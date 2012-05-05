@@ -19,22 +19,24 @@
  * @subpackage db_driver
  */
 class ociDbResultSet extends jDbResultSet {
-    protected $_stmt;
+    protected $_stmtId;
+    protected $_cnt;
 
-    function __construct ($stmt) {
-        $this->_stmt = $stmt;
+    function __construct ($idResult, $stmtId = null, $cnt=null) {
+        $this->_idResult = $idResult;
+        $this->_stmtId = $stmtId;
+        $this->_cnt = $cnt;
     }
 
     public function fetch() {
-		$res = false;
-		if(!$this->execute()) {
-			return $res;
-		}
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
-			$res = oci_fetch_object($this->_stmt);
+            if ($this->_fetchModeCtoArgs)
+                $res = oci_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam, $this->_fetchModeCtoArgs);
+            else
+                $res = oci_fetch_object ($this->_idResult, -1 , $this->_fetchModeParam);
         }
         else if ($this->_fetchMode == jDbConnection::FETCH_INTO) {
-            $res = oci_fetch_object ($this->_stmt);
+             $res = oci_fetch_object ($this->_idResult);
             $values = get_object_vars ($res);
             $res = $this->_fetchModeParam;
             foreach ($values as $k=>$value) {
@@ -42,40 +44,47 @@ class ociDbResultSet extends jDbResultSet {
             }
         }
         else {
-            $res = oci_fetch_object ($this->_stmt);
+            $res = oci_fetch_object ($this->_idResult);
         }
 
         if ($res && count($this->modifier)) {
             foreach($this->modifier as $m)
                 call_user_func_array($m, array($res, $this));
-        }
+         }
         return $res;
     }
-
-    public function statement() { return $this->_stmt; }
 
     protected function _fetch(){ }
 
     protected function _free (){
-        return oci_free_statement ($this->_stmt);
+        return oci_free_result ($this->_idResult);
+    }
+
+    protected function _rewind (){
+        return oci_result_seek ( $this->_idResult, 0 );
     }
 
     public  function rowCount(){
-        return oci_num_rows($this->_stmt);
+        return oci_num_rows($this->_idResult);
     }
 
     public function bindColumn($column, &$param , $type=null )
-      {throw new jException('jelix~db.error.feature.unsupported', array('oci','bindColumn')); }
+      {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn')); }
     public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
-       {throw new jException('jelix~db.error.feature.unsupported', array('oci','bindParam')); }
+       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
     public function bindValue($parameter, $value, $data_type)
-       {throw new jException('jelix~db.error.feature.unsupported', array('oci','bindValue')); }
+       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
 
     public function columnCount() {
-        return pg_num_fields($this->_idResult);
+        return oci_num_fields($this->_idResult);
     }
 
     public function execute($parameters=array()) {
-        return oci_execute($this->_stmt);
+        $this->_idResult= oci_execute($this->_cnt,$this->_stmtId, $parameters);
+        return true;
+    }
+
+    public function unescapeBin($text) {
+        return oci_unescape_bytea($text);
     }
 }

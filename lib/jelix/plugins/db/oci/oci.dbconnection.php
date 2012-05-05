@@ -17,7 +17,7 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-// require_once(dirname(__FILE__).'/pgsql.dbresultset.php');
+require_once(dirname(__FILE__).'/oci.dbresultset.php');
 
 /**
  *
@@ -25,12 +25,9 @@
  * @subpackage db_driver
  */
 class ociDbConnection extends jDbConnection {
-
-	protected $_lastErrorData = null;
-
     function __construct($profile){
         if(!function_exists('oci_connect')){
-            throw new jException('jelix~db.error.nofunction','oci');
+            throw new jException('jelix~db.error.nofunction','posgresql');
         }
         parent::__construct($profile);
         if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
@@ -61,54 +58,125 @@ class ociDbConnection extends jDbConnection {
     }
 
     public function beginTransaction (){
-        return true;
+        return $this->_doExec('BEGIN');
     }
 
     public function commit (){
-        return true;
+        return $this->_doExec('COMMIT');
     }
 
     public function rollback (){
-        return true;
+        return $this->_doExec('ROLLBACK');
     }
 
-	public function prepare($query) {
-		$res = oci_parse($this->_connection, $query);
-		
-		return $res;
-	}
-	
-    /**
-     * @return string the last error description
-     */
-    public function errorInfo() {
-		return oci_error($this->_connection);
-	}
+    public function prepare ($query){
+        $id=(string)mktime();
+        $res = oci_prepare($this->_connection, $id, $query);
+        if($res){
+            $rs= new ociDbResultSet ($res, $id, $this->_connection );
+        }else{
+            throw new jException('jelix~db.error.query.bad',  oci_last_error($this->_connection).'('.$query.')');
+        }
+        return $rs;
+    }
 
-    /**
-     * @return integer the last error code
-     */
-    public function errorCode() {
-		$errorData = oci_error($this->_connection);
-		if($errorData === false) {
-			return 0;
-		}
-		return $errorData['code'];
-	}
+    public function errorInfo(){
+        return array( 'HY000' ,oci_last_error($this->_connection), oci_last_error($this->_connection));
+    }
 
-    /**
-     * return the id value of the last inserted row.
-     * Some driver need a sequence name, so give it at first parameter
-     * @param string $fromSequence the sequence name
-     * @return integer the id value
-     */
-    public function lastInsertId($fromSequence='') {
+    public function errorCode(){
+        return pg_last_error($this->_connection);
+    }
+
+    protected function _connect (){
+        $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'pg_pconnect':'pg_connect');
+
+        $str = '';
+
+        // we do a distinction because if the host is given == TCP/IP connection else unix socket
+        if($this->profile['host'] != '')
+            $str = 'host=\''.$this->profile['host'].'\''.$str;
+
+        if (isset($this->profile['port'])) {
+            $str .= ' port=\''.$this->profile['port'].'\'';
+        }
+
+        if ($this->profile['database'] != '') {
+            $str .= ' dbname=\''.$this->profile['database'].'\'';
+        }
+
+        // we do isset instead of equality test against an empty string, to allow to specify
+        // that we want to use configuration set in environment variables
+        if (isset($this->profile['user'])) {
+            $str .= ' user=\''.$this->profile['user'].'\'';
+        }
+
+        if (isset($this->profile['password'])) {
+            $str .= ' password=\''.$this->profile['password'].'\'';
+        }
+
+        if (isset($this->profile['timeout']) && $this->profile['timeout'] != '') {
+            $str .= ' connect_timeout=\''.$this->profile['timeout'].'\'';
+        }
+
+        // let's do the connection
+        if ($cnx = @$funcconnect ($str)) {
+            if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
+               && isset($this->_charsets[$GLOBALS['gJConfig']->charset])) {
+                oci_set_client_encoding($cnx, $this->_charsets[$GLOBALS['gJConfig']->charset]);
+            }
+        }
+		else {
+            throw new jException('jelix~db.error.connection',$this->profile['host']);
+        }
+
+        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
+            $sql = 'SET search_path TO '.$this->profile['search_path'];
+            if (! @pg_query($cnx, $sql)) {
+                throw new jException('jelix~db.error.query.bad',  pg_last_error($cnx).'('.$sql.')');
+            }
+        }
+        return $cnx;
+    }
+
+    protected function _disconnect () {
+        return pg_close ($this->_connection);
+    }
+
+    protected function _doQuery ($queryString){
+        if ($qI = @oci_query ($this->_connection, $queryString)){
+            $rs= new ociDbResultSet ($qI);
+            $rs->_connector = $this;
+        }else{
+            $rs = false;
+            throw new jException('jelix~db.error.query.bad',  oci_last_error($this->_connection).'('.$queryString.')');
+        }
+        return $rs;
+    }
+
+    protected function _doExec($query){
+        if($rs = $this->_doQuery($query)){
+            return oci_affected_rows($rs->id());
+        }else
+            return 0;
+    }
+
+    protected function _doLimitQuery ($queryString, $offset, $number){
+        if($number < 0)
+            $number='ALL';
+        $queryString.= ' LIMIT '.$number.' OFFSET '.$offset;
+        $this->lastQuery = $queryString;
+        $result = $this->_doQuery($queryString);
+        return $result;
+    }
+
+    public function lastInsertId($seqname=''){
+
         if($seqname == ''){
-            trigger_error(get_class($this) . '::lastInstertId invalide sequence name', E_USER_WARNING);
+            trigger_error(get_class($this).'::lastInstertId invalide sequence name',E_USER_WARNING);
             return false;
         }
-		
-        $cur = $this->query("SELECT $seqname.CURRVAL AS ID FROM DUAL");
+        $cur=$this->query("select '$seqname'.currval as id");
         if($cur){
             $res=$cur->fetch();
             if($res)
@@ -119,76 +187,20 @@ class ociDbConnection extends jDbConnection {
             trigger_error(get_class($this).'::lastInstertId invalide sequence name',E_USER_WARNING);
             return false;
         }
-	}
-
-    protected function _connect (){
-        $funcconnect= (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'oci_pconnect':'oci_connect');
-
-        $str = '';
-
-        if($this->profile['host'] != '')
-            $str .= '//' . $this->profile['host'];
-
-        if (isset($this->profile['port'])) {
-            $str .= ':' . $this->profile['port'];
-        }
-
-        if ($this->profile['instance_name'] != '') {
-            $str .= '/' . $this->profile['instance_name'];
-        }
-
-        // let's do the connection
-        if ($cnx = @$funcconnect ($this->profile['user'], $this->profile['password'], $str)) {
-        }
-		else {
-            throw new jException('jelix~db.error.connection',$this->profile['host']);
-        }
-		
-        return $cnx;
     }
 
-    protected function _disconnect () {
-        return oci_close ($this->_connection);
-    }
-
-    /**
-    * do a query which return results
-    * @return jDbResultSet/boolean
-    */
-    protected function _doQuery ($queryString) {
-		if ($res = @oci_parse ($this->_connection, $queryString)) {
-            $rs = new ociDbResultSet ($res);
-            $rs->_connector = $this;
-		} else {
-            $rs = false;
-			$errorData = oci_error($this->_connection);
-            throw new jException('jelix~db.error.query.bad',  $errorData['message'] . '(' . $queryString . ')');
-		}
-		return $rs;
-	}
-
-    protected function _doExec($query){
-        if($rs = $this->_doQuery($query)){
-            return oci_num_rows($rs->statement());
-        }else
-            return 0;
-    }
-
-    /**
-    * do a query which return a limited number of results
-    * @return jDbResultSet/boolean
-    */
-    protected function _doLimitQuery ($queryString, $offset, $number)
-	{
-	}
-
-    /**
-    * Notify the changes on autocommit
-    * @param boolean $state the new state of autocommit
-    */
     protected function _autoCommitNotify ($state){
 
+        $this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
     }
+
+    protected function _quote($text, $binary) {
+        if ($binary)
+            return oci_escape_bytea($this->_connection, $text);
+        else
+            return oci_escape_string($this->_connection, $text);
+	}
+
 
     /**
      *
@@ -199,10 +211,10 @@ class ociDbConnection extends jDbConnection {
     public function getAttribute($id) {
         switch($id) {
             case self::ATTR_CLIENT_VERSION:
-                return oci_client_version();
-				break;
+				$v = oci_version($this->_connection);
+                return (array_key_exists($v['client']) ? $v['client'] : '');
             case self::ATTR_SERVER_VERSION:
-                return oci_server_version($this->_connection);
+                return oci_parameter_status($this->_connection, "server_version");
                 break;
         }
         return "";
