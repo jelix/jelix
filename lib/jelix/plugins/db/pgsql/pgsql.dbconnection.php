@@ -29,7 +29,7 @@ class pgsqlDbConnection extends jDbConnection {
 
     function __construct($profile){
         if(!function_exists('pg_connect')){
-            throw new jException('jelix~db.error.nofunction','pgsql');
+            throw new jException('jelix~db.error.nofunction','posgresql');
         }
         parent::__construct($profile);
         if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
