@@ -103,12 +103,12 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
                 $returning_bind .= $this->_codeBindParam ($field) ."\n";
                 continue;
             }
-
             if (strlen ($field->sequenceName)) {
                 $values[] = $field->sequenceName . '.nextval';
             }
             else if (strlen ($field->insertPattern) && ($field->insertPattern != '%s')) {
-                $values[] = str_replace ("'", "\\'", $field->insertPattern); // Eescape quotes as needed
+                $values[] = str_replace ("'", "\\'", sprintf($field->insertPattern,  ':' . $field->fieldName)); // Eescape quotes as needed
+                $binds[] = $field;
             }
             else {
                 $values[] = ':' . $field->fieldName;
@@ -123,7 +123,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
         
         $src[] = '    ' . implode (',', $values);
         $src[] = '    )';
-        $src[] = '    RETURNING ' . implode (',', $returning['field']) . ' INTO ' . implode (',', $returning['bind']);
+        // $src[] = '    RETURNING ' . implode (',', $returning['field']) . ' INTO ' . implode (',', $returning['bind']);
         $src[] = '    \';';
         
         $src[] = '    $sth = $this->_conn->prepare ($query);';
@@ -132,7 +132,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
         
         // Bind the variables, at last
         foreach ($binds as $bind) 
-            $this->_codeBindParam ($bind);
+            $src[] = $this->_codeBindParam ($bind);
 
         $src[] = '    $result = $sth->execute ();';
 
@@ -186,9 +186,9 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             foreach ($fields_obj as $field) {
 
                 if (strlen ($field->updatePattern) && ($field->updatePattern != '%s')) {
-                    $frags[] = str_replace ("'", "\\'", $field->insertPattern); // Eescape quotes as needed
-                }
-                else {
+                    $frags[] = str_replace ("'", "\\'", sprintf($field->updatePattern,  ':' . $field->fieldName)); // Eescape quotes as needed
+                    $binds[] = $field;
+                } else {
                     $frags[] = $field->fieldName .'=:' . $field->fieldName;
                     $binds[] = $field;
                 }
@@ -258,7 +258,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             case 'name':
             case 'longvarchar':
             case 'string':
-                $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PARAM_NULL : PDO::PARAM_STR));';
+                $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_STR));';
                 break;
             case 'int':
             case 'integer':
@@ -266,7 +266,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             case 'smallint':
             case 'mediumint':
             case 'bigint':
-                 $src = '    $sth->bindParam (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PARAM_NULL : PDO::PARAM_INT));';
+                 $src = '    $sth->bindParam (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_INT));';
                  break;
             default:
                 $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ');';
