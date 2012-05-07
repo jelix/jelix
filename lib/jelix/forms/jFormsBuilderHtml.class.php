@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin
+* @contributor Julien Issler, Dominique Papin, Florian Lonqueu-Brochard
 * @copyright   2006-2012 Laurent Jouanneau
-* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin, 2012 Florian Lonqueu-Brochard  
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -713,7 +713,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 $value='';
         }
         $value = (string) $value;
-        echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
+        if(!$ctrl->required || !empty($ctrl->emptyItemLabel)){
+            echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
+        }
         $this->fillSelect($ctrl, $value);
         echo '</select>';
     }
