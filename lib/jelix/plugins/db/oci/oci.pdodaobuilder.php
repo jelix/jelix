@@ -100,15 +100,19 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             if ($field->autoIncrement) {
                 $returning['field'][] =  $field->fieldName; 
                 $returning['bind'][] = ':' . $field->fieldName;
-                $returning_bind .= $this->_codeBindParam ($field) ."\n";
+                $returning_bind .= $this->_codeBindParam ($field, false) ."\n";
                 continue;
             }
             if (strlen ($field->sequenceName)) {
                 $values[] = $field->sequenceName . '.nextval';
             }
             else if (strlen ($field->insertPattern) && ($field->insertPattern != '%s')) {
-                $values[] = str_replace ("'", "\\'", sprintf($field->insertPattern,  ':' . $field->fieldName)); // Eescape quotes as needed
-                $binds[] = $field;
+                if(strpos($field->insertPattern, '%s') !== false) {
+                    $values[] = str_replace ("'", "\\'", sprintf($field->insertPattern, ':' . $field->fieldName)); // Escape quotes as needed
+                    $binds[] = $field;
+                } else {
+                    $values[] = str_replace ("'", "\\'", $field->insertPattern); // Escape quotes as needed
+                }
             }
             else {
                 $values[] = ':' . $field->fieldName;
@@ -117,7 +121,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             if ($field->isPK) {
                 $returning['field'][] = $field->fieldName;
                 $returning['bind'][] = ':' . $field->fieldName;
-                $returning_bind .= $this->_codeBindParam ($field) ."\n";
+                $returning_bind .= $this->_codeBindParam ($field, false) ."\n";
             }
         }
         
@@ -186,8 +190,12 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             foreach ($fields_obj as $field) {
 
                 if (strlen ($field->updatePattern) && ($field->updatePattern != '%s')) {
-                    $frags[] = str_replace ("'", "\\'", sprintf($field->updatePattern,  ':' . $field->fieldName)); // Eescape quotes as needed
-                    $binds[] = $field;
+                    if(strpos($field->updatePattern, '%s') !== false) {
+                        $frags[] = $field->fieldName .'='.str_replace ("'", "\\'", sprintf($field->updatePattern, ':' . $field->fieldName)); // Escape quotes as needed
+                        $binds[] = $field;
+                    } else {
+                        $frags[] = str_replace ("'", "\\'", $field->updatePattern); // Escape quotes as needed
+                    }
                 } else {
                     $frags[] = $field->fieldName .'=:' . $field->fieldName;
                     $binds[] = $field;
@@ -243,7 +251,7 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
         return implode("\n",$src);
     }
     
-    private function _codeBindParam ($bind) {
+    private function _codeBindParam ($bind, $checkNull = true) {
         switch ($bind->datatype) {
             case 'clob':
                 $src = '    $sth->bindParam (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', PDO::PARAM_STR, strlen ($record->' . $bind->name . '));';
@@ -258,7 +266,11 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             case 'name':
             case 'longvarchar':
             case 'string':
-                $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_STR));';
+                if($checkNull) {
+                    $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_STR));';
+                } else {
+                    $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', PDO::PARAM_STR);';
+                }
                 break;
             case 'int':
             case 'integer':
@@ -266,8 +278,12 @@ class ociPdoDaoBuilder extends jPdoDaoGenerator {
             case 'smallint':
             case 'mediumint':
             case 'bigint':
-                 $src = '    $sth->bindParam (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_INT));';
-                 break;
+                if($checkNull) {
+                    $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', (is_null($record->' . $bind->name . ') ? PDO::PARAM_NULL : PDO::PARAM_INT));';
+                } else {
+                    $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ', PDO::PARAM_INT);';
+                }
+                break;
             default:
                 $src = '    $sth->bindValue (\':' . $bind->fieldName . '\', $record->' . $bind->name . ');';
         }
