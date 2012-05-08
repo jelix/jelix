@@ -18,7 +18,7 @@
  */
 class jDbPDOResultSet extends PDOStatement {
 
-    protected $_fetchMode = 0;
+    protected $_fetchMode = PDO::FETCH_OBJ;
 
     public function fetch ($fetch_style = null, $cursor_orientation = PDO::FETCH_ORI_NEXT, $cursor_offset = 0) {
         // we take a shortcut: unused parameters are ignored by parent::fetch

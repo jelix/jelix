@@ -63,5 +63,4 @@ class ociDaoBuilder extends jDaoGenerator {
     protected function buildUpdateAutoIncrementPK($pkai) {
         return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';
     }
-
 }

@@ -20,6 +20,7 @@
 #includephp jDaoProperty.class.php
 #includephp jDaoMethod.class.php
 #includephp jDaoGenerator.class.php
+#includephp jPdoDaoGenerator.class.php
 
 #else
 * @author      Laurent Jouanneau
@@ -39,6 +40,7 @@ require(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
 require(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
 require(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
 require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
+require(JELIX_LIB_PATH.'dao/jPdoDaoGenerator.class.php');
 #endif
 
 /**
@@ -75,8 +77,8 @@ class jDaoCompiler  implements jISimpleCompiler {
         $parser = new jDaoParser ($selector);
         $parser->parse(simplexml_import_dom($doc), $tools);
 
-        require_once($gJConfig->_pluginsPathList_db[$selector->driver].$selector->driver.'.daobuilder.php');
-        $class = $selector->driver.'DaoBuilder';
+        require_once($gJConfig->_pluginsPathList_db[$selector->driver] . $selector->driver . '.' . ($selector->isPdo ? 'pdo' : '') . 'daobuilder.php');
+        $class = $selector->driver . ($selector->isPdo ? 'Pdo' : '') . 'DaoBuilder';
         $generator = new $class ($selector, $tools, $parser);
 
         // generation of PHP classes corresponding to the DAO definition
