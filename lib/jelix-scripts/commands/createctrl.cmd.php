@@ -71,7 +71,9 @@ class createctrlCommand extends JelixScriptCommand {
                 $tplname = 'module/controller.tpl';
             }
        }
-       $this->createFile($agfilename,$tplname,$param);
+       if($this->createFile($agfilename,$tplname,$param)) {
+          echo "Controller created successfully\n";
+       }
 
     }
 }

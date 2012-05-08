@@ -306,6 +306,10 @@ abstract class JelixScriptCommand {
          chown($filename, $this->config->chownUser);
          chgrp($filename, $this->config->chownGroup);
       }
+      if (!file_exists($filename)) {
+         echo "Error: file '".$filename."' could not be created\n";
+         return false;
+      }
       return true;
    }
 
