@@ -214,7 +214,24 @@ class jIniFileModifier {
         $this->modified = true;
     }
 
-
+    /**
+     * modify several options in the ini file.
+     * @param array $value   associated array with key=>value
+     * @param string $section the section where to set the item. 0 is the global section
+     */
+    public function setValues($values, $section=0) {
+        foreach($values as $name=>$val) {
+            if (is_array($val)) {
+                // let's ignore key values, we don't want them
+                $i = 0;
+                foreach ($val as $arval) {
+                    $this->setValue($name, $arval, $section, $i++);
+                }
+            }
+            else
+                $this->setValue($name, $val, $section);
+        }
+    }
 
     /**
      * remove an option in the ini file. It can remove an entire section if you give
@@ -377,6 +394,45 @@ class jIniFileModifier {
             return $item[2];
         }
         return null;
+    }
+
+    /**
+     * return all values of a section in the ini file. 
+     * @param string $section the section from wich we want values. 0 is the global section
+     * @return array the list of values, $key=>$value
+     */
+    public function getValues($section=0) {
+        if(!isset($this->content[$section])) {
+            return array();
+        }
+        $values = array();
+        foreach ($this->content[$section] as $k =>$item) {
+            if ($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
+                continue;
+
+            if (preg_match('/^-?[0-9]$/', $item[2])) { 
+                $val = intval($item[2]);
+            }
+            else if (preg_match('/^-?[0-9\.]$/', $item[2])) { 
+                $val = floatval($item[2]);
+            }
+            else if (strtolower($item[2]) === 'true' || strtolower($item[2]) === 'on') {
+                $val = true;
+            }
+            else if (strtolower($item[2]) === 'false' || strtolower($item[2]) === 'off') {
+                $val = false;
+            }
+            else
+                $val = $item[2];
+            
+            if ($item[0] == self::TK_VALUE) {
+                $values[$item[1]] = $val;
+            }
+            else {
+                $values[$item[1]][$item[3]] = $val;
+            }
+        }
+        return $values;
     }
 
     /**

@@ -1115,6 +1115,79 @@ foo[]=ccc
         $this->assertEquals($result, $ini->generate());
     }
 
+    
+    public function testSetValues() {
+        $content = '
+; a comment <?php die()
+  
+foo=bar
+
+; section comment
+[aSection]
+truc=true
+
+; super section
+[the_section]
+foo= z
+';
+        $ini = new testIniFileModifier('');
+        $ini->testParse($content);
+        $ini->setValues(array('truc'=>'machin', 'bidule'=>1, 'truck'=>true, 'foo'=>array('aaa', 'bbb', 'ccc')), 'the_section');
+        $expected = '
+; a comment <?php die()
+  
+foo=bar
+
+; section comment
+[aSection]
+truc=true
+
+; super section
+[the_section]
+foo[]=aaa
+
+truc=machin
+bidule=1
+truck=1
+foo[]=bbb
+foo[]=ccc
+';
+        $this->assertEquals($expected, $ini->generate());
+    }
+
+    public function testGetValues() {
+        $content = '
+; a comment <?php die()
+  
+foo=bar
+
+; section comment
+[aSection]
+truc=true
+
+; super section
+[the_section]
+truc=machin
+bidule=1
+truck=on
+foo[]=aaa
+; key comment
+foo[]=bbb
+foo[]=ccc
+';
+
+        $ini = new testIniFileModifier('');
+        $ini->testParse($content);
+
+        $values = $ini->getValues('the_section');
+        $expected = array('truc'=>'machin', 'bidule'=>1, 'truck'=>true, 'foo'=>array('aaa', 'bbb', 'ccc'));
+        $this->assertEquals($expected, $values);
+
+        $values = $ini->getValues(0);
+        $expected = array('foo'=>'bar');
+        $this->assertEquals($expected, $values);
+    }
+
 }
 
 ?>
