@@ -1,8 +1,8 @@
 <?php
-require_once (dirname(__FILE__).'/../../../../lib/jelix/installer/jInstallerApplication.class.php');
-require_once (dirname(__FILE__).'/../../../../lib/jelix/installer/jInstallerEntryPoint.class.php');
-require_once (dirname(__FILE__).'/../../../../lib/jelix/installer/jInstallerModuleInfos.class.php');
-require_once (dirname(__FILE__).'/../../../../lib/jelix/core/jConfigCompiler.class.php');
+require_once (__DIR__.'/../../../../lib/jelix/installer/jInstallerApplication.class.php');
+require_once (__DIR__.'/../../../../lib/jelix/installer/jInstallerEntryPoint.class.php');
+require_once (__DIR__.'/../../../../lib/jelix/installer/jInstallerModuleInfos.class.php');
+require_once (__DIR__.'/../../../../lib/jelix/core/jConfigCompiler.class.php');
 
 
 class testInstallApp extends jInstallerApplication {
@@ -16,7 +16,7 @@ class installAppTest extends PHPUnit_Framework_TestCase
     function testEntryPointsList () {
         jApp::saveContext();
         
-        jApp::initPaths(dirname(__FILE__).'/app1/');
+        jApp::initPaths(__DIR__.'/app1/');
         
         $app = new testInstallApp('project_empty.xml');
         $this->assertEquals(array(), $app->getEntryPointsList());

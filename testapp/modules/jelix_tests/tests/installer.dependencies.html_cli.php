@@ -10,7 +10,7 @@
 * @since 1.2
 */
 
-require_once(dirname(__FILE__).'/installer.lib.php');
+require_once(__DIR__.'/installer.lib.php');
 
 
 class UTjInstallerDependencies extends jUnitTestCase {
