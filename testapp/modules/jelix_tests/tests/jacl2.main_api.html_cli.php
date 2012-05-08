@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/jacl2_main_api.lib.php');
+require_once(__DIR__.'/jacl2_main_api.lib.php');
 
 class UTjacl2 extends UTjacl2_main_api {
 

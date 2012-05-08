@@ -10,7 +10,7 @@
 */
 
 
-require_once(dirname(__FILE__).'/daotests.lib.php');
+require_once(__DIR__.'/daotests.lib.php');
 
 class UTDao_generator_select extends jUnitTestCase {
 

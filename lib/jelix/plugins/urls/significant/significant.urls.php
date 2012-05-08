@@ -19,7 +19,7 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
     public $type = 'urlcfgsig';
 
     public function getCompiler(){
-        require_once(dirname(__FILE__).'/jSignificantUrlsCompiler.class.php');
+        require_once(__DIR__.'/jSignificantUrlsCompiler.class.php');
         $o = new jSignificantUrlsCompiler();
         return $o;
     }

@@ -2,8 +2,8 @@
 error_reporting(E_ALL);
 include '../jtpl_standalone_prepend.php';
 
-jTplConfig::$cachePath = dirname(__FILE__).'/../temp/';
-jTplConfig::$templatePath = dirname(__FILE__) . '/';
+jTplConfig::$cachePath = __DIR__.'/../temp/';
+jTplConfig::$templatePath = __DIR__ . '/';
 
 $tpl = new jTpl();
 

@@ -9,7 +9,7 @@
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-$appPath = dirname (__FILE__).'/';
+$appPath = __DIR__.'/';
 require ($appPath.'../lib/jelix/init.php');
 
 jApp::initPaths(

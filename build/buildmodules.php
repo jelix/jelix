@@ -35,13 +35,13 @@ $BUILD_OPTIONS = array(
     ),
 );
 
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
 $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 
 if($VERSION == 'SERIAL'){
     $VERSION = 'SERIAL-'.$SOURCE_REVISION;
@@ -79,7 +79,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$BUILD_SUBPATH);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);

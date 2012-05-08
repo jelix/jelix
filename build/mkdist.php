@@ -12,7 +12,7 @@
 
 // arguments :  fichier.lf   chemin_source chemin_dist
 
-require_once(dirname(__FILE__).'/lib/jManifest.class.php');
+require_once(__DIR__.'/lib/jManifest.class.php');
 
 if($_SERVER['argc'] < 4){
    exit(1);

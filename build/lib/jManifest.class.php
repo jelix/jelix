@@ -9,9 +9,9 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-require_once(dirname(__FILE__).'/preprocessor.lib.php');
-require_once(dirname(__FILE__).'/jBuildUtils.lib.php');
-require_once(dirname(__FILE__).'/class.JavaScriptPacker.php');
+require_once(__DIR__.'/preprocessor.lib.php');
+require_once(__DIR__.'/jBuildUtils.lib.php');
+require_once(__DIR__.'/class.JavaScriptPacker.php');
 
 /**
  * jManifest copy files indicated in a 'manifest' file, to a specific directory

@@ -13,7 +13,7 @@
  *
  */
 include (LIB_PATH . 'intuition/Intuition.inc');
-require_once(dirname(__FILE__).'/intuition.dbresultset.php');
+require_once(__DIR__.'/intuition.dbresultset.php');
 
 /**
 * @package    jelix

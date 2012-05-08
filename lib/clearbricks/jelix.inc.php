@@ -1,5 +1,5 @@
 <?php
-$dirname = dirname(__FILE__).'/';
+$dirname = __DIR__.'/';
 
 function __($str)
 {
