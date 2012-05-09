@@ -133,7 +133,7 @@ class jIniFileModifier {
             }else if(preg_match('/^(\s*;.*)$/',$line, $m)){
                 $this->content[$currentSection][]=array(self::TK_COMMENT, $m[1]);
 
-            }else if(preg_match('/^(\s*\[([a-z0-9_.-@:]+)\]\s*)/i', $line, $m)) {
+            }else if(preg_match('/^(\s*\[([a-z0-9_.\-@:]+)\]\s*)/i', $line, $m)) {
                 $currentSection = $m[2];
                 $this->content[$currentSection]=array(
                     array(self::TK_SECTION, $m[1]),
