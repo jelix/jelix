@@ -60,13 +60,13 @@ class jForms {
         $fid = is_array($formId) ? serialize($formId) : $formId;
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
             $dc = $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
-            if ($formId == self::DEFAULT_ID) {
+            if ($formId === self::DEFAULT_ID) {
                 $dc->refcount = 1;
             }
         }
         else {
             $dc = $_SESSION['JFORMS'][$formSel][$fid];
-            if ($formId == self::DEFAULT_ID) 
+            if ($formId === self::DEFAULT_ID) 
                 $dc->refcount++;
         }
         $form = new $c($formSel, $dc, true);
