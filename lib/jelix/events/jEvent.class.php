@@ -3,8 +3,8 @@
 * @package     jelix
 * @subpackage  events
 * @author      Gérald Croes, Patrice Ferlet
-* @contributor Laurent Jouanneau, Dominique Papin, Steven Jehannet
-* @copyright 2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau, 2009 Dominique Papin
+* @contributor Laurent Jouanneau, Dominique Papin, Steven Jehannet, Michel MA
+* @copyright 2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau, 2009 Dominique Papin, 2012 Michel MA (michgeek)
 * This classes were get originally from the Copix project
 * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -81,9 +81,22 @@ class jEvent {
     /**
     * adds data in the responses list
     * @param array $response a single response
+    * @param string/int $key of the response
     */
-    public function add ($response) {
-        $this->_responses[] = & $response;
+    public function add ($response, $key = null) {
+        if(is_null($key)) {
+            $this->_responses[] = &$response;
+        } else {
+            $this->_responses[$key] = &$response;
+        }
+    }
+
+    /**
+     * check if we have a response corresponding to the key
+     * @return boolean wheter or not we have found the key
+     */
+    public function inResponseKey($key) {
+        return isset($this->_responses[$key]);
     }
 
     /**
