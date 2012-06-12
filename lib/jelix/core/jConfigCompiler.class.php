@@ -186,6 +186,19 @@ class jConfigCompiler {
                 $config->timeZone = "Europe/Paris";
         }
 
+        // lang to locale
+        $availableLocales = explode(',', $config->availableLocales);
+        foreach ($availableLocales as $locale) {
+            if (preg_match("/^([a-z]{2,3})_([A-Z]{2,3})$/", $locale, $m)) {
+                if (!isset($config->langToLocale[$m[1]]))
+                    $config->langToLocale[$m[1]] = $locale;
+            }
+            else {
+                throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '$locale' is not a locale code");
+            }
+        }
+        $config->availableLocales = $availableLocales;
+
         if($config->sessions['storage'] == 'files'){
             $config->sessions['files_path'] = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $config->sessions['files_path']);
         }

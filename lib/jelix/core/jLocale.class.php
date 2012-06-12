@@ -111,4 +111,80 @@ class jLocale {
             return $string;
         }
     }
+
+    /**
+     * says if the given locale or lang code is available in the application
+     * @param string $locale the locale code (xx_YY) or a lang code (xx)
+     * @param boolean $strictCorrespondance if true don't try to find a locale from an other country
+     * @return string the corresponding locale
+     */
+    static function getCorrespondingLocale($l, $strictCorrespondance=false) {
+
+        if (strpos($l, '_') === false) {
+            $l = self::langToLocale($l);
+        }
+
+        if ($l != '') {
+            $avLoc = &jApp::config()->availableLocales;
+            if (in_array($l, $avLoc)) {
+                return $l;
+            }
+            if ($strictCorrespondance)
+                return '';
+            $l2 = self::langToLocale(substr($l, 0, strpos($l, '_')));
+            if ($l2 != $l && in_array($l2, $avLoc)) {
+                return $l2;
+            }
+        }
+        return '';
+    }
+
+    /**
+     * returns the locale corresponding of one of the accepted language indicated
+     * by the browser, and which is available in the application.
+     * @return string the locale. empty if not found.
+     */
+    static function getPreferedLocaleFromRequest() {
+        if (!isset($_SERVER['HTTP_ACCEPT_LANGUAGE']))
+            return '';
+
+        $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
+        foreach ($languages as $bl) {
+            if (!preg_match("/^([a-zA-Z]{2,3})(?:[-_]([a-zA-Z]{2,3}))?(;q=[0-9]\\.[0-9])?$/",$bl,$match))
+                continue;
+            $l = strtolower($match[1]);
+            if (isset($match[2]))
+                $l .= '_'.strtoupper($match[2]);
+            $lang = self::getCorrespondingLocale($l);
+            if ($lang != '')
+                return $lang;
+        }
+        return '';
+    }
+
+    /**
+     * @var array content of the lang_to_locale.ini.php
+     */
+    static protected $langToLocale = null;
+
+    /**
+     * returns the locale corresponding to a lang.
+     *
+     * The file lang_to_locale give corresponding locale, but you can override these
+     * association into the langToLocale section of the main configuration
+     * @param string $lang a lang code (xx)
+     * @return string the corresponding locale (xx_YY)
+     */
+    static function langToLocale($lang) {
+        $conf = jApp::config();
+        if (isset($conf->langToLocale[$lang]))
+            return $conf->langToLocale[$lang];
+        if (is_null(self::$langToLocale)) {
+            self::$langToLocale = @parse_ini_file(JELIX_LIB_CORE_PATH.'lang_to_locale.ini.php');
+        }
+        if (isset(self::$langToLocale[$lang])) {
+            return self::$langToLocale[$lang];
+        }
+        return '';
+    }
 }
