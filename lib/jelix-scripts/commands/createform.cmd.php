@@ -174,6 +174,8 @@ class createformCommand extends JelixScriptCommand {
             $this->createFile($locale_filename_en, 'module/locales.tpl', array('content'=>$locale_content));
         }
 
-        $this->createFile($filename,'module/form.xml.tpl', array('content'=>$content.$submit));
+        if($this->createFile($filename,'module/form.xml.tpl', array('content'=>$content.$submit))) {
+           echo "Form created successfully\n";
+        }
     }
 }

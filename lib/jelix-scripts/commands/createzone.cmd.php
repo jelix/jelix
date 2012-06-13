@@ -57,8 +57,9 @@ class createzoneCommand extends JelixScriptCommand {
        }else{
           $param['template'] = '';
        }
-
-       $this->createFile($filename,'module/zone.tpl',$param);
+       if($this->createFile($filename,'module/zone.tpl',$param)) {
+          echo "Zone created successfully\n";
+       }
     }
 }
 
