@@ -155,6 +155,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1760_minify.php
   upgrade_to_1.3pre.1871_jprofiles.php
   upgrade_to_1.3pre.1919_cmd.php
+  upgrade_availablelocales.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
