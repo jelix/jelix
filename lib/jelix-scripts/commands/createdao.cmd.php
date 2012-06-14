@@ -73,7 +73,9 @@ class createdaoCommand extends JelixScriptCommand {
             $param['table'] = $param['name'];
 
        if($this->getOption('-empty')){
-          $this->createFile($filename,'module/dao_empty.xml.tpl',$param);
+          if($this->createFile($filename,'module/dao_empty.xml.tpl',$param)) {
+            echo "Empty DAO created successfully\n";
+         }
        }else{
 
          $sequence = $this->getParam('sequence', '');
@@ -118,7 +120,9 @@ class createdaoCommand extends JelixScriptCommand {
 
          $param['properties']=$properties;
          $param['primarykeys']=$primarykeys;
-         $this->createFile($filename,'module/dao.xml.tpl',$param);
+         if($this->createFile($filename,'module/dao.xml.tpl',$param)) {
+            echo "DAO created ssuccessfully\n";
+         }
        }
     }
 }
