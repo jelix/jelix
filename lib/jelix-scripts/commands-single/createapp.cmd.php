@@ -16,7 +16,7 @@
 
 class createappCommand extends JelixScriptCommand {
 
-   protected $commonOptions = array();
+   protected $commonOptions = array('-v'=>false);
 
     public  $name = 'createapp';
     public  $allowed_options=array('-nodefaultmodule'=>false,
@@ -26,6 +26,17 @@ class createappCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-wwwpath a_path]";
     public  $help='';
+    public $commonSyntaxOptions = '[-v] ';
+    public $commonOptionsHelp = array(
+        'en'=>"
+    Other options:
+    -v: verbose mode
+",
+        'fr'=>"
+    Autres options:
+    -v: mode verbeux. Affiche plus d'informations.
+"
+    );
 
     public $applicationRequirement = 1;
 
@@ -149,20 +160,20 @@ class createappCommand extends JelixScriptCommand {
         $param['rp_jelix'] = $this->getRelativePath($appPath, JELIX_LIB_PATH);
         $param['rp_app']   = $this->getRelativePath($wwwpath, $appPath);
 
-        $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param);
-        $this->createFile($appPath.'project.xml','project.xml.tpl', $param);
-        $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param);
-        $this->createFile($configPath.'defaultconfig.ini.php', 'var/config/defaultconfig.ini.php.tpl', $param);
-        $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param);
-        $this->createFile($configPath.'urls.xml', 'var/config/urls.xml.tpl', $param);
+        $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
+        $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
+        $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
+        $this->createFile($configPath.'defaultconfig.ini.php', 'var/config/defaultconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
+        $this->createFile($configPath.'urls.xml', 'var/config/urls.xml.tpl', $param, "URLs mapping file");
         //$this->createFile(JELIX_APP_CONFIG_PATH.'installer.ini.php', 'var/config/installer.ini.php.tpl', $param);
-        $this->createFile($configPath.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param);
-        $this->createFile($appPath.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param);
-        $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param);
-        $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param);
+        $this->createFile($configPath.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
+        $this->createFile($appPath.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
+        $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param);
-        $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param);
+        $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param, "Main entry point");
+        $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param, "Configuration file for Apache");
 
         $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
         $param['php_rp_var']  = $this->convertRp($param['rp_var']);
@@ -172,7 +183,7 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
         $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
 
-        $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param);
+        $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
 
         $installer = new jInstaller(new textInstallReporter('warning'));
         $installer->installApplication();
@@ -184,7 +195,7 @@ class createappCommand extends JelixScriptCommand {
                 $cmd = JelixScript::getCommand('createmodule', $this->config);
                 $cmd->initOptParam(array('-addinstallzone'=>true), array('module'=>$param['modulename']));
                 $cmd->run();
-                $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param);
+                $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, "Main template");
             } catch (Exception $e) {
                 $moduleok = false;
                 echo "The module has not been created because of this error: ".$e->getMessage()."\nHowever the application has been created\n";

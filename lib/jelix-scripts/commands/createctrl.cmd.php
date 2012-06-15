@@ -52,8 +52,8 @@ class createctrlCommand extends JelixScriptCommand {
        } else {
             $type = 'classic';
        }
-       
-       $agfilename.=strtolower($this->_parameters['name']).'.'. $type .'.php';
+       $ctrlname = strtolower($this->_parameters['name']).'.'. $type .'.php';
+       $agfilename.= $ctrlname;
 
        $method = $this->getParam('method','index');
 
@@ -71,10 +71,7 @@ class createctrlCommand extends JelixScriptCommand {
                 $tplname = 'module/controller.tpl';
             }
        }
-       if($this->createFile($agfilename,$tplname,$param)) {
-          echo "Controller created successfully\n";
-       }
-
+       $this->createFile($agfilename, $tplname, $param, 'Controller');
     }
 }
 
