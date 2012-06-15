@@ -210,7 +210,7 @@ abstract class JelixScriptCommand {
    }
 
    protected function verbose() {
-      return $this->getOption('-v');
+      return ($this->getOption('-v') || $this->config->verboseMode);
    }
 
    /**

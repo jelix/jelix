@@ -193,7 +193,9 @@ class createappCommand extends JelixScriptCommand {
         if (!$this->getOption('-nodefaultmodule')) {
             try {
                 $cmd = JelixScript::getCommand('createmodule', $this->config);
-                $cmd->initOptParam(array('-addinstallzone'=>true), array('module'=>$param['modulename']));
+                $options = $this->getCommonActiveOption();
+                $options['-addinstallzone'] = true;
+                $cmd->initOptParam($options, array('module'=>$param['modulename']));
                 $cmd->run();
                 $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, "Main template");
             } catch (Exception $e) {
@@ -205,12 +207,14 @@ class createappCommand extends JelixScriptCommand {
         if ($this->getOption('-withcmdline')) {
             if(!$this->getOption('-nodefaultmodule') && $moduleok){
                 $agcommand = JelixScript::getCommand('createctrl', $this->config);
-                $options = array('-cmdline'=>true);
-                $agcommand->initOptParam($options,array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
+                $options = $this->getCommonActiveOption();
+                $options['-cmdline'] = true;
+                $agcommand->initOptParam($options, array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
                 $agcommand->run();
             }
             $agcommand = JelixScript::getCommand('createentrypoint', $this->config);
-            $options = array('-type'=>'cmdline');
+            $options = $this->getCommonActiveOption();
+            $options['-type'] = 'cmdline';
             $parameters = array('name'=>$param['modulename']);
             $agcommand->initOptParam($options, $parameters);
             $agcommand->run();
