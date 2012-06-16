@@ -165,10 +165,10 @@ class testjDateTime extends UnitTestCase {
         $this->assertEqual(new jDateTime(2007, 12, 26, 5, 17, 25), $dt);
 
         $dt->setFromString("2007-12-26T05:17:25+01:30", jDateTime::ISO8601_FORMAT);
-        $this->assertEqual(new jDateTime(2007, 12, 26, 6, 47, 25), $dt);
+        $this->assertEqual(new jDateTime(2007, 12, 26, 3, 47, 25), $dt);
 
         $dt->setFromString("2007-12-26T05:17:25-01:15", jDateTime::ISO8601_FORMAT);
-        $this->assertEqual(new jDateTime(2007, 12, 26, 4, 2, 25), $dt);
+        $this->assertEqual(new jDateTime(2007, 12, 26, 6, 32, 25), $dt);
 
         $dt->setFromString("1198642645", jDateTime::TIMESTAMP_FORMAT);
         $this->assertEqual(new jDateTime(2007, 12, 26, 5, 17, 25), $dt);
@@ -178,5 +178,22 @@ class testjDateTime extends UnitTestCase {
             jDateTime::RFC822_FORMAT);
         $this->assertEqual(new jDateTime(2007, 12, 26, 4, 17, 25), $dt);
     }
+    
+    function testOffsetTimeZone() {
+        
+        $dt = new jDateTime();
+        
+        $dt->setFromString('2012-04-15T12:00:00+02:00', jDateTime::ISO8601_FORMAT);
+        $this->assertEqual(2012, $dt->year);
+        $this->assertEqual(4, $dt->month);
+        $this->assertEqual(15, $dt->day);
+        $this->assertEqual(10, $dt->hour);
+        $this->assertEqual(0, $dt->minute);
+        $this->assertEqual(0, $dt->second);
+
+        $utc = $dt->toString(jDateTime::ISO8601_FORMAT);
+        
+        $this->assertEqual('2012-04-15T10:00:00Z', $utc);
+        
+    }   
 }
-?>
