@@ -124,4 +124,10 @@ class mainCtrl extends jController {
         return $resp;
     }
 
+  function sitemap() {
+     $resp = $this->getResponse('sitemap');
+     $resp->importFromUrlsXml();
+     return $resp;
+  }
+
 }
