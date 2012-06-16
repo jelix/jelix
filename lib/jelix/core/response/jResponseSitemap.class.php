@@ -52,13 +52,13 @@ class jResponseSitemap extends jResponse {
     * List of URLs for a sitemap index file
     * @var array()
     */
-    protected $urlSitemap;
+    protected $urlSitemap = array();
 
     /**
     * List of URLs for a sitemap file
     * @var array()
     */
-    protected $urlList;
+    protected $urlList = array();
 
     /**
      * The template container
@@ -94,7 +94,7 @@ class jResponseSitemap extends jResponse {
         $this->sendHttpHeaders();
         echo '<?xml version="1.0" encoding="UTF-8"?>', "\n";
 
-        if (!is_null($this->urlSitemap)) {
+        if (count($this->urlSitemap)) {
             echo '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' . "\n";
             $this->_headSent = true;
             $this->contentTpl = 'jelix~sitemapindex';
@@ -111,7 +111,7 @@ class jResponseSitemap extends jResponse {
             echo $this->getFormatedErrorMsg();
         }
 
-        if (!is_null($this->urlSitemap)) {
+        if (count($this->urlSitemap)) {
             echo '</sitemapindex>';
         } else {
             echo '</urlset>';
@@ -252,23 +252,34 @@ class jResponseSitemap extends jResponse {
 
         $urls = array();
         $significantFile = $gJConfig->urlengine['significantFile'];
-        $entryPoint = $gJConfig->urlengine['defaultEntrypoint'];
-        $snp = $gJConfig->urlengine['urlScriptIdenc'];
+        $basePath = $gJConfig->urlengine['basePath'];
+        $epExt = ($gJConfig->urlengine['multiview']?$gJConfig->urlengine['entrypointExtension']:'');
 
-        $file = JELIX_APP_TEMP_PATH.'compiled/urlsig/' . $significantFile .
-                '.' . rawurlencode($entryPoint) . '.entrypoint.php';
+        $file = JELIX_APP_TEMP_PATH.'compiled/urlsig/' . $significantFile . '.creationinfos.php';
 
         if (file_exists($file)) {
             require $file;
-            $dataParseUrl = $GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
-            foreach ($dataParseUrl as $k => $infoparsing) {
-                if ($k == 0) {
+            foreach ($GLOBALS['SIGNIFICANT_CREATEURL'] as $selector => $createinfo) {
+                if ($createinfo[0] != 1 && $createinfo[0] != 4) {
                     continue;
                 }
-                // it is not really relevant to get URL that are not complete
-                // but it is difficult to know automatically what are real URLs
-                if (preg_match('/^([^\(]*)/', substr($infoparsing[2], 2, -2), $matches)) {
-                    $urls[] = $matches[1];
+                if ($createinfo[0] == 4) {
+                    foreach ($createinfo as $k => $createinfo2) {
+                        if ($k == 0) continue;
+
+                        if ($createinfo2[2] == true // https needed -> we don't take this url. FIXME
+                         ||count($createinfo2[3]) ) { // there are some dynamique parameters, we don't take it this we cannot guesse dynamic parameters
+                            continue;
+                        }
+                        $urls[] = $basePath.($createinfo2[1]?$createinfo2[1].$epExt:'').$createinfo2[5];
+                    }
+                }
+                else if ($createinfo[2] == true // https needed -> we don't take this url. FIXME
+                         ||  count($createinfo[3]) ) { // there are some dynamique parameters, we don't take it this we cannot guesse dynamic parameters
+                    continue;
+                }
+                else {
+                    $urls[] = $basePath.($createinfo[1]?$createinfo[1].$epExt:'').$createinfo[5];
                 }
             }
         }
