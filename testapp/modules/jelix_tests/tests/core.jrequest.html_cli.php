@@ -37,6 +37,7 @@ class UTjrequest extends jUnitTestCase {
         $conf->urlengine['basePath'] = '/';
         $conf->responses=array();
         $conf->_coreResponses=array();
+        $conf->availableLocales = implode(',', $conf->availableLocales);
     }
 
     function tearDown() {

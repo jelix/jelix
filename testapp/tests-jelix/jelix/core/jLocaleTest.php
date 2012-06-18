@@ -36,6 +36,13 @@ class jLocaleTest extends PHPUnit_Framework_TestCase {
 
     function testGetCorrespondingLocale() {
         jApp::config()->availableLocales = array('en_US');
+
+        $this->assertEquals(array('en'=>'en_EN'), jApp::config()->langToLocale);
+        $this->assertEquals('', jLocale::getCorrespondingLocale('en'));
+
+        jApp::config()->langToLocale = array('en'=>'en_US');
+        $this->assertEquals('en_US', jLocale::getCorrespondingLocale('en'));
+        jApp::config()->langToLocale = array();
         $this->assertEquals('en_US', jLocale::getCorrespondingLocale('en'));
         $this->assertEquals('en_US', jLocale::getCorrespondingLocale('en_US'));
         $this->assertEquals('en_US', jLocale::getCorrespondingLocale('en_GB'));

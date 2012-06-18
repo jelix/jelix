@@ -270,7 +270,7 @@ class significantUrlEngine implements jIUrlEngine {
                             $typeStatic = $v[1];
                             $v = substr($v,2);
                             if ($typeStatic == 'l')
-                                jApp::config()->locale = $v.'_'.strtoupper($v);
+                                jApp::config()->locale = jLocale::langToLocale($v);
                             else if ($typeStatic == 'L')
                                 jApp::config()->locale = $v;
                         }
@@ -291,7 +291,7 @@ class significantUrlEngine implements jIUrlEngine {
                                 if ($escapes[$k] & 4) {
                                     $v = $matches[$k];
                                     if (preg_match('/^\w{2,3}$/', $v, $m))
-                                        jApp::config()->locale = $v.'_'.strtoupper($v);
+                                        jApp::config()->locale = jLocale::langToLocale($v);
                                     else {
                                         jApp::config()->locale = $v;
                                         $params[$name] = substr($v, 0, strpos('_'));
@@ -300,7 +300,7 @@ class significantUrlEngine implements jIUrlEngine {
                                 else if ($escapes[$k] & 8) {
                                     $v = $matches[$k];
                                     if (preg_match('/^\w{2,3}$/', $v, $m)) {
-                                        jApp::config()->locale = $params[$name] = $v.'_'.strtoupper($v);
+                                        jApp::config()->locale = $params[$name] = jLocale::langToLocale($v);
                                     }
                                     else
                                         jApp::config()->locale = $v;
@@ -432,7 +432,7 @@ class significantUrlEngine implements jIUrlEngine {
                             if ($paramStatic === null)
                                 $paramStatic = jApp::config()->locale;
                             else if (preg_match('/^\w{2,3}$/', $paramStatic, $m)) { // if the value is a lang instead of locale, translate it
-                                $paramStatic .= '_'.strtoupper($paramStatic);
+                                $paramStatic = jLocale::langToLocale($paramStatic);
                             }
                         }
                     }
@@ -508,7 +508,7 @@ class significantUrlEngine implements jIUrlEngine {
                         $value = jApp::config()->locale;
                     }
                     else if (preg_match('/^\w{2,3}$/', $value, $m)) {
-                        $value = $value.'_'.strtoupper($value);
+                        $value = jLocale::langToLocale($value);
                     }
                 }
                 else {
