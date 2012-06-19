@@ -119,7 +119,7 @@ class jSelectorLoc extends jSelectorModule {
         // and if it is this message, it means that the error message doesn't exist
         // in the specific lang or charset, so we retrieve it in en_EN language and UTF-8 charset
         if($this->toString() == 'jelix~errors.selector.invalid.target'){
-            $l = 'en_EN';
+            $l = 'en_US';
             $c = 'UTF-8';
         }
         else{

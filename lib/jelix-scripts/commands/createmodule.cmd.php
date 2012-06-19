@@ -133,7 +133,7 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'daos/');
             $this->createDir($path.'forms/');
             $this->createDir($path.'locales/');
-            $this->createDir($path.'locales/en_EN/');
+            $this->createDir($path.'locales/en_US/');
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
             $this->createFile($path.'install/install.php','module/install.tpl',$param);
@@ -206,7 +206,7 @@ class createmoduleCommand extends JelixScriptCommand {
         if ($this->getOption('-admin')) {
             $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param);
             $this->createFile($path.'events.xml', 'module/events.xml.tpl', $param);
-            file_put_contents($path.'locales/en_EN/interface.UTF-8.properties', 'menu.item='.$module);
+            file_put_contents($path.'locales/en_US/interface.UTF-8.properties', 'menu.item='.$module);
             file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);
         }
 

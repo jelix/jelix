@@ -60,7 +60,7 @@ class createformCommand extends JelixScriptCommand {
             $this->createDir($locale_filename_fr);
             $locale_filename_fr.=strtolower($this->_parameters['form']).'.UTF-8.properties';
 
-            $locale_filename_en = $path.'locales/en_EN/';
+            $locale_filename_en = $path.'locales/en_US/';
             $this->createDir($locale_filename_en);
             $locale_filename_en.=strtolower($this->_parameters['form']).'.UTF-8.properties';
             $submit="\n\n<submit ref=\"_submit\">\n\t<label locale='".$locale_base."ok' />\n</submit>";
