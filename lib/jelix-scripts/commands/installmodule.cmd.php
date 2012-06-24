@@ -10,10 +10,11 @@
 class installmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'installmodule';
-    public  $allowed_options=array('-v'=>false, '-p'=>true);
+    public  $allowed_options=array('-p'=>true);
     public  $allowed_parameters=array('module'=>true,'...'=>false);
 
-    public  $syntaxhelp = '[-v] [-p "param1;param2=value;..."] [-ep ENTRYPOINT] MODULE [MODULE [....]]';
+    public  $syntaxhelp = '[-p "param1;param2=value;..."] MODULE [MODULE [....]]';
+
     public  $help = '';
 
     function __construct($config){
@@ -23,19 +24,17 @@ class installmoduleCommand extends JelixScriptCommand {
     Si un point d'entrée est indiqué, le module ne sera installé que pour
     ce point d'entrée.
 
-    Option -v : mode verbeux.
-           -p : indique des paramètres d'installation, valable que si un seul
-                module est indiqué
-           -ep : spécifie un point d'entrée pour l'installation
+    Option:
+        -p : indique des paramètres d'installation, valable que si un seul
+             module est indiqué
     ",
             'en'=>"
     Install or upgrade given modules even if there are not activated.
     if an entry point is indicated, the module is installed only for this
     entry point.
 
-    Option -v: verbose mode.
-           -p: parameters for the installation, valid if only one module is indicated
-           -ep: specify an entrypoint for the installation
+    Option:
+        -p: parameters for the installation, valid if only one module is indicated
     ",
     );
         parent::__construct($config);
@@ -67,7 +66,7 @@ class installmoduleCommand extends JelixScriptCommand {
             }
         }
 
-        if ($this->getOption("-v"))
+        if ($this->verbose())
             $reporter = new textInstallReporter();
         else
             $reporter = new textInstallReporter('error');
