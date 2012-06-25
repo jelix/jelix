@@ -259,7 +259,6 @@ cd testapp/modules/jelix_tests/tests/
   jdb.mysql.html_cli.php
   jdb.mysqli.html_cli.php
   jdb.pgsql.html_cli.php
-  jdb.sqlite.html_cli.php
   jdbschema.mysql.html_cli.php
   jdbtools.html_cli.php
   jdbtools.mysql.html_cli.php
@@ -348,6 +347,7 @@ cd testapp/tests-jelix/jelix/utils/
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
+  jDb_sqliteTest.php
 cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_dbTest.php
   jkvdb_fileTest.php
