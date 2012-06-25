@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_profile  extends PHPUnit_Framework_TestCase
+class jDb_profilesTest  extends PHPUnit_Framework_TestCase
 {
     public static function setUpBeforeClass() {
         jelix_init_test_env();

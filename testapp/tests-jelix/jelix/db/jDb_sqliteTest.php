@@ -4,20 +4,32 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjDbSqlite extends jUnitTestCase {
+class jDb_sqliteTest extends PHPUnit_Framework_TestCase {
 
-    function skip() {
-        try{
-            $prof = jProfiles::get('jdb', 'testapp_sqlite', true);
+    public static function setUpBeforeClass() {
+        jelix_init_test_env();
+    }
+
+    public function setUp (){
+        try {
+            jProfiles::get('jdb', 'testapp_sqlite', true);
         }
-        catch (Exception $e) {
-            $this->skipIf(true, 'UTjDbSqlite cannot be run : no sqlite profile');
+        catch(Exception $e) {
+            $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_sqlite profile');
+            return;
         }
+
+        if (!function_exists('sqlite_open')) {
+            $this->markTestSkipped(get_class($this).' cannot be run: sqlite extension is not installed');
+        }
+    }
+
+    public function tearDown() {
     }
 
     function testTools(){
