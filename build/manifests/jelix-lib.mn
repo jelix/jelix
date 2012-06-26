@@ -472,12 +472,6 @@ cd lib/jelix/plugins/coord/traceexec
   plugin.xml
   traceexec.coord.ini.php.dist
 
-cd lib/jelix/plugins/db/intuition
-  intuition.dbconnection.php
-  intuition.dbresultset.php
-  intuition.dbtools.php
-  intuition.daobuilder.php
-
 cd lib/jelix/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php

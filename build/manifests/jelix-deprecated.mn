@@ -87,6 +87,7 @@ cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
 
 rmd lib/jelix/plugins/cache/memcached
+rmd  lib/jelix/plugins/db/intuition
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
