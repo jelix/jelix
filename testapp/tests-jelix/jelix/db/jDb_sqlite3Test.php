@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_sqliteTest extends jUnitTestCase {
+class jDb_sqlite3Test extends jUnitTestCase {
 
     public static function setUpBeforeClass() {
         jelix_init_test_env();
@@ -17,15 +17,15 @@ class jDb_sqliteTest extends jUnitTestCase {
 
     public function setUp (){
         try {
-            jProfiles::get('jdb', 'testapp_sqlite', true);
+            jProfiles::get('jdb', 'testapp_sqlite3', true);
         }
         catch(Exception $e) {
-            $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_sqlite profile');
+            $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_sqlite3 profile');
             return;
         }
 
-        if (!function_exists('sqlite_open')) {
-            $this->markTestSkipped(get_class($this).' cannot be run: sqlite extension is not installed');
+        if (!class_exists('SQLite3')) {
+            $this->markTestSkipped(get_class($this).' cannot be run: sqlite3 extension is not installed');
         }
     }
 
@@ -33,7 +33,7 @@ class jDb_sqliteTest extends jUnitTestCase {
     }
 
     function testTools(){
-        $tools = jDb::getConnection('testapp_sqlite')->tools();
+        $tools = jDb::getConnection('testapp_sqlite3')->tools();
         $fields = $tools->getFieldList('products');
         $structure = '<array>
     <object key="id" class="jDbFieldProperties">
