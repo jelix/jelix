@@ -235,26 +235,6 @@ class jCoordinator {
         return $ctrl;
     }
 
-
-    /**
-     * instancy a response object corresponding to the default response type
-     * of the current resquest.
-     * Deprecated. use $request->getResponse() instead.
-     * @param boolean $originalResponse TRUE to get the original, non overloaded response
-     * @deprecated since 1.3
-     */
-    public function initDefaultResponseOfRequest($originalResponse = false){
-        try {
-            $this->request->getResponse('', $originalResponse);
-        }
-        catch (Exception $e) {
-            if (!$originalResponse)
-                $this->initDefaultResponseOfRequest(true);
-            else
-                throw $e;
-        }
-    }
-
     /**
      * Error handler using a response object to return the error.
      * Replace the default PHP error handler.
@@ -378,23 +358,5 @@ class jCoordinator {
     */
     public function isPluginEnabled ($pluginName){
         return isset ($this->plugins[strtolower ($pluginName)]);
-    }
-
-    /**
-    * deprecated.  use jApp::isModuleEnabled() instead
-    * @deprecated
-    */
-    public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        trigger_error("jCoordinator::isModuleEnabled() is deprecated. Use jApp::isModuleEnabled() instead", E_USER_NOTICE);
-        return jApp::isModuleEnabled($moduleName, $includingExternal);
-    }
-
-    /**
-    * deprecated.  use jApp::getModulePath() instead
-    * @deprecated
-     */
-    public function getModulePath($module, $includingExternal = false){
-        trigger_error("jCoordinator::getModulePath() is deprecated. Use jApp::getModulePath() instead", E_USER_NOTICE);
-        return jApp::getModulePath($module, $includingExternal);
     }
 }

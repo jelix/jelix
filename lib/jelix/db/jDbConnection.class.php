@@ -191,14 +191,6 @@ abstract class jDbConnection {
     public function encloseName ($fieldName) {
         return $fieldName;
     }
-    
-    /**
-     * @deprecated since 1.1.2
-     * @see encloseName
-     */
-    public function encloseFieldName ($fieldName) {
-        return $this->encloseName($fieldName);
-    }
 
     /**
       * Prefix the given table with the prefix specified in the connection's profile

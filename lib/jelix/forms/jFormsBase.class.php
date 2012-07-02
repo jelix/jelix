@@ -604,15 +604,6 @@ abstract class jFormsBase {
     }
 
     /**
-     * DEPRECATED. use initModifiedControlsList() instead.
-     * @since 1.1b1
-     * @deprecated 1.1rc1
-     */
-    public function resetModifiedControlsList(){
-        $this->initModifiedControlsList();
-    }
-
-    /**
      * returns the old values of the controls which have been modified since
      * the call of the method initModifiedControlsList()
      * @return array key=control id,  value=old value
