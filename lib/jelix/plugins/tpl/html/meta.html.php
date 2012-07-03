@@ -43,10 +43,10 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $resp->addJSLink($param,$params,true);
             break;
         case 'jsie7':
-            $gJCoord->response->addJSLink($param,$params,'IE 7');
+            $resp->addJSLink($param,$params,'IE 7');
             break;
         case 'jsltie7':
-            $gJCoord->response->addJSLink($param,$params,'lt IE 7');
+            $resp->addJSLink($param,$params,'lt IE 7');
             break;
         case 'cssie':
             $resp->addCSSLink($param,$params,true);
