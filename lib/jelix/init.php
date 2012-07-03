@@ -147,22 +147,6 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
 /**
- * The main object of Jelix which process all things
- * @global jCoordinator $gJCoord
- * @name $gJCoord
- * @deprecated use jApp::coord() instead
- */
-$gJCoord = null;
-
-/**
- * Object that contains all configuration values
- * @global stdobject $gJConfig
- * @name $gJConfig
- * @deprecated use jApp::config() instead
- */
-$gJConfig = null;
-
-/**
  * contains path for __autoload function
  * @global array $gLibPath
  * @name $gLibPath

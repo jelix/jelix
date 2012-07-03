@@ -39,7 +39,7 @@ world
 
     public function testTemplateWithLocale() {
 
-        $GLOBALS['gJConfig']->locale = 'en_EN';
+        jApp::config()->locale = 'en_EN';
         $template = 'hello
 {@jelix_tests~tests1.first.locale@}
 {assign $value="third"}

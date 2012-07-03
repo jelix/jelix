@@ -77,9 +77,6 @@ class jCoordinator {
         if ($configFile)
             jApp::loadConfig($configFile, $enableErrorHandler);
 
-        // temporary init. Remove this line when JELIX_APP_* and $gJConfig support will be removed completely from Jelix
-        jApp::initLegacy();
-
         $this->_loadPlugins();
     }
 

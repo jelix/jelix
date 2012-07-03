@@ -140,10 +140,8 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             }
         }
 
-        // it will initialize deprecated global variables $gJCoord $gJConfig. it could be needed by tests
-        $config = jConfigCompiler::readAndCache($this->epInfo->configFile, null, $this->entryPoint);
-        $coord = new jCoordinator($config, false);
-
+        jApp::setConfig(jConfigCompiler::readAndCache($this->epInfo->configFile, null, $this->entryPoint));
+        jApp::setCoord(new jCoordinator('', false));
     }
 
     protected function getAllModulesTestSuites() {

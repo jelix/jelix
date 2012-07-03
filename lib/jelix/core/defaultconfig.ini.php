@@ -420,12 +420,12 @@ disableCache = off
 ; the url from which we can display images (basepath excluded). default = current host
 ; if you set this parameter, you MUST set src_path
 src_url=
-; the path on the file system, to the directory where images are stored (the www directory of the other application. default = JELIX_APP_WWW_PATH
+; the path on the file system, to the directory where images are stored (the www directory of the other application. default = jApp::wwwPath()
 src_path=
 ; the url from which we can display images cache. default = current host + basepath + 'cache/images/'
 ; if you set this parameter, you MUST set cache_path
 cache_url=
-; the path on the file system, to the directory where images cache are stored. default = JELIX_APP_WWW_PATH
+; the path on the file system, to the directory where images cache are stored. default = jApp::wwwPath()
 cache_path=
 
 
