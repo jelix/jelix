@@ -378,7 +378,7 @@ class jTpl {
 
             $cachePath .= $outputtype.'_'.$this->_templateName.'.php';
 #ifnot JTPL_STANDALONE
-            $mustCompile = $GLOBALS['gJConfig']->compilation['force'] || !file_exists($cachePath);
+            $mustCompile = jApp::config()->compilation['force'] || !file_exists($cachePath);
 #else
             $mustCompile = jTplConfig::$compilationForce || !file_exists($cachePath);
 #endif
