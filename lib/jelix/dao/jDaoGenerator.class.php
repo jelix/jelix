@@ -1049,15 +1049,14 @@ class jDaoGenerator {
 
     protected function _preparePHPCallbackExpr($field){
         $type = strtolower($field->unifiedType);
-        // TODO PHP53: generate a closure instead of create_function
         switch($type){
             case 'integer':
-                return 'create_function(\'$__e\',\'return intval($__e);\')';
+                return 'function($__e){return intval($__e);}';
             case 'double':
             case 'float':
             case 'numeric':
             case 'decimal':
-                return 'create_function(\'$__e\',\'return jDb::floatToStr($__e);\')';
+                return 'function($__e){return jDb::floatToStr($__e);}';
             case 'boolean':
                 return 'array($this, \'_callbackBool\')';
             default:
