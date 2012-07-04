@@ -148,12 +148,6 @@ class PreProcTestCase extends UnitTestCase {
         ),
     );
 
-
-
-    function __construct() {
-        $this->UnitTestCase();
-    }
-
     function setUp() {
     }
 
