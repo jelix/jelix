@@ -327,25 +327,12 @@ class jInstallCheck {
         else
             $indexconfig = array();
 
-        if ((isset ($defaultconfig['coordplugins']['magicquotes']) && $defaultconfig['coordplugins']['magicquotes'] == 1) ||
-            (isset ($indexconfig['coordplugins']['magicquotes']) && $indexconfig['coordplugins']['magicquotes'] == 1)) {
-            if(ini_get('magic_quotes_gpc') == 1){
-                $this->notice('ini.magic_quotes_gpc_with_plugin');
-            }
-            else {
-                $this->error('ini.magicquotes_plugin_without_php');
-                $ok=false;
-            }
-        }
-        else {
 #endif
-            if(ini_get('magic_quotes_gpc') == 1){
-                $this->warning('ini.magic_quotes_gpc');
-                $ok=false;
-            }
-#ifnot STANDALONE_CHECKER
+        if(ini_get('magic_quotes_gpc') == 1){
+            $this->error('ini.magic_quotes_gpc');
+            $ok=false;
         }
-#endif
+
         if(ini_get('magic_quotes_runtime') == 1){
             $this->error('ini.magic_quotes_runtime');
             $ok=false;

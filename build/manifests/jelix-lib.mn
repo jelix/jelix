@@ -433,10 +433,6 @@ cd lib/jelix/plugins/cache/memcache
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
 
-cd lib/jelix/plugins/coord/magicquotes
-! magicquotes.coord.php
-  plugin.xml
-
 cd lib/jelix/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
 ! autolocale.coord.php
