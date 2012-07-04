@@ -131,7 +131,7 @@ class jDaoGenerator {
         }
 
         $src[] = '   public function getSelector() { return "'.$this->_daoId.'"; }';
-        // TODO PHP 5.3 : we could remove that
+
         $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
         $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
         $src[] = '}';
@@ -171,11 +171,6 @@ class jDaoGenerator {
         $src[] = '   parent::__construct($conn);';
         $src[] = '   $this->_fromClause = \''.$this->sqlFromClause.'\';';
         $src[] = '}';
-
-        // cannot put this methods directly into jDaoBase because self cannot refer to a child class
-        // FIXME PHP53, we could use the static keyword instead of self
-        $src[] = '   public function getProperties() { return self::$_properties; }';
-        $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
 
         $src[] = ' ';
         $src[] = ' protected function _getPkWhereClauseForSelect($pk){';
