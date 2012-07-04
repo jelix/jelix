@@ -11,5 +11,4 @@ jApp::setEnv('jelixtests');
 function jelix_init_test_env() {
     $config = jConfigCompiler::read('index/config.ini.php', true, true, 'index.php');
     jApp::setConfig($config);
-    jApp::initLegacy();
 }

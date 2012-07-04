@@ -94,7 +94,6 @@ class createappCommand extends JelixScriptCommand {
         $this->config->initAppPaths($appPath);
 
         jApp::setEnv('jelix-scripts');
-        jApp::initLegacy();
 
         JelixScript::checkTempPath();
 

@@ -53,7 +53,6 @@ if ($command->applicationRequirement == JelixScriptCommand::APP_MUST_NOT_EXIST) 
 }
 
 jApp::setEnv('jelix-scripts');
-jApp::initLegacy();
 
 JelixScript::checkTempPath();
 
