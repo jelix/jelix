@@ -29,8 +29,8 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.2)",
-    '5.2'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.3)",
+    '5.3'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",

@@ -15,8 +15,8 @@ $BUILD_OPTIONS = array(
     '',                                             // regexp for the value or empty=all (only for non-boolean options)
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jTpl will be generated (by default, the target is php 5.2)",
-    '5.2'
+    "PHP5 version for which jTpl will be generated (by default, the target is php 5.3)",
+    '5.3'
     ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
