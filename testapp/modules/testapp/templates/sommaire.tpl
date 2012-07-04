@@ -9,6 +9,7 @@
    <li><a href="{jurl 'main:generateerror'}">error on a page</a></li>
    <li><a href="{jurl 'main:generatewarning'}">warning on a page</a></li>
    <li><a href="{jurl 'main:testminify'}">page using minify</a></li>
+   <li><a href="{jurl 'main:sitemap'}">sitemap</a></li>
 </ul>
 
 <h3>Unit tests</h3>

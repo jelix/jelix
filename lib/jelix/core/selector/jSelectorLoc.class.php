@@ -43,8 +43,8 @@ class jSelectorLoc extends jSelectorModule {
         if ($charset === null){
             $charset = jApp::config()->charset;
         }
-        if(strpos($locale,'_') === false){
-            $locale.='_'.strtoupper($locale);
+        if (strpos($locale,'_') === false) {
+            $locale = jLocale::langToLocale($locale);
         }
         $this->locale = $locale;
         $this->charset = $charset;
@@ -81,14 +81,16 @@ class jSelectorLoc extends jSelectorModule {
 
     protected function _createPath(){
 
-        if(!isset(jApp::config()->_modulesPathList[$this->module])){
+        if (!isset(jApp::config()->_modulesPathList[$this->module])) {
             if ($this->module == 'jelix')
                 throw new Exception('jelix module is not enabled !!');
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
         $locales = array($this->locale);
-        $lang = substr($this->locale,0,2);
+        $lang = substr($this->locale, 0, strpos($this->locale,'_'));
+        // FIXME we should drop support of such locales 'en_EN', and supports directory with lang name 'en'
+        // study impact of such changes
         $generic_locale = $lang.'_'.strtoupper($lang);
         if($this->locale !== $generic_locale)
             $locales[] = $generic_locale;
@@ -117,7 +119,7 @@ class jSelectorLoc extends jSelectorModule {
         // and if it is this message, it means that the error message doesn't exist
         // in the specific lang or charset, so we retrieve it in en_EN language and UTF-8 charset
         if($this->toString() == 'jelix~errors.selector.invalid.target'){
-            $l = 'en_EN';
+            $l = 'en_US';
             $c = 'UTF-8';
         }
         else{

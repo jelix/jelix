@@ -60,6 +60,36 @@
             <param name="path" type="path" />
         </url>
 
+        <url pathinfo="/url-with-lang/test1/:lang/:p1" module="jelix_tests" action="urlsig:lang1">
+            <param name="p1" />
+            <param name="lang" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test1bis/:lang/:p1" module="jelix_tests" action="urlsig:lang1bis">
+            <param name="p1" />
+            <param name="lang" type="locale" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test2/en/:p1" module="jelix_tests" action="urlsig:lang2">
+            <param name="p1" />
+            <static name="lang" value="en" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test2/fr/:p1" module="jelix_tests" action="urlsig:lang2">
+            <param name="p1" />
+            <static name="lang" value="fr" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test3/en/:p1" module="jelix_tests" action="urlsig:lang3">
+            <param name="p1" />
+            <static name="lang" value="en_US" type="locale" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test3/fr/:p1" module="jelix_tests" action="urlsig:lang3">
+            <param name="p1" />
+            <static name="lang" value="fr_FR" type="locale" />
+        </url>
+
     </classicentrypoint>
     <entrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig:url2">

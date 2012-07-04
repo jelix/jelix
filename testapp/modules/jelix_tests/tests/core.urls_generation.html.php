@@ -30,15 +30,12 @@ class UTCreateUrls extends UnitTestCase {
       $req->urlScriptPath = $this->oldUrlScriptPath;
       $req->params = $this->oldParams;
       $req->type = $this->oldRequestType;
-
       jApp::restoreContext();
       $_SERVER = $this->oldserver;
-
       jUrl::getEngine(true);
     }
 
-
-    protected function _doCompareUrl($title, $urlList,$trueResult ){
+    protected function _doCompareUrl($title, $urlList, $trueResult ){
         //$this->sendMessage($title);
         foreach($urlList as $k=>$urldata){
             try{
@@ -354,6 +351,133 @@ class UTCreateUrls extends UnitTestCase {
 
     }
 
+    function testSignificantEngineWithLang() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = true;
+        $conf->forceHTTPSPort = true;
+        $conf->urlengine = array(
+            'engine'=>'significant',
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'defaultEntrypoint'=>'index',
+            'entrypointExtension'=>'.php',
+            'notfoundAct'=>'jelix~notfound',
+            'significantFile'=>'urls.xml',
+            'checkHttpsOnParsing'=>true
+        );
+
+        jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+
+        $urlList = array();
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1', array('p1'=>'foo',  'lang'=>'fr'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1', array('p1'=>'foo',  'lang'=>'en'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1', array('p1'=>'foo',  'lang'=>'en_US'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang1', array('p1'=>'foo'));
+
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1bis', array('p1'=>'foo',  'lang'=>'fr_FR'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1bis', array('p1'=>'foo',  'lang'=>'en_US'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1bis', array('p1'=>'foo',  'lang'=>'en'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang1bis', array('p1'=>'foo'));
+
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang2', array('p1'=>'foo'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang2', array('p1'=>'foo'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang2', array('p1'=>'foo', 'lang'=>'en'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang2', array('p1'=>'foo', 'lang'=>'fr'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang2', array('p1'=>'foo', 'lang'=>'en_US'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang2', array('p1'=>'foo', 'lang'=>'fr_FR'));
+
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang3', array('p1'=>'foo'));
+        $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang3', array('p1'=>'foo'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang3', array('p1'=>'foo', 'lang'=>'en'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang3', array('p1'=>'foo', 'lang'=>'fr'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang3', array('p1'=>'foo', 'lang'=>'en_US'));
+        $urlList[] = array('en_US', 'jelix_tests~urlsig:lang3', array('p1'=>'foo', 'lang'=>'fr_FR'));
+
+        $trueResult = array(
+            "/index.php/url-with-lang/test1/fr/foo",
+            "/index.php/url-with-lang/test1/en/foo",
+            "/index.php/url-with-lang/test1/en/foo",
+            "/index.php/url-with-lang/test1/en/foo",
+
+            "/index.php/url-with-lang/test1bis/fr_FR/foo",
+            "/index.php/url-with-lang/test1bis/en_US/foo",
+            "/index.php/url-with-lang/test1bis/en_EN/foo", // FIXME
+            "/index.php/url-with-lang/test1bis/en_US/foo",
+
+            "/index.php/url-with-lang/test2/en/foo",
+            "/index.php/url-with-lang/test2/fr/foo",
+            "/index.php/url-with-lang/test2/en/foo",
+            "/index.php/url-with-lang/test2/fr/foo",
+            "/index.php/url-with-lang/test2/en/foo",
+            "/index.php/url-with-lang/test2/fr/foo",
+
+            "/index.php/url-with-lang/test3/en/foo",
+            "/index.php/url-with-lang/test3/fr/foo",
+            "/index.php/url-with-lang/test3/en/foo",
+            "/index.php/url-with-lang/test3/fr/foo",
+            "/index.php/url-with-lang/test3/en/foo",
+            "/index.php/url-with-lang/test3/fr/foo",
+
+         );
+
+
+        $this->_doCompareUrlLang("significant, multiview = false", $urlList, $trueResult);
+
+        $conf->urlengine['multiview']=true;
+        $trueResult=array(
+            "/index/url-with-lang/test1/fr/foo",
+            "/index/url-with-lang/test1/en/foo",
+            "/index/url-with-lang/test1/en/foo",
+            "/index/url-with-lang/test1/en/foo",
+
+            "/index/url-with-lang/test1bis/fr_FR/foo",
+            "/index/url-with-lang/test1bis/en_US/foo",
+            "/index/url-with-lang/test1bis/en_EN/foo", // FIXME
+            "/index/url-with-lang/test1bis/en_US/foo",
+
+            "/index/url-with-lang/test2/en/foo",
+            "/index/url-with-lang/test2/fr/foo",
+            "/index/url-with-lang/test2/en/foo",
+            "/index/url-with-lang/test2/fr/foo",
+            "/index/url-with-lang/test2/en/foo",
+            "/index/url-with-lang/test2/fr/foo",
+
+            "/index/url-with-lang/test3/en/foo",
+            "/index/url-with-lang/test3/fr/foo",
+            "/index/url-with-lang/test3/en/foo",
+            "/index/url-with-lang/test3/fr/foo",
+            "/index/url-with-lang/test3/en/foo",
+            "/index/url-with-lang/test3/fr/foo",
+
+        );
+
+        $this->_doCompareUrlLang("significant, multiview = true", $urlList,$trueResult);
+    }
+
+    protected function _doCompareUrlLang($title, $urlList, $trueResult ){
+        foreach($urlList as $k=>$urldata){
+            try{
+                jApp::config()->locale = $urldata[0];
+                $url = jUrl::get($urldata[1], $urldata[2]);
+                $this->assertEqual($url, $trueResult[$k], 'url '.$k.' - %s');
+            }catch(jExceptionSelector $e){
+                $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
+            }catch(jException $e){
+                $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
+            }catch(Exception $e){
+                $msgerr = '<br>generated exception, code='.$e->getCode().' msg='.$e->getMessage().' %s';
+                $this->sendMessage($msgerr);
+                throw $e;
+            }
+        }
+    }
 
     function testSignificantEngineError(){
 

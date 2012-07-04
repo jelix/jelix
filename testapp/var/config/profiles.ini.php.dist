@@ -55,6 +55,12 @@ password=
 driver=sqlite
 database="tests.sqlite"
 
+; to run tests with sqlite
+[jdb:testapp_sqlite3]
+driver=sqlite3
+database="tests.sqlite3"
+
+
 [jdb:testapp_mysqli]
 driver="mysqli"
 database="testapp"

@@ -189,6 +189,7 @@ class significantUrlEngine implements jIUrlEngine {
             }
 
             if (count($infoparsing) < 7) {
+                // an handler will parse the request URI
                 list($module, $action, $reg, $selectorHandler, $secondariesActions, $needHttps) = $infoparsing;
                 $url2 = clone $url;
                 if ($reg != '') {
@@ -231,13 +232,15 @@ class significantUrlEngine implements jIUrlEngine {
                 array( 0=>'module', 1=>'action', 2=>'regexp_pathinfo',
                 3=>array('year','month'), // list of dynamic value included in the url,
                                       // alphabetical ascendant order
-                4=>array(true, false),    // list of integers which indicates for each
-                                      // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
+                4=>array(0, 1..), // list of integer which indicates for each
+                                // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape, 4: lang, 8: locale
+
                 5=>array('bla'=>'whatIWant' ), // list of static values
                 6=>false or array('secondaries','actions')
                 */
                 list($module, $action, $reg, $dynamicValues, $escapes,
                      $staticValues, $secondariesActions, $needHttps) = $infoparsing;
+
                 if (isset($params['module']) && $params['module'] !== $module)
                     continue;
 
@@ -262,7 +265,17 @@ class significantUrlEngine implements jIUrlEngine {
 
                 // let's merge static parameters
                 if ($staticValues) {
-                    $params = array_merge ($params, $staticValues);
+                    foreach ($staticValues as $n=>$v) {
+                        if ($v[0] == '$') { // special statique value
+                            $typeStatic = $v[1];
+                            $v = substr($v,2);
+                            if ($typeStatic == 'l')
+                                jApp::config()->locale = jLocale::langToLocale($v);
+                            else if ($typeStatic == 'L')
+                                jApp::config()->locale = $v;
+                        }
+                        $params[$n] = $v;
+                    }
                 }
 
                 // now let's read dynamic parameters
@@ -270,11 +283,28 @@ class significantUrlEngine implements jIUrlEngine {
                     array_shift($matches);
                     foreach ($dynamicValues as $k=>$name){
                         if (isset($matches[$k])) {
-                            if ($escapes[$k]==2) {
+                            if ($escapes[$k] & 2) {
                                 $params[$name] = jUrl::unescape($matches[$k]);
                             }
                             else {
                                 $params[$name] = $matches[$k];
+                                if ($escapes[$k] & 4) {
+                                    $v = $matches[$k];
+                                    if (preg_match('/^\w{2,3}$/', $v, $m))
+                                        jApp::config()->locale = jLocale::langToLocale($v);
+                                    else {
+                                        jApp::config()->locale = $v;
+                                        $params[$name] = substr($v, 0, strpos('_'));
+                                    }
+                                }
+                                else if ($escapes[$k] & 8) {
+                                    $v = $matches[$k];
+                                    if (preg_match('/^\w{2,3}$/', $v, $m)) {
+                                        jApp::config()->locale = $params[$name] = jLocale::langToLocale($v);
+                                    }
+                                    else
+                                        jApp::config()->locale = $v;
+                                }
                             }
                         }
                     }
@@ -383,7 +413,31 @@ class significantUrlEngine implements jIUrlEngine {
                 // verify that given static parameters of the action correspond
                 // to those defined for this url
                 foreach ($urlinfo[$i][7] as $n=>$v) {
-                    if ($url->getParam($n,'') != $v) {
+                    // specialStatic are static values for which the url engine
+                    // can compare not only with a given url parameter value, but
+                    // also with a value stored some where (typically, a configuration value)
+                    $specialStatic = ($v[0] == '$');
+                    $paramStatic = $url->getParam($n, null);
+                    if ($specialStatic) { // special statique value
+                        $typePS = $v[1];
+                        $v = substr($v,2);
+                        if ($typePS == 'l') {
+                            if ($paramStatic === null)
+                                $paramStatic = jLocale::getCurrentLang();
+                            else if (preg_match('/^(\w{2,3})_\w{2,3}$/', $paramStatic, $m)) { // if the value is a locale instead of lang, translate it
+                                $paramStatic = $m[1];
+                            }
+                        }
+                        elseif ($typePS == 'L') {
+                            if ($paramStatic === null)
+                                $paramStatic = jApp::config()->locale;
+                            else if (preg_match('/^\w{2,3}$/', $paramStatic, $m)) { // if the value is a lang instead of locale, translate it
+                                $paramStatic = jLocale::langToLocale($paramStatic);
+                            }
+                        }
+                    }
+
+                    if ($paramStatic != $v) {
                         $ok = false;
                         break;
                     }
@@ -433,16 +487,32 @@ class significantUrlEngine implements jIUrlEngine {
         elseif($urlinfo[0] == 1) {
             $pi = $urlinfo[5];
             foreach ($urlinfo[3] as $k=>$param){
-                switch ($urlinfo[4][$k]) {
-                    case 2:
-                        $value = jUrl::escape($url->getParam($param,''),true);
-                        break;
-                    case 1:
-                        $value = str_replace('%2F', '/',urlencode($url->getParam($param,'')));
-                        break;
-                    default:
-                        $value = urlencode($url->getParam($param,''));
-                        break;
+                $typeParam = $urlinfo[4][$k];
+                $value = $url->getParam($param,'');
+                if ($typeParam & 2) {
+                    $value = jUrl::escape($value, true);
+                }
+                else if ($typeParam & 1) {
+                    $value = str_replace('%2F', '/', urlencode($value));
+                }
+                else if ($typeParam & 4) {
+                    if ($value == '') {
+                        $value = jLocale::getCurrentLang();
+                    }
+                    else if (preg_match('/^(\w{2,3})_\w{2,3}$/', $value, $m)) {
+                        $value = $m[1];
+                    }
+                }
+                else if ($typeParam & 8) {
+                    if ($value == '') {
+                        $value = jApp::config()->locale;
+                    }
+                    else if (preg_match('/^\w{2,3}$/', $value, $m)) {
+                        $value = jLocale::langToLocale($value);
+                    }
+                }
+                else {
+                    $value = urlencode($value);
                 }
                 $pi = str_replace(':'.$param, $value, $pi);
                 $url->delParam($param);

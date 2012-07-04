@@ -186,6 +186,32 @@ class jConfigCompiler {
                 $config->timeZone = "Europe/Paris";
         }
 
+        // lang to locale
+        $availableLocales = explode(',', $config->availableLocales);
+        foreach ($availableLocales as $locale) {
+            if (preg_match("/^([a-z]{2,3})_([A-Z]{2,3})$/", $locale, $m)) {
+                if (!isset($config->langToLocale[$m[1]]))
+                    $config->langToLocale[$m[1]] = $locale;
+            }
+            else {
+                throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '$locale' is not a locale code");
+            }
+        }
+
+        $locale = $config->locale;
+        if (preg_match("/^([a-z]{2,3})_([A-Z]{2,3})$/", $locale, $m)) {
+            $config->langToLocale[$m[1]] = $locale;
+        }
+        else {
+            throw new Exception("Error in the main configuration. Bad locale code in default locale -- config->locale: '$locale' is not a locale code");
+        }
+
+        if (!in_array($locale, $availableLocales)) {
+            array_unshift($availableLocales, $locale);
+        }
+
+        $config->availableLocales = $availableLocales;
+
         if($config->sessions['storage'] == 'files'){
             $config->sessions['files_path'] = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $config->sessions['files_path']);
         }
@@ -218,17 +244,6 @@ class jConfigCompiler {
                     throw new Exception('Error in the configuration file --  in loadClasses parameter, bad class selector: '.$sel);
             }
         }
-
-        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
-            if(!isset($m[2])){
-                $m[2] = $m[1];
-            }
-            $config->defaultLang = strtolower($m[1]);
-            $config->defaultCountry = strtoupper($m[2]);
-            $config->locale = $config->defaultLang.'_'.$config->defaultCountry;
-        }else{
-            throw new Exception("Syntax error in the locale parameter in config file -- $configFile", 14);
-        }*/
     }
 
     /**

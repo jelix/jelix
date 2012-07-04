@@ -3,8 +3,17 @@
 
 startModule = "jelix"
 startAction = "default:index"
+
+; the default locale used in the application
 locale = "en_US"
+
+; the locales available in the application
+availableLocales = "en_US"
+
+; the charset used in the application
 charset = "UTF-8"
+
+; the default theme
 theme = default
 
 ; set "1.0" or "1.1" if you want to force an HTTP version
@@ -14,7 +23,10 @@ httpVersion=""
 ; if empty, jelix will try to get the default timezone
 timeZone =
 
+; list of directories where the framework can find plugins
 pluginsPath = app:plugins/
+
+; list of directories where the framework can find modules
 modulesPath = lib:jelix-modules/,app:modules/
 
 ; Default domain name to use with jfullurl for example.
@@ -436,3 +448,5 @@ cache_path=
 ; This will be used by jUrl::getRootUrl() and jTpl's {jrooturl}
 jelix.cache=cache/
 
+[langToLocale]
+; overrides of lang_to_locale.ini.php
