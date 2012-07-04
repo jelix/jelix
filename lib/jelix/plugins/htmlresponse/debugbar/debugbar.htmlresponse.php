@@ -38,7 +38,7 @@ interface jIDebugbarPlugin {
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp errors.debugbar.php
 #else
-require_once(dirname(__FILE__).'/errors.debugbar.php');
+require_once(__DIR__.'/errors.debugbar.php');
 #endif
 
 

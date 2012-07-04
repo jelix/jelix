@@ -9,9 +9,9 @@
  * @contributor  Christophe Thiriot (for some code imported from his jphpunit module)
  */
 
-require_once(dirname(__FILE__).'/JelixTestSuite.class.php');
-require_once(dirname(__FILE__).'/junittestcase.class.php');
-require_once(dirname(__FILE__).'/junittestcasedb.class.php');
+require_once(__DIR__.'/JelixTestSuite.class.php');
+require_once(__DIR__.'/junittestcase.class.php');
+require_once(__DIR__.'/junittestcasedb.class.php');
 require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
 
 
@@ -59,7 +59,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
 
         $filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
-        $dir = dirname(__FILE__);
+        $dir = __DIR__;
         $filter->addFileToBlacklist($dir.'/JelixTestSuite.class.php', 'PHPUNIT');
         $filter->addFileToBlacklist($dir.'/junittestcase.class.php', 'PHPUNIT');
         $filter->addFileToBlacklist($dir.'/junittestcasedb.class.php', 'PHPUNIT');

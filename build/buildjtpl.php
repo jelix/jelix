@@ -59,12 +59,12 @@ $BUILD_OPTIONS = array(
     ),
 );
 
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
 Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 
 $IS_NIGHTLY = (strpos($JTPL_VERSION,'SERIAL') !== false);
 
@@ -122,7 +122,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);

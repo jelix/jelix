@@ -46,7 +46,7 @@ if(!function_exists('jelix_version')){
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 #endif
 
-define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
+define ('JELIX_LIB_PATH',         __DIR__.'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
 define ('LIB_PATH',               dirname(JELIX_LIB_PATH).'/');

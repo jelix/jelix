@@ -52,7 +52,7 @@ $BUILD_OPTIONS = array(
     '',
     ),
 );
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
@@ -65,7 +65,7 @@ $TODAY = date('Y-m-d H:i');
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $VERSION = preg_replace('/\s+/m', '', $VERSION);
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
 
@@ -118,7 +118,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$APPNAME);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);
