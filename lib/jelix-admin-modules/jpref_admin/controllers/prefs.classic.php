@@ -24,6 +24,7 @@ class prefsCtrl extends jController {
         $tpl = new jTpl();
         $tpl->assign('prefs',jPrefManager::getAllPreferences());
         $rep->body->assign('MAIN', $tpl->fetch('prefs_index'));
+        $rep->body->assign('selectedMenuItem','pref');
 
         return $rep;
     }
@@ -74,6 +75,7 @@ class prefsCtrl extends jController {
         $tpl->assign('id', $id);
         $tpl->assign('field', $pref->type);
         $rep->body->assign('MAIN', $tpl->fetch('pref_edit'));
+        $rep->body->assign('selectedMenuItem','pref');
         
         return $rep;
     }
