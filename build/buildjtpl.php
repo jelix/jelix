@@ -45,15 +45,15 @@ $BUILD_OPTIONS = array(
     false,
     '1',
     ),
-'PHP52'=> array(
-    false,
-    false,
-    ),
 'PHP53'=> array(
     false,
     false,
     ),
-'PHP53ORMORE'=> array(
+'PHP54'=> array(
+    false,
+    false,
+    ),
+'PHP54ORMORE'=> array(
     false,
     false,
     ),
@@ -85,17 +85,19 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 }
 
 if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
+    if(version_compare($PHP_VERSION_TARGET, '5.4') > -1){
+        $PHP54 = 1;
+        $PHP54ORMORE = 1;
+    }
+    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
         $PHP53 = 1;
-        $PHP53ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        $PHP52 = 1;
-    }else{
+    }
+    else{
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // no defined target, so php 5.2
-    $PHP52=1;
+    // no defined target, so php 5.3
+    $PHP53 = 1;
 }
 
 

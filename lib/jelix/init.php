@@ -59,12 +59,6 @@ define ('BYTECODE_CACHE_EXISTS', true);
 define ('BYTECODE_CACHE_EXISTS', false);
 #endif
 
-#if !PHP53ORMORE
-if(!defined('E_DEPRECATED'))
-    define ('E_DEPRECATED',8192);
-if(!defined('E_USER_DEPRECATED'))
-    define ('E_USER_DEPRECATED',16384);
-#endif
 error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE

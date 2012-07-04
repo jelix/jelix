@@ -152,14 +152,7 @@ class jZone {
             $f = $this->_getCacheFile();
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){
-#if PHP53ORMORE
                     clearstatcache(false, $f);
-#else
-                    if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-                        clearstatcache(false, $f);
-                    else
-                        clearstatcache();
-#endif
                     if(time() - filemtime($f) > $this->_cacheTimeout){
                         // timeout : regenerate the cache
                         unlink($f);

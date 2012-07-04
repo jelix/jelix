@@ -83,15 +83,15 @@ $BUILD_OPTIONS = array(
     'UTF-8',
     '',
     ),
-'PHP52'=> array(
-    false,
-    false,
-    ),
 'PHP53'=> array(
     false,
     false,
     ),
-'PHP53ORMORE'=> array(
+'PHP54'=> array(
+    false,
+    false,
+    ),
+'PHP54ORMORE'=> array(
     false,
     false,
     ),
@@ -172,20 +172,20 @@ if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
 else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
-if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
-        // filter and json are in php >=5.2
+if ($PHP_VERSION_TARGET) {
+    if (version_compare($PHP_VERSION_TARGET, '5.4') > -1) {
+        $PHP54 = 1;
+        $PHP54ORMORE = 1;
+    }
+    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
         $PHP53 = 1;
-        $PHP53ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        // filter and json are in php >=5.2
-        $PHP52 = 1;
-    }else{
+    }
+    else {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // no defined target, so php 5.2
-    $PHP52=1;
+    // no defined target, so php 5.3
+    $PHP53 = 1;
 }
 
 $BUILD_FLAGS = 0;
