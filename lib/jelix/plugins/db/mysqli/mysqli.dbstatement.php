@@ -12,16 +12,31 @@ require_once(dirname(__FILE__).'/mysqli.dbresultset.php');
 
 class mysqliDbStatement extends jDbStatement {
 
+    private $_usesMysqlnd = true;
+
+    function __construct($connection, $usesMysqlnd){
+        $this->_usesMysqlnd = $usesMysqlnd;
+        parent::__construct($connection);
+    }
+
     public function execute(){
         $this->_stmt->execute();
 
         if($this->_stmt->result_metadata()){
-            //need the MySQL native driver (by default in php 5.3.0)
+            //the query prodeces a result
             try{
-                $res = new mysqliDbResultSet($this->_stmt->get_result());
+                if( $this->_usesMysqlnd ) {
+                    //with the MySQL native driver - mysqlnd (by default in php 5.3.0)
+                    $res = new mysqliDbResultSet($this->_stmt->get_result());
+                } else {
+                    //this call to store_result() will buffer all results but is necessary for num_rows to have
+                    //its real value and thus for dbresultset's ->rowCount() to work fine :
+                    $this->_stmt->store_result(); 
+                    $res = new mysqliDbResultSet($this->_stmt);
+                }
             }
             catch(Exception $e){
-                throw new jException('jelix~db.error.nofunction', 'Mysqlnd');
+                throw new jException('jelix~db.error.query.bad', $this->_stmt->errno);
             }
         }
         else{
