@@ -31,7 +31,8 @@ class mysqliDbResultSet extends jDbResultSet {
     }
 
     protected function _free (){
-        return $this->_idResult->close();
+        //free_result may lead to a warning if close() has been called before by dbconnection's _disconnect()
+        return @$this->_idResult->free_result();
     }
 
     protected function _rewind (){
