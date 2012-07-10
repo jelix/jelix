@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `labels_test` (
 `label` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `key` , `lang` ),
 UNIQUE (`keyalias`)
-);
+) ENGINE=InnoDb ;
 
 CREATE TABLE IF NOT EXISTS `labels1_test` (
 `key` INT NOT NULL ,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `labels1_test` (
 `label` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `key`),
 UNIQUE (`keyalias`)
-);
+) ENGINE=InnoDb ;
 
 -- for the crud example
 CREATE TABLE IF NOT EXISTS `products` (
