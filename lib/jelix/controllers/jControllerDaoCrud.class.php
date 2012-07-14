@@ -165,7 +165,7 @@ class jControllerDaoCrud extends jController {
      * @return boolean true if it is ok.
      */
     protected function _checkData($form, $calltype){
-        return true
+        return true;
     }
 
     /**
