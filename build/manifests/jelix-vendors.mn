@@ -109,6 +109,7 @@ cd lib/phpMailer/language
 
 #if ENABLE_DEVELOPER
 cd lib/simpletest
+  arguments.php
   authentication.php
   autorun.php
   browser.php
@@ -133,6 +134,7 @@ cd lib/simpletest
   page.php
   php_parser.php
   README
+  recorder.php
   reflection_php4.php
   reflection_php5.php
   remote.php
@@ -153,15 +155,14 @@ cd lib/simpletest
   xml.php
 cd lib/simpletest/extensions
   pear_test_case.php
-  phpunit_test_case.php
   testdox.php
-  junit_xml_reporter.php
 cd lib/simpletest/extensions/testdox
   test.php
 cd lib/simpletest/test
   acceptance_test.php
   adapter_test.php
   all_tests.php
+  arguments_test.php
   authentication_test.php
   autorun_test.php
   bad_test_suite.php
@@ -188,7 +189,7 @@ cd lib/simpletest/test
   parse_error_test.php
   parsing_test.php
   php_parser_test.php
-  reflection_php4_test.php
+  recorder_test.php
   reflection_php5_test.php
   remote_test.php
   shell_test.php
@@ -211,6 +212,7 @@ cd lib/simpletest/test/support
   failing_test.php
   latin1_sample
   passing_test.php
+  recorder_sample.php
   spl_examples.php
   supplementary_upload_sample.txt
   test1.php
