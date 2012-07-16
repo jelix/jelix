@@ -461,4 +461,70 @@ class UTjforms extends jUnitTestCase {
 
         jForms::destroy('product');
     }
+    
+    
+    public function testTokenGenerationDefaultId() {
+        $f = jForms::create('product');
+        $c = $f->getContainer();
+        $this->assertEqual(0, $c->formId);
+        
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationStringIntId() {
+        $f = jForms::create('product', "8");
+        $c = $f->getContainer();
+        $this->assertEqual("8", $c->formId);
+        
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationString0Id() {
+        $f = jForms::create('product', "0");
+        $c = $f->getContainer();
+        $this->assertEqual("0", $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationIntId() {
+        $f = jForms::create('product', 8);
+        $c = $f->getContainer();
+        $this->assertEqual(8, $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGeneration0Id() {
+        $f = jForms::create('product', 0);
+        $c = $f->getContainer();
+        $this->assertEqual(0, $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
 }
