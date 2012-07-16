@@ -71,6 +71,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="name" value="" />
@@ -104,6 +105,7 @@ class UTjforms extends jUnitTestCase {
             <string key="label" value="" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="label" value="" />
@@ -158,6 +160,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
@@ -167,6 +170,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -186,6 +190,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
@@ -195,6 +200,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -205,6 +211,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -246,6 +253,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="2" />
     </object>
     <array method="getAllData()">
         <string key="name" value="phone" />
@@ -286,6 +294,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="name" value="phone" />
@@ -339,6 +348,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="45" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -349,6 +359,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -369,6 +380,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="45" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -379,6 +391,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -397,6 +410,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';

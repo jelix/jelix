@@ -55,18 +55,18 @@ class jForms {
         $formSel = $sel->toString(); 
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        if($formId === null)
+        if($formId === null || $formId === '')
             $formId = self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
         if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
             $dc = $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
-            if ($formId == self::DEFAULT_ID) {
+            if (is_numeric($formId) && $formId == self::DEFAULT_ID) {
                 $dc->refcount = 1;
             }
         }
         else {
             $dc = $_SESSION['JFORMS'][$formSel][$fid];
-            if ($formId == self::DEFAULT_ID) 
+            if (is_numeric($formId) && $formId == self::DEFAULT_ID) 
                 $dc->refcount++;
         }
         $form = new $c($formSel, $dc, true);
@@ -84,7 +84,7 @@ class jForms {
      */
     static public function get($formSel, $formId=null){
 
-        if($formId === null)
+        if($formId === null || $formId === '')
             $formId= self::DEFAULT_ID;
         $fid = is_array($formId) ? serialize($formId) : $formId;
 
@@ -129,7 +129,7 @@ class jForms {
      */
     static public function destroy($formSel, $formId=null){
 
-        if($formId === null)  $formId = self::DEFAULT_ID;
+        if($formId === null || $formId === '')  $formId = self::DEFAULT_ID;
         if(is_array($formId)) $formId = serialize($formId);
         
         // normalize the selector to avoid conflict in session
@@ -137,7 +137,7 @@ class jForms {
         $formSel = $sel->toString();
 
         if(isset($_SESSION['JFORMS'][$formSel][$formId])){
-            if ($formId == self::DEFAULT_ID) {
+            if (is_numeric($formId) && $formId == self::DEFAULT_ID) {
                 if((--$_SESSION['JFORMS'][$formSel][$formId]->refcount) > 0) {
                   $_SESSION['JFORMS'][$formSel][$formId]->clear();
                     return;
