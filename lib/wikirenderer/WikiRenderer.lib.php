@@ -20,8 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-define('WIKIRENDERER_PATH', __DIR__.'/');
-define('WIKIRENDERER_VERSION', '3.1.4');
+
+define('WIKIRENDERER_PATH', dirname(__FILE__).'/');
+define('WIKIRENDERER_VERSION', '3.1.5');
+
 
 
 /**
@@ -774,7 +776,6 @@ class WikiTextLine extends WikiTag {
     public $isTextLineTag=true;
 }
 
-
 /**
  *
  */
@@ -786,6 +787,11 @@ class WikiHtmlTextLine extends WikiTag {
     }
 }
 
+class WikiXmlTextLine extends WikiHtmlTextLine {
+    protected function _doEscape($string){
+        return htmlspecialchars($string, ENT_NOQUOTES);
+    }
+}
 
 /**
  * a base class for wiki inline tag, to generate XHTML element.
@@ -829,4 +835,9 @@ abstract class WikiTagXhtml extends WikiTag {
 }
 
 
-?>
+class WikiTagXml extends WikiTagXhtml {
+   protected function _doEscape($string){
+       return htmlspecialchars($string, ENT_NOQUOTES);
+   }
+}
+

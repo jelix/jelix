@@ -51,6 +51,8 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         $pk = $table->getPrimaryKey();
         $this->assertEqual($pk->columns, array('id'));
 
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
         $verif='<array>
     <object class="jDbColumn" key="id">
         <string property="type" value="int" />
@@ -63,9 +65,11 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <null property="minLength"/>
-        <null property="maxLength"/>
-        <double property="minValue" value="-2147483648"/>
-        <integer property="maxValue" value="2147483647"/>
+        <null property="maxLength"/>'.
+        ($is64bits ? 
+         '<integer property="minValue" value="-2147483648"/>' :
+         '<double property="minValue" value="-2147483648"/>').
+        '<integer property="maxValue" value="2147483647"/>
     </object>
     <object class="jDbColumn" key="name">
         <string property="type" value="varchar" />
