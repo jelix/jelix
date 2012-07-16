@@ -190,6 +190,7 @@ cd lib/jelix/dao
   jDao.class.php
 * jDaoCompiler.class.php
   jDaoConditions.class.php
+  jDaoXmlException.class.php
 
 cd lib/jelix/db
 * jDb.class.php
