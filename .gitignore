@@ -3,3 +3,4 @@ TAGS
 _dist/
 _dev/
 *.komodoproject
+.komodotools

@@ -76,7 +76,8 @@ div.exception p { font-size:0.9em; }
         margin-left: 0;  border: none; }
 .diff del, .diff ins {  font-weight: bold; text-decoration: none; }
 .diff .original, .diff .deleted,
-.diff .final, .diff .added {  background: white; }
+.diff .final, .diff .added {  background: white; font-family: sans-serif;
+    white-space: pre;}
 .diff .original, .diff .deleted {  background: #fcc;  border: none; }
 .diff .final, .diff .added {  background: #cfc; border: none; }
 .diff del { background: #f99; }
