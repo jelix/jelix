@@ -375,12 +375,13 @@ class jConfigCompiler {
                         if ($config->modules[$f.'.access'] == 3) {
                             $config->_externalModulesPathList[$f]=$p.$f.'/';
                         }
-                        elseif ($config->modules[$f.'.access'])
+                        elseif ($config->modules[$f.'.access']) {
                             $config->_modulesPathList[$f]=$p.$f.'/';
                             self::readModuleFile($config, $p.$f.'/');
                             if (file_exists( $p.$f.'/plugins')) {
                                 $config->pluginsPath .= ',module:'.$f;
                             }
+                        }
                     }
                 }
                 closedir($handle);
