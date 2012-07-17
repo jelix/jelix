@@ -157,8 +157,8 @@ class testInstallerMain extends jInstaller {
 <project xmlns="http://jelix.org/ns/project/1.0">
     <info id="test@jelix.org" name="test">
         <version stability="stable" date="">1.0</version>
-        <label lang="en-EN">Test</label>
-        <description lang="en-EN">Application to test Jelix</description>
+        <label lang="en_US">Test</label>
+        <description lang="en_US">Application to test Jelix</description>
         <copyright>2009 the company</copyright>
         <creator name="Me" email="me@jelix.org" active="true" />
     </info>

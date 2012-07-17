@@ -2,8 +2,8 @@
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jelix@modules.jelix.org" name="jelix" createdate="2006-01-01">
 #expand        <version stability="stable" date="__TODAY__">__LIB_VERSION__</version>
-        <label lang="en-EN">Jelix Main Module</label>
-        <description lang="en-EN">Main module of jelix which contains some ressources needed by jelix classes</description>
+        <label lang="en_US">Jelix Main Module</label>
+        <description lang="en_US">Main module of jelix which contains some ressources needed by jelix classes</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2005-2011 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" active="true"/>
