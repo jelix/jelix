@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="towns" primarykey="postalcode" />
+   </datasources>
+   <record>
+      <property name="postalcode"   fieldname="postalcode" datatype="integer"/>
+      <property name="name" fieldname="name" datatype="string" />
+      <property name="department" fieldname="department" datatype="string" />
+   </record>
+   <factory>
+      <method name="findByDepartment" type="select">
+         <parameter name="dep" />
+         <conditions>
+             <eq property="department" expr="$dep" />
+         </conditions>
+     </method>
+   </factory>
+</dao>
+

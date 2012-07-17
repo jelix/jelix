@@ -260,6 +260,11 @@ class UTDao_generator extends jUnitTestCase {
               <like property="ownerlogin" expr="concat($login,\'%\')" />
            </conditions>
         </method>
+        <method name="method14" type="select">
+           <conditions>
+              <in property="name" value="\'foo\',\'bar\',\'baz\'" />
+           </conditions>
+        </method>
     </factory>
 </dao>';
         $parser = new jDaoParser ($this->_selector);
@@ -356,6 +361,10 @@ class UTDao_generator extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), true);
         $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method14']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method14']->getParameters(), true);
+        $this->assertEqualOrDiff(' `grp`.`name` IN (\\\'foo\\\',\\\'bar\\\',\\\'baz\\\')',$where);
     }
 
     function testBuildSQLConditionWithPattern(){

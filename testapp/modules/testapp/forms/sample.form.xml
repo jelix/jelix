@@ -93,6 +93,20 @@
   <input ref="unwanted" required="true" type="datetime">
       <label>This field shouldn't appear, it is deactivated</label>
    </input>
+   <group ref="towns">
+        <label>Linked list</label>
+      <menulist ref="listdep">
+          <label>Departments list</label>
+          <item value="finistere">Finistère</item>
+          <item value="touraine">Touraine</item>
+          <item value="polynesia">Polynésie</item>
+      </menulist>
+      <menulist ref="listtown">
+          <label>Towns list, updated when department is selected</label>
+          <datasource dao="testapp~towns" method="findByDepartment"
+          criteriafrom="listdep" labelproperty="name" valueproperty="postalcode" />
+      </menulist>
+   </group>
 
    <choice ref="task">
       <label>Task status</label>
@@ -138,6 +152,21 @@
           <datetime ref="choice2datettimerequired" required="true">
             <label>Datetime required</label>
          </datetime>
+      </item>
+      <item value="choice4">
+         <label>linked lists</label>
+         <menulist ref="listdep2">
+            <label>Departments list</label>
+            <item value="finistere">Finistère</item>
+            <item value="touraine">Touraine</item>
+            <item value="polynesia">Polynésie</item>
+        </menulist>
+        <menulist ref="listtown2">
+            <label>Towns list, updated when department is selected</label>
+            <datasource dao="testapp~towns" method="findByDepartment"
+            criteriafrom="listdep2" labelproperty="name" valueproperty="postalcode" />
+        </menulist>
+
       </item>
    </choice>
 

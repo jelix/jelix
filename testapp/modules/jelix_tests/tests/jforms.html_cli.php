@@ -71,6 +71,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="name" value="" />
@@ -104,6 +105,7 @@ class UTjforms extends jUnitTestCase {
             <string key="label" value="" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="label" value="" />
@@ -158,6 +160,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
@@ -167,6 +170,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -186,6 +190,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
@@ -195,6 +200,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -205,6 +211,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -246,6 +253,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="2" />
     </object>
     <array method="getAllData()">
         <string key="name" value="phone" />
@@ -286,6 +294,7 @@ class UTjforms extends jUnitTestCase {
             <string key="price" value="45" />
         </array>
         <array property="errors">array()</array>
+        <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="name" value="phone" />
@@ -339,6 +348,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="45" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -349,6 +359,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -369,6 +380,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="price" value="45" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
@@ -379,6 +391,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -397,6 +410,7 @@ class UTjforms extends jUnitTestCase {
                 <string key="label" value="" />
             </array>
             <array property="errors">array()</array>
+            <integer property="refcount" value="0" />
         </object>
      </array>
 </array>';
@@ -460,5 +474,71 @@ class UTjforms extends jUnitTestCase {
         $this->assertComplexIdenticalStr($o, $verif);
 
         jForms::destroy('product');
+    }
+    
+    
+    public function testTokenGenerationDefaultId() {
+        $f = jForms::create('product');
+        $c = $f->getContainer();
+        $this->assertEqual(0, $c->formId);
+        
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationStringIntId() {
+        $f = jForms::create('product', "8");
+        $c = $f->getContainer();
+        $this->assertEqual("8", $c->formId);
+        
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationString0Id() {
+        $f = jForms::create('product', "0");
+        $c = $f->getContainer();
+        $this->assertEqual("0", $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGenerationIntId() {
+        $f = jForms::create('product', 8);
+        $c = $f->getContainer();
+        $this->assertEqual(8, $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
+    }
+
+    public function testTokenGeneration0Id() {
+        $f = jForms::create('product', 0);
+        $c = $f->getContainer();
+        $this->assertEqual(0, $c->formId);
+
+        $c->token = '';
+        $this->assertNotEqual('', $f->createNewToken());
+
+        sleep(1);
+        $t = $c->token;
+        $this->assertEqual($t, $f->createNewToken());
     }
 }
