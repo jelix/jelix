@@ -31,6 +31,7 @@ cd lib/jelix/core/response
   jResponseXulDialog.class.php
   jResponseXulPage.class.php
   jResponseRdf.class.php
+  jResponseLatexToPdf.class.php
 
 cd lib/jelix/core-modules/jelix/controllers
   error.xul.php

@@ -103,7 +103,6 @@ cd lib/jelix/core/response
   jResponseRss20.class.php
   jResponseAtom10.class.php
   jResponseCss.class.php
-  jResponseLatexToPdf.class.php
   jResponseTcpdf.class.php
   jResponseSoap.class.php
   jResponseHtmlFragment.class.php
