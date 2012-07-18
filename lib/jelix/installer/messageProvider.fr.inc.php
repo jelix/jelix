@@ -63,7 +63,7 @@
         'ini.magic_quotes_gpc'  =>'php.ini : l\'activation des magic quotes n\'est pas prise en charge par jelix. Vous devez les désactiver',
         'ini.magic_quotes_runtime'=>'php.ini : magic_quotes_runtime doit être à off',
         'ini.session.auto_start'=>'php.ini : session.auto_start doit être à off',
-        'ini.safe_mode'         =>'php.ini : le safe_mode n\'est pas recommandé.',
+        'ini.safe_mode'         =>'php.ini : le safe_mode est obsolète et n\'est pas recommandé.',
         'ini.register_globals'  =>'php.ini : il faut désactiver register_globals, pour des raisons de sécurité et parce que cette option n\'est pas nécessaire.',
         'ini.asp_tags'          =>'php.ini : il est conseillé de désactiver asp_tags. Cette option n\'est pas nécessaire.',
         'ini.short_open_tag'    =>'php.ini : il est conseillé de désactiver short_open_tag. Cette option n\'est pas nécessaire.',

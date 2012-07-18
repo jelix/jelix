@@ -344,7 +344,7 @@ class jInstallCheck {
         }
 
         if(ini_get('safe_mode') == 1){
-            $this->warning('safe_mode');
+            $this->error('ini.safe_mode');
             $ok=false;
         }
 
