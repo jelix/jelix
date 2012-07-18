@@ -82,7 +82,6 @@ cd lib/jelix/core/request
 * jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
-  jXulRequest.class.php
   jRdfRequest.class.php
   jCssRequest.class.php
   jSoapRequest.class.php
@@ -99,10 +98,6 @@ cd lib/jelix/core/response
   jResponseText.class.php
   jResponseCmdline.class.php
   jResponseXmlrpc.class.php
-  jResponseXul.class.php
-  jResponseXulOverlay.class.php
-  jResponseXulDialog.class.php
-  jResponseXulPage.class.php
   jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
@@ -138,7 +133,6 @@ cd lib/jelix/core-modules/jelix
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
-! error.xul.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
 ! error.rdf.php
@@ -226,7 +220,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 
 
 cd lib/jelix/core-modules/jelix/templates
-  404.xul.tpl
   403.html.tpl
   404.html.tpl
   rss20.tpl
@@ -661,14 +654,6 @@ cd lib/jelix/plugins/tpl/xml
   function.jlocale.php
   function.jurl.php
   meta.xml.php
-
-cd lib/jelix/plugins/tpl/xul
-  cfunction.const.php
-  function.jfullurl.php
-  function.jlocale.php
-  function.jurl.php
-  function.urljsstring.php
-  meta.xul.php
 
 cd lib/jelix/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php

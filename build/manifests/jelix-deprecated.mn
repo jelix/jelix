@@ -21,6 +21,17 @@ cd lib/jelix/core
   jErrorHandler.lib.php
   jException.lib.php
 
+cd lib/jelix/core/request
+  jXulRequest.class.php
+
+cd lib/jelix/core/response
+  jResponseXul.class.php
+  jResponseXulOverlay.class.php
+  jResponseXulDialog.class.php
+  jResponseXulPage.class.php
+
+cd lib/jelix/core-modules/jelix/controllers
+  error.xul.php
 
 cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.datas.mysql.sql
@@ -39,6 +50,7 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jauth.schema.pgsql.sql
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
+
 cd lib/jelix/core-modules/jelix/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -63,6 +75,9 @@ cd lib/jelix/core-modules/jelix/locales/en_US
 cd lib/jelix/core-modules/jelix/locales/fr_FR
    soap.UTF-8.properties
 
+cd lib/jelix/core-modules/jelix/templates
+  404.xul.tpl
+
 cd lib/jelix/forms/
    jIFormsBuilderCompiler.iface.php
 
@@ -85,6 +100,8 @@ cd lib/jelix/plugins/tpl/html
 
 cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
+
+rmd lib/jelix/plugins/tpl/xul/
 
 rmd lib/jelix/plugins/cache/memcached
 rmd lib/jelix/plugins/db/intuition
@@ -184,6 +201,8 @@ cd lib/jelix-www/jquery/ui/i18n
 cd lib/jelix-www/jquery/themes/smoothness/
   jquery-ui-1.8.2.custom.css
 rmd lib/jelix-www/jquery/themes/default
+rmd lib/jelix-www/xul
+
 rmd lib/jelix-www/wymeditor/config
 
 cd lib/jelix-www/wymeditor
