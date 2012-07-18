@@ -78,7 +78,6 @@ cmdline = jResponseCmdline
 jsonrpc = jResponseJsonrpc
 json = jResponseJson
 xmlrpc = jResponseXmlrpc
-rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
 rss2.0 = jResponseRss20
@@ -102,7 +101,6 @@ cmdline = jResponseCmdline
 jsonrpc = jResponseJsonrpc
 json = jResponseJson
 xmlrpc = jResponseXmlrpc
-rdf = jResponseRdf
 xml = jResponseXml
 zip = jResponseZip
 rss2.0 = jResponseRss20
@@ -232,7 +230,6 @@ documentRoot=
 index = "@classic"
 xmlrpc = "@xmlrpc"
 jsonrpc = "@jsonrpc"
-rdf = "@rdf"
 
 [basic_significant_urlengine_entrypoints]
 ; for each entry point, it indicates if the entry point name
@@ -240,7 +237,6 @@ rdf = "@rdf"
 index = on
 xmlrpc = on
 jsonrpc = on
-rdf = on
 
 [logger]
 ; list of loggers for each categories of log messages

@@ -82,7 +82,6 @@ cd lib/jelix/core/request
 * jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
-  jRdfRequest.class.php
   jCssRequest.class.php
   jSoapRequest.class.php
 
@@ -98,7 +97,6 @@ cd lib/jelix/core/response
   jResponseText.class.php
   jResponseCmdline.class.php
   jResponseXmlrpc.class.php
-  jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
   jResponseXmlFeed.class.php
@@ -135,7 +133,6 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
-! error.rdf.php
   jforms.classic.php
   www.classic.php
 cd lib/jelix/core-modules/jelix/daos

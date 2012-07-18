@@ -116,8 +116,6 @@ index = "@classic"
 index = on
 xmlrpc = on
 jsonrpc = on
-rdf = on
-
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

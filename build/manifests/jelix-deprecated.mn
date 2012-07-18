@@ -23,15 +23,18 @@ cd lib/jelix/core
 
 cd lib/jelix/core/request
   jXulRequest.class.php
+  jRdfRequest.class.php
 
 cd lib/jelix/core/response
   jResponseXul.class.php
   jResponseXulOverlay.class.php
   jResponseXulDialog.class.php
   jResponseXulPage.class.php
+  jResponseRdf.class.php
 
 cd lib/jelix/core-modules/jelix/controllers
   error.xul.php
+  error.rdf.php
 
 cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.datas.mysql.sql

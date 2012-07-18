@@ -20,7 +20,6 @@
                <name>classicentrypoint</name>
                <name>xmlrpcentrypoint</name>
                <name>jsonrpcentrypoint</name>
-               <name>rdfentrypoint</name>
                <name>xmlentrypoint</name>
                <name>cssentrypoint</name>
             </choice>

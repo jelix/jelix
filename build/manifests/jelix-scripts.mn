@@ -75,7 +75,6 @@ cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
   jsonrpc.php.tpl
-  rdf.php.tpl
   soap.php.tpl
   minify.php.tpl
 cd lib/jelix-scripts/templates/scripts
