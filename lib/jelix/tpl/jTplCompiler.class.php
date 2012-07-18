@@ -269,11 +269,6 @@ class jTplCompiler
         return true;
     }
 
-    protected function _piCallback($matches) {
-        return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
-    }
-
-
     protected function compileContent ($tplcontent) {
         $this->_metaBody = '';
         $this->_blockStack = array();
@@ -284,7 +279,9 @@ class jTplCompiler
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
 
         if ($this->escapePI) {
-            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
+            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", function ($matches) {
+                return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
+            }, $tplcontent);
         }
         if ($this->removeASPtags) {
           // we remove all asp tags
@@ -297,7 +294,13 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
-        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", array($this,'_callbackLineFeed'), $tplcontent);
+        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", function ($matches){
+                list($full, , $firstcar, $lastcar) = $matches;
+                if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
+                    return "$full\n";
+                }
+                else return $full;
+            }, $tplcontent);
         $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
 
         /*$tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);*/
@@ -307,20 +310,6 @@ class jTplCompiler
             $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
 
         return $tplcontent;
-    }
-
-    /**
-     * function called during the parsing of the template by a preg_replace_callback function
-     * It is called to add line feeds where needed
-     * @param array $matches a matched item
-     * @return string the same tag with one more line feed
-     */
-    public function _callbackLineFeed($matches){
-        list($full, , $firstcar, $lastcar) = $matches;
-        if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
-            return "$full\n";
-        }
-        else return $full;
     }
 
     /**
