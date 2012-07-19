@@ -377,11 +377,11 @@ class jConfigCompiler {
                         }
                         elseif ($config->modules[$f.'.access']) {
                             $config->_modulesPathList[$f]=$p.$f.'/';
-                            self::readModuleFile($config, $p.$f.'/');
                             if (file_exists( $p.$f.'/plugins')) {
                                 $config->pluginsPath .= ',module:'.$f;
                             }
                         }
+                        self::readModuleFile($config, $p.$f.'/');
                     }
                 }
                 closedir($handle);
