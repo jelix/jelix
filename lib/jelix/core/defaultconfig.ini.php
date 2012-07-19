@@ -195,8 +195,6 @@ jqueryPath="jelix/jquery/"
 
 defaultEntrypoint= index
 
-entrypointExtension= .php
-
 ; action to show the 'page not found' error
 notfoundAct = "jelix~error:notfound"
 

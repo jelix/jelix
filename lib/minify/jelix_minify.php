@@ -17,7 +17,7 @@ function getDocumentRoot() {
     $urlengine = $config['urlengine'];
 
     if($urlengine['scriptNameServerVariable'] == '') {
-        $urlengine['scriptNameServerVariable'] = jConfigCompiler::findServerName($urlengine['entrypointExtension']);
+        $urlengine['scriptNameServerVariable'] = jConfigCompiler::findServerName('.php');
     }
     $urlScript = $_SERVER[$urlengine['scriptNameServerVariable']];
     $lastslash = strrpos ($urlScript, '/');

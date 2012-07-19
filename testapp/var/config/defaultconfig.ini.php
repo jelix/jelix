@@ -67,10 +67,8 @@ basePath = ""
 
 defaultEntrypoint= index
 
-entrypointExtension= .php
-
-; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
-simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
+; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur
+d'url simple simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions

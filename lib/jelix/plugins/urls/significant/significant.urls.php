@@ -150,7 +150,7 @@ class significantUrlEngine implements jIUrlEngine {
             else {
                 $snp = $scriptNamePath;
             }
-            $pos = strrpos($snp, $conf['entrypointExtension']);
+            $pos = strrpos($snp, '.php');
             if ($pos !== false) {
                 $snp = substr($snp,0,$pos);
             }
@@ -463,7 +463,7 @@ class significantUrlEngine implements jIUrlEngine {
             $url->scriptName = jApp::coord()->request->getServerURI(true).$url->scriptName;
 
         if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
-            $url->scriptName .= jApp::config()->urlengine['entrypointExtension'];
+            $url->scriptName .= '.php';
         }
 
         // for some request types, parameters aren't in the url

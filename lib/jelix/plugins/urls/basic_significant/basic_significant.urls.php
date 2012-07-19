@@ -85,7 +85,7 @@ class basic_significantUrlEngine extends simpleUrlEngine {
             && jApp::config()->basic_significant_urlengine_entrypoints[$script]) {
 
             if(!jApp::config()->urlengine['multiview']){
-                $script .= jApp::config()->urlengine['entrypointExtension'];
+                $script .= '.php';
             }
             $scriptName .= $script;
         }

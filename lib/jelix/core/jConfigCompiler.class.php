@@ -510,7 +510,7 @@ class jConfigCompiler {
      * calculate miscelaneous path, depending of the server configuration and other informations
      * in the given array : script path, script name, documentRoot ..
      * @param array $urlconf  urlengine configuration. scriptNameServerVariable, basePath,
-     * jelixWWWPath, jqueryPath and entrypointExtension should be present
+     * jelixWWWPath and jqueryPath should be present
      */
     static public function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
         // retrieve the script path+name.
@@ -522,7 +522,7 @@ class jConfigCompiler {
         }
         else {
             if($urlconf['scriptNameServerVariable'] == '') {
-                $urlconf['scriptNameServerVariable'] = self::findServerName($urlconf['entrypointExtension'], $isCli);
+                $urlconf['scriptNameServerVariable'] = self::findServerName('.php', $isCli);
             }
             $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
         }
@@ -601,7 +601,7 @@ class jConfigCompiler {
                 $urlconf['documentRoot'] = substr(jApp::wwwPath(), 0, - (strlen($localBasePath)));
         }
 
-        $pos = strrpos($snp, $urlconf['entrypointExtension']);
+        $pos = strrpos($snp, '.php');
         if($pos !== false){
             $snp = substr($snp,0,$pos);
         }
