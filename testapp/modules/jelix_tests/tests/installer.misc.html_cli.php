@@ -18,7 +18,13 @@ class testInstallerMisc extends jInstaller {
 class UTjinstallermisc extends UnitTestCase {
 
     public function setUp() {
+        jApp::saveContext();
     }
+
+    public function tearDown() {
+        jApp::restoreContext();
+    }
+
 
     public function testDummy() {
 

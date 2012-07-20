@@ -210,7 +210,8 @@ class jApp {
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
              self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
-             self::$_config, self::$_coord) = array_pop(self::$contextBackup);
+             $conf, self::$_coord) = array_pop(self::$contextBackup);
+        self::setConfig($conf);
     }
 
     /**

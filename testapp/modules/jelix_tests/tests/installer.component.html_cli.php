@@ -53,6 +53,11 @@ class UTjInstallerComponent extends UnitTestCase {
 
 
     public function setUp() {
+        jApp::saveContext();
+    }
+
+    public function tearDown() {
+        jApp::restoreContext();
     }
 
     public function testDependenciesReading() {
