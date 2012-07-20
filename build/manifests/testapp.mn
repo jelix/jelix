@@ -106,6 +106,7 @@ cd testapp/modules/testapp/install
   base.mysql.sql
   base.pgsql.sql
   install.php
+  upgrade_urlengine.php
 cd testapp/modules/testapp/tests/
   test1.pu.php
 

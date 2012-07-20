@@ -44,15 +44,13 @@ class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
-</script><div class="jforms-hiddens"><input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig:url1"/>
-</div>';
+</script>';
         $this->assertEqualOrDiff($result, $out);
         $this->assertEqualOrDiff('', $this->builder->getJsContent());
 
@@ -60,15 +58,13 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'get'));
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
-<input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig:url1"/>
 </div>';
         $this->assertEqualOrDiff($result, $out);
         $this->formname = $this->builder->getName();
@@ -1167,15 +1163,13 @@ jForms.tForm.addControl(c);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
-<input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig:url1"/>
 <input type="hidden" name="hidden1" id="'.$this->formname.'_hidden1" value="11"/>
 </div>';
         $this->assertEqualOrDiff($result, $out);
@@ -1259,15 +1253,13 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
-<input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig:url1"/>
 <input type="hidden" name="hidden1" id="'.$this->formname.'_hidden1" value="11"/>
 <input type="hidden" name="hidden2" id="'.$this->formname.'_hidden2" value=""/>
 </div>';
@@ -1279,15 +1271,13 @@ jForms.declareForm(jForms.tForm);
         ob_start();
         $this->builder->outputHeader(array('method'=>'post'));
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php" method="post" id="'.$this->formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
 jForms.declareForm(jForms.tForm);
 //]]>
 </script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
-<input type="hidden" name="module" value="jelix_tests"/>
-<input type="hidden" name="action" value="urlsig:url1"/>
 <input type="hidden" name="hidden1" id="'.$this->formname.'_hidden1" value="11"/>
 <input type="hidden" name="hidden2" id="'.$this->formname.'_hidden2" value="toto"/>
 </div>';
