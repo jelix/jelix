@@ -199,7 +199,7 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $form = jForms::get('product');
 
         // ---- retrieve data
-        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAll" , 'label', 'key', '');
+        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAllOrderByKeyalias" , 'label', 'key', '');
         $data = $ds->getData($form);
         $this->assertEqual($data, array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'));
         try {
@@ -211,7 +211,7 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         }
 
         // ---- retrieve data with multiple label
-        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAll" , 'lang,label', 'key', '', null, null, '#');
+        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAllOrderByKeyalias" , 'lang,label', 'key', '', null, null, '#');
         $data = $ds->getData($form);
         $this->assertEqual($data, array('1'=>'en#dd-en', '2'=>'en#ee-en', '3'=>'fr#cc-fr'));
     }
@@ -235,7 +235,7 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         //$data = $ds->getData($form);
         //$this->assertError();
 
-        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang2" , 'label', 'key', '', "fr,en");
+        $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang2OrderByKeyalias" , 'label', 'key', '', "fr,en");
         $ds->labelMethod = 'getByLang2';
         $data = $ds->getData($form);
         $this->assertEqual($data, array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'));
