@@ -10,6 +10,13 @@
       <property name="label" fieldname="label" datatype="string"  required="true"/>
    </record>
    <factory>
+      <method name="findAllOrderByKeyalias">
+          <order>
+              <orderitem property="keyalias" way="asc" />
+          </order>
+      </method>
+
+
       <method name="findByLang">
          <parameter name="lang" />
          <conditions>
@@ -35,13 +42,16 @@
       </method>
 
 
-      <method name="findByLang2">
+      <method name="findByLang2OrderByKeyalias">
          <parameter name="lang1" />
          <parameter name="lang2" />
          <conditions logic="or">
             <eq property="lang" expr="$lang1" />
             <eq property="lang" expr="$lang2" />
          </conditions>
+          <order>
+              <orderitem property="keyalias" way="asc" />
+          </order>
       </method>
 
       <method name="findByLang3">
