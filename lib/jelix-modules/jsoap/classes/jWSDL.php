@@ -10,15 +10,15 @@
 */
 
 
-require_once(LIB_PATH.'wshelper/WSDLStruct.class.php');
-require_once(LIB_PATH.'wshelper/WSDLException.class.php');
-require_once(LIB_PATH.'wshelper/WSException.class.php');
-require_once(LIB_PATH.'wshelper/IPXMLSchema.class.php');
-require_once(LIB_PATH.'wshelper/IPPhpDoc.class.php');
-require_once(LIB_PATH.'wshelper/IPReflectionClass.class.php');
-require_once(LIB_PATH.'wshelper/IPReflectionCommentParser.class.php');
-require_once(LIB_PATH.'wshelper/IPReflectionMethod.class.php');
-require_once(LIB_PATH.'wshelper/IPReflectionProperty.class.php');
+require_once(__DIR__.'/wshelper/WSDLStruct.class.php');
+require_once(__DIR__.'/wshelper/WSDLException.class.php');
+require_once(__DIR__.'/wshelper/WSException.class.php');
+require_once(__DIR__.'/wshelper/IPXMLSchema.class.php');
+require_once(__DIR__.'/wshelper/IPPhpDoc.class.php');
+require_once(__DIR__.'/wshelper/IPReflectionClass.class.php');
+require_once(__DIR__.'/wshelper/IPReflectionCommentParser.class.php');
+require_once(__DIR__.'/wshelper/IPReflectionMethod.class.php');
+require_once(__DIR__.'/wshelper/IPReflectionProperty.class.php');
 
 
 

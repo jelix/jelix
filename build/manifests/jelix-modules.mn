@@ -158,6 +158,19 @@ cd lib/jelix-modules/jsoap/classes
   jWSDL.php
   jSoapCoordinator.class.php
   jSoapRequest.class.php
+cd lib/jelix-modules/jsoap/classes/wshelper
+! CREDITS
+! LICENCE
+! README
+! IPPhpDoc.class.php
+! IPReflectionClass.class.php
+! IPReflectionCommentParser.class.php
+! IPReflectionMethod.class.php
+! IPReflectionProperty.class.php
+! IPXMLSchema.class.php
+! WSDLException.class.php
+! WSDLStruct.class.php
+! WSException.class.php
 cd lib/jelix-modules/jsoap/controllers
   WSDL.classic.php
 cd lib/jelix-modules/jsoap/locales/en_EN

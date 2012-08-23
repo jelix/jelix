@@ -254,6 +254,7 @@ cd lib/jelix-modules/jauthdb/install
   _installclass.php
 
 rmd lib/jelix-modules/jWSDL
+rmd lib/wshelper
 
 cd lib/jelix-modules/junittests/install/www/tests/
   design.css
