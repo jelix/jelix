@@ -91,6 +91,7 @@ cd lib/jelix/installer/
 cd lib/jelix/utils/
   jLog.class.php
   jMinifier.class.php
+  jWSDL.class.php
 
 cd lib/jelix/plugins/acl/db/
   db.acl.php

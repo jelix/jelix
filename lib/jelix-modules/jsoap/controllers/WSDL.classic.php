@@ -3,15 +3,10 @@
 * @package     jelix-modules
 * @subpackage  jelix
 * @author      Sylvain de Vathaire
-* @copyright   2008 Sylvain de Vathaire
+* @contributor Laurent Jouanneau
+* @copyright   2008 Sylvain de Vathaire, 2012 Laurent Jouanneau
 * @licence     http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
-
-/**
- * jWSDL class
- */
-require(JELIX_LIB_UTILS_PATH.'jWSDL.class.php');
-
 
 /**
  * @package    jelix-modules

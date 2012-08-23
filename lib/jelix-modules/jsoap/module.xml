@@ -13,4 +13,7 @@
     <dependencies>
 #expand        <jelix minversion="1.5pre" maxversion="__LIB_VERSION_MAX__"/>
     </dependencies>
+    <autoload>
+        <class name="jWSDL" file="classes/jWSDL.php" />
+    </autoload>
 </module>

@@ -154,6 +154,8 @@ cd lib/jelix-modules/junittests/www
 
 cd lib/jelix-modules/jsoap
 * module.xml
+cd lib/jelix-modules/jsoap/classes
+  jWSDL.php
 cd lib/jelix-modules/jsoap/controllers
   WSDL.classic.php
 cd lib/jelix-modules/jsoap/templates

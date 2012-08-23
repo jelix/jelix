@@ -9,13 +9,6 @@
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-
-/**
- * jWSDL utility class
- */
-require_once(JELIX_LIB_UTILS_PATH.'jWSDL.class.php');
-
-
 /**
  * Specialisation of the main class of the jelix core for soap purpose
  *
@@ -42,7 +35,6 @@ class jSoapCoordinator extends jCoordinator {
      * Return php variables, the soap server will transform it in a soap response
      */
     public function processSoap(){
-
         $this->wsdl = new jWSDL($this->request->params['module'], $this->request->params['action']);
 
         $this->soapServer = $this->getSoapServer($this->wsdl);

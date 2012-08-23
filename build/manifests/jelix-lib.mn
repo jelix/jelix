@@ -405,7 +405,6 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
-  jWSDL.class.php
 
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
