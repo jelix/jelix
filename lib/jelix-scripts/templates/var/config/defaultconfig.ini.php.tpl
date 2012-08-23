@@ -38,7 +38,7 @@ jacl2db.access = 0
 jauth.access = 0
 jauthdb.access = 0
 junittests.access = 0
-jWSDL.access = 0
+jsoap.access = 0
 
 [coordplugins]
 ;name = file_ini_name or 1

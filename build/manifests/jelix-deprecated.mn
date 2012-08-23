@@ -250,6 +250,8 @@ cd lib/jelix-modules/jauthdb/install
   install_jauth.data.sqlite.sql
   _installclass.php
 
+rmd lib/jelix-modules/jWSDL
+
 cd lib/jelix-modules/junittests/install/www/tests/
   design.css
 

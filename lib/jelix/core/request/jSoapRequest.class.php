@@ -34,7 +34,7 @@ class jSoapRequest extends jRequest {
        if(isset($_GET["service"]) && $_GET['service'] != ''){
             list($module, $action) =  explode('~',$_GET["service"]);
         }else{
-            throw new JException('jWSDL~errors.service.param.required');
+            throw new jException('jsoap~errors.service.param.required');
         }
 
         $this->params['module'] = $module;

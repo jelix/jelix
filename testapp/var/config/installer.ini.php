@@ -13,7 +13,7 @@ testurls.installed = 1
 
 ; for tests
 junittests.installed = 1
-jWSDL.installed = 1
+jsoap.installed = 1
 jacldb.installed = 1
 jacl2db.installed = 1
 jauthdb.installed = 1

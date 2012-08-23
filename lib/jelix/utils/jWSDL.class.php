@@ -96,7 +96,7 @@ class jWSDL {
         if (extension_loaded('eAccelerator')) {
             $reflect = new ReflectionClass('jWSDL');
             if($reflect->getDocComment() == NULL) {
-                throw new jException('jWSDL~errors.eaccelerator.configuration');
+                throw new jException('jsoap~errors.eaccelerator.configuration');
             }
             unset($reflect);
         }
@@ -181,7 +181,7 @@ class jWSDL {
         try {
             $gendoc = $wsdl->generateDocument();
         } catch (WSDLException $exception) {
-            throw new JException('jWSDL~errors.wsdl.generation', $exception->msg);
+            throw new JException('jsoap~errors.wsdl.generation', $exception->msg);
         }
 
         return $gendoc;
