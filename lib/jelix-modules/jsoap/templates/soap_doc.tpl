@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <h1 class="apptitle">Web services documentation<br/><span class="welcome">{$doc['class']->name|replace:'Ctrl':''}
-        <a href="{jurl 'jWSDL~WSDL:wsdl', array("service"=>$doc['service'])}">[WSDL]</a></span></h1>
+        <a href="{jurl 'jsoap~WSDL:wsdl', array("service"=>$doc['service'])}">[WSDL]</a></span></h1>
 
 <div id="page">
     <!--<div class="logo"><img src="{$j_jelixwww}design/images/logo_jelix_moyen.png" alt=""/></div>-->
@@ -10,7 +10,7 @@
         <h3>Services</h3>
         <ul>
         {foreach $doc['menu'] as $webservice}
-        <li><a href="{jurl 'jWSDL~WSDL:index', array("service"=>$webservice['service'])}">{$webservice['class']}</a></li>
+        <li><a href="{jurl 'jsoap~WSDL:index', array("service"=>$webservice['service'])}">{$webservice['class']}</a></li>
         {/foreach}
         </ul>
     </div>
@@ -37,7 +37,7 @@
                 {if $propertieClassName =='int' || $propertieClassName =='string' || $propertieClassName =='boolean' || $propertieClassName =='double' || $propertieClassName =='float' ||$propertieClassName =='void'}
                 <li>type {$propertie->type}</li>
                 {else}
-                <li>type <a href="{jurl 'jWSDL~WSDL:index', array('service'=>$doc['service'], 'className'=>str_replace('[]' , '',$propertieClassName))}">{$propertie->type}</a></li>
+                <li>type <a href="{jurl 'jsoap~WSDL:index', array('service'=>$doc['service'], 'className'=>str_replace('[]' , '',$propertieClassName))}">{$propertie->type}</a></li>
                 {/if}
                 </ul>
             {/if}
@@ -70,7 +70,7 @@
                     {if $returnClassName =='int' || $returnClassName =='string' || $returnClassName =='boolean' || $returnClassName =='double' || $returnClassName =='float' || $returnClassName =='void'}
                     <li>return {$method->return}</li>
                     {else}
-                    <li>return <a href="{jurl 'jWSDL~WSDL:index', array('service'=>$doc['service'], 'className'=>$returnClassName)}">{$method->return}</a></li>
+                    <li>return <a href="{jurl 'jsoap~WSDL:index', array('service'=>$doc['service'], 'className'=>$returnClassName)}">{$method->return}</a></li>
                     {/if}
                     </ul>
                 {/if}

@@ -38,7 +38,7 @@ class WSDLCtrl extends jController {
                     list($module, $controller) =  explode('~',$service);
                 }
                 if (empty($module) || empty($controller)) {
-                    throw new JException("jWSDL~errors.service.param.invalid");
+                    throw new JException("jsoap~errors.service.param.invalid");
                 }
             }
 
@@ -53,7 +53,7 @@ class WSDLCtrl extends jController {
         }else{
             $rep->title = "Documentation -  Web services";
         }
-        $rep->bodyTpl = 'jWSDL~soap_doc';
+        $rep->bodyTpl = 'jsoap~soap_doc';
         return $rep;
     }
 
@@ -68,14 +68,14 @@ class WSDLCtrl extends jController {
         $service = $this->param('service');
 
         if (empty($service)) {
-            throw new JException("jWSDL~errors.service.param.required");
+            throw new jException("jsoap~errors.service.param.required");
         }
 
         if(!strpos($service, '~')===FALSE){
             list($module, $controller) =  explode('~',$service);
         }
         if (empty($module) || empty($controller)) {
-            throw new JException("jWSDL~errors.service.param.invalid");
+            throw new jException("jsoap~errors.service.param.invalid");
         }
 
         $wsdl = new jWSDL($module, $controller);
