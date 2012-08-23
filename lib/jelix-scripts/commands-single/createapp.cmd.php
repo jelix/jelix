@@ -245,7 +245,7 @@ class createappCommand extends JelixScriptCommand {
         if(strpos($rp, './') === 0)
             $rp = substr($rp, 2);
         if (strpos($rp, '../') !== false) {
-            return 'realpath($appPath.\''.$rp."').'/'";
+            return 'realpath(__DIR__.\'/'.$rp."').'/'";
         }
         else if (DIRECTORY_SEPARATOR == '/' && $rp[0] == '/') {
             return "'".$rp."'";
@@ -254,7 +254,7 @@ class createappCommand extends JelixScriptCommand {
             return "'".$rp."'";
         }
         else {
-            return '$appPath.\''.$rp."'";
+            return '__DIR__.\'/'.$rp."'";
         }
     }
 }

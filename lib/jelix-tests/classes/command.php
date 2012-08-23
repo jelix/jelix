@@ -59,11 +59,11 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
 
         $filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
-        $dir = __DIR__;
-        $filter->addFileToBlacklist($dir.'/JelixTestSuite.class.php', 'PHPUNIT');
-        $filter->addFileToBlacklist($dir.'/junittestcase.class.php', 'PHPUNIT');
-        $filter->addFileToBlacklist($dir.'/junittestcasedb.class.php', 'PHPUNIT');
-        $filter->addFileToBlacklist(dirname($dir).'/phpunit.inc.php', 'PHPUNIT');
+
+        $filter->addFileToBlacklist(__DIR__.'/JelixTestSuite.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist(__DIR__.'/junittestcase.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist(__DIR__.'/junittestcasedb.class.php', 'PHPUNIT');
+        $filter->addFileToBlacklist(dirname(__DIR__).'/phpunit.inc.php', 'PHPUNIT');
 
         if ($this->version36) {
             return new PHPUnit_TextUI_TestRunner($this->arguments['loader'], $filter);
