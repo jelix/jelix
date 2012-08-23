@@ -38,7 +38,6 @@ cd lib/jelix/core
   jAutoloader.class.php
   jConfigAutoloader.class.php
 * jConfigCompiler.class.php
-  jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
@@ -83,7 +82,6 @@ cd lib/jelix/core/request
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
   jCssRequest.class.php
-  jSoapRequest.class.php
 
 cd lib/jelix/core/response
   error.en_US.php
@@ -104,7 +102,6 @@ cd lib/jelix/core/response
   jResponseAtom10.class.php
   jResponseCss.class.php
   jResponseTcpdf.class.php
-  jResponseSoap.class.php
   jResponseHtmlFragment.class.php
   jResponseSitemap.class.php
 

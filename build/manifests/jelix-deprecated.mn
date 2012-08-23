@@ -20,10 +20,12 @@ cd lib/jelix/core
   jApplication.class.php
   jErrorHandler.lib.php
   jException.lib.php
+  jSoapCoordinator.class.php
 
 cd lib/jelix/core/request
   jXulRequest.class.php
   jRdfRequest.class.php
+  jSoapRequest.class.php
 
 cd lib/jelix/core/response
   jResponseXul.class.php
