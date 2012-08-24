@@ -10,12 +10,18 @@ class testInstallApp extends jInstallerApplication {
 }
 
 
-class installAppTest extends PHPUnit_Framework_TestCase
-{
+class installAppTest extends PHPUnit_Framework_TestCase {
+
+    function setUp() {
+        jApp::saveContext();
+    }
+
+    function tearDown() {
+        jApp::restoreContext();
+    }
+
 
     function testEntryPointsList () {
-        jApp::saveContext();
-        
         jApp::initPaths(dirname(__FILE__).'/app1/');
         
         $app = new testInstallApp('project_empty.xml');
@@ -41,7 +47,5 @@ class installAppTest extends PHPUnit_Framework_TestCase
         $this->assertEquals('foo.php', $ep->file);
         $this->assertEquals('', $ep->type);
         $this->assertEquals('foo', $ep->config->startModule);
-
-        jApp::restoreContext();
     }
 }

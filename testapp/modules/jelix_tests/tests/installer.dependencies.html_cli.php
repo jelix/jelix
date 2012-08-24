@@ -21,11 +21,13 @@ class UTjInstallerDependencies extends jUnitTestCase {
     public function setUp() {
         $this->instReport = new testInstallReporter();
         $this->installer = new testInstallerMain($this->instReport);
+        jApp::saveContext();
     }
 
     public function tearDown() {
         $this->instReport = null;
         $this->installer = null;
+        jApp::restoreContext();
     }
 
 
