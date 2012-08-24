@@ -5,10 +5,19 @@ require_once(JELIX_LIB_CORE_PATH.'/request/jClassicRequest.class.php');
 class httpcacheUnitTest extends PHPUnit_Framework_TestCase
 {
 
+    protected $_server;
+
     public function setUp(){
+        $this->_server = $_SERVER;
         unset($_SERVER['REQUEST_METHOD']);
         unset($_SERVER['REMOTE_ADDR']);
         unset($_SERVER['HTTP_If_Modified_Since']);
+        jApp::saveContext();
+    }
+
+    public function tearDown() {
+        $_SERVER = $this->_server;
+        jApp::restoreContext();
     }
 
     /**
