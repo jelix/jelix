@@ -6,6 +6,8 @@ startAction="main:index"
 
 [responses]
 html=myHtmlResponse
+soap="jsoap~jResponseSoap"
+
 
 [urlengine]
 engine=significant

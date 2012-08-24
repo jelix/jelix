@@ -13,6 +13,6 @@
 class jsoapModuleInstaller extends jInstallerModule {
 
     function install() {
-
+        $this->config->setValue('soap', "jsoap~jResponseSoap", "responses");
     }
 }
