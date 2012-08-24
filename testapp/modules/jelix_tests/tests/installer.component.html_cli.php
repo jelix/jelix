@@ -51,7 +51,6 @@ class UTjInstallerComponent extends UnitTestCase {
 
     protected $defaultIni;
 
-
     public function setUp() {
         jApp::saveContext();
     }
