@@ -134,12 +134,12 @@ checkCacheFiletime  = on
 force  = off
 
 [urlengine]
-; name of url engine :  "simple" or "significant"
-engine        = simple
+; name of url engine :  "basic_significant" or "significant"
+engine        = basic_significant
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
-; you use the significant engine. If you use the simple url engine, you can set to off.
+; you use the significant engine. If you use the deprecated "simple" url engine, you can set to off.
 enableParser = on
 
 ; if multiview is activated in apache, eg, you don't have to indicate the ".php" suffix
@@ -196,7 +196,7 @@ defaultEntrypoint= index
 ; action to show the 'page not found' error
 notfoundAct = "jelix~error:notfound"
 
-; list of actions which require https protocol for the simple url engine
+; list of actions which require https protocol for the deprecated "simple" url engine
 ; syntax of the list is the same as explained in the simple_urlengine_entrypoints
 simple_urlengine_https =
 
@@ -211,7 +211,7 @@ urlScriptIdenc=
 documentRoot=
 
 [simple_urlengine_entrypoints]
-; parameters for the simple url engine. This is the list of entry points
+; parameters for the deprecated "simple" url engine. This is the list of entry points
 ; with list of actions attached to each entry points
 
 ; script_name_without_suffix = "list of action selectors separated by a space"

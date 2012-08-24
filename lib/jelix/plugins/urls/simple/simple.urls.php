@@ -15,6 +15,7 @@
  * @package  jelix
  * @subpackage urls_engine
  * @see jIUrlEngine
+ * @deprecated 1.4
  */
 class simpleUrlEngine implements jIUrlEngine {
 

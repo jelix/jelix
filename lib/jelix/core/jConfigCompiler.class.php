@@ -161,6 +161,9 @@ class jConfigCompiler {
         self::_loadModuleInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
 
+        if ($config->urlengine['engine'] == 'simple')
+            trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (!isset($config->_pluginsPathList_coord[$name])) {

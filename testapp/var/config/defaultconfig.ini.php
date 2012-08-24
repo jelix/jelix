@@ -45,8 +45,7 @@ checkCacheFiletime  = on
 force  = off
 
 [urlengine]
-; name of url engine :  "simple" or "significant"
-engine        = simple
+engine        = basic_significant
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
