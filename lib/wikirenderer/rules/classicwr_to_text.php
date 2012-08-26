@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau 
  * @copyright 2003-2006 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -47,22 +47,26 @@ class classicwr_to_text   extends WikiRendererConfig {
 // ===================================== déclarations des tags inlines
 
 class cwrtext_strong extends WikiTag {
+    protected $name ='strong';
     public $beginTag='__';
     public $endTag='__';
 }
 
 class cwrtext_em extends WikiTag {
+    protected $name ='em';
     public $beginTag='\'\'';
     public $endTag='\'\'';
 }
 
 class cwrtext_code extends WikiTag {
+    protected $name ='code';
     public $beginTag='@@';
     public $endTag='@@';
     function getContent(){ return '['.$this->contents[0].']';}
 }
 
 class cwrtext_q extends WikiTag {
+    protected $name ='q';
     public $beginTag='^^';
     public $endTag='^^';
     protected $attribute=array('$$','lang','cite');
@@ -76,6 +80,7 @@ class cwrtext_q extends WikiTag {
 }
 
 class cwrtext_cite extends WikiTag {
+    protected $name ='cite';
     public $beginTag='{{';
     public $endTag='}}';
     protected $attribute=array('$$','title');
@@ -89,6 +94,7 @@ class cwrtext_cite extends WikiTag {
 }
 
 class cwrtext_acronym extends WikiTag {
+    protected $name ='acronym';
     public $beginTag='??';
     public $endTag='??';
     protected $attribute=array('$$','title');
@@ -102,6 +108,7 @@ class cwrtext_acronym extends WikiTag {
 }
 
 class cwrtext_anchor extends WikiTag {
+    protected $name ='anchor';
     public $beginTag='~~';
     public $endTag='~~';
     protected $attribute=array('name');
@@ -111,6 +118,7 @@ class cwrtext_anchor extends WikiTag {
 
 
 class cwrtext_link extends WikiTag {
+    protected $name ='link';
     public $beginTag='[';
     public $endTag=']';
     protected $attribute=array('$$','href','hreflang','title');
@@ -121,7 +129,8 @@ class cwrtext_link extends WikiTag {
         if($cnt == 1 ){
             return $this->wikiContentArr[0];
         }else{
-            return $this->wikiContentArr[0].' ('.$this->wikiContentArr[1].')';
+            list($href, $label) = $this->config->processLink($this->wikiContentArr[1], $this->name);
+            return $this->wikiContentArr[0].' ('.$href.')';
         }
     }
 }
@@ -129,6 +138,7 @@ class cwrtext_link extends WikiTag {
 
 
 class cwrtext_image extends WikiTag {
+    protected $name ='image';
     public $beginTag='((';
     public $endTag='))';
     protected $attribute=array('src','alt','align','longdesc');

@@ -423,7 +423,7 @@ c2.activate(\'closed\');
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php/jelix/jforms/getListData\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::config()->urlengine['basePath'].'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
@@ -442,7 +442,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php/jelix/jforms/getListData\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::config()->urlengine['basePath'].'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
@@ -462,7 +462,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php?module=jelix&action=jforms:getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::config()->urlengine['basePath'].'index.php/jelix/jforms/getListData\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::config()->urlengine['basePath'].'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());

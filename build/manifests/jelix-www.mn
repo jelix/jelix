@@ -51,20 +51,6 @@ cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
   wymiframe.html
   wymiframe.css
 
-cd lib/jelix-www/xul
-  jxulform.css
-  jxulform.xml
-  throbber.gif
-  jsonrpc.js
-  jxbl.xml
-  jxbl.css
-#if ENABLE_DEVELOPER
-cd lib/jelix-www/xul/test/
-! testxulform.php
-! testxulform_jsonrpc.php
-! testxulform.xul
-#endif
-
 cd lib/jelix-www/wymeditor
   jquery.wymeditor.js
   GPL-license.txt
@@ -306,6 +292,7 @@ cd lib/jelix-www/jquery/ui/i18n
 ! jquery.ui.datepicker-fo.js
 ! jquery.ui.datepicker-fr.js
 ! jquery.ui.datepicker-fr-CH.js
+! jquery.ui.datepicker-ge.js
 ! jquery.ui.datepicker-gl.js
 ! jquery.ui.datepicker-he.js
 ! jquery.ui.datepicker-hi.js

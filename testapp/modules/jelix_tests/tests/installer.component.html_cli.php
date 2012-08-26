@@ -11,7 +11,7 @@
 */
 
 
-require_once(dirname(__FILE__).'/installer.lib.php');
+require_once(__DIR__.'/installer.lib.php');
 require_once(LIB_PATH.'/simpletest/mock_objects.php');
 
 class testInstallerComponentModule2 extends jInstallerComponentModule {
@@ -51,8 +51,12 @@ class UTjInstallerComponent extends UnitTestCase {
 
     protected $defaultIni;
 
-
     public function setUp() {
+        jApp::saveContext();
+    }
+
+    public function tearDown() {
+        jApp::restoreContext();
     }
 
     public function testDependenciesReading() {

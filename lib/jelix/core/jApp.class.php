@@ -68,44 +68,6 @@ class jApp {
      */
     public static function isInit() { return self::$_isInit; }
 
-    /**
-     * init path from JELIX_APP_* defines or define JELIX_APP_*,
-     * depending of how the bootstrap has been initialized.
-     * The goal of this method is to support the transition
-     * between the old way of defining path, and the new way
-     * in jelix 1.3.
-     * @deprecated
-     */
-    public static function initLegacy() {
-        if (self::$_isInit) {
-            if (!defined('JELIX_APP_PATH')) {
-                define ('JELIX_APP_PATH',         self::$appPath);
-                define ('JELIX_APP_TEMP_PATH',    self::tempPath());
-                define ('JELIX_APP_VAR_PATH',     self::$varPath);
-                define ('JELIX_APP_LOG_PATH',     self::$logPath);
-                define ('JELIX_APP_CONFIG_PATH',  self::$configPath);
-                define ('JELIX_APP_WWW_PATH',     self::$wwwPath);
-                define ('JELIX_APP_CMD_PATH',     self::$scriptPath);
-            }
-        }
-        else if (defined('JELIX_APP_PATH')) {
-            self::initPaths(JELIX_APP_PATH,
-                            JELIX_APP_WWW_PATH,
-                            JELIX_APP_VAR_PATH,
-                            JELIX_APP_LOG_PATH,
-                            JELIX_APP_CONFIG_PATH,
-                            JELIX_APP_CMD_PATH);
-            self::setTempBasePath(JELIX_APP_TEMP_PATH);
-        }
-
-        global $gJConfig;
-        if (!$gJConfig)
-            $gJConfig = self::$_config;
-        global $gJCoord;
-        if (!$gJCoord)
-            $gJCoord = self::$_coord;
-    }
-
     public static function appPath($file='') { return self::$appPath.$file; }
     public static function varPath($file='') { return self::$varPath.$file; }
     public static function logPath($file='') { return self::$logPath.$file; }
@@ -157,7 +119,7 @@ class jApp {
      * Load the configuration from the given file.
      *
      * Call it after initPaths
-     * @param  string $configFile name of the ini file to configure the framework
+     * @param  string|object $configFile name of the ini file to configure the framework or a configuration object
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
      *                 and really have to use the default handler or an other handler
@@ -166,7 +128,10 @@ class jApp {
         if ($enableErrorHandler) {
             jBasicErrorHandler::register();
         }
-        self::setConfig(jConfig::load($configFile));
+        if (is_object($configFile))
+            self::setConfig($configFile);
+        else
+            self::setConfig(jConfig::load($configFile));
         self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 
@@ -207,7 +172,8 @@ class jApp {
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
              self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
-             self::$_config, self::$_coord) = array_pop(self::$contextBackup);
+             $conf, self::$_coord) = array_pop(self::$contextBackup);
+        self::setConfig($conf);
     }
 
     /**

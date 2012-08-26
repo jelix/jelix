@@ -320,11 +320,13 @@ class jTpl {
 #endif
             $previousTpl = $this->_templateName;
             $this->_templateName = $tpl;
-            if (in_array($tpl, $this->processedMeta)) {
-                $callMeta = false;
+            if ($callMeta) {
+                if (in_array($tpl, $this->processedMeta)) {
+                    $callMeta = false;
+                }
+                else
+                    $this->processedMeta[] = $tpl;
             }
-            else
-                $this->processedMeta[] = $tpl;
             $this->recursiveTpl[] = $tpl;
 #ifnot JTPL_STANDALONE
             $md = $this->getTemplate ($sel, $outputtype, $trusted);
@@ -376,7 +378,7 @@ class jTpl {
 
             $cachePath .= $outputtype.'_'.$this->_templateName.'.php';
 #ifnot JTPL_STANDALONE
-            $mustCompile = $GLOBALS['gJConfig']->compilation['force'] || !file_exists($cachePath);
+            $mustCompile = jApp::config()->compilation['force'] || !file_exists($cachePath);
 #else
             $mustCompile = jTplConfig::$compilationForce || !file_exists($cachePath);
 #endif

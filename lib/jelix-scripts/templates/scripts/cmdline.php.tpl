@@ -8,7 +8,7 @@
 * @license   %%default_license_url%% %%default_license%%
 */
 
-require_once (dirname(__FILE__).'/%%rp_app%%application.init.php');
+require_once (__DIR__.'/%%rp_app%%application.init.php');
 
 checkAppOpened();
 
@@ -16,8 +16,6 @@ require_once (JELIX_LIB_CORE_PATH.'jCmdlineCoordinator.class.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');
 
-jApp::loadConfig('%%config_file%%');
-
-jApp::setCoord(new jCmdlineCoordinator());
+jApp::setCoord(new jCmdlineCoordinator('%%config_file%%'));
 jApp::coord()->process(new jCmdLineRequest());
 

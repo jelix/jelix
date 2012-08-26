@@ -9,6 +9,7 @@
    <li><a href="{jurl 'main:generateerror'}">error on a page</a></li>
    <li><a href="{jurl 'main:generatewarning'}">warning on a page</a></li>
    <li><a href="{jurl 'main:testminify'}">page using minify</a></li>
+   <li><a href="{jurl 'main:sitemap'}">sitemap</a></li>
 </ul>
 
 <h3>Unit tests</h3>
@@ -54,6 +55,6 @@
 <h3>Soap tests</h3>
 <ul>
    <li><a href="{jurl 'clientSoap:soapExtension'}">client (soap extension)</a></li>
-   <li><a href="{jurl 'jWSDL~WSDL:index'}">Web services documentation</a></li>
-   <li><a href="{jurl 'jWSDL~WSDL:wsdl', array('service'=>'testapp~soap')}">WSDL</a></li>
+   <li><a href="{jurl 'jsoap~WSDL:index'}">Web services documentation</a></li>
+   <li><a href="{jurl 'jsoap~WSDL:wsdl', array('service'=>'testapp~soap')}">WSDL</a></li>
 </ul>

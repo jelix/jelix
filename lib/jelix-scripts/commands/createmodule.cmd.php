@@ -91,6 +91,8 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $iniDefault = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
+        if ($this->verbose())
+            echo "modulePath updated in the main configuration\n";
 
         if (!$this->allEntryPoint) {
             $list = $this->getEntryPointsList();
@@ -104,6 +106,8 @@ class createmoduleCommand extends JelixScriptCommand {
                 throw new Exception("entry point is unknown");
             }
             $this->updateModulePath($ini, jApp::config()->modulesPath, $repository, $repositoryPath);
+            if ($this->verbose())
+                echo "modulePath updated in the configuration ".$entryPoint['config']."\n";
         }
 
         $path = $repositoryPath.$module.'/';
@@ -133,9 +137,11 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'daos/');
             $this->createDir($path.'forms/');
             $this->createDir($path.'locales/');
-            $this->createDir($path.'locales/en_EN/');
+            $this->createDir($path.'locales/en_US/');
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
+            if ($this->verbose())
+                echo "Sub directories have been created in the new module $module.\n";
             $this->createFile($path.'install/install.php','module/install.tpl',$param);
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
@@ -146,6 +152,8 @@ class createmoduleCommand extends JelixScriptCommand {
         if ($isdefault) {
             $iniDefault->setValue('startModule', $module);
             $iniDefault->setValue('startAction', 'default:index');
+            if ($this->verbose())
+                echo "The new module $module becomes the default module\n";
         }
 
         $iniDefault->setValue($module.'.access', ($this->allEntryPoint?2:1) , 'modules');
@@ -185,6 +193,8 @@ class createmoduleCommand extends JelixScriptCommand {
                     }
                 }
             }
+            if ($this->verbose())
+                echo "The module is initialized for the entry point ".$entryPoint['file'].".\n";
         }
 
         $install->save();
@@ -204,12 +214,11 @@ class createmoduleCommand extends JelixScriptCommand {
         }
 
         if ($this->getOption('-admin')) {
-            $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param);
+            $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param, "Listener");
             $this->createFile($path.'events.xml', 'module/events.xml.tpl', $param);
-            file_put_contents($path.'locales/en_EN/interface.UTF-8.properties', 'menu.item='.$module);
+            file_put_contents($path.'locales/en_US/interface.UTF-8.properties', 'menu.item='.$module);
             file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);
         }
-
     }
 
     protected function updateModulePath($ini, $currentModulesPath, $repository, $repositoryPath) {

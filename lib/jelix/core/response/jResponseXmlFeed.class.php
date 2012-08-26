@@ -5,7 +5,7 @@
 * @author     Yannick Le Guédart
 * @contributor Laurent Jouanneau
 * @copyright  2006 Yannick Le Guédart
-* @copyright  2006-2009 Laurent Jouanneau
+* @copyright  2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -64,8 +64,7 @@ abstract class jResponseXMLFeed extends jResponse {
     function __construct (){
 
         $this->charset  = jApp::config()->charset;
-        list($lang,$country ) = explode('_', jApp::config()->locale);
-        $this->lang       = $lang;
+        $this->lang     = jLocale::getCurrentLang();
 
         parent::__construct ();
     }

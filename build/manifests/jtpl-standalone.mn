@@ -47,10 +47,6 @@ sd lib/jelix/plugins/tpl/text
 dd plugins/text
   cfunction.const.php
 
-sd lib/jelix/plugins/tpl/xul
-dd plugins/xul
-  cfunction.const.php
-
 sd lib/jelix/plugins/tpl/xml
 dd plugins/xml
   cfunction.const.php

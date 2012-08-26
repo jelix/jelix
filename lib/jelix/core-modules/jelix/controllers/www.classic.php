@@ -23,9 +23,9 @@ class wwwCtrl extends jController {
         $rep = $this->getResponse('binary');
         $rep->doDownload = false;
         $dir = jApp::getModulePath($module).'www/';
-        jLog::log($dir.str_replace('..', '', $this->param('file')));
         $rep->fileName = realpath($dir.str_replace('..', '', $this->param('file')));
-        if (strpos($rep->fileName, $dir) !==0) {
+
+        if (!is_file($rep->fileName)) {
             $rep = $this->getResponse('html', true);
             $rep->bodyTpl = 'jelix~404.html';
             $rep->setHttpStatus('404', 'Not Found');

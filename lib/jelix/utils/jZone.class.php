@@ -142,17 +142,6 @@ class jZone {
     }
 
     /**
-     * Same as param(), included for compatibility with older versions
-     * @param string $paramName the parameter name
-     * @param mixed $defaultValue the parameter default value
-     * @return mixed the param value
-     * @deprecated 1.1
-     */
-    public function getParam ($paramName, $defaultValue=null){
-        return $this->param($paramName, $defaultValue);
-    }
-
-    /**
     * get the zone content
     * Return the cache content if it is activated and if it's exists, or call _createContent
     * @return string  zone content
@@ -163,14 +152,7 @@ class jZone {
             $f = $this->_getCacheFile();
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){
-#if PHP53ORMORE
                     clearstatcache(false, $f);
-#else
-                    if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-                        clearstatcache(false, $f);
-                    else
-                        clearstatcache();
-#endif
                     if(time() - filemtime($f) > $this->_cacheTimeout){
                         // timeout : regenerate the cache
                         unlink($f);
@@ -270,29 +252,5 @@ class jZone {
 
         jContext::pop ();
         return $toReturn;
-    }
-
-    /**
-     * @deprecated
-     */
-    function __set ($name, $value) {
-        if ($name == '_tplOuputType') {
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            trigger_error('jZone::_tplOuputType is deprecated (mispelled), use jZone::_tplOutputType instead',E_USER_NOTICE);
-#endif
-            $this->_tplOutputType = $value;
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    function __get ($name) {
-        if ($name == '_tplOuputType') {
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            trigger_error('jZone::_tplOuputType is deprecated (mispelled), use jZone::_tplOutputType instead',E_USER_NOTICE);
-#endif
-            return $this->_tplOutputType;
-        }
     }
 }

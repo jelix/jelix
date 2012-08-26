@@ -14,7 +14,6 @@ require_once (JELIX_LIB_CORE_PATH.'jCmdlineCoordinator.class.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');
 
-jApp::loadConfig('cmdline/configtests.ini.php');
 
-jApp::setCoord(new jCmdlineCoordinator());
+jApp::setCoord(new jCmdlineCoordinator('cmdline/configtests.ini.php'));
 jApp::coord()->process(new jCmdLineRequest());

@@ -6,4 +6,4 @@ startAction="main:index"
 
 [responses]
 html=myHtmlResponse
-
+soap="jsoap~jResponseSoap"

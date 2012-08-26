@@ -11,16 +11,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#if !PHP53ORMORE
-if (!defined('T_GOTO'))
-    define('T_GOTO',333);
-if (!defined('T_NAMESPACE'))
-    define('T_NAMESPACE',377);
-if (!defined('T_USE'))
-    define('T_USE',340);
-#endif
-
-
 /**
  * This is the compiler of templates: it converts a template into a php file.
  * @package     jelix
@@ -279,11 +269,6 @@ class jTplCompiler
         return true;
     }
 
-    protected function _piCallback($matches) {
-        return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
-    }
-
-
     protected function compileContent ($tplcontent) {
         $this->_metaBody = '';
         $this->_blockStack = array();
@@ -294,7 +279,9 @@ class jTplCompiler
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
 
         if ($this->escapePI) {
-            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
+            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", function ($matches) {
+                return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
+            }, $tplcontent);
         }
         if ($this->removeASPtags) {
           // we remove all asp tags
@@ -307,7 +294,13 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
-        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", array($this,'_callbackLineFeed'), $tplcontent);
+        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", function ($matches){
+                list($full, , $firstcar, $lastcar) = $matches;
+                if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
+                    return "$full\n";
+                }
+                else return $full;
+            }, $tplcontent);
         $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
 
         /*$tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);*/
@@ -317,20 +310,6 @@ class jTplCompiler
             $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
 
         return $tplcontent;
-    }
-
-    /**
-     * function called during the parsing of the template by a preg_replace_callback function
-     * It is called to add line feeds where needed
-     * @param array $matches a matched item
-     * @return string the same tag with one more line feed
-     */
-    public function _callbackLineFeed($matches){
-        list($full, , $firstcar, $lastcar) = $matches;
-        if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
-            return "$full\n";
-        }
-        else return $full;
     }
 
     /**
@@ -626,7 +605,7 @@ class jTplCompiler
         $bracketcount = $sqbracketcount = 0;
         $firstok = array_shift($tokens);
 
-        // il y a un bug, parfois le premier token n'est pas T_OPEN_TAG...
+        // there is a bug, sometimes the first token isn't T_OPEN_TAG...
         if ($firstok == '<' && $tokens[0] == '?' && is_array($tokens[1])
             && $tokens[1][0] == T_STRING && $tokens[1][1] == 'php') {
             array_shift($tokens);
@@ -751,7 +730,7 @@ class jTplCompiler
     }
 
     /**
-     * try to find a plugin
+     * Try to find a plugin
      * @param string $type type of plugin (function, modifier...)
      * @param string $name the plugin name
      * @return array|boolean an array containing the path of the plugin

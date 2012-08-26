@@ -56,7 +56,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string default locale for new app
      */
-    public $infoLocale='en_EN';
+    public $infoLocale='en_US';
 
     /**
      * @var boolean true = a chmod is done on new files and directories
@@ -102,6 +102,11 @@ class JelixScriptCommandConfig {
      * @var boolean true = debug mode
      */
     public $debugMode = false;
+
+    /**
+     * @var boolean true = verbose mode, -v flag is implicit.
+     */
+    public $verboseMode = false;
 
     public $layoutTempPath = '%appdir%/../temp/%appname%/';
     public $layoutWwwPath = '%appdir%/www/';
@@ -150,7 +155,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string
      */
-    public $newAppInfoLocale='en_EN';
+    public $newAppInfoLocale='en_US';
 
     /**
      * name of the application. cannot be indicated into configuration files

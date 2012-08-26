@@ -313,14 +313,7 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
         $filePath = $this->_getFilePath($key);
         if (!file_exists($filePath))
             return false;
-#if PHP53ORMORE
         clearstatcache(false, $filePath);
-#else
-        if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-            clearstatcache(false, $filePath);
-        else
-            clearstatcache();
-#endif
         $mt = filemtime($filePath);
         return ( $mt >= time() || $mt == 0) && is_readable ($filePath);
     }
@@ -454,14 +447,7 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl {
                         if ($all) {
                             @unlink ($f);
                         } else {
-#if PHP53ORMORE
                             clearstatcache(false, $f);
-#else
-                            if (version_compare(PHP_VERSION, '5.3.0') >= 0)
-                                clearstatcache(false, $f);
-                            else
-                                clearstatcache();
-#endif
                             if (time() > filemtime($f) && filemtime($f) != 0) {
                                 @unlink ($f);
                             }

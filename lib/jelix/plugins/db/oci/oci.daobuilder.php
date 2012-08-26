@@ -58,7 +58,7 @@ class ociDaoBuilder extends jDaoGenerator {
     }
 
     /*
-     * Remplace le lastInsertId qui ne marche pas avec oci 
+     * Replaces the lastInsertId which doesn't work with oci
      */
     protected function buildUpdateAutoIncrementPK($pkai) {
         return '          $record->'.$pkai->name.'= $this->_conn->query(\'SELECT '.$pkai->sequenceName.'.currval as '.$pkai->name.' from dual\')->fetch()->'.$pkai->name.';';

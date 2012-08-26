@@ -121,7 +121,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $urlParams = $this->_actionParams;
             $attrs['action'] = $this->_action;
         } else {
-            $url = jUrl::get($this->_action, $this->_actionParams, 2); // retourne le jurl correspondant
+            $url = jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
             $urlParams = $url->params;
             $attrs['action'] = $url->getPath();
         }
@@ -622,7 +622,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
         if(is_array($value)){
-            $value = array_map(create_function('$v', 'return (string) $v;'),$value);
+            $value = array_map(function($v){ return (string) $v;},$value);
         }
         else {
             $value = (string) $value;
@@ -743,7 +743,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 $value = $value[0];
 
             if(is_array($value)){
-                $value = array_map(create_function('$v', 'return (string) $v;'),$value);
+                $value = array_map(function($v){ return (string) $v;},$value);
                 $this->fillSelect($ctrl, $value);
             }else{
                 $this->fillSelect($ctrl, (string)$value);

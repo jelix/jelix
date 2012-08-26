@@ -30,7 +30,7 @@ class createentrypointCommand extends JelixScriptCommand {
     modèle.
 
     L'option -type indique le type de point d'entrée : classic, jsonrpc,
-    xmlrpc, rdf, soap, cmdline.
+    xmlrpc, soap, cmdline.
 
     Le nom du point d'entrée peut être un chemin sous-repertoire/foo.php.
     ",
@@ -42,7 +42,7 @@ class createentrypointCommand extends JelixScriptCommand {
     a model.
 
     The -type option indicates the type of the entry point: classic, jsonrpc,
-    xmlrpc, rdf, soap, cmdline.
+    xmlrpc, soap, cmdline.
 
     The name of the entry point can contain a subdirectory.
     ",
@@ -56,7 +56,7 @@ class createentrypointCommand extends JelixScriptCommand {
         $type = $this->getOption('-type');
         if (!$type)
             $type = 'classic';
-        else if(!in_array($type, array('classic','jsonrpc','xmlrpc','rdf','soap','cmdline')))
+        else if(!in_array($type, array('classic','jsonrpc','xmlrpc','soap','cmdline')))
             throw new Exception("invalid type");
 
         // retrieve the name of the entry point
@@ -108,6 +108,8 @@ class createentrypointCommand extends JelixScriptCommand {
                 }
                 file_put_contents($configFilePath,
                                   file_get_contents(jApp::configPath($originalConfig)));
+                if ($this->verbose())
+                    echo "Configuration file $configFile has been created from the config file $originalConfig.\n";
             }
             else {
                 // else we create a new config file, with the startmodule of the default
@@ -122,7 +124,7 @@ class createentrypointCommand extends JelixScriptCommand {
 
                 $this->createFile($configFilePath,
                                   'var/config/index/config.ini.php.tpl',
-                                  $param);
+                                  $param, "Configuration file");
             }
         }
 
@@ -136,7 +138,7 @@ class createentrypointCommand extends JelixScriptCommand {
         $param['rp_app']   = $this->getRelativePath($entryPointDir, jApp::appPath());
         $param['config_file'] = $configFile;
 
-        $this->createFile($entryPointFullPath, $entryPointTemplate, $param);
+        $this->createFile($entryPointFullPath, $entryPointTemplate, $param, "Entry point");
 
         if ($type != 'cmdline') {
             if (null === $inifile->getValue($name, 'simple_urlengine_entrypoints', null, true)) {
@@ -150,10 +152,14 @@ class createentrypointCommand extends JelixScriptCommand {
         }
 
         $this->updateProjectXml($name.".php", $configFile , $type);
+        if ($this->verbose())
+            echo "Project.xml has been updated.\n";
 
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $installer = new jInstaller(new textInstallReporter('warning'));
         $installer->installEntryPoint($name.".php");
+        if ($this->verbose())
+            echo "All modules have been initialized for the new entry point.\n";
     }
 
     protected function updateProjectXml ($fileName, $configFileName, $type) {

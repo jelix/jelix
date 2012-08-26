@@ -69,6 +69,7 @@ cd testapp/modules/testapp/daos
   testnews.dao.xml
   products.dao.xml
   productsalias.dao.xml
+  towns.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php
@@ -105,6 +106,7 @@ cd testapp/modules/testapp/install
   base.mysql.sql
   base.pgsql.sql
   install.php
+  upgrade_urlengine.php
 cd testapp/modules/testapp/tests/
   test1.pu.php
 
@@ -254,10 +256,11 @@ cd testapp/modules/jelix_tests/tests/
   jdao.generator_select.html_cli.php
   jdb.1_queries.html_cli.php
   jdb.2_queries_with_pdo.html_cli.php
+  jdb.3_queries_with_mysqli.html_cli.php
   jdb.lib.php
   jdb.mysql.html_cli.php
+  jdb.mysqli.html_cli.php
   jdb.pgsql.html_cli.php
-  jdb.sqlite.html_cli.php
   jdbschema.mysql.html_cli.php
   jdbtools.html_cli.php
   jdbtools.mysql.html_cli.php
@@ -315,6 +318,7 @@ cd testapp/tests-jelix/jelix/core/
   configautoloaderTest.php
   jAppContextTest.php
   moduleAutoloadTest.php
+  jLocaleTest.php
   jLogTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
@@ -345,6 +349,8 @@ cd testapp/tests-jelix/jelix/utils/
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
+  jDb_sqliteTest.php
+  jDb_sqlite3Test.php
 cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_dbTest.php
   jkvdb_fileTest.php
@@ -401,5 +407,7 @@ cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/db/sqlite/
   tests.sqlite
+cd testapp/var/db/sqlite3/
+  tests.sqlite3
 
 cd temp/testapp

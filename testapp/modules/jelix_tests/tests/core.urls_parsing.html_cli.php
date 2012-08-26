@@ -6,6 +6,8 @@
 * @contributor Thibault Piront (nuKs)
 * @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
+
+
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -27,6 +29,7 @@ class UTParseUrls extends UnitTestCase {
     protected $oldParams;
     protected $oldRequestType;
     protected $oldUrlengineConf;
+    protected $backupLocale;
     protected $simple_urlengine_entrypoints;
 
     function setUp() {
@@ -35,7 +38,7 @@ class UTParseUrls extends UnitTestCase {
       $this->oldUrlScriptPath = $req->urlScriptPath;
       $this->oldParams = $req->params;
       $this->oldRequestType = $req->type;
-
+      $this->backupLocale = jApp::config()->locale;
       $this->oldUrlengineConf = jApp::config()->urlengine;
       $this->simple_urlengine_entrypoints = jApp::config()->simple_urlengine_entrypoints;
     }
@@ -46,6 +49,7 @@ class UTParseUrls extends UnitTestCase {
       $req->params = $this->oldParams;
       $req->type = $this->oldRequestType;
 
+      jApp::config()->locale = $this->backupLocale;
       jApp::config()->urlengine = $this->oldUrlengineConf;
       jApp::config()->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
       jUrl::getEngine(true);
@@ -63,7 +67,6 @@ class UTParseUrls extends UnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
          'checkHttpsOnParsing'=>false
@@ -79,7 +82,7 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
-      // celle ci n'a pas de définition dans urls.xml *exprés*
+      // this result has no definition in urls.xml, it si normal
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array();
       $resultList[]= array('module'=>'news',        'action'=>'main:bar',     'aaa'=>'bbb');
@@ -112,7 +115,6 @@ class UTParseUrls extends UnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo/bar/');
-
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -240,6 +242,87 @@ class UTParseUrls extends UnitTestCase {
 
     }
 
+    function testSignificantEngineWithLang() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+        $config = jApp::config();
+        $config->urlengine = array(
+            'engine'=>'significant',
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'defaultEntrypoint'=>'index',
+            'notfoundAct'=>'jelix~notfound',
+            'significantFile'=>'urls.xml',
+            'checkHttpsOnParsing'=>false
+        );
+        $config->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+
+        $resultList=array();
+        $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1', 'p1'=>'foo', 'lang'=>'fr'));
+        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1', 'p1'=>'foo', 'lang'=>'en', 'bar'=>'baz')); // FIXME should be en_US
+        $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'fr_FR'));
+        $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'fr_FR'));
+        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'en_EN')); // FIXME should be en_US
+        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang2', 'p1'=>'foo', 'lang'=>'en'));// FIXME should be en_US
+        $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang2', 'p1'=>'foo', 'lang'=>'fr'));
+        $resultList[]= array('en_US', array('module'=>'jelix_tests', 'action'=>'urlsig:lang3', 'p1'=>'foo', 'lang'=>'en_US'));
+        $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang3', 'p1'=>'foo', 'lang'=>'fr_FR'));
+
+        $request=array(
+            array("index.php","/url-with-lang/test1/fr/foo", array()),
+            array("index.php","/url-with-lang/test1/en/foo", array('bar'=>'baz')),
+            array("index.php","/url-with-lang/test1bis/fr_FR/foo", array()),
+            array("index.php","/url-with-lang/test1bis/fr/foo", array()),
+            array("index.php","/url-with-lang/test1bis/en/foo", array()),
+            array("index.php","/url-with-lang/test2/en/foo", array()),
+            array("index.php","/url-with-lang/test2/fr/foo", array()),
+            array("index.php","/url-with-lang/test3/en/foo", array()),
+            array("index.php","/url-with-lang/test3/fr/foo", array()),
+        );
+
+        foreach($request as $k=>$urldata){
+            jApp::config()->locale = 'xx_YY';
+            $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+            $p = $url->params;
+            ksort($p);
+            ksort($resultList[$k][1]);
+            $this->assertEqual($p, $resultList[$k][1], 'test '.$k. ' - %s');
+            $this->assertEqual(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+        }
+
+        $config->urlengine['checkHttpsOnParsing'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+        $config->urlengine['multiview']=true;
+
+        $request=array(
+            array("index","/url-with-lang/test1/fr/foo", array()),
+            array("index","/url-with-lang/test1/en/foo", array('bar'=>'baz')),
+            array("index","/url-with-lang/test1bis/fr_FR/foo", array()),
+            array("index","/url-with-lang/test1bis/fr/foo", array()),
+            array("index","/url-with-lang/test1bis/en/foo", array()),
+            array("index","/url-with-lang/test2/en/foo", array()),
+            array("index","/url-with-lang/test2/fr/foo", array()),
+            array("index","/url-with-lang/test3/en/foo", array()),
+            array("index","/url-with-lang/test3/fr/foo", array()),
+        );
+
+        foreach($request as $k=>$urldata){
+            jApp::config()->locale = 'xx_YY';
+            $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+            $p = $url->params;
+            ksort($p);
+            ksort($resultList[$k][1]);
+            $this->assertEqual($p, $resultList[$k][1], 'test '.$k. ' - %s');
+            $this->assertEqual(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+        }
+    }
+
     function testBasicSignificantEngine() {
        $req = jApp::coord()->request;
        $req->urlScriptPath = '/';
@@ -252,7 +335,6 @@ class UTParseUrls extends UnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
        );

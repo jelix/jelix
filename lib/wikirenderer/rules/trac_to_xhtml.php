@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2006-2008 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -330,7 +330,7 @@ class tracxhtml_list extends WikiRendererBloc {
         $d=$t[0] - $newLen;
         $str='';
 
-        if( $d < 0 ){ // one more level
+        if( $d < 0 ){ // un niveau de plus
             $this->_stack[] = array($newLen ,  $this->_detectMatch[2]);
             $str=($this->_detectMatch[2] == '*'?"<ul><li>":"<ol><li>");
 

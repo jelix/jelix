@@ -131,7 +131,7 @@ class jDaoGenerator {
         }
 
         $src[] = '   public function getSelector() { return "'.$this->_daoId.'"; }';
-        // TODO PHP 5.3 : we could remove that
+
         $src[] = '   public function getProperties() { return '.$this->_DaoClassName.'::$_properties; }';
         $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
         $src[] = '}';
@@ -171,11 +171,6 @@ class jDaoGenerator {
         $src[] = '   parent::__construct($conn);';
         $src[] = '   $this->_fromClause = \''.$this->sqlFromClause.'\';';
         $src[] = '}';
-
-        // cannot put this methods directly into jDaoBase because self cannot refer to a child class
-        // FIXME PHP53, we could use the static keyword instead of self
-        $src[] = '   public function getProperties() { return self::$_properties; }';
-        $src[] = '   public function getPrimaryKeyNames() { return self::$_pkFields;}';
 
         $src[] = ' ';
         $src[] = ' protected function _getPkWhereClauseForSelect($pk){';
@@ -945,7 +940,7 @@ class jDaoGenerator {
                     $phpvalue = 'implode(\',\', array_map( '.$phpexpr.', '.$cond['value'].'))';
                     $value= '(\'.'.$phpvalue.'.\')';
                 }else{
-                    $value= '('.$cond['value'].')';
+                    $value= '('.str_replace("'", "\\'", $cond['value']).')';
                 }
                 $r.=$cond['operator'].' '.$value;
             }elseif($cond['operator'] == 'IS NULL' || $cond['operator'] == 'IS NOT NULL'){
@@ -1054,15 +1049,14 @@ class jDaoGenerator {
 
     protected function _preparePHPCallbackExpr($field){
         $type = strtolower($field->unifiedType);
-        // TODO PHP53: generate a closure instead of create_function
         switch($type){
             case 'integer':
-                return 'create_function(\'$__e\',\'return intval($__e);\')';
+                return 'function($__e){return intval($__e);}';
             case 'double':
             case 'float':
             case 'numeric':
             case 'decimal':
-                return 'create_function(\'$__e\',\'return jDb::floatToStr($__e);\')';
+                return 'function($__e){return jDb::floatToStr($__e);}';
             case 'boolean':
                 return 'array($this, \'_callbackBool\')';
             default:

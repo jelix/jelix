@@ -12,7 +12,7 @@
 // $commandName
 
 error_reporting(E_ALL);
-define ('JELIX_SCRIPTS_PATH', dirname(__FILE__).'/../');
+define ('JELIX_SCRIPTS_PATH', __DIR__.'/../');
 require (JELIX_SCRIPTS_PATH.'../jelix/init.php');
 require (JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
 
@@ -31,7 +31,15 @@ $scriptName = array_shift($argv); // shift the script name
 set_error_handler('JelixScriptsErrorHandler');
 set_exception_handler('JelixScriptsExceptionHandler');
 
-$command = JelixScript::getCommand($commandName, null, true);
+if (count($argv) > 0 && ($argv[0] == '-h' || $argv[0] == 'help')) {
+    array_shift($argv);
+    array_unshift($argv, $commandName);
+    array_unshift($argv, "-standalone");
+    $commandName = 'help';
+    $command = JelixScript::getCommand($commandName, JelixScript::loadConfig(false), false);
+}
+else
+    $command = JelixScript::getCommand($commandName, null, true);
 
 if (jApp::isInit()) {
     echo "Error: shouldn't run within an application\n";

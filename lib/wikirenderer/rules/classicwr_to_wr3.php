@@ -6,7 +6,7 @@
  * @subpackage rules
  * @author Laurent Jouanneau
  * @copyright 2003-2006 Laurent Jouanneau
- * @link http://wikirenderer.berlios.de
+ * @link http://wikirenderer.jelix.org
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public 2.1
@@ -152,8 +152,6 @@ class cwrwr3_image extends WikiTag {
     }
 }
 
-
-
 // ===================================== déclaration des différents bloc wiki
 
 class WrWr3Bloc extends WikiRendererBloc {
@@ -165,9 +163,13 @@ class WrWr3Bloc extends WikiRendererBloc {
 /**
  * traite les signes de types liste
  */
-class cwrwr3_list extends WrWr3Bloc {
+class cwrwr3_list extends WikiRendererBloc {
    public $type='list';
-   protected $regexp="/^([\*#-]+.*)/";
+   protected $regexp="/^([\*#-]+)(.*)/";
+
+   public function getRenderedLine(){
+      return $this->_detectMatch[1].$this->_renderInlineTag($this->_detectMatch[2]);
+   }
 }
 
 
@@ -192,16 +194,19 @@ class cwrwr3_hr extends WrWr3Bloc {
 /**
  * traite les signes de types titre
  */
-class cwrwr3_title extends WrWr3Bloc {
+class cwrwr3_title extends WikiRendererBloc {
    public $type='title';
-   protected $regexp="/^(\!{1,3}.*)/";
+   protected $regexp="/^(\!{1,3})(.*)/";
    protected $_closeNow=true;
+   public function getRenderedLine(){
+      return $this->_detectMatch[1].$this->_renderInlineTag($this->_detectMatch[2]);
+   }
 }
 
 /**
  * traite les signes de type paragraphe
  */
-class cwrwr3_p extends WrWr3Bloc {
+class cwrwr3_p extends WikiRendererBloc {
    public $type='p';
 
    public function detect($string){
@@ -215,6 +220,9 @@ class cwrwr3_p extends WrWr3Bloc {
         return false;
       }
    }
+   public function getRenderedLine(){
+      return $this->_renderInlineTag($this->_detectMatch[1]);
+   }
 }
 
 /**
@@ -224,26 +232,32 @@ class cwrwr3_pre extends WrWr3Bloc {
 
    public $type='pre';
    protected $regexp="/^(\s.*)/";
-   protected $_openTag="<code>";
-   protected $_closeTag="</code>";
+   protected $_openTag="<code>\n";
+   protected $_closeTag="\n</code>";
 }
 
 
 /**
  * traite les signes de type blockquote
  */
-class cwrwr3_blockquote extends WrWr3Bloc {
+class cwrwr3_blockquote extends WikiRendererBloc {
    public $type='bq';
-   protected $regexp="/^(\>+.*)/";
+   protected $regexp="/^(\>+)(.*)/";
+   public function getRenderedLine(){
+      return $this->_detectMatch[1].$this->_renderInlineTag($this->_detectMatch[2]);
+   }
 }
 
 /**
  * traite les signes de type définitions
  */
-class cwrwr3_definition extends WrWr3Bloc {
+class cwrwr3_definition extends WikiRendererBloc {
 
    public $type='dfn';
-   protected $regexp="/^(;.* : .*)/i";
+   protected $regexp="/^;(.*) : (.*)/i";
+   public function getRenderedLine(){
+      return ';'.$this->_renderInlineTag($this->_detectMatch[1]).' : '.$this->_renderInlineTag($this->_detectMatch[2]);
+   }
 }
 
 ?>

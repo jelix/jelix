@@ -24,7 +24,7 @@ class jAclDbManager {
     private function __construct (){ }
 
     /**
-     * add a right on the given subject/group/resource
+     * Add a right on the given subject/group/resource
      * @param int    $group the group id.
      * @param string $subject the key of the subject
      * @param string  $value the value of the right
@@ -38,12 +38,12 @@ class jAclDbManager {
         $sbj = $daosbj->get($subject);
         if(!$sbj) return false;
 
-        //  récupère la liste des valeurs du groupe de valeur
+        //  get the values list from the value group
         $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
 
         if($resource === null) $resource='';
 
-        // on verifie que la valeur est autorisée
+        // check if the value is allowed
         $ok=false;
         foreach($vallist as $valueok){
             if($valueok->value == $value){
@@ -53,7 +53,7 @@ class jAclDbManager {
         }
         if(!$ok) return false;
 
-        //  ajoute la nouvelle valeur
+        //  add the new value
         $daoright = jDao::get('jacldb~jaclrights', 'jacl_profile');
         $right = $daoright->get($subject,$group,$resource,$value);
         if(!$right){
@@ -69,7 +69,7 @@ class jAclDbManager {
     }
 
     /**
-     * remove a right on the given subject/group/resource
+     * Remove a right on the given subject/group/resource
      * @param int    $group the group id.
      * @param string $subject the key of the subject
      * @param string  $value the value of the right
@@ -85,7 +85,7 @@ class jAclDbManager {
 
 
     /**
-     * remove the right on the given subject/resource, for all groups
+     * Remove the right on the given subject/resource, for all groups
      * @param string  $subject the key of the subject
      * @param string $resource the id of a resource
      */
@@ -96,13 +96,13 @@ class jAclDbManager {
     }
 
     /**
-     * create a new subject
+     * Create a new subject
      * @param string  $subject the key of the subject
      * @param int $id_aclvalgrp the id of the values group with which the right can be set
      * @param string $label_key the key of a locale which represents the label of the subject
      */
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
-        // ajoute un sujet dans la table jacl_subject
+        // adds a subject in the jacl_subject table
         $daosbj = jDao::get('jacldb~jaclsubject','jacl_profile');
         $subj = jDao::createRecord('jacldb~jaclsubject','jacl_profile');
         $subj->id_aclsbj=$subject;

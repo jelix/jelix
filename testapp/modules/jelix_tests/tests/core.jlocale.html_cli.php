@@ -27,6 +27,14 @@ class UTjlocale extends jUnitTestCase {
 
     protected $filePath;
 
+    function setUp() {
+        jApp::saveContext();
+    }
+
+    function tearDown() {
+        jApp::restoreContext();
+    }
+
     public function testBundleUnknownFile(){
         $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
         $b = new bundleTest('','');
@@ -88,7 +96,6 @@ class UTjlocale extends jUnitTestCase {
         $this->assertEqual('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEqual('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEqual('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
-        jApp::config()->locale = 'en_EN';
     }
 
     function testException() {
@@ -113,7 +120,6 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual($e->getMessage(), '(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)');
         }
-        jApp::config()->locale = 'en_EN';
     }
 
     function testWithNoAskedLocale(){
@@ -150,7 +156,6 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang for the UTF-8 charset', $e->getMessage());
         }
-        jApp::config()->locale = 'en_EN';
     }
 
     function testWithNoAskedLocaleFile(){
@@ -174,8 +179,6 @@ class UTjlocale extends jUnitTestCase {
             $this->pass();
             $this->assertEqual('(200)The given locale key "jelix_tests~tests3.first.locale" is invalid (for charset UTF-8, lang fr_FR)', $e->getMessage());
         }
-
-        jApp::config()->locale = 'en_EN';
     }
 
     function testWithBadCharset() {
@@ -215,7 +218,6 @@ class UTjlocale extends jUnitTestCase {
            $this->pass();
            $this->assertEqual('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
         }
-        jApp::config()->charset = 'UTF-8';
     }
 
     function testLineBreak(){
@@ -227,5 +229,3 @@ class UTjlocale extends jUnitTestCase {
     }
 
 }
-
-?>

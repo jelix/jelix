@@ -22,7 +22,7 @@ jelix_tests.access = 2
 testapp.access = 2
 testurls.access = 2
 junittests.access = 2
-jWSDL.access = 2
+jsoap.access = 2
 jacl.access = 1
 jacldb.access = 1
 jacl2db.access = 1
@@ -45,8 +45,7 @@ checkCacheFiletime  = on
 force  = off
 
 [urlengine]
-; name of url engine :  "simple" or "significant"
-engine        = simple
+engine        = basic_significant
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
@@ -67,10 +66,8 @@ basePath = ""
 
 defaultEntrypoint= index
 
-entrypointExtension= .php
-
-; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
-simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
+; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur
+d'url simple simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions

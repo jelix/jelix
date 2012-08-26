@@ -6,8 +6,8 @@
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-require_once(dirname(__FILE__).'/JelixScriptCommandConfig.class.php');
-require_once(dirname(__FILE__).'/JelixScriptCommand.class.php');
+require_once(__DIR__.'/JelixScriptCommandConfig.class.php');
+require_once(__DIR__.'/JelixScriptCommand.class.php');
 
 
 class JelixScript {
@@ -22,8 +22,10 @@ class JelixScript {
     static function loadConfig($appname='') {
         $config = new JelixScriptCommandConfig();
 
-        if ($appname == '')
+        if ($appname === '')
             $appname = $config->loadFromProject();
+        else if ($appname === false) // don't load from project..
+            $appname = '';
 
         // try to find a .jelix-scripts.ini in the current directory or parent directories
         $dir = getcwd();
@@ -103,7 +105,7 @@ class JelixScript {
             $commandfile = JELIX_SCRIPTS_PATH.'commands/'.$cmdName.'.cmd.php';
 
         if (!file_exists($commandfile)) {
-            throw new Exception("Error: unknown command");
+            throw new Exception("Error: unknown command $cmdName");
         }
 
         require_once($commandfile);

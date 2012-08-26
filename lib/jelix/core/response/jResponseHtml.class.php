@@ -188,7 +188,7 @@ class jResponseHtml extends jResponseBasicHtml {
         // to add things in the <head>
         if ($this->bodyTpl != '') {
             $this->body->meta($this->bodyTpl);
-            $content = $this->body->fetch($this->bodyTpl,'html');
+            $content = $this->body->fetch($this->bodyTpl, 'html', true, false);
         }
         else $content = '';
 
@@ -511,11 +511,11 @@ class jResponseHtml extends jResponseBasicHtml {
             echo "<style type=\"text/css\">\n";
             foreach ($this->_Styles as $selector=>$value){
                 if (strlen ($value)){
-                    //il y a une paire clef valeur.
+                    // there is a key/value
                     echo $selector.' {'.$value."}\n";
                 }else{
-                    //il n'y a pas de valeur, c'est peut être simplement une commande.
-                    //par exemple @import qqchose, ...
+                    // no value, it could be simply a command
+                    //for example @import something, ...
                     echo $selector, "\n";
                 }
             }

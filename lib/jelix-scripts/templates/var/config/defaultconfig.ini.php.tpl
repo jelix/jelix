@@ -6,6 +6,7 @@ startModule = "%%modulename%%"
 startAction = "default:index"
 
 locale = "%%default_locale%%"
+availableLocales = "%%default_locale%%"
 charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
@@ -37,7 +38,7 @@ jacl2db.access = 0
 jauth.access = 0
 jauthdb.access = 0
 junittests.access = 0
-jWSDL.access = 0
+jsoap.access = 0
 
 [coordplugins]
 ;name = file_ini_name or 1
@@ -86,8 +87,6 @@ basePath = ""
 
 defaultEntrypoint= index
 
-entrypointExtension= .php
-
 ; action to show the 'page not found' error
 notfoundAct = "jelix~error:notfound"
 
@@ -115,8 +114,6 @@ index = "@classic"
 index = on
 xmlrpc = on
 jsonrpc = on
-rdf = on
-
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

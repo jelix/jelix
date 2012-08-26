@@ -38,7 +38,6 @@ cd lib/jelix/core
   jAutoloader.class.php
   jConfigAutoloader.class.php
 * jConfigCompiler.class.php
-  jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
@@ -66,7 +65,7 @@ cd lib/jelix/core
   jIUrlEngine.iface.php
 #endif
 #endif
-
+! lang_to_locale.ini.php
 
 cd lib/jelix/core/log/
   jFileLogger.class.php
@@ -82,10 +81,7 @@ cd lib/jelix/core/request
 * jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
-  jXulRequest.class.php
-  jRdfRequest.class.php
   jCssRequest.class.php
-  jSoapRequest.class.php
 
 cd lib/jelix/core/response
   error.en_US.php
@@ -99,20 +95,13 @@ cd lib/jelix/core/response
   jResponseText.class.php
   jResponseCmdline.class.php
   jResponseXmlrpc.class.php
-  jResponseXul.class.php
-  jResponseXulOverlay.class.php
-  jResponseXulDialog.class.php
-  jResponseXulPage.class.php
-  jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
   jResponseXmlFeed.class.php
   jResponseRss20.class.php
   jResponseAtom10.class.php
   jResponseCss.class.php
-  jResponseLatexToPdf.class.php
   jResponseTcpdf.class.php
-  jResponseSoap.class.php
   jResponseHtmlFragment.class.php
   jResponseSitemap.class.php
 
@@ -138,10 +127,8 @@ cd lib/jelix/core-modules/jelix
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
-! error.xul.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
-! error.rdf.php
   jforms.classic.php
   www.classic.php
 cd lib/jelix/core-modules/jelix/daos
@@ -155,6 +142,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1760_minify.php
   upgrade_to_1.3pre.1871_jprofiles.php
   upgrade_to_1.3pre.1919_cmd.php
+  upgrade_availablelocales.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -225,7 +213,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 
 
 cd lib/jelix/core-modules/jelix/templates
-  404.xul.tpl
   403.html.tpl
   404.html.tpl
   rss20.tpl
@@ -259,6 +246,7 @@ cd lib/jelix/dao
   jDaoParser.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
+  jDaoXmlException.class.php
 #endif
 
 cd lib/jelix/db
@@ -269,6 +257,7 @@ cd lib/jelix/db
   jDbSchema.class.php
   jDbTable.class.php
   jDbTools.class.php
+  jDbStatement.class.php
   jDbWidget.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jDbConnection.class.php
@@ -413,7 +402,6 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
-  jWSDL.class.php
 
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
@@ -430,10 +418,6 @@ cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
-
-cd lib/jelix/plugins/coord/magicquotes
-! magicquotes.coord.php
-  plugin.xml
 
 cd lib/jelix/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
@@ -470,12 +454,6 @@ cd lib/jelix/plugins/coord/traceexec
   plugin.xml
   traceexec.coord.ini.php.dist
 
-cd lib/jelix/plugins/db/intuition
-  intuition.dbconnection.php
-  intuition.dbresultset.php
-  intuition.dbtools.php
-  intuition.daobuilder.php
-
 cd lib/jelix/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php
@@ -490,6 +468,14 @@ cd lib/jelix/plugins/db/mysql
   mysql.dbtools.php
   mysql.daobuilder.php
 
+cd lib/jelix/plugins/db/mysqli
+  mysqli.dbconnection.php
+  mysqli.dbresultset.php
+  mysqli.dbschema.php
+  mysqli.dbstatement.php
+  mysqli.dbtools.php
+  mysqli.daobuilder.php
+
 cd lib/jelix/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
@@ -503,6 +489,13 @@ cd lib/jelix/plugins/db/sqlite
   sqlite.dbschema.php
   sqlite.dbtools.php
   sqlite.daobuilder.php
+
+cd lib/jelix/plugins/db/sqlite3
+  sqlite3.dbconnection.php
+  sqlite3.dbresultset.php
+  sqlite3.dbschema.php
+  sqlite3.dbtools.php
+  sqlite3.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
   oci.daobuilder.php
@@ -653,14 +646,6 @@ cd lib/jelix/plugins/tpl/xml
   function.jlocale.php
   function.jurl.php
   meta.xml.php
-
-cd lib/jelix/plugins/tpl/xul
-  cfunction.const.php
-  function.jfullurl.php
-  function.jlocale.php
-  function.jurl.php
-  function.urljsstring.php
-  meta.xul.php
 
 cd lib/jelix/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php

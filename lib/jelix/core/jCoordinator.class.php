@@ -3,11 +3,11 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin
+* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav
 * @copyright    2005-2012 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
-* @copyright    2008-2010 Dominique Papin
+* @copyright    2008-2010 Dominique Papin, 2012 Flav
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -66,7 +66,7 @@ class jCoordinator {
     protected $errorMessage = null;
 
     /**
-     * @param  string $configFile name of the ini file to configure the framework
+     * @param  string|object $config filename of the ini file to configure the framework, or the config object itself
      *              this parameter is optional if jApp::loadConfig has been already called
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
@@ -76,9 +76,6 @@ class jCoordinator {
 
         if ($configFile)
             jApp::loadConfig($configFile, $enableErrorHandler);
-
-        // temporary init. Remove this line when JELIX_APP_* and $gJConfig support will be removed completely from Jelix
-        jApp::initLegacy();
 
         $this->_loadPlugins();
     }
@@ -229,30 +226,10 @@ class jCoordinator {
         $ctrl = new $class($this->request);
         if($ctrl instanceof jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
-        }elseif(!method_exists($ctrl, $selector->method)){
+        }elseif(!is_callable(array($ctrl, $selector->method))){
             throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;
-    }
-
-
-    /**
-     * instancy a response object corresponding to the default response type
-     * of the current resquest.
-     * Deprecated. use $request->getResponse() instead.
-     * @param boolean $originalResponse TRUE to get the original, non overloaded response
-     * @deprecated since 1.3
-     */
-    public function initDefaultResponseOfRequest($originalResponse = false){
-        try {
-            $this->request->getResponse('', $originalResponse);
-        }
-        catch (Exception $e) {
-            if (!$originalResponse)
-                $this->initDefaultResponseOfRequest(true);
-            else
-                throw $e;
-        }
     }
 
     /**
@@ -327,6 +304,7 @@ class jCoordinator {
         $resp = $this->request->getErrorResponse($this->response);
         $resp->outputErrors();
         jSession::end();
+
         exit(1);
     }
 
@@ -377,23 +355,5 @@ class jCoordinator {
     */
     public function isPluginEnabled ($pluginName){
         return isset ($this->plugins[strtolower ($pluginName)]);
-    }
-
-    /**
-    * deprecated.  use jApp::isModuleEnabled() instead
-    * @deprecated
-    */
-    public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        trigger_error("jCoordinator::isModuleEnabled() is deprecated. Use jApp::isModuleEnabled() instead", E_USER_NOTICE);
-        return jApp::isModuleEnabled($moduleName, $includingExternal);
-    }
-
-    /**
-    * deprecated.  use jApp::getModulePath() instead
-    * @deprecated
-     */
-    public function getModulePath($module, $includingExternal = false){
-        trigger_error("jCoordinator::getModulePath() is deprecated. Use jApp::getModulePath() instead", E_USER_NOTICE);
-        return jApp::getModulePath($module, $includingExternal);
     }
 }

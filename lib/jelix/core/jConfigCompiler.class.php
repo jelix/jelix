@@ -161,6 +161,9 @@ class jConfigCompiler {
         self::_loadModuleInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
 
+        if ($config->urlengine['engine'] == 'simple')
+            trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (!isset($config->_pluginsPathList_coord[$name])) {
@@ -185,6 +188,32 @@ class jConfigCompiler {
             else
                 $config->timeZone = "Europe/Paris";
         }
+
+        // lang to locale
+        $availableLocales = explode(',', $config->availableLocales);
+        foreach ($availableLocales as $locale) {
+            if (preg_match("/^([a-z]{2,3})_([A-Z]{2,3})$/", $locale, $m)) {
+                if (!isset($config->langToLocale[$m[1]]))
+                    $config->langToLocale[$m[1]] = $locale;
+            }
+            else {
+                throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '$locale' is not a locale code");
+            }
+        }
+
+        $locale = $config->locale;
+        if (preg_match("/^([a-z]{2,3})_([A-Z]{2,3})$/", $locale, $m)) {
+            $config->langToLocale[$m[1]] = $locale;
+        }
+        else {
+            throw new Exception("Error in the main configuration. Bad locale code in default locale -- config->locale: '$locale' is not a locale code");
+        }
+
+        if (!in_array($locale, $availableLocales)) {
+            array_unshift($availableLocales, $locale);
+        }
+
+        $config->availableLocales = $availableLocales;
 
         if($config->sessions['storage'] == 'files'){
             $config->sessions['files_path'] = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $config->sessions['files_path']);
@@ -218,17 +247,6 @@ class jConfigCompiler {
                     throw new Exception('Error in the configuration file --  in loadClasses parameter, bad class selector: '.$sel);
             }
         }
-
-        /*if(preg_match("/^([a-zA-Z]{2})(?:_([a-zA-Z]{2}))?$/",$config->locale,$m)){
-            if(!isset($m[2])){
-                $m[2] = $m[1];
-            }
-            $config->defaultLang = strtolower($m[1]);
-            $config->defaultCountry = strtoupper($m[2]);
-            $config->locale = $config->defaultLang.'_'.$config->defaultCountry;
-        }else{
-            throw new Exception("Syntax error in the locale parameter in config file -- $configFile", 14);
-        }*/
     }
 
     /**
@@ -360,9 +378,13 @@ class jConfigCompiler {
                         if ($config->modules[$f.'.access'] == 3) {
                             $config->_externalModulesPathList[$f]=$p.$f.'/';
                         }
-                        elseif ($config->modules[$f.'.access'])
+                        elseif ($config->modules[$f.'.access']) {
                             $config->_modulesPathList[$f]=$p.$f.'/';
                             self::readModuleFile($config, $p.$f.'/');
+                            if (file_exists( $p.$f.'/plugins')) {
+                                $config->pluginsPath .= ',module:'.$f;
+                            }
+                        }
                     }
                 }
                 closedir($handle);
@@ -491,7 +513,7 @@ class jConfigCompiler {
      * calculate miscelaneous path, depending of the server configuration and other informations
      * in the given array : script path, script name, documentRoot ..
      * @param array $urlconf  urlengine configuration. scriptNameServerVariable, basePath,
-     * jelixWWWPath, jqueryPath and entrypointExtension should be present
+     * jelixWWWPath and jqueryPath should be present
      */
     static public function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
         // retrieve the script path+name.
@@ -503,7 +525,7 @@ class jConfigCompiler {
         }
         else {
             if($urlconf['scriptNameServerVariable'] == '') {
-                $urlconf['scriptNameServerVariable'] = self::findServerName($urlconf['entrypointExtension'], $isCli);
+                $urlconf['scriptNameServerVariable'] = self::findServerName('.php', $isCli);
             }
             $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
         }
@@ -582,7 +604,7 @@ class jConfigCompiler {
                 $urlconf['documentRoot'] = substr(jApp::wwwPath(), 0, - (strlen($localBasePath)));
         }
 
-        $pos = strrpos($snp, $urlconf['entrypointExtension']);
+        $pos = strrpos($snp, '.php');
         if($pos !== false){
             $snp = substr($snp,0,$pos);
         }
@@ -613,30 +635,32 @@ class jConfigCompiler {
      */
     static private function _initResponsesPath($config, $list){
         $copylist = $config->$list; // because we modify $list and then it will search for "foo.path" responses...
-        foreach($copylist as $type=>$class){
+        foreach ($copylist as $type=>$class) {
             if (strpos($class,'app:') === 0) {
                 $config->{$list}[$type] = $class = substr($class, 4);
                 $config->{$list}[$type.'.path'] = $path = jApp::appPath('responses/'.$class.'.class.php');
                 if (file_exists($path))
                     continue;
             }
-            else if (preg_match('@^module:([^:]+)(\:(.+))?$@', $class, $m)) {
+            else if (preg_match('@^(?:module:)?([^~]+)~(.+)$@', $class, $m)) {
                 $mod = $m[1];
-                if (isset($config->_modulesPathList[$mod]) && isset($m[2])) {
-                    $class = $m[3];
+                if (isset($config->_modulesPathList[$mod])) {
+                    $class = $m[2];
                     $path = $config->_modulesPathList[$mod].'responses/'.$class.'.class.php';
                     $config->{$list}[$type] = $class;
                     $config->{$list}[$type.'.path'] = $path;
                     if (file_exists($path))
                         continue;
                 }
+                else
+                    $path = $class;
             }
-            else if(file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')){
-                $config->{$list}[$type.'.path']=$path;
+            else if (file_exists($path=JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')) {
+                $config->{$list}[$type.'.path'] = $path;
                 continue;
             }
-            else if(file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))){
-                $config->{$list}[$type.'.path']=$path;
+            else if (file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))) {
+                $config->{$list}[$type.'.path'] = $path;
                 continue;
             }
             throw new Exception('Error in main configuration on responses parameters -- the class file of the response type "'.$type.'" is not found ('.$path.')',12);

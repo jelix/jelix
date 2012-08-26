@@ -29,8 +29,8 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.2)",
-    '5.2'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.3)",
+    '5.3'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
@@ -83,15 +83,15 @@ $BUILD_OPTIONS = array(
     'UTF-8',
     '',
     ),
-'PHP52'=> array(
-    false,
-    false,
-    ),
 'PHP53'=> array(
     false,
     false,
     ),
-'PHP53ORMORE'=> array(
+'PHP54'=> array(
+    false,
+    false,
+    ),
+'PHP54ORMORE'=> array(
     false,
     false,
     ),
@@ -102,7 +102,7 @@ $BUILD_OPTIONS = array(
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), git, hg or svn",
     '',
-    '/^(git|svn|hg|none)?$/',
+    '/^(git|svn|hg|rm|none)?$/',
     ),
 'SOURCE_REVISION'=> array(
     false,
@@ -147,12 +147,12 @@ $BUILD_OPTIONS = array(
 );
 
 
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
-//----------------- Preparation des variables d'environnement
+//----------------- Prepare environment variables
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 $TODAY = date('Y-m-d H:i');
@@ -172,20 +172,20 @@ if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
 else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
-if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
-        // filter and json are in php >=5.2
+if ($PHP_VERSION_TARGET) {
+    if (version_compare($PHP_VERSION_TARGET, '5.4') > -1) {
+        $PHP54 = 1;
+        $PHP54ORMORE = 1;
+    }
+    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
         $PHP53 = 1;
-        $PHP53ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        // filter and json are in php >=5.2
-        $PHP52 = 1;
-    }else{
+    }
+    else {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // no defined target, so php 5.2
-    $PHP52=1;
+    // no defined target, so php 5.3
+    $PHP53 = 1;
 }
 
 $BUILD_FLAGS = 0;
@@ -295,7 +295,7 @@ jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , 
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
-// creation du fichier d'infos sur le build
+// create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
     'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
@@ -317,7 +317,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);

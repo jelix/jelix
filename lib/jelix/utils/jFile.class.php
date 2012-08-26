@@ -135,17 +135,17 @@ class jFile {
                 if ($exception)
                     continue;
             }
-        	// file deletion
+            // file deletion
             if ($dirContent->isFile() || $dirContent->isLink()) {
-        		unlink($dirContent->getPathName());
-        	} else {
-        		// recursive directory deletion
+                    unlink($dirContent->getPathName());
+            } else {
+                // recursive directory deletion
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
                     $removed = self::removeDir($dirContent->getPathName(), true, $except);
                     if (!$removed)
                         $allIsDeleted = false;
-        		}
-        	}
+                }
+            }
         }
         unset($dir); // see bug #733
         unset($dirContent);
@@ -165,30 +165,11 @@ class jFile {
      * @since 1.1.6
      */
     public static function getMimeType($file){
-#if PHP53ORMORE
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $type = finfo_file($finfo, $file);
         finfo_close($finfo);
         return $type;
     }
-#else
-        if (function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $type = finfo_file($finfo, $file);
-            finfo_close($finfo);
-            return $type;
-        }
-        else if (function_exists('mime_content_type')) {
-            return mime_content_type($file);
-        }
-        else {
-            // we know that it is not the ideal way to do it
-            // but don't want to spent time and resource to guess
-            // it from the file content.
-            return self::getMimeTypeFromFilename($file);
-        }
-    }
-#endif
 
     /**
      * get the MIME Type of a file, only with its name

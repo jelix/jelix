@@ -10,4 +10,4 @@ jacl2 = jacl2_ws.coord.ini.php
 jacl = jacl_ws.coord.ini.php
 
 [responses]
-
+soap="jsoap~jResponseSoap"

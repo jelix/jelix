@@ -4,6 +4,7 @@
 * @subpackage  dao
 * @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
+* @contributor Philippe Villiers
 * @copyright   2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -91,7 +92,18 @@ class jDaoProperty {
     */
     function __construct ($aAttributes, $parser, $tools){
         $needed = array('name', 'fieldname', 'table', 'datatype', 'required',
-                        'minlength', 'maxlength', 'regexp', 'sequence', 'default','autoincrement');
+                        'minlength', 'maxlength', 'regexp', 'sequence', 'default', 'autoincrement');
+
+        // Allowed attributes names
+        $allowed = array('name', 'fieldname', 'table', 'datatype', 'required',
+                        'minlength', 'maxlength', 'regexp', 'sequence', 'default', 'autoincrement',
+                        'updatepattern', 'insertpattern', 'selectpattern');
+
+        foreach($aAttributes as $attributeName => $attributeValue) {
+            if(!in_array($attributeName, $allowed)) {
+                throw new jDaoXmlException ($parser->selector, 'unknown.attr', array($attributeName, 'property'));
+            }
+        }
 
         $params = $parser->getAttr($aAttributes, $needed);
 
