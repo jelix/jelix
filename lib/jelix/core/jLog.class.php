@@ -117,25 +117,6 @@ class jLog {
     }
 
     /**
-    * log a simple error into the given category.
-    * @param string $message
-    * @param string $category the log type ('warning', 'notice' or 'error')
-    */
-    public static function logError ($message, $category='error') {
-        switch ($category) {
-            case 'warning':
-                trigger_error($message, E_USER_WARNING);
-                break;
-            case 'notice':
-                trigger_error($message, E_USER_NOTICE);
-                break;
-            default:
-                trigger_error($message, E_USER_ERROR);
-                break;
-        }
-    }
-    
-    /**
     * log an exception into the given category.
     * @param Exception $exception
     * @param string $category the log type
