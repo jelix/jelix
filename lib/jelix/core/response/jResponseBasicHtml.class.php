@@ -99,6 +99,7 @@ class jResponseBasicHtml extends jResponse {
      * - $HEADBOTTOM: content before th </head> tag
      * - $BODYTOP: content just after the <body> tag, at the top of the page
      * - $BODYBOTTOM: content just before the </body> tag, at the bottom of the page
+     * - $BASEPATH: base path of the application, for links of your style sheets etc..
      * @var string
      */
     public $htmlFile = '';
@@ -213,6 +214,7 @@ class jResponseBasicHtml extends jResponse {
         $HEADBOTTOM = implode("\n", $this->_headBottom);
         $BODYTOP = implode("\n", $this->_bodyTop);
         $BODYBOTTOM = implode("\n", $this->_bodyBottom);
+        $BASEPATH = jApp::config()->urlengine['basePath'];
 
         ob_start();
         foreach($this->plugins as $name=>$plugin)
@@ -257,7 +259,7 @@ class jResponseBasicHtml extends jResponse {
         $HEADBOTTOM = implode("\n", $this->_headBottom);
         $BODYTOP = implode("\n", $this->_bodyTop);
         $BODYBOTTOM = implode("\n", $this->_bodyBottom);
-        $basePath = jApp::config()->urlengine['basePath'];
+        $BASEPATH = jApp::config()->urlengine['basePath'];
 
         header("HTTP/{$this->httpVersion} 500 Internal jelix error");
         header('Content-Type: text/html;charset='.$this->_charset);
