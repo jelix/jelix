@@ -148,7 +148,7 @@ ACTION:
         if(isset($params[2]))
             $resource = $cnx->quote($params[2]);
         else
-            $resource = $cnx->quote('');
+            $resource = $cnx->quote('-');
 
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
@@ -188,7 +188,7 @@ ACTION:
         if(isset($params[2]))
             $resource = $cnx->quote($params[2]);
         else
-            $resource = '';
+            $resource = '-';
 
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."

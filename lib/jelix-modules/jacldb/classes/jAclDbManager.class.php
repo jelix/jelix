@@ -31,7 +31,7 @@ class jAclDbManager {
      * @param string $resource the id of a resource
      * @return boolean  true if the right is set
      */
-    public static function addRight($group, $subject, $value , $resource=''){
+    public static function addRight($group, $subject, $value , $resource='-'){
         $daosbj = jDao::get('jacldb~jaclsubject', 'jacl_profile');
         $daorightval = jDao::get('jacldb~jaclrightvalues', 'jacl_profile');
 
@@ -41,7 +41,7 @@ class jAclDbManager {
         //  get the values list from the value group
         $vallist = $daorightval->findByValGroup($sbj->id_aclvalgrp);
 
-        if($resource === null) $resource='';
+        if($resource === null) $resource='-';
 
         // check if the value is allowed
         $ok=false;
