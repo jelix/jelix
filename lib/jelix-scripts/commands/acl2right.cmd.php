@@ -193,7 +193,7 @@ ACTION:
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
-        if($resource)
+        if(!empty($resource))
             $sql.=" AND id_aclres=".$resource;
 
         $rs = $cnx->query($sql);
@@ -204,7 +204,7 @@ ACTION:
         $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')."
              WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
-        if($resource)
+        if(!empty($resource))
             $sql.=" AND id_aclres=".$resource;
         $cnx->exec($sql);
 
