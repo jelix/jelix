@@ -36,10 +36,6 @@ $BUILD_OPTIONS = array(
     "The edition name of the version (optional)",
     'dev',
     ),
-'ENABLE_PHP_XMLRPC'=>array(
-    "true if jelix can use php xmlrpc api",
-    false,
-    ),
 'ENABLE_PHP_JELIX'=>array(
     "true if jelix can use jelix php extension.",
     false,
@@ -190,7 +186,6 @@ if ($PHP_VERSION_TARGET) {
 
 $BUILD_FLAGS = 0;
 if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
-if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
 
 switch($WITH_BYTECODE_CACHE){
     case 'auto': $BUILD_FLAGS |=112; break;
@@ -297,7 +292,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+    'ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
