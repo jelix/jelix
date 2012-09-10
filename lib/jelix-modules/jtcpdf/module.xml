@@ -12,4 +12,7 @@
     <dependencies>
 #expand        <jelix minversion="1.5" maxversion="__LIB_VERSION_MAX__"/>
     </dependencies>
+    <autoload>
+        <class name="jTcpdf" file="classes/jTcpdf.php" />
+    </autoload>
 </module>

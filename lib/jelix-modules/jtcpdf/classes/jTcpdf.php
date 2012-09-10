@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  utils
+* @subpackage  jtcpdf module
 * @author      Julien Issler
 * @contributor Laurent Jouanneau
 * @copyright   2007-2009 Julien Issler, 2007-2012 Laurent Jouanneau
