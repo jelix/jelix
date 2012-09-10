@@ -34,6 +34,7 @@ cd lib/jelix/core/response
   jResponseXulPage.class.php
   jResponseRdf.class.php
   jResponseLatexToPdf.class.php
+  jResponseTcpdf.class.php
 
 cd lib/jelix/core-modules/jelix/controllers
   error.xul.php
@@ -94,6 +95,7 @@ cd lib/jelix/utils/
   jLog.class.php
   jMinifier.class.php
   jWSDL.class.php
+  jTcpdf.class.php
 
 cd lib/jelix/plugins/acl/db/
   db.acl.php
@@ -218,17 +220,8 @@ cd lib/jelix-www/wymeditor
 cd lib/jelix-www/wymeditor/skins/default
   screen.css
 
-rmd lib/tcpdf/barcode
-cd lib/pdf-fonts/
-  courierb.php
-  courierbi.php
-  courieri.php
-  dejavusans-extralight.php
-  dejavusans-extralight.ctg.z
-  dejavusans-extralight.z
-
-rmd lib/pdf-fonts/dejavu-ttf-2.15
-rmd lib/pdf-fonts/freefont-20060126
+rmd lib/tcpdf/
+rmd lib/pdf-fonts/
 
 rmd lib/jelix-admin-modules/jacl2_admin
 

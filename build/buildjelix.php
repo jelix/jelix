@@ -65,10 +65,6 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-'INCLUDE_ALL_FONTS'=>array(
-    "True if you want to include lib/fonts content for tcpdf or other",
-    false,
-    ),
 'PROPERTIES_CHARSET_TARGET'=> array(
     "List of charset used for command cch (convert charset)",
     'UTF-8,ISO-8859-1,ISO-8859-15',
@@ -258,10 +254,6 @@ jManifest::process('build/manifests/jelix-vendors.mn', '.', $BUILD_TARGET_PATH ,
 jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
-
-if($INCLUDE_ALL_FONTS){
-    jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
-}
 
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());

@@ -101,7 +101,6 @@ cd lib/jelix/core/response
   jResponseRss20.class.php
   jResponseAtom10.class.php
   jResponseCss.class.php
-  jResponseTcpdf.class.php
   jResponseHtmlFragment.class.php
   jResponseSitemap.class.php
 
@@ -393,7 +392,6 @@ cd lib/jelix/utils/
   jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
-  jTcpdf.class.php
   jVersionComparator.class.php
 * jWiki.class.php
   jXMLFeedReader.class.php
