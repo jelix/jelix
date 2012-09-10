@@ -155,10 +155,10 @@ function generateModulePackage($moduleName, $modulesRepositoryPath) {
     $version = (string) $xml->info[0]->version;
     if ($IS_NIGHTLY) {
         $version .= '.'.$SOURCE_REVISION;
-        $packageName = $moduleName.'-nightly';
+        $packageName = 'module-'.$moduleName.'-nightly';
     }
     else {
-        $packageName = $moduleName.'-'.$version;
+        $packageName = 'module-'.$moduleName.'-'.$version;
     }
 
     // create the directory
