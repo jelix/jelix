@@ -11,17 +11,17 @@
 */
 
 define('K_TCPDF_EXTERNAL_CONFIG',true);
-define('K_PATH_MAIN', LIB_PATH.'tcpdf/');
+define('K_PATH_MAIN', __DIR__.'/tcpdf/');
 define('K_PATH_URL',
        jApp::coord()->request->getServerURI() .
        jApp::config()->urlengine['basePath']);
-define('K_PATH_FONTS', LIB_PATH.'pdf-fonts/');
+define('K_PATH_FONTS', __DIR__.'/tcpdf/fonts/');
 define('K_PATH_CACHE', jApp::tempPath());
 define('K_PATH_IMAGES', jApp::appPath());
 define('K_BLANK_IMAGE', K_PATH_MAIN.'images/_blank.png');
 define('K_CELL_HEIGHT_RATIO', 1.25);
 define('K_SMALL_RATIO', 2/3);
-require_once (LIB_PATH.'tcpdf/tcpdf.php');
+require_once (__DIR__.'/tcpdf/tcpdf.php');
 
 /**
  * sub-class of TCPDF, for better Jelix integration (error handling) and easy save to disk feature.
@@ -35,10 +35,6 @@ class jTcpdf extends TCPDF {
 
         if($encoding === null)
             $encoding = jApp::config()->charset;
-
-        if(!is_dir(K_PATH_FONTS)) {
-            throw new jException('jelix~errors.tcpdf.fonts_missing', array(K_PATH_FONTS));
-        }
 
         parent::__construct($orientation, $unit, $format, ($encoding == 'UTF-8' || $encoding == 'UTF-16'), $encoding);
 
