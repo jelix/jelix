@@ -23,7 +23,11 @@ class UTjDbPgsql extends jUnitTestCaseDb {
     }
 
     function setUpRun() {
-        $this->emptyTable('product_test');
+        try{
+            $prof = jProfiles::get('jdb', $this->dbProfile, true);
+            $this->emptyTable('product_test');
+        }
+        catch (Exception $e) {}
     }
 
     function testTools(){
