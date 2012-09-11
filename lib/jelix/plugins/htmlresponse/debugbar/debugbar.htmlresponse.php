@@ -172,8 +172,12 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
 
 #includerawinto LOGOJELIX jelix-dbg.png | base64
 #includerawinto LOGOSTOP icons/cancel.png | base64
+        if (isset($_COOKIE['jxdebugbarpos']))
+            $class = "jxdb-position-".$_COOKIE['jxdebugbarpos'];
+        else
+            $class = "jxdb-position-".(jApp::config()->debugbar['defaultPosition'] == 'left'?'l':'r');
         ?>
-<div id="jxdb">
+<div id="jxdb" class="<?php echo $class;?>">
     <div id="jxdb-header">
 #expand    <a href="javascript:jxdb.selectTab('jxdb-panel-jelix');"><img src="data:image/png;base64,__LOGOJELIX__" alt="Jelix debug toolbar"/></a>
 <?php foreach ($this->tabs as $item) {
