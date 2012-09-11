@@ -1,6 +1,6 @@
 <?php
 
-class jLocaleTest extends PHPUnit_Framework_TestCase {
+class jLocaleLangCodeTest extends PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass() {
         jelix_init_test_env();

@@ -213,7 +213,6 @@ cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
-  core.jlocale.html_cli.php
   core.jrequest.html_cli.php
   core.rest_controller.html_cli.php
   core.selectors_action.html.php
@@ -318,6 +317,7 @@ cd testapp/tests-jelix/jelix/core/
   configautoloaderTest.php
   jAppContextTest.php
   moduleAutoloadTest.php
+  jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
 cd testapp/tests-jelix/jelix/installer/
