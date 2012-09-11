@@ -160,8 +160,10 @@ class jApp {
             $coord = clone self::$_coord;
         else
             $coord = null;
-        self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
-                                       self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env, $conf, $coord);
+        self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath,
+                                       self::$configPath, self::$wwwPath, self::$scriptPath,
+                                       self::$tempBasePath, self::$env, $conf, $coord,
+                                       self::$modulesContext);
     }
 
     /**
@@ -172,7 +174,7 @@ class jApp {
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
              self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
-             $conf, self::$_coord) = array_pop(self::$contextBackup);
+             $conf, self::$_coord, self::$modulesContext) = array_pop(self::$contextBackup);
         self::setConfig($conf);
     }
 
@@ -240,5 +242,31 @@ class jApp {
             throw new Exception('getModulePath : invalid module name');
         }
         return self::$_config->_modulesPathList[$module];
+    }
+
+    static protected $modulesContext = array();
+
+    /**
+    * set the context to the given module
+    * @param string $module  the module name
+    */
+    static function pushCurrentModule ($module){
+        array_push (self::$modulesContext, $module);
+    }
+
+    /**
+    * cancel the current context and set the context to the previous module
+    * @return string the obsolet module name
+    */
+    static function popCurrentModule (){
+        return array_pop (self::$modulesContext);
+    }
+
+    /**
+    * get the module name of the current context
+    * @return string name of the current module
+    */
+    static function getCurrentModule (){
+        return end(self::$modulesContext);
     }
 }

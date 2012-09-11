@@ -225,7 +225,7 @@ class jZone {
     * @return string the filename
     */
     private function _getCacheFile (){
-        $module = jContext::get ();
+        $module = jApp::getCurrentModule ();
         $ar = $this->_params;
         ksort($ar);
         $id=md5(serialize($ar));
@@ -242,7 +242,7 @@ class jZone {
     private static function  _callZone($name,$method, &$params){
 
         $sel = new jSelectorZone($name);
-        jContext::push ($sel->module);
+        jApp::pushCurrentModule ($sel->module);
 
         $fileName = $sel->getPath();
         require_once($fileName);
@@ -250,7 +250,7 @@ class jZone {
         $zone = new $className ($params);
         $toReturn = $zone->$method ();
 
-        jContext::pop ();
+        jApp::popCurrentModule ();
         return $toReturn;
     }
 }

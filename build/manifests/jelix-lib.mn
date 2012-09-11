@@ -44,7 +44,6 @@ cd lib/jelix/core
   jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php
-  jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
   jException.class.php

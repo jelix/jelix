@@ -43,7 +43,7 @@ class jSelectorAct extends jSelectorActFast {
             if($this->module == '#'){
                 $this->module = $coord->moduleName;
             }elseif($this->module ==''){
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
 
             if($this->request == '')
@@ -62,7 +62,7 @@ class jSelectorAct extends jSelectorActFast {
                 else
                     $this->module = $m[1];
             }else{
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             if($m[2] == '#')
                 $this->resource = $coord->actionName;

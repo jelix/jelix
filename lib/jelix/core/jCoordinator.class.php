@@ -145,7 +145,7 @@ class jCoordinator {
             }
         }
 
-        jContext::push ($this->moduleName);
+        jApp::pushCurrentModule ($this->moduleName);
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
@@ -180,8 +180,8 @@ class jCoordinator {
                 $result = $this->plugins[$name]->beforeAction ($pluginparams);
                 if($result){
                     $this->action = $result;
-                    jContext::pop();
-                    jContext::push($result->module);
+                    jApp::popCurrentModule();
+                    jApp::pushCurrentModule($result->module);
                     $this->moduleName = $result->module;
                     $this->actionName = $result->resource;
                     $ctrl = $this->getController($this->action);
@@ -204,7 +204,7 @@ class jCoordinator {
             $this->plugins[$name]->afterProcess ();
         }
 
-        jContext::pop();
+        jApp::popCurrentModule();
         jSession::end();
     }
 

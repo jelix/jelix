@@ -32,13 +32,12 @@ class jLocaleTest extends jUnitTestCase {
 
     function setUp() {
         jApp::saveContext();
-        jContext::push('jelix_tests');
+        jApp::pushCurrentModule('jelix_tests');
         $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
     }
 
     function tearDown() {
         jApp::restoreContext();
-        jContext::pop();
     }
 
     public function testBundleUnknownFile(){

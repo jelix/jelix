@@ -21,6 +21,7 @@ cd lib/jelix/core
   jErrorHandler.lib.php
   jException.lib.php
   jSoapCoordinator.class.php
+  jContext.class.php
 
 cd lib/jelix/core/request
   jXulRequest.class.php

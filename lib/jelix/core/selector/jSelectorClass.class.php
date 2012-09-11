@@ -38,7 +38,7 @@ class jSelectorClass extends jSelectorModule {
 #if ENABLE_PHP_JELIX
         if(jelix_scan_class_sel($sel, $this)){
             if($this->module ==''){
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             $this->_createPath();
             $this->_createCachePath();
@@ -50,7 +50,7 @@ class jSelectorClass extends jSelectorModule {
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
             }else{
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             $this->resource = $m[3];
             if( ($p=strrpos($m[3], '/')) !== false){

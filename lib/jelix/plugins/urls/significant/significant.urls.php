@@ -357,7 +357,7 @@ class significantUrlEngine implements jIUrlEngine {
 
         $url = new jUrl('', $urlact->params, '');
 
-        $module = $url->getParam('module', jContext::get());
+        $module = $url->getParam('module', jApp::getCurrentModule());
         $action = $url->getParam('action');
 
         // let's try to retrieve informations corresponding

@@ -37,7 +37,7 @@ abstract class jSelectorModule implements jISelector {
 #if ENABLE_PHP_JELIX
         if(jelix_scan_module_sel($sel, $this)){
             if($this->module ==''){
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             $this->_createPath();
             $this->_createCachePath();
@@ -49,7 +49,7 @@ abstract class jSelectorModule implements jISelector {
             if($m[1]!='' && $m[2]!=''){
                 $this->module = $m[2];
             }else{
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             $this->resource = $m[3];
             $this->_createPath();

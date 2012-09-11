@@ -199,7 +199,7 @@ class jTplCompiler
         $this->trusted = $selector->trusted;
         $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
-        jContext::push($selector->module);
+        jApp::pushCurrentModule($selector->module);
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
@@ -208,7 +208,7 @@ class jTplCompiler
         $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
             $selector->userModifiers, $selector->userFunctions, $md5);
 
-        jContext::pop();
+        jApp::popCurrentModule();
         return true;
     }
 #endif
