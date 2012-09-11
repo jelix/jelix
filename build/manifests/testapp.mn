@@ -318,7 +318,7 @@ cd testapp/tests-jelix/jelix/core/
   configautoloaderTest.php
   jAppContextTest.php
   moduleAutoloadTest.php
-  jLocaleTest.php
+  jLocaleLangCodeTest.php
   jLogTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
