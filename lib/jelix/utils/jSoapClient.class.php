@@ -25,13 +25,18 @@ class  jLogSoapMessage extends jLogMessage {
      * @var string
      */
     protected $response;
+    /**
+     * @var string
+     */
+    protected $duration;
 
-    public function __construct($function_name, $soapClient, $category='default') {
+    public function __construct($function_name, $soapClient, $category='default', $duration = 0) {
         $this->category = $category;
         $this->headers = $soapClient->__getLastRequestHeaders();
         $this->request = $soapClient->__getLastRequest ();
         $this->response = $soapClient->__getLastResponse();
         $this->functionName = $function_name;
+        $this->duration = $duration;
         $this->message = 'Soap call: '.$function_name.'()';
     }
 
@@ -47,8 +52,13 @@ class  jLogSoapMessage extends jLogMessage {
         return $this->request;
     }
 
+    public function getDuration() {
+        return $this->duration;
+    }
+
     public function getFormatedMessage() {
         $message =  'Soap call: '.$this->functionName."()\n";
+        $message .= "DURATION: ".$this->duration."s\n";
         $message .= "HEADERS:\n\t".str_replace("\n","\n\t",$this->headers)."\n";
         $message .= "REQUEST:\n\t".str_replace("\n","\n\t",$this->request)."\n";
         $message .= "RESPONSE:\n\t".str_replace("\n","\n\t",$this->response)."\n";
@@ -60,17 +70,28 @@ class  jLogSoapMessage extends jLogMessage {
 
 class SoapClientDebug extends SoapClient {
     public function __call ( $function_name , $arguments) {
+        $timeExecutionBegin = $this->_microtimeFloat();
         $result = parent::__call($function_name , $arguments);
-        $log = new jLogSoapMessage($function_name, $this, 'soap');
+        $timeExecutionEnd = $this->_microtimeFloat();
+
+        $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
         jLog::log($log,'soap');
         return $result;
     }
 
     public function __soapCall ( $function_name , $arguments, $options=array(), $input_headers=null,  &$output_headers=null) {
+        $timeExecutionBegin = $this->_microtimeFloat();
         $result = parent::__soapCall($function_name , $arguments, $options, $input_headers,  $output_headers);
-        $log = new jLogSoapMessage($function_name, $this, 'soap');
+        $timeExecutionEnd = $this->_microtimeFloat();
+
+        $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
         jLog::log($log,'soap');
         return $result;
+    }
+
+    protected function _microtimeFloat() {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
     }
 }
 
