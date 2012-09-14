@@ -15,7 +15,6 @@ class jacl2dbModuleUpgrader_rightsresource extends jInstallerModule {
     function install() {
         if (!$this->firstDbExec())
             return;
-        $this->declareDbProfile('jacl2_profile', null, false);
         $cn = $this->dbConnection();
         try {
             $cn->beginTransaction();
