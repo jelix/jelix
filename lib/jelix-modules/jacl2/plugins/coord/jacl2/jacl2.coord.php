@@ -8,10 +8,6 @@
 * @since 1.1
 */
 
-/**
- *
- */
-require(JELIX_LIB_PATH.'acl/jAcl2.class.php');
 
 /**
 * @package    jelix

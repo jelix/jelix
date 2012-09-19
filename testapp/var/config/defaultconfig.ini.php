@@ -25,6 +25,7 @@ junittests.access = 2
 jsoap.access = 2
 jacl.access = 1
 jacldb.access = 1
+jacl2.access = 1
 jacl2db.access = 1
 jauthdb.access = 1
 jauth.access = 1
@@ -32,8 +33,16 @@ jauth.access = 1
 
 [coordplugins]
 auth = auth.coord.ini.php
-jacl2 = jacl2.coord.ini.php
-jacl = jacl.coord.ini.php
+
+[coordplugin_jacl2]
+on_error=2
+error_message="jacl2~errors.action.right.needed"
+on_error_action="jelix~error:badright"
+
+[coordplugin_jacl]
+on_error=2
+error_message="jacl~errors.action.right.needed"
+on_error_action="jelix~error:badright"
 
 [responses]
 
