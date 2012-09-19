@@ -7,6 +7,13 @@ cd lib/jelix-modules/jacl
 * module.xml
 cd lib/jelix-modules/jacl/classes
 * jAcl.class.php
+cd lib/jelix-modules/jacl/plugins/coord/jacl
+! jacl.coord.php
+  plugin.xml
+  jacl.coord.ini.php.dist  
+cd lib/jelix-modules/jacl/plugins/tpl/common/
+  block.ifacl.php
+  block.ifnotacl.php
 
 cd lib/jelix-modules/jacldb
 * module.xml
@@ -16,7 +23,6 @@ cd lib/jelix-modules/jacldb/classes
   jAclDb.class.php
   jAclDbManager.class.php
   jAclDbUserGroup.class.php
-
 cd lib/jelix-modules/jacldb/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -39,6 +45,20 @@ cd lib/jelix-modules/jacldb/install/var/config
   jacl.coord.ini.php
 cd lib/jelix-modules/jacldb/plugins/acl/db/
   db.acl.php
+
+
+cd lib/jelix-modules/jacl2
+   module.xml
+cd lib/jelix-modules/jacl2/classes
+  jAcl2.class.php
+  jIAcl2Driver.iface.php
+cd lib/jelix-modules/jacl2/plugins/coord/jacl2
+! jacl2.coord.php
+  plugin.xml
+  jacl2.coord.ini.php.dist
+cd lib/jelix-modules/jacl2/plugins/tpl/common/
+  block.ifacl2.php
+  block.ifnotacl2.php
 
 cd lib/jelix-modules/jacl2db
 * module.xml

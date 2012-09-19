@@ -22,12 +22,6 @@ cd lib/jelix/auth
   jAuthDriverBase.class.php
 #endif
 
-cd lib/jelix/acl
-* jAcl2.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jIAcl2Driver.iface.php
-#endif
-
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
 *  jControllerDaoCrud.class.php
@@ -426,16 +420,6 @@ cd lib/jelix/plugins/coord/auth
   plugin.xml
   auth.coord.ini.php.dist
 
-cd lib/jelix/plugins/coord/jacl
-! jacl.coord.php
-  plugin.xml
-  jacl.coord.ini.php.dist
-
-cd lib/jelix/plugins/coord/jacl2
-! jacl2.coord.php
-  plugin.xml
-  jacl2.coord.ini.php.dist
-
 cd lib/jelix/plugins/coord/zendframework
   zendframework.coord.php
   plugin.xml
@@ -542,10 +526,6 @@ cd lib/jelix/plugins/htmlresponse/debugbar
 #endif
 
 cd lib/jelix/plugins/tpl/common
-  block.ifacl.php
-  block.ifnotacl.php
-  block.ifacl2.php
-  block.ifnotacl2.php
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php

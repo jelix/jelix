@@ -157,9 +157,6 @@ function jelix_autoload($class) {
     if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }
-    elseif($class == 'jAcl2'){
-        $f = JELIX_LIB_PATH.'acl/jAcl2.class.php';
-    }
     elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example
         $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
