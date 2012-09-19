@@ -253,7 +253,7 @@ class jApp {
     */
     public static function isModuleEnabled ($moduleName, $includingExternal = false) {
         if (!self::$_config)
-            throw Exception ('Configuration is not loaded');
+            throw new Exception ('Configuration is not loaded');
         if ($includingExternal && isset(self::$_config->_externalModulesPathList[$moduleName])) {
             return true;
         }
@@ -269,7 +269,7 @@ class jApp {
      */
     public static function getModulePath($module, $includingExternal = false){
         if (!self::$_config)
-            throw Exception ('Configuration is not loaded');
+            throw new Exception ('Configuration is not loaded');
 
         if (!isset(self::$_config->_modulesPathList[$module])) {
             if ($includingExternal && isset(self::$_config->_externalModulesPathList[$module])) {
