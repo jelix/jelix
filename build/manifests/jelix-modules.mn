@@ -7,6 +7,12 @@ cd lib/jelix-modules/jacl
 * module.xml
 cd lib/jelix-modules/jacl/classes
 * jAcl.class.php
+cd lib/jelix-modules/jacl/locales/en_EN/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/locales/en_US/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/locales/fr_FR/
+cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/plugins/coord/jacl
 ! jacl.coord.php
   plugin.xml
@@ -50,8 +56,17 @@ cd lib/jelix-modules/jacldb/plugins/acl/db/
 cd lib/jelix-modules/jacl2
    module.xml
 cd lib/jelix-modules/jacl2/classes
-  jAcl2.class.php
+* jAcl2.class.php
+#ifnot ENABLE_OPTIMIZED_SOURCE
   jIAcl2Driver.iface.php
+#endif
+cd lib/jelix-modules/jacl2/locales/en_EN/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/en_US/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/fr_FR/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+
 cd lib/jelix-modules/jacl2/plugins/coord/jacl2
 ! jacl2.coord.php
   plugin.xml

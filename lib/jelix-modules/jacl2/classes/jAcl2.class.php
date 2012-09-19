@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  acl
+* @subpackage  acl2
 * @author      Laurent Jouanneau
 * @copyright   2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
@@ -13,7 +13,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAcl2Driver.iface.php
 #else
-require(JELIX_LIB_PATH.'acl/jIAcl2Driver.iface.php');
+require(__DIR__.'jIAcl2Driver.iface.php');
 #endif
 #endif
 
@@ -43,11 +43,11 @@ class jAcl2 {
             $config = jApp::config();
             $db = strtolower($config->acl2['driver']);
             if ($db == '')
-                throw new jException('jelix~errors.acl.driver.notfound',$db);
+                throw new jException('jacl2~errors.driver.notfound',$db);
 
             $driver = jApp::loadPlugin($db, 'acl2', '.acl2.php', $config->acl2['driver'].'Acl2Driver', $config->acl2);
             if (is_null($driver)) {
-                throw new jException('jelix~errors.acl.driver.notfound',$db);
+                throw new jException('jacl2~errors.driver.notfound',$db);
             }
         }
         return $driver;
