@@ -378,10 +378,6 @@ cd testapp/var/config
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
   defaultconfig.ini.php
-  jacl2.coord.ini.php
-  jacl2_ws.coord.ini.php
-  jacl.coord.ini.php
-  jacl_ws.coord.ini.php
   profiles.ini.php.dist
   urls.xml
   urls_rest.xml

@@ -242,6 +242,9 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.data.sqlite.sql
   _installclass.php
 
+rmd lib/jelix-modules/jacl2db/install/var/
+rmd lib/jelix-modules/jacldb/install/var/
+
 cd lib/jelix-modules/jauthdb/install
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql

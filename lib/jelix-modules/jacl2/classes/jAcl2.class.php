@@ -13,7 +13,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAcl2Driver.iface.php
 #else
-require(__DIR__.'jIAcl2Driver.iface.php');
+require(__DIR__.'/jIAcl2Driver.iface.php');
 #endif
 #endif
 
