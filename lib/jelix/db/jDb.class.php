@@ -204,7 +204,9 @@ class jDb {
     */
     public static function _createConnector ($profile) {
         if ($profile['driver'] == 'pdo' || (isset($profile['usepdo']) && $profile['usepdo'])) {
-            $dbh = new jDbPDOConnection($profile);
+            $dbh = jApp::loadPlugin($profile['driver'], 'db', '.dbpdoconnection.php', $profile['driver'].'DbPDOConnection', $profile);
+            if (is_null($dbh))
+                $dbh = new jDbPDOConnection($profile);
             return $dbh;
         }
         else {
