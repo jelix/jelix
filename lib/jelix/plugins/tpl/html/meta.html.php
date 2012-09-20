@@ -105,6 +105,7 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             break;
         case 'generator':
             $resp->addMetaGenerator($param);
+            break;
         case 'jquery':
             $resp->addJSLink(jApp::config()->urlengine['jqueryPath'].'jquery.js');
             break;
