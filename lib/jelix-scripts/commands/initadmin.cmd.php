@@ -92,6 +92,8 @@ class initadminCommand extends JelixScriptCommand {
             $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath, 0, null, true);
         }
 
+        $installConfig->setValue('jacl.installed', '0', $entrypoint);
+        $inifile->setValue('jacl.access', '0', 'modules');
         $installConfig->setValue('jacldb.installed', '0', $entrypoint);
         $inifile->setValue('jacldb.access', '0', 'modules');
         $installConfig->setValue('junittests.installed', '0', $entrypoint);
