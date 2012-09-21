@@ -69,12 +69,27 @@ cd lib/jelix/core-modules/jelix/daos
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/en_US
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/fr_FR
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl

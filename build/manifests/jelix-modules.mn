@@ -48,6 +48,12 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.data.pgsql.sql
   install.php
   upgrade_pluginmoved.php
+cd lib/jelix-modules/jacldb/locales/en_US
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
+cd lib/jelix-modules/jacldb/locales/en_EN
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
+cd lib/jelix-modules/jacldb/locales/fr_FR
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/plugins/acl/db/
   db.acl.php
 

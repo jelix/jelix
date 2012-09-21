@@ -146,7 +146,6 @@ cd lib/jelix/core-modules/jelix/install/sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -166,7 +165,6 @@ cch date_time.UTF-8.properties(date_time.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -188,7 +186,6 @@ cd lib/jelix/core-modules/jelix/locales/fr_FR
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
