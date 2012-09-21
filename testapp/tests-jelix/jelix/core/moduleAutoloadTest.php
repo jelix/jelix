@@ -24,7 +24,7 @@ class moduleAutoloadTest extends PHPUnit_Framework_TestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(3, count($conf->_autoload_class), '_autoload_class should have 2 declarations (for jelix_tests, jsoap and jacl modules)');
+        $this->assertEquals(5, count($conf->_autoload_class), '_autoload_class should have 5 declarations (for jelix_tests, jsoap, jacl, jacl2 modules)');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }
