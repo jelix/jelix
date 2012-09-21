@@ -74,6 +74,9 @@ cd lib/jelix/core-modules/jelix/locales/en_EN
    acldb.UTF-8.properties
    acldb.ISO-8859-1.properties
    acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/en_US
    soap.UTF-8.properties
@@ -82,6 +85,9 @@ cd lib/jelix/core-modules/jelix/locales/en_US
    acldb.UTF-8.properties
    acldb.ISO-8859-1.properties
    acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/fr_FR
    soap.UTF-8.properties
@@ -90,6 +96,9 @@ cd lib/jelix/core-modules/jelix/locales/fr_FR
    acldb.UTF-8.properties
    acldb.ISO-8859-1.properties
    acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl

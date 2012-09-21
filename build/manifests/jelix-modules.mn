@@ -67,10 +67,13 @@ cd lib/jelix-modules/jacl2/classes
 #endif
 cd lib/jelix-modules/jacl2/locales/en_EN/
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/en_US/
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/fr_FR/
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2/install
   install.php
 cd lib/jelix-modules/jacl2/plugins/coord/jacl2
