@@ -27,6 +27,7 @@ require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 #endif
 
+
 /**
  * This is the main class for authentification process
  * @package    jelix
@@ -35,10 +36,19 @@ require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 class jAuth {
 
     /**
+     * @deprecated
+     * @see jAuth::getConfig()
+     */
+    protected static function _getConfig() {
+        return self::loadConfig();
+    }
+
+    /**
      * Load the configuration of authentification, stored in the auth plugin config
      * @return array
+     * @since 1.2.10
      */
-    protected static function  _getConfig(){
+    public static function loadConfig($config = null){
         static $config = null;
         if($config == null){
             global $gJCoord;
@@ -52,20 +62,34 @@ class jAuth {
                 $config['session_name'] = 'JELIX_USER';
 
             if (!isset( $config['persistant_cookie_path'])
-                ||  $config['persistant_cookie_path'] == '')
-                $config['persistant_cookie_path'] = $GLOBALS['gJConfig']->urlengine['basePath'];
+                ||  $config['persistant_cookie_path'] == '') {
+                if (isset($GLOBALS['gJConfig']))
+                    $config['persistant_cookie_path'] = $GLOBALS['gJConfig']->urlengine['basePath'];
+                else
+                    $config['persistant_cookie_path'] = '/';
+            }
+
         }
         return $config;
     }
 
     /**
+     * @deprecated
+     * @see jAuth::getDriver()
+     */
+    protected static function _getDriver() {
+        return self::getDriver();
+    }
+
+    /**
      * return the auth driver
      * @return jIAuthDriver
+     * @since 1.2.10
      */
-    protected static function _getDriver(){
+    public static function getDriver(){
         static $driver = null;
         if($driver == null){
-            $config = self::_getConfig();
+            $config = self::loadConfig();
             global $gJConfig;
             $db = strtolower($config['driver']);
             if(!isset($gJConfig->_pluginsPathList_auth)
@@ -86,7 +110,7 @@ class jAuth {
      * @return string the value. null if it doesn't exist
      */
     public static function getDriverParam($paramName) {
-        $config = self::_getConfig();
+        $config = self::loadConfig();
         $config = $config[$config['driver']];
         if(isset($config[$paramName]))
             return $config[$paramName];
@@ -105,7 +129,7 @@ class jAuth {
      * @return object the user
      */
     public static function getUser($login){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         return $dr->getUser($login);
     }
 
@@ -122,7 +146,7 @@ class jAuth {
      * @since 1.0b2
      */
     public static function createUserObject($login,$password){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         return $dr->createUserObject($login,$password);
     }
 
@@ -144,7 +168,7 @@ class jAuth {
      * @return object the user (eventually, with additional data)
      */
     public static function saveNewUser($user){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         if($dr->saveNewUser($user))
             jEvent::notify ('AuthNewUser', array('user'=>$user));
         return $user;
@@ -169,12 +193,12 @@ class jAuth {
      * @param object $user  user data
      */
     public static function updateUser($user){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         if($dr->updateUser($user) === false)
             return false;
 
         if(self::isConnected() && self::getUserSession()->login === $user->login){
-            $config = self::_getConfig();
+            $config = self::loadConfig();
             $_SESSION[$config['session_name']] = $user;
         }
         jEvent::notify ('AuthUpdateUser', array('user'=>$user));
@@ -189,7 +213,7 @@ class jAuth {
      * @return boolean true if ok
      */
     public static function removeUser($login){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         $eventresp = jEvent::notify ('AuthCanRemoveUser', array('login'=>$login));
         foreach($eventresp->getResponse() as $rep){
             if(!isset($rep['canremove']) || $rep['canremove'] === false)
@@ -210,7 +234,7 @@ class jAuth {
      * @return array array of object
      */
     public static function getUserList($pattern = '%'){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         return $dr->getUserlist($pattern);
     }
 
@@ -222,11 +246,11 @@ class jAuth {
      * @return boolean true if the change succeed
      */
     public static function changePassword($login, $newpassword){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         if($dr->changePassword($login, $newpassword)===false)
             return false;
         if(self::isConnected() && self::getUserSession()->login === $login){
-            $config = self::_getConfig();
+            $config = self::loadConfig();
             $_SESSION[$config['session_name']] = self::getUser($login);
         }
         return true;
@@ -239,7 +263,7 @@ class jAuth {
      * @return object|false  if ok, returns the user as object
      */
     public static function verifyPassword($login, $password){
-        $dr = self::_getDriver();
+        $dr = self::getDriver();
         return $dr->verifyPassword($login, $password);
     }
 
@@ -252,8 +276,8 @@ class jAuth {
      */
     public static function login($login, $password, $persistant=false){
 
-        $dr = self::_getDriver();
-        $config = self::_getConfig();
+        $dr = self::getDriver();
+        $config = self::loadConfig();
 
         $eventresp = jEvent::notify ('AuthBeforeLogin', array('login'=>$login));
         foreach($eventresp->getResponse() as $rep){
@@ -300,7 +324,7 @@ class jAuth {
      * @return boolean true if persistant session in enabled
      */
     public static function isPersistant(){
-        $config = self::_getConfig();
+        $config = self::loadConfig();
         if(!isset($config['persistant_enable']))
             return false;
         else
@@ -312,7 +336,7 @@ class jAuth {
      */
     public static function logout(){
 
-        $config = self::_getConfig();
+        $config = self::loadConfig();
         jEvent::notify ('AuthLogout', array('login'=>$_SESSION[$config['session_name']]->login));
         $_SESSION[$config['session_name']] = new jAuthDummyUser();
 
@@ -328,7 +352,7 @@ class jAuth {
      * @return boolean
      */
     public static function isConnected(){
-        $config = self::_getConfig();
+        $config = self::loadConfig();
         return (isset($_SESSION[$config['session_name']]) && $_SESSION[$config['session_name']]->login != '');
     }
 
@@ -337,7 +361,7 @@ class jAuth {
     * @return object the user data
     */
     public static function getUserSession (){
-        $config = self::_getConfig();
+        $config = self::loadConfig();
         if (! isset ($_SESSION[$config['session_name']]))
             $_SESSION[$config['session_name']] = new jAuthDummyUser();
         return $_SESSION[$config['session_name']];

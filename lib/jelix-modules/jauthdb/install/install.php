@@ -49,12 +49,13 @@ class jauthdbModuleInstaller extends jInstallerModule {
                     require_once(JELIX_LIB_PATH.'auth/jAuth.class.php');
                     require_once(JELIX_LIB_PATH.'plugins/auth/db/db.auth.php');
                     $confIni = parse_ini_file(JELIX_APP_CONFIG_PATH.$authconfig, true);
-                    $driver = new dbAuthDriver($confIni['Db']);
-                    $password = $driver->cryptPassword('admin');
 
+                    $authConfig = jAuth::loadConfig($confIni);
+                    $driver = new dbAuthDriver($authConfig['Db'], $authConfig->passwordHashMethod, $authConfig->passwordHashOptions);
+                    $passwordHash = $driver->cryptPassword('admin');
                     $cn = $this->dbConnection();
                     $cn->exec("INSERT INTO ".$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES
-                                ('admin', ".$cn->quote($password)." , 'admin@localhost.localdomain')");
+                                ('admin', ".$cn->quote($passwordHash)." , 'admin@localhost.localdomain')");
                 }
             }
         }
