@@ -51,7 +51,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
                     $confIni = parse_ini_file(JELIX_APP_CONFIG_PATH.$authconfig, true);
 
                     $authConfig = jAuth::loadConfig($confIni);
-                    $driver = new dbAuthDriver($authConfig['Db'], $authConfig->passwordHashMethod, $authConfig->passwordHashOptions);
+                    $driver = new dbAuthDriver($authConfig['Db']);
                     $passwordHash = $driver->cryptPassword('admin');
                     $cn = $this->dbConnection();
                     $cn->exec("INSERT INTO ".$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES

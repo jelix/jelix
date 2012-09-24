@@ -136,11 +136,23 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver {
     public function verifyPassword($login, $password){
         if (trim($password) == '')
             return false;
-        $classuser = jClasses::create($this->_params['class']);
+        $class = jClasses::create($this->_params['class']);
+        $user = $class->getByLogin($login);
+        if (!$user) {
+            return false;
+        }
 
-        $user = $classuser->getByLoginPassword($login, $this->cryptPassword($password));
+        $result = $this->_verifyPassword($password, $user->password);
+        if ($result === false)
+            return false;
 
-        return ($user?$user:false);
+        if ($result !== true) {
+            // it is a new hash for the password, let's update it persistently
+            $user->password = $result;
+            $class->updatePassword($login, $result);
+        }
+
+        return $user;
     }
 
 }

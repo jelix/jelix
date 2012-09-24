@@ -27,6 +27,7 @@ require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 #endif
 
+require_once($GLOBALS['gJCoord']->getModulePath('jauth').'classes/password.php');
 
 /**
  * This is the main class for authentification process
@@ -69,6 +70,37 @@ class jAuth {
                     $config['persistant_cookie_path'] = '/';
             }
 
+            // Read hash method configuration. If not empty, cryptPassword will use
+            // the new API of PHP 5.5 (password_verify and so on...)
+            $hashmeth = (isset($config['password_hash_method'])? $config['password_hash_method']:'');
+            switch ($hashmeth) {
+                case 'default':
+                    $password_hash_method = PASSWORD_DEFAULT;
+                    break;
+                case 'bcrypt':
+                    $password_hash_method = PASSWORD_BCRYPT;
+                    break;
+                default:
+                    $password_hash_method = 0;
+            }
+
+            $password_hash_options = (isset($config['password_hash_options'])?$config['password_hash_options']:'');
+            if ($password_hash_options != '') {
+                $list = '{"'.str_replace(array('=',';'), array('":"', '","'), $config['password_hash_options']).'"}';
+                $json = new jJson(SERVICES_JSON_LOOSE_TYPE);
+                $password_hash_options = @$json->decode($list);
+                if (!$password_hash_options)
+                    $password_hash_options = array();
+            }
+            else {
+                $password_hash_options = array();
+            }
+
+            $config['password_hash_method'] = $password_hash_method;
+            $config['password_hash_options'] = $password_hash_options;
+
+            $config[$config['driver']]['password_hash_method'] = $config['password_hash_method'];
+            $config[$config['driver']]['password_hash_options'] = $config['password_hash_options'];
         }
         return $config;
     }
