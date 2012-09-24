@@ -142,7 +142,7 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver {
             return false;
         }
 
-        $result = $this->_verifyPassword($password, $user->password);
+        $result = $this->checkPassword($password, $user->password);
         if ($result === false)
             return false;
 

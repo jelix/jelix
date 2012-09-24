@@ -27,10 +27,11 @@ class jAuthDriverBase {
      * @param string $password the password to hash
      * @return string the hash password
      */
-    public function cryptPassword($password) {
-        if ($this->passwordHashMethod) {
+    public function cryptPassword($password, $forceOldHash = false) {
+        if (!$forceOldHash && $this->passwordHashMethod) {
             return password_hash($password, $this->passwordHashMethod, $this->passwordHashOptions);
         }
+
         if (isset($this->_params['password_crypt_function'])) {
             $f = $this->_params['password_crypt_function'];
             if ($f != '') {
@@ -56,12 +57,13 @@ class jAuthDriverBase {
      * @return boolean|string false if password does not correspond. True if it is ok. A string
      * containing a new hash if it is ok and need to store a new hash
      */
-    protected function _verifyPassword($givenPassword, $currentPasswordHash) {
+    public function checkPassword($givenPassword, $currentPasswordHash) {
         if ($currentPasswordHash[0] == '$' && $this->passwordHashMethod) {
             // ok, we have hash for standard API, let's use standard API
             if (!password_verify($givenPassword, $currentPasswordHash)) {
                 return false;
             }
+
             // check if rehash is needed, 
             if (password_needs_rehash($currentPasswordHash, $this->passwordHashMethod, $this->passwordHashOptions)) {
                 return password_hash($givenPassword, $this->passwordHashMethod,  $this->passwordHashOptions);
@@ -69,7 +71,7 @@ class jAuthDriverBase {
         }
         else {
             // verify with the old hash api
-            if ($currentPasswordHash != $this->cryptPassword($givenPassword)) {
+            if ($currentPasswordHash != $this->cryptPassword($givenPassword, true)) {
                 return false;
             }
 

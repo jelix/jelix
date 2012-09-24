@@ -82,14 +82,14 @@ class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver {
             return false;
         }
 
-        $result = $this->_verifyPassword($password, $user->password);
+        $result = $this->checkPassword($password, $user->password);
         if ($result === false)
             return false;
 
         if ($result !== true) {
             // it is a new hash for the password, let's update it persistently
             $user->password = $result;
-            $daouser->update($user);
+            $daouser->updatePassword($login, $result);
         }
 
         return $user;

@@ -44,19 +44,26 @@ class jAuth {
         return self::loadConfig();
     }
 
+    protected static $config = null;
+    protected static $driver = null;
     /**
      * Load the configuration of authentification, stored in the auth plugin config
      * @return array
      * @since 1.2.10
      */
-    public static function loadConfig($config = null){
-        static $config = null;
-        if($config == null){
-            global $gJCoord;
-            $plugin = $gJCoord->getPlugin('auth');
-            if($plugin === null)
-                throw new jException('jelix~auth.error.plugin.missing');
-            $config = & $plugin->config;
+    public static function loadConfig($newconfig = null){
+
+        if (self::$config === null) {
+            if (!$newconfig) {
+                global $gJCoord;
+                $plugin = $gJCoord->getPlugin('auth');
+                if($plugin === null)
+                    throw new jException('jelix~auth.error.plugin.missing');
+                $config = & $plugin->config;
+            }
+            else {
+                $config = $newconfig;
+            }
 
             if (!isset($config['session_name'])
                 || $config['session_name'] == '')
@@ -72,16 +79,22 @@ class jAuth {
 
             // Read hash method configuration. If not empty, cryptPassword will use
             // the new API of PHP 5.5 (password_verify and so on...)
-            $hashmeth = (isset($config['password_hash_method'])? $config['password_hash_method']:'');
-            switch ($hashmeth) {
-                case 'default':
-                    $password_hash_method = PASSWORD_DEFAULT;
-                    break;
-                case 'bcrypt':
-                    $password_hash_method = PASSWORD_BCRYPT;
-                    break;
-                default:
-                    $password_hash_method = 0;
+            $password_hash_method = (isset($config['password_hash_method'])? $config['password_hash_method']:0);
+
+            if ($password_hash_method === '' || (! is_numeric($password_hash_method))) {
+                switch ($password_hash_method) {
+                    case 'default':
+                        $password_hash_method = PASSWORD_DEFAULT;
+                        break;
+                    case 'bcrypt':
+                        $password_hash_method = PASSWORD_BCRYPT;
+                        break;
+                    default:
+                        $password_hash_method = 0;
+                }
+            }
+            else {
+                $password_hash_method= intval($password_hash_method);
             }
 
             $password_hash_options = (isset($config['password_hash_options'])?$config['password_hash_options']:'');
@@ -99,10 +112,12 @@ class jAuth {
             $config['password_hash_method'] = $password_hash_method;
             $config['password_hash_options'] = $password_hash_options;
 
-            $config[$config['driver']]['password_hash_method'] = $config['password_hash_method'];
-            $config[$config['driver']]['password_hash_options'] = $config['password_hash_options'];
+            $config[$config['driver']]['password_hash_method'] = $password_hash_method;
+            $config[$config['driver']]['password_hash_options'] = $password_hash_options;
+
+            self::$config = $config;
         }
-        return $config;
+        return self::$config;
     }
 
     /**
@@ -119,8 +134,8 @@ class jAuth {
      * @since 1.2.10
      */
     public static function getDriver(){
-        static $driver = null;
-        if($driver == null){
+
+        if (self::$driver === null) {
             $config = self::loadConfig();
             global $gJConfig;
             $db = strtolower($config['driver']);
@@ -132,8 +147,9 @@ class jAuth {
             require_once($gJConfig->_pluginsPathList_auth[$db].$db.'.auth.php');
             $dname = $config['driver'].'AuthDriver';
             $driver = new $dname($config[$config['driver']]);
+            self::$driver = $driver;
         }
-        return $driver;
+        return self::$driver;
     }
 
     /**
