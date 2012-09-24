@@ -53,7 +53,7 @@ class jAuth {
      */
     public static function loadConfig($newconfig = null){
 
-        if (self::$config === null) {
+        if (self::$config === null || $newconfig) {
             if (!$newconfig) {
                 global $gJCoord;
                 $plugin = $gJCoord->getPlugin('auth');
@@ -114,7 +114,8 @@ class jAuth {
 
             $config[$config['driver']]['password_hash_method'] = $password_hash_method;
             $config[$config['driver']]['password_hash_options'] = $password_hash_options;
-
+            if ($newconfig)
+                return $config;
             self::$config = $config;
         }
         return self::$config;

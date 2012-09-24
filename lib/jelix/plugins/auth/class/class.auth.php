@@ -73,6 +73,7 @@ interface jIAuthDriverClass {
     * @param string $login the user login
     * @param string $password the new encrypted password
     * @return object user informations
+    * @deprecated since 1.2.10
     */
     public function getByLoginPassword($login, $cryptedpassword);
 }
