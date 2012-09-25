@@ -89,7 +89,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
         switch($nodename){
             case 'object':
                 if (isset($xml['class'])) {
-                    $this->assertInternalType((string)$xml['class'], $value, $name.': not a '.(string)$xml['class'].' object'.$errormessage);
+                    $this->assertInstanceOf((string)$xml['class'], $value, $name.': not a '.(string)$xml['class'].' object'.$errormessage);
                 } else {
                     $this->assertTrue(is_object($value),  $name.': not an object'.$errormessage);
                 }
