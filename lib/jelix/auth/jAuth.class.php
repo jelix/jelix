@@ -81,16 +81,7 @@ class jAuth {
             $password_hash_method = (isset($config['password_hash_method'])? $config['password_hash_method']:0);
 
             if ($password_hash_method === '' || (! is_numeric($password_hash_method))) {
-                switch ($password_hash_method) {
-                    case 'default':
-                        $password_hash_method = PASSWORD_DEFAULT;
-                        break;
-                    case 'bcrypt':
-                        $password_hash_method = PASSWORD_BCRYPT;
-                        break;
-                    default:
-                        $password_hash_method = 0;
-                }
+                $password_hash_method = 0;
             }
             else {
                 $password_hash_method= intval($password_hash_method);
@@ -120,8 +111,6 @@ class jAuth {
 
             $config[$config['driver']]['password_hash_method'] = $password_hash_method;
             $config[$config['driver']]['password_hash_options'] = $password_hash_options;
-            if ($newconfig)
-                return $config;
             self::$config = $config;
         }
         return self::$config;
