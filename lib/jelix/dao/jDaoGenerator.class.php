@@ -682,7 +682,7 @@ class jDaoGenerator {
             $result[] = $start . $field->$info . $end;
         }
 
-        return implode ($beetween,$result);;
+        return implode ($beetween,$result);
     }
 
     /**

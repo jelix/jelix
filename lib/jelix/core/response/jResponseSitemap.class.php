@@ -122,7 +122,7 @@ class jResponseSitemap extends jResponse {
      * @param string $lastmod The date of last modification of the file
      * @param string $changefreq How frequently the page is likely to change
      * @param string $priority The priority of this URL relative to other URLs
-     * @return void
+     * @return boolean true if addition is ok, else false
      */
     public function addUrl($loc, $lastmod = null, $changefreq = null, $priority = null) {
 
@@ -146,13 +146,14 @@ class jResponseSitemap extends jResponse {
         }
 
         $this->urlList[] = $url;
+        return true;
     }
 
     /**
      * add a URL in a sitemap file
      * @param string $loc URL of sitemap file
      * @param string $lastmod The date of last modification of the sitemap file
-     * @return void
+     * @return boolean true if addition is ok, else false
      */
     public function addSitemap($loc, $lastmod = null) {
 
@@ -168,6 +169,7 @@ class jResponseSitemap extends jResponse {
         }
 
         $this->urlSitemap[] = $sitemap;
+        return true;
     }
 
     /**

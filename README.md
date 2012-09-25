@@ -22,6 +22,7 @@ Read [the first chapter of the manual to install Jelix and to create an applicat
 Documentation and community
 ===========================
 
+
 You have a full manual to learn Jelix. You can read it [direcly on the website](http://docs.jelix.org/en/manual-1.5),
 or you can [download the PDF edition](http://download.jelix.org/jelix/documentation/en/manual-jelix-1.5.pdf).
 
