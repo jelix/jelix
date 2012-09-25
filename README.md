@@ -23,7 +23,7 @@ Documentation and community
 ===========================
 
 You have a full manual to learn Jelix. You can read it [direcly on the website](http://docs.jelix.org/en/manual-1.4),
-or you can [download the PDF edition](http://download.jelix.org/jelix/documentation/en/manual-jelix-1.3.1.pdf).
+or you can [download the PDF edition](http://download.jelix.org/jelix/documentation/en/manual-jelix-1.4.pdf).
 
 You can ask your questions [on the forum](http://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network. 

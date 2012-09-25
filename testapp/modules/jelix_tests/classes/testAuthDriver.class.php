@@ -38,6 +38,7 @@ class testAuthDriver implements jIAuthDriverClass {
     public function getByLogin($login) {
         $user = new testAuthDriverUser();
         $user->login = $login;
+        $user->password = md5('foo');
         return $user;
     }
 

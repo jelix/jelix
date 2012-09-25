@@ -94,8 +94,8 @@ class jCoordinator {
             // so we don't have to check if the value $conf is empty or not
             if ($conf == '1') {
                 $confname = 'coordplugin_'.$name;
-                if (isset($config->confname))
-                    $conf = $config->confname;
+                if (isset($config->$confname))
+                    $conf = $config->$confname;
                 else
                     $conf = array();
             }
