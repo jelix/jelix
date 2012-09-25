@@ -19,7 +19,7 @@ class UTjacl extends jUnitTestCaseDb {
         $coord = jApp::coord();
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
 
-        $confContent = parse_ini_file(JELIX_APP_CONFIG_PATH.'auth_class.coord.ini.php',true);
+        $confContent = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
         $config = jAuth::loadConfig($confContent);
 
         if (isset($coord->plugins['auth']))
