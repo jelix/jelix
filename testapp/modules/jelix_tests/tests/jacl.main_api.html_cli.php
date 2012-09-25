@@ -15,16 +15,19 @@ class UTjacl extends jUnitTestCaseDb {
     protected $config;
     protected $oldAuthPlugin;
 
-    public function setUpRun (){
-        $conf = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
 
+    public function setUpRun (){
         global $gJCoord;
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
+
+        $confContent = parse_ini_file(JELIX_APP_CONFIG_PATH.'auth_class.coord.ini.php',true);
+        $config = jAuth::loadConfig($confContent);
+
         if (isset($gJCoord->plugins['auth']))
             $this->oldAuthPlugin = $gJCoord->plugins['auth'];
-        $gJCoord->plugins['auth'] = new AuthCoordPlugin($conf);
-
+        $gJCoord->plugins['auth'] = new AuthCoordPlugin($config);
         $this->config = & $gJCoord->plugins['auth']->config;
+
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
 
         $this->dbProfile = 'jacl_profile';
