@@ -3,12 +3,50 @@
  * A Compatibility library with PHP 5.5's simplified password hashing API.
  *
  * @author Anthony Ferrara <ircmaxell@php.net>
+ * @contributor Laurent Jouanneau <laurent@jelix.org>
  * @license http://www.opensource.org/licenses/mit-license.html MIT License
  * @copyright 2012 The Authors
  */
 
-if (version_compare(PHP_VERSION, '5.3.7', '<')) {
-	trigger_error("The Password Compatibility Library requires PHP >= 5.3.7", E_USER_WARNING);
+ /**
+  * function to check if the password API can be used
+  * In some PHP version ( <5.3.7), crypt() with blowfish is vulnerable.
+  * But this issue has been fixed on some older PHP version (php 5.3.3 for most of them) in some
+  * distro, like Debian squeeze.
+  * @see http://www.php.net/security/crypt_blowfish.php
+  */
+function can_use_password_API () {
+    if (version_compare(PHP_VERSION, '5.3.7', '>=')) {
+        if (!defined('_PASSWORD_CRYPT_HASH_FORMAT'))
+            define('_PASSWORD_CRYPT_HASH_FORMAT', '$2y$%02d$');
+        if (!defined('_PASSWORD_CRYPT_PROLOG'))
+            define('_PASSWORD_CRYPT_PROLOG', '$2y$');
+        return true;
+    }
+    if (version_compare(PHP_VERSION, '5.3.3', '<')) {
+        return false;
+    }
+    // On debian squeeze, crypt() has been fixed in PHP 5.3.3
+    // http://security-tracker.debian.org/tracker/CVE-2011-2483
+    // so we can use crypt() securely with $2a$ ($2y$ is not available)
+    if (preg_match('/squeeze(\d+)$/', PHP_VERSION, $m)) {
+        if (intval($m[1]) >= 4) {
+            if (!defined('_PASSWORD_CRYPT_HASH_FORMAT'))
+                define('_PASSWORD_CRYPT_HASH_FORMAT', '$2a$%02d$');
+            if (!defined('_PASSWORD_CRYPT_PROLOG'))
+                define('_PASSWORD_CRYPT_PROLOG', '$2a$');
+            return true;
+        }
+    }
+    //FIXME crypt() in PHP 5.3.3 is fixed also on other distro like RedHat.
+    // however I don't know if it supports 2y, and how does PHP_VERSION look like
+    return false;
+}
+
+
+
+if (!can_use_password_API()) {
+	trigger_error("The Password Compatibility Library requires PHP >= 5.3.7 or PHP >= 5.3.3-7+squeeze4 on debian", E_USER_WARNING);
 	// Prevent defining the functions
 	return;
 }
@@ -52,7 +90,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 					}
 				}
 				$required_salt_len = 22;
-				$hash_format = sprintf("$2y$%02d$", $cost);
+				$hash_format = sprintf(_PASSWORD_CRYPT_HASH_FORMAT, $cost);
 				break;
 			default:
 				trigger_error(sprintf("password_hash(): Unknown password hashing algorithm: %s", $algo), E_USER_WARNING);
@@ -118,7 +156,7 @@ if (!defined('PASSWORD_BCRYPT')) {
 				$bl = strlen($buffer);
 				for ($i = 0; $i < $raw_length; $i++) {
 					if ($i < $bl) {
-						$buffer[$i] ^= chr(mt_rand(0, 255));
+						$buffer[$i] = $buffer[$i] ^ chr(mt_rand(0, 255));
 					} else {
 						$buffer .= chr(mt_rand(0, 255));
 					}
@@ -162,10 +200,10 @@ if (!defined('PASSWORD_BCRYPT')) {
 			'algoName' => 'unknown',
 			'options' => array(),
 		);
-		if (substr($hash, 0, 4) == '$2y$' && strlen($hash) == 60) {
+		if (substr($hash, 0, 4) == _PASSWORD_CRYPT_PROLOG && strlen($hash) == 60) {
 			$return['algo'] = PASSWORD_BCRYPT;
 			$return['algoName'] = 'bcrypt';
-			list($cost) = sscanf($hash, "$2y$%d$");
+			list($cost) = sscanf($hash, _PASSWORD_CRYPT_HASH_FORMAT);
 			$return['options']['cost'] = $cost;
 		}
 		return $return;

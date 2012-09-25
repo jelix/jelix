@@ -27,7 +27,7 @@ require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 #endif
 
-require_once($GLOBALS['gJCoord']->getModulePath('jauth').'classes/password.php');
+
 
 /**
  * This is the main class for authentification process
@@ -95,6 +95,13 @@ class jAuth {
             }
             else {
                 $password_hash_method= intval($password_hash_method);
+            }
+
+            if ($password_hash_method > 0) {
+                require_once($GLOBALS['gJCoord']->getModulePath('jauth').'classes/password.php');
+                if (!can_use_password_API()) {
+                    $password_hash_method = 0;
+                }
             }
 
             $password_hash_options = (isset($config['password_hash_options'])?$config['password_hash_options']:'');
