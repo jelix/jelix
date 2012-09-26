@@ -98,6 +98,8 @@ cd testapp/modules/testapp/install
   base.mysql.sql
   base.pgsql.sql
   install.php
+  towns.mysql.sql
+  upgrade_createtowns.php
 
 cd testapp/modules/jelix_tests
   events.xml
