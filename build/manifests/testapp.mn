@@ -107,6 +107,8 @@ cd testapp/modules/testapp/install
   base.pgsql.sql
   install.php
   upgrade_urlengine.php
+  towns.mysql.sql
+  upgrade_createtowns.php
 cd testapp/modules/testapp/tests/
   test1.pu.php
 
