@@ -16,6 +16,10 @@ jAppManager::close();
 $installer = new jInstaller(new textInstallReporter());
 
 $installer->installApplication();
-
-jAppManager::clearTemp();
+try {
+    jAppManager::clearTemp();    
+}
+catch(Exception $e) {
+    echo "Warning: temporary files cannot be deleted because of this error: ".$e->getMessage().".\nDelete them by hand immediately!";
+}
 jAppManager::open();
