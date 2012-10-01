@@ -292,6 +292,7 @@ cd lib/jelix/forms
 cd lib/jelix/forms/controls
   jFormsControlDatasource.class.php
   jFormsControlGroups.class.php
+  jFormsControlButton.class.php
   jFormsControlCaptcha.class.php
   jFormsControlCheckbox.class.php
   jFormsControlCheckboxes.class.php
