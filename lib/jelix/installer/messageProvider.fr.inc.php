@@ -68,7 +68,6 @@
         'ini.safe_mode'         =>'php.ini : le safe_mode n\'est pas recommandé.',
         'ini.register_globals'  =>'php.ini : il faut désactiver register_globals, pour des raisons de sécurité et parce que cette option n\'est pas nécessaire.',
         'ini.asp_tags'          =>'php.ini : il est conseillé de désactiver asp_tags. Cette option n\'est pas nécessaire.',
-        'ini.short_open_tag'    =>'php.ini : il est conseillé de désactiver short_open_tag. Cette option n\'est pas nécessaire.',
         'ini.ok'                =>'Les paramètres de php sont ok',
 
         'module.unknown'        =>'Module inconnu',
