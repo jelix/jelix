@@ -53,6 +53,7 @@ cd lib/jelix/core
 * jSession.class.php
   jServer.class.php
 #ifnot ENABLE_PHP_JELIX
+  jelix_api.php
   jICoordPlugin.iface.php
   jISelector.iface.php
   jIUrlEngine.iface.php

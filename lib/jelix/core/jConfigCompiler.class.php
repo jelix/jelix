@@ -57,11 +57,8 @@ class jConfigCompiler {
             throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
         }
 
-        
-        self::$commonConfig = jIniFile::read($configPath.'defaultconfig.ini.php',true);
-
-#if ENABLE_PHP_JELIX
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
+        self::$commonConfig = clone $config;
 
         @jelix_read_ini($configPath.'defaultconfig.ini.php', $config);
 
@@ -71,25 +68,9 @@ class jConfigCompiler {
             if( false === @jelix_read_ini($configPath.$configFile, $config))
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
-#else
-        $config = jIniFile::read(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
-
-        if (self::$commonConfig) {
-            self::_mergeConfig($config, self::$commonConfig);
-        }
-
-        if($configFile !='defaultconfig.ini.php'){
-            if(!file_exists($configPath.$configFile))
-                throw new Exception("Configuration file is missing -- $configFile ", 5);
-            if( false === ($userConfig = parse_ini_file($configPath.$configFile,true)))
-                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
-            self::_mergeConfig($config, $userConfig);
-        }
-        $config = (object) $config;
-#endif
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
-        self::$commonConfig  = null;
+        self::$commonConfig = null;
         return $config;
     }
 
@@ -278,8 +259,8 @@ class jConfigCompiler {
             $installation[$section] = array();
 
         $list = preg_split('/ *, */',$config->modulesPath);
-        if (isset(self::$commonConfig['modulesPath']))
-            $list = array_merge($list, preg_split('/ *, */',self::$commonConfig['modulesPath']));
+        if (isset(self::$commonConfig->modulesPath))
+            $list = array_merge($list, preg_split('/ *, */',self::$commonConfig->modulesPath));
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
 
@@ -340,8 +321,8 @@ class jConfigCompiler {
                                 // that it is activated for an other entry point,
                                 // and then we want the possibility to retrieve its
                                 // urls, at least
-                                if (isset(self::$commonConfig['modules'][$f.'.access'])
-                                    && self::$commonConfig['modules'][$f.'.access'] > 0)
+                                if (isset(self::$commonConfig->modules[$f.'.access'])
+                                    && self::$commonConfig->modules[$f.'.access'] > 0)
                                     $config->modules[$f.'.access'] = 3;
                             }
                             else if (!$installation[$section][$f.'.installed']) {
