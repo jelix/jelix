@@ -173,11 +173,11 @@ function toto() {
         ),
 29=>array(
         '<p>ok<?xml echo $toto ?></p>',
-        '<p>ok<?xml echo $toto ?></p>',
+        '<p>ok<?php echo \'<?xml echo $toto ?>\'?></p>',
         ),
 30=>array(
         '<p>ok<?browser echo $toto ?></p>',
-        '<p>ok<?browser echo $toto ?></p>',
+        '<p>ok<?php echo \'<?browser echo $toto ?>\'?></p>',
         ),
 31=>array(
         '<p>ok<?php
