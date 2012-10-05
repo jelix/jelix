@@ -4,27 +4,46 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTEvents extends UnitTestCase {
+class eventsTest extends PHPUnit_Framework_TestCase {
 
-    function testEvents() {
+    function setUp() {
+        jEvent::clearCache();
+        jelix_init_test_env();
+        jFile::removeDir(jApp::tempPath(), false);
+    }
+
+    function testBasics() {
       $response = jEvent::notify('TestEvent');
       $response = $response->getResponse ();
       $response = serialize($response[0]);
       $temoin = serialize(array('module'=>'jelix_tests','ok'=>true));
 
-      $this->assertTrue($temoin == $response, 'évenement simple');
+      $this->assertEquals($temoin, $response, 'simple event');
 
       $temoin = array('hello'=>'world');
       $response = jEvent::notify('TestEventWithParams',$temoin );
       $response = $response->getResponse ();
+      $this->assertEquals('world', $response[0]['params'], 'event with parameters');
+    }
 
-      $this->assertTrue(($response[0]['params'] == 'world'), 'évenement avec paramètres');
+    function testDisabledListener() {
+        jApp::config()->disabledListeners['TestEvent'] = array('jelix_tests~testevents');
+
+        $response = jEvent::notify('TestEvent');
+        $response = $response->getResponse ();
+        $this->assertEquals(array(), $response);
+    }
+
+    function testDisabledListener2() {
+        jApp::config()->disabledListeners['TestEvent'] = 'jelix_tests~testevents';
+
+        $response = jEvent::notify('TestEvent');
+        $response = $response->getResponse ();
+        $this->assertEquals(array(), $response);
     }
 }
-
-?>

@@ -223,7 +223,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  events.simple_test.html_cli.php
   httpcache.pu.php
   installer.lib.php
   installer.main.html_cli.php
@@ -322,6 +321,8 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
+cd testapp/tests-jelix/jelix/events/
+  eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
 cd testapp/tests-jelix/jelix/installer/app1/
