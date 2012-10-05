@@ -546,6 +546,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.count_sentences.php
   modifier.count_words.php
   modifier.date_format.php
+  modifier.datetime.php
   modifier.indent.php
   modifier.implode.php
   modifier.jdatetime.php

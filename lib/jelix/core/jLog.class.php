@@ -132,8 +132,8 @@ class jLog {
     protected static function _dispatchLog($message) {
         $confLoggers = &jApp::config()->logger;
         $category = $message->getCategory();
-        if (!isset($confLoggers->logger[$category])
-            || strpos($category, 'option_') === 0) { // option_* ar not some type of log messages
+        if (!isset($confLoggers[$category])
+            || strpos($category, 'option_') === 0) { // option_* are not some type of log messages
             $category = 'default';
         }
 

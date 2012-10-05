@@ -71,21 +71,36 @@ class  jLogSoapMessage extends jLogMessage {
 class SoapClientDebug extends SoapClient {
     public function __call ( $function_name , $arguments) {
         $timeExecutionBegin = $this->_microtimeFloat();
-        $result = parent::__call($function_name , $arguments);
+        $ex = false;
+        try {
+            $result = parent::__call($function_name , $arguments);
+        }
+        catch(Exception $e) {
+            $ex = $e;
+        }
         $timeExecutionEnd = $this->_microtimeFloat();
 
         $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
         jLog::log($log,'soap');
+        if ($ex)
+            throw $ex;
         return $result;
     }
 
     public function __soapCall ( $function_name , $arguments, $options=array(), $input_headers=null,  &$output_headers=null) {
         $timeExecutionBegin = $this->_microtimeFloat();
-        $result = parent::__soapCall($function_name , $arguments, $options, $input_headers,  $output_headers);
+        $ex = false;
+        try {
+            $result = parent::__soapCall($function_name , $arguments, $options, $input_headers,  $output_headers);
+        }
+        catch(Exception $e) {
+            $ex = $e;
+        }
         $timeExecutionEnd = $this->_microtimeFloat();
-
         $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
         jLog::log($log,'soap');
+        if ($ex)
+            throw $ex;
         return $result;
     }
 
