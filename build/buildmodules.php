@@ -49,7 +49,7 @@ $BUILD_OPTIONS = array(
     '',
     '/^(git|svn|hg|rm|none)?$/',
     ),
-'VERBOSE'=> array(
+'VERBOSE_MODE'=> array(
     "show messages",
     false,
     ),
@@ -139,7 +139,7 @@ if ($TARGET_REPOSITORY != '') {
     $DELETE_DEPRECATED_FILES = true;
 }
 
-jManifest::$verbose = ($VERBOSE == '1');
+jManifest::$verbose = ($VERBOSE_MODE == '1');
 jManifest::$usedVcs = $TARGET_REPOSITORY;
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
