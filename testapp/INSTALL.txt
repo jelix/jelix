@@ -10,7 +10,7 @@ Installation of testapp
     - section jdb:testapp_pgsql if you have postgresql sql
     don't touch other  "jdb" sections !
 - configure other section in profiles.ini.php: "jkvdb:", "jcache:", "jsoapclient:"
-- create the "testapp/" "testapp-cli/" and "testapp-scripts/" directories in the temp directory of Jelix
+- create the "testapp/"  directories in the temp directory of Jelix
 - put write access for apache on temp/testapp/, testapp/var/log/ and testapp/var/mails
 - run the script in install/installer.php 
     cd testapp/install && php installer.php
