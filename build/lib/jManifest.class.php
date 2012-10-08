@@ -3,7 +3,7 @@
 * @package     jBuildTools
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -29,7 +29,7 @@ class jManifest {
      * @var boolean true if you want to strip comment and compress whitespaces
      */
     static public $stripComment = false;
-    
+
     /**
      * @var boolean true if you want more messages during the copy
     */
@@ -38,12 +38,12 @@ class jManifest {
     /**
      * @var string  the name of the vcs to use. 'svn' for Subversion, 'hg' for mercurial. '' for no support.
      */
-    static public $usedVcs = ''; 
+    static public $usedVcs = '';
 
     static public $sourcePropertiesFilesDefaultCharset = 'utf-8';
-    
+
     static public $targetPropertiesFilesCharset = 'utf-8';
-    
+
     /**
      * when compressing whitespaces, jManifest will replace indentation made with spaces
      * by a tab character.
@@ -57,19 +57,29 @@ class jManifest {
      * @param string $sourcepath main directory where it reads files
      * @param string $distpath main directory were files are copied
      */
-    static public function process($ficlist, $sourcepath, $distpath, $preprocvars){
+    static public function process($ficlist, $sourcepath, $distpath, $preprocvars, $preprocmanifest=false){
 
         $stripcomment = self::$stripComment;
         $verbose = self::$verbose;
+        $preproc = new jPreProcessor();
 
         $sourcedir = jBuildUtils::normalizeDir($sourcepath);
         $distdir =  jBuildUtils::normalizeDir($distpath);
 
-        $script = file($ficlist);
+        if ($preprocmanifest) {
+            $preproc->setVars($preprocvars);
+            try{
+                $content = $preproc->parseFile($ficlist);
+            }catch(Exception $e){
+                throw new Exception ( "cannot preprocess the manifest file ".$ficlist." (". $e .")\n");
+            }
+            $script = explode("\n", $content);
+        }
+        else
+            $script = file($ficlist);
 
         $currentdestdir = '';
         $currentsrcdir = '';
-        $preproc = new jPreProcessor();
 
         foreach($script as $nbline=>$line){
             $nbline++;
@@ -170,6 +180,9 @@ class jManifest {
                                 else if (self::$usedVcs  == 'hg') {
                                     exec("hg add $encodefile");
                                 }
+                                else if (self::$usedVcs  == 'git') {
+                                    exec("git add $encodefile");
+                                }
                                 chdir($d);
                             }
                         }
@@ -192,6 +205,9 @@ class jManifest {
                         }
                         else if (self::$usedVcs  == 'hg') {
                             exec("hg add $destfile");
+                        }
+                        else if (self::$usedVcs  == 'git') {
+                            exec("git add $destfile");
                         }
                         chdir($d);
                     }
@@ -270,7 +286,7 @@ class jManifest {
     }
 
     static protected function strip_ws(& $s, &$canRemoveNextSpaces){
-        
+
         if ($s == '') {
             $canRemoveNextSpaces = false;
             return $s;
@@ -283,9 +299,9 @@ class jManifest {
         $result = preg_replace("(\n+)", "\n", $result);
         $result = str_replace("\t",$indent,$result);
         $result = str_replace($indent,"\t",$result);
-        
+
         $result = preg_replace("/^([\n \t]+)\n([ \t]*)$/", "\n$2", $result);
-        
+
         if (strpos($result, "\n") === false && $canRemoveNextSpaces) {
             $result = '';
         }
@@ -294,7 +310,7 @@ class jManifest {
             // tab, depending of the len of this spaces.
             $s = $m[1];
             $l = strlen($s);
-            if ($l < strlen($result)) {   
+            if ($l < strlen($result)) {
                 $result = substr($result, 0, -$l);
                 if ($l > (self::$indentation/2))
                     $result .= "\t";
@@ -306,7 +322,7 @@ class jManifest {
         $canRemoveNextSpaces = false;
         return $result;
     }
-    
+
     /**
      * delete files indicated in the given manifest file, from the indicated target
      * directory.
@@ -362,6 +378,12 @@ class jManifest {
                             $d = getcwd();
                             chdir(dirname($destfile));
                             exec("hg remove $destfile");
+                            chdir($d);
+                            break;
+                        case 'git':
+                            $d = getcwd();
+                            chdir(dirname($destfile));
+                            exec("git rm $destfile");
                             chdir($d);
                             break;
                     }
