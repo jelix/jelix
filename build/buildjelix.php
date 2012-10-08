@@ -100,9 +100,9 @@ $BUILD_OPTIONS = array(
     true
     ),
 'TARGET_REPOSITORY'=> array(
-    "The type of the version control system you use on the target directory : none (default), svn or hg",
+    "The type of the version control system you use on the target directory : none (default), svn, git or hg",
     '',
-    '/^(svn|hg|none)?$/',
+    '/^(svn|hg|git|none)?$/',
     ),
 'SOURCE_REVISION'=> array(
     false,
@@ -242,7 +242,7 @@ jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 jManifest::$stripComment = ($STRIP_COMMENT == '1');
 jManifest::$verbose = ($VERBOSE == '1');
-jManifest::$usedVcs = $TARGET_REPOSITORY;
+jManifest::setFileSystem($TARGET_REPOSITORY);
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 

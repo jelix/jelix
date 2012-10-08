@@ -3,7 +3,7 @@
 * @package     jBuildTools
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -11,17 +11,17 @@
 
 class jBuildUtils {
 
-    static public function createDir ($dir, $vcs = ''){
+    /**
+     * create a directory
+     * @return boolean  false if the directory did already exist
+     */
+    static public function createDir ($dir){
         if (!file_exists($dir)) {
-            self::createDir(dirname($dir), $vcs);
+            self::createDir(dirname($dir));
             mkdir($dir, 0775);
-            if ($vcs == 'svn') {
-                exec("svn add $dir");
-            }
-            //else if ($vcs == 'hg') {
-            //    exec("hg add $dir");
-            //}
+            return true;
         }
+        return false;
     }
 
     static public function normalizeDir($dirpath){
@@ -30,33 +30,7 @@ class jBuildUtils {
         }
         return $dirpath;
     }
-    
-    /**
-     * @param string $dir  the path of the dir to delete
-     * @param string $cmd  the command name to use to remove the directory
-     *                     supported commands: 'rm', 'svn', 'hg'
-     */
-    static public function removeDir ($dir, $cmd = 'rm') {
-      if (!file_exists($dir)) {
-          //echo "cannot remove $dir. It doesn't exist.\n";
-          return;
-      }
-      switch($cmd) {
-          case 'rm':
-              self::_removeDir($dir);
-              break;
-          case 'svn':
-              exec("svn remove $dir");
-              break;
-          case 'hg':
-              exec("hg remove $dir");
-              break;
-          case '':
-          case 'none':
-              // do nothing
-      }
-    }
-    
+
     /**
      * Recursive function deleting a directory
      *
@@ -65,7 +39,7 @@ class jBuildUtils {
      * @since 1.0b1
      * @author Loic Mathaud
      */
-    public static function _removeDir($path, $deleteParent=true) {
+    public static function removeDir($path, $deleteParent=true) {
 
         if($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR)
             throw new Exception('The root cannot be removed !!'); //see ticket #840
@@ -79,7 +53,7 @@ class jBuildUtils {
             else {
                 // recursive directory deletion
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    self::_removeDir($dirContent->getPathName());
+                    self::removeDir($dirContent->getPathName());
               }
             }
         }
@@ -91,5 +65,4 @@ class jBuildUtils {
             rmdir($path);
         }
     }
-    
 }
