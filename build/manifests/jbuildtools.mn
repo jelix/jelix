@@ -15,3 +15,10 @@ cd lib
    jManifest.class.php
    jCmdUtils.class.php
    class.JavaScriptPacker.php
+
+cd lib/filesystem
+    FileSystemInterface.php
+    FsGit.php
+    FsHg.php
+    FsOs.php
+    FsSvn.php
