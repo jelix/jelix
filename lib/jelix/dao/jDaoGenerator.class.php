@@ -836,7 +836,7 @@ class jDaoGenerator {
             $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field, true);
 
             if($pattern != ''){
-                if(strpos($field->$pattern, "'") !== false) {
+                if(strpos($field->$pattern, "'") !== false && strpos($field->$pattern, "\\'") === false) {
                     $values[$field->name] = sprintf(str_replace("'", "\\'", $field->$pattern),'\'.'.$value.'.\'');
                 } else {
                     $values[$field->name] = sprintf($field->$pattern,'\'.'.$value.'.\'');
