@@ -32,6 +32,8 @@ cd lib/jelix-scripts/commands-single/
   createapp.cmd.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
+  composer.phar
+  composer.php
   JelixScript.class.php
   JelixScriptCommand.class.php
   JelixScriptCommandConfig.class.php
@@ -81,6 +83,7 @@ cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
   auth.coord.ini.php.tpl
+  composer.json.tpl
 * defaultconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
   installer.ini.php.tpl

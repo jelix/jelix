@@ -10,7 +10,7 @@
 class installmoduleCommand extends JelixScriptCommand {
 
     public  $name = 'installmodule';
-    public  $allowed_options=array('-p'=>true);
+    public  $allowed_options=array('-p'=>true, '-withoutcomposer'=>false);
     public  $allowed_parameters=array('module'=>true,'...'=>false);
 
     public  $syntaxhelp = '[-p "param1;param2=value;..."] MODULE [MODULE [....]]';
@@ -41,14 +41,20 @@ class installmoduleCommand extends JelixScriptCommand {
     }
 
     public function run(){
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
+    	if (! $this->getOption('-withoutcomposer')) {
+            require_once (__DIR__.'/../includes/composer.php');
+            jComposerInstaller::install();
+        }
+    	
+    	require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         jAppManager::close();
 
         $module = $this->getParam('module');
         $modulesList = $this->getParam('...', array());
         array_unshift($modulesList, $module);
-
+        
+        
         $parameters = $this->getOption('-p');
         if ($parameters && count($modulesList) > 1) {
             throw new Exception ('Parameters are for only one module');
