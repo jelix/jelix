@@ -12,12 +12,11 @@ require_once(JELIX_LIB_PATH.'pref/jPrefItem.class.php');
 require_once(JELIX_LIB_PATH.'pref/jPrefItemGroup.class.php');
 
 class jPrefManager{
-    
+
     protected static $_ini;
-    
+
     protected static $_pref_config_file = 'preferences.ini.php';
-    
-    
+
     /**
      * Add a preference into the preference config
      * 
@@ -71,7 +70,7 @@ class jPrefManager{
         $prefs = array();
         $nogroup = new jPrefItemGroup();
         $nogroup->id= '__nogroup';
-        $nogroup-> locale = 'jpref_admin~admin.group.others';
+        $nogroup->locale = 'jelix~prefs.group.others';
         
         foreach($preferences as $item_key => $item){
             if(substr($item_key, 0, 5) == 'group'){
@@ -83,11 +82,11 @@ class jPrefManager{
             else if(substr($item_key, 0, 4) == 'pref'){
                 $p = new jPrefItem();
                 $p->setFromIniNode($item_key, $item);
-                    
+
                 //current user doesnt have rights to read this pref
                 if(!$p->isReadable())
                     continue;
-                
+
                 if($get_prefs_values)
                     $p->loadValue();
 
@@ -99,37 +98,35 @@ class jPrefManager{
         }
         usort($prefs, 'jPrefItem::compareGroup');
         if(count($nogroup->prefs) > 0)
-            $prefs['__nogroup'] = $nogroup;                     
+            $prefs['__nogroup'] = $nogroup;
         return $prefs;
     }
-    
+
     /**
      * 
      */ 
     public static function getPref($pref_id, $get_pref_value = true){
         $preferences = self::_getPrefFile();
-        
+
         $item_key = 'pref:'.$pref_id;
-        
+
         if(isset($preferences[$item_key])){
             $ini_node = $preferences[$item_key];
             $p = new jPrefItem();
             $p->setFromIniNode($item_key, $ini_node);
-            
+
             //current user doesnt have rights to read this pref
             if(!$p->isReadable())
                 break;
-            
+
             if($get_pref_value)
                 $p->loadValue();
-            
+
             return $p;
         }
         else
             return null;
     }
-
-
 
     protected static function _getPrefFile(){
         return jIniFile::read(jApp::configPath(self::$_pref_config_file));
