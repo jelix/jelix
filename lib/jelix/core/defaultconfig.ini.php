@@ -431,3 +431,7 @@ jelix.cache=cache/
 
 [langToLocale]
 ; overrides of lang_to_locale.ini.php
+
+[disabledListeners]
+; list of jEvent listener to not call
+; eventname[]="module~listenerName"

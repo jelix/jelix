@@ -6,14 +6,7 @@ cd .
   README
 
 
-cd lib/jelix/acl
-  jAcl.class.php
-  jAclDb.class.php
-  jAclDbManager.class.php
-  jAclDbUserGroup.class.php
-  jAcl2Db.class.php
-  jAcl2DbManager.class.php
-  jAcl2DbUserGroup.class.php
+rmd lib/jelix/acl
 
 cd lib/jelix/core
   jInstallChecker.class.php
@@ -76,12 +69,36 @@ cd lib/jelix/core-modules/jelix/daos
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/en_US
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/fr_FR
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl
@@ -104,6 +121,12 @@ cd lib/jelix/plugins/acl/db/
 cd lib/jelix/plugins/acl2/db
   db.acl2.php
 
+cd lib/jelix/plugins/tpl/common
+  block.ifacl.php
+  block.ifnotacl.php
+  block.ifacl2.php
+  block.ifnotacl2.php
+  
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php
   function.formdatasfull.php
@@ -112,6 +135,8 @@ cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
 
 rmd lib/jelix/plugins/tpl/xul/
+rmd lib/jelix/plugins/coord/jacl/
+rmd lib/jelix/plugins/coord/jacl2/
 
 rmd lib/jelix/plugins/cache/memcached
 rmd lib/jelix/plugins/db/intuition
@@ -240,6 +265,9 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.data.pgsql.sql
   install_jacl2.data.sqlite.sql
   _installclass.php
+
+rmd lib/jelix-modules/jacl2db/install/var/
+rmd lib/jelix-modules/jacldb/install/var/
 
 cd lib/jelix-modules/jauthdb/install
   install_jauth.data.mysql.sql

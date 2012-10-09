@@ -26,12 +26,6 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#if ENABLE_PHP_JELIX
-if(!function_exists('jelix_version')){
-    die('this edition of Jelix needs jelix php extension.');
-}
-#endif
-
 /**
  * Version number of Jelix
  * @name  JELIX_VERSION
@@ -64,6 +58,7 @@ error_reporting (E_ALL | E_STRICT);
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp core/jApp.class.php
 #ifnot ENABLE_PHP_JELIX
+#includephp core/jelix_api.php
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
 #includephp core/jIUrlEngine.iface.php
@@ -102,6 +97,7 @@ error_reporting (E_ALL | E_STRICT);
 #else
 require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
 #ifnot ENABLE_PHP_JELIX
+require (JELIX_LIB_CORE_PATH . 'jelix_api.php');
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
@@ -156,9 +152,6 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
 function jelix_autoload($class) {
     if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    }
-    elseif($class == 'jAcl2'){
-        $f = JELIX_LIB_PATH.'acl/jAcl2.class.php';
     }
     elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example

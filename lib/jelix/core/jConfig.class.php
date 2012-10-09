@@ -63,23 +63,13 @@ class jConfig {
                     include($file);
                     $config = (object) $config;
                 }else{
-#if ENABLE_PHP_JELIX
                     $config = jelix_read_ini($file);
-#else
-                    $config = parse_ini_file($file,true);
-                    $config = (object) $config;
-#endif
                 }
 #elseif WITH_BYTECODE_CACHE 
                 include($file);
                 $config = (object) $config;
 #else
-#if ENABLE_PHP_JELIX
                 $config = jelix_read_ini($file);
-#else
-                $config = parse_ini_file($file,true);
-                $config = (object) $config;
-#endif
 #endif
                 // we check all directories to see if it has been modified
                 if($config->compilation['checkCacheFiletime']){

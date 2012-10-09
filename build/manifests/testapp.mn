@@ -107,6 +107,8 @@ cd testapp/modules/testapp/install
   base.pgsql.sql
   install.php
   upgrade_urlengine.php
+  towns.mysql.sql
+  upgrade_createtowns.php
 cd testapp/modules/testapp/tests/
   test1.pu.php
 
@@ -221,7 +223,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  events.simple_test.html_cli.php
   httpcache.pu.php
   installer.lib.php
   installer.main.html_cli.php
@@ -320,6 +321,8 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
+cd testapp/tests-jelix/jelix/events/
+  eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
 cd testapp/tests-jelix/jelix/installer/app1/
@@ -378,10 +381,6 @@ cd testapp/var/config
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
   defaultconfig.ini.php
-  jacl2.coord.ini.php
-  jacl2_ws.coord.ini.php
-  jacl.coord.ini.php
-  jacl_ws.coord.ini.php
   profiles.ini.php.dist
   urls.xml
   urls_rest.xml

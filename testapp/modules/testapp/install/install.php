@@ -13,8 +13,9 @@
 class testappModuleInstaller extends jInstallerModule {
 
     function install() {
-        if ($this->firstDbExec())
+        if ($this->firstDbExec()) {
             $this->execSQLScript('base');
-
+            $this->execSQLScript('towns');
+        }
     }
 }

@@ -12,6 +12,11 @@
 require_once(__DIR__.'/preprocessor.lib.php');
 require_once(__DIR__.'/jBuildUtils.lib.php');
 require_once(__DIR__.'/class.JavaScriptPacker.php');
+require_once(__DIR__.'/filesystem/FileSystemInterface.php');
+require_once(__DIR__.'/filesystem/FsOs.php');
+require_once(__DIR__.'/filesystem/FsSvn.php');
+require_once(__DIR__.'/filesystem/FsHg.php');
+require_once(__DIR__.'/filesystem/FsGit.php');
 
 /**
  * jManifest copy files indicated in a 'manifest' file, to a specific directory
@@ -35,11 +40,6 @@ class jManifest {
     */
     static public $verbose = false;
 
-    /**
-     * @var string  the name of the vcs to use. 'svn' for Subversion, 'hg' for mercurial. '' for no support.
-     */
-    static public $usedVcs = '';
-
     static public $sourcePropertiesFilesDefaultCharset = 'utf-8';
 
     static public $targetPropertiesFilesCharset = 'utf-8';
@@ -51,6 +51,32 @@ class jManifest {
      */
     static public $indentation = 4;
 
+    // the file system object to use
+    static protected $fs = null;
+
+    static public function setFileSystem($fsName) {
+        switch ($fsName) {
+            case 'svn':
+                self::$fs = new FsSvn();
+                break;
+            case 'git':
+                self::$fs = new FsGit();
+                break;
+            case 'hg':
+                self::$fs = new FsHg();
+                break;
+            default:
+                self::$fs = new FsOs();
+        }
+    }
+
+    static public function getFileSystem($rootPath) {
+        if (self::$fs === null)
+            self::$fs = new FsOS();
+        self::$fs->setRootPath($rootPath);
+        return self::$fs;
+    }
+
     /**
      * read the given manifest file and copy files
      * @param string $ficlist manifest file name
@@ -59,6 +85,7 @@ class jManifest {
      */
     static public function process($ficlist, $sourcepath, $distpath, $preprocvars, $preprocmanifest=false){
 
+        $fs = self::getFileSystem($distpath);
         $stripcomment = self::$stripComment;
         $verbose = self::$verbose;
         $preproc = new jPreProcessor();
@@ -85,15 +112,19 @@ class jManifest {
             $nbline++;
             if(preg_match(';^(cd|sd|dd|\*|!|\*!|c|\*c|cch)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\%\/.\-_]*)\))?\s*$;m', $line, $m)){
                 if($m[1] == 'dd'){
+                    // set destination dir
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    jBuildUtils::createDir($distdir.$currentdestdir, self::$usedVcs);
+                    $fs->createDir($distdir.$currentdestdir);
                 }elseif($m[1] == 'sd'){
+                    // set source dir
                     $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
                 }elseif($m[1] == 'cd'){
+                    // set source dir and destination dir (same sub path)
                     $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    jBuildUtils::createDir($distdir.$currentdestdir, self::$usedVcs);
+                    $fs->createDir($distdir.$currentdestdir);
                 }else{
+                    //
                     $doPreprocessing = (strpos($m[1],'*') !== false);
                     $doCompression = (strpos($m[1],'c') !== false && $m[1] != 'cch') || ($stripcomment && (strpos($m[1],'!') === false));
 
@@ -105,8 +136,6 @@ class jManifest {
 
                     $destfile = $distdir.$currentdestdir.$m[3];
                     $sourcefile = $sourcedir.$currentsrcdir.$m[2];
-
-                    $addIntoRepo = !file_exists($destfile);
 
                     if($doPreprocessing){
                         if($verbose){
@@ -130,13 +159,13 @@ class jManifest {
                                 $contents = $packer->pack();
                             }
                         }
-                        file_put_contents($destfile,$contents);
+                        $fs->setFileContent($destfile, $contents);
 
                     }elseif($doCompression && preg_match("/\.php$/",$destfile)){
                         if($verbose)
                             echo "strip comment in  $sourcefile\tto\t".$destfile."\n";
                         $src = file_get_contents($sourcefile);
-                        file_put_contents($destfile,self::stripPhpComments($src));
+                        $fs->setFileContent($destfile, self::stripPhpComments($src));
 
                     }elseif($doCompression && preg_match("/\.js$/",$destfile)) {
                         if($verbose)
@@ -144,7 +173,7 @@ class jManifest {
 
                         $script = file_get_contents($sourcefile);
                         $packer = new JavaScriptPacker($script, 0, true, false);
-                        file_put_contents($destfile, $packer->pack());
+                        $fs->setFileContent($destfile, $packer->pack());
 
                     }elseif($m[1] == 'cch') {
 
@@ -167,49 +196,15 @@ class jManifest {
                             $encodefile = str_replace('%charset%', $val, $destfile);
                             if($verbose)
                                 echo "\tencode into ".$encodefile."\n";
-                            $addIntoRepo = !file_exists($encodefile);
-                            $file = fopen($encodefile, "w");
-                            fwrite($file, mb_convert_encoding($content, $val, $encode));
-                            fclose($file);
-                            if ($addIntoRepo) {
-                                $d = getcwd();
-                                chdir(dirname($encodefile));
-                                if (self::$usedVcs == 'svn') {
-                                    exec("svn add $encodefile");
-                                }
-                                else if (self::$usedVcs  == 'hg') {
-                                    exec("hg add $encodefile");
-                                }
-                                else if (self::$usedVcs  == 'git') {
-                                    exec("git add $encodefile");
-                                }
-                                chdir($d);
-                            }
+                            $fs->setFileContent($encodefile,  mb_convert_encoding($content, $val, $encode));
                         }
-                        $addIntoRepo = false;
                     }else{
                         if($verbose)
                             echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
 
-                        if(!copy($sourcefile, $destfile)){
+                        if (!$fs->copyFile($sourcefile, $destfile)) {
                             throw new Exception ( "$ficlist : cannot copy file ".$m[2].", line $nbline \n");
                         }
-                    }
-
-                    if ($addIntoRepo) {
-                        $d = getcwd();
-                        chdir(dirname($destfile));
-
-                        if (self::$usedVcs == 'svn') {
-                            exec("svn add $destfile");
-                        }
-                        else if (self::$usedVcs  == 'hg') {
-                            exec("hg add $destfile");
-                        }
-                        else if (self::$usedVcs  == 'git') {
-                            exec("git add $destfile");
-                        }
-                        chdir($d);
                     }
                 }
             }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
@@ -331,6 +326,8 @@ class jManifest {
      */
     static public function removeFiles($ficlist, $distpath) {
 
+        $fs = self::getFileSystem($distpath);
+
         $distdir =  jBuildUtils::normalizeDir($distpath);
 
         $script = file($ficlist);
@@ -343,7 +340,7 @@ class jManifest {
             if (preg_match(';^(cd|rmd)?\s+([a-zA-Z0-9\/.\-_]+)\s*$;m', $line, $m)) {
                 if($m[1] == 'rmd'){
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    jBuildUtils::removeDir($distdir.$currentdestdir, self::$usedVcs);
+                    $fs->removeDir($distdir.$currentdestdir);
                 }
                 elseif($m[1] == 'cd') {
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
@@ -362,31 +359,8 @@ class jManifest {
                     }
                     if(self::$verbose)
                         echo "remove  ".$destfile."\n";
-                    switch(self::$usedVcs) {
-                        case '':
-                        case 'rm':
-                            if (!unlink($destfile))
-                                throw new Exception ( " $ficlist: cannot remove file ".$m[2].", line $nbline \n");
-                            break;
-                        case 'svn':
-                            $d = getcwd();
-                            chdir(dirname($destfile));
-                            exec("svn remove $destfile");
-                            chdir($d);
-                            break;
-                        case 'hg':
-                            $d = getcwd();
-                            chdir(dirname($destfile));
-                            exec("hg remove $destfile");
-                            chdir($d);
-                            break;
-                        case 'git':
-                            $d = getcwd();
-                            chdir(dirname($destfile));
-                            exec("git rm $destfile");
-                            chdir($d);
-                            break;
-                    }
+                    if (!$fs->removeFile($destfile))
+                        throw new Exception ( " $ficlist: cannot remove file ".$m[2].", line $nbline \n");
                 }
             }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
                 // we ignore comments

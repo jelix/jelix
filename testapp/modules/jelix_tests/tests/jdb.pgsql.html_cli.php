@@ -11,23 +11,22 @@
 */
 
 class UTjDbPgsql extends jUnitTestCaseDb {
-    protected $dbProfile ='pgsql_profile';
+    protected $dbProfile = 'pgsql_profile';
 
+    protected $noDb = false;
     function skip() {
-        try{
-            $prof = jProfiles::get('jdb', $this->dbProfile, true);
-        }
-        catch (Exception $e) {
-            $this->skipIf(true, 'UTjDbPgsql cannot be run: '.$e->getMessage());
-        }
+        $this->skipIf(($this->noDb !== false), 'UTjDbPgsql cannot be run: '.$this->noDb);
     }
 
     function setUpRun() {
         try{
+            // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
             $this->emptyTable('product_test');
         }
-        catch (Exception $e) {}
+        catch (Exception $e) {
+            $this->noDb = $e->getMessage();
+        }
     }
 
     function testTools(){
