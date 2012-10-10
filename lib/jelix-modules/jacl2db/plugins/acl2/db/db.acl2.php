@@ -118,7 +118,10 @@ class dbAcl2Driver implements jIAcl2Driver {
         self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
         if (!self::$anonacl[$subject]) {
             $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
-            $right = $dao->getAnonymousRightWithRes($subject, $resource);
+            $daoResource = $resource;
+            if(empty($resource))
+                $daoResource = '-';
+            $right = $dao->getAnonymousRightWithRes($subject, $daoResource);
             return self::$anonaclres[$subject][$resource] = ($right != false ? ($right->canceled?false:true) : false);
         }
         else
