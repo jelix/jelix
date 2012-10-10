@@ -56,12 +56,12 @@ EOS
             $popupOpened = false;
             $currentCount = array('error'=>0,'warning'=>0,'notice'=>0,'deprecated'=>0,'strict'=>0);
 
-            $openOnString = trim(jApp::config()->debugbar['errors_openon']);
+            $openOnString = jApp::config()->debugbar['errors_openon'];
             $openOn = array();
             if( $openOnString == '*' ) {
                 $popupOpened = true;
             } else {
-                $openOn = array_map('strtoupper', array_map('trim', explode(',', $openOnString)));
+                $openOn = preg_split("/\s*,\s*/", strtoupper($openOnString));
             }
 
             foreach($messages as $msg) {
@@ -71,7 +71,7 @@ EOS
                     if ($cat == 'error')
                         $maxLevel = 1;
 
-                    if( !$popupOpened && array_search( strtoupper($cat), $openOn ) !== FALSE ) {
+                    if( !$popupOpened && in_array( strtoupper($cat), $openOn ) !== FALSE ) {
                         $popupOpened = true;
                     }
 
