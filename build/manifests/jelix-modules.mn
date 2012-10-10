@@ -69,6 +69,7 @@ cd lib/jelix-modules/jacl2db/install
   upgrade_to_1.3a3_cancelrights.php
   upgrade_to_1.3RC2.2100_typecanceled.php
   upgrade_pluginmoved.php
+  upgrade_newresdefaultvalue.php
 cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.mysql.sql
   upgrade_codegroup_2.mysql.sql
