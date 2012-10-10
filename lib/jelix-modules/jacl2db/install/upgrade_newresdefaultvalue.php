@@ -8,7 +8,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacl2dbModuleUpgrader_rightsresource extends jInstallerModule {
+class jacl2dbModuleUpgrader_newresdefaultvalue extends jInstallerModule {
+
+    public $targetVersions = array('1.4.1', '1.5.2');
+    public $date = '2012-10-10 12:45';
 
     protected $defaultDbProfile = 'jacl2_profile';
 

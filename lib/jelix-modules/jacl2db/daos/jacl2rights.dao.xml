@@ -61,7 +61,6 @@
             <conditions >
                 <eq property="id_aclsbj" expr="$subject" />
                 <eq property="id_aclres" value="-"/>
-                </conditions>
                 <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
