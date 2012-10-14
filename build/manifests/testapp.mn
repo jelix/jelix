@@ -199,6 +199,9 @@ cd testapp/modules/jelix_tests/templates
   test_truncate_html.tpl
   test_tpl_fetch.tpl
   test_tpl_meta_call.tpl
+  test_zone_cache.tpl
+  test_zone_cache_meta.tpl
+  test_zone_cache_meta_deep2.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
@@ -281,6 +284,7 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.fetch.html_cli.php
   jtpl.plugins.html.php
   jtpl.virtual.html_cli.php
+  jzone.cache.html.php
   utils.jdatatype.html_cli.php
   utils.jduration.html_cli.php
   utils.jimagemodifier.html_cli.php
@@ -288,6 +292,11 @@ cd testapp/modules/jelix_tests/tests/
   utils.jrooturl.html_cli.php
   test1.pu.php
   test2.unit.pu.php
+cd testapp/modules/jelix_tests/zones/
+  test_cache.zone.php
+  test_cache_meta.zone.php
+  test_cache_meta_deep.zone.php
+  test_cache_meta_deep2.zone.php
 
 cd testapp/modules/testurls/
 *  module.xml
