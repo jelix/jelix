@@ -219,6 +219,18 @@ class jResponseHtml extends jResponseBasicHtml {
     }
 
     /**
+     * set the title of the page
+     * 
+     * @param string $href  url of the link
+     * @param string $rel   relation name
+     * @param string $type  mime type of the ressource
+     * @param string $title
+     */ 
+    public function setTitle($title) {
+        $this->title = $title;
+    }
+
+    /**
      * add a generic link to the head
      * 
      * @param string $href  url of the link
