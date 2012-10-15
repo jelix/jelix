@@ -377,6 +377,7 @@ cd lib/jelix/utils/
   jJsonRpc.class.php
   jMailer.class.php
   jMessage.class.php
+  jMethodSniffer.class.php
   jProfiles.class.php
   jRSS20Reader.class.php
   jRSS20Info.class.php
