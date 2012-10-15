@@ -65,19 +65,20 @@ class UTjzonecache extends jUnitTestCase {
         $resp = jApp::coord()->response;
         $titleBefore = $resp->title;
 
-        $actionTitle = 'title from action';
+        $actionTitle = 'That\'s a title from action';
         jZone::get($zoneSel, array('zoneTitle'=>$actionTitle));
         $this->assertEqualOrDiff($resp->title, $actionTitle, 'First cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
-        jZone::get($zoneSel, array('zoneTitle'=>'title from action'));
+        jZone::get($zoneSel, array('zoneTitle'=>$actionTitle));
         $this->assertEqualOrDiff($resp->title, $actionTitle, 'Second cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
 
         jZone::get($zoneSel);
-        $this->assertEqualOrDiff($resp->title, 'title from zone', 'First cached zone get - meta, %s');
+        $expectedOutput = 'That\'s a title from zone';
+        $this->assertEqualOrDiff($resp->title, $expectedOutput, 'First cached zone get - meta, %s');
         $resp->title = $titleBefore;
         jZone::get($zoneSel);
-        $this->assertEqualOrDiff($resp->title, 'title from zone', 'Second cached zone get - meta, %s');
+        $this->assertEqualOrDiff($resp->title, $expectedOutput, 'Second cached zone get - meta, %s');
         $resp->title = $titleBefore;
     }
 
@@ -92,10 +93,11 @@ class UTjzonecache extends jUnitTestCase {
         $titleBefore = $resp->title;
 
         jZone::get($zoneSel);
-        $this->assertEqualOrDiff($resp->title, 'deep zone title', 'First cached zone get - "deep" meta, %s');
+        $expectedOutput = 'That\'s a deep zone title with backslash \\';
+        $this->assertEqualOrDiff($resp->title, $expectedOutput, 'First cached zone get - "deep" meta, %s');
         $resp->title = $titleBefore;
         jZone::get($zoneSel);
-        $this->assertEqualOrDiff($resp->title, 'deep zone title', 'Second cached zone get - "deep" meta, %s');
+        $this->assertEqualOrDiff($resp->title, $expectedOutput, 'Second cached zone get - "deep" meta, %s');
         $resp->title = $titleBefore;
     }
 

@@ -1,1 +1,1 @@
-This is a cached zone template
+That's a cached zone template with double quote

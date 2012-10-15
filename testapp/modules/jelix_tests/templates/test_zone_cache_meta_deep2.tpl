@@ -1,1 +1,1 @@
-{meta_html title 'deep zone title'}
+{meta_html title "That's a deep zone title with backslash \\"}

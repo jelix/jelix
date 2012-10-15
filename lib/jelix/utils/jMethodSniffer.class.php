@@ -47,19 +47,25 @@ class jMethodSniffer {
     public function __toString() {
         $sniffedString = '';
         foreach( $this->jMethodSnifferVars->sniffed as $sniffedItem ) {
-            $encodingMethod = 'json_encode';
-            $decodingMethod = 'json_decode';
+            $canUseJson = true;
             foreach( $sniffedItem[1] as $methodParam ) {
                 if( is_object($methodParam) ) {
                     //json_encode / json_decode would be faster than serialize / unserialize, but this could lead to behaviour
                     //differences if one (at least) of the arguments is an object ...
-                    $encodingMethod = 'serialize';
-                    $decodingMethod = 'unserialize';
+                    $canUseJson = false;
                     break;
                 }
             }
+            $encodedParams = '';
+            $decodingMethod = 'json_decode';
+            if( $canUseJson ) {
+                $encodedParams = str_replace("'", "\\'", str_replace("\\", "\\\\", json_encode( $sniffedItem[1] )));
+            } else {
+                $encodedParams = str_replace("'", "\\'", str_replace("\\", "\\\\", serialize( $sniffedItem[1] )));
+                $decodingMethod = 'unserialize';
+            }
             $sniffedString .= "call_user_func_array( array(". $this->jMethodSnifferVars->instanceString . ", '$sniffedItem[0]')" .
-                ", ".$decodingMethod."('" . $encodingMethod($sniffedItem[1]) . "'));\n";
+                ", ".$decodingMethod."('" . $encodedParams . "'));\n";
         }
         return $sniffedString;
     }

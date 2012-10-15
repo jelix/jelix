@@ -17,7 +17,7 @@ class test_cache_metaZone extends jZone {
     protected function _prepareTpl(){
 
         if( !$this->param('zoneTitle') ) {
-            $zoneTitle = 'title from zone';
+            $zoneTitle = 'That\'s a title from zone';
             $this->_tpl->assign( compact('zoneTitle') );
         }
     }
