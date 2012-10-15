@@ -117,7 +117,13 @@ class jDaoGenerator {
         // Build the record class
         //-----------------------
 
-        $src[] = "\nclass ".$this->_DaoRecordClassName.' extends jDaoRecordBase {';
+        $overloadObject = 'jDaoRecordBase';
+        if (isset($this->_dataParser->attributes['overload'])) {
+            $sel = new jSelectorClass($this->_dataParser->attributes['overload']);
+            $src[] = ' require_once (\''.$sel->getPath().'\');';
+            $overloadObject = $sel->className;
+        }
+        $src[] = "\nclass ".$this->_DaoRecordClassName.' extends '.$overloadObject.' {';
 
         $properties=array();
 
