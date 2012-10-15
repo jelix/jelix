@@ -172,11 +172,13 @@ class jZone {
                 }
                 //fetch metas from cache :
                 if( file_exists($cacheFiles['meta']) ) {
-                    //create an anonymous function and then unset it. if jZone cache is cleared within 2 calls in a single
-                    //request, this should still work fine
-                    $metaFunct = create_function('$resp', file_get_contents($cacheFiles['meta']));
-                    $metaFunct( jApp::coord()->response );
-                    unset( $metaFunct );
+                    if( filesize($cacheFiles['meta']) > 0 ) {
+                        //create an anonymous function and then unset it. if jZone cache is cleared within 2 calls in a single
+                        //request, this should still work fine
+                        $metaFunct = create_function('$resp', file_get_contents($cacheFiles['meta']));
+                        $metaFunct( jApp::coord()->response );
+                        unset( $metaFunct );
+                    }
                 } else {
                     //the cache does not exist yet for this response type. We have to generate it !
                     $response = jApp::coord()->response;
