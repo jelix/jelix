@@ -28,6 +28,7 @@ cd lib/jelix/controllers
 *  jControllerDaoCrudDfk.class.php
 
 cd lib/jelix/core
+  ConfigCompilerPluginInterface.php
 ! defaultconfig.ini.php
   jAutoloader.class.php
   jConfigAutoloader.class.php
@@ -406,6 +407,15 @@ cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
+
+cd lib/jelix/plugins/configcompiler/locales
+  locales.configcompiler.php
+cd lib/jelix/plugins/configcompiler/nsautoloader
+  nsautoloader.configcompiler.php
+cd lib/jelix/plugins/configcompiler/responses
+  responses.configcompiler.php
+cd lib/jelix/plugins/configcompiler/session
+  session.configcompiler.php
 
 cd lib/jelix/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
