@@ -21,47 +21,6 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-<<<<<<< HEAD
-=======
-'PROPERTIES_CHARSET_TARGET'=> array(
-    "List of charset used for command cch (convert charset)",
-    'UTF-8,ISO-8859-1,ISO-8859-15',
-    '',
-    ),
-'DEFAULT_CHARSET'=> array(
-    "The default charset of file. useful when convertir some files (cch command)",
-    'UTF-8',
-    '',
-    ),
-'DELETE_DEPRECATED_FILES'=> array(
-    "If 'on', deprecated files will be deleted",
-    true
-    ),
-'TARGET_REPOSITORY'=> array(
-    "The type of the version control system you use on the target directory : none (default), git, hg or svn",
-    '',
-    '/^(git|svn|hg|rm|none)?$/',
-    ),
-'VERBOSE_MODE'=> array(
-    "show messages",
-    false,
-    ),
-'SOURCE_REVISION'=> array(
-    false,
-    ),
-'TODAY'=> array(
-    false,
-    '',
-    ),
-'LIB_VERSION'=> array(
-    false,
-    '',
-    ),
-'LIB_VERSION_MAX'=> array(
-    false,
-    '',
-    ),
->>>>>>> 766a26a... Fix verbose mode not working with -v switch.
 'IS_NIGHTLY'=> array(
     false,
     false,
@@ -103,31 +62,7 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 
 }
 
-<<<<<<< HEAD
 //----------------- Génération des sources
-=======
-jManifest::$verbose = ($VERBOSE_MODE == '1');
-jManifest::$usedVcs = $TARGET_REPOSITORY;
-jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
-jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
-
-//----------------- Source generation
-
-function generateModulePackage($moduleName, $modulesRepositoryPath) {
-    extract(ENV::getAll());
-    global $BUILD_SUBPATH;
-
-    // retrieve the version from module.xml
-    $xml = simplexml_load_file($modulesRepositoryPath.'/'.$moduleName.'/module.xml');
-    $version = (string) $xml->info[0]->version;
-    if ($IS_NIGHTLY) {
-        $version .= '.'.$SOURCE_REVISION;
-        $packageName = 'module-'.$moduleName.'-nightly';
-    }
-    else {
-        $packageName = 'module-'.$moduleName.'-'.$version;
-    }
->>>>>>> 766a26a... Fix verbose mode not working with -v switch.
 
 //... creation des repertoires
 jBuildUtils::createDir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
