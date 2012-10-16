@@ -40,11 +40,6 @@ $BUILD_OPTIONS = array(
     "true if jelix can use jelix php extension.",
     false,
     ),
-'WITH_BYTECODE_CACHE'=> array(
-    "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator', 'xcache' or '' for  none",
-    'auto',
-    '/^(auto|apc|eaccelerator|xcache)?$/',
-    ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution (simpletest &cie)",
     true,
@@ -183,12 +178,6 @@ if ($PHP_VERSION_TARGET) {
 $BUILD_FLAGS = 0;
 if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
 
-switch($WITH_BYTECODE_CACHE){
-    case 'auto': $BUILD_FLAGS |=112; break;
-    case 'apc': $BUILD_FLAGS |=16; break;
-    case 'eaccelerator': $BUILD_FLAGS |=32; break;
-    case 'xcache': $BUILD_FLAGS |=64; break;
-}
 //if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
 //if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
 
@@ -284,7 +273,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+    'ENABLE_PHP_JELIX', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);

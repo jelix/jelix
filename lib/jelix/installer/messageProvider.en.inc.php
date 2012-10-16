@@ -36,7 +36,6 @@
         'extension.optional.installed'=>'the optional extension %s is available',
         'extension.required.installed'=>'the required extension %s is available',
         'extensions.required.ok'=>'All needed PHP extensions are available',
-        'extension.opcode.cache'=>'The application requires an extension for opcode cache (apc, eaccelerator...)',
         'extension.database.ok'=>'The application will use a SQL database',
         'extension.database.ok2'=>'The application can use SQL databases',
         'extension.database.missing'=>'The application needs a SQL database',

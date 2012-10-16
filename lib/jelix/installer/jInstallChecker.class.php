@@ -50,7 +50,6 @@ class jInstallCheck {
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
 #expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__',
-#expand    'WITH_BYTECODE_CACHE'=>'__WITH_BYTECODE_CACHE__',
         );
 #endif
     }
@@ -158,14 +157,6 @@ class jInstallCheck {
             }
             else if ($this->verbose) {
                 $this->ok('extension.required.installed', $name);
-            }
-        }
-
-        if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' &&
-           $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
-            if(!extension_loaded ('apc') && !extension_loaded ('eaccelerator') && !extension_loaded ('xcache')) {
-                $this->error('extension.opcode.cache');
-                $ok=false;
             }
         }
 

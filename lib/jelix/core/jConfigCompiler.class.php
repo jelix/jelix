@@ -91,10 +91,10 @@ class jConfigCompiler {
         $config = self::read($configFile, false, $isCli, $pseudoScriptName);
         $tempPath = jApp::tempPath();
         jFile::createDir($tempPath);
+        $filename = $tempPath.str_replace('/','~',$configFile);
 
-#if WITH_BYTECODE_CACHE == 'auto'
         if(BYTECODE_CACHE_EXISTS){
-            $filename=$tempPath.str_replace('/','~',$configFile).'.conf.php';
+            $filename .= '.conf.php';
             if ($f = @fopen($filename, 'wb')) {
                 fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
                 fclose($f);
@@ -102,19 +102,8 @@ class jConfigCompiler {
                 throw new Exception('Error while writing configuration cache file -- '.$filename);
             }
         }else{
-            jIniFile::write(get_object_vars($config), $tempPath.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
+            jIniFile::write(get_object_vars($config), $tempPath.'.resultini.php', ";<?php die('');?>\n");
         }
-#elseif WITH_BYTECODE_CACHE
-        $filename=$tempPath.str_replace('/','~',$configFile).'.conf.php';
-        if ($f = @fopen($filename, 'wb')) {
-            fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
-            fclose($f);
-        } else {
-            throw new Exception('Error while writing configuration cache file -- '.$filename);
-        }
-#else
-        jIniFile::write(get_object_vars($config), $tempPath.str_replace('/','~',$configFile).'.resultini.php', ";<?php die('');?>\n");
-#endif
         return $config;
     }
 

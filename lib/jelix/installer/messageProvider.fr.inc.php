@@ -35,7 +35,6 @@
         'extension.optional.installed'=>'L\'extension %s optionnelle est disponible',
         'extension.required.installed'=>'L\'extension %s obligatoire est disponible',
         'extensions.required.ok'=>'Toutes les extensions PHP obligatoires sont disponibles',
-        'extension.opcode.cache'=>'Cette édition de Jelix a besoin d\'une extension de cache d\'opcode (apc, eaccelerator...)',
         'extension.database.ok'=>'L\'application utilisera une base de données SQL',
         'extension.database.ok2'=>'L\'application pourra utiliser une base de données SQL',
         'extension.database.missing'=>'L\'application a besoin d\'une base de données SQL',
