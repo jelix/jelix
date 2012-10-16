@@ -113,7 +113,7 @@ ACTION:
         if(isset($params[3]))
             $resource = $cnx->quote($params[3]);
         else
-            $resource = $cnx->quote('-');
+            $resource = $cnx->quote('');
 
         $sql="SELECT * FROM jacl_rights
                 WHERE id_aclgrp=".$group."
@@ -168,7 +168,7 @@ ACTION:
         if(isset($params[3]))
             $resource = $cnx->quote($params[3]);
         else
-            $resource = $cnx->quote('-');
+            $resource = '';
 
         $sql="SELECT * FROM jacl_rights
                 WHERE id_aclgrp=".$group."
