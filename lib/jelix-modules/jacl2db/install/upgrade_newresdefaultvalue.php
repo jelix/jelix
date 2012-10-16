@@ -18,17 +18,6 @@ class jacl2dbModuleUpgrader_newresdefaultvalue extends jInstallerModule {
     function install() {
         if (!$this->firstDbExec())
             return;
-        $cn = $this->dbConnection();
-        try {
-            $cn->beginTransaction();
-
-            $cn->exec("UPDATE ".$cn->prefixTable('jacl2_rights')." 
-            SET id_aclres='-' WHERE id_aclres='' OR id_aclres IS NULL");
-
-            $cn->commit();
-        } catch(Exception $e) {
-            $cn->rollback();
-            throw $e;
-        }
+        $this->execSQLScript('sql/upgrade_newresdefaultvalue');
     }
 }

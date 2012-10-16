@@ -1,52 +1,48 @@
 
-ALTER TABLE %%PREFIX%%jacl2_rights DROP CONSTRAINT %%PREFIX%%jacl2_rights_id_aclsbj_id_aclgrp_id_aclres_pk;
 
-UPDATE ".$cn->prefixTable('jacl2_rights')." 
-            SET id_aclres='-' WHERE id_aclres='' OR id_aclres IS NULL
+CREATE TEMPORARY TABLE %%PREFIX%%jacl2_rights_tmp(
+    "id_aclsbj" VARCHAR(100) NOT NULL,
+    "id_aclgrp" VARCHAR(50) NOT NULL,
+    "id_aclres" VARCHAR(100) NOT NULL DEFAULT ('-'),
+    "canceled" INTEGER NOT NULL DEFAULT (0)
+);
+INSERT INTO %%PREFIX%%jacl2_rights_tmp (id_aclsbj, id_aclgrp, id_aclres, canceled)
+SELECT id_aclsbj, id_aclgrp, id_aclres, canceled FROM %%PREFIX%%jacl2_rights
+WHERE id_aclres IS NOT NULL AND id_aclres <> '';
+INSERT INTO %%PREFIX%%jacl2_rights_tmp (id_aclsbj, id_aclgrp, id_aclres, canceled)
+SELECT id_aclsbj, id_aclgrp, '-', canceled FROM %%PREFIX%%jacl2_rights
+WHERE id_aclres IS NULL OR id_aclres = '';
 
-faire des alter table sur jacl2_rights (mysql, oci, pgsql, sqlite)
--> id_aclres varchar(100) NOT NULL default '-'
+DROP TABLE %%PREFIX%%jacl2_rights;
+CREATE TEMPORARY TABLE %%PREFIX%%jacl2_rights(
+    "id_aclsbj" VARCHAR(100) NOT NULL,
+    "id_aclgrp" VARCHAR(50) NOT NULL,
+    "id_aclres" VARCHAR(100) NOT NULL DEFAULT ('-'),
+    "canceled" INTEGER NOT NULL DEFAULT (0),
+    PRIMARY KEY (id_aclsbj, id_aclgrp, id_aclres)
+);
 
-
-jacl2_group (sqlite)
-jacl2_subject (mysql, sqlite)
-->id_aclsbj varchar(100) NOT NULL DEFAULT ''  <- enlever default ''
-
-
-
-
-
-ALTER TABLE %%PREFIX%%jacl2_rights DROP PRIMARY KEY;
-ALTER TABLE %%PREFIX%%jacl2_rights CHANGE id_aclres id_aclres varchar(100) NOT NULL default '-';
-UPDATE %%PREFIX%%jacl2_rights SET id_aclres='-' WHERE id_aclres='' OR id_aclres IS NULL;
-ALTER TABLE %%PREFIX%%jacl2_rights ADD PRIMARY KEY ( `id_aclsbj` , `id_aclgrp` , `id_aclres`);
-
-ALTER TABLE %%PREFIX%%jacl2_subject DROP PRIMARY KEY;
-ALTER TABLE %%PREFIX%%jacl2_subject CHANGE id_aclsbj id_aclsbj varchar(100) NOT NULL;
-ALTER TABLE %%PREFIX%%jacl2_subject ADD PRIMARY KEY ( `id_aclsbj`);
-
-
-
-ALTER TABLE %%PREFIX%%jacl2_group DROP PRIMARY KEY;
-ALTER TABLE %%PREFIX%%jacl2_group CHANGE id_aclsbj id_aclsbj varchar(100) NOT NULL;
-ALTER TABLE %%PREFIX%%jacl2_group ADD PRIMARY KEY ( `id_aclsbj`);
+INSERT INTO %%PREFIX%%jacl2_rights (id_aclsbj, id_aclgrp, id_aclres, canceled)
+SELECT id_aclsbj, id_aclgrp, '-', canceled FROM %%PREFIX%%jacl2_rights_tmp;
+DROP TABLE %%PREFIX%%jacl2_rights_tmp;
 
 
-
-
-
-ALTER TABLE jacl2_rights DROP PRIMARY KEY;
-ALTER TABLE jacl2_rights CHANGE id_aclres id_aclres varchar(100) NOT NULL default '-';
-UPDATE jacl2_rights SET id_aclres='-' WHERE id_aclres='' OR id_aclres IS NULL;
-ALTER TABLE jacl2_rights ADD PRIMARY KEY ( `id_aclsbj` , `id_aclgrp` , `id_aclres`);
-
-ALTER TABLE jacl2_subject DROP PRIMARY KEY;
-ALTER TABLE jacl2_subject CHANGE id_aclsbj id_aclsbj varchar(100) NOT NULL;
-ALTER TABLE jacl2_subject ADD PRIMARY KEY ( `id_aclsbj`);
-
-
-
-ALTER TABLE jacl2_group DROP PRIMARY KEY;
-ALTER TABLE jacl2_group CHANGE id_aclsbj id_aclsbj varchar(100) NOT NULL;
-ALTER TABLE jacl2_group ADD PRIMARY KEY ( `id_aclsbj`);
+CREATE TEMPORARY TABLE jacl2_subject_tmp (
+  id_aclsbj varchar(100) NOT NULL DEFAULT '',
+  label_key varchar(100) DEFAULT NULL,
+  id_aclsbjgrp VARCHAR( 50 ) DEFAULT NULL,
+  PRIMARY KEY (id_aclsbj)
+);
+INSERT INTO %%PREFIX%%jacl2_subject_tmp (id_aclsbj, label_key, id_aclsbjgrp)
+SELECT id_aclsbj, label_key, id_aclsbjgrp FROM %%PREFIX%%jacl2_subject;
+DROP TABLE %%PREFIX%%jacl2_subject;
+CREATE TEMPORARY TABLE jacl2_subject (
+  id_aclsbj varchar(100) NOT NULL,
+  label_key varchar(100) DEFAULT NULL,
+  id_aclsbjgrp VARCHAR( 50 ) DEFAULT NULL,
+  PRIMARY KEY (id_aclsbj)
+);
+INSERT INTO %%PREFIX%%jacl2_subject (id_aclsbj, label_key, id_aclsbjgrp)
+SELECT id_aclsbj, label_key, id_aclsbjgrp FROM %%PREFIX%%jacl2_subject_tmp;
+DROP TABLE %%PREFIX%%jacl2_subject_tmp;
 

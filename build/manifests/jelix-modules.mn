@@ -79,6 +79,10 @@ cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_2.sqlite.sql
   upgrade_subjectgroup_data.sql
   upgrade_type_canceled.pgsql.sql
+  upgrade_newresdefaultvalue.mysql.sql
+  upgrade_newresdefaultvalue.pgsql.sql
+  upgrade_newresdefaultvalue.sqlite.sql
+  upgrade_newresdefaultvalue.oci.sql
 cd lib/jelix-modules/jacl2db/install/var/config
   jacl2.coord.ini.php
 cd lib/jelix-modules/jacl2db/plugins/acl2/db/
