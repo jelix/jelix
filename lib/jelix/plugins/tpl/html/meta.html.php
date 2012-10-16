@@ -31,7 +31,7 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
     }
     switch($method){
         case 'title':
-            $resp->title = $param;
+            $resp->setTitle($param);
             break;
         case 'js':
             $resp->addJSLink($param,$params);

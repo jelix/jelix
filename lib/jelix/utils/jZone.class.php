@@ -149,7 +149,8 @@ class jZone {
     public function getContent (){
 
         if ($this->_useCache && !jApp::config()->zones['disableCache']){
-            $f = $this->_getCacheFile();
+            $cacheFiles = $this->_getCacheFiles();
+            $f = $cacheFiles['content'];
             if(file_exists($f)){
                 if($this->_cacheTimeout > 0){
                     clearstatcache(false, $f);
@@ -157,24 +158,50 @@ class jZone {
                         // timeout : regenerate the cache
                         unlink($f);
                         $this->_cancelCache=false;
+                        $response = jApp::coord()->response;
+                        $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
+                        jApp::coord()->response = $sniffer;
                         $content=$this->_createContent();
+                        jApp::coord()->response = $response;
                         if(!$this->_cancelCache){
                             jFile::write($f,$content);
+                            jFile::write($cacheFiles['meta'], (string)$sniffer);
                         }
                         return $content;
                     }
                 }
-                if($this->_tplname != ''){
-                    $this->_tpl = new jTpl();
-                    $this->_tpl->assign($this->_params);
-                    $this->_tpl->meta($this->_tplname, $this->_tplOutputType);
+                //fetch metas from cache :
+                if( file_exists($cacheFiles['meta']) ) {
+                    if( filesize($cacheFiles['meta']) > 0 ) {
+                        //create an anonymous function and then unset it. if jZone cache is cleared within 2 calls in a single
+                        //request, this should still work fine
+                        $metaFunct = create_function('$resp', file_get_contents($cacheFiles['meta']));
+                        $metaFunct( jApp::coord()->response );
+                        unset( $metaFunct );
+                    }
+                } else {
+                    //the cache does not exist yet for this response type. We have to generate it !
+                    $response = jApp::coord()->response;
+                    $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
+                    jApp::coord()->response = $sniffer;
+                    $this->_createContent();
+                    jApp::coord()->response = $response;
+                    if(!$this->_cancelCache){
+                        jFile::write($cacheFiles['meta'], (string)$sniffer);
+                    }
                 }
+                //and now fetch content from cache :
                 $content = file_get_contents($f);
             }else{
                 $this->_cancelCache=false;
+                $response = jApp::coord()->response;
+                $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
+                jApp::coord()->response = $sniffer;
                 $content=$this->_createContent();
+                jApp::coord()->response = $response;
                 if(!$this->_cancelCache){
                     jFile::write($f,$content);
+                    jFile::write($cacheFiles['meta'], (string)$sniffer);
                 }
             }
         }else{
@@ -188,9 +215,10 @@ class jZone {
     */
     public function clearCache (){
         if ($this->_useCache){
-            $f = $this->_getCacheFile();
-            if(file_exists($f)){
-                unlink($f);
+            foreach( $this->_getCacheFiles(false) as $f ) {
+                if(file_exists($f)){
+                    unlink($f);
+                }
             }
         }
     }
@@ -224,12 +252,25 @@ class jZone {
     * create the cache filename
     * @return string the filename
     */
-    private function _getCacheFile (){
+    private function _getCacheFiles($forCurrentResponse=true){
         $module = jApp::getCurrentModule ();
         $ar = $this->_params;
         ksort($ar);
         $id=md5(serialize($ar));
-        return jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php');
+        $cacheFiles = array( 'content' => jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php') );
+        if( $forCurrentResponse ) {
+            //make distinct a cache files for metas according to response type as meta handling is often different for different responses
+            $respType = jApp::coord()->response->getType();
+            $cacheFiles['meta'] = jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~meta~'.$respType.'~'.$id.'.php');
+        } else {
+            foreach( jApp::config()->responses as $respType ) {
+                //list all response types
+                if( substr($respType, -5) != '.path' ) {
+                    $cacheFiles['meta.'.$respType] = jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~meta~'.$respType.'~'.$id.'.php');
+                }
+            }
+        }
+        return $cacheFiles;
     }
 
    /**
