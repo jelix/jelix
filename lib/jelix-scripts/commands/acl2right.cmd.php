@@ -148,7 +148,7 @@ ACTION:
         if(isset($params[2]))
             $resource = $cnx->quote($params[2]);
         else
-            $resource = $cnx->quote('');
+            $resource = $cnx->quote('-');
 
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
@@ -188,13 +188,12 @@ ACTION:
         if(isset($params[2]))
             $resource = $cnx->quote($params[2]);
         else
-            $resource = '';
+            $resource = $cnx->quote('-');
 
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
-        if($resource)
-            $sql.=" AND id_aclres=".$resource;
+        $sql.=" AND id_aclres=".$resource;
 
         $rs = $cnx->query($sql);
         if(!$rs->fetch()){
@@ -204,8 +203,7 @@ ACTION:
         $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')."
              WHERE id_aclgrp=".$group."
                 AND id_aclsbj=".$subject;
-        if($resource)
-            $sql.=" AND id_aclres=".$resource;
+        $sql.=" AND id_aclres=".$resource;
         $cnx->exec($sql);
 
         if ($this->verbose())

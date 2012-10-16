@@ -30,11 +30,12 @@ class jAcl2DbManager {
      * @param string $resource the id of a resource
      * @return boolean  true if the right is set
      */
-    public static function addRight($group, $subject, $resource=''){
+    public static function addRight($group, $subject, $resource='-'){
         $sbj = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->get($subject);
         if(!$sbj) return false;
 
-        if($resource === null) $resource='';
+        if(empty($resource))
+            $resource = '-';
 
         //  add the new value
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
@@ -63,8 +64,9 @@ class jAcl2DbManager {
      * @param string $resource the id of a resource
      * @param boolean $canceled true if the removing is to cancel a right, instead of an inheritance
      */
-    public static function removeRight($group, $subject, $resource='', $canceled = false){
-        if($resource === null) $resource='';
+    public static function removeRight($group, $subject, $resource='-', $canceled = false){
+        if(empty($resource))
+            $resource = '-';
 
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         if ($canceled) {
@@ -136,6 +138,8 @@ class jAcl2DbManager {
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($subject, $resource){
+        if(empty($resource))
+            $resource = '-';
         jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteBySubjRes($subject, $resource);
         jAcl2::clearCache();
     }

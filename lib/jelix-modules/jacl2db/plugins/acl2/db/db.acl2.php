@@ -32,7 +32,9 @@ class dbAcl2Driver implements jIAcl2Driver {
      * @param string $resource the id of a resource
      * @return boolean true if the right is ok
      */
-    public function getRight($subject, $resource=null){
+    public function getRight($subject, $resource='-'){
+        if (empty($resource))
+            $resource = '-';
 
         if(!jAuth::isConnected()) {
             return self::getAnonymousRight($subject, $resource);
@@ -41,6 +43,7 @@ class dbAcl2Driver implements jIAcl2Driver {
         $groups = null;
 
         if (self::$acl === null) {
+            // let's load all rights for the groups on which the current user is attached
             $groups = jAcl2DbUserGroup::getGroups();
             self::$acl=array();
             if (count($groups)) {
@@ -64,16 +67,19 @@ class dbAcl2Driver implements jIAcl2Driver {
             self::$acl[$subject] = false;
         }
 
-        if($resource === null){
+        // no resource given, just return the global right for the given subject
+        if ($resource == '-') {
             return self::$acl[$subject];
         }
 
+        // if we already have loaded the corresponding right, returns it
         if(isset(self::$aclres[$subject][$resource])){
             return self::$aclres[$subject][$resource];
         }
 
+        // default right for the resource is the global right
         self::$aclres[$subject][$resource] = self::$acl[$subject];
-        // if the general right is not set, check the specific right for the resource
+        // if the general right is not given, check the specific right for the resource
         if (!self::$acl[$subject]) {
             if($groups===null)
                 $groups = jAcl2DbUserGroup::getGroups();
@@ -88,9 +94,12 @@ class dbAcl2Driver implements jIAcl2Driver {
             return true;
     }
 
-    protected function getAnonymousRight($subject, $resource=null) {
+    protected function getAnonymousRight($subject, $resource='-') {
+        if (empty($resource))
+            $resource = '-';
 
         if (self::$anonacl === null) {
+            // let's load rights for anonymous group
             $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             self::$anonacl=array();
             foreach($dao->getAllAnonymousRights() as $rec){
@@ -107,15 +116,19 @@ class dbAcl2Driver implements jIAcl2Driver {
             self::$anonacl[$subject] = false;
         }
 
-        if($resource === null){
+        // no resource given, just return the global right for the given subject
+        if ($resource === '-') {
             return self::$anonacl[$subject];
         }
 
+        // if we already have loaded the corresponding right, returns it
         if(isset(self::$anonaclres[$subject][$resource])){
             return self::$anonaclres[$subject][$resource];
         }
 
+        // default right for the resource is the global right
         self::$anonaclres[$subject][$resource] = self::$anonacl[$subject];
+        // if the general right is not given, check the specific right for the resource
         if (!self::$anonacl[$subject]) {
             $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
             $right = $dao->getAnonymousRightWithRes($subject, $resource);
