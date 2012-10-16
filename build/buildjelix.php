@@ -127,7 +127,7 @@ $BUILD_OPTIONS = array(
     false,
     '',
     ),
-'VERBOSE'=> array(
+'VERBOSE_MODE'=> array(
     "show messages",
     false,
     ),
@@ -241,7 +241,7 @@ if ($TARGET_REPOSITORY != '') {
 jBuildUtils::createDir($BUILD_TARGET_PATH);
 
 jManifest::$stripComment = ($STRIP_COMMENT == '1');
-jManifest::$verbose = ($VERBOSE == '1');
+jManifest::$verbose = ($VERBOSE_MODE == '1');
 jManifest::setFileSystem($TARGET_REPOSITORY);
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
