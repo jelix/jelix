@@ -82,9 +82,6 @@ class jProfiles {
         }
         // if the profile doesn't exist, we take the default one
         elseif (!$noDefault) {
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            //trigger_error(jLocale::get('jelix~errors.profile.use.default', $name), E_USER_NOTICE);
-#endif
             if (isset(self::$_profiles[$category.':default'])) {
                 self::$_profiles[$category.':default']['_name'] = 'default';
                 if ($common)

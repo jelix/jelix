@@ -4,15 +4,38 @@
 * @subpackage  dao
 * @author      Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright   2001-2005 CopixTeam, 2005-2006 Laurent Jouanneau
+* @copyright   2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
+#if ENABLE_OPTIMIZED_SOURCE
+* @contributor Olivier Demah
+* @contributor Philippe Villiers
+* @contributor Bastien Jaillot
+* @contributor Julien Issler, Guillaume Dugas
+* @copyright  2007-2008 Julien Issler, 2010 Olivier Demah
+* These classes was retrieved originally from the Copix project
+* (CopixDAOGeneratorV1, CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
+* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
+* Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
+#else
 * This class was get originally from the Copix project (CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
-* and this class was adapted/improved for Jelix by Laurent Jouanneau
+#endif
 *
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+#if ENABLE_OPTIMIZED_SOURCE
+#includephp jDaoXmlException.class.php
+#includephp jDaoProperty.class.php
+#includephp jDaoMethod.class.php
+#includephp jDaoGenerator.class.php
+#else
+require(JELIX_LIB_PATH.'dao/jDaoXmlException.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
+require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
+#endif
 
 /**
  * extract data from a dao xml content

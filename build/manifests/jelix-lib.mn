@@ -231,11 +231,11 @@ cd lib/jelix/dao
   jDaoRecordBase.class.php
   jDaoFactoryBase.class.php
   jDao.class.php
-* jDaoCompiler.class.php
+  jDaoCompiler.class.php
+* jDaoParser.class.php
   jDaoConditions.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jDaoGenerator.class.php
-  jDaoParser.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
   jDaoXmlException.class.php
@@ -244,7 +244,8 @@ cd lib/jelix/dao
 cd lib/jelix/db
 * jDb.class.php
   jDbColumn.class.php
-* jDbPDOConnection.class.php
+  jDbPDOConnection.class.php
+  jDbPDOConnectionDebug.class.php
   jDbPDOResultSet.class.php
   jDbSchema.class.php
   jDbTable.class.php

@@ -17,7 +17,7 @@ cd lib/jelix-scripts/commands
   createclassfromdao.cmd.php
   createdaocrud.cmd.php
   createentrypoint.cmd.php
-* createform.cmd.php
+  createform.cmd.php
   createlangpackage.cmd.php
   createmodule.cmd.php
   createzone.cmd.php

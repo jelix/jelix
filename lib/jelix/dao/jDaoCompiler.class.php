@@ -2,27 +2,6 @@
 /**
 * @package    jelix
 * @subpackage dao
-#if ENABLE_OPTIMIZED_SOURCE
-* @author     Gérald Croes, Laurent Jouanneau
-* @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
-* Ideas and some parts of this file were get originally from the Copix project
-* (CopixDAOGeneratorV1, CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
-* Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this lines of code are Gerald Croes and Laurent Jouanneau,
-* and classes were adapted/improved for Jelix by Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
-#includephp jDaoXmlException.class.php
-#includephp jDaoParser.class.php
-#includephp jDaoProperty.class.php
-#includephp jDaoMethod.class.php
-#includephp jDaoGenerator.class.php
-
-#else
 * @author      Laurent Jouanneau
 * @copyright   2005-2012 Laurent Jouanneau
 * Idea of this class was get originally from the Copix project
@@ -36,12 +15,7 @@
 /**
  *
  */
-require(JELIX_LIB_PATH.'dao/jDaoXmlException.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
-#endif
+require_once(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
 
 /**
  * The compiler for the DAO xml files. it is used by jIncluder
