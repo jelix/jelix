@@ -60,6 +60,8 @@ class jMailer extends PHPMailer {
         $this->defaultLang = $config->locale;
         $this->CharSet = $config->charset;
         $this->Mailer = $config->mailer['mailerType'];
+        if ($config->mailer['mailerType'])
+            $this->Mailer = $config->mailer['mailerType'];
         $this->Hostname = $config->mailer['hostname'];
         $this->Sendmail = $config->mailer['sendmailPath'];
         $this->Host = $config->mailer['smtpHost'];
