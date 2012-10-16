@@ -105,6 +105,7 @@ cd lib/jelix/core/selector
 * jSelectorActFast.class.php
 * jSelectorClass.class.php
   jSelectorDao.class.php
+  jSelectorDaoRecord.class.php
   jSelectorFile.lib.php
   jSelectorForm.class.php
   jSelectorIface.class.php
@@ -114,9 +115,6 @@ cd lib/jelix/core/selector
   jSelectorTpl.class.php
   jSelectorZone.class.php
 #endif
-
-cd lib/jelix/core/selector
-  jSelectorDaoRecord.class.php
 
 cd lib/jelix/core-modules/jelix
 *  module.xml

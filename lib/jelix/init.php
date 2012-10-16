@@ -74,6 +74,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/selector/jSelectorAct.class.php
 #includephp core/selector/jSelectorClass.class.php
 #includephp core/selector/jSelectorDao.class.php
+#includephp core/selector/jSelectorDaoRecord.class.php
 #includephp core/selector/jSelectorForm.class.php
 #includephp core/selector/jSelectorIface.class.php
 #includephp core/selector/jSelectorLoc.class.php
@@ -113,6 +114,7 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorClass.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorIface.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');

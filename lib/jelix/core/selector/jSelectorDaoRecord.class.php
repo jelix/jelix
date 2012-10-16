@@ -3,9 +3,8 @@
 * see jISelector.iface.php for documentation about selectors. 
 * @package     jelix
 * @subpackage  core_selector
-* @author      Laurent Jouanneau
-* @contributor Loic Mathaud
-* @copyright   2005-2012 Laurent Jouanneau, 2007 Loic Mathaud
+* @author      Guillaume Dugas
+* @copyright   2012 Guillaume Dugas
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
