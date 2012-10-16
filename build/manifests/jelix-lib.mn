@@ -115,6 +115,9 @@ cd lib/jelix/core/selector
   jSelectorZone.class.php
 #endif
 
+cd lib/jelix/core/selector
+  jSelectorDaoRecord.class.php
+
 cd lib/jelix/core-modules/jelix
 *  module.xml
    urls.xml

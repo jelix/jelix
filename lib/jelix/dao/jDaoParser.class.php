@@ -67,7 +67,12 @@ class jDaoParser {
     private $_eventList = array();
 
     public $hasOnlyPrimaryKeys = false;
-    
+
+    /**
+     * record attributes
+     */
+    public $attributes = array();
+
     public $selector;
     /**
     * Constructor
@@ -111,6 +116,9 @@ class jDaoParser {
         $countprop = 0;
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
+            foreach ($xml->record[0]->attributes() as $name => $value) {
+                $this->attributes[$name] = $value;
+            }
             foreach ($xml->record[0]->property as $prop){
                 $p = new jDaoProperty ($prop->attributes(), $this, $tools);
                 $this->_properties[$p->name] = $p;
