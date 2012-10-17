@@ -18,7 +18,7 @@
  */
 
 class jSelectorDaoRecord extends jSelectorModule {
-    protected $type = 'dao';
+    protected $type = 'daorecord';
     protected $_dirname = 'daos/';
     protected $_suffix = '.daorecord.php';
 
