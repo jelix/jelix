@@ -92,9 +92,9 @@ class jDaoParser {
     public $hasOnlyPrimaryKeys = false;
 
     /**
-     * record attributes
+     * extended dao record
      */
-    public $attributes = array();
+    private $_daoRecordSelector = null;
 
     public $selector;
     /**
@@ -137,11 +137,21 @@ class jDaoParser {
     
     protected function parseRecord($xml, $tools) {
         $countprop = 0;
+        // dao and daoRecord inheritance
+        if(isset($xml->record)) {
+            if (isset($xml->record[0]['origin'])) {
+                $sel = new jSelectorDao($xml->record[0]['origin'], $this->selector->driver);
+                $parser = self::getParser($sel);
+                $this->_properties = $parser->getProperties();
+                $this->_daoRecordSelector = $parser->getDaoRecordSelector();
+            }
+            if (isset($xml->record[0]['extends'])) {
+                $this->_daoRecordSelector = $xml->record[0]['extends'];
+            }
+        }
+        
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
-            foreach ($xml->record[0]->attributes() as $name => $value) {
-                $this->attributes[$name] = $value;
-            }
             foreach ($xml->record[0]->property as $prop){
                 $p = new jDaoProperty ($prop->attributes(), $this, $tools);
                 $this->_properties[$p->name] = $p;
@@ -150,7 +160,7 @@ class jDaoParser {
                     $countprop ++;
             }
             $this->hasOnlyPrimaryKeys = ($countprop == 0);
-        }else
+        }elseif(count($this->_properties) == 0)
             throw new jDaoXmlException ($this->selector, 'properties.missing');
     }
     
@@ -162,6 +172,14 @@ class jDaoParser {
                 $this->_eventList = preg_split("/[\s,]+/", $events);
             }
 
+            // Getting parent methods
+            $parent_methods = array();
+            if (isset($xml->factory[0]['origin'])) {
+                $sel = new jSelectorDao($xml->factory[0]['origin'], $this->selector->driver);
+                $parser = self::getParser($sel);
+                $parent_methods = $parser->getMethods();
+            }
+            
             if (isset($xml->factory[0]->method)){
                 foreach($xml->factory[0]->method as $method){
                     $m = new jDaoMethod ($method, $this);
@@ -169,6 +187,12 @@ class jDaoParser {
                         throw new jDaoXmlException ($this->selector, 'method.duplicate',$m->name);
                     }
                     $this->_methods[$m->name] = $m;
+                }
+            }
+            // Apply parent methods if not exists
+            foreach($parent_methods as $name => $method) {
+                if (! isset($this->_methods[$name])) {
+                    $this->_methods[$name] = $method;
                 }
             }
         }
@@ -253,5 +277,30 @@ class jDaoParser {
     public function getOuterJoins(){  return $this->_ojoins;}
     public function getInnerJoins(){  return $this->_ijoins;}
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
+    public function getDaoRecordSelector(){ return $this->_daoRecordSelector;}
+    
+    
+    public static function getParser($selector) {
+        $daoPath = $selector->getPath();
+        
+        $doc = new DOMDocument();
+        
+        if(!$doc->load($daoPath)){
+            throw new jException('jelix~daoxml.file.unknown', $daoPath);
+        }
+
+        if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
+            throw new jException('jelix~daoxml.namespace.wrong',array($daoPath, $doc->namespaceURI));
+        }
+
+        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
+        if(is_null($tools))
+            throw new jException('jelix~db.error.driver.notfound', $selector->driver);
+        
+        $parser = new jDaoParser ($selector);
+        $parser->parse(simplexml_import_dom($doc), $tools);
+        
+        return $parser;
+    }
 }
 

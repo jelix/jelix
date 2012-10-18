@@ -118,9 +118,9 @@ class jDaoGenerator {
         //-----------------------
 
         $extendedObject = 'jDaoRecordBase';
-        if (isset($this->_dataParser->attributes['extends'])) {
-            require_once( JELIX_LIB_PATH . "/core/selector/jSelectorDaoRecord.class.php");
-            $sel = new jSelectorDaoRecord($this->_dataParser->attributes['extends']);
+        $daoRecordSelector = $this->_dataParser->getDaoRecordSelector();
+        if ($daoRecordSelector) {
+            $sel = new jSelectorDaoRecord($daoRecordSelector);
             $src[] = ' require_once (\''.$sel->getPath().'\');';
             $extendedObject = $sel->resource . 'DaoRecord';
         }
