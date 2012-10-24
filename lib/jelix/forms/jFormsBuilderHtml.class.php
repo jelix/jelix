@@ -245,10 +245,26 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $attributes['class'].= ' '.$class;
         else
             $attributes['class'] = $class;
-        $this->{'output'.$ctrl->type}($ctrl, $attributes);
-        echo "\n";
-        $this->{'js'.$ctrl->type}($ctrl);
-        $this->outputHelp($ctrl);
+            
+        global $gJConfig;
+        if (isset($gJConfig->jforms_builder_html[$ctrl->type])) {
+            $pluginName= $gJConfig->jforms_builder_html[$ctrl->type];
+            $className = $pluginName . 'HtmlWidgetBuilder';
+            
+            if (class_exists($className)) {
+                $plugin = new $className();
+                $plugin->outputControl();
+                $plugin->outputJs();
+                $plugin->outputHelp();
+            } else {
+                //ERROR
+            }
+        } else {
+            $this->{'output'.$ctrl->type}($ctrl, $attributes);
+            echo "\n";
+            $this->{'js'.$ctrl->type}($ctrl);
+            $this->outputHelp($ctrl);
+        }
     }
 
     protected function _outputAttr(&$attributes) {
