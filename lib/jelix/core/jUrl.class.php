@@ -119,11 +119,13 @@ class jUrl extends jUrlBase {
         static $url = false;
         if ($url === false){
             $req = jApp::coord()->request;
-            $url = $req->getServerURI().$req->urlScript.$req->urlPathInfo.'?';
+            $url = $req->getServerURI().$req->urlScript.$req->urlPathInfo;
             $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)
                 $q = str_replace( '%3A', ':', $q);
-            $url .=$q;
+            if( $q != '' ) {
+                $url .= '?' . $q;
+            }
         }
         return $url;
     }
