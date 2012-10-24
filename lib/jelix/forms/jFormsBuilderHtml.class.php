@@ -11,6 +11,11 @@
 */
 
 /**
+ *
+ */
+require(JELIX_LIB_PATH.'forms/jFormsHtmlWidgetBuilder.class.php');
+
+/**
  * HTML form builder
  * @package     jelix
  * @subpackage  jelix-plugins
@@ -23,6 +28,14 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     protected $isRootControl = true;
 
+    public function getjFormsJsVarName() {
+        return $this->jFormsJsVarName;
+    }
+    
+    public function getIsRootControl() {
+        return $this->isRootControl;
+    }
+    
     public function outputAllControls() {
 
         echo '<table class="jforms-table" border="0">';
@@ -209,57 +222,68 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
-        $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
-        $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
-        $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
-        $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-        $id = $this->_name.'_'.$ctrl->ref;
-        $idLabel = ' id="'.$id.'_label"';
-        if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
-            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
-        }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
+        if (isset(jApp::config()->jforms_builder_html[$ctrl->type])) {
+            $pluginName= jApp::config()->jforms_builder_html[$ctrl->type];
+            $className = $pluginName . 'HtmlWidgetBuilder';
+
+            if (class_exists($className)) {
+                $plugin = new $className($ctrl, $this);
+                $plugin->outputLabel();
+            } else {
+                //ERROR
+            }
+        } else {
+            if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
+            $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
+            $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
+            $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
+            $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
+            $id = $this->_name.'_'.$ctrl->ref;
+            $idLabel = ' id="'.$id.'_label"';
+            if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
+                echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
+            }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
+                echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
+            }
         }
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        if($ctrl->type == 'hidden') return;
-        $ro = $ctrl->isReadOnly();
-        $attributes['name'] = $ctrl->ref;
-        $attributes['id'] = $this->_name.'_'.$ctrl->ref;
-
-        if ($ro)
-            $attributes['readonly'] = 'readonly';
-        else
-            unset($attributes['readonly']);
-        if (!isset($attributes['title']) && $ctrl->hint) {
-            $attributes['title'] = $ctrl->hint;
-        }
-
-        $class = 'jforms-ctrl-'.$ctrl->type;
-        $class .= ($ctrl->required == false || $ro?'':' jforms-required');
-        $class .= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
-        $class .= ($ro && $ctrl->type != 'captcha'?' jforms-readonly':'');
-        if (isset($attributes['class']))
-            $attributes['class'].= ' '.$class;
-        else
-            $attributes['class'] = $class;
-            
-        global $gJConfig;
-        if (isset($gJConfig->jforms_builder_html[$ctrl->type])) {
-            $pluginName= $gJConfig->jforms_builder_html[$ctrl->type];
+        if (isset(jApp::config()->jforms_builder_html[$ctrl->type])) {
+            $pluginName= jApp::config()->jforms_builder_html[$ctrl->type];
             $className = $pluginName . 'HtmlWidgetBuilder';
-            
+
             if (class_exists($className)) {
-                $plugin = new $className();
+                $plugin = new $className($ctrl, $this);
                 $plugin->outputControl();
                 $plugin->outputJs();
                 $plugin->outputHelp();
             } else {
                 //ERROR
             }
-        } else {
+        } else { //To remove when all control in plugin
+            if($ctrl->type == 'hidden') return;
+            $ro = $ctrl->isReadOnly();
+            $attributes['name'] = $ctrl->ref;
+            $attributes['id'] = $this->_name.'_'.$ctrl->ref;
+    
+            if ($ro)
+                $attributes['readonly'] = 'readonly';
+            else
+                unset($attributes['readonly']);
+            if (!isset($attributes['title']) && $ctrl->hint) {
+                $attributes['title'] = $ctrl->hint;
+            }
+    
+            $class = 'jforms-ctrl-'.$ctrl->type;
+            $class .= ($ctrl->required == false || $ro?'':' jforms-required');
+            $class .= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
+            $class .= ($ro && $ctrl->type != 'captcha'?' jforms-readonly':'');
+            if (isset($attributes['class']))
+                $attributes['class'].= ' '.$class;
+            else
+                $attributes['class'] = $class;
+
             $this->{'output'.$ctrl->type}($ctrl, $attributes);
             echo "\n";
             $this->{'js'.$ctrl->type}($ctrl);

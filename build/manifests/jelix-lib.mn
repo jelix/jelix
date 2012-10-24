@@ -293,6 +293,7 @@ cd lib/jelix/forms
 * jFormsControl.class.php
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
+  jFormsHtmlWidgetBuilder.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/forms/controls
