@@ -9,12 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class eventsTest extends PHPUnit_Framework_TestCase {
+class eventsTest extends jUnitTestCase {
 
     function setUp() {
         jEvent::clearCache();
-        jelix_init_test_env();
+        self::initJelixConfig();
         jFile::removeDir(jApp::tempPath(), false);
+        parent::setUp();
     }
 
     function testBasics() {

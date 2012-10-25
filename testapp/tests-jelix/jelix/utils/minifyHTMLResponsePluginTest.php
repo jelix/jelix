@@ -16,10 +16,10 @@ class testMinifyHTMLResponsePlugin extends minifyHTMLResponsePlugin {
 }
 
 
-class minifyHTMLResponsePluginTest extends PHPUnit_Framework_TestCase
+class minifyHTMLResponsePluginTest extends jUnitTestCase
 {
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     function testStaticJs () {

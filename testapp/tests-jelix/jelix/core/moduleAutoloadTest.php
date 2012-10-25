@@ -5,11 +5,11 @@
 // we should then have into jApp::config() this informations
 // let's check them
 
-class moduleAutoloadTest extends PHPUnit_Framework_TestCase
+class moduleAutoloadTest extends jUnitTestCase
 {
     protected static $modulePath;
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
         self::$modulePath = jApp::config()->_modulesPathList['jelix_tests'];
     }
 
