@@ -319,6 +319,17 @@ class jDatatypeLocaleTime extends jDatatypeDateTime {
 
 
 /**
+ * Datatype localetime
+ * @package     jelix
+ * @subpackage  utils
+ * @author dhughuet, time short
+ */
+class jDatatypeLocaleTimeShort extends jDatatypeDateTime {
+    protected $format=14;
+}
+
+
+/**
  * Datatype url
  *
  * Possible facets are: 'schemeRequired','hostRequired','pathRequired', 'queryRequired'.
