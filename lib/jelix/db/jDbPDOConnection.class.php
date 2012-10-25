@@ -35,6 +35,12 @@ class jDbPDOConnection extends PDO {
     public $dbms;
 
     /**
+     * driver name
+     * @var string
+     */
+    public $driverName = '';
+
+    /**
      * Use a profile to do the connection
      * @param array $profile the profile data readed from the ini file
      */
@@ -45,14 +51,14 @@ class jDbPDOConnection extends PDO {
         $password = '';
         $dsn = '';
         if (isset($profile['dsn'])) {
-            $this->dbms = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
+            $this->dbms = $this->driverName = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
             $dsn = $profile['dsn'];
             unset($prof['dsn']);
             if ($this->dbms == 'sqlite')
                 $dsn = str_replace(array('app:','lib:','var:'), array(jApp::appPath(), LIB_PATH, jApp::varPath()), $dsn);
         }
         else {
-            $this->dbms = $profile['driver'];
+            $this->dbms = $this->driverName = $profile['driver'];
             $db = $profile['database'];
             $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
             if($this->dbms != 'sqlite')
