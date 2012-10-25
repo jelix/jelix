@@ -258,7 +258,7 @@ class jDatatypeDateTime extends jDatatype {
 
     protected function _addFacet($type,$value){
         if($type == 'maxValue' || $type == 'minValue'){
-            if(!preg_match('#^\d{4}-\d{2}-\d{2} (\d{2}:\d{2}(:\d{2})?)?$#',$value))
+            if(!preg_match('#^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}(:\d{2})?)?$#',$value))
                 $value = date($this->_date_format,strtotime($value));
             $this->$type = new jDateTime();
             $this->$type->setFromString($value,$this->format);
