@@ -92,10 +92,16 @@ class jDaoParser {
     public $hasOnlyPrimaryKeys = false;
 
     /**
-     * extended dao record
+     * record class
      */
-    private $_daoRecordSelector = null;
-
+    private $_daoRecord = null;
+    
+    /*
+     * import
+     */
+    private $_daoImport = null;
+    private $_parserImport = null;
+    
     public $selector;
     /**
     * Constructor
@@ -111,9 +117,37 @@ class jDaoParser {
     * @param int $debug  for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
     */
     public function parse( $xml, $tools){
+        $this->import($xml, $tools);
         $this->parseDatasource($xml);
         $this->parseRecord($xml, $tools);
         $this->parseFactory($xml);
+    }
+    
+    protected function import($xml, $tools) {
+        if(isset($xml['import'])){
+            $import = $xml['import'];
+            $this->_daoImport = $import;
+            
+            // Keep the same driver as current used
+            $importSel = new jSelectorDao($import, $this->selector->driver);
+            
+            $doc = new DOMDocument();
+            if(! $doc->load($importSel->getPath())){
+                throw new jException('jelix~daoxml.file.unknown', $importSel->getPath());
+            }
+            $parser = new jDaoParser ($importSel);
+            $parser->parse(simplexml_import_dom($doc), $tools);
+            
+            $this->_parserImport = $parser;
+            $this->_properties = $parser->getProperties();
+            $this->_tables = $parser->getTables();
+            $this->_primaryTable = $parser->getPrimaryTable();
+            $this->_methods = $parser->getMethods();
+            $this->_ojoins = $parser->getOuterJoins();
+            $this->_ijoins = $parser->getInnerJoins();
+            $this->_eventList = $parser->getEvents();
+            $this->_daoRecord = $parser->getDaoRecord();
+        }
     }
     
     protected function parseDatasource($xml) {
@@ -130,28 +164,18 @@ class jDaoParser {
             foreach($xml->datasources[0]->optionalforeigntable as $table){
                 $this->_parseTable (2, $table);
             }
-        }else{
+        }else if ($this->_primaryTable === ''){
             throw new jDaoXmlException ($this->selector, 'datasource.missing');
         }
     }
     
     protected function parseRecord($xml, $tools) {
         $countprop = 0;
-        // dao and daoRecord inheritance
-        if(isset($xml->record)) {
-            if (isset($xml->record[0]['origin'])) {
-                $sel = new jSelectorDao($xml->record[0]['origin'], $this->selector->driver);
-                $parser = self::getParser($sel);
-                $this->_properties = $parser->getProperties();
-                $this->_daoRecordSelector = $parser->getDaoRecordSelector();
-            }
-            if (isset($xml->record[0]['extends'])) {
-                $this->_daoRecordSelector = $xml->record[0]['extends'];
-            }
-        }
-        
         //add the record properties
         if(isset($xml->record) && isset($xml->record[0]->property)){
+            if (isset($xml->record[0]['extends'])) {
+                $this->_daoRecord = $xml->record[0]['extends'];
+            }
             foreach ($xml->record[0]->property as $prop){
                 $p = new jDaoProperty ($prop->attributes(), $this, $tools);
                 $this->_properties[$p->name] = $p;
@@ -160,7 +184,7 @@ class jDaoParser {
                     $countprop ++;
             }
             $this->hasOnlyPrimaryKeys = ($countprop == 0);
-        }elseif(count($this->_properties) == 0)
+        }else if (count($this->_properties) == 0)
             throw new jDaoXmlException ($this->selector, 'properties.missing');
     }
     
@@ -172,14 +196,6 @@ class jDaoParser {
                 $this->_eventList = preg_split("/[\s,]+/", $events);
             }
 
-            // Getting parent methods
-            $parent_methods = array();
-            if (isset($xml->factory[0]['origin'])) {
-                $sel = new jSelectorDao($xml->factory[0]['origin'], $this->selector->driver);
-                $parser = self::getParser($sel);
-                $parent_methods = $parser->getMethods();
-            }
-            
             if (isset($xml->factory[0]->method)){
                 foreach($xml->factory[0]->method as $method){
                     $m = new jDaoMethod ($method, $this);
@@ -187,12 +203,6 @@ class jDaoParser {
                         throw new jDaoXmlException ($this->selector, 'method.duplicate',$m->name);
                     }
                     $this->_methods[$m->name] = $m;
-                }
-            }
-            // Apply parent methods if not exists
-            foreach($parent_methods as $name => $method) {
-                if (! isset($this->_methods[$name])) {
-                    $this->_methods[$name] = $method;
                 }
             }
         }
@@ -276,31 +286,10 @@ class jDaoParser {
     public function getMethods(){  return $this->_methods;}
     public function getOuterJoins(){  return $this->_ojoins;}
     public function getInnerJoins(){  return $this->_ijoins;}
+    public function getEvents(){ return $this->_eventList;}
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
-    public function getDaoRecordSelector(){ return $this->_daoRecordSelector;}
+    public function getDaoRecord() { return $this->_daoRecord;}
+    public function importedFrom(){ return $this->_daoImport;}
+    public function getImportedParser(){ $this->_parserImport;}
     
-    
-    public static function getParser($selector) {
-        $daoPath = $selector->getPath();
-        
-        $doc = new DOMDocument();
-        
-        if(!$doc->load($daoPath)){
-            throw new jException('jelix~daoxml.file.unknown', $daoPath);
-        }
-
-        if($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0'){
-            throw new jException('jelix~daoxml.namespace.wrong',array($daoPath, $doc->namespaceURI));
-        }
-
-        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
-        if(is_null($tools))
-            throw new jException('jelix~db.error.driver.notfound', $selector->driver);
-        
-        $parser = new jDaoParser ($selector);
-        $parser->parse(simplexml_import_dom($doc), $tools);
-        
-        return $parser;
-    }
 }
-
