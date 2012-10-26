@@ -949,34 +949,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputSubmit($ctrl, $attr) {
-        unset($attr['readonly']);
-        $attr['class'] = 'jforms-submit';
-        $attr['type'] = 'submit';
-
-        if($ctrl->standalone){
-            $attr['value'] = $ctrl->label;
-            echo '<input';
-            $this->_outputAttr($attr);
-            echo $this->_endt;
-        }else{
-            $id = $this->_name.'_'.$ctrl->ref.'_';
-            $attr['name'] = $ctrl->ref;
-            foreach($ctrl->datasource->getData($this->_form) as $v=>$label){
-                // because IE6 sucks with <button type=submit> (see ticket #431), we must use input :-(
-                $attr['value'] = $label;
-                $attr['id'] = $id.$v;
-                echo ' <input';
-                $this->_outputAttr($attr);
-                echo $this->_endt;
-            }
-        }
-    }
-
-    protected function jsSubmit($ctrl) {
-        // no javascript
-    }
-
     protected function outputCaptcha($ctrl, &$attr) {
         $ctrl->initExpectedValue();
         echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';

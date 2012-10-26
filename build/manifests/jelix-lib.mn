@@ -512,6 +512,9 @@ cd lib/jelix/plugins/debugbar/soaplog
 cd lib/jelix/plugins/formwidget/reset
   reset.formwidget.php
 
+cd lib/jelix/plugins/formwidget/submit
+  submit.formwidget.php
+
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
 

@@ -107,7 +107,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         
     }
     
-    protected function escJsStr($str) {
+    protected function _escJsStr($str) {
         return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
     }
     
