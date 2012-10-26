@@ -222,17 +222,13 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        if (isset(jApp::config()->jforms_builder_html[$ctrl->type])) {
-            $pluginName= jApp::config()->jforms_builder_html[$ctrl->type];
-            $className = $pluginName . 'HtmlWidgetBuilder';
+        $pluginName = $ctrl->type;
+        $className = $pluginName . 'FormWidget';
 
-            if (class_exists($className)) {
-                $plugin = new $className($ctrl, $this);
-                $plugin->outputLabel();
-            } else {
-                //ERROR
-            }
-        } else {
+        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
+        if (!is_null($plugin)) {
+            
+        } else { //To remove when the migration is complete
             if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
             $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
             $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
@@ -249,19 +245,15 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        if (isset(jApp::config()->jforms_builder_html[$ctrl->type])) {
-            $pluginName= jApp::config()->jforms_builder_html[$ctrl->type];
-            $className = $pluginName . 'HtmlWidgetBuilder';
+        $pluginName = $ctrl->type;
+        $className = $pluginName . 'FormWidget';
 
-            if (class_exists($className)) {
-                $plugin = new $className($ctrl, $this);
-                $plugin->outputControl();
-                $plugin->outputJs();
-                $plugin->outputHelp();
-            } else {
-                //ERROR
-            }
-        } else { //To remove when all control in plugin
+        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
+        if (!is_null($plugin)) {
+            $plugin->outputControl();
+            $plugin->outputJs();
+            $plugin->outputHelp();
+        } else { //To remove when the migration is complete
             if($ctrl->type == 'hidden') return;
             $ro = $ctrl->isReadOnly();
             $attributes['name'] = $ctrl->ref;
@@ -982,19 +974,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function jsSubmit($ctrl) {
-        // no javascript
-    }
-
-    protected function outputReset($ctrl, &$attr) {
-        unset($attr['readonly']);
-        $attr['class'] = 'jforms-reset';
-        $attr['type'] = 'reset';
-        echo '<button';
-        $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($ctrl->label),'</button>';
-    }
-
-    protected function jsReset($ctrl) {
         // no javascript
     }
 
