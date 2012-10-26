@@ -124,6 +124,12 @@ class jDaoGenerator {
         // Build the record class
         //-----------------------
         
+        if ($this->_dataParser->importedFrom()) {
+            $imported = $this->_dataParser->importedFrom();
+            $driver = $this->_dataParser->selector->driver;
+            $src[] = " jIncluder::inc(new jSelectorDao('$imported', '$driver'));\n";
+        }
+        
         $src[] = "\nabstract class ".$this->_DaoUserRecordClassName.' extends jDaoRecordBase {}'."\n";
         
         $extendedObject = $this->_DaoUserRecordClassName;
