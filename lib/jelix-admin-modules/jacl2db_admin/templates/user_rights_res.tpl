@@ -6,6 +6,7 @@
 <form action="{formurl 'jacl2db_admin~users:saverightres',array('user'=>$user)}" method="post">
 <fieldset><legend>{@jacl2db_admin~acl2.rightres.title@}</legend>
 <div>{formurlparam 'jacl2db_admin~users:saverightres',array('user'=>$user)}</div>
+{if count($rightsWithResources)}
 
 <p><strong>{@jacl2db_admin~acl2.warning.deleting.rightres@}</strong></p>
 
@@ -34,6 +35,9 @@
 {/foreach}
 </tbody>
 </table>
+{else}
+<p>{@jacl2db_admin~acl2.no.rightres@}</p>
+{/if}
 </fieldset>
 </form>
 
