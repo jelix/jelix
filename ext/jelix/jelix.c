@@ -1126,7 +1126,7 @@ PHP_FUNCTION(jelix_scan_locale_sel)
             } else if(!( ( *cursor >= 'a' && *cursor <= 'z')
                 || ( *cursor >= 'A' && *cursor <= 'Z')
                 || ( *cursor >= '0' && *cursor <= '9')
-                || *cursor == '_' || *cursor == '.')){
+                || *cursor == '_' || *cursor == '-' || *cursor == '.')){
                 RETURN_FALSE;
             }
             resource_length ++;
