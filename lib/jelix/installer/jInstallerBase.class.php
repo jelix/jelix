@@ -238,15 +238,9 @@ abstract class jInstallerBase {
     protected function getDbType($profile = null) {
         if (!$profile)
             $profile = $this->dbProfile;
-        $p = jProfiles::get ('jdb', $profile);
-        $driver = $p['driver'];
-        if ($driver == 'pdo') {
-            preg_match('/^(\w+)\:.*$/',$p['dsn'], $m);
-            $driver = $m[1];
-        }
-        return $driver;
+        $conn = jDb::getConnection($profile);
+        return $conn->dbms;
     }
-
 
     /**
      * import a sql script into the current profile.
@@ -262,9 +256,8 @@ abstract class jInstallerBase {
      */
     final protected function execSQLScript ($name, $module = null, $inTransaction = true) {
 
+        $conn = $this->dbConnection();
         $tools = $this->dbTool();
-
-        $driver = $this->getDbType($this->dbProfile);
 
         if ($module) {
             $conf = $this->entryPoint->config->_modulesPathList;
@@ -278,19 +271,19 @@ abstract class jInstallerBase {
         }
         $file = $path.'install/'.$name;
         if (substr($name, -4) != '.sql')
-            $file .= '.'.$driver.'.sql';
+            $file .= '.'.$conn->dbms.'.sql';
 
         if ($inTransaction)
-            $this->dbConnection()->beginTransaction();
+            $conn->beginTransaction();
         try {
             $tools->execSQLScript($file);
             if ($inTransaction) {
-                $this->dbConnection()->commit();
+                $conn->commit();
             }
         }
         catch(Exception $e) {
             if ($inTransaction)
-                $this->dbConnection()->rollback();
+                $conn->rollback();
             throw $e;
         }
     }
