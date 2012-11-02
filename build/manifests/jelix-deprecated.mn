@@ -6,21 +6,33 @@ cd .
   README
 
 
-cd lib/jelix/acl
-  jAcl.class.php
-  jAclDb.class.php
-  jAclDbManager.class.php
-  jAclDbUserGroup.class.php
-  jAcl2Db.class.php
-  jAcl2DbManager.class.php
-  jAcl2DbUserGroup.class.php
+rmd lib/jelix/acl
 
 cd lib/jelix/core
   jInstallChecker.class.php
   jApplication.class.php
   jErrorHandler.lib.php
   jException.lib.php
+  jSoapCoordinator.class.php
+  jContext.class.php
 
+cd lib/jelix/core/request
+  jXulRequest.class.php
+  jRdfRequest.class.php
+  jSoapRequest.class.php
+
+cd lib/jelix/core/response
+  jResponseXul.class.php
+  jResponseXulOverlay.class.php
+  jResponseXulDialog.class.php
+  jResponseXulPage.class.php
+  jResponseRdf.class.php
+  jResponseLatexToPdf.class.php
+  jResponseTcpdf.class.php
+
+cd lib/jelix/core-modules/jelix/controllers
+  error.xul.php
+  error.rdf.php
 
 cd lib/jelix/core-modules/jelix/install/sql
   install_jacl.datas.mysql.sql
@@ -39,6 +51,7 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jauth.schema.pgsql.sql
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
+
 cd lib/jelix/core-modules/jelix/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -56,12 +69,39 @@ cd lib/jelix/core-modules/jelix/daos
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/en_US
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
 
 cd lib/jelix/core-modules/jelix/locales/fr_FR
    soap.UTF-8.properties
+   soap.ISO-8859-1.properties
+   soap.ISO-8859-15.properties
+   acldb.UTF-8.properties
+   acldb.ISO-8859-1.properties
+   acldb.ISO-8859-15.properties
+   acl2db.UTF-8.properties
+   acl2db.ISO-8859-1.properties
+   acl2db.ISO-8859-15.properties
+
+cd lib/jelix/core-modules/jelix/templates
+  404.xul.tpl
 
 cd lib/jelix/forms/
    jIFormsBuilderCompiler.iface.php
@@ -72,6 +112,8 @@ cd lib/jelix/installer/
 cd lib/jelix/utils/
   jLog.class.php
   jMinifier.class.php
+  jWSDL.class.php
+  jTcpdf.class.php
 
 cd lib/jelix/plugins/acl/db/
   db.acl.php
@@ -79,6 +121,12 @@ cd lib/jelix/plugins/acl/db/
 cd lib/jelix/plugins/acl2/db
   db.acl2.php
 
+cd lib/jelix/plugins/tpl/common
+  block.ifacl.php
+  block.ifnotacl.php
+  block.ifacl2.php
+  block.ifnotacl2.php
+  
 cd lib/jelix/plugins/tpl/html
   block.formdatas.php
   function.formdatasfull.php
@@ -86,8 +134,13 @@ cd lib/jelix/plugins/tpl/html
 cd lib/jelix/plugins/jforms/html
   html.jformscompiler.php
 
+rmd lib/jelix/plugins/tpl/xul/
+rmd lib/jelix/plugins/coord/jacl/
+rmd lib/jelix/plugins/coord/jacl2/
+
 rmd lib/jelix/plugins/cache/memcached
-rmd  lib/jelix/plugins/db/intuition
+rmd lib/jelix/plugins/db/intuition
+rmd lib/jelix/plugins/coord/magicquotes
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
@@ -183,6 +236,8 @@ cd lib/jelix-www/jquery/ui/i18n
 cd lib/jelix-www/jquery/themes/smoothness/
   jquery-ui-1.8.2.custom.css
 rmd lib/jelix-www/jquery/themes/default
+rmd lib/jelix-www/xul
+
 rmd lib/jelix-www/wymeditor/config
 
 cd lib/jelix-www/wymeditor
@@ -191,17 +246,8 @@ cd lib/jelix-www/wymeditor
 cd lib/jelix-www/wymeditor/skins/default
   screen.css
 
-rmd lib/tcpdf/barcode
-cd lib/pdf-fonts/
-  courierb.php
-  courierbi.php
-  courieri.php
-  dejavusans-extralight.php
-  dejavusans-extralight.ctg.z
-  dejavusans-extralight.z
-
-rmd lib/pdf-fonts/dejavu-ttf-2.15
-rmd lib/pdf-fonts/freefont-20060126
+rmd lib/tcpdf/
+rmd lib/pdf-fonts/
 
 rmd lib/jelix-admin-modules/jacl2_admin
 
@@ -220,11 +266,17 @@ cd lib/jelix-modules/jacl2db/install
   install_jacl2.data.sqlite.sql
   _installclass.php
 
+rmd lib/jelix-modules/jacl2db/install/var/
+rmd lib/jelix-modules/jacldb/install/var/
+
 cd lib/jelix-modules/jauthdb/install
   install_jauth.data.mysql.sql
   install_jauth.data.pgsql.sql
   install_jauth.data.sqlite.sql
   _installclass.php
+
+rmd lib/jelix-modules/jWSDL
+rmd lib/wshelper
 
 cd lib/jelix-modules/junittests/install/www/tests/
   design.css

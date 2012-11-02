@@ -50,7 +50,6 @@ class jInstallCheck {
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
 #expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__',
-#expand    'WITH_BYTECODE_CACHE'=>'__WITH_BYTECODE_CACHE__',
         );
 #endif
     }
@@ -158,14 +157,6 @@ class jInstallCheck {
             }
             else if ($this->verbose) {
                 $this->ok('extension.required.installed', $name);
-            }
-        }
-
-        if($this->buildProperties['WITH_BYTECODE_CACHE'] != 'auto' &&
-           $this->buildProperties['WITH_BYTECODE_CACHE'] != '') {
-            if(!extension_loaded ('apc') && !extension_loaded ('eaccelerator') && !extension_loaded ('xcache')) {
-                $this->error('extension.opcode.cache');
-                $ok=false;
             }
         }
 
@@ -327,25 +318,12 @@ class jInstallCheck {
         else
             $indexconfig = array();
 
-        if ((isset ($defaultconfig['coordplugins']['magicquotes']) && $defaultconfig['coordplugins']['magicquotes'] == 1) ||
-            (isset ($indexconfig['coordplugins']['magicquotes']) && $indexconfig['coordplugins']['magicquotes'] == 1)) {
-            if(ini_get('magic_quotes_gpc') == 1){
-                $this->notice('ini.magic_quotes_gpc_with_plugin');
-            }
-            else {
-                $this->error('ini.magicquotes_plugin_without_php');
-                $ok=false;
-            }
-        }
-        else {
 #endif
-            if(ini_get('magic_quotes_gpc') == 1){
-                $this->warning('ini.magic_quotes_gpc');
-                $ok=false;
-            }
-#ifnot STANDALONE_CHECKER
+        if(ini_get('magic_quotes_gpc') == 1){
+            $this->error('ini.magic_quotes_gpc');
+            $ok=false;
         }
-#endif
+
         if(ini_get('magic_quotes_runtime') == 1){
             $this->error('ini.magic_quotes_runtime');
             $ok=false;
@@ -357,7 +335,7 @@ class jInstallCheck {
         }
 
         if(ini_get('safe_mode') == 1){
-            $this->warning('safe_mode');
+            $this->error('ini.safe_mode');
             $ok=false;
         }
 

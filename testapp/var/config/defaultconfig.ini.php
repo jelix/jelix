@@ -22,9 +22,10 @@ jelix_tests.access = 2
 testapp.access = 2
 testurls.access = 2
 junittests.access = 2
-jWSDL.access = 2
+jsoap.access = 2
 jacl.access = 1
 jacldb.access = 1
+jacl2.access = 1
 jacl2db.access = 1
 jauthdb.access = 1
 jauth.access = 1
@@ -32,8 +33,16 @@ jauth.access = 1
 
 [coordplugins]
 auth = auth.coord.ini.php
-jacl2 = jacl2.coord.ini.php
-jacl = jacl.coord.ini.php
+
+[coordplugin_jacl2]
+on_error=2
+error_message="jacl2~errors.action.right.needed"
+on_error_action="jelix~error:badright"
+
+[coordplugin_jacl]
+on_error=2
+error_message="jacl~errors.action.right.needed"
+on_error_action="jelix~error:badright"
 
 [responses]
 
@@ -66,10 +75,8 @@ basePath = ""
 
 defaultEntrypoint= index
 
-entrypointExtension= .php
-
-; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur d'url simple
-simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
+; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur
+d'url simple simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions

@@ -3,3 +3,5 @@
 
 startModule = "testapp"
 startAction = "default:index"
+[responses]
+soap="jsoap~jResponseSoap"

@@ -26,12 +26,6 @@
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#if ENABLE_PHP_JELIX
-if(!function_exists('jelix_version')){
-    die('this edition of Jelix needs jelix php extension.');
-}
-#endif
-
 /**
  * Version number of Jelix
  * @name  JELIX_VERSION
@@ -46,37 +40,26 @@ if(!function_exists('jelix_version')){
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
 #endif
 
-define ('JELIX_LIB_PATH',         dirname (__FILE__).'/');
+define ('JELIX_LIB_PATH',         __DIR__.'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
 define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
 define ('LIB_PATH',               dirname(JELIX_LIB_PATH).'/');
 
-#if WITH_BYTECODE_CACHE == 'auto'
-define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
-#elseif WITH_BYTECODE_CACHE
-define ('BYTECODE_CACHE_EXISTS', true);
-#else
-define ('BYTECODE_CACHE_EXISTS', false);
-#endif
 
-#if !PHP53ORMORE
-if(!defined('E_DEPRECATED'))
-    define ('E_DEPRECATED',8192);
-if(!defined('E_USER_DEPRECATED'))
-    define ('E_USER_DEPRECATED',16384);
-#endif
+define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
+
 error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp core/jApp.class.php
 #ifnot ENABLE_PHP_JELIX
+#includephp core/jelix_api.php
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
 #includephp core/jIUrlEngine.iface.php
 #endif
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
-#includephp core/jContext.class.php
 #includephp core/jConfig.class.php
 #includephp core/jConfigAutoloader.class.php
 #includephp core/jSelector.class.php
@@ -86,6 +69,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/selector/jSelectorAct.class.php
 #includephp core/selector/jSelectorClass.class.php
 #includephp core/selector/jSelectorDao.class.php
+#includephp core/selector/jSelectorDaoRecord.class.php
 #includephp core/selector/jSelectorForm.class.php
 #includephp core/selector/jSelectorIface.class.php
 #includephp core/selector/jSelectorLoc.class.php
@@ -109,13 +93,13 @@ error_reporting (E_ALL | E_STRICT);
 #else
 require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
 #ifnot ENABLE_PHP_JELIX
+require (JELIX_LIB_CORE_PATH . 'jelix_api.php');
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 #endif
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
-require (JELIX_LIB_CORE_PATH . 'jContext.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfigAutoloader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
@@ -125,6 +109,7 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorClass.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorIface.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');
@@ -147,22 +132,6 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
 /**
- * The main object of Jelix which process all things
- * @global jCoordinator $gJCoord
- * @name $gJCoord
- * @deprecated use jApp::coord() instead
- */
-$gJCoord = null;
-
-/**
- * Object that contains all configuration values
- * @global stdobject $gJConfig
- * @name $gJConfig
- * @deprecated use jApp::config() instead
- */
-$gJConfig = null;
-
-/**
  * contains path for __autoload function
  * @global array $gLibPath
  * @name $gLibPath
@@ -180,9 +149,6 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
 function jelix_autoload($class) {
     if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV|Pref).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    }
-    elseif($class == 'jAcl2'){
-        $f = JELIX_LIB_PATH.'acl/jAcl2.class.php';
     }
     elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
         // for DAO which are stored in sessions for example

@@ -33,31 +33,16 @@ abstract class jSelectorModule implements jISelector {
     protected $_compilerPath;
     protected $_useMultiSourceCompiler=false;
 
-    function __construct($sel){
-#if ENABLE_PHP_JELIX
+    function __construct ($sel) {
         if(jelix_scan_module_sel($sel, $this)){
             if($this->module ==''){
-                $this->module = jContext::get ();
+                $this->module = jApp::getCurrentModule ();
             }
             $this->_createPath();
             $this->_createCachePath();
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
-#else
-        if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.]+)$/", $sel, $m)){
-            if($m[1]!='' && $m[2]!=''){
-                $this->module = $m[2];
-            }else{
-                $this->module = jContext::get ();
-            }
-            $this->resource = $m[3];
-            $this->_createPath();
-            $this->_createCachePath();
-        }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
-        }
-#endif
     }
 
     public function getPath (){

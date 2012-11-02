@@ -15,8 +15,8 @@ $BUILD_OPTIONS = array(
     '',                                             // regexp for the value or empty=all (only for non-boolean options)
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jTpl will be generated (by default, the target is php 5.2)",
-    '5.2'
+    "PHP5 version for which jTpl will be generated (by default, the target is php 5.3)",
+    '5.3'
     ),
 'PACKAGE_TAR_GZ'=>array(
     "create a tar.gz package",
@@ -45,26 +45,26 @@ $BUILD_OPTIONS = array(
     false,
     '1',
     ),
-'PHP52'=> array(
-    false,
-    false,
-    ),
 'PHP53'=> array(
     false,
     false,
     ),
-'PHP53ORMORE'=> array(
+'PHP54'=> array(
+    false,
+    false,
+    ),
+'PHP54ORMORE'=> array(
     false,
     false,
     ),
 );
 
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
 Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 
 $IS_NIGHTLY = (strpos($JTPL_VERSION,'SERIAL') !== false);
 
@@ -85,17 +85,19 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
 }
 
 if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
+    if(version_compare($PHP_VERSION_TARGET, '5.4') > -1){
+        $PHP54 = 1;
+        $PHP54ORMORE = 1;
+    }
+    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
         $PHP53 = 1;
-        $PHP53ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        $PHP52 = 1;
-    }else{
+    }
+    else{
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // no defined target, so php 5.2
-    $PHP52=1;
+    // no defined target, so php 5.3
+    $PHP53 = 1;
 }
 
 
@@ -122,7 +124,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);

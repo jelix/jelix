@@ -219,6 +219,15 @@ class jResponseHtml extends jResponseBasicHtml {
     }
 
     /**
+     * set the title of the page
+     * 
+     * @param string $title
+     */ 
+    public function setTitle($title) {
+        $this->title = $title;
+    }
+
+    /**
      * add a generic link to the head
      * 
      * @param string $href  url of the link

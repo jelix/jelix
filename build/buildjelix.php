@@ -29,25 +29,16 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.2)",
-    '5.2'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.3)",
+    '5.3'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
     'dev',
     ),
-'ENABLE_PHP_XMLRPC'=>array(
-    "true if jelix can use php xmlrpc api",
-    false,
-    ),
 'ENABLE_PHP_JELIX'=>array(
     "true if jelix can use jelix php extension.",
     false,
-    ),
-'WITH_BYTECODE_CACHE'=> array(
-    "says which bytecode cache engine will be recognized by jelix. Possible values :  'auto' (automatic detection), 'apc', 'eaccelerator', 'xcache' or '' for  none",
-    'auto',
-    '/^(auto|apc|eaccelerator|xcache)?$/',
     ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution (simpletest &cie)",
@@ -69,10 +60,6 @@ $BUILD_OPTIONS = array(
     "create a zip package",
     false,
     ),
-'INCLUDE_ALL_FONTS'=>array(
-    "True if you want to include lib/fonts content for tcpdf or other",
-    false,
-    ),
 'PROPERTIES_CHARSET_TARGET'=> array(
     "List of charset used for command cch (convert charset)",
     'UTF-8,ISO-8859-1,ISO-8859-15',
@@ -83,15 +70,15 @@ $BUILD_OPTIONS = array(
     'UTF-8',
     '',
     ),
-'PHP52'=> array(
-    false,
-    false,
-    ),
 'PHP53'=> array(
     false,
     false,
     ),
-'PHP53ORMORE'=> array(
+'PHP54'=> array(
+    false,
+    false,
+    ),
+'PHP54ORMORE'=> array(
     false,
     false,
     ),
@@ -147,12 +134,12 @@ $BUILD_OPTIONS = array(
 );
 
 
-include(dirname(__FILE__).'/lib/jBuild.inc.php');
+include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
-$SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
+$SOURCE_REVISION = Git::revision(__DIR__.'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 $TODAY = date('Y-m-d H:i');
@@ -172,32 +159,25 @@ if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
 else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
-if($PHP_VERSION_TARGET){
-    if(version_compare($PHP_VERSION_TARGET, '5.3') > -1){
-        // filter and json are in php >=5.2
+if ($PHP_VERSION_TARGET) {
+    if (version_compare($PHP_VERSION_TARGET, '5.4') > -1) {
+        $PHP54 = 1;
+        $PHP54ORMORE = 1;
+    }
+    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
         $PHP53 = 1;
-        $PHP53ORMORE = 1;
-    }elseif(version_compare($PHP_VERSION_TARGET, '5.2') > -1){
-        // filter and json are in php >=5.2
-        $PHP52 = 1;
-    }else{
+    }
+    else {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }else{
-    // no defined target, so php 5.2
-    $PHP52=1;
+    // no defined target, so php 5.3
+    $PHP53 = 1;
 }
 
 $BUILD_FLAGS = 0;
 if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
-if($ENABLE_PHP_XMLRPC)  $BUILD_FLAGS |=4;
 
-switch($WITH_BYTECODE_CACHE){
-    case 'auto': $BUILD_FLAGS |=112; break;
-    case 'apc': $BUILD_FLAGS |=16; break;
-    case 'eaccelerator': $BUILD_FLAGS |=32; break;
-    case 'xcache': $BUILD_FLAGS |=64; break;
-}
 //if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
 //if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
 
@@ -264,10 +244,6 @@ jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , 
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
-if($INCLUDE_ALL_FONTS){
-    jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
-}
-
 if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
    jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
 }
@@ -297,7 +273,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_PHP_XMLRPC','ENABLE_PHP_JELIX', 'WITH_BYTECODE_CACHE', 'ENABLE_DEVELOPER',
+    'ENABLE_PHP_JELIX', 'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
@@ -317,7 +293,7 @@ if($PACKAGE_TAR_GZ){
 if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(dirname(__FILE__));
+    chdir(__DIR__);
 }
 
 exit(0);

@@ -67,7 +67,6 @@ class UTParseUrls extends UnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
          'checkHttpsOnParsing'=>false
@@ -255,7 +254,6 @@ class UTParseUrls extends UnitTestCase {
             'multiview'=>false,
             'basePath'=>'/',
             'defaultEntrypoint'=>'index',
-            'entrypointExtension'=>'.php',
             'notfoundAct'=>'jelix~notfound',
             'significantFile'=>'urls.xml',
             'checkHttpsOnParsing'=>false
@@ -337,7 +335,6 @@ class UTParseUrls extends UnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'entrypointExtension'=>'.php',
          'notfoundAct'=>'jelix~notfound',
          'significantFile'=>'urls.xml',
        );

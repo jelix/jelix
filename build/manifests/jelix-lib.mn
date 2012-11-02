@@ -22,30 +22,23 @@ cd lib/jelix/auth
   jAuthDriverBase.class.php
 #endif
 
-cd lib/jelix/acl
-* jAcl2.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jIAcl2Driver.iface.php
-#endif
-
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
 *  jControllerDaoCrud.class.php
 *  jControllerDaoCrudDfk.class.php
 
 cd lib/jelix/core
+  ConfigCompilerPluginInterface.php
 ! defaultconfig.ini.php
   jAutoloader.class.php
   jConfigAutoloader.class.php
 * jConfigCompiler.class.php
-  jSoapCoordinator.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
   jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php
-  jContext.class.php
 * jController.class.php
 * jCoordinator.class.php
   jException.class.php
@@ -61,6 +54,7 @@ cd lib/jelix/core
 * jSession.class.php
   jServer.class.php
 #ifnot ENABLE_PHP_JELIX
+  jelix_api.php
   jICoordPlugin.iface.php
   jISelector.iface.php
   jIUrlEngine.iface.php
@@ -82,10 +76,7 @@ cd lib/jelix/core/request
 * jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
-  jXulRequest.class.php
-  jRdfRequest.class.php
   jCssRequest.class.php
-  jSoapRequest.class.php
 
 cd lib/jelix/core/response
   error.en_US.php
@@ -99,20 +90,12 @@ cd lib/jelix/core/response
   jResponseText.class.php
   jResponseCmdline.class.php
   jResponseXmlrpc.class.php
-  jResponseXul.class.php
-  jResponseXulOverlay.class.php
-  jResponseXulDialog.class.php
-  jResponseXulPage.class.php
-  jResponseRdf.class.php
   jResponseXml.class.php
   jResponseZip.class.php
   jResponseXmlFeed.class.php
   jResponseRss20.class.php
   jResponseAtom10.class.php
   jResponseCss.class.php
-  jResponseLatexToPdf.class.php
-  jResponseTcpdf.class.php
-  jResponseSoap.class.php
   jResponseHtmlFragment.class.php
   jResponseSitemap.class.php
 
@@ -122,6 +105,7 @@ cd lib/jelix/core/selector
 * jSelectorActFast.class.php
 * jSelectorClass.class.php
   jSelectorDao.class.php
+  jSelectorDaoRecord.class.php
   jSelectorFile.lib.php
   jSelectorForm.class.php
   jSelectorIface.class.php
@@ -138,10 +122,8 @@ cd lib/jelix/core-modules/jelix
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
-! error.xul.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
-! error.rdf.php
   jforms.classic.php
   www.classic.php
 cd lib/jelix/core-modules/jelix/daos
@@ -156,6 +138,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1871_jprofiles.php
   upgrade_to_1.3pre.1919_cmd.php
   upgrade_availablelocales.php
+  upgrade_modulejacl2.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -165,8 +148,6 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jcache.schema.sqlite.sql
 
 cd lib/jelix/core-modules/jelix/locales/en_US
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -186,8 +167,6 @@ cch date_time.UTF-8.properties(date_time.%charset%.properties)
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -209,8 +188,6 @@ cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix/core-modules/jelix/locales/fr_FR
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -228,7 +205,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/templates
-  404.xul.tpl
   403.html.tpl
   404.html.tpl
   rss20.tpl
@@ -255,11 +231,11 @@ cd lib/jelix/dao
   jDaoRecordBase.class.php
   jDaoFactoryBase.class.php
   jDao.class.php
-* jDaoCompiler.class.php
+  jDaoCompiler.class.php
+* jDaoParser.class.php
   jDaoConditions.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jDaoGenerator.class.php
-  jDaoParser.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
   jDaoXmlException.class.php
@@ -268,7 +244,8 @@ cd lib/jelix/dao
 cd lib/jelix/db
 * jDb.class.php
   jDbColumn.class.php
-* jDbPDOConnection.class.php
+  jDbPDOConnection.class.php
+  jDbPDOConnectionDebug.class.php
   jDbPDOResultSet.class.php
   jDbSchema.class.php
   jDbTable.class.php
@@ -321,6 +298,7 @@ cd lib/jelix/forms
 cd lib/jelix/forms/controls
   jFormsControlDatasource.class.php
   jFormsControlGroups.class.php
+  jFormsControlButton.class.php
   jFormsControlCaptcha.class.php
   jFormsControlCheckbox.class.php
   jFormsControlCheckboxes.class.php
@@ -403,13 +381,13 @@ cd lib/jelix/utils/
   jJsonRpc.class.php
   jMailer.class.php
   jMessage.class.php
+  jMethodSniffer.class.php
   jProfiles.class.php
   jRSS20Reader.class.php
   jRSS20Info.class.php
   jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
-  jTcpdf.class.php
   jVersionComparator.class.php
 * jWiki.class.php
   jXMLFeedReader.class.php
@@ -418,7 +396,6 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
-  jWSDL.class.php
 
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
@@ -436,9 +413,14 @@ cd lib/jelix/plugins/cache/memcache
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
 
-cd lib/jelix/plugins/coord/magicquotes
-! magicquotes.coord.php
-  plugin.xml
+cd lib/jelix/plugins/configcompiler/locales
+  locales.configcompiler.php
+cd lib/jelix/plugins/configcompiler/nsautoloader
+  nsautoloader.configcompiler.php
+cd lib/jelix/plugins/configcompiler/responses
+  responses.configcompiler.php
+cd lib/jelix/plugins/configcompiler/session
+  session.configcompiler.php
 
 cd lib/jelix/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
@@ -449,16 +431,6 @@ cd lib/jelix/plugins/coord/auth
 ! auth.coord.php
   plugin.xml
   auth.coord.ini.php.dist
-
-cd lib/jelix/plugins/coord/jacl
-! jacl.coord.php
-  plugin.xml
-  jacl.coord.ini.php.dist
-
-cd lib/jelix/plugins/coord/jacl2
-! jacl2.coord.php
-  plugin.xml
-  jacl2.coord.ini.php.dist
 
 cd lib/jelix/plugins/coord/zendframework
   zendframework.coord.php
@@ -566,10 +538,6 @@ cd lib/jelix/plugins/htmlresponse/debugbar
 #endif
 
 cd lib/jelix/plugins/tpl/common
-  block.ifacl.php
-  block.ifnotacl.php
-  block.ifacl2.php
-  block.ifnotacl2.php
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php
@@ -668,14 +636,6 @@ cd lib/jelix/plugins/tpl/xml
   function.jlocale.php
   function.jurl.php
   meta.xml.php
-
-cd lib/jelix/plugins/tpl/xul
-  cfunction.const.php
-  function.jfullurl.php
-  function.jlocale.php
-  function.jurl.php
-  function.urljsstring.php
-  meta.xul.php
 
 cd lib/jelix/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php

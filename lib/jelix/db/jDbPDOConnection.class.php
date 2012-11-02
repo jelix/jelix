@@ -124,7 +124,6 @@ class jDbPDOConnection extends PDO {
         $args = func_get_args();
 
         switch (count($args)) {
-#if ENABLE_OPTIMIZED_SOURCE
         case 1:
             $rs = parent::query($args[0]);
             $rs->setFetchMode(PDO::FETCH_OBJ);
@@ -133,41 +132,10 @@ class jDbPDOConnection extends PDO {
             return parent::query($args[0], $args[1]);
         case 3:
             return parent::query($args[0], $args[1], $args[2]);
-#else
-        case 1:
-            $log = new jSQLLogMessage($args[0]);
-            $rs = parent::query($args[0]);
-            $log->endQuery();
-            jLog::log($log,'sql');
-            $rs->setFetchMode(PDO::FETCH_OBJ);
-            return $rs;
-        case 2:
-            $log = new jSQLLogMessage($args[0]);
-            $result = parent::query($args[0], $args[1]);
-            $log->endQuery();
-            jLog::log($log,'sql');
-            return $result;
-        case 3:
-            $log = new jSQLLogMessage($args[0]);
-            $result = parent::query($args[0], $args[1], $args[2]);
-            $log->endQuery();
-            jLog::log($log,'sql');
-            return $result;
-#endif
         default:
             throw new Exception('jDbPDOConnection: bad argument number in query');
         }
     }
-
-#ifnot ENABLE_OPTIMIZED_SOURCE
-    public function exec($query) {
-        $log = new jSQLLogMessage($query);
-        $result = parent::exec($query);
-        $log->endQuery();
-        jLog::log($log,'sql');
-        return $result;
-    }
-#endif
 
     /**
     * Launch a SQL Query with limit parameter (so only a subset of a result)
@@ -306,3 +274,4 @@ class jDbPDOConnection extends PDO {
     }
 
 }
+

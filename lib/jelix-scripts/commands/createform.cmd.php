@@ -40,9 +40,7 @@ class createformCommand extends JelixScriptCommand {
     public function run(){
 
         $this->loadAppConfig();
-#if ENABLE_OPTIMIZED_SOURCE
-        require(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php'); // jDaoParser is in jDaoCompiler file
-#endif
+        require_once(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
 
         $path = $this->getModulePath($this->_parameters['module']);
 
@@ -81,7 +79,7 @@ class createformCommand extends JelixScriptCommand {
         }
 
         jApp::config()->startModule = $this->_parameters['module'];
-        jContext::push($this->_parameters['module']);
+        jApp::pushCurrentModule($this->_parameters['module']);
 
         $tools = jDb::getConnection()->tools();
 

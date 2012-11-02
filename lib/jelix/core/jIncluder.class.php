@@ -92,15 +92,13 @@ class jIncluder {
         $mustCompile = jApp::config()->compilation['force'] || !file_exists($cachefile);
 
         if(!$mustCompile && jApp::config()->compilation['checkCacheFiletime']){
-#ifnot ENABLE_OPTIMIZED_SOURCE
             $sourcefile = $aSelector->getPath();
+#ifnot ENABLE_OPTIMIZED_SOURCE
             if($sourcefile == '' || !file_exists($sourcefile)){
                 throw new jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));
             }
-            if( filemtime($sourcefile) > filemtime($cachefile))
-#else
-            if( filemtime($aSelector->getPath()) > filemtime($cachefile))
 #endif
+            if( filemtime($sourcefile) > filemtime($cachefile))
                 $mustCompile = true;
         }
 

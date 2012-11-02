@@ -51,32 +51,16 @@ class jSelectorLoc extends jSelectorModule {
         $this->_suffix = '.'.$charset.'.properties';
         $this->_compilerPath=JELIX_LIB_CORE_PATH.'jLocalesCompiler.class.php';
 
-#if ENABLE_PHP_JELIX
-        if(jelix_scan_locale_sel($sel, $this)){
-            if($this->module ==''){
-                $this->module = jContext::get ();
+        if (jelix_scan_locale_sel($sel, $this)) {
+            if ($this->module =='') {
+                $this->module = jApp::getCurrentModule ();
             }
             $this->_createPath();
             $this->_createCachePath();
-        }else{
+        }
+        else {
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
-#else
-        if(preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $sel, $m)){
-            if($m[1]!='' && $m[2]!=''){
-                $this->module = $m[2];
-            }else{
-                $this->module = jContext::get ();
-            }
-            $this->resource = $m[3];
-            $this->fileKey = $m[3];
-            $this->messageKey = $m[4];
-            $this->_createPath();
-            $this->_createCachePath();
-        }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
-        }
-#endif
     }
 
     protected function _createPath(){

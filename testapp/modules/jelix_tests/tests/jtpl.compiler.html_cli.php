@@ -22,10 +22,6 @@ class testJtplContentCompiler extends jTplCompiler {
         return $this->compileContent($content);
     }
 
-    public function setEscapePI($b) {
-        $this->escapePI = $b;
-    }
-
     public function setRemoveASPTags($b) {
         $this->removeASPtags = $b;
     }
@@ -177,11 +173,11 @@ function toto() {
         ),
 29=>array(
         '<p>ok<?xml echo $toto ?></p>',
-        '<p>ok<?xml echo $toto ?></p>',
+        '<p>ok<?php echo \'<?xml echo $toto ?>\'?></p>',
         ),
 30=>array(
         '<p>ok<?browser echo $toto ?></p>',
-        '<p>ok<?browser echo $toto ?></p>',
+        '<p>ok<?php echo \'<?browser echo $toto ?>\'?></p>',
         ),
 31=>array(
         '<p>ok<?php
@@ -218,7 +214,6 @@ end',),
         $compil->outputType = 'html';
         $compil->trusted = true;
         $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
-        $compil->setEscapePI(false);
         $compil->setRemoveASPtags(false);
 
         foreach($this->content as $k=>$t){
@@ -231,7 +226,6 @@ end',),
             }
         }
 
-        $compil->setEscapePI(true);
         $compil->setRemoveASPtags(false);
         $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
         $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));
@@ -421,7 +415,6 @@ endif;
         $compil->outputType = 'html';
         $compil->trusted = true;
         $compil->setUserPlugins(array(), array());
-        $compil->setEscapePI(false);
         $compil->setRemoveASPtags(false);
 
         foreach($this->metaContent as $k=>$t){

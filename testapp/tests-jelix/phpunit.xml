@@ -7,6 +7,9 @@
     <testsuite name="Jelix Db">
       <directory>jelix/db/</directory>
     </testsuite>
+    <testsuite name="Jelix Events">
+      <directory>jelix/events/</directory>
+    </testsuite>
     <testsuite name="Jelix KVDb">
       <directory>jelix/kvdb/</directory>
     </testsuite>

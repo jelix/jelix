@@ -11,16 +11,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#if !PHP53ORMORE
-if (!defined('T_GOTO'))
-    define('T_GOTO',333);
-if (!defined('T_NAMESPACE'))
-    define('T_NAMESPACE',377);
-if (!defined('T_USE'))
-    define('T_USE',340);
-#endif
-
-
 /**
  * This is the compiler of templates: it converts a template into a php file.
  * @package     jelix
@@ -148,8 +138,6 @@ class jTplCompiler
      */
     protected $_userFunctions = array ();
 
-    protected $escapePI = false;
-
     protected $removeASPtags = true;
 
     /**
@@ -161,7 +149,6 @@ class jTplCompiler
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
         $this->_allowedInForeach = array_merge($this->_vartype, array(T_AS, T_DOUBLE_ARROW));
 
-        $this->escapePI = (ini_get("short_open_tag") == "1");
         $this->removeASPtags = (ini_get("asp_tags") == "1");
 
 #if JTPL_STANDALONE
@@ -209,7 +196,7 @@ class jTplCompiler
         $this->trusted = $selector->trusted;
         $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted?'_t':''));
 
-        jContext::push($selector->module);
+        jApp::pushCurrentModule($selector->module);
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
@@ -218,7 +205,7 @@ class jTplCompiler
         $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
             $selector->userModifiers, $selector->userFunctions, $md5);
 
-        jContext::pop();
+        jApp::popCurrentModule();
         return true;
     }
 #endif
@@ -279,11 +266,6 @@ class jTplCompiler
         return true;
     }
 
-    protected function _piCallback($matches) {
-        return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
-    }
-
-
     protected function compileContent ($tplcontent) {
         $this->_metaBody = '';
         $this->_blockStack = array();
@@ -293,9 +275,10 @@ class jTplCompiler
         // we remove all template comments
         $tplcontent = preg_replace("!{\*(.*?)\*}!s", '', $tplcontent);
 
-        if ($this->escapePI) {
-            $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", array($this,'_piCallback'), $tplcontent);
-        }
+        $tplcontent = preg_replace_callback("!(<\?.*\?>)!sm", function ($matches) {
+            return '<?php echo \''.str_replace("'","\\'",$matches[1]).'\'?>';
+        }, $tplcontent);
+
         if ($this->removeASPtags) {
           // we remove all asp tags
           $tplcontent = preg_replace("!<%.*%>!s", '', $tplcontent);
@@ -307,7 +290,13 @@ class jTplCompiler
 
         $tplcontent = preg_replace("!{literal}(.*?){/literal}!s", '{literal}', $tplcontent);
 
-        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", array($this,'_callbackLineFeed'), $tplcontent);
+        $tplcontent = preg_replace_callback("/{((.).*?)}(\n)/sm", function ($matches){
+                list($full, , $firstcar, $lastcar) = $matches;
+                if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
+                    return "$full\n";
+                }
+                else return $full;
+            }, $tplcontent);
         $tplcontent = preg_replace_callback("/{((.).*?)}/sm", array($this,'_callback'), $tplcontent);
 
         /*$tplcontent = preg_replace('/\?>\n?<\?php/', '', $tplcontent);*/
@@ -317,20 +306,6 @@ class jTplCompiler
             $this->doError1('errors.tpl.tag.block.end.missing', end($this->_blockStack));
 
         return $tplcontent;
-    }
-
-    /**
-     * function called during the parsing of the template by a preg_replace_callback function
-     * It is called to add line feeds where needed
-     * @param array $matches a matched item
-     * @return string the same tag with one more line feed
-     */
-    public function _callbackLineFeed($matches){
-        list($full, , $firstcar, $lastcar) = $matches;
-        if ($firstcar == '=' || $firstcar == '$' || $firstcar == '@') {
-            return "$full\n";
-        }
-        else return $full;
     }
 
     /**

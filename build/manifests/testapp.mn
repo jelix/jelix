@@ -199,6 +199,9 @@ cd testapp/modules/jelix_tests/templates
   test_truncate_html.tpl
   test_tpl_fetch.tpl
   test_tpl_meta_call.tpl
+  test_zone_cache.tpl
+  test_zone_cache_meta.tpl
+  test_zone_cache_meta_deep2.tpl
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
@@ -215,7 +218,6 @@ cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
-  core.jlocale.html_cli.php
   core.jrequest.html_cli.php
   core.rest_controller.html_cli.php
   core.selectors_action.html.php
@@ -224,7 +226,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  events.simple_test.html_cli.php
   httpcache.pu.php
   installer.lib.php
   installer.main.html_cli.php
@@ -283,6 +284,7 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.fetch.html_cli.php
   jtpl.plugins.html.php
   jtpl.virtual.html_cli.php
+  jzone.cache.html.php
   utils.jdatatype.html_cli.php
   utils.jduration.html_cli.php
   utils.jimagemodifier.html_cli.php
@@ -290,6 +292,11 @@ cd testapp/modules/jelix_tests/tests/
   utils.jrooturl.html_cli.php
   test1.pu.php
   test2.unit.pu.php
+cd testapp/modules/jelix_tests/zones/
+  test_cache.zone.php
+  test_cache_meta.zone.php
+  test_cache_meta_deep.zone.php
+  test_cache_meta_deep2.zone.php
 
 cd testapp/modules/testurls/
 *  module.xml
@@ -321,7 +328,10 @@ cd testapp/tests-jelix/jelix/core/
   jAppContextTest.php
   moduleAutoloadTest.php
   jLocaleTest.php
+  jLocaleLangCodeTest.php
   jLogTest.php
+cd testapp/tests-jelix/jelix/events/
+  eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
 cd testapp/tests-jelix/jelix/installer/app1/
@@ -380,10 +390,6 @@ cd testapp/var/config
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
   defaultconfig.ini.php
-  jacl2.coord.ini.php
-  jacl2_ws.coord.ini.php
-  jacl.coord.ini.php
-  jacl_ws.coord.ini.php
   profiles.ini.php.dist
   urls.xml
   urls_rest.xml

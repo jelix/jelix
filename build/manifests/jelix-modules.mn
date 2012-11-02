@@ -7,6 +7,20 @@ cd lib/jelix-modules/jacl
 * module.xml
 cd lib/jelix-modules/jacl/classes
 * jAcl.class.php
+cd lib/jelix-modules/jacl/install
+  install.php
+cd lib/jelix-modules/jacl/locales/en_EN/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/locales/en_US/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/locales/fr_FR/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/plugins/coord/jacl
+! jacl.coord.php
+  plugin.xml
+cd lib/jelix-modules/jacl/plugins/tpl/common/
+  block.ifacl.php
+  block.ifnotacl.php
 
 cd lib/jelix-modules/jacldb
 * module.xml
@@ -16,7 +30,6 @@ cd lib/jelix-modules/jacldb/classes
   jAclDb.class.php
   jAclDbManager.class.php
   jAclDbUserGroup.class.php
-
 cd lib/jelix-modules/jacldb/daos
    jaclgroup.dao.xml
    jaclrights.dao.xml
@@ -35,10 +48,38 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.data.pgsql.sql
   install.php
   upgrade_pluginmoved.php
-cd lib/jelix-modules/jacldb/install/var/config
-  jacl.coord.ini.php
+  upgrade_localesmoved.php
+cd lib/jelix-modules/jacldb/locales/en_US
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
+cd lib/jelix-modules/jacldb/locales/en_EN
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
+cd lib/jelix-modules/jacldb/locales/fr_FR
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/plugins/acl/db/
   db.acl.php
+
+
+cd lib/jelix-modules/jacl2
+   module.xml
+cd lib/jelix-modules/jacl2/classes
+* jAcl2.class.php
+#ifnot ENABLE_OPTIMIZED_SOURCE
+  jIAcl2Driver.iface.php
+#endif
+cd lib/jelix-modules/jacl2/locales/en_EN/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/en_US/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/fr_FR/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/install
+  install.php
+cd lib/jelix-modules/jacl2/plugins/coord/jacl2
+! jacl2.coord.php
+  plugin.xml
+cd lib/jelix-modules/jacl2/plugins/tpl/common/
+  block.ifacl2.php
+  block.ifnotacl2.php
 
 cd lib/jelix-modules/jacl2db
 * module.xml
@@ -69,7 +110,9 @@ cd lib/jelix-modules/jacl2db/install
   upgrade_to_1.3a3_cancelrights.php
   upgrade_to_1.3RC2.2100_typecanceled.php
   upgrade_pluginmoved.php
+  upgrade_localesmoved.php
   upgrade_newresdefaultvalue.php
+
 cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.mysql.sql
   upgrade_codegroup_2.mysql.sql
@@ -83,8 +126,14 @@ cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_newresdefaultvalue.pgsql.sql
   upgrade_newresdefaultvalue.sqlite.sql
   upgrade_newresdefaultvalue.oci.sql
-cd lib/jelix-modules/jacl2db/install/var/config
-  jacl2.coord.ini.php
+  
+cd lib/jelix-modules/jacl2db/locales/en_EN/
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
+cd lib/jelix-modules/jacl2db/locales/en_US/
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
+cd lib/jelix-modules/jacl2db/locales/fr_FR/
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
+
 cd lib/jelix-modules/jacl2db/plugins/acl2/db/
   db.acl2.php
 
@@ -158,19 +207,38 @@ cd lib/jelix-modules/junittests/www
   design.css
 #endif
 
-cd lib/jelix-modules/jWSDL
+cd lib/jelix-modules/jsoap
 * module.xml
-cd lib/jelix-modules/jWSDL/controllers
+cd lib/jelix-modules/jsoap/classes
+  jWSDL.php
+  jSoapCoordinator.class.php
+  jSoapRequest.class.php
+cd lib/jelix-modules/jsoap/classes/wshelper
+! CREDITS
+! LICENCE
+! README
+! IPPhpDoc.class.php
+! IPReflectionClass.class.php
+! IPReflectionCommentParser.class.php
+! IPReflectionMethod.class.php
+! IPReflectionProperty.class.php
+! IPXMLSchema.class.php
+! WSDLException.class.php
+! WSDLStruct.class.php
+! WSException.class.php
+cd lib/jelix-modules/jsoap/controllers
   WSDL.classic.php
-cd lib/jelix-modules/jWSDL/templates
-  soap_doc.tpl
-cd lib/jelix-modules/jWSDL/locales/en_EN
+cd lib/jelix-modules/jsoap/locales/en_EN
 cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jWSDL/locales/en_US
+cd lib/jelix-modules/jsoap/locales/en_US
 cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jWSDL/locales/fr_FR
+cd lib/jelix-modules/jsoap/locales/fr_FR
 cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jWSDL/install
+cd lib/jelix-modules/jsoap/install
   install.php
+cd lib/jelix-modules/jsoap/responses
+  jResponseSoap.class.php
+cd lib/jelix-modules/jsoap/templates
+  soap_doc.tpl
 
 cd lib/jelix-plugins

@@ -30,7 +30,7 @@ class passwordCtrl extends jController {
         }
         
         if ($this->personalView && $id != jAuth::getUserSession()->login) {
-            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
             $rep = $this->getResponse('redirect');
             $rep->action = 'master_admin~default:index';
             return $rep;
@@ -60,7 +60,7 @@ class passwordCtrl extends jController {
         $rep = $this->getResponse('redirect');
 
         if ($this->personalView && $id != jAuth::getUserSession()->login) {
-            jMessage::add(jLocale::get('jelix~errors.acl.action.right.needed'), 'error');
+            jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
             $rep->action = 'master_admin~default:index';
             return $rep;
         }

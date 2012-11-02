@@ -209,7 +209,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        if($ctrl->type == 'hidden' || $ctrl->type == 'group') return;
+        if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
         $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
         $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
         $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
@@ -622,7 +622,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
 
         if(is_array($value)){
-            $value = array_map(create_function('$v', 'return (string) $v;'),$value);
+            $value = array_map(function($v){ return (string) $v;},$value);
         }
         else {
             $value = (string) $value;
@@ -743,7 +743,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 $value = $value[0];
 
             if(is_array($value)){
-                $value = array_map(create_function('$v', 'return (string) $v;'),$value);
+                $value = array_map(function($v){ return (string) $v;},$value);
                 $this->fillSelect($ctrl, $value);
             }else{
                 $this->fillSelect($ctrl, (string)$value);
@@ -886,6 +886,18 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function jsOutput($ctrl) {
+    }
+
+    protected function outputButton($ctrl, &$attr) {
+        unset($attr['readonly']);
+        unset($attr['class']);
+        $attr['value'] = $this->_form->getData($ctrl->ref);
+        echo '<button ';
+        $this->_outputAttr($attr);
+        echo '>',htmlspecialchars($ctrl->label),'</button>';
+    }
+
+    protected function jsButton($ctrl) {
     }
 
     protected function outputUpload($ctrl, &$attr) {

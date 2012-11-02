@@ -31,5 +31,4 @@ string jx_url_param_unescape(string);
 classes
 =======
 
-jContext
 jUrlBase

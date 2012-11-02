@@ -20,10 +20,6 @@ class testJtplContentCompiler extends jTplCompiler {
     public function compileContent2($content){
         return $this->compileContent($content);
     }
-    
-    public function setEscapePI($b) {
-        $this->escapePI = $b;
-    }
 
     public function setRemoveASPTags($b) {
         $this->removeASPtags = $b;
@@ -193,7 +189,6 @@ function toto() {
         $compil->outputType = 'html';
         $compil->trusted = true;
         $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
-        $compil->setEscapePI(false);
         $compil->setRemoveASPtags(false);
         
         foreach($this->content as $k=>$t){
@@ -204,7 +199,6 @@ function toto() {
             }
         }
 
-        $compil->setEscapePI(true);
         $compil->setRemoveASPtags(false);
         $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
         $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));

@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(dirname(__FILE__).'/daotests.lib.php');
+require_once(__DIR__.'/daotests.lib.php');
 
 
 class UTDao_generator extends jUnitTestCase {
@@ -299,7 +299,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` IN (\'.implode(\',\', array_map( create_function(\'$__e\',\'return intval($__e);\'), $group)).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEqualOrDiff(' `grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), false);
@@ -348,7 +348,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( create_function(\'$__e\',\'return intval($__e);\'), $group)).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEqualOrDiff(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), true);

@@ -28,18 +28,6 @@ class jKVDb {
     }
 
     /**
-	 * get the profile from the INI file. If no $name paramter is given, then
-	 * the default profile is returned, if defined.
-	 *
-	 * @param string $name
-	 * @return array
-	 * @deprecated use jProfiles::get instead
-	 */
-	public static function getProfile($name = null) {
-		return jProfiles::get('jkvdb', $name);
-	}
-
-    /**
      * callback method for jProfiles. internal use
      */
     public static function _createConnector($profile) {

@@ -138,6 +138,7 @@ abstract class jFormsControl {
 #includephp controls/jFormsControlDatasource.class.php
 #includephp controls/jFormsControlGroups.class.php
 
+#includephp controls/jFormsControlButton.class.php
 #includephp controls/jFormsControlCaptcha.class.php
 #includephp controls/jFormsControlCheckbox.class.php
 #includephp controls/jFormsControlCheckboxes.class.php
@@ -166,6 +167,7 @@ abstract class jFormsControl {
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlDatasource.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlGroups.class.php');
 
+require(JELIX_LIB_PATH.'forms/controls/jFormsControlButton.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlCaptcha.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlCheckbox.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlCheckboxes.class.php');

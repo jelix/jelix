@@ -20,9 +20,9 @@
 #includephp installer/jInstallerMessageProvider.class.php
 #includephp installer/jInstallChecker.class.php
 #else
-include dirname(__FILE__).'/installer/jIInstallReporter.iface.php';
-include dirname(__FILE__).'/installer/jInstallerMessageProvider.class.php';
-include dirname(__FILE__).'/installer/jInstallChecker.class.php';
+include __DIR__.'/installer/jIInstallReporter.iface.php';
+include __DIR__.'/installer/jInstallerMessageProvider.class.php';
+include __DIR__.'/installer/jInstallChecker.class.php';
 #endif
 /**
  * an HTML reporter for jInstallChecker

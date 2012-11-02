@@ -77,9 +77,6 @@ class jCoordinator {
         if ($configFile)
             jApp::loadConfig($configFile, $enableErrorHandler);
 
-        // temporary init. Remove this line when JELIX_APP_* and $gJConfig support will be removed completely from Jelix
-        jApp::initLegacy();
-
         $this->_loadPlugins();
     }
 
@@ -104,7 +101,7 @@ class jCoordinator {
                 if (false === ($conf = parse_ini_file($conff,true)))
                     throw new Exception("Error in a plugin configuration file -- plugin: $name  file: $conff", 13);
             }
-            include( $config->_pluginsPathList_coord[$name].$name.'.coord.php');
+            include_once($config->_pluginsPathList_coord[$name].$name.'.coord.php');
             $class= $name.'CoordPlugin';
             $this->plugins[strtolower($name)] = new $class($conf);
         }
@@ -148,7 +145,7 @@ class jCoordinator {
             }
         }
 
-        jContext::push ($this->moduleName);
+        jApp::pushCurrentModule ($this->moduleName);
         try{
             $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
@@ -183,8 +180,8 @@ class jCoordinator {
                 $result = $this->plugins[$name]->beforeAction ($pluginparams);
                 if($result){
                     $this->action = $result;
-                    jContext::pop();
-                    jContext::push($result->module);
+                    jApp::popCurrentModule();
+                    jApp::pushCurrentModule($result->module);
                     $this->moduleName = $result->module;
                     $this->actionName = $result->resource;
                     $ctrl = $this->getController($this->action);
@@ -207,7 +204,7 @@ class jCoordinator {
             $this->plugins[$name]->afterProcess ();
         }
 
-        jContext::pop();
+        jApp::popCurrentModule();
         jSession::end();
     }
 
@@ -233,26 +230,6 @@ class jCoordinator {
             throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;
-    }
-
-
-    /**
-     * instancy a response object corresponding to the default response type
-     * of the current resquest.
-     * Deprecated. use $request->getResponse() instead.
-     * @param boolean $originalResponse TRUE to get the original, non overloaded response
-     * @deprecated since 1.3
-     */
-    public function initDefaultResponseOfRequest($originalResponse = false){
-        try {
-            $this->request->getResponse('', $originalResponse);
-        }
-        catch (Exception $e) {
-            if (!$originalResponse)
-                $this->initDefaultResponseOfRequest(true);
-            else
-                throw $e;
-        }
     }
 
     /**
@@ -378,23 +355,5 @@ class jCoordinator {
     */
     public function isPluginEnabled ($pluginName){
         return isset ($this->plugins[strtolower ($pluginName)]);
-    }
-
-    /**
-    * deprecated.  use jApp::isModuleEnabled() instead
-    * @deprecated
-    */
-    public function isModuleEnabled ($moduleName, $includingExternal = false) {
-        trigger_error("jCoordinator::isModuleEnabled() is deprecated. Use jApp::isModuleEnabled() instead", E_USER_NOTICE);
-        return jApp::isModuleEnabled($moduleName, $includingExternal);
-    }
-
-    /**
-    * deprecated.  use jApp::getModulePath() instead
-    * @deprecated
-     */
-    public function getModulePath($module, $includingExternal = false){
-        trigger_error("jCoordinator::getModulePath() is deprecated. Use jApp::getModulePath() instead", E_USER_NOTICE);
-        return jApp::getModulePath($module, $includingExternal);
     }
 }

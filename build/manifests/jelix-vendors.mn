@@ -222,49 +222,6 @@ cd lib/simpletest/test/support/collector
   collectable.2
 #endif
 
-cd lib/tcpdf
-  2dbarcodes.php
-  barcodes.php
-  CHANGELOG.TXT
-  datamatrix.php
-  encodings_maps.php
-  htmlcolors.php
-  LICENSE.TXT
-  pdf417.php
-  qrcode.php
-  README.TXT
-  spotcolors.php
-  sRGB.icc
-  tcpdf.crt
-  tcpdf.fdf
-  tcpdf.p12
-  tcpdf.php
-! unicode_data.php
-cd lib/tcpdf/config
-  tcpdf_config.php
-  tcpdf_config_alt.php
-cd lib/tcpdf/config/lang
-  ara.php
-  bra.php
-  chi.php
-  dan.php
-  eng.php
-  fra.php
-  ger.php
-  heb.php
-  hrv.php
-  ita.php
-  jpn.php
-  kor.php
-  pol.php
-  por.php
-  rus.php
-  slv.php
-  spa.php
-  swe.php
-  zho.php
-cd lib/tcpdf/images
-  _blank.png
 
 cd lib/wikirenderer
   CHANGELOG
@@ -285,17 +242,3 @@ cd lib/wikirenderer/rules
 ! wr3_to_docbook.php
 ! wr3_to_text.php
 ! wr3_to_xhtml.php
-
-cd lib/wshelper
-! CREDITS
-! LICENCE
-! README
-! IPPhpDoc.class.php
-! IPReflectionClass.class.php
-! IPReflectionCommentParser.class.php
-! IPReflectionMethod.class.php
-! IPReflectionProperty.class.php
-! IPXMLSchema.class.php
-! WSDLException.class.php
-! WSDLStruct.class.php
-! WSException.class.php
