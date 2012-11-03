@@ -794,49 +794,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputTextarea($ctrl, &$attr) {
-        if (!isset($attr['rows']))
-            $attr['rows'] = $ctrl->rows;
-        if (!isset($attr['cols']))
-            $attr['cols'] = $ctrl->cols;
-        echo '<textarea';
-        $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($this->_form->getData($ctrl->ref)),'</textarea>';
-    }
-
-    protected function jsTextarea($ctrl, $withjsobj=true) {
-        if ($withjsobj)
-            $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-
-        $maxl= $ctrl->datatype->getFacet('maxLength');
-        if($maxl !== null)
-            $this->jsContent .="c.maxLength = '$maxl';\n";
-
-        $minl= $ctrl->datatype->getFacet('minLength');
-        if($minl !== null)
-            $this->jsContent .="c.minLength = '$minl';\n";
-
-        $this->commonJs($ctrl);
-    }
-
-    protected function outputHtmleditor($ctrl, &$attr) {
-        $this->outputTextarea($ctrl, $attr);
-    }
-
-    protected function jsHtmleditor($ctrl) {
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlHtml('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $this->jsTextarea($ctrl, false);
-        $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$this->_name.'_'.$ctrl->ref.'","'.$this->_name.'","'.$ctrl->skin."\",".$this->jFormsJsVarName.".config);\n";
-    }
-
-    protected function outputWikieditor($ctrl, &$attr) {
-        $this->outputTextarea($ctrl, $attr);
-    }
-
-    protected function jsWikieditor($ctrl) {
-
-    }
 
     protected function outputSecret($ctrl, &$attr) {
         if ($ctrl->size != 0)
@@ -930,21 +887,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->commonJs($ctrl);
     }
 
-    protected function outputCaptcha($ctrl, &$attr) {
-        $ctrl->initExpectedValue();
-        echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
-
-        unset($attr['readonly']);
-        $attr['type'] = 'text';
-        $attr['value'] = '';
-        echo '<input';
-        $this->_outputAttr($attr);
-        echo $this->_endt;
-    }
-
-    protected function jsCaptcha($ctrl) {
-        $this->jsTextarea($ctrl);
-    }
 
     protected function outputGroup($ctrl, &$attr) {
         echo '<fieldset id="',$attr['id'],'"><legend>',htmlspecialchars($ctrl->label),"</legend>\n";

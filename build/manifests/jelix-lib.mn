@@ -509,14 +509,26 @@ cd lib/jelix/plugins/debugbar/defaultlog
 cd lib/jelix/plugins/debugbar/soaplog
 * soaplog.debugbar.php
 
+cd lib/jelix/plugins/formwidget/captcha
+  captcha.formwidget.php
+
 cd lib/jelix/plugins/formwidget/checkbox
   checkbox.formwidget.php
+
+cd lib/jelix/plugins/formwidget/htmleditor
+  htmleditor.formwidget.php
 
 cd lib/jelix/plugins/formwidget/reset
   reset.formwidget.php
 
 cd lib/jelix/plugins/formwidget/submit
   submit.formwidget.php
+
+cd lib/jelix/plugins/formwidget/textarea
+  textarea.formwidget.php
+
+cd lib/jelix/plugins/formwidget/wikieditor
+  wikieditor.formwidget.php
 
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php

@@ -142,11 +142,4 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $this->commonJs($ctrl);
     }
-
-    protected function jsWikieditor($ctrl) {
-        $this->jsTextarea($ctrl);
-        $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
-    }
-
 }
