@@ -316,56 +316,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if ($this->isRootControl) $this->jsContent .= $this->jFormsJsVarName.".tForm.addControl(c);\n";
     }
 
-    protected function outputInput($ctrl, &$attr) {
-        $value = $this->_form->getData($ctrl->ref);
-        if ($ctrl->size != 0)
-            $attr['size'] = $ctrl->size;
-        $maxl= $ctrl->datatype->getFacet('maxLength');
-        if($maxl !== null)
-            $attr['maxlength']=$maxl;
-        $attr['value'] = $value;
-        $attr['type'] = 'text';
-        echo '<input';
-        $this->_outputAttr($attr);
-        echo $this->_endt;
-    }
-
-    protected function jsInput($ctrl) {
-
-        $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
-                        'jDatatypeDateTime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
-                        'jDatatypeUrl'=>'Url','jDatatypeEmail'=>'Email','jDatatypeIPv4'=>'Ipv4','jDatatypeIPv6'=>'Ipv6');
-        $isLocale = false;
-        $data_type_class = get_class($ctrl->datatype);
-        if(isset($datatype[$data_type_class]))
-            $dt = $datatype[$data_type_class];
-        else if ($ctrl->datatype instanceof jDatatypeLocaleTime)
-            { $dt = 'Time'; $isLocale = true; }
-        else if ($ctrl->datatype instanceof jDatatypeLocaleDate)
-            { $dt = 'LocaleDate'; $isLocale = true; }
-        else if ($ctrl->datatype instanceof jDatatypeLocaleDateTime)
-            { $dt = 'LocaleDatetime'; $isLocale = true; }
-        else
-            $dt = 'String';
-
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."Control".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        if ($isLocale)
-            $this->jsContent .="c.lang='".jApp::config()->locale."';\n";
-
-        $maxl= $ctrl->datatype->getFacet('maxLength');
-        if($maxl !== null)
-            $this->jsContent .="c.maxLength = '$maxl';\n";
-
-        $minl= $ctrl->datatype->getFacet('minLength');
-        if($minl !== null)
-            $this->jsContent .="c.minLength = '$minl';\n";
-        $re = $ctrl->datatype->getFacet('pattern');
-        if($re !== null)
-            $this->jsContent .="c.regexp = ".$re.";\n";
-
-        $this->commonJs($ctrl);
-    }
-
     protected function _outputDateControlDay($ctrl, $attr, $value){
         $attr['name'] = $ctrl->ref.'[day]';
         $attr['id'] .= 'day';
