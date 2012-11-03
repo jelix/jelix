@@ -18,7 +18,9 @@
 class submitFormWidget extends jFormsHtmlWidgetBuilder {
     function outputLabel() { /* no label */ }
 
-    function outputJs() { /* no javascript */ }
+    function getJs() { /* no javascript */ }
+
+    function outputHelp() { /* no help */ }
 
     function outputControl() {
         $attr = $this->getControlAttributes();
@@ -31,7 +33,7 @@ class submitFormWidget extends jFormsHtmlWidgetBuilder {
             $attr['value'] = $this->ctrl->label;
             echo '<input';
             $this->_outputAttr($attr);
-            echo $this->_endt;
+            echo '/>';
         }else{
             $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
             $attr['name'] = $this->ctrl->ref;
@@ -41,10 +43,8 @@ class submitFormWidget extends jFormsHtmlWidgetBuilder {
                 $attr['id'] = $id.$v;
                 echo ' <input';
                 $this->_outputAttr($attr);
-                echo $this->_endt;
+                echo '/>';
             }
         }
     }
-
-    function outputHelp() {}
 }

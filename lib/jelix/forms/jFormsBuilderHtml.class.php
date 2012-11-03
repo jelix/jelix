@@ -227,7 +227,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
         $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
         if (!is_null($plugin)) {
-            
+            $plugin->outputLabel();
         } else { //To remove when the migration is complete
             if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
             $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
@@ -251,8 +251,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
         if (!is_null($plugin)) {
             $plugin->outputControl();
-            $plugin->outputJs();
             $plugin->outputHelp();
+            $this->jsContent .= $plugin->getJs(); //the js content for the control, it's displayed at the form footer
+
         } else { //To remove when the migration is complete
             if($ctrl->type == 'hidden') return;
             $ro = $ctrl->isReadOnly();
@@ -589,26 +590,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::DB_DTFORMAT)."';\n";
         if($maxDate)
             $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::DB_DTFORMAT)."';\n";
-        $this->commonJs($ctrl);
-    }
-
-    protected function outputCheckbox($ctrl, &$attr) {
-        $value = $this->_form->getData($ctrl->ref);
-
-        if($ctrl->valueOnCheck == $value){
-            $attr['checked'] = "checked";
-         }
-        $attr['value'] = $ctrl->valueOnCheck;
-        $attr['type'] = 'checkbox';
-        echo '<input';
-        $this->_outputAttr($attr);
-        echo $this->_endt;
-    }
-
-    protected function jsCheckbox($ctrl) {
-
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlBoolean('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-
         $this->commonJs($ctrl);
     }
 

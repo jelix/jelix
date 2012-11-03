@@ -509,6 +509,9 @@ cd lib/jelix/plugins/debugbar/defaultlog
 cd lib/jelix/plugins/debugbar/soaplog
 * soaplog.debugbar.php
 
+cd lib/jelix/plugins/formwidget/checkbox
+  checkbox.formwidget.php
+
 cd lib/jelix/plugins/formwidget/reset
   reset.formwidget.php
 

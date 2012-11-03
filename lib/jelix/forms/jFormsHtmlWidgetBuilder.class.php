@@ -22,28 +22,49 @@ class jFormsWidgetBuilder {
 }
 
 abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
+    /**
+     * The form builder
+     */
     protected $builder;
+
+    /**
+     * The control
+     */
     protected $ctrl;
-    protected $jsContent;
-    protected $_endt = '/>';
-    protected $jFormsJsVarName;
-    protected $isRootControl;
 
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
-
-        $this->jFormsJsVarName = $this->builder->getjFormsJsVarName();
-        $this->isRootControl = $this->builder->getIsRootControl();
     }
     
-    public function getIsRootControl() {
-        return $this->isRootControl;
+    /**
+     * Get the control id
+     */
+    protected function getId() {
+        return $this->builder->getName().'_'.$this->ctrl->ref;
+    }
+
+    /**
+     * Get the control name
+     */
+    protected function getName() {
+        return $this->ctrl->ref;
     }
     
-    protected function getClass() { }
+    /**
+     * Get the control class
+     */
+    protected function getClass() {
+        $ro = $this->ctrl->isReadOnly();
 
-    protected function getId() { return $this->builder->getName().'_'.$this->ctrl->ref; }
+        $class = 'jforms-ctrl-'.$this->ctrl->type;
+        $class .= ($this->ctrl->required == false || $ro?'':' jforms-required');
+        $class .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
+        $class .= ($ro && $this->ctrl->type != 'captcha'?' jforms-readonly':'');
+
+        return $class;
+    }
+
 
     protected function getLabelAttributes() {
         $attr = array();
@@ -57,57 +78,51 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
 
         return $attr;
     }
-    
+
+    /**
+     * Returns an array containing all the control attributes
+     */
     protected function getControlAttributes() {
         $attr = array();
 
-        $ro = $this->ctrl->isReadOnly();
-        $attr['name'] = $this->ctrl->ref;
-        $attr['id'] = $this->builder->getName().'_'.$this->ctrl->ref;
-
-        if ($ro)
+        if ($this->ctrl->isReadOnly())
             $attr['readonly'] = 'readonly';
-        else
-            unset($attr['readonly']);
-        if (!isset($attr['title']) && $this->ctrl->hint) {
+        if ($this->ctrl->hint)
             $attr['title'] = $this->ctrl->hint;
-        }
 
-        $class = 'jforms-ctrl-'.$this->ctrl->type;
-        $class .= ($this->ctrl->required == false || $ro?'':' jforms-required');
-        $class .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
-        $class .= ($ro && $this->ctrl->type != 'captcha'?' jforms-readonly':'');
-        if (isset($attr['class']))
-            $attr['class'].= ' '.$class;
-        else
-            $attr['class'] = $class;
+        $attr['name'] = $this->getName();
+        $attr['id'] = $this->getId();
+        $attr['class'] = $this->getClass();
 
         return $attr;
     }
     
-    protected function getCommonJS() {
+    protected function commonJS() {
+        $jsContent = '';
+        
         if($this->ctrl->required){
-            $this->jsContent .= "c.required = true;\n";
+            $jsContent .= "c.required = true;\n";
             if($this->ctrl->alertRequired){
-                $this->jsContent .= "c.errRequired=". $this->escJsStr($this->ctrl->alertRequired).";\n";
+                $jsContent .= "c.errRequired=". $this->escJsStr($this->ctrl->alertRequired).";\n";
             }
             else {
-                $this->jsContent .= "c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
+                $jsContent .= "c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
             }
         }
 
         if($this->ctrl->alertInvalid){
-            $this->jsContent .= "c.errInvalid=".$this->escJsStr($this->ctrl->alertInvalid).";\n";
+            $jsContent .= "c.errInvalid=".$this->escJsStr($this->ctrl->alertInvalid).";\n";
         }
         else {
-            $this->jsContent .= "c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
+            $jsContent .= "c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
 
-        if ($this->isRootControl) $this->jsContent .= $this->jFormsJsVarName.".tForm.addControl(c);\n";
-        
+        if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
+
+        return $jsContent;
     }
     
-    protected function _escJsStr($str) {
+    protected function escJsStr($str) {
         return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
     }
     
@@ -116,10 +131,22 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
             echo ' '.$name.'="'.htmlspecialchars($val).'"';
         }
     }
+
+    public function outputHelp() {
+         if ($this->ctrl->help) {
+            if($this->ctrl->type == 'checkboxes' || ($this->ctrl->type == 'listbox' && $this->ctrl->multiple)){
+                $name=$this->ctrl->ref.'[]';
+            }else{
+                $name=$this->ctrl->ref;
+            }
+            // additionnal &nbsp, else background icon is not shown in webkit
+            echo '<span class="jforms-help" id="'.$this->getId().'-help">&nbsp;<span>'.htmlspecialchars($this->ctrl->help).'</span></span>';
+        }
+    }
+
   
     abstract function outputLabel();
-    abstract function outputHelp();
-    abstract function outputJs();
     abstract function outputControl();
+    abstract function getJs();
 }
 

@@ -18,7 +18,7 @@
 class resetFormWidget extends jFormsHtmlWidgetBuilder {
     function outputLabel() { /* no label */ }
 
-    function outputJs() { /* no javascript */ }
+    function getJs() { /* no javascript */ }
 
     function outputControl() {
         $attr = $this->getControlAttributes();
