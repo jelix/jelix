@@ -15,21 +15,9 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
- /*
-c = new jFormsJQControlDate('datenaissance', 'Your birthday');
-c.multiFields = true;
-c.errInvalid='"Your birthday" field is invalid';
-jelix_datepicker_default(c, jFormsJQ.config);
-jFormsJQ.tForm.addControl(c);
+class date_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+    function getHeader() { }
 
-
-c = new jFormsJQControlDate('datenaissance', 'Your birthday');
-c.multiFields = true;
-c.errInvalid='"Your birthday" field is invalid';
-jFormsJQ.tForm.addControl(c); 
- */
-
-class dateFormWidget extends jFormsHtmlWidgetBuilder {
     function outputLabel() {
         $attr = $this->getLabelAttributes();
 
@@ -50,6 +38,12 @@ class dateFormWidget extends jFormsHtmlWidgetBuilder {
             $js .= "c.minDate = '".$minDate->toString(jDateTime::DB_DFORMAT)."';\n";
         if($maxDate)
             $js .= "c.maxDate = '".$maxDate->toString(jDateTime::DB_DFORMAT)."';\n";
+
+        if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
+            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
+            $js .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
+        }
+
         $js .= $this->commonJs($ctrl);
         
         return $js;

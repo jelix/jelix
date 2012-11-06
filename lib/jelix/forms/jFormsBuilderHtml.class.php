@@ -21,6 +21,7 @@ require(JELIX_LIB_PATH.'forms/jFormsHtmlWidgetBuilder.class.php');
  * @subpackage  jelix-plugins
  */
 class jFormsBuilderHtml extends jFormsBuilderBase {
+    protected $formType = '_html';
 
     protected $jFormsJsVarName = 'jForms';
 
@@ -222,7 +223,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        $pluginName = $ctrl->type;
+        $pluginName = $ctrl->type . $this->formType;
         $className = $pluginName . 'FormWidget';
 
         $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
@@ -245,7 +246,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        $pluginName = $ctrl->type;
+        $pluginName = $ctrl->type . $this->formType;
         $className = $pluginName . 'FormWidget';
 
         $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));

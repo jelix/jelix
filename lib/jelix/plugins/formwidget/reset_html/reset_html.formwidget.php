@@ -15,7 +15,9 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class resetFormWidget extends jFormsHtmlWidgetBuilder {
+class reset_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+    function getHeader() { }
+
     function outputLabel() { /* no label */ }
 
     function getJs() { /* no javascript */ }

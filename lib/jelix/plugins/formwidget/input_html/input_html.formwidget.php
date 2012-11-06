@@ -15,7 +15,9 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class inputFormWidget extends jFormsHtmlWidgetBuilder {
+class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+    function getHeader() { }
+
     function outputLabel() {
         $attr = $this->getLabelAttributes();
 

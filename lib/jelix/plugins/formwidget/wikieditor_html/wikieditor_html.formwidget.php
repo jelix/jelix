@@ -15,7 +15,9 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class wikieditorFormWidget extends jFormsHtmlWidgetBuilder {
+class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+    function getHeader() { }
+    
     function outputLabel() {
         $attr = $this->getLabelAttributes();
 

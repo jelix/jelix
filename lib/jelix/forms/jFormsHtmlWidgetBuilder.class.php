@@ -50,7 +50,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
     protected function getName() {
         return $this->ctrl->ref;
     }
-    
+
     /**
      * Get the control class
      */
@@ -148,5 +148,6 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
     abstract function outputLabel();
     abstract function outputControl();
     abstract function getJs();
+    abstract function getHeader();
 }
 
