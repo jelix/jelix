@@ -158,12 +158,26 @@ class createformCommand extends JelixScriptCommand {
             if($datatype != '')
                 $attr.=' type="'.$datatype.'"';
 
-            if ($this->getOption('-createlocales')) {
-                $locale_content .= 'form.'.$name.'='. ucwords(str_replace('_',' ',$name))."\n";
-                $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+            // use database comment to create form's label
+            if(isset($property->comment) && $property->comment!='') {
+                if ($this->getOption('-createlocales')) {
+                    // replace special chars by dot
+                    $comment = preg_replace('/[^a-z0-9]/i', '.', $property->comment);
+                    $locale_content .= 'form.'.$name.'='.$property->comment."\n";
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+                } else {
+                    // encoding special chars
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".htmlspecialchars($property->comment)."</label>\n</$tag>";
+                }
             } else {
-                $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".ucwords(str_replace('_',' ',$name))."</label>\n</$tag>";
+                if ($this->getOption('-createlocales')) {
+                    $locale_content .= 'form.'.$name.'='. ucwords(str_replace('_',' ',$name))."\n";
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+                } else {
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".ucwords(str_replace('_',' ',$name))."</label>\n</$tag>";
+                }
             }
+
         }
 
         if ($this->getOption('-createlocales')) {
