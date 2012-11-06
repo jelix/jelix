@@ -16,16 +16,6 @@
  */
 
 class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getHeader() { }
-
-    function outputLabel() {
-        $attr = $this->getLabelAttributes();
-
-        echo '<label class="',$attr['class'],'" for="',$this->getId(),'"',$attr['idLabel'],$attr['hint'],'>';
-        echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
-        echo "</label>\n";
-    }
-
     function getJs() {
         $js = '';
         $ctrl = $this->ctrl;

@@ -16,16 +16,6 @@
  */
 
 class datetime_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getHeader() { }
-
-    function outputLabel() {
-        $attr = $this->getLabelAttributes();
-
-        echo '<span class="',$attr['class'],'"',$attr['idLabel'],$attr['hint'],'>';
-        echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
-        echo "</span>\n";
-    }
-
     function getJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

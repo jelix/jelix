@@ -15,17 +15,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
- class secret_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getHeader() { }
-
-    function outputLabel() {
-        $attr = $this->getLabelAttributes();
-
-        echo '<label class="',$attr['class'],'" for="',$this->getId(),'"',$attr['idLabel'],$attr['hint'],'>';
-        echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
-        echo "</label>\n";
-    }
-
+class secret_htmlFormWidget extends jFormsHtmlWidgetBuilder {
     function getJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

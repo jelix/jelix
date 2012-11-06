@@ -16,11 +16,7 @@
  */
 
 class reset_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getHeader() { }
-
-    function outputLabel() { /* no label */ }
-
-    function getJs() { /* no javascript */ }
+    function getJs() { /* no JS */ }
 
     function outputControl() {
         $attr = $this->getControlAttributes();
@@ -32,7 +28,4 @@ class reset_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $this->_outputAttr($attr);
         echo '>',htmlspecialchars($this->ctrl->label),'</button>';
     }
-
-    function outputHelp() {}
-
 }

@@ -65,7 +65,6 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         return $class;
     }
 
-
     protected function getLabelAttributes() {
         $attr = array();
         
@@ -132,6 +131,9 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         }
     }
 
+    /**
+     * This function displays the blue question mark near the form field
+     */
     public function outputHelp() {
          if ($this->ctrl->help) {
             if($this->ctrl->type == 'checkboxes' || ($this->ctrl->type == 'listbox' && $this->ctrl->multiple)){
@@ -144,10 +146,28 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         }
     }
 
-  
-    abstract function outputLabel();
+    /**
+     * This function displays the form field label.
+     */
+    public function outputLabel() {
+        $ctrl = $this->ctrl;
+        $attr = $this->getLabelAttributes();
+
+        if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
+            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
+        }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
+        }
+    }
+
+    /**
+     * Returns the list of JS and CSS to link to the page
+     */
+    public function getHeader() {
+        return '';
+    }
+    
     abstract function outputControl();
     abstract function getJs();
-    abstract function getHeader();
 }
 
