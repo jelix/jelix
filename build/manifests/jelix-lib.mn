@@ -509,6 +509,9 @@ cd lib/jelix/plugins/debugbar/defaultlog
 cd lib/jelix/plugins/debugbar/soaplog
 * soaplog.debugbar.php
 
+cd lib/jelix/plugins/formwidget/button_html
+  button_html.formwidget.php
+  
 cd lib/jelix/plugins/formwidget/captcha_html
   captcha_html.formwidget.php
 
@@ -518,15 +521,24 @@ cd lib/jelix/plugins/formwidget/checkbox_html
 cd lib/jelix/plugins/formwidget/date_html
   date_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/datetime_html
+  datetime_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/htmleditor_html
   htmleditor_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/input_html
   input_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/output_html
+  output_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/reset_html
   reset_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/secret_html
+  secret_html.formwidget.php
+  
 cd lib/jelix/plugins/formwidget/submit_html
   submit_html.formwidget.php
 
