@@ -518,11 +518,20 @@ cd lib/jelix/plugins/formwidget/captcha_html
 cd lib/jelix/plugins/formwidget/checkbox_html
   checkbox_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/checkboxes_html
+  checkboxes_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/choice_html
+  choice_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/date_html
   date_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/datetime_html
   datetime_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/group_html
+  group_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/htmleditor_html
   htmleditor_html.formwidget.php
@@ -530,11 +539,17 @@ cd lib/jelix/plugins/formwidget/htmleditor_html
 cd lib/jelix/plugins/formwidget/input_html
   input_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/listbox_html
+  listbox_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/menulist_html
   menulist_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/output_html
   output_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/radiobuttons_html
+  radiobuttons_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/reset_html
   reset_html.formwidget.php
