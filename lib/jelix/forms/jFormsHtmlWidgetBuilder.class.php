@@ -154,20 +154,65 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         $attr = $this->getLabelAttributes();
 
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
-            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
+            echo '<span class="',$attr['class'],'"',$attr['idLabel'],$attr['hint'],'>';
+            echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
+            echo "</span>\n";
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
+            echo '<label class="',$attr['class'],'" for="',$this->getId(),'"',$attr['idLabel'],$attr['hint'],'>';
+            echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
+            echo "</label>\n";
         }
     }
 
+    
     /**
      * Returns the list of JS and CSS to link to the page
      */
-    public function getHeader() {
-        return '';
-    }
-    
-    abstract function outputControl();
+    public function getHeader() { }
+
     abstract function getJs();
+
+    public function getLastJs() { }
+
+    abstract function outputControl();
+    
+    
+    //Temporaty function
+    protected function fillSelect($ctrl, $value) {
+        $data = $ctrl->datasource->getData($this->builder->getForm());
+        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+            if (isset($data[''])) {
+                foreach($data[''] as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                    echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+                }
+            }
+            foreach($data as $group=>$values) {
+                if ($group === '')
+                    continue;
+                echo '<optgroup label="'.htmlspecialchars($group).'">';
+                foreach($values as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                    echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+                }
+                echo '</optgroup>';
+            }
+        }
+        else {
+            foreach($data as $v=>$label){
+                    if(is_array($value))
+                        $selected = in_array((string) $v,$value,true);
+                    else
+                        $selected = ((string) $v===$value);
+                echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
+            }
+        }
+    }
 }
 

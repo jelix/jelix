@@ -530,6 +530,9 @@ cd lib/jelix/plugins/formwidget/htmleditor_html
 cd lib/jelix/plugins/formwidget/input_html
   input_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/menulist_html
+  menulist_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/output_html
   output_html.formwidget.php
 
@@ -538,12 +541,18 @@ cd lib/jelix/plugins/formwidget/reset_html
 
 cd lib/jelix/plugins/formwidget/secret_html
   secret_html.formwidget.php
-  
+
+cd lib/jelix/plugins/formwidget/secretconfirm_html
+  secretconfirm_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/submit_html
   submit_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/textarea_html
   textarea_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/upload_html
+  upload_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/wikieditor_html
   wikieditor_html.formwidget.php

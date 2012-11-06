@@ -254,7 +254,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $plugin->outputControl();
             $plugin->outputHelp();
             $this->jsContent .= $plugin->getJs(); //the js content for the control, it's displayed at the form footer
-
+            $this->lastJsContent .= $plugin->getLastJs();
+            
         } else { //To remove when the migration is complete
             if($ctrl->type == 'hidden') return;
             $ro = $ctrl->isReadOnly();
@@ -436,31 +437,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     }
 
-    protected function outputMenulist($ctrl, &$attr) {
-        unset($attr['readonly']);
-        $attr['size'] = '1';
-        echo '<select';
-        $this->_outputAttr($attr);
-        echo ">\n";
-        $value = $this->_form->getData($ctrl->ref);
-        if(is_array($value)){
-            if(isset($value[0]))
-                $value = $value[0];
-            else
-                $value='';
-        }
-        $value = (string) $value;
-        echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
-        $this->fillSelect($ctrl, $value);
-        echo '</select>';
-    }
-
-    protected function jsMenulist($ctrl) {
-
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-
-        $this->commonJs($ctrl);
-    }
 
     protected function outputListbox($ctrl, &$attr) {
         unset($attr['readonly']);
@@ -517,41 +493,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
         $this->commonJs($ctrl);
     }
-
-
-
-    protected function outputSecretconfirm($ctrl, &$attr) {
-        if ($ctrl->size != 0)
-            $attr['size'] = $ctrl->size;
-        $attr['type'] = 'password';
-        $attr['value'] = $this->_form->getData($ctrl->ref);
-        echo '<input';
-        $this->_outputAttr($attr);
-        echo $this->_endt;
-    }
-
-    protected function jsSecretconfirm($ctrl) {
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlConfirm('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $this->commonJs($ctrl);
-    }
-
-    protected function outputUpload($ctrl, &$attr) {
-        /*if($ctrl->maxsize){
-            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
-        }*/
-        $attr['type'] = 'file';
-        $attr['value'] = '';
-        echo '<input';
-        $this->_outputAttr($attr);
-        echo $this->_endt;
-    }
-
-    protected function jsUpload($ctrl) {
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-
-        $this->commonJs($ctrl);
-    }
-
 
     protected function outputGroup($ctrl, &$attr) {
         echo '<fieldset id="',$attr['id'],'"><legend>',htmlspecialchars($ctrl->label),"</legend>\n";
