@@ -177,14 +177,14 @@ class jDaoParser {
                 $this->_daoRecord = $xml->record[0]['extends'];
             }
             if(isset($xml->record[0]->property)) {
-	            foreach ($xml->record[0]->property as $prop){
-	                $p = new jDaoProperty ($prop->attributes(), $this, $tools);
-	                $this->_properties[$p->name] = $p;
-	                $this->_tables[$p->table]['fields'][] = $p->name;
-	                if($p->ofPrimaryTable && !$p->isPK)
-	                    $countprop ++;
-	            }
-	            $this->hasOnlyPrimaryKeys = ($countprop == 0);
+                foreach ($xml->record[0]->property as $prop){
+                    $p = new jDaoProperty ($prop->attributes(), $this, $tools);
+                    $this->_properties[$p->name] = $p;
+                    $this->_tables[$p->table]['fields'][] = $p->name;
+                    if($p->ofPrimaryTable && !$p->isPK)
+                        $countprop ++;
+                }
+                $this->hasOnlyPrimaryKeys = ($countprop == 0);
             }
         }else if (count($this->_properties) == 0)
             throw new jDaoXmlException ($this->selector, 'properties.missing');
