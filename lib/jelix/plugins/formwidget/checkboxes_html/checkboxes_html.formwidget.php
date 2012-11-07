@@ -16,27 +16,23 @@
  */
 
 class checkboxes_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $js = "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
-        $js .= $this->commonJs($ctrl);
-
-        return $js;
+        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
+        $this->commonJs($ctrl);
     }
     
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($this->ctrl);
 
-        $attr['name'] = $ctrl->ref.'[]';
+        $attr['name'] = $this->ctrl->ref.'[]';
         unset($attr['title']);
         if(is_array($value) && count($value) == 1)
             $value = $value[0];
-        $span ='<span class="jforms-chkbox jforms-ctl-'.$ctrl->ref.'"><input type="checkbox"';
+        $span ='<span class="jforms-chkbox jforms-ctl-'.$this->ctrl->ref.'"><input type="checkbox"';
 
         if(is_array($value)){
             $value = array_map(function($v){ return (string) $v;},$value);
@@ -44,6 +40,6 @@ class checkboxes_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         else {
             $value = (string) $value;
         }
-        $this->showRadioCheck($ctrl, $attr, $value, $span);
+        $this->showRadioCheck($this->ctrl, $attr, $value, $span);
     }
 }

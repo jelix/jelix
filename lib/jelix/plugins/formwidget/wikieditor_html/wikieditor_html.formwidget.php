@@ -16,7 +16,7 @@
  */
 
 class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -30,24 +30,22 @@ class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
+        $this->builder->jsContent .= $js;
 
-        $js .= $this->commonJs($ctrl);
+        $this->commonJs($ctrl);
 
         $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $js .= '$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
-
-        return $js;
+        $this->builder->jsContent .= '$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($this->ctrl);
 
         if (!isset($attr['rows']))
-            $attr['rows'] = $ctrl->rows;
+            $attr['rows'] = $this->ctrl->rows;
         if (!isset($attr['cols']))
-            $attr['cols'] = $ctrl->cols;
+            $attr['cols'] = $this->ctrl->cols;
 
         echo '<textarea';
         $this->_outputAttr($attr);

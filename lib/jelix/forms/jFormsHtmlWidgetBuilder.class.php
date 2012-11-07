@@ -65,6 +65,13 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         return $class;
     }
 
+    protected function getValue($ctrl) {
+        return $this->builder->getForm()->getData($ctrl->ref);
+    }
+    
+    /**
+     * Retrieve the label attributes
+     */
     protected function getLabelAttributes() {
         $attr = array();
         
@@ -81,9 +88,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
     /**
      * Returns an array containing all the control attributes
      */
-    protected function getControlAttributes() {
-        $attr = array();
-
+    protected function getControlAttributes($attr=array()) {
         if ($this->ctrl->isReadOnly())
             $attr['readonly'] = 'readonly';
         if ($this->ctrl->hint)
@@ -118,7 +123,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
 
         if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
 
-        return $jsContent;
+        $this->builder->jsContent .= $jsContent;
     }
     
     protected function escJsStr($str) {
@@ -170,9 +175,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
      */
     public function getHeader() { }
 
-    public function getLastJs() { }
-
-    abstract function getJs();
+    abstract function outputJs();
 
     abstract function outputControl();
     

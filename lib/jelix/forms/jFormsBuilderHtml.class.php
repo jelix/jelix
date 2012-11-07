@@ -27,7 +27,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     protected $options;
 
-    protected $isRootControl = true;
+    public $isRootControl = true;
 
     public function getjFormsJsVarName() {
         return $this->jFormsJsVarName;
@@ -207,9 +207,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected $jsContent = '';
+    public $jsContent = '';
 
-    protected $lastJsContent = '';
+    public $lastJsContent = '';
 
     public function outputFooter(){
         echo '<script type="text/javascript">
@@ -229,19 +229,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
         if (!is_null($plugin)) {
             $plugin->outputLabel();
-        } else { //To remove when the migration is complete
-            if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
-            $required = ($ctrl->required == false || $ctrl->isReadOnly()?'':' jforms-required');
-            $reqhtml = ($required?'<span class="jforms-required-star">*</span>':'');
-            $inError = (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
-            $hint = ($ctrl->hint == ''?'':' title="'.htmlspecialchars($ctrl->hint).'"');
-            $id = $this->_name.'_'.$ctrl->ref;
-            $idLabel = ' id="'.$id.'_label"';
-            if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
-                echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
-            }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
-                echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
-            }
+        } else {
+            //Throw error
         }
     }
 
@@ -253,36 +242,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if (!is_null($plugin)) {
             $plugin->outputControl();
             $plugin->outputHelp();
-            $this->jsContent .= $plugin->getJs(); //the js content for the control, it's displayed at the form footer
-            $this->lastJsContent .= $plugin->getLastJs();
-            
-        } else { //To remove when the migration is complete
-            if($ctrl->type == 'hidden') return;
-            $ro = $ctrl->isReadOnly();
-            $attributes['name'] = $ctrl->ref;
-            $attributes['id'] = $this->_name.'_'.$ctrl->ref;
-    
-            if ($ro)
-                $attributes['readonly'] = 'readonly';
-            else
-                unset($attributes['readonly']);
-            if (!isset($attributes['title']) && $ctrl->hint) {
-                $attributes['title'] = $ctrl->hint;
-            }
-    
-            $class = 'jforms-ctrl-'.$ctrl->type;
-            $class .= ($ctrl->required == false || $ro?'':' jforms-required');
-            $class .= (isset($this->_form->getContainer()->errors[$ctrl->ref]) ?' jforms-error':'');
-            $class .= ($ro && $ctrl->type != 'captcha'?' jforms-readonly':'');
-            if (isset($attributes['class']))
-                $attributes['class'].= ' '.$class;
-            else
-                $attributes['class'] = $class;
-
-            $this->{'output'.$ctrl->type}($ctrl, $attributes);
-            echo "\n";
-            $this->{'js'.$ctrl->type}($ctrl);
-            $this->outputHelp($ctrl);
+            $plugin->outputJs();
+        } else {
+            //Throw error
         }
     }
 
@@ -297,7 +259,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function commonJs($ctrl) {
-
         if($ctrl->required){
             $this->jsContent .="c.required = true;\n";
             if($ctrl->alertRequired){
@@ -316,92 +277,5 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
 
         if ($this->isRootControl) $this->jsContent .= $this->jFormsJsVarName.".tForm.addControl(c);\n";
-    }
-
-    protected function outputChoice($ctrl, &$attr) {
-        echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
-
-        $value = $this->_form->getData($ctrl->ref);
-        if(is_array($value)){
-            if(isset($value[0]))
-                $value = $value[0];
-            else
-                $value='';
-        }
-
-        $i=0;
-        $attr['name'] = $ctrl->ref;
-        $id = $this->_name.'_'.$ctrl->ref.'_';
-        $attr['type']='radio';
-        unset($attr['class']);
-        $readonly = (isset($attr['readonly']) && $attr['readonly']!='');
-
-        $this->jsChoiceInternal($ctrl);
-        $this->jsContent .="c2 = c;\n";
-        $this->isRootControl = false;
-        foreach( $ctrl->items as $itemName=>$listctrl){
-            if (!$ctrl->isItemActivated($itemName))
-                continue;
-            echo '<li><label><input';
-            $attr['id'] = $id.$i;
-            $attr['value'] = $itemName;
-            if ($itemName==$value)
-                $attr['checked'] = 'checked';
-            else
-                unset($attr['checked']);
-            $this->_outputAttr($attr);
-            echo ' onclick="'.$this->jFormsJsVarName.'.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
-            echo htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
-
-            $displayedControls = false;
-            foreach($listctrl as $ref=>$c) {
-                if(!$this->_form->isActivated($ref) || $c->type == 'hidden') continue;
-                $displayedControls = true;
-                echo ' <span class="jforms-item-controls">';
-                $this->outputControlLabel($c);
-                echo ' ';
-                $this->outputControl($c);
-                echo "</span>\n";
-                $this->jsContent .="c2.addControl(c, ".$this->escJsStr($itemName).");\n";
-            }
-            if(!$displayedControls) {
-                $this->jsContent .="c2.items[".$this->escJsStr($itemName)."]=[];\n";
-            }
-
-            echo "</li>\n";
-            $i++;
-        }
-        echo "</ul>\n";
-        $this->isRootControl = true;
-    }
-
-    protected function jsChoice($ctrl) {
-        $value = $this->_form->getData($ctrl->ref);
-        if(is_array($value)){
-            if(isset($value[0]))
-                $value = $value[0];
-            else
-                $value='';
-        }
-        $this->jsContent .= "c2.activate('".$value."');\n";
-    }
-
-    protected function jsChoiceInternal($ctrl) {
-
-        $this->jsContent .="c = new ".$this->jFormsJsVarName."ControlChoice('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-
-        $this->commonJs($ctrl);
-    }
-
-    protected function outputHelp($ctrl) {
-        if ($ctrl->help) {
-            if($ctrl->type == 'checkboxes' || ($ctrl->type == 'listbox' && $ctrl->multiple)){
-                $name=$ctrl->ref.'[]';
-            }else{
-                $name=$ctrl->ref;
-            }
-            // additionnal &nbsp, else background icon is not shown in webkit
-            echo '<span class="jforms-help" id="'. $this->_name.'_'.$ctrl->ref.'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
-        }
     }
 }

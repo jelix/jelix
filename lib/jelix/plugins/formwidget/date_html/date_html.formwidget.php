@@ -16,7 +16,7 @@
  */
 
 class date_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
@@ -34,19 +34,17 @@ class date_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             $js .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }
 
-        $js .= $this->commonJs($ctrl);
-        
-        return $js;
+        $this->builder->jsContent .= $js;
+        $this->commonJs($ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($this->ctrl);
 
 
-        $attr['id'] = $formName.'_'.$ctrl->ref.'_';
+        $attr['id'] = $formName.'_'.$this->ctrl->ref.'_';
         $v = array('year'=>'','month'=>'','day'=>'');
         if(preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?$#', $value, $matches)){
             if(isset($matches[1]))
@@ -59,11 +57,11 @@ class date_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $f = jLocale::get('jelix~format.date');
         for($i=0;$i<strlen($f);$i++){
             if($f[$i] == 'Y')
-                $this->_outputDateControlYear($ctrl, $attr, $v['year']);
+                $this->_outputDateControlYear($this->ctrl, $attr, $v['year']);
             else if($f[$i] == 'm')
-                $this->_outputDateControlMonth($ctrl, $attr, $v['month']);
+                $this->_outputDateControlMonth($this->ctrl, $attr, $v['month']);
             else if($f[$i] == 'd')
-                $this->_outputDateControlDay($ctrl, $attr, $v['day']);
+                $this->_outputDateControlDay($this->ctrl, $attr, $v['day']);
             else
                 echo ' ';
         }

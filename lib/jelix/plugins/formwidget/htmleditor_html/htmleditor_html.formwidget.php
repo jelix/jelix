@@ -16,7 +16,7 @@
  */
 
 class htmleditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -31,24 +31,21 @@ class htmleditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
 
-        $js .= $this->commonJs($ctrl);
-        
-        
-        $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
-        $js .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n";
+        $this->builder->jsContent .= $js;
+        $this->commonJs($ctrl);
 
-        return $js;
+        $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
+        $this->builder->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n";
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($this->ctrl);
 
         if (!isset($attr['rows']))
-            $attr['rows'] = $ctrl->rows;
+            $attr['rows'] = $this->ctrl->rows;
         if (!isset($attr['cols']))
-            $attr['cols'] = $ctrl->cols;
+            $attr['cols'] = $this->ctrl->cols;
 
         echo '<textarea';
         $this->_outputAttr($attr);

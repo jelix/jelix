@@ -16,7 +16,7 @@
  */
 
 class captcha_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
@@ -29,19 +29,16 @@ class captcha_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
+        $this->builder->jsContent .= $js;
 
-        $js .= $this->commonJs($ctrl);
-        
-        return $js;
+        $this->commonJs($ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
 
-        $ctrl->initExpectedValue();
-        echo '<span class="jforms-captcha-question">',htmlspecialchars($ctrl->question),'</span> ';
+        $this->ctrl->initExpectedValue();
+        echo '<span class="jforms-captcha-question">',htmlspecialchars($this->ctrl->question),'</span> ';
 
         unset($attr['readonly']);
         $attr['type'] = 'text';

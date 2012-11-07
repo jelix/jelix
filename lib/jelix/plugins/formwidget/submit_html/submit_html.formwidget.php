@@ -16,7 +16,7 @@
  */
 
 class submit_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() { /* no JS */ }
+    function outputJs() { /* no JS */ }
 
     function outputControl() {
         $attr = $this->getControlAttributes();

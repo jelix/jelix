@@ -16,23 +16,19 @@
  */
 
 class checkbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $js = "c = new ".$this->builder->getjFormsJsVarName()."ControlBoolean('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n";
-        $js .= $this->commonJs($this->ctrl);
-
-        return $js;
+        $this->builder->jsContent .= $js;
+        $this->commonJs($this->ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $attr = $this->getControlAttributes();
-        
-        $value = $this->builder->getForm()->getData($ctrl->ref);
 
-        if($ctrl->valueOnCheck == $value){
+        if($this->ctrl->valueOnCheck == $this->getValue($this->ctrl)){
             $attr['checked'] = "checked";
-         }
-        $attr['value'] = $ctrl->valueOnCheck;
+        }
+        $attr['value'] = $this->ctrl->valueOnCheck;
         $attr['type'] = 'checkbox';
         echo '<input';
         $this->_outputAttr($attr);

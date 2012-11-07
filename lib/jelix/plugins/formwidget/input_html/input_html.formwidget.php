@@ -16,10 +16,8 @@
  */
 
 class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
-        $js = '';
+    function outputJs() {
         $ctrl = $this->ctrl;
-        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
                         'jDatatypeDateTime'=>'Datetime','jDatatypeDate'=>'Date','jDatatypeTime'=>'Time',
@@ -37,7 +35,8 @@ class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         else
             $dt = 'String';
 
-        $js .="c = new ".$jFormsJsVarName."Control".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
+        $js = "c = new ".$jFormsJsVarName."Control".$dt."('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($isLocale)
             $js .="c.lang='".jApp::config()->locale."';\n";
 
@@ -52,21 +51,19 @@ class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         if($re !== null)
             $js .="c.regexp = ".$re.";\n";
 
-        $js .= $this->commonJs($ctrl);
-        return $js;
+        $this->builder->jsContent .= $js;
+        $this->commonJs($ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
 
-        if ($ctrl->size != 0)
-            $attr['size'] = $ctrl->size;
-        $maxl= $ctrl->datatype->getFacet('maxLength');
+        if ($this->ctrl->size != 0)
+            $attr['size'] = $this->ctrl->size;
+        $maxl= $this->ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
             $attr['maxlength']=$maxl;
-        $attr['value'] = $value;
+        $attr['value'] = $this->getValue($this->ctrl);
         $attr['type'] = 'text';
 
         echo '<input';

@@ -16,24 +16,19 @@
  */
 
 class upload_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
-        $js ="c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $js .= $this->commonJs($ctrl);
-
-        return $js;
+        $this->builder->jsContent .="c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->commonJs($ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
 
-        /*if($ctrl->maxsize){
-            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
+        /*if($this->ctrl->maxsize){
+            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$this->ctrl->maxsize,'"','/>';
         }*/
         $attr['type'] = 'file';
         $attr['value'] = '';

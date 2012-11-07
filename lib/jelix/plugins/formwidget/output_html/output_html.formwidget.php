@@ -17,10 +17,7 @@
 
  class output_htmlFormWidget extends jFormsHtmlWidgetBuilder {
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
         
         unset($attr['readonly']);
         unset($attr['class']);
@@ -31,7 +28,7 @@
         else $hint = '';
         
         $attr['type'] = 'hidden';
-        $attr['value'] = $value;
+        $attr['value'] = $this->getValue($this->ctrl);
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';

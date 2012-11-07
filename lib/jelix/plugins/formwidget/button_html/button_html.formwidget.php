@@ -15,18 +15,16 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
- class button_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class button_htmlFormWidget extends jFormsHtmlWidgetBuilder {
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
         
-        unset($attr['readonly']);
-        unset($attr['class']);
-        $attr['value'] = $value;
+        unset($attr['readonly']); //readonly is useless on button
+        unset($attr['class']); //no class on button
+
+        $attr['value'] = $this->getValue($this->ctrl);
         echo '<button ';
         $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($ctrl->label),'</button>';
+        echo '>',htmlspecialchars($this->ctrl->label),'</button>';
     }
 }

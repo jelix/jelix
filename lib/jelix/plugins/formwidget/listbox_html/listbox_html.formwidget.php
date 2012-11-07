@@ -16,7 +16,7 @@
  */
 
 class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $js = '';
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -27,23 +27,21 @@ class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         } else {
             $js .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
-        $js .= $this->commonJs($ctrl);
-
-        return $js;
+        $this->builder->jsContent .= $js;
+        $this->commonJs($ctrl);
     }
     
     function outputControl() {
         $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($ctrl);
 
         unset($attr['readonly']);
         $attr['size'] = $ctrl->size;
 
         if($ctrl->multiple){
             $attr['name'] = $ctrl->ref.'[]';
-            $attr['id'] = $this->_name.'_'.$ctrl->ref;
+            $attr['id'] = $this->getId();
             $attr['multiple'] = 'multiple';
             echo '<select';
             $this->_outputAttr($attr);

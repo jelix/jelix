@@ -16,24 +16,20 @@
  */
 
 class radiobuttons_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
-        $ctrl = $this->ctrl;
+    function outputJs() {
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $js = "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $js .= $this->commonJs($ctrl);
-
-        return $js;
+        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n";
+        
+        $this->commonJs($this->ctrl);
     }
     
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
+        $value = $this->getValue($this->ctrl);
 
-        $id = $this->builder->getName().'_'.$ctrl->ref.'_';
-        $attr['name'] = $ctrl->ref;
+        $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
+        $attr['name'] = $this->ctrl->ref;
         unset($attr['title']);
         if(is_array($value)){
             if(isset($value[0]))
@@ -42,7 +38,7 @@ class radiobuttons_htmlFormWidget extends jFormsHtmlWidgetBuilder {
                 $value = '';
         }
         $value = (string) $value;
-        $span ='<span class="jforms-radio jforms-ctl-'.$ctrl->ref.'"><input type="radio"';
-        $this->showRadioCheck($ctrl, $attr, $value, $span);
+        $span ='<span class="jforms-radio jforms-ctl-'.$this->ctrl->ref.'"><input type="radio"';
+        $this->showRadioCheck($this->ctrl, $attr, $value, $span);
     }
 }

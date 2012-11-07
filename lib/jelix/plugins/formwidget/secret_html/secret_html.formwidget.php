@@ -16,7 +16,7 @@
  */
 
 class secret_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function getJs() {
+    function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
@@ -32,24 +32,21 @@ class secret_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $re = $ctrl->datatype->getFacet('pattern');
         if($re !== null)
             $js .="c.regexp = ".$re.";\n";
-        $js .= $this->commonJs($ctrl);
 
-        return $js;
+        $this->builder->jsContent .= $js;
+        $this->commonJs($ctrl);
     }
 
     function outputControl() {
-        $ctrl = $this->ctrl;
-        $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->builder->getForm()->getData($ctrl->ref);
-        
-        if ($ctrl->size != 0)
-            $attr['size'] = $ctrl->size;
-        $maxl = $ctrl->datatype->getFacet('maxLength');
+
+        if ($this->ctrl->size != 0)
+            $attr['size'] = $this->ctrl->size;
+        $maxl = $this->ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
             $attr['maxlength'] = $maxl;
         $attr['type'] = 'password';
-        $attr['value'] = $value;
+        $attr['value'] = $this->getValue($this->ctrl);
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';
