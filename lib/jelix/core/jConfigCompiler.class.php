@@ -102,7 +102,7 @@ class jConfigCompiler {
                 throw new Exception('Error while writing configuration cache file -- '.$filename);
             }
         }else{
-            jIniFile::write(get_object_vars($config), $tempPath.'.resultini.php', ";<?php die('');?>\n");
+            jIniFile::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n");
         }
         return $config;
     }
