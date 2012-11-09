@@ -86,7 +86,7 @@ class jDaoProperty {
     public $autoIncrement = false;
 
     /**
-    * the comment Mysql field to form label
+    * comment field / eg : use to form's label
     * @var string
     */
     public $comment = '';
