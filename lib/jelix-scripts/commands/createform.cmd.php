@@ -12,15 +12,17 @@
 class createformCommand extends JelixScriptCommand {
 
     public  $name = 'createform';
-    public  $allowed_options=array('-createlocales'=>false);
+    public  $allowed_options=array('-createlocales'=>false,'-usecomments'=>false);
     public  $allowed_parameters=array('module'=>true,'form'=>true, 'dao'=>false);
 
-    public  $syntaxhelp = "[-createlocales] MODULE FORM [DAO]";
+    public  $syntaxhelp = "[-createlocales] [-usecomments] MODULE FORM [DAO]";
     public  $help=array(
         'fr'=>"
     Crée un nouveau fichier jforms, soit vide, soit un formulaire à partir d'un fichier dao
 
     Si l'option -createlocales est présente, créé les fichiers locales avec les champs du formulaire
+
+    Si l'option -usecomments est présente, utilise les commentaires précisés sur chaque propriétés du DAO comme label
 
     MODULE: nom du module concerné.
     FORM : nom du formulaire.
@@ -30,6 +32,8 @@ class createformCommand extends JelixScriptCommand {
     Create a new jforms file, from a jdao file.
 
     If you give the -createlocales option, it will create the locales files with the form's values.
+
+    if you give the -usecomments option, it will use DAO's property comments like form's labels
 
     MODULE : module name where to create the form
     FORM : name of the form
@@ -158,12 +162,25 @@ class createformCommand extends JelixScriptCommand {
             if($datatype != '')
                 $attr.=' type="'.$datatype.'"';
 
-            if ($this->getOption('-createlocales')) {
-                $locale_content .= 'form.'.$name.'='. ucwords(str_replace('_',' ',$name))."\n";
-                $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+            // use database comment to create form's label
+            if($property->comment!='' && $this->getOption('-usecomments')) {
+                if ($this->getOption('-createlocales')) {
+                    // replace special chars by dot
+                    $locale_content .= 'form.'.$name.'='.htmlspecialchars(utf8_decode($property->comment))."\n";
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+                } else {
+                    // encoding special chars
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".htmlspecialchars($property->comment)."</label>\n</$tag>";
+                }
             } else {
-                $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".ucwords(str_replace('_',' ',$name))."</label>\n</$tag>";
+                if ($this->getOption('-createlocales')) {
+                    $locale_content .= 'form.'.$name.'='. ucwords(str_replace('_',' ',$name))."\n";
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label locale='".$locale_base.$name."' />\n</$tag>";
+                } else {
+                    $content.="\n\n<$tag ref=\"$name\"$attr>\n\t<label>".ucwords(str_replace('_',' ',$name))."</label>\n</$tag>";
+                }
             }
+
         }
 
         if ($this->getOption('-createlocales')) {
