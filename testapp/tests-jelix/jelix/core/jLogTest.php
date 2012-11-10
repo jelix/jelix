@@ -10,10 +10,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jLogTest extends PHPUnit_Framework_TestCase {
+class jLogTest extends jUnitTestCase {
 
     public function testLogFile(){
-        jelix_init_test_env();
+        self::initJelixConfig();
         $file = jApp::logPath('test.log');
         if(file_exists($file))
             file_put_contents($file,'');

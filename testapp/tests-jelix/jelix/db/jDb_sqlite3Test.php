@@ -12,7 +12,7 @@
 class jDb_sqlite3Test extends jUnitTestCase {
 
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     public function setUp (){
@@ -27,9 +27,7 @@ class jDb_sqlite3Test extends jUnitTestCase {
         if (!class_exists('SQLite3')) {
             $this->markTestSkipped(get_class($this).' cannot be run: sqlite3 extension is not installed');
         }
-    }
-
-    public function tearDown() {
+        parent::setUp();
     }
 
     function testTools(){

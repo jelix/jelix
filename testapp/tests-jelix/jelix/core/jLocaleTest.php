@@ -27,17 +27,19 @@ class jLocaleTest extends jUnitTestCase {
     protected $filePath;
 
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     function setUp() {
         jApp::saveContext();
         jApp::pushCurrentModule('jelix_tests');
         $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
+        parent::setUp();
     }
 
     function tearDown() {
         jApp::restoreContext();
+        parent::tearDown();
     }
 
     public function testBundleUnknownFile(){
