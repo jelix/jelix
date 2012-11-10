@@ -4,3 +4,4 @@ _dist/
 _dev/
 *.komodoproject
 .komodotools
+*.kdev4

@@ -1,9 +1,9 @@
 <?php
 
-class jLocaleLangCodeTest extends PHPUnit_Framework_TestCase {
+class jLocaleLangCodeTest extends jUnitTestCase {
 
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     protected $backupAvailableLocale;
@@ -14,12 +14,14 @@ class jLocaleLangCodeTest extends PHPUnit_Framework_TestCase {
         $this->backupLangToLocale = jApp::config()->langToLocale ;
         $this->backupAcceptedLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])?$_SERVER['HTTP_ACCEPT_LANGUAGE']:'';
         $this->backupAvailableLocale = jApp::config()->availableLocales ;
+        parent::setUp();
     }
 
     public function tearDown() {
         jApp::config()->langToLocale = $this->backupLangToLocale;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->backupAcceptedLanguage;
         jApp::config()->availableLocales = $this->backupAvailableLocale;
+        parent::tearDown();
     }
 
     function testLangToLocale() {
