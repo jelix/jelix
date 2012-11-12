@@ -127,26 +127,4 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
     }
-
-    protected function jsMenulist($ctrl) {
-
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jFormsDaoDatasource) {
-            $dependentControls = $ctrl->datasource->getDependentControls();
-            if ($dependentControls) {
-                $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
-                $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
-            }
-        }
-
-        $this->commonJs($ctrl);
-    }
-
-    protected function jsWikieditor($ctrl) {
-        $this->jsTextarea($ctrl);
-        $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
-    }
-
 }
