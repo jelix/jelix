@@ -350,7 +350,7 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 cd testapp/tests-jelix/jelix/prefs/
-  jPrefTests.php
+  jPrefTest.php
 cd testapp/tests-jelix/jelix/utils/
   jDateTimeTest.php
   jFilterTest.php
