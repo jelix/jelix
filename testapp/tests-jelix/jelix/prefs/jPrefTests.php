@@ -1,13 +1,14 @@
 <?php
 
 
-class jpref_main_apiTest extends PHPUnit_Framework_TestCase{
-    
+class jPrefTest extends jUnitTestCase {
+
     /**
      * @covers jPref::set
      * @covers jPref::get
      */
     public function testJPref(){
+        $this->initJelixConfig();
         $testArray = array();
         $testArray[] = array('value' => false, 'key' => 'my.bool.value');
         $testArray[] = array('value' => 123, 'key' => 'my.int.value');
