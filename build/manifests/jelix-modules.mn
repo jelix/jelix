@@ -241,4 +241,19 @@ cd lib/jelix-modules/jsoap/responses
 cd lib/jelix-modules/jsoap/templates
   soap_doc.tpl
 
+cd lib/jelix-modules/jpref
+  module.xml
+cd lib/jelix-modules/jpref/classes/
+  jPref.php
+  jPrefItem.php
+  jPrefItemGroup.php
+  jPrefManager.php
+cd lib/jelix-modules/jpref/locales/en_US
+cch prefs.UTF-8.properties(prefs.%charset%.properties)
+cd lib/jelix-modules/jpref/locales/en_EN
+cch prefs.UTF-8.properties(prefs.%charset%.properties)
+cd lib/jelix-modules/jpref/locales/fr_FR
+cch prefs.UTF-8.properties(prefs.%charset%.properties)
+
+
 cd lib/jelix-plugins
