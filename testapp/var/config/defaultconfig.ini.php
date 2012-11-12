@@ -29,7 +29,7 @@ jacl2.access = 1
 jacl2db.access = 1
 jauthdb.access = 1
 jauth.access = 1
-
+jpref.access=1
 
 [coordplugins]
 auth = auth.coord.ini.php
