@@ -3,22 +3,16 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin
+* @contributor Julien Issler, Dominique Papin, Claudio Bernardes
 * @copyright   2006-2012 Laurent Jouanneau
-* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-/**
- *
- */
-require(JELIX_LIB_PATH.'forms/jFormsHtmlWidgetBuilder.class.php');
 
 /**
- * HTML form builder
- * @package     jelix
- * @subpackage  jelix-plugins
+ * Main HTML form builder
  */
 class jFormsBuilderHtml extends jFormsBuilderBase {
     protected $formType = '_html';

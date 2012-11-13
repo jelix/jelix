@@ -3,9 +3,9 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin
+* @contributor Loic Mathaud, Dominique Papin, Claudio Bernardes
 * @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
-* @copyright   2007 Loic Mathaud
+* @copyright   2007 Loic Mathaud, 2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
