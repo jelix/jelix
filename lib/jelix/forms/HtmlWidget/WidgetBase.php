@@ -14,19 +14,29 @@
 namespace jelix\forms\HtmlWidget;
 
 abstract class WidgetBase {
+
     /**
      * The form builder
+     * @var \jelix\forms\Builder\HtmlBuilder
      */
     protected $builder;
 
     /**
+     * the parent widget
+     * @var \jelix\forms\HtmlWidget\ParentWidgetInterface
+     */
+    protected $parentWidget;
+
+    /**
      * The control
+     * @var jControl
      */
     protected $ctrl;
 
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
+        $this->parentWidget = $args[2];
     }
     
     /**

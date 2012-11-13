@@ -16,13 +16,25 @@ namespace jelix\forms\Builder;
  * Main HTML form builder
  */
 class HtmlBuilder extends BuilderBase {
-    protected $formType = '_html';
+    protected $formType = 'html';
 
     protected $jFormsJsVarName = 'jForms';
+
+    /**
+     * @var \jelix\forms\HtmlWidget\RootWidget
+     */
+    protected $rootWidget;
 
     protected $options;
 
     public $isRootControl = true;
+
+    public function __construct($form){
+        parent::__construct($form);
+        $this->rootWidget = jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
+        if (!$this->rootWidget)
+            throw new Exception ("Unknown root widget plugin ".$this->formType);
+    }
 
     public function getjFormsJsVarName() {
         return $this->jFormsJsVarName;
@@ -217,12 +229,10 @@ class HtmlBuilder extends BuilderBase {
         echo '</form>';
     }
 
-    public function getWidget($ctrl, $builder = null) {
-        $pluginName = $ctrl->type . $this->formType;
+    public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
+        $pluginName = $ctrl->type . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
-        if ($builder === null)
-            $builder = $this;
-        $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $builder));
+        $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         return $plugin;
     }
 
