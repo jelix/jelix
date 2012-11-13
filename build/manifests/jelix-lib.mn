@@ -282,16 +282,26 @@ cd lib/jelix/events
 cd lib/jelix/forms
   jForms.class.php
   jFormsBase.class.php
-  jFormsBuilderBase.class.php
-  jFormsBuilderHtml.class.php
   jFormsCompiler.class.php
   jFormsCompiler_jf_1_0.class.php
   jFormsCompiler_jf_1_1.class.php
 * jFormsControl.class.php
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
-  jFormsHtmlWidgetBuilder.class.php
 
+cd lib/jelix/forms/Builder
+  BuilderBase.php
+  HtmlBuilder.php
+
+cd lib/jelix/forms/HtmlWidget
+  ParentWidgetInterface.php
+  RootWidget.php
+  WidgetBase.php
+  WidgetInterface.php
+
+cd lib/jelix/forms/legacy
+  jFormsBuilderBase.class.php
+  jFormsBuilderHtml.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/forms/controls
@@ -500,6 +510,9 @@ cd lib/jelix/plugins/debugbar/defaultlog
 cd lib/jelix/plugins/debugbar/soaplog
 * soaplog.debugbar.php
 
+cd lib/jelix/plugins/formbuilder/html
+  html.formbuilder.php
+
 cd lib/jelix/plugins/formwidget/button_html
   button_html.formwidget.php
   
@@ -523,6 +536,9 @@ cd lib/jelix/plugins/formwidget/datetime_html
 
 cd lib/jelix/plugins/formwidget/group_html
   group_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/html
+  html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/htmleditor_html
   htmleditor_html.formwidget.php
