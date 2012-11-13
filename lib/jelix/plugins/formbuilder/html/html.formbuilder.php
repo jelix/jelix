@@ -82,30 +82,5 @@ class htmlFormsBuilder extends \jelix\forms\Builder\HtmlBuilder {
         }
     }
 
-    protected function commonJs($ctrl) {
 
-        if($ctrl->required){
-            $this->jsContent .="c.required = true;\n";
-            if($ctrl->alertRequired){
-                $this->jsContent .="c.errRequired=".$this->escJsStr($ctrl->alertRequired).";\n";
-            }
-            else {
-                $this->jsContent .="c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $ctrl->label)).";\n";
-            }
-        }
-
-        if($ctrl->alertInvalid){
-            $this->jsContent .="c.errInvalid=".$this->escJsStr($ctrl->alertInvalid).";\n";
-        }
-        else {
-            $this->jsContent .="c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label)).";\n";
-        }
-
-        if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
-            $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
-        }
-
-        if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
-    }
 }

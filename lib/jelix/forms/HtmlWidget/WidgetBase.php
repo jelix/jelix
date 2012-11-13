@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
-* @copyright   2006-2011 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
 * @copyright   2012 Claudio Bernardes
 * @link        http://www.jelix.org
@@ -13,7 +13,7 @@
 
 namespace jelix\forms\HtmlWidget;
 
-abstract class WidgetBase {
+abstract class WidgetBase implements WidgetInterface {
 
     /**
      * The form builder
@@ -56,7 +56,7 @@ abstract class WidgetBase {
     /**
      * Get the control class
      */
-    protected function getClass() {
+    protected function getCSSClass() {
         $ro = $this->ctrl->isReadOnly();
 
         $class = 'jforms-ctrl-'.$this->ctrl->type;
@@ -98,12 +98,12 @@ abstract class WidgetBase {
 
         $attr['name'] = $this->getName();
         $attr['id'] = $this->getId();
-        $attr['class'] = $this->getClass();
+        $attr['class'] = $this->getCSSClass();
 
         return $attr;
     }
     
-    protected function commonJS() {
+    protected function commonJs() {
         $jsContent = '';
         
         if($this->ctrl->required){
@@ -125,7 +125,7 @@ abstract class WidgetBase {
 
         if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
 
-        $this->builder->jsContent .= $jsContent;
+        $this->parentWidget->addJs($jsContent);
     }
     
     protected function escJsStr($str) {
@@ -171,18 +171,9 @@ abstract class WidgetBase {
         }
     }
 
-    
-    /**
-     * Returns the list of JS and CSS to link to the page
-     */
-    public function getHeader() { }
-
-    abstract function outputJs();
-
     abstract function outputControl();
-    
-    
-    //Temporaty function
+
+    //Temporary function
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());
         if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {

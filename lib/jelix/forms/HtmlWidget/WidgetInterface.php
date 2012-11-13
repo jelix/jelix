@@ -15,7 +15,13 @@ namespace jelix\forms\HtmlWidget;
  */
 interface WidgetInterface {
 
-    public function __construct(\jelix\forms\Builder\HtmlBuilder $mainBuilder, ParentBuilderInterface $parentBuilder);
+    /*
+     * @param array $args array containing:
+     *    jFormsControl,
+     *    \jelix\forms\Builder\HtmlBuilder,
+     *    \jelix\forms\HtmlWidget\ParentBuilderInterface,
+     */
+    public function __construct($args);
 
     /**
      * return the id of the HTML element

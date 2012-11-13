@@ -83,26 +83,27 @@ c2.addControl(c, 'choice4');
 c2.activate(''); 
 */
  
-class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
-        $value = $this->getValue($this->ctrl);
+class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+                            implements \jelix\forms\HtmlWidget\ParentWidgetInterface {
 
-        if(is_array($value)){
-            if(isset($value[0]))
-                $value = $value[0];
-            else
-                $value='';
-        }
-        
-        $this->builder->jsContent .= "c2.activate('".$value."');\n";
+    //------ ParentBuilderInterface
+
+    function addJs($js) {
+        $this->parentWidget->addJs($js);
     }
 
+    function addFinalJs($js) {
+        $this->parentWidget->addFinalJs($js);
+    }
+
+    // -------- WidgetInterface
+
     protected function jsChoiceInternal($ctrl) {
-        $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlChoice('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlChoice('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
         $this->commonJs($ctrl);
+        $this->parentWidget->addJs("c2 = c;\n");
     }
 
     function outputControl() {
@@ -127,7 +128,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $readonly = (isset($attr['readonly']) && $attr['readonly']!='');
 
         $this->jsChoiceInternal($ctrl);
-        $this->builder->jsContent .="c2 = c;\n";
 
         $this->isRootControl = false;
         foreach( $ctrl->items as $itemName=>$listctrl){
@@ -147,16 +147,17 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $displayedControls = false;
             foreach($listctrl as $ref=>$c) {
                 if(!$this->builder->getForm()->isActivated($ref) || $c->type == 'hidden') continue;
+                $widget = $this->builder->getWidget($c, $this);
                 $displayedControls = true;
                 echo ' <span class="jforms-item-controls">';
-                $this->builder->outputControlLabel($c);
+                $widget->outputLabel();
                 echo ' ';
-                $this->builder->outputControl($c);
+                $widget->outputControl();
                 echo "</span>\n";
-                $this->builder->jsContent .="c2.addControl(c, ".$this->escJsStr($itemName).");\n";
+                $this->parentWidget->addJs("c2.addControl(c, ".$this->escJsStr($itemName).");\n");
             }
             if(!$displayedControls) {
-                $this->builder->jsContent .="c2.items[".$this->escJsStr($itemName)."]=[];\n";
+                $this->parentWidget->addJs("c2.items[".$this->escJsStr($itemName)."]=[];\n");
             }
 
             echo "</li>\n";
@@ -164,6 +165,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         }
         echo "</ul>\n";
         $this->isRootControl = true;
+        $this->parentWidget->addJs("c2.activate('".$value."');\n");
     }
 
 }
