@@ -24,5 +24,25 @@ class RootWidget implements ParentWidgetInterface {
     }
 
     //------ Other methods
+    public function outputHeader($builder) {
+        $jsVarName = $builder->getjFormsJsVarName();
+        echo '<script type="text/javascript">
+//<![CDATA[
+'.$jsVarName.'.tForm = new jFormsForm(\''.$builder->getName().'\');
+'.$jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator').'());
+'.$jsVarName.'.declareForm(jForms.tForm);
+//]]>
+</script>';
+    }
+
+    public function outputFooter() {
+        echo '<script type="text/javascript">
+//<![CDATA[
+(function(){var c, c2;
+'.$this->js.$this->finalJs.'
+})();
+//]]>
+</script>';
+    }
 }
 

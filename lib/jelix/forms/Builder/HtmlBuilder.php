@@ -43,7 +43,13 @@ class HtmlBuilder extends BuilderBase {
     public function getIsRootControl() {
         return $this->isRootControl;
     }
-    
+
+    public function getOption($name) {
+        if (isset($this->options[$name]))
+            return $this->options[$name];
+        return null;
+    }
+
     public function outputAllControls() {
 
         echo '<table class="jforms-table" border="0">';
@@ -112,16 +118,6 @@ class HtmlBuilder extends BuilderBase {
         }
     }
 
-    protected function outputHeaderScript(){
-                echo '<script type="text/javascript">
-//<![CDATA[
-'.$this->jFormsJsVarName.'.tForm = new jFormsForm(\''.$this->_name.'\');
-'.$this->jFormsJsVarName.'.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
-'.$this->jFormsJsVarName.'.declareForm(jForms.tForm);
-//]]>
-</script>';
-    }
-
     /**
      * output the header content of the form
      * @param array $params some parameters <ul>
@@ -155,7 +151,7 @@ class HtmlBuilder extends BuilderBase {
         $this->_outputAttr($attrs);
         echo '>';
 
-        $this->outputHeaderScript();
+        $this->rootWidget->outputHeader($this);
 
         $hiddens = '';
         foreach ($urlParams as $p_name => $p_value) {
@@ -214,18 +210,8 @@ class HtmlBuilder extends BuilderBase {
         }
     }
 
-    public $jsContent = '';
-
-    public $lastJsContent = '';
-
     public function outputFooter(){
-        echo '<script type="text/javascript">
-//<![CDATA[
-(function(){var c, c2;
-'.$this->jsContent.$this->lastJsContent.'
-})();
-//]]>
-</script>';
+        $this->rootWidget->outputFooter($this);
         echo '</form>';
     }
 
@@ -233,27 +219,20 @@ class HtmlBuilder extends BuilderBase {
         $pluginName = $ctrl->type . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
+        if (!$plugin)
+            throw new Exception('Widget '.$pluginName.' not found');
         return $plugin;
     }
 
     public function outputControlLabel($ctrl){
-        $plugin = $this->getWidget($ctrl);
-        if (!is_null($plugin)) {
-            $plugin->outputLabel();
-        } else {
-            //Throw error
-        }
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->outputLabel();
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        $plugin = $this->getWidget($ctrl);
-        if (!is_null($plugin)) {
-            $plugin->outputControl();
-            $plugin->outputHelp();
-            $plugin->outputJs();
-        } else {
-            //Throw error
-        }
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->outputControl();
+        $widget->outputHelp();
     }
 
     protected function _outputAttr(&$attributes) {
@@ -262,7 +241,7 @@ class HtmlBuilder extends BuilderBase {
         }
     }
 
-    protected function escJsStr($str) {
+    public function escJsStr($str) {
         return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
     }
 }

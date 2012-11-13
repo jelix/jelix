@@ -11,7 +11,20 @@
 
 class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget {
     
-    
-    
-    
+    public function outputHeader($builder) {
+        $conf = jApp::config()->urlengine;
+        // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
+        echo '<script type="text/javascript">
+//<![CDATA[
+jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
+jFormsJQ.config = {locale:'.$this->escJsStr(jApp::config()->locale).
+    ',basePath:'.$builder->escJsStr($conf['basePath']).
+    ',jqueryPath:'.$builder->escJsStr($conf['jqueryPath']).
+    ',jelixWWWPath:'.$builder->escJsStr($conf['jelixWWWPath']).'};
+jFormsJQ.tForm = new jFormsJQForm(\''.$builder->getName().'\',\''.$builder->getForm()->getSelector().'\',\''.$builder->getForm()->getContainer()->formId.'\');
+jFormsJQ.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator').'());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+//]]>
+</script>';
+    }
 }

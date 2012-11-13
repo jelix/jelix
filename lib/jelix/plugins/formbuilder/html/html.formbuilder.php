@@ -82,23 +82,6 @@ class htmlFormsBuilder extends \jelix\forms\Builder\HtmlBuilder {
         }
     }
 
-    protected function outputHeaderScript(){
-        $conf = jApp::config()->urlengine;
-        // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
-        echo '<script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
-jFormsJQ.config = {locale:'.$this->escJsStr(jApp::config()->locale).
-    ',basePath:'.$this->escJsStr($conf['basePath']).
-    ',jqueryPath:'.$this->escJsStr($conf['jqueryPath']).
-    ',jelixWWWPath:'.$this->escJsStr($conf['jelixWWWPath']).'};
-jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\',\''.$this->_form->getSelector().'\',\''.$this->_form->getContainer()->formId.'\');
-jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script>';
-    }
-
     protected function commonJs($ctrl) {
 
         if($ctrl->required){
@@ -125,26 +108,4 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
     }
-
-    protected function jsMenulist($ctrl) {
-
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jFormsDaoDatasource) {
-            $dependentControls = $ctrl->datasource->getDependentControls();
-            if ($dependentControls) {
-                $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
-                $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
-            }
-        }
-
-        $this->commonJs($ctrl);
-    }
-
-    protected function jsWikieditor($ctrl) {
-        $this->jsTextarea($ctrl);
-        $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
-    }
-
 }
