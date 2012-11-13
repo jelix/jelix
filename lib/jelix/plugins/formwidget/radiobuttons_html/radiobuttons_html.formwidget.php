@@ -18,11 +18,11 @@
  */
 
 class radiobuttons_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n";
-        
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
+
         $this->commonJs($this->ctrl);
     }
     
@@ -42,5 +42,7 @@ class radiobuttons_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $value = (string) $value;
         $span ='<span class="jforms-radio jforms-ctl-'.$this->ctrl->ref.'"><input type="radio"';
         $this->showRadioCheck($this->ctrl, $attr, $value, $span);
+        $this->outputJs();
+
     }
 }

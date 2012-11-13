@@ -18,7 +18,7 @@
  */
 
 class textarea_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
@@ -32,7 +32,7 @@ class textarea_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
 
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
     }
 
@@ -48,5 +48,6 @@ class textarea_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<textarea';
         $this->_outputAttr($attr);
         echo '>',htmlspecialchars($value),'</textarea>';
+        $this->outputJs();
     }
 }

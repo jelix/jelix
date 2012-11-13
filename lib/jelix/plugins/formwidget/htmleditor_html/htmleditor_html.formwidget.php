@@ -18,7 +18,7 @@
  */
 
 class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -33,11 +33,11 @@ class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
 
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
 
         $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
-        $this->builder->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n";
+        $this->parentWidget->addJs('jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n");
     }
 
     function outputControl() {
@@ -52,5 +52,6 @@ class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<textarea';
         $this->_outputAttr($attr);
         echo '>',htmlspecialchars($value),'</textarea>';
+        $this->outputJs();
     }
 }

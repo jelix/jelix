@@ -18,7 +18,6 @@
  */
 
 class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() { /* no JS */ }
 
     function outputControl() {
         $attr = $this->getControlAttributes();

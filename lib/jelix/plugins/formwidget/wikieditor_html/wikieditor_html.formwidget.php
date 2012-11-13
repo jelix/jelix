@@ -18,7 +18,7 @@
  */
 
 class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -32,12 +32,12 @@ class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
 
         $this->commonJs($ctrl);
 
         $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $this->builder->jsContent .= '$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
+        $this->parentWidget->addJs('$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n");
     }
 
     function outputControl() {
@@ -52,5 +52,6 @@ class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<textarea';
         $this->_outputAttr($attr);
         echo '>',htmlspecialchars($value),'</textarea>';
+        $this->outputJs();
     }
 }

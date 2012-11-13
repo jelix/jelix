@@ -16,10 +16,20 @@
  * @subpackage  jelix-plugins
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
+class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+                            implements \jelix\forms\HtmlWidget\ParentWidgetInterface {
 
-class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() { /* no js */ }
-    
+    //------ ParentBuilderInterface
+
+    function addJs($js) {
+        $this->parentWidget->addJs($js);
+    }
+
+    function addFinalJs($js) {
+        $this->parentWidget->addFinalJs($js);
+    }
+
+    //------- WidgetInterface
     function outputControl() {
         $attr = $this->getControlAttributes();
 
@@ -28,10 +38,11 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         foreach( $this->ctrl->getChildControls() as $ctrlref=>$c){
             if($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') continue;
             if(!$this->builder->getForm()->isActivated($ctrlref)) continue;
+            $widget = $this->builder->getWidget($c, $this);
             echo '<tr><th scope="row">';
-            $this->builder->outputControlLabel($c);
+            $widget->outputLabel();
             echo "</th>\n<td>";
-            $this->builder->outputControl($c);
+            $widget->outputControl();
             echo "</td></tr>\n";
         }
         echo "</table></fieldset>";

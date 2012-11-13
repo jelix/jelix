@@ -18,11 +18,11 @@
  */
 
 class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n");
         $this->commonJs($ctrl);
     }
     
@@ -43,5 +43,6 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $value = (string) $value;
         }
         $this->showRadioCheck($this->ctrl, $attr, $value, $span);
+        $this->outputJs();
     }
 }

@@ -18,7 +18,7 @@
  */
 
 class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
@@ -36,7 +36,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $js .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }
 
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
     }
 
@@ -77,6 +77,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             else
                 echo ' ';
         }
+        $this->outputJs();
     }
     
     protected function _outputDateControlDay($ctrl, $attr, $value){

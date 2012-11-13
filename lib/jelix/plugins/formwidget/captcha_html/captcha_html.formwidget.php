@@ -18,7 +18,7 @@
  */
 
 class captcha_htmlFormWidget extends  \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
@@ -31,7 +31,7 @@ class captcha_htmlFormWidget extends  \jelix\forms\HtmlWidget\WidgetBase {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
 
         $this->commonJs($ctrl);
     }
@@ -48,5 +48,6 @@ class captcha_htmlFormWidget extends  \jelix\forms\HtmlWidget\WidgetBase {
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';
+        $this->outputJs();
     }
 }

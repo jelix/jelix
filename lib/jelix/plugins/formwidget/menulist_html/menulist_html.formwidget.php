@@ -18,17 +18,17 @@
  */
 
 class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
         if ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jFormsDaoDatasource) {
             $dependentControls = $ctrl->datasource->getDependentControls();
             if ($dependentControls) {
-                $this->builder->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
-                $this->builder->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
+                $this->parentWidget->addJs("c.dependencies = ['".implode("','",$dependentControls)."'];\n");
+                $this->parentWidget->addFinalJs("jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n");
             }
         }
         $this->commonJs($ctrl);
@@ -54,5 +54,6 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($this->ctrl->emptyItemLabel),"</option>\n";
         $this->fillSelect($this->ctrl, $value);
         echo '</select>';
+        $this->outputJs();
     }
 }

@@ -18,11 +18,11 @@
  */
 
 class upload_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
-        $this->builder->jsContent .="c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
         $this->commonJs($ctrl);
     }
 
@@ -37,5 +37,6 @@ class upload_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';
+        $this->outputJs();
     }
 }

@@ -18,7 +18,7 @@
  */
 
 class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $js = '';
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -29,7 +29,7 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         } else {
             $js .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
     }
     
@@ -77,6 +77,6 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $this->fillSelect($ctrl, $value);
             echo '</select>';
         }
-
+        $this->outputJs();
     }
 }

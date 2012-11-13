@@ -18,7 +18,7 @@
  */
 
 class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
 
         $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
@@ -53,7 +53,7 @@ class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         if($re !== null)
             $js .="c.regexp = ".$re.";\n";
 
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
     }
 
@@ -71,5 +71,6 @@ class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';
+        $this->outputJs();
     }
 }

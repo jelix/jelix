@@ -18,7 +18,7 @@
  */
 
 class secret_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    function outputJs() {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
@@ -35,7 +35,7 @@ class secret_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         if($re !== null)
             $js .="c.regexp = ".$re.";\n";
 
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
         $this->commonJs($ctrl);
     }
 
@@ -52,5 +52,6 @@ class secret_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo '<input';
         $this->_outputAttr($attr);
         echo '/>';
+        $this->outputJs();
     }
 }
