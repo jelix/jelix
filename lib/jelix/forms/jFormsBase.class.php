@@ -681,7 +681,7 @@ abstract class jFormsBase {
         if(isset($this->builders[$buildertype]))
             return $this->builders[$buildertype];
 
-        include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
+        include_once(JELIX_LIB_PATH.'forms/legacy/jFormsBuilderBase.class.php');
         $o = jApp::loadPlugin($buildertype, 'jforms', '.jformsbuilder.php', $buildertype.'JformsBuilder', $this);
         if ($o) {
             $this->builders[$buildertype] = $o;
