@@ -34,7 +34,7 @@ class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $js .="c.minLength = '$minl';\n";
 
         $this->parentWidget->addJs($js);
-        $this->commonJs($ctrl);
+        $this->commonJs();
 
         $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
         $this->parentWidget->addJs('jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n");

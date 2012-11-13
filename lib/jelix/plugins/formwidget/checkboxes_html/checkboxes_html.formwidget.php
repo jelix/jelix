@@ -18,12 +18,12 @@
  */
 
 class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    protected function outputJs() {
-        $ctrl = $this->ctrl;
+
+    protected function outputJs($refName) {
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n");
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$refName."', ".$this->escJsStr($this->ctrl->label).");\n");
+        $this->commonJs();
     }
     
     function outputControl() {
@@ -42,7 +42,42 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         else {
             $value = (string) $value;
         }
-        $this->showRadioCheck($this->ctrl, $attr, $value, $span);
-        $this->outputJs();
+        $this->showRadioCheck($attr, $value, $span);
+        $this->outputJs($this->ctrl->ref."[]");
+    }
+
+    protected function showRadioCheck(&$attr, &$value, $span) {
+        $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
+        $i=0;
+        $data = $this->ctrl->datasource->getData($this->builder->getForm());
+        if ($this->ctrl->datasource instanceof \jIFormsDatasource2 && $this->ctrl->datasource->hasGroupedData()) {
+            if (isset($data[''])) {
+                $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
+            }
+            foreach($data as $group=>$values){
+                if ($group === '')
+                    continue;
+                echo '<fieldset><legend>'.htmlspecialchars($group).'</legend>'."\n";
+                $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
+                echo "</fieldset>\n";
+            }
+            echo "\n";
+        }else{
+            $this->echoCheckboxes($span, $id, $data, $attr, $value, $i);
+            echo "\n";
+        }
+    }
+
+    protected function echoCheckboxes($span, $id, &$values, &$attr, &$value, &$i) {
+        foreach($values as $v=>$label){
+            $attr['id'] = $id.$i;
+            $attr['value'] = $v;
+            echo $span;
+            $this->_outputAttr($attr);
+            if((is_array($value) && in_array((string) $v,$value,true)) || ($value === (string) $v))
+                echo ' checked="checked"';
+            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+            $i++;
+        }
     }
 }

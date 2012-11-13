@@ -62,7 +62,7 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * Get the control class
      */
-    public function getCSSClass() {
+    protected function getCSSClass() {
         $ro = $this->ctrl->isReadOnly();
 
         if (isset($this->attributes['class']))
@@ -191,7 +191,6 @@ abstract class WidgetBase implements WidgetInterface {
 
     abstract function outputControl();
 
-    //Temporary function
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());
         if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
@@ -226,41 +225,6 @@ abstract class WidgetBase implements WidgetInterface {
                         $selected = ((string) $v===$value);
                 echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
             }
-        }
-    }
-
-    protected function showRadioCheck($ctrl, &$attr, &$value, $span) {
-        $id = $this->builder->getName().'_'.$ctrl->ref.'_';
-        $i=0;
-        $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
-            if (isset($data[''])) {
-                $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
-            }
-            foreach($data as $group=>$values){
-                if ($group === '')
-                    continue;
-                echo '<fieldset><legend>'.htmlspecialchars($group).'</legend>'."\n";
-                $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
-                echo "</fieldset>\n";
-            }
-            echo "\n";
-        }else{
-            $this->echoCheckboxes($span, $id, $data, $attr, $value, $i);
-            echo "\n";
-        }
-    }
-
-    protected function echoCheckboxes($span, $id, &$values, &$attr, &$value, &$i) {
-        foreach($values as $v=>$label){
-            $attr['id'] = $id.$i;
-            $attr['value'] = $v;
-            echo $span;
-            $this->_outputAttr($attr);
-            if((is_array($value) && in_array((string) $v,$value,true)) || ($value === (string) $v))
-                echo ' checked="checked"';
-            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
-            $i++;
         }
     }
 }

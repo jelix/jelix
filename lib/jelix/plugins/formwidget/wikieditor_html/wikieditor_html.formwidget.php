@@ -34,7 +34,7 @@ class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $js .="c.minLength = '$minl';\n";
         $this->parentWidget->addJs($js);
 
-        $this->commonJs($ctrl);
+        $this->commonJs();
 
         $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
         $this->parentWidget->addJs('$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n");

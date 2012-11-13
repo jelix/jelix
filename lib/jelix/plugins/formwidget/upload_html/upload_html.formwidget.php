@@ -23,7 +23,7 @@ class upload_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
         $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {

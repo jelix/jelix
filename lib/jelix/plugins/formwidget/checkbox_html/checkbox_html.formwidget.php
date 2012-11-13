@@ -21,7 +21,7 @@ class checkbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     protected function outputJs() {
         $js = "c = new ".$this->builder->getjFormsJsVarName()."ControlBoolean('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n";
         $this->parentWidget->addJs($js);
-        $this->commonJs($this->ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {

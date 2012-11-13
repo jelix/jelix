@@ -31,7 +31,7 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
                 $this->parentWidget->addFinalJs("jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n");
             }
         }
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {

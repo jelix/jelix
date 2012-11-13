@@ -33,7 +33,7 @@ class captcha_htmlFormWidget extends  \jelix\forms\HtmlWidget\WidgetBase {
             $js .="c.minLength = '$minl';\n";
         $this->parentWidget->addJs($js);
 
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {

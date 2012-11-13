@@ -10,6 +10,8 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+require_once(__DIR__.'/../checkboxes_html/checkboxes_html.formwidget.php');
+
 /**
  * HTML form builder
  * @package     jelix
@@ -17,15 +19,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class radiobuttons_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    protected function outputJs() {
-        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
+class radiobuttons_htmlFormWidget extends checkboxes_htmlFormWidget {
 
-        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
-
-        $this->commonJs($this->ctrl);
-    }
-    
     function outputControl() {
         $attr = $this->getControlAttributes();
         $value = $this->getValue($this->ctrl);
@@ -41,8 +36,8 @@ class radiobuttons_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         }
         $value = (string) $value;
         $span ='<span class="jforms-radio jforms-ctl-'.$this->ctrl->ref.'"><input type="radio"';
-        $this->showRadioCheck($this->ctrl, $attr, $value, $span);
-        $this->outputJs();
+        $this->showRadioCheck($attr, $value, $span);
+        $this->outputJs($this->ctrl->ref);
 
     }
 }

@@ -34,11 +34,6 @@ interface WidgetInterface {
     public function getName();
 
     /**
-     * return the CSS class of the HTML element
-     */
-    public function getCSSClass();
-    
-    /**
      * return the value of the HTML element
      */
     public function getValue();

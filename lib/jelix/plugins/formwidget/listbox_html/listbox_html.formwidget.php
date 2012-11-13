@@ -30,7 +30,7 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $js .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
         $this->parentWidget->addJs($js);
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
     
     function outputControl() {

@@ -37,7 +37,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         }
 
         $this->parentWidget->addJs($js);
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {
