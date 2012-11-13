@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class textarea_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class textarea_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

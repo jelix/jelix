@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();

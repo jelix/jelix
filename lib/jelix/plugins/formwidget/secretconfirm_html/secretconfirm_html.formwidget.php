@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class secretconfirm_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class secretconfirm_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

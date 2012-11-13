@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class button_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class button_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputControl() {
         $attr = $this->getControlAttributes();
         

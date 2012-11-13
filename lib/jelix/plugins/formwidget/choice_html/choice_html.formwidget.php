@@ -83,7 +83,7 @@ c2.addControl(c, 'choice4');
 c2.activate(''); 
 */
  
-class choice_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() {
         $value = $this->getValue($this->ctrl);
 

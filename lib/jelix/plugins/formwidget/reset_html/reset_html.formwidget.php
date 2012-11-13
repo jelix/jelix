@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class reset_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class reset_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() { /* no JS */ }
 
     function outputControl() {

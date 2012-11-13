@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class group_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() { /* no js */ }
     
     function outputControl() {

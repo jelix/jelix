@@ -17,7 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class checkbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
+class checkbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputJs() {
         $js = "c = new ".$this->builder->getjFormsJsVarName()."ControlBoolean('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n";
         $this->builder->jsContent .= $js;
