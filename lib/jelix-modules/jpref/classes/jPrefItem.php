@@ -56,7 +56,7 @@ class jPrefItem{
             if(in_array($node['type'], self::$allowed_types))
                 $this->type = $node['type'];
             else
-                throw new jException('jelix~prefs.type.not.allowed', array($node['type'], implode(',',self::$allowed_types)));
+                throw new jException('jpref~prefs.type.not.allowed', array($node['type'], implode(',',self::$allowed_types)));
         }
 
         if(!empty($node['locale']))

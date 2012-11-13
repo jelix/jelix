@@ -164,7 +164,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/locales/en_EN
 cch auth.UTF-8.properties(auth.%charset%.properties)
@@ -183,7 +182,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/locales/fr_FR
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
@@ -202,7 +200,6 @@ cch formserr.UTF-8.properties(formserr.%charset%.properties)
 cch jelix.UTF-8.properties(jelix.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/templates
   403.html.tpl
@@ -348,12 +345,6 @@ cd lib/jelix/installer
 cd lib/jelix/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
-
-cd lib/jelix/pref
-  jPref.class.php
-  jPrefItem.class.php
-  jPrefItemGroup.class.php
-  jPrefManager.class.php
 
 cd lib/jelix/tpl/
 *  jTpl.class.php
