@@ -43,7 +43,7 @@ interface WidgetInterface {
      */
     public function getValue();
 
-    public function outputMeta();
+    //public function outputMeta();
 
     /**
      * displays the help of the form field

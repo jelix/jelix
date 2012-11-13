@@ -31,7 +31,7 @@ class HtmlBuilder extends BuilderBase {
         parent::__construct($form);
         $this->rootWidget = jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
         if (!$this->rootWidget)
-            throw new Exception ("Unknown root widget plugin ".$this->formType);
+            throw new \Exception ("Unknown root widget plugin ".$this->formType);
     }
 
     public function getjFormsJsVarName() {
@@ -214,7 +214,7 @@ class HtmlBuilder extends BuilderBase {
         $className = $pluginName . 'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin)
-            throw new Exception('Widget '.$pluginName.' not found');
+            throw new \Exception('Widget '.$pluginName.' not found');
         return $plugin;
     }
 

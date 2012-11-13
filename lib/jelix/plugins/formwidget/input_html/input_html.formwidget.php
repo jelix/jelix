@@ -70,7 +70,7 @@ class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
 
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
         $this->outputJs();
     }
 }

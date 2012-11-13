@@ -17,7 +17,7 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget {
         echo '<script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
-jFormsJQ.config = {locale:'.$this->escJsStr(jApp::config()->locale).
+jFormsJQ.config = {locale:'.$builder->escJsStr(jApp::config()->locale).
     ',basePath:'.$builder->escJsStr($conf['basePath']).
     ',jqueryPath:'.$builder->escJsStr($conf['jqueryPath']).
     ',jelixWWWPath:'.$builder->escJsStr($conf['jelixWWWPath']).'};

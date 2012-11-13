@@ -42,21 +42,21 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * Get the control id
      */
-    protected function getId() {
+    public function getId() {
         return $this->builder->getName().'_'.$this->ctrl->ref;
     }
 
     /**
      * Get the control name
      */
-    protected function getName() {
+    public function getName() {
         return $this->ctrl->ref;
     }
 
     /**
      * Get the control class
      */
-    protected function getCSSClass() {
+    public function getCSSClass() {
         $ro = $this->ctrl->isReadOnly();
 
         $class = 'jforms-ctrl-'.$this->ctrl->type;
@@ -67,8 +67,8 @@ abstract class WidgetBase implements WidgetInterface {
         return $class;
     }
 
-    protected function getValue($ctrl) {
-        return $this->builder->getForm()->getData($ctrl->ref);
+    public function getValue() {
+        return $this->builder->getForm()->getData($this->ctrl->ref);
     }
     
     /**
