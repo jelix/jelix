@@ -98,9 +98,8 @@ class UTjDbMysqli extends jUnitTestCaseDb {
         $this->assertTableHasNRecords('labels_test', 3);
         $stmt = null;
 
-
         //SELECT
-        $stmt = $cnx->prepare('SELECT * FROM labels_test WHERE lang = ?');
+        $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = ? ORDER BY `key` asc');
         $this->assertTrue($stmt instanceof mysqliDbStatement);
         $lang = 'fr';
         $bind = $stmt->bindParam('s', $lang);
@@ -109,6 +108,11 @@ class UTjDbMysqli extends jUnitTestCaseDb {
         $res = $stmt->execute();
         $this->assertTrue($res instanceof mysqliDbResultSet);
         $this->assertEqual($res->rowCount(), 2);
+
+        $result = $res->fetch();
+        $this->assertEqual('11', $result->key);
+        $this->assertEqual('fr', $result->lang);
+        $this->assertEqual('France', $result->label);
     }
 
 
