@@ -34,7 +34,7 @@ class checkbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr['type'] = 'checkbox';
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
         $this->outputJs();
     }
 }

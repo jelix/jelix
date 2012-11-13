@@ -27,6 +27,6 @@ class reset_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr['type'] = 'reset';
         echo '<button';
         $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($this->ctrl->label),'</button>';
+        echo '>',htmlspecialchars($this->ctrl->label),"</button>\n";
     }
 }

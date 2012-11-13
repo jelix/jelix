@@ -59,7 +59,7 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             }else{
                 $this->fillSelect($ctrl, (string)$value);
             }
-            echo '</select>';
+            echo "</select>\n";
         }else{
             if(is_array($value)){
                 if(count($value) >= 1)
@@ -75,7 +75,7 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             if($ctrl->emptyItemLabel !== null)
                 echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
             $this->fillSelect($ctrl, $value);
-            echo '</select>';
+            echo "</select>\n";
         }
         $this->outputJs();
     }

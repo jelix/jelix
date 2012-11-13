@@ -30,7 +30,7 @@ class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $attr['value'] = $this->ctrl->label;
             echo '<input';
             $this->_outputAttr($attr);
-            echo '/>';
+            echo "/>\n";
         }else{
             $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
             $attr['name'] = $this->ctrl->ref;
@@ -40,8 +40,9 @@ class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
                 $attr['id'] = $id.$v;
                 echo ' <input';
                 $this->_outputAttr($attr);
-                echo '/>';
+                echo "/>";
             }
+            echo "\n";
         }
     }
 }

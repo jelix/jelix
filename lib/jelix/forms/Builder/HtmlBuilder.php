@@ -219,12 +219,15 @@ class HtmlBuilder extends BuilderBase {
     }
 
     public function outputControlLabel($ctrl){
+        if($ctrl->type == 'hidden') return;
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->outputLabel();
     }
 
     public function outputControl($ctrl, $attributes=array()){
+        if($ctrl->type == 'hidden') return;
         $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->setAttributes($attributes);
         $widget->outputControl();
         $widget->outputHelp();
     }

@@ -36,7 +36,7 @@ class upload_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr['value'] = '';
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
         $this->outputJs();
     }
 }

@@ -35,7 +35,7 @@ class secretconfirm_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr['value'] = $this->getValue($this->ctrl);
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
         $this->outputJs();
 
     }

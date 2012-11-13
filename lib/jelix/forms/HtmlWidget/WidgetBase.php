@@ -33,6 +33,12 @@ abstract class WidgetBase implements WidgetInterface {
      */
     protected $ctrl;
 
+    /**
+     * attributes
+     * @var array
+     */
+    protected $attributes = array();
+
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
@@ -59,7 +65,12 @@ abstract class WidgetBase implements WidgetInterface {
     public function getCSSClass() {
         $ro = $this->ctrl->isReadOnly();
 
-        $class = 'jforms-ctrl-'.$this->ctrl->type;
+        if (isset($this->attributes['class']))
+            $class = $this->attributes['class'].' ';
+        else
+            $class = '';
+
+        $class .= 'jforms-ctrl-'.$this->ctrl->type;
         $class .= ($this->ctrl->required == false || $ro?'':' jforms-required');
         $class .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
         $class .= ($ro && $this->ctrl->type != 'captcha'?' jforms-readonly':'');
@@ -71,6 +82,10 @@ abstract class WidgetBase implements WidgetInterface {
         return $this->builder->getForm()->getData($this->ctrl->ref);
     }
     
+    public function setAttributes($attr) {
+        $this->attributes = $attr;
+    }
+
     /**
      * Retrieve the label attributes
      */
@@ -90,14 +105,15 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * Returns an array containing all the control attributes
      */
-    protected function getControlAttributes($attr=array()) {
+    protected function getControlAttributes() {
+        $attr = $this->attributes;
+        $attr['name'] = $this->getName();
+        $attr['id'] = $this->getId();
         if ($this->ctrl->isReadOnly())
             $attr['readonly'] = 'readonly';
         if ($this->ctrl->hint)
             $attr['title'] = $this->ctrl->hint;
 
-        $attr['name'] = $this->getName();
-        $attr['id'] = $this->getId();
         $attr['class'] = $this->getCSSClass();
 
         return $attr;
@@ -227,8 +243,10 @@ abstract class WidgetBase implements WidgetInterface {
                 $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
                 echo "</fieldset>\n";
             }
+            echo "\n";
         }else{
             $this->echoCheckboxes($span, $id, $data, $attr, $value, $i);
+            echo "\n";
         }
     }
 

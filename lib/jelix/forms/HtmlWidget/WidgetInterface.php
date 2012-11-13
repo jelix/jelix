@@ -60,5 +60,11 @@ interface WidgetInterface {
      */
     public function outputControl();
 
+    /**
+     * set attributes to add on the HTML element
+     * @param array $attributes
+     */
+    public function setAttributes($attributes);
+
 }
 
