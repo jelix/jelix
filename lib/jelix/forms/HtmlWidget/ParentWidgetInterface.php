@@ -26,5 +26,9 @@ interface ParentWidgetInterface {
      */
     function addFinalJs($js);
 
-
+    /**
+     * indicate if the parent widget generate itself some of js child
+     * @return boolean
+     */
+    function controlJsChild();
 }

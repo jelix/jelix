@@ -94,11 +94,12 @@ abstract class WidgetBase implements WidgetInterface {
         
         $attr['hint'] = ($this->ctrl->hint == '' ? '' : ' title="'.htmlspecialchars($this->ctrl->hint).'"');
         $attr['idLabel'] = ' id="'.$this->getId().'_label"';
-        $attr['reqHtml'] = ($this->ctrl->required == true?'<span class="jforms-required-star">*</span>':'');
+ 
+        $required = ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
+        $attr['reqHtml'] = ($required?'<span class="jforms-required-star">*</span>':'');
         $attr['class'] = 'jforms-label';
         $attr['class'] .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
-        $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
-
+        $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');        
         return $attr;
     }
 
@@ -139,7 +140,7 @@ abstract class WidgetBase implements WidgetInterface {
             $jsContent .= "c.errInvalid=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
 
-        if ($this->parentWidget instanceof \jelix\forms\HtmlWidget\RootWidget)
+        if (!$this->parentWidget->controlJsChild())
             $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
 
         $this->parentWidget->addJs($jsContent);

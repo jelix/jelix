@@ -29,7 +29,7 @@ class HtmlBuilder extends BuilderBase {
 
     public function __construct($form){
         parent::__construct($form);
-        $this->rootWidget = jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
+        $this->rootWidget = \jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
         if (!$this->rootWidget)
             throw new \Exception ("Unknown root widget plugin ".$this->formType);
     }
@@ -219,7 +219,7 @@ class HtmlBuilder extends BuilderBase {
     }
 
     public function outputControlLabel($ctrl){
-        if($ctrl->type == 'hidden') return;
+        if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->outputLabel();
     }

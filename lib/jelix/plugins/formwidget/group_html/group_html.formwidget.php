@@ -29,6 +29,10 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->parentWidget->addFinalJs($js);
     }
 
+    function controlJsChild() {
+        return false;
+    }
+
     //------- WidgetInterface
     function outputControl() {
         $attr = $this->getControlAttributes();
@@ -45,6 +49,6 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             $widget->outputControl();
             echo "</td></tr>\n";
         }
-        echo "</table></fieldset>";
+        echo "</table></fieldset>\n";
     }
 }

@@ -96,6 +96,10 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->parentWidget->addFinalJs($js);
     }
 
+    function controlJsChild() {
+        return true;
+    }
+
     // -------- WidgetInterface
 
     protected function jsChoiceInternal($ctrl) {
@@ -162,7 +166,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             echo "</li>\n";
             $i++;
         }
-        echo "</ul>\n";
+        echo "</ul>\n\n";
         $this->parentWidget->addJs("c2.activate('".$value."');\n");
     }
 

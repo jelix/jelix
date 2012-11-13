@@ -23,6 +23,10 @@ class RootWidget implements ParentWidgetInterface {
         $this->finalJs .= $js;
     }
 
+    function controlJsChild() {
+        return false;
+    }
+
     //------ Other methods
     public function outputHeader($builder) {
         $jsVarName = $builder->getjFormsJsVarName();
