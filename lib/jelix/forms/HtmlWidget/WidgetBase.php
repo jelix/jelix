@@ -123,7 +123,8 @@ abstract class WidgetBase implements WidgetInterface {
             $jsContent .= "c.errInvalid=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
 
-        if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
+        if ($this->parentWidget instanceof \jelix\forms\HtmlWidget\RootWidget)
+            $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
 
         $this->parentWidget->addJs($jsContent);
     }

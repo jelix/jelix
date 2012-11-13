@@ -27,8 +27,6 @@ class HtmlBuilder extends BuilderBase {
 
     protected $options;
 
-    public $isRootControl = true;
-
     public function __construct($form){
         parent::__construct($form);
         $this->rootWidget = jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
@@ -38,10 +36,6 @@ class HtmlBuilder extends BuilderBase {
 
     public function getjFormsJsVarName() {
         return $this->jFormsJsVarName;
-    }
-    
-    public function getIsRootControl() {
-        return $this->isRootControl;
     }
 
     public function getOption($name) {

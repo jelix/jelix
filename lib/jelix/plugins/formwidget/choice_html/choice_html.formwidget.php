@@ -129,7 +129,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $this->jsChoiceInternal($ctrl);
 
-        $this->isRootControl = false;
         foreach( $ctrl->items as $itemName=>$listctrl){
             if (!$ctrl->isItemActivated($itemName))
                 continue;
@@ -164,7 +163,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             $i++;
         }
         echo "</ul>\n";
-        $this->isRootControl = true;
         $this->parentWidget->addJs("c2.activate('".$value."');\n");
     }
 
