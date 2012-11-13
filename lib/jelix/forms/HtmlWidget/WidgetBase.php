@@ -11,17 +11,9 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-/**
- * HTML form builder
- * @package     jelix
- * @subpackage  jelix-plugins
- * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
- */
-class jFormsWidgetBuilder {
+namespace jelix\forms\HtmlWidget;
 
-}
-
-abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
+abstract class WidgetBase {
     /**
      * The form builder
      */
@@ -110,7 +102,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
                 $jsContent .= "c.errRequired=". $this->escJsStr($this->ctrl->alertRequired).";\n";
             }
             else {
-                $jsContent .= "c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
+                $jsContent .= "c.errRequired=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
             }
         }
 
@@ -118,7 +110,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
             $jsContent .= "c.errInvalid=".$this->escJsStr($this->ctrl->alertInvalid).";\n";
         }
         else {
-            $jsContent .= "c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
+            $jsContent .= "c.errInvalid=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
 
         if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
@@ -183,7 +175,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
     //Temporaty function
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 foreach($data[''] as $v=>$label){
                     if(is_array($value))
@@ -222,7 +214,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         $id = $this->builder->getName().'_'.$ctrl->ref.'_';
         $i=0;
         $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
             }

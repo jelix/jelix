@@ -13,9 +13,9 @@ namespace jelix\forms\HtmlWidget;
 /**
  * Interface for HTML widgets plugins
  */
-interface BuilderInterface {
+interface WidgetInterface {
 
-    public function __construct(\jFormsBuilderHtml $mainBuilder, ParentBuilderInterface $parentBuilder);
+    public function __construct(\jelix\forms\Builder\HtmlBuilder $mainBuilder, ParentBuilderInterface $parentBuilder);
 
     /**
      * return the id of the HTML element

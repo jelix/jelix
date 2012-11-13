@@ -13,7 +13,7 @@ namespace jelix\forms\HtmlWidget;
 /**
  * Interface for widgets that can have children widget: main builder, choice etc.
  */
-interface ParentBuilderInterface {
+interface ParentWidgetInterface {
 
     /**
      * Add javascript content into the generated form

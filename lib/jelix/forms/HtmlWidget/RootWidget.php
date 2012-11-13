@@ -9,7 +9,7 @@
 */
 namespace jelix\forms\HtmlWidget;
 
-class RootBuilder implements ParentBuilderInterface {
+class RootWidget implements ParentWidgetInterface {
 
     //------ ParentBuilderInterface
 

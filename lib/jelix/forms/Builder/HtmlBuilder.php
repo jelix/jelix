@@ -10,11 +10,12 @@
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace jelix\forms\Builder;
 
 /**
  * Main HTML form builder
  */
-class jFormsBuilderHtml extends jFormsBuilderBase {
+class HtmlBuilder extends BuilderBase {
     protected $formType = '_html';
 
     protected $jFormsJsVarName = 'jForms';
@@ -64,18 +65,18 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputMetaContent($t) {
-        $resp= jApp::coord()->response;
+        $resp= \jApp::coord()->response;
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $config = jApp::config();
+        $config = \jApp::config();
         $www = $config->urlengine['jelixWWWPath'];
         $bp = $config->urlengine['basePath'];
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
         $heConf = &$config->htmleditors;
         foreach($t->_vars as $k=>$v){
-            if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+            if($v instanceof \jFormsBase && count($edlist = $v->getHtmlEditors())) {
                 foreach($edlist as $ed) {
 
                     if(isset($heConf[$ed->config.'.engine.file'])){
@@ -129,7 +130,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $urlParams = $this->_actionParams;
             $attrs['action'] = $this->_action;
         } else {
-            $url = jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
+            $url = \jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
             $urlParams = $url->params;
             $attrs['action'] = $url->getPath();
         }
@@ -181,17 +182,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                     if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';
                     }else{
-                        echo '<li>', jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
+                        echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
                     }
                 }
-                elseif ($err === jForms::ERRDATA_INVALID_FILE_SIZE) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_INVALID_FILE_SIZE) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label),'</li>';
                 }
-                elseif ($err === jForms::ERRDATA_INVALID_FILE_TYPE) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_INVALID_FILE_TYPE) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label),'</li>';
                 }
-                elseif ($err === jForms::ERRDATA_FILE_UPLOAD_ERROR) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_FILE_UPLOAD_ERROR) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label),'</li>';
                 }
                 elseif ($err != '') {
                     echo '<li>', $err,'</li>';
@@ -221,7 +222,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $className = $pluginName . 'FormWidget';
         if ($builder === null)
             $builder = $this;
-        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $builder));
+        $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $builder));
         return $plugin;
     }
 
