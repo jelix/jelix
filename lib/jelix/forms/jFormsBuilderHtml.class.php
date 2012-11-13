@@ -222,11 +222,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         echo '</form>';
     }
 
-    public function outputControlLabel($ctrl){
+    public function getWidget($ctrl, $builder = null) {
         $pluginName = $ctrl->type . $this->formType;
         $className = $pluginName . 'FormWidget';
+        if ($builder === null)
+            $builder = $this;
+        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $builder));
+        return $plugin;
+    }
 
-        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
+    public function outputControlLabel($ctrl){
+        $plugin = $this->getWidget($ctrl);
         if (!is_null($plugin)) {
             $plugin->outputLabel();
         } else {
@@ -235,10 +241,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        $pluginName = $ctrl->type . $this->formType;
-        $className = $pluginName . 'FormWidget';
-
-        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
+        $plugin = $this->getWidget($ctrl);
         if (!is_null($plugin)) {
             $plugin->outputControl();
             $plugin->outputHelp();
