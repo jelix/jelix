@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0" import="testapp~posts">
+    <record extends="testapp~postTracker" />
+    <factory events="deletebefore, insertbefore, updatebefore">
+        <method name="findAll" type="select">
+            <conditions>
+                <eq property="type" value="tracker" />
+            </conditions>
+        </method>
+        <method name="countOpen" type="count">
+            <conditions>
+                <eq property="type" value="tracker" />
+                <eq property="status" value="open" />
+            </conditions>
+        </method>
+        <method name="findOpen" type="select">
+            <conditions>
+                <eq property="type" value="tracker" />
+                <eq property="status" value="open" />
+            </conditions>
+        </method>
+    </factory>
+</dao>

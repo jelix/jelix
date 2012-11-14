@@ -70,6 +70,12 @@ cd testapp/modules/testapp/daos
   products.dao.xml
   productsalias.dao.xml
   towns.dao.xml
+  post.daorecord.php
+  postBlog.daorecord.php
+  postTracker.daorecord.php
+  post_blog.dao.xml
+  post_tracker.dao.xml
+  posts.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php
@@ -329,6 +335,8 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
+cd testapp/tests-jelix/jelix/daos
+  jDaoImportTest.php
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/

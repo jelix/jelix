@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="posts" realname="posts" primarykey="id" />
+    </datasources>
+    <record extends="testapp~post">
+        <property name="id" fieldname="id" datatype="int" required="true"/>
+        <property name="title" fieldname="title" datatype="varchar" required="true" maxlength="245"/>
+        <property name="author" fieldname="author" datatype="varchar" default="" maxlength="50"/>
+        <property name="content" fieldname="content" datatype="longtext" default=""/>
+        <property name="type" fieldname="type" datatype="varchar" required="true" maxlength="32"/>
+        <property name="status" fieldname="status" datatype="varchar" default="" maxlength="15"/>
+        <property name="date" fieldname="date" datatype="datetime" required="true"/>
+        <!--<property name="" fieldname="" datatype="string/int/float/date"
+        required="yes" maxlength="" minlength="" regexp="" sequence=""
+        updatepattern="" insertpattern="" selectpattern=""/>-->
+    </record>
+    <factory events="deletebefore" />
+</dao>
