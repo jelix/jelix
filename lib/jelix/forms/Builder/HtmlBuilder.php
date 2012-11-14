@@ -18,6 +18,8 @@ namespace jelix\forms\Builder;
 class HtmlBuilder extends BuilderBase {
     protected $formType = 'html';
 
+    protected $formConfig = 'jforms_builder_html';
+
     protected $jFormsJsVarName = 'jForms';
 
     /**
@@ -194,7 +196,8 @@ class HtmlBuilder extends BuilderBase {
     }
 
     public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
-        $pluginName = $ctrl->type . '_'. $this->formType;
+        $config = \jApp::config()->{$this->formConfig};
+        $pluginName = (isset($config[$ctrl->type]) ? $config[$ctrl->type] : $ctrl->type) . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin)
