@@ -18,6 +18,15 @@
  */
 
 class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    public function outputMetaContent($resp) {
+        $bp = jApp::config()->urlengine['basePath'];
+        $confDate = &jApp::config()->datepickers;
+        $datepicker_default_config = jApp::config()->forms['datepicker'];
+
+        $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$datepicker_default_config;
+        $resp->addJSLink($bp.$confDate[$config]);
+    }
+
     protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

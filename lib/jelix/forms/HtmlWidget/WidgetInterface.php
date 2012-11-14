@@ -38,7 +38,11 @@ interface WidgetInterface {
      */
     public function getValue();
 
-    //public function outputMeta();
+    /**
+     * add the CSS and javascript link
+     * @param jResponse $resp The response used
+     */
+    public function outputMetaContent($resp);
 
     /**
      * displays the help of the form field

@@ -34,6 +34,14 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
     }
 
     //------- WidgetInterface
+
+    public function outputMetaContent($resp) {
+        foreach( $this->ctrl->getChildControls() as $ctrlref=>$c){
+            $widget = $this->builder->getWidget($c, $this);
+            $widget->outputMetaContent($resp);
+        }
+    }
+
     function outputControl() {
         $attr = $this->getControlAttributes();
 

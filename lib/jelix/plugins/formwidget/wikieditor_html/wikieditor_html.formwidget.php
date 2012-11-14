@@ -18,6 +18,21 @@
  */
 
 class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    public function outputMetaContent($resp) {
+        $bp = jApp::config()->urlengine['basePath'];
+        $confWikiEditor = &jApp::config()->wikieditors;
+
+        if(isset($confWikiEditor[$this->ctrl->config.'.engine.file']))
+            $resp->addJSLink($bp.$confWikiEditor[$this->ctrl->config.'.engine.file']);
+        if(isset($confWikiEditor[$this->ctrl->config.'.config.path'])) {
+            $p = $bp.$confWikiEditor[$this->ctrl->config.'.config.path'];
+            $resp->addJSLink($p.jApp::config()->locale.'.js');
+            $resp->addCSSLink($p.'style.css');
+        }
+        if(isset($confWikiEditor[$this->ctrl->config.'.skin']))
+            $resp->addCSSLink($bp.$confWikiEditor[$this->ctrl->config.'.skin']);
+    }
+
     protected function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();

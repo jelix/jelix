@@ -81,34 +81,18 @@ class HtmlBuilder extends BuilderBase {
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $config = \jApp::config();
-        $www = $config->urlengine['jelixWWWPath'];
-        $bp = $config->urlengine['basePath'];
+
+        $www = \jApp::config()->urlengine['jelixWWWPath'];
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
-        $heConf = &$config->htmleditors;
-        foreach($t->_vars as $k=>$v){
-            if($v instanceof \jFormsBase && count($edlist = $v->getHtmlEditors())) {
-                foreach($edlist as $ed) {
 
-                    if(isset($heConf[$ed->config.'.engine.file'])){
-                        $file = $heConf[$ed->config.'.engine.file'];
-                        if(is_array($file)){
-                            foreach($file as $url) {
-                                $resp->addJSLink($bp.$url);
-                            }
-                        }else
-                            $resp->addJSLink($bp.$file);
-                    }
+        //we loop on root control has they fill call the outputMetaContent recursively
+        foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl) {
+            if($ctrl->type == 'hidden') continue;
+            if(!$this->_form->isActivated($ctrlref)) continue;
 
-                    if(isset($heConf[$ed->config.'.config']))
-                        $resp->addJSLink($bp.$heConf[$ed->config.'.config']);
-
-                    $skin = $ed->config.'.skin.'.$ed->skin;
-                    if(isset($heConf[$skin]) && $heConf[$skin] != '')
-                        $resp->addCSSLink($bp.$heConf[$skin]);
-                }
-            }
+            $widget = $this->getWidget($ctrl, $this->rootWidget);
+            $widget->outputMetaContent($resp);
         }
     }
 

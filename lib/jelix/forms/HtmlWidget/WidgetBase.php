@@ -86,6 +86,8 @@ abstract class WidgetBase implements WidgetInterface {
         $this->attributes = $attr;
     }
 
+    public function outputMetaContent($resp) { /* do nothing */ }
+    
     /**
      * Retrieve the label attributes
      */
