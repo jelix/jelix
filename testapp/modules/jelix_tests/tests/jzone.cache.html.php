@@ -64,22 +64,33 @@ class UTjzonecache extends jUnitTestCase {
 
         $resp = jApp::coord()->response;
         $titleBefore = $resp->title;
+        $bodyTagAttrBefore = $resp->bodyTagAttributes;
+        $resp->bodyTagAttributes = array();
 
         $actionTitle = 'That\'s a title from action';
+        $bodyAttrs = array('class' => 'special');
         jZone::get($zoneSel, array('zoneTitle'=>$actionTitle));
         $this->assertEqualOrDiff($resp->title, $actionTitle, 'First cached zone get with param - meta, %s');
+        $this->assertEqualOrDiff($resp->bodyTagAttributes, $bodyAttrs, 'First cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
+        $resp->bodyTagAttributes = $bodyTagAttrBefore;
         jZone::get($zoneSel, array('zoneTitle'=>$actionTitle));
         $this->assertEqualOrDiff($resp->title, $actionTitle, 'Second cached zone get with param - meta, %s');
+        $this->assertEqualOrDiff($resp->bodyTagAttributes, $bodyAttrs, 'First cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
+        $resp->bodyTagAttributes = $bodyTagAttrBefore;
 
         jZone::get($zoneSel);
         $expectedOutput = 'That\'s a title from zone';
         $this->assertEqualOrDiff($resp->title, $expectedOutput, 'First cached zone get - meta, %s');
+        $this->assertEqualOrDiff($resp->bodyTagAttributes, $bodyAttrs, 'First cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
+        $resp->bodyTagAttributes = $bodyTagAttrBefore;
         jZone::get($zoneSel);
         $this->assertEqualOrDiff($resp->title, $expectedOutput, 'Second cached zone get - meta, %s');
+        $this->assertEqualOrDiff($resp->bodyTagAttributes, $bodyAttrs, 'First cached zone get with param - meta, %s');
         $resp->title = $titleBefore;
+        $resp->bodyTagAttributes = $bodyTagAttrBefore;
     }
 
     function testCacheMetaDeep() {
