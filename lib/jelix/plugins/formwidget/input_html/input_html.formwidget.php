@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
 
         $datatype = array('jDatatypeBoolean'=>'Boolean','jDatatypeDecimal'=>'Decimal','jDatatypeInteger'=>'Integer','jDatatypeHexadecimal'=>'Hexadecimal',
@@ -51,8 +53,8 @@ class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         if($re !== null)
             $js .="c.regexp = ".$re.";\n";
 
-        $this->builder->jsContent .= $js;
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs($js);
+        $this->commonJs();
     }
 
     function outputControl() {
@@ -68,6 +70,7 @@ class input_htmlFormWidget extends jFormsHtmlWidgetBuilder {
 
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
+        $this->outputJs();
     }
 }

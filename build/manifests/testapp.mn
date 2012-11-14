@@ -277,8 +277,9 @@ cd testapp/modules/jelix_tests/tests/
   jforms.htmllightbuilder.html_cli.php
   jforms.htmllightbuilder2.html_cli.php
   jforms.modifiedcontrols.html_cli.php
+  jforms.newhtmlbuilder.html_cli.php
+  jforms.newhtmlbuilder2.html_cli.php
   jforms.with_dao.html_cli.php
-  jpref.main_api.pu.php
   jtpl.compiler.html_cli.php
   jtpl.expressions_parsing.html_cli.php
   jtpl.fetch.html_cli.php
@@ -350,6 +351,8 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
   config.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
+cd testapp/tests-jelix/jelix/prefs/
+  jPrefTest.php
 cd testapp/tests-jelix/jelix/utils/
   jDateTimeTest.php
   jFilterTest.php

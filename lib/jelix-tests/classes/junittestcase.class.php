@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  junittests
+* @subpackage  jelix-tests
 * @author      Laurent Jouanneau
 * @contributor Christophe Thiriot
 * @copyright   2006-2012 Laurent Jouanneau
@@ -11,16 +11,35 @@
 
 class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
-    // for database management
-
-    protected $dbProfile ='';
+    /**
+     * indicates if PDO is needed. If yes, PDO will be checked
+     * and if not present, tests will be skipped
+     * @var boolean
+     */
     protected $needPDO = false;
+
+    /**
+     * profile name for jDb
+     * @var string
+     */
+    protected $dbProfile ='';
 
     public function setUp() {
         parent::setUp();
         if($this->needPDO && false === class_exists('PDO',false)){
             $this->markTestSkipped('PDO does not exists ! You should install PDO because tests need it.');
         }
+    }
+
+    /**
+     * init jelix configuration
+     */
+    protected static function initJelixConfig($withCoordinator = false, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
+        require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
+        $config = jConfigCompiler::read($config, true, true, $entryPoint);
+        jApp::setConfig($config);
+        if ($withCoordinator)
+            jApp::setCoord(new jCoordinator('', false));
     }
 
     /**
@@ -31,7 +50,6 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     }
 
     //    complex equality
-
     public function assertComplexIdentical($value, $file, $errormessage=''){
         $xml = simplexml_load_file($file);
         if(!$xml){

@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -30,12 +32,12 @@ class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
 
-        $this->commonJs($ctrl);
+        $this->commonJs();
 
         $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
-        $this->builder->jsContent .= '$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
+        $this->parentWidget->addJs('$("#'.$formName.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n");
     }
 
     function outputControl() {
@@ -49,6 +51,7 @@ class wikieditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
 
         echo '<textarea';
         $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($value),'</textarea>';
+        echo '>',htmlspecialchars($value),"</textarea>\n";
+        $this->outputJs();
     }
 }

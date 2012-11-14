@@ -300,9 +300,8 @@ class jImageModifier {
             $image = imagecreatetruecolor($finalwidth, $finalheight);
             imagesavealpha($image, true);
             $tp = imagecolorallocatealpha($image,0,0,0,127);
-            imagefill($image,0,0,$tp);
-
             imagecopyresampled($image, $ancienimage, 0, 0, $posx, $posy, imagesx($image), imagesy($image), $resamplewidth, $resampleheight);
+            imagefill($image,0,0,$tp); // Because of a strange behavior (ticket #1486), we must fill the background AFTER imagecopyresampled
         }
 
         // The shadow cast adds to the dimension of the image chooses

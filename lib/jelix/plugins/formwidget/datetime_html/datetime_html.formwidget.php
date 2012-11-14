@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class datetime_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
@@ -34,8 +36,8 @@ class datetime_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             $js .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }
 
-        $this->builder->jsContent .= $js;
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs($js);
+        $this->commonJs();
     }
 
     function outputControl() {
@@ -75,6 +77,7 @@ class datetime_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             else
                 echo ' ';
         }
+        $this->outputJs();
     }
     
     protected function _outputDateControlDay($ctrl, $attr, $value){

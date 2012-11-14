@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,13 +17,13 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class secretconfirm_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class secretconfirm_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlConfirm('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlConfirm('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
+        $this->commonJs();
     }
 
     function outputControl() {
@@ -33,7 +35,8 @@ class secretconfirm_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $attr['value'] = $this->getValue($this->ctrl);
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
+        $this->outputJs();
 
     }
 }

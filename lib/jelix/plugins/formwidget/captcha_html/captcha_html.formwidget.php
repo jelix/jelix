@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class captcha_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class captcha_htmlFormWidget extends  \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         
@@ -29,9 +31,9 @@ class captcha_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $minl= $ctrl->datatype->getFacet('minLength');
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
-        $this->builder->jsContent .= $js;
+        $this->parentWidget->addJs($js);
 
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {
@@ -45,6 +47,7 @@ class captcha_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $attr['value'] = '';
         echo '<input';
         $this->_outputAttr($attr);
-        echo '/>';
+        echo "/>\n";
+        $this->outputJs();
     }
 }

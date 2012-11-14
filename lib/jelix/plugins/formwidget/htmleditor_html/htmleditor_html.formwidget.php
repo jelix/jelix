@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class htmleditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $formName = $this->builder->getName();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -31,11 +33,11 @@ class htmleditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         if($minl !== null)
             $js .="c.minLength = '$minl';\n";
 
-        $this->builder->jsContent .= $js;
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs($js);
+        $this->commonJs();
 
         $engine = jApp::config()->htmleditors[$ctrl->config.'.engine.name'];
-        $this->builder->jsContent .= 'jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n";
+        $this->parentWidget->addJs('jelix_'.$engine.'_'.$ctrl->config.'("'.$formName.'_'.$ctrl->ref.'","'.$formName.'","'.$ctrl->skin."\",".$jFormsJsVarName.".config);\n");
     }
 
     function outputControl() {
@@ -49,6 +51,7 @@ class htmleditor_htmlFormWidget extends jFormsHtmlWidgetBuilder {
 
         echo '<textarea';
         $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($value),'</textarea>';
+        echo '>',htmlspecialchars($value),"</textarea>\n";
+        $this->outputJs();
     }
 }

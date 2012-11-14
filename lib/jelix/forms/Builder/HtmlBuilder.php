@@ -3,40 +3,47 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin
+* @contributor Julien Issler, Dominique Papin, Claudio Bernardes
 * @copyright   2006-2012 Laurent Jouanneau
-* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2008-2011 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-/**
- *
- */
-require(JELIX_LIB_PATH.'forms/jFormsHtmlWidgetBuilder.class.php');
+namespace jelix\forms\Builder;
 
 /**
- * HTML form builder
- * @package     jelix
- * @subpackage  jelix-plugins
+ * Main HTML form builder
  */
-class jFormsBuilderHtml extends jFormsBuilderBase {
-    protected $formType = '_html';
+class HtmlBuilder extends BuilderBase {
+    protected $formType = 'html';
 
     protected $jFormsJsVarName = 'jForms';
 
+    /**
+     * @var \jelix\forms\HtmlWidget\RootWidget
+     */
+    protected $rootWidget;
+
     protected $options;
 
-    public $isRootControl = true;
+    public function __construct($form){
+        parent::__construct($form);
+        $this->rootWidget = \jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
+        if (!$this->rootWidget)
+            throw new \Exception ("Unknown root widget plugin ".$this->formType);
+    }
 
     public function getjFormsJsVarName() {
         return $this->jFormsJsVarName;
     }
-    
-    public function getIsRootControl() {
-        return $this->isRootControl;
+
+    public function getOption($name) {
+        if (isset($this->options[$name]))
+            return $this->options[$name];
+        return null;
     }
-    
+
     public function outputAllControls() {
 
         echo '<table class="jforms-table" border="0">';
@@ -70,18 +77,18 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     public function outputMetaContent($t) {
-        $resp= jApp::coord()->response;
+        $resp= \jApp::coord()->response;
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $config = jApp::config();
+        $config = \jApp::config();
         $www = $config->urlengine['jelixWWWPath'];
         $bp = $config->urlengine['basePath'];
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
         $heConf = &$config->htmleditors;
         foreach($t->_vars as $k=>$v){
-            if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+            if($v instanceof \jFormsBase && count($edlist = $v->getHtmlEditors())) {
                 foreach($edlist as $ed) {
 
                     if(isset($heConf[$ed->config.'.engine.file'])){
@@ -105,16 +112,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function outputHeaderScript(){
-                echo '<script type="text/javascript">
-//<![CDATA[
-'.$this->jFormsJsVarName.'.tForm = new jFormsForm(\''.$this->_name.'\');
-'.$this->jFormsJsVarName.'.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
-'.$this->jFormsJsVarName.'.declareForm(jForms.tForm);
-//]]>
-</script>';
-    }
-
     /**
      * output the header content of the form
      * @param array $params some parameters <ul>
@@ -135,7 +132,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             $urlParams = $this->_actionParams;
             $attrs['action'] = $this->_action;
         } else {
-            $url = jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
+            $url = \jUrl::get($this->_action, $this->_actionParams, 2); // returns the corresponding jurl
             $urlParams = $url->params;
             $attrs['action'] = $url->getPath();
         }
@@ -148,7 +145,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->_outputAttr($attrs);
         echo '>';
 
-        $this->outputHeaderScript();
+        $this->rootWidget->outputHeader($this);
 
         $hiddens = '';
         foreach ($urlParams as $p_name => $p_value) {
@@ -187,17 +184,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                     if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';
                     }else{
-                        echo '<li>', jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
+                        echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label),'</li>';
                     }
                 }
-                elseif ($err === jForms::ERRDATA_INVALID_FILE_SIZE) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_INVALID_FILE_SIZE) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label),'</li>';
                 }
-                elseif ($err === jForms::ERRDATA_INVALID_FILE_TYPE) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_INVALID_FILE_TYPE) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label),'</li>';
                 }
-                elseif ($err === jForms::ERRDATA_FILE_UPLOAD_ERROR) {
-                    echo '<li>', jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label),'</li>';
+                elseif ($err === \jForms::ERRDATA_FILE_UPLOAD_ERROR) {
+                    echo '<li>', \jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label),'</li>';
                 }
                 elseif ($err != '') {
                     echo '<li>', $err,'</li>';
@@ -207,45 +204,32 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    public $jsContent = '';
-
-    public $lastJsContent = '';
-
     public function outputFooter(){
-        echo '<script type="text/javascript">
-//<![CDATA[
-(function(){var c, c2;
-'.$this->jsContent.$this->lastJsContent.'
-})();
-//]]>
-</script>';
+        $this->rootWidget->outputFooter($this);
         echo '</form>';
     }
 
-    public function outputControlLabel($ctrl){
-        $pluginName = $ctrl->type . $this->formType;
+    public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
+        $pluginName = $ctrl->type . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
+        $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
+        if (!$plugin)
+            throw new \Exception('Widget '.$pluginName.' not found');
+        return $plugin;
+    }
 
-        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
-        if (!is_null($plugin)) {
-            $plugin->outputLabel();
-        } else {
-            //Throw error
-        }
+    public function outputControlLabel($ctrl){
+        if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->outputLabel();
     }
 
     public function outputControl($ctrl, $attributes=array()){
-        $pluginName = $ctrl->type . $this->formType;
-        $className = $pluginName . 'FormWidget';
-
-        $plugin = jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this));
-        if (!is_null($plugin)) {
-            $plugin->outputControl();
-            $plugin->outputHelp();
-            $plugin->outputJs();
-        } else {
-            //Throw error
-        }
+        if($ctrl->type == 'hidden') return;
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->setAttributes($attributes);
+        $widget->outputControl();
+        $widget->outputHelp();
     }
 
     protected function _outputAttr(&$attributes) {
@@ -254,7 +238,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
     }
 
-    protected function escJsStr($str) {
+    public function escJsStr($str) {
         return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
     }
 }

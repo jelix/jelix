@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,21 +17,21 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class menulist_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->builder->jsContent .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
         if ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jFormsDaoDatasource) {
             $dependentControls = $ctrl->datasource->getDependentControls();
             if ($dependentControls) {
-                $this->builder->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
-                $this->builder->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
+                $this->parentWidget->addJs("c.dependencies = ['".implode("','",$dependentControls)."'];\n");
+                $this->parentWidget->addFinalJs("jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n");
             }
         }
-        $this->commonJs($ctrl);
+        $this->commonJs();
     }
 
     function outputControl() {
@@ -51,6 +53,7 @@ class menulist_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         $value = (string) $value;
         echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($this->ctrl->emptyItemLabel),"</option>\n";
         $this->fillSelect($this->ctrl, $value);
-        echo '</select>';
+        echo "</select>\n";
+        $this->outputJs();
     }
 }

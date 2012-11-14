@@ -12,10 +12,10 @@ class testJProfiles extends jProfiles {
 }
 
 
-class profilesTest extends PHPUnit_Framework_TestCase
+class profilesTest extends jUnitTestCase
 {
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     function testDefaultProfile () {

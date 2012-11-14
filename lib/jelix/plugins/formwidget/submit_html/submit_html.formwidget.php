@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,7 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class submit_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() { /* no JS */ }
+class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
 
     function outputControl() {
         $attr = $this->getControlAttributes();
@@ -29,7 +30,7 @@ class submit_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             $attr['value'] = $this->ctrl->label;
             echo '<input';
             $this->_outputAttr($attr);
-            echo '/>';
+            echo "/>\n";
         }else{
             $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
             $attr['name'] = $this->ctrl->ref;
@@ -39,8 +40,9 @@ class submit_htmlFormWidget extends jFormsHtmlWidgetBuilder {
                 $attr['id'] = $id.$v;
                 echo ' <input';
                 $this->_outputAttr($attr);
-                echo '/>';
+                echo "/>";
             }
+            echo "\n";
         }
     }
 }

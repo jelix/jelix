@@ -1,9 +1,11 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  forms
+* @subpackage  formwidgets
 * @author      Claudio Bernardes
+* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -15,8 +17,8 @@
  * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
 
-class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
-    function outputJs() {
+class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    protected function outputJs() {
         $js = '';
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -27,8 +29,8 @@ class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
         } else {
             $js .= "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
-        $this->builder->jsContent .= $js;
-        $this->commonJs($ctrl);
+        $this->parentWidget->addJs($js);
+        $this->commonJs();
     }
     
     function outputControl() {
@@ -57,7 +59,7 @@ class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             }else{
                 $this->fillSelect($ctrl, (string)$value);
             }
-            echo '</select>';
+            echo "</select>\n";
         }else{
             if(is_array($value)){
                 if(count($value) >= 1)
@@ -73,8 +75,8 @@ class listbox_htmlFormWidget extends jFormsHtmlWidgetBuilder {
             if($ctrl->emptyItemLabel !== null)
                 echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
             $this->fillSelect($ctrl, $value);
-            echo '</select>';
+            echo "</select>\n";
         }
-
+        $this->outputJs();
     }
 }

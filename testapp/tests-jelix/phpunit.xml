@@ -22,6 +22,9 @@
     <testsuite name="Jelix Forms">
       <directory>jelix/forms/</directory>
     </testsuite>
+    <testsuite name="jPref ">
+      <directory>jelix/prefs/</directory>
+    </testsuite>
     <testsuite name="Jelix Scripts">
       <directory>jelix-scripts/</directory>
     </testsuite>

@@ -4,60 +4,73 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
-* @copyright   2006-2011 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
 * @copyright   2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-/**
- * HTML form builder
- * @package     jelix
- * @subpackage  jelix-plugins
- * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
- */
-class jFormsWidgetBuilder {
+namespace jelix\forms\HtmlWidget;
 
-}
+abstract class WidgetBase implements WidgetInterface {
 
-abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
     /**
      * The form builder
+     * @var \jelix\forms\Builder\HtmlBuilder
      */
     protected $builder;
 
     /**
+     * the parent widget
+     * @var \jelix\forms\HtmlWidget\ParentWidgetInterface
+     */
+    protected $parentWidget;
+
+    /**
      * The control
+     * @var jControl
      */
     protected $ctrl;
+
+    /**
+     * attributes
+     * @var array
+     */
+    protected $attributes = array();
 
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
+        $this->parentWidget = $args[2];
     }
     
     /**
      * Get the control id
      */
-    protected function getId() {
+    public function getId() {
         return $this->builder->getName().'_'.$this->ctrl->ref;
     }
 
     /**
      * Get the control name
      */
-    protected function getName() {
+    public function getName() {
         return $this->ctrl->ref;
     }
 
     /**
      * Get the control class
      */
-    protected function getClass() {
+    protected function getCSSClass() {
         $ro = $this->ctrl->isReadOnly();
 
-        $class = 'jforms-ctrl-'.$this->ctrl->type;
+        if (isset($this->attributes['class']))
+            $class = $this->attributes['class'].' ';
+        else
+            $class = '';
+
+        $class .= 'jforms-ctrl-'.$this->ctrl->type;
         $class .= ($this->ctrl->required == false || $ro?'':' jforms-required');
         $class .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
         $class .= ($ro && $this->ctrl->type != 'captcha'?' jforms-readonly':'');
@@ -65,10 +78,14 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         return $class;
     }
 
-    protected function getValue($ctrl) {
-        return $this->builder->getForm()->getData($ctrl->ref);
+    public function getValue() {
+        return $this->builder->getForm()->getData($this->ctrl->ref);
     }
     
+    public function setAttributes($attr) {
+        $this->attributes = $attr;
+    }
+
     /**
      * Retrieve the label attributes
      */
@@ -77,31 +94,33 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         
         $attr['hint'] = ($this->ctrl->hint == '' ? '' : ' title="'.htmlspecialchars($this->ctrl->hint).'"');
         $attr['idLabel'] = ' id="'.$this->getId().'_label"';
-        $attr['reqHtml'] = ($this->ctrl->required == true?'<span class="jforms-required-star">*</span>':'');
+ 
+        $required = ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
+        $attr['reqHtml'] = ($required?'<span class="jforms-required-star">*</span>':'');
         $attr['class'] = 'jforms-label';
         $attr['class'] .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
-        $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
-
+        $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');        
         return $attr;
     }
 
     /**
      * Returns an array containing all the control attributes
      */
-    protected function getControlAttributes($attr=array()) {
+    protected function getControlAttributes() {
+        $attr = $this->attributes;
+        $attr['name'] = $this->getName();
+        $attr['id'] = $this->getId();
         if ($this->ctrl->isReadOnly())
             $attr['readonly'] = 'readonly';
         if ($this->ctrl->hint)
             $attr['title'] = $this->ctrl->hint;
 
-        $attr['name'] = $this->getName();
-        $attr['id'] = $this->getId();
-        $attr['class'] = $this->getClass();
+        $attr['class'] = $this->getCSSClass();
 
         return $attr;
     }
     
-    protected function commonJS() {
+    protected function commonJs() {
         $jsContent = '';
         
         if($this->ctrl->required){
@@ -110,7 +129,7 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
                 $jsContent .= "c.errRequired=". $this->escJsStr($this->ctrl->alertRequired).";\n";
             }
             else {
-                $jsContent .= "c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
+                $jsContent .= "c.errRequired=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.required', $this->ctrl->label)).";\n";
             }
         }
 
@@ -118,12 +137,13 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
             $jsContent .= "c.errInvalid=".$this->escJsStr($this->ctrl->alertInvalid).";\n";
         }
         else {
-            $jsContent .= "c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
+            $jsContent .= "c.errInvalid=".$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
 
-        if ($this->builder->getIsRootControl()) $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
+        if (!$this->parentWidget->controlJsChild())
+            $jsContent .= $this->builder->getJFormsJsVarName().".tForm.addControl(c);\n";
 
-        $this->builder->jsContent .= $jsContent;
+        $this->parentWidget->addJs($jsContent);
     }
     
     protected function escJsStr($str) {
@@ -169,21 +189,11 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
         }
     }
 
-    
-    /**
-     * Returns the list of JS and CSS to link to the page
-     */
-    public function getHeader() { }
-
-    abstract function outputJs();
-
     abstract function outputControl();
-    
-    
-    //Temporaty function
+
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 foreach($data[''] as $v=>$label){
                     if(is_array($value))
@@ -215,39 +225,6 @@ abstract class jFormsHtmlWidgetBuilder extends jFormsWidgetBuilder  {
                         $selected = ((string) $v===$value);
                 echo '<option value="',htmlspecialchars($v),'"',($selected?' selected="selected"':''),'>',htmlspecialchars($label),"</option>\n";
             }
-        }
-    }
-
-    protected function showRadioCheck($ctrl, &$attr, &$value, $span) {
-        $id = $this->builder->getName().'_'.$ctrl->ref.'_';
-        $i=0;
-        $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
-            if (isset($data[''])) {
-                $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
-            }
-            foreach($data as $group=>$values){
-                if ($group === '')
-                    continue;
-                echo '<fieldset><legend>'.htmlspecialchars($group).'</legend>'."\n";
-                $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
-                echo "</fieldset>\n";
-            }
-        }else{
-            $this->echoCheckboxes($span, $id, $data, $attr, $value, $i);
-        }
-    }
-
-    protected function echoCheckboxes($span, $id, &$values, &$attr, &$value, &$i) {
-        foreach($values as $v=>$label){
-            $attr['id'] = $id.$i;
-            $attr['value'] = $v;
-            echo $span;
-            $this->_outputAttr($attr);
-            if((is_array($value) && in_array((string) $v,$value,true)) || ($value === (string) $v))
-                echo ' checked="checked"';
-            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
-            $i++;
         }
     }
 }

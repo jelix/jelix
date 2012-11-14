@@ -64,8 +64,6 @@ abstract class jFormsBuilderBase {
     }
 
     public function getName(){ return  $this->_name; }
-    
-    public function getForm(){ return $this->_form; }
 
     /**
      * called during the meta content processing in templates

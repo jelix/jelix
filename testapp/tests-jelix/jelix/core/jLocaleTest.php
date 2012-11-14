@@ -27,17 +27,19 @@ class jLocaleTest extends jUnitTestCase {
     protected $filePath;
 
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     function setUp() {
         jApp::saveContext();
         jApp::pushCurrentModule('jelix_tests');
         $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
+        parent::setUp();
     }
 
     function tearDown() {
         jApp::restoreContext();
+        parent::tearDown();
     }
 
     public function testBundleUnknownFile(){
@@ -92,6 +94,7 @@ class jLocaleTest extends jUnitTestCase {
     function testSimpleLocale(){
         jApp::config()->locale = 'fr_FR';
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
+        $this->assertEquals('ceci est une phrase fr_FR avec tiret',jLocale::get('tests1.first-dash-locale'));
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
         $this->assertEquals('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
         $this->assertEquals('Chaîne à tester à foison',jLocale::get('tests1.multiline.locale.with.accent2'));

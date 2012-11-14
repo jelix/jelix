@@ -5,11 +5,11 @@
 // we should then have into jApp::config() this informations
 // let's check them
 
-class moduleAutoloadTest extends PHPUnit_Framework_TestCase
+class moduleAutoloadTest extends jUnitTestCase
 {
     protected static $modulePath;
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
         self::$modulePath = jApp::config()->_modulesPathList['jelix_tests'];
     }
 
@@ -24,7 +24,7 @@ class moduleAutoloadTest extends PHPUnit_Framework_TestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(5, count($conf->_autoload_class), '_autoload_class should have 5 declarations (for jelix_tests, jsoap, jacl, jacl2 modules)');
+        $this->assertEquals(9, count($conf->_autoload_class), '_autoload_class should have 5 declarations (for jelix_tests, jsoap, jacl, jacl2 modules)');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }

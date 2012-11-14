@@ -1,9 +1,9 @@
 <?php
 
-class soapclientTest extends PHPUnit_Framework_TestCase
+class soapclientTest extends jUnitTestCase
 {
     public static function setUpBeforeClass() {
-        jelix_init_test_env();
+        self::initJelixConfig();
     }
 
     function testCall() {
