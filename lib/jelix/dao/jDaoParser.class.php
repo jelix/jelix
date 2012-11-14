@@ -92,10 +92,16 @@ class jDaoParser {
     public $hasOnlyPrimaryKeys = false;
 
     /**
-     * record attributes
+     * record class
      */
-    public $attributes = array();
-
+    private $_daoRecord = null;
+    
+    /*
+     * import
+     */
+    private $_daoImport = null;
+    private $_parserImport = null;
+    
     public $selector;
     /**
     * Constructor
@@ -111,9 +117,37 @@ class jDaoParser {
     * @param int $debug  for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
     */
     public function parse( $xml, $tools){
+        $this->import($xml, $tools);
         $this->parseDatasource($xml);
         $this->parseRecord($xml, $tools);
         $this->parseFactory($xml);
+    }
+    
+    protected function import($xml, $tools) {
+        if(isset($xml['import'])){
+            $import = $xml['import'];
+            $this->_daoImport = $import;
+            
+            // Keep the same driver as current used
+            $importSel = new jSelectorDao($import, $this->selector->driver);
+            
+            $doc = new DOMDocument();
+            if(! $doc->load($importSel->getPath())){
+                throw new jException('jelix~daoxml.file.unknown', $importSel->getPath());
+            }
+            $parser = new jDaoParser ($importSel);
+            $parser->parse(simplexml_import_dom($doc), $tools);
+            
+            $this->_parserImport = $parser;
+            $this->_properties = $parser->getProperties();
+            $this->_tables = $parser->getTables();
+            $this->_primaryTable = $parser->getPrimaryTable();
+            $this->_methods = $parser->getMethods();
+            $this->_ojoins = $parser->getOuterJoins();
+            $this->_ijoins = $parser->getInnerJoins();
+            $this->_eventList = $parser->getEvents();
+            $this->_daoRecord = $parser->getDaoRecord();
+        }
     }
     
     protected function parseDatasource($xml) {
@@ -130,7 +164,7 @@ class jDaoParser {
             foreach($xml->datasources[0]->optionalforeigntable as $table){
                 $this->_parseTable (2, $table);
             }
-        }else{
+        }else if ($this->_primaryTable === ''){
             throw new jDaoXmlException ($this->selector, 'datasource.missing');
         }
     }
@@ -138,19 +172,21 @@ class jDaoParser {
     protected function parseRecord($xml, $tools) {
         $countprop = 0;
         //add the record properties
-        if(isset($xml->record) && isset($xml->record[0]->property)){
-            foreach ($xml->record[0]->attributes() as $name => $value) {
-                $this->attributes[$name] = $value;
+        if(isset($xml->record)){
+            if (isset($xml->record[0]['extends'])) {
+                $this->_daoRecord = $xml->record[0]['extends'];
             }
-            foreach ($xml->record[0]->property as $prop){
-                $p = new jDaoProperty ($prop->attributes(), $this, $tools);
-                $this->_properties[$p->name] = $p;
-                $this->_tables[$p->table]['fields'][] = $p->name;
-                if($p->ofPrimaryTable && !$p->isPK)
-                    $countprop ++;
+            if(isset($xml->record[0]->property)) {
+                foreach ($xml->record[0]->property as $prop){
+                    $p = new jDaoProperty ($prop->attributes(), $this, $tools);
+                    $this->_properties[$p->name] = $p;
+                    $this->_tables[$p->table]['fields'][] = $p->name;
+                    if($p->ofPrimaryTable && !$p->isPK)
+                        $countprop ++;
+                }
+                $this->hasOnlyPrimaryKeys = ($countprop == 0);
             }
-            $this->hasOnlyPrimaryKeys = ($countprop == 0);
-        }else
+        }else if (count($this->_properties) == 0)
             throw new jDaoXmlException ($this->selector, 'properties.missing');
     }
     
@@ -252,6 +288,10 @@ class jDaoParser {
     public function getMethods(){  return $this->_methods;}
     public function getOuterJoins(){  return $this->_ojoins;}
     public function getInnerJoins(){  return $this->_ijoins;}
+    public function getEvents(){ return $this->_eventList;}
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
+    public function getDaoRecord() { return $this->_daoRecord;}
+    public function importedFrom(){ return $this->_daoImport;}
+    public function getImportedParser(){ $this->_parserImport;}
+    
 }
-
