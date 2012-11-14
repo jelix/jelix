@@ -156,6 +156,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                 $widget->outputLabel();
                 echo ' ';
                 $widget->outputControl();
+                $widget->outputHelp();
                 echo "</span>\n";
                 $this->parentWidget->addJs("c2.addControl(c, ".$this->escJsStr($itemName).");\n");
             }

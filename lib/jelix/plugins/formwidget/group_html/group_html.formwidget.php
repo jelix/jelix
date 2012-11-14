@@ -47,6 +47,7 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             $widget->outputLabel();
             echo "</th>\n<td>";
             $widget->outputControl();
+            $widget->outputHelp();
             echo "</td></tr>\n";
         }
         echo "</table></fieldset>\n";
