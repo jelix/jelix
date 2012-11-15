@@ -47,14 +47,14 @@ class jMethodSniffer {
     public function __toString() {
         $sniffedString = '';
         foreach( $this->jMethodSnifferVars->sniffed as $sniffedItem ) {
-            $canUseJson = false;
+            $canUseJson = true;
             foreach( $sniffedItem[1] as $methodParam ) {
-                if( is_bool($methodParam) || is_int($methodParam) ||
+                if( $canUseJson && !( is_bool($methodParam) || is_int($methodParam) ||
                     is_double($methodParam) || is_float($methodParam) ||
-                    is_string($methodParam) ) {
+                    is_string($methodParam) ) ) {
                     //json_encode / json_decode would be faster than serialize / unserialize, but this could lead to behaviour
                     //differences if one (at least) of the arguments is e.g. an object ...
-                    $canUseJson = true;
+                    $canUseJson = false;
                     break;
                 }
             }
