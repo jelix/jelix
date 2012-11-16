@@ -112,7 +112,7 @@ class HtmlBuilder extends BuilderBase {
      */
     public function outputHeader($params){
         if (isset($params['plugins']) {
-            $this->_pluginsConf = $params['plugins'];
+            $this->pluginsConf = $params['plugins'];
             unset($params['plugins']);
         }
 
