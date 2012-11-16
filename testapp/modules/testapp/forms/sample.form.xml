@@ -36,6 +36,7 @@
       <datasource dao="testapp~config" method="findAll" labelproperty="cvalue" valueproperty="ckey" />
       <label>Select one value</label>
       <emptyitem>-- choices --</emptyitem>
+      <help>Simple test</help>
   </menulist>
 
   <listbox ref="home">
@@ -118,10 +119,14 @@
           <input ref="assignee" required="true">
               <label>assignee name</label>
           </input>
+          <textarea ref="explanation">
+            <label>Explaination</label>
+          </textarea>
       </item>
       <item value="closed">
           <label>Closed</label>
           <menulist ref="task-done">
+              <help>Is the task closed ?</help>
               <label>Status</label>
               <item value="done">Done</item>
               <item value="cancelled">Cancelled</item>

@@ -25,7 +25,7 @@ class HtmlBuilder extends BuilderBase {
     /**
      * @var array containing the formwidget for the current builder
      */
-    protected $pluginsConf;
+    protected $pluginsConf = array();
 
     /**
      * @var \jelix\forms\HtmlWidget\RootWidget
@@ -111,7 +111,7 @@ class HtmlBuilder extends BuilderBase {
      *      </ul>
      */
     public function outputHeader($params){
-        if (isset($params['plugins']) {
+        if (isset($params['plugins'])) {
             $this->pluginsConf = $params['plugins'];
             unset($params['plugins']);
         }
@@ -207,12 +207,12 @@ class HtmlBuilder extends BuilderBase {
 
     public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
         $config = \jApp::config()->{$this->formConfig};
-        if (isset($this->pluginsConf['$this->ctrl->ref'])) { //first the builder conf
-           $plugin = $this->pluginsConf['$this->ctrl->ref'];
+        if (isset($this->pluginsConf[$ctrl->ref])) { //first the builder conf
+           $plugin = $this->pluginsConf[$ctrl->ref];
         } elseif (isset($config[$ctrl->type])) { //then the ini conf
            $plugin = $config[$ctrl->type];
         } else { //finaly the control type
-           $plugin = $this->ctrl;
+           $plugin = $ctrl->type;
         }
         $pluginName = $plugin . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';

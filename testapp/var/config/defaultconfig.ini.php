@@ -146,3 +146,5 @@ secure_test = "https://www.junittest.com/"
 foo_relPath="foo"
 foo_absPath="/foo"
 
+[jforms_builder_html]
+;control = plugin
