@@ -23,6 +23,11 @@ class HtmlBuilder extends BuilderBase {
     protected $jFormsJsVarName = 'jForms';
 
     /**
+     * @var array containing the formwidget for the current builder
+     */
+    protected $pluginsConf;
+
+    /**
      * @var \jelix\forms\HtmlWidget\RootWidget
      */
     protected $rootWidget;
@@ -106,6 +111,11 @@ class HtmlBuilder extends BuilderBase {
      *      </ul>
      */
     public function outputHeader($params){
+        if (isset($params['plugins']) {
+            $this->_pluginsConf = $params['plugins'];
+            unset($params['plugins']);
+        }
+
         $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
             'method'=>'post'), $params);
         if (isset($params['attributes']))
@@ -197,7 +207,14 @@ class HtmlBuilder extends BuilderBase {
 
     public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
         $config = \jApp::config()->{$this->formConfig};
-        $pluginName = (isset($config[$ctrl->type]) ? $config[$ctrl->type] : $ctrl->type) . '_'. $this->formType;
+        if (isset($this->pluginsConf['$this->ctrl->ref'])) { //first the builder conf
+           $plugin = $this->pluginsConf['$this->ctrl->ref'];
+        } elseif (isset($config[$ctrl->type])) { //then the ini conf
+           $plugin = $config[$ctrl->type];
+        } else { //finaly the control type
+           $plugin = $this->ctrl;
+        }
+        $pluginName = $plugin . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin)
