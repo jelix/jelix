@@ -279,6 +279,11 @@ cd lib/jelix/events
   jEventListener.class.php
 #endif
 
+cd lib/jelix/FakeServerConf
+  ApacheCGI.php
+  ApacheMod.php
+  FakeServerConf.php
+
 cd lib/jelix/forms
   jForms.class.php
   jFormsBase.class.php
