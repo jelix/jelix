@@ -108,12 +108,20 @@ class jCoordinator {
     }
 
     /**
-    * main method : launch the execution of the action.
+    * initialize the given request and some properties of the coordinator
     *
-    * This method should be called in a entry point.
+    * It extracts information for the request to set the module name and the
+    * action name. It doesn't verify if the corresponding controller does
+    * exist or not.
+    * It enables also the error handler of Jelix, if needed.
+    * Does not call this method directly in entry points. Prefer to call
+    * process() instead (that will call setRequest). 
+    * setRequest is mostly used for tests or specific contexts.
     * @param  jRequest  $request the request object
+    * @throw jException if the module is unknown or the action name format is not valid
+    * @see jCoordinator::process()
     */
-    public function process ($request){
+    protected function setRequest ($request) {
 
         $config = jApp::config();
         $this->request = $request;
@@ -129,7 +137,6 @@ class jCoordinator {
         }
 
         $this->request->init();
-        jSession::start();
 
         $this->moduleName = $request->getParam('module');
         $this->actionName = $request->getParam('action');
@@ -145,26 +152,44 @@ class jCoordinator {
             }
         }
 
-        jApp::pushCurrentModule ($this->moduleName);
-        try{
-            $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
+        $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
-            if($config->modules[$this->moduleName.'.access'] < 2){
-                throw new jException('jelix~errors.module.untrusted',$this->moduleName);
-            }
+        if ($config->modules[$this->moduleName.'.access'] < 2) {
+            throw new jException('jelix~errors.module.untrusted', $this->moduleName);
+        }
+    }
+
+    /**
+    * main method : launch the execution of the action.
+    *
+    * This method should be called in a entry point.
+    *
+    * @param  jRequest  $request the request object. It is required if a descendant of jCoordinator did not called setRequest before
+    */
+    public function process ($request=null) {
+
+        try {
+            if ($request)
+                $this->setRequest($request);
 
             $ctrl = $this->getController($this->action);
-        }catch(jException $e){
+        }
+        catch (jException $e) {
+            $config = jApp::config();
             if ($config->urlengine['notfoundAct'] =='') {
                 throw $e;
             }
             try {
                 $this->action = new jSelectorAct($config->urlengine['notfoundAct']);
                 $ctrl = $this->getController($this->action);
-            }catch(jException $e2){
+            }
+            catch(jException $e2) {
                 throw $e;
             }
         }
+        jSession::start();
+
+        jApp::pushCurrentModule ($this->moduleName);
 
         if (count($this->plugins)) {
             $pluginparams = array();
@@ -189,6 +214,7 @@ class jCoordinator {
                 }
             }
         }
+
         $this->response = $ctrl->{$this->action->method}();
         if($this->response == null){
             throw new jException('jelix~errors.response.missing',$this->action->toString());
