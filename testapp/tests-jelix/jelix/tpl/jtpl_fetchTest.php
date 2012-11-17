@@ -4,13 +4,17 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
-class UTjtplfetch extends jUnitTestCase {
+class jtpl_fetchTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testSimpleFetch() {
         
@@ -27,21 +31,20 @@ value=aaa
 value=bbb
 value=ccc
 end';
-        $this->assertEqualOrDiff($expected, $content);
+        $this->assertEquals($expected, $content);
     }
 
     function testMetaCall() {
 
         $tpl = new jTpl();
         $meta = $tpl->meta('test_tpl_meta_call', 'html');
-        $this->assertEqual($meta['counter'], 1);
+        $this->assertEquals(1, $meta['counter']);
 
         // fetch shouldn't call meta if meta already processed
         $content = $tpl->fetch('test_tpl_meta_call','html');
 
         // so the counter should be still equals to 1
         $meta = $tpl->meta('test_tpl_meta_call', 'html');
-        $this->assertEqual($meta['counter'], 1);
+        $this->assertEquals(1, $meta['counter']);
     }
-
 }

@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -36,7 +36,11 @@ function testjtplcontentUserFunction($t,$a,$b) {
 }
 
 
-class UTjtplcontent extends jUnitTestCase {
+class jtpl_compilerTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     protected $content = array(
 0=>array(
@@ -218,7 +222,7 @@ end',),
 
         foreach($this->content as $k=>$t){
             try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]), "Test '$k'");
+                $this->assertEquals($t[1], $compil->compileContent2($t[0]), "Test '$k'");
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -227,14 +231,14 @@ end',),
         }
 
         $compil->setRemoveASPtags(false);
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml
+        $this->assertEquals('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
+        $this->assertEquals('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));
+        $this->assertEquals('<p>ok<?php echo \'<?xml
   version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml
   version="truc"?></p>'));
-        $this->assertEqualOrDiff('<p>ok<%=$truc%></p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
+        $this->assertEquals('<p>ok<%=$truc%></p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
         $compil->setRemoveASPtags(true);
-        $this->assertEqualOrDiff('<p>ok</p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
+        $this->assertEquals('<p>ok</p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
     }
 
     protected $contentUntrusted = array(
@@ -253,7 +257,7 @@ end',),
         $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
         foreach($this->contentUntrusted as $k=>$t){
             try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
+                $this->assertEquals($t[1], $compil->compileContent2($t[0]));
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -305,7 +309,7 @@ end',),
 
         foreach($this->contentPlugins as $k=>$t){
             try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
+                $this->assertEquals($t[1], $compil->compileContent2($t[0]));
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -337,8 +341,8 @@ end',),
                 $str = $compil->compileContent2($t[0]);
                 $this->fail("Test '$k', exception didn't happen, compilation result: $str");
             }catch(jException $e){
-                $this->assertEqual($e->getLocaleKey(), $t[1], "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
-                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2], "Test '$k': %s");
+                $this->assertEquals($t[1], $e->getLocaleKey(), "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
+                $this->assertEquals($t[2], $e->getLocaleParameters(), "Test '$k': %s");
             }catch(Exception $e){
                 $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
             }
@@ -363,8 +367,8 @@ end',),
                 $compil->compileContent2($t[0]);
                 $this->fail("Test '$k', exception didn't happen");
             }catch(jException $e){
-                $this->assertEqual($e->getLocaleKey(), $t[1], "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
-                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2], "Test '$k': %s");
+                $this->assertEquals($t[1], $e->getLocaleKey(), "Test '$k': %s  (local parameters: ".var_export($e->getLocaleParameters(), true).")");
+                $this->assertEquals($t[2], $e->getLocaleParameters(), "Test '$k': %s");
             }catch(Exception $e){
                 $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
             }
@@ -419,8 +423,8 @@ endif;
 
         foreach($this->metaContent as $k=>$t){
             try{
-                $this->assertEqualOrDiff($t[2], $compil->compileContent2($t[0]), "Test content '$k'");
-                $this->assertEqualOrDiff($t[1], $compil->getMetaContent(), "Test meta content '$k'");
+                $this->assertEquals($t[2], $compil->compileContent2($t[0]), "Test content '$k'");
+                $this->assertEquals($t[1], $compil->getMetaContent(), "Test meta content '$k'");
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -428,8 +432,4 @@ endif;
             }
         }
     }
-
-
 }
-
-?>

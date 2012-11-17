@@ -3,13 +3,13 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Thiriot Christophe
-* @contributor
-* @copyright   2009 Thiriot Christophe
+* @contributor Laurent Jouanneau
+* @copyright   2009 Thiriot Christophe, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjtplVirtual extends jUnitTestCase {
+class jtpl_virtualTest extends jUnitTestCase {
 
     public function testSimpleTemplate() {
 
@@ -34,7 +34,7 @@ world
         $tpl = new jTpl();
         $tpl->assign('value', 'test');
         $result = $tpl->fetchFromString($template, 'text');
-        $this->assertEqual($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testTemplateWithLocale() {
@@ -53,7 +53,7 @@ this is the 3th en_EN sentence';
 
         $tpl = new jTpl();
         $result = $tpl->fetchFromString($template, 'text');
-        $this->assertEqual($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 
     public function testTemplateWithModifier() {
@@ -70,6 +70,6 @@ value';
         $tpl->assign('value', 'value');
         $tpl->assign('up', 'VALUE');
         $result = $tpl->fetchFromString($template, 'text');
-        $this->assertEqual($expected, $result);
+        $this->assertEquals($expected, $result);
     }
 }

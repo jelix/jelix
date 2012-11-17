@@ -4,14 +4,18 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 
-class UTjtplplugins extends jUnitTestCase {
+class jtpl_pluginsTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+    }
 
     protected $templates = array(
         0=>array(
@@ -131,7 +135,7 @@ class UTjtplplugins extends jUnitTestCase {
             if(strpos($t[1],'%BASEPATH%') !== false){
                 $expected = str_replace('%BASEPATH%', jApp::config()->urlengine['basePath'], $expected);
             }
-            $this->assertEqualOrDiff($output, $expected, 'testplugin['.$k.'], %s');
+            $this->assertEquals($expected, $output, 'testplugin['.$k.'], %s');
 
         }
     }
@@ -145,7 +149,9 @@ class UTjtplplugins extends jUnitTestCase {
        		$tpl->assign('cut',$chars[0]);
        		$tpl->assign('etc',$chars[2] ? $chars[2] : '...');
        		$tpl->assign('sentence',$sentence);
-       		$this->assertEqualOrDiff('test => '.$key .'(cut '.$chars[0].' ) :'.$tpl->fetch('test_truncate_html'),'test => '.$key .'(cut '.$chars[0].' ) : '.$chars[1],'testplugin['.$key.'], %s');
+       		$this->assertEquals('test => '.$key .'(cut '.$chars[0].' ) : '.$chars[1],
+                                'test => '.$key .'(cut '.$chars[0].' ) :'.$tpl->fetch('test_truncate_html'),
+                                'testplugin['.$key.'], %s');
 		}
 		
 	}
@@ -232,7 +238,7 @@ class UTjtplplugins extends jUnitTestCase {
 <li class="pagelinks-next pagelinks-disabled">&gt;</li>
 <li class="pagelinks-end pagelinks-disabled">&gt;|</li>
 </ul>';
-        $this->assertEqualOrDiff($expected, $output);
+        $this->assertEquals($expected, $output);
     }
 
 	function testInclude() {
@@ -244,8 +250,8 @@ class UTjtplplugins extends jUnitTestCase {
 		$meta = $tpl->meta('test_include');
 		$content = $tpl->fetch('test_include');
 
-		$this->assertEqual(array('main'=>'main template','subtpl'=>'sub template'), $meta);
-		$this->assertEqualOrDiff("
+		$this->assertEquals(array('main'=>'main template','subtpl'=>'sub template'), $meta);
+		$this->assertEquals("
 <h1>Main template</h1>
 <p>first</p>
 
@@ -265,8 +271,8 @@ class UTjtplplugins extends jUnitTestCase {
 	 	$tpl->assign('items', array(1,2));
 		$meta = $tpl->meta('test_include_recursive');
 		$content = $tpl->fetch('test_include_recursive');
-		$this->assertEqual(array('main'=>'2', 'counter'=>1), $meta);
-		$this->assertEqualOrDiff("c=2\nx=2\nc=1\nx=1\n" , $content);
+		$this->assertEquals(array('main'=>'2', 'counter'=>1), $meta);
+		$this->assertEquals("c=2\nx=2\nc=1\nx=1\n" , $content);
 
 		// if a template includes an other template more than one time,
 		// meta should be retrieved only one time
@@ -274,8 +280,8 @@ class UTjtplplugins extends jUnitTestCase {
 	 	$tpl->assign('items', array());
 		$meta = $tpl->meta('test_include_recursive2');
 		$content = $tpl->fetch('test_include_recursive2');
-		$this->assertEqual(array('main'=>'0', 'counter'=>1), $meta);
-		$this->assertEqualOrDiff("c=2\nx=2\nc=1\nx=1\nc=2\nx=4\nc=1\nx=3\n\n", $content);
+		$this->assertEquals(array('main'=>'0', 'counter'=>1), $meta);
+		$this->assertEquals("c=2\nx=2\nc=1\nx=1\nc=2\nx=4\nc=1\nx=3\n\n", $content);
 	}
 }
 

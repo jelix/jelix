@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -53,7 +53,7 @@ class testJtplCompiler extends jTplCompiler {
 function testjtplcontentUserModifier($s){}
 
 
-class UTjtplexpr extends jUnitTestCase {
+class jtpl_expressions_parsingTest extends jUnitTestCase {
 
     protected $varexpr = array(
         'a'=>'a',
@@ -118,7 +118,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -128,7 +128,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexprTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -143,7 +143,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -153,7 +153,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexprUnTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -217,8 +217,8 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->fail("No Exception for this test '$k' ");
             }catch(jException $e){
-                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
-                $this->assertEqual($t[1], $e->getLocaleParameters());
+                $this->assertEquals($t[0], $e->getLocaleKey());
+                $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
             }
@@ -228,8 +228,8 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->fail("No Exception for this test '$k' ");
             }catch(jException $e){
-                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
-                $this->assertEqual($t[1], $e->getLocaleParameters());
+                $this->assertEquals($t[0], $e->getLocaleKey());
+                $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
             }
@@ -244,8 +244,8 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->fail("No Exception for this test '$k' ");
             }catch(jException $e){
-                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
-                $this->assertEqual($t[1], $e->getLocaleParameters());
+                $this->assertEquals($t[0], $e->getLocaleKey());
+                $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
             }
@@ -255,8 +255,8 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseVarExpr($k);
                 $this->fail("No Exception for this test '$k' ");
             }catch(jException $e){
-                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
-                $this->assertEqual($t[1], $e->getLocaleParameters());
+                $this->assertEquals($t[0], $e->getLocaleKey());
+                $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
             }
@@ -282,7 +282,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varTag as $k=>$t){
             try{
                 $res = $compil->testParseVariable($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -313,7 +313,7 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varAssign as $k=>$t){
             try{
                 $res = $compil->testParseAssignExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception : ".$e->getMessage().' ('.$e->getLocaleKey().')');
             }catch(Exception $e){
@@ -328,16 +328,11 @@ class UTjtplexpr extends jUnitTestCase {
                 $res = $compil->testParseAssignExpr($k);
                 $this->fail("No Exception for this test '$k' ");
             }catch(jException $e){
-                $this->assertEqualOrDiff($t[0], $e->getLocaleKey());
-                $this->assertEqual($t[1], $e->getLocaleParameters());
+                $this->assertEquals($t[0], $e->getLocaleKey());
+                $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->pass("Unknown Exception: ".$e->getMessage());
             }
-
         }
     }
-
-
 }
-
-?>
