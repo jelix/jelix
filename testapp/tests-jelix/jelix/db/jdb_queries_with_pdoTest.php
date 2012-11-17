@@ -12,7 +12,7 @@ require_once(__DIR__.'/jdb.lib.php');
 /**
  * same tests as UTjdb, but with a pdo connection
  */
-class UTjDb_pdo extends UTjDb_query {
+class jDb_queries_with_pdoTest extends jDb_queryBase {
 
     protected $dbProfile ='testapppdo';
     protected $needPDO = true;

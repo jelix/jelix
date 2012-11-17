@@ -8,30 +8,33 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjDbMysqli extends jUnitTestCaseDb {
+class jDb_MysqliTest extends jUnitTestCaseDb {
     protected $dbProfile ='mysqli_profile';
 
-    function skip() {
-        try{
-            $prof = jProfiles::get('jdb', $this->dbProfile, true);
-        }
-        catch (Exception $e) {
-            $this->skipIf(true, 'UTjDbMysqli cannot be run: '.$e->getMessage());
-        }
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
     }
 
     function setUp() {
-        $this->emptyTable('labels_test');
+        try{
+            $prof = jProfiles::get('jdb', $this->dbProfile, true);
+            $this->emptyTable('labels_test');
+        }
+        catch (Exception $e) {
+            $this->markTestSkipped('UTjDbMysqli cannot be run: '.$e->getMessage());
+        }
+        jApp::pushCurrentModule('jelix_tests');
     }
+
     function tearDown() {
         $this->emptyTable('labels_test');
+        jApp::popCurrentModule();
     }
 
     function testTransaction() { //labels_test is an InnoDb table so transaction are supported
         $this->assertTableIsEmpty('labels_test');
         $cnx = jDb::getConnection($this->dbProfile);
         $dao = jDao::create ('labels', $this->dbProfile);
-
 
         $cnx->beginTransaction();
 
@@ -107,15 +110,13 @@ class UTjDbMysqli extends jUnitTestCaseDb {
 
         $res = $stmt->execute();
         $this->assertTrue($res instanceof mysqliDbResultSet);
-        $this->assertEqual($res->rowCount(), 2);
+        $this->assertEquals(2, $res->rowCount());
 
         $result = $res->fetch();
-        $this->assertEqual('11', $result->key);
-        $this->assertEqual('fr', $result->lang);
-        $this->assertEqual('France', $result->label);
+        $this->assertEquals('11', $result->key);
+        $this->assertEquals('fr', $result->lang);
+        $this->assertEquals('France', $result->label);
     }
 
 
 }
-
-?>

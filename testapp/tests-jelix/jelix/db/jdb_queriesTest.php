@@ -12,6 +12,6 @@
 require_once(__DIR__.'/jdb.lib.php');
 
 
-class UTjDb extends UTjDb_query {
+class jDb_queriesTest extends jDb_queryBase {
 
 }

@@ -3,16 +3,20 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Julien Issler
-* @contributor
-* @copyright   2009 Julien Issler
+* @contributor Laurent Jouanneau
+* @copyright   2009 Julien Issler, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjDbMysql extends jUnitTestCaseDb {
+class jDb_MysqlTest extends jUnitTestCaseDb {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testFieldNameEnclosure(){
-        $this->assertEqualOrDiff(jDb::getConnection()->encloseName('toto'),'`toto`');
+        $this->assertEquals('`toto`', jDb::getConnection()->encloseName('toto'));
     }
 
 }

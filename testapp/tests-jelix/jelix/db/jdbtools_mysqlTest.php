@@ -17,25 +17,29 @@ class testmysqlDbTools extends mysqlDbTools {
     }
 }
 
-class UTjDbToolsMysql extends jUnitTestCase {
+class jDbTools_MysqlTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testExecSqlSimpleScript(){
         $db = jDb::getConnection();
         $tools = new testmysqlDbTools($db);
 
-        $this->assertEqual(array("SELECT toto"), $tools->testParseSQLScript("SELECT toto"));
-        $this->assertEqual($tools->testParseSQLScript("SELECT toto 'sdsd''mpo;ipi';"), array("SELECT toto 'sdsd''mpo;ipi'") );
-        $this->assertEqual($tools->testParseSQLScript("SELECT toto 'sdsd\'mpo;ipi';"), array("SELECT toto 'sdsd\'mpo;ipi'") );
-        $this->assertEqual($tools->testParseSQLScript("SELECT toto /*'sdsd'*/'mpo;ipi';"), array("SELECT toto 'mpo;ipi'") );
-        $this->assertEqual($tools->testParseSQLScript("SELECT toto /*'sdsd\npo'*/'mpo;ipi';"), array("SELECT toto 'mpo;ipi'") );
-        $this->assertEqual($tools->testParseSQLScript('SELECT toto "sdsd""mpo;ipi";'), array('SELECT toto "sdsd""mpo;ipi"') );
-        $this->assertEqual($tools->testParseSQLScript('SELECT toto "sdsd\"mpo;ipi";'), array('SELECT toto "sdsd\"mpo;ipi"') );
-        $this->assertEqual($tools->testParseSQLScript('SELECT toto /*"sdsd"*/"mpo;ipi";'), array('SELECT toto "mpo;ipi"') );
-        $this->assertEqual($tools->testParseSQLScript('SELECT toto /*"sdsd'."\n".'po"*/"mpo;ipi";'), array('SELECT toto "mpo;ipi"') );
+        $this->assertEquals(array("SELECT toto"), $tools->testParseSQLScript("SELECT toto"));
+        $this->assertEquals(array("SELECT toto 'sdsd''mpo;ipi'"), $tools->testParseSQLScript("SELECT toto 'sdsd''mpo;ipi';"));
+        $this->assertEquals(array("SELECT toto 'sdsd\'mpo;ipi'"), $tools->testParseSQLScript("SELECT toto 'sdsd\'mpo;ipi';"));
+        $this->assertEquals(array("SELECT toto 'mpo;ipi'"), $tools->testParseSQLScript("SELECT toto /*'sdsd'*/'mpo;ipi';"));
+        $this->assertEquals(array("SELECT toto 'mpo;ipi'"), $tools->testParseSQLScript("SELECT toto /*'sdsd\npo'*/'mpo;ipi';"));
+        $this->assertEquals(array('SELECT toto "sdsd""mpo;ipi"'), $tools->testParseSQLScript('SELECT toto "sdsd""mpo;ipi";'));
+        $this->assertEquals(array('SELECT toto "sdsd\"mpo;ipi"'), $tools->testParseSQLScript('SELECT toto "sdsd\"mpo;ipi";'));
+        $this->assertEquals(array('SELECT toto "mpo;ipi"'), $tools->testParseSQLScript('SELECT toto /*"sdsd"*/"mpo;ipi";'));
+        $this->assertEquals(array('SELECT toto "mpo;ipi"'), $tools->testParseSQLScript('SELECT toto /*"sdsd'."\n".'po"*/"mpo;ipi";'));
 
-        $this->assertEqual($tools->testParseSQLScript("SELECT ''; SELECT toto"), array("SELECT ''", 'SELECT toto'));
-        $this->assertEqual($tools->testParseSQLScript('SELECT ""; SELECT toto'), array('SELECT ""', 'SELECT toto'));
-        $this->assertEqual($tools->testParseSQLScript('SELECT ``; SELECT toto'), array('SELECT ``', 'SELECT toto'));
+        $this->assertEquals(array("SELECT ''", 'SELECT toto'), $tools->testParseSQLScript("SELECT ''; SELECT toto"));
+        $this->assertEquals(array('SELECT ""', 'SELECT toto'), $tools->testParseSQLScript('SELECT ""; SELECT toto'));
+        $this->assertEquals(array('SELECT ``', 'SELECT toto'), $tools->testParseSQLScript('SELECT ``; SELECT toto'));
 
     }
 
@@ -53,7 +57,7 @@ UPDATE ticket SET component_id = cid WHERE component = cname;";
             "DROP PROCEDURE IF EXISTS updateComponent",
             "UPDATE ticket SET component_id = cid WHERE component = cname"
         );
-        $this->assertEqual($tools->testParseSQLScript($sql), $result);
+        $this->assertEquals($result, $tools->testParseSQLScript($sql));
 
 
         $sql =" ALTER TABLE `ticket` ADD `component_id` INT NOT NULL AFTER `component` ;
@@ -100,7 +104,7 @@ REPEAT
 UNTIL done END REPEAT;
 CLOSE compCur;
 END", "CALL updateComponent()");
-       $this->assertEqual($tools->testParseSQLScript($sql), $result);
+       $this->assertEquals($result, $tools->testParseSQLScript($sql));
 
     $sql = "-- phpMyAdmin SQL Dump
 -- version 3.3.2deb1
@@ -125,7 +129,7 @@ SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
     $result = array(
             "SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\"",
         );
-        $this->assertEqual($tools->testParseSQLScript($sql), $result);
+        $this->assertEquals($result, $tools->testParseSQLScript($sql));
         //echo '<pre>';var_export($tools->testParseSQLScript($sql));echo '</pre>';
     }
 
@@ -143,6 +147,6 @@ SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
         $list = $tools->getTableList();
         sort($goodList);
         sort($list);
-        $this->assertEqual($list, $goodList);
+        $this->assertEquals($goodList, $list);
     }
 }

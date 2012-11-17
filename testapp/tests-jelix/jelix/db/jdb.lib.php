@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -12,11 +12,15 @@
 /**
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
-abstract class UTjDb_query extends jUnitTestCase {
+abstract class jDb_queryBase extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);
-        $this->assertTrue($cnx != null, 'connection null !');
+        $this->assertNotNull($cnx, 'connection null !');
         if($this->needPDO)
             $this->assertTrue($cnx instanceof jDbPDOConnection, 'connection null !');
         else
@@ -29,7 +33,7 @@ abstract class UTjDb_query extends jUnitTestCase {
 
         $rs = $db->query('SELECT count(*) as N FROM product_test');
         if($r=$rs->fetch()){
-            $this->assertTrue($r->N == 0, "After a DELETE, product_test table should be empty !!");
+            $this->assertEquals(0, $r->N, "After a DELETE, product_test table should be empty !!");
         }else{
             $this->fail("After a DELETE, product_test table should be empty, but error when try to get record count");
         }
@@ -38,11 +42,11 @@ abstract class UTjDb_query extends jUnitTestCase {
     function testInsert(){
         $db = jDb::getConnection($this->dbProfile);
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('camembert',2.31) ");
-        $this->assertEqual($nb,1,'exec insert 1 should return 1');
+        $this->assertEquals(1, $nb, 'exec insert 1 should return 1');
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('yaourt',0.76) ");
-        $this->assertEqual($nb,1,'exec insert 2 should return 1');
+        $this->assertEquals(1, $nb, 'exec insert 2 should return 1');
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('gloubi-boulga',4.9)");
-        $this->assertEqual($nb,1,'exec insert 3 should return 1');
+        $this->assertEquals(1, $nb, 'exec insert 3 should return 1');
     }
 
     function testSelect(){
@@ -59,7 +63,7 @@ abstract class UTjDb_query extends jUnitTestCase {
         while($res = $resultSet->fetch()){
             $list[] = $res;
         }
-        $this->assertEqual(count($list), 3, 'query return bad number of results ('.count($list).')');
+        $this->assertEquals(3, count($list), 'query return bad number of results ('.count($list).')');
 
         $structure = '<array>
     <object>
@@ -99,7 +103,7 @@ abstract class UTjDb_query extends jUnitTestCase {
         while($res = $resultSet->fetch()){
             $list[] = $res;
         }
-        $this->assertEqual(count($list), 3, 'query return bad number of results ('.count($list).')');
+        $this->assertEquals(3, count($list), 'query return bad number of results ('.count($list).')');
 
         $structure = '<array>
     <object>
@@ -134,7 +138,7 @@ abstract class UTjDb_query extends jUnitTestCase {
         while($res = $resultSet->fetch()){
             $list[] = $res;
         }
-        $this->assertEqual(count($list), 3, 'query return bad number of results ('.count($list).')');
+        $this->assertEquals(3, count($list), 'query return bad number of results ('.count($list).')');
 
         $structure = '<array>
     <object class="MyProductContainer">
@@ -189,7 +193,7 @@ abstract class UTjDb_query extends jUnitTestCase {
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
-        $this->assertEqual($resultSet->fetch(), false);
+        $this->assertFalse(!!$resultSet->fetch());
     }
 
     function testTools(){
@@ -252,5 +256,3 @@ class MyProductContainer {
 
     public $token;
 }
-
-?>

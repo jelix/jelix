@@ -12,8 +12,11 @@
 
 include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbschema.php');
 
-class UTjDbSchemaMysql extends jUnitTestCase {
+class jDbSchema_MysqlTest extends jUnitTestCase {
 
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testTableList() {
         $db = jDb::getConnection();
@@ -34,7 +37,7 @@ class UTjDbSchemaMysql extends jUnitTestCase {
 
         sort($goodList);
         sort($tables);
-        $this->assertEqual($tables, $goodList);
+        $this->assertEquals($goodList, $tables);
     }
 
     function testTable() {
@@ -46,10 +49,10 @@ class UTjDbSchemaMysql extends jUnitTestCase {
         if (!$this->assertNotNull($table))
             return;
 
-        $this->assertEqual($table->getName(), 'product_test');
+        $this->assertEquals('product_test', $table->getName());
 
         $pk = $table->getPrimaryKey();
-        $this->assertEqual($pk->columns, array('id'));
+        $this->assertEquals(array('id'), $pk->columns);
 
         $is64bits = ( PHP_INT_SIZE*8 == 64 );
 

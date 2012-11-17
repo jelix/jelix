@@ -15,47 +15,50 @@ include_once (JELIX_LIB_PATH.'plugins/db/oci/oci.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/sqlite/sqlite.dbtools.php');
 
 
-class UTjDbTools extends jUnitTestCase {
+class jDbToolsTest extends jUnitTestCase {
 
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     function testEncloseName(){
 
         $tools= new mysqlDbTools(null);
         $result = $tools->encloseName('foo');
-        $this->assertEqualOrDiff('`foo`',$result);
+        $this->assertEquals('`foo`',$result);
 
         $tools= new pgsqlDbTools(null);
         $result = $tools->encloseName('foo');
-        $this->assertEqualOrDiff('"foo"',$result);
+        $this->assertEquals('"foo"',$result);
 
         $tools= new ociDbTools(null);
         $result = $tools->encloseName('foo');
-        $this->assertEqualOrDiff('foo',$result);
+        $this->assertEquals('foo',$result);
 
         $tools= new sqliteDbTools(null);
         $result = $tools->encloseName('foo');
-        $this->assertEqualOrDiff('foo',$result);
+        $this->assertEquals('foo',$result);
     }
 
     function testFloatToStr() {
-        $this->assertEqual('12', jDb::floatToStr(12));
-        $this->assertEqual('12.56', jDb::floatToStr(12.56));
-        $this->assertEqual('12', jDb::floatToStr("12"));
-        $this->assertEqual('12.56', jDb::floatToStr("12.56"));
-        $this->assertEqual('65.78E6', jDb::floatToStr("65.78E6"));
-        $this->assertEqual('65.78E6', jDb::floatToStr(65.78E6));
-        $this->assertEqual('65.78E42', jDb::floatToStr(65.78E42));
+        $this->assertEquals('12', jDb::floatToStr(12));
+        $this->assertEquals('12.56', jDb::floatToStr(12.56));
+        $this->assertEquals('12', jDb::floatToStr("12"));
+        $this->assertEquals('12.56', jDb::floatToStr("12.56"));
+        $this->assertEquals('65.78E6', jDb::floatToStr("65.78E6"));
+        $this->assertEquals('65.78E6', jDb::floatToStr(65.78E6));
+        $this->assertEquals('65.78E42', jDb::floatToStr(65.78E42));
 
         // not very good behavior, but this is the behavior in old stable version of jelix
-        $this->assertEqual('65', jDb::floatToStr("65,650.98"));
-        $this->assertEqual('12', jDb::floatToStr("12,589")); // ',' no allowed as decimal separator
-        $this->assertEqual('96', jDb::floatToStr("96 000,98"));
+        $this->assertEquals('65', jDb::floatToStr("65,650.98"));
+        $this->assertEquals('12', jDb::floatToStr("12,589")); // ',' no allowed as decimal separator
+        $this->assertEquals('96', jDb::floatToStr("96 000,98"));
 
         // some test to detect if the behavior of PHP change
         $this->assertFalse(is_numeric("65,650.98"));
         $this->assertFalse(is_float("65,650.98"));
         $this->assertFalse(is_integer("65,650.98"));
-        $this->assertEqual('65', floatval("65,650.98"));
+        $this->assertEquals('65', floatval("65,650.98"));
     }
 
     function testStringToPhpValue(){
@@ -66,47 +69,47 @@ class UTjDbTools extends jUnitTestCase {
             $tools->stringToPhpValue('int','5', false);
             $this->fail("stringToPhpValue accepts int !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
         try {
             $tools->stringToPhpValue( 'string','$foo',false);
             $this->fail("stringToPhpValue accepts string !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         try {
             $tools->stringToPhpValue( 'autoincrement','5',false);
             $this->fail("stringToPhpValue accepts autoincrement !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         // with no checknull
         $result = $tools->stringToPhpValue( 'integer','5',false);
-        $this->assertEqualOrDiff(5,$result);
+        $this->assertEquals(5,$result);
         $result = $tools->stringToPhpValue( 'float','5',false);
-        $this->assertEqualOrDiff(5,$result);
+        $this->assertEquals(5,$result);
         $result = $tools->stringToPhpValue( 'varchar','$foo',false);
-        $this->assertEqualOrDiff('$foo',$result);
+        $this->assertEquals('$foo',$result);
         $result = $tools->stringToPhpValue('varchar','$f\'oo', false);
-        $this->assertEqualOrDiff('$f\'oo',$result);
+        $this->assertEquals('$f\'oo',$result);
         $result = $tools->stringToPhpValue('double','5.63', false);
-        $this->assertEqualOrDiff(5.63,$result);
+        $this->assertEquals(5.63,$result);
         $result = $tools->stringToPhpValue('float','5.63', false);
-        $this->assertEqualOrDiff(5.63,$result);
+        $this->assertEquals(5.63,$result);
         $result = $tools->stringToPhpValue('float','983298095.631212', false);
-        $this->assertEqualOrDiff(983298095.631212,$result);
+        $this->assertEquals(983298095.631212,$result);
         $result = $tools->stringToPhpValue('numeric','565465465463', false);
-        $this->assertEqualOrDiff('565465465463',$result);
+        $this->assertEquals('565465465463',$result);
         $result = $tools->stringToPhpValue('numeric','565469876543139798641315465463', false);
-        $this->assertEqualOrDiff('565469876543139798641315465463',$result);
+        $this->assertEquals('565469876543139798641315465463',$result);
 
         // with checknull 
         $result = $tools->stringToPhpValue('integer','NULL', true);
-        $this->assertEqualOrDiff(null,$result);
+        $this->assertNull($result);
         $result = $tools->stringToPhpValue('varchar','NULL', true);
-        $this->assertEqualOrDiff(null,$result);
+        $this->assertNull($result);
     }
 
 
@@ -118,71 +121,71 @@ class UTjDbTools extends jUnitTestCase {
             $tools->escapeValue('int','5', false);
             $this->fail("escapeValue accepts int !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
         try {
             $tools->escapeValue( 'string','$foo',false);
             $this->fail("escapeValue accepts string !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         try {
             $tools->escapeValue( 'autoincrement','5',false);
             $this->fail("escapeValue accepts autoincrement !!");
         } catch(Exception $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
 
 
         // with no checknull
         $result = $tools->escapeValue( 'integer',5,false);
-        $this->assertEqualOrDiff("5",$result);
+        $this->assertEquals("5",$result);
         $result = $tools->escapeValue( 'numeric',598787232098320,false);
-        $this->assertEqualOrDiff("598787232098320",$result);
+        $this->assertEquals("598787232098320",$result);
         $result = $tools->escapeValue( 'numeric',59878723209832,false);
-        $this->assertEqualOrDiff("59878723209832",$result);
+        $this->assertEquals("59878723209832",$result);
         $result = $tools->escapeValue( 'numeric',5987872320983,false);
-        $this->assertEqualOrDiff("5987872320983",$result);
+        $this->assertEquals("5987872320983",$result);
         $result = $tools->escapeValue( 'numeric',598787232098,false);
-        $this->assertEqualOrDiff("598787232098",$result);
+        $this->assertEquals("598787232098",$result);
         $result = $tools->escapeValue( 'numeric',59878723209,false);
-        $this->assertEqualOrDiff("59878723209",$result);
+        $this->assertEquals("59878723209",$result);
         $result = $tools->escapeValue( 'numeric',5987872320,false);
-        $this->assertEqualOrDiff("5987872320",$result);
+        $this->assertEquals("5987872320",$result);
         $result = $tools->escapeValue( 'integer',598787232,false);
-        $this->assertEqualOrDiff("598787232",$result);
+        $this->assertEquals("598787232",$result);
         $result = $tools->escapeValue( 'integer',59878723,false);
-        $this->assertEqualOrDiff("59878723",$result);
+        $this->assertEquals("59878723",$result);
         $result = $tools->escapeValue( 'integer',5987872,false);
-        $this->assertEqualOrDiff("5987872",$result);
+        $this->assertEquals("5987872",$result);
         $result = $tools->escapeValue( 'numeric',5987872320983209098238723,false);
-        $this->assertEqualOrDiff("5987872320983209098238723",$result);
+        $this->assertEquals("5987872320983209098238723",$result);
         
         $result = $tools->escapeValue( 'float',5,false);
-        $this->assertEqualOrDiff("5",$result);
+        $this->assertEquals("5",$result);
         $result = $tools->escapeValue( 'varchar','$foo',false);
-        $this->assertEqualOrDiff('\'$foo\'',$result);
+        $this->assertEquals('\'$foo\'',$result);
         $result = $tools->escapeValue('varchar','$f\'oo', false);
-        $this->assertEqualOrDiff('\'$f\\\'oo\'',$result);
+        $this->assertEquals('\'$f\\\'oo\'',$result);
         $result = $tools->escapeValue('double',5.63, false);
-        $this->assertEqualOrDiff('5.63',$result);
+        $this->assertEquals('5.63',$result);
         $result = $tools->escapeValue('float',98084345.637655464, false);
-        $this->assertEqualOrDiff('98084345.637655464',$result);
+        $this->assertEquals('98084345.637655464',$result);
         $result = $tools->escapeValue('decimal',98084345.637655464, false);
-        $this->assertEqualOrDiff('98084345.637655464',$result);
+        $this->assertEquals('98084345.637655464',$result);
         $result = $tools->escapeValue('numeric','565465465463', false);
-        $this->assertEqualOrDiff('565465465463',$result);
+        $this->assertEquals('565465465463',$result);
         $result = $tools->escapeValue('numeric','565469876543139798641315465463', false);
-        $this->assertEqualOrDiff('565469876543139798641315465463',$result);
+        $this->assertEquals('565469876543139798641315465463',$result);
 
         // with checknull 
         $result = $tools->escapeValue('integer',5, true);
-        $this->assertEqualOrDiff('5',$result);
+        $this->assertEquals('5',$result);
         $result = $tools->escapeValue('integer',null, true);
-        $this->assertEqualOrDiff('NULL',$result);
+        $this->assertEquals('NULL',$result);
         $result = $tools->escapeValue('varchar',null, true);
-        $this->assertEqualOrDiff('NULL',$result);
+        $this->assertEquals('NULL',$result);
     }
 
 
