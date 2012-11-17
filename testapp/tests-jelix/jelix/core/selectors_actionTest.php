@@ -11,9 +11,10 @@
 
 class selectors_actionTest extends jUnitTestCase {
 
-    public function setUp() {
+    function setUp() {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
     }
 
     function testWithModule() {

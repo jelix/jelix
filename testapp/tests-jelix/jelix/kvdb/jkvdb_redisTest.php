@@ -22,7 +22,8 @@ class jkvdb_redisTest extends UTjKVDb {
 
     protected $redis;
 
-    public function setUp (){
+    function setUp () {
+        parent::setUp();
         if (!$this->_kvdbSetUp())
             return;
 

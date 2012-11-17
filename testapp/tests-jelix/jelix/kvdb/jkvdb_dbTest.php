@@ -22,12 +22,13 @@ class jkvdb_dbTest extends UTjKVDb {
 
     protected $db = null;
 
-    public function setUp (){
+    function setUp (){
         if ($this->_kvdbSetUp()) {
             $this->dbProfile = $this->profileData['dbprofile'];
             $this->db = jDb::getConnection($this->dbProfile);
             $this->db->exec('delete from testkvdb');
         }
+        parent::setUp();
     }
 
     public function testGarbage () {

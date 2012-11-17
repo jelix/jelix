@@ -4,15 +4,12 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
-
-
-class UTjdatatype extends jUnitTestCase {
+class jDatatypeTest extends PHPUnit_Framework_TestCase {
 
     function testString() {
         $dt=new jDatatypeString();
@@ -161,7 +158,7 @@ class UTjdatatype extends jUnitTestCase {
         $this->assertFalse($dt->check('a'), "jDatatypeInteger::check('a')");
         $this->assertFalse($dt->check('465abd598'), "jDatatypeInteger::check('465abd598')");
     }
-
+    /*
     function testHexa() {
         $dt=new jDatatypeHexadecimal();
     }
@@ -189,6 +186,5 @@ class UTjdatatype extends jUnitTestCase {
     function testLocalTime() {
         $dt=new jDatatypeLocaleTime();
     }
+    */
 }
-
-?>

@@ -20,7 +20,7 @@ class jkvdb_memcacheTest extends UTjKVDb {
 
     protected $profile = 'usingmemcache';
 
-    public function setUp (){
+    function setUp (){
         if (!$this->_kvdbSetUp())
             return;
         if (!extension_loaded('memcache'))
@@ -30,6 +30,7 @@ class jkvdb_memcacheTest extends UTjKVDb {
             $this->mmc = memcache_connect($host, intval($port));
             memcache_flush($this->mmc);
         }
+        parent::setUp();
     }
 
     public function tearDown() {

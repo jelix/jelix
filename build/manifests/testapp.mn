@@ -280,11 +280,6 @@ cd testapp/modules/jelix_tests/tests/
   jtpl.plugins.html.php
   jtpl.virtual.html_cli.php
   jzone.cache.html.php
-  utils.jdatatype.html_cli.php
-  utils.jduration.html_cli.php
-  utils.jimagemodifier.html_cli.php
-  utils.jclasses.html_cli.php
-  utils.jrooturl.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -354,10 +349,15 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/utils/
+  jClassesTest.php
+  jDatatypeTest.php
   jDateTimeTest.php
+  jDurationTest.php
   jFilterTest.php
+  jImageModifierTest.php
   jIniFileModifierTest.php
   jMailerTest.php
+  jRootUrlTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
   versionComparatorTest.php

@@ -3,12 +3,13 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Florian Hatat
-* @copyright   2008 Florian Hatat
+* @contributor Laurent Jouanneau
+* @copyright   2008 Florian Hatat, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testjDuration extends UnitTestCase {
+class jDurationTest extends PHPUnit_Framework_TestCase {
     function testReportedBug(){
         // Get now date/time
         $dtNow = new jDateTime();
@@ -26,7 +27,7 @@ class testjDuration extends UnitTestCase {
         {
             $countdown = $dtNow->durationTo($dtExpirationDate);
             $dtNow->add($countdown);
-            $this->assertEqual($dtNow, $dtExpirationDate);
+            $this->assertEquals($dtExpirationDate, $dtNow);
         }
         catch (Exception $e)
         {
@@ -39,7 +40,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 12, 25, 15, 28, 17);
         $dtExpected = new jDateTime(2007, 12, 25, 15, 28, 37);
         $dt->add($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testRelative1(){
@@ -47,7 +48,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 8, 14, 15, 28, 17);
         $dtExpected = new jDateTime(2007, 9, 14, 15, 28, 17);
         $dt->add($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testRelative2(){
@@ -55,7 +56,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 1, 14, 15, 28, 17);
         $dtExpected = new jDateTime(2006, 12, 14, 15, 28, 17);
         $dt->sub($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     // Add one month to August, 31st, you would get something like "September, 
@@ -66,7 +67,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 8, 31, 15, 28, 17);
         $dtExpected = new jDateTime(2007, 10, 1, 15, 28, 17);
         $dt->add($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testNegative(){
@@ -74,7 +75,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 12, 25, 15, 28, 17);
         $dtExpected = new jDateTime(2007, 12, 25, 15, 27, 57);
         $dt->add($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testMultiplication(){
@@ -83,7 +84,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2007, 1, 1, 23, 58, 3);
         $dtExpected = new jDateTime(1997, 1, 1, 23, 58, 3);
         $dt->sub($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testLeap1(){
@@ -91,7 +92,7 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2000, 2, 29, 12, 12, 12);
         $dtExpected = new jDateTime(2008, 2, 29, 12, 12, 12);
         $dt->add($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
 
     function testLeap2(){
@@ -99,14 +100,14 @@ class testjDuration extends UnitTestCase {
         $dt = new jDateTime(2000, 2, 29, 12, 12, 12);
         $dtExpected = new jDateTime(1993, 3, 1, 12, 12, 12);
         $dt->sub($dur);
-        $this->assertEqual($dt, $dtExpected);
+        $this->assertEquals($dtExpected, $dt);
     }
     
     function testManySeconds () {
         $dur = new jDuration(98320);
-        $this->assertEqual($dur->months, 0);
-        $this->assertEqual($dur->days, 1);
-        $this->assertEqual($dur->seconds, 11920);
+        $this->assertEquals(0, $dur->months);
+        $this->assertEquals(1, $dur->days);
+        $this->assertEquals(11920, $dur->seconds);
     }
 }
-?>
+

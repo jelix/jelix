@@ -20,11 +20,12 @@ class jkvdb_fileTest extends UTjKVDb {
 
     protected $profile = 'usingfile';
 
-    public function setUp (){
+    function setUp (){
         if (!$this->_kvdbSetUp())
             return;
         if (file_exists(jApp::tempPath().'kvfiles/tests/'))
             jFile::removeDir(jApp::tempPath().'kvfiles/tests/',false);
+        parent::setUp();
     }
     
     public function testSetGet (){

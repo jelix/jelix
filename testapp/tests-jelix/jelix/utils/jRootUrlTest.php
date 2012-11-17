@@ -3,22 +3,27 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Brice Tencé
-* @contributor 
-* @copyright    2011 Laurent Jouanneau
+* @contributor Laurent Jouanneau
+* @copyright   2011-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjrooturl extends UnitTestCase {
+class UTjrooturl extends jUnitTestCase {
+
+    function setUp() {
+        self::initJelixConfig();
+        parent::setUp();
+    }
 
     public function testjRootUrl(){
 
-        $this->assertEqual( jUrl::getRootUrl( 'test' ), 'http://www.junittest.com/' );
-        $this->assertEqual( jUrl::getRootUrl( 'secure_test' ), 'https://www.junittest.com/' );
-        $this->assertEqual( jUrl::getRootUrl( '/themes' ), 'http://themes.junittest.com/' );
-        $this->assertEqual( jUrl::getRootUrl( 'foo_relPath' ), jApp::config()->urlengine['basePath'].'foo' );
-        $this->assertEqual( jUrl::getRootUrl( 'foo_absPath' ), '/foo' );
-        $this->assertEqual( jUrl::getRootUrl( 'notInConfig' ), jApp::config()->urlengine['basePath'] );
-        $this->assertEqual( jUrl::getRootUrl( '/notInConfig' ), jApp::config()->urlengine['basePath'] );
+        $this->assertEquals( 'http://www.junittest.com/',    jUrl::getRootUrl( 'test' ));
+        $this->assertEquals( 'https://www.junittest.com/',   jUrl::getRootUrl( 'secure_test' ));
+        $this->assertEquals( 'http://themes.junittest.com/', jUrl::getRootUrl( '/themes' ));
+        $this->assertEquals( jApp::config()->urlengine['basePath'].'foo', jUrl::getRootUrl( 'foo_relPath' ));
+        $this->assertEquals( '/foo',                                jUrl::getRootUrl( 'foo_absPath' ));
+        $this->assertEquals( jApp::config()->urlengine['basePath'], jUrl::getRootUrl( 'notInConfig' ));
+        $this->assertEquals( jApp::config()->urlengine['basePath'], jUrl::getRootUrl( '/notInConfig' ));
     }
 }

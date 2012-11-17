@@ -31,7 +31,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      */
     protected $dbProfile ='';
 
-    public function setUp() {
+    protected function setUp() {
         parent::setUp();
         if($this->needPDO && false === class_exists('PDO',false)){
             $this->markTestSkipped('PDO does not exists ! You should install PDO because tests need it.');

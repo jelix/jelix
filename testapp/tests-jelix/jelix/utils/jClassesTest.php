@@ -3,16 +3,17 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Christophe Thiriot
-* @contributor
-* @copyright   2008 Christophe Thiriot
+* @contributor Laurent Jouanneau
+* @copyright   2008 Christophe Thiriot, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.1
 */
 
-class UTjclasses extends UnitTestCase {
+class jClassesTest extends jUnitTestCase {
 
     public function setUp() {
+        self::initJelixConfig();
         jClasses::resetBindings();
     }
 
@@ -26,7 +27,7 @@ class UTjclasses extends UnitTestCase {
             $class = jClasses::getBindedService('iface:jelix_tests~test');
             $this->fail('An interface without binding should raise a jException');
         } catch (jException $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
     }
 
@@ -37,13 +38,13 @@ class UTjclasses extends UnitTestCase {
 
         jClasses::bind('jelix_tests~test')->to('jelix_tests~myclass');
         $classname = jClasses::bind('jelix_tests~test')->getClassName();
-        $this->assertTrue($classname === 'myclass');
+        $this->assertEquals('myclass', $classname);
 
         try {
             jClasses::bind('jelix_tests~test')->to('jelix_tests~notexistingclass');
             $this->fail('A binding to a non existing class should raise an exception');
         } catch (jExceptionSelector $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
     }
 
@@ -55,7 +56,7 @@ class UTjclasses extends UnitTestCase {
 
         jClasses::bind('jelix_tests~test')->toInstance($instance);
         $classname = jClasses::bind('jelix_tests~test')->getClassName();
-        $this->assertTrue($classname === 'myclass');
+        $this->assertEquals('myclass', $classname);
     }
 
     // test with binding in jelix config file + get class name + non existing binded class
@@ -77,7 +78,7 @@ class UTjclasses extends UnitTestCase {
     // test with binding in DEFAULT IMPLEMENTATION constant + get class name + non existing binded class
     public function testBindingInDefaultImplementation() {
         $classname = jClasses::bind('iface:jelix_tests~tests/foo')->getClassName();
-        $this->assertEqual($classname, 'bind');
+        $this->assertEquals('bind', $classname);
         jClasses::resetBindings();
 
         $class = jClasses::getBindedService('iface:jelix_tests~tests/foo');
@@ -89,7 +90,7 @@ class UTjclasses extends UnitTestCase {
             $class = jClasses::getBindedService('class:jelix_tests~test/bind');
             $this->fail('A non existing default implementation should raise an exception');
         } catch (jExceptionSelector $e) {
-            $this->pass();
+            $this->assertTrue(true);
         }
     }
 

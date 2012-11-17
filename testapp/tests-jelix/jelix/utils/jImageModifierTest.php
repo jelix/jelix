@@ -4,21 +4,25 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2011 Laurent Jouanneau
+* @copyright   2011-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjimagemodifier extends UnitTestCase {
+class jImageModifierTest extends jUnitTestCase {
 
     protected $origFile;
 
-    function skip() {
-        $this->skipIf(!is_writable(jApp::wwwPath('cache/images/')), "cache/images/ is not writable");
-    }
-
-    function setUpRun() {
+    protected function setUp()
+    {
+        if (!is_writable(jApp::wwwPath('cache/images/'))) {
+            $this->markTestSkipped(
+              'cache/images/ is not writable'
+            );
+        }
+        parent::setUp();
         $this->origFile = jApp::wwwPath('imagemodifier/logo_test.png');
+        self::initClassicRequest(TESTAPP_URL.'index.php');
     }
 
     function testGet() {
@@ -29,13 +33,12 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30));
-        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
         $this->assertTrue(file_exists($cacheFile));
 
-
         $image = imagecreatefrompng($cacheFile);
-        $this->assertEqual(50, imagesx($image));
-        $this->assertEqual(30, imagesy($image));
+        $this->assertEquals(50, imagesx($image));
+        $this->assertEquals(30, imagesy($image));
         @imagedestroy($image);
         if (file_exists($cacheFile))
             unlink($cacheFile);
@@ -49,13 +52,13 @@ class UTjimagemodifier extends UnitTestCase {
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('maxwidth'=>50, 'maxheight'=>30, 'omo'=>true));
         $this->assertTrue(file_exists($cacheFile));
-        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
-        //$this->assertEqual('50', $attributes['width']);
-        //$this->assertEqual('16', $attributes['height']);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
+        //$this->assertEquals('50', $attributes['width']);
+        //$this->assertEquals('16', $attributes['height']);
 
         $image = imagecreatefrompng($cacheFile);
-        $this->assertEqual(50, imagesx($image));
-        $this->assertEqual(16, imagesy($image));
+        $this->assertEquals(50, imagesx($image));
+        $this->assertEquals(16, imagesy($image));
         @imagedestroy($image);
         if (file_exists($cacheFile))
             unlink($cacheFile);
@@ -68,20 +71,16 @@ class UTjimagemodifier extends UnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30, 'omo'=>true));
-        $this->assertEqual(jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName, $attributes['src']);
-        $this->assertEqual('50', $attributes['width']);
-        $this->assertEqual('30', $attributes['height']);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
+        $this->assertEquals('50', $attributes['width']);
+        $this->assertEquals('30', $attributes['height']);
         $this->assertTrue(file_exists($cacheFile));
 
         $image = imagecreatefrompng($cacheFile);
-        $this->assertEqual(50, imagesx($image));
-        $this->assertEqual(30, imagesy($image));
+        $this->assertEquals(50, imagesx($image));
+        $this->assertEquals(30, imagesy($image));
         @imagedestroy($image);
         if (file_exists($cacheFile))
             unlink($cacheFile);
     }
-
-
-
-
 }
