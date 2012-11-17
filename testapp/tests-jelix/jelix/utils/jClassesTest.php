@@ -12,9 +12,10 @@
 
 class jClassesTest extends jUnitTestCase {
 
-    public function setUp() {
+    function setUp() {
         self::initJelixConfig();
         jClasses::resetBindings();
+        parent::setUp();
     }
 
     public function testClassNoBinding() {

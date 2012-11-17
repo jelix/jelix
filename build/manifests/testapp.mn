@@ -253,16 +253,6 @@ cd testapp/modules/jelix_tests/tests/
   jdao.parser_update.html_cli.php
   jdao.generator.html_cli.php
   jdao.generator_select.html_cli.php
-  jdb.1_queries.html_cli.php
-  jdb.2_queries_with_pdo.html_cli.php
-  jdb.3_queries_with_mysqli.html_cli.php
-  jdb.lib.php
-  jdb.mysql.html_cli.php
-  jdb.mysqli.html_cli.php
-  jdb.pgsql.html_cli.php
-  jdbschema.mysql.html_cli.php
-  jdbtools.html_cli.php
-  jdbtools.mysql.html_cli.php
   jforms.html_cli.php
   jforms.check_datas.html_cli.php
   jforms.compiler.html_cli.php
@@ -365,6 +355,16 @@ cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
   jDb_sqliteTest.php
   jDb_sqlite3Test.php
+  jdb_queriesTest.php
+  jdb_queries_with_pdoTest.php
+  jdb_queries_with_mysqliTest.php
+  jdb.lib.php
+  jdb_mysqlTest.php
+  jdb_mysqliTest.php
+  jdb_pgsqlTest.php
+  jdbschema_mysqlTest.php
+  jdbtoolsTest.php
+  jdbtools_mysqlTest.php
 cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_dbTest.php
   jkvdb_fileTest.php
