@@ -86,9 +86,7 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             break;
         case 'bodyattr':
             if(is_array($param)){
-                foreach($param as $p1=>$p2){
-                    if(!is_numeric($p1)) $resp->bodyTagAttributes[$p1]=$p2;
-                }
+                $resp->setBodyAttributes( $param );
             }
             break;
         case 'keywords':
