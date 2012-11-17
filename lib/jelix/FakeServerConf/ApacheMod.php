@@ -5,7 +5,7 @@
 * @author       Laurent Jouanneau
 * @copyright    2012 Laurent Jouanneau
 * @link         http://jelix.org
-* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+* @licence      MIT
 */
 
 namespace jelix\FakeServerConf;
@@ -15,8 +15,8 @@ namespace jelix\FakeServerConf;
  */
 class ApacheMod extends FakeServerConf {
 
-    public function setHttpRequest($url, $method='get', $body='') {
-        parent::setHttpRequest($url, $method, $body);
+    public function setHttpRequest($url, $method='get', $body='', $bodyContentType='application/x-www-form-urlencoded') {
+        parent::setHttpRequest($url, $method, $body, $bodyContentType);
         if (isset($_SERVER['PATH_INFO'])) {
             $_SERVER['PATH_TRANSLATED'] = $_SERVER["DOCUMENT_ROOT"].ltrim($_SERVER['PATH_INFO'], '/');
         }
