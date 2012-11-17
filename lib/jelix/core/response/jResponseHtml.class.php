@@ -345,6 +345,20 @@ class jResponseHtml extends jResponseBasicHtml {
     }
 
     /**
+     * set attributes on the body tag
+     * @param array $attrArray  an associative array of attributes and their values
+     */
+    public function setBodyAttributes ( $attrArray ){
+        if( is_array($attrArray) ) {
+            foreach( $attrArray as $attr => $value ) {
+                if(!is_numeric($attr)) {
+                    $this->bodyTagAttributes[$attr]=$value;
+                }
+            }
+        }
+    }
+
+    /**
      * add inline javascript code (inside a <script> tag)
      * @param string $code  javascript source code
      * @param boolean $before will insert the code before js links if true
