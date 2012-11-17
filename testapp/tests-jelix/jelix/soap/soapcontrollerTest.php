@@ -13,7 +13,11 @@
 /**
 * Tests of soapCtrl web services 
 */
-class UTsoap extends jUnitTestCase {
+class soapcontrollerTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
 
     /**
      * Test with the soap extension
@@ -23,7 +27,7 @@ class UTsoap extends jUnitTestCase {
         ini_set('soap.wsdl_cache_enabled', 0);
 
         // Load the WSDL
-        $wsdlURI = "http://".$_SERVER['HTTP_HOST'].jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
+        $wsdlURI = "http://".TESTAPP_HOST.jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
         $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
 
         $result = $client->__soapCall('getServerDate', array());

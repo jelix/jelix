@@ -4,12 +4,17 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTSelectorMod extends UnitTestCase {
+class selectors_moduleTest extends jUnitTestCase {
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+        jApp::pushCurrentModule('jelix_tests');
+    }
 
     function testZoneSelector() {
         $sels=array(

@@ -4,12 +4,17 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTSelectorAct extends UnitTestCase {
+class selectors_actionTest extends jUnitTestCase {
+
+    public function setUp() {
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+    }
 
     function testWithModule() {
         $sels=array(
@@ -28,7 +33,7 @@ class UTSelectorAct extends UnitTestCase {
 "testapp~"=>array('testapp','default','index','classic'),
 "testapp~#"=>array('testapp',jApp::coord()->action->controller, jApp::coord()->action->method,'classic'),
         );
-        $this->runtest($sels);
+        $this->launchtestsel($sels);
     }
 
 
@@ -60,7 +65,7 @@ class UTSelectorAct extends UnitTestCase {
 "aa.bb"=>false,
 "aa~bb.cc"=>false,
         );
-        $this->runtest($sels);
+        $this->launchtestsel($sels);
     }
 
 
@@ -81,7 +86,7 @@ class UTSelectorAct extends UnitTestCase {
 "#~"=>array($mod,'default','index','classic'),
 "#~#"=>array($mod,jApp::coord()->action->controller, jApp::coord()->action->method,'classic'),
         );
-        $this->runtest($sels);
+        $this->launchtestsel($sels);
     }
 
    function testMisc() {
@@ -98,10 +103,10 @@ class UTSelectorAct extends UnitTestCase {
 ""=>array('jelix_tests','default','index','classic'),
 "#"=>array('jelix_tests',jApp::coord()->action->controller, jApp::coord()->action->method,'classic'),
         );
-        $this->runtest($sels);
+        $this->launchtestsel($sels);
     }
 
-    protected function runtest($list){
+    protected function launchtestsel($list){
 
 
         foreach($list as $sel=>$res){
@@ -164,24 +169,19 @@ class UTSelectorAct extends UnitTestCase {
                 $valid=false;
             }
             $msg='';
-            if($valid){
+            if ($valid) {
                 $valid = $valid 
-                && $s->module == $res[0]
-                && $s->controller == $res[1]
-                && $s->method == $res[2]
-                && $s->request == $res[3];
-                if(!$valid)
+                        && $s->module == $res[0]
+                        && $s->controller == $res[1]
+                        && $s->method == $res[2]
+                        && $s->request == $res[3];
+                if (!$valid)
                     $msg=' contains unexpected data ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
-            $this->assertTrue($valid , ' test of '.$sel. ' (should be '.($res === false ? 'invalid':'valid').')');
+            $this->assertTrue($valid , ' test of '.implode('-',$sel). ' (should be '.($res === false ? 'invalid':'valid').')');
             if($msg)
                 $this->sendMessage($msg);
         }
-
     }
-
-
 }
-
-?>

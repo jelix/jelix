@@ -8,7 +8,7 @@ class jPrefTest extends jUnitTestCase {
      * @covers jPref::get
      */
     public function testJPref(){
-        $this->initJelixConfig();
+        self::initJelixConfig();
         $testArray = array();
         $testArray[] = array('value' => false, 'key' => 'my.bool.value');
         $testArray[] = array('value' => 123, 'key' => 'my.int.value');

@@ -219,10 +219,6 @@ cd testapp/modules/jelix_tests/forms
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
-  core.rest_controller.html_cli.php
-  core.selectors_action.html.php
-  core.selectors_module.html_cli.php
-  core.soap.html.php
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
@@ -329,6 +325,12 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
+  restcontrollerTest.php
+  selectors_actionTest.php
+  selectors_moduleTest.php
+cd testapp/tests-jelix/jelix/soap/
+  soapcontrollerTest.php
+  soapclientTest.php
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
@@ -358,7 +360,6 @@ cd testapp/tests-jelix/jelix/utils/
   jMailerTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
-  soapclientTest.php
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
