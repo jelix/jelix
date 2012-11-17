@@ -264,11 +264,6 @@ cd testapp/modules/jelix_tests/tests/
   jforms.htmllightbuilder2.html_cli.php
   jforms.modifiedcontrols.html_cli.php
   jforms.with_dao.html_cli.php
-  jtpl.compiler.html_cli.php
-  jtpl.expressions_parsing.html_cli.php
-  jtpl.fetch.html_cli.php
-  jtpl.plugins.html.php
-  jtpl.virtual.html_cli.php
   jzone.cache.html.php
   test1.pu.php
   test2.unit.pu.php
@@ -373,6 +368,12 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
   jforms_init_from_requestTest.php
+cd testapp/tests-jelix/jelix/tpl/
+  jtpl_compilerTest.php
+  jtpl_expressions_parsingTest.php
+  jtpl_fetchTest.php
+  jtpl_pluginsTest.php
+  jtpl_virtualTest.php
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 
