@@ -16,6 +16,10 @@ class selectors_actionTest extends jUnitTestCase {
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
+    
+    function tearDown() {
+        jApp::popCurrentModule();
+    }
 
     function testWithModule() {
         $sels=array(

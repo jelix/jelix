@@ -11,9 +11,13 @@
 
 class selectors_moduleTest extends jUnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public function setUp() {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
+    }
+    function tearDown() {
+        jApp::popCurrentModule();
     }
 
     function testZoneSelector() {

@@ -50,6 +50,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
         require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
         $config = jConfigCompiler::read($config, true, true, $entryPoint);
         jApp::setConfig($config);
+        jApp::setCoord(null);
     }
 
     /**

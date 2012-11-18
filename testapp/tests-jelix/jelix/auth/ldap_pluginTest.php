@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire, laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -17,17 +17,22 @@
 
 define ("NB_USERS_LDAP",3);
 
-class UTjAuth_LDAP extends jUnitTestCase {
+class ldap_pluginAuthTest extends jUnitTestCase {
 
     protected $config;
 
-    public function setUpRun (){
+    function setUp(){
+        parent::setUp();
         if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
+            $this->markTestSkipped('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
+                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
             return;
         }
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        
         $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
-
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 
@@ -35,12 +40,8 @@ class UTjAuth_LDAP extends jUnitTestCase {
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
     }
 
-    function skip() {
-        $this->skipIf($this->config === null, 'Ldap plugin for jauth is not tested because there isn\'t configuration.'.
-                               ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
-    }
-
-    public function tearDownRun (){
+    function tearDown(){
+        jApp::popCurrentModule();
         unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
@@ -122,5 +123,3 @@ class UTjAuth_LDAP extends jUnitTestCase {
 
 
 }
-
-?>

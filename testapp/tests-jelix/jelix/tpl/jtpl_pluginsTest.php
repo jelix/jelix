@@ -13,10 +13,14 @@
 
 class jtpl_pluginsTest extends jUnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public function setUp() {
         self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
     }
-
+    function tearDown() {
+        jApp::popCurrentModule();
+    }
     protected $templates = array(
         0=>array(
             'test_plugin_jurl', // template selector

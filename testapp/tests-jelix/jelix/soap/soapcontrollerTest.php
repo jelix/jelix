@@ -15,8 +15,13 @@
 */
 class soapcontrollerTest extends jUnitTestCase {
 
-    public static function setUpBeforeClass() {
-        self::initJelixConfig();
+    public function setUp() {
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
+    }
+    function tearDown() {
+        jApp::popCurrentModule();
     }
 
     /**
