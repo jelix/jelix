@@ -237,11 +237,6 @@ cd testapp/modules/jelix_tests/tests/
   jacl2.users_and_groups.html_cli.php
   jacl2_main_api.lib.php
   jauth.ldap_api.html.php
-  jcache.lib.php
-  jcache.db.html_cli.php
-  jcache.file.html_cli.php
-  jcache.memcache.html_cli.php
-  jcache.memcache22.html_cli.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.factory_base.html_cli.php
@@ -297,6 +292,12 @@ cd testapp/modules/testinstall3
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
+cd testapp/tests-jelix/jelix/cache/
+  jcache.lib.php
+  jcache_dbTest.php
+  jcache_fileTest.php
+  jcache_memcacheTest.php
+  jcache_memcache22Test.php
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php

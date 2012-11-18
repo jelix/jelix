@@ -4,6 +4,9 @@
     <testsuite name="Jelix Core">
       <directory>jelix/core/</directory>
     </testsuite>
+    <testsuite name="Jelix Cache">
+      <directory>jelix/cache/</directory>
+    </testsuite>
     <testsuite name="Jelix Db">
       <directory>jelix/db/</directory>
     </testsuite>
@@ -27,6 +30,12 @@
     </testsuite>
     <testsuite name="Jelix Scripts">
       <directory>jelix-scripts/</directory>
+    </testsuite>
+    <testsuite name="Jelix tpl">
+      <directory>jelix/tpl/</directory>
+    </testsuite>
+    <testsuite name="Jelix soap">
+      <directory>jelix/soap/</directory>
     </testsuite>
   </testsuites>
 </phpunit>
