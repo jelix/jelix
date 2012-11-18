@@ -222,7 +222,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  httpcache.pu.php
   installer.lib.php
   installer.main.html_cli.php
   installer.misc.html_cli.php
@@ -298,6 +297,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_fileTest.php
   jcache_memcacheTest.php
   jcache_memcache22Test.php
+  httpcacheTest.php
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php

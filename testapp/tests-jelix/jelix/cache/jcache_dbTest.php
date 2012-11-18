@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,11 +18,12 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheDb extends UTjCacheAPI {
+class jCache_DbTest extends jCacheAPITest {
 
     protected $profile = 'usingdb';
 
     public function setUp (){
+        parent::setUp();
         $this->emptyTable('jlx_cache');
     }
 
@@ -32,7 +33,7 @@ class UTjCacheDb extends UTjCacheAPI {
         $this->insertRecordsIntoTable('jlx_cache', array('cache_key','cache_data','cache_date'),array(array('cache_key'=>'phpIncompleteClassKey','cache_data'=>'O:9:"dummyData":2:{s:5:"label";s:23:"test unserializing data";s:11:"description";s:26:"for expecting an exception";}','cache_date'=>null)));
         $data=jCache::get('phpIncompleteClassKey',$this->profile);
         if(!is_object($data)){
-            $this->pass();
+            $this->assertTrue(true);
         }else{
             $this->fail();
         }

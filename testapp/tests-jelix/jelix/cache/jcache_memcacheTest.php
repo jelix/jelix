@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,20 +18,19 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheMemcache extends UTjCacheAPI {
+class jCache_MemcacheTest extends jCacheAPITest {
 
     protected $profile = 'usingmemcache';
 
     protected $mmhost= 'localhost';
     protected $mmport = 11211;
 
-    function skip() {
-        parent::skip();
-        $this->skipIf(!extension_loaded('memcache'), 'UTjCacheMemcache  cannot be run because memcache is not installed');
-        $this->skipIf(version_compare(phpversion('memcache'), '3.0.1') == -1, 'UTjCacheMemcache cannot be run because version of memcache is wrong (should be >= 3.0.1)');
-    }
-
-    public function setUp () {
+    function setUp () {
+        if (!extension_loaded('memcache'))
+            $this->markTestSkipped('jCache_MemcacheTest  cannot be run because memcache is not installed');
+        if (version_compare(phpversion('memcache'), '3.0.1') == -1)
+            $this->markTestSkipped('jCache_MemcacheTest cannot be run because version of memcache is wrong (should be >= 3.0.1)');
+        parent::setUp();
         if (isset($this->conf['servers']))
             list($this->mmhost, $this->mmport) = explode(":",$this->conf['servers']);
         $mmc = memcache_connect($this->mmhost, (int)$this->mmport);

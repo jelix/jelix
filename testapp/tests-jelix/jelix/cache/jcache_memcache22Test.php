@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,20 +18,19 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheMemcache22 extends UTjCacheAPI {
+class jCache_Memcache22Test extends jCacheAPITest {
 
     protected $profile = 'usingmemcache';
 
     protected $mmhost = 'localhost';
     protected $mmport = 11211;
 
-    function skip() {
-        parent::skip();
-        $this->skipIf(!extension_loaded('memcache'), 'UTjCacheMemcache22  cannot be run because memcache is not installed');
-        $this->skipIf(version_compare(phpversion('memcache'), '3.0.1') > 0, 'UTjCacheMemcache22 cannot be run because version of memcache is wrong (should be <= 3.0.1)');
-    }
-
-    public function setUp () {
+    function setUp () {
+        if (!extension_loaded('memcache'))
+            $this->markTestSkipped('jCache_Memcache22Test  cannot be run because memcache is not installed');
+        if (version_compare(phpversion('memcache'), '3.0.1') > 0)
+            $this->markTestSkipped('jCache_Memcache22Test cannot be run because version of memcache is wrong (should be < 3.0.1)');
+        parent::setUp();
         if (isset($this->conf['servers']))
             list($this->mmhost, $this->mmport) = explode(":",$this->conf['servers']);
         $mmc = memcache_connect($this->mmhost, $this->mmport);
@@ -41,7 +40,7 @@ class UTjCacheMemcache22 extends UTjCacheAPI {
     public function testGet (){
         parent::testGet();
         //Memcache manages serialization and unserialization process internally. It throws an exception in case of errors
-        $this->pass();
+        $this->assertTrue(true);
     }
 
     public function testGarbage (){

@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -16,21 +16,26 @@
 * @subpackage  jelix_tests module
 */
 
-abstract class UTjCacheAPI extends jUnitTestCaseDb {
+abstract class jCacheAPITest extends jUnitTestCaseDb {
 
     protected $profile = '';
     
     protected $conf = null;
 
-    function setUpRun() {
+    protected $tmpFile;
+
+    public static function setUpBeforeClass() {
+        self::initJelixConfig();
+    }
+
+    function setUp() {
         $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
         if (isset($conf['jcache:'.$this->profile]) && $conf['jcache:'.$this->profile]['enabled']) {
             $this->conf = $conf['jcache:'.$this->profile];
         }
-    }
-
-    function skip() {
-        $this->skipIf($this->conf === null, get_class($this).' cannot be run with '.$this->profile.': undefined profile');
+        if ($this->conf === null)
+            $this->markTestSkipped(get_class($this).' cannot be run with '.$this->profile.': undefined profile');
+        parent::setUp();
     }
 
     public function testSet (){
@@ -40,7 +45,7 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             'content'=>'Lorem ipsum dolor sit amét, conséctetuer adipiscing elit. Donec at odio vitae libero tempus convallis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum purus mauris, dapibus eu, sagittis quis, sagittis quis, mi. Morbi fringilla massa quis velit. Curabitur metus massa, semper mollis, molestie vel, adipiscing nec, massa. Phasellus vitae felis sed lectus dapibus facilisis. In ultrices sagittis ipsum. In at est. Integer iaculis turpis vel magna. Cras eu est. Integer porttitor ligula a tellus. Curabitur accumsan ipsum a velit. Sed laoreet lectus quis leo. Nulla pellentesque molestie ante. Quisque vestibulum est id justo. Ut pellentesque ante in neque.'
         );
         $myObj=(object)array('property1'=>'string','property2'=>'integer');
-        $tmpFile = tmpfile();
+        
 
         $this->assertFalse(jCache::set('defaultProfileDisabledKey',$myData));
 
@@ -61,11 +66,12 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::set('invalid Key','data for an invalid key',0,$this->profile);
             $this->fail();
         }catch(jException $e){
-            $this->pass();
+            $this->assertTrue(true);
         }
-
+        $tmpFile = tmpfile();
+        $this->assertTrue(is_resource($tmpFile));
         $this->assertFalse(jCache::set('unableToSerializeDataKey',$tmpFile,0,$this->profile));
-        fclose( $tmpFile );
+        fclose($tmpFile);
     }
 
     public function testGet (){
@@ -93,7 +99,7 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::call(array('testCache','missingStaticMethod'),null,0,$this->profile);
             $this->fail();
         }catch(jException $e){
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         $returnData=jCache::call(array($myClass,'method'),array(1,2),0,$this->profile);
@@ -105,7 +111,7 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::call(array($myClass,'missingMethod'),null,0,$this->profile);
             $this->fail();
         }catch(jException $e){
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         $returnData=jCache::call('testFunction',array(1,2),0,$this->profile);
@@ -117,7 +123,7 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::call('testFunction_missing',null,0,$this->profile);
             $this->fail();
         }catch(jException $e){
-            $this->pass();
+            $this->assertTrue(true);
         }
     }
 
@@ -128,7 +134,7 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
             jCache::add('added1Key', 111, $ttl,'invalidProfil');
             $this->fail("jCache should throw an exeception when we give an invalid profile");
         }catch(jException $e){
-            $this->pass();
+            $this->assertTrue(true);
         }
 
         jCache::set('existentKey',array((object)array('x'=>0,'y'=>0),'a screen point'),$ttl,$this->profile);
@@ -147,11 +153,11 @@ abstract class UTjCacheAPI extends jUnitTestCaseDb {
         $this->assertTrue(jCache::increment('integerDataKey',1,$this->profile)==101);
 
         $this->assertTrue(jCache::set('floatDataKey',100.5,1,$this->profile));
-        $this->assertEqual(jCache::get('floatDataKey',$this->profile), 100.5);
-        $this->assertEqual(jCache::increment('floatDataKey',1,$this->profile),101);
+        $this->assertEquals(100.5, jCache::get('floatDataKey',$this->profile));
+        $this->assertEquals(101, jCache::increment('floatDataKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('floatIncrementationKey',100,1,$this->profile));
-        $this->assertEqual(jCache::increment('floatIncrementationKey',1.5,$this->profile),101);
+        $this->assertEquals(101, jCache::increment('floatIncrementationKey',1.5,$this->profile));
 
         $this->assertTrue(jCache::set('stringIncrementationKey',1,1,$this->profile));
         $this->assertFalse(jCache::increment('stringIncrementationKey','increment by string',$this->profile));

@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009
+* @copyright   NEOV 2009, 2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -18,7 +18,7 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class UTjCacheFile extends UTjCacheAPI {
+class jCache_FileTest extends jCacheAPITest {
 
     protected $profile = 'usingfile';
 

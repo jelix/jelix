@@ -27,7 +27,7 @@ class soapcontrollerTest extends jUnitTestCase {
         ini_set('soap.wsdl_cache_enabled', 0);
 
         // Load the WSDL
-        $wsdlURI = "http://".TESTAPP_HOST.jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
+        $wsdlURI = TESTAPP_URL.jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
         $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
 
         $result = $client->__soapCall('getServerDate', array());
