@@ -222,11 +222,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  installer.lib.php
-  installer.main.html_cli.php
-  installer.misc.html_cli.php
-  installer.component.html_cli.php
-  installer.dependencies.html_cli.php
   jacl.main_api.html_cli.php
   jacl.manager.html_cli.php
   jacl.users_and_groups.html_cli.php
@@ -316,6 +311,11 @@ cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
+  installer.lib.php
+  installer_mainTest.php
+  installer_componentTest.php
+  installer_dependenciesTest.php
+
 cd testapp/tests-jelix/jelix/installer/app1/
   project.xml
   project1.xml
