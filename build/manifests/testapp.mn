@@ -312,7 +312,6 @@ cd testapp/tests-jelix/jelix/events/
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
   installer.lib.php
-  installer_mainTest.php
   installer_componentTest.php
   installer_dependenciesTest.php
 

@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2011 Laurent Jouanneau
+* @copyright   2009-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.2
@@ -12,7 +12,6 @@
 
 
 require_once(__DIR__.'/installer.lib.php');
-require_once(LIB_PATH.'/simpletest/mock_objects.php');
 
 class testInstallerComponentModule2 extends jInstallerComponentModule {
 
@@ -47,28 +46,28 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     
 }
 
-class UTjInstallerComponent extends UnitTestCase {
+class jInstaller_ComponentTest extends jUnitTestCase {
 
     protected $defaultIni;
 
-    public function setUp() {
+    function setUp() {
+        $this->defaultIni = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         jApp::saveContext();
     }
 
-    public function tearDown() {
+    function tearDown() {
         jApp::restoreContext();
     }
 
     public function testDependenciesReading() {
-        $this->defaultIni = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
         $comp = new testInstallerComponentForDependencies("test","", null);
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
 </module>';
         $comp->readDependenciesFromString($str);
-        $this->assertEqual($comp->dependencies, array());
-        $this->assertEqual($comp->getJelixVersion(), array('*','*'));
+        $this->assertEquals(array(), $comp->dependencies);
+        $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
@@ -76,8 +75,8 @@ class UTjInstallerComponent extends UnitTestCase {
     </dependencies>
 </module>';
         $comp->readDependenciesFromString($str);
-        $this->assertEqual($comp->dependencies, array());
-        $this->assertEqual($comp->getJelixVersion(), array('*','*'));
+        $this->assertEquals(array(), $comp->dependencies);
+        $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
@@ -87,7 +86,7 @@ class UTjInstallerComponent extends UnitTestCase {
 </module>';
 
         $comp->readDependenciesFromString($str);
-        $this->assertEqual($comp->dependencies, array(
+        $this->assertEquals(array(
             array(
                 'type'=> 'module',
                 'id' => 'jelix@jelix.org',
@@ -96,8 +95,8 @@ class UTjInstallerComponent extends UnitTestCase {
                 'maxversion' => '1.1',
                 ''
             )
-            ));
-        $this->assertEqual($comp->getJelixVersion(), array('1.0', '1.1'));
+            ), $comp->dependencies);
+        $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
 
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
@@ -111,7 +110,7 @@ class UTjInstallerComponent extends UnitTestCase {
 </module>';
 
         $comp->readDependenciesFromString($str);
-        $this->assertEqual($comp->dependencies, array(
+        $this->assertEquals(array(
             array(
                 'type'=> 'module',
                 'id' => 'jelix@jelix.org',
@@ -144,8 +143,8 @@ class UTjInstallerComponent extends UnitTestCase {
                 'maxversion' => '*',
                 ''
             ),
-            ));
-        $this->assertEqual($comp->getJelixVersion(), array('1.0', '1.1'));
+            ), $comp->dependencies);
+        $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
     }
 
 
@@ -232,7 +231,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue(is_array($upgraders));
-            $this->assertEqual(count($upgraders), 0);
+            $this->assertEquals(0, count($upgraders));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -262,7 +261,7 @@ class UTjInstallerComponent extends UnitTestCase {
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
-            $this->assertEqual(count($upgraders), 0);
+            $this->assertEquals(0, count($upgraders));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -291,21 +290,17 @@ class UTjInstallerComponent extends UnitTestCase {
 
 
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 1)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(1, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
             $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 1)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(1, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -335,25 +330,21 @@ class UTjInstallerComponent extends UnitTestCase {
 
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have second then newupgraderfilename
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 3)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_second');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(3, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
             $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 3)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_second');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(3, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -382,25 +373,21 @@ class UTjInstallerComponent extends UnitTestCase {
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have newupgraderfilename then second
 
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 3)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_second');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(3, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
             $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 3)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_second');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(3, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -413,9 +400,11 @@ class UTjInstallerComponent extends UnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            Mock::generate('jInstaller');
+            
+
             file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
-            $installer = new MockjInstaller();
+            $installer = $this->getMock('jInstaller', null, array(new testInstallReporter()) );
+
             $installer->installerIni = new jIniFileModifier(jApp::tempPath('dummyInstaller.ini'));
 
             $component = new testInstallerComponentModule2('testinstall2', jApp::appPath('modules/testinstall2/'), $installer);
@@ -439,13 +428,11 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 3)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_second');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(3, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
 
             $installer->installerIni->setValue('testinstall2.firstversion', '1.1.3' , 'index');
             $installer->installerIni->setValue('testinstall2.firstversion.date', '2011-01-13' , 'index');
@@ -463,11 +450,9 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 1)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(1, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -495,27 +480,23 @@ class UTjInstallerComponent extends UnitTestCase {
             $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 4)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_first');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[3]), 'testinstall2ModuleUpgrader_second');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(4, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_first', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[2]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[3]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
             $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
-            if ($this->assertTrue (is_array($upgraders))) {
-                if ($this->assertEqual(count($upgraders), 4)) {
-                    $this->assertEqual(get_class($upgraders[0]), 'testinstall2ModuleUpgrader_first');
-                    $this->assertEqual(get_class($upgraders[1]), 'testinstall2ModuleUpgrader_newupgraderfilename');
-                    $this->assertEqual(get_class($upgraders[2]), 'testinstall2ModuleUpgrader_newupgraderfilenamedate');
-                    $this->assertEqual(get_class($upgraders[3]), 'testinstall2ModuleUpgrader_second');
-                }
-            }
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(4, count($upgraders));
+            $this->assertEquals('testinstall2ModuleUpgrader_first', get_class($upgraders[0]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[1]));
+            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[2]));
+            $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[3]));
         }
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");

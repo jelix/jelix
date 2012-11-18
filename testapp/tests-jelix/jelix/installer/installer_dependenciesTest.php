@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009 Laurent Jouanneau
+* @copyright   2009-2012 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.2
@@ -13,7 +13,7 @@
 require_once(__DIR__.'/installer.lib.php');
 
 
-class UTjInstallerDependencies extends jUnitTestCase {
+class jInstaller_DependenciesTest extends jUnitTestCase {
 
     protected $installer;
     protected $instReport;
@@ -402,8 +402,8 @@ class UTjInstallerDependencies extends jUnitTestCase {
         $max = count($this->instReport->messages);
         $this->assertTrue($max > 0);
         $error = $this->instReport->messages[$max-1];
-        $this->assertEqual($error[0], 'Circular dependency ! Cannot install the component testA');
-        $this->assertEqual($error[1], 'error');
+        $this->assertEquals('Circular dependency ! Cannot install the component testA', $error[0]);
+        $this->assertEquals('error', $error[1]);
 
         $this->instReport->messages = array();
 
@@ -411,8 +411,8 @@ class UTjInstallerDependencies extends jUnitTestCase {
         $max = count($this->instReport->messages);
         $this->assertTrue($max > 0);
         $error = $this->instReport->messages[$max-1];
-        $this->assertEqual($error[0], 'Circular dependency ! Cannot install the component testB');
-        $this->assertEqual($error[1], 'error');
+        $this->assertEquals('Circular dependency ! Cannot install the component testB', $error[0]);
+        $this->assertEquals('error', $error[1]);
     }
 }
 
