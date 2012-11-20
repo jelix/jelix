@@ -247,7 +247,13 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
     }
 
+    /**
+     * @param jFormsControl $ctrl
+     */
     protected function commonJs($ctrl) {
+        if ($ctrl->isReadOnly()) {
+            $this->jsContent .="c.readOnly = true;\n";
+        }
 
         if($ctrl->required){
             $this->jsContent .="c.required = true;\n";
@@ -267,6 +273,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
 
         if ($this->isRootControl) $this->jsContent .= $this->jFormsJsVarName.".tForm.addControl(c);\n";
+        
     }
 
     protected function outputInput($ctrl, &$attr) {
@@ -686,7 +693,11 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputMenulist($ctrl, &$attr) {
-        unset($attr['readonly']);
+        if (isset($attr['readonly'])) {
+            $attr['disabled'] = 'disabled';
+            unset($attr['readonly']);
+        }
+
         $attr['size'] = '1';
         echo '<select';
         $this->_outputAttr($attr);
@@ -714,7 +725,10 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputListbox($ctrl, &$attr) {
-        unset($attr['readonly']);
+        if (isset($attr['readonly'])) {
+            $attr['disabled'] = 'disabled';
+            unset($attr['readonly']);
+        }
         $attr['size'] = $ctrl->size;
 
         if($ctrl->multiple){
