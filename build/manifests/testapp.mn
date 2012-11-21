@@ -233,19 +233,6 @@ cd testapp/modules/jelix_tests/tests/
   jdao.parser_update.html_cli.php
   jdao.generator.html_cli.php
   jdao.generator_select.html_cli.php
-  jforms.html_cli.php
-  jforms.check_datas.html_cli.php
-  jforms.compiler.html_cli.php
-  jforms.compiler_1_1.html_cli.php
-  jforms.datasources.html_cli.php
-  jforms.htmlbuilder.html_cli.php
-  jforms.htmlbuilder2.html_cli.php
-  jforms.htmllightbuilder.html_cli.php
-  jforms.htmllightbuilder2.html_cli.php
-  jforms.modifiedcontrols.html_cli.php
-  jforms.newhtmlbuilder.html_cli.php
-  jforms.newhtmlbuilder2.html_cli.php
-  jforms.with_dao.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -371,7 +358,20 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_redisTest.php
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
+  jforms_check_datasTest.php
+  jforms_compilerTest.php
+  jforms_compiler_1_1Test.php
+  jforms_datasourcesTest.php
+  jforms_htmlbuilderTest.php
+  jforms_htmlbuilder2Test.php
+  jforms_htmllightbuilderTest.php
+  jforms_htmllightbuilder2Test.php
   jforms_init_from_requestTest.php
+  jforms_modified_controlsTest.php
+  jforms_newhtmlbuilderTest.php
+  jforms_newhtmlbuilder2Test.php
+  jforms_sessionTest.php
+  jforms_with_daoTest.php
 cd testapp/tests-jelix/jelix/tpl/
   jtpl_compilerTest.php
   jtpl_expressions_parsingTest.php
