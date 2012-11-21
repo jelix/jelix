@@ -42,7 +42,8 @@ class UTjformsHtmlLightBuilder extends jUnitTestCaseDb {
     function testOutputHeader(){
         $this->builder->setAction('jelix_tests~urlsig:url1',array());
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
         $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
@@ -56,7 +57,8 @@ jForms.declareForm(jForms.tForm);
 
         $this->builder->setAction('jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
         ob_start();
-        $this->builder->outputHeader(array('method'=>'get'));
+        $this->builder->setOptions(array('method'=>'get'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
         $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
@@ -1161,7 +1163,8 @@ jForms.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
         $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
@@ -1251,7 +1254,8 @@ jForms.declareForm(jForms.tForm);
 
 
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
         $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[
@@ -1269,7 +1273,8 @@ jForms.declareForm(jForms.tForm);
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
         $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.$this->formname.'"><script type="text/javascript">
 //<![CDATA[

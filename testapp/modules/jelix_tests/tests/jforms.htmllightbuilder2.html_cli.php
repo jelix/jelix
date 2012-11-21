@@ -368,7 +368,8 @@ c2.activate(\'closed\');
     public function testFormWithExternalUrlAsAction(){
         $this->builder->setAction('http://www.jelix.org/dummy.php',array());
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
@@ -385,7 +386,8 @@ jForms.declareForm(jForms.tForm);
 
         $this->builder->setAction('http://www.jelix.org/dummy.php',array('foo'=>'bar'));
         ob_start();
-        $this->builder->outputHeader(array('method'=>'post'));
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
@@ -403,7 +405,8 @@ jForms.declareForm(jForms.tForm);
 
         $this->builder->setAction('https://www.jelix.org/dummy.php',array());
         ob_start();
-        $this->builder->outputHeader(array('method'=>'get'));
+        $this->builder->setOptions(array('method'=>'get'));
+        $this->builder->outputHeader();
         $out = ob_get_clean();
 
         $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">

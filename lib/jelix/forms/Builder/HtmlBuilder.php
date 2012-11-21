@@ -32,8 +32,6 @@ class HtmlBuilder extends BuilderBase {
      */
     protected $rootWidget;
 
-    protected $options;
-
     public function __construct($form){
         parent::__construct($form);
         $config = \jApp::config()->{$this->formConfig};
@@ -50,14 +48,25 @@ class HtmlBuilder extends BuilderBase {
             throw new \Exception('Unknown root widget plugin '.$pluginName);
     }
 
-    public function getjFormsJsVarName() {
-        return $this->jFormsJsVarName;
+
+    /**
+     * set options
+     * @param array $options some parameters <ul>
+     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+     *      <li>"method" => "post" or "get". default is "post"</li>
+     *      </ul>
+     */
+    public function setOptions($options) {
+        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
+            'method'=>'post'), $options);
+         if (isset($this->options['plugins'])) {
+            $this->pluginsConf = $this->options['plugins'];
+            unset($this->options['plugins']);
+        }
     }
 
-    public function getOption($name) {
-        if (isset($this->options[$name]))
-            return $this->options[$name];
-        return null;
+    public function getjFormsJsVarName() {
+        return $this->jFormsJsVarName;
     }
 
     public function outputAllControls() {
@@ -114,21 +123,11 @@ class HtmlBuilder extends BuilderBase {
 
     /**
      * output the header content of the form
-     * @param array $params some parameters <ul>
-     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
-     *      <li>"method" => "post" or "get". default is "post"</li>
-     *      </ul>
      */
-    public function outputHeader($params){
-        if (isset($params['plugins'])) {
-            $this->pluginsConf = $params['plugins'];
-            unset($params['plugins']);
-        }
+    public function outputHeader(){
 
-        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
-            'method'=>'post'), $params);
-        if (isset($params['attributes']))
-            $attrs = $params['attributes'];
+        if (isset($this->options['attributes']))
+            $attrs = $this->options['attributes'];
         else
             $attrs = array();
 

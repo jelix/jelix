@@ -21,9 +21,19 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     protected $jFormsJsVarName = 'jForms';
 
-    protected $options;
-
     protected $isRootControl = true;
+
+    /**
+     * set options
+     * @param array $options some parameters <ul>
+     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+     *      <li>"method" => "post" or "get". default is "post"</li>
+     *      </ul>
+     */
+    public function setOptions($options) {
+        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
+            'method'=>'post'), $options);
+    }
 
     public function outputAllControls() {
 
@@ -105,16 +115,11 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     /**
      * output the header content of the form
-     * @param array $params some parameters <ul>
-     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
-     *      <li>"method" => "post" or "get". default is "post"</li>
-     *      </ul>
      */
-    public function outputHeader($params){
-        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
-            'method'=>'post'), $params);
-        if (isset($params['attributes']))
-            $attrs = $params['attributes'];
+    public function outputHeader(){
+
+        if (isset($this->options['attributes']))
+            $attrs = $this->options['attributes'];
         else
             $attrs = array();
 

@@ -42,6 +42,11 @@ abstract class BuilderBase {
      */
     protected $_name;
 
+    /**
+     * @var array options for the builder
+     */
+    protected $options = array();
+
     protected $_endt = '/>';
     /**
      * @param jFormsBase $form a form object
@@ -68,6 +73,24 @@ abstract class BuilderBase {
     public function getForm(){ return $this->_form; }
 
     /**
+     * set options
+     * @param array $options associative array
+     */
+    public function setOptions($options) {
+        $this->options = $options;
+    }
+
+    /**
+     * @param string $name name of an option
+     * @return mixed the value of the option
+     */
+    public function getOption($name) {
+        if (isset($this->options[$name]))
+            return $this->options[$name];
+        return null;
+    }
+
+    /**
      * called during the meta content processing in templates
      * This method should set things on the response, like adding
      * css styles, javascript links etc.
@@ -77,9 +100,8 @@ abstract class BuilderBase {
 
     /**
      * output the header content of the form
-     * @param array $params some parameters, depending of the type of builder
      */
-    abstract public function outputHeader($params);
+    abstract public function outputHeader();
 
     /**
      * output the footer content of the form

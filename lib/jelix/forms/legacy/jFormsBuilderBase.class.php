@@ -44,6 +44,11 @@ abstract class jFormsBuilderBase {
      */
     protected $_name;
 
+    /**
+     * @var array options for the builder
+     */
+    protected $options = array();
+
     protected $_endt = '/>';
     /**
      * @param jFormsBase $form a form object
@@ -65,6 +70,14 @@ abstract class jFormsBuilderBase {
         }
     }
 
+    /**
+     * set options
+     * @param array $options associative array
+     */
+    public function setOptions($options) {
+        $this->options = $options;
+    }
+    
     public function getName(){ return  $this->_name; }
 
     /**
@@ -77,9 +90,8 @@ abstract class jFormsBuilderBase {
 
     /**
      * output the header content of the form
-     * @param array $params some parameters, depending of the type of builder
      */
-    abstract public function outputHeader($params);
+    abstract public function outputHeader();
 
     /**
      * output the footer content of the form
