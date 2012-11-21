@@ -36,9 +36,18 @@ class HtmlBuilder extends BuilderBase {
 
     public function __construct($form){
         parent::__construct($form);
-        $this->rootWidget = \jApp::loadPlugin($this->formType, 'formwidget', '.formwidget.php', $this->formType.'FormWidget');
+        $config = \jApp::config()->{$this->formConfig};
+        if (isset($this->pluginsConf['root'])) { //first the builder conf
+           $pluginName = $this->pluginsConf['root'];
+        } elseif (isset($config['root'])) { //then the ini conf
+           $pluginName = $config['root'];
+        } else { //finaly the control type
+           $pluginName = $this->formType;
+        }
+        $className = $pluginName . 'FormWidget';
+        $this->rootWidget = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className);
         if (!$this->rootWidget)
-            throw new \Exception ("Unknown root widget plugin ".$this->formType);
+            throw new \Exception('Unknown root widget plugin '.$pluginName);
     }
 
     public function getjFormsJsVarName() {
@@ -208,13 +217,12 @@ class HtmlBuilder extends BuilderBase {
     public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
         $config = \jApp::config()->{$this->formConfig};
         if (isset($this->pluginsConf[$ctrl->ref])) { //first the builder conf
-           $plugin = $this->pluginsConf[$ctrl->ref];
+           $pluginName = $this->pluginsConf[$ctrl->ref];
         } elseif (isset($config[$ctrl->type])) { //then the ini conf
-           $plugin = $config[$ctrl->type];
+           $pluginName = $config[$ctrl->type];
         } else { //finaly the control type
-           $plugin = $ctrl->type;
+           $pluginName = $ctrl->type . '_'. $this->formType;
         }
-        $pluginName = $plugin . '_'. $this->formType;
         $className = $pluginName . 'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin)
