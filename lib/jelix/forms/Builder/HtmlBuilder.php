@@ -213,7 +213,11 @@ class HtmlBuilder extends BuilderBase {
         echo '</form>';
     }
 
+    protected $widgets = array();
+
     public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
+        if (isset($this->widgets[$ctrl->ref]))
+            return $this->widgets[$ctrl->ref];
         $config = \jApp::config()->{$this->formConfig};
         if (isset($this->pluginsConf[$ctrl->ref])) { //first the builder conf
            $pluginName = $this->pluginsConf[$ctrl->ref];
@@ -226,6 +230,7 @@ class HtmlBuilder extends BuilderBase {
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin)
             throw new \Exception('Widget '.$pluginName.' not found');
+        $this->widgets[$ctrl->ref] = $plugin;
         return $plugin;
     }
 
