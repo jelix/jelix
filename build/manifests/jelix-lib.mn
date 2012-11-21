@@ -287,14 +287,26 @@ cd lib/jelix/FakeServerConf
 cd lib/jelix/forms
   jForms.class.php
   jFormsBase.class.php
-  jFormsBuilderBase.class.php
-  jFormsBuilderHtml.class.php
   jFormsCompiler.class.php
   jFormsCompiler_jf_1_0.class.php
   jFormsCompiler_jf_1_1.class.php
 * jFormsControl.class.php
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
+
+cd lib/jelix/forms/Builder
+  BuilderBase.php
+  HtmlBuilder.php
+
+cd lib/jelix/forms/HtmlWidget
+  ParentWidgetInterface.php
+  RootWidget.php
+  WidgetBase.php
+  WidgetInterface.php
+
+cd lib/jelix/forms/legacy
+  jFormsBuilderBase.class.php
+  jFormsBuilderHtml.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/forms/controls
@@ -502,6 +514,75 @@ cd lib/jelix/plugins/debugbar/defaultlog
 
 cd lib/jelix/plugins/debugbar/soaplog
 * soaplog.debugbar.php
+
+cd lib/jelix/plugins/formbuilder/html
+  html.formbuilder.php
+
+cd lib/jelix/plugins/formwidget/button_html
+  button_html.formwidget.php
+  
+cd lib/jelix/plugins/formwidget/captcha_html
+  captcha_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/checkbox_html
+  checkbox_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/checkboxes_html
+  checkboxes_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/choice_html
+  choice_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/date_html
+  date_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/datetime_html
+  datetime_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/group_html
+  group_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/html
+  html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/htmleditor_html
+  htmleditor_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/input_html
+  input_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/listbox_html
+  listbox_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/menulist_html
+  menulist_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/output_html
+  output_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/radiobuttons_html
+  radiobuttons_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/reset_html
+  reset_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/secret_html
+  secret_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/secretconfirm_html
+  secretconfirm_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/submit_html
+  submit_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/textarea_html
+  textarea_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/upload_html
+  upload_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/wikieditor_html
+  wikieditor_html.formwidget.php
 
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php

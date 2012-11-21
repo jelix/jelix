@@ -113,7 +113,10 @@ cd lib/jelix/core-modules/jelix/templates
   404.xul.tpl
 
 cd lib/jelix/forms/
-   jIFormsBuilderCompiler.iface.php
+  jIFormsBuilderCompiler.iface.php
+  jFormsBuilderBase.class.php
+  jFormsBuilderHtml.class.php
+  jFormsHtmlWidgetBuilder.class.php
 
 cd lib/jelix/installer/
   jInstallerApp.class.php
