@@ -8,12 +8,14 @@
 * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @deprecated
 */
 
 /**
  * HTML form builder
  * @package     jelix
  * @subpackage  jelix-plugins
+ * @deprecated
  */
 class jFormsBuilderHtml extends jFormsBuilderBase {
 

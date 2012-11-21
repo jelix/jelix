@@ -8,6 +8,7 @@
 * @copyright   2007 Loic Mathaud
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+* @deprecated
 */
 
 /**
@@ -17,6 +18,7 @@
  * (html form for example)
  * @package     jelix
  * @subpackage  forms
+* @deprecated
  */
 abstract class jFormsBuilderBase {
     /**
