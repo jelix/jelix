@@ -4,62 +4,58 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2011 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-abstract class UTjacl2_main_api extends jUnitTestCaseDb {
+abstract class jacl2APITest extends jUnitTestCaseDb {
 
     protected $dbProfile = 'jacl2_profile';
 
-    protected $config;
+    protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
-    public function setUpRun (){
-        $coord = jApp::coord();
-        require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
+    public function setUp (){
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        if (!self::$coordAuthPlugin) {
 
-        $confContent = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
-        $config = jAuth::loadConfig($confContent);
-        
+            require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
+            $confContent = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
+            $config = jAuth::loadConfig($confContent);
+            self::$coordAuthPlugin = new AuthCoordPlugin($config);
+
+            // prepare data
+            $this->emptyTable('jacl2_rights');
+            $this->emptyTable('jacl2_subject');
+            $this->emptyTable('jacl2_user_group');
+
+            $groups= array(array('id_aclgrp'=>'group1', 'name'=>'Groupe 1', 'grouptype'=>0, 'ownerlogin'=>null),
+                           array('id_aclgrp'=>'group2', 'name'=>'Groupe 2', 'grouptype'=>0, 'ownerlogin'=>null));
+
+            $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
+
+            $usergroups=array(
+                array('login'=>'laurent', 'id_aclgrp'=>'group1'),
+            );
+            $this->insertRecordsIntoTable('jacl2_user_group', array('login','id_aclgrp'), $usergroups, true);
+        }
+
+        $coord = jApp::coord();
         if (isset($coord->plugins['auth']))
             $this->oldAuthPlugin = $coord->plugins['auth'];
-        $coord->plugins['auth'] = new AuthCoordPlugin($config);
-
-        $this->config = & $coord->plugins['auth']->config;
-        $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
-
-        // prepare data
-        
-        $this->emptyTable('jacl2_rights');
-        $this->emptyTable('jacl2_subject');
-        $this->emptyTable('jacl2_user_group');
-
-        $groups= array(array('id_aclgrp'=>'group1', 'name'=>'Groupe 1', 'grouptype'=>0, 'ownerlogin'=>null),
-                       array('id_aclgrp'=>'group2', 'name'=>'Groupe 2', 'grouptype'=>0, 'ownerlogin'=>null));
-
-        $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
-
-        $usergroups=array(
-            array('login'=>'laurent', 'id_aclgrp'=>'group1'),
-        );
-        $this->insertRecordsIntoTable('jacl2_user_group', array('login','id_aclgrp'), $usergroups, true);
-        
-    }
-
-    public function setUp (){
+        $coord->plugins['auth'] = self::$coordAuthPlugin;
+        $_SESSION[self::$coordAuthPlugin->config['session_name']] = new jAuthDummyUser();
         jAuth::login('laurent','foo', false);
         jAcl2DbUserGroup::clearCache();
     }
 
-    public function tearDownRun (){
+    public function tearDown(){
         if ($this->oldAuthPlugin)
             jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
         else
             unset(jApp::coord()->plugins['auth']);
-        unset($_SESSION[$this->config['session_name']]);
-        $this->config = null;
+        unset($_SESSION[self::$coordAuthPlugin->config['session_name']]);
     }
 
     public function testIsMemberOfGroup(){
@@ -67,6 +63,9 @@ abstract class UTjacl2_main_api extends jUnitTestCaseDb {
         $this->assertFalse(jAcl2DbUserGroup::isMemberOfGroup ('group2'));
     }
 
+    /**
+     * @depends testIsMemberOfGroup
+     */
     public function testCheckRight(){
         jAcl2DbManager::addSubject('super.cms.list', 'cms~rights.super.cms');
         jAcl2DbManager::addSubject('super.cms.update', 'cms~rights.super.cms');
@@ -97,6 +96,9 @@ abstract class UTjacl2_main_api extends jUnitTestCaseDb {
     }
 
 
+    /**
+    * @depends testCheckRight
+    */
     public function testCheckCanceledRight(){
         $usergroups=array(
             array('login'=>'laurent', 'id_aclgrp'=>'group2'),
@@ -124,6 +126,9 @@ abstract class UTjacl2_main_api extends jUnitTestCaseDb {
     }
 
 
+    /**
+     * @depends testCheckCanceledRight
+     */
     public function testGetRightDisconnect(){
         jAuth::logout();
         jAcl2::clearCache();

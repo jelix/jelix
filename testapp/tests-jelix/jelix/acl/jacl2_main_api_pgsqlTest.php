@@ -4,38 +4,37 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
+* @copyright   2007-2012 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(__DIR__.'/jacl2_main_api.lib.php');
+require_once(__DIR__.'/jacl2.lib.php');
 
-class UTjacl2Pgsql extends UTjacl2_main_api {
+class jacl2_main_api_pgsqlTest extends jacl2APITest {
 
-    protected $backupProfile;
-    protected $noPgsql = false;
-    public function setUpRun (){
+    //protected $backupProfile;
+
+    public function setUp(){
         jProfiles::clear();
-        jDao::releaseAll();
-        
-        $this->backupProfile = jProfiles::get('jdb','jacl2_profile', true);
         try {
-            $pgsql = jProfiles::get('jdb','testapp_pgsql', true);
+            jProfiles::get('jdb','testapp_pgsql', true);
             jProfiles::createVirtualProfile('jdb','jacl2_profile', 'testapp_pgsql');
         }
         catch(Exception $e) {
-            $this->noPgsql = true;
+            $this->markTestSkipped('jacl2_main_api_pgsqlTest cannot be run: '.$e->getMessage());
+            return;
         }
-        parent::setUpRun();
+
+        jDao::releaseAll();
+
+        //$this->backupProfile = jProfiles::get('jdb','jacl2_profile', true);
+        parent::setUp();
     }
 
-    function skip() {
-        $this->skipIf($this->noPgsql, "Pgsql is not configured. %s");
-    }
 
-    public function tearDownRun (){
-        parent::tearDownRun();
+    public function tearDown (){
+        parent::tearDown();
         jProfiles::clear();
         jDao::releaseAll();
         jAcl2DbUserGroup::clearCache();

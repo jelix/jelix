@@ -222,14 +222,6 @@ cd testapp/modules/jelix_tests/tests/
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  jacl.main_api.html_cli.php
-  jacl.manager.html_cli.php
-  jacl.users_and_groups.html_cli.php
-  jacl2.main_api.html_cli.php
-  jacl2.main_api_pgsql.html_cli.php
-  jacl2.manager.html_cli.php
-  jacl2.users_and_groups.html_cli.php
-  jacl2_main_api.lib.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.factory_base.html_cli.php
@@ -284,6 +276,15 @@ cd testapp/modules/testinstall3
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
+cd testapp/tests-jelix/jelix/acl/
+  jacl_main_apiTest.php
+  jacl_managerTest.php
+  jacl_users_and_groupsTest.php
+  jacl2_main_apiTest.php
+  jacl2_main_api_pgsqlTest.php
+  jacl2_managerTest.php
+  jacl2_users_groupsTest.php
+  jacl2.lib.php
 cd testapp/tests-jelix/jelix/auth/
   ldap_pluginTest.php
 cd testapp/tests-jelix/jelix/cache/
