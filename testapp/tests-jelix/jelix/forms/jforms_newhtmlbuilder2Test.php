@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(__DIR__.'/jforms.htmlbuilder2.html_cli.php');
+require_once(__DIR__.'/jforms_htmlbuilder2Test.php');
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
 
@@ -44,17 +44,14 @@ class testHtmlFormsBuilder2 extends htmlFormBuilder {
 }
 
 
-class UTjformsNewHTMLBuilder2 extends UTjformsHTMLBuilder2 {
+class jforms_newHTMLBuilder2Test extends jforms_HTMLBuilder2Test {
 
-    protected $form;
-    protected $container;
-    protected $builder;
-
-    function setUpRun() {
+    function setUp() {
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        $_SESSION['JFORMS'] = array();
         $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testHtmlFormsBuilder2($this->form);
-        $this->formname = $this->builder->getName();
     }
-    
 }

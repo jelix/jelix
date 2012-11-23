@@ -25,20 +25,26 @@ class testJFormsHtmlLightBuilder2 extends htmllightJformsBuilder {
 }
 
 
-class UTjformsHTMLLightBuilder2 extends jUnitTestCaseDb {
+class jforms_HTMLLightBuilder2Test extends jUnitTestCaseDb {
 
     protected $form;
     protected $container;
     protected $builder;
     protected $formname;
 
-    function setUpRun() {
+    function setUp() {
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        $_SESSION['JFORMS'] = array();
         $this->container = new jFormsDataContainer('formtestlightB','');
         $this->form = new testHTMLLightForm2('formtestlightB', $this->container, true );
         $this->builder = new testJFormsHtmlLightBuilder2($this->form);
         $this->formname = $this->builder->getName();
     }
 
+    function tearDown(){
+        jApp::popCurrentModule();
+    }
     function testOutputGroup(){
 
         $group= new jFormsControlgroup('identity');
@@ -75,7 +81,7 @@ class UTjformsHTMLLightBuilder2 extends jUnitTestCaseDb {
 
 
         ob_start();$this->builder->outputControlLabel($group);$out = ob_get_clean();
-        $this->assertEqualOrDiff('', $out);
+        $this->assertEquals('', $out);
 
 
         $expected = '<fieldset id="'.$this->formname.'_identity"><legend>Your identity</legend>'."\n";
@@ -93,8 +99,8 @@ class UTjformsHTMLLightBuilder2 extends jUnitTestCaseDb {
 
 
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'nom\', \'Your name\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlString(\'nom\', \'Your name\');
 c.required = true;
 c.errRequired=\'"Your name" field is required\';
 c.errInvalid=\'"Your name" field is invalid\';
@@ -126,8 +132,8 @@ jForms.tForm.addControl(c);
         $expected .= '<tr><th scope="row"><label class="jforms-label" for="'.$this->formname.'_mail" id="'.$this->formname.'_mail_label">Votre mail</label>'."\n".'</th>'."\n";
         $expected .= '<td><input name="mail" id="'.$this->formname.'_mail" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="" type="text"/>'."\n".'</td></tr>'."\n</table></fieldset>\n";
         ob_start();$this->builder->outputControl($group);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlString(\'nom\', \'Your name\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlString(\'nom\', \'Your name\');
 c.required = true;
 c.errRequired=\'"Your name" field is required\';
 c.errInvalid=\'"Your name" field is invalid\';
@@ -183,7 +189,7 @@ jForms.tForm.addControl(c);
         $choice->setReadOnly(false);
 
         ob_start();$this->builder->outputControlLabel($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff('<span class="jforms-label" id="'.$this->formname.'_status_label">Task Status</span>'."\n", $out);
+        $this->assertEquals('<span class="jforms-label" id="'.$this->formname.'_status_label">Task Status</span>'."\n", $out);
 
 
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
@@ -198,8 +204,8 @@ jForms.tForm.addControl(c);
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'"Task Status" field is invalid\';
 jForms.tForm.addControl(c);
 c2 = c;
@@ -234,8 +240,8 @@ c2.activate(\'\');
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'"Task Status" field is invalid\';
 jForms.tForm.addControl(c);
 c2 = c;
@@ -269,8 +275,8 @@ c2.activate(\'assigned\');
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'"Task Status" field is invalid\';
 jForms.tForm.addControl(c);
 c2 = c;
@@ -304,8 +310,8 @@ c2.activate(\'new\');
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'"Task Status" field is invalid\';
 jForms.tForm.addControl(c);
 c2 = c;
@@ -340,8 +346,8 @@ c2.activate(\'closed\');
         $expected .= '</li>'."\n";
         $expected .= '</ul>'."\n\n";
         ob_start();$this->builder->outputControl($choice);$out = ob_get_clean();
-        $this->assertEqualOrDiff($expected, $out);
-        $this->assertEqualOrDiff('c = new jFormsControlChoice(\'status\', \'Task Status\');
+        $this->assertEquals($expected, $out);
+        $this->assertEquals('c = new jFormsControlChoice(\'status\', \'Task Status\');
 c.errInvalid=\'"Task Status" field is invalid\';
 jForms.tForm.addControl(c);
 c2 = c;
@@ -381,8 +387,8 @@ jForms.declareForm(jForms.tForm);
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
 </div>';
 
-        $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+        $this->assertEquals($result, $out);
+        $this->assertEquals('', $this->builder->getJsContent());
 
         $this->builder->setAction('http://www.jelix.org/dummy.php',array('foo'=>'bar'));
         ob_start();
@@ -400,8 +406,8 @@ jForms.declareForm(jForms.tForm);
 <input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
 </div>';
 
-        $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+        $this->assertEquals($result, $out);
+        $this->assertEquals('', $this->builder->getJsContent());
 
         $this->builder->setAction('https://www.jelix.org/dummy.php',array());
         ob_start();
@@ -418,8 +424,8 @@ jForms.declareForm(jForms.tForm);
 </script><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
 </div>';
 
-        $this->assertEqualOrDiff($result, $out);
-        $this->assertEqualOrDiff('', $this->builder->getJsContent());
+        $this->assertEquals($result, $out);
+        $this->assertEquals('', $this->builder->getJsContent());
 
     }
 }

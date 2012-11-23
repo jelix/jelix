@@ -26,10 +26,11 @@ class testCDForm extends jFormsBase {
     }
 }
 
-class UTjformsCheckDatas extends jUnitTestCaseDb {
+class jforms_check_data extends jUnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() {
+        self::initJelixConfig();
         $this->container = new jFormsDataContainer('','');
         $this->form = new testCDForm('foo',$this->container);
     }
@@ -125,7 +126,7 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','   ');
         $this->assertTrue($this->form->check());
-        $this->assertEqual('', $this->form->getData('nom'));
+        $this->assertEquals('', $this->form->getData('nom'));
         $this->form->setData('nom','foo@machin.com');
         $this->assertTrue($this->form->check());
 
@@ -167,35 +168,35 @@ class UTjformsCheckDatas extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
 
         $ctrl->setDataFromDao(null, 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('on', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('0', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('1', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao(0, 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao(1, 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('t', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('f', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('TRUE', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('FALSE', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('true', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao('false', 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao(true, 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnCheck);
+        $this->assertEquals($ctrl->valueOnCheck, $this->form->getData('nom') );
         $ctrl->setDataFromDao(false, 'boolean');
-        $this->assertEqual($this->form->getData('nom') , $ctrl->valueOnUncheck);
+        $this->assertEquals($ctrl->valueOnUncheck, $this->form->getData('nom') );
     }
 
     function testCheckboxes() {

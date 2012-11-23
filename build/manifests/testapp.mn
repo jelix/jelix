@@ -358,7 +358,7 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_redisTest.php
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
-  jforms_check_datasTest.php
+  jforms_check_dataTest.php
   jforms_compilerTest.php
   jforms_compiler_1_1Test.php
   jforms_datasourcesTest.php

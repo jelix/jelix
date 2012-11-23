@@ -11,10 +11,11 @@
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class UTjformsDatasources extends jUnitTestCaseDb {
+class jforms_datasourcesTest extends jUnitTestCaseDb {
 
-    function setUpRun(){
-
+    function setUp(){
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
         $_SESSION['JFORMS'] = array();
         $form = jForms::create('product');
         $this->savedParams = jApp::coord()->request->params;
@@ -34,8 +35,13 @@ class UTjformsDatasources extends jUnitTestCaseDb {
                         array('key'=>2, 'keyalias'=>'ee', 'lang'=>'en', 'label'=>'ee-en'),
         );
         $this->insertRecordsIntoTable('labels_test', array('key','keyalias', 'lang','label'), $labels, true);
+    }
 
-
+    function tearDown(){
+        
+        jApp::coord()->request->params = $this->savedParams;
+        jForms::destroy('product');
+        jApp::popCurrentModule();
     }
 
     function testValueIsPkSimpleTable() {
@@ -44,16 +50,16 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         // ---- retrieve all data
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'key', '');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr', '4'=>'dd-en', '5'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), 'ee-en');
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr', '4'=>'dd-en', '5'=>'ee-en'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
 
         // ---- retrieve data with multiple label
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'key', '', null, null, '#');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'fr#aa-fr', '2'=>'fr#bb-fr', '3'=>'fr#cc-fr', '4'=>'en#dd-en', '5'=>'en#ee-en'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'fr#aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), 'en#ee-en');
+        $this->assertEquals(array('1'=>'fr#aa-fr', '2'=>'fr#bb-fr', '3'=>'fr#cc-fr', '4'=>'en#dd-en', '5'=>'en#ee-en'), $data);
+        $this->assertEquals('fr#aa-fr', $ds->getLabel2('1', $form));
+        $this->assertEquals('en#ee-en', $ds->getLabel2('5', $form));
     }
 
     function testValueIsPkSimpleTableStaticCriteria() {
@@ -62,11 +68,11 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         // ---- retrieve data with a static criteria
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'key', '', "fr");
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
         // even if this record doesn't correspond to the criteria, we don't have choice
         // because the PK is a single field. And for some case, it could make sens
-        $this->assertEqual($ds->getLabel2('5', $form), 'ee-en');
+        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
     }
 
     function testValueIsPkSimpleTableDynamicCriteria() {
@@ -77,17 +83,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
 
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
         // even if this record doesn't correspond to the criteria, we don't have choice
         // because the PK is a single field. And for some case, it could make sens
-        $this->assertEqual($ds->getLabel2('5', $form), 'ee-en');
+        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
 
         $form->setData('name', 'en');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('4'=>'dd-en', '5'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), 'ee-en');
+        $this->assertEquals(array('4'=>'dd-en', '5'=>'ee-en'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
     }
 
     function testValueNotPkSimpleTable() {
@@ -97,17 +103,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
             // method for the label is not given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'keyalias', '');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('aa', $form), null);
-        $this->assertEqual($ds->getLabel2('ee', $form), null);
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'), $data);
+        $this->assertNull($ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('ee', $form));
 
             // method for the label is given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'keyalias', '', null, null);
         $ds->labelMethod = 'getByAlias';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('aa', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('ee', $form), 'ee-en');
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
+        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
 
     }
 
@@ -118,17 +124,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
                 // method for the label is not given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'keyalias', '', null, null, '#');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'));
-        $this->assertEqual($ds->getLabel2('aa', $form), null);
-        $this->assertEqual($ds->getLabel2('ee', $form), null);
+        $this->assertEquals(array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'), $data);
+        $this->assertNull($ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('ee', $form));
 
                 // method for the label is given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'keyalias', '', null, null, '#');
         $ds->labelMethod = 'getByAlias';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'));
-        $this->assertEqual($ds->getLabel2('aa', $form), 'fr#aa-fr');
-        $this->assertEqual($ds->getLabel2('ee', $form), 'en#ee-en');
+        $this->assertEquals(array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'), $data);
+        $this->assertEquals('fr#aa-fr', $ds->getLabel2('aa', $form));
+        $this->assertEquals('en#ee-en', $ds->getLabel2('ee', $form));
     }
 
     function testValueNotPkSimpleTableStaticCriteria() {
@@ -138,17 +144,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
                 // method for the label is not given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', "fr");
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('aa', $form), null);
-        $this->assertEqual($ds->getLabel2('ee', $form), null);
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
+        $this->assertNull($ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('ee', $form));
 
                 // method for the label is not given
         $ds = new jFormsDaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', "fr");
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('aa', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('ee', $form), 'ee-en');
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
+        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithoutMethod() {
@@ -160,17 +166,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
                 // method for the label is not given
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('aa', $form), null);
-        $this->assertEqual($ds->getLabel2('ee', $form), null);
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
+        $this->assertNull($ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('ee', $form));
 
                 // method for the label is given
         $form->setData('name', 'fr');
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('aa', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('dd', $form), 'dd-en');
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
+        $this->assertEquals('dd-en', $ds->getLabel2('dd', $form));
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithMethod() {
@@ -182,17 +188,17 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $ds->labelMethod = 'get';
         $form->setData('name', 'en');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('dd'=>'dd-en', 'ee'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('aa', $form), null);
-        $this->assertEqual($ds->getLabel2('ee', $form), null);
+        $this->assertEquals(array('dd'=>'dd-en', 'ee'=>'ee-en'), $data);
+        $this->assertNull($ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('ee', $form));
 
             // method for the label is given
         $form->setData('name', 'en');
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('dd'=>'dd-en', 'ee'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('bb', $form), 'bb-fr');
-        $this->assertEqual($ds->getLabel2('ee', $form), 'ee-en');
+        $this->assertEquals(array('dd'=>'dd-en', 'ee'=>'ee-en'), $data);
+        $this->assertEquals('bb-fr', $ds->getLabel2('bb', $form));
+        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
     }
 
     function testValueIsPkMultiKeyTable() {
@@ -201,19 +207,19 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         // ---- retrieve data
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAllOrderByKeyalias" , 'label', 'key', '');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'));
+        $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'), $data);
         try {
-            $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
+            $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
             $this->fail('An exception should be thrown since the primary key is not a unique field');
         }
         catch(Exception $e) {
-            $this->pass('Ok, exception is thrown since the primary key is not a unique field');
+            $this->assertTrue(true, 'Ok, exception is thrown since the primary key is not a unique field');
         }
 
         // ---- retrieve data with multiple label
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAllOrderByKeyalias" , 'lang,label', 'key', '', null, null, '#');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'en#dd-en', '2'=>'en#ee-en', '3'=>'fr#cc-fr'));
+        $this->assertEquals(array('1'=>'en#dd-en', '2'=>'en#ee-en', '3'=>'fr#cc-fr'), $data);
     }
     function testValueIsPkMultiKeyTableStaticCriteria(){
         $form = jForms::get('product');
@@ -221,9 +227,9 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         // ---- retrieve data with a static criteria
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', "fr");
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
     }
 
     function testValueIsPkMultiKeyTableMutlipleStaticCriteria(){
@@ -238,9 +244,9 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang2OrderByKeyalias" , 'label', 'key', '', "fr,en");
         $ds->labelMethod = 'getByLang2';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'dd-en');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'), $data);
+        $this->assertEquals('dd-en', $ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
 
 
     }
@@ -252,15 +258,15 @@ class UTjformsDatasources extends jUnitTestCaseDb {
 
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
 
         $form->setData('name', 'en');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'dd-en', '2'=>'ee-en'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'dd-en');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en'), $data);
+        $this->assertEquals('dd-en', $ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
 
     }
 
@@ -269,18 +275,18 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', null, 'price');
         $form->setData('price', '5');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array());
-        $this->assertEqual($ds->getLabel2('1', $form), null);
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array(), $data);
+        $this->assertNull($ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
         
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findAllFr" , 'label', 'key', '', null, 'price');
         // ok here, implementation of findAllFr doesn't take care about the price parameter, but well...
         $ds->labelMethod = 'getFr';
         $form->setData('price', '5');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
     }
 
     function testValueIsPkMultiKeyTableMultipleDynamicCriteria(){
@@ -291,9 +297,9 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $form->setData('name', 'fr');
         $form->setData('price', '5');
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('1', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('5', $form), null);
+        $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr',$ds->getLabel2('1', $form));
+        $this->assertNull($ds->getLabel2('5', $form));
     }
     
     function testValueNotPkMultiKeyTable(){
@@ -310,14 +316,9 @@ class UTjformsDatasources extends jUnitTestCaseDb {
         $ds = new jFormsDaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'keyalias', '', 'fr');
         $ds->labelMethod = 'getByAliasLang';
         $data = $ds->getData($form);
-        $this->assertEqual($data, array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'));
-        $this->assertEqual($ds->getLabel2('aa', $form), 'aa-fr');
-        $this->assertEqual($ds->getLabel2('dd', $form), null);
+        $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
+        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
+        $this->assertNull($ds->getLabel2('dd', $form));
 
-    }
-
-    function testEnd(){
-        jApp::coord()->request->params = $this->savedParams;
-        jForms::destroy('product');
     }
 }

@@ -25,7 +25,7 @@ class tesMForm extends jFormsBase {
     }
 }
 
-class UTjformsGetModifiedControls extends jUnitTestCaseDb {
+class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() {
@@ -63,7 +63,7 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
     function testinitModifiedControlsList() {
         $this->form->initModifiedControlsList();
 
-        $this->assertIdentical($this->form->getContainer()->data, $this->form->getContainer()->originalData);
+        $this->assertEquals($this->form->getContainer()->data, $this->form->getContainer()->originalData);
 
         $initForm = array (
           'inputctrl' => 'toto',
@@ -72,7 +72,7 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl2'=>'1',
           'list'=>array('bbb','123'),
           );
-        $this->assertIdentical($initForm, $this->form->getContainer()->originalData);
+        $this->assertEquals($initForm, $this->form->getContainer()->originalData);
     }
     
     function testModifiedControls1() {
@@ -85,10 +85,10 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl1'=>'0',
           'chckbxctrl2'=>'1',
           'list'=>array('bbb','123'),);
-        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $this->assertEquals($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
             'chckbxctrl' => '1');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
         $this->form->setData('inputctrl', 'tata');
         $newForm = array (
           'inputctrl' => 'tata',
@@ -96,11 +96,11 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl1'=>'0',
           'chckbxctrl2'=>'1',
           'list'=>array('bbb','123'),);
-        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $this->assertEquals($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
            'inputctrl' => 'toto' ,
             'chckbxctrl' => '1');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
 
         $this->form->setData('list', array('123'));
@@ -110,12 +110,12 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl1'=>'0',
           'chckbxctrl2'=>'1',
           'list'=>array('123'),);
-        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $this->assertEquals($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
            'inputctrl' => 'toto' ,
             'chckbxctrl' => '1',
             'list'=>array('bbb','123'));
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('list', array());
         $newForm = array (
@@ -124,12 +124,12 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl1'=>'0',
           'chckbxctrl2'=>'1',
           'list'=>array(),);
-        $this->assertIdentical($newForm, $this->form->getContainer()->data);
+        $this->assertEquals($newForm, $this->form->getContainer()->data);
         $modifiedControls = array (
            'inputctrl' => 'toto' ,
             'chckbxctrl' => '1',
             'list'=>array('bbb','123'));
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         // despite all changes : originalData hasn't changed
         $initForm = array (
@@ -138,7 +138,7 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
           'chckbxctrl1'=>'0',
           'chckbxctrl2'=>'1',
           'list'=>array('bbb','123'),);
-        $this->assertIdentical($initForm, $this->form->getContainer()->originalData);
+        $this->assertEquals($initForm, $this->form->getContainer()->originalData);
     }
 
 
@@ -148,12 +148,12 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
         $this->form->setData('inputctrl', '');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('inputctrl', 'hey');
         $modifiedControls = array (
            'inputctrl' => null);
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
     }
 
 
@@ -163,27 +163,27 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
         $this->form->setData('chckbxctrl', '0');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', 'on');
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', '');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', null);
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', '1');
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', true);
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
 
         $this->form->setData('chckbxctrl', null);
@@ -191,11 +191,11 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
         $this->form->setData('chckbxctrl', '0');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', 'on');
         $modifiedControls = array ('chckbxctrl'=>'0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
 
         $c = $this->form->getControl('chckbxctrl');
@@ -207,31 +207,31 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
         $this->form->setData('chckbxctrl', '0');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', 0);
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', 'on');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', '');
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', null);
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', '1');
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('chckbxctrl', true);
         $modifiedControls = array ('chckbxctrl'=> '0');
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
     }
 
@@ -241,18 +241,18 @@ class UTjformsGetModifiedControls extends jUnitTestCaseDb {
 
         $this->form->setData('list', '');
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
 
         $this->form->setData('list', array('123'));
         $modifiedControls = array (
            'list' => array());
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
         
         $this->form->setData('list', array('123','aaa'));
         $this->form->initModifiedControlsList();
         $this->form->setData('list', array('aaa', '123'));
         $modifiedControls = array ();
-        $this->assertIdentical($modifiedControls, $this->form->getModifiedControls());
+        $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
     }
 
 }

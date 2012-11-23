@@ -38,7 +38,12 @@ class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
 }
 
 
-class UTjformsCompiler_1_1 extends jUnitTestCase {
+class jforms_compiler_1_1Test extends jUnitTestCase {
+
+    function setUp() {
+        self::initJelixConfig();
+    }
+
 
     protected $_XmlControls = array(
 0=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.1">
@@ -937,7 +942,7 @@ $this->addControl($ctrl);',
                 // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
                 $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
 
-                $this->assertEqualOrDiff($this->_PhpControls[$k],$ct, "test $k failed" );
+                $this->assertEquals($this->_PhpControls[$k],$ct, "test $k failed" );
             }
         }
     }
@@ -1135,8 +1140,8 @@ array('','','myfile')
 
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
-                    $this->assertEqualOrDiff($control[1], $e->getLocaleKey(),"%s ($k)");
-                    $this->assertEqual($control[2], $e->getLocaleParameters(),"%s ($k)");
+                    $this->assertEquals($control[1], $e->getLocaleKey(),"%s ($k)");
+                    $this->assertEquals($control[2], $e->getLocaleParameters(),"%s ($k)");
                 }catch(Exception $e){
                     $this->fail("Unexpected exception for bad xml test content $k :". $e->getMessage());
                 }
@@ -1174,8 +1179,8 @@ array( 'reset','myfile')
                     $ct = $jfc->testPhpForm($dom);
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
-                    $this->assertEqualOrDiff($form[1], $e->getLocaleKey());
-                    $this->assertEqual($form[2], $e->getLocaleParameters());
+                    $this->assertEquals($form[1], $e->getLocaleKey());
+                    $this->assertEquals($form[2], $e->getLocaleParameters());
                 }catch(Exception $e){
                     $this->fail("Unexpected exception for bad xml test content $k :". $e->getMessage());
                 }

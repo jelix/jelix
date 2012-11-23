@@ -18,14 +18,21 @@ class UTjformsDummyObject {
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class UTjforms extends jUnitTestCase {
-    protected $form1;
+class jforms_sessionTest extends jUnitTestCase {
+
+    protected $backupGlobalsBlacklist = array('_SESSION');
+
     protected $form2;
 
     protected $form1Descriptor, $form2Descriptor, $formLabelDescriptor;
 
-    function setUpRun(){
+    static function setUpBeforeClass() {
         $_SESSION['JFORMS'] = array();
+    }
+    
+    function setUp(){
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
         $this->form1Descriptor = '
 <object class="cForm_jelix_tests_Jx_product">
     <object method="getContainer()" class="jFormsDataContainer">
@@ -123,9 +130,13 @@ class UTjforms extends jUnitTestCase {
 </object>';
     }
 
+    function tearDown(){
+        jApp::popCurrentModule();
+    }
+
     function testCreate(){
-        $this->form1 = jForms::create('product');
-        $this->assertComplexIdenticalStr($this->form1, $this->form1Descriptor);
+        $form1 = jForms::create('product');
+        $this->assertComplexIdenticalStr($form1, $this->form1Descriptor);
 
         $verif='
 <array>
@@ -144,11 +155,11 @@ class UTjforms extends jUnitTestCase {
 </array>';
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
         // second time
-        $this->form1 = jForms::create('product');
-        $this->assertEqual($this->form1->getContainer()->refcount, 2);
+        $form1 = jForms::create('product');
+        $this->assertEquals(2, $form1->getContainer()->refcount);
 
-        $this->form2 = jForms::create('product', 'akey');
-        $this->assertComplexIdenticalStr($this->form2, $this->form2Descriptor);
+        $form2 = jForms::create('product', 'akey');
+        $this->assertComplexIdenticalStr($form2, $this->form2Descriptor);
         $verif='
 <array>
      <array key="jelix_tests~product">
@@ -177,8 +188,8 @@ class UTjforms extends jUnitTestCase {
         $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
 
 
-        $this->formLabel = jForms::create('label', array(1,'fr'));
-        $this->assertComplexIdenticalStr($this->formLabel, $this->formLabelDescriptor);
+        $formLabel = jForms::create('label', array(1,'fr'));
+        $this->assertComplexIdenticalStr($formLabel, $this->formLabelDescriptor);
         $verif='
 <array>
      <array key="jelix_tests~product">
@@ -480,65 +491,65 @@ class UTjforms extends jUnitTestCase {
     public function testTokenGenerationDefaultId() {
         $f = jForms::create('product');
         $c = $f->getContainer();
-        $this->assertEqual(0, $c->formId);
+        $this->assertEquals(0, $c->formId);
         
         $c->token = '';
-        $this->assertNotEqual('', $f->createNewToken());
+        $this->assertNotEquals('', $f->createNewToken());
 
         sleep(1);
         $t = $c->token;
-        $this->assertEqual($t, $f->createNewToken());
+        $this->assertEquals($t, $f->createNewToken());
     }
 
     public function testTokenGenerationStringIntId() {
         $f = jForms::create('product', "8");
         $c = $f->getContainer();
-        $this->assertEqual("8", $c->formId);
+        $this->assertEquals("8", $c->formId);
         
         $c->token = '';
-        $this->assertNotEqual('', $f->createNewToken());
+        $this->assertNotEquals('', $f->createNewToken());
 
         sleep(1);
         $t = $c->token;
-        $this->assertEqual($t, $f->createNewToken());
+        $this->assertEquals($t, $f->createNewToken());
     }
 
     public function testTokenGenerationString0Id() {
         $f = jForms::create('product', "0");
         $c = $f->getContainer();
-        $this->assertEqual("0", $c->formId);
+        $this->assertEquals("0", $c->formId);
 
         $c->token = '';
-        $this->assertNotEqual('', $f->createNewToken());
+        $this->assertNotEquals('', $f->createNewToken());
 
         sleep(1);
         $t = $c->token;
-        $this->assertEqual($t, $f->createNewToken());
+        $this->assertEquals($t, $f->createNewToken());
     }
 
     public function testTokenGenerationIntId() {
         $f = jForms::create('product', 8);
         $c = $f->getContainer();
-        $this->assertEqual(8, $c->formId);
+        $this->assertEquals(8, $c->formId);
 
         $c->token = '';
-        $this->assertNotEqual('', $f->createNewToken());
+        $this->assertNotEquals('', $f->createNewToken());
 
         sleep(1);
         $t = $c->token;
-        $this->assertEqual($t, $f->createNewToken());
+        $this->assertEquals($t, $f->createNewToken());
     }
 
     public function testTokenGeneration0Id() {
         $f = jForms::create('product', 0);
         $c = $f->getContainer();
-        $this->assertEqual(0, $c->formId);
+        $this->assertEquals(0, $c->formId);
 
         $c->token = '';
-        $this->assertNotEqual('', $f->createNewToken());
+        $this->assertNotEquals('', $f->createNewToken());
 
         sleep(1);
         $t = $c->token;
-        $this->assertEqual($t, $f->createNewToken());
+        $this->assertEquals($t, $f->createNewToken());
     }
 }
