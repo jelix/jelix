@@ -20,9 +20,8 @@ require_once(__DIR__.'/jcache.lib.php');
 
 class jCache_DbTest extends jCacheAPITest {
 
-    protected $profile = 'usingdb';
-
     public function setUp (){
+        $this->profile = 'usingdb';
         parent::setUp();
         $this->emptyTable('jlx_cache');
     }

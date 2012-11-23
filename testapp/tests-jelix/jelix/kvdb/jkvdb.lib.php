@@ -15,7 +15,7 @@
 * @subpackage  jelix_tests module
 */
 
-abstract class UTjKVDb extends jUnitTestCaseDb {
+abstract class jKVDbTest extends jUnitTestCaseDb {
 
     protected $profile;
 

@@ -9,17 +9,17 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjaclmanager extends jUnitTestCaseDb {
+class jacl_managerTest extends jUnitTestCaseDb {
 
     protected static $firstSetup = true;
     
     public function setUp(){
+        $this->dbProfile = 'jacl_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
         if (!self::$firstSetup) {
             return;
         }
         self::$firstSetup = false;
-        $this->dbProfile = 'jacl_profile';
         $this->emptyTable('jacl_user_group');
         $this->emptyTable('jacl_rights');
         $this->emptyTable('jacl_right_values');

@@ -12,20 +12,24 @@
 
 class jDb_PgsqlTest extends jUnitTestCaseDb {
 
-    public static function setUpBeforeClass() {
-        self::initJelixConfig();
-    }
-    protected $dbProfile = 'pgsql_profile';
-
     function setUp() {
+        self::initJelixConfig();
+        $this->dbProfile = 'pgsql_profile';
         try{
             // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
-            $this->emptyTable('product_test');
+            if ($this->getName() == 'testTools')
+                $this->emptyTable('product_test');
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
+            return;
         }
+        jApp::pushCurrentModule('jelix_tests');
+    }
+
+    function tearDown() {
+        jApp::popCurrentModule();
     }
 
     function testTools(){
@@ -77,49 +81,54 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
         $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
     }
 
+    protected static $prod1, $prod2, $prod3;
+
+    /**
+     * @depends testTools
+     */
     function testInsert() {
         $dao = jDao::create ('products', $this->dbProfile);
 
-        $this->prod1 = jDao::createRecord ('products', $this->dbProfile);
-        $this->prod1->name ='assiette';
-        $this->prod1->price = 3.87;
-        $this->prod1->promo = false;
-        $res = $dao->insert($this->prod1);
+        self::$prod1 = jDao::createRecord ('products', $this->dbProfile);
+        self::$prod1->name ='assiette';
+        self::$prod1->price = 3.87;
+        self::$prod1->promo = false;
+        $res = $dao->insert(self::$prod1);
 
         $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', $this->prod1->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', $this->prod1->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertNotEquals('', self::$prod1->id, 'jDaoBase::insert : id not set');
+        $this->assertNotEquals('', self::$prod1->create_date, 'jDaoBase::insert : create_date not updated');
 
-        $this->prod2 = jDao::createRecord ('products', $this->dbProfile);
-        $this->prod2->name ='fourchette';
-        $this->prod2->price = 1.54;
-        $this->prod2->promo = true;
-        $res = $dao->insert($this->prod2);
-
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', $this->prod2->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', $this->prod2->create_date, 'jDaoBase::insert : create_date not updated');
-
-        $this->prod3 = jDao::createRecord ('products', $this->dbProfile);
-        $this->prod3->name ='verre';
-        $this->prod3->price = 2.43;
-        $this->prod3->promo = false;
-        $res = $dao->insert($this->prod3);
+        self::$prod2 = jDao::createRecord ('products', $this->dbProfile);
+        self::$prod2->name ='fourchette';
+        self::$prod2->price = 1.54;
+        self::$prod2->promo = true;
+        $res = $dao->insert(self::$prod2);
 
         $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', $this->prod3->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', $this->prod3->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertNotEquals('', self::$prod2->id, 'jDaoBase::insert : id not set');
+        $this->assertNotEquals('', self::$prod2->create_date, 'jDaoBase::insert : create_date not updated');
+
+        self::$prod3 = jDao::createRecord ('products', $this->dbProfile);
+        self::$prod3->name ='verre';
+        self::$prod3->price = 2.43;
+        self::$prod3->promo = false;
+        $res = $dao->insert(self::$prod3);
+
+        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
+        $this->assertNotEquals('', self::$prod3->id, 'jDaoBase::insert : id not set');
+        $this->assertNotEquals('', self::$prod3->create_date, 'jDaoBase::insert : create_date not updated');
 
         $this->records = array(
-            array('id'=>$this->prod1->id,
+            array('id'=>self::$prod1->id,
             'name'=>'assiette',
             'price'=>3.87,
             'promo'=>'f'),
-            array('id'=>$this->prod2->id,
+            array('id'=>self::$prod2->id,
             'name'=>'fourchette',
             'price'=>1.54,
             'promo'=>'t'),
-            array('id'=>$this->prod3->id,
+            array('id'=>self::$prod3->id,
             'name'=>'verre',
             'price'=>2.43,
             'promo'=>'f'),
@@ -128,30 +137,37 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
 
     }
 
+    /**
+     * @depends testInsert
+     */
     function testGet() {
         $dao = jDao::create ('products', $this->dbProfile);
 
-        $prod = $dao->get($this->prod1->id);
+        $prod = $dao->get(self::$prod1->id);
+
         $this->assertTrue($prod instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
-        $this->assertEquals($this->prod1->id, $prod->id, 'jDao::get : bad id on record');
+        $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name, 'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price, 'jDao::get : bad price property on record');
         $this->assertEquals('f', $prod->promo, 'jDao::get : bad promo property on record');
     }
 
+    /**
+     * @depends testGet
+     */
     function testUpdate(){
         $dao = jDao::create ('products', $this->dbProfile);
         $prod = jDao::createRecord ('products', $this->dbProfile);
         $prod->name ='assiette nouvelle';
         $prod->price = 5.90;
         $prod->promo = true;
-        $prod->id = $this->prod1->id;
+        $prod->id = self::$prod1->id;
 
         $dao->update($prod);
 
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
-        $this->assertEquals($this->prod1->id, $prod2->id, 'jDao::get : bad id on record');
+        $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
         $this->assertEquals('t', $prod2->promo,'jDao::get : bad promo property on record');
@@ -159,32 +175,35 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
 
         $prod->promo = 't';
         $dao->update($prod);
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertEquals('t', $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 1;
         $dao->update($prod);
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertEquals('t', $prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = 'f';
         $dao->update($prod);
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertEquals('f', $prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = false;
         $dao->update($prod);
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertEquals('f',$prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = 0;
         $dao->update($prod);
-        $prod2 = $dao->get($this->prod1->id);
+        $prod2 = $dao->get(self::$prod1->id);
         $this->assertEquals('f', $prod2->promo, 'jDao::get : bad promo property on record : %');
 
     }
 
-   function testBinaryField() {
+    /**
+     * @depends testUpdate
+     */
+    function testBinaryField() {
         $this->emptyTable('jsessions');
 
         $dao = jDao::create ('jelix~jsession', $this->dbProfile);
@@ -204,6 +223,9 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
         $this->assertEquals(bin2hex($sess1->data), bin2hex($sess2->data), 'jDao::get : bad binary data');
     }
 
+    /**
+     * @depends testBinaryField
+     */
     function testFieldNameEnclosure(){
         $this->assertEquals('"toto"', jDb::getConnection($this->dbProfile)->encloseName('toto'));
     }

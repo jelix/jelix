@@ -14,10 +14,6 @@
  */
 abstract class jDb_queryBase extends jUnitTestCase {
 
-    public static function setUpBeforeClass() {
-        self::initJelixConfig();
-    }
-
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);
         $this->assertNotNull($cnx, 'connection null !');
@@ -27,6 +23,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
             $this->assertTrue($cnx instanceof jDbConnection, 'connection null !');
     }
 
+    /**
+     * @depends testConnection
+     */
     function testEmptyATable(){
         $db = jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM product_test');
@@ -39,6 +38,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         }
     }
 
+    /**
+     * @depends testEmptyATable
+     */
     function testInsert(){
         $db = jDb::getConnection($this->dbProfile);
         $nb = $db->exec("INSERT INTO product_test( name, price) VALUES('camembert',2.31) ");
@@ -49,6 +51,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         $this->assertEquals(1, $nb, 'exec insert 3 should return 1');
     }
 
+    /**
+     * @depends testInsert
+     */
     function testSelect(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
@@ -87,6 +92,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         $record->price+=10;
     }
 
+    /**
+     * @depends testSelect
+     */
     function testSelectWithModifier(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id, name,price FROM product_test');
@@ -122,6 +130,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
     }
 
+    /**
+     * @depends testSelectWithModifier
+     */
     function testFetchClass(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
@@ -157,6 +168,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
     }
 
+    /**
+     * @depends testFetchClass
+     */
     function testFetchInto(){
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
@@ -196,6 +210,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
         $this->assertFalse(!!$resultSet->fetch());
     }
 
+    /**
+     * @depends testFetchInto
+     */
     function testTools(){
 
         $tools = jDb::getConnection($this->dbProfile)->tools();

@@ -19,6 +19,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
     protected $instReport;
 
     public function setUp() {
+        self::initJelixConfig();
         jApp::saveContext();
         $this->instReport = new testInstallReporter();
         $this->installer = new testInstallerMain($this->instReport);

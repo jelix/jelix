@@ -9,13 +9,10 @@
 */
 
 class jDb_MysqliTest extends jUnitTestCaseDb {
-    protected $dbProfile ='mysqli_profile';
-
-    public static function setUpBeforeClass() {
-        self::initJelixConfig();
-    }
 
     function setUp() {
+        self::initJelixConfig();
+        $this->dbProfile ='mysqli_profile';
         try{
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
             $this->emptyTable('labels_test');

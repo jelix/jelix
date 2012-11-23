@@ -11,7 +11,7 @@
 
 class jDb_profilesTest  extends jUnitTestCase
 {
-    public static function setUpBeforeClass() {
+    public function setUp() {
         self::initJelixConfig();
     }
 

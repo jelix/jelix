@@ -11,12 +11,11 @@
 
 abstract class jacl2APITest extends jUnitTestCaseDb {
 
-    protected $dbProfile = 'jacl2_profile';
-
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
     public function setUp (){
+        $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
         if (!self::$coordAuthPlugin) {
 
@@ -58,6 +57,10 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         unset($_SESSION[self::$coordAuthPlugin->config['session_name']]);
     }
 
+    static function tearDownAfterClass() {
+        self::$coordAuthPlugin = null;
+    }
+
     public function testIsMemberOfGroup(){
         $this->assertTrue(jAcl2DbUserGroup::isMemberOfGroup ('group1'));
         $this->assertFalse(jAcl2DbUserGroup::isMemberOfGroup ('group2'));
@@ -95,7 +98,6 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
 
     }
 
-
     /**
     * @depends testCheckRight
     */
@@ -108,7 +110,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         jAcl2DbUserGroup::clearCache();
 
         // it should cancel the right super.cms.update (which is set on group1)
-        jAcl2DbManager::removeRight('group2', 'super.cms.update', '', true);
+        jAcl2DbManager::removeRight('group2', 'super.cms.update', '-', true);
 
         $this->assertTrue(jAcl2::check('super.cms.list'));
         $this->assertFalse(jAcl2::check('super.cms.update')); // is canceled

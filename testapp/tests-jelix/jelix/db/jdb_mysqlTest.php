@@ -11,7 +11,7 @@
 
 class jDb_MysqlTest extends jUnitTestCaseDb {
 
-    public static function setUpBeforeClass() {
+    public function setUp() {
         self::initJelixConfig();
     }
 

@@ -16,11 +16,12 @@ require_once(__DIR__.'/jkvdb.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jkvdb_fileTest extends UTjKVDb {
-
-    protected $profile = 'usingfile';
+class jkvdb_fileTest extends jKVDbTest {
 
     function setUp (){
+        $this->profile = 'usingfile';
+        self::initJelixConfig();
+
         if (!$this->_kvdbSetUp())
             return;
         if (file_exists(jApp::tempPath().'kvfiles/tests/'))

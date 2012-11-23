@@ -20,16 +20,16 @@ require_once(__DIR__.'/jcache.lib.php');
 
 class jCache_Memcache22Test extends jCacheAPITest {
 
-    protected $profile = 'usingmemcache';
-
-    protected $mmhost = 'localhost';
-    protected $mmport = 11211;
-
     function setUp () {
+        $this->mmhost= 'localhost';
+        $this->mmport= 11211;
+        $this->profile = 'usingmemcache';
+
         if (!extension_loaded('memcache'))
             $this->markTestSkipped('jCache_Memcache22Test  cannot be run because memcache is not installed');
         if (version_compare(phpversion('memcache'), '3.0.1') > 0)
             $this->markTestSkipped('jCache_Memcache22Test cannot be run because version of memcache is wrong (should be < 3.0.1)');
+        $this->profile = 'usingmemcache';
         parent::setUp();
         if (isset($this->conf['servers']))
             list($this->mmhost, $this->mmport) = explode(":",$this->conf['servers']);
@@ -55,9 +55,9 @@ class jCache_Memcache22Test extends jCacheAPITest {
         parent::testFlush();
 
         $mmc=memcache_connect($this->mmhost, $this->mmport);
-        $this->assertTrue(memcache_get($mmc,'flush1DataKey'));
-        $this->assertTrue(memcache_get($mmc,'flush2DataKey'));
-        $this->assertTrue(memcache_get($mmc,'flush3DataKey'));
+        $this->assertEquals('some data', memcache_get($mmc,'flush1DataKey'));
+        $this->assertEquals('data to remove', memcache_get($mmc,'flush2DataKey'));
+        $this->assertEquals('other data to remove', memcache_get($mmc,'flush3DataKey'));
         $this->assertTrue(jCache::flush($this->profile));
         $this->assertFalse(memcache_get($mmc,'flush1DataKey'));
         $this->assertFalse(memcache_get($mmc,'flush2DataKey'));

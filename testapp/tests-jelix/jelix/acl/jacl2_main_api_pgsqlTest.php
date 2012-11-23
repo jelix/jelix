@@ -13,9 +13,8 @@ require_once(__DIR__.'/jacl2.lib.php');
 
 class jacl2_main_api_pgsqlTest extends jacl2APITest {
 
-    //protected $backupProfile;
-
     public function setUp(){
+        jDao::releaseAll();
         jProfiles::clear();
         try {
             jProfiles::get('jdb','testapp_pgsql', true);
@@ -25,19 +24,13 @@ class jacl2_main_api_pgsqlTest extends jacl2APITest {
             $this->markTestSkipped('jacl2_main_api_pgsqlTest cannot be run: '.$e->getMessage());
             return;
         }
-
-        jDao::releaseAll();
-
-        //$this->backupProfile = jProfiles::get('jdb','jacl2_profile', true);
         parent::setUp();
     }
-
 
     public function tearDown (){
         parent::tearDown();
         jProfiles::clear();
         jDao::releaseAll();
         jAcl2DbUserGroup::clearCache();
-        //jProfiles::createVirtualProfile('jdb','jacl2_profile', $this->backupProfile);
     }
 }
