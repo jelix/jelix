@@ -186,5 +186,7 @@ class jProfiles {
     public static function clear() {
         self::$_profiles = null;
         self::$_objectPool = array();
+        if (gc_enabled())
+            gc_collect_cycles();
     }
 }
