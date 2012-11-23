@@ -177,6 +177,8 @@ class jProfiles {
             self::$_profiles[$category.':'.$name] = $params;
         }
         unset (self::$_objectPool[$category][$name]); // close existing connection with the same pool name
+        if (gc_enabled())
+            gc_collect_cycles();
     }
 
     /**
