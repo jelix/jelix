@@ -1,9 +1,9 @@
 <?php
 
-class jDaoImportTest extends PHPUnit_Framework_TestCase {
+class jDaoImportTest extends jUnitTestCase {
 
-    public static function setUpBeforeClass() {
-        jelix_init_test_env();
+    public function setUp () {
+        self::initJelixConfig();
     }
 
     public function testExtendedRecords() {

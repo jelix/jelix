@@ -12,6 +12,7 @@
     </testsuite>
     <testsuite name="Jelix Dao">
       <directory>jelix/daos/</directory>
+    </testsuite>
     <testsuite name="Jelix Events">
       <directory>jelix/events/</directory>
     </testsuite>
