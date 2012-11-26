@@ -12,11 +12,14 @@
 class sampleFormCtrl extends jController {
 
   function newform(){
+      jForms::destroy('sample');
       // création d'un formulaire vierge
       $form = jForms::create('sample');
       $form->deactivate('unwanted');
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform:show";
+      //$form->setReadOnly('conf');
+      //$form->setData('conf', 'browser');
       return $rep;
   }
 
@@ -27,6 +30,9 @@ class sampleFormCtrl extends jController {
           $form = jForms::create('sample');
           $form->deactivate('unwanted');
       }
+
+      //$form->setReadOnly('listdep2');
+
       $rep = $this->getResponse('html');
       $rep->title = 'Form editing';
 
