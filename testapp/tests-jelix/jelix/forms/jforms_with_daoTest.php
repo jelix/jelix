@@ -1,0 +1,247 @@
+<?php
+/**
+* @package     testapp
+* @subpackage  jelix_tests module
+* @author      Laurent Jouanneau
+* @contributor
+* @copyright   2007 Laurent Jouanneau
+* @link        http://www.jelix.org
+* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+*/
+
+require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
+
+class jforms_With_DaoTest extends jUnitTestCaseDb {
+
+    protected $backupGlobalsBlacklist = array('_SESSION');
+
+    static function setUpBeforeClass() {
+        $_SESSION['JFORMS'] = array();
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        $form = jForms::create('product');
+        $form = jForms::create('label', array(1,'fr'));
+        $form = jForms::create('label', array(1,'en'));
+    }
+
+    function setUp(){
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        if ($this->getName() == 'testInsertDao') {
+            $this->emptyTable('product_test');
+            $this->emptyTable('product_tags_test');
+            $this->emptyTable('labels_test');
+        }
+    }
+
+    function tearDown(){
+        jApp::popCurrentModule();
+        jApp::setCoord(null);
+    }
+    
+    static function tearDownAfterClass() {
+/*        jForms::destroy('product');
+        jForms::destroy('label', array(1,'fr'));
+        jForms::destroy('label', array(1,'en'));
+*/    }
+
+    static protected $id;
+    static protected $id2;
+    
+    function testInsertDao(){
+        $req = jApp::coord()->request;
+
+        $req->params['name'] = 'phone';
+        $req->params['price'] = '45';
+        $req->params['tag'] = array('professionnal','book');
+        $form = jForms::fill('product');
+
+        // save main data
+        self::$id = $form->saveToDao('products');
+        $this->assertEquals(1, preg_match("/^[0-9]+$/",self::$id));
+        $records = array(
+            array('id'=>self::$id, 'name'=>'phone', 'price'=>45),
+        );
+        $this->assertTableContainsRecords('product_test', $records);
+
+        // save data of the tags control which is a container
+        $form->saveControlToDao('tag','product_tags',self::$id);
+        $records = array(
+            array('product_id'=>self::$id, 'tag'=>'professionnal'),
+            array('product_id'=>self::$id, 'tag'=>'book'),
+        );
+        $this->assertTableContainsRecords('product_tags_test', $records);
+
+        //insert a second product
+        $req->params['name'] = 'computer';
+        $req->params['price'] = '590';
+        $req->params['tag'] = array('professionnal','promotion');
+        $form = jForms::fill('product');
+
+        self::$id2 = $form->saveToDao('products');
+        $this->assertEquals(1, preg_match("/^[0-9]+$/",self::$id2));
+        $this->assertNotEquals(self::$id, self::$id2);
+        $records = array(
+            array('id'=>self::$id, 'name'=>'phone', 'price'=>45),
+            array('id'=>self::$id2, 'name'=>'computer', 'price'=>590),
+        );
+        $this->assertTableContainsRecords('product_test', $records);
+
+        // save data of the tags control which is a container
+        $form->saveControlToDao('tag','product_tags',self::$id2);
+        $records = array(
+            array('product_id'=>self::$id, 'tag'=>'professionnal'),
+            array('product_id'=>self::$id, 'tag'=>'book'),
+            array('product_id'=>self::$id2,'tag'=>'professionnal'),
+            array('product_id'=>self::$id2,'tag'=>'promotion'),
+        );
+        $this->assertTableContainsRecords('product_tags_test', $records);
+    }
+
+    /**
+     * @depends testInsertDao
+     */
+    function testInsertDao2(){
+
+        $req = jApp::coord()->request;
+
+        $req->params['label'] = 'bonjour';
+        $form = jForms::fill('label', array(1,'fr'));
+
+        // save main data
+        $id = $form->saveToDao('labels');
+        $this->assertEquals(array(1,'fr'), $id);
+        $records = array(
+            array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
+        );
+        $this->assertTableContainsRecords('labels_test', $records);
+
+        //insert a second label
+        $req->params['label'] = 'Hello';
+        $form = jForms::fill('label', array(1,'en'));
+
+        $id2 = $form->saveToDao('labels');
+        $this->assertEquals(array(1,'en'), $id2);
+        $records = array(
+            array('key'=>1, 'lang'=>'fr', 'label'=>'bonjour'),
+            array('key'=>1, 'lang'=>'en', 'label'=>'Hello'),
+        );
+        $this->assertTableContainsRecords('labels_test', $records);
+    }
+
+    /**
+     * @depends testInsertDao2
+     */
+    function testUpdateDao(){
+
+        $req = jApp::coord()->request;
+
+        $form = jForms::create('product',self::$id); // "fill" need an existing form
+
+        $req->params['name'] = 'other phone';
+        $req->params['price'] = '68';
+        $req->params['tag'] = array('high tech','best seller');
+
+        $form = jForms::fill('product',self::$id);
+        $id = $form->saveToDao('products');
+
+        $this->assertEquals(self::$id, $id);
+
+        $form->saveToDao('products'); // try to update an unchanged record 
+
+        $records = array(
+            array('id'=>self::$id, 'name'=>'other phone', 'price'=>68),
+            array('id'=>self::$id2,'name'=>'computer',    'price'=>590),
+        );
+        $this->assertTableContainsRecords('product_test', $records);
+
+        // save data of the tags control which is a container
+        $form->saveControlToDao('tag','product_tags',self::$id);
+        $records = array(
+            array('product_id'=>self::$id2, 'tag'=>'professionnal'),
+            array('product_id'=>self::$id2, 'tag'=>'promotion'),
+            array('product_id'=>self::$id,  'tag'=>'high tech'),
+            array('product_id'=>self::$id,  'tag'=>'best seller'),
+        );
+        $this->assertTableContainsRecords('product_tags_test', $records);
+
+    }
+
+    /**
+     * @depends testUpdateDao
+     */
+    function testLoadDao(){
+        jForms::destroy('product');
+        jForms::destroy('product', self::$id);
+        $verif='
+<array>
+     <array key="jelix_tests~product">array()</array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        $form = jForms::create('product', self::$id);
+
+$verif='
+<array>
+     <array key="jelix_tests~product">
+        <object key="'.self::$id.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.self::$id.'" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="" />
+                <string key="price" value="" />
+                <array key="tag">array()</array>
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        $form->initFromDao('products');
+
+$verif='
+<array>
+     <array key="jelix_tests~product">
+        <object key="'.self::$id.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.self::$id.'" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="other phone" />
+                <string key="price" value="68" />
+                <array key="tag">array()</array>
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        $form->initControlFromDao('tag', 'product_tags');
+$verif='
+<array>
+     <array key="jelix_tests~product">
+        <object key="'.self::$id.'" class="jFormsDataContainer">
+            <integer property="formId" value="'.self::$id.'" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="other phone" />
+                <string key="price" value="68" />
+                <array key="tag">array(\'best seller\', \'high tech\')</array>
+            </array>
+            <array property="errors">array()</array>
+        </object>
+     </array>
+</array>';
+        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+    }
+
+    /**
+     * @depends testLoadDao
+     */
+    function testGetValue() {
+        $this->emptyTable('labels1_test');
+    }
+}
+?>

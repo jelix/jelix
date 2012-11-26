@@ -17,7 +17,7 @@
  */
 require(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
 require(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
-require(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
+require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
  * exception for jforms
@@ -670,19 +670,35 @@ abstract class jFormsBase {
     public function hasUpload() { return count($this->uploads)>0; }
 
     /**
-     * @param string $buildertype  the type name of a form builder
-     * @return jFormsBuilderBase
+     * @param string $buildertype  the type name of a form builder.
+     *          if the name begins by 'legacy.', it load a legacy builder plugin (jelix <=1.4)
+     * @return \jelix\forms\Builder\BuilderBase | jFormsBuilderBase
      */
     public function getBuilder($buildertype){
 
-        if($buildertype == '')
-            $buildertype = 'html';
+        $legacy = false;
+        if ($buildertype == '') {
+            $buildertype = $plugintype = 'html';
+        }
+        else if (preg_match('/^legacy\.(.*)$/', $buildertype, $m)) {
+            $legacy = true;
+            $plugintype = $m[1];
+        }
+        else {
+            $plugintype = $buildertype;
+        }
 
         if(isset($this->builders[$buildertype]))
             return $this->builders[$buildertype];
 
-        include_once(JELIX_LIB_PATH.'forms/jFormsBuilderBase.class.php');
-        $o = jApp::loadPlugin($buildertype, 'jforms', '.jformsbuilder.php', $buildertype.'JformsBuilder', $this);
+        if (!$legacy) {
+            $o = jApp::loadPlugin($plugintype, 'formbuilder', '.formbuilder.php', $plugintype.'FormBuilder', $this);
+        }
+        else {
+            include_once(JELIX_LIB_PATH.'forms/legacy/jFormsBuilderBase.class.php');
+            $o = jApp::loadPlugin($plugintype, 'jforms', '.jformsbuilder.php', $plugintype.'JformsBuilder', $this);
+        }
+
         if ($o) {
             $this->builders[$buildertype] = $o;
             return $o;

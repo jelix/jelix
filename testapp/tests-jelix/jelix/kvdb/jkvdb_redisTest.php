@@ -16,13 +16,15 @@ require_once(LIB_PATH . 'php5redis/Redis.php');
 * @subpackage  jelix_tests module
 */
 
-class jkvdb_redisTest extends UTjKVDb {
-
-    protected $profile = 'usingredis';
+class jkvdb_redisTest extends jKVDbTest {
 
     protected $redis;
 
-    public function setUp (){
+    function setUp () {
+        $this->profile = 'usingredis';
+        self::initJelixConfig();
+
+        parent::setUp();
         if (!$this->_kvdbSetUp())
             return;
 

@@ -15,7 +15,7 @@ class jDb_sqliteTest extends jUnitTestCase {
         self::initJelixConfig();
     }
 
-    public function setUp (){
+    function setUp (){
         try {
             jProfiles::get('jdb', 'testapp_sqlite', true);
         }

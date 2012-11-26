@@ -16,18 +16,19 @@ require_once(__DIR__.'/jkvdb.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jkvdb_dbTest extends UTjKVDb {
-
-    protected $profile = 'usingdb';
+class jkvdb_dbTest extends jKVDbTest {
 
     protected $db = null;
 
-    public function setUp (){
+    function setUp (){
+        $this->profile = 'usingdb';
+        self::initJelixConfig();
         if ($this->_kvdbSetUp()) {
             $this->dbProfile = $this->profileData['dbprofile'];
             $this->db = jDb::getConnection($this->dbProfile);
             $this->db->exec('delete from testkvdb');
         }
+        parent::setUp();
     }
 
     public function testGarbage () {

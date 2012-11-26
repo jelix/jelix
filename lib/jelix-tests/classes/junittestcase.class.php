@@ -8,6 +8,14 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
+
+class jCoordinatorForTest extends jCoordinator {
+    function testSetRequest($request) {
+        $this->setRequest($request);
+    }
+}
+
 
 class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
@@ -24,7 +32,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      */
     protected $dbProfile ='';
 
-    public function setUp() {
+    protected function setUp() {
         parent::setUp();
         if($this->needPDO && false === class_exists('PDO',false)){
             $this->markTestSkipped('PDO does not exists ! You should install PDO because tests need it.');
@@ -32,14 +40,42 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * init jelix configuration
+     * init jelix configuration.
+     *
+     * If you need to setup a full jelix environment with a coordinator,
+     * prefer to call initClassicRequest
+     * @param string $config the configuration file to use, as if you were inside an entry point
+     * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
-    protected static function initJelixConfig($withCoordinator = false, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
+    protected static function initJelixConfig($config = 'index/config.ini.php', $entryPoint = 'index.php') {
         require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
         $config = jConfigCompiler::read($config, true, true, $entryPoint);
         jApp::setConfig($config);
-        if ($withCoordinator)
-            jApp::setCoord(new jCoordinator('', false));
+        jApp::setCoord(null);
+    }
+
+    /**
+     * @var \jelix\FakeServerConf\ApacheMod
+     */
+    protected static $fakeServer = null;
+
+    /**
+     * initialize a full jelix environment with a coordinator, a request object etc.
+     *
+     * it initializes a coordinator, a classic request object. It sets jApp::coord(),
+     * @param string $url the full requested URL (with http://, the domaine name etc.)
+     * @param string $config the configuration file to use, as if you were inside an entry point
+     * @param string $entryPoint the entrypoint name as indicated into project.xml
+     */
+    protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
+        self::$fakeServer = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer->setHttpRequest($url);
+        require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
+        $config = jConfigCompiler::read($config, true, false, $entryPoint);
+        $coord = new jCoordinatorForTest($config, false);
+        jApp::setCoord($coord);
+        $request = new jClassicRequest();
+        $coord->testSetRequest($request);
     }
 
     /**

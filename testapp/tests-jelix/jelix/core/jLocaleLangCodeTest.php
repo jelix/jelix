@@ -10,7 +10,7 @@ class jLocaleLangCodeTest extends jUnitTestCase {
     protected $backupAcceptedLanguage;
     protected $backupLangToLocale;
 
-    public function setUp() {
+    function setUp() {
         $this->backupLangToLocale = jApp::config()->langToLocale ;
         $this->backupAcceptedLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])?$_SERVER['HTTP_ACCEPT_LANGUAGE']:'';
         $this->backupAvailableLocale = jApp::config()->availableLocales ;

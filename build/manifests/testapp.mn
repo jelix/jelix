@@ -225,33 +225,9 @@ cd testapp/modules/jelix_tests/forms
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
-  core.rest_controller.html_cli.php
-  core.selectors_action.html.php
-  core.selectors_module.html_cli.php
-  core.soap.html.php
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
   daotests.lib.php
-  httpcache.pu.php
-  installer.lib.php
-  installer.main.html_cli.php
-  installer.misc.html_cli.php
-  installer.component.html_cli.php
-  installer.dependencies.html_cli.php
-  jacl.main_api.html_cli.php
-  jacl.manager.html_cli.php
-  jacl.users_and_groups.html_cli.php
-  jacl2.main_api.html_cli.php
-  jacl2.main_api_pgsql.html_cli.php
-  jacl2.manager.html_cli.php
-  jacl2.users_and_groups.html_cli.php
-  jacl2_main_api.lib.php
-  jauth.ldap_api.html.php
-  jcache.lib.php
-  jcache.db.html_cli.php
-  jcache.file.html_cli.php
-  jcache.memcache.html_cli.php
-  jcache.memcache22.html_cli.php
   jdao.conditions.html_cli.php
   jdao.events.html_cli.php
   jdao.factory_base.html_cli.php
@@ -263,38 +239,6 @@ cd testapp/modules/jelix_tests/tests/
   jdao.parser_update.html_cli.php
   jdao.generator.html_cli.php
   jdao.generator_select.html_cli.php
-  jdb.1_queries.html_cli.php
-  jdb.2_queries_with_pdo.html_cli.php
-  jdb.3_queries_with_mysqli.html_cli.php
-  jdb.lib.php
-  jdb.mysql.html_cli.php
-  jdb.mysqli.html_cli.php
-  jdb.pgsql.html_cli.php
-  jdbschema.mysql.html_cli.php
-  jdbtools.html_cli.php
-  jdbtools.mysql.html_cli.php
-  jforms.html_cli.php
-  jforms.check_datas.html_cli.php
-  jforms.compiler.html_cli.php
-  jforms.compiler_1_1.html_cli.php
-  jforms.datasources.html_cli.php
-  jforms.htmlbuilder.html_cli.php
-  jforms.htmlbuilder2.html_cli.php
-  jforms.htmllightbuilder.html_cli.php
-  jforms.htmllightbuilder2.html_cli.php
-  jforms.modifiedcontrols.html_cli.php
-  jforms.with_dao.html_cli.php
-  jtpl.compiler.html_cli.php
-  jtpl.expressions_parsing.html_cli.php
-  jtpl.fetch.html_cli.php
-  jtpl.plugins.html.php
-  jtpl.virtual.html_cli.php
-  jzone.cache.html.php
-  utils.jdatatype.html_cli.php
-  utils.jduration.html_cli.php
-  utils.jimagemodifier.html_cli.php
-  utils.jclasses.html_cli.php
-  utils.jrooturl.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -327,6 +271,25 @@ cd testapp/modules/testinstall3
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
+cd testapp/tests-jelix/jelix/acl/
+  jacl_main_apiTest.php
+  jacl_managerTest.php
+  jacl_users_and_groupsTest.php
+  jacl2_main_apiTest.php
+  jacl2_main_api_pgsqlTest.php
+  jacl2_managerTest.php
+  jacl2_users_groupsTest.php
+  jacl2.lib.php
+cd testapp/tests-jelix/jelix/auth/
+  ldap_pluginTest.php
+cd testapp/tests-jelix/jelix/cache/
+  jcache.lib.php
+  jcache_dbTest.php
+  jcache_fileTest.php
+  jcache_memcacheTest.php
+  jcache_memcache22Test.php
+  httpcacheTest.php
+  jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php
@@ -335,12 +298,22 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleTest.php
   jLocaleLangCodeTest.php
   jLogTest.php
+  restcontrollerTest.php
+  selectors_actionTest.php
+  selectors_moduleTest.php
+cd testapp/tests-jelix/jelix/soap/
+  soapcontrollerTest.php
+  soapclientTest.php
 cd testapp/tests-jelix/jelix/daos
   jDaoImportTest.php
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
   installAppTest.php
+  installer.lib.php
+  installer_componentTest.php
+  installer_dependenciesTest.php
+
 cd testapp/tests-jelix/jelix/installer/app1/
   project.xml
   project1.xml
@@ -360,18 +333,32 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/utils/
+  jClassesTest.php
+  jDatatypeTest.php
   jDateTimeTest.php
+  jDurationTest.php
   jFilterTest.php
+  jImageModifierTest.php
   jIniFileModifierTest.php
   jMailerTest.php
+  jRootUrlTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
-  soapclientTest.php
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
   jDb_sqliteTest.php
   jDb_sqlite3Test.php
+  jdb_queriesTest.php
+  jdb_queries_with_pdoTest.php
+  jdb_queries_with_mysqliTest.php
+  jdb.lib.php
+  jdb_mysqlTest.php
+  jdb_mysqliTest.php
+  jdb_pgsqlTest.php
+  jdbschema_mysqlTest.php
+  jdbtoolsTest.php
+  jdbtools_mysqlTest.php
 cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_dbTest.php
   jkvdb_fileTest.php
@@ -379,7 +366,26 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_redisTest.php
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
+  jforms_check_dataTest.php
+  jforms_compilerTest.php
+  jforms_compiler_1_1Test.php
+  jforms_datasourcesTest.php
+  jforms_htmlbuilderTest.php
+  jforms_htmlbuilder2Test.php
+  jforms_htmllightbuilderTest.php
+  jforms_htmllightbuilder2Test.php
   jforms_init_from_requestTest.php
+  jforms_modified_controlsTest.php
+  jforms_newhtmlbuilderTest.php
+  jforms_newhtmlbuilder2Test.php
+  jforms_sessionTest.php
+  jforms_with_daoTest.php
+cd testapp/tests-jelix/jelix/tpl/
+  jtpl_compilerTest.php
+  jtpl_expressions_parsingTest.php
+  jtpl_fetchTest.php
+  jtpl_pluginsTest.php
+  jtpl_virtualTest.php
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 

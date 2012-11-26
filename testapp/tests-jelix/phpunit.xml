@@ -4,12 +4,14 @@
     <testsuite name="Jelix Core">
       <directory>jelix/core/</directory>
     </testsuite>
-    <testsuite name="Jelix Dao">
-      <directory>jelix/daos/</directory>
+    <testsuite name="Jelix Cache">
+      <directory>jelix/cache/</directory>
     </testsuite>
     <testsuite name="Jelix Db">
       <directory>jelix/db/</directory>
     </testsuite>
+    <testsuite name="Jelix Dao">
+      <directory>jelix/daos/</directory>
     <testsuite name="Jelix Events">
       <directory>jelix/events/</directory>
     </testsuite>
@@ -25,11 +27,23 @@
     <testsuite name="Jelix Forms">
       <directory>jelix/forms/</directory>
     </testsuite>
+    <testsuite name="Jelix Auth">
+      <directory>jelix/auth/</directory>
+    </testsuite>
+    <testsuite name="Jelix Acl">
+      <directory>jelix/acl/</directory>
+    </testsuite>
     <testsuite name="jPref ">
       <directory>jelix/prefs/</directory>
     </testsuite>
     <testsuite name="Jelix Scripts">
       <directory>jelix-scripts/</directory>
+    </testsuite>
+    <testsuite name="Jelix tpl">
+      <directory>jelix/tpl/</directory>
+    </testsuite>
+    <testsuite name="Jelix soap">
+      <directory>jelix/soap/</directory>
     </testsuite>
   </testsuites>
 </phpunit>

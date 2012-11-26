@@ -16,11 +16,12 @@ require_once(__DIR__.'/jkvdb.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jkvdb_memcacheTest extends UTjKVDb {
+class jkvdb_memcacheTest extends jKVDbTest {
 
-    protected $profile = 'usingmemcache';
+    function setUp (){
+        $this->profile = 'usingmemcache';
+        self::initJelixConfig();
 
-    public function setUp (){
         if (!$this->_kvdbSetUp())
             return;
         if (!extension_loaded('memcache'))
@@ -30,6 +31,7 @@ class jkvdb_memcacheTest extends UTjKVDb {
             $this->mmc = memcache_connect($host, intval($port));
             memcache_flush($this->mmc);
         }
+        parent::setUp();
     }
 
     public function tearDown() {
