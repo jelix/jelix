@@ -38,7 +38,10 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr = $this->getControlAttributes();
         $value = $this->getValue($ctrl);
 
-        unset($attr['readonly']);
+        if (isset($attr['readonly'])) {
+            $attr['disabled'] = 'disabled';
+            unset($attr['readonly']);
+        }
         $attr['size'] = $ctrl->size;
 
         if($ctrl->multiple){

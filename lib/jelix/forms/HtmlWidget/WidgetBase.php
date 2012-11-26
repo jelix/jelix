@@ -124,7 +124,10 @@ abstract class WidgetBase implements WidgetInterface {
     
     protected function commonJs() {
         $jsContent = '';
-        
+        if ($this->ctrl->isReadOnly()) {
+            $jsContent .="c.readOnly = true;\n";
+        }
+
         if($this->ctrl->required){
             $jsContent .= "c.required = true;\n";
             if($this->ctrl->alertRequired){

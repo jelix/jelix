@@ -38,7 +38,11 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr = $this->getControlAttributes();
         $value = $this->getValue($this->ctrl);
 
-        unset($attr['readonly']);
+        if (isset($attr['readonly'])) {
+            $attr['disabled'] = 'disabled';
+            unset($attr['readonly']);
+        }
+
         $attr['size'] = '1';
         echo '<select';
         $this->_outputAttr($attr);
