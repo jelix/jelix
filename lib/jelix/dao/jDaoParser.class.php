@@ -10,7 +10,7 @@
 * @contributor Philippe Villiers
 * @contributor Bastien Jaillot
 * @contributor Julien Issler, Guillaume Dugas
-* @copyright  2007-2008 Julien Issler, 2010 Olivier Demah
+* @copyright  2007-2008 Julien Issler, 2010 Olivier Demah, 2012 Guillaume Dugas
 * These classes was retrieved originally from the Copix project
 * (CopixDAOGeneratorV1, CopixDAODefinitionV1, Copix 2.3dev20050901, http://www.copix.org)
 * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -145,12 +145,18 @@ class jDaoParser {
             $this->_ijoins = $parser->getInnerJoins();
             $this->_eventList = $parser->getEvents();
             $this->_daoRecord = $parser->getDaoRecord();
+            $this->hasOnlyPrimaryKeys = $parser->hasOnlyPrimaryKeys;
         }
     }
     
     protected function parseDatasource($xml) {
         // -- tables
-        if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)){
+        if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)) {
+            // erase table definitions (in the case where the dao imports an other one)
+            $this->_tables = array();
+            $this->_ijoins = array();
+            $this->_ojoins = array();
+
             $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
             if(isset($xml->datasources[0]->primarytable[1])){
@@ -162,32 +168,52 @@ class jDaoParser {
             foreach($xml->datasources[0]->optionalforeigntable as $table){
                 $this->_parseTable (2, $table);
             }
-        }else if ($this->_primaryTable === ''){
+        }else if ($this->_primaryTable === '') { // no imported dao
             throw new jDaoXmlException ($this->selector, 'datasource.missing');
         }
     }
     
     protected function parseRecord($xml, $tools) {
-        $countprop = 0;
+
         //add the record properties
         if(isset($xml->record)){
             if (isset($xml->record[0]['extends'])) {
                 $this->_daoRecord = $xml->record[0]['extends'];
             }
             if(isset($xml->record[0]->property)) {
+                // don't append directly new properties into _properties,
+                // so we can see the differences between imported properties
+                // and readed properties
+                $properties = array();
                 foreach ($xml->record[0]->property as $prop){
                     $p = new jDaoProperty ($prop->attributes(), $this, $tools);
-                    $this->_properties[$p->name] = $p;
-                    $this->_tables[$p->table]['fields'][] = $p->name;
-                    if($p->ofPrimaryTable && !$p->isPK)
-                        $countprop ++;
+                    if (isset($properties[$p->name])) {
+                        throw new jDaoXmlException ($this->selector, 'property.already.defined', $p->name);
+                    }
+                    if (!isset($this->_properties[$p->name])) { // if this property does not redefined an imported property
+                        $this->_tables[$p->table]['fields'][] = $p->name;
+                    }
+                    $properties[$p->name] = $p;
                 }
-                $this->hasOnlyPrimaryKeys = ($countprop == 0);
+                $this->_properties = array_merge($this->_properties, $properties);
             }
-        }else if (count($this->_properties) == 0)
+        }
+        // in the case when there is no defined property and no imported dao
+        if (count($this->_properties) == 0)
             throw new jDaoXmlException ($this->selector, 'properties.missing');
+
+        // check that properties are attached to a known table. It can be
+        // wrong if the datasource has been redefined with other table names
+        $countprop = 0;
+        foreach ($this->_properties as $p) {
+            if (!isset($this->_tables[$p->table]))
+                throw new jDaoXmlException ($this->selector, 'property.imported.unknown.table', $p->name);
+            if($p->ofPrimaryTable && !$p->isPK)
+                $countprop ++;
+        }
+        $this->hasOnlyPrimaryKeys = ($countprop == 0);
     }
-    
+
     protected function parseFactory($xml) {
         // get additionnal methods definition
         if (isset ($xml->factory)) {
@@ -197,13 +223,15 @@ class jDaoParser {
             }
 
             if (isset($xml->factory[0]->method)){
+                $methods = array();
                 foreach($xml->factory[0]->method as $method){
                     $m = new jDaoMethod ($method, $this);
-                    if(isset ($this->_methods[$m->name])){
+                    if (isset ($methods[$m->name])){
                         throw new jDaoXmlException ($this->selector, 'method.duplicate',$m->name);
                     }
-                    $this->_methods[$m->name] = $m;
+                    $methods[$m->name] = $m;
                 }
+                $this->_methods = array_merge($this->_methods, $methods);
             }
         }
     }
