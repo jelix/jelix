@@ -100,7 +100,6 @@ class jDaoParser {
      * import
      */
     private $_daoImport = null;
-    private $_parserImport = null;
     
     public $selector;
     /**
@@ -116,29 +115,28 @@ class jDaoParser {
     * @param jDbTools $tools
     * @param int $debug  for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
     */
-    public function parse( $xml, $tools){
+    public function parse ($xml, $tools) {
         $this->import($xml, $tools);
         $this->parseDatasource($xml);
         $this->parseRecord($xml, $tools);
         $this->parseFactory($xml);
     }
     
-    protected function import($xml, $tools) {
-        if(isset($xml['import'])){
+    protected function import ($xml, $tools) {
+        if (isset($xml['import'])) {
             $import = $xml['import'];
-            $this->_daoImport = $import;
-            
+
             // Keep the same driver as current used
             $importSel = new jSelectorDao($import, $this->selector->driver);
-            
+            $this->_daoImport = $importSel->toString();
+
             $doc = new DOMDocument();
-            if(! $doc->load($importSel->getPath())){
+            if (!$doc->load($importSel->getPath())) {
                 throw new jException('jelix~daoxml.file.unknown', $importSel->getPath());
             }
             $parser = new jDaoParser ($importSel);
             $parser->parse(simplexml_import_dom($doc), $tools);
-            
-            $this->_parserImport = $parser;
+
             $this->_properties = $parser->getProperties();
             $this->_tables = $parser->getTables();
             $this->_primaryTable = $parser->getPrimaryTable();
@@ -292,6 +290,4 @@ class jDaoParser {
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
     public function getDaoRecord() { return $this->_daoRecord;}
     public function importedFrom(){ return $this->_daoImport;}
-    public function getImportedParser(){ $this->_parserImport;}
-    
 }

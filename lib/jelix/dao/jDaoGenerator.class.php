@@ -123,22 +123,19 @@ class jDaoGenerator {
         //-----------------------
         // Build the record class
         //-----------------------
-        
-        if ($this->_dataParser->importedFrom()) {
-            $imported = $this->_dataParser->importedFrom();
-            $driver = $this->_dataParser->selector->driver;
-            $src[] = " jIncluder::inc(new jSelectorDao('$imported', '$driver'));\n";
-        }
-        
+
         $src[] = "\nabstract class ".$this->_DaoUserRecordClassName.' extends jDaoRecordBase {}'."\n";
-        
-        $extendedObject = $this->_DaoUserRecordClassName;
+
         if ($this->_dataParser->getDaoRecord()) {
             require_once( JELIX_LIB_PATH . "/core/selector/jSelectorDaoRecord.class.php");
             $sel = new jSelectorDaoRecord($this->_dataParser->getDaoRecord());
             $src[] = ' require_once (\''.$sel->getPath().'\');';
             $extendedObject = $sel->resource . 'DaoRecord';
         }
+        else {
+            $extendedObject = $this->_DaoUserRecordClassName;
+        }
+
         $src[] = "\nclass ".$this->_DaoRecordClassName.' extends '.$extendedObject.' {';
 
         $properties=array();
