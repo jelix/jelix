@@ -12,16 +12,20 @@
 
 require_once(__DIR__.'/daotests.lib.php');
 
-class UTDao_generator_select extends jUnitTestCase {
+class jdao_generator_selectTest extends jUnitTestCase {
 
     protected $_selector;
     protected $_tools;
-    
+
     function setUp() {
-        $this->_selector = new fakejSelectorDao('foo','bar','mysql');
+        $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
         $this->_tools= new mysqlDbTools(null);
     }
 
+    function tearDown() {
+        $this->_selector = null;
+        $this->_tools = null;
+    }
 
     function testBuildSelectClause(){
         $doc ='<?xml version="1.0"?>
@@ -39,10 +43,10 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test`',$from);
-        $this->assertEqualOrDiff('',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test`',$from);
+        $this->assertEquals('',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -60,10 +64,10 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `p`.`id`, `p`.`name`, `p`.`price`',$result);
+        $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p`',$from);
-        $this->assertEqualOrDiff('',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p`',$from);
+        $this->assertEquals('',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -83,10 +87,10 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`, `category`.`cat_id`, `category`.`name` as `category`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`, `category`.`cat_id`, `category`.`name` as `category`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `category`',$from);
-        $this->assertEqualOrDiff(' WHERE  `product_test`.`cat_id`=`category`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `category`',$from);
+        $this->assertEquals(' WHERE  `product_test`.`cat_id`=`category`.`cat_id`',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -106,10 +110,10 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`',$result);
+        $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `c`',$from);
-        $this->assertEqualOrDiff(' WHERE  `p`.`cat_id`=`c`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `c`',$from);
+        $this->assertEquals(' WHERE  `p`.`cat_id`=`c`.`cat_id`',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -129,10 +133,10 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`',$result);
+        $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`)',$from);
-        $this->assertEqualOrDiff('',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`)',$from);
+        $this->assertEquals('',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -155,10 +159,10 @@ class UTDao_generator_select extends jUnitTestCase {
         $parser->parse(simplexml_load_string($doc), $this->_tools);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`, `c2`.`cat_id2`, `c2`.`name` as `category2`',$result);
+        $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`, `c2`.`cat_id2`, `c2`.`name` as `category2`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEqualOrDiff(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`), `\'.$this->_conn->prefixTable(\'category\').\'` AS `c2`',$from);
-        $this->assertEqualOrDiff(' WHERE  `p`.`cat_id2`=`c2`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`), `\'.$this->_conn->prefixTable(\'category\').\'` AS `c2`',$from);
+        $this->assertEquals(' WHERE  `p`.`cat_id2`=`c2`.`cat_id`',$where);
     }
 
 
@@ -180,7 +184,7 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`',$result);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -198,7 +202,7 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, TOUPPER(`product_test`.`name`) as `name`, `product_test`.`price`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, TOUPPER(`product_test`.`name`) as `name`, `product_test`.`price`',$result);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -216,7 +220,7 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `p`.`id`, TOUPPER(`p`.`name`) as `name`, `p`.`price`',$result);
+        $this->assertEquals('SELECT `p`.`id`, TOUPPER(`p`.`name`) as `name`, `p`.`price`',$result);
 
 
         $doc ='<?xml version="1.0"?>
@@ -235,7 +239,7 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, TOUPPER(name) as `name`, `product_test`.`price`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, TOUPPER(name) as `name`, `product_test`.`price`',$result);
 
 
         $doc ='<?xml version="1.0"?>
@@ -254,7 +258,7 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $result = $generator->GetSelectClause();
-        $this->assertEqualOrDiff('SELECT `product_test`.`id`, CONCAT(name,\\\' \\\',price) as `name`, `product_test`.`price`',$result);
+        $this->assertEquals('SELECT `product_test`.`id`, CONCAT(name,\\\' \\\',price) as `name`, `product_test`.`price`',$result);
 
     }
 
@@ -287,10 +291,10 @@ class UTDao_generator_select extends jUnitTestCase {
 
         $methods = $parser->getMethods();
         $result = $generator->GetBuildCountUserQuery($methods['method1']);
-        $this->assertEqualOrDiff('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;',$result);
+        $this->assertEquals('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;',$result);
 
         $result = $generator->GetBuildCountUserQuery($methods['method2']);
-        $this->assertEqualOrDiff('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;
+        $this->assertEquals('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;
 $__query .=\' WHERE  `product_test`.`price` = 1\';',$result);
 
         $doc ='<?xml version="1.0"?>
@@ -321,10 +325,10 @@ $__query .=\' WHERE  `product_test`.`price` = 1\';',$result);
         $generator= new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
         $methods = $parser->getMethods();
         $result = $generator->GetBuildCountUserQuery($methods['method1']);
-        $this->assertEqualOrDiff('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;',$result);
+        $this->assertEquals('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;',$result);
 
         $result = $generator->GetBuildCountUserQuery($methods['method2']);
-        $this->assertEqualOrDiff('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;
+        $this->assertEquals('    $__query = \'SELECT COUNT(*) as c \'.$this->_fromClause.$this->_whereClause;
 $__query .=\' WHERE  `c`.`cat_id` = 1\';',$result);
     }
 }

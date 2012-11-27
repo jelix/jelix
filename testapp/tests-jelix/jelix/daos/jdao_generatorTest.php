@@ -12,7 +12,8 @@
 require_once(__DIR__.'/daotests.lib.php');
 
 
-class UTDao_generator extends jUnitTestCase {
+class jdao_generatorTest extends jUnitTestCase {
+
     protected function getSimpleGenerator(){
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -32,15 +33,19 @@ class UTDao_generator extends jUnitTestCase {
 
     protected $_selector;
     protected $_tools;
-    
+
     function setUp() {
-        $this->_selector = new fakejSelectorDao('foo','bar','mysql');
+        $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
         $this->_tools= new mysqlDbTools(null);
     }
 
+    function tearDown() {
+        $this->_selector = null;
+        $this->_tools = null;
+    }
 
     protected $_generator;
-    function _getProp($type, $expr, $checknull, $op='') {
+    protected function _getProp($type, $expr, $checknull, $op='') {
         $u = $this->_tools->getTypeInfo($type);
         $prop = new testDaoProperty();
         $prop->datatype = $type;
@@ -54,107 +59,107 @@ class UTDao_generator extends jUnitTestCase {
 
         // with no checknull
 
-        $this->assertEqualOrDiff('intval($foo)',$this->_getProp('int','$foo', false));
-        $this->assertEqualOrDiff('intval($foo)',$this->_getProp('integer','$foo', false));
-        $this->assertEqualOrDiff('intval($foo)',$this->_getProp('autoincrement','$foo', false));
-        $this->assertEqualOrDiff('$this->_conn->quote($foo)',$this->_getProp('string','$foo', false));
-        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('double','$foo', false));
-        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('float','$foo', false));
-        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('numeric','$foo', false));
-        $this->assertEqualOrDiff('jDb::floatToStr($foo)',$this->_getProp('bigautoincrement','$foo', false));
+        $this->assertEquals('intval($foo)',$this->_getProp('int','$foo', false));
+        $this->assertEquals('intval($foo)',$this->_getProp('integer','$foo', false));
+        $this->assertEquals('intval($foo)',$this->_getProp('autoincrement','$foo', false));
+        $this->assertEquals('$this->_conn->quote($foo)',$this->_getProp('string','$foo', false));
+        $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('double','$foo', false));
+        $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('float','$foo', false));
+        $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('numeric','$foo', false));
+        $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('bigautoincrement','$foo', false));
 
         // with checknull 
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('autoincrement','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : $this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('double','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('float','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true));
-        $this->assertEqualOrDiff('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('autoincrement','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : $this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('double','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('float','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true));
 
         // with checknull and operator =
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('autoincrement','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('double','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('float','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true,'='));
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('autoincrement','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($foo,false))',$this->_getProp('string','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('double','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('float','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true,'='));
 
         // with checknull with default value and operator =
         /*$prop->defaultValue=34;
         $prop->datatype='integer';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34:\'=\'.intval($foo)))',$result);
+        $this->assertEquals('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34:\'=\'.intval($foo)))',$result);
         $prop->datatype='autoincrement';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('\'=\'.intval($foo)',$result);
+        $this->assertEquals('\'=\'.intval($foo)',$result);
         $prop->datatype='string';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote2($foo,false))',$result);
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \'=\'.$this->_conn->quote2($foo,false))',$result);
         $prop->defaultValue=34.6;
         $prop->datatype='double';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
+        $this->assertEquals('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
         $prop->defaultValue=34.6;
         $prop->datatype='float';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
+        $this->assertEquals('($foo === null ? \'IS NULL\' : ($foo === \'\'?\'=\'.34.6:\'=\'.doubleval($foo)))',$result);
         $prop->datatype='numeric';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \'=\'.(is_numeric ($foo) ? $foo : intval($foo)))',$result);
         $prop->datatype='bigautoincrement';
         $result = $generator->GetPreparePHPExpr('$foo', $prop, true,'=');
-        $this->assertEqualOrDiff('\'=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
+        $this->assertEquals('\'=\'.(is_numeric ($foo) ? $foo : intval($foo))',$result);
         $prop->defaultValue = null;*/
 
         // with checknull and operator <>
         $result = $this->_getProp('integer','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.intval($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.intval($foo))',$result);
         $result = $this->_getProp('autoincrement','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.intval($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.intval($foo))',$result);
         $result = $this->_getProp('string','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote2($foo,false))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.$this->_conn->quote2($foo,false))',$result);
         $result = $this->_getProp('double','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('float','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('numeric','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<>');
-        $this->assertEqualOrDiff('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
+        $this->assertEquals('($foo === null ? \'IS NOT NULL\' : \' <> \'.jDb::floatToStr($foo))',$result);
 
         // with checknull and other operator <=
         $result = $this->_getProp('integer','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.intval($foo)',$result);
+        $this->assertEquals('\' <= \'.intval($foo)',$result);
         $result = $this->_getProp('autoincrement','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.intval($foo)',$result);
+        $this->assertEquals('\' <= \'.intval($foo)',$result);
         $result = $this->_getProp('string','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' <= \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('double','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
+        $this->assertEquals('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('float','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
+        $this->assertEquals('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('numeric','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
+        $this->assertEquals('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'<=');
-        $this->assertEqualOrDiff('\' <= \'.jDb::floatToStr($foo)',$result);
+        $this->assertEquals('\' <= \'.jDb::floatToStr($foo)',$result);
 
         // with checknull and other operator LIKE
         $result = $this->_getProp('integer','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('autoincrement','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('string','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('double','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('float','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('numeric','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('bigautoincrement','$foo', true,'LIKE');
-        $this->assertEqualOrDiff('\' LIKE \'.$this->_conn->quote($foo)',$result);
+        $this->assertEquals('\' LIKE \'.$this->_conn->quote($foo)',$result);
     }
  
     function testBuildSQLCondition(){
@@ -275,96 +280,96 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method1']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 1',$where);
+        $this->assertEquals(' `grouptype` = 1',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method2']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` <> 2',$where);
+        $this->assertEquals(' `grouptype` <> 2',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
+        $this->assertEquals(' `grouptype` = 2 AND `ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method4']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method4']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` \'.\' = \'.intval($group).\' AND `parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\'',$where);
+        $this->assertEquals(' `grouptype` \'.\' = \'.intval($group).\' AND `parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method5']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method5']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` \'.\' = \'.intval($group).\' AND ( `parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\' OR `id_aclgrp` \'.\' = \'.intval($parent).\')',$where);
+        $this->assertEquals(' `grouptype` \'.\' = \'.intval($group).\' AND ( `parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\' OR `id_aclgrp` \'.\' = \'.intval($parent).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method6']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method6']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` IN (1,2,3) AND `parent_id` IS NULL ',$where);
+        $this->assertEquals(' `grouptype` IN (1,2,3) AND `parent_id` IS NULL ',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEquals(' `grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
+        $this->assertEquals(' `grouptype` = 2 AND `ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
+        $this->assertEquals(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method10']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method10']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` LIKE \\\'2%\\\' AND `name` LIKE \\\'a%\\\' AND `ownerlogin` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grouptype` LIKE \\\'2%\\\' AND `name` LIKE \\\'a%\\\' AND `ownerlogin` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), false);
-        $this->assertEqualOrDiff(' `name` <> \\\'toto\\\'',$where);
+        $this->assertEquals(' `name` <> \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method12']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method12']->getParameters(), false);
-        $this->assertEqualOrDiff(' `ownerlogin` LIKE concat(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\',\\\'%\\\')',$where);
+        $this->assertEquals(' `ownerlogin` LIKE concat(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\',\\\'%\\\')',$where);
 
         // with prefix
         $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method1']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 1',$where);
+        $this->assertEquals(' `grp`.`grouptype` = 1',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method2']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` <> 2',$where);
+        $this->assertEquals(' `grp`.`grouptype` <> 2',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
+        $this->assertEquals(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` \'.($login === null ? \'IS NULL\' : \' = \'.$this->_conn->quote2($login,false)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method4']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method4']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` \'.\' = \'.intval($group).\' AND `grp`.`parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\'',$where);
+        $this->assertEquals(' `grp`.`grouptype` \'.\' = \'.intval($group).\' AND `grp`.`parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method5']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method5']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` \'.\' = \'.intval($group).\' AND ( `grp`.`parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\' OR `grp`.`id_aclgrp` \'.\' = \'.intval($parent).\')',$where);
+        $this->assertEquals(' `grp`.`grouptype` \'.\' = \'.intval($group).\' AND ( `grp`.`parent_id` \'.($parent === null ? \'IS NULL\' : \' = \'.intval($parent)).\' OR `grp`.`id_aclgrp` \'.\' = \'.intval($parent).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method6']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method6']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` IN (1,2,3) AND `grp`.`parent_id` IS NULL ',$where);
+        $this->assertEquals(' `grp`.`grouptype` IN (1,2,3) AND `grp`.`parent_id` IS NULL ',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEquals(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
+        $this->assertEquals(' `grp`.`grouptype` = 2 AND `grp`.`ownerlogin` = TOUPPER(\'.($login === null ? \'NULL\' : $this->_conn->quote2($login,false)).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
+        $this->assertEquals(' `grp`.`grouptype` = 2 AND `grp`.`name` = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method11']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method11']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
+        $this->assertEquals(' `grp`.`name` <> \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method14']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method14']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`name` IN (\\\'foo\\\',\\\'bar\\\',\\\'baz\\\')',$where);
+        $this->assertEquals(' `grp`.`name` IN (\\\'foo\\\',\\\'bar\\\',\\\'baz\\\')',$where);
     }
 
     function testBuildSQLConditionWithPattern(){
@@ -422,32 +427,32 @@ class UTDao_generator extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method1']->getParameters(), false);
-        $this->assertEqualOrDiff(' `name` = \\\'toto\\\'',$where);
+        $this->assertEquals(' `name` = \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method2']->getParameters(), false);
-        $this->assertEqualOrDiff(' `name` <> \\\'toto\\\'',$where);
+        $this->assertEquals(' `name` <> \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` \'.\' = \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grouptype` = 2 AND `name` \'.\' = \'.$this->_conn->quote($login).\'',$where);
 
         // with prefix
         $where = $generator->BuildSQLCondition ($methods['method1']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method1']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`name` = \\\'toto\\\'',$where);
+        $this->assertEquals(' `grp`.`name` = \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method2']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method2']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`name` <> \\\'toto\\\'',$where);
+        $this->assertEquals(' `grp`.`name` <> \\\'toto\\\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method3']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true);
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 2 AND `grp`.`name` \'.\' = \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grp`.`grouptype` = 2 AND `grp`.`name` \'.\' = \'.$this->_conn->quote($login).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
-        $this->assertEqualOrDiff(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
     }
 
@@ -472,17 +477,17 @@ class UTDao_generator extends jUnitTestCase {
         $generator = new testMysqlDaoGenerator($this->_selector, $this->_tools, $parser);
 
         $pkFields=$generator->GetPkFields();
-        $this->assertTrue(count($pkFields) ==1);
+        $this->assertEquals(1, count($pkFields));
         $this->assertTrue(isset($pkFields['id_aclgrp']));
 
         $where = $generator->BuildSimpleConditions2 ($pkFields);
-        $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\' = \'.intval($id_aclgrp).\'',$where);
+        $this->assertEquals(' `grp`.`id_aclgrp`\'.\' = \'.intval($id_aclgrp).\'',$where);
 
         $where = $generator->BuildSimpleConditions2 ($pkFields, 'record->');
-        $this->assertEqualOrDiff(' `grp`.`id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
+        $this->assertEquals(' `grp`.`id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
 
         $where = $generator->BuildSimpleConditions2 ($pkFields, 'record->', false);
-        $this->assertEqualOrDiff(' `id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
+        $this->assertEquals(' `id_aclgrp`\'.\' = \'.intval($record->id_aclgrp).\'',$where);
     }
 
 
@@ -531,41 +536,41 @@ class UTDao_generator extends jUnitTestCase {
 
         $methods = $parser->getMethods();
 
-        $this->assertTrue($methods['method1']->getConditions() != null);
+        $this->assertNotNull($methods['method1']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
-        $this->assertEqualOrDiff(' `grouptype` = 1', $sql);
+        $this->assertEquals(' `grouptype` = 1', $sql);
 
-        $this->assertTrue($methods['method2']->getConditions() != null);
+        $this->assertNotNull($methods['method2']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
-        $this->assertEqualOrDiff(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+        $this->assertEquals(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
-        $this->assertTrue($methods['method3']->getConditions() !== null);
+        $this->assertNotNull($methods['method3']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  ORDER BY `name` asc',$sql);
+        $this->assertEquals(' 1=1  ORDER BY `name` asc',$sql);
 
-        $this->assertTrue($methods['method4']->getConditions() !== null);
+        $this->assertNotNull($methods['method4']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+        $this->assertEquals(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
-        $this->assertEqualOrDiff(' `grp`.`grouptype` = 1', $sql);
+        $this->assertEquals(' `grp`.`grouptype` = 1', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
-        $this->assertEqualOrDiff(' `grp`.`grouptype` <> 2 GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
+        $this->assertEquals(' `grp`.`grouptype` <> 2 GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  ORDER BY `grp`.`name` asc',$sql);
+        $this->assertEquals(' 1=1  ORDER BY `grp`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
+        $this->assertEquals(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
 
     }
 
@@ -614,41 +619,41 @@ class UTDao_generator extends jUnitTestCase {
 
         $methods = $parser->getMethods();
 
-        $this->assertTrue($methods['method1']->getConditions() != null);
+        $this->assertNotNull($methods['method1']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
-        $this->assertEqualOrDiff(' `grouptype` = 1', $sql);
+        $this->assertEquals(' `grouptype` = 1', $sql);
 
-        $this->assertTrue($methods['method2']->getConditions() != null);
+        $this->assertNotNull($methods['method2']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
-        $this->assertEqualOrDiff(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+        $this->assertEquals(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
-        $this->assertTrue($methods['method3']->getConditions() !== null);
+        $this->assertNotNull($methods['method3']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  ORDER BY `name` asc',$sql);
+        $this->assertEquals(' 1=1  ORDER BY `name` asc',$sql);
 
-        $this->assertTrue($methods['method4']->getConditions() !== null);
+        $this->assertNotNull($methods['method4']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+        $this->assertEquals(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
                                                 $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
-        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` = 1', $sql);
+        $this->assertEquals(' `jacl_group`.`grouptype` = 1', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
                                                 $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
-        $this->assertEqualOrDiff(' `jacl_group`.`grouptype` <> 2 GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+        $this->assertEquals(' `jacl_group`.`grouptype` <> 2 GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
+        $this->assertEquals(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
                                                 $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
-        $this->assertEqualOrDiff(' 1=1  GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+        $this->assertEquals(' 1=1  GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
 
     }
 
@@ -673,7 +678,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $fieldList = $generator->GetPropertiesBy('PrimaryTable');
         list($fields, $values) = $generator->PrepareValues($fieldList,'insertPattern', 'record->');
-        $this->assertEqual("now()", $values['code']);
+        $this->assertEquals("now()", $values['code']);
         
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -693,7 +698,7 @@ class UTDao_generator extends jUnitTestCase {
 
         $fieldList = $generator->GetPropertiesBy('PrimaryTable');
         list($fields, $values) = $generator->PrepareValues($fieldList,'insertPattern', 'record->');
-        $this->assertEqual('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote2($record->code,false)).\')', $values['code']);
+        $this->assertEquals('now(\'.($record->code === null ? \'NULL\' : $this->_conn->quote2($record->code,false)).\')', $values['code']);
         
     }
 
@@ -730,8 +735,7 @@ class UTDao_generator extends jUnitTestCase {
         $src = array();
         $generator->GetBuildUpdateUserQuery($methods['test'], $src, $primaryFields);
         
-        $this->assertEqualOrDiff('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
+        $this->assertEquals('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
     }
 
 }
-?>

@@ -12,11 +12,15 @@
 require_once(__DIR__.'/daotests.lib.php');
 
 
-class UTDao_parser_update extends jUnitTestCase {
+class jdao_parser_updateTest extends jUnitTestCase {
 
     protected $_selector;
-    function setUpRun() {
+    function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+    }
+
+    function tearDown() {
+        $this->_selector = null;
     }
 
     protected $methDatas=array(
@@ -383,8 +387,8 @@ class UTDao_parser_update extends jUnitTestCase {
                 $p = new jDaoMethod($xml, $parser);
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getLocaleKey(), $t[1]);
-                $this->assertEqual($e->getLocaleParameters(), $t[2]);
+                $this->assertEquals($t[1], $e->getLocaleKey());
+                $this->assertEquals($t[2], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -422,8 +426,8 @@ class UTDao_parser_update extends jUnitTestCase {
             $p = new jDaoMethod($xml, $parser);
             $this->fail("Pas d'exception survenue !");
         }catch(jDaoXmlException $e){
-            $this->assertEqual($e->getLocaleKey(), 'jelix~daoxml.method.update.forbidden');
-            $this->assertEqual($e->getLocaleParameters(), array('foo~bar','','tryupdate'));
+            $this->assertEquals('jelix~daoxml.method.update.forbidden', $e->getLocaleKey());
+            $this->assertEquals(array('foo~bar','','tryupdate'), $e->getLocaleParameters());
         }catch(Exception $e){
             $this->fail("Exception inconnue : ".$e->getMessage());
         }
@@ -431,5 +435,3 @@ class UTDao_parser_update extends jUnitTestCase {
 }
 
 
-
-?>

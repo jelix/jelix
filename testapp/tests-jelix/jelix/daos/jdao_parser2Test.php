@@ -11,11 +11,15 @@
 require_once(__DIR__.'/daotests.lib.php');
 
 
-class UTDao_parser2 extends jUnitTestCase {
+class jdao_parser2Test extends jUnitTestCase {
 
     protected $_selector;
-    function setUpRun() {
+    function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+    }
+
+    function tearDown() {
+        $this->_selector = null;
     }
 
     protected $methDatas=array(
@@ -443,8 +447,8 @@ class UTDao_parser2 extends jUnitTestCase {
                 $p = new jDaoMethod($xml, $parser);
                 $this->fail("Pas d'exception survenue !");
             }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getLocaleKey(), $t[1]);
-                $this->assertEqual($e->getLocaleParameters(), $t[2]);
+                $this->assertEquals($t[1], $e->getLocaleKey());
+                $this->assertEquals($t[2], $e->getLocaleParameters());
             }catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
             }
@@ -452,7 +456,3 @@ class UTDao_parser2 extends jUnitTestCase {
     }
 
 }
-
-
-
-?>

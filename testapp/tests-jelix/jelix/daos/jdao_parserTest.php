@@ -11,13 +11,18 @@
 
 require_once(__DIR__.'/daotests.lib.php');
 
-class UTDao_parser extends jUnitTestCase {
+class jdao_parserTest extends jUnitTestCase {
 
     protected $_selector;
     protected $_tools;
-    function setUpRun() {
+    function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
         $this->_tools= new mysqlDbTools(null);
+    }
+
+    function tearDown() {
+        $this->_selector = null;
+        $this->_tools = null;
     }
 
     protected $dsTest=array(
@@ -303,17 +308,16 @@ array('foo~bar','')
     function testBadDatasources() {
 
         foreach($this->dsTestbad as $k=>$t){
-            //$this->sendMessage("test bad datasource ".$k);
             $xml= simplexml_load_string($t[0]);
             $p = new testjDaoParser($this->_selector);
             try{
                 $p->testParseDatasource($xml);
-                $this->fail("Pas d'exception survenue !");
+                $this->fail("No expected exception!");
             }catch(jDaoXmlException $e){
-                $this->assertEqual($e->getLocaleKey(), $t[1]);
-                $this->assertEqualOrDiff($e->getLocaleParameters(), $t[2]);
+                $this->assertEquals($t[1], $e->getLocaleKey());
+                $this->assertEquals($t[2], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
+                $this->fail("Unknown Exception: ".$e->getMessage());
             }
         }
     }
