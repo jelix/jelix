@@ -1,6 +1,6 @@
 <?php 
 
-abstract class postDaoRecord extends cDaoUserRecord_testapp_Jx_posts_Jx {
+abstract class postDaoRecord extends jDaoRecordBase {
     
     function getAuthorObject() {
         if ($this->author) {
