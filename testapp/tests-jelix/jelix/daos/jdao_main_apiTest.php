@@ -10,6 +10,6 @@
 */
 require_once(__DIR__.'/jdao_main_api.lib.php');
 
-class UTDao extends UTDao_base {
+class jdao_main_apiTest extends jdao_main_api_base {
  
 }
