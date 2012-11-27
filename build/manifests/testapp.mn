@@ -227,13 +227,7 @@ cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
   core.urls_generation.html.php
   core.urls_parsing.html_cli.php
-  daotests.lib.php
   jdao.factory_base.html_cli.php
-  jdao.parser.html_cli.php
-  jdao.parser2.html_cli.php
-  jdao.parser_update.html_cli.php
-  jdao.generator.html_cli.php
-  jdao.generator_select.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -306,6 +300,12 @@ cd testapp/tests-jelix/jelix/daos
   jdao_main_apiTest.php
   jdao_main_api_pdoTest.php
   jdao_main_api.lib.php
+  jdao_parserTest.php
+  jdao_parser2Test.php
+  jdao_parser_updateTest.php
+  jdao_generatorTest.php
+  jdao_generator_selectTest.php
+  daotests.lib.php
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
