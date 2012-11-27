@@ -14,12 +14,11 @@ require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 require_once(JELIX_LIB_PATH.'dao/jDaoConditions.class.php');
 
 
-class UTDao_Conditions extends jUnitTestCase {
-
+class jDao_ConditionsTest extends jUnitTestCase {
 
     function testConditions() {
 
-        try{
+        try {
             $cond=new jDaoConditions();
 
             $check='<?xml version="1.0"?>
