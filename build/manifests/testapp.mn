@@ -70,12 +70,6 @@ cd testapp/modules/testapp/daos
   products.dao.xml
   productsalias.dao.xml
   towns.dao.xml
-  post.daorecord.php
-  postBlog.daorecord.php
-  postTracker.daorecord.php
-  post_blog.dao.xml
-  post_tracker.dao.xml
-  posts.dao.xml
 cd testapp/modules/testapp/controllers
   main.classic.php
   forms.classic.php
@@ -220,6 +214,12 @@ cd testapp/modules/jelix_tests/daos
   description.dao.xml
   labels.dao.xml
   labels1.dao.xml
+  post.daorecord.php
+  postBlog.daorecord.php
+  postTracker.daorecord.php
+  post_blog.dao.xml
+  post_tracker.dao.xml
+  posts.dao.xml
 cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml

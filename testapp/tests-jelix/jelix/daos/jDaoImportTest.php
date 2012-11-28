@@ -7,9 +7,9 @@ class jDaoImportTest extends jUnitTestCase {
     }
 
     public function testExtendedRecords() {
-        $post = jDao::createRecord('testapp~posts');
-        $blogPost = jDao::createRecord('testapp~post_blog');
-        $trackerPost = jDao::createRecord('testapp~post_tracker');
+        $post = jDao::createRecord('jelix_tests~posts');
+        $blogPost = jDao::createRecord('jelix_tests~post_blog');
+        $trackerPost = jDao::createRecord('jelix_tests~post_tracker');
         
         $this->assertInstanceOf('postDaoRecord', $post);
         $this->assertInstanceOf('postDaoRecord', $blogPost);
@@ -19,9 +19,9 @@ class jDaoImportTest extends jUnitTestCase {
     }
     
     public function testImportedEvents() {
-        $postSel = new jSelectorDao('testapp~posts', '');
-        $blogSel = new jSelectorDao('testapp~post_blog', '');
-        $trackerSel = new jSelectorDao('testapp~post_tracker', '');
+        $postSel = new jSelectorDao('jelix_tests~posts', '');
+        $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
+        $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
         $dbtools = jApp::loadPlugin($postSel->driver, 'db', '.dbtools.php', $postSel->driver.'DbTools');
 
         $postParser = new jDaoParser($postSel);
