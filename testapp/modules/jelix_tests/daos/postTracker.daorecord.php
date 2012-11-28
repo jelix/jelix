@@ -1,6 +1,6 @@
 <?php 
 
-
+require_once(__DIR__.'/post.daorecord.php');
 abstract class postTrackerDaoRecord extends postDaoRecord {
     
     function open() {

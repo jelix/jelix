@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<dao xmlns="http://jelix.org/ns/dao/1.0" import="testapp~posts">
-    <record extends="testapp~postBlog" />
-    <factory>
-        <method name="findAll" type="select">
-            <conditions>
-                <eq property="type" value="blog" />
-            </conditions>
-        </method>
-    </factory>
+<dao xmlns="http://jelix.org/ns/dao/1.0" import="jelix_tests~posts">
+    <record extends="jelix_tests~postBlog">
+        <!-- redefine author property -->
+        <property name="author" fieldname="author" datatype="varchar" maxlength="100"/>
+        <!-- add new property -->
+        <property name="email" fieldname="email" datatype="varchar" maxlength="120"/>
+    </record>
 </dao>

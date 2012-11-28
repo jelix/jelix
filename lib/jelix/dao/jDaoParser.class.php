@@ -56,8 +56,8 @@ class jDaoParser {
     * keys = table code name
     * values = array()
     *          'name'=> table code name, 'realname'=>'real table name',
-    *          'primarykey'=> attribute , 'pk'=> primary keys list
-    *          'onforeignkey'=> attribute, 'fk'=> foreign keys list
+    *           'pk'=> primary keys list
+    *          'fk'=> foreign keys list
     *          'fields'=>array(list of field code name)
     */
     private $_tables = array();
@@ -92,12 +92,14 @@ class jDaoParser {
     public $hasOnlyPrimaryKeys = false;
 
     /**
-     * record class
+     * selector of the user record class
+     * @var string
      */
     private $_daoRecord = null;
     
     /*
-     * import
+     * selector of the imported dao
+     * @var string
      */
     private $_daoImport = null;
     
@@ -124,11 +126,13 @@ class jDaoParser {
     
     protected function import ($xml, $tools) {
         if (isset($xml['import'])) {
-            $import = $xml['import'];
+            $import = (string)$xml['import'];
 
+            jApp::pushCurrentModule($this->selector->module);
             // Keep the same driver as current used
             $importSel = new jSelectorDao($import, $this->selector->driver);
             $this->_daoImport = $importSel->toString();
+            jApp::popCurrentModule();
 
             $doc = new DOMDocument();
             if (!$doc->load($importSel->getPath())) {
@@ -178,7 +182,10 @@ class jDaoParser {
         //add the record properties
         if(isset($xml->record)){
             if (isset($xml->record[0]['extends'])) {
-                $this->_daoRecord = $xml->record[0]['extends'];
+                jApp::pushCurrentModule($this->selector->module);
+                $sel = new jSelectorDaoRecord((string)$xml->record[0]['extends']);
+                $this->_daoRecord = $sel->toString();
+                jApp::popCurrentModule();
             }
             if(isset($xml->record[0]->property)) {
                 // don't append directly new properties into _properties,

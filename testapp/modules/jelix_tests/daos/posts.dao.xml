@@ -3,7 +3,7 @@
     <datasources>
         <primarytable name="posts" realname="posts" primarykey="id" />
     </datasources>
-    <record extends="testapp~post">
+    <record extends="jelix_tests~post">
         <property name="id" fieldname="id" datatype="int" required="true"/>
         <property name="title" fieldname="title" datatype="varchar" required="true" maxlength="245"/>
         <property name="author" fieldname="author" datatype="varchar" default="" maxlength="50"/>
