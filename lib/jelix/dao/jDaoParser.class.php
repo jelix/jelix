@@ -69,13 +69,13 @@ class jDaoParser {
 
     /**
     * code name of foreign table with a outer join
-    * @var array  of table code name
+    * @var array  list of array(table code name, 0)
     */
     private $_ojoins = array ();
 
     /**
     * code name of foreign table with a inner join
-    * @var array  of array(table code name, 0)
+    * @var array  list of table code name
     */
     private $_ijoins = array ();
 
@@ -93,15 +93,15 @@ class jDaoParser {
 
     /**
      * selector of the user record class
-     * @var string
+     * @var jSelectorDaoRecord
      */
-    private $_daoRecord = null;
+    private $_userRecord = null;
     
-    /*
+    /**
      * selector of the imported dao
-     * @var string
+     * @var jSelectorDao[]
      */
-    private $_daoImport = null;
+    private $_importedDao = null;
     
     public $selector;
     /**
@@ -131,7 +131,6 @@ class jDaoParser {
             jApp::pushCurrentModule($this->selector->module);
             // Keep the same driver as current used
             $importSel = new jSelectorDao($import, $this->selector->driver);
-            $this->_daoImport = $importSel->toString();
             jApp::popCurrentModule();
 
             $doc = new DOMDocument();
@@ -148,8 +147,14 @@ class jDaoParser {
             $this->_ojoins = $parser->getOuterJoins();
             $this->_ijoins = $parser->getInnerJoins();
             $this->_eventList = $parser->getEvents();
-            $this->_daoRecord = $parser->getDaoRecord();
+            $this->_userRecord = $parser->getUserRecord();
+            $this->_importedDao = $parser->getImportedDao();
             $this->hasOnlyPrimaryKeys = $parser->hasOnlyPrimaryKeys;
+
+            if ($this->_importedDao)
+                $this->_importedDao[] = $importSel;
+            else
+                $this->_importedDao = array($importSel);
         }
     }
     
@@ -183,8 +188,7 @@ class jDaoParser {
         if(isset($xml->record)){
             if (isset($xml->record[0]['extends'])) {
                 jApp::pushCurrentModule($this->selector->module);
-                $sel = new jSelectorDaoRecord((string)$xml->record[0]['extends']);
-                $this->_daoRecord = $sel->toString();
+                $this->_userRecord = new jSelectorDaoRecord((string)$xml->record[0]['extends']);
                 jApp::popCurrentModule();
             }
             if(isset($xml->record[0]->property)) {
@@ -315,14 +319,61 @@ class jDaoParser {
         return in_array (trim ($value), array ('true', '1', 'yes'));
     }
 
+    /**
+    * the properties list.
+    * keys = field code name
+    * values = jDaoProperty
+    * @return array
+    */
     public function getProperties () { return $this->_properties; }
+
+    /**
+    * all tables with their properties, and their own fields
+    * keys = table code name
+    * values = array()
+    *          'name'=> table code name, 'realname'=>'real table name',
+    *           'pk'=> primary keys list
+    *          'fk'=> foreign keys list
+    *          'fields'=>array(list of field code name)
+    * @return array
+    */
     public function getTables(){  return $this->_tables;}
+
+    /**
+    * @return string the primary table code name
+    */
     public function getPrimaryTable(){  return $this->_primaryTable;}
+
+    /**
+     * @return jDaoMethod[] list of jDaoMethod objects
+     */
     public function getMethods(){  return $this->_methods;}
+
+    /**
+    * list of code name of foreign table with a outer join
+    * @var array  list of array(table code name, 0)
+    */
     public function getOuterJoins(){  return $this->_ojoins;}
+
+    /**
+    * list of code name of foreign tables with a inner join
+    * @return array  the list
+    */
     public function getInnerJoins(){  return $this->_ijoins;}
+
     public function getEvents(){ return $this->_eventList;}
     public function hasEvent($event){ return in_array($event,$this->_eventList);}
-    public function getDaoRecord() { return $this->_daoRecord;}
-    public function importedFrom(){ return $this->_daoImport;}
+
+    /**
+     * selector of the user record class
+     * @return jSelectorDaoRecord
+     */
+    public function getUserRecord() { return $this->_userRecord;}
+
+    /**
+     * selector of the imported dao. If can return several selector, if
+     * an imported dao import itself an other dao etc.
+     * @return jSelectorDao[]
+     */
+    public function getImportedDao(){ return $this->_importedDao;}
 }

@@ -324,10 +324,11 @@ class jDaoImportTest extends jUnitTestCase {
                             $postTrackerParser->getOuterJoins());
         $this->assertEquals(array(),
                             $postTrackerParser->getInnerJoins());
-        $this->assertEquals('postTracker',
-                            $postTrackerParser->getDaoRecord());
+        $this->assertEquals('jelix_tests~postTracker',
+                            $postTrackerParser->getUserRecord()->toString());
+        $daos = $postTrackerParser->getImportedDao();
         $this->assertEquals('jelix_tests~posts',
-                            $postTrackerParser->importedFrom());
+                            $daos[0]->toString());
     }
 
     public function testImportWithRedefinedProperties() {
@@ -531,8 +532,9 @@ class jDaoImportTest extends jUnitTestCase {
         $this->assertEquals(array(),
                             $postBlogParser->getInnerJoins());
         $this->assertEquals('jelix_tests~postBlog',
-                            $postBlogParser->getDaoRecord());
+                            $postBlogParser->getUserRecord()->toString());
+        $daos = $postBlogParser->getImportedDao();
         $this->assertEquals('jelix_tests~posts',
-                            $postBlogParser->importedFrom());
+                            $daos[0]->toString());
     }
 }

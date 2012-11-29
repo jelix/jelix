@@ -116,11 +116,10 @@ class jDaoGenerator {
         //-----------------------
         // Build the record class
         //-----------------------
-
-        if ($this->_dataParser->getDaoRecord()) {
-            $sel = new jSelectorDaoRecord($this->_dataParser->getDaoRecord());
-            $src[] = ' require_once (\''.$sel->getPath().'\');';
-            $extendedObject = $sel->resource . 'DaoRecord';
+        $userRecord = $this->_dataParser->getUserRecord();
+        if ($userRecord) {
+            $src[] = ' require_once (\''.$userRecord->getPath().'\');';
+            $extendedObject = $userRecord->resource . 'DaoRecord';
         }
         else {
             $extendedObject = 'jDaoRecordBase';
