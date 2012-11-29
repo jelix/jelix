@@ -23,7 +23,7 @@ class jSelectorUrlCfgSig extends jSelectorCfg {
         $o = new jSignificantUrlsCompiler();
         return $o;
     }
-    public function getCompiledFilePath (){ return jApp::tempPath('compiled/urlsig/'.$this->file.'.creationinfos.php');}
+    public function getCompiledFilePath (){ return jApp::tempPath('compiled/urlsig/'.$this->file.'.creationinfos_15.php');}
 }
 
 /**

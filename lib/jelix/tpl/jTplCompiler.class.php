@@ -18,10 +18,11 @@
  */
 class jTplCompiler
 #ifnot JTPL_STANDALONE
-    implements jISimpleCompiler {
-#else
+    implements jISimpleCompiler
+#endif
     {
 
+#if JTPL_STANDALONE
     private $_locales;
 #endif
     private $_literals;
@@ -201,8 +202,15 @@ class jTplCompiler
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
+        $realCacheFile = str_replace(".php", ".inc.php", $selector->getCompiledFilePath());
+        
+        $header = "<?php if (jApp::config()->compilation['checkCacheFiletime']) {\n";
+        $header .= "if (filemtime('".$this->_sourceFile.'\') > '.filemtime($this->_sourceFile).") return false;\n}\n";
+        $header .= "require('".$realCacheFile."');\n";
+        $header .= "return true;\n";
+        jFile::write($selector->getCompiledFilePath(), $header);
 
-        $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
+        $this->compileString(file_get_contents($this->_sourceFile), $realCacheFile,
             $selector->userModifiers, $selector->userFunctions, $md5);
 
         jApp::popCurrentModule();
@@ -224,7 +232,7 @@ class jTplCompiler
         $header .="\n".$this->_metaBody."\n}\n";
 
         $header.='function template_'.$md5.'($t){'."\n?>";
-        $result = $header.$result."<?php \n}\n?>";
+        $result = $header.$result."<?php \n}\n";
 
 #if JTPL_STANDALONE
         $_dirname = dirname($cachefile).'/';

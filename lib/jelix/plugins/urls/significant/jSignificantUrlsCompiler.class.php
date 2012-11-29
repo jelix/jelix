@@ -141,7 +141,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         */
 
         $this->createUrlInfos = array();
-        $this->createUrlContent = "<?php \n";
+        $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime']) {\n";
+        $this->createUrlContent .= "if (filemtime('".$sourceFile.'\') > '.filemtime($sourceFile).") return false;\n";
         $this->readProjectXml();
         $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
@@ -299,8 +300,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($this->defaultUrl->entryPoint).'.entrypoint.php'),$parseContent);
         }
-        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\n?>";
-        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos.php'), $this->createUrlContent);
+        $this->createUrlContent .= "\n}\n";
+        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
+        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
         return true;
     }
 
@@ -518,6 +520,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         if (!file_exists($path.$file))
             throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' does not exist');
+
+        $this->createUrlContent .= "if (filemtime('".$path.$file.'\') > '.filemtime($path.$file).") return false;\n";
 
         $xml = simplexml_load_file ($path.$file);
         if (!$xml) {
