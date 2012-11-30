@@ -194,7 +194,9 @@ abstract class WidgetBase implements WidgetInterface {
         }
     }
 
-    abstract function outputControl();
+    // if this method is abstract, fatal error with PHP 5.3.3 (debian squeeze)
+    // FIXME PHP54 : this function can be abstracted
+    public function outputControl(){}
 
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());
