@@ -229,20 +229,6 @@ c jquery.flash.js
 cd lib/jelix-www/jquery/include
 c jquery.include.js
 cd lib/jelix-www/jquery/ui
-! jquery.effects.blind.min.js
-! jquery.effects.bounce.min.js
-! jquery.effects.clip.min.js
-! jquery.effects.core.min.js
-! jquery.effects.drop.min.js
-! jquery.effects.explode.min.js
-! jquery.effects.fade.min.js
-! jquery.effects.fold.min.js
-! jquery.effects.highlight.min.js
-! jquery.effects.pulsate.min.js
-! jquery.effects.scale.min.js
-! jquery.effects.shake.min.js
-! jquery.effects.slide.min.js
-! jquery.effects.transfer.min.js
 ! jquery.ui.accordion.min.js
 ! jquery.ui.autocomplete.min.js
 ! jquery.ui.button.min.js
@@ -252,19 +238,34 @@ cd lib/jelix-www/jquery/ui
 ! jquery.ui.dialog.min.js
 ! jquery.ui.draggable.min.js
 ! jquery.ui.droppable.min.js
+! jquery.ui.effect.min.js
+! jquery.ui.effect-blind.min.js
+! jquery.ui.effect-bounce.min.js
+! jquery.ui.effect-drop.min.js
+! jquery.ui.effect-explode.min.js
+! jquery.ui.effect-fade.min.js
+! jquery.ui.effect-fold.min.js
+! jquery.ui.effect-highlight.min.js
+! jquery.ui.effect-pulsate.min.js
+! jquery.ui.effect-scale.min.js
+! jquery.ui.effect-shake.min.js
+! jquery.ui.effect-slide.min.js
+! jquery.ui.effect-transfer.min.js
+! jquery.ui.menu.min.js
 ! jquery.ui.mouse.min.js
 ! jquery.ui.position.min.js
 ! jquery.ui.progressbar.min.js
 ! jquery.ui.resizable.min.js
 ! jquery.ui.selectable.min.js
 ! jquery.ui.slider.min.js
+! jquery.ui.spinner.min.js
 ! jquery.ui.sortable.min.js
+! jquery.ui.tooltip.min.js
 ! jquery.ui.tabs.min.js
 ! jquery.ui.widget.min.js
   AUTHORS.txt
   version.txt
   MIT-LICENSE.txt
-  GPL-LICENSE.txt
 
 cd lib/jelix-www/jquery/ui/i18n
 ! jquery-ui-i18n.js
@@ -347,12 +348,15 @@ cd lib/jelix-www/jquery/themes/base
   jquery.ui.core.css
   jquery.ui.datepicker.css
   jquery.ui.dialog.css
+  jquery.ui.menu.css
   jquery.ui.progressbar.css
   jquery.ui.resizable.css
   jquery.ui.selectable.css
   jquery.ui.slider.css
+  jquery.ui.spinner.css
   jquery.ui.tabs.css
   jquery.ui.theme.css
+  jquery.ui.tooltip.css
 cd lib/jelix-www/jquery/themes/base/images
   ui-anim_basic_16x16.gif
   ui-bg_flat_0_aaaaaa_40x100.png
@@ -378,12 +382,15 @@ cd lib/jelix-www/jquery/themes/smoothness
   jquery.ui.core.css
   jquery.ui.datepicker.css
   jquery.ui.dialog.css
+  jquery.ui.menu.css
   jquery.ui.progressbar.css
   jquery.ui.resizable.css
   jquery.ui.selectable.css
   jquery.ui.slider.css
+  jquery.ui.spinner.css
   jquery.ui.tabs.css
   jquery.ui.theme.css
+  jquery.ui.tooltip.css
 cd lib/jelix-www/jquery/themes/smoothness/images
   ui-anim_basic_16x16.gif
   ui-bg_flat_0_aaaaaa_40x100.png
