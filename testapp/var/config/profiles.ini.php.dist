@@ -149,6 +149,11 @@ driver = db
 table=testkvdb
 dbprofile=default
 
+[jkvdb:usingdba]
+driver = dba
+handler=db4
+file="temp:kvdbdba.db4"
+
 ;----------------- jSoapClient
 [jsoapclient]
 

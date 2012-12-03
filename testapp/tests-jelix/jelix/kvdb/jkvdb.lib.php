@@ -23,6 +23,8 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
     
     protected $profileData;
 
+    protected $supportTTL = true;
+
     protected function _kvdbSetUp() {
         try {
             $this->profileData = jProfiles::get('jkvdb', $this->profile);
@@ -46,13 +48,18 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
         $kv = jKVDb::getConnection($this->profile);
 
         $this->assertTrue($kv->set('noExpireKey',$myData));
-        $this->assertTrue($kv->get('noExpireKey')==$myData);
+        $this->assertEquals($myData, $kv->get('noExpireKey'));
 
-        $this->assertTrue($kv->setWithTtl('expiredKey','data expired', strtotime("-1 year")));
-        $this->assertNull($kv->get('expiredKey'));
+        $this->assertTrue($kv->set('noExpireKeyObj',$myObj));
+        $this->assertEquals($myObj, $kv->get('noExpireKeyObj'));
 
-        $this->assertTrue($kv->setWithTtl('ttlInSecondesKey', $myObj, 30));
-        $this->assertTrue($kv->get('ttlInSecondesKey')==$myObj);
+        if ($this->supportTTL) {
+            $this->assertTrue($kv->setWithTtl('expiredKey','data expired', strtotime("-1 year")));
+            $this->assertNull($kv->get('expiredKey'));
+    
+            $this->assertTrue($kv->setWithTtl('ttlInSecondesKey', $myObj, 30));
+            $this->assertEquals($myObj, $kv->get('ttlInSecondesKey'));
+        }
 
         $this->assertFalse($kv->set('unableToSerializeDataKey',$img));
     }
@@ -60,12 +67,13 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
     public function testMultipleGet (){
         $kv = jKVDb::getConnection($this->profile);
         $kv->set('getKey', 'string for data');
-        $kv->setWithTtl('expiredKey','data expired',strtotime("-1 day"));
+        if ($this->supportTTL)
+            $kv->setWithTtl('expiredKey','data expired',strtotime("-1 day"));
         $data = $kv->get(array('getKey','expiredKey','inexistentKey'));
         $this->assertTrue(isset($data['getKey']));
-        $this->assertTrue($data['getKey']=='string for data');
-        $this->assertTrue(!isset($data['expiredKey']));
-        $this->assertTrue(!isset($data['inexistentKey']));
+        $this->assertEquals('string for data', $data['getKey']);
+        $this->assertFalse(isset($data['expiredKey']));
+        $this->assertFalse(isset($data['inexistentKey']));
     }
 
     public function testInsertReplace () {

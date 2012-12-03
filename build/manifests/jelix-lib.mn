@@ -590,6 +590,9 @@ cd lib/jelix/plugins/jforms/html
 cd lib/jelix/plugins/jforms/htmllight
   htmllight.jformsbuilder.php
 
+cd lib/jelix/plugins/kvdb/dba/
+  dba.kvdriver.php
+
 cd lib/jelix/plugins/kvdb/db/
   db.kvdriver.php
 

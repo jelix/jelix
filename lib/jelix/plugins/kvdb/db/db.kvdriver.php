@@ -175,7 +175,9 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function increment ($key, $incr = 1) {
-
+        if (!is_numeric($incr)) {
+            return false;
+        }
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
 
@@ -195,6 +197,9 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function decrement ($key, $decr = 1) {
+        if (!is_numeric($decr)) {
+            return false;
+        }
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);

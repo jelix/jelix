@@ -360,6 +360,7 @@ cd testapp/tests-jelix/jelix/db/
   jdbtoolsTest.php
   jdbtools_mysqlTest.php
 cd testapp/tests-jelix/jelix/kvdb/
+  jkvdb_dbaTest.php
   jkvdb_dbTest.php
   jkvdb_fileTest.php
   jkvdb_memcacheTest.php

@@ -128,7 +128,6 @@ cd lib/jelix-www/wymeditor/skins/twopanels
   skin.js
 
 cd lib/jelix-www/jquery
-  GPL-LICENSE.txt
   MIT-LICENSE.txt
 ! jquery.js
   VERSION
