@@ -49,7 +49,7 @@ interface jIKVSet {
     public function sAdd($skey, $value);
     public function sRemove($skey, $value);
     public function sCount($skey);
-	public function sPop($skey);
+    public function sPop($skey);
 }
 
 

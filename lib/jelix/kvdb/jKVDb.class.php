@@ -15,7 +15,7 @@
  */
 class jKVDb {
 
-	protected function __construct() { } // the class is only static
+    protected function __construct() { } // the class is only static
 
     /**
     * get the jKVConnection object associated to a given profile name

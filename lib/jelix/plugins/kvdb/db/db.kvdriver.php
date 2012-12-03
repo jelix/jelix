@@ -11,7 +11,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
 
     protected $table;
 
-   	protected function _connect() {
+    protected function _connect() {
 
         if (!isset($this->_profile['table']) || !isset($this->_profile['dbprofile'])) {
             throw new Exception("table and dbprofile is missing for the db kvdb driver");
@@ -21,9 +21,9 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
 
         $cnx = jDb::getConnection($this->_profile['dbprofile']);
         return $cnx;
-	}
+    }
 
-   	protected function _disconnect() {
+    protected function _disconnect() {
         $this->_connection = null;
     }
 
@@ -62,8 +62,8 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function set ($key, $value) {
-		if (is_resource($value))
-			return false;
+        if (is_resource($value))
+            return false;
         return $this->_set($key, $value, '2050-12-31 00:00:00');
     }
 
@@ -90,8 +90,8 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function insert ($key, $value) {
-		if (is_resource($value))
-			return false;
+        if (is_resource($value))
+            return false;
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
@@ -108,8 +108,8 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function replace ($key, $value) {
-		if (is_resource($value))
-			return false;
+        if (is_resource($value))
+            return false;
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
@@ -135,8 +135,8 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function append ($key, $value) {
-		if (is_resource($value))
-			return false;
+        if (is_resource($value))
+            return false;
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
@@ -155,8 +155,8 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
     }
 
     public function prepend ($key, $value) {
-		if (is_resource($value))
-			return false;
+        if (is_resource($value))
+            return false;
 
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
@@ -223,7 +223,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent {
      */
     public function setWithTtl($key, $value, $ttl) {
         if (is_resource($value))
-			return false;
+            return false;
         if ($ttl > 0) {
             if ($ttl <= 2592000) {
                 $ttl += time();
