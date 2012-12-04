@@ -17,11 +17,11 @@
 /**
 *
 */
-require_once(JELIX_LIB_CORE_PATH.'response/jResponseBasicHtml.class.php');
+require_once(__DIR__.'/jResponseBasicHtml.class.php');
 require_once(JELIX_LIB_PATH.'tpl/jTpl.class.php');
 
 /**
-* HTML response
+* HTML5 response
 * @package  jelix
 * @subpackage core_response
 */
@@ -147,13 +147,6 @@ class jResponseHtml extends jResponseBasicHtml {
      * @var string
      */
     protected $_endTag="/>\n";
-
-    /**
-     * says if the document uses a Strict or Transitional Doctype
-     * @var boolean
-     * @since 1.1.3
-     */
-    protected $_strictDoctype = true;
 
     /**
     * constructor;
@@ -411,12 +404,11 @@ class jResponseHtml extends jResponseBasicHtml {
      * @since 1.1
      */
     protected function outputDoctype (){
+        echo '<!DOCTYPE HTML>', "\n";
         if($this->_isXhtml){
-            echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 '.($this->_strictDoctype?'Strict':'Transitional').'//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-'.($this->_strictDoctype?'strict':'transitional').'.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
+            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
 ';
         }else{
-            echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01'.($this->_strictDoctype?'':' Transitional').'//EN" "http://www.w3.org/TR/html4/'.($this->_strictDoctype?'strict':'loose').'.dtd">', "\n";
             echo '<html lang="',$this->_lang,'">';
         }
     }
@@ -581,15 +573,6 @@ class jResponseHtml extends jResponseBasicHtml {
             $this->_endTag = "/>\n";
         else
             $this->_endTag = ">\n";
-    }
-
-    /**
-     * activate / deactivate the strict Doctype (activated by default)
-     * @param boolean $val true for strict, false for transitional
-     * @since 1.1.3
-     */
-    public function strictDoctype($val = true){
-        $this->_strictDoctype = $val;
     }
 
     /**

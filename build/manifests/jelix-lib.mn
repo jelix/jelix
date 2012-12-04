@@ -83,6 +83,7 @@ cd lib/jelix/core/response
   jResponseBinary.class.php
   jResponseBasicHtml.class.php
   jResponseHtml.class.php
+  jResponseHtml4.class.php
   jResponseJsonrpc.class.php
   jResponseJson.class.php
   jResponseRedirect.class.php
