@@ -444,6 +444,7 @@ class jResponseHtml extends jResponseBasicHtml {
     protected function outputHtmlHeader (){
 
         echo '<head>'."\n";
+        echo implode ("\n", $this->_headTop);
         if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){      
             echo '<meta content="application/xhtml+xml; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
         } else {
