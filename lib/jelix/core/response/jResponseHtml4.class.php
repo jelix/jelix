@@ -18,6 +18,8 @@ require_once(__DIR__.'/jResponseHtml.class.php');
  */
 class jResponseHtml4 extends jResponseHtml {
 
+    protected $_isXhtml = true; // default behavior of the old jResponseHtml in jelix 1.4 and lower
+
     /**
      * says if the document uses a Strict or Transitional Doctype
      * @var boolean
