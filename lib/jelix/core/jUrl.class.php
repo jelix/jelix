@@ -108,18 +108,21 @@ class jUrl extends jUrlBase {
     //============================== static helper methods
 
     /**
-    * get current Url
+    * returns the current Url.
+    *
+    * The URL is the URL for the frontend HTTP server, if your app is behind a proxy.
     * @param boolean $forxml if true, escape some characters to include the url into an html/xml document
     * @return string the url
     */
-    static function getCurrentUrl ($forxml = false) {
-        if(isset($_SERVER["REQUEST_URI"])){
-           return $_SERVER["REQUEST_URI"];
-        }
+    static function getCurrentUrl ($forxml = false, $full = false) {
+        // we don't take $_SERVER["REQUEST_URI"] because it doesn't correspond to the real URI
+        // if the app is behind a proxy with a different basePath than the frontend
         static $url = false;
         if ($url === false){
             $req = $GLOBALS['gJCoord']->request;
-            $url = $req->getServerURI().$req->urlScript.$req->urlPathInfo.'?';
+            $url = $req->urlScriptPath.$req->urlScriptName.$req->urlPathInfo.'?';
+            if ($full)
+                $url = $req->getServerURI().$url;
             $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
             if(strpos($q, '%3A')!==false)
                 $q = str_replace( '%3A', ':', $q);
