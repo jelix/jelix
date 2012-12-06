@@ -114,21 +114,6 @@ soap = on
 plugins = debugbar
 
 
-[logger]
-; list of loggers for each categories of log messages
-; default category is the category used when a given category is not declared here
-; available loggers : file, syslog, firebug, mail, memory. see plugins for others
-default=file,memory
-error= file,memory
-warning=file,memory
-notice=file,memory
-deprecated=memory
-strict=memory
-sql=memory
-
-[fileLogger]
-default=messages.log
-
 [mailLogger]
 ;email = root@localhost
 ;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"

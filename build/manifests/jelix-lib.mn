@@ -422,6 +422,8 @@ cd lib/jelix/plugins/cache/memcache
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
 
+cd lib/jelix/plugins/configcompiler/debugbar
+  debugbar.configcompiler.php
 cd lib/jelix/plugins/configcompiler/locales
   locales.configcompiler.php
 cd lib/jelix/plugins/configcompiler/nsautoloader
