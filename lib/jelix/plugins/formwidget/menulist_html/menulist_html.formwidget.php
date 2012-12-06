@@ -55,7 +55,7 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
                 $value='';
         }
         $value = (string) $value;
-        if (!$this->ctrl->required) {
+        if (!$this->ctrl->required || $this->ctrl->emptyItemLabel !== '') {
             echo '<option value=""',($value===''?' selected="selected"':''),'>',htmlspecialchars($this->ctrl->emptyItemLabel),"</option>\n";
         }
         $this->fillSelect($this->ctrl, $value);
