@@ -180,8 +180,7 @@ function generateModulePackage($moduleName, $modulesRepositoryPath) {
     if($PACKAGE_ZIP){
         $dir = getcwd();
         chdir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
-//echo 'zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName."\n";
-        exec('zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName);
+        exec('zip -r ../'.$packageName.'.zip '.$moduleName);
         chdir($dir);
     }
     return;
