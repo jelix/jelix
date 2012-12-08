@@ -2,10 +2,10 @@
 cd jtcpdf
 * module.xml
 
-cd jtpcdf/classes/
-  jTcpdf.class.php
+cd jtcpdf/classes/
+  jTcpdf.php
 
-cd jtpcdf/classes/tcpdf
+cd jtcpdf/classes/tcpdf
   2dbarcodes.php
   barcodes.php
   CHANGELOG.TXT
@@ -23,33 +23,59 @@ cd jtpcdf/classes/tcpdf
   tcpdf.p12
   tcpdf.php
 ! unicode_data.php
-cd jtpcdf/classes/tcpdf/config
+cd jtcpdf/classes/tcpdf/config
   tcpdf_config.php
   tcpdf_config_alt.php
-cd jtpcdf/classes/tcpdf/config/lang
+cd jtcpdf/classes/tcpdf/config/lang
+  afr.php
   ara.php
+  aze.php
+  bel.php
   bra.php
+  bul.php
+  cat.php
+  ces.php
   chi.php
+  cym.php
   dan.php
   eng.php
+  est.php
+  eus.php
+  far.php
   fra.php
   ger.php
+  glg.php
+  hat.php
   heb.php
   hrv.php
+  hun.php
+  hye.php
+  ind.php
   ita.php
   jpn.php
+  kat.php
   kor.php
+  mkd.php
+  mlt.php
+  msa.php
+  nld.php
+  nob.php
   pol.php
   por.php
   rus.php
   slv.php
   spa.php
+  sqi.php
+  srp.php
+  swa.php
   swe.php
+  urd.php
+  yid.php
   zho.php
-cd jtpcdf/classes/tcpdf/images
+cd jtcpdf/classes/tcpdf/images
   _blank.png
 
-cd jtpcdf/classes/pdf-fonts
+cd jtcpdf/classes/tcpdf/fonts
   aealarabiya.ctg.z
   aealarabiya.php
   aealarabiya.z
@@ -211,11 +237,11 @@ cd jtpcdf/classes/pdf-fonts
   uni2cid_aj16.php
   uni2cid_ak12.php
   zapfdingbats.php
-cd jtpcdf/classes/pdf-fonts/dejavu-fonts-ttf-2.33
+cd jtcpdf/classes/tcpdf/fonts/dejavu-fonts-ttf-2.33
   AUTHORS
   LICENSE
   README
-cd jtpcdf/classes/pdf-fonts/freefont-20100919
+cd jtcpdf/classes/tcpdf/fonts/freefont-20100919
   AUTHORS
   COPYING
   CREDITS

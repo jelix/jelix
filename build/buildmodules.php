@@ -140,7 +140,7 @@ if ($TARGET_REPOSITORY != '') {
 }
 
 jManifest::$verbose = ($VERBOSE_MODE == '1');
-jManifest::$usedVcs = $TARGET_REPOSITORY;
+jManifest::setFileSystem($TARGET_REPOSITORY);
 jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 
@@ -180,7 +180,7 @@ function generateModulePackage($moduleName, $modulesRepositoryPath) {
     if($PACKAGE_ZIP){
         $dir = getcwd();
         chdir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
-echo 'zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName."\n";
+//echo 'zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName."\n";
         exec('zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName);
         chdir($dir);
     }
@@ -188,7 +188,7 @@ echo 'zip -r '.$dir.'/'.$MAIN_TARGET_PATH.$packageName.'.zip '.$moduleName."\n";
 }
 
 
-//generateModulePackage('jtcpdf', 'lib/jelix-modules/');
+generateModulePackage('jtcpdf', 'lib/jelix-modules/');
 
 
 
