@@ -177,14 +177,14 @@ class HtmlBuilder extends BuilderBase {
             $errRequired='';
             foreach($errors as $cname => $err){
                 if(!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
-                if ($err === jForms::ERRDATA_REQUIRED) {
+                if ($err === \jForms::ERRDATA_REQUIRED) {
                     if ($ctrls[$cname]->alertRequired){
                         echo '<li>', $ctrls[$cname]->alertRequired,'</li>';
                     }
                     else {
-                        echo '<li>', jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
+                        echo '<li>', \jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label),'</li>';
                     }
-                }else if ($err === jForms::ERRDATA_INVALID) {
+                }else if ($err === \jForms::ERRDATA_INVALID) {
                     if($ctrls[$cname]->alertInvalid){
                         echo '<li>', $ctrls[$cname]->alertInvalid,'</li>';
                     }else{
