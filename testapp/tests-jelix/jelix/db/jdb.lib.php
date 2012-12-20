@@ -85,6 +85,9 @@ abstract class jDb_queryBase extends jUnitTestCase {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
+
+        $res = $resultSet->fetch();
+        $this->assertTrue($res === false || $res === null);
     }
 
     function _callbackTest($record, $rs) {
