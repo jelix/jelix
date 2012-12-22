@@ -25,7 +25,7 @@ class jConfigCompiler {
 
     /**
      * read the given ini file, for the current entry point, or for the entrypoint given
-     * in $pseudoScriptName. Merge it with the content of defaultconfig.ini.php
+     * in $pseudoScriptName. Merge it with the content of mainconfig.ini.php
      * It also calculates some options.
      * If you are in a CLI script but you want to load a configuration file for a web entry point
      * or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
@@ -56,13 +56,32 @@ class jConfigCompiler {
         if(!is_writable(jApp::logPath())) {
             throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
         }
-
+        // this is the defaultconfig file of JELIX itself
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
         self::$commonConfig = clone $config;
 
-        @jelix_read_ini($configPath.'defaultconfig.ini.php', $config);
-
-        if($configFile != 'defaultconfig.ini.php'){
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");    
+        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',$configPath);
+        
+        /*
+        if (file_exists($configPath.'mainconfig.ini.php')) 
+            @jelix_read_ini($configPath.'mainconfig.ini.php', $config);    
+        else
+        // @deprecated since Jelix 1.5
+        // the following 5 lines (until 'else' included) should be removed for Jelix 1.6
+        if(file_exists($configPath.'defaultconfig.ini.php')) {
+            @jelix_read_ini($configPath.'defaultconfig.ini.php', $config);
+            trigger_error("the config file var/config/defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
+        }
+        else
+            throw new Exception("Configuration file is missing -- $configFile", 5);
+        */
+        if (file_exists($mainConfigFile['fullpath']))
+            @jelix_read_ini($mainConfigFile['fullpath'], $config);
+        else
+            throw new Exception("Configuration file is missing -- $configFile", 5);
+        
+        if($configFile != 'mainconfig.ini.php' and $configFile != 'defaultconfig.ini.php'){
             if(!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
             if( false === @jelix_read_ini($configPath.$configFile, $config))
@@ -72,7 +91,7 @@ class jConfigCompiler {
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
         self::$commonConfig = null;
         return $config;
-    }
+    }     
 
     /**
      * Identical to read(), but also stores the result in a temporary file

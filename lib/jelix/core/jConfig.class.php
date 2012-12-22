@@ -24,7 +24,7 @@ class jConfig {
     /**
      * load and read the configuration of the application
      * The combination of all configuration files (the given file
-     * and the defaultconfig.ini.php) is stored
+     * and the mainconfig.ini.php) is stored
      * in a single temporary file. So it calls the jConfigCompiler
      * class if needed
      * @param string $configFile the config file name
@@ -46,7 +46,13 @@ class jConfig {
             $compil=true;
         }else{
             $t = filemtime($file);
-            $dc = jApp::configPath('defaultconfig.ini.php');
+            // @deprecated since jelix 1.5
+            // the next 2 lines will be removed with jelix 1.6 for
+            // $dc = jApp::configPath('mainconfig.ini.php');
+            include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+            $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());            
+            
+            $dc = $mainConfigFile['fullpath'];
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(jApp::configPath($configFile))>$t){
                 // one of the two config file have been modified: let's compile

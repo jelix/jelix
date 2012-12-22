@@ -31,7 +31,13 @@ class confmailWizPage extends installWizardPage {
      * action to process the page after the submit
      */
     function process() {
-        $ini = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $ini = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());
+    
+        $ini = new jIniFileModifier($mainConfigFile['fullpath']);
         $errors = array();
         $_SESSION['confmail']['webmasterEmail'] = trim($_POST['webmasterEmail']);
         if ($_SESSION['confmail']['webmasterEmail'] == '') {
@@ -106,7 +112,14 @@ class confmailWizPage extends installWizardPage {
 
 
     protected function loadconf() {
-        $ini = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $ini = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());
+    
+        $ini = new jIniFileModifier($mainConfigFile['fullpath']);
+
         $emailConfig = array(
             'webmasterEmail'=>$ini->getValue('webmasterEmail','mailer'),
             'webmasterName'=>$ini->getValue('webmasterName','mailer'),
