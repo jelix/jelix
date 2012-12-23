@@ -93,8 +93,8 @@ class createmoduleCommand extends JelixScriptCommand {
         // the next 2 lines will be removed with jelix 1.6 for
         // $iniDefault = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());        
-        $iniDefault = new jIniFileModifier($mainConfigFile['fullpath']);
+        $mainConfigFile = myMainConfigFileName(jApp::configPath());        
+        $iniDefault = new jIniFileModifier($mainConfigFile);
         
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
         if ($this->verbose())

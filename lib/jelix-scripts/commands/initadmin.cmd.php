@@ -77,9 +77,9 @@ class initadminCommand extends JelixScriptCommand {
         // the next 2 lines will be removed with jelix 1.6 for
         // $inifile = new jIniMultiFilesModifier(jApp::configPath('mainconfig.ini.php'),jApp::configPath($ep['config']));
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());            
+        $mainConfigFile = myMainConfigFileName(jApp::configPath());            
         
-        $inifile = new jIniMultiFilesModifier($mainConfigFile['fullpath'],
+        $inifile = new jIniMultiFilesModifier($mainConfigFile,
                                           jApp::configPath($ep['config']));
 
         $params = array();

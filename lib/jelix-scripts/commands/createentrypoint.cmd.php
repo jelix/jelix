@@ -120,18 +120,9 @@ class createentrypointCommand extends JelixScriptCommand {
                 // @deprecated since jelix 1.5
                 // the next 2 lines will be removed with jelix 1.6 for
                 // $mainConfig = parse_ini_file(jApp::configPath('mainconfig.ini.php'), true);
-                $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());                
-                $mainConfig = parse_ini_file($mainConfigFile['fullpath']);
-                /*
-                // @deprecated since jelix 1.5
-                // the next 5 lines will be removed  with jelix 1.6                
-                if ( parse_ini_file(jApp::configPath('mainconfig.ini.php') ) === false ) {
-                    $mainConfig = parse_ini_file(jApp::configPath('defaultonfig.ini.php'), true);
-                    trigger_error("the config file var/config/defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
-                }
-                else
-                    $mainConfig = parse_ini_file(jApp::configPath('mainconfig.ini.php'), true);
-                */
+                $mainConfigFile = myMainConfigFileName(jApp::configPath());
+                parse_ini_file($mainConfigFile);
+
                 $param = array();
                 if (isset($mainConfig['startModule']))
                     $param['modulename'] = $mainConfig['startModule'];
@@ -150,9 +141,9 @@ class createentrypointCommand extends JelixScriptCommand {
         // the next 2 lines will be removed with jelix 1.6 for
         // $inifile = new jIniMultiFilesModifier('mainconfig.ini.php', $configFilePath);
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',jApp::configPath());
+        $mainConfigFile = myMainConfigFileName(jApp::configPath());
 
-        $inifile = new jIniMultiFilesModifier(jApp::configPath($mainConfigFile['name']), $configFilePath);
+        $inifile = new jIniMultiFilesModifier($mainConfigFile, $configFilePath);
 
         $param = array();
         $param['modulename'] = $inifile->getValue('startModule');

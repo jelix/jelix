@@ -61,23 +61,10 @@ class jConfigCompiler {
         self::$commonConfig = clone $config;
 
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");    
-        $mainConfigFile = $myMainConfigFileName('mainconfig.ini.php',$configPath);
+        $mainConfigFile = myMainConfigFileName($configPath);
         
-        /*
-        if (file_exists($configPath.'mainconfig.ini.php')) 
-            @jelix_read_ini($configPath.'mainconfig.ini.php', $config);    
-        else
-        // @deprecated since Jelix 1.5
-        // the following 5 lines (until 'else' included) should be removed for Jelix 1.6
-        if(file_exists($configPath.'defaultconfig.ini.php')) {
-            @jelix_read_ini($configPath.'defaultconfig.ini.php', $config);
-            trigger_error("the config file var/config/defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
-        }
-        else
-            throw new Exception("Configuration file is missing -- $configFile", 5);
-        */
-        if (file_exists($mainConfigFile['fullpath']))
-            @jelix_read_ini($mainConfigFile['fullpath'], $config);
+        if ($mainConfigFile !== false )
+            @jelix_read_ini($mainConfigFile, $config);
         else
             throw new Exception("Configuration file is missing -- $configFile", 5);
         
