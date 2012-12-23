@@ -94,7 +94,7 @@ class jInstallerApplication {
         // the next 2 lines will be removed with jelix 1.6 for
         // $mainConfig = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = myMainConfigFileName(jApp::configPath());
+        $mainConfigFile = $myMainConfigFileName(jApp::configPath());
         
         $mainConfig = new jIniFileModifier($mainConfigFile);
 

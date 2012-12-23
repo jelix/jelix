@@ -61,7 +61,7 @@ class jConfigCompiler {
         self::$commonConfig = clone $config;
 
         include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");    
-        $mainConfigFile = myMainConfigFileName($configPath);
+        $mainConfigFile = $myMainConfigFileName($configPath);
         
         if ($mainConfigFile !== false )
             @jelix_read_ini($mainConfigFile, $config);

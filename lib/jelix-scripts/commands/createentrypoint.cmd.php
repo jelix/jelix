@@ -120,7 +120,7 @@ class createentrypointCommand extends JelixScriptCommand {
                 // @deprecated since jelix 1.5
                 // the next 2 lines will be removed with jelix 1.6 for
                 // $mainConfig = parse_ini_file(jApp::configPath('mainconfig.ini.php'), true);
-                $mainConfigFile = myMainConfigFileName(jApp::configPath());
+                $mainConfigFile = $myMainConfigFileName(jApp::configPath());
                 parse_ini_file($mainConfigFile);
 
                 $param = array();
@@ -140,8 +140,7 @@ class createentrypointCommand extends JelixScriptCommand {
         // @deprecated since jelix 1.5
         // the next 2 lines will be removed with jelix 1.6 for
         // $inifile = new jIniMultiFilesModifier('mainconfig.ini.php', $configFilePath);
-        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = myMainConfigFileName(jApp::configPath());
+        $mainConfigFile = $myMainConfigFileName(jApp::configPath());
 
         $inifile = new jIniMultiFilesModifier($mainConfigFile, $configFilePath);
 
