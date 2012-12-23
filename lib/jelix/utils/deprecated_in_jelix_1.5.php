@@ -8,7 +8,7 @@
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-/** This anonymous function is used in jelix 1.5 to check :
+/** This function is used in jelix 1.5 to check :
  * if the new config file mainconfig.ini.php exists and
  * ** if yes, use it 
  * ** if no, test if the old (and deprecated) defaultconfig.ini.php if exists then
@@ -20,7 +20,7 @@
  * Jelix itself
  */
 
-$myMainConfigFileName = function($path)
+function myMainConfigFileName ($path)
 {
        
     if ( file_exists ($path.'mainconfig.ini.php') ) {
