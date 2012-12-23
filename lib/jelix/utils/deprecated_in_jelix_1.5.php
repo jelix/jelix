@@ -8,7 +8,7 @@
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-/** This Closure is used in jelix 1.5 to check :
+/** This function is used in jelix 1.5 to check :
  * if the new config file mainconfig.ini.php exists and
  * ** if yes, use it 
  * ** if no, test if the old (and deprecated) defaultconfig.ini.php if exists then
@@ -20,21 +20,19 @@
  * Jelix itself
  */
 
-$myMainConfigFileName = function($name,$path)
+function myMainConfigFileName ($path)
 {
-    // default config file name   
-    $configFileName['fullpath'] = $path.'mainconfig.ini.php';
-    $configFileName['name'] = $name;
        
-    if ( file_exists ($path.$name) ) {
-        $configFileName['name'] = $name;
-        $configFileName['fullpath'] = $path.$name;
+    if ( file_exists ($path.'mainconfig.ini.php') ) {
+        $configFileName = $path.'mainconfig.ini.php';
     }
     elseif(file_exists($path.'defaultconfig.ini.php')) {
-        $configFileName['name'] = 'defaultconfig.ini.php';
         $configFileName['fullpath'] = $path.'defaultconfig.ini.php';
         trigger_error("the config file var/config/defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
     }
+    // if none of them exists return false and we will be able throw an exception
+    else
+        $configFileName = false;
     
     return $configFileName;
 };
