@@ -252,9 +252,15 @@ class jInstallCheck {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(jApp::configPath('defaultconfig.ini.php'))
+            if (file_exists(jApp::configPath('mainconfig.ini.php'))
+                && !is_writable(jApp::configPath('mainconfig.ini.php'))) {
+                $this->error('path.mainconfig.writable');
+                $ok = false;
+            }
+            // @deprecated since JELIX > 1.5.x to remove with Jelix 1.6
+            elseif (file_exists(jApp::configPath('defaultconfig.ini.php'))
                 && !is_writable(jApp::configPath('defaultconfig.ini.php'))) {
-                $this->error('path.defaultconfig.writable');
+                $this->error('path.mainconfig.writable');
                 $ok = false;
             }
             if (file_exists(jApp::configPath('installer.ini.php'))
@@ -309,8 +315,8 @@ class jInstallCheck {
     function checkPhpSettings(){
         $ok = true;
 #ifnot STANDALONE_CHECKER
-        if (file_exists(jApp::configPath("defaultconfig.ini.php")))
-            $defaultconfig = parse_ini_file(jApp::configPath("defaultconfig.ini.php"), true);
+        if (file_exists(jApp::configPath("maintconfig.ini.php")))
+            $defaultconfig = parse_ini_file(jApp::configPath("maintconfig.ini.php"), true);
         else
             $defaultconfig = array();
         if (file_exists(jApp::configPath("index/config.ini.php")))

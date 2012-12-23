@@ -73,7 +73,13 @@ class initadminCommand extends JelixScriptCommand {
 
         $installConfig = new jIniFileModifier(jApp::configPath('installer.ini.php'));
 
-        $inifile = new jIniMultiFilesModifier(jApp::configPath('defaultconfig.ini.php'),
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $inifile = new jIniMultiFilesModifier(jApp::configPath('mainconfig.ini.php'),jApp::configPath($ep['config']));
+        require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = myMainConfigFileName(jApp::configPath());            
+        
+        $inifile = new jIniMultiFilesModifier($mainConfigFile,
                                           jApp::configPath($ep['config']));
 
         $params = array();
@@ -87,7 +93,7 @@ class initadminCommand extends JelixScriptCommand {
         $inifile->setValue('startAction', 'default:index');
         $modulePath = $inifile->getValue("modulesPath",0,null,true);
         if (strpos($modulePath, 'lib:jelix-admin-modules') === false) {
-            // we set it on defaultconfig.ini.php, so if the url engine is "significant"
+            // we set it on mainconfig.ini.php, so if the url engine is "significant"
             // it could know the admin modules during the parsing of modules
             $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath, 0, null, true);
         }

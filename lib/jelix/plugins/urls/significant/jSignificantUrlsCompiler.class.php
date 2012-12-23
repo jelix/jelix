@@ -144,7 +144,14 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime']) {\n";
         $this->createUrlContent .= "if (filemtime('".$sourceFile.'\') > '.filemtime($sourceFile).") return false;\n";
         $this->readProjectXml();
-        $this->retrieveModulePaths(jApp::configPath('defaultconfig.ini.php'));
+        
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $this->retrieveModulePaths(jApp::configPath('mainconfig.ini.php'));
+        require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = myMainConfigFileName(jApp::configPath());
+        
+        $this->retrieveModulePaths($mainConfigFile);
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
         $this->checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
 

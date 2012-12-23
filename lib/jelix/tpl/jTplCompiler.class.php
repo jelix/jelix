@@ -169,8 +169,8 @@ class jTplCompiler
     public function compile ($tplName, $tplFile, $outputtype, $trusted,
                              $userModifiers = array(), $userFunctions = array()) {
         $this->_sourceFile = $tplFile;
-        $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);
         $this->outputType = $outputtype;
+        $cachefile = jTplConfig::$cachePath .dirname($tplName).'/'.$this->outputType.($trusted?'_t':'').'_'. basename($tplName);        
         $this->trusted = $trusted;
         $md5 = md5($tplFile.'_'.$this->outputType.($this->trusted?'_t':''));
 
