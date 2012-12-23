@@ -214,7 +214,7 @@ class jInstaller {
      * the defaultconfig.ini.php content
      * @var jIniFileModifier
      */
-    public $defaultConfig;
+    public $mainConfig;
 
     /**
      * initialize the installation
@@ -227,7 +227,14 @@ class jInstaller {
     function __construct ($reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
-        $this->defaultConfig = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $this->mainConfig = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = $myMainConfigFileName(jApp::configPath());
+        
+        $this->mainConfig = new jIniFileModifier($mainConfigFile);
         $this->installerIni = $this->getInstallerIni();
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
@@ -305,7 +312,7 @@ class jInstaller {
      * @internal for tests
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint($this->defaultConfig, $configFile, $file, $type);
+        return new jInstallerEntryPoint($this->mainConfig, $configFile, $file, $type);
     }
 
     /**

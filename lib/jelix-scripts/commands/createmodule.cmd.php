@@ -89,7 +89,13 @@ class createmoduleCommand extends JelixScriptCommand {
             $repository .= '/';
         $repositoryPath = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $repository);
 
-        $iniDefault = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $iniDefault = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        $mainConfigFile = $myMainConfigFileName(jApp::configPath());        
+        $iniDefault = new jIniFileModifier($mainConfigFile);
+        
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
         if ($this->verbose())
             echo "modulePath updated in the main configuration\n";

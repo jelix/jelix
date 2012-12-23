@@ -325,7 +325,7 @@ cd testapp/tests-jelix/jelix/installer/app1/plugins/
 cd testapp/tests-jelix/jelix/installer/app1/var/log
   .dummy
 cd testapp/tests-jelix/jelix/installer/app1/var/config/
-  defaultconfig.ini.php
+  mainconfig.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
   config.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
@@ -405,7 +405,7 @@ cd testapp/var/config
   auth_class.coord.ini.php
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
-  defaultconfig.ini.php
+  mainconfig.ini.php
   profiles.ini.php.dist
   urls.xml
   urls_rest.xml

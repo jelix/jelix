@@ -94,7 +94,9 @@ class createentrypointCommand extends JelixScriptCommand {
                 $configFile = $name.'/config.ini.php';
             }
         }
-
+        // @deprecated since jelix 1.5 will be removed in jelix 1.6
+        include (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
+        
         // let's create the config file if needed
         $configFilePath = jApp::configPath($configFile);
         if (!file_exists($configFilePath)) {
@@ -114,11 +116,16 @@ class createentrypointCommand extends JelixScriptCommand {
             else {
                 // else we create a new config file, with the startmodule of the default
                 // config as a module name.
-                $defaultConfig = parse_ini_file(jApp::configPath('defaultconfig.ini.php'), true);
+
+                // @deprecated since jelix 1.5
+                // the next 2 lines will be removed with jelix 1.6 for
+                // $mainConfig = parse_ini_file(jApp::configPath('mainconfig.ini.php'), true);
+                $mainConfigFile = $myMainConfigFileName(jApp::configPath());
+                parse_ini_file($mainConfigFile);
 
                 $param = array();
-                if (isset($defaultConfig['startModule']))
-                    $param['modulename'] = $defaultConfig['startModule'];
+                if (isset($mainConfig['startModule']))
+                    $param['modulename'] = $mainConfig['startModule'];
                 else
                     $param['modulename'] = 'jelix';
 
@@ -129,8 +136,14 @@ class createentrypointCommand extends JelixScriptCommand {
         }
 
         require_once (JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');
-        $inifile = new jIniMultiFilesModifier(jApp::configPath('defaultconfig.ini.php'),
-                                              $configFilePath);
+        
+        // @deprecated since jelix 1.5
+        // the next 2 lines will be removed with jelix 1.6 for
+        // $inifile = new jIniMultiFilesModifier('mainconfig.ini.php', $configFilePath);
+        $mainConfigFile = $myMainConfigFileName(jApp::configPath());
+
+        $inifile = new jIniMultiFilesModifier($mainConfigFile, $configFilePath);
+
         $param = array();
         $param['modulename'] = $inifile->getValue('startModule');
         // creation of the entry point
@@ -158,6 +171,7 @@ class createentrypointCommand extends JelixScriptCommand {
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $installer = new jInstaller(new textInstallReporter('warning'));
         $installer->installEntryPoint($name.".php");
+        
         if ($this->verbose())
             echo "All modules have been initialized for the new entry point.\n";
     }
