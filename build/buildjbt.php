@@ -39,6 +39,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 //----------------- Preparation des variables d'environnement
 
 Env::setFromFile('VERSION','build/VERSION', true);
+$VERSION = preg_replace('/\s+/m', '', $VERSION);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 if($VERSION == 'SERIAL'){

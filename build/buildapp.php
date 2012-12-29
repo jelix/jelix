@@ -64,6 +64,8 @@ $MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
 $TODAY = date('Y-m-d H:i');
 
 Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
+$VERSION = preg_replace('/\s+/m', '', $VERSION);
+
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
