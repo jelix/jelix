@@ -45,6 +45,7 @@ include(dirname(__FILE__).'/lib/jBuild.inc.php');
 
 //----------------- initialize variables
 Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+$LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $SOURCE_REVISION = Git::revision(dirname(__FILE__).'/../');
 
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
@@ -84,10 +85,10 @@ jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH, ENV::get
 //}
 
 if($PACKAGE_ZIP){
+    file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_FONTS_NAME', $PACKAGE_NAME);
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
     chdir(dirname(__FILE__));
-    file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_FONTS_NAME', $PACKAGE_NAME);
 }
 
 exit(0);
