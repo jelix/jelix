@@ -87,6 +87,7 @@ if($PACKAGE_ZIP){
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
     chdir(dirname(__FILE__));
+    file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_FONTS_NAME', $PACKAGE_NAME);
 }
 
 exit(0);
