@@ -49,7 +49,7 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
         'lang_date' => jDateTime::LANG_DFORMAT,
         'lang_datetime' => jDateTime::LANG_DTFORMAT,
         'lang_time' => jDateTime::LANG_TFORMAT,
-    	'lang_short_datetime' => jDateTime::LANG_SHORT_DTFORMAT,
+        'lang_short_datetime' => jDateTime::LANG_SHORT_DTFORMAT,
         'db_date' => jDateTime::DB_DFORMAT,
         'db_datetime' => jDateTime::DB_DTFORMAT,
         'db_time' => jDateTime::DB_TFORMAT,
@@ -58,12 +58,20 @@ function jtpl_modifier_common_jdatetime($date, $format_in = 'db_datetime',
         'rfc822'=> jDateTime::RFC822_FORMAT,
         'full_lang_date'=> jDateTime::FULL_LANG_DATE
         );
-    if(!isset($formats[$format_in]) | !isset($formats[$format_out])){
+    
+    if (isset($formats[$format_in])) { $format_in = $formats[$format_in]; }
+    if (isset($formats[$format_out])) { $format_out = $formats[$format_out]; }
+
+    $ret = false;
+    $dt = new jDateTime();
+    if ($dt->setFromString($date, $format_in)) {
+        $ret = $dt->toString($format_out);
+    }
+
+    if ($ret == false) {
         throw new jException("jelix~errors.tpl.tag.modifier.invalid", array('','jdatetime',''));
     }
 
-    $dt = new jDateTime();
-    $dt->setFromString($date, $formats[$format_in]);
-    return $dt->toString($formats[$format_out]);
+    return $ret;
 }
 

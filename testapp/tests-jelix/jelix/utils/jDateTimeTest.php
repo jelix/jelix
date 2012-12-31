@@ -136,7 +136,10 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
         // Time when my guests arrive.
         $dt = new jDateTime(2007, 12, 25, 20, 30, 19);
         $this->assertEquals($dt->toString(jDateTime::DB_DFORMAT), "2007-12-25");
+        $this->assertEquals($dt->toString('Y-m-d'), "2007-12-25");
         $this->assertEquals($dt->toString(jDateTime::DB_DTFORMAT),
+            "2007-12-25 20:30:19");
+        $this->assertEquals($dt->toString('Y-m-d G:i:s'),
             "2007-12-25 20:30:19");
         $this->assertEquals($dt->toString(jDateTime::DB_TFORMAT), "20:30:19");
         $this->assertEquals($dt->toString(jDateTime::ISO8601_FORMAT),
@@ -144,6 +147,7 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($dt->toString(jDateTime::TIMESTAMP_FORMAT),
             "1198611019");
         $this->assertEquals($dt->toString(jDateTime::RFC822_FORMAT), "Tue, 25 Dec 2007 20:30:19 +0100");
+        $this->assertEquals($dt->toString('r'), "Tue, 25 Dec 2007 20:30:19 +0100");
     }
 
     // Tests string parsing.
@@ -176,6 +180,12 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
         $dt->setFromString("Wed, 26 Dec 2007 05:17:25 +0100",
             jDateTime::RFC822_FORMAT);
         $this->assertEquals(new jDateTime(2007, 12, 26, 4, 17, 25), $dt);
+
+        $dt->setFromString("2007-12-26", 'Y-m-d');
+        $this->assertEquals(new jDateTime(2007, 12, 26, 0, 0, 0), $dt);
+
+        $dt->setFromString("2007-12-26 05:17:25", 'Y-m-d G:i:s');
+        $this->assertEquals(new jDateTime(2007, 12, 26, 5, 17, 25), $dt);
     }
     
     function testOffsetTimeZone() {
