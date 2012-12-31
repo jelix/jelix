@@ -119,9 +119,9 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
                 case 'effects':
                     $resp->addJSLink($base.'jquery.js');
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
-                    $resp->addJSLink($base.'ui/jquery.effect.min.js');
+                    $resp->addJSLink($base.'ui/jquery.ui.effect.min.js');
                     foreach($params as $f)
-                        $resp->addJSLink($base.'ui/jquery.effect-'.$f.'.min.js');
+                        $resp->addJSLink($base.'ui/jquery.ui.effect-'.$f.'.min.js');
                     break;
                 case 'theme':
                     $resp->addCSSLink($base.'themes/base/jquery.ui.all.css');
