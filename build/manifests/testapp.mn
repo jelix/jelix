@@ -218,6 +218,7 @@ cd testapp/modules/jelix_tests/daos
   postBlog.daorecord.php
   postTracker.daorecord.php
   post_blog.dao.xml
+  post_blog2.dao.xml
   post_tracker.dao.xml
   posts.dao.xml
 cd testapp/modules/jelix_tests/forms

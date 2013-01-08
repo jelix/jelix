@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0" import="jelix_tests~posts">
+    <datasources>
+        <!-- we declare the same table to see if properties are ok after parsing -->
+        <primarytable name="posts" realname="posts" primarykey="id" />
+    </datasources>
+    <record extends="jelix_tests~postBlog">
+        <property name="id" fieldname="id" datatype="int" required="true"/>
+        <!-- redefine author property -->
+        <property name="author" fieldname="author" datatype="varchar" maxlength="100"/>
+        <!-- add new property -->
+        <property name="email" fieldname="email" datatype="varchar" maxlength="120"/>
+    </record>
+</dao>

@@ -332,8 +332,17 @@ class jDaoImportTest extends jUnitTestCase {
     }
 
     public function testImportWithRedefinedProperties() {
+        $this->launchTestImportWithRedefinedProperties('jelix_tests~post_blog');
+    }
+
+    public function testImportWithRedefinedPropertiesAndTable() {
+        // with a dao that redeclare the table
+        $this->launchTestImportWithRedefinedProperties('jelix_tests~post_blog2');
+    }
+    
+    protected function launchTestImportWithRedefinedProperties($daoName) {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
-        $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
+        $blogSel = new jSelectorDao($daoName, '');
         $dbtools = jApp::loadPlugin($blogSel->driver, 'db', '.dbtools.php', $blogSel->driver.'DbTools');
 
         $postBlogParser = new jDaoParser($blogSel);
@@ -348,7 +357,7 @@ class jDaoImportTest extends jUnitTestCase {
                     'fields'=>array('id', 'title', 'author', 'content', 'type', 'status', 'date', 'email')
                 )
             ),
-                            $postBlogParser->getTables());
+            $postBlogParser->getTables());
         $properties = '<?xml version="1.0"?>
         <array>
             <object key="id" class="jDaoProperty">

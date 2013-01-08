@@ -161,6 +161,7 @@ class jDaoParser {
     protected function parseDatasource($xml) {
         // -- tables
         if(isset ($xml->datasources) && isset ($xml->datasources[0]->primarytable)) {
+            $previousTables = $this->_tables;
             // erase table definitions (in the case where the dao imports an other one)
             $this->_tables = array();
             $this->_ijoins = array();
@@ -168,14 +169,23 @@ class jDaoParser {
 
             $t = $this->_parseTable (0, $xml->datasources[0]->primarytable[0]);
             $this->_primaryTable = $t['name'];
+            if (isset($previousTables[$t['name']])) {
+                $this->_tables[$t['name']]['fields'] = $previousTables[$t['name']]['fields'];
+            }
             if(isset($xml->datasources[0]->primarytable[1])){
                 throw new jDaoXmlException ($this->selector, 'table.two.many');
             }
             foreach($xml->datasources[0]->foreigntable as $table){
-                $this->_parseTable (1, $table);
+                $t = $this->_parseTable (1, $table);
+                if (isset($previousTables[$t['name']])) {
+                    $this->_tables[$t['name']]['fields'] = $previousTables[$t['name']]['fields'];
+                }
             }
             foreach($xml->datasources[0]->optionalforeigntable as $table){
-                $this->_parseTable (2, $table);
+                $t = $this->_parseTable (2, $table);
+                if (isset($previousTables[$t['name']])) {
+                    $this->_tables[$t['name']]['fields'] = $previousTables[$t['name']]['fields'];
+                }
             }
         }else if ($this->_primaryTable === '') { // no imported dao
             throw new jDaoXmlException ($this->selector, 'datasource.missing');
@@ -191,7 +201,7 @@ class jDaoParser {
                 $this->_userRecord = new jSelectorDaoRecord((string)$xml->record[0]['extends']);
                 jApp::popCurrentModule();
             }
-            if(isset($xml->record[0]->property)) {
+            if (isset($xml->record[0]->property)) {
                 // don't append directly new properties into _properties,
                 // so we can see the differences between imported properties
                 // and readed properties
@@ -201,7 +211,7 @@ class jDaoParser {
                     if (isset($properties[$p->name])) {
                         throw new jDaoXmlException ($this->selector, 'property.already.defined', $p->name);
                     }
-                    if (!isset($this->_properties[$p->name])) { // if this property does not redefined an imported property
+                    if (!in_array($p->name, $this->_tables[$p->table]['fields'])) { // if this property does not redefined an imported property
                         $this->_tables[$p->table]['fields'][] = $p->name;
                     }
                     $properties[$p->name] = $p;
