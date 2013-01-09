@@ -56,17 +56,17 @@ class jDaoCompiler  implements jISimpleCompiler {
 
         // generation of PHP classes corresponding to the DAO definition
         $compiled = '<?php ';
-        $compiled .= "\nif (jApp::config()->compilation['checkCacheFiletime']) {";
-        $compiled .= "\n if( filemtime('".$daoPath.'\') > '.filemtime($daoPath).') return false;';
+        $compiled .= "\nif (jApp::config()->compilation['checkCacheFiletime']&&(\n";
+        $compiled .= "\n filemtime('".$daoPath.'\') > '.filemtime($daoPath);
         $importedDao = $parser->getImportedDao();
         if ($importedDao) {
             foreach($importedDao as $selimpdao) {
                 $path = $selimpdao->getPath();
-                $compiled .= "\nif( filemtime('".$path.'\') > '.filemtime($path).') return false;';
+                $compiled .= "\n|| filemtime('".$path.'\') > '.filemtime($path);
             }
         }
-        $compiled .="\n}\n";
-        $compiled .= $generator->buildClasses ()."\n return true; ";
+        $compiled .=")){ return false;\n}\nelse {\n";
+        $compiled .= $generator->buildClasses ()."\n return true; }";
 
         jFile::write ($selector->getCompiledFilePath(), $compiled);
         return true;
