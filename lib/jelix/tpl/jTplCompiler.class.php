@@ -202,29 +202,26 @@ class jTplCompiler
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
-        $realCacheFile = str_replace(".php", ".inc.php", $selector->getCompiledFilePath());
         
-        $header = "<?php if (jApp::config()->compilation['checkCacheFiletime']) {\n";
-        $header .= "if (filemtime('".$this->_sourceFile.'\') > '.filemtime($this->_sourceFile).") return false;\n}\n";
-        $header .= "require('".$realCacheFile."');\n";
-        $header .= "return true;\n";
-        jFile::write($selector->getCompiledFilePath(), $header);
+        $header = "if (jApp::config()->compilation['checkCacheFiletime'] &&\n";
+        $header .= "filemtime('".$this->_sourceFile.'\') > '.filemtime($this->_sourceFile)."){ return false;\n} else {\n";
+        $footer = "return true;}\n";
 
-        $this->compileString(file_get_contents($this->_sourceFile), $realCacheFile,
-            $selector->userModifiers, $selector->userFunctions, $md5);
+        $this->compileString(file_get_contents($this->_sourceFile), $selector->getCompiledFilePath(),
+            $selector->userModifiers, $selector->userFunctions, $md5, $header, $footer);
 
         jApp::popCurrentModule();
         return true;
     }
 #endif
 
-    public function compileString($templatecontent, $cachefile, $userModifiers, $userFunctions, $md5) {
+    public function compileString($templatecontent, $cachefile, $userModifiers, $userFunctions, $md5, $header='', $footer='') {
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
         $this->_userFunctions = $userFunctions;
 
         $result = $this->compileContent($templatecontent);
 
-        $header = "<?php \n";
+        $header = "<?php \n".$header;
         foreach ($this->_pluginPath as $path=>$ok) {
             $header.=' require_once(\''.$path."');\n";
         }
@@ -232,7 +229,7 @@ class jTplCompiler
         $header .="\n".$this->_metaBody."\n}\n";
 
         $header.='function template_'.$md5.'($t){'."\n?>";
-        $result = $header.$result."<?php \n}\n";
+        $result = $header.$result."<?php \n}\n".$footer;
 
 #if JTPL_STANDALONE
         $_dirname = dirname($cachefile).'/';
