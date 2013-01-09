@@ -46,9 +46,8 @@ class mainCtrl extends jController {
    }
 
    function testdao(){
-    $dao = jDao::get('testnews');
 
-    if( $id=$this->param('newid')){
+    if ($id = $this->param('newid')) {
         $dao = jDao::get('config');
         $rec = jDao::createRecord('config');
 
@@ -66,6 +65,18 @@ class mainCtrl extends jController {
       return $rep;
    }
 
+    function resetdao(){
+        $db = jDb::getConnection();
+        $db->exec('delete from myconfig');
+        
+        $rep = $this->getResponse('html');
+        $rep->title = 'Empty table';
+        $rep->bodyTpl = 'testapp~main';
+        $rep->body->assign('MAIN', 'reset done');
+    
+        return $rep;
+    }
+   
     function generateerror() {
         $rep = $this->getResponse('html');
         throw new Exception("here is an error");
