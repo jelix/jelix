@@ -11,6 +11,8 @@ cd lib/jelix-modules/jacl/install
   install.php
 cd lib/jelix-modules/jacl/locales/en_EN/
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl/locales/en_GB/
+cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/locales/en_US/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/locales/fr_FR/
@@ -53,6 +55,8 @@ cd lib/jelix-modules/jacldb/locales/en_US
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/locales/en_EN
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
+cd lib/jelix-modules/jacldb/locales/en_GB
+cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/locales/fr_FR
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/plugins/acl/db/
@@ -67,6 +71,8 @@ cd lib/jelix-modules/jacl2/classes
   jIAcl2Driver.iface.php
 #endif
 cd lib/jelix-modules/jacl2/locales/en_EN/
+cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/en_GB/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/en_US/
 cch errors.UTF-8.properties(errors.%charset%.properties)
@@ -129,6 +135,8 @@ cd lib/jelix-modules/jacl2db/install/sql/
   
 cd lib/jelix-modules/jacl2db/locales/en_EN/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
+cd lib/jelix-modules/jacl2db/locales/en_GB/
+cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/en_US/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/fr_FR/
@@ -168,6 +176,9 @@ cd lib/jelix-modules/jauth/locales/en_US
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch autherror.UTF-8.properties(autherror.%charset%.properties)
 cd lib/jelix-modules/jauth/locales/en_EN
+cch auth.UTF-8.properties(auth.%charset%.properties)
+cch autherror.UTF-8.properties(autherror.%charset%.properties)
+cd lib/jelix-modules/jauth/locales/en_GB
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch autherror.UTF-8.properties(autherror.%charset%.properties)
 cd lib/jelix-modules/jauth/locales/fr_FR
@@ -230,6 +241,8 @@ cd lib/jelix-modules/jsoap/controllers
   WSDL.classic.php
 cd lib/jelix-modules/jsoap/locales/en_EN
 cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jsoap/locales/en_GB
+cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jsoap/locales/en_US
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jsoap/locales/fr_FR
@@ -249,6 +262,8 @@ cd lib/jelix-modules/jpref/classes/
   jPrefItemGroup.php
   jPrefManager.php
 cd lib/jelix-modules/jpref/locales/en_US
+cch prefs.UTF-8.properties(prefs.%charset%.properties)
+cd lib/jelix-modules/jpref/locales/en_GB
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix-modules/jpref/locales/en_EN
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
