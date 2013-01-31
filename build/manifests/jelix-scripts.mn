@@ -81,7 +81,7 @@ cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
   auth.coord.ini.php.tpl
-* defaultconfig.ini.php.tpl
+* mainconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
   installer.ini.php.tpl
   profiles.ini.php.tpl
