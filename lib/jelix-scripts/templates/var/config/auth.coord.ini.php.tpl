@@ -10,6 +10,9 @@ driver = Db
 ; session variable name
 session_name = "JELIX_USER"
 
+; set to 'on' to destroy the session on logout
+session_destroy =
+
 ; Says if there is a check on the ip address : verify if the ip
 ; is the same when the user has been connected
 secure_with_ip = 0
