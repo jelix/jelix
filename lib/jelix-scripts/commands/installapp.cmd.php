@@ -13,7 +13,7 @@
 class installappCommand extends JelixScriptCommand {
 
     public  $name = 'installapp';
-    public  $allowed_options = array();
+    public  $allowed_options = array('-withoutcomposer' => false);
     public  $allowed_parameters = array();
 
     public  $syntaxhelp = "";
@@ -32,6 +32,11 @@ class installappCommand extends JelixScriptCommand {
     }
 
     public function run(){
+    	if (! $this->getOption('-withoutcomposer')) {
+            require_once (__DIR__.'/../includes/composer.php');
+            jComposerInstaller::update();
+        }
+    	
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         jAppManager::close();
