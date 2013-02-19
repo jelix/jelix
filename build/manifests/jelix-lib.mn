@@ -385,7 +385,6 @@ cd lib/jelix/tpl/
 *  jTplCompiler.class.php
 
 cd lib/jelix/utils/
-  deprecated_in_jelix_1.5.php
   jAppManager.class.php
   jAtom10Reader.class.php
   jAtom10Info.class.php
