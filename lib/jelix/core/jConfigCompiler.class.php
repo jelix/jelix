@@ -25,7 +25,7 @@ class jConfigCompiler {
 
     /**
      * read the given ini file, for the current entry point, or for the entrypoint given
-     * in $pseudoScriptName. Merge it with the content of defaultconfig.ini.php
+     * in $pseudoScriptName. Merge it with the content of mainconfig.ini.php
      * It also calculates some options.
      * If you are in a CLI script but you want to load a configuration file for a web entry point
      * or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
@@ -56,13 +56,19 @@ class jConfigCompiler {
         if(!is_writable(jApp::logPath())) {
             throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
         }
-
+        // this is the defaultconfig file of JELIX itself
         $config = jelix_read_ini(JELIX_LIB_CORE_PATH.'defaultconfig.ini.php');
         self::$commonConfig = clone $config;
 
-        @jelix_read_ini($configPath.'defaultconfig.ini.php', $config);
-
-        if($configFile != 'defaultconfig.ini.php'){
+        require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");    
+        $mainConfigFile = myMainConfigFileName($configPath);
+        
+        if ($mainConfigFile !== false )
+            @jelix_read_ini($mainConfigFile, $config);
+        else
+            throw new Exception("Configuration file is missing -- $configFile", 5);
+        
+        if($configFile != 'mainconfig.ini.php' and $configFile != 'defaultconfig.ini.php'){
             if(!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
             if( false === @jelix_read_ini($configPath.$configFile, $config))
