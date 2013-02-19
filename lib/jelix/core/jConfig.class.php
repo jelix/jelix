@@ -46,13 +46,8 @@ class jConfig {
             $compil=true;
         }else{
             $t = filemtime($file);
-            // @deprecated since jelix 1.5
-            // the next 2 lines will be removed with jelix 1.6 for
-            // $dc = jApp::configPath('mainconfig.ini.php');
-            require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-            $mainConfigFile = myMainConfigFileName(jApp::configPath());                
-            
-            $dc = $mainConfigFile;
+            $dc = jApp::configPath(jApp::mainConfigFile());
+
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(jApp::configPath($configFile))>$t){
                 // one of the two config file have been modified: let's compile

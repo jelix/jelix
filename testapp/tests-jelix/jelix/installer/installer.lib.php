@@ -121,7 +121,7 @@ class testInstallerMain extends jInstaller {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
-        $this->defaultConfig = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
+        $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jsoap');
         $config = jApp::config();
@@ -182,7 +182,7 @@ class testInstallerMain extends jInstaller {
     }
 
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($this->defaultConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
+        return new testInstallerEntryPoint($this->mainConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
     }
     
     protected function getComponentModule($name, $path, $installer) {

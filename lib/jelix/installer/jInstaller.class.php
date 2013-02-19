@@ -227,14 +227,7 @@ class jInstaller {
     function __construct ($reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
-        
-        // @deprecated since jelix 1.5
-        // the next 2 lines will be removed with jelix 1.6 for
-        // $this->mainConfig = new jIniFileModifier(jApp::configPath('mainconfig.ini.php'));
-        require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = myMainConfigFileName(jApp::configPath());
-        
-        $this->mainConfig = new jIniFileModifier($mainConfigFile);
+        $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();

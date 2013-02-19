@@ -257,7 +257,7 @@ class jInstallCheck {
                 $this->error('path.mainconfig.writable');
                 $ok = false;
             }
-            // @deprecated since JELIX > 1.5.x to remove with Jelix 1.6
+            // TODO: remove it in future jelix > 1.6
             elseif (file_exists(jApp::configPath('defaultconfig.ini.php'))
                 && !is_writable(jApp::configPath('defaultconfig.ini.php'))) {
                 $this->error('path.mainconfig.writable');

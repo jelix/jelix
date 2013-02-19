@@ -3,7 +3,8 @@
 * @package    jelix
 * @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2011-2012 Laurent Jouanneau
+* @contributor  Olivier Demah
+* @copyright  2011-2013 Laurent Jouanneau, 2012 Olivier Demah
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -135,6 +136,27 @@ class jApp {
         self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 
+    protected static $_mainConfigFile = null;
+
+    /**
+     * Main config file path
+     */
+    public static function mainConfigFile() {
+
+        if (self::$_mainConfigFile)
+            return self::$_mainConfigFile;
+
+        $configFileName = self::configPath('mainconfig.ini.php');
+        if (!file_exists ($configFileName) ) {
+            // support of legacy configuration file
+            // TODO: support of defaultconfig.ini.php should be dropped in version > 1.6
+            $configFileName = self::configPath('defaultconfig.ini.php');
+            trigger_error("the config file defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
+        }
+        self::$_mainConfigFile = $configFileName;
+        return $configFileName;
+    }
+
     protected static $_coord = null;
     
     public static function coord() {
@@ -142,7 +164,7 @@ class jApp {
     }
 
     public static function setCoord($coord) {
-        self::$_coord = $coord;
+        self::$_coord = $coord; 
     }
 
     protected static $contextBackup = array();

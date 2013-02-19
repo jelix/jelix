@@ -13,16 +13,8 @@ function getDocumentRoot() {
 
     require_once(JELIX_LIB_PATH."core/jConfigCompiler.class.php");
 
-    // @deprecated since Jelix 1.5
-    // the following 4 lines (until 'else' included) should be removed for Jelix 1.6
-    // and just replace by this one :
-    // $config = parse_ini_file(jApp::configPath('mainconfig.ini.php'));
-    $flag = parse_ini_file(jApp::configPath('mainconfig.ini.php'));
-    if ( $flag === false ) {
-        $config = parse_ini_file(jApp::configPath('defaultconfig.ini.php'));
-        trigger_error("the config file var/config/defaultconfig.ini.php is deprecated and will be removed in the next major release", E_USER_DEPRECATED);
-    }    
-        
+    $config = parse_ini_file(jApp::mainConfigFile());
+
     $urlengine = $config['urlengine'];
 
     if($urlengine['scriptNameServerVariable'] == '') {

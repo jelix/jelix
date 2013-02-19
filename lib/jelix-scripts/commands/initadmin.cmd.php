@@ -73,14 +73,8 @@ class initadminCommand extends JelixScriptCommand {
 
         $installConfig = new jIniFileModifier(jApp::configPath('installer.ini.php'));
 
-        // @deprecated since jelix 1.5
-        // the next 2 lines will be removed with jelix 1.6 for
-        // $inifile = new jIniMultiFilesModifier(jApp::configPath('mainconfig.ini.php'),jApp::configPath($ep['config']));
-        require_once (JELIX_LIB_PATH."utils/deprecated_in_jelix_1.5.php");
-        $mainConfigFile = myMainConfigFileName(jApp::configPath());            
-        
-        $inifile = new jIniMultiFilesModifier($mainConfigFile,
-                                          jApp::configPath($ep['config']));
+        $inifile = new jIniMultiFilesModifier(jApp::mainConfigFile(),
+                                              jApp::configPath($ep['config']));
 
         $params = array();
         $this->createFile(jApp::appPath('responses/adminHtmlResponse.class.php'),'responses/adminHtmlResponse.class.php.tpl',$params, "Response for admin interface");
