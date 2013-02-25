@@ -13,7 +13,7 @@
 if (function_exists('jelix_version')) {
     return;
 }
-
+else {
 
 function jelix_read_ini($fileName, $config = null) {
     $conf = jIniFile::read($fileName);
@@ -108,4 +108,7 @@ function jelix_scan_locale_sel($selStr, $selObj) {
         return true;
     }
     return false;
+}
+
+
 }
