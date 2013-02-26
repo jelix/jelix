@@ -17,6 +17,7 @@ cd lib/jelix/auth
   jAuthUser.class.php
   jAuthDummyUser.class.php
   jAuthUserLDAP.class.php
+  password.php
 
 cd lib/jelix/acl
 * jAcl.class.php
