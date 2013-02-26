@@ -21,6 +21,7 @@ cd lib/jelix/auth
   jIAuthDriver.iface.php
   jAuthDriverBase.class.php
 #endif
+  password.php
 
 cd lib/jelix/acl
 * jAcl.class.php
