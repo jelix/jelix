@@ -69,7 +69,6 @@ cd lib/jelix-modules/jauth
   urls_ws.xml
 cd lib/jelix-modules/jauth/classes
 !  jauth.listener.php
-   password.php
 cd lib/jelix-modules/jauth/controllers
 ! login.classic.php
 ! loginsw.classic.php
