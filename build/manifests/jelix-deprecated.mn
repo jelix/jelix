@@ -205,6 +205,9 @@ rmd lib/pdf-fonts/freefont-20060126
 
 rmd lib/jelix-admin-modules/jacl2_admin
 
+cd lib/jelix-modules/jauth/classes
+  password.php
+
 cd lib/jelix-modules/jauth/daos
   jelixuser.dao.xml
 
