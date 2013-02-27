@@ -3,7 +3,7 @@
 * @package  jelix
 * @subpackage core
 * @author   Laurent Jouanneau
-* @copyright 2005-2011 Laurent Jouanneau
+* @copyright 2005-2013 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,6 +15,12 @@
  * @static
  */
 class jConfig {
+
+    /**
+     * indicate if the configuration was loading from the cache (true) or
+     * if the cache configuration was regenerated (false)
+     */
+    public static $fromCache = true;
 
     /**
      * this is a static class, so private constructor
@@ -40,17 +46,17 @@ class jConfig {
         else
             $file .= '.resultini.php';
 
-        $compil=false;
+        self::$fromCache = true;
         if(!file_exists($file)){
             // no cache, let's compile
-            $compil=true;
+            self::$fromCache = false;
         }else{
             $t = filemtime($file);
             $dc = jApp::configPath('defaultconfig.ini.php');
             if( (file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(jApp::configPath($configFile))>$t){
                 // one of the two config file have been modified: let's compile
-                $compil=true;
+                self::$fromCache = false;
             }else{
 
                 // let's read the cache file
@@ -65,14 +71,14 @@ class jConfig {
                 if($config->compilation['checkCacheFiletime']){
                     foreach($config->_allBasePath as $path){
                         if(!file_exists($path) || filemtime($path)>$t){
-                            $compil = true;
+                            self::$fromCache = false;
                             break;
                         }
                     }
                 }
             }
         }
-        if($compil){
+        if(!self::$fromCache){
             require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
             return jConfigCompiler::readAndCache($configFile);
         }else
