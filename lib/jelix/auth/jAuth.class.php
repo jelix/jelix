@@ -88,7 +88,7 @@ class jAuth {
             }
 
             if ($password_hash_method > 0) {
-                require_once(dirname(__FILE__).'/password.php');
+                require_once(__DIR__.'/password.php');
                 if (!can_use_password_API()) {
                     $password_hash_method = 0;
                 }
