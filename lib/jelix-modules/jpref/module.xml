@@ -11,7 +11,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.5a1" maxversion="1.5"/>
+#expand        <jelix minversion="1.5a1" maxversion="__LIB_VERSION_MAX__"/>
     </dependencies>
     <autoload>
         <class name="jPref" file="classes/jPref.php" />
