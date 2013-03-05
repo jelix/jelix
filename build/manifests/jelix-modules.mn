@@ -64,7 +64,7 @@ cd lib/jelix-modules/jacldb/plugins/acl/db/
 
 
 cd lib/jelix-modules/jacl2
-   module.xml
+* module.xml
 cd lib/jelix-modules/jacl2/classes
 * jAcl2.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
@@ -254,7 +254,7 @@ cd lib/jelix-modules/jsoap/templates
   soap_doc.tpl
 
 cd lib/jelix-modules/jpref
-  module.xml
+* module.xml
 cd lib/jelix-modules/jpref/classes/
   jPref.php
   jPrefItem.php
