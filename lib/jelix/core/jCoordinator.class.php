@@ -151,6 +151,7 @@ class jCoordinator {
                 $this->actionName = 'default:index';
             }
         }
+        jApp::pushCurrentModule($this->moduleName);
 
         $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 

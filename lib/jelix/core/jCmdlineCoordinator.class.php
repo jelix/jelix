@@ -33,7 +33,7 @@ class jCmdlineCoordinator extends jCoordinator {
     * This method should be called in a Command line entry point.
     * @param  jRequestCmdline  $request the command line request object
     */
-    public function process($request){
+    public function process($request=null){
         $this->allErrorMessages = jBasicErrorHandler::$initErrorMessages;
         parent::process($request);
         exit($this->response->getExitCode());
