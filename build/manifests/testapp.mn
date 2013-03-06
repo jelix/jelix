@@ -434,6 +434,7 @@ cd testapp/var/config/soap
   config.ini.php
 cd testapp/var/locales/fr_FR/jelix_tests/locales/
   newoverload.UTF-8.properties
+  overload.UTF-8.properties
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/themes/default/junittests
