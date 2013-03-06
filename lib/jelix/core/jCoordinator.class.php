@@ -3,11 +3,11 @@
 * @package      jelix
 * @subpackage   core
 * @author       Laurent Jouanneau
-* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav
+* @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav, Gaëtan MARROT
 * @copyright    2005-2012 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
-* @copyright    2008-2010 Dominique Papin, 2012 Flav
+* @copyright    2008-2010 Dominique Papin, 2012 Flav, 2013 Gaëtan MARROT
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
