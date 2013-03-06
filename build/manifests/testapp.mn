@@ -165,6 +165,8 @@ cd testapp/modules/jelix_tests/locales/
   test_I.properties
   test_J.properties
 cd testapp/modules/jelix_tests/locales/fr_FR
+  newoverload.UTF-8.properties
+  overload.UTF-8.properties
   testunit.ISO-8859-1.properties
   tests1.UTF-8.properties
   tests2.UTF-8.properties
@@ -430,12 +432,16 @@ cd testapp/var/config/cmdline
   configtests.ini.php
 cd testapp/var/config/soap
   config.ini.php
+cd testapp/var/locales/fr_FR/jelix_tests/locales/
+  newoverload.UTF-8.properties
 cd testapp/var/themes/default/testapp
   hello2.tpl
 cd testapp/var/themes/default/junittests
   main.tpl
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
+cd testapp/var/overloads/jelix_tests/locales/fr_FR/
+  overload.UTF-8.properties
 cd testapp/var/db/sqlite/
   tests.sqlite
 cd testapp/var/db/sqlite3/

@@ -7,7 +7,7 @@
 * @contributor Rahal
 * @contributor Julien Issler
 * @contributor Baptiste Toinot
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2013 Laurent Jouanneau
 * @copyright   2007 Rahal
 * @copyright   2008 Julien Issler
 * @copyright   2008 Baptiste Toinot
@@ -80,6 +80,16 @@ class jSelectorLoc extends jSelectorModule {
             $locales[] = $generic_locale;
 
         foreach($locales as $locale){
+
+            // check if the locale has been overloaded in a locales directory
+            $localesPath = jApp::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+            if (is_readable ($localesPath)){
+                $this->_path = $localesPath;
+                $this->_where = 'locales/';
+                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
+                return;
+            }
+
             // check if the locale has been overloaded
             $overloadedPath = jApp::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
             if (is_readable ($overloadedPath)){
