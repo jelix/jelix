@@ -227,4 +227,14 @@ class jLocaleTest extends jUnitTestCase {
         $this->assertEquals("This multiline sentence\n has two line breaks\n after the words \"sentence\" and \"breaks\"",jLocale::get('tests4.multiline.string.with.line.break',null,'en_EN','UTF-8'));
     }
 
+    function testOverload(){
+        jApp::config()->locale = 'fr_FR';
+        $this->assertEquals('bonne valeur overload',jLocale::get('jelix_tests~overload.test'));
+    }
+
+    function testNewOverload(){
+        jApp::config()->locale = 'fr_FR';
+        $this->assertEquals('bonne valeur',jLocale::get('jelix_tests~newoverload.test'));
+    }
+
 }
