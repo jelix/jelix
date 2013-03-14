@@ -92,8 +92,11 @@ class jDaoConditions {
      * @param string $field_id   the property name used to order results
      * @param string $way        the order type : asc or desc
      */
-    function addItemOrder($field_id, $way='ASC'){
-        $this->order[$field_id]=$way;
+    function addItemOrder ($field_id, $way='ASC') {
+        $way = strtoupper($way);
+        if ($way !='DESC' && $way != 'ASC')
+            throw new jException('jelix~dao.error.bad.operator', $way);
+        $this->order[$field_id] = $way;
     }
 
     /**
@@ -129,6 +132,9 @@ class jDaoConditions {
     * @param string $glueOp the logical operator which links each conditions in the group : AND or OR
     */
     function startGroup ($glueOp = 'AND'){
+        $glueOp = strtoupper($glueOp);
+        if ($glueOp !='AND' && $glueOp != 'OR')
+            throw new jException('jelix~dao.error.bad.operator', $glueOp);
         $cond= new jDaoCondition ($glueOp, $this->_currentCondition);
         $this->_currentCondition = $cond;
     }
@@ -164,6 +170,5 @@ class jDaoConditions {
         }
         else
             throw new jException('jelix~dao.error.bad.operator', $operator);
-        
     }
 }
