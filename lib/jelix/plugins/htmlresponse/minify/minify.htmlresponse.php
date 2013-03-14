@@ -38,9 +38,14 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
         if (!($this->response instanceof jResponseHtml))
             return;
         global $gJConfig;
+        $basePath = $gJConfig->urlengine['basePath'];
         if ($gJConfig->jResponseHtml['minifyCSS']) {
             if ($gJConfig->jResponseHtml['minifyExcludeCSS']) {
-                $this->excludeCSS = explode( ',', $gJConfig->jResponseHtml['minifyExcludeCSS'] );
+                $this->excludeCSS = preg_split( '!\s*/\s*!', $gJConfig->jResponseHtml['minifyExcludeCSS'] );
+                foreach($this->excludeCSS as $k=>$url) {
+                    if (substr($url,0,1) != '/')
+                        $this->excludeCSS[$k]= $basePath.$url;
+                }
             }
 
             $this->response->setCSSLinks($this->generateMinifyList($this->response->getCSSLinks(), 'excludeCSS'));
@@ -49,7 +54,11 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
 
         if ($gJConfig->jResponseHtml['minifyJS']) {
             if($gJConfig->jResponseHtml['minifyExcludeJS'] ) {
-                $this->excludeJS = explode( ',', $gJConfig->jResponseHtml['minifyExcludeJS'] );
+                $this->excludeJS = preg_split( '!\s*/\s*!', $gJConfig->jResponseHtml['minifyExcludeJS'] );
+                foreach($this->excludeJS as $k=>$url) {
+                    if (substr($url,0,1) != '/')
+                        $this->excludeJS[$k]= $basePath.$url;
+                }
             }
             $this->response->setJSLinks($this->generateMinifyList($this->response->getJSLinks(), 'excludeJS'));
             $this->response->setJSIELinks($this->generateMinifyList($this->response->getJSIELinks(), 'excludeJS'));
