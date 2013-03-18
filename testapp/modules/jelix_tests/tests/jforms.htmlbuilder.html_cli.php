@@ -563,6 +563,21 @@ jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
 
+        $ctrl->emptyItemLabel = '-- select --';
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="menulist1" id="'.$this->formname.'_menulist1" class="jforms-ctrl-menulist" size="1">'."\n";
+        $result.='<option value="" selected="selected">-- select --</option>'."\n";
+        $result.='<option value="10">foo</option>'."\n";
+        $result.='<option value="11">bar</option>'."\n";
+        $result.='<option value="23">baz</option>'."\n";
+        $result.='</select>'."\n";
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+c.errInvalid=\'"Votre choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+
+        $ctrl->emptyItemLabel = '';
         $this->form->setData('menulist1',11);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="menulist1" id="'.$this->formname.'_menulist1" class="jforms-ctrl-menulist" size="1">'."\n";
@@ -577,7 +592,7 @@ c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
-
+        $ctrl->emptyItemLabel = null;
         $ctrl->datasource= new jFormsStaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
@@ -649,7 +664,6 @@ jFormsJQ.tForm.addControl(c);
         $this->form->setData('menulist1',"23");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="menulist1" id="'.$this->formname.'_menulist1" title="ceci est un tooltip" class="jforms-ctrl-menulist jforms-readonly" disabled="disabled" size="1">'."\n";
-        $result.='<option value=""></option>'."\n";
         $result.='<option value="10">foo</option>'."\n";
         $result.='<option value="11">bar</option>'."\n";
         $result.='<option value="23" selected="selected">baz</option>'."\n";
@@ -679,6 +693,29 @@ c.readOnly = true;
 c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
+
+        $ctrl->required = true;
+        $ctrl->emptyItemLabel = ' -- select -- ';
+        $this->form->setData('menulist1',"");
+        ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
+        $result='<select name="menulist1" id="'.$this->formname.'_menulist1" title="ceci est un tooltip" class="jforms-ctrl-menulist jforms-readonly" disabled="disabled" size="1">'."\n";
+        $result.='<option value="" selected="selected"> -- select -- </option>'."\n";
+        $result.='<option value="10">foo</option>'."\n";
+        $result.='<option value="11">bar</option>'."\n";
+        $result.='<option value="23">baz</option>'."\n";
+        $result.='</select>'."\n";
+        $this->assertEqualOrDiff($result, $out);
+        $this->assertEqualOrDiff('c = new jFormsJQControlString(\'menulist1\', \'Votre choix\');
+c.readOnly = true;
+c.required = true;
+c.errRequired=\'"Votre choix" field is required\';
+c.errInvalid=\'"Votre choix" field is invalid\';
+jFormsJQ.tForm.addControl(c);
+', $this->builder->getJsContent());
+        $ctrl->required = false;
+        $ctrl->emptyItemLabel = null;
+
+
 
         $records = array(
             array('id'=>'10', 'name'=>'foo', 'price'=>'15'),
