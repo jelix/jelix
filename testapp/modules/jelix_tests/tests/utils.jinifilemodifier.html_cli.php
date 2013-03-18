@@ -416,6 +416,7 @@ bbb');
         $this->assertEqual($parser->getValue('laurent','aSection'), 'toto' );
         $this->assertEqual($parser->getValue('isvalid','aSection'), true );
         $this->assertEqual($parser->getValue('foo','vla',2), 'ccc' );
+        $this->assertEqual($parser->getValue('foo','vla'), array('aaa', 'bbb', 'ccc'));
         
     }
     

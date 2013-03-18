@@ -345,13 +345,22 @@ class jIniFileModifier {
         if(!isset($this->content[$section])) {
             return null;
         }
+        $arrayValue = array();
+        $isArray = false;
         foreach ($this->content[$section] as $k =>$item) {
             if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
                 || $item[1] != $name)
                 continue;
-            if ($item[0] == self::TK_ARR_VALUE && $key !== null){
-                if($item[3] != $key)
+            if ($item[0] == self::TK_ARR_VALUE) {
+                if ($key !== null) {
+                    if($item[3] != $key)
+                        continue;
+                }
+                else {
+                    $isArray = true;
+                    $arrayValue[] = $item[2];
                     continue;
+                }
             }
 
             if (preg_match('/^-?[0-9]$/', $item[2])) { 
@@ -368,6 +377,8 @@ class jIniFileModifier {
             }
             return $item[2];
         }
+        if ($isArray)
+            return $arrayValue;
         return null;
     }
 
