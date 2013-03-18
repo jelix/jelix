@@ -117,16 +117,13 @@ class jUrl extends jUrlBase {
     static function getCurrentUrl ($forxml = false, $full = false) {
         // we don't take $_SERVER["REQUEST_URI"] because it doesn't correspond to the real URI
         // if the app is behind a proxy with a different basePath than the frontend
-        static $url = false;
-        if ($url === false){
-            $req = $GLOBALS['gJCoord']->request;
-            $url = $req->urlScriptPath.$req->urlScriptName.$req->urlPathInfo.'?';
-            if ($full)
-                $url = $req->getServerURI().$url;
-            $q = http_build_query($_GET, '', ($forxml?'&amp;':'&'));
-            if(strpos($q, '%3A')!==false)
-                $q = str_replace( '%3A', ':', $q);
-            $url .=$q;
+        $req = $GLOBALS['gJCoord']->request;
+        $sel = $req->params['module'].'~'.$req->params['action'];
+        if ($full) {
+            $url = self::getFull($sel, $req->params, ($forxml?self::XMLSTRING:self::STRING));
+         }
+        else {
+            $url = self::get($sel, $req->params, ($forxml?self::XMLSTRING:self::STRING));
         }
         return $url;
     }

@@ -25,6 +25,7 @@
         <entry file="testnews.php" config="index/config.ini.php" />
         <entry file="foo/bar.php" config="index/config.ini.php" />
         <entry file="invisible.php" config="index/config.ini.php" />
+        <entry file="noep.php" config="index/config.ini.php" />
         <entry file="handlermodule.php" config="index/config.ini.php" />
         <entry file="news.php" config="index/config.ini.php" />
         <entry file="soap.php" config="soap/config.ini.php" type="soap"/>

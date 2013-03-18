@@ -15,10 +15,11 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldRequestType;
     protected $oldserver;
     protected $oldConfig;
+    protected $oldReq;
 
     function setUp() {
       global $gJCoord, $gJConfig;
-
+      $this->oldReq = $req = $gJCoord->request;
       $this->oldUrlScriptPath = $gJCoord->request->urlScriptPath;
       $this->oldParams = $gJCoord->request->params;
       $this->oldRequestType = $gJCoord->request->type;
@@ -28,7 +29,7 @@ class UTCreateUrls extends UnitTestCase {
 
     function tearDown() {
       global $gJCoord, $gJConfig;
-
+      $gJCoord->request = $this->oldReq;
       $gJCoord->request->urlScriptPath=$this->oldUrlScriptPath;
       $gJCoord->request->params=$this->oldParams;
       $gJCoord->request->type=$this->oldRequestType;
@@ -613,5 +614,89 @@ class UTCreateUrls extends UnitTestCase {
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
         $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+    }
+
+    function testGetCurrentUrl() {
+        global $gJConfig, $gJCoord;
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'], $url);
+
+        $_SERVER['PATH_INFO'] = '/zip/yo/';
+        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_PORT'] = '80';
+        $conf = $gJConfig;
+        $conf->domainName = 'testapp.local';
+        $conf->urlengine = array(
+          'engine'=>'basic_significant',
+          'enableParser'=>true,
+          'multiview'=>false,
+          'basePath'=>'/',
+          'backendBasePath'=>'/',
+          'scriptNameServerVariable'=>'SCRIPT_NAME',
+          'defaultEntrypoint'=>'index',
+          'entrypointExtension'=>'.php',
+          'notfoundAct'=>'jelix~error:notfound',
+          'pathInfoInQueryParameter'=>'',
+          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+          'significantFile'=>'urls.xml',
+          'urlScript'=>'/noep.php',
+          'urlScriptPath'=>'/',
+          'urlScriptName'=>'noep.php',
+          'urlScriptId'=>'noep',
+          'urlScriptIdenc'=>'noep',
+          'documentRoot'=>$conf->urlengine['documentRoot'],
+          'checkHttpsOnParsing'=>true,
+          'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
+          'jqueryPath' =>$conf->urlengine['jqueryPath'],
+        );
+
+        jUrl::getEngine(true);
+
+        $gJCoord->request = new jClassicRequest();
+        $gJCoord->request->init();
+        $gJCoord->request->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
+        
+        $url = jUrl::getCurrentUrl(false, false);
+        $this->assertEqual('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://testapp.local/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+
+        $conf = $gJConfig;
+        $conf->domainName = 'testapp.local';
+        $conf->urlengine = array(
+          'engine'=>'significant',
+          'enableParser'=>true,
+          'multiview'=>true,
+          'basePath'=>'/',
+          'backendBasePath'=>'/',
+          'scriptNameServerVariable'=>'SCRIPT_NAME',
+          'defaultEntrypoint'=>'index',
+          'entrypointExtension'=>'.php',
+          'notfoundAct'=>'jelix~error:notfound',
+          'pathInfoInQueryParameter'=>'',
+          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+          'significantFile'=>'urls.xml',
+          'urlScript'=>'/noep.php',
+          'urlScriptPath'=>'/',
+          'urlScriptName'=>'noep.php',
+          'urlScriptId'=>'noep',
+          'urlScriptIdenc'=>'noep',
+          'documentRoot'=>$conf->urlengine['documentRoot'],
+          'checkHttpsOnParsing'=>true,
+          'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
+          'jqueryPath' =>$conf->urlengine['jqueryPath'],
+        );
+        jUrl::getEngine(true);
+
+        $gJCoord->request = new jClassicRequest();
+        $gJCoord->request->init();
+        $gJCoord->request->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
+
+        $url = jUrl::getCurrentUrl(false, false);
+        $this->assertEqual('/zip/yo/?foo=bar', $url);
+
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://testapp.local/zip/yo/?foo=bar', $url);
     }
 }
