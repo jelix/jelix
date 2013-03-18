@@ -1,11 +1,11 @@
 <?php
 /**
- * @package   havefnubb
- * @subpackage modulesinfo
+ * @package   jelix
+ * @subpackage core
  * @author    Vincent Viaud
- * @contributor
+ * @contributor 2013 foxmask
  * @copyright 2010 Vincent Viaud
- * @link      http://havefnubb.org
+ * @link      
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
