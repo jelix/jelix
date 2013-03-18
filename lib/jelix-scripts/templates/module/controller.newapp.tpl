@@ -17,6 +17,9 @@ class %%name%%Ctrl extends jController {
 
         // this is a call for the 'welcome' zone after creating a new application
         // remove this line !
+        $prj = new jProjectxml();
+        $prjInfo = $prj->getInfo();
+        $rep->title = $prjInfo->name . ' - '. jLocale::get('jelix~jelix.newapp.h1');
         $rep->body->assignZone('MAIN', 'jelix~check_install');
 
         return $rep;

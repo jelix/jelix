@@ -35,6 +35,8 @@ cd lib/jelix/core
   jConfigAutoloader.class.php
 * jConfigCompiler.class.php
   jCmdlineCoordinator.class.php
+  jFilexml.class.php
+  jProjectxml.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
   jBasicErrorHandler.class.php
