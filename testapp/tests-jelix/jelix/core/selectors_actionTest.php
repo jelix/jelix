@@ -184,7 +184,7 @@ class selectors_actionTest extends jUnitTestCase {
                     $msg=' contains unexpected data ('.$s->module.', '.$s->controller.', '.$s->method.', '.$s->request.')';
             }
 
-            $this->assertTrue($valid , ' test of '.implode('-',$sel). ' (should be '.($res === false ? 'invalid':'valid').')');
+            $this->assertTrue($valid , ' test of '.$sel[1].'~'.$sel[2].'@'.$sel[2]. ' should be valid');
             if($msg)
                 $this->sendMessage($msg);
         }

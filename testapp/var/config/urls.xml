@@ -98,6 +98,11 @@
           <static name="mystatic" value="valeur statique" />
         </url>
     </entrypoint>
+    <entrypoint name="noep"  noentrypoint="true">
+       <url pathinfo="/zip/:var/" module="jelix_tests" action="urlsig:bug1488">
+          <param name="var" />
+        </url>
+    </entrypoint>
     <entrypoint name="foo/bar" type="classic">
        <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />
     </entrypoint>
