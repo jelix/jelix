@@ -91,11 +91,13 @@ class jDaoConditions {
      * add an order clause
      * @param string $field_id   the property name used to order results
      * @param string $way        the order type : asc or desc
+     * @param boolean $allowAnyWay true if the value of $way should be checked. Internal use.
+     *                              Not recommended because it may cause security issues
      */
-    function addItemOrder ($field_id, $way='ASC') {
-        $way = strtoupper($way);
-        if ($way !='DESC' && $way != 'ASC')
+    function addItemOrder ($field_id, $way='ASC', $allowAnyWay=false) {
+        if (!$allowAnyWay && strtoupper($way) !='DESC' && strtoupper($way) != 'ASC')
             throw new jException('jelix~dao.error.bad.operator', $way);
+
         $this->order[$field_id] = $way;
     }
 
