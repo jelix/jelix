@@ -398,6 +398,9 @@ anumber=98
 string= "uuuuu"
 string2= "aaa
 bbb"
+string3= "aaa
+  multiline
+bbb"
 afloatnumber=   5.098  
 
 [aSection]
@@ -420,12 +423,15 @@ foo[]=ccc
         $this->assertEquals($parser->getValue('string'), 'uuuuu' );
         $this->assertEquals($parser->getValue('string2'), 'aaa
 bbb');
+        $this->assertEquals($parser->getValue('string3'), 'aaa
+  multiline
+bbb');
         $this->assertEquals($parser->getValue('afloatnumber'), 5.098 );
         $this->assertEquals($parser->getValue('truc','aSection'), true );
         $this->assertEquals($parser->getValue('laurent','aSection'), 'toto' );
         $this->assertEquals($parser->getValue('isvalid','aSection'), true );
         $this->assertEquals($parser->getValue('foo','vla',2), 'ccc' );
-        
+        $this->assertEquals($parser->getValue('foo','vla'), array('aaa', 'bbb', 'ccc'));
     }
     
     function testSave() {

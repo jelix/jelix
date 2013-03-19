@@ -564,7 +564,6 @@ jForms.tForm.addControl(c);
         $this->form->setData('menulist1',"23");
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
         $result='<select name="menulist1" id="'.$this->formname.'_menulist1" title="ceci est un tooltip" class="jforms-ctrl-menulist jforms-readonly" disabled="disabled" size="1">'."\n";
-        $result.='<option value=""></option>'."\n";
         $result.='<option value="10">foo</option>'."\n";
         $result.='<option value="11">bar</option>'."\n";
         $result.='<option value="23" selected="selected">baz</option>'."\n";

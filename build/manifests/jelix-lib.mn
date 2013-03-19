@@ -243,6 +243,7 @@ cd lib/jelix/core-modules/jelix/templates
   defaultmain.tpl
   sitemap.tpl
   sitemapindex.tpl
+  check_install.tpl
 cd lib/jelix/core-modules/jelix/templates/en_EN
   check_install.tpl
 cd lib/jelix/core-modules/jelix/templates/en_US

@@ -90,6 +90,7 @@ foo__bar = "jelix_tests~urlsig:url4@classic"
 news = "new~*@classic"
 soap = "@soap"
 actu = "jelix_tests~actu:*@classic"
+noep = "jelix_tests~urlsig:bug1488@classic"
 
 [basic_significant_urlengine_entrypoints]
 ; for each entry point, it indicates if the entry point name
@@ -101,6 +102,7 @@ testnews = off
 foo__bar = on
 news = on
 soap = on
+noep = on
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
