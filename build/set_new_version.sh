@@ -5,17 +5,17 @@ SCRIPTDIR=$(dirname $0)
 
 VERSION=$1
 if [ "$VERSION" == "" ]; then
-    echo "Error: new version is missing"
+    echo "Error: parameters missing\n"
+    echo "usage: set_new_version.sh <new version> <next version>"
     exit 1
 fi
 
 NEXTVERSION=$2
 if [ "$NEXTVERSION" == "" ]; then
     echo "Error: next version is missing"
+    echo "usage: set_new_version.sh <new version> <next version>"
     exit 1
 fi
-
-
 
 VER_MAJOR=""
 VER_MIDDLE=""
