@@ -352,6 +352,7 @@ storage=
 ; dao_db_profile = ""
 
 ; list of selectors of classes to load before the session_start
+; @deprecated please use autoload configuration in module.xml files instead
 loadClasses=
 
 [forms]
