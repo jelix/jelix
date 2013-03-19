@@ -253,6 +253,8 @@ Loic Mathaud (bballizlife):
  - translations in the config file (#940)
  - jelix-script createdao should'nt validate fieldname with '-' (#980)
 
+Vincent Morel (aka dantahoua)
+
 Alexis Métaireau
  - improvements on jtpl plugin formcontrol (#652)
  - added jResponseHtml::addLink(#657)
