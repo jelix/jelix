@@ -773,7 +773,8 @@ class UTCreateUrls extends UnitTestCase {
         $req = jApp::coord()->request = new jClassicRequest();
         $req->init();
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
-        
+        $req->getModuleAction();
+
         $url = jUrl::getCurrentUrl(false, false);
         $this->assertEqual('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
 
@@ -810,11 +811,13 @@ class UTCreateUrls extends UnitTestCase {
         $req = jApp::coord()->request = new jClassicRequest();
         $req->init();
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
+        $req->getModuleAction();
 
         $url = jUrl::getCurrentUrl(false, false);
         $this->assertEqual('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
         $this->assertEqual('http://testapp.local/zip/yo/?foo=bar', $url);
+
     }
 }
