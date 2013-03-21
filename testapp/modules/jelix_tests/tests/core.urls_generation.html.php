@@ -651,11 +651,11 @@ class UTCreateUrls extends UnitTestCase {
         );
 
         jUrl::getEngine(true);
-
         $gJCoord->request = new jClassicRequest();
         $gJCoord->request->init();
         $gJCoord->request->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
-        
+        $gJCoord->request->getModuleAction();
+
         $url = jUrl::getCurrentUrl(false, false);
         $this->assertEqual('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
 
@@ -692,11 +692,13 @@ class UTCreateUrls extends UnitTestCase {
         $gJCoord->request = new jClassicRequest();
         $gJCoord->request->init();
         $gJCoord->request->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
+        $gJCoord->request->getModuleAction();
 
         $url = jUrl::getCurrentUrl(false, false);
         $this->assertEqual('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
         $this->assertEqual('http://testapp.local/zip/yo/?foo=bar', $url);
+
     }
 }
