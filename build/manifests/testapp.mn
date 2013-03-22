@@ -229,7 +229,6 @@ cd testapp/modules/jelix_tests/forms
 cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
   core.urls_generation.html.php
-  core.urls_parsing.html_cli.php
   jdao.factory_base.html_cli.php
   test1.pu.php
   test2.unit.pu.php
@@ -299,6 +298,7 @@ cd testapp/tests-jelix/jelix/core/
   restcontrollerTest.php
   selectors_actionTest.php
   selectors_moduleTest.php
+  urlsParsingTest.php
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php

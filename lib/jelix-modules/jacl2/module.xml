@@ -14,6 +14,8 @@
     </dependencies>
     <autoload>
         <class name="jAcl2" file="classes/jAcl2.class.php" />
+#ifnot ENABLE_PHP_JELIX
         <class name="jIAcl2Driver" file="classes/jIAcl2Driver.iface.php" />
+#endif
     </autoload>
 </module>

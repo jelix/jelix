@@ -14,10 +14,11 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldParams;
     protected $oldRequestType;
     protected $oldserver;
-    protected $oldConfig;
+    protected $oldReq;
 
     function setUp() {
       $req = jApp::coord()->request;
+      $this->oldReq = $req = jApp::coord()->request;
       $this->oldUrlScriptPath = $req->urlScriptPath;
       $this->oldParams = $req->params;
       $this->oldRequestType = $req->type;
@@ -26,7 +27,7 @@ class UTCreateUrls extends UnitTestCase {
     }
 
     function tearDown() {
-      $req = jApp::coord()->request;
+      $req = jApp::coord()->request = $this->oldReq;
       $req->urlScriptPath = $this->oldUrlScriptPath;
       $req->params = $this->oldParams;
       $req->type = $this->oldRequestType;
@@ -732,5 +733,91 @@ class UTCreateUrls extends UnitTestCase {
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
         $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+    }
+
+    function testGetCurrentUrl() {
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'], $url);
+
+        $_SERVER['PATH_INFO'] = '/zip/yo/';
+        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_PORT'] = '80';
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->urlengine = array(
+          'engine'=>'basic_significant',
+          'enableParser'=>true,
+          'multiview'=>false,
+          'basePath'=>'/',
+          'backendBasePath'=>'/',
+          'scriptNameServerVariable'=>'SCRIPT_NAME',
+          'defaultEntrypoint'=>'index',
+          'entrypointExtension'=>'.php',
+          'notfoundAct'=>'jelix~error:notfound',
+          'pathInfoInQueryParameter'=>'',
+          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+          'significantFile'=>'urls.xml',
+          'urlScript'=>'/noep.php',
+          'urlScriptPath'=>'/',
+          'urlScriptName'=>'noep.php',
+          'urlScriptId'=>'noep',
+          'urlScriptIdenc'=>'noep',
+          'documentRoot'=>$conf->urlengine['documentRoot'],
+          'checkHttpsOnParsing'=>true,
+          'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
+          'jqueryPath' =>$conf->urlengine['jqueryPath'],
+        );
+
+        jUrl::getEngine(true);
+
+        $req = jApp::coord()->request = new jClassicRequest();
+        $req->init();
+        $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
+        $req->getModuleAction();
+
+        $url = jUrl::getCurrentUrl(false, false);
+        $this->assertEqual('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://testapp.local/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->urlengine = array(
+          'engine'=>'significant',
+          'enableParser'=>true,
+          'multiview'=>true,
+          'basePath'=>'/',
+          'backendBasePath'=>'/',
+          'scriptNameServerVariable'=>'SCRIPT_NAME',
+          'defaultEntrypoint'=>'index',
+          'entrypointExtension'=>'.php',
+          'notfoundAct'=>'jelix~error:notfound',
+          'pathInfoInQueryParameter'=>'',
+          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+          'significantFile'=>'urls.xml',
+          'urlScript'=>'/noep.php',
+          'urlScriptPath'=>'/',
+          'urlScriptName'=>'noep.php',
+          'urlScriptId'=>'noep',
+          'urlScriptIdenc'=>'noep',
+          'documentRoot'=>$conf->urlengine['documentRoot'],
+          'checkHttpsOnParsing'=>true,
+          'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
+          'jqueryPath' =>$conf->urlengine['jqueryPath'],
+        );
+        jUrl::getEngine(true);
+
+        $req = jApp::coord()->request = new jClassicRequest();
+        $req->init();
+        $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
+        $req->getModuleAction();
+
+        $url = jUrl::getCurrentUrl(false, false);
+        $this->assertEqual('/zip/yo/?foo=bar', $url);
+
+        $url = jUrl::getCurrentUrl(false, true);
+        $this->assertEqual('http://testapp.local/zip/yo/?foo=bar', $url);
+
     }
 }

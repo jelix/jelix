@@ -22,6 +22,7 @@ class sessionConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInt
 
         $config->sessions['_class_to_load'] = array();
         if ($config->sessions['loadClasses'] != '') {
+            trigger_error("Configuration: loadClasses is deprecated, use instead autoload configuration in module.xml files", E_USER_NOTICE);
             $list = preg_split('/ *, */',$config->sessions['loadClasses']);
             foreach($list as $sel) {
                 if(preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_\.\\/]+)$/", $sel, $m)){

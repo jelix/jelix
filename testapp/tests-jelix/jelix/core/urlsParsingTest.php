@@ -6,11 +6,10 @@
 * @contributor Thibault Piront (nuKs)
 * @copyright   2005-2009 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
-
-
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
 require_once(JELIX_LIB_PATH.'plugins/urls/significant/significant.urls.php');
 
 class UTParseUrlsIncluder extends jIncluder {
@@ -24,35 +23,17 @@ class UTParseUrlsIncluder extends jIncluder {
 }
 
 
-class UTParseUrls extends UnitTestCase {
-    protected $oldUrlScriptPath;
-    protected $oldParams;
-    protected $oldRequestType;
-    protected $oldUrlengineConf;
-    protected $backupLocale;
-    protected $simple_urlengine_entrypoints;
+class UTParseUrls extends jUnitTestCase {
 
     function setUp() {
-
-      $req = jApp::coord()->request;
-      $this->oldUrlScriptPath = $req->urlScriptPath;
-      $this->oldParams = $req->params;
-      $this->oldRequestType = $req->type;
-      $this->backupLocale = jApp::config()->locale;
-      $this->oldUrlengineConf = jApp::config()->urlengine;
-      $this->simple_urlengine_entrypoints = jApp::config()->simple_urlengine_entrypoints;
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
     }
-
+    
     function tearDown() {
-      $req = jApp::coord()->request;
-      $req->urlScriptPath = $this->oldUrlScriptPath;
-      $req->params = $this->oldParams;
-      $req->type = $this->oldRequestType;
-
-      jApp::config()->locale = $this->backupLocale;
-      jApp::config()->urlengine = $this->oldUrlengineConf;
-      jApp::config()->simple_urlengine_entrypoints = $this->simple_urlengine_entrypoints;
-      jUrl::getEngine(true);
+        jApp::popCurrentModule();
+        jUrl::getEngine(true);
     }
 
     function testSignificantEngine() {
@@ -175,7 +156,7 @@ class UTParseUrls extends UnitTestCase {
       $p = $url->params;
       ksort($p);
 
-      $this->assertEqual($expected, $p);
+      $this->assertEquals($expected, $p);
 
       $config->urlengine['checkHttpsOnParsing'] = false;
       UTParseUrlsIncluder::resetUrlCache();
@@ -183,11 +164,11 @@ class UTParseUrls extends UnitTestCase {
 
       // the dot should be escaped in the regular expression
       $url = jUrl::parse ("index.php", "/hello.html",array());
-      $this->assertEqual($url->params['module'], 'jelix_tests');
-      $this->assertEqual($url->params['action'], 'urlsig:url31');
+      $this->assertEquals($url->params['module'], 'jelix_tests');
+      $this->assertEquals($url->params['action'], 'urlsig:url31');
       $url = jUrl::parse ("index.php", "/helloUhtml",array());
-      $this->assertEqual($url->params['module'], 'jelix');
-      $this->assertEqual($url->params['action'], 'default:notfound');
+      $this->assertEquals($url->params['module'], 'jelix');
+      $this->assertEquals($url->params['action'], 'default:notfound');
 
       //$this->sendMessage("significant, multiview = true");
       $config->urlengine['multiview']=true;
@@ -291,8 +272,8 @@ class UTParseUrls extends UnitTestCase {
             $p = $url->params;
             ksort($p);
             ksort($resultList[$k][1]);
-            $this->assertEqual($p, $resultList[$k][1], 'test '.$k. ' - %s');
-            $this->assertEqual(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+            $this->assertEquals($p, $resultList[$k][1], 'test '.$k. ' - %s');
+            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
         }
 
         $config->urlengine['checkHttpsOnParsing'] = true;
@@ -318,8 +299,8 @@ class UTParseUrls extends UnitTestCase {
             $p = $url->params;
             ksort($p);
             ksort($resultList[$k][1]);
-            $this->assertEqual($p, $resultList[$k][1], 'test '.$k. ' - %s');
-            $this->assertEqual(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+            $this->assertEquals($p, $resultList[$k][1], 'test '.$k. ' - %s');
+            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
         }
     }
 
