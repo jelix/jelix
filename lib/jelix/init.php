@@ -129,6 +129,7 @@ require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLog.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
+require (JELIX_LIB_CORE_PATH . 'jProjectxml.class.php');
 #endif
 
 /**
