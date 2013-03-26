@@ -11,6 +11,7 @@
  * @contributor Christophe Thiriot
  * @contributor Yannick Le Guédart
  * @contributor Steven Jehannet, Didier Huguet
+ * @contributor Philippe Villiers
  * @copyright   2005-2011 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
@@ -20,6 +21,7 @@
  * @copyright   2009 Christophe Thiriot
  * @copyright   2010 Yannick Le Guédart
  * @copyright   2010 Steven Jehannet, 2010 Didier Huguet
+ * @copyright   2013 Philippe Villiers
  * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -422,10 +424,23 @@ abstract class jDaoFactoryBase  {
 
             $prop=$fields[$cond['field_id']];
 
-            if($forSelect)
-                $prefixNoCondition = $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName']);
-            else
-                $prefixNoCondition = $this->_conn->encloseName($prop['fieldName']);
+            // Check if pattern is set
+            $pattern = isset($cond['field_pattern']) ? $cond['field_pattern'] : '%s';
+
+            if($forSelect) {
+                if($pattern == '%s' || empty($pattern)) {
+                    $prefixNoCondition = $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName']);
+                } else {
+                    $prefixNoCondition = str_replace(array("'", "%s"), array("\\'", $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName'])), $pattern); 
+                }
+            }
+            else {
+                if($pattern == '%s' || empty($pattern)) {
+                    $prefixNoCondition = $this->_conn->encloseName($prop['fieldName']);
+                } else {
+                    $prefixNoCondition = str_replace(array("'", "%s"), array("\\'", $this->_conn->encloseName($prop['fieldName'])), $pattern);
+                } 
+            }
 
             $op = strtoupper($cond['operator']);
             $prefix = $prefixNoCondition.' '.$op.' '; // ' ' for LIKE
