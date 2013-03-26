@@ -431,14 +431,14 @@ abstract class jDaoFactoryBase  {
                 if($pattern == '%s' || empty($pattern)) {
                     $prefixNoCondition = $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName']);
                 } else {
-                    $prefixNoCondition = str_replace(array("'", "%s"), array("\\'", $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName'])), $pattern); 
+                    $prefixNoCondition = str_replace("%s", $this->_conn->encloseName($this->_tables[$prop['table']]['name']).'.'.$this->_conn->encloseName($prop['fieldName']), $pattern);
                 }
             }
             else {
                 if($pattern == '%s' || empty($pattern)) {
                     $prefixNoCondition = $this->_conn->encloseName($prop['fieldName']);
                 } else {
-                    $prefixNoCondition = str_replace(array("'", "%s"), array("\\'", $this->_conn->encloseName($prop['fieldName'])), $pattern);
+                    $prefixNoCondition = str_replace("%s", $this->_conn->encloseName($prop['fieldName']), $pattern);
                 } 
             }
 
