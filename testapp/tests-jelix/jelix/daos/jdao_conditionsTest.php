@@ -54,7 +54,7 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
 
             $cond=new jDaoConditions();
-            $cond->addCondition('foo', '=', 'toto', false);
+            $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)');
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
@@ -62,7 +62,41 @@ class jDao_ConditionsTest extends jUnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+            </object>';
+
+
+            $cond=new jDaoConditions();
+            $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)', false);
+
+            $check='<?xml version="1.0"?>
+            <object class="jDaoConditions">
+                <array p="order">array()</array>
+                <boolean m="isEmpty()" value="false" />
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+            </object>';
+
+            $this->assertComplexIdenticalStr($cond, $check);
+
+
+            $cond=new jDaoConditions();
+            $cond->addCondition('foo', '=', 'toto', '%s', false);
+
+            $check='<?xml version="1.0"?>
+            <object class="jDaoConditions">
+                <array p="order">array()</array>
+                <boolean m="isEmpty()" value="false" />
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"%s","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -81,13 +115,59 @@ class jDao_ConditionsTest extends jUnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"%s","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">array(
-                             array("field_id"=>"foo1","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
-                             array("field_id"=>"foo1","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
+                             array("field_id"=>"foo1","field_pattern"=>"%s","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
+                             array("field_id"=>"foo1","field_pattern"=>"%s","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
+                            <array p="group">array()</array>
+                            <string p="glueOp" value="OR"/>
+                        </object>
+                    </array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+            </object>';
+
+            $this->assertComplexIdenticalStr($cond, $check);
+
+
+            $cond=new jDaoConditions();
+            $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)', false);
+
+            $check='<?xml version="1.0"?>
+            <object class="jDaoConditions">
+                <array p="order">array()</array>
+                <boolean m="isEmpty()" value="false" />
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+            </object>';
+
+            $this->assertComplexIdenticalStr($cond, $check);
+
+
+            $cond->startGroup('OR');
+            $cond->addCondition('foo1', '<', '100', 'ROUND(%s)');
+            $cond->addCondition('foo1', '>', '0', 'CEIL(%s)');
+            $cond->endGroup ();
+            $check='<?xml version="1.0"?>
+            <object class="jDaoConditions">
+                <array p="order">array()</array>
+                <boolean m="isEmpty()" value="false" />
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">
+                        <object p="condition" class="jDaoCondition">
+                            <object p="parent" class="jDaoCondition" />
+                            <array p="conditions">array(
+                             array("field_id"=>"foo1","field_pattern"=>"ROUND(%s)","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
+                             array("field_id"=>"foo1","field_pattern"=>"CEIL(%s)","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
                             <array p="group">array()</array>
                             <string p="glueOp" value="OR"/>
                         </object>

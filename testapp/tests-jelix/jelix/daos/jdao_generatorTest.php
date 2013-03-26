@@ -270,6 +270,13 @@ class jdao_generatorTest extends jUnitTestCase {
               <in property="name" value="\'foo\',\'bar\',\'baz\'" />
            </conditions>
         </method>
+        <method name="method15" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+           </conditions>
+        </method>
     </factory>
 </dao>';
         $parser = new jDaoParser ($this->_selector);
@@ -370,6 +377,10 @@ class jdao_generatorTest extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method14']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method14']->getParameters(), true);
         $this->assertEquals(' `grp`.`name` IN (\\\'foo\\\',\\\'bar\\\',\\\'baz\\\')',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method15']->getParameters(), true);
+        $this->assertEquals(' `grp`.`grouptype` = 2 AND TOUPPER(`grp`.`name`) = TOUPPER(\'.$this->_conn->quote($login).\')',$where);
     }
 
     function testBuildSQLConditionWithPattern(){
@@ -417,6 +428,15 @@ class jdao_generatorTest extends jUnitTestCase {
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
+
+        <method name="method15" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+              <like property="grouptype" expr="$login" />
+           </conditions>
+        </method>
     </factory>
 </dao>';
         $parser = new jDaoParser ($this->_selector);
@@ -453,6 +473,10 @@ class jdao_generatorTest extends jUnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method9']->getParameters(), false);
         $this->assertEquals(' `grouptype` = 2 AND `name` = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
+                                                $methods['method15']->getParameters(), false);
+        $this->assertEquals(' `grouptype` = 2 AND TOUPPER(`name`) = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
     }
 

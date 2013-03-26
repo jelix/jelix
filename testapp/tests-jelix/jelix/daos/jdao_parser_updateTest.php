@@ -131,8 +131,44 @@ class jdao_parser_updateTest extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="group">array()</array>
+                    <string p="glueOp" value="AND"/>
+                </object>
+                <array p="order">array()</array>
+            </object>
+            <array m="getParameters ()">array()</array>
+            <array m="getParametersDefaultValues ()">array()</array>
+            <null m="getLimit ()"/>
+            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <null m="getProcStock ()"/>
+            <null m="getBody ()"/>
+        </object>'),
+       
+        array('<?xml version="1.0"?>
+          <method name="foo" type="update">
+            <values>
+                <value property="subject" value="my text" />
+            </values>
+            <conditions>
+                <eq property="subject" pattern="CONCAT(%s, \'b\')" value="bar" />
+                <eq property="texte" pattern="LOWER(%s)" value="machine" />
+            </conditions>
+          </method>',
+        '<?xml version="1.0"?>
+        <object>
+            <string p="name" value="foo"/>
+            <string p="type" value="update"/>
+            <boolean p="distinct" value="false"/>
+            <boolean p="eventBeforeEnabled" value="false"/>
+            <boolean p="eventAfterEnabled" value="false"/>
+            <object m="getConditions()" class="jDaoConditions">
+                <object p="condition" class="jDaoCondition">
+                    <null p="parent" />
+                    <array p="conditions">array(
+                     array("field_id"=>"subject","field_pattern"=>"CONCAT(%s, \'b\')","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","field_pattern"=>"LOWER(%s)","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -236,9 +272,9 @@ class jdao_parser_updateTest extends jUnitTestCase {
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
                 $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
-            }catch(Exception $e){
+            }/*catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
-            }
+            }*/
         }
     }
 
