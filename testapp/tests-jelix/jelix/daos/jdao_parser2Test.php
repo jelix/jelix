@@ -153,8 +153,8 @@ class jdao_parser2Test extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -186,8 +186,8 @@ class jdao_parser2Test extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="OR"/>
                 </object>
@@ -233,21 +233,21 @@ class jdao_parser2Test extends jUnitTestCase {
                         <object p="condition" class="jDaoCondition">
                             <notnull p="parent" />
                             <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                            array("field_id"=>"texte","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
+                            array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
+                            array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
                             <array p="group">array()</array>
                             <string p="glueOp" value="AND"/>
                         </object>
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">array(
-                            array("field_id"=>"subject","value"=>"bar2", "operator"=>"=", "isExpr"=>false))</array>
+                            array("field_id"=>"subject","field_pattern"=>"","value"=>"bar2", "operator"=>"=", "isExpr"=>false))</array>
                             <array p="group">
                                 <object p="condition" class="jDaoCondition">
                                     <notnull p="parent" />
                                     <array p="conditions">array(
-                                    array("field_id"=>"texte","value"=>"machine2", "operator"=>"=", "isExpr"=>false),
-                                    array("field_id"=>"texte","value"=>"truc", "operator"=>"=", "isExpr"=>false))</array>
+                                    array("field_id"=>"texte","field_pattern"=>"","value"=>"machine2", "operator"=>"=", "isExpr"=>false),
+                                    array("field_id"=>"texte","field_pattern"=>"","value"=>"truc", "operator"=>"=", "isExpr"=>false))</array>
                                     <array p="group">array()</array>
                                     <string p="glueOp" value="OR"/>
                                 </object>
@@ -285,8 +285,8 @@ class jdao_parser2Test extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","value"=>"\'machine\'", "operator"=>"=", "isExpr"=>true))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"", "operator"=>"=", "isExpr"=>false),
+                     array("field_id"=>"texte","field_pattern"=>"","value"=>"\'machine\'", "operator"=>"=", "isExpr"=>true))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -318,7 +318,7 @@ class jdao_parser2Test extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -350,7 +350,7 @@ class jdao_parser2Test extends jUnitTestCase {
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
                     <array p="conditions">array(
-                     array("field_id"=>"subject","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
+                     array("field_id"=>"subject","field_pattern"=>"","value"=>"", "operator"=>"=", "isExpr"=>false))</array>
                     <array p="group">array()</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -390,16 +390,16 @@ class jdao_parser2Test extends jUnitTestCase {
         $parser->testParseRecord($doc, new mysqlDbTools(null));
 
         foreach($this->methDatas as $k=>$t){
-            //$this->sendMessage("test good method ".$k);
+            // $this->sendMessage("test good method ".$k);
             $xml= simplexml_load_string($t[0]);
             try{
                 $p = new jDaoMethod($xml, $parser);
                 $this->assertComplexIdenticalStr($p, $t[1]);
             }catch(jDaoXmlException $e){
                 $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
-            }catch(Exception $e){
+            }/*catch(Exception $e){
                 $this->fail("Exception inconnue : ".$e->getMessage());
-            }
+            }*/
         }
     }
 
