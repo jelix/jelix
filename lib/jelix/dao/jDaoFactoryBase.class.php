@@ -301,17 +301,24 @@ abstract class jDaoFactoryBase  {
     final public function countBy($searchcond, $distinct=null) {
         $count = '*';
         $sqlite = false;
+        $oracle = false;
         if ($distinct !== null) {
             $props = static::$_properties;
             if (isset($props[$distinct]))
                 $count = 'DISTINCT '.$this->_tables[$props[$distinct]['table']]['name'].'.'.$props[$distinct]['fieldName'];
             $sqlite = ($this->_conn->dbms == 'sqlite');
         }
+        $oracle = ($this->_conn->dbms == 'oci');
 
-        if (!$sqlite)
-            $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
-        else // specific query for sqlite, which doesn't support COUNT+DISTINCT
+        if (!$sqlite) {
+            if(!$oracle) {
+                $query = 'SELECT COUNT('.$count.') as c '.$this->_fromClause.$this->_whereClause;
+            } else {
+                $query = 'SELECT COUNT('.$count.') as "c" '.$this->_fromClause.$this->_whereClause;
+            }
+        } else { // specific query for sqlite, which doesn't support COUNT+DISTINCT
             $query = 'SELECT COUNT(*) as c FROM (SELECT '.$count.' '.$this->_fromClause.$this->_whereClause;
+        }
 
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
