@@ -136,9 +136,11 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
         // Time when my guests arrive.
         $dt = new jDateTime(2007, 12, 25, 20, 30, 19);
         $this->assertEquals($dt->toString(jDateTime::DB_DFORMAT), "2007-12-25");
-        $this->assertEquals($dt->toString(jDateTime::DB_DTFORMAT),
-            "2007-12-25 20:30:19");
+        $this->assertEquals($dt->toString("Y-m-d"), "2007-12-25");
+        $this->assertEquals($dt->toString(jDateTime::DB_DTFORMAT), "2007-12-25 20:30:19");
+        $this->assertEquals($dt->toString("Y-m-d G:i:s"), "2007-12-25 20:30:19");
         $this->assertEquals($dt->toString(jDateTime::DB_TFORMAT), "20:30:19");
+        $this->assertEquals($dt->toString("G:i:s"), "20:30:19");
         $this->assertEquals($dt->toString(jDateTime::ISO8601_FORMAT),
             "2007-12-25T20:30:19Z");
         $this->assertEquals($dt->toString(jDateTime::TIMESTAMP_FORMAT),
