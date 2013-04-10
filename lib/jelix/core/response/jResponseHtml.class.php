@@ -360,14 +360,14 @@ class jResponseHtml extends jResponseBasicHtml {
     public function addCSSLinkModule ($module, $src, $params=array(), $forIE=false){ 
         $src = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
         if($forIE){
-            if (!isset ($this->_JSIELink[$src])){
+            if (!isset ($this->_CSSIELink[$src])){
                 if (!is_bool($forIE) && !empty($forIE))
                     $params['_ieCondition'] = $forIE;
-                $this->_JSIELink[$src] = $params;
+                $this->_CSSIELink[$src] = $params;
             }
         }else{
-            if (!isset ($this->_JSLink[$src])){
-                $this->_JSLink[$src] = $params;
+            if (!isset ($this->_CSSLink[$src])){
+                $this->_CSSLink[$src] = $params;
             }
         }
     }
@@ -383,14 +383,14 @@ class jResponseHtml extends jResponseBasicHtml {
     public function addCSSThemeLinkModule ($module, $src, $params=array(), $forIE=false){ 
         $src =  $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>'themes/'.jApp::config()->theme.'/'.$src));
         if($forIE){
-            if (!isset ($this->_JSIELink[$src])){
+            if (!isset ($this->_CSSIELink[$src])){
                 if (!is_bool($forIE) && !empty($forIE))
                     $params['_ieCondition'] = $forIE;
-                $this->_JSIELink[$src] = $params;
+                $this->_CSSIELink[$src] = $params;
             }
         }else{
-            if (!isset ($this->_JSLink[$src])){
-                $this->_JSLink[$src] = $params;
+            if (!isset ($this->_CSSLink[$src])){
+                $this->_CSSLink[$src] = $params;
             }
         }
     }  
