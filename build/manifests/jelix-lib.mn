@@ -524,6 +524,8 @@ cd lib/jelix/plugins/db/sqlite3
   sqlite3.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
+  oci.dbconnection.php
+  oci.dbresultset.php
   oci.daobuilder.php
   oci.dbschema.php
   oci.dbtools.php
