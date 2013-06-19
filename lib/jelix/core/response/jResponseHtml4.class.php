@@ -27,13 +27,14 @@ class jResponseHtml4 extends jResponseHtml {
     protected $_strictDoctype = true;
 
     protected function outputDoctype (){
+        $lang = str_replace('_', '-', $this->_lang);
         if($this->_isXhtml){
             echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 '.($this->_strictDoctype?'Strict':'Transitional').'//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-'.($this->_strictDoctype?'strict':'transitional').'.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$this->_lang,'" lang="',$this->_lang,'">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$lang,'" lang="',$lang,'">
 ';
         }else{
             echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01'.($this->_strictDoctype?'':' Transitional').'//EN" "http://www.w3.org/TR/html4/'.($this->_strictDoctype?'strict':'loose').'.dtd">', "\n";
-            echo '<html lang="',$this->_lang,'">';
+            echo '<html lang="',$lang,'">';
         }
     }
  
