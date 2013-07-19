@@ -60,6 +60,11 @@ interface WidgetInterface {
     public function outputControl();
 
     /**
+     * displays the value of the form field only
+     */
+    public function outputControlValue();
+
+    /**
      * set attributes to add on the HTML element
      * @param array $attributes
      */

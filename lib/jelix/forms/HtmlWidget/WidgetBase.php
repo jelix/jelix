@@ -121,7 +121,18 @@ abstract class WidgetBase implements WidgetInterface {
 
         return $attr;
     }
-    
+
+    protected function getValueAttributes(){
+        $attr = $this->attributes;
+        $attr['id'] = $this->getId();
+        $class = 'jforms-value jforms-value-'.$this->ctrl->type;
+        if (isset($attr['class']))
+            $attr['class'] .= ' '.$class;
+        else
+            $attr['class'] = $class;
+        return $attr;
+    }
+
     protected function commonJs() {
         $jsContent = '';
         if ($this->ctrl->isReadOnly()) {
@@ -197,6 +208,21 @@ abstract class WidgetBase implements WidgetInterface {
     // if this method is abstract, fatal error with PHP 5.3.3 (debian squeeze)
     // FIXME PHP54 : this function can be abstracted
     public function outputControl(){}
+
+
+    public function outputControlValue(){
+        $attr = $this->getValueAttributes();
+        echo '<span ';
+        $this->_outputAttr($attr);
+        echo '>';
+        $value = $this->getValue();
+        $value = $this->ctrl->getDisplayValue($value);
+        if ($this->ctrl->isHtmlContent())
+            echo $value;
+        else
+            echo htmlspecialchars($value);
+        echo '</span>';
+    }
 
     protected function fillSelect($ctrl, $value) {
         $data = $ctrl->datasource->getData($this->builder->getForm());

@@ -248,6 +248,13 @@ class HtmlBuilder extends BuilderBase {
         $widget->outputHelp();
     }
 
+    public function outputControlValue($ctrl, $attributes=array()){
+        if($ctrl->type == 'hidden') return;
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        $widget->setAttributes($attributes);
+        $widget->outputControlValue();
+    }
+
     protected function _outputAttr(&$attributes) {
         foreach($attributes as $name=>$val) {
             echo ' '.$name.'="'.htmlspecialchars($val).'"';

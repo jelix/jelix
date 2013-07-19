@@ -49,21 +49,29 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         return;
     }
 
-    if(!$tpl->_privateVars['__form']->isActivated($ctrlname))
+    $form = $tpl->_privateVars['__form'];
+    if(!$form->isActivated($ctrlname))
         return;
+    $c = 'jFormsBuilderBase';
 
-    $value = $tpl->_privateVars['__form']->getData($ctrlname);
-    $value = $ctrl->getDisplayValue($value);
-    if(is_array($value)){
-        $s ='';
-        foreach($value as $v){
-            $s.=$sep.htmlspecialchars($v);
-        }
-        echo substr($s, strlen($sep));
-    }elseif($ctrl->isHtmlContent())
-        echo $value;
-    else if($ctrl->type == 'textarea')
-        echo nl2br(htmlspecialchars($value));
-    else
-        echo htmlspecialchars($value);
+    if ($form instanceof $c || !$insideForm) {
+        $value = $tpl->_privateVars['__form']->getData($ctrlname);
+        $value = $ctrl->getDisplayValue($value);
+        if(is_array($value)){
+            $s ='';
+            foreach($value as $v){
+                $s.=$sep.htmlspecialchars($v);
+            }
+            echo substr($s, strlen($sep));
+        }elseif($ctrl->isHtmlContent())
+            echo $value;
+        else if($ctrl->type == 'textarea')
+            echo nl2br(htmlspecialchars($value));
+        else
+            echo htmlspecialchars($value);
+    }
+    else {
+        $tpl->_privateVars['__formbuilder']->outputControlValue($ctrl, (is_array($sep)?$sep:array()));
+    }
+
 }
