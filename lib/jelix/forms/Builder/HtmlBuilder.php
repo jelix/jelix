@@ -234,10 +234,10 @@ class HtmlBuilder extends BuilderBase {
         return $plugin;
     }
 
-    public function outputControlLabel($ctrl){
+    public function outputControlLabel($ctrl, $editMode=true){
         if($ctrl->type == 'hidden' || $ctrl->type == 'group' || $ctrl->type == 'button') return;
         $widget = $this->getWidget($ctrl, $this->rootWidget);
-        $widget->outputLabel();
+        $widget->outputLabel($editMode);
     }
 
     public function outputControl($ctrl, $attributes=array()){

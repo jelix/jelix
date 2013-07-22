@@ -20,31 +20,33 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
-    if($ctrlname =='') {
+
+    if ($ctrlname =='') {
         $ctrl=$tpl->_privateVars['__ctrl'];
-    }else{
+    }
+    else {
         $ctrls = $tpl->_privateVars['__form']->getControls();
         if (!isset($ctrls[$ctrlname])) {
             throw new jException('jelix~formserr.unknown.control',
                 array($ctrlname, $tpl->_privateVars['__form']->getSelector(),$tpl->_templateName));
         }
-        $ctrl=$ctrls[$ctrlname];
+        $ctrl = $ctrls[$ctrlname];
     }
+
     if ($ctrl->type == 'hidden')
         return;
 
     if(!$tpl->_privateVars['__form']->isActivated($ctrl->ref)) return;
 
-    // if _formbuilder exists, we are inside a {form} (so it displays a form)
-    // else we are inside a {formdata}
-    if(isset($tpl->_privateVars['__formbuilder'])){
-        if($ctrl->type == 'submit' || $ctrl->type == 'reset')
+    $editMode = !(isset ($t->_privateVars['__formViewMode']) && $t->_privateVars['__formViewMode']);
+
+    if ($editMode) {
+        if ($ctrl->type == 'submit' || $ctrl->type == 'reset')
             return;
-        $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl);
-    }else {
-        if($ctrl->type == 'captcha')
-            return;
-        echo htmlspecialchars($ctrl->label);
     }
+    else if ($ctrl->type == 'captcha') {
+            return;
+    }
+    $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl, $editMode);
 }
 

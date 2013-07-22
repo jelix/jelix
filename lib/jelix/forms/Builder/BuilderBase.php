@@ -125,7 +125,7 @@ abstract class BuilderBase {
      * displays the label corresponding of the given control
      * @param jFormsControl $ctrl the control to display
      */
-    abstract public function outputControlLabel($ctrl);
+    abstract public function outputControlLabel($ctrl, $editMode=true);
 
     /**
      * displays the value of the control (without the control)

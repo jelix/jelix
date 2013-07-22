@@ -22,11 +22,9 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
     }
-    $insideForm = isset($tpl->_privateVars['__formbuilder']);
 
     if($ctrlname =='') {
         $ctrl = $tpl->_privateVars['__ctrl'];
-        $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
         $ctrlname = $tpl->_privateVars['__ctrlref'];
     } else {
         $ctrls = $tpl->_privateVars['__form']->getControls();
@@ -37,24 +35,22 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
         $ctrl = $ctrls[$ctrlname];
     }
 
+    if($ctrl->type == 'hidden' || $ctrl->type == 'captcha' || $ctrl->type == 'reset')
+        return;
+
+    $editMode = !(isset ($t->_privateVars['__formViewMode']) && $t->_privateVars['__formViewMode']);
+    if($ctrl->type == 'submit'  && ($ctrl->standalone || $editMode))
+        return;
+
     $tpl->_privateVars['__displayed_ctrl'][$ctrlname] = true;
-
-    if($ctrl->type == 'hidden' || $ctrl->type == 'captcha')
-        return;
-
-    if($ctrl->type == 'submit'  && ($ctrl->standalone || $insideForm))
-        return;
-
-    if($ctrl->type == 'reset' && $insideForm){
-        return;
-    }
 
     $form = $tpl->_privateVars['__form'];
     if(!$form->isActivated($ctrlname))
         return;
+
     $c = 'jFormsBuilderBase';
 
-    if ($form instanceof $c || !$insideForm) {
+    if ($form instanceof $c) {
         $value = $tpl->_privateVars['__form']->getData($ctrlname);
         $value = $ctrl->getDisplayValue($value);
         if(is_array($value)){
@@ -71,7 +67,7 @@ function jtpl_function_html_ctrl_value($tpl, $ctrlname='', $sep =', '){
             echo htmlspecialchars($value);
     }
     else {
-        $tpl->_privateVars['__formbuilder']->outputControlValue($ctrl, (is_array($sep)?$sep:array()));
+        $tpl->_privateVars['__formbuilder']->outputControlValue($ctrl, (is_array($sep)?$sep:array('separator'=>$sep)));
     }
 
 }

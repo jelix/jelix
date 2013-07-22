@@ -178,4 +178,44 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->parentWidget->addJs("c2.activate('".$value."');\n");
     }
 
+    function outputControlValue() {
+        $ctrl = $this->ctrl;
+        $attr = $this->getValueAttributes();
+        $value = $this->getValue($ctrl);
+        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
+
+        //echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
+        if(is_array($value)){
+            if(isset($value[0]))
+                $value = $value[0];
+            else
+                $value='';
+        }
+
+        $i=0;
+        $attr['name'] = $ctrl->ref;
+        $id = $this->builder->getName().'_'.$ctrl->ref.'_';
+        $attr['type']='radio';
+
+        if (!isset($ctrl->items[$value]) || !$ctrl->isItemActivated($value)) {
+            return;
+        }
+
+        echo '<label>',htmlspecialchars($ctrl->itemsNames[$value]),"</label>\n";
+        $listctrl = $ctrl->items[$value];
+        if (count($listctrl)) {
+            echo "<ul>\n";
+            foreach($listctrl as $ref=>$c) {
+                if(!$this->builder->getForm()->isActivated($ref) || $c->type == 'hidden') continue;
+                $widget = $this->builder->getWidget($c, $this);
+                echo '<li class="jforms-item-controls">';
+                $widget->outputLabel(false);
+                echo ':';
+                $widget->outputControlValue();
+                echo "</li>\n";
+            }
+
+            echo "</ul>\n";
+        }
+    }
 }

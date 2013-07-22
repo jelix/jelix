@@ -25,7 +25,9 @@ function jtpl_block_html_formdata($compiler, $begin, $param=array())
 
     if(!$begin){
         return '
-unset($t->_privateVars[\'__form\']); 
+unset($t->_privateVars[\'__form\']);
+unset($t->_privateVars[\'__formbuilder\']);
+unset($t->_privateVars[\'__formViewMode\']);
 unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
@@ -35,6 +37,8 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
+    $t->_privateVars[\'__formViewMode\'] = 1;
+    $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder('.$builder.');
 $t->_privateVars[\'__displayed_ctrl\'] = array();
 ';
     return $content;

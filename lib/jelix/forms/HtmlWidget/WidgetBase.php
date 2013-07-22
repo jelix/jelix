@@ -39,6 +39,8 @@ abstract class WidgetBase implements WidgetInterface {
      */
     protected $attributes = array();
 
+    protected $valuesSeparator = ' ';
+
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
@@ -83,6 +85,10 @@ abstract class WidgetBase implements WidgetInterface {
     }
     
     public function setAttributes($attr) {
+        if (isset($attr['separator'])) {
+            $this->valuesSeparator = $attr['separator'];
+            unset($attr['separator']);
+        }
         $this->attributes = $attr;
     }
 
@@ -91,17 +97,24 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * Retrieve the label attributes
      */
-    protected function getLabelAttributes() {
+    protected function getLabelAttributes($editMode) {
         $attr = array();
         
         $attr['hint'] = ($this->ctrl->hint == '' ? '' : ' title="'.htmlspecialchars($this->ctrl->hint).'"');
         $attr['idLabel'] = ' id="'.$this->getId().'_label"';
  
-        $required = ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
-        $attr['reqHtml'] = ($required?'<span class="jforms-required-star">*</span>':'');
+        if ($editMode) {
+            $required = ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
+            $attr['reqHtml'] = ($required?'<span class="jforms-required-star">*</span>':'');
+        }
+        else {
+            $attr['reqHtml'] = '';
+        }
         $attr['class'] = 'jforms-label';
         $attr['class'] .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
-        $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');        
+        if ($editMode) {
+            $attr['class'] .= ($this->ctrl->required == false || $this->ctrl->isReadOnly()?'':' jforms-required');
+        }
         return $attr;
     }
 
@@ -190,9 +203,9 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * This function displays the form field label.
      */
-    public function outputLabel() {
+    public function outputLabel($editMode=true) {
         $ctrl = $this->ctrl;
-        $attr = $this->getLabelAttributes();
+        $attr = $this->getLabelAttributes($editMode);
 
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
             echo '<span class="',$attr['class'],'"',$attr['idLabel'],$attr['hint'],'>';
@@ -217,7 +230,13 @@ abstract class WidgetBase implements WidgetInterface {
         echo '>';
         $value = $this->getValue();
         $value = $this->ctrl->getDisplayValue($value);
-        if ($this->ctrl->isHtmlContent())
+        if(is_array($value)){
+            $s ='';
+            foreach($value as $v){
+                $s .= $this->valuesSeparator.htmlspecialchars($v);
+            }
+            echo substr($s, strlen($this->valuesSeparator));
+        }else if ($this->ctrl->isHtmlContent())
             echo $value;
         else
             echo htmlspecialchars($value);
