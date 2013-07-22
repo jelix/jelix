@@ -108,6 +108,20 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval($attributes['maxlength']).');';
             unset($attributes['maxlength']);
         }
+        if(isset($attributes['minvalue'])){
+            if($type != 'integer' && $type != 'decimal' && $type != 'html'  && $type != 'xhtml'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('minvalue','input',$this->sourceFile));
+            }
+            $source[]='$ctrl->datatype->addFacet(\'minValue\','.intval($attributes['minvalue']).');';
+            unset($attributes['minvalue']);
+        }
+        if(isset($attributes['maxvalue'])){
+            if($type != 'integer' && $type != 'decimal' && $type != 'html' && $type != 'xhtml'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('maxvalue','input',$this->sourceFile));
+            }
+            $source[]='$ctrl->datatype->addFacet(\'maxValue\','.intval($attributes['maxvalue']).');';
+            unset($attributes['maxvalue']);
+        }
         $this->readLabel($source, $control, 'input');
         $this->readHelpHintAlert($source, $control);
         $this->attrSize($source, $attributes);
