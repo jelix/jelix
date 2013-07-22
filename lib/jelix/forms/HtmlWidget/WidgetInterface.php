@@ -52,7 +52,7 @@ interface WidgetInterface {
     /**
      * displays the form field label.
      */
-    public function outputLabel($editMode=true);
+    public function outputLabel($format='', $editMode=true);
 
     /**
      * displays the form field itself

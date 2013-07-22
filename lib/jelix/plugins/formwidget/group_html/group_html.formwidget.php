@@ -71,7 +71,7 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             if(!$this->builder->getForm()->isActivated($ctrlref)) continue;
             $widget = $this->builder->getWidget($c, $this);
             echo '<tr><th scope="row">';
-            $widget->outputLabel(false);
+            $widget->outputLabel('', false);
             echo "</th>\n<td>";
             $widget->outputControlValue();
             echo "</td></tr>\n";

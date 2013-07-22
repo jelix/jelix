@@ -15,7 +15,7 @@
  * @param jTpl $tpl template engine
  * @param string $ctrlname  the name of the control to display (required if it is outside a formcontrols)
  */
-function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
+function jtpl_function_html_ctrl_label($tpl, $ctrlname='', $format='')
 {
     if( (!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname =='') {
         return;
@@ -47,6 +47,6 @@ function jtpl_function_html_ctrl_label($tpl, $ctrlname='')
     else if ($ctrl->type == 'captcha') {
             return;
     }
-    $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl, $editMode);
+    $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl, $format, $editMode);
 }
 

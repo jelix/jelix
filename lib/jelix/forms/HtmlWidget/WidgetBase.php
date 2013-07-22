@@ -203,17 +203,21 @@ abstract class WidgetBase implements WidgetInterface {
     /**
      * This function displays the form field label.
      */
-    public function outputLabel($editMode=true) {
+    public function outputLabel($format='', $editMode=true) {
         $ctrl = $this->ctrl;
         $attr = $this->getLabelAttributes($editMode);
+        if ($format)
+            $label = sprintf($format, $this->ctrl->label);
+        else
+            $label = $this->ctrl->label;
 
         if($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'choice'){
             echo '<span class="',$attr['class'],'"',$attr['idLabel'],$attr['hint'],'>';
-            echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
+            echo htmlspecialchars($label), $attr['reqHtml'];
             echo "</span>\n";
         }else if($ctrl->type != 'submit' && $ctrl->type != 'reset'){
             echo '<label class="',$attr['class'],'" for="',$this->getId(),'"',$attr['idLabel'],$attr['hint'],'>';
-            echo htmlspecialchars($this->ctrl->label), $attr['reqHtml'];
+            echo htmlspecialchars($label), $attr['reqHtml'];
             echo "</label>\n";
         }
     }

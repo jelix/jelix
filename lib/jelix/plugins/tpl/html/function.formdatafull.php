@@ -38,7 +38,7 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $option
         }
         else {
             echo '<tr><th scope="row" valign="top">';
-            $formfullBuilder->outputControlLabel($ctrl, false);
+            $formfullBuilder->outputControlLabel($ctrl, '', false);
             echo '</th>';
             echo '<td>';
             $formfullBuilder->outputControlValue($ctrl);
