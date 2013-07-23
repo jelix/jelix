@@ -357,12 +357,10 @@ class jFormsCompiler_jf_1_0  {
             throw new jException('jelix~formserr.tag.missing',array('label',$controltype,$this->sourceFile));
         }
         if(isset($control->label['locale'])){
-            $label='';
             $labellocale=(string)$control->label['locale'];
             $source[]='$ctrl->label=jLocale::get(\''.$labellocale.'\');';
         }else{
             $label=(string)$control->label;
-            $labellocale='';
             $source[]='$ctrl->label=\''.str_replace("'","\\'",$label).'\';';
         }
     }

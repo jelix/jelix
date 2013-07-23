@@ -29,6 +29,8 @@
             <label>Are you a geek ?</label>
             <help>A geek is a person which is extremely keen on computer science</help>
             <hint>Check the box if you are a geek</hint>
+            <oncheckvalue label="yes" />
+            <onuncheckvalue label="no" />
         </checkbox>
     </group>
 

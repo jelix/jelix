@@ -699,6 +699,7 @@ cd lib/jelix/plugins/tpl/html
   function.breadcrumb.php
   function.ctrl_control.php
   function.ctrl_label.php
+  function.ctrl_rawvalue.php
   function.ctrl_value.php
   function.diff.php
   function.formdatafull.php
