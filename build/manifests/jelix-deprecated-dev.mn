@@ -42,6 +42,10 @@ cd lib/jelix-scripts/templates/var/config/
    dbprofils.ini.php.tpl
    kvprofiles.ini.php.tpl
    cache.ini.php.tpl
+   defaultconfig.ini.php.tpl
+
+cd lib/jelix-scripts/templates/www/
+  rdf.php.tpl
 
 cd lib/jelix-modules/junittests/install
   application-cli.init.php
@@ -52,3 +56,6 @@ cd lib/simpletest/test
   parser_test.php
   real_sites_test.php
   test_groups.php
+  reflection_php4_test.php
+cd lib/simpletest/extensions
+  junit
