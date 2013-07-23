@@ -88,10 +88,10 @@ class jFormsControlCheckbox extends jFormsControl {
 
     function getDisplayValue($value){
         if ($value == $this->valueOnCheck) {
-            return ($this->valueLabelOnCheck === ''?$this->valueLabelOnCheck:$value);
+            return ($this->valueLabelOnCheck !== ''?$this->valueLabelOnCheck:$value);
         }
         else {
-            return ($this->valueLabelOnUncheck === ''?$this->valueLabelOnUncheck:$value);
+            return ($this->valueLabelOnUncheck !== ''?$this->valueLabelOnUncheck:$value);
         }
         return $value;
     }
