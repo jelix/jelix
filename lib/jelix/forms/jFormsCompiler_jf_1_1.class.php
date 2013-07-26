@@ -90,6 +90,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         $this->attrReadOnly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'date');
+        $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);
         if(isset($attributes['mindate'])){
             $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mindate'].'\');';
@@ -111,6 +112,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         $this->attrReadOnly($source, $attributes);
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'datetime');
+        $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);
         if(isset($attributes['mindate'])){
             $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mindate'].'\');';
@@ -158,6 +160,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             unset($attributes['maxlength']);
         }
         $this->readLabel($source, $control, 'textarea');
+        $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);
         if (isset($attributes['rows'])) {
             $rows = intval($attributes['rows']);
@@ -253,6 +256,8 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
     protected function generateChoice(&$source, $control, &$attributes) {
         $this->attrRequired($source, $attributes);
         $this->readLabel($source, $control, 'choice');
+        $this->readEmptyValueLabel($source, $control);
+
         $this->attrReadOnly($source, $attributes);
         $this->readHelpHintAlert($source, $control);
         $source[]='$topctrl = $ctrl;';

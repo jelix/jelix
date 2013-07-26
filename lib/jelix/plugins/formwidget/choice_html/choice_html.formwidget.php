@@ -184,7 +184,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $value = $this->getValue($ctrl);
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        //echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.'" >',"\n";
         if(is_array($value)){
             if(isset($value[0]))
                 $value = $value[0];
@@ -197,11 +196,16 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $id = $this->builder->getName().'_'.$ctrl->ref.'_';
         $attr['type']='radio';
 
-        if (!isset($ctrl->items[$value]) || !$ctrl->isItemActivated($value)) {
+        if (!isset($ctrl->items[$value])) {
+            if (!$ctrl->isItemActivated($value) || $ctrl->emptyValueLabel === null)
+                return;
+            echo '<span ';
+            $this->_outputAttr($attr);
+            echo '>', htmlspecialchars($ctrl->emptyValueLabel), '</span>';
             return;
         }
 
-        echo '<label>',htmlspecialchars($ctrl->itemsNames[$value]),"</label>\n";
+        echo '<label>',htmlspecialchars($value),"</label>\n";
         $listctrl = $ctrl->items[$value];
         if (count($listctrl)) {
             echo "<ul>\n";
