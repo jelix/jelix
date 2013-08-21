@@ -14,36 +14,37 @@ class FsOs implements FileSystemInterface {
     protected $rootPath = '';
 
     function setRootPath($rootPath) {
-        $this->rootPath = $rootPath;
+        $this->rootPath = rtrim($rootPath, '/').'/';
     }
 
     function createDir($dir) {
-        jBuildUtils::createDir($dir);
+        return jBuildUtils::createDir($this->rootPath.$dir);
     }
 
     function copyFile($sourcefile, $targetFile) {
-        if(!copy($sourcefile, $targetFile)){
+        if(!copy($sourcefile, $this->rootPath.$targetFile)){
             return false;
         }
         return true;
     }
 
     function setFileContent($file, $content) {
-        file_put_contents($file, $content);
+        file_put_contents($this->rootPath.$file, $content);
     }
 
     function removeFile($file) {
-        if (!unlink($file))
+        if (!unlink($this->rootPath.$file))
             return false;
         return true;
     }
 
     function removeDir($dir) {
-        if (!file_exists($dir)) {
+        if (!file_exists($this->rootPath.$dir)) {
             //echo "cannot remove $dir. It doesn't exist.\n";
-            return;
+            return false;
         }
-        jBuildUtils::removeDir($dir);
+        jBuildUtils::removeDir($this->rootPath.$dir);
+        return true;
     }
 
 }

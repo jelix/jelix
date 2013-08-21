@@ -13,7 +13,9 @@ class FsGit extends FsHg {
     protected $vcs = 'git';
 
     function removeDir($dir) {
-        if (file_exists($dir))
-            $this->launchCommand("rm -r $dir");
+        if (file_exists($this->rootPath.$dir)) {
+            return $this->launchCommand("rm -r $dir");
+        }
+        return false;
     }
 }
