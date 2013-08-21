@@ -25,10 +25,7 @@ class jBuildUtils {
     }
 
     static public function normalizeDir($dirpath){
-        if(substr($dirpath,-1) != '/'){
-            $dirpath.='/';
-        }
-        return $dirpath;
+        return rtrim($dirpath, '/').'/';
     }
 
     /**
