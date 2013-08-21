@@ -29,6 +29,7 @@ cd lib/jelix/core/response
   jResponseRdf.class.php
   jResponseLatexToPdf.class.php
   jResponseTcpdf.class.php
+  jResponseSoap.class.php
 
 cd lib/jelix/core-modules/jelix/controllers
   error.xul.php
@@ -182,8 +183,11 @@ cd lib/jelix-www/design/
 cd lib/jelix-www/markitup
   readme.txt
   jquery.markitup.pack.js
+cd lib/jelix-www/jquery/
+  GPL-LICENSE.txt
 rmd lib/jelix-www/jquery/date_input
 cd lib/jelix-www/jquery/ui
+  GPL-LICENSE.txt
   effects.blind.min.js
   effects.bounce.min.js
   effects.core.min.js
