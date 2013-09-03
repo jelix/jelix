@@ -334,7 +334,7 @@ class jConfigCompiler {
      */
     static protected function _loadPluginsPathList($config) {
         $list = preg_split('/ *, */',$config->pluginsPath);
-        array_unshift($list, JELIX_LIB_PATH.'plugins/');
+        array_push($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
