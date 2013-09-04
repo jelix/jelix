@@ -524,6 +524,8 @@ cd lib/jelix/plugins/db/sqlite3
   sqlite3.daobuilder.php
 
 cd lib/jelix/plugins/db/oci
+  oci.dbconnection.php
+  oci.dbresultset.php
   oci.daobuilder.php
   oci.dbschema.php
   oci.dbtools.php
@@ -697,6 +699,7 @@ cd lib/jelix/plugins/tpl/html
   function.breadcrumb.php
   function.ctrl_control.php
   function.ctrl_label.php
+  function.ctrl_rawvalue.php
   function.ctrl_value.php
   function.diff.php
   function.formdatafull.php

@@ -29,6 +29,8 @@
             <label>Are you a geek ?</label>
             <help>A geek is a person which is extremely keen on computer science</help>
             <hint>Check the box if you are a geek</hint>
+            <oncheckvalue label="yes" />
+            <onuncheckvalue label="no" />
         </checkbox>
     </group>
 
@@ -36,6 +38,7 @@
       <datasource dao="testapp~config" method="findAll" labelproperty="cvalue" valueproperty="ckey" />
       <label>Select one value</label>
       <emptyitem>-- choices --</emptyitem>
+      <emptyvaluelabel>no value</emptyvaluelabel>
       <help>Simple test</help>
   </menulist>
 
@@ -98,6 +101,7 @@
         <label>Linked list</label>
       <menulist ref="listdep">
           <label>Departments list</label>
+          <emptyvaluelabel>somewhere in france</emptyvaluelabel>
           <item value="finistere">Finistère</item>
           <item value="touraine">Touraine</item>
           <item value="polynesia">Polynésie</item>
@@ -137,6 +141,7 @@
 
    <choice ref="choice2">
       <label>Another choice</label>
+      <emptyvaluelabel>no choice</emptyvaluelabel>
       <item value="choice1">
           <label>Choice 1</label>
       </item>

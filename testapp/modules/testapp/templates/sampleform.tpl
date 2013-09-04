@@ -30,9 +30,9 @@ myErrorDecorator.prototype = {
 {/literal}
 </script>
 {*, array('errorDecorator'=>'myErrorDecorator')*}
-{form $form,'sampleform:save', array(), $builder, array('plugins'=>array('explanation' => 'date_html'))}
+{form $form,'sampleform:save', array(), $builder, array('plugins'=>array('explanation' => 'input_html'))}
     {formcontrols}
-    <div>{ctrl_label}: {ctrl_control}</div>
+    <div>{ctrl_label '', '%s: '} {ctrl_control}</div>
     {/formcontrols}
 <p>{formreset} {formsubmit}</p>
 {/form}

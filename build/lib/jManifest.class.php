@@ -114,7 +114,7 @@ class jManifest {
                 if($m[1] == 'dd'){
                     // set destination dir
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    $fs->createDir($distdir.$currentdestdir);
+                    $fs->createDir($currentdestdir);
                 }elseif($m[1] == 'sd'){
                     // set source dir
                     $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
@@ -122,7 +122,7 @@ class jManifest {
                     // set source dir and destination dir (same sub path)
                     $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    $fs->createDir($distdir.$currentdestdir);
+                    $fs->createDir($currentdestdir);
                 }else{
                     //
                     $doPreprocessing = (strpos($m[1],'*') !== false);
@@ -134,19 +134,22 @@ class jManifest {
                     if(!isset($m[3]) || $m[3]=='')
                         $m[3]=$m[2];
 
-                    $destfile = $distdir.$currentdestdir.$m[3];
+                    $destfile = $currentdestdir.$m[3];
                     $sourcefile = $sourcedir.$currentsrcdir.$m[2];
 
                     if($doPreprocessing){
                         if($verbose){
-                            echo "process  $sourcefile \tto\t$destfile \n";
+                            echo "process  $sourcefile \tto\t$distdir"."$destfile \n";
                         }
+
                         $preproc->setVars($preprocvars);
+
                         try{
                             $contents = $preproc->parseFile($sourcefile);
                         }catch(Exception $e){
                             throw new Exception ( "$ficlist : line $nbline, cannot process file ".$m[2]." (". $e .")\n");
                         }
+
                         if($doCompression) {
                             if( preg_match("/\.php$/",$destfile)) {
                                 if($verbose) echo "     strip php comment ";
@@ -163,7 +166,7 @@ class jManifest {
 
                     }elseif($doCompression && preg_match("/\.php$/",$destfile)){
                         if($verbose)
-                            echo "strip comment in  $sourcefile\tto\t".$destfile."\n";
+                            echo "strip comment in  $sourcefile\tto\t".$distdir.$destfile."\n";
                         $src = file_get_contents($sourcefile);
                         $fs->setFileContent($destfile, self::stripPhpComments($src));
 
@@ -182,7 +185,7 @@ class jManifest {
                         }
 
                         if($verbose)
-                            echo "convert charset\tsources\t".$sourcedir.$currentsrcdir.$m[2]."   ".$m[3]."\n";
+                            echo "convert charset\tsources\t".$sourcefile."   ".$m[3]."\n";
 
                         $encoding = preg_split('/[\s,]+/', self::$targetPropertiesFilesCharset);
 
@@ -200,7 +203,7 @@ class jManifest {
                         }
                     }else{
                         if($verbose)
-                            echo "copy  ".$sourcedir.$currentsrcdir.$m[2]."\tto\t".$destfile."\n";
+                            echo "copy  ".$sourcefile."\tto\t".$distdir.$destfile."\n";
 
                         if (!$fs->copyFile($sourcefile, $destfile)) {
                             throw new Exception ( "$ficlist : cannot copy file ".$m[2].", line $nbline \n");
@@ -325,22 +328,19 @@ class jManifest {
      * @param string $distpath directory were files are copied
      */
     static public function removeFiles($ficlist, $distpath) {
-
-        $fs = self::getFileSystem($distpath);
-
         $distdir =  jBuildUtils::normalizeDir($distpath);
+
+        $fs = self::getFileSystem($distdir);
 
         $script = file($ficlist);
 
         $currentdestdir = '';
-        $preproc = new jPreProcessor();
 
         foreach($script as $nbline=>$line){
             $nbline++;
             if (preg_match(';^(cd|rmd)?\s+([a-zA-Z0-9\/.\-_]+)\s*$;m', $line, $m)) {
                 if($m[1] == 'rmd'){
-                    $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    $fs->removeDir($distdir.$currentdestdir);
+                    $fs->removeDir(jBuildUtils::normalizeDir($m[2]));
                 }
                 elseif($m[1] == 'cd') {
                     $currentdestdir = jBuildUtils::normalizeDir($m[2]);
@@ -351,10 +351,10 @@ class jManifest {
                         throw new Exception ( "$ficlist : file required on line $nbline \n");
                     }
 
-                    $destfile = $distdir.$currentdestdir.$m[2];
-                    if (!file_exists($destfile)) {
+                    $destfile = $currentdestdir.$m[2];
+                    if (!file_exists($distdir.$destfile)) {
                         if (self::$verbose)
-                            echo "cannot remove $destfile. It doesn't exist.\n";
+                            echo "cannot remove $destfile. It doesn't exist anymore.\n";
                         continue;
                     }
                     if(self::$verbose)

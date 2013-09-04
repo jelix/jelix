@@ -44,6 +44,8 @@ abstract class jFormsControl {
     public $initialReadOnly = false;
     public $initialActivation = true;
 
+    public $emptyValueLabel = null;
+
     protected $form;
     protected $container;
 
@@ -102,6 +104,9 @@ abstract class jFormsControl {
     }
 
     function getDisplayValue($value){
+        if ($value == '' && $this->emptyValueLabel !== null) {
+            return $this->emptyValueLabel;
+        }
         return $value;
     }
 

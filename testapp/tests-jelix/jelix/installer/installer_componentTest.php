@@ -52,7 +52,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     function setUp() {
         self::initJelixConfig();
-        $this->defaultIni = new jIniFileModifier(jApp::configPath().'defaultconfig.ini.php');
+        $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
         jApp::saveContext();
     }
 

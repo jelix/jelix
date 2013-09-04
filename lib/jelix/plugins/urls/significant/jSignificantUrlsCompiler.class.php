@@ -424,13 +424,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     /**
      * extract all dynamic parts of a pathinfo, and read <param> elements
      * @param simpleXmlElement $url the url element
-     * @param string $regexppath  the path info
+     * @param string $path  the path info
      * @param significantUrlInfoParsing $u
      * @return string the correponding regular expression
      */
-    protected function extractDynamicParams($url, $regexppath, $u) {
-        $regexppath = preg_quote($regexppath , '!');
-        if (preg_match_all("/\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
+    protected function extractDynamicParams($url, $pathinfo, $u) {
+        $regexppath = preg_quote($pathinfo , '!');
+        if (preg_match_all("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
 
             // process parameters which are declared in a <param> element
@@ -485,6 +485,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
+        $regexppath = str_replace("\\\\\\:", "\:", $regexppath);
         return $regexppath;
     }
 

@@ -61,6 +61,10 @@ class jApp {
         self::$configPath = (is_null($configPath)?self::$varPath.'config/':$configPath);
         self::$scriptPath = (is_null($scriptPath)?$appPath.'scripts/':$scriptPath);
         self::$_isInit = true;
+        self::$_coord = null;
+        self::$_config = null;
+        self::$configAutoloader = null;
+        self::$_mainConfigFile = null;
     }
 
     /**
@@ -185,7 +189,8 @@ class jApp {
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath,
                                        self::$configPath, self::$wwwPath, self::$scriptPath,
                                        self::$tempBasePath, self::$env, $conf, $coord,
-                                       self::$modulesContext);
+                                       self::$modulesContext, self::$configAutoloader,
+                                       self::$_mainConfigFile);
     }
 
     /**
@@ -196,7 +201,8 @@ class jApp {
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
              self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
-             $conf, self::$_coord, self::$modulesContext) = array_pop(self::$contextBackup);
+             $conf, self::$_coord, self::$modulesContext, self::$configAutoloader,
+            self::$_mainConfigFile) = array_pop(self::$contextBackup);
         self::setConfig($conf);
     }
 

@@ -13,6 +13,6 @@ class FsHg extends FsSvn {
     protected $vcs = 'hg';
 
     function createDir($dir) {
-        jBuildUtils::createDir($dir);
+        return jBuildUtils::createDir($this->rootPath.$dir);
     }
 }

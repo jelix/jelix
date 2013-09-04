@@ -219,7 +219,81 @@ class jDaoImportTest extends jUnitTestCase {
         $this->assertComplexIdenticalStr($postTrackerParser->getProperties(), $properties);
         $this->assertEquals('posts',
                             $postTrackerParser->getPrimaryTable());
+        /*
+             <object key="countOpenPattern" class="jDaoMethod">
+                <string p="name" value="countOpenPattern"/>
+                <string p="type" value="count"/>
+                <boolean p="distinct" value="false"/>
+                <boolean p="eventBeforeEnabled" value="false"/>
+                <boolean p="eventAfterEnabled" value="false"/>
+                <object m="getConditions()" class="jDaoConditions">
+                    <object p="condition" class="jDaoCondition">
+                        <null p="parent" />
+                        <array p="conditions">
+                           <array>
+                            array(\'field_id\' => \'type\',
+                            \'value\' => \'tracker\',
+                            \'operator\' => \'=\',
+                            \'isExpr\' => false,
+                            \'field_pattern\' => \'\')
+                            </array>
+                           <array>
+                            array(\'field_id\' => \'status\',
+                            \'value\' => \'open\',
+                            \'operator\' => \'=\',
+                            \'isExpr\' => false,
+                            \'field_pattern\' => \'LOWER(%s)\')
+                            </array>
+                        </array>
+                        <array p="group">array()</array>
+                    </object>
+                    <array p="order">array()</array>
+                </object>
+                <array m="getParameters ()">array()</array>
+                <array m="getParametersDefaultValues ()">array()</array>
+                <null m="getLimit ()"/>
+                <array m="getValues ()">array()</array>
+                <null m="getProcStock ()"/>
+                <null m="getBody ()"/>
+            </object>
         
+            <object key="findOpenPattern" class="jDaoMethod">
+                <string p="name" value="findOpenPattern"/>
+                <string p="type" value="select"/>
+                <boolean p="distinct" value="false"/>
+                <boolean p="eventBeforeEnabled" value="false"/>
+                <boolean p="eventAfterEnabled" value="false"/>
+                <object m="getConditions()" class="jDaoConditions">
+                    <object p="condition" class="jDaoCondition">
+                        <null p="parent" />
+                        <array p="conditions">
+                           <array>
+                            array(\'field_id\' => \'type\',
+                            \'value\' => \'tracker\',
+                            \'operator\' => \'=\',
+                            \'isExpr\' => false,
+                            \'field_pattern\' => \'\')
+                            </array>
+                           <array>
+                            array(\'field_id\' => \'status\',
+                            \'value\' => \'open\',
+                            \'operator\' => \'=\',
+                            \'isExpr\' => false,
+                            \'field_pattern\' => \'LOWER(%s)\')
+                            </array>
+                        </array>
+                        <array p="group">array()</array>
+                    </object>
+                    <array p="order">array()</array>
+                </object>
+                <array m="getParameters ()">array()</array>
+                <array m="getParametersDefaultValues ()">array()</array>
+                <null m="getLimit ()"/>
+                <array m="getValues ()">array()</array>
+                <null m="getProcStock ()"/>
+                <null m="getBody ()"/>
+            </object>
+        */
         $methods = '<?xml version="1.0"?>
         <array>
             <object key="findAll" class="jDaoMethod">
@@ -287,42 +361,7 @@ class jDaoImportTest extends jUnitTestCase {
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
-            <object key="countOpenPattern" class="jDaoMethod">
-                <string p="name" value="countOpenPattern"/>
-                <string p="type" value="count"/>
-                <boolean p="distinct" value="false"/>
-                <boolean p="eventBeforeEnabled" value="false"/>
-                <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
-                        <null p="parent" />
-                        <array p="conditions">
-                           <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
-                            </array>
-                           <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'LOWER(%s)\')
-                            </array>
-                        </array>
-                        <array p="group">array()</array>
-                    </object>
-                    <array p="order">array()</array>
-                </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
-                <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
-                <null m="getProcStock ()"/>
-                <null m="getBody ()"/>
-            </object>
+            
             <object key="findOpen" class="jDaoMethod">
                 <string p="name" value="findOpen"/>
                 <string p="type" value="select"/>
@@ -359,42 +398,7 @@ class jDaoImportTest extends jUnitTestCase {
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
-            <object key="findOpenPattern" class="jDaoMethod">
-                <string p="name" value="findOpenPattern"/>
-                <string p="type" value="select"/>
-                <boolean p="distinct" value="false"/>
-                <boolean p="eventBeforeEnabled" value="false"/>
-                <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
-                        <null p="parent" />
-                        <array p="conditions">
-                           <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
-                            </array>
-                           <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'LOWER(%s)\')
-                            </array>
-                        </array>
-                        <array p="group">array()</array>
-                    </object>
-                    <array p="order">array()</array>
-                </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
-                <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
-                <null m="getProcStock ()"/>
-                <null m="getBody ()"/>
-            </object>
+            
         </array>';
         $this->assertComplexIdenticalStr($postTrackerParser->getMethods(), $methods);
         $this->assertEquals(array(),
