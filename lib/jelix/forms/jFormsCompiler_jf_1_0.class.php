@@ -109,6 +109,30 @@ class jFormsCompiler_jf_1_0  {
             $source[]='$ctrl->datatype->addFacet(\'maxLength\','.intval($attributes['maxlength']).');';
             unset($attributes['maxlength']);
         }
+        if(isset($attributes['minvalue'])){
+            if($type != 'integer' && $type != 'decimal' && $type != 'html'  && $type != 'xhtml'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('minvalue','input',$this->sourceFile));
+            }
+            // Make sure we don't alter the value if decimal
+            if($type != 'decimal') {
+                $source[]='$ctrl->datatype->addFacet(\'minValue\','.intval($attributes['minvalue']).');';
+            } else {
+                $source[]='$ctrl->datatype->addFacet(\'minValue\','.$attributes['minvalue'].');';
+            }
+            unset($attributes['minvalue']);
+        }
+        if(isset($attributes['maxvalue'])){
+            if($type != 'integer' && $type != 'decimal' && $type != 'html' && $type != 'xhtml'){
+                throw new jException('jelix~formserr.attribute.not.allowed',array('maxvalue','input',$this->sourceFile));
+            }
+            // Make sure we don't alter the value if decimal
+            if($type != 'decimal') {
+                $source[]='$ctrl->datatype->addFacet(\'maxValue\','.intval($attributes['maxvalue']).');';
+            } else {
+                $source[]='$ctrl->datatype->addFacet(\'maxValue\','.$attributes['maxvalue'].');';
+            }
+            unset($attributes['maxvalue']);
+        }
         $this->readLabel($source, $control, 'input');
         $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);

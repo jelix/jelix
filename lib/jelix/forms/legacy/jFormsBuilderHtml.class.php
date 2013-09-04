@@ -333,6 +333,14 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if ($isLocale)
             $this->jsContent .="c.lang='".jApp::config()->locale."';\n";
 
+        $maxv= $ctrl->datatype->getFacet('maxValue');
+        if($maxv !== null)
+            $this->jsContent .="c.maxValue = '$maxv';\n";
+
+        $minv= $ctrl->datatype->getFacet('minValue');
+        if($minv !== null)
+            $this->jsContent .="c.minValue = '$minv';\n";
+
         $maxl= $ctrl->datatype->getFacet('maxLength');
         if($maxl !== null)
             $this->jsContent .="c.maxLength = '$maxl';\n";
