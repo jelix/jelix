@@ -231,7 +231,7 @@ class jConfigCompiler {
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            $p = jFile::parseJelixPath( $path );
             if (!file_exists($p)) {
                 throw new Exception('Error in the configuration file -- The path, '.$path.' given in the jelix config, doesn\'t exist', 10);
             }
@@ -353,7 +353,7 @@ class jConfigCompiler {
                 }
             }
             else {
-                $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+                $p = jFile::parseJelixPath( $path );
             }
             if(!file_exists($p)){
                 trigger_error('Error in main configuration on pluginsPath -- The path, '.$path.' given in the jelix config, doesn\'t exists !',E_USER_ERROR);

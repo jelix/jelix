@@ -360,7 +360,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
-            $p = str_replace(array('lib:','app:'), array(LIB_PATH, jApp::appPath()), $path);
+            $p = jFile::parseJelixPath( $path );
             if (!file_exists($p)) {
                 continue;
             }
