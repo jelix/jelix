@@ -143,6 +143,10 @@ class jConfigCompiler {
     static protected function checkCoordPluginsPath($config) {
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
+            if (strpos($name, '.') !== false)  {
+                $coordplugins[$name] = $conf;
+                continue;
+            }
             if (!isset($config->_pluginsPathList_coord[$name])) {
                 throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin $name is unknown.", 7);
             }
