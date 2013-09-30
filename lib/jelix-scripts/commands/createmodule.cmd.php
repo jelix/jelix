@@ -227,7 +227,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $repositoryFound = false;
         foreach($listRepos as $path){
             if(trim($path) == '') continue;
-            $p = 'sqlite:' . jFile::parseJelixPath( $path );
+            $p = jFile::parseJelixPath( $path );
             if (substr($p,-1) != '/')
                 $p .= '/';
             if ($p == $repositoryPath) {
