@@ -276,7 +276,7 @@ class jInstallCheck {
         }
 
         foreach($this->otherPaths as $path) {
-            $realPath = str_replace(array('app:','lib:','var:', 'www:'), array(jApp::appPath(), LIB_PATH, jApp::varPath(), jApp::wwwPath()), $path);
+            $realPath = jFile::parseJelixPath( $path );
             if (!file_exists($realPath)) {
                 $this->error('path.custom.not.exists', array($path));
                 $ok = false;
