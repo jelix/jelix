@@ -104,6 +104,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
     public function outputMetaContent($resp) {
         foreach( $this->ctrl->getChildControls() as $ctrlref=>$c){
+            if ($c->type == 'hidden') continue;
             $widget = $this->builder->getWidget($c, $this);
             $widget->outputMetaContent($resp);
         }
