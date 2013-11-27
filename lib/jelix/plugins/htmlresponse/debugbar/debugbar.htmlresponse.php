@@ -124,12 +124,8 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * the main content (if any) is already generated.
      */
     public function beforeOutput() {
+        // load plugins
         $plugins = jApp::config()->debugbar['plugins'];
-        $css = "
-#expand ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
-#expand ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
-";
-        $js = '';
         if ($plugins) {
             $plugins = preg_split('/ *, */', $plugins);
             foreach ($plugins as $name) {
@@ -141,22 +137,6 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
                     throw new jException('');*/
             }
         }
-
-        foreach($this->plugins as $name => $plugin) {
-            $css .= $plugin->getCSS();
-            $js .= $plugin->getJavascript();
-        }
-
-        $this->response->addHeadContent('
-<style type="text/css">
-#includeraw debugbar.css
-'.$css.'
-</style>
-<script type="text/javascript">//<![CDATA[
-#includeraw debugbar.js|jspacker|escquote
-'.$js.' //]]>
-</script>
-');
     }
 
     /**
@@ -165,7 +145,24 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
      * directly some contents.
      */
     public function atBottom() {
-
+        $css = "";
+        $js = '';
+        foreach($this->plugins as $name => $plugin) {
+            $css .= $plugin->getCSS();
+            $js .= $plugin->getJavascript();
+        }
+        ?>
+<style type="text/css">
+#includeraw debugbar.css
+#expand ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
+#expand ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
+<?php echo $css ?>
+</style>
+<script type="text/javascript">//<![CDATA[
+#includeraw debugbar.js|jspacker
+<?php echo $js ?> //]]>
+</script>
+        <?php
         foreach($this->plugins as $plugin) {
             $plugin->show($this);
         }
