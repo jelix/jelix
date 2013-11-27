@@ -233,6 +233,8 @@ cd lib/jelix-www/jquery/ui
   ui.tabs.min.js
 cd lib/jelix-www/jquery/ui/i18n
   jquery.ui.i18n.all.js
+  jquery.ui.datepicker-ge.js
+  jquery.ui.datepicker-kz.js
   ui.datepicker-ar.js
   ui.datepicker-bg.js
   ui.datepicker-ca.js
@@ -270,6 +272,9 @@ cd lib/jelix-www/jquery/ui/i18n
   ui.datepicker-zh-TW.js
 cd lib/jelix-www/jquery/themes/smoothness/
   jquery-ui-1.8.2.custom.css
+cd lib/jelix-www/jquery/themes/smoothness/images
+  ui-anim_basic_16x16.gif
+
 rmd lib/jelix-www/jquery/themes/default
 rmd lib/jelix-www/xul
 
