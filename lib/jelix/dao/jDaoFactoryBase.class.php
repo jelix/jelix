@@ -188,7 +188,12 @@ abstract class jDaoFactoryBase  {
      * @return int the count
      */
     public function countAll(){
-        $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
+        $oracle = ($this->_conn->dbms == 'oci');
+        if (!$oracle) {
+            $query = 'SELECT COUNT(*) as c '.$this->_fromClause.$this->_whereClause;
+        } else { // specific query for oracle to make sure the alias has the correct case
+            $query = 'SELECT COUNT(*) as "c" '.$this->_fromClause.$this->_whereClause;
+        }
         $rs  = $this->_conn->query ($query);
         $res = $rs->fetch ();
         return intval($res->c);
