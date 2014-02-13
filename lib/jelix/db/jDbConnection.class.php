@@ -102,6 +102,13 @@ abstract class jDbConnection {
         }
     }
 
+
+    function disconnect() {
+        if ($this->_connection !== null) {
+            $this->_disconnect ();
+        }
+    }
+
     /**
     * Launch a SQL Query which returns rows (typically, a SELECT statement)
     * @param string   $queryString   the SQL query
