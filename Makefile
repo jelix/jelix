@@ -64,8 +64,6 @@ nightlies:
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-gold.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_GOLD
 	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) ./build/config/testapp-dist.ini
 	$(PHP) build/buildjbt.php -D $(DISTPATHSWITCH) ./build/config/jbt-dist.ini
 	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) ./build/config/jtpl-dist.ini
