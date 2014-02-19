@@ -96,7 +96,7 @@ sd lib/simpletest/test/support/collector
   collectable.1
   collectable.2
 
-sd lib/jelix/tpl/tests/
+sd lib/jelix-legacy/tpl/tests/
 dd tests/
    exemple.php
    test.tpl
@@ -104,7 +104,7 @@ dd tests/
    compiler.php
    expressions_parsing.php
 
-sd lib/jelix/tpl/tests/foo/
+sd lib/jelix-legacy/tpl/tests/foo/
 dd tests/foo/
    test.tpl
 
@@ -117,7 +117,7 @@ sd lib/jelix-modules/junittests/classes
 dd tests/simpletest/
    junittestcase.class.php
 
-sd lib/jelix/tpl/tests/
+sd lib/jelix-legacy/tpl/tests/
 dd tests/simpletest/
    myhtmlreporter.class.php
 

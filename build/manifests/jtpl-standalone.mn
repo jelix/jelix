@@ -1,5 +1,5 @@
 dd .
-sd lib/jelix/tpl/
+sd lib/jelix-legacy/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php
    jtpl_standalone_prepend.php
@@ -7,7 +7,7 @@ sd lib/jelix/tpl/
    CREDITS
    LICENCE
 
-sd lib/jelix/plugins/tpl/common
+sd lib/jelix-legacy/plugins/tpl/common
 dd plugins/common
   block.stripws.php
   cfunction.include.php
@@ -35,7 +35,7 @@ dd plugins/common
   modifier.truncate.php
   modifier.wordwrap.php
 
-sd lib/jelix/plugins/tpl/html
+sd lib/jelix-legacy/plugins/tpl/html
 dd plugins/html
   block.swf.php
   cfunction.const.php
@@ -43,21 +43,21 @@ dd plugins/html
   modifier.nl2br.php
   function.image.php
 
-sd lib/jelix/plugins/tpl/text
+sd lib/jelix-legacy/plugins/tpl/text
 dd plugins/text
   cfunction.const.php
 
-sd lib/jelix/plugins/tpl/xml
+sd lib/jelix-legacy/plugins/tpl/xml
 dd plugins/xml
   cfunction.const.php
 
-sd lib/jelix/tpl/locales/
+sd lib/jelix-legacy/tpl/locales/
 dd locales/
   fr.php
   en.php
 
-sd lib/jelix/tpl/temp/
+sd lib/jelix-legacy/tpl/temp/
 dd temp/
 
-sd lib/jelix/tpl/templates/
+sd lib/jelix-legacy/tpl/templates/
 dd templates/

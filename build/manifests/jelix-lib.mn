@@ -3,7 +3,7 @@ cd .
 cd lib
   .htaccess
 
-cd lib/jelix
+cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
 * init.php
@@ -12,7 +12,7 @@ cd lib/jelix
   LICENCE
   VERSION
 
-cd lib/jelix/auth
+cd lib/jelix-legacy/auth
 * jAuth.class.php
   jAuthUser.class.php
   jAuthDummyUser.class.php
@@ -23,12 +23,12 @@ cd lib/jelix/auth
 #endif
   password.php
 
-cd lib/jelix/controllers
+cd lib/jelix-legacy/controllers
   jControllerCmdLine.class.php
 *  jControllerDaoCrud.class.php
 *  jControllerDaoCrudDfk.class.php
 
-cd lib/jelix/core
+cd lib/jelix-legacy/core
   ConfigCompilerPluginInterface.php
 ! defaultconfig.ini.php
   jAutoloader.class.php
@@ -61,7 +61,7 @@ cd lib/jelix/core
 #endif
 ! lang_to_locale.ini.php
 
-cd lib/jelix/core/log/
+cd lib/jelix-legacy/core/log/
   jFileLogger.class.php
   jSyslogLogger.class.php
   jMailLogger.class.php
@@ -70,14 +70,14 @@ cd lib/jelix/core/log/
   jLogMessage.class.php
 #endif
 
-cd lib/jelix/core/request
+cd lib/jelix-legacy/core/request
   jClassicRequest.class.php
 * jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
   jCssRequest.class.php
 
-cd lib/jelix/core/response
+cd lib/jelix-legacy/core/response
   error.en_US.php
   jResponseBinary.class.php
   jResponseBasicHtml.class.php
@@ -100,7 +100,7 @@ cd lib/jelix/core/response
   jResponseSitemap.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
-cd lib/jelix/core/selector
+cd lib/jelix-legacy/core/selector
 * jSelectorAct.class.php
 * jSelectorActFast.class.php
 * jSelectorClass.class.php
@@ -116,20 +116,20 @@ cd lib/jelix/core/selector
   jSelectorZone.class.php
 #endif
 
-cd lib/jelix/core-modules/jelix
+cd lib/jelix-legacy/core-modules/jelix
 *  module.xml
    urls.xml
-cd lib/jelix/core-modules/jelix/controllers
+cd lib/jelix-legacy/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
   jforms.classic.php
   www.classic.php
-cd lib/jelix/core-modules/jelix/daos
+cd lib/jelix-legacy/core-modules/jelix/daos
    jsession.dao.xml
    jcache.dao.xml
-cd lib/jelix/core-modules/jelix/install
+cd lib/jelix-legacy/core-modules/jelix/install
   install.php
   upgrade_to_1.3b2pre.1959_fixmailinimigration.php
   upgrade_to_1.3pre.1753_newlog.php
@@ -139,7 +139,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1919_cmd.php
   upgrade_availablelocales.php
   upgrade_modulejacl2.php
-cd lib/jelix/core-modules/jelix/install/sql
+cd lib/jelix-legacy/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
   install_jsession.schema.sqlite.sql
@@ -147,7 +147,7 @@ cd lib/jelix/core-modules/jelix/install/sql
   install_jcache.schema.pgsql.sql
   install_jcache.schema.sqlite.sql
 
-cd lib/jelix/core-modules/jelix/locales/en_US
+cd lib/jelix-legacy/core-modules/jelix/locales/en_US
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -165,7 +165,7 @@ cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
 
-cd lib/jelix/core-modules/jelix/locales/en_EN
+cd lib/jelix-legacy/core-modules/jelix/locales/en_EN
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -183,7 +183,7 @@ cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
 
-cd lib/jelix/core-modules/jelix/locales/en_GB
+cd lib/jelix-legacy/core-modules/jelix/locales/en_GB
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
@@ -201,7 +201,7 @@ cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
 
-cd lib/jelix/core-modules/jelix/locales/fr_FR
+cd lib/jelix-legacy/core-modules/jelix/locales/fr_FR
 cch jforms.UTF-8.properties(jforms.%charset%.properties)
 cch date_time.UTF-8.properties(date_time.%charset%.properties)
 cch auth.UTF-8.properties(auth.%charset%.properties)
@@ -219,7 +219,7 @@ cch jelix.UTF-8.properties(jelix.%charset%.properties)
 cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
 
-cd lib/jelix/core-modules/jelix/templates
+cd lib/jelix-legacy/core-modules/jelix/templates
   403.html.tpl
   404.html.tpl
   rss20.tpl
@@ -234,16 +234,16 @@ cd lib/jelix/core-modules/jelix/templates
   sitemap.tpl
   sitemapindex.tpl
   check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/en_EN
+cd lib/jelix-legacy/core-modules/jelix/templates/en_EN
   check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/en_US
+cd lib/jelix-legacy/core-modules/jelix/templates/en_US
   check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/fr_FR
+cd lib/jelix-legacy/core-modules/jelix/templates/fr_FR
   check_install.tpl
-cd lib/jelix/core-modules/jelix/zones
+cd lib/jelix-legacy/core-modules/jelix/zones
   check_install.zone.php
 
-cd lib/jelix/dao
+cd lib/jelix-legacy/dao
   jDaoRecordBase.class.php
   jDaoFactoryBase.class.php
   jDao.class.php
@@ -257,7 +257,7 @@ cd lib/jelix/dao
   jDaoXmlException.class.php
 #endif
 
-cd lib/jelix/db
+cd lib/jelix-legacy/db
 * jDb.class.php
   jDbColumn.class.php
   jDbPDOConnection.class.php
@@ -274,10 +274,10 @@ cd lib/jelix/db
 #endif
 
 #if ENABLE_DEVELOPER
-cd lib/jelix/docs
+cd lib/jelix-legacy/docs
   workflow_action.sxd
 
-cd lib/jelix/docs/ns
+cd lib/jelix-legacy/docs/ns
   dao.rng
   events.rng
   item_infos.rng
@@ -291,19 +291,19 @@ cd lib/jelix/docs/ns
   urls.rng
 #endif
 
-cd lib/jelix/events
+cd lib/jelix-legacy/events
 * jEvent.class.php
   jEventCompiler.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jEventListener.class.php
 #endif
 
-cd lib/jelix/FakeServerConf
+cd lib/jelix-legacy/FakeServerConf
   ApacheCGI.php
   ApacheMod.php
   FakeServerConf.php
 
-cd lib/jelix/forms
+cd lib/jelix-legacy/forms
   jForms.class.php
   jFormsBase.class.php
   jFormsCompiler.class.php
@@ -313,22 +313,22 @@ cd lib/jelix/forms
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
 
-cd lib/jelix/forms/Builder
+cd lib/jelix-legacy/forms/Builder
   BuilderBase.php
   HtmlBuilder.php
 
-cd lib/jelix/forms/HtmlWidget
+cd lib/jelix-legacy/forms/HtmlWidget
   ParentWidgetInterface.php
   RootWidget.php
   WidgetBase.php
   WidgetInterface.php
 
-cd lib/jelix/forms/legacy
+cd lib/jelix-legacy/forms/legacy
   jFormsBuilderBase.class.php
   jFormsBuilderHtml.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
-cd lib/jelix/forms/controls
+cd lib/jelix-legacy/forms/controls
   jFormsControlDatasource.class.php
   jFormsControlGroups.class.php
   jFormsControlButton.class.php
@@ -358,7 +358,7 @@ cd lib/jelix/forms/controls
 #endif
 
 
-cd lib/jelix/installer
+cd lib/jelix-legacy/installer
   closed.html
   jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
@@ -376,15 +376,15 @@ cd lib/jelix/installer
   jInstallerModuleInfos.class.php
   jInstallerPlugin.class.php
 
-cd lib/jelix/kvdb
+cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
 
-cd lib/jelix/tpl/
+cd lib/jelix-legacy/tpl/
 *  jTpl.class.php
 *  jTplCompiler.class.php
 
-cd lib/jelix/utils/
+cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jAtom10Reader.class.php
   jAtom10Info.class.php
@@ -424,73 +424,73 @@ cd lib/jelix/utils/
   jZipCreator.class.php
 * jZone.class.php
 
-cd lib/jelix/plugins/auth/ldap
+cd lib/jelix-legacy/plugins/auth/ldap
   ldap.auth.php
-cd lib/jelix/plugins/auth/db
+cd lib/jelix-legacy/plugins/auth/db
   db.auth.php
-cd lib/jelix/plugins/auth/class
+cd lib/jelix-legacy/plugins/auth/class
 * class.auth.php
-cd lib/jelix/plugins/auth/lds
+cd lib/jelix-legacy/plugins/auth/lds
   lds.auth.php
 
-cd lib/jelix/plugins/cache/db
+cd lib/jelix-legacy/plugins/cache/db
   db.cache.php
-cd lib/jelix/plugins/cache/memcache
+cd lib/jelix-legacy/plugins/cache/memcache
   memcache.cache.php
-cd lib/jelix/plugins/cache/memcache22
+cd lib/jelix-legacy/plugins/cache/memcache22
   memcache22.cache.php
 
-cd lib/jelix/plugins/configcompiler/debugbar
+cd lib/jelix-legacy/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
-cd lib/jelix/plugins/configcompiler/locales
+cd lib/jelix-legacy/plugins/configcompiler/locales
   locales.configcompiler.php
-cd lib/jelix/plugins/configcompiler/nsautoloader
+cd lib/jelix-legacy/plugins/configcompiler/nsautoloader
   nsautoloader.configcompiler.php
-cd lib/jelix/plugins/configcompiler/responses
+cd lib/jelix-legacy/plugins/configcompiler/responses
   responses.configcompiler.php
-cd lib/jelix/plugins/configcompiler/session
+cd lib/jelix-legacy/plugins/configcompiler/session
   session.configcompiler.php
 
-cd lib/jelix/plugins/coord/autolocale
+cd lib/jelix-legacy/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
 ! autolocale.coord.php
   plugin.xml
 
-cd lib/jelix/plugins/coord/auth
+cd lib/jelix-legacy/plugins/coord/auth
 ! auth.coord.php
   plugin.xml
   auth.coord.ini.php.dist
 
-cd lib/jelix/plugins/coord/zendframework
+cd lib/jelix-legacy/plugins/coord/zendframework
   zendframework.coord.php
   plugin.xml
   zendframework.coord.ini.php.dist
 
-cd lib/jelix/plugins/coord/history
+cd lib/jelix-legacy/plugins/coord/history
 ! history.coord.php
   plugin.xml
   history.coord.ini.php.dist
 
-cd lib/jelix/plugins/coord/traceexec
+cd lib/jelix-legacy/plugins/coord/traceexec
 ! traceexec.coord.php
   plugin.xml
   traceexec.coord.ini.php.dist
 
-cd lib/jelix/plugins/db/mssql
+cd lib/jelix-legacy/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php
   mssql.dbschema.php
   mssql.dbtools.php
   mssql.daobuilder.php
 
-cd lib/jelix/plugins/db/mysql
+cd lib/jelix-legacy/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
   mysql.dbschema.php
   mysql.dbtools.php
   mysql.daobuilder.php
 
-cd lib/jelix/plugins/db/mysqli
+cd lib/jelix-legacy/plugins/db/mysqli
   mysqli.dbconnection.php
   mysqli.dbresultset.php
   mysqli.dbschema.php
@@ -498,149 +498,149 @@ cd lib/jelix/plugins/db/mysqli
   mysqli.dbtools.php
   mysqli.daobuilder.php
 
-cd lib/jelix/plugins/db/pgsql
+cd lib/jelix-legacy/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
   pgsql.dbschema.php
   pgsql.dbtools.php
   pgsql.daobuilder.php
 
-cd lib/jelix/plugins/db/sqlite
+cd lib/jelix-legacy/plugins/db/sqlite
   sqlite.dbconnection.php
   sqlite.dbresultset.php
   sqlite.dbschema.php
   sqlite.dbtools.php
   sqlite.daobuilder.php
 
-cd lib/jelix/plugins/db/sqlite3
+cd lib/jelix-legacy/plugins/db/sqlite3
   sqlite3.dbconnection.php
   sqlite3.dbresultset.php
   sqlite3.dbschema.php
   sqlite3.dbtools.php
   sqlite3.daobuilder.php
 
-cd lib/jelix/plugins/db/oci
+cd lib/jelix-legacy/plugins/db/oci
   oci.dbconnection.php
   oci.dbresultset.php
   oci.daobuilder.php
   oci.dbschema.php
   oci.dbtools.php
 
-cd lib/jelix/plugins/debugbar/sqllog
+cd lib/jelix-legacy/plugins/debugbar/sqllog
 * sqllog.debugbar.php
 
-cd lib/jelix/plugins/debugbar/sessiondata
+cd lib/jelix-legacy/plugins/debugbar/sessiondata
 * sessiondata.debugbar.php
 
-cd lib/jelix/plugins/debugbar/defaultlog
+cd lib/jelix-legacy/plugins/debugbar/defaultlog
 * defaultlog.debugbar.php
 
-cd lib/jelix/plugins/debugbar/soaplog
+cd lib/jelix-legacy/plugins/debugbar/soaplog
 * soaplog.debugbar.php
 
-cd lib/jelix/plugins/formbuilder/html
+cd lib/jelix-legacy/plugins/formbuilder/html
   html.formbuilder.php
 
-cd lib/jelix/plugins/formwidget/button_html
+cd lib/jelix-legacy/plugins/formwidget/button_html
   button_html.formwidget.php
   
-cd lib/jelix/plugins/formwidget/captcha_html
+cd lib/jelix-legacy/plugins/formwidget/captcha_html
   captcha_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/checkbox_html
+cd lib/jelix-legacy/plugins/formwidget/checkbox_html
   checkbox_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/checkboxes_html
+cd lib/jelix-legacy/plugins/formwidget/checkboxes_html
   checkboxes_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/choice_html
+cd lib/jelix-legacy/plugins/formwidget/choice_html
   choice_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/date_html
+cd lib/jelix-legacy/plugins/formwidget/date_html
   date_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/datetime_html
+cd lib/jelix-legacy/plugins/formwidget/datetime_html
   datetime_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/group_html
+cd lib/jelix-legacy/plugins/formwidget/group_html
   group_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/html
+cd lib/jelix-legacy/plugins/formwidget/html
   html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/htmleditor_html
+cd lib/jelix-legacy/plugins/formwidget/htmleditor_html
   htmleditor_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/input_html
+cd lib/jelix-legacy/plugins/formwidget/input_html
   input_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/listbox_html
+cd lib/jelix-legacy/plugins/formwidget/listbox_html
   listbox_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/menulist_html
+cd lib/jelix-legacy/plugins/formwidget/menulist_html
   menulist_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/output_html
+cd lib/jelix-legacy/plugins/formwidget/output_html
   output_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/radiobuttons_html
+cd lib/jelix-legacy/plugins/formwidget/radiobuttons_html
   radiobuttons_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/reset_html
+cd lib/jelix-legacy/plugins/formwidget/reset_html
   reset_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/secret_html
+cd lib/jelix-legacy/plugins/formwidget/secret_html
   secret_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/secretconfirm_html
+cd lib/jelix-legacy/plugins/formwidget/secretconfirm_html
   secretconfirm_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/submit_html
+cd lib/jelix-legacy/plugins/formwidget/submit_html
   submit_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/textarea_html
+cd lib/jelix-legacy/plugins/formwidget/textarea_html
   textarea_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/upload_html
+cd lib/jelix-legacy/plugins/formwidget/upload_html
   upload_html.formwidget.php
 
-cd lib/jelix/plugins/formwidget/wikieditor_html
+cd lib/jelix-legacy/plugins/formwidget/wikieditor_html
   wikieditor_html.formwidget.php
 
-cd lib/jelix/plugins/jforms/html
+cd lib/jelix-legacy/plugins/jforms/html
   html.jformsbuilder.php
 
-cd lib/jelix/plugins/jforms/htmllight
+cd lib/jelix-legacy/plugins/jforms/htmllight
   htmllight.jformsbuilder.php
 
-cd lib/jelix/plugins/kvdb/dba/
+cd lib/jelix-legacy/plugins/kvdb/dba/
   dba.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/db/
+cd lib/jelix-legacy/plugins/kvdb/db/
   db.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/file2/
+cd lib/jelix-legacy/plugins/kvdb/file2/
   file2.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/memcache/
+cd lib/jelix-legacy/plugins/kvdb/memcache/
   memcache.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/redis/
+cd lib/jelix-legacy/plugins/kvdb/redis/
   redis.kvdriver.php
 
-cd lib/jelix/plugins/logger/firebug
+cd lib/jelix-legacy/plugins/logger/firebug
   firebug.logger.php
 
-cd lib/jelix/plugins/htmlresponse/minify
+cd lib/jelix-legacy/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
-cd lib/jelix/plugins/htmlresponse/debugbar
+cd lib/jelix-legacy/plugins/htmlresponse/debugbar
 * debugbar.htmlresponse.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * errors.debugbar.php
 #endif
 
-cd lib/jelix/plugins/tpl/common
+cd lib/jelix-legacy/plugins/tpl/common
   block.ifuserconnected.php
   block.ifusernotconnected.php
   block.stripws.php
@@ -680,7 +680,7 @@ cd lib/jelix/plugins/tpl/common
   modifier.wiki.php
   modifier.wordwrap.php
 
-cd lib/jelix/plugins/tpl/html
+cd lib/jelix-legacy/plugins/tpl/html
   block.form.php
   block.formcontrols.php
   block.formdata.php
@@ -720,35 +720,35 @@ cd lib/jelix/plugins/tpl/html
   meta.htmlmodule.php
   modifier.nl2br.php
 
-cd lib/jelix/plugins/tpl/ltx2pdf
+cd lib/jelix-legacy/plugins/tpl/ltx2pdf
   function.jlocale.php
   function.jurl.php
   modifier.latex.php
   block.lenv.php
   block.lcmd.php
 
-cd lib/jelix/plugins/tpl/text
+cd lib/jelix-legacy/plugins/tpl/text
   cfunction.const.php
   function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   function.formdatafull.php
 
-cd lib/jelix/plugins/tpl/xml
+cd lib/jelix-legacy/plugins/tpl/xml
   cfunction.const.php
   function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   meta.xml.php
 
-cd lib/jelix/plugins/urls/significant
+cd lib/jelix-legacy/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php
 * significant.urls.php
 
-cd lib/jelix/plugins/urls/simple
+cd lib/jelix-legacy/plugins/urls/simple
   simple.urls.php
 
-cd lib/jelix/plugins/urls/basic_significant
+cd lib/jelix-legacy/plugins/urls/basic_significant
   basic_significant.urls.php
 
 cd lib/jelix-plugins/cache/file

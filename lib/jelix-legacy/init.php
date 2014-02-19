@@ -182,7 +182,7 @@ spl_autoload_register("jelix_autoload");
 
 /**
  * check if the application is opened. If not, it displays the yourapp/install/closed.html
- * file with a http error (or lib/jelix/installer/closed.html), and exit.
+ * file with a http error (or lib/jelix-legacy/installer/closed.html), and exit.
  * This function should be called in all entry point, before the creation of the coordinator.
  * @see jAppManager
  * @todo migrate the code to jAppManager or jApp

@@ -73,18 +73,18 @@ else
     TAG_NAME="RELEASE_JELIX_${VER_MAJOR}_${VER_MIDDLE}_${VER_MINOR}_${VER_FIX}"
 fi
 
-echo "$VERSION" > $SCRIPTDIR/../lib/jelix/VERSION
+echo "$VERSION" > $SCRIPTDIR/../lib/jelix-legacy/VERSION
 echo "$VERSION" > $SCRIPTDIR/../testapp/VERSION
 
-git add $SCRIPTDIR/../lib/jelix/VERSION
+git add $SCRIPTDIR/../lib/jelix-legacy/VERSION
 git add $SCRIPTDIR/../testapp/VERSION
 git commit -m "Release Jelix $VERSION"
 git tag "$TAG_NAME"
 
-echo "$NEXTVERSION" > $SCRIPTDIR/../lib/jelix/VERSION
+echo "$NEXTVERSION" > $SCRIPTDIR/../lib/jelix-legacy/VERSION
 echo "$NEXTVERSION" > $SCRIPTDIR/../testapp/VERSION
 
-git add $SCRIPTDIR/../lib/jelix/VERSION
+git add $SCRIPTDIR/../lib/jelix-legacy/VERSION
 git add $SCRIPTDIR/../testapp/VERSION
 git commit -m "Bumped version to $NEXTVERSION"
 

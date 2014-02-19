@@ -134,7 +134,7 @@ include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
-Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+Env::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
 $SOURCE_REVISION = Git::revision(__DIR__.'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
@@ -237,7 +237,7 @@ jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_
 
 // jtpl standalone for wizard
 
-Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
+Env::setFromFile('JTPL_VERSION','lib/jelix-legacy/tpl/VERSION', true);
 if($IS_NIGHTLY){
     $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
 }
@@ -256,7 +256,7 @@ $var = ENV::getAll();
 $var['STANDALONE_CHECKER'] = true;
 jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , $var);
 
-file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
+file_put_contents($BUILD_TARGET_PATH.'lib/jelix-legacy/VERSION', $LIB_VERSION);
 
 // create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
@@ -265,7 +265,7 @@ $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
 
-file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
+file_put_contents($BUILD_TARGET_PATH.'lib/jelix-legacy/BUILD', $infos);
 
 //... packages
 if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {

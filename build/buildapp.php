@@ -80,7 +80,7 @@ else {
 }
 
 
-Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+Env::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 

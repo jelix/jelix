@@ -12,7 +12,7 @@ error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', __DIR__.'/../');
 
 if(!class_exists('jCoordinator', false)) { // for old application.init.php which doesn't include init.php
-    echo "Error: your application.init.php should include the lib/jelix/init.php";
+    echo "Error: your application.init.php should include the vendor/autoload.php";
     exit(1);
 }
 
