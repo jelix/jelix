@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2012 Laurent Jouanneau
+ * @copyright   2005-2014 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -54,7 +54,7 @@ class jSelectorUrlHandler extends jSelectorClass {
     }
 
 }
-#ifnot ENABLE_PHP_JELIX
+
 /**
  * interface for user url handler
  * @package  jelix
@@ -77,7 +77,7 @@ interface jIUrlSignificantHandler {
     */
     public function create($urlact, $url);
 }
-#endif
+
 /**
  * an url engine to parse,analyse and create significant url
  * it needs an urls.xml file in the config directory (see documentation)

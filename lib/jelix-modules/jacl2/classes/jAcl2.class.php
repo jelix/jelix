@@ -3,18 +3,16 @@
 * @package     jelix
 * @subpackage  acl2
 * @author      Laurent Jouanneau
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
 */
 
-#ifnot ENABLE_PHP_JELIX
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAcl2Driver.iface.php
 #else
 require(__DIR__.'/jIAcl2Driver.iface.php');
-#endif
 #endif
 
 /**

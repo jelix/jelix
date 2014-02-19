@@ -7,7 +7,7 @@
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
 * @contributor Olivier Demah, Brice Tence, Julien Issler
-* @copyright 2007-2011 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
+* @copyright 2007-2014 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -49,7 +49,6 @@ class jInstallCheck {
 #if STANDALONE_CHECKER
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
-#expand    'ENABLE_PHP_JELIX'  =>'__ENABLE_PHP_JELIX__',
         );
 #endif
     }
@@ -146,9 +145,6 @@ class jInstallCheck {
 
         $extensions = array( 'dom', 'SPL', 'SimpleXML', 'pcre', 'session',
             'tokenizer', 'iconv', 'filter', 'json');
-
-        if($this->buildProperties['ENABLE_PHP_JELIX'] == '1')
-            $extensions[] = 'jelix';
 
         foreach($extensions as $name){
             if(!extension_loaded($name)){

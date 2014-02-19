@@ -3,13 +3,12 @@
 * @package     jelix
 * @subpackage  acl
 * @author      Laurent Jouanneau
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.0a3
 */
 
-#ifnot ENABLE_PHP_JELIX
 /**
  * interface for jAcl drivers
  * @package jelix
@@ -31,7 +30,6 @@ interface jIAclDriver {
     public function clearCache();
 
 }
-#endif
 
 /**
  * Main class to query the acl system, and to know value of a right

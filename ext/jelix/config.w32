@@ -1,7 +1,0 @@
-
-ARG_ENABLE("jelix", "enable jelix framework support", "no");
-
-if (PHP_JELIX != "no") {
-	EXTENSION("jelix", "jelix.c jelix_interfaces.c");
-}
-

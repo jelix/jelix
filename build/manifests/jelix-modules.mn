@@ -67,9 +67,7 @@ cd lib/jelix-modules/jacl2
 * module.xml
 cd lib/jelix-modules/jacl2/classes
 * jAcl2.class.php
-#ifnot ENABLE_PHP_JELIX
   jIAcl2Driver.iface.php
-#endif
 cd lib/jelix-modules/jacl2/locales/en_EN/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/en_GB/

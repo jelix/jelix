@@ -3,7 +3,7 @@
 * @package     jelix
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2011 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -35,10 +35,6 @@ $BUILD_OPTIONS = array(
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
     'dev',
-    ),
-'ENABLE_PHP_JELIX'=>array(
-    "true if jelix can use jelix php extension.",
-    false,
     ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution (simpletest &cie)",
@@ -176,11 +172,6 @@ if ($PHP_VERSION_TARGET) {
 }
 
 $BUILD_FLAGS = 0;
-if($ENABLE_PHP_JELIX)  $BUILD_FLAGS |=1;
-
-//if($ENABLE_OLD_CLASS_NAMING)  $BUILD_FLAGS |=256;
-//if($ENABLE_OLD_ACTION_SELECTOR) $BUILD_FLAGS |= 512;
-
 
 if($EDITION_NAME ==''){
     $EDITION_NAME_x='userbuild';
@@ -244,10 +235,6 @@ jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , 
 jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
 jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
 
-if($ENABLE_PHP_JELIX && ($PACKAGE_TAR_GZ || $PACKAGE_ZIP)){
-   jManifest::process('build/manifests/jelix-ext-php.mn', '.', $BUILD_TARGET_PATH , ENV::getAll());
-}
-
 // jtpl standalone for wizard
 
 Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
@@ -273,7 +260,7 @@ file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
 $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_PHP_JELIX', 'ENABLE_DEVELOPER',
+    'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);

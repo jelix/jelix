@@ -17,9 +17,7 @@ cd lib/jelix/auth
   jAuthUser.class.php
   jAuthDummyUser.class.php
   jAuthUserLDAP.class.php
-#ifnot ENABLE_PHP_JELIX
   jIAuthDriver.iface.php
-#endif
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jAuthDriverBase.class.php
 #endif
@@ -56,12 +54,10 @@ cd lib/jelix/core
 * jUrl.class.php
 * jSession.class.php
   jServer.class.php
-#ifnot ENABLE_PHP_JELIX
   jelix_api.php
   jICoordPlugin.iface.php
   jISelector.iface.php
   jIUrlEngine.iface.php
-#endif
 #endif
 ! lang_to_locale.ini.php
 

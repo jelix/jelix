@@ -1,7 +1,0 @@
-
-LTLIBRARY_NAME          = libjelix.la
-LTLIBRARY_SOURCES       = jelix.c jelix_interfaces.c
-LTLIBRARY_SHARED_NAME   = jelix.la
-LTLIBRARY_SHARED_LIBADD = $(JELIX_SHARED_LIBADD)
-
-include $(top_srcdir)/build/dynlib.mk

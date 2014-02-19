@@ -12,7 +12,7 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2012 Laurent Jouanneau
+* @copyright 2005-2014 Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Loic Mathaud
 * @copyright 2007-2009 Julien Issler
@@ -32,13 +32,11 @@
  */
 #expand define ('JELIX_VERSION', '__LIB_VERSION__');
 
-#ifnot ENABLE_PHP_JELIX
 /**
  * base of namespace path used in xml files of jelix
  * @name  JELIX_NAMESPACE_BASE
  */
 define ('JELIX_NAMESPACE_BASE' , 'http://jelix.org/ns/');
-#endif
 
 define ('JELIX_LIB_PATH',         __DIR__.'/');
 define ('JELIX_LIB_CORE_PATH',    JELIX_LIB_PATH.'core/');
@@ -52,12 +50,10 @@ error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp core/jApp.class.php
-#ifnot ENABLE_PHP_JELIX
 #includephp core/jelix_api.php
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
 #includephp core/jIUrlEngine.iface.php
-#endif
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
 #includephp core/jConfig.class.php
@@ -92,12 +88,10 @@ error_reporting (E_ALL | E_STRICT);
 
 #else
 require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
-#ifnot ENABLE_PHP_JELIX
 require (JELIX_LIB_CORE_PATH . 'jelix_api.php');
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
-#endif
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
