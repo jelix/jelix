@@ -395,7 +395,7 @@ abstract class jRequest {
       $input = file_get_contents("php://input");
       $values = array();
 
-      if (strpos($_SERVER["CONTENT_TYPE"], "application/x-www-url-encoded") === 0) {
+      if (strpos($_SERVER["CONTENT_TYPE"], "application/x-www-form-urlencoded") === 0) {
          parse_str($input, $values);
          return $values;
       }
