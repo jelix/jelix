@@ -1,0 +1,32 @@
+{
+    "name": "jelix/jelix",
+    "type": "library",
+    "description": "Jelix PHP framework",
+    "keywords": ["framework"],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "archive": {
+        "exclude": ["/ext", "/build", "/temp", "/testapp", "Makefile"]
+    }
+    "replace": {
+    },
+    "autoload": {
+        "psr-0": { "jelix\\": "lib/" },
+        "classmap": [ ],
+        "files": [  ]
+    },
+    "minimum-stability": "dev"
+}

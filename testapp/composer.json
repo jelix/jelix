@@ -1,0 +1,30 @@
+{
+    "name": "jelix/testapp",
+    "type": "application",
+    "description": "Jelix Application for tests",
+    "keywords": [],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "replace": {
+        "jelix/jelix":"self.version"
+    },
+    "autoload": {
+        "psr-0": { "jelix\\": "../lib/" },
+        "classmap": [ ],
+        "files": [ "lib/jelix/init.php"  ]
+    },
+    "minimum-stability": "dev"
+}
