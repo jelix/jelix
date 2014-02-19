@@ -22,9 +22,9 @@
         "jelix/jelix":"self.version"
     },
     "autoload": {
-        "psr-0": { "jelix\\": "../lib/" },
+        "psr-0": { },
         "classmap": [ ],
-        "files": [ "lib/jelix/init.php"  ]
+        "files": [ "../lib/jelix/init.php"  ]
     },
     "minimum-stability": "dev"
 }

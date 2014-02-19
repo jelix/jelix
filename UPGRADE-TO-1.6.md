@@ -22,11 +22,6 @@ exist yet. Following instructions are for later.
     "require": {
         "php": ">=5.3.3",
         "jelix/jelix": "1.6a1"
-    },
-    "autoload": {
-        "psr-0": { },
-        "classmap": [ ],
-        "files": [ "lib/jelix/init.php" ]
     }
   }
 ```
