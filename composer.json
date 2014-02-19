@@ -19,14 +19,14 @@
         "php": ">=5.3.3"
     },
     "archive": {
-        "exclude": ["/ext", "/build", "/temp", "/testapp", "Makefile"]
+        "exclude": ["/build", "/temp", "/testapp", "Makefile"]
     },
     "replace": {
     },
     "autoload": {
-        "psr-0": { "jelix\\": "lib/" },
+        "psr-4": { "jelix\\": "lib/jelix-legacy" },
         "classmap": [ ],
-        "files": [ "lib/jelix/init.php" ]
+        "files": [ "lib/jelix-legacy/init.php" ]
     },
     "minimum-stability": "dev"
 }

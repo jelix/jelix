@@ -2,6 +2,7 @@ cd testapp
 * project.xml
   .htaccess
   application.init.php
+  composer.json
   INSTALL.txt
   cmd.php
 cd testapp/plugins

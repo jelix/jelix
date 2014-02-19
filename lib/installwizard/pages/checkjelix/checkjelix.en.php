@@ -5,6 +5,6 @@ $locales = array(
     'title'=>'Jelix prequesites',
     'results'=>'Results',
 
-#include ../../../jelix/installer/messageProvider.en.inc.php
+#include ../../../jelix-legacy/installer/messageProvider.en.inc.php
 
 );

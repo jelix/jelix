@@ -131,7 +131,7 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
  * @name $gLibPath
  * @see __autoload()
  */
-$gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
+$GLOBALS['gLibPath'] =array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
  'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
@@ -142,7 +142,7 @@ $gLibPath=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  */
 function jelix_autoload($class) {
     if (strpos($class, 'jelix\\') === 0) {
-        $f = LIB_PATH.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+        $f = LIB_PATH.'jelix-legacy/'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class,6)).'.php';
     }
     else if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
@@ -182,7 +182,7 @@ spl_autoload_register("jelix_autoload");
 
 /**
  * check if the application is opened. If not, it displays the yourapp/install/closed.html
- * file with a http error (or lib/jelix/installer/closed.html), and exit.
+ * file with a http error (or lib/jelix-legacy/installer/closed.html), and exit.
  * This function should be called in all entry point, before the creation of the coordinator.
  * @see jAppManager
  * @todo migrate the code to jAppManager or jApp

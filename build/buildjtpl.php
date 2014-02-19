@@ -63,7 +63,7 @@ include(__DIR__.'/lib/jBuild.inc.php');
 
 //----------------- Prepare environment variables
 
-Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
+Env::setFromFile('JTPL_VERSION','lib/jelix-legacy/tpl/VERSION', true);
 $SOURCE_REVISION = Git::revision(__DIR__.'/../');
 
 $IS_NIGHTLY = (strpos($JTPL_VERSION,'SERIAL') !== false);

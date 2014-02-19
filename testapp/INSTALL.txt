@@ -2,6 +2,9 @@ Installation of testapp
 
 - download and install a "developer" edition of Jelix
 - move the testapp directory at the same level of the lib/ directory of jelix.
+- install Composer: http://getcomposer.org
+- go in the testapp directory, and type
+   php composer.phar install
 - create a database in mysql
 - rename testapp/var/config/profiles.ini.php.dist to testapp/var/config/profiles.ini.php
 - configure parameters in profiles.ini.php:
