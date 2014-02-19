@@ -4,9 +4,6 @@ Migration
 
 Here are instructions to migrate an Jelix 1.5.* application to this version
 
-WARNING: the composer support is a work in progress. The jelix/jelix package does not
-exist yet. Following instructions are for later.
-
 - Install Composer http://getcomposer.org
 - Create a composer.json file into your application directory.
   If you already have a such file in your project, add the package "jelix/jelix"
@@ -21,8 +18,11 @@ exist yet. Following instructions are for later.
     "description": "",
     "require": {
         "php": ">=5.3.3",
-        "jelix/jelix": "1.6a1"
-    }
+        "jelix/jelix": "dev-master"
+    },
+    "repositories" : [
+      { "type": "composer", "url":"http://packages.jelix.org" }
+    ]
   }
 ```
 
