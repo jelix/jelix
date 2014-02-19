@@ -20,7 +20,7 @@
     },
     "archive": {
         "exclude": ["/ext", "/build", "/temp", "/testapp", "Makefile"]
-    }
+    },
     "replace": {
     },
     "autoload": {
