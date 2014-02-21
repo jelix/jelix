@@ -777,6 +777,7 @@ cd lib/installwizard/
   installWizardPage.php
   install.php.dist
   wiz_layout.en.php
+  wiz_layout.fr.php
 * wiz_layout.tpl
   wizard.ini.php.dist
   README.txt
