@@ -339,7 +339,7 @@ class jConfigCompiler {
      */
     static protected function _loadPluginsPathList($config) {
         $list = preg_split('/ *, */',$config->pluginsPath);
-        array_push($list, JELIX_LIB_PATH.'plugins/');
+        array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
@@ -374,9 +374,11 @@ class jConfigCompiler {
                                $config->_allBasePath[]=$p.$f.'/';
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
-                                    if($f == 'tpl'){
+                                    if ($f == 'tpl') {
                                         $prop = '_tplpluginsPathList_'.$subf;
-                                        $config->{$prop}[] = $p.$f.'/'.$subf.'/';
+                                        if (!isset($config->{$prop}))
+                                            $config->{$prop} = array();
+                                        array_unshift($config->{$prop}, $p.$f.'/'.$subf.'/');
                                     }else{
                                         $prop = '_pluginsPathList_'.$f;
                                         $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
