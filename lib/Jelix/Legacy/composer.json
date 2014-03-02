@@ -1,10 +1,10 @@
 {
-    "name": "jelix/jelix",
+    "name": "jelix/legacy",
     "type": "library",
-    "description": "Jelix PHP framework",
+    "description": "Classes that help to migrate to new Jelix classes",
     "keywords": ["framework"],
     "homepage": "http://jelix.org",
-    "license": "LGPL-2.1",
+    "license": "MIT",
     "authors": [
         {
             "name": "Laurent Jouanneau",
@@ -18,16 +18,11 @@
     "require": {
         "php": ">=5.3.3"
     },
-    "archive": {
-        "exclude": ["/build", "/temp", "/testapp", "Makefile"]
-    },
     "replace": {
-        "jelix/legacy": "self.version"
     },
     "autoload": {
-        "psr-4": { "jelix\\": "lib/jelix-legacy" },
-        "classmap": [ ],
-        "files": [ "lib/jelix-legacy/init.php" ]
+        "files": [ "Jelix/Legacy/init.php" ]
     },
+    "target-dir": "Jelix/Legacy",
     "minimum-stability": "dev"
 }
