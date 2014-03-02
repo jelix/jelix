@@ -3,6 +3,17 @@ cd .
 cd lib
   .htaccess
 
+cd lib/Jelix/Core
+  App.php
+  composer.json
+
+cd lib/Jelix/Legacy/
+  composer.json
+  init.php
+
+cd lib/Jelix/Legacy/core
+  jApp.php
+
 cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
@@ -36,7 +47,6 @@ cd lib/jelix-legacy/core
 * jConfigCompiler.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
-* jApp.class.php
   jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php

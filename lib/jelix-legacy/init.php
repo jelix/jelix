@@ -49,7 +49,6 @@ define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_e
 error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jApp.class.php
 #includephp core/jelix_api.php
 #includephp core/jICoordPlugin.iface.php
 #includephp core/jISelector.iface.php
@@ -87,7 +86,6 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jSession.class.php
 
 #else
-require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
 require (JELIX_LIB_CORE_PATH . 'jelix_api.php');
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');

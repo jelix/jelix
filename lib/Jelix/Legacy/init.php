@@ -9,7 +9,7 @@
 */
 
 $GLOBALS['JELIX_LEGACY_CLASSES'] = array(
-    
+    "jApp" => __DIR__.'/core/jApp.php'
 );
 
 

@@ -1,8 +1,8 @@
 {
-    "name": "jelix/jelix",
+    "name": "jelix/core",
     "type": "library",
-    "description": "Jelix PHP framework",
-    "keywords": ["framework"],
+    "description": "Core of the Jelix Framework",
+    "keywords": ["framework", "application", "config"],
     "homepage": "http://jelix.org",
     "license": "LGPL-2.1",
     "authors": [
@@ -18,21 +18,12 @@
     "require": {
         "php": ">=5.3.3"
     },
-    "archive": {
-        "exclude": ["/build", "/temp", "/testapp", "Makefile"]
-    },
     "replace": {
-        "jelix/core": "self.version",
-        "jelix/legacy": "self.version"
     },
     "autoload": {
-        "psr-4": {
-            "jelix\\": "lib/jelix-legacy",
-            "Jelix\\": "lib/Jelix"
-            
-        },
-        "classmap": [ ],
-        "files": [ "lib/jelix-legacy/init.php" ]
+        "psr-4" : {
+            "Jelix\\Core\\" : ""
+        }
     },
     "minimum-stability": "dev"
 }
