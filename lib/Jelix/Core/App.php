@@ -1,20 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
 * @contributor  Olivier Demah
-* @copyright  2011-2013 Laurent Jouanneau, 2012 Olivier Demah
+* @copyright  2011-2014 Laurent Jouanneau, 2012 Olivier Demah
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\Core;
 
 /**
-*
-* @package    jelix
-* @subpackage core
+* 
 */
-class jApp {
+class App {
 
     protected static $tempBasePath = '';
 
@@ -113,7 +110,7 @@ class jApp {
         self::$_config = $config;
         if ($config) {
             date_default_timezone_set(self::$_config->timeZone);
-            self::$configAutoloader = new jConfigAutoloader($config);
+            self::$configAutoloader = new \jConfigAutoloader($config);
             spl_autoload_register(array(self::$configAutoloader, 'loadClass'));
             foreach(self::$_config->_autoload_autoloader as $autoloader)
                 require_once($autoloader);
@@ -131,12 +128,12 @@ class jApp {
      */
     public static function loadConfig ($configFile, $enableErrorHandler=true) {
         if ($enableErrorHandler) {
-            jBasicErrorHandler::register();
+            \jBasicErrorHandler::register();
         }
         if (is_object($configFile))
             self::setConfig($configFile);
         else
-            self::setConfig(jConfig::load($configFile));
+            self::setConfig(\jConfig::load($configFile));
         self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 
@@ -219,9 +216,9 @@ class jApp {
 
         if (!class_exists($classname,false)) {
             $optname = '_pluginsPathList_'.$type;
-            if (!isset(jApp::config()->$optname))
+            if (!isset(self::config()->$optname))
                 return null;
-            $opt = & jApp::config()->$optname;
+            $opt = & self::config()->$optname;
 #ifnot ENABLE_OPTIMIZED_SOURCE
             if (!isset($opt[$name])
                 || !file_exists($opt[$name].$name.$suffix) ){
@@ -245,7 +242,7 @@ class jApp {
     */
     public static function isModuleEnabled ($moduleName, $includingExternal = false) {
         if (!self::$_config)
-            throw new Exception ('Configuration is not loaded');
+            throw new \Exception ('Configuration is not loaded');
         if ($includingExternal && isset(self::$_config->_externalModulesPathList[$moduleName])) {
             return true;
         }
@@ -261,13 +258,13 @@ class jApp {
      */
     public static function getModulePath($module, $includingExternal = false){
         if (!self::$_config)
-            throw new Exception ('Configuration is not loaded');
+            throw new \Exception ('Configuration is not loaded');
 
         if (!isset(self::$_config->_modulesPathList[$module])) {
             if ($includingExternal && isset(self::$_config->_externalModulesPathList[$module])) {
                 return self::$_config->_externalModulesPathList[$module];
             }
-            throw new Exception('getModulePath : invalid module name');
+            throw new \Exception('getModulePath : invalid module name');
         }
         return self::$_config->_modulesPathList[$module];
     }

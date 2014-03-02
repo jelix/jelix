@@ -19,12 +19,20 @@
         "php": ">=5.3.3"
     },
     "replace": {
-        "jelix/jelix":"self.version"
+        "jelix/jelix":"self.version",
+        "Jelix/Legacy":"self.version",
+        "Jelix/Core":"self.version"
     },
     "autoload": {
-        "psr-0": { },
+        "psr-4": {
+            "jelix\\": "../lib/jelix-legacy/",
+            "Jelix\\": "../lib/Jelix/"
+        },
         "classmap": [ ],
-        "files": [ "../lib/jelix-legacy/init.php"  ]
+        "files": [
+            "../lib/jelix-legacy/init.php",
+            "../lib/Jelix/Legacy/init.php"
+        ]
     },
     "minimum-stability": "dev"
 }

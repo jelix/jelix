@@ -1,5 +1,4 @@
 <?php
-
 /**
 * @package  Jelix\Legacy
 * @author   Laurent Jouanneau
@@ -9,4 +8,9 @@
 * @licence  MIT
 */
 
+/**
+ * dummy class for compatibility
+ * @see \Jelix\Core\App
+ * @deprecated
+ */
 class jApp extends \Jelix\Core\App { }
