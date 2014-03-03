@@ -8,6 +8,13 @@ cd .
 
 rmd lib/jelix/
 
+cd lib/jelix-legacy/core/
+  jApp.class.php
+  jConfig.class.php
+  jConfigCompiler.class.php
+  jConfigAutoloader.class.php
+  ConfigCompilerPluginInterface.php
+
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
 

@@ -5,7 +5,13 @@ cd lib
 
 cd lib/Jelix/Core
   App.php
+  Config.php
   composer.json
+
+cd lib/Jelix/Core/Config
+  Compiler.php
+  Autoloader.php
+  CompilerPluginInterface.php
 
 cd lib/Jelix/Legacy/
   composer.json
@@ -13,6 +19,9 @@ cd lib/Jelix/Legacy/
 
 cd lib/Jelix/Legacy/core
   jApp.php
+  jConfig.php
+  jConfigCompiler.php
+  jConfigAutoloader.php
 
 cd lib/jelix-legacy/
   CHANGELOG
@@ -40,16 +49,12 @@ cd lib/jelix-legacy/controllers
 *  jControllerDaoCrudDfk.class.php
 
 cd lib/jelix-legacy/core
-  ConfigCompilerPluginInterface.php
 ! defaultconfig.ini.php
   jAutoloader.class.php
-  jConfigAutoloader.class.php
-* jConfigCompiler.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jBasicErrorHandler.class.php
   jBundle.class.php
-* jConfig.class.php
 * jController.class.php
 * jCoordinator.class.php
   jException.class.php

@@ -41,5 +41,9 @@ Here are instructions to migrate an Jelix 1.5.* application to this version
 
     require (__DIR__.'/vendor/autoload.php');
 
+
+- If you use plugins, you have to change their base class name for some of them:
+   - jelix\core\ConfigCompilerPluginInterface to Jelix\Core\Config\CompilerPluginInterface
+
 - That's all for the moment.
 
