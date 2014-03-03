@@ -14,6 +14,7 @@ cd lib/jelix-legacy/core/
   jConfigCompiler.class.php
   jConfigAutoloader.class.php
   ConfigCompilerPluginInterface.php
+  defaultconfig.ini.php
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/

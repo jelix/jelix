@@ -1,7 +1,5 @@
 <?php
 
-require_once(JELIX_LIB_CORE_PATH.'jConfigAutoloader.class.php');
-
 class fakeConfigAutoloader extends jConfigAutoloader {
 
     function test_get_path($className) {

@@ -9,7 +9,7 @@
 */
 
 
-class responsesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class responsesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 15;

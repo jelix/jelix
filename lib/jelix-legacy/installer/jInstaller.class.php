@@ -17,7 +17,6 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
-require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 require_once(JELIX_LIB_PATH.'utils/jIniFile.class.php');
 require_once(JELIX_LIB_PATH.'utils/jIniFileModifier.class.php');
 require_once(JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');

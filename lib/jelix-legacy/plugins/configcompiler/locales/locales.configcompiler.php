@@ -9,7 +9,7 @@
 */
 
 
-class localesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class localesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 10;

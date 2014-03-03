@@ -2,8 +2,6 @@
 require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
 require_once (JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once (JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
-require_once (JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-
 
 class testInstallApp extends jInstallerApplication {
 

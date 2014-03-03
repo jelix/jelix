@@ -110,7 +110,7 @@ class App {
         self::$_config = $config;
         if ($config) {
             date_default_timezone_set(self::$_config->timeZone);
-            self::$configAutoloader = new \jConfigAutoloader($config);
+            self::$configAutoloader = new Config\Autoloader($config);
             spl_autoload_register(array(self::$configAutoloader, 'loadClass'));
             foreach(self::$_config->_autoload_autoloader as $autoloader)
                 require_once($autoloader);
@@ -133,7 +133,7 @@ class App {
         if (is_object($configFile))
             self::setConfig($configFile);
         else
-            self::setConfig(\jConfig::load($configFile));
+            self::setConfig(Config::load($configFile));
         self::$_config->enableErrorHandler = $enableErrorHandler;
     }
 

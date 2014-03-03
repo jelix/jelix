@@ -1,19 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2012 Laurent Jouanneau
+* @copyright  2012-2014 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace Jelix\Core\Config;
+
 /**
-*
-* @package    jelix
-* @subpackage core
-*/
-class jConfigAutoloader {
+ * Autoloader for informations stored in module.xml files
+ */
+class Autoloader {
 
 
     public function __construct($config) {
@@ -22,17 +20,17 @@ class jConfigAutoloader {
 
     /**
      * @var object a configuration object readed from an ini file
-     * @see jConfig
+     * @see Jelix\Core\Config
      */
     protected $config = null;
 
     /**
      * the method that should be called by the autoload system
      */
-    public function loadClass($className) {
+    public function loadClass ($className) {
         $path = $this->getPath($className);
         if (is_array($path)) {
-            foreach($path as $p) {
+            foreach ($path as $p) {
                 if (file_exists($p)) {
                     require($p);
                     return true;

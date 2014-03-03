@@ -1,20 +1,18 @@
 <?php
 /**
-* @package  jelix
-* @subpackage core
 * @author   Laurent Jouanneau
-* @copyright 2005-2013 Laurent Jouanneau
+* @copyright 2005-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+namespace Jelix\Core;
+
 /**
  * static class which loads the configuration
- * @package  jelix
- * @subpackage core
  * @static
  */
-class jConfig {
+class Config {
 
     /**
      * indicate if the configuration was loading from the cache (true) or
@@ -35,11 +33,11 @@ class jConfig {
      * class if needed
      * @param string $configFile the config file name
      * @return object it contains all configuration options
-     * @see jConfigCompiler
+     * @see Jelix\Core\Config\Compiler
      */
     static public function load($configFile){
         $config=array();
-        $file = jApp::tempPath().str_replace('/','~',$configFile);
+        $file = App::tempPath().str_replace('/','~',$configFile);
 
         if (BYTECODE_CACHE_EXISTS)
             $file .= '.conf.php';
@@ -47,31 +45,33 @@ class jConfig {
             $file .= '.resultini.php';
 
         self::$fromCache = true;
-        if(!file_exists($file)){
+        if (!file_exists($file)) {
             // no cache, let's compile
             self::$fromCache = false;
-        }else{
+        }
+        else {
             $t = filemtime($file);
-            $dc = jApp::configPath(jApp::mainConfigFile());
+            $dc = App::configPath(App::mainConfigFile());
 
-            if( (file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(jApp::configPath($configFile))>$t){
+            if ((file_exists($dc) && filemtime($dc)>$t)
+                || filemtime(App::configPath($configFile))>$t) {
                 // one of the two config file have been modified: let's compile
                 self::$fromCache = false;
-            }else{
-
+            }
+            else {
                 // let's read the cache file
-                if(BYTECODE_CACHE_EXISTS){
+                if (BYTECODE_CACHE_EXISTS) {
                     include($file);
                     $config = (object) $config;
-                }else{
+                }
+                else {
                     $config = jelix_read_ini($file);
                 }
 
                 // we check all directories to see if it has been modified
-                if($config->compilation['checkCacheFiletime']){
-                    foreach($config->_allBasePath as $path){
-                        if(!file_exists($path) || filemtime($path)>$t){
+                if ($config->compilation['checkCacheFiletime']) {
+                    foreach ($config->_allBasePath as $path) {
+                        if (!file_exists($path) || filemtime($path)>$t) {
                             self::$fromCache = false;
                             break;
                         }
@@ -79,11 +79,12 @@ class jConfig {
                 }
             }
         }
-        if(!self::$fromCache){
-            require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
-            return jConfigCompiler::readAndCache($configFile);
-        }else
+        if (!self::$fromCache) {
+            return Config\Compiler::readAndCache($configFile);
+        }
+        else {
             return $config;
+        }
     }
 }
 

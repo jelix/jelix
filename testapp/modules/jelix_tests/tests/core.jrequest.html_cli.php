@@ -9,8 +9,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
-
 
 class configCompileTest extends jConfigCompiler {
 

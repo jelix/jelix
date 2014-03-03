@@ -237,7 +237,6 @@ abstract class JelixScriptCommand {
       if ($configFile == '')
          throw new Exception("Entry point is unknown");
 
-      require_once(JELIX_LIB_PATH."core/jConfigCompiler.class.php");
       jApp::setConfig(jConfigCompiler::read($configFile, true, true, $this->entryPointName));
    }
 

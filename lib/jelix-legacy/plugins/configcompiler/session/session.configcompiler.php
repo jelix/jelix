@@ -9,7 +9,7 @@
 */
 
 
-class sessionConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class sessionConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 5;

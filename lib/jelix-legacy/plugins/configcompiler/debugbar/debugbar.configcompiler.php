@@ -9,7 +9,7 @@
 */
 
 
-class debugbarConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class debugbarConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 20;

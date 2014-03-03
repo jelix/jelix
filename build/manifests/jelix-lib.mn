@@ -9,9 +9,11 @@ cd lib/Jelix/Core
   composer.json
 
 cd lib/Jelix/Core/Config
+! defaultconfig.ini.php
   Compiler.php
   Autoloader.php
   CompilerPluginInterface.php
+  Exception.php
 
 cd lib/Jelix/Legacy/
   composer.json
@@ -49,7 +51,6 @@ cd lib/jelix-legacy/controllers
 *  jControllerDaoCrudDfk.class.php
 
 cd lib/jelix-legacy/core
-! defaultconfig.ini.php
   jAutoloader.class.php
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE

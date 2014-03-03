@@ -1,19 +1,17 @@
 <?php
 /**
-* @package      jelix
-* @subpackage   core
 * @author       Laurent Jouanneau
-* @copyright    2012 Laurent Jouanneau
+* @copyright    2012-2013 Laurent Jouanneau
 * @link         http://jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-namespace jelix\core;
+namespace Jelix\Core\Config;
 
 /**
- * interface for plugins of jConfigCompiler
+ * interface for plugins for \Jelix\Core\Config\Compiler
  */
-interface ConfigCompilerPluginInterface {
+interface CompilerPluginInterface {
 
     /**
      * lower number is higher priority. Numbers lower than 50 are reserved

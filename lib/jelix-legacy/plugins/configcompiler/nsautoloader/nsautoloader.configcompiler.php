@@ -9,7 +9,7 @@
 */
 
 
-class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 1;
