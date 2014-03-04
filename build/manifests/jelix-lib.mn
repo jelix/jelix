@@ -5,6 +5,7 @@ cd lib
 
 cd lib/Jelix/Core
   App.php
+  AppManager.php
   Config.php
   composer.json
 
@@ -21,6 +22,7 @@ cd lib/Jelix/Legacy/
 
 cd lib/Jelix/Legacy/core
   jApp.php
+  jAppManager.php
   jConfig.php
   jConfigCompiler.php
   jConfigAutoloader.php
@@ -401,7 +403,6 @@ cd lib/jelix-legacy/tpl/
 *  jTplCompiler.class.php
 
 cd lib/jelix-legacy/utils/
-  jAppManager.class.php
   jAtom10Reader.class.php
   jAtom10Info.class.php
   jAtom10Item.class.php
