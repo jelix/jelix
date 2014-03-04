@@ -1,22 +1,19 @@
 <?php
 /**
-* @package    jelix
-* @subpackage utils
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2010-2011 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2010-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace Jelix\Core;
+
 /**
 * utilities to manage a jelix application
-* @package    jelix
-* @subpackage utils
-* @since 1.0b1
 * @static
 */
-class jAppManager {
+class AppManager {
 
     private function __construct() {}
 
@@ -26,7 +23,7 @@ class jAppManager {
      * @since 1.2
      */
     public static function close($message='') {
-        file_put_contents(jApp::configPath('CLOSED'), $message);
+        file_put_contents(App::configPath('CLOSED'), $message);
     }
 
     /**
@@ -34,8 +31,8 @@ class jAppManager {
      * @since 1.2
      */
     public static function open() {
-        if (file_exists(jApp::configPath('CLOSED')))
-            unlink(jApp::configPath('CLOSED'));
+        if (file_exists(App::configPath('CLOSED')))
+            unlink(App::configPath('CLOSED'));
     }
 
     /**
@@ -44,26 +41,26 @@ class jAppManager {
      * @since 1.2
      */
     public static function isOpened() {
-        return !file_exists(jApp::configPath('CLOSED'));
+        return !file_exists(App::configPath('CLOSED'));
     }
 
     public static function clearTemp($path='') {
         if ($path == '') {
-            $path = jApp::tempBasePath();
+            $path = App::tempBasePath();
             if ($path == '') {
-                throw new Exception("default temp base path is not defined",1);
+                throw new \Exception("default temp base path is not defined",1);
             }
         }
 
         if ($path == DIRECTORY_SEPARATOR || $path == '' || $path == '/') {
-            throw new Exception('given temp path is invalid', 2);
+            throw new \Exception('given temp path is invalid', 2);
         }
         if (!file_exists($path))
-            throw new Exception('given temp path does not exists', 3);
+            throw new \Exception('given temp path does not exists', 3);
 
         if (!is_writeable($path))
-            throw new Exception('given temp path does not exists', 4);
+            throw new \Exception('given temp path does not exists', 4);
 
-        jFile::removeDir($path, false);
+        \jFile::removeDir($path, false);
     }
 }
