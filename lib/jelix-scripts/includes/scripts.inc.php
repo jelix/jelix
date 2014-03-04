@@ -41,7 +41,7 @@ if (count($argv) > 0 && ($argv[0] == '-h' || $argv[0] == 'help')) {
 else
     $command = JelixScript::getCommand($commandName, null, true);
 
-if (jApp::isInit()) {
+if (\Jelix\Core\App::isInit()) {
     echo "Error: shouldn't run within an application\n";
     exit(1);
 }

@@ -16,6 +16,6 @@ require_once (JELIX_LIB_CORE_PATH.'jCmdlineCoordinator.class.php');
 
 require_once (JELIX_LIB_CORE_PATH.'request/jCmdLineRequest.class.php');
 
-jApp::setCoord(new jCmdlineCoordinator('%%config_file%%'));
-jApp::coord()->process(new jCmdLineRequest());
+\Jelix\Core\App::setCoord(new jCmdlineCoordinator('%%config_file%%'));
+\Jelix\Core\App::coord()->process(new jCmdLineRequest());
 

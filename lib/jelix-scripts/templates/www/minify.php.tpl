@@ -23,7 +23,7 @@ require ('../application.init.php');
 //$min_symlinks = array();
 //$min_uploaderHoursBehind = 0;
 
-//$min_groupConfigPath=jApp::configPath(). 'minifyGroupsConfig.php';
+//$min_groupConfigPath=\Jelix\Core\App::configPath(). 'minifyGroupsConfig.php';
 
 require(LIB_PATH.'minify/jelix_minify.php');
 

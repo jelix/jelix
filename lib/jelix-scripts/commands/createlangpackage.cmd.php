@@ -23,7 +23,7 @@ class createlangpackageCommand extends JelixScriptCommand {
 
     public function run(){
         $this->loadAppConfig();
-        $config = jApp::config();
+        $config = \Jelix\Core\App::config();
 
         $model_lang = $this->getParam('model_lang', $config->locale);
         $lang = $this->getParam('lang');
@@ -34,10 +34,10 @@ class createlangpackageCommand extends JelixScriptCommand {
                 continue;
 
             if ($this->getOption('-to-overload')) {
-                $target_dir = jApp::varPath('overloads/'.$module.'/locales/'.$lang.'/');
+                $target_dir = \Jelix\Core\App::varPath('overloads/'.$module.'/locales/'.$lang.'/');
             }
             else {
-                $target_dir = jApp::varPath('locales/'.$lang.'/'.$module.'/locales/');
+                $target_dir = \Jelix\Core\App::varPath('locales/'.$lang.'/'.$module.'/locales/');
             }
 
             jFile::createDir($target_dir);

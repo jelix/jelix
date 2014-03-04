@@ -168,7 +168,7 @@ class createdaocrudCommand extends JelixScriptCommand {
             }
         }
 
-        if (jApp::config()->urlengine['engine'] == 'significant') {
+        if (\Jelix\Core\App::config()->urlengine['engine'] == 'significant') {
 
             if (!file_exists($path.'urls.xml')) {
                 $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());

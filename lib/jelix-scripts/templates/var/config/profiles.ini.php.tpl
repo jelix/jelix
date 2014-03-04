@@ -104,7 +104,7 @@ ttl = 0
 
 ; Parameters for file driver :
 
-; directory where to put the cache files (optional default jApp::tempPath('cache/'))
+; directory where to put the cache files (optional default \Jelix\Core\App::tempPath('cache/'))
 cache_dir =
 ; enable / disable locking file
 file_locking = 1

@@ -27,9 +27,9 @@ class cleartempCommand extends JelixScriptCommand {
 
     public function run(){
         try {
-            $tempPath = jApp::tempBasePath();
+            $tempPath = \Jelix\Core\App::tempBasePath();
             if ($tempPath == DIRECTORY_SEPARATOR || $tempPath == '' || $tempPath == '/') {
-                echo "Error: bad path in jApp::tempBasePath(), it is equals to '".$tempPath."' !!\n";
+                echo "Error: bad path in \\Jelix\\Core\\App::tempBasePath(), it is equals to '".$tempPath."' !!\n";
                 echo "       Jelix cannot clear the content of the temp directory.\n";
                 echo "       Correct the path in your application.init.php or create the corresponding directory\n";
                 exit(1);

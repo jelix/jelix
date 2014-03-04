@@ -8,6 +8,8 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+use Jelix\Core\App as App;
+
 class initadminCommand extends JelixScriptCommand {
 
     public  $name = 'initadmin';
@@ -71,14 +73,14 @@ class initadminCommand extends JelixScriptCommand {
             }
         }
 
-        $installConfig = new jIniFileModifier(jApp::configPath('installer.ini.php'));
+        $installConfig = new jIniFileModifier(App::configPath('installer.ini.php'));
 
-        $inifile = new jIniMultiFilesModifier(jApp::mainConfigFile(),
-                                              jApp::configPath($ep['config']));
+        $inifile = new jIniMultiFilesModifier(App::mainConfigFile(),
+                                              App::configPath($ep['config']));
 
         $params = array();
-        $this->createFile(jApp::appPath('responses/adminHtmlResponse.class.php'),'responses/adminHtmlResponse.class.php.tpl',$params, "Response for admin interface");
-        $this->createFile(jApp::appPath('responses/adminLoginHtmlResponse.class.php'),'responses/adminLoginHtmlResponse.class.php.tpl',$params, "Response for login page");
+        $this->createFile(App::appPath('responses/adminHtmlResponse.class.php'),'responses/adminHtmlResponse.class.php.tpl',$params, "Response for admin interface");
+        $this->createFile(App::appPath('responses/adminLoginHtmlResponse.class.php'),'responses/adminLoginHtmlResponse.class.php.tpl',$params, "Response for login page");
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
         $inifile->setValue('htmlauth', 'adminLoginHtmlResponse', 'responses');
 
@@ -147,7 +149,7 @@ class initadminCommand extends JelixScriptCommand {
         $installer = new jInstaller($reporter);
         $installer->installModules(array('master_admin'), $entrypoint.'.php');
 
-        $authini = new jIniFileModifier(jApp::configPath($entrypoint.'/auth.coord.ini.php'));
+        $authini = new jIniFileModifier(App::configPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
         $authini->setValue('timeout','30');
         $authini->save();
@@ -170,7 +172,7 @@ class initadminCommand extends JelixScriptCommand {
 
         if (!$this->getOption('-noacl2db')) {
             if ($profile != '') {
-                $dbini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+                $dbini = new jIniFileModifier(App::configPath('profiles.ini.php'));
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }

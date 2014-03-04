@@ -9,7 +9,7 @@
 */
 
 namespace Jelix\Core\Config;
-use \Jelix\Core\App as App;
+use Jelix\Core\App as App;
 
 /**
  * This class merges two ini files in a single array and store it in a temporary file

@@ -8,6 +8,7 @@
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+use Jelix\Core\App as App;
 
 class migrateModule {
     public $path;
@@ -65,9 +66,9 @@ class migrateCommand extends JelixScriptCommand {
         }
 
         if ($this->checkStep("Create the install/installer.php script")) {
-            if (!file_exists(jApp::appPath('install/installer.php'))) {
-                $this->createDir(jApp::appPath('install/'));
-                $this->createFile(jApp::appPath('install/installer.php'),'installer/installer.php.tpl',array());
+            if (!file_exists(App::appPath('install/installer.php'))) {
+                $this->createDir(App::appPath('install/'));
+                $this->createFile(App::appPath('install/installer.php'),'installer/installer.php.tpl',array());
             }
         }
         $this->finalStep("Migration done");
@@ -87,7 +88,7 @@ class migrateCommand extends JelixScriptCommand {
         if ($this->checkStep("Check application compatibility")) {
             if (jVersionComparator::compareVersion($maxversion, "1.2") > -1)
                 throw new Exception("Because of maxversion in project.xml, it seems that your application is already compatible with jelix 1.2");
-            if (file_exists(jApp::configPath('installer.ini.php')))
+            if (file_exists(App::configPath('installer.ini.php')))
                 throw new Exception("installer.ini.php already exists !");
         }
     }
@@ -97,7 +98,7 @@ class migrateCommand extends JelixScriptCommand {
      */
     protected function updateConfig() {
         // retrieve the default config
-        $defaultconfig = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        $defaultconfig = new jIniFileModifier(App::configPath('defaultconfig.ini.php'));
 
         $this->defaultModulesPath = $defaultconfig->getValue('modulesPath');
         if (!$this->defaultModulesPath) {
@@ -162,7 +163,7 @@ class migrateCommand extends JelixScriptCommand {
                 if (isset($configList[$ep['config']]))
                     continue;
 
-                $config = new jIniFileModifier(jApp::configPath($ep['config']));
+                $config = new jIniFileModifier(App::configPath($ep['config']));
 
                 $modulesPath = $config->getValue('modulesPath');
                 if (!$modulesPath) {
@@ -237,7 +238,7 @@ class migrateCommand extends JelixScriptCommand {
             foreach($eplist as $ep) {
                 if (isset($configList[$ep['config']]))
                     continue;
-                $config = new jIniFileModifier(jApp::configPath($ep['config']));
+                $config = new jIniFileModifier(App::configPath($ep['config']));
 
                 $modulesPath = $config->getValue('modulesPath');
                 if (!$modulesPath) {
@@ -317,7 +318,7 @@ class migrateCommand extends JelixScriptCommand {
         $dep = $this->nextElementSibling($this->firstElementChild($doc->documentElement));
         $dir = $this->nextElementSibling($dep, 'directories');
 
-        $this->projectXml->save(jApp::appPath('project.xml'));
+        $this->projectXml->save(App::appPath('project.xml'));
     }
 
     /**
@@ -440,8 +441,8 @@ class migrateCommand extends JelixScriptCommand {
     protected $currentStep = 0;
 
     protected function loadStep() {
-        if (!file_exists(jApp::configPath('MIGRATION'))) {
-            file_put_contents(jApp::configPath('MIGRATION'), 0);
+        if (!file_exists(App::configPath('MIGRATION'))) {
+            file_put_contents(App::configPath('MIGRATION'), 0);
         }
     }
 
@@ -450,20 +451,20 @@ class migrateCommand extends JelixScriptCommand {
      */
     protected function checkStep($message) {
         $this->currentStep ++;
-        $step = intval(file_get_contents(jApp::configPath('MIGRATION')));
+        $step = intval(file_get_contents(App::configPath('MIGRATION')));
         if ($this->currentStep < $step) {
             echo $message." (already done)\n";
             return false;
         }
         else {
-            file_put_contents(jApp::configPath('MIGRATION'), $this->currentStep);
+            file_put_contents(App::configPath('MIGRATION'), $this->currentStep);
             echo $message."\n";
             return true;
         }
     }
 
     protected function finalStep($message) {
-        unlink(jApp::configPath('MIGRATION'));
+        unlink(App::configPath('MIGRATION'));
         echo $message ."\n";
     }
 }

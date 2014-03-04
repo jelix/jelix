@@ -220,10 +220,10 @@ abstract class JelixScriptCommand {
 
    function loadAppConfig() {
 
-      if (jApp::config())
+      if (\Jelix\Core\App::config())
          return;
 
-      $xml = simplexml_load_file(jApp::appPath('project.xml'));
+      $xml = simplexml_load_file(\Jelix\Core\App::appPath('project.xml'));
       $configFile = '';
 
       foreach ($xml->entrypoints->entry as $entrypoint) {
@@ -237,7 +237,7 @@ abstract class JelixScriptCommand {
       if ($configFile == '')
          throw new Exception("Entry point is unknown");
 
-      jApp::setConfig(jConfigCompiler::read($configFile, true, true, $this->entryPointName));
+      \Jelix\Core\App::setConfig(\Jelix\Core\Config\Compiler::read($configFile, true, true, $this->entryPointName));
    }
 
    /**
@@ -248,7 +248,7 @@ abstract class JelixScriptCommand {
    protected function getModulePath($module) {
       $this->loadAppConfig();
 
-      $config = jApp::config();
+      $config = \Jelix\Core\App::config();
       if (!isset($config->_modulesPathList[$module])) {
         if (isset($config->_externalModulesPathList[$module]))
             return $config->_externalModulesPathList[$module];
@@ -426,7 +426,7 @@ abstract class JelixScriptCommand {
 
       $doc = new DOMDocument();
 
-      if (!$doc->load(jApp::appPath('project.xml'))){
+      if (!$doc->load(\Jelix\Core\App::appPath('project.xml'))){
          throw new Exception("cannot load project.xml");
       }
 

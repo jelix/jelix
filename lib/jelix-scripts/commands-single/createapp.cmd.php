@@ -14,6 +14,8 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+use Jelix\Core\App as App;
+
 class createappCommand extends JelixScriptCommand {
 
    protected $commonOptions = array('-v'=>false);
@@ -93,7 +95,7 @@ class createappCommand extends JelixScriptCommand {
         $this->config->infoCopyright = $this->config->newAppInfoCopyright;
         $this->config->initAppPaths($appPath);
 
-        jApp::setEnv('jelix-scripts');
+        App::setEnv('jelix-scripts');
 
         JelixScript::checkTempPath();
 
@@ -101,17 +103,17 @@ class createappCommand extends JelixScriptCommand {
             $wwwpath = path::real($appPath.$p, false).'/';
         }
         else {
-            $wwwpath = jApp::wwwPath();
+            $wwwpath = App::wwwPath();
         }
 
         $this->createDir($appPath);
-        $this->createDir(jApp::tempBasePath());
+        $this->createDir(App::tempBasePath());
         $this->createDir($wwwpath);
 
-        $varPath = jApp::varPath();
-        $configPath = jApp::configPath();
+        $varPath = App::varPath();
+        $configPath = App::configPath();
         $this->createDir($varPath);
-        $this->createDir(jApp::logPath());
+        $this->createDir(App::logPath());
         $this->createDir($configPath);
         $this->createDir($configPath.'index/');
         $this->createDir($varPath.'overloads/');
@@ -132,7 +134,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir($appPath.'plugins/auth/');
         $this->createDir($appPath.'responses');
         $this->createDir($appPath.'tests');
-        $this->createDir(jApp::scriptsPath());
+        $this->createDir(App::scriptsPath());
 
         $param = array();
         $param['default_id'] = $appName.$this->config->infoIDSuffix;
@@ -150,23 +152,23 @@ class createappCommand extends JelixScriptCommand {
 
         $param['config_file'] = 'index/config.ini.php';
 
-        $param['rp_temp']  = $this->getRelativePath($appPath, jApp::tempBasePath());
-        $param['rp_var']   = $this->getRelativePath($appPath, jApp::varPath());
-        $param['rp_log']   = $this->getRelativePath($appPath, jApp::logPath());
+        $param['rp_temp']  = $this->getRelativePath($appPath, App::tempBasePath());
+        $param['rp_var']   = $this->getRelativePath($appPath, App::varPath());
+        $param['rp_log']   = $this->getRelativePath($appPath, App::logPath());
         $param['rp_conf']  = $this->getRelativePath($appPath, $configPath);
         $param['rp_www']   = $this->getRelativePath($appPath, $wwwpath);
-        $param['rp_cmd']   = $this->getRelativePath($appPath, jApp::scriptsPath());
+        $param['rp_cmd']   = $this->getRelativePath($appPath, App::scriptsPath());
         $param['rp_jelix'] = $this->getRelativePath($appPath, JELIX_LIB_PATH);
         $param['rp_app']   = $this->getRelativePath($wwwpath, $appPath);
 
-        $this->createFile(jApp::logPath().'.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::varPath().'mails/.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::varPath().'sessions/.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::varPath().'overloads/.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::logPath().'.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'mails/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'sessions/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'overloads/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::scriptsPath().'.dummy', 'dummy.tpl', array());
-        $this->createFile(jApp::tempBasePath().'.dummy', 'dummy.tpl', array());
+        $this->createFile(App::scriptsPath().'.dummy', 'dummy.tpl', array());
+        $this->createFile(App::tempBasePath().'.dummy', 'dummy.tpl', array());
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
@@ -183,7 +185,7 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(jApp::tempBasePath());
+        $temp = dirname(App::tempBasePath());
         if (file_exists($temp.'/.gitignore')) {
             $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
             file_put_contents($temp.'/.gitignore', $gitignore);

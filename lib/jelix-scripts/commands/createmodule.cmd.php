@@ -9,6 +9,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+use Jelix\Core\App as App;
 
 class createmoduleCommand extends JelixScriptCommand {
 
@@ -89,7 +90,7 @@ class createmoduleCommand extends JelixScriptCommand {
             $repository .= '/';
         $repositoryPath = jFile::parseJelixPath( $repository );
 
-        $iniDefault = new jIniFileModifier(jApp::mainConfigFile());
+        $iniDefault = new jIniFileModifier(App::mainConfigFile());
 
         $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
         if ($this->verbose())
@@ -99,14 +100,14 @@ class createmoduleCommand extends JelixScriptCommand {
             $list = $this->getEntryPointsList();
             foreach ($list as $k => $entryPoint) {
                 if ($entryPoint['file'] == $this->entryPointName) {
-                    $ini = new jIniFileModifier(jApp::configPath($entryPoint['config']));
+                    $ini = new jIniFileModifier(App::configPath($entryPoint['config']));
                     break;
                 }
             }
             if (!$ini) {
                 throw new Exception("entry point is unknown");
             }
-            $this->updateModulePath($ini, jApp::config()->modulesPath, $repository, $repositoryPath);
+            $this->updateModulePath($ini, App::config()->modulesPath, $repository, $repositoryPath);
             if ($this->verbose())
                 echo "modulePath updated in the configuration ".$entryPoint['config']."\n";
         }
@@ -114,7 +115,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $path = $repositoryPath.$module.'/';
         $this->createDir($path);
 
-        jApp::setConfig(null);
+        App::setConfig(null);
 
         if ($this->getOption('-admin')) {
             $this->removeOption('-nosubdir');
@@ -161,12 +162,12 @@ class createmoduleCommand extends JelixScriptCommand {
         $iniDefault->save();
 
         $list = $this->getEntryPointsList();
-        $install = new jIniFileModifier(jApp::configPath('installer.ini.php'));
+        $install = new jIniFileModifier(App::configPath('installer.ini.php'));
 
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
 
-            $configFile = jApp::configPath($entryPoint['config']);
+            $configFile = App::configPath($entryPoint['config']);
             $epconfig = new jIniFileModifier($configFile);
 
             if ($this->allEntryPoint)

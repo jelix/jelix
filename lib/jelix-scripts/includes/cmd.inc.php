@@ -43,7 +43,7 @@ $config = JelixScript::loadConfig();
 
 $command = JelixScript::getCommand($commandName, $config);
 
-if (!jApp::isInit()) {
+if (!\Jelix\Core\App::isInit()) {
     echo "Error: should run within an application\n";
     exit(1);
 }
@@ -52,7 +52,7 @@ if ($command->applicationRequirement == JelixScriptCommand::APP_MUST_NOT_EXIST) 
     exit(1);
 }
 
-jApp::setEnv('jelix-scripts');
+\Jelix\Core\App::setEnv('jelix-scripts');
 
 JelixScript::checkTempPath();
 

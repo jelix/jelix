@@ -12,14 +12,14 @@ require_once ('%%rp_app%%application.init.php');
 
 checkAppOpened();
 
-jApp::loadConfig('%%config_file%%');
+\Jelix\Core\App::loadConfig('%%config_file%%');
 ini_set("soap.wsdl_cache_enabled", "0"); // disabling PHP's WSDL cache
 
 jClasses::inc('jsoap~jSoapCoordinator');
 jClasses::inc('jsoap~jSoapRequest');
 
 $jelix = new jSoapCoordinator();
-jApp::setCoord($jelix);
+\Jelix\Core\App::setCoord($jelix);
 $jelix->request = new jSoapRequest();
 $jelix->request->initService();
 $jelix->processSoap();

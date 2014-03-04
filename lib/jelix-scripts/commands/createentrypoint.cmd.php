@@ -9,6 +9,8 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+use Jelix\Core\App as App;
+
 class createentrypointCommand extends JelixScriptCommand {
 
     public  $name = 'createentrypoint';
@@ -67,11 +69,11 @@ class createentrypointCommand extends JelixScriptCommand {
 
         // the full path of the entry point
         if ($type == 'cmdline') {
-            $entryPointFullPath = jApp::scriptsPath($name.'.php');
+            $entryPointFullPath = App::scriptsPath($name.'.php');
             $entryPointTemplate = 'scripts/cmdline.php.tpl';
         }
         else {
-            $entryPointFullPath = jApp::wwwPath($name.'.php');
+            $entryPointFullPath = App::wwwPath($name.'.php');
             $entryPointTemplate = 'www/'.($type=='classic'?'index':$type).'.php.tpl';
         }
 
@@ -96,25 +98,25 @@ class createentrypointCommand extends JelixScriptCommand {
         }
 
         // let's create the config file if needed
-        $configFilePath = jApp::configPath($configFile);
+        $configFilePath = App::configPath($configFile);
         if (!file_exists($configFilePath)) {
             $this->createDir(dirname($configFilePath));
             // the file doesn't exists
             // if there is a -copy-config parameter, we copy this file
             $originalConfig = $this->getOption('-copy-config');
             if ($originalConfig) {
-                if (! file_exists(jApp::configPath($originalConfig))) {
+                if (! file_exists(App::configPath($originalConfig))) {
                     throw new Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
-                                  file_get_contents(jApp::configPath($originalConfig)));
+                                  file_get_contents(App::configPath($originalConfig)));
                 if ($this->verbose())
                     echo "Configuration file $configFile has been created from the config file $originalConfig.\n";
             }
             else {
                 // else we create a new config file, with the startmodule of the default
                 // config as a module name.
-                $mainConfig = parse_ini_file(jApp::mainConfigFile(), true);
+                $mainConfig = parse_ini_file(App::mainConfigFile(), true);
 
                 $param = array();
                 if (isset($mainConfig['startModule']))
@@ -130,13 +132,13 @@ class createentrypointCommand extends JelixScriptCommand {
 
         require_once (JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');
 
-        $inifile = new jIniMultiFilesModifier(jApp::mainConfigFile(), $configFilePath);
+        $inifile = new jIniMultiFilesModifier(App::mainConfigFile(), $configFilePath);
 
         $param = array();
         $param['modulename'] = $inifile->getValue('startModule');
         // creation of the entry point
         $this->createDir($entryPointDir);
-        $param['rp_app']   = $this->getRelativePath($entryPointDir, jApp::appPath());
+        $param['rp_app']   = $this->getRelativePath($entryPointDir, App::appPath());
         $param['config_file'] = $configFile;
 
         $this->createFile($entryPointFullPath, $entryPointTemplate, $param, "Entry point");
@@ -180,6 +182,6 @@ class createentrypointCommand extends JelixScriptCommand {
         else
             $ep->item(0)->appendChild($elem);
 
-        $this->projectXml->save(jApp::appPath('project.xml'));
+        $this->projectXml->save(App::appPath('project.xml'));
     }
 }

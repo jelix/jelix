@@ -259,7 +259,7 @@ ACTION:
         if (isset($params[3]) && preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $params[1], $m)) {
             $localestring = "\n".$m[3].'='.$params[3];
             $path = $this->getModulePath($m[1]);
-            $file = $path.'locales/'.jApp::config()->locale.'/'.$m[2].'.'.jApp::config()->charset.'.properties';
+            $file = $path.'locales/'.\Jelix\Core\App::config()->locale.'/'.$m[2].'.'.\Jelix\Core\App::config()->charset.'.properties';
             if (file_exists($file)) {
                 $localestring = file_get_contents($file).$localestring;
             }

@@ -168,7 +168,7 @@ class JelixScriptCommandConfig {
         $appname = basename($applicationDir);
         $search = array( '%appdir%', '%appname%');
         $replace = array($applicationDir, $appname);
-        jApp::initPaths(
+        \Jelix\Core\App::initPaths(
             $applicationDir.'/',
             str_replace($search, $replace, $this->layoutWwwPath),
             str_replace($search, $replace, $this->layoutVarPath),
@@ -176,7 +176,7 @@ class JelixScriptCommandConfig {
             str_replace($search, $replace, $this->layoutConfigPath),
             str_replace($search, $replace, $this->layoutScriptsPath)
         );
-        jApp::setTempBasePath(str_replace($search, $replace, $this->layoutTempPath));
+        \Jelix\Core\App::setTempBasePath(str_replace($search, $replace, $this->layoutTempPath));
     }
 
     /**
@@ -187,7 +187,7 @@ class JelixScriptCommandConfig {
 
         $doc = new DOMDocument();
 
-        if (!$doc->load(jApp::appPath('project.xml'))){
+        if (!$doc->load(\Jelix\Core\App::appPath('project.xml'))){
             throw new Exception("cannot load project.xml");
         }
 

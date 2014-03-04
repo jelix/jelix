@@ -82,8 +82,8 @@ class createformCommand extends JelixScriptCommand {
             return;
         }
 
-        jApp::config()->startModule = $this->_parameters['module'];
-        jApp::pushCurrentModule($this->_parameters['module']);
+        \Jelix\Core\App::config()->startModule = $this->_parameters['module'];
+        \Jelix\Core\App::pushCurrentModule($this->_parameters['module']);
 
         $tools = jDb::getConnection()->tools();
 

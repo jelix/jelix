@@ -34,7 +34,7 @@ class installappCommand extends JelixScriptCommand {
     public function run(){
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
-        jAppManager::close();
+        \Jelix\Core\AppManager::close();
         if ($this->verbose())
             $reporter = new textInstallReporter();
         else
@@ -44,17 +44,17 @@ class installappCommand extends JelixScriptCommand {
 
         $installer->installApplication();
         try {
-            jAppManager::clearTemp(jApp::tempBasePath());
+            \Jelix\Core\AppManager::clearTemp(\Jelix\Core\App::tempBasePath());
         }
         catch(Exception $e) {
             if ($e->getCode() == 2) {
-                echo "Error: bad path in jApp::tempBasePath(), it is equals to '".jApp::tempBasePath()."' !!\n";
+                echo "Error: bad path in use \\Jelix\\Core\\App::tempBasePath(), it is equals to '".\Jelix\Core\App::tempBasePath()."' !!\n";
                 echo "       Jelix cannot clear the content of the temp directory.\n";
                 echo "       you must clear it your self.\n";
                 echo "       Correct the path in the application.init.php or create the directory\n";
             }
             else echo "Error: ".$e->getMessage();
         }
-        jAppManager::open();
+        \Jelix\Core\AppManager::open();
     }
 }

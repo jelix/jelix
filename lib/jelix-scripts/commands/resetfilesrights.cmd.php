@@ -32,10 +32,10 @@ class resetfilesrightsCommand extends JelixScriptCommand {
     public function run(){
         
         $paths = array();
-        $paths[] = jApp::tempBasePath();
-        $paths[] = jApp::logPath();
-        $paths[] = jApp::varPath('mails');
-        $paths[] = jApp::varPath('db');
+        $paths[] = \Jelix\Core\App::tempBasePath();
+        $paths[] = \Jelix\Core\App::logPath();
+        $paths[] = \Jelix\Core\App::varPath('mails');
+        $paths[] = \Jelix\Core\App::varPath('db');
         
         foreach($paths as $path) {
             $this->setRights($path);

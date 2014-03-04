@@ -13,10 +13,10 @@ require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
 checkAppOpened();
 
-jApp::loadConfig('%%config_file%%');
+\Jelix\Core\App::loadConfig('%%config_file%%');
 
-jApp::setCoord(new jCoordinator());
-jApp::coord()->process(new jClassicRequest());
+\Jelix\Core\App::setCoord(new jCoordinator());
+\Jelix\Core\App::coord()->process(new jClassicRequest());
 
 
 

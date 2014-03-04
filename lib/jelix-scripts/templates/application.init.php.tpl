@@ -8,9 +8,9 @@
 * @license   %%default_license_url%% %%default_license%%
 */
 
-require (%%php_rp_jelix%%.'init.php');
+require (__DIR__.'/vendor/autoload.php');
 
-jApp::initPaths(
+\Jelix\Core\App::initPaths(
     __DIR__.'/',
     %%php_rp_www%%,
     %%php_rp_var%%,
@@ -18,4 +18,4 @@ jApp::initPaths(
     %%php_rp_conf%%,
     %%php_rp_cmd%%
 );
-jApp::setTempBasePath(%%php_rp_temp%%);
+\Jelix\Core\App::setTempBasePath(%%php_rp_temp%%);
