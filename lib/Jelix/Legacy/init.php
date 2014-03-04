@@ -11,6 +11,7 @@
 $GLOBALS['JELIX_LEGACY_CLASSES'] = array(
     "jApp" => __DIR__.'/core/jApp.php',
     "jAppManager" => __DIR__.'/core/jAppManager.php',
+    "jAutoloader" => __DIR__.'/core/jAutoloader.php',
     "jConfig" => __DIR__.'/core/jConfig.php',
     "jConfigAutoloader" => __DIR__.'/core/jConfigAutoloader.php',
     "jConfigCompiler" => __DIR__.'/core/jConfigCompiler.php',

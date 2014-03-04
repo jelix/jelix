@@ -9,6 +9,7 @@ rmd lib/jelix/
 
 cd lib/jelix-legacy/core/
   jApp.class.php
+  jAutoloader.class.php
   jConfig.class.php
   jConfigCompiler.class.php
   jConfigAutoloader.class.php
