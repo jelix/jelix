@@ -1,19 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2011-2012 Laurent Jouanneau
+* @copyright  2011-2014 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace Jelix\Core;
+
 /**
-*
-* @package    jelix
-* @subpackage core
+* Class to do autoloading in various way. Compatible with PSR-0 and PSR-4
 */
-class jAutoloader {
+class Autoloader {
 
     protected $nsPaths = array();
     protected $classPaths = array();
@@ -61,7 +59,8 @@ class jAutoloader {
     }
 
     /**
-     * register a namespace associated to a path. The full class path will be resolved as:
+     * register a namespace associated to a path. The full class path will be resolved
+     * following psr4 rules. As:
      *  - the part of the namespace of the class that match $namespace, is removed
      *  - the other part is then transformed following psr0 rules
      *  - the resulting path is then added to $includePath

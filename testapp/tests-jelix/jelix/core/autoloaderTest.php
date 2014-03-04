@@ -1,7 +1,5 @@
 <?php
 
-require_once(JELIX_LIB_CORE_PATH.'jAutoloader.class.php');
-
 class fakeAutoloader extends jAutoloader {
 
     function test_get_path($className) {
