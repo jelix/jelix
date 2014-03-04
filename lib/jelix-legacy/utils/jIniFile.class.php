@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2008-2012 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -20,14 +20,57 @@ class jIniFile {
     /**
      * read an ini file
      * @param string $filename the path and the name of the file to read
+     * @param boolean $asObject true if the content should be returned as an object
      * @return array the content of the file or false
      */
-    public static function read($filename) {
-        if ( file_exists ($filename) ) {
-            return parse_ini_file($filename, true);
-        } else {
+    public static function read($filename, $asObject = false) {
+        if (file_exists ($filename)) {
+            if ($asObject) {
+                return (object) parse_ini_file($filename, true);
+            }
+            else {
+                return parse_ini_file($filename, true);
+            }
+        }
+        else {
             return false;
         }
+    }
+
+    /**
+     * read an ini file and merge its parameters to the given object.
+     * Useful to merge to config files.
+     * Parameters whose name starts with a '_' are not merged.
+     * @param string $filename the path and the name of the file to read
+     * @param object $content
+     * @return array the content of the file or false
+     * @since 1.7
+     */
+    public static function readAndMergeObject($filename, $content) {
+        if (!file_exists ($filename)) {
+            return false;
+        }
+
+        $newContent = @parse_ini_file($filename, true);
+        if ($newContent === false)
+            return false;
+
+        foreach ($newContent as $k=>$v) {
+            if (!isset($content->$k)) {
+                $content->$k = $v;
+                continue;
+            }
+
+            if ($k[1] == '_')
+                continue;
+            if (is_array($v)) {
+                $content->$k = array_merge($content->$k, $v);
+            }
+            else {
+                $content->$k = $v;
+            }
+        }
+        return $content;
     }
 
     /**

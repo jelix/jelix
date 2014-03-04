@@ -55,16 +55,16 @@ class Compiler {
             throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
         }
         // this is the defaultconfig file of JELIX itself
-        $config = jelix_read_ini(__DIR__.'/defaultconfig.ini.php');
+        $config = \jIniFile::read(__DIR__.'/defaultconfig.ini.php', true);
         self::$commonConfig = clone $config;
 
         // read the main configuration of the app
-        @jelix_read_ini(App::mainConfigFile(), $config);
+        \jIniFile::readAndMergeObject(App::mainConfigFile(), $config);
 
         if ($configFile != 'mainconfig.ini.php' && $configFile != 'defaultconfig.ini.php') {
             if (!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
-            if ( false === @jelix_read_ini($configPath.$configFile, $config))
+            if ( false === \jIniFile::readAndMergeObject($configPath.$configFile, $config))
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
 
