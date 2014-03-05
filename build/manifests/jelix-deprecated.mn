@@ -13,12 +13,14 @@ cd lib/jelix-legacy/core/
   jConfig.class.php
   jConfigCompiler.class.php
   jConfigAutoloader.class.php
+  jIncluder.class.php
   ConfigCompilerPluginInterface.php
   defaultconfig.ini.php
 
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
-
+  jClasses.class.php
+  jClassBinding.class.php
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/

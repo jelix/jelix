@@ -8,6 +8,9 @@ cd lib/Jelix/Core
   AppManager.php
   Autoloader.php
   Config.php
+  Includer.php
+  ModuleClass.php
+  ModuleClassBinding.php
   composer.json
 
 cd lib/Jelix/Core/Config
@@ -62,7 +65,6 @@ cd lib/jelix-legacy/core
 * jController.class.php
 * jCoordinator.class.php
   jException.class.php
-* jIncluder.class.php
   jLocale.class.php
 * jLog.class.php
   jRequest.class.php
@@ -408,8 +410,6 @@ cd lib/jelix-legacy/utils/
   jAtom10Info.class.php
   jAtom10Item.class.php
   jCache.class.php
-  jClasses.class.php
-  jClassBinding.class.php
   jCmdUtils.class.php
   jCrypt.class.php
 * jDatatype.class.php
