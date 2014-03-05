@@ -20,6 +20,7 @@ $GLOBALS['JELIX_LEGACY_CLASSES'] = array(
     "jIMultiFileCompiler" => __DIR__.'/core/jIMultiFileCompiler.php',
     "jIncluder" => __DIR__.'/core/jIncluder.php',
     "jISimpleCompiler" => __DIR__.'/core/jISimpleCompiler.php',
+    "jProfiles" => __DIR__.'/utils/jProfiles.php',
 );
 
 

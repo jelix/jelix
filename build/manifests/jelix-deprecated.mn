@@ -21,6 +21,7 @@ cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php
   jClassBinding.class.php
+  jProfiles.class.php
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/

@@ -11,6 +11,7 @@ cd lib/Jelix/Core
   Includer.php
   ModuleClass.php
   ModuleClassBinding.php
+  Profiles.php
   composer.json
 
 cd lib/Jelix/Core/Config
@@ -438,7 +439,6 @@ cd lib/jelix-legacy/utils/
   jMailer.class.php
   jMessage.class.php
   jMethodSniffer.class.php
-  jProfiles.class.php
   jRSS20Reader.class.php
   jRSS20Info.class.php
   jRSS20Item.class.php
