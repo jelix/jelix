@@ -43,6 +43,7 @@ cd lib/Jelix/Legacy/core
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
+  jProfiles.php
 
 cd lib/jelix-legacy/
   CHANGELOG

@@ -1,20 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Julien Issler
-* @copyright   2011-2012 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
+* @copyright   2011-2014 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+namespace Jelix\Core;
+
 /**
 * class to read profiles from the profiles.ini.php
-* @package     jelix
-* @subpackage  utils
 */
-class jProfiles {
+class Profiles {
 
     /**
      * loaded profiles
@@ -30,7 +28,7 @@ class jProfiles {
 
 
     protected static function loadProfiles() {
-        $file = jApp::configPath('profiles.ini.php');
+        $file = App::configPath('profiles.ini.php');
         self::$_profiles = parse_ini_file($file, true);
     }
 
@@ -95,9 +93,9 @@ class jProfiles {
         }
         else {
             if ($name == 'default')
-                throw new jException('jelix~errors.profile.default.unknown', $category);
+                throw new \jException('jelix~errors.profile.default.unknown', $category);
             else
-                throw new jException('jelix~errors.profile.unknown',array($name, $category));
+                throw new \jException('jelix~errors.profile.unknown',array($name, $category));
         }
 
         if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
@@ -107,7 +105,7 @@ class jProfiles {
             return self::$_profiles[$targetName];
         }
         else {
-            throw new jException('jelix~errors.profile.unknown', array($name, $category));
+            throw new \jException('jelix~errors.profile.unknown', array($name, $category));
         }
     }
 
@@ -138,7 +136,7 @@ class jProfiles {
      * or store the object retrieved from the function, which accepts a profile
      * as parameter (array)
      * @param string $category the profile category
-     * @param string $name the name of the profile (will be given to jProfiles::get)
+     * @param string $name the name of the profile (will be given to Profiles::get)
      * @param string|array  $function the function name called to retrieved the object. It uses call_user_func.
      * @param boolean  $noDefault  if true and if the profile doesn't exist, throw an error instead of getting the default profile
      * @return object|null the stored object
@@ -163,7 +161,7 @@ class jProfiles {
      */
     public static function createVirtualProfile ($category, $name, $params) {
         if ($name == '') {
-           throw new jException('jelix~errors.profile.virtual.no.name', $category);
+           throw new \jException('jelix~errors.profile.virtual.no.name', $category);
         }
 
         if (self::$_profiles === null) {
