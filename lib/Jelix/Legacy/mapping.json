@@ -1,0 +1,14 @@
+{
+    "jApp" : "core/jApp.php",
+    "jAppManager" : "core/jAppManager.php",
+    "jAutoloader" : "core/jAutoloader.php",
+    "jClasses" : "utils/jClasses.php",
+    "jClassBinding" : "utils/jClassBinding.php",
+    "jConfig" : "core/jConfig.php",
+    "jConfigAutoloader" : "core/jConfigAutoloader.php",
+    "jConfigCompiler" : "core/jConfigCompiler.php",
+    "jIMultiFileCompiler" : "core/jIMultiFileCompiler.php",
+    "jIncluder" : "core/jIncluder.php",
+    "jISimpleCompiler" : "core/jISimpleCompiler.php",
+    "jProfiles" : "utils/jProfiles.php"
+}

@@ -28,6 +28,7 @@ cd lib/Jelix/Core/Includer
 cd lib/Jelix/Legacy/
   composer.json
   init.php
+  mapping.json
 
 cd lib/Jelix/Legacy/core
   jApp.php
