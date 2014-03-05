@@ -1,29 +1,27 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Christophe Thiriot
-* @copyright   2005-2007 Laurent Jouanneau
+* @copyright   2005-2014 Laurent Jouanneau
 * @copyright   2008 Christophe Thiriot
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+namespace Jelix\Core;
+
 /**
 * This object is responsible to include and instancy some classes stored in the classes directory of modules.
-* @package     jelix
-* @subpackage  utils
 * @static
 */
-class jClasses {
+class ModuleClass {
 
     static protected $_instances = array();
 
     static protected $_bindings = array();
 
-    private function __construct(){}
+    private function __construct() {}
 
     /**
      * include the given class and return an instance
@@ -31,14 +29,14 @@ class jClasses {
      * @return object an instance of the classe
      */
     static public function create($selector) {
-        $sel = new jSelectorClass($selector);
+        $sel = new \jSelectorClass($selector);
         require_once($sel->getPath());
         $class = $sel->className;
         return new $class ();
     }
 
     /**
-     * Shortcut to corresponding jClassBinding::getInstance() but without singleton
+     * Shortcut to corresponding ModuleClassBinding::getInstance() but without singleton
      * The binding is recreated each time (be careful about performance)
      * 
      * @param string $selector  Selector to a bindable class|interface
@@ -52,7 +50,7 @@ class jClasses {
 
     /**
      * alias of create method
-     * @see jClasses::create()
+     * @see ModuleClass::create()
      */
     static public function createInstance($selector) {
         return self::create($selector);
@@ -65,7 +63,7 @@ class jClasses {
      * @return object an instance of the classe
      */
     static public function getService($selector) {
-        $sel = new jSelectorClass($selector);
+        $sel = new \jSelectorClass($selector);
         $s = $sel->toString();
         if (isset(self::$_instances[$s])) {
             return self::$_instances[$s];
@@ -77,7 +75,7 @@ class jClasses {
     }
 
     /**
-     * Shortcut to corresponding jClassBinding::getInstance() 
+     * Shortcut to corresponding ModuleClassBinding::getInstance() 
      * 
      * @param string $selector  Selector to a bindable class|interface
      * @return object           Corresponding instance
@@ -90,21 +88,21 @@ class jClasses {
 
     /**
      * Get the binding corresponding to the specified selector.
-     * Better for use like this : jClasses::bind($selector)->getClassName()
+     * Better for use like this : ModuleClass::bind($selector)->getClassName()
      * 
      * @param string $selector
      * @param bool   $singleton if this binding should be a singleton or not
-     * @return jClassBinding
-     * @see jClasses::bind
+     * @return ModuleClassBinding
+     * @see ModuleClass::bind
      * @since 1.1
      * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function bind($selector) {
-        $osel = jSelectorFactory::create($selector, 'iface');
+        $osel = \jSelectorFactory::create($selector, 'iface');
         $s    = $osel->toString(true);
 
         if (!isset(self::$_bindings[$s])) {
-            self::$_bindings[$s] = new jClassBinding($osel);
+            self::$_bindings[$s] = new ModuleClassBinding($osel);
         }
 
         return self::$_bindings[$s];
@@ -126,7 +124,7 @@ class jClasses {
      * @param string $selector the jelix selector correponding to the class
      */
     static public function inc($selector) {
-        $sel = new jSelectorClass($selector);
+        $sel = new \jSelectorClass($selector);
         require_once($sel->getPath());
     }
 
@@ -136,7 +134,7 @@ class jClasses {
      * @since 1.0b2
      */
     static public function incIface($selector) {
-        $sel = new jSelectorIface($selector);
+        $sel = new \jSelectorIface($selector);
         require_once($sel->getPath());
     }
 }

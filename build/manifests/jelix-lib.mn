@@ -20,6 +20,10 @@ cd lib/Jelix/Core/Config
   CompilerPluginInterface.php
   Exception.php
 
+cd lib/Jelix/Core/Includer
+  MultiFileCompilerInterface.php
+  SimpleCompilerInterface.php
+
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -31,6 +35,13 @@ cd lib/Jelix/Legacy/core
   jConfig.php
   jConfigCompiler.php
   jConfigAutoloader.php
+  jIncluder.php
+  jIMultiFileCompiler.php
+  jISimpleCompiler.php
+
+cd lib/Jelix/Legacy/utils
+  jClasses.php
+  jClassBinding.php
 
 cd lib/jelix-legacy/
   CHANGELOG

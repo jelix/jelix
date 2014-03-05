@@ -1,24 +1,22 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  utils
  * @author      Christophe Thiriot
  * @contributor Laurent Jouanneau
- * @copyright   2008 Christophe Thiriot, 2008-2012 Laurent Jouanneau
+ * @copyright   2008 Christophe Thiriot, 2008-2014 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  * @since 1.1
  */
 
+namespace Jelix\Core;
+
 /**
  * Services binding for jelix
  *
- * @package     jelix
- * @subpackage  utils
  * @experimental  This class is EXPERIMENTAL. Its API and its behaviors could
  * change in future version
  */
-class jClassBinding {
+class ModuleClassBinding {
     /**
      * @var jSelectorIface|jSelectorClass Called selector
      */
@@ -49,10 +47,10 @@ class jClassBinding {
      * Even if this instance is already defined (BE CAREFUL !!! singleton is bypassed)
      *
      * @param string $toselector
-     * @return jClassBinding $this
+     * @return ModuleClassBinding $this
      */
     public function to($toselector) {
-        $this->toSelector = new jSelectorClass($toselector);
+        $this->toSelector = new \jSelectorClass($toselector);
         $this->instance   = null;
         return $this;
     }
@@ -62,7 +60,7 @@ class jClassBinding {
      * Even if this instance is already defined (BE CAREFUL !!! singleton is bypassed)
      *
      * @param  mixed    $instance
-     * @return jClassBinding $this
+     * @return ModuleClassBinding $this
      */
     public function toInstance($instance) {
         $this->instance   = $instance;
@@ -84,16 +82,16 @@ class jClassBinding {
     }
 
     /**
-     * Create the binded selector if not initialzed yet
+     * Create the binded selector if not initialized yet
      * 
      * @return mixed 
      */
     protected function _createInstance() {
         if ($this->toSelector === null) {
             $this->instance   = null;
-            $this->toSelector = $this->_getClassSelector();    
+            $this->toSelector = $this->_getClassSelector();
         }
-        return jClasses::create($this->toSelector->toString());
+        return ModuleClass::create($this->toSelector->toString());
     }
 
     /**
@@ -104,9 +102,11 @@ class jClassBinding {
     public function getClassName() {
         if ($this->instance !== null) {
             return get_class($this->instance);
-        } elseif ($this->toSelector !== null) {
+        }
+        elseif ($this->toSelector !== null) {
             return $this->toSelector->className;
-        } else {
+        }
+        else {
             return $this->_getClassSelector()->className;
         }
     }
@@ -126,7 +126,7 @@ class jClassBinding {
             $str_selector_long = $this->fromSelector->toString(true);
 
             // 1) verify that a default implementation is specified in the jelix config file
-            $config = jApp::config();
+            $config = App::config();
             if (isset($config->classbindings) && count($config->classbindings)) {
                 $conf = $config->classbindings;
 
@@ -142,8 +142,8 @@ class jClassBinding {
                 }
 
                 if ($str_fromselector !== null) {
-                    $this->fromSelector = jSelectorFactory::create($str_selector_long, 'iface');
-                    return $this->toSelector = new jSelectorClass($conf[$str_fromselector]);
+                    $this->fromSelector = \jSelectorFactory::create($str_selector_long, 'iface');
+                    return $this->toSelector = new \jSelectorClass($conf[$str_fromselector]);
                 }
             }
 
@@ -152,15 +152,15 @@ class jClassBinding {
             if (defined($constname)) { // check first, constant() crashes on some php version when the const does not exist
                 $class_selector = constant($constname);
                 if ($class_selector!==null)
-                    return $this->toSelector = new jSelectorClass($class_selector);
+                    return $this->toSelector = new \jSelectorClass($class_selector);
             }
 
             // 3) If the source is a class, then use it as the default implementation
-            if (true === ($this->fromSelector instanceof jSelectorClass)) {
+            if (true === ($this->fromSelector instanceof \jSelectorClass)) {
                 return $this->toSelector = $this->fromSelector;
             }
 
-            throw new jException('jelix~errors.bindings.nobinding', array($this->fromSelector->toString(true)));
+            throw new \jException('jelix~errors.bindings.nobinding', array($this->fromSelector->toString(true)));
         }
     }
 }
