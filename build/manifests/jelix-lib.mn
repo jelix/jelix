@@ -25,6 +25,11 @@ cd lib/Jelix/Core/Includer
   MultiFileCompilerInterface.php
   SimpleCompilerInterface.php
 
+cd lib/Jelix/Core/Selector
+  Factory.php
+  SelectorInterface.php
+  Exception.php
+
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -40,6 +45,9 @@ cd lib/Jelix/Legacy/core
   jIncluder.php
   jIMultiFileCompiler.php
   jISimpleCompiler.php
+  jSelectorFactory.php
+  jISelector.php
+  jExceptionSelector.php
 
 cd lib/Jelix/Legacy/utils
   jClasses.php
@@ -83,7 +91,6 @@ cd lib/jelix-legacy/core
 * jLog.class.php
   jRequest.class.php
 * jResponse.class.php
-* jSelector.class.php
   jUrlBase.class.php
   jUrlAction.class.php
 * jUrl.class.php
@@ -91,7 +98,6 @@ cd lib/jelix-legacy/core
   jServer.class.php
   jelix_api.php
   jICoordPlugin.iface.php
-  jISelector.iface.php
   jIUrlEngine.iface.php
 #endif
 ! lang_to_locale.ini.php
@@ -844,3 +850,4 @@ cd lib/installwizard/pages/confmail/
 
 cd temp
   .htaccess
+

@@ -17,6 +17,8 @@ cd lib/jelix-legacy/core/
   ConfigCompilerPluginInterface.php
   defaultconfig.ini.php
 
+   jSelector.class.php
+   jISelector.iface.php
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php
