@@ -10,6 +10,14 @@ list($switches, $p) = jCmdUtils::getOptionsAndParams($_SERVER['argv'], $sws, $pa
 $p['targetdir'] = trim($p['targetdir'], '/');
 $p['sourcedir'] = trim($p['sourcedir'], '/');
 
+$namespace = str_replace('/', '\\', $p['targetdir']).'\\';
+
+$newclass = $namespace.substr($p['targetfile'],0, strpos($p['targetfile'], '.'));
+$oldclass = substr($p['sourcefile'],0, strpos($p['sourcefile'], '.'));
+
+$legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
+
+
 // ------------------ update manifests
 
 
@@ -22,25 +30,19 @@ $deprecated->parse();
 $jelixLib->removeFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
 $deprecated->addFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
 $jelixLib->addFile('lib/Jelix/'.$p['targetdir'], $p['targetfile']);
+$jelixLib->addFile($legacyDir, $oldclass.'.php');
 
 $jelixLib->save();
 $deprecated->save();
 
 //-------------------  create dummy class
 
-$namespace = str_replace('/', '\\', $p['targetdir']).'\\';
-
-$newclass = $namespace.substr($p['targetfile'],0, strpos($p['targetfile'], '.'));
-$oldclass = substr($p['sourcefile'],0, strpos($p['sourcefile'], '.'));
+if (!file_exists($legacyDir))
+    mkdir ($legacyDir, 775, true);
 
 $template = file_get_contents(__DIR__.'/classtemplate.txt');
 $template = str_replace('%%OLDCLASS%%', $oldclass, $template);
 $template = str_replace('%%NEWCLASS%%', $newclass, $template);
-
-$legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
-
-if (!file_exists($legacyDir))
-    mkdir ($legacyDir, 775, true);
 
 file_put_contents($legacyDir.'/'.$oldclass.'.php', $template);
 

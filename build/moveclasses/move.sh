@@ -16,3 +16,5 @@ fi
 
 git mv lib/jelix-legacy/$SOURCE_DIR/$SOURCE_FILE lib/Jelix/$TARGET_DIR/$TARGET_FILE
 php build/moveclasses/moveClass.php $SOURCE_DIR $SOURCE_FILE $TARGET_DIR $TARGET_FILE
+git add lib/Jelix/Legacy/$SOURCE_DIR
+#git commit -am "Move $SOURCE_FILE to lib/Jelix/$TARGET_DIR/$TARGET_FILE"
