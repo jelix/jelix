@@ -13,5 +13,8 @@
     "jProfiles": "utils/jProfiles.php",
     "jSelectorFactory": "core/jSelectorFactory.php",
     "jISelector": "core/jISelector.php",
-    "jExceptionSelector": "core/jExceptionSelector.php"
+    "jExceptionSelector": "core/jExceptionSelector.php",
+    "jSelectorClass": "core/selector/jSelectorClass.php",
+    "jSelectorModule": "core/selector/jSelectorModule.php",
+    "jSelectorIface": "core/selector/jSelectorIface.php"
 }

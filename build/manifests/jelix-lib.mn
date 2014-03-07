@@ -30,6 +30,9 @@ cd lib/Jelix/Core/Selector
   SelectorInterface.php
   Exception.php
 
+   ClassSelector.php
+   ModuleSelector.php
+   InterfaceSelector.php
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -144,14 +147,11 @@ cd lib/jelix-legacy/core/response
 cd lib/jelix-legacy/core/selector
 * jSelectorAct.class.php
 * jSelectorActFast.class.php
-* jSelectorClass.class.php
   jSelectorDao.class.php
   jSelectorDaoRecord.class.php
   jSelectorFile.lib.php
   jSelectorForm.class.php
-  jSelectorIface.class.php
 * jSelectorLoc.class.php
-* jSelectorModule.class.php
   jSelectorSimpleFile.class.php
   jSelectorTpl.class.php
   jSelectorZone.class.php
@@ -851,3 +851,7 @@ cd lib/installwizard/pages/confmail/
 cd temp
   .htaccess
 
+cd lib/Jelix/Legacy/core/selector
+   jSelectorClass.php
+   jSelectorModule.php
+   jSelectorIface.php

@@ -71,14 +71,14 @@ class ManifestParser {
         $foundDir = false;
         foreach($this->content as $k=>$token) {
             if ($token[0] == self::DIR && $token[2] == $dir){
-                $this->content[$k][3][] = array(self::FILE, '   '.$filename."\n", $filename);
+                $this->content[$k][3][] = array(self::FILE, '  '.$filename."\n", $filename);
                 $foundDir = true;
                 break;
             }
         }
         if (!$foundDir) {
             $currentDir = array(self::DIR, "cd $dir\n", $dir, array());
-            $currentDir[3][] = array(self::FILE, '   '.$filename."\n", $filename);
+            $currentDir[3][] = array(self::FILE, '  '.$filename."\n", $filename);
             $this->content[] = $currentDir;
         }
     }

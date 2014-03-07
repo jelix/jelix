@@ -38,7 +38,7 @@ $deprecated->save();
 //-------------------  create dummy class
 
 if (!file_exists($legacyDir))
-    mkdir ($legacyDir, 775, true);
+    mkdir ($legacyDir, 0775, true);
 
 $template = file_get_contents(__DIR__.'/classtemplate.txt');
 $template = str_replace('%%OLDCLASS%%', $oldclass, $template);

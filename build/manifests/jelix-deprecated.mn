@@ -195,3 +195,7 @@ cd lib/json
 cd lib/php5redis
   README.txt
   Php5Redis.php
+cd lib/jelix-legacy/core/selector
+   jSelectorClass.class.php
+   jSelectorModule.class.php
+   jSelectorIface.class.php
