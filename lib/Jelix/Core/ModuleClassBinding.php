@@ -18,7 +18,7 @@ namespace Jelix\Core;
  */
 class ModuleClassBinding {
     /**
-     * @var jSelectorIface|jSelectorClass Called selector
+     * @var Selector\ClassSelector|Selector\InterfaceSelector Called selector
      */
     protected $fromSelector = null;
 
@@ -34,7 +34,7 @@ class ModuleClassBinding {
 
     /**
      * __constructor
-     * @param jSelectorIface|jSelectorClass $selector the selector of the class
+     * @param Selector\ClassSelector|Selector\InterfaceSelector $selector the selector of the class
      * @return void
      */
     public function __construct($selector) {
@@ -50,7 +50,7 @@ class ModuleClassBinding {
      * @return ModuleClassBinding $this
      */
     public function to($toselector) {
-        $this->toSelector = new \jSelectorClass($toselector);
+        $this->toSelector = new Selector\ClassSelector($toselector);
         $this->instance   = null;
         return $this;
     }
@@ -143,7 +143,7 @@ class ModuleClassBinding {
 
                 if ($str_fromselector !== null) {
                     $this->fromSelector = Selector\Factory::create($str_selector_long, 'iface');
-                    return $this->toSelector = new \jSelectorClass($conf[$str_fromselector]);
+                    return $this->toSelector = new Selector\ClassSelector($conf[$str_fromselector]);
                 }
             }
 
@@ -152,11 +152,11 @@ class ModuleClassBinding {
             if (defined($constname)) { // check first, constant() crashes on some php version when the const does not exist
                 $class_selector = constant($constname);
                 if ($class_selector!==null)
-                    return $this->toSelector = new \jSelectorClass($class_selector);
+                    return $this->toSelector = new Selector\ClassSelector($class_selector);
             }
 
             // 3) If the source is a class, then use it as the default implementation
-            if (true === ($this->fromSelector instanceof \jSelectorClass)) {
+            if (true === ($this->fromSelector instanceof Selector\ClassSelector)) {
                 return $this->toSelector = $this->fromSelector;
             }
 

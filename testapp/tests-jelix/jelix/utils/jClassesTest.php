@@ -44,7 +44,7 @@ class jClassesTest extends jUnitTestCase {
         try {
             jClasses::bind('jelix_tests~test')->to('jelix_tests~notexistingclass');
             $this->fail('A binding to a non existing class should raise an exception');
-        } catch (jExceptionSelector $e) {
+        } catch (\Jelix\Core\Selector\Exception $e) {
             $this->assertTrue(true);
         }
     }
@@ -90,7 +90,7 @@ class jClassesTest extends jUnitTestCase {
         try {
             $class = jClasses::getBindedService('class:jelix_tests~test/bind');
             $this->fail('A non existing default implementation should raise an exception');
-        } catch (jExceptionSelector $e) {
+        } catch (\Jelix\Core\Selector\Exception $e) {
             $this->assertTrue(true);
         }
     }

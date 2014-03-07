@@ -29,7 +29,7 @@ class ModuleClass {
      * @return object an instance of the classe
      */
     static public function create($selector) {
-        $sel = new \jSelectorClass($selector);
+        $sel = new Selector\ClassSelector($selector);
         require_once($sel->getPath());
         $class = $sel->className;
         return new $class ();
@@ -63,7 +63,7 @@ class ModuleClass {
      * @return object an instance of the classe
      */
     static public function getService($selector) {
-        $sel = new \jSelectorClass($selector);
+        $sel = new Selector\ClassSelector($selector);
         $s = $sel->toString();
         if (isset(self::$_instances[$s])) {
             return self::$_instances[$s];
@@ -124,7 +124,7 @@ class ModuleClass {
      * @param string $selector the jelix selector correponding to the class
      */
     static public function inc($selector) {
-        $sel = new \jSelectorClass($selector);
+        $sel = new Selector\ClassSelector($selector);
         require_once($sel->getPath());
     }
 
@@ -134,7 +134,7 @@ class ModuleClass {
      * @since 1.0b2
      */
     static public function incIface($selector) {
-        $sel = new \jSelectorIface($selector);
+        $sel = new Selector\InterfaceSelector($selector);
         require_once($sel->getPath());
     }
 }

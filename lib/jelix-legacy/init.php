@@ -114,14 +114,11 @@ spl_autoload_register("jelix_autoload");
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
 #includephp core/jServer.class.php
-#includephp core/selector/jSelectorModule.class.php
 #includephp core/selector/jSelectorActFast.class.php
 #includephp core/selector/jSelectorAct.class.php
-#includephp core/selector/jSelectorClass.class.php
 #includephp core/selector/jSelectorDao.class.php
 #includephp core/selector/jSelectorDaoRecord.class.php
 #includephp core/selector/jSelectorForm.class.php
-#includephp core/selector/jSelectorIface.class.php
 #includephp core/selector/jSelectorLoc.class.php
 #includephp core/selector/jSelectorTpl.class.php
 #includephp core/selector/jSelectorZone.class.php
@@ -146,14 +143,11 @@ require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jServer.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorClass.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorIface.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');

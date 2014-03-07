@@ -17,7 +17,7 @@ namespace Jelix\Core\Includer;
 interface SimpleCompilerInterface {
     /**
      * parse the given file, and store the result in a cache file
-     * @param jSelector $aSelector the file selector
+     * @param \Jelix\Core\Selector\SelectorInterface $aSelector the file selector
      * @return boolean true : process ok
      */
     public function compile($aSelector);

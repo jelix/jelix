@@ -2,13 +2,14 @@
 /**
 * see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors.
 *
-* @package     jelix
-* @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+namespace Jelix\Core\Selector;
+use Jelix\Core\App as App;
 
 /**
  * base class for all selector concerning module files
@@ -16,10 +17,9 @@
  * General syntax for them : "module~resource".
  * Syntax of resource depend on the selector type.
  * module is optional.
- * @package    jelix
- * @subpackage core_selector
- */
-abstract class jSelectorModule implements jISelector {
+*/
+abstract class ModuleSelector implements SelectorInterface {
+
     public $module = null;
     public $resource = null;
 
@@ -34,14 +34,15 @@ abstract class jSelectorModule implements jISelector {
     protected $_useMultiSourceCompiler=false;
 
     function __construct ($sel) {
-        if(jelix_scan_module_sel($sel, $this)){
-            if($this->module ==''){
-                $this->module = jApp::getCurrentModule ();
+        if (jelix_scan_module_sel($sel, $this)) {
+            if ($this->module =='') {
+                $this->module = App::getCurrentModule ();
             }
             $this->_createPath();
             $this->_createCachePath();
-        }else{
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
+        }
+        else {
+            throw new Exception('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
     }
 
@@ -74,22 +75,24 @@ abstract class jSelectorModule implements jISelector {
 
     protected function _createPath(){
 
-        if(!isset(jApp::config()->_modulesPathList[$this->module])){
-            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
+        if (!isset(App::config()->_modulesPathList[$this->module])) {
+            throw new Exception('jelix~errors.selector.module.unknown', $this->toString(true));
         }
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
-        if (!is_readable ($this->_path)){
-            if($this->type == 'loc'){
-                throw new Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');
-            }elseif($this->toString() == 'jelix~errors.selector.invalid.target'){
-                throw new Exception("Jelix Panic ! don't find localization files to show you an other error message !");
-            }else{
-                throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
+        $this->_path = App::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        if (!is_readable ($this->_path)) {
+            if ($this->type == 'loc') {
+                throw new \Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');
+            }
+            elseif($this->toString() == 'jelix~errors.selector.invalid.target') {
+                throw new \Exception("Jelix Panic ! don't find localization files to show you an other error message !");
+            }
+            else {
+                throw new Exception('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
             }
         }
     }
 
-    protected function _createCachePath(){
-        $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.$this->module.'~'.$this->resource.$this->_cacheSuffix);
+    protected function _createCachePath() {
+        $this->_cachePath = App::tempPath('compiled/'.$this->_dirname.$this->module.'~'.$this->resource.$this->_cacheSuffix);
     }
 }
