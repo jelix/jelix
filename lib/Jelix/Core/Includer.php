@@ -34,7 +34,7 @@ class Includer {
     /**
      * includes cache of the correspondant file selector
      * check the cache, compile if needed, and include the cache
-     * @param    jISelector   $aSelectorId    the selector corresponding to the file
+     * @param    Selector\SelectorInterface   $aSelectorId    the selector corresponding to the file
     */
     public static function inc($aSelector) {
 

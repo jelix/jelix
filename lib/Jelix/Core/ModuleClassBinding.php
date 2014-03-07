@@ -142,7 +142,7 @@ class ModuleClassBinding {
                 }
 
                 if ($str_fromselector !== null) {
-                    $this->fromSelector = \jSelectorFactory::create($str_selector_long, 'iface');
+                    $this->fromSelector = Selector\Factory::create($str_selector_long, 'iface');
                     return $this->toSelector = new \jSelectorClass($conf[$str_fromselector]);
                 }
             }

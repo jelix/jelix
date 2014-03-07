@@ -98,7 +98,7 @@ class ModuleClass {
      * @experimental  This method is EXPERIMENTAL. It could be changed in future version
      */
     static public function bind($selector) {
-        $osel = \jSelectorFactory::create($selector, 'iface');
+        $osel = Selector\Factory::create($selector, 'iface');
         $s    = $osel->toString(true);
 
         if (!isset(self::$_bindings[$s])) {

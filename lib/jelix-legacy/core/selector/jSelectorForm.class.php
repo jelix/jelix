@@ -1,6 +1,6 @@
 <?php
 /**
-* see jISelector.iface.php for documentation about selectors. Here abstract class for many selectors
+* see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors
 *
 * @package     jelix
 * @subpackage  core_selector

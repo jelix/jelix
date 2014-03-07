@@ -25,13 +25,13 @@
     },
     "autoload": {
         "psr-4": {
-            "jelix\\": "../lib/jelix-legacy/",
-            "Jelix\\": "../lib/Jelix/"
+            "Jelix\\": "../lib/Jelix/",
+            "jelix\\": "../lib/jelix-legacy/"
         },
         "classmap": [ ],
         "files": [
-            "../lib/jelix-legacy/init.php",
-            "../lib/Jelix/Legacy/init.php"
+            "../lib/Jelix/Legacy/init.php",
+            "../lib/jelix-legacy/init.php"
         ]
     },
     "minimum-stability": "dev"
