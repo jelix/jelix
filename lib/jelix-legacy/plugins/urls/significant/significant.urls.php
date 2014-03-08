@@ -15,8 +15,14 @@
  * @author      Laurent Jouanneau
  * @copyright   2005-2006 Laurent Jouanneau
  */
-class jSelectorUrlCfgSig extends jSelectorCfg {
+class jSelectorUrlCfgSig extends jSelectorSimpleFile {
+
     public $type = 'urlcfgsig';
+
+    function __construct($sel){
+        $this->_basePath = jApp::configPath();
+        parent::__construct($sel);
+    }
 
     public function getCompiler(){
         require_once(__DIR__.'/jSignificantUrlsCompiler.class.php');

@@ -17,5 +17,10 @@
     "jSelectorFactory": "core/jSelectorFactory.php",
     "jSelectorIface": "core/selector/jSelectorIface.php",
     "jSelectorModule": "core/selector/jSelectorModule.php",
-    "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php"
+    "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
+    "jSelectorLog": "core/selector/jSelectorLog.php",
+    "jSelectorTmp": "core/selector/jSelectorTmp.php",
+    "jSelectorVar": "core/selector/jSelectorVar.php",
+    "jSelectorLib": "core/selector/jSelectorLib.php",
+    "jSelectorCfg": "core/selector/jSelectorCfg.php"
 }

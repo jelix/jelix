@@ -150,7 +150,6 @@ cd lib/jelix-legacy/core/selector
 * jSelectorActFast.class.php
   jSelectorDao.class.php
   jSelectorDaoRecord.class.php
-  jSelectorFile.lib.php
   jSelectorForm.class.php
 * jSelectorLoc.class.php
   jSelectorTpl.class.php
@@ -852,7 +851,13 @@ cd temp
   .htaccess
 
 cd lib/Jelix/Legacy/core/selector
-   jSelectorClass.php
-   jSelectorModule.php
-   jSelectorIface.php
+  jSelectorClass.php
+  jSelectorModule.php
+  jSelectorIface.php
+  jSelectorLog.php
   jSelectorSimpleFile.php
+  jSelectorTmp.php
+  jSelectorVar.php
+  jSelectorCfg.php
+  jSelectorLib.php
+

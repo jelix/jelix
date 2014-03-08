@@ -47,8 +47,10 @@ class jFileLogger implements jILogger {
         $f = str_replace('%ip%', $ip , $f);
 
         try {
-            $sel = new jSelectorLog($f);
-            $file = $sel->getPath();
+            if (!preg_match("/^([\w\.\/]+)$/", $f, $m)) {
+                throw new Exception("Invalid file name for file logger name $f");
+            }
+            $file = jApp::logPath($f);
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\t$type\t".$message->getFormatedMessage()."\n", 3, $file);
         }
         catch(Exception $e) {
