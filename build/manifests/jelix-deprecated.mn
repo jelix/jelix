@@ -199,3 +199,4 @@ cd lib/jelix-legacy/core/selector
    jSelectorClass.class.php
    jSelectorModule.class.php
    jSelectorIface.class.php
+  jSelectorSimpleFile.class.php

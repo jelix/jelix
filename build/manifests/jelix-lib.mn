@@ -33,6 +33,7 @@ cd lib/Jelix/Core/Selector
    ClassSelector.php
    ModuleSelector.php
    InterfaceSelector.php
+  SimpleFileSelector.php
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -152,7 +153,6 @@ cd lib/jelix-legacy/core/selector
   jSelectorFile.lib.php
   jSelectorForm.class.php
 * jSelectorLoc.class.php
-  jSelectorSimpleFile.class.php
   jSelectorTpl.class.php
   jSelectorZone.class.php
 #endif
@@ -855,3 +855,4 @@ cd lib/Jelix/Legacy/core/selector
    jSelectorClass.php
    jSelectorModule.php
    jSelectorIface.php
+  jSelectorSimpleFile.php
