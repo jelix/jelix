@@ -10,7 +10,7 @@ list($switches, $p) = jCmdUtils::getOptionsAndParams($_SERVER['argv'], $sws, $pa
 $p['targetdir'] = trim($p['targetdir'], '/');
 $p['sourcedir'] = trim($p['sourcedir'], '/');
 
-$namespace = str_replace('/', '\\', $p['targetdir']).'\\';
+$namespace = '\\Jelix\\'.str_replace('/', '\\', $p['targetdir']).'\\';
 
 $newclass = $namespace.substr($p['targetfile'],0, strpos($p['targetfile'], '.'));
 $oldclass = substr($p['sourcefile'],0, strpos($p['sourcefile'], '.'));
@@ -19,7 +19,6 @@ $legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
 
 
 // ------------------ update manifests
-
 
 $jelixLib = new ManifestParser(__DIR__.'/../manifests/jelix-lib.mn');
 $jelixLib->parse();
@@ -51,5 +50,12 @@ file_put_contents($legacyDir.'/'.$oldclass.'.php', $template);
 
 $mapping = json_decode(file_get_contents('lib/Jelix/Legacy/mapping.json'), true);
 $mapping[$oldclass] = str_replace('lib/Jelix/Legacy/', '', $legacyDir).'/'.$oldclass.'.php';
+ksort($mapping);
 file_put_contents('lib/Jelix/Legacy/mapping.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));
 
+// ----------------- update newclassname.json
+
+$mapping = json_decode(file_get_contents('lib/Jelix/Legacy/newclassname.json'), true);
+$mapping[$oldclass] = $newclass;
+ksort($mapping);
+file_put_contents('lib/Jelix/Legacy/newclassname.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));

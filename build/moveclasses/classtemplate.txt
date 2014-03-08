@@ -10,7 +10,7 @@
 
 /**
  * dummy class for compatibility
- * @see \Jelix\%%NEWCLASS%%
+ * @see %%NEWCLASS%%
  * @deprecated
  */
-class %%OLDCLASS%% extends \Jelix\%%NEWCLASS%% { }
+class %%OLDCLASS%% extends %%NEWCLASS%% { }
