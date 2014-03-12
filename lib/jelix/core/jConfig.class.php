@@ -47,19 +47,22 @@ class jConfig {
             $file .= '.resultini.php';
 
         self::$fromCache = true;
-        if(!file_exists($file)){
+        if (!file_exists($file)) {
             // no cache, let's compile
             self::$fromCache = false;
-        }else{
+        }
+        else {
             $t = filemtime($file);
             $dc = jApp::configPath(jApp::mainConfigFile());
+            $lc = jApp::configPath('localconfig.ini.php');
 
-            if( (file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(jApp::configPath($configFile))>$t){
-                // one of the two config file have been modified: let's compile
+            if ((file_exists($dc) && filemtime($dc)>$t)
+                || filemtime(jApp::configPath($configFile))>$t
+                || (file_exists($lc) && filemtime($lc)>$t)){
+                // one of the config files have been modified: let's compile
                 self::$fromCache = false;
-            }else{
-
+            }
+            else {
                 // let's read the cache file
                 if(BYTECODE_CACHE_EXISTS){
                     include($file);
@@ -82,8 +85,10 @@ class jConfig {
         if(!self::$fromCache){
             require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
             return jConfigCompiler::readAndCache($configFile);
-        }else
+        }
+        else {
             return $config;
+        }
     }
 }
 

@@ -63,6 +63,12 @@ class jConfigCompiler {
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
+        // read the local configuration of the app
+        if (file_exists($configPath.'localconfig.ini.php')) {
+            @jelix_read_ini($configPath.'localconfig.ini.php', $config);
+        }
+
+        // read the configuration specific to the entry point
         if ($configFile != 'mainconfig.ini.php' && $configFile != 'defaultconfig.ini.php') {
             if(!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
