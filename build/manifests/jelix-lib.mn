@@ -415,6 +415,7 @@ cd lib/jelix/utils/
   jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
+  jSoapObject.class.php
   jVersionComparator.class.php
 * jWiki.class.php
   jXMLFeedReader.class.php
