@@ -84,6 +84,7 @@ cd lib/jelix-scripts/templates/var/config/
 * mainconfig.ini.php.tpl
   jacl2.coord.ini.php.tpl
   installer.ini.php.tpl
+  localconfig.ini.php.tpl
   profiles.ini.php.tpl
   preferences.ini.php.tpl
   urls.xml.tpl

@@ -2,7 +2,9 @@ Migration
 =========
 
 
-Here are instructions to migrate an Jelix 1.5.* application to this version
+Here are instructions to migrate an Jelix 1.5.* application to the trunk version
+
+WARNING: this is experimental!!
 
 - Install Composer http://getcomposer.org
 - Create a composer.json file into your application directory.

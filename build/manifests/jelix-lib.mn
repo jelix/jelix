@@ -451,6 +451,7 @@ cd lib/jelix-legacy/utils/
   jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
+  jSoapObject.class.php
   jVersionComparator.class.php
 * jWiki.class.php
   jXMLFeedReader.class.php
@@ -813,6 +814,7 @@ cd lib/installwizard/
   installWizardPage.php
   install.php.dist
   wiz_layout.en.php
+  wiz_layout.fr.php
 * wiz_layout.tpl
   wizard.ini.php.dist
   README.txt

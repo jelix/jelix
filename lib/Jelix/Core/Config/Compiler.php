@@ -61,6 +61,12 @@ class Compiler {
         // read the main configuration of the app
         \jIniFile::readAndMergeObject(App::mainConfigFile(), $config);
 
+        // read the local configuration of the app
+        if (file_exists($configPath.'localconfig.ini.php')) {
+            @jelix_read_ini($configPath.'localconfig.ini.php', $config);
+        }
+
+        // read the configuration specific to the entry point
         if ($configFile != 'mainconfig.ini.php' && $configFile != 'defaultconfig.ini.php') {
             if (!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
@@ -357,7 +363,7 @@ class Compiler {
      */
     static protected function _loadPluginsPathList($config) {
         $list = preg_split('/ *, */',$config->pluginsPath);
-        array_push($list, JELIX_LIB_PATH.'plugins/');
+        array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
             if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
@@ -396,9 +402,11 @@ class Compiler {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if ($f == 'tpl') {
                                         $prop = '_tplpluginsPathList_'.$subf;
-                                        $config->{$prop}[] = $p.$f.'/'.$subf.'/';
+                                        if (!isset($config->{$prop}))
+                                            $config->{$prop} = array();
+                                        array_unshift($config->{$prop}, $p.$f.'/'.$subf.'/');
                                     }
-                                    else {
+                                    else{
                                         $prop = '_pluginsPathList_'.$f;
                                         $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
                                     }

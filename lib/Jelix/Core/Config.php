@@ -52,10 +52,12 @@ class Config {
         else {
             $t = filemtime($file);
             $dc = App::configPath(App::mainConfigFile());
+            $lc = App::configPath('localconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(App::configPath($configFile))>$t) {
-                // one of the two config file have been modified: let's compile
+                || filemtime(App::configPath($configFile))>$t
+                || (file_exists($lc) && filemtime($lc)>$t)){
+                // one of the config files have been modified: let's compile
                 self::$fromCache = false;
             }
             else {

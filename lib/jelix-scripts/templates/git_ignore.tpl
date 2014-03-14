@@ -2,8 +2,7 @@
 Thumbs.db
 var/config/installer.ini.php
 var/config/profiles.ini.php
-var/config/defaultconfig.ini.php
-var/config/mainconfig.ini.php
+var/config/localconfig.ini.php
 var/log/*
 var/sessions/*
 var/uploads/*

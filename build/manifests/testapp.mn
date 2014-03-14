@@ -416,6 +416,7 @@ cd testapp/var/config
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
   mainconfig.ini.php
+  localconfig.ini.php.dist
   profiles.ini.php.dist
   urls.xml
   urls_rest.xml
