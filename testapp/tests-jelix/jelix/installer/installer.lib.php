@@ -11,8 +11,6 @@
 */
 
 require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
-require_once(JELIX_LIB_UTILS_PATH.'jIniFileModifier.class.php');
-
 
 class testInstallerComponentModule extends jInstallerComponentModule {
 

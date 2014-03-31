@@ -1,21 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage utils
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
 * @copyright  2006 Loic Mathaud, 2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\IniFile;
 
 /**
 * utility class to read and write an ini file
-* @package    jelix
-* @subpackage utils
-* @since 1.0b1
 */
-class jIniFile {
+class Manager {
 
     /**
      * read an ini file
@@ -98,14 +94,9 @@ class jIniFile {
         if ($f = @fopen($filename, 'wb')) {
             fwrite($f, $header.$result);
             fclose($f);
-        } else {
-            // jIniFile is used by the configs compiler. There is no configuration
-            // object in that case. we need to generate an error without using jLocale
-            if(jApp::config()){
-                throw new jException('jelix~errors.inifile.write.error', array ($filename));
-            }else{
-                throw new Exception('(24)Error while writing ini file '.$filename);
-            }
+        }
+        else {
+            throw new \Exception('Error while writing ini file '.$filename, 24);
         }
     }
 
@@ -115,7 +106,7 @@ class jIniFile {
      * @return string the formated value
      */
     static private function _iniValue($key, $value){
-        if(is_array($value)) {
+        if (is_array($value)) {
             $res = '';
             foreach($value as $v)
                 $res.=self::_iniValue($key.'[]', $v);
@@ -124,9 +115,9 @@ class jIniFile {
                   || is_numeric($value)
                   || (preg_match("/^[\w-.]*$/", $value) && strpos("\n",$value) === false)) {
             return $key.'='.$value."\n";
-        } else if($value === false) {
+        } else if ($value === false) {
             return $key."=0\n";
-        } else if($value === true) {
+        } else if ($value === true) {
             return $key."=1\n";
         } else {
             return $key.'="'.$value."\"\n";

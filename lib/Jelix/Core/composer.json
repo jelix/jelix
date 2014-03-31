@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "jelix/inifile": "self.version",
     },
     "replace": {
     },

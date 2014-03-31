@@ -10,6 +10,7 @@
 
 namespace Jelix\Core\Config;
 use Jelix\Core\App as App;
+use Jelix\IniFile\Manager as IniFileMgr;
 
 /**
  * This class merges two ini files in a single array and store it in a temporary file
@@ -55,11 +56,11 @@ class Compiler {
             throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
         }
         // this is the defaultconfig file of JELIX itself
-        $config = \jIniFile::read(__DIR__.'/defaultconfig.ini.php', true);
+        $config = IniFileMgr::read(__DIR__.'/defaultconfig.ini.php', true);
         self::$commonConfig = clone $config;
 
         // read the main configuration of the app
-        \jIniFile::readAndMergeObject(App::mainConfigFile(), $config);
+        IniFileMgr::readAndMergeObject(App::mainConfigFile(), $config);
 
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
@@ -70,7 +71,7 @@ class Compiler {
         if ($configFile != 'mainconfig.ini.php' && $configFile != 'defaultconfig.ini.php') {
             if (!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
-            if ( false === \jIniFile::readAndMergeObject($configPath.$configFile, $config))
+            if ( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config))
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
 
@@ -107,7 +108,7 @@ class Compiler {
             }
         }
         else {
-            \jIniFile::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n");
+            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n");
         }
         return $config;
     }

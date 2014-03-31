@@ -1,25 +1,21 @@
 <?php
 /**
-* @package    jelix
-* @subpackage utils
 * @author     Laurent Jouanneau
-* @copyright  2008-2010 Laurent Jouanneau
+* @copyright  2008-2014 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\IniFile;
 
 /**
 * utility class to read and modify two ini files at the same time :
 * one master file, and one file which overrides values of the master file,
 * like we have in jelix with mainconfig.ini.php and config.ini.php of an entry point
-* @package    jelix
-* @subpackage utils
-* @since 1.1
 */
-class jIniMultiFilesModifier {
+class MultiModifier {
 
     /**
-     * @var jIniFileModifier
+     * @var jIniFile\Modifier
      */
     protected $master;
 
@@ -30,18 +26,22 @@ class jIniMultiFilesModifier {
 
     /**
      * load the two ini files
-     * @param jIniFileModifier|string $master the master ini file (object or filename)
-     * @param jIniFileModifier|string $overrider the ini file overriding the master ini file (object or filename)
+     * @param \Jelix\IniFile\Modifier|string $master the master ini file (object or filename)
+     * @param \Jelix\IniFile\Modifier|string $overrider the ini file overriding the master ini file (object or filename)
      */
     function __construct($master, $overrider) {
-        if (is_object($master))
+        if (is_object($master)) {
             $this->master = $master;
-        else
-            $this->master = new jIniFileModifier($master);
-        if (is_object($overrider))
+        }
+        else {
+            $this->master = new Modifier($master);
+        }
+        if (is_object($overrider)) {
             $this->overrider = $overrider;
-        else
-            $this->overrider = new jIniFileModifier($overrider);
+        }
+        else {
+            $this->overrider = new Modifier($overrider);
+        }
     }
 
     /**
@@ -104,7 +104,7 @@ class jIniMultiFilesModifier {
     }
 
     /**
-     * @return jIniFileModifier the first ini file
+     * @return \Jelix\IniFile\Modifier the first ini file
      * @since 1.2
      */
     public function getMaster() {
@@ -112,7 +112,7 @@ class jIniMultiFilesModifier {
     }
     
     /**
-     * @return jIniFileModifier the second ini file
+     * @return \Jelix\IniFile\Modifier the second ini file
      * @since 1.2
      */
     public function getOverrider() {

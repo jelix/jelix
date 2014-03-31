@@ -1,23 +1,20 @@
 <?php
 /**
-* @package    jelix
-* @subpackage utils
 * @author     Laurent Jouanneau
-* @copyright  2008-2013 Laurent Jouanneau
+* @copyright  2008-2014 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+
+namespace Jelix\IniFile;
 
 /**
 * utility class to modify an ini file by preserving comments, whitespace..
 * It follows same behaviors of parse_ini_file, except when there are quotes
 * inside values. it doesn't support quotes inside values, because parse_ini_file
 * is totally bugged, depending cases.
-* @package    jelix
-* @subpackage utils
-* @since 1.1
 */
-class jIniFileModifier {
+class Modifier {
 
     /**
      * @const integer token type for whitespaces
@@ -71,17 +68,16 @@ class jIniFileModifier {
      * @param string $filename the file to load
      */
     function __construct($filename) {
-        if(!file_exists($filename) || !is_file($filename))
+        if (!file_exists($filename) || !is_file($filename))
             // because the class is used also by installers, we don't have any
             // modules in this case, so impossible to use jException
-            throw new Exception ('(23)The file '.$filename.' doesn\'t exist' );
+            throw new \Exception ('(23)The file '.$filename.' doesn\'t exist', 23);
         $this->filename = $filename;
         $this->parse(preg_split("/(\r\n|\n|\r)/", file_get_contents($filename)));
     }
     
     /**
      * @return string the file name
-     * @since 1.2
      */
     function getFileName() {
         return $this->filename;
@@ -92,55 +88,65 @@ class jIniFileModifier {
      */
     protected function parse($lines) {
         $this->content = array(0=>array());
-        $currentSection=0;
+        $currentSection = 0;
         $multiline = false;
-        $currentValue= null;
+        $currentValue = null;
         
         $arrayContents = array();
         
         foreach ($lines as $num => $line) {
-            if($multiline) {
-                if(preg_match('/^(.*)"\s*$/', $line, $m)) {
-                    $currentValue[2].=$m[1];
-                    $multiline=false;
-                    $this->content[$currentSection][]=$currentValue;
-                } else {
-                    $currentValue[2].=$line."\n";
+            if ($multiline) {
+                if (preg_match('/^(.*)"\s*$/', $line, $m)) {
+                    $currentValue[2] .= $m[1];
+                    $multiline = false;
+                    $this->content[$currentSection][] = $currentValue;
                 }
-            } else if(preg_match('/^\s*([a-z0-9_.-]+)(\[\])?\s*=\s*(")?([^"]*)(")?(\s*)/i', $line, $m)) {
+                else {
+                    $currentValue[2] .= $line."\n";
+                }
+            }
+            else if (preg_match('/^\s*([a-z0-9_.-]+)(\[\])?\s*=\s*(")?([^"]*)(")?(\s*)/i', $line, $m)) {
                 list($all, $name, $foundkey, $firstquote, $value ,$secondquote,$lastspace) = $m;
 
                 if ($foundkey !='') {
-                    if (isset($arrayContents[$currentSection][$name]))
+                    if (isset($arrayContents[$currentSection][$name])) {
                         $key = count($arrayContents[$currentSection][$name]);
-                    else
+                    }
+                    else {
                         $key = 0;
+                    }
                     $currentValue = array(self::TK_ARR_VALUE, $name, $value, $key);
                     $arrayContents[$currentSection][$name][$key] = $value;
                 }
-                else
+                else {
                     $currentValue = array(self::TK_VALUE, $name, $value);
-
-                if($firstquote == '"' && $secondquote == '') {
-                    $multiline = true;
-                    $currentValue[2].="\n";
-                } else {
-                    if($firstquote == '' && $secondquote == '')
-                        $currentValue[2] = trim($value);
-                    $this->content[$currentSection][]=$currentValue;
                 }
 
-            }else if(preg_match('/^(\s*;.*)$/',$line, $m)){
-                $this->content[$currentSection][]=array(self::TK_COMMENT, $m[1]);
+                if ($firstquote == '"' && $secondquote == '') {
+                    $multiline = true;
+                    $currentValue[2].="\n";
+                }
+                else {
+                    if ($firstquote == '' && $secondquote == '') {
+                        $currentValue[2] = trim($value);
+                    }
+                    $this->content[$currentSection][] = $currentValue;
+                }
 
-            }else if(preg_match('/^(\s*\[([a-z0-9_.\-@:]+)\]\s*)/i', $line, $m)) {
+            }
+            else if (preg_match('/^(\s*;.*)$/',$line, $m)) {
+                $this->content[$currentSection][] = array(self::TK_COMMENT, $m[1]);
+
+            }
+            else if (preg_match('/^(\s*\[([a-z0-9_.\-@:]+)\]\s*)/i', $line, $m)) {
                 $currentSection = $m[2];
-                $this->content[$currentSection]=array(
+                $this->content[$currentSection] = array(
                     array(self::TK_SECTION, $m[1]),
                 );
 
-            }else  {
-                $this->content[$currentSection][]=array(self::TK_WS, $line);
+            }
+            else {
+                $this->content[$currentSection][] = array(self::TK_WS, $line);
             }
         }
     }
@@ -161,18 +167,21 @@ class jIniFileModifier {
             $deleteMode = false;
             foreach ($this->content[$section] as $k =>$item) {
                 if ($deleteMode) {
-                    if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name)
+                    if ($item[0] == self::TK_ARR_VALUE && $item[1] == $name) {
                         $this->content[$section][$k] = array(self::TK_WS, '--');
+                    }
                     continue;
                 }
                 
                 // if the item is not a value or an array value, or not the same name
                 if (($item[0] != self::TK_VALUE && $item[0] != self::TK_ARR_VALUE)
-                    || $item[1] != $name)
+                    || $item[1] != $name) {
                     continue;
+                }
+
                 // if it is an array value, and if the key doesn't correspond
                 if ($item[0] == self::TK_ARR_VALUE && $key !== null) {
-                    if($item[3] != $key || $key === '') {
+                    if ($item[3] != $key || $key === '') {
                         $lastKey = $item[3];
                         continue;
                     }
@@ -181,10 +190,11 @@ class jIniFileModifier {
                     // we add the value as an array value
                     if ($key === '')
                         $key = 0;
-                    $this->content[$section][$k] = array(self::TK_ARR_VALUE,$name,$value, $key);
-                } else {
+                    $this->content[$section][$k] = array(self::TK_ARR_VALUE, $name,$value, $key);
+                }
+                else {
                     // we store the value
-                    $this->content[$section][$k] = array(self::TK_VALUE,$name,$value);
+                    $this->content[$section][$k] = array(self::TK_VALUE, $name, $value);
                     if ($item[0] == self::TK_ARR_VALUE) {
                         // the previous value was an array value, so we erase other array values
                         $deleteMode = true;
@@ -200,13 +210,16 @@ class jIniFileModifier {
             $this->content[$section] = array(array(self::TK_SECTION, '['.$section.']'));
         }
         if (!$foundValue) {
-            if($key === null) {
+            if ($key === null) {
                 $this->content[$section][]= array(self::TK_VALUE, $name, $value);
-            } else {
-                if ($lastKey != -1)
+            }
+            else {
+                if ($lastKey != -1) {
                     $lastKey++;
-                else
+                }
+                else {
                     $lastKey = 0;
+                }
                 $this->content[$section][]= array(self::TK_ARR_VALUE, $name, $value, $lastKey);
             }
         }
@@ -220,7 +233,7 @@ class jIniFileModifier {
      * @param string $section the section where to set the item. 0 is the global section
      */
     public function setValues($values, $section=0) {
-        foreach($values as $name=>$val) {
+        foreach ($values as $name=>$val) {
             if (is_array($val)) {
                 // let's ignore key values, we don't want them
                 $i = 0;
@@ -228,8 +241,9 @@ class jIniFileModifier {
                     $this->setValue($name, $arval, $section, $i++);
                 }
             }
-            else
+            else {
                 $this->setValue($name, $val, $section);
+            }
         }
     }
 
@@ -452,7 +466,7 @@ class jIniFileModifier {
     public function save() {
         if ($this->modified) {
             if (false === @file_put_contents($this->filename, $this->generateIni()))
-                throw new Exception("Impossible to write into ".$this->filename);
+                throw new \Exception("Impossible to write into ".$this->filename);
             $this->modified = false;
         }
     }
@@ -539,13 +553,13 @@ class jIniFileModifier {
      * renamed with the prefix plus "_". The global (unamed) section will be the section
      * named with the value of prefix. If the section prefix is not given, the existing
      * sections and given section with the same name will be merged.
-     * @param jIniFileModifier $ini  an ini file modifier to merge with the current
+     * @param Jelix\IniFile\Modifier $ini  an ini file modifier to merge with the current
      * @param string $sectionPrefix the prefix to add to the section prefix
      * @param string $separator the separator to add between the prefix and the old name
      *                         of the section
      * @since 1.2
      */
-    public function import(jIniFileModifier $ini, $sectionPrefix = '', $separator = '_') {
+    public function import(Modifier $ini, $sectionPrefix = '', $separator = '_') {
         foreach($ini->content as $section=>$values) {
             if ($sectionPrefix) {
                 if ($section == "0") {
