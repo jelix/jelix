@@ -1,0 +1,29 @@
+{
+    "name": "jelix/inifile",
+    "type": "library",
+    "description": "Objects to manipulate ini files",
+    "keywords": ["ini", "files"],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "replace": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "Jelix\\IniFile\\" : ""
+        }
+    },
+    "minimum-stability": "dev"
+}

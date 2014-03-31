@@ -12,15 +12,18 @@
     "jISelector": "core/jISelector.php",
     "jISimpleCompiler": "core/jISimpleCompiler.php",
     "jIncluder": "core/jIncluder.php",
+    "jIniFile": "utils/jIniFile.php",
+    "jIniFileModifier": "utils/jIniFileModifier.php",
+    "jIniMultiFilesModifier": "utils/jIniMultiFilesModifier.php",
     "jProfiles": "utils/jProfiles.php",
+    "jSelectorCfg": "core/selector/jSelectorCfg.php",
     "jSelectorClass": "core/selector/jSelectorClass.php",
     "jSelectorFactory": "core/jSelectorFactory.php",
     "jSelectorIface": "core/selector/jSelectorIface.php",
+    "jSelectorLib": "core/selector/jSelectorLib.php",
+    "jSelectorLog": "core/selector/jSelectorLog.php",
     "jSelectorModule": "core/selector/jSelectorModule.php",
     "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
-    "jSelectorLog": "core/selector/jSelectorLog.php",
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
-    "jSelectorVar": "core/selector/jSelectorVar.php",
-    "jSelectorLib": "core/selector/jSelectorLib.php",
-    "jSelectorCfg": "core/selector/jSelectorCfg.php"
+    "jSelectorVar": "core/selector/jSelectorVar.php"
 }

@@ -25,6 +25,9 @@ cd lib/jelix-legacy/utils/
   jClassBinding.class.php
   jProfiles.class.php
 
+  jIniFile.class.php
+  jIniFileModifier.class.php
+  jIniMultiFilesModifier.class.php
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
 

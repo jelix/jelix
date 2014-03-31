@@ -58,6 +58,9 @@ cd lib/Jelix/Legacy/utils
   jClassBinding.php
   jProfiles.php
 
+  jIniFile.php
+  jIniFileModifier.php
+  jIniMultiFilesModifier.php
 cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
@@ -438,9 +441,6 @@ cd lib/jelix-legacy/utils/
 * jFilter.class.php
   jHttp.class.php
   jImageModifier.class.php
-  jIniFile.class.php
-  jIniFileModifier.class.php
-  jIniMultiFilesModifier.class.php
   jJson.class.php
   jJsonRpc.class.php
   jMailer.class.php
@@ -863,3 +863,7 @@ cd lib/Jelix/Legacy/core/selector
   jSelectorCfg.php
   jSelectorLib.php
 
+cd lib/Jelix/IniFile
+  Manager.php
+  Modifier.php
+  MultiModifier.php
