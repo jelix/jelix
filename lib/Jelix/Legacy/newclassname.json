@@ -8,6 +8,7 @@
     "jConfigAutoloader": "\\Jelix\\Core\\Config\\Autoloader",
     "jConfigCompiler": "\\Jelix\\Core\\Config\\Compiler",
     "jExceptionSelector": "\\Jelix\\Core\\Selector\\Exception",
+    "jFileLogger": "\\Jelix\\Logger\\Output\\File",
     "jIMultiFileCompiler": "\\Jelix\\Core\\Includer\\MultiFileCompilerInterface",
     "jISelector": "\\Jelix\\Core\\Selector\\SelectorInterface",
     "jISimpleCompiler": "\\Jelix\\Core\\Includer\\SimpleCompilerInterface",
@@ -15,10 +16,15 @@
     "jIniFile": "\\Jelix\\IniFile\\Manager",
     "jIniFileModifier": "\\Jelix\\IniFile\\Modifier",
     "jIniMultiFilesModifier": "\\Jelix\\IniFile\\MultiModifier",
+    "jLog": "\\Jelix\\Logger\\Log",
+    "jLogErrorMessage": "\\Jelix\\Logger\\Message\\Error",
+    "jLogMessage": "\\Jelix\\Logger\\Message\\Text",
+    "jMailLogger": "\\Jelix\\Logger\\Output\\Mail",
     "jProfiles": "\\Jelix\\Core\\Profiles",
     "jSelectorClass": "\\Jelix\\Core\\selector\\ClassSelector",
     "jSelectorFactory": "\\Jelix\\Core\\Selector\\Factory",
     "jSelectorIface": "\\Jelix\\Core\\selector\\InterfaceSelector",
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",
-    "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector"
+    "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector",
+    "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog"
 }

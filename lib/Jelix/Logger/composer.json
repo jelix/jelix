@@ -1,0 +1,29 @@
+{
+    "name": "jelix/logger",
+    "type": "library",
+    "description": "Objects to log things",
+    "keywords": ["log", "dump", "syslog"],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "replace": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "Jelix\\Logger\\" : ""
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -19,6 +19,7 @@ cd lib/jelix-legacy/core/
 
    jSelector.class.php
    jISelector.iface.php
+  jLog.class.php
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php
@@ -205,3 +206,9 @@ cd lib/jelix-legacy/core/selector
   jSelectorIface.class.php
   jSelectorSimpleFile.class.php
   jSelectorFile.lib.php
+cd lib/jelix-legacy/core/log
+  jLogErrorMessage.class.php
+  jLogMessage.class.php
+  jFileLogger.class.php
+  jMailLogger.class.php
+  jSyslogLogger.class.php

@@ -8,6 +8,7 @@
     "jConfigAutoloader": "core/jConfigAutoloader.php",
     "jConfigCompiler": "core/jConfigCompiler.php",
     "jExceptionSelector": "core/jExceptionSelector.php",
+    "jFileLogger": "core/log/jFileLogger.php",
     "jIMultiFileCompiler": "core/jIMultiFileCompiler.php",
     "jISelector": "core/jISelector.php",
     "jISimpleCompiler": "core/jISimpleCompiler.php",
@@ -15,6 +16,10 @@
     "jIniFile": "utils/jIniFile.php",
     "jIniFileModifier": "utils/jIniFileModifier.php",
     "jIniMultiFilesModifier": "utils/jIniMultiFilesModifier.php",
+    "jLog": "core/jLog.php",
+    "jLogErrorMessage": "core/log/jLogErrorMessage.php",
+    "jLogMessage": "core/log/jLogMessage.php",
+    "jMailLogger": "core/log/jMailLogger.php",
     "jProfiles": "utils/jProfiles.php",
     "jSelectorCfg": "core/selector/jSelectorCfg.php",
     "jSelectorClass": "core/selector/jSelectorClass.php",
@@ -25,5 +30,6 @@
     "jSelectorModule": "core/selector/jSelectorModule.php",
     "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
-    "jSelectorVar": "core/selector/jSelectorVar.php"
+    "jSelectorVar": "core/selector/jSelectorVar.php",
+    "jSyslogLogger": "core/log/jSyslogLogger.php"
 }

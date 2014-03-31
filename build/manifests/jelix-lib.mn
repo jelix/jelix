@@ -53,6 +53,7 @@ cd lib/Jelix/Legacy/core
   jISelector.php
   jExceptionSelector.php
 
+  jLog.php
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
@@ -95,7 +96,6 @@ cd lib/jelix-legacy/core
 * jCoordinator.class.php
   jException.class.php
   jLocale.class.php
-* jLog.class.php
   jRequest.class.php
 * jResponse.class.php
   jUrlBase.class.php
@@ -110,12 +110,7 @@ cd lib/jelix-legacy/core
 ! lang_to_locale.ini.php
 
 cd lib/jelix-legacy/core/log/
-  jFileLogger.class.php
-  jSyslogLogger.class.php
-  jMailLogger.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
-  jLogErrorMessage.class.php
-  jLogMessage.class.php
 #endif
 
 cd lib/jelix-legacy/core/request
@@ -864,6 +859,24 @@ cd lib/Jelix/Legacy/core/selector
   jSelectorLib.php
 
 cd lib/Jelix/IniFile
+  composer.json
   Manager.php
   Modifier.php
   MultiModifier.php
+cd lib/Jelix/Logger
+  composer.json
+  Log.php
+cd lib/Jelix/Logger/Message
+  Error.php
+  Text.php
+
+cd lib/Jelix/Legacy/core/log
+  jLogErrorMessage.php
+  jLogMessage.php
+  jFileLogger.php
+  jMailLogger.php
+  jSyslogLogger.php
+cd lib/Jelix/Logger/Output
+  File.php
+  Mail.php
+  Syslog.php
