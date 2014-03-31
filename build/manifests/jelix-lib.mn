@@ -863,20 +863,28 @@ cd lib/Jelix/IniFile
   Manager.php
   Modifier.php
   MultiModifier.php
+
 cd lib/Jelix/Logger
   composer.json
   Log.php
+  MessageInterface.php
+  OutputInterface.php
 cd lib/Jelix/Logger/Message
+  Dump.php
   Error.php
   Text.php
-
-cd lib/Jelix/Legacy/core/log
-  jLogErrorMessage.php
-  jLogMessage.php
-  jFileLogger.php
-  jMailLogger.php
-  jSyslogLogger.php
 cd lib/Jelix/Logger/Output
   File.php
   Mail.php
   Syslog.php
+
+cd lib/Jelix/Legacy/core/log
+  jFileLogger.php
+  jILogger.php
+  jILogMessage.php
+  jLogErrorMessage.php
+  jLogDumpMessage.php
+  jLogMessage.php
+  jMailLogger.php
+  jSyslogLogger.php
+

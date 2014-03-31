@@ -1,18 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
 * @contributor Brice Tence
-* @copyright  2006-2012 Laurent Jouanneau, 2011 Brice Tence
+* @copyright  2006-2014 Laurent Jouanneau, 2011 Brice Tence
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Logger\Message;
 
 /**
  * this class is formatting an error message for a logger
  */
-class jLogErrorMessage implements jILogMessage {
+class Error implements \Jelix\Logger\MessageInterface {
     protected $category;
     protected $message;
     protected $file;
@@ -101,7 +100,7 @@ class jLogErrorMessage implements jILogMessage {
             $url = 'Unknow request';
 
         // url params including module and action
-        if (jApp::coord() && ($req = jApp::coord()->request)) {
+        if (\Jelix\Core\App::coord() && ($req = \Jelix\Core\App::coord()->request)) {
             $params = str_replace("\n", ' ', var_export($req->params, true));
             $remoteAddr = $req->getIP();
         }

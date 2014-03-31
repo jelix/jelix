@@ -1,30 +1,29 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2006-2012 Laurent Jouanneau
+* @copyright  2006-2014 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Logger\Output;
 
 /**
  * logger storing message into a file
  */
-class jFileLogger implements jILogger {
+class File implements \Jelix\Logger\OutputInterface {
     /**
-     * @param jILogMessage $message the message to log
+     * @param \Jelix\Logger\MessageInterface $message the message to log
      */
     function logMessage($message) {
 
-        if (!is_writable(jApp::logPath()))
+        if (!is_writable(\Jelix\Core\App::logPath()))
             return;
 
         $type = $message->getCategory();
-        $appConf = jApp::config();
+        $appConf = \Jelix\Core\App::config();
         
         if ($appConf) {
-            $conf = & jApp::config()->fileLogger;
+            $conf = & \Jelix\Core\App::config()->fileLogger;
             if (!isset($conf[$type]))
                 return;
             $f = $conf[$type];
@@ -37,7 +36,7 @@ class jFileLogger implements jILogger {
             $f = 'errors.log';
         }
 
-        $coord = jApp::coord();
+        $coord = \Jelix\Core\App::coord();
         if ($coord && $coord->request ) {
             $ip = $coord->request->getIP();
         }
@@ -50,11 +49,11 @@ class jFileLogger implements jILogger {
             if (!preg_match("/^([\w\.\/]+)$/", $f, $m)) {
                 throw new Exception("Invalid file name for file logger name $f");
             }
-            $file = jApp::logPath($f);
+            $file = \Jelix\Core\App::logPath($f);
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\t$type\t".$message->getFormatedMessage()."\n", 3, $file);
         }
-        catch(Exception $e) {
-            $file = jApp::logPath('errors.log');
+        catch(\Exception $e) {
+            $file = \Jelix\Core\App::logPath('errors.log');
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\terror\t".$e->getMessage()."\n", 3, $file);
         }
     }

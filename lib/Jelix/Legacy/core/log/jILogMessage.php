@@ -9,8 +9,8 @@
 */
 
 /**
- * dummy class for compatibility
- * @see \Jelix\Logger\Message\Error
+ * dummy interface for compatibility
+ * @see \Jelix\Logger\MessageInterface
  * @deprecated
  */
-class jLogErrorMessage extends \Jelix\Logger\Message\Error { }
+interface jILogMessage extends \Jelix\Logger\MessageInterface { }

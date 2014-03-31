@@ -1,25 +1,24 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2006-2012 Laurent Jouanneau
+* @copyright  2006-2014 Laurent Jouanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Logger\Output;
 
 /**
  * logger storing message into syslog
  */
-class jSyslogLogger implements jILogger {
+class Syslog implements \Jelix\Logger\OutputInterface {
     /**
-     * @param jILogMessage $message the message to log
+     * @param \Jelix\Logger\MessageInterface $message the message to log
      */
     function logMessage($message) {
         $type = $message->getCategory();
 
-        if (jApp::coord()->request)
-            $ip = jApp::coord()->request->getIP();
+        if (\Jelix\Core\App::coord()->request)
+            $ip = \Jelix\Core\App::coord()->request->getIP();
         else
             $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 

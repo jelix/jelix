@@ -10,7 +10,7 @@
 
 /**
  * dummy class for compatibility
- * @see \Jelix\Logger\Message\Error
+ * @see \Jelix\Logger\Message\Dump
  * @deprecated
  */
-class jLogErrorMessage extends \Jelix\Logger\Message\Error { }
+class jLogDumpMessage extends \Jelix\Logger\Message\Dump { }

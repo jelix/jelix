@@ -131,7 +131,6 @@ spl_autoload_register("jelix_autoload");
 #includephp core/jResponse.class.php
 #includephp core/jBundle.class.php
 #includephp core/jLocale.class.php
-#includephp core/jLog.class.php
 #includephp core/jSession.class.php
 
 #else
@@ -158,7 +157,6 @@ require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require (JELIX_LIB_CORE_PATH . 'jBundle.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
-require (JELIX_LIB_CORE_PATH . 'jLog.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
