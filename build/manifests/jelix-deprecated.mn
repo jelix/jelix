@@ -16,10 +16,13 @@ cd lib/jelix-legacy/core/
   jIncluder.class.php
   ConfigCompilerPluginInterface.php
   defaultconfig.ini.php
-
-   jSelector.class.php
-   jISelector.iface.php
+  jSelector.class.php
+  jISelector.iface.php
   jLog.class.php
+  jLocale.class.php
+  jBundle.class.php
+  lang_to_locale.ini.php
+
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php
@@ -206,6 +209,7 @@ cd lib/jelix-legacy/core/selector
   jSelectorIface.class.php
   jSelectorSimpleFile.class.php
   jSelectorFile.lib.php
+  jSelectorLoc.class.php
 cd lib/jelix-legacy/core/log
   jLogErrorMessage.class.php
   jLogMessage.class.php

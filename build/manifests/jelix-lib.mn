@@ -29,11 +29,11 @@ cd lib/Jelix/Core/Selector
   Factory.php
   SelectorInterface.php
   Exception.php
-
-   ClassSelector.php
-   ModuleSelector.php
-   InterfaceSelector.php
+  ClassSelector.php
+  ModuleSelector.php
+  InterfaceSelector.php
   SimpleFileSelector.php
+
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -52,16 +52,18 @@ cd lib/Jelix/Legacy/core
   jSelectorFactory.php
   jISelector.php
   jExceptionSelector.php
-
   jLog.php
+  jLocale.php
+  jBundle.php
+
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
   jProfiles.php
-
   jIniFile.php
   jIniFileModifier.php
   jIniMultiFilesModifier.php
+
 cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
@@ -91,11 +93,9 @@ cd lib/jelix-legacy/core
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jBasicErrorHandler.class.php
-  jBundle.class.php
 * jController.class.php
 * jCoordinator.class.php
   jException.class.php
-  jLocale.class.php
   jRequest.class.php
 * jResponse.class.php
   jUrlBase.class.php
@@ -106,11 +106,6 @@ cd lib/jelix-legacy/core
   jelix_api.php
   jICoordPlugin.iface.php
   jIUrlEngine.iface.php
-#endif
-! lang_to_locale.ini.php
-
-cd lib/jelix-legacy/core/log/
-#ifnot ENABLE_OPTIMIZED_SOURCE
 #endif
 
 cd lib/jelix-legacy/core/request
@@ -149,7 +144,6 @@ cd lib/jelix-legacy/core/selector
   jSelectorDao.class.php
   jSelectorDaoRecord.class.php
   jSelectorForm.class.php
-* jSelectorLoc.class.php
   jSelectorTpl.class.php
   jSelectorZone.class.php
 #endif
@@ -857,6 +851,7 @@ cd lib/Jelix/Legacy/core/selector
   jSelectorVar.php
   jSelectorCfg.php
   jSelectorLib.php
+  jSelectorLoc.php
 
 cd lib/Jelix/IniFile
   composer.json
@@ -888,3 +883,10 @@ cd lib/Jelix/Legacy/core/log
   jMailLogger.php
   jSyslogLogger.php
 
+cd lib/Jelix/Locale
+  composer.json
+  Locale.php
+  Bundle.php
+  LocaleSelector.php
+! lang_to_locale.ini.php
+  
