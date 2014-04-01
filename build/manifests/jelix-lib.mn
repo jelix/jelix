@@ -103,7 +103,6 @@ cd lib/jelix-legacy/core
 * jUrl.class.php
 * jSession.class.php
   jServer.class.php
-  jelix_api.php
   jICoordPlugin.iface.php
   jIUrlEngine.iface.php
 #endif

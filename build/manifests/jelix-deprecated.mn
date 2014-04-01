@@ -22,6 +22,7 @@ cd lib/jelix-legacy/core/
   jLocale.class.php
   jBundle.class.php
   lang_to_locale.ini.php
+  jelix_api.php
 
 cd lib/jelix-legacy/utils/
   jAppManager.class.php

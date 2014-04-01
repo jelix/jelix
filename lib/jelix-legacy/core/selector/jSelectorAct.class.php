@@ -40,7 +40,7 @@ class jSelectorAct extends jSelectorActFast {
         if ($coord->actionName === null)
             $coord->actionName = 'default:index';
 
-        if (jelix_scan_action_sel($sel, $this, $coord->actionName)) {
+        if ($this->_scan_act_sel($sel, $coord->actionName)) {
 
             if ($this->module == '#') {
                 $this->module = $coord->moduleName;
@@ -56,6 +56,30 @@ class jSelectorAct extends jSelectorActFast {
         }else{
             throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+    }
+
+    protected function _scan_act_sel($selStr, $actionName) {
+        if (preg_match("/^(?:([a-zA-Z0-9_\.]+|\#)~)?([a-zA-Z0-9_:]+|\#)?(?:@([a-zA-Z0-9_]+))?$/", $selStr, $m)) {
+            $m = array_pad($m, 4, '');
+            $this->module = $m[1];
+            if ($m[2] == '#')
+                $this->resource = $actionName;
+            else
+                $this->resource = $m[2];
+            $r = explode(':',$this->resource);
+            if (count($r) == 1){
+                $this->controller = 'default';
+                $this->method = $r[0]==''?'index':$r[0];
+            }
+            else {
+                $this->controller = $r[0]=='' ? 'default':$r[0];
+                $this->method = $r[1]==''?'index':$r[1];
+            }
+            $this->resource = $this->controller.':'.$this->method;
+            $this->request = $m[3];
+            return true;
+        }
+        return false;
     }
 
     protected function _createPath(){

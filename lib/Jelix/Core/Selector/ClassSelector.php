@@ -34,7 +34,7 @@ class ClassSelector extends ModuleSelector {
     public $className = '';
 
     function __construct($sel){
-        if (jelix_scan_class_sel($sel, $this)) {
+        if ($this->_scan_sel($sel)) {
             if ($this->module =='') {
                 $this->module = App::getCurrentModule ();
             }
@@ -44,6 +44,23 @@ class ClassSelector extends ModuleSelector {
         else {
             throw new Exception('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+    }
+
+    protected function _scan_sel($selStr) {
+        if (preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.\\/]+)$/", $selStr, $m)) {
+            $this->module = $m[2];
+            $this->resource = $m[3];
+            if (($p=strrpos($m[3], '/')) !== false) {
+                $this->className = substr($m[3],$p+1);
+                $this->subpath = substr($m[3],0,$p+1);
+            }
+            else {
+                $this->className = $m[3];
+                $this->subpath ='';
+            }
+            return true;
+        }
+        return false;
     }
 
     protected function _createPath(){

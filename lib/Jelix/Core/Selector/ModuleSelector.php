@@ -34,7 +34,7 @@ abstract class ModuleSelector implements SelectorInterface {
     protected $_useMultiSourceCompiler=false;
 
     function __construct ($sel) {
-        if (jelix_scan_module_sel($sel, $this)) {
+        if ($this->_scan_sel($sel)) {
             if ($this->module =='') {
                 $this->module = App::getCurrentModule ();
             }
@@ -44,6 +44,20 @@ abstract class ModuleSelector implements SelectorInterface {
         else {
             throw new Exception('jelix~errors.selector.invalid.syntax', array($sel,$this->type));
         }
+    }
+
+    protected function _scan_sel($selStr) {
+        if (preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_\.]+)$/", $selStr, $m)) {
+            if ($m[1]!='' && $m[2]!='') {
+                $this->module = $m[2];
+            }
+            else {
+                $this->module = '';
+            }
+            $this->resource = $m[3];
+            return true;
+        }
+        return false;
     }
 
     public function getPath (){
