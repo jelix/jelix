@@ -1,11 +1,9 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor Julien Issler, Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2014 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -14,13 +12,13 @@
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Locale;
+use Jelix\Core\App;
 
 /**
  * static class to get a localized string
- * @package  jelix
- * @subpackage core
  */
-class jLocale {
+class Locale {
     /**
      *
      */
@@ -36,7 +34,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentLang(){
-        $s=jApp::config()->locale;
+        $s = App::config()->locale;
         return substr($s,0, strpos($s,'_'));
     }
     /**
@@ -44,7 +42,7 @@ class jLocale {
      * @return string
      */
     static function getCurrentCountry (){
-        $s = jApp::config()->locale;
+        $s = App::config()->locale;
         return substr($s,strpos($s,'_')+1);
     }
 
@@ -61,17 +59,17 @@ class jLocale {
     */
     static function get ($key, $args=null, $locale=null, $charset=null) {
 
-        $config = jApp::config();
+        $config = App::config();
         try {
-            $file = new jSelectorLoc($key, $locale, $charset);
+            $file = new LocaleSelector($key, $locale, $charset);
         }
-        catch (jExceptionSelector $e) {
+        catch (\Jelix\Core\Selector\Exception $e) {
             // the file is not found
             if ($e->getCode() == 12) throw $e;
             if ($locale === null)  $locale = $config->locale;
             if ($charset === null) $charset = $config->charset;
             if ($locale != $config->fallbackLocale && $config->fallbackLocale) {
-                return jLocale::get ($key, $args, $config->fallbackLocale, $charset);
+                return self::get ($key, $args, $config->fallbackLocale, $charset);
             }
             else
                 throw new Exception('(200)The given locale key "'.$key
@@ -83,7 +81,7 @@ class jLocale {
         $keySelector = $file->module.'~'.$file->fileKey;
 
         if (!isset (self::$bundles[$keySelector][$locale])) {
-            self::$bundles[$keySelector][$locale] =  new jBundle ($file, $locale);
+            self::$bundles[$keySelector][$locale] =  new Bundle ($file, $locale);
         }
 
         $bundle = self::$bundles[$keySelector][$locale];
@@ -98,10 +96,10 @@ class jLocale {
             //use the default language and country.
             else if ($locale == $config->locale) {
                 if ($config->fallbackLocale)
-                    return jLocale::get ($key, $args, $config->fallbackLocale, $charset);
+                    return self::get ($key, $args, $config->fallbackLocale, $charset);
                 throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
             }
-            return jLocale::get ($key, $args, $config->locale);
+            return self::get ($key, $args, $config->locale);
         }
         else {
             //here, we know the message
@@ -125,7 +123,7 @@ class jLocale {
         }
 
         if ($l != '') {
-            $avLoc = &jApp::config()->availableLocales;
+            $avLoc = &App::config()->availableLocales;
             if (in_array($l, $avLoc)) {
                 return $l;
             }
@@ -176,11 +174,11 @@ class jLocale {
      * @return string the corresponding locale (xx_YY)
      */
     static function langToLocale($lang) {
-        $conf = jApp::config();
+        $conf = App::config();
         if (isset($conf->langToLocale[$lang]))
             return $conf->langToLocale[$lang];
         if (is_null(self::$langToLocale)) {
-            self::$langToLocale = @parse_ini_file(JELIX_LIB_CORE_PATH.'lang_to_locale.ini.php');
+            self::$langToLocale = @parse_ini_file(__DIR__.'/lang_to_locale.ini.php');
         }
         if (isset(self::$langToLocale[$lang])) {
             return self::$langToLocale[$lang];

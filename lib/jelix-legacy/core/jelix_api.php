@@ -69,21 +69,7 @@ function jelix_scan_class_sel($selStr, $selObj) {
     return false;
 }
 
-function jelix_scan_locale_sel($selStr, $selObj) {
-    if (preg_match("/^(([a-zA-Z0-9_\.]+)~)?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\-\.]+)$/", $selStr, $m)) {
-        if ($m[1]!='' && $m[2]!='') {
-            $selObj->module = $m[2];
-        }
-        else {
-            $selObj->module = '';
-        }
-        $selObj->resource = $m[3];
-        $selObj->fileKey = $m[3];
-        $selObj->messageKey = $m[4];
-        return true;
-    }
-    return false;
-}
+
 
 
 }

@@ -1,11 +1,9 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
 * @contributor Julien Issler, Yannick Le Guédart, Dominique Papin
-* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2014 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -14,13 +12,14 @@
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Locale;
+use Jelix\Core\App;
 
 /**
 * a bundle contains all readed properties in a given language, and for all charsets
-* @package  jelix
-* @subpackage core
 */
-class jBundle {
+class Bundle {
+
     public $fic;
     public $locale;
 
@@ -45,8 +44,8 @@ class jBundle {
     */
     public function get ($key, $charset = null){
 
-        if($charset == null){
-            $charset = jApp::config()->charset;
+        if ($charset == null){
+            $charset = App::config()->charset;
         }
         if (!in_array ($charset, $this->_loadedCharset)){
             $this->_loadLocales ($this->locale, $charset);
@@ -54,7 +53,8 @@ class jBundle {
 
         if (isset ($this->_strings[$charset][$key])){
             return $this->_strings[$charset][$key];
-        }else{
+        }
+        else {
             return null;
         }
     }
@@ -73,13 +73,14 @@ class jBundle {
 
         // check if we have a compiled version of the ressources
 
-        if (is_readable ($cache)){
+        if (is_readable ($cache)) {
             $okcompile = true;
 
-            if (jApp::config()->compilation['force']){
+            if (App::config()->compilation['force']){
                $okcompile = false;
-            }else{
-                if (jApp::config()->compilation['checkCacheFiletime']){
+            }
+            else {
+                if (App::config()->compilation['checkCacheFiletime']){
                     if (is_readable ($source) && filemtime($source) > filemtime($cache)){
                         $okcompile = false;
                     }
@@ -98,7 +99,7 @@ class jBundle {
         if(isset($this->_strings[$charset])){
             $content = '<?php $_loaded= '.var_export($this->_strings[$charset], true).' ?>';
 
-            jFile::write($cache, $content);
+            \jFile::write($cache, $content);
         }
     }
 
@@ -121,39 +122,46 @@ class jBundle {
                     $linenumber++;
                     $line=rtrim($line);
                     if($multiline){
-                        if(preg_match("/^\s*(.*)\s*(\\\\?)$/U".$utf8Mod, $line, $match)){
+                        if (preg_match("/^\s*(.*)\s*(\\\\?)$/U".$utf8Mod, $line, $match)) {
                             $multiline= ($match[2] =="\\");
                             if (strlen ($match[1])) {
                                 $sp = preg_split('/(?<!\\\\)\#/', $match[1], -1 ,PREG_SPLIT_NO_EMPTY);
                                 $this->_strings[$charset][$key].=' '.str_replace($escapedChars,$unescape,trim($sp[0]));
-                            } else {
+                            }
+                            else {
                                 $this->_strings[$charset][$key].=' ';
                             }
-                        }else{
+                        }
+                        else {
                             throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,210);
                         }
-                    }elseif(preg_match("/^\s*(.+)\s*=\s*(.*)\s*(\\\\?)$/U".$utf8Mod,$line, $match)){
+                    }
+                    elseif (preg_match("/^\s*(.+)\s*=\s*(.*)\s*(\\\\?)$/U".$utf8Mod,$line, $match)) {
                         // on a bien un cle=valeur
                         $key=$match[1];
                         $multiline= ($match[3] =="\\");
                         $sp = preg_split('/(?<!\\\\)\#/', $match[2], -1 ,PREG_SPLIT_NO_EMPTY);
-                        if(count($sp)){
+                        if (count($sp)) {
                             $value=trim($sp[0]);
-                        }else{
+                        }
+                        else {
                             $value='';
                         }
 
                         $this->_strings[$charset][$key] = str_replace($escapedChars,$unescape,$value);
 
-                    }elseif(preg_match("/^\s*(\#.*)?$/",$line, $match)){
+                    }
+                    elseif (preg_match("/^\s*(\#.*)?$/",$line, $match)){
                         // ok, just a comment
-                    }else {
+                    }
+                    else {
                         throw new Exception('Syntaxe error in file properties '.$fichier.' line '.$linenumber,211);
                     }
                 }
             }
             fclose ($f);
-        }else{
+        }
+        else {
             throw new Exception('Cannot load the resource '.$fichier,212);
         }
     }

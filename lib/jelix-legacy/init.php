@@ -119,7 +119,6 @@ spl_autoload_register("jelix_autoload");
 #includephp core/selector/jSelectorDao.class.php
 #includephp core/selector/jSelectorDaoRecord.class.php
 #includephp core/selector/jSelectorForm.class.php
-#includephp core/selector/jSelectorLoc.class.php
 #includephp core/selector/jSelectorTpl.class.php
 #includephp core/selector/jSelectorZone.class.php
 #includephp core/jUrlBase.class.php
@@ -129,8 +128,6 @@ spl_autoload_register("jelix_autoload");
 #includephp core/jController.class.php
 #includephp core/jRequest.class.php
 #includephp core/jResponse.class.php
-#includephp core/jBundle.class.php
-#includephp core/jLocale.class.php
 #includephp core/jSession.class.php
 
 #else
@@ -145,7 +142,6 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlBase.class.php');
@@ -155,8 +151,6 @@ require (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
-require (JELIX_LIB_CORE_PATH . 'jBundle.class.php');
-require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
