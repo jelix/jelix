@@ -892,6 +892,7 @@ cd lib/Jelix/Legacy/events
   jEventCompiler.php
   jEventListener.php
 cd lib/Jelix/Event
+  composer.json
   Event.php
   Compiler.php
   Listener.php

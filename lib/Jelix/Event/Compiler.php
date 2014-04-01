@@ -1,19 +1,17 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  events
 * @author      Laurent Jouanneau
-* @copyright 2005-2006 Laurent Jouanneau
+* @copyright 2005-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\Event;
+use Jelix\Core\App;
 
 /**
  *
- * @package     jelix
- * @subpackage  events
  */
-class jEventCompiler implements jIMultiFileCompiler {
+class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface {
 
     private $eventList;
 
@@ -25,7 +23,7 @@ class jEventCompiler implements jIMultiFileCompiler {
         if (is_readable ($sourceFile)){
             $xml = simplexml_load_file($sourceFile);
 
-            $config = jApp::config()->disabledListeners;
+            $config = App::config()->disabledListeners;
             if (isset ($xml->listener)){
                 foreach ($xml->listener as $listener){
 
@@ -54,7 +52,7 @@ class jEventCompiler implements jIMultiFileCompiler {
 
     public function endCompile($cachefile){
         $content = '<?php $GLOBALS["JELIX_EVENTS"] = '.var_export($this->eventList,true).";\n?>";
-        jFile::write($cachefile, $content);
+        \jFile::write($cachefile, $content);
     }
 }
 

@@ -104,7 +104,9 @@ class Includer {
         }
 
         if ($mustCompile) {
-            require_once(JELIX_LIB_PATH.$aType[1]);
+            if ($aType[1]) {
+                require_once(JELIX_LIB_PATH.$aType[1]);
+            }
             $compiler = new $aType[0];
             $compileok = true;
             foreach ($config->_modulesPathList as $module=>$path) {

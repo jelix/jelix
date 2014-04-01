@@ -1,10 +1,8 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  events
 * @author      Gérald Croes, Patrice Ferlet
 * @contributor Laurent Jouanneau, Dominique Papin, Steven Jehannet
-* @copyright 2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau, 2009 Dominique Papin
+* @copyright 2001-2005 CopixTeam, 2005-2014 Laurent Jouanneau, 2009 Dominique Papin
 * This classes were get originally from the Copix project
 * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -14,23 +12,14 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp jEventListener.class.php
-#else
-/**
- *
- */
-require(JELIX_LIB_PATH.'events/jEventListener.class.php');
-#endif
-
+namespace Jelix\Event;
+use Jelix\Core\App;
+use Jelix\Core\Includer;
 
 /**
 * Class which represents an event in the event system
-* @package     jelix
-* @subpackage  events
 */
-class jEvent {
+class Event {
     /**
     * The name of the event.
     * @var string name
@@ -143,11 +132,11 @@ class jEvent {
     /**
     * send a notification to all modules
     * @param string $event the event name
-    * @return jEvent
+    * @return Jelix\Event\Event
     */
     public static function notify ($eventname, $params=array()) {
 
-        $event = new jEvent($eventname, $params);
+        $event = new Event($eventname, $params);
 
         if(!isset(self::$hashListened[$eventname])){
             self::loadListenersFor ($eventname);
@@ -161,8 +150,8 @@ class jEvent {
         return $event;
    }
 
-    protected static $compilerData = array('jEventCompiler',
-                    'events/jEventCompiler.class.php',
+    protected static $compilerData = array('\\Jelix\\Event\\Compiler',
+                    null,
                     'events.xml',
                     'events.php'
                     );
@@ -171,7 +160,7 @@ class jEvent {
     * because a listener can listen several events, we should
     * create only one instancy of a listener for performance, and
     * $hashListened will contains only reference to this listener.
-    * @var array of jEventListener
+    * @var array of Jelix\Event\Listener
     */
     protected static $listenersSingleton = array ();
 
@@ -189,14 +178,14 @@ class jEvent {
     */
     protected static function loadListenersFor ($eventName) {
         if (!isset($GLOBALS['JELIX_EVENTS'])) {
-            self::$compilerData[3] = jApp::config()->urlengine['urlScriptId'].'.'.self::$compilerData[3];
-            jIncluder::incAll(self::$compilerData);
+            self::$compilerData[3] = App::config()->urlengine['urlScriptId'].'.'.self::$compilerData[3];
+            Includer::incAll(self::$compilerData);
         }
 
         $inf = & $GLOBALS['JELIX_EVENTS'];
         self::$hashListened[$eventName] = array();
-        if(isset($inf[$eventName])){
-            $modules = & jApp::config()->_modulesPathList;
+        if (isset($inf[$eventName])) {
+            $modules = & App::config()->_modulesPathList;
             foreach ($inf[$eventName] as $listener){
                 list($module,$listenerName) = $listener;
                 if (! isset($modules[$module]))  // some modules could be unused

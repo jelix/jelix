@@ -1,10 +1,8 @@
 <?php
 /**
-* @package    jelix
-* @subpackage events
 * @author     Gérald Croes
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2014 Laurent Jouanneau
 * This class was get originally from the Copix project
 * (CopixListener, Copix 2.3dev20050901, http://www.copix.org)
 * Many of lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -14,16 +12,15 @@
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\Event;
 
 /**
 * base class for event listeners
-* @package     jelix
-* @subpackage  events
 */
-class jEventListener {
+class Listener {
     /**
     * perform a given event
-    * @param jEvent $event the event itself
+    * @param Jelix\Event\Event $event the event itself
     * @return void
     */
     function performEvent ($event) {
