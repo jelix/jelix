@@ -323,10 +323,7 @@ cd lib/jelix-legacy/docs/ns
 #endif
 
 cd lib/jelix-legacy/events
-* jEvent.class.php
-  jEventCompiler.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
-  jEventListener.class.php
 #endif
 
 cd lib/jelix-legacy/FakeServerConf
@@ -890,3 +887,11 @@ cd lib/Jelix/Locale
   LocaleSelector.php
 ! lang_to_locale.ini.php
   
+cd lib/Jelix/Legacy/events
+  jEvent.php
+  jEventCompiler.php
+  jEventListener.php
+cd lib/Jelix/Event
+  Event.php
+  Compiler.php
+  Listener.php

@@ -217,3 +217,7 @@ cd lib/jelix-legacy/core/log
   jFileLogger.class.php
   jMailLogger.class.php
   jSyslogLogger.class.php
+cd lib/jelix-legacy/events
+  jEvent.class.php
+  jEventCompiler.class.php
+  jEventListener.class.php
