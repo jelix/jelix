@@ -79,12 +79,14 @@ class Includer {
     *    'foo.xml', // file name to compile (in each modules)
     *    'foo.php',  //cache filename
     *    );
+    *  @return mixed arbitrary value from the cached
     */
     public static function incAll($aType){
+        $returnedValue = null;
 
         $cachefile = App::tempPath('compiled/'.$aType[3]);
         if (isset(self::$_includedFiles[$cachefile])) {
-            return;
+            return $returnedValue ;
         }
 
         $config = App::config();
@@ -118,13 +120,14 @@ class Includer {
 
             if ($compileok) {
                 $compiler->endCompile($cachefile);
-                require($cachefile);
+                $returnedValue = require($cachefile);
                 self::$_includedFiles[$cachefile] = true;
             }
         }
         else {
-            require($cachefile);
+            $returnedValue = require($cachefile);
             self::$_includedFiles[$cachefile] = true;
         }
+        return $returnedValue;
     }
 }

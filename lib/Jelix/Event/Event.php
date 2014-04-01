@@ -172,17 +172,22 @@ class Event {
     protected static $hashListened = array ();
 
     /**
+     * list of all declared listeners. Readed from all events.xml
+     */
+    protected static $listenersConfig = null;
+
+    /**
     * return the list of all listener corresponding to an event
     * @param string $eventName the event name we wants the listeners for.
     * @return array of objects
     */
     protected static function loadListenersFor ($eventName) {
-        if (!isset($GLOBALS['JELIX_EVENTS'])) {
+        if (!self::$listenersConfig) {
             self::$compilerData[3] = App::config()->urlengine['urlScriptId'].'.'.self::$compilerData[3];
-            Includer::incAll(self::$compilerData);
+            self::$listenersConfig = Includer::incAll(self::$compilerData);
         }
 
-        $inf = & $GLOBALS['JELIX_EVENTS'];
+        $inf = & self::$listenersConfig;
         self::$hashListened[$eventName] = array();
         if (isset($inf[$eventName])) {
             $modules = & App::config()->_modulesPathList;
@@ -190,7 +195,7 @@ class Event {
                 list($module,$listenerName) = $listener;
                 if (! isset($modules[$module]))  // some modules could be unused
                     continue;
-                if (! isset (self::$listenersSingleton[$module][$listenerName])){
+                if (! isset (self::$listenersSingleton[$module][$listenerName])) {
                     require_once ($modules[$module].'classes/'.$listenerName.'.listener.php');
                     $className = $listenerName.'Listener';
                     self::$listenersSingleton[$module][$listenerName] =  new $className ();
@@ -207,6 +212,6 @@ class Event {
     public static function clearCache() {
         self::$hashListened = array();
         self::$listenersSingleton = array ();
-        unset($GLOBALS['JELIX_EVENTS']);
+        self::$listenersConfig = null;
     }
 }

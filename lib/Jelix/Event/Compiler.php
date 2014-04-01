@@ -51,7 +51,7 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface {
     }
 
     public function endCompile($cachefile){
-        $content = '<?php $GLOBALS["JELIX_EVENTS"] = '.var_export($this->eventList,true).";\n?>";
+        $content = '<?php return '.var_export($this->eventList,true).";\n?>";
         \jFile::write($cachefile, $content);
     }
 }
