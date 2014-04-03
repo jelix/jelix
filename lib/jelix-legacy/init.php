@@ -123,10 +123,7 @@ spl_autoload_register("jelix_autoload");
 #includephp core/jUrlBase.class.php
 #includephp core/jUrlAction.class.php
 #includephp core/jUrl.class.php
-#includephp core/jCoordinator.class.php
 #includephp core/jController.class.php
-#includephp core/jRequest.class.php
-#includephp core/jResponse.class.php
 #includephp core/jSession.class.php
 
 #else
@@ -145,10 +142,7 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlBase.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
-require (JELIX_LIB_CORE_PATH . 'jCoordinator.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
-require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
-require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 

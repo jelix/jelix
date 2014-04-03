@@ -56,6 +56,9 @@ cd lib/Jelix/Legacy/core
   jLocale.php
   jBundle.php
 
+  jCoordinator.php
+  jRequest.php
+  jResponse.php
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
@@ -94,10 +97,7 @@ cd lib/jelix-legacy/core
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jBasicErrorHandler.class.php
 * jController.class.php
-* jCoordinator.class.php
   jException.class.php
-  jRequest.class.php
-* jResponse.class.php
   jUrlBase.class.php
   jUrlAction.class.php
 * jUrl.class.php
@@ -896,3 +896,7 @@ cd lib/Jelix/Event
   Event.php
   Compiler.php
   Listener.php
+cd lib/Jelix/Routing
+  Router.php
+  ClientRequest.php
+  ServerResponse.php

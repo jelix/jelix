@@ -24,6 +24,9 @@ cd lib/jelix-legacy/core/
   lang_to_locale.ini.php
   jelix_api.php
 
+  jCoordinator.class.php
+  jRequest.class.php
+  jResponse.class.php
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php
