@@ -209,7 +209,7 @@ abstract class ClientRequest {
         else
             $responses = &App::config()->responses;
 
-        $coord = App::coord();
+        $coord = App::router();
         if(!isset($responses[$type])){
             if ($coord->action) {
                $action = $coord->action->resource;

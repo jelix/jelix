@@ -89,7 +89,7 @@ abstract class ServerResponse {
             // output text response
             header("HTTP/{$this->httpVersion} 500 Internal jelix error");
             header('Content-type: text/plain');
-            echo App::coord()->getGenericErrorMessage();
+            echo App::router()->getGenericErrorMessage();
         }
     }
 
@@ -280,7 +280,7 @@ abstract class ServerResponse {
 
         if($dateLastModified != null){
             $dateLastModified = $this->_normalizeDate($dateLastModified);
-            $lastModified = App::coord()->request->header('If-Modified-Since');
+            $lastModified = App::router()->request->header('If-Modified-Since');
             if ($lastModified !== null && $lastModified == $dateLastModified) {
                 $notModified = true;
             }
@@ -290,7 +290,7 @@ abstract class ServerResponse {
         }
 
         if($etag != null){
-            $headerEtag = App::coord()->request->header('If-None-Match');
+            $headerEtag = App::router()->request->header('If-None-Match');
             if ($headerEtag !== null && $etag == $headerEtag) {
                 $notModified = true;
             }

@@ -17,8 +17,8 @@ class Syslog implements \Jelix\Logger\OutputInterface {
     function logMessage($message) {
         $type = $message->getCategory();
 
-        if (\Jelix\Core\App::coord()->request)
-            $ip = \Jelix\Core\App::coord()->request->getIP();
+        if (\Jelix\Core\App::router()->request)
+            $ip = \Jelix\Core\App::router()->request->getIP();
         else
             $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
 

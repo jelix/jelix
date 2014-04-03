@@ -29,7 +29,7 @@ class Mail implements \Jelix\Logger\OutputInterface {
      */
     function output($response) {
 
-        if (!\Jelix\Core\App::coord()->request)
+        if (!\Jelix\Core\App::router()->request)
             return;
 
         $email = \Jelix\Core\App::config()->mailLogger['email'];

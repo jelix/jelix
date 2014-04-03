@@ -100,7 +100,7 @@ class Error implements \Jelix\Logger\MessageInterface {
             $url = 'Unknow request';
 
         // url params including module and action
-        if (\Jelix\Core\App::coord() && ($req = \Jelix\Core\App::coord()->request)) {
+        if (\Jelix\Core\App::router() && ($req = \Jelix\Core\App::router()->request)) {
             $params = str_replace("\n", ' ', var_export($req->params, true));
             $remoteAddr = $req->getIP();
         }

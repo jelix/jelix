@@ -36,7 +36,7 @@ class File implements \Jelix\Logger\OutputInterface {
             $f = 'errors.log';
         }
 
-        $coord = \Jelix\Core\App::coord();
+        $coord = \Jelix\Core\App::router();
         if ($coord && $coord->request ) {
             $ip = $coord->request->getIP();
         }

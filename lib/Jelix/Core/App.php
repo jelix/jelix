@@ -58,7 +58,7 @@ class App {
         self::$configPath = (is_null($configPath)?self::$varPath.'config/':$configPath);
         self::$scriptPath = (is_null($scriptPath)?$appPath.'scripts/':$scriptPath);
         self::$_isInit = true;
-        self::$_coord = null;
+        self::$_router = null;
         self::$_config = null;
         self::$configAutoloader = null;
         self::$_mainConfigFile = null;
@@ -158,14 +158,40 @@ class App {
         return $configFileName;
     }
 
-    protected static $_coord = null;
-    
-    public static function coord() {
-        return self::$_coord;
+    /**
+     * The current router
+     * @var \Jelix\Routing\Router
+     */
+    protected static $_router = null;
+
+    /**
+     * @return \Jelix\Routing\Router current router
+     */
+    public static function router() {
+        return self::$_router;
     }
 
-    public static function setCoord($coord) {
-        self::$_coord = $coord; 
+    /**
+     * @param \Jelix\Routing\Router $router set new current router
+     */
+    public static function setRouter($router) {
+        self::$_router = $router; 
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function coord() {
+        //trigger_error("App::coord() is deprecated, use App::router() instead", E_USER_DEPRECATED);
+        return self::$_router;
+    }
+
+    /**
+     * @deprecated
+     */
+    public static function setCoord($router) {
+        //trigger_error("App::setCoord() is deprecated, use App::setRouter() instead", E_USER_DEPRECATED);
+        self::$_router = $router; 
     }
 
     protected static $contextBackup = array();
@@ -179,13 +205,13 @@ class App {
             $conf = clone self::$_config;
         else
             $conf = null;
-        if (self::$_coord)
-            $coord = clone self::$_coord;
+        if (self::$_router)
+            $router = clone self::$_router;
         else
-            $coord = null;
+            $router = null;
         self::$contextBackup[] = array(self::$appPath, self::$varPath, self::$logPath,
                                        self::$configPath, self::$wwwPath, self::$scriptPath,
-                                       self::$tempBasePath, self::$env, $conf, $coord,
+                                       self::$tempBasePath, self::$env, $conf, $router,
                                        self::$modulesContext, self::$configAutoloader,
                                        self::$_mainConfigFile);
     }
@@ -198,7 +224,7 @@ class App {
             return;
         list(self::$appPath, self::$varPath, self::$logPath, self::$configPath,
              self::$wwwPath, self::$scriptPath, self::$tempBasePath, self::$env,
-             $conf, self::$_coord, self::$modulesContext, self::$configAutoloader,
+             $conf, self::$_router, self::$modulesContext, self::$configAutoloader,
             self::$_mainConfigFile) = array_pop(self::$contextBackup);
         self::setConfig($conf);
     }
@@ -219,12 +245,10 @@ class App {
             if (!isset(self::config()->$optname))
                 return null;
             $opt = & self::config()->$optname;
-#ifnot ENABLE_OPTIMIZED_SOURCE
             if (!isset($opt[$name])
                 || !file_exists($opt[$name].$name.$suffix) ){
                 return null;
             }
-#endif
             require_once($opt[$name].$name.$suffix);
         }
         if (!is_null($args))
