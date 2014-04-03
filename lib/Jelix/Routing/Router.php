@@ -112,7 +112,7 @@ class Router {
     }
 
     /**
-    * initialize the given request and some properties of the coordinator
+    * initialize the given request and some properties of the router
     *
     * It extracts information for the request to set the module name and the
     * action name. It doesn't verify if the corresponding controller does
@@ -348,7 +348,7 @@ class Router {
     }
 
     /**
-    * gets a given coordinator plugin if registered
+    * gets a given router plugin if registered
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
     * @return jICoordPlugin
@@ -367,7 +367,7 @@ class Router {
     }
 
     /**
-    * Says if the given coordinator plugin $name is enabled
+    * Says if the given router plugin $name is enabled
     * @param string $pluginName
     * @return boolean true : plugin is ok
     */
