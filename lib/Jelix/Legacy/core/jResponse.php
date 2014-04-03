@@ -13,4 +13,4 @@
  * @see \Jelix\Routing\ServerResponse
  * @deprecated
  */
-class jResponse extends \Jelix\Routing\ServerResponse { }
+abstract class jResponse extends \Jelix\Routing\ServerResponse { }

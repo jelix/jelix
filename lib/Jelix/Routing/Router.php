@@ -1,16 +1,16 @@
 <?php
 /**
-* @package      jelix
-* @subpackage   core
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav, Gaëtan MARROT
-* @copyright    2005-2013 laurent Jouanneau
+* @copyright    2005-2014 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
 * @copyright    2008-2010 Dominique Papin, 2012 Flav, 2013 Gaëtan MARROT
 * @link         http://www.jelix.org
 * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Routing;
+use Jelix\Core\App;
 
 /**
  * the main class of the jelix core
@@ -18,10 +18,8 @@
  * this is the "chief orchestra" of the framework. Its goal is
  * to load the configuration, to get the request parameters
  * used to instancie the correspondant controllers and to run the right method.
- * @package  jelix
- * @subpackage core
  */
-class jCoordinator {
+class Router {
 
     /**
      * plugin list
@@ -31,13 +29,13 @@ class jCoordinator {
 
     /**
      * current response object
-     * @var jResponse
+     * @var \Jelix\Routing\ServerResponse
      */
     public $response = null;
 
     /**
      * current request object
-     * @var jRequest
+     * @var \Jelix\Routing\ClientRequest
      */
     public $request = null;
 
@@ -61,21 +59,22 @@ class jCoordinator {
 
     /**
      * the current error message
-     * @var jLogErrorMessage
+     * @var \Jelix\Logger\Message\Error
      */
     protected $errorMessage = null;
 
     /**
      * @param  string|object $config filename of the ini file to configure the framework, or the config object itself
-     *              this parameter is optional if jApp::loadConfig has been already called
+     *              this parameter is optional if App::loadConfig has been already called
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
      *                 keep it to true, unless you have something to debug
      *                 and really have to use the default handler or an other handler
      */
     function __construct ($configFile='', $enableErrorHandler=true) {
 
-        if ($configFile)
-            jApp::loadConfig($configFile, $enableErrorHandler);
+        if ($configFile) {
+            App::loadConfig($configFile, $enableErrorHandler);
+        }
 
         $this->_loadPlugins();
     }
@@ -85,7 +84,7 @@ class jCoordinator {
      */
     private function _loadPlugins(){
 
-        $config = jApp::config();
+        $config = App::config();
         foreach ($config->coordplugins as $name=>$conf) {
             if (strpos($name, '.') !== false)
                 continue;
@@ -99,7 +98,7 @@ class jCoordinator {
                     $conf = array();
             }
             else {
-                $conff = jApp::configPath($conf);
+                $conff = App::configPath($conf);
                 if (false === ($conf = parse_ini_file($conff,true)))
                     throw new Exception("Error in a plugin configuration file -- plugin: $name  file: $conff", 13);
             }
@@ -107,6 +106,7 @@ class jCoordinator {
             $class= $name.'CoordPlugin';
             if (isset($config->coordplugins[$name.'.name']))
                 $name = $config->coordplugins[$name.'.name'];
+            $class = '\\'.$class;
             $this->plugins[strtolower($name)] = new $class($conf);
         }
     }
@@ -121,13 +121,13 @@ class jCoordinator {
     * Does not call this method directly in entry points. Prefer to call
     * process() instead (that will call setRequest). 
     * setRequest is mostly used for tests or specific contexts.
-    * @param  jRequest  $request the request object
-    * @throw jException if the module is unknown or the action name format is not valid
-    * @see jCoordinator::process()
+    * @param  ClientRequest  $request the request object
+    * @throw \jException if the module is unknown or the action name format is not valid
+    * @see Router::process()
     */
     protected function setRequest ($request) {
 
-        $config = jApp::config();
+        $config = App::config();
         $this->request = $request;
 
         if ($config->enableErrorHandler) {
@@ -135,20 +135,20 @@ class jCoordinator {
             set_exception_handler(array($this, 'exceptionHandler'));
 
             // let's log messages appeared during init
-            foreach(jBasicErrorHandler::$initErrorMessages as $msg) {
-                jLog::log($msg, $msg->getCategory());
+            foreach(\jBasicErrorHandler::$initErrorMessages as $msg) {
+                \Jelix\Logger\Log::log($msg, $msg->getCategory());
             }
         }
 
         $this->request->init();
 
         list($this->moduleName, $this->actionName) = $request->getModuleAction();
-        jApp::pushCurrentModule($this->moduleName);
+        App::pushCurrentModule($this->moduleName);
 
-        $this->action = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
+        $this->action = new \jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
         if ($config->modules[$this->moduleName.'.access'] < 2) {
-            throw new jException('jelix~errors.module.untrusted', $this->moduleName);
+            throw new \jException('jelix~errors.module.untrusted', $this->moduleName);
         }
     }
 
@@ -157,7 +157,7 @@ class jCoordinator {
     *
     * This method should be called in a entry point.
     *
-    * @param  jRequest  $request the request object. It is required if a descendant of jCoordinator did not called setRequest before
+    * @param  ClientRequest  $request the request object. It is required if a descendant of Router did not called setRequest before
     */
     public function process ($request=null) {
 
@@ -167,22 +167,22 @@ class jCoordinator {
 
             $ctrl = $this->getController($this->action);
         }
-        catch (jException $e) {
-            $config = jApp::config();
+        catch (\jException $e) {
+            $config = App::config();
             if ($config->urlengine['notfoundAct'] =='') {
                 throw $e;
             }
             try {
-                $this->action = new jSelectorAct($config->urlengine['notfoundAct']);
+                $this->action = new \jSelectorAct($config->urlengine['notfoundAct']);
                 $ctrl = $this->getController($this->action);
             }
-            catch(jException $e2) {
+            catch(\jException $e2) {
                 throw $e;
             }
         }
-        jSession::start();
+        \jSession::start();
 
-        jApp::pushCurrentModule ($this->moduleName);
+        App::pushCurrentModule ($this->moduleName);
 
         if (count($this->plugins)) {
             $pluginparams = array();
@@ -198,8 +198,8 @@ class jCoordinator {
                 $result = $this->plugins[$name]->beforeAction ($pluginparams);
                 if($result){
                     $this->action = $result;
-                    jApp::popCurrentModule();
-                    jApp::pushCurrentModule($result->module);
+                    App::popCurrentModule();
+                    App::pushCurrentModule($result->module);
                     $this->moduleName = $result->module;
                     $this->actionName = $result->resource;
                     $ctrl = $this->getController($this->action);
@@ -210,7 +210,7 @@ class jCoordinator {
 
         $this->response = $ctrl->{$this->action->method}();
         if($this->response == null){
-            throw new jException('jelix~errors.response.missing',$this->action->toString());
+            throw new \jException('jelix~errors.response.missing',$this->action->toString());
         }
 
         foreach ($this->plugins as $name => $obj){
@@ -223,8 +223,8 @@ class jCoordinator {
             $this->plugins[$name]->afterProcess ();
         }
 
-        jApp::popCurrentModule();
-        jSession::end();
+        App::popCurrentModule();
+        \jSession::end();
     }
 
     /**
@@ -235,18 +235,18 @@ class jCoordinator {
 
         $ctrlpath = $selector->getPath();
         if(!file_exists($ctrlpath)){
-            throw new jException('jelix~errors.ad.controller.file.unknown',array($this->actionName,$ctrlpath));
+            throw new \jException('jelix~errors.ad.controller.file.unknown',array($this->actionName,$ctrlpath));
         }
         require_once($ctrlpath);
         $class = $selector->getClass();
         if(!class_exists($class,false)){
-            throw new jException('jelix~errors.ad.controller.class.unknown',array($this->actionName,$class, $ctrlpath));
+            throw new \jException('jelix~errors.ad.controller.class.unknown',array($this->actionName,$class, $ctrlpath));
         }
         $ctrl = new $class($this->request);
-        if($ctrl instanceof jIRestController){
+        if($ctrl instanceof \jIRestController){
             $method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
         }elseif(!is_callable(array($ctrl, $selector->method))){
-            throw new jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
+            throw new \jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath));
         }
         return $ctrl;
     }
@@ -274,10 +274,10 @@ class jCoordinator {
             $code = 1;
         }
 
-        if (!isset (jBasicErrorHandler::$errorCode[$errno])){
+        if (!isset (\jBasicErrorHandler::$errorCode[$errno])){
             $errno = E_ERROR;
         }
-        $codestr = jBasicErrorHandler::$errorCode[$errno];
+        $codestr = \jBasicErrorHandler::$errorCode[$errno];
 
         $trace = debug_backtrace();
         array_shift($trace);
@@ -307,10 +307,10 @@ class jCoordinator {
      */
     public function handleError($type, $code, $message, $file, $line, $trace){
 
-        $errorLog = new jLogErrorMessage($type, $code, $message, $file, $line, $trace);
+        $errorLog = new \Jelix\Logger\Message\Error($type, $code, $message, $file, $line, $trace);
 
-        $errorLog->setFormat(jApp::config()->error_handling['messageLogFormat']);
-        jLog::log($errorLog, $type);
+        $errorLog->setFormat(App::config()->error_handling['messageLogFormat']);
+        \Jelix\Logger\Log::log($errorLog, $type);
 
         // if non fatal error, it is finished, continue the execution of the action
         if ($type != 'error')
@@ -322,7 +322,7 @@ class jCoordinator {
 
         $resp = $this->request->getErrorResponse($this->response);
         $resp->outputErrors();
-        jSession::end();
+        \jSession::end();
 
         exit(1);
     }
@@ -333,7 +333,7 @@ class jCoordinator {
      * @return string
      */
     public function getGenericErrorMessage() {
-        $msg = jApp::config()->error_handling['errorMessage'];
+        $msg = App::config()->error_handling['errorMessage'];
         if ($this->errorMessage)
             $code = $this->errorMessage->getCode();
         else $code = '';
@@ -341,8 +341,7 @@ class jCoordinator {
     }
 
     /**
-     * @return jLogErrorMessage  the current error
-     * @since 1.3a1
+     * @return \Jelix\Logger\Message\Error the current error
      */
     public function getErrorMessage() {
         return $this->errorMessage;
@@ -360,7 +359,7 @@ class jCoordinator {
             $plugin = $this->plugins[$pluginName];
         }else{
             if ($required){
-                throw new jException('jelix~errors.plugin.unregister', $pluginName);
+                throw new \jException('jelix~errors.plugin.unregister', $pluginName);
             }
             $plugin = null;
         }

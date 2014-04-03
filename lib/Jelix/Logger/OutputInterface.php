@@ -21,7 +21,7 @@ interface OutputInterface {
 
     /**
      * output messages to the given response
-     * @param jResponse $response
+     * @param \Jelix\Routing\ServerResponse $response
      */
     function output($response);
 }

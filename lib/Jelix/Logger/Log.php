@@ -165,7 +165,7 @@ class Log {
     /**
      * call each loggers so they have the possibility to inject data into the
      * given response
-     * @param jResponse $response
+     * @param \Jelix\Routing\ServerResponse $response
      */
     public static function outputLog($response) {
         foreach(self::$loggers as $logger) {

@@ -1,23 +1,19 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart
-* @copyright  2005-2013 Laurent Jouanneau, 2010 Yannick Le Guédart
+* @copyright  2005-2014 Laurent Jouanneau, 2010 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
+namespace Jelix\Routing;
+use Jelix\Core\App;
 
 /**
  * base class for object which retrieve all parameters of an http request. The
  * process depends on the type of request (ex: xmlrpc..)
- *
- * @package  jelix
- * @subpackage core
  */
-abstract class jRequest {
+abstract class ClientRequest {
 
    /**
     * request parameters
@@ -105,7 +101,7 @@ abstract class jRequest {
      * init the url* properties
      */
     protected function _initUrlData(){
-        $conf = &jApp::config()->urlengine;
+        $conf = &App::config()->urlengine;
 
         $this->urlScript = $conf['urlScript'];
         $this->urlScriptPath = $conf['urlScriptPath'];
@@ -130,7 +126,7 @@ abstract class jRequest {
             $pathinfo = '';
         }
 
-        if (jApp::config()->isWindows && $pathinfo && strpos($pathinfo, $this->urlScript) !== false){
+        if (App::config()->isWindows && $pathinfo && strpos($pathinfo, $this->urlScript) !== false){
             //under IIS, we may get  /subdir/index.php/mypath/myaction as PATH_INFO, so we fix it
             $pathinfo = substr ($pathinfo, strlen ($this->urlScript));
         }
@@ -143,7 +139,7 @@ abstract class jRequest {
      * fills also $module and $action properties
      */
     public function getModuleAction() {
-        $conf = jApp::config();
+        $conf = App::config();
 
         if (isset($this->params['module']) && trim($this->params['module']) != '') {
             $this->module = $this->params['module'];
@@ -186,7 +182,7 @@ abstract class jRequest {
     }
 
     /**
-     * @param jResponse $response the response
+     * @param \Jelix\Routing\ServerResponse $response the response
      * @return boolean true if the given class is allowed for the current request
      */
     public function isAllowedResponse($response){
@@ -200,7 +196,7 @@ abstract class jRequest {
      * get a response object.
      * @param string $name the name of the response type (ex: "html")
      * @param boolean $useOriginal true:don't use the response object redefined by the application
-     * @return jResponse the response object
+     * @return \Jelix\Routing\ServerResponse the response object
      */
     public function getResponse($type='', $useOriginal = false){
 
@@ -209,11 +205,11 @@ abstract class jRequest {
         }
 
         if ($useOriginal)
-            $responses = &jApp::config()->_coreResponses;
+            $responses = &App::config()->_coreResponses;
         else
-            $responses = &jApp::config()->responses;
+            $responses = &App::config()->responses;
 
-        $coord = jApp::coord();
+        $coord = App::coord();
         if(!isset($responses[$type])){
             if ($coord->action) {
                $action = $coord->action->resource;
@@ -224,9 +220,9 @@ abstract class jRequest {
                $path = '';
             }
             if ($type == $this->defaultResponseType)
-               throw new jException('jelix~errors.default.response.type.unknown',array($action,$type));
+               throw new \jException('jelix~errors.default.response.type.unknown',array($action,$type));
             else
-               throw new jException('jelix~errors.ad.response.type.unknown',array($action, $type, $path));
+               throw new \jException('jelix~errors.ad.response.type.unknown',array($action, $type, $path));
         }
 
         $respclass = $responses[$type];
@@ -237,7 +233,7 @@ abstract class jRequest {
         $response = new $respclass();
 
         if (!$this->isAllowedResponse($response)){
-            throw new jException('jelix~errors.ad.response.type.notallowed',array($coord->action->resource, $type, $coord->action->getPath()));
+            throw new \jException('jelix~errors.ad.response.type.notallowed',array($coord->action->resource, $type, $coord->action->getPath()));
         }
 
         $coord->response = $response;
@@ -246,15 +242,15 @@ abstract class jRequest {
     }
 
     /**
-     * @return jResponse
+     * @return ServerResponse
      */
     public function getErrorResponse($currentResponse) {
       try {
          return $this->getResponse('', true);
       }
-      catch(Exception $e) {
+      catch(\Exception $e) {
          require_once(JELIX_LIB_CORE_PATH.'response/jResponseText.class.php');
-         return new jResponseText();
+         return new \jResponseText();
       }
     }
 
@@ -319,8 +315,8 @@ abstract class jRequest {
     * @since 1.2.3
     */
    function getDomainName() {
-      if (jApp::config()->domainName != '') {
-         return jApp::config()->domainName;
+      if (App::config()->domainName != '') {
+         return App::config()->domainName;
       }
       elseif (isset($_SERVER['HTTP_HOST'])) {
          if (($pos = strpos($_SERVER['HTTP_HOST'], ':')) !== false)
@@ -366,7 +362,7 @@ abstract class jRequest {
       else
          $https = $forceHttps;
 
-      $forcePort = ($https ? jApp::config()->forceHTTPSPort : jApp::config()->forceHTTPPort);
+      $forcePort = ($https ? App::config()->forceHTTPSPort : App::config()->forceHTTPPort);
       if ($forcePort === true) {
          return '';
       }

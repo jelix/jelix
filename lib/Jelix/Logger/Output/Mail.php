@@ -25,7 +25,7 @@ class Mail implements \Jelix\Logger\OutputInterface {
     }
 
     /**
-     * @param jResponse $response
+     * @param \Jelix\Routing\ServerResponse $response
      */
     function output($response) {
 

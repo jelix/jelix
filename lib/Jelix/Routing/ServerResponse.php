@@ -1,16 +1,16 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Brice Tence
 * @contributor Florian Lonqueu-Brochard
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2014 Laurent Jouanneau
 * @copyright   2010 Julien Issler, 2011 Brice Tence
 * @copyright   2011 Florian Lonqueu-Brochard
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Routing;
+use Jelix\Core\App;
 
 /**
 * base class for response object
@@ -18,7 +18,7 @@
 * @package  jelix
 * @subpackage core
 */
-abstract class jResponse {
+abstract class ServerResponse {
 
     /**
     * @var string ident of the response type
@@ -46,10 +46,10 @@ abstract class jResponse {
 
     /**
      * @var boolean Should we output only the headers or the entire response
-     */ 
+     */
     protected $_outputOnlyHeaders = false;
-    
-    
+
+
     public $httpVersion = '1.1';
     public $forcedHttpVersion = false;
 
@@ -58,8 +58,8 @@ abstract class jResponse {
     */
     function __construct() {
 
-        if( jApp::config()->httpVersion != "" ) {
-            $this->httpVersion = jApp::config()->httpVersion;
+        if( App::config()->httpVersion != "" ) {
+            $this->httpVersion = App::config()->httpVersion;
             $this->forcedHttpVersion = true;
         }
     }
@@ -82,14 +82,14 @@ abstract class jResponse {
         // if accept text/html
         if (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'],'text/html')) {
             require_once(JELIX_LIB_CORE_PATH.'responses/jResponseBasicHtml.class.php');
-            $response = new jResponseBasicHtml();
+            $response = new \jResponseBasicHtml();
             $response->outputErrors();
         }
         else {
             // output text response
             header("HTTP/{$this->httpVersion} 500 Internal jelix error");
             header('Content-type: text/plain');
-            echo jApp::coord()->getGenericErrorMessage();
+            echo App::coord()->getGenericErrorMessage();
         }
     }
 
@@ -145,7 +145,10 @@ abstract class jResponse {
      * @param string $code  the status code (200, 404...)
      * @param string $msg the message following the status code ("OK", "Not Found"..)
      */
-    public function setHttpStatus($code, $msg){ $this->_httpStatusCode=$code; $this->_httpStatusMsg=$msg;}
+    public function setHttpStatus($code, $msg){
+        $this->_httpStatusCode = $code;
+        $this->_httpStatusMsg = $msg;
+    }
 
     /**
      * send http headers
@@ -166,48 +169,46 @@ abstract class jResponse {
         }
         $this->_httpHeadersSent=true;
     }
-    
-    
+
+
     /**
      * Normalize a date into GMT format
      * @param mixed $date Can be a jDateTime object, a DateTime object or a string understandable by strtotime
      * @return string    a date in GMT format
      */
     protected function _normalizeDate($date){
-        if($date instanceof jDateTime){
-            return gmdate('D, d M Y H:i:s \G\M\T', $date->toString(jDateTime::TIMESTAMP_FORMAT));
+        if ($date instanceof \jDateTime){
+            return gmdate('D, d M Y H:i:s \G\M\T', $date->toString(\jDateTime::TIMESTAMP_FORMAT));
         }
-        elseif($date instanceof DateTime){
+        elseif($date instanceof \DateTime){
             return gmdate('D, d M Y H:i:s \G\M\T', $date->getTimestamp());
         }
         else{
             return gmdate('D, d M Y H:i:s \G\M\T', strtotime($date));
         }
-    } 
-    
+    }
+
     /**
      * check if the request is of type GET or HEAD
      */
     protected function _checkRequestType(){
-        
+
         $allowedTypes = array('GET', 'HEAD');
-        
-        if(in_array($_SERVER['REQUEST_METHOD'], $allowedTypes)){
+
+        if (in_array($_SERVER['REQUEST_METHOD'], $allowedTypes)){
             return true;
         }
         else {
-#ifndef PROD_VERSION
-            trigger_error(jLocale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
-#endif
+            trigger_error(\Jelix\Locale\Locale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
             return false;
         }
     }
-    
-    
-    
+
+
+
     /**
     * Clean the differents caches headers
-    */  
+    */
     public function cleanCacheHeaders(){
         $toClean = array('Cache-Control', 'Expires', 'Pragma' );
         foreach($toClean as $h){
@@ -215,71 +216,71 @@ abstract class jResponse {
             $this->addHttpHeader($h, '');
         }
     }
-    
-    
+
+
     /**
      * Set an expires header to the page/ressource.
-     * 
+     *
      * @param mixed $dateLastModified Can be a jDateTime object, a DateTime object or a string understandable by strtotime
-     * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true. 
+     * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true.
      *
      * @see _normalizeDate
      */
     public function setExpires($date, $cleanCacheHeader = true) {
-        
+
         if(!$this->_checkRequestType())
             return;
-        
+
         if($cleanCacheHeader)
             $this->cleanCacheHeaders();
 
         $date = $this->_normalizeDate($date);
         $this->addHttpHeader('Expires', $date);
     }
-    
+
 
 
     /**
      * Set a life time for the page/ressource.
-     * 
+     *
      * @param int $time             Time during which the page will be cached. Express in seconds.
      * @param boolean $sharedCache      True if the lifetime concern a public/shared cache. Default : false.
-     * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true. 
+     * @param boolean $cleanCacheHeaderTrue for clean/delete other cache headers. Default : true.
      */
     public function setLifetime($time, $sharedCache = false, $cleanCacheHeader = true) {
-        
+
         if(!$this->_checkRequestType())
             return;
-           
+
         if($cleanCacheHeader)
             $this->cleanCacheHeaders();
-        
+
         $type = $sharedCache ? 'public' : 'private';
 
         $this->addHttpHeader('Cache-Control', $type.', '.($sharedCache ? 's-' : '').'maxage='.$time);
     }
-    
+
     /**
      * Use the HTPP headers Last-Modified to see if the ressource in client cache is fresh
-     * 
+     *
      * @param mixed $dateLastModified Can be a jDateTime object, a DateTime object or a string understandable by strtotime
-     * @param boolean $cleanCacheHeader True for clean/delete other cache headers. Default : true. 
-     * 
+     * @param boolean $cleanCacheHeader True for clean/delete other cache headers. Default : true.
+     *
      * @return boolean    True if the client ressource version is fresh, false otherwise
      */
     public function isValidCache($dateLastModified = null, $etag = null, $cleanCacheHeader = true){
-        
+
         if(!$this->_checkRequestType())
             return false;
-        
+
         $notModified = false;
-        
+
         if($cleanCacheHeader)
             $this->cleanCacheHeaders();
-         
+
         if($dateLastModified != null){
             $dateLastModified = $this->_normalizeDate($dateLastModified);
-            $lastModified = jApp::coord()->request->header('If-Modified-Since');
+            $lastModified = App::coord()->request->header('If-Modified-Since');
             if ($lastModified !== null && $lastModified == $dateLastModified) {
                 $notModified = true;
             }
@@ -287,22 +288,22 @@ abstract class jResponse {
                 $this->addHttpHeader('Last-Modified', $dateLastModified);
             }
         }
-        
+
         if($etag != null){
-            $headerEtag = jApp::coord()->request->header('If-None-Match');
+            $headerEtag = App::coord()->request->header('If-None-Match');
             if ($headerEtag !== null && $etag == $headerEtag) {
                 $notModified = true;
             }
             else {
                 $this->addHttpHeader('Etag', $etag);
             }
-            
+
         }
 
        if($notModified) {
             $this->_outputOnlyHeaders = true;
             $this->setHttpStatus(304, 'Not Modified');
-            
+
             $toClean = array('Allow', 'Content-Encoding', 'Content-Language', 'Content-Length', 'Content-MD5', 'Content-Type', 'Last-Modified', 'Etag');
             foreach($toClean as $h)
                 unset($this->_httpHeaders[$h]);
@@ -311,6 +312,4 @@ abstract class jResponse {
         return $notModified;
     }
 
-    
-    
 }

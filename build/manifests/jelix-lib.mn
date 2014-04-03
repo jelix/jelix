@@ -891,12 +891,16 @@ cd lib/Jelix/Legacy/events
   jEvent.php
   jEventCompiler.php
   jEventListener.php
+
 cd lib/Jelix/Event
   composer.json
   Event.php
   Compiler.php
   Listener.php
+
 cd lib/Jelix/Routing
+  composer.json
+  Exception.php
   Router.php
   ClientRequest.php
   ServerResponse.php

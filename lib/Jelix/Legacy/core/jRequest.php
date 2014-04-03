@@ -13,4 +13,4 @@
  * @see \Jelix\Routing\ClientRequest
  * @deprecated
  */
-class jRequest extends \Jelix\Routing\ClientRequest { }
+abstract class jRequest extends \Jelix\Routing\ClientRequest { }
