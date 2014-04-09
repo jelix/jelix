@@ -291,6 +291,7 @@ cd testapp/tests-jelix/jelix/cache/
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php
+  configTest.php
   jAppContextTest.php
   moduleAutoloadTest.php
   jLocaleTest.php
@@ -300,6 +301,12 @@ cd testapp/tests-jelix/jelix/core/
   selectors_actionTest.php
   selectors_moduleTest.php
   urlsParsingTest.php
+cd testapp/tests-jelix/jelix/core/app/modules/simple/
+  module.xml
+cd testapp/tests-jelix/jelix/core/app/modules/notamodule/
+  .dummy
+cd testapp/tests-jelix/jelix/core/app/modules/package/
+  composer.json
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php

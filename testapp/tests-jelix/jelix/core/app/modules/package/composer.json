@@ -1,0 +1,20 @@
+{
+    "name": "jelixtest/composerpackage",
+    "version" : "1.0",
+    "type": "jelix-module",
+    "description": "A jelix module that is a composer package",
+    "keywords": [],
+    "require": {
+        "php": ">=5.3.3",
+        "jelix/core": "self:version"
+    },
+    "autoload": {
+        "psr-4" : {
+        }
+    },
+    "extra" : {
+        "jelix" : {
+            "moduleWebAlias" : "thepackage"
+        }
+    }
+}

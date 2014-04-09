@@ -127,7 +127,7 @@ class Compiler {
 
         self::checkMiscParameters($config);
         self::getPaths($config->urlengine, $pseudoScriptName, $isCli);
-        self::_loadModuleInfo($config, $allModuleInfo);
+        self::_loadModulesInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
         self::checkCoordPluginsPath($config);
         self::runConfigCompilerPlugins($config);
@@ -209,13 +209,13 @@ class Compiler {
     }
     
     /**
-     * Analyse and check the "lib:" and "app:" path.
+     * Find all activated modules and check their status
      * @param object $config  the config object
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
      */
-    static protected function _loadModuleInfo($config, $allModuleInfo) {
+    static protected function _loadModulesInfo($config, $allModuleInfo) {
 
         $installerFile = App::configPath('installer.ini.php');
 
@@ -267,90 +267,7 @@ class Compiler {
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
-
-                        if ($config->disableInstallers) {
-                            $installation[$section][$f.'.installed'] = 1;
-                        }
-                        else if (!isset($installation[$section][$f.'.installed'])) {
-                            $installation[$section][$f.'.installed'] = 0;
-                        }
-
-                        if ($f == 'jelix') {
-                            $config->modules['jelix.access'] = 2; // the jelix module should always be public
-                        }
-                        else {
-                            if ($config->enableAllModules) {
-                                if ($config->disableInstallers
-                                    || $installation[$section][$f.'.installed']
-                                    || $allModuleInfo) {
-                                    $config->modules[$f.'.access'] = 2;
-                                }
-                                else {
-                                    $config->modules[$f.'.access'] = 0;
-                                }
-                            }
-                            else if (!isset($config->modules[$f.'.access'])) {
-                                // no given access in defaultconfig and ep config
-                                $config->modules[$f.'.access'] = 0;
-                            }
-                            else if ($config->modules[$f.'.access'] == 0) {
-                                // we want to activate the module if it is not activated
-                                // for the entry point, but is declared activated
-                                // in the default config file. In this case, it means
-                                // that it is activated for an other entry point,
-                                // and then we want the possibility to retrieve its
-                                // urls, at least
-                                if (isset(self::$commonConfig->modules[$f.'.access'])
-                                    && self::$commonConfig->modules[$f.'.access'] > 0) {
-                                    $config->modules[$f.'.access'] = 3;
-                                }
-                            }
-                            else if (!$installation[$section][$f.'.installed']) {
-                                // module is not installed.
-                                // outside installation mode, we force the access to 0
-                                // so the module is unusable until it is installed
-                                if (!$allModuleInfo) {
-                                    $config->modules[$f.'.access'] = 0;
-                                }
-                            }
-                        }
-
-                        if (!isset($installation[$section][$f.'.dbprofile'])) {
-                            $config->modules[$f.'.dbprofile'] = 'default';
-                        }
-                        else {
-                            $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
-                        }
-
-                        if ($allModuleInfo) {
-                            if (!isset($installation[$section][$f.'.version'])) {
-                                $installation[$section][$f.'.version'] = '';
-                            }
-
-                            if (!isset($installation[$section][$f.'.dataversion'])) {
-                                $installation[$section][$f.'.dataversion'] = '';
-                            }
-
-                            if (!isset($installation['__modules_data'][$f.'.contexts'])) {
-                                $installation['__modules_data'][$f.'.contexts'] = '';
-                            }
-
-                            $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
-                            $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
-                            $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
-
-                            $config->_allModulesPathList[$f]=$p.$f.'/';
-                        }
-
-                        if ($config->modules[$f.'.access'] == 3) {
-                            $config->_externalModulesPathList[$f]=$p.$f.'/';
-                        }
-                        elseif ($config->modules[$f.'.access']) {
-                            $config->_modulesPathList[$f]=$p.$f.'/';
-                            if (file_exists( $p.$f.'/plugins')) {
-                                $config->pluginsPath .= ',module:'.$f;
-                            }
-                        }
+                        self::_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
                     }
                 }
                 closedir($handle);
@@ -358,6 +275,128 @@ class Compiler {
         }
     }
 
+    static protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
+        $packageName = '';
+        $webAlias = '';
+        if (file_exists($path.'/composer.json')) {
+            $composer = json_decode(file_get_contents($path.'/composer.json'));
+            if ($composer) {
+                $packageName = $composer->name;
+                if (isset($composer->extra) && isset($composer->extra->jelix) && isset($composer->extra->jelix->moduleWebAlias)) {
+                    $webAlias = $composer->extra->jelix->moduleWebAlias;
+                }
+                else {
+                    $webAlias = preg_replace("/[^a-z0-9_]/", "-", $packageName);
+                }
+            }
+            else {
+                trigger_error($path.'/composer.json has json syntax issues', E_USER_WARNING);
+            }
+        }
+
+        if (!$packageName && file_exists($path.'/module.xml')) {
+            $packageName = $webAlias = basename($path);
+        }
+
+        if (!$packageName) {
+            return;
+        }
+        $f = $packageName;
+
+        if ($config->disableInstallers) {
+            $installation[$section][$f.'.installed'] = 1;
+        }
+        else if (!isset($installation[$section][$f.'.installed'])) {
+            $installation[$section][$f.'.installed'] = 0;
+        }
+
+        if ($f == 'jelix') {
+            $config->modules['jelix.access'] = 2; // the jelix module should always be public
+        }
+        else {
+            if ($config->enableAllModules) {
+                if ($config->disableInstallers
+                    || $installation[$section][$f.'.installed']
+                    || $allModuleInfo) {
+                    $config->modules[$f.'.access'] = 2;
+                }
+                else {
+                    $config->modules[$f.'.access'] = 0;
+                }
+            }
+            else if (!isset($config->modules[$f.'.access'])) {
+                // no given access in defaultconfig and ep config
+                $config->modules[$f.'.access'] = 0;
+            }
+            else if ($config->modules[$f.'.access'] == 0) {
+                // we want to activate the module if it is not activated
+                // for the entry point, but is declared activated
+                // in the default config file. In this case, it means
+                // that it is activated for an other entry point,
+                // and then we want the possibility to retrieve its
+                // urls, at least
+                if (isset(self::$commonConfig->modules[$f.'.access'])
+                    && self::$commonConfig->modules[$f.'.access'] > 0) {
+                    $config->modules[$f.'.access'] = 3;
+                }
+            }
+            else if (!$installation[$section][$f.'.installed']) {
+                // module is not installed.
+                // outside installation mode, we force the access to 0
+                // so the module is unusable until it is installed
+                if (!$allModuleInfo) {
+                    $config->modules[$f.'.access'] = 0;
+                }
+            }
+        }
+
+        if (!$config->modules[$f.'.access']) {
+            return;
+        }
+        if (!isset($config->modules[$f.'.webalias'])) {
+            $config->modules[$f.'.webalias'] = $webAlias;
+        }
+        else {
+            $webAlias = $config->modules[$f.'.webalias'];
+        }
+        if (!isset($installation[$section][$f.'.dbprofile'])) {
+            $config->modules[$f.'.dbprofile'] = 'default';
+        }
+        else {
+            $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
+        }
+
+        if ($allModuleInfo) {
+            if (!isset($installation[$section][$f.'.version'])) {
+                $installation[$section][$f.'.version'] = '';
+            }
+
+            if (!isset($installation[$section][$f.'.dataversion'])) {
+                $installation[$section][$f.'.dataversion'] = '';
+            }
+
+            if (!isset($installation['__modules_data'][$f.'.contexts'])) {
+                $installation['__modules_data'][$f.'.contexts'] = '';
+            }
+
+            $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
+            $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
+            $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
+
+            $config->_allModulesPathList[$f]=$path.'/';
+        }
+
+        if ($config->modules[$f.'.access'] == 3) {
+            $config->_externalModulesPathList[$f]=$path.'/';
+        }
+        elseif ($config->modules[$f.'.access']) {
+            $config->_modulesPathList[$f]=$path.'/';
+            if (file_exists( $path.'/plugins')) {
+                $config->pluginsPath .= ',module:'.$f;
+            }
+        }
+    }
+    
     /**
      * Analyse plugin paths
      * @param object $config the config container

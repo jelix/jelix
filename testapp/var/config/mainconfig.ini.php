@@ -9,12 +9,15 @@ charset = "UTF-8"
 timeZone = 
 
 pluginsPath = app:plugins/,lib:jelix-plugins/,module:jacl2db/plugins,module:jacldb/plugins
-modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default
 
 ; for junittests module
 enableTests = on
+
+; list of directories that contain modules, ie, a module.xml (deprecated) or
+; a composer.json in their subdirectories
+modulesPath = lib:jelix-modules/,app:modules/
 
 [modules]
 jelix.access = 2
