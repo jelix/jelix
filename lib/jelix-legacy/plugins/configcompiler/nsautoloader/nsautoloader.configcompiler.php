@@ -17,12 +17,13 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
 
     function atStart($config) {
         $config->_autoload_class = array();
-        $config->_autoload_namespace = array();
+        $config->_autoload_namespace = array(); // psr0
         $config->_autoload_classpattern = array();
         $config->_autoload_includepathmap = array();
         $config->_autoload_includepath = array();
-        $config->_autoload_namespacepathmap = array();
+        $config->_autoload_namespacepathmap = array(); // psr4
         $config->_autoload_autoloader = array();
+        $config->_autoload_fallback = array('psr4'=>array(), 'psr0'=>array());
     }
 
     function onModule($config, $moduleName, $path, $xml) {
@@ -55,13 +56,25 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
                         throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for namespace doesn\'t exists: '.$p);
-                    $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $p.$suffix;
+                    $name = trim((string)$element['name'],'\\');
+                    if ($name == '') {
+                        $config->_autoload_fallback['psr0'][] = $p.$suffix;
+                    }
+                    else {
+                        $config->_autoload_namespace[$name] = $p.$suffix;
+                    }
                     break;
                 case 'namespacePathMap':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
                         throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for namespacePathMap doesn\'t exists: '.$p);
-                    $config->_autoload_namespacepathmap[trim((string)$element['name'],'\\')] = $p.$suffix;
+                    $name = trim((string)$element['name'],'\\');
+                    if ($name == '') {
+                        $config->_autoload_fallback['psr4'][] = $p.$suffix;
+                    }
+                    else {
+                        $config->_autoload_namespacepathmap[$name] = $p.$suffix;
+                    }
                     break;
                 case 'includePath':
                     $p = $path.((string)$element['dir']);

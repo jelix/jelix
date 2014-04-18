@@ -98,6 +98,32 @@ class Autoloader {
         }
 
         /*
+        [_autoload_fallback]
+        psr4[] = "/path|.ext"
+        */
+        if (isset($this->config->_autoload_fallback['psr4']))
+        foreach($this->config->_autoload_fallback['psr4'] as $info) {
+            list($incPath, $ext) = explode('|', $info);
+            $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+            if (file_exists($file)) {
+                return $file;
+            }
+        }
+
+        /*
+        [_autoload_fallback]
+        psr0[] = "/path|.ext"
+        */
+        if (isset($this->config->_autoload_fallback['psr0']))
+        foreach($this->config->_autoload_fallback['psr0'] as $info) {
+            list($incPath, $ext) = explode('|', $info);
+            $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+            if (file_exists($file)) {
+                return $file;
+            }
+        }
+
+        /*
         [_autoload_classpattern]
         regexp[] = "regexp"
         path[]= "/path|ext"
