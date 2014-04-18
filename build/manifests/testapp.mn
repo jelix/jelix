@@ -307,6 +307,27 @@ cd testapp/tests-jelix/jelix/core/app/modules/notamodule/
   .dummy
 cd testapp/tests-jelix/jelix/core/app/modules/package/
   composer.json
+cd testapp/tests-jelix/jelix/core/autoload
+  foobat.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/bar
+  foo.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/bar/foo
+  myclass2.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/bar/foo/bar
+  myclass.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/bar/foo/bar/my
+  class.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/other/blo_u/bl
+  i.php
+cd testapp/tests-jelix/jelix/core/autoload/ns/other/blo_u/bl_i/bla
+  p.php
+cd testapp/tests-jelix/jelix/core/autoload/some
+  bateau.php
+  batman.php
+cd testapp/tests-jelix/jelix/core/autoload/some/bateau
+  sous.php
+cd testapp/tests-jelix/jelix/core/autoload/some/foo
+  bateau.php
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php

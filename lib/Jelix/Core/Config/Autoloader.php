@@ -29,23 +29,15 @@ class Autoloader {
      */
     public function loadClass ($className) {
         $path = $this->getPath($className);
-        if (is_array($path)) {
-            foreach ($path as $p) {
-                if (file_exists($p)) {
-                    require($p);
-                    return true;
-                }
-            }
+        if ($path === false) {
+            return false;
         }
-        else if ($path) {
-            require($path);
-            return true;
-        }
-        return false;
+        require($path);
     }
 
     /**
      * @return string the full path of the file declaring the given class
+     *              or false if file not found
      */
     protected function getPath($className) {
 
@@ -63,16 +55,21 @@ class Autoloader {
         }
 
         $lastNsPos = strripos($className, '\\');
+        $path = '';
         if ($lastNsPos !== false) {
             // the class name contains a namespace, let's split ns and class
             $namespace = substr($className, 0, $lastNsPos);
             $class = substr($className, $lastNsPos + 1);
+            if ($namespace) {
+                $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
+            }
         }
         else {
             $namespace = '';
             $class = &$className;
             // the given class name does not contains namespace
         }
+        $fileName = str_replace('_', DIRECTORY_SEPARATOR, $class);
 
         /*
         [_autoload_namespace]
@@ -80,16 +77,10 @@ class Autoloader {
         */
         foreach($this->config->_autoload_namespace as $ns=>$info) {
             if (strpos($className, $ns) === 0) {
-                $path = '';
-                if ($lastNsPos !== false) {
-                    if ($namespace) {
-                        $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-                    }
-                }
-
                 list($incPath, $ext) = explode('|', $info);
-                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
-                return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
+                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                if (file_exists($file))
+                    return $file;
             }
         }
 
@@ -99,16 +90,10 @@ class Autoloader {
         */
         foreach($this->config->_autoload_namespacepathmap as $ns=>$info) {
             if (strpos($className, $ns) === 0) {
-                $path = '';
-                if ($lastNsPos !== false) {
-                    $namespace = substr($namespace, strlen($ns)+1);
-                    if ($namespace) {
-                        $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-                    }
-                }
                 list($incPath, $ext) = explode('|', $info);
-                $fileName = str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
-                return $incPath.DIRECTORY_SEPARATOR.$path.$fileName;
+                $file = $incPath.DIRECTORY_SEPARATOR.substr($path, strlen($ns)+1).$fileName.$ext;
+                if (file_exists($file))
+                    return $file;
             }
         }
 
@@ -121,7 +106,9 @@ class Autoloader {
             foreach ($this->config->_autoload_classpattern['regexp'] as $k=>$reg) {
                 if (preg_match($reg, $className)) {
                     list($incPath, $ext) = explode('|', $this->config->_autoload_classpattern['path'][$k]);
-                    return $incPath. DIRECTORY_SEPARATOR .$className.$ext;
+                    $file = $incPath. DIRECTORY_SEPARATOR .$className.$ext;
+                    if (file_exists($file))
+                        return $file;
                 }
             }
         }
@@ -134,10 +121,9 @@ class Autoloader {
         if (isset($this->config->_autoload_includepath['path'])) {
             foreach($this->config->_autoload_includepath['path'] as $info) {
                 list($incPath, $ext) = explode('|',$info);
-                if ($namespace)
-                    $path = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR;
-                else $path = '';
-                $pathList[] = $incPath.DIRECTORY_SEPARATOR.$path.str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
+                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                if (file_exists($file))
+                    return $file;
             }
         }
 
@@ -148,13 +134,12 @@ class Autoloader {
         if (isset($this->config->_autoload_includepathmap['path'])) {
             foreach($this->config->_autoload_includepathmap['path'] as $info) {
                 list($incPath, $ext) = explode('|',$info);
-                $pathList[] = $incPath.DIRECTORY_SEPARATOR.str_replace('_', DIRECTORY_SEPARATOR, $class) . $ext;
+                $file = $incPath.DIRECTORY_SEPARATOR.$fileName.$ext;
+                if (file_exists($file))
+                        return $file;
             }
         }
-        if (count($pathList)) {
-            return $pathList;
-        }
-        return '';
+        return false;
     }
 }
 

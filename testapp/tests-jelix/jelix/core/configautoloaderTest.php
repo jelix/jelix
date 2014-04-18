@@ -19,13 +19,13 @@ class configautoloaderTest extends PHPUnit_Framework_TestCase {
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
-path[]="/usr/lib/sea|.php"
+path[]="'.__DIR__.'/autoload/some|.php"
 ', true));
-        $this->assertEquals(array('/usr/lib/sea/bateau.php'), $autoloader->test_get_path('bateau'));
-        $this->assertEquals(array('/usr/lib/sea/bateauinconnu.php'), $autoloader->test_get_path('bateauinconnu'));
-        $this->assertEquals(array('/usr/lib/sea/bateau/sous.php'), $autoloader->test_get_path('bateau_sous'));
-        $this->assertEquals(array('/usr/lib/sea/bateau.php'), $autoloader->test_get_path('\bateau'));
-        $this->assertEquals(array('/usr/lib/sea/foo/bateau.php'), $autoloader->test_get_path('\foo\bateau'));
+        $this->assertEquals(__DIR__.'/autoload/some/bateau.php', $autoloader->test_get_path('bateau'));
+        $this->assertFalse($autoloader->test_get_path('bateauinconnu'));
+        $this->assertEquals(__DIR__.'/autoload/some/bateau/sous.php', $autoloader->test_get_path('bateau_sous'));
+        $this->assertEquals(__DIR__.'/autoload/some/bateau.php', $autoloader->test_get_path('\bateau'));
+        $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php', $autoloader->test_get_path('\foo\bateau'));
     }
     
     function testClassPath() {
@@ -36,14 +36,14 @@ path[]="/usr/lib/sea|.php"
 [_autoload_includepathmap]
 [_autoload_includepath]
 [_autoload_class]
-bateau="/usr/lib/sea/bateau.php"
-foo\bateau="/usr/lib/sea/foobat.php"
+bateau="'.__DIR__.'/autoload/some/bateau.php"
+foo\bateau="'.__DIR__.'/autoload/foobat.php"
 ', true));
-        $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('bateau'));
-        $this->assertEquals('', $autoloader->test_get_path('bateauinconnu'));
-        $this->assertEquals('', $autoloader->test_get_path('bateau_sous'));
-        $this->assertEquals('/usr/lib/sea/foobat.php', $autoloader->test_get_path('foo\bateau'));
-        $this->assertEquals('', $autoloader->test_get_path('unknown'));
+        $this->assertEquals(__DIR__.'/autoload/some/bateau.php',$autoloader->test_get_path('bateau'));
+        $this->assertFalse($autoloader->test_get_path('bateauinconnu'));
+        $this->assertFalse($autoloader->test_get_path('bateau_sous'));
+        $this->assertEquals(__DIR__.'/autoload/foobat.php',$autoloader->test_get_path('foo\bateau'));
+        $this->assertFalse($autoloader->test_get_path('unknown'));
     }
 
     function testPathWithNamespacePSR0() {
@@ -54,16 +54,15 @@ foo\bateau="/usr/lib/sea/foobat.php"
 [_autoload_includepathmap]
 [_autoload_includepath]
 [_autoload_namespace]
-foo = "/my/path|.php"
-blo_u\bl_i="/my/path2|.php"
+foo = "'.__DIR__.'/autoload/ns/bar|.php"
+blo_u\bl_i="'.__DIR__.'/autoload/ns/other|.php"
 ', true));
-        $this->assertEquals('/my/path/foo.php', $autoloader->test_get_path('foo'));
-        $this->assertEquals('/my/path/foo.php', $autoloader->test_get_path('\foo'));
-        $this->assertEquals('/my/path/foo/bar/myclass.php', $autoloader->test_get_path('foo\bar\myclass'));
-        $this->assertEquals('/my/path/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
-        $this->assertEquals('/my/path2/blo_u/bl_i/bla/p.php', $autoloader->test_get_path('blo_u\bl_i\bla_p'));
-        $this->assertEquals('/my/path2/blo_u/bl/i.php', $autoloader->test_get_path('blo_u\bl_i'));
-
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('foo'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('\foo'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('foo\bar\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/other/blo_u/bl_i/bla/p.php', $autoloader->test_get_path('blo_u\bl_i\bla_p'));
+        $this->assertEquals(__DIR__.'/autoload/ns/other/blo_u/bl/i.php', $autoloader->test_get_path('blo_u\bl_i'));
     }
 
     function testPathWithNamespaceNotPSR0() {
@@ -74,12 +73,11 @@ blo_u\bl_i="/my/path2|.php"
 [_autoload_includepathmap]
 [_autoload_includepath]
 [_autoload_namespacepathmap]
-foo = "/my/path|.php"
+foo = "'.__DIR__.'/autoload/ns/bar/foo|.php"
 ', true));
-        $this->assertEquals('/my/path/bar/myclass.php', $autoloader->test_get_path('\foo\bar\myclass'));
-        $this->assertEquals('/my/path/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
-        $this->assertEquals('/my/path/myclass.php', $autoloader->test_get_path('\foo\myclass'));
-
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('\foo\bar\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/myclass2.php', $autoloader->test_get_path('\foo\myclass2'));
     }
 
     function testClassRegPath() {
@@ -91,12 +89,12 @@ foo = "/my/path|.php"
 [_autoload_includepath]
 [_autoload_classpattern]
 regexp[]="/^bat/"
-path[]="/usr/lib/sea|.php"
+path[]="'.__DIR__.'/autoload/some|.php"
 ', true));
 
-        $this->assertEquals('/usr/lib/sea/bateau.php', $autoloader->test_get_path('bateau'));
-        $this->assertEquals('/usr/lib/sea/batman.php', $autoloader->test_get_path('batman'));
-        $this->assertEquals('', $autoloader->test_get_path('unknown'));
+        $this->assertEquals(__DIR__.'/autoload/some/bateau.php',  $autoloader->test_get_path('bateau'));
+        $this->assertEquals(__DIR__.'/autoload/some/batman.php',  $autoloader->test_get_path('batman'));
+        $this->assertFalse($autoloader->test_get_path('unknown'));
     }
 
 }
