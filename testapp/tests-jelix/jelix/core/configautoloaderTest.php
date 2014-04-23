@@ -71,6 +71,44 @@ psr0[]="'.__DIR__.'/autoload/some|.php"
         $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
     }
 
+    function testPathWithNamespacePSR0WithMultipleDir() {
+        $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
+[_autoload_class]
+[_autoload_namespacepathmap]
+[_autoload_classpattern]
+[_autoload_includepathmap]
+[_autoload_includepath]
+[_autoload_namespace]
+foo[] = "'.__DIR__.'/autoload/ns/bar|.php"
+foo[] = "'.__DIR__.'/autoload/some|.php"
+[_autoload_fallback]
+', true));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('foo'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('\foo'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('foo\bar\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
+    }
+
+    function testPathWithNamespacePSR4WithMultipleDir() {
+        $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
+[_autoload_class]
+[_autoload_namespace]
+[_autoload_classpattern]
+[_autoload_includepathmap]
+[_autoload_includepath]
+[_autoload_namespacepathmap]
+foo[] = "'.__DIR__.'/autoload/ns/bar/foo|.php"
+foo[] = "'.__DIR__.'/autoload/some/foo|.php"
+[_autoload_fallback]
+', true));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('\foo\bar\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/myclass2.php', $autoloader->test_get_path('\foo\myclass2'));
+        $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
+        $this->assertFalse($autoloader->test_get_path('foo\something'));
+    }
+
     function testPathWithNamespacePSR4() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
@@ -88,6 +126,7 @@ psr0[]="'.__DIR__.'/autoload/some|.php"
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/myclass2.php', $autoloader->test_get_path('\foo\myclass2'));
         $this->assertEquals(__DIR__.'/autoload/some/bateau.php',$autoloader->test_get_path('bateau'));
         $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
+        $this->assertFalse($autoloader->test_get_path('foo\something'));
     }
 
     function testClassRegPath() {

@@ -51,7 +51,7 @@ class sessionConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginIn
         }
     }
 
-    function onModule($config, $moduleName, $modulePath, $xml) {
+    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false) {
         
     }
 

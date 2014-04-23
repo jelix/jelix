@@ -29,7 +29,7 @@ class debugbarConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginI
         }
     }
 
-    function onModule($config, $moduleName, $modulePath, $xml) {
+    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false) {
         
     }
 

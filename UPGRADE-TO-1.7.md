@@ -46,6 +46,9 @@ WARNING: this is experimental!!
 
 - If you use plugins, you have to change their base class name for some of them:
    - jelix\core\ConfigCompilerPluginInterface to Jelix\Core\Config\CompilerPluginInterface
+        the signature of the onModule method has changed to support composer.json content.
+        You have to change this method in your plugins
+        See Jelix\Core\Config\CompilerPluginInterface
 
 - That's all for the moment.
 

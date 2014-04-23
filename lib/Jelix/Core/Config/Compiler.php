@@ -197,9 +197,17 @@ class Compiler {
             $plugin->atStart($config);
 
         foreach ($config->_modulesPathList as $moduleName=>$modulePath) {
-            $moduleXml = simplexml_load_file($modulePath.'module.xml');
+            if (file_exists($modulePath.'composer.json')) {
+                $moduleInfo = json_decode(file_get_contents($modulePath.'composer.json'));
+                $isXml = false;
+            }
+            else {
+                $moduleInfo = simplexml_load_file($modulePath.'module.xml');
+                $isXml = true;
+            }
+
             foreach ($plugins as $plugin) {
-                $plugin->onModule($config, $moduleName, $modulePath, $moduleXml);
+                $plugin->onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml);
             }
         }
 

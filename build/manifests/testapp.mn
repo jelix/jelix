@@ -291,6 +291,7 @@ cd testapp/tests-jelix/jelix/cache/
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php
+  configCompilerAutoloadInfoTest.php
   configTest.php
   jAppContextTest.php
   moduleAutoloadTest.php

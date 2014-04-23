@@ -30,9 +30,10 @@ interface CompilerPluginInterface {
      * @param object $config the configuration object
      * @param string $moduleName the module name
      * @param string $modulePath the path to the module directory
-     * @param SimpleXml $moduleXml the xml object representing the content of module.xml of the module
+     * @param SimpleXml|object $moduleInfo the object representing the composer.json object, or
+     *          the xml object representing the content of module.xml of the module
      */
-    function onModule($config, $moduleName, $modulePath, $moduleXml);
+    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false);
 
     /**
      * called after processing module informations

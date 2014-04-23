@@ -20,6 +20,7 @@ cd lib/Jelix/Core/Config
   Autoloader.php
   CompilerPluginInterface.php
   Exception.php
+  ComposerUtils.php
 
 cd lib/Jelix/Core/Includer
   MultiFileCompilerInterface.php
@@ -904,3 +905,7 @@ cd lib/Jelix/Routing
   Router.php
   ClientRequest.php
   ServerResponse.php
+
+cd lib/Jelix/External
+  composer.json
+  ClassMapGenerator.php

@@ -51,7 +51,7 @@ class localesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginIn
         $config->availableLocales = $availableLocales;
     }
 
-    function onModule($config, $moduleName, $modulePath, $xml) {
+    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false) {
         
     }
 

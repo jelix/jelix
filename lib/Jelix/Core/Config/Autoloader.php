@@ -77,10 +77,20 @@ class Autoloader {
         */
         foreach($this->config->_autoload_namespace as $ns=>$info) {
             if (strpos($className, $ns) === 0) {
-                list($incPath, $ext) = explode('|', $info);
-                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
-                if (file_exists($file))
-                    return $file;
+                if (is_array($info)) {
+                    foreach($info as $inf) {
+                        list($incPath, $ext) = explode('|', $inf);
+                        $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                        if (file_exists($file))
+                            return $file;
+                    }
+                }
+                else {
+                    list($incPath, $ext) = explode('|', $info);
+                    $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                    if (file_exists($file))
+                        return $file;
+                }
             }
         }
 
@@ -90,10 +100,20 @@ class Autoloader {
         */
         foreach($this->config->_autoload_namespacepathmap as $ns=>$info) {
             if (strpos($className, $ns) === 0) {
-                list($incPath, $ext) = explode('|', $info);
-                $file = $incPath.DIRECTORY_SEPARATOR.substr($path, strlen($ns)+1).$fileName.$ext;
-                if (file_exists($file))
-                    return $file;
+                if (is_array($info)) {
+                    foreach($info as $inf) {
+                        list($incPath, $ext) = explode('|', $inf);
+                        $file = $incPath.DIRECTORY_SEPARATOR.substr($path, strlen($ns)+1).$fileName.$ext;
+                        if (file_exists($file))
+                            return $file;
+                    }
+                }
+                else {
+                    list($incPath, $ext) = explode('|', $info);
+                    $file = $incPath.DIRECTORY_SEPARATOR.substr($path, strlen($ns)+1).$fileName.$ext;
+                    if (file_exists($file))
+                        return $file;
+                }
             }
         }
 

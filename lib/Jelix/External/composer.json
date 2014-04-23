@@ -1,0 +1,19 @@
+{
+    "name": "jelix/external",
+    "type": "library",
+    "description": "Some classes imported from various projects, used by Jelix components",
+    "keywords": [],
+    "homepage": "http://jelix.org",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "replace": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "Jelix\\External\\" : ""
+        }
+    },
+    "minimum-stability": "dev"
+}

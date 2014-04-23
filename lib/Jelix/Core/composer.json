@@ -18,6 +18,7 @@
     "require": {
         "php": ">=5.3.3",
         "jelix/inifile": "self.version",
+        "jelix/external": "self.version"
     },
     "replace": {
     },
