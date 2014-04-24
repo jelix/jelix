@@ -165,9 +165,13 @@ class jFile {
      * @since 1.1.6
      */
     public static function getMimeType($file){
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $type = finfo_file($finfo, $file);
-        finfo_close($finfo);
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $type = finfo_file($finfo, $file);
+            finfo_close($finfo);
+        } else {
+            $type = 'application/octet-stream';
+        }
         return $type;
     }
 
@@ -280,6 +284,7 @@ class jFile {
         'ifb'=>'text/calendar',
         'sgml'=>'text/sgml',
         'htc'=>'text/x-component',
+        'csv'=>'text/csv',
 
         // images
         'png' => 'image/png',
