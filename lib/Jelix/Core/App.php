@@ -293,6 +293,13 @@ class App {
         return self::$_config->_modulesPathList[$module];
     }
 
+    /**
+     * 
+     */
+    public static function getModuleInfoList($includingExternal = false) {
+        
+    }
+    
     static protected $modulesContext = array();
 
     /**

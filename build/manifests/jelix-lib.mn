@@ -26,6 +26,15 @@ cd lib/Jelix/Core/Includer
   MultiFileCompilerInterface.php
   SimpleCompilerInterface.php
 
+cd lib/Jelix/Core/Infos
+  AppInfos.php
+  ComposerJsonParser.php
+  InfosAbstract.php
+  ModuleInfos.php
+  ModuleXmlParser.php
+  ProjectXmlParser.php
+  XmlParserAbstract.php
+
 cd lib/Jelix/Core/Selector
   Factory.php
   SelectorInterface.php
