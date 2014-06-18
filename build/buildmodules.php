@@ -170,8 +170,6 @@ function generateModulePackage($moduleName, $modulesRepositoryPath) {
 
     jManifest::process('build/manifests/modules/'.$moduleName.'.mn', $modulesRepositoryPath , $MAIN_TARGET_PATH.$BUILD_SUBPATH, ENV::getAll());
 
-
-    
     // do package
     if($PACKAGE_TAR_GZ){
         exec('tar czf '.$MAIN_TARGET_PATH.$packageName.'.tar.gz -C '.$MAIN_TARGET_PATH.$BUILD_SUBPATH. ' '. $moduleName);
