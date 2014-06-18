@@ -49,7 +49,7 @@ class jException extends Exception {
         }catch(Exception $e){
             $message = $e->getMessage();
         }
-        if(preg_match('/^\s*\((\d+)\)(.+)$/gm',$message,$m)){
+        if(preg_match('/^\s*\((\d+)\)(.+)$/ms',$message,$m)){
             $code = $m[1];
             $message = $m[2];
         }
