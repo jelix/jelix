@@ -224,15 +224,8 @@ class Git {
         if(file_exists($path.'.git')){
             $wd = getcwd();
             chdir($path);
-            $logs = `git shortlog -s`;
+            $rev = intval(`git rev-list HEAD --count`);
             chdir($wd);
-            $logs = explode("\n", $logs);
-            $rev = 0;
-            foreach($logs as $log) {
-                if(preg_match("/^\s*(\d+)/", $log, $m)) {
-                    $rev += intval($m[1]);
-                }
-            }
         }
         return $rev;
     }
