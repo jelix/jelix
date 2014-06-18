@@ -291,9 +291,10 @@ if($PACKAGE_TAR_GZ){
 }
 
 if($PACKAGE_ZIP){
+    $oldpath = getcwd();
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(__DIR__);
+    chdir($oldpath);
 }
 
 exit(0);
