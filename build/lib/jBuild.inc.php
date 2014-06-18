@@ -222,7 +222,10 @@ class Git {
         $path=jBuildUtils::normalizeDir($path);
         $rev=-1;
         if(file_exists($path.'.git')){
+            $wd = getcwd();
+            chdir($path);
             $logs = `git shortlog -s`;
+            chdir($wd);
             $logs = explode("\n", $logs);
             $rev = 0;
             foreach($logs as $log) {
