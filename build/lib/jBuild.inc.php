@@ -222,14 +222,10 @@ class Git {
         $path=jBuildUtils::normalizeDir($path);
         $rev=-1;
         if(file_exists($path.'.git')){
-            $logs = `git shortlog -s`;
-            $logs = explode("\n", $logs);
-            $rev = 0;
-            foreach($logs as $log) {
-                if(preg_match("/^\s*(\d+)/", $log, $m)) {
-                    $rev += intval($m[1]);
-                }
-            }
+            $wd = getcwd();
+            chdir($path);
+            $rev = intval(`git rev-list HEAD --count`);
+            chdir($wd);
         }
         return $rev;
     }

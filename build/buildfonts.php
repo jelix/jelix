@@ -86,9 +86,10 @@ jManifest::process('build/manifests/fonts.mn', '.', $BUILD_TARGET_PATH, ENV::get
 
 if($PACKAGE_ZIP){
     file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_FONTS_NAME', $PACKAGE_NAME);
+    $oldpath = getcwd();
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir(dirname(__FILE__));
+    chdir($oldpath);
 }
 
 exit(0);
