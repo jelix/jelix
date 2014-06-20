@@ -94,7 +94,7 @@ class jPref{
             
         $prefix .= '|';
 
-		$cnx->setWithTtl(self::$_prefix.$key, $prefix.$value, $ttl);
+        $cnx->setWithTtl(self::$_prefix.$key, $prefix.$value, $ttl);
     } 
 
 
