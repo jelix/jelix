@@ -72,8 +72,9 @@ class jPref{
      * 
      * @param string $key The corrresponding to the preference
      * @param mixed  $value La valeur de la préférence
+     * @param integer $ttl the time to live in seconds...
      */ 
-    public static function set($key, $value) {
+    public static function set($key, $value, $ttl = 0) {
         
         self::$_prefs[$key] = $value;
         
@@ -93,8 +94,12 @@ class jPref{
             
         $prefix .= '|';
 
-        $cnx->set(self::$_prefix.$key, $prefix.$value);
-    } 
+        if(($ttl > 0) && ($cnx instanceof jIKVttl)) {
+            $cnx->setWithTtl(self::$_prefix.$key, $prefix.$value, $ttl);
+        } else {
+            $cnx->set(self::$_prefix.$key, $prefix.$value);
+        }
+    }
 
 
     /**
