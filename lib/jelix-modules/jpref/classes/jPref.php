@@ -94,7 +94,7 @@ class jPref{
             
         $prefix .= '|';
 
-        if($cnx instanceof jIKVttl) {
+        if(($ttl > 0) && ($cnx instanceof jIKVttl)) {
             $cnx->setWithTtl(self::$_prefix.$key, $prefix.$value, $ttl);
         } else {
             $cnx->set(self::$_prefix.$key, $prefix.$value);
