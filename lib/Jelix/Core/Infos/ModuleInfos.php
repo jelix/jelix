@@ -12,16 +12,34 @@ class ModuleInfos extends InfosAbstract {
 
     public $type = 'library';
 
+    /**
+     * @var array of path
+     */
     public $autoloaders = array();
 
+    /**
+     * @var array  classname => file path relative to the module directory
+     */
     public $autoloadClasses = array();
 
+    /**
+     * @var array  pattern => directory path relative to the module directory
+     */
     public $autoloadClassPatterns = array();
 
-    public $autoloadNamespaces = array();
+    /**
+     * @var array namespace name => psr0 path, 0 => array( fallback path )
+     */
+    public $autoloadPsr0Namespaces = array(0=>array());
 
-    public $autoloadPsr4Namespaces = array();
+    /**
+     * @var array namespace name => psr4 path, 0 => array( fallback path )
+     */
+    public $autoloadPsr4Namespaces = array(0=>array());
 
+    /**
+     *  @var array  of strings (path)
+     */
     public $autoloadIncludePath = array();
 
     /**

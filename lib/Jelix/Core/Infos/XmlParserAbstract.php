@@ -66,12 +66,15 @@ abstract class XmlParserAbstract {
                 $property = $xml->name;
 
                 if ('label' == $property || 'description' == $property) {
-                    if ($xml->getAttribute('lang') == $locale[$property]
-                        || $locale[$property] == '') {
+                    if ($xml->getAttribute('lang') == $locale[$property] ||
+                        $locale[$property] == '') {
+
                         $xml->read();
                         $object->$property = $xml->value;
-                        if ($locale[$property] == '')
+                        if ($locale[$property] == '') {
+                            // let's mark we readed the element corresponding to the locale
                             $locale[$property] = '__readed__';
+                        }
                     }
                 }
                 elseif ('creator' == $property || 'contributor' == $property) {

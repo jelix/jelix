@@ -30,29 +30,56 @@ class ModuleXmlParser extends XmlParserAbstract {
                     $attr[$xml->name] = $xml->value;
                 }
 
+                $suffix = ".php";
+                $dir = "";
+                if (isset($attr['suffix']) && $attr['suffix'] != '.php') {
+                    $suffix = $attr['suffix'];
+                }
+                if (isset($attr['dir'])) {
+                    $dir = array($attr['dir'], $suffix);
+                }
                 switch($name) {
                     case 'autoloader':
                         $object->autoloaders[] = $attr['file'];
                         break;
                     case 'class':
-                        $object->autoloadClasses[] = $attr;
+                        $object->autoloadClasses[$attr['name']] = $attr['file'];
                         break;
                     case 'classPattern':
-                        $object->autoloadClassPatterns[] = $attr;
+                        $object->autoloadClassPatterns[$attr['pattern']] = $attr['dir'];
                         break;
                     case 'namespace':
-                        $object->autoloadNamespaces[] = $attr;
+                        if ($dir == '') {
+                            break;
+                        }
+                        $namespace = (isset($attr['name'])?$attr['name']:'');
+                        if ($name == '') {
+                            $object->autoloadPsr0Namespaces[0][] = $dir;
+                        }
+                        else {
+                            $object->autoloadPsr0Namespaces[$attr['name']] = $dir;
+                        }
                         break;
                     case 'namespacePathMap':
-                        $object->autoloadPsr4Namespaces[] = $attr;
+                        if ($dir == '') {
+                            break;
+                        }
+                        $namespace = (isset($attr['name'])?$attr['name']:'');
+                        if ($name == '') {
+                            $object->autoloadPsr4Namespaces[0][] = $dir;
+                        }
+                        else {
+                            $object->autoloadPsr4Namespaces[$attr['name']] = $dir;
+                        }
                         break;
                     case 'includePath':
-                        $object->autoloadIncludePath[] = $attr;
+                        if ($dir != '') {
+                            $object->autoloadIncludePath[] = $dir;
+                        }
                         break;
                 }
             }
         }
-
         return $object;
     }
 

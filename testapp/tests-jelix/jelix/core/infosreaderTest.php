@@ -53,7 +53,7 @@ class infosreaderTest extends jUnitTestCase {
             <!--<array>
             </array>-->
         </array>
-        <array property="autoloadNamespaces">
+        <array property="autoloadPsr0Namespaces">
             <!--<array>
             </array>-->
         </array>
@@ -137,7 +137,7 @@ class infosreaderTest extends jUnitTestCase {
             <!--<array>
             </array>-->
         </array>
-        <array property="autoloadNamespaces">
+        <array property="autoloadPsr0Namespaces">
             <!--<array>
             </array>-->
         </array>
@@ -147,8 +147,8 @@ class infosreaderTest extends jUnitTestCase {
         </array>
         <array property="autoloadIncludePath">
             <array>
-                <string key="dir">autoloadtest/incpath</string>
-                <string key="suffix">.php</string>
+                <string key="0">autoloadtest/incpath</string>
+                <string key="1">.php</string>
             </array>
         </array>    
     </object>';
@@ -213,7 +213,7 @@ class infosreaderTest extends jUnitTestCase {
             <!--<array>
             </array>-->
         </array>
-        <array property="autoloadNamespaces">
+        <array property="autoloadPsr0Namespaces">
             <!--<array>
             </array>-->
         </array>
