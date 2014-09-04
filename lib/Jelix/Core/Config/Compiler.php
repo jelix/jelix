@@ -64,7 +64,7 @@ class Compiler {
 
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
-            @jelix_read_ini($configPath.'localconfig.ini.php', $config);
+            IniFileMgr::readAndMergeObject($configPath.'localconfig.ini.php', $config);
         }
 
         // read the configuration specific to the entry point
