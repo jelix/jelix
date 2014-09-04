@@ -8,11 +8,13 @@ cd lib/Jelix/Core
   AppManager.php
   Autoloader.php
   Config.php
+  Framework.php
   Includer.php
   ModuleClass.php
   ModuleClassBinding.php
   Profiles.php
   composer.json
+  VERSION
 
 cd lib/Jelix/Core/Config
 ! defaultconfig.ini.php

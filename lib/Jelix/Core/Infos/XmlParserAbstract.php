@@ -93,7 +93,12 @@ abstract class XmlParserAbstract {
                         $object->$attrProperty = $xml->value;
                     }
                     $xml->read();
-                    $object->$property = $xml->value;
+                    if ($property == 'version') {
+                        $object->$property = $this->fixVersion($xml->value);
+                    }
+                    else {
+                        $object->$property = $xml->value;
+                    }
                 }
             }
         }
@@ -117,13 +122,31 @@ abstract class XmlParserAbstract {
 
                 while ($xml->moveToNextAttribute()) {
                     $attrName = $xml->name;
-                    $dependency[$attrName] = $xml->value;
+                    if ($attrName == 'minversion' || $attrName == 'maxversion') {
+                        $dependency[$attrName] = $this->fixVersion($xml->value);
+                    }
+                    else {
+                        $dependency[$attrName] = $xml->value;
+                    }
                 }
 
                 array_push($object->$property, $dependency);
             }
         }
         return $object;
+    }
+
+    /**
+     * Fix version for non built lib
+     */
+    protected function fixVersion($version) {
+        if ($version == '__LIB_VERSION__') {
+            return \Jelix\Core\Framework::version();
+        }
+        else if ($version == '__LIB_VERSION_MAX__') {
+            return \Jelix\Core\Framework::versionMax();
+        }
+        return $version;
     }
 }
 
