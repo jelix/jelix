@@ -413,6 +413,8 @@ cd lib/jelix-legacy/installer
   jInstallerModule.class.php
   jInstallerModuleInfos.class.php
   jInstallerPlugin.class.php
+* messageProvider.fr.inc.php
+* messageProvider.en.inc.php
 
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php

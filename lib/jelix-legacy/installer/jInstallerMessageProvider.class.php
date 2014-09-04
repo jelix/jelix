@@ -21,13 +21,8 @@ class jInstallerMessageProvider {
     protected $currentLang;
 
     protected $messages = array(
-        'fr'=>array(
-#include messageProvider.fr.inc.php
-        ),
-
-        'en'=>array(
-#include messageProvider.en.inc.php
-        ),
+        'fr'=>array( ),
+        'en'=>array( ),
     );
 
     function __construct($lang=''){
@@ -43,9 +38,11 @@ class jInstallerMessageProvider {
         }elseif(preg_match("/^([a-zA-Z]{2,3})(?:[-_]([a-zA-Z]{2,3}))?$/",$lang,$match)){
             $lang = strtolower($match[1]);
         }
+
         if($lang == '' || !isset($this->messages[$lang])){
             $lang = 'en';
         }
+        $this->messages[$lang] = include(__DIR__.'/messageProvider.'.$lang.'.inc.php');
         $this->currentLang = $lang;
     }
 

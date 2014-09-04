@@ -1,4 +1,8 @@
+<?php
 
+return array(
+    'title'=>'Jelix prequesites',
+    'results'=>'Results',
 #ifnot STANDALONE_CHECKER
         'checker.title'     =>'Jelix Installation checking',
 #else
@@ -90,4 +94,4 @@
         'install.module.error'          =>'An error occured during the installation of the module %s: %s',
         'install.module.check.dependency'=>'Check dependencies of the module %s',
         'install.module.upgraded'       =>'Module %s upgraded to the version %s',
-
+);
