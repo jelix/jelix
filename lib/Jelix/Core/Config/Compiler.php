@@ -127,10 +127,10 @@ class Compiler {
 
         self::checkMiscParameters($config);
         self::getPaths($config->urlengine, $pseudoScriptName, $isCli);
-        self::_loadModulesInfo($config, $allModuleInfo);
+        $modules = self::_loadModulesInfo($config, $allModuleInfo);
         self::_loadPluginsPathList($config);
         self::checkCoordPluginsPath($config);
-        self::runConfigCompilerPlugins($config);
+        self::runConfigCompilerPlugins($config, $modules);
     }
 
     static protected function checkMiscParameters($config) {
@@ -168,7 +168,7 @@ class Compiler {
         $config->coordplugins = $coordplugins;
     }
 
-    static protected function runConfigCompilerPlugins($config) {
+    static protected function runConfigCompilerPlugins($config, $modules) {
         if (!isset($config->_pluginsPathList_configcompiler)) {
             return;
         }
@@ -190,24 +190,17 @@ class Compiler {
         }
 
         // sort plugins by priority
-        usort($plugins, function($a, $b){ return $a->getPriority() < $b->getPriority();});
+        usort($plugins, function($a, $b){
+                            return $a->getPriority() < $b->getPriority();
+                        });
 
         // run plugins
         foreach($plugins as $plugin)
             $plugin->atStart($config);
 
-        foreach ($config->_modulesPathList as $moduleName=>$modulePath) {
-            if (file_exists($modulePath.'composer.json')) {
-                $moduleInfo = json_decode(file_get_contents($modulePath.'composer.json'));
-                $isXml = false;
-            }
-            else {
-                $moduleInfo = simplexml_load_file($modulePath.'module.xml');
-                $isXml = true;
-            }
-
+        foreach ($modules as $moduleName=>$module) {
             foreach ($plugins as $plugin) {
-                $plugin->onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml);
+                $plugin->onModule($config, $module);
             }
         }
 
@@ -222,6 +215,7 @@ class Compiler {
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
+     * @return \Jelix\Core\Infos\ModuleInfos[] 
      */
     static protected function _loadModulesInfo($config, $allModuleInfo) {
 
@@ -254,6 +248,7 @@ class Compiler {
         }
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
+        $modules = array();
 
         foreach($list as $k=>$path){
             if(trim($path) == '') continue;
@@ -263,9 +258,9 @@ class Compiler {
             }
             if (substr($p,-1) !='/')
                 $p.='/';
-            if (in_array($p, $pathChecked))
+            if (isset($pathChecked[$p]))
                 continue;
-            $pathChecked[] = $p;
+            $pathChecked[$p] = true;
 
              // don't include the core-modules into the list of base path. this list is to verify
              // if modules have been modified into repositories
@@ -275,42 +270,28 @@ class Compiler {
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
-                        self::_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
+                        $module = self::_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
+                        if ($module !== null) {
+                            $modules[$module->name] = $module;
+                        }
                     }
                 }
                 closedir($handle);
             }
         }
+        return $modules;
     }
 
+    /**
+     * @return \Jelix\Core\Infos\ModuleInfos
+     */
     static protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
-        $packageName = '';
-        $webAlias = '';
-        if (file_exists($path.'/composer.json')) {
-            $composer = json_decode(file_get_contents($path.'/composer.json'));
-            if ($composer) {
-                $packageName = $composer->name;
-                if (isset($composer->extra) && isset($composer->extra->jelix) && isset($composer->extra->jelix->moduleWebAlias)) {
-                    $webAlias = $composer->extra->jelix->moduleWebAlias;
-                }
-                else {
-                    $webAlias = preg_replace("/[^a-z0-9_]/", "-", $packageName);
-                }
-            }
-            else {
-                trigger_error($path.'/composer.json has json syntax issues', E_USER_WARNING);
-            }
-        }
 
-        if (!$packageName && file_exists($path.'/module.xml')) {
-            $packageName = $webAlias = basename($path);
+        $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
+        if ($moduleInfo->id == '' && $moduleInfo->name == '') {
+            return null;
         }
-
-        if (!$packageName) {
-            return;
-        }
-        $f = $packageName;
-
+        $f = $moduleInfo->name;
         if ($config->disableInstallers) {
             $installation[$section][$f.'.installed'] = 1;
         }
@@ -359,14 +340,12 @@ class Compiler {
         }
 
         if (!$config->modules[$f.'.access']) {
-            return;
+            return null;
         }
         if (!isset($config->modules[$f.'.webalias'])) {
-            $config->modules[$f.'.webalias'] = $webAlias;
+            $config->modules[$f.'.webalias'] = $moduleInfo->webAlias;
         }
-        else {
-            $webAlias = $config->modules[$f.'.webalias'];
-        }
+
         if (!isset($installation[$section][$f.'.dbprofile'])) {
             $config->modules[$f.'.dbprofile'] = 'default';
         }
@@ -403,6 +382,7 @@ class Compiler {
                 $config->pluginsPath .= ',module:'.$f;
             }
         }
+        return $moduleInfo;
     }
     
     /**

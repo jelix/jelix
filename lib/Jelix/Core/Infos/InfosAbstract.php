@@ -45,4 +45,11 @@ abstract class InfosAbstract {
      */
     public $dependencies = array();
 
+    public function getPath() {
+        return $this->path;
+    }
+    
+    public function isXmlFile() {
+        return $this->xmlFile;
+    }
 }

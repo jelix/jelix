@@ -43,22 +43,12 @@ class ComposerUtils {
 
 
     /**
-     * Says if the given composer files has been loaded by Composer.
-     * @param string|object $composer  composer.json path or json object
-     * @return boolean true if the given composer file has been loaded
+     * Says if the given package has been loaded by Composer.
+     * @param string $packageName  
+     * @return boolean true if the given package has been loaded
      */
-    static function isLoaded($composer) {
-        if (is_string($composer)) {
-            if (file_exists($composer)) {
-                $composer = json_decode(file_get_contents($composer));
-                if (!$composer)
-                    throw new \Exception("bad composer.json file");
-            }
-            else {
-                throw new \Exception("no composer.json file");
-            }
-        }
+    static function isLoaded($packageName) {
         $packages = self::getInstalledPackages();
-        return (isset($packages[$composer->name]));
+        return (isset($packages[$packageName]));
     }
 }

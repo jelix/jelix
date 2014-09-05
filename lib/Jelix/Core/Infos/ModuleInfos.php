@@ -13,6 +13,11 @@ class ModuleInfos extends InfosAbstract {
     public $type = 'library';
 
     /**
+     * the name used for url
+     */
+    public $webAlias = '';
+
+    /**
      * @var array of path
      */
     public $autoloaders = array();
@@ -46,7 +51,8 @@ class ModuleInfos extends InfosAbstract {
      * @param string $path path to the module directory
      */
     function __construct($path) {
-        $this->path = $path;
+        $this->path = rtrim($path, '/');
+        $this->webAlias = $this->name = basename($this->path);
 
         $config = \Jelix\Core\App::config();
         if ($config) {
@@ -56,12 +62,12 @@ class ModuleInfos extends InfosAbstract {
             $locale = '';
         }
 
-        if (file_exists($path.'composer.json')) {
-            $parser = new ComposerJsonParser($path.'composer.json', $locale);
+        if (file_exists($this->path.'/composer.json')) {
+            $parser = new ComposerJsonParser($this->path.'/composer.json', $locale);
         }
-        else if (file_exists($path.'module.xml')) {
+        else if (file_exists($this->path.'/module.xml')) {
             $this->isXml = true;
-            $parser = new ModuleXmlParser($path.'module.xml', $locale);
+            $parser = new ModuleXmlParser($this->path.'/module.xml', $locale);
         }
         else {
             return;

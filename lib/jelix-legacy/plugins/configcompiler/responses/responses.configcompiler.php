@@ -20,7 +20,7 @@ class responsesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlugin
         $this->_initResponsesPath($config, '_coreResponses');
     }
 
-    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false) {
+    function onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
         
     }
 

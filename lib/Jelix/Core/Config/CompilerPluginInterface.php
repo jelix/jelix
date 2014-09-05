@@ -28,12 +28,9 @@ interface CompilerPluginInterface {
     /**
      * called for each activated modules
      * @param object $config the configuration object
-     * @param string $moduleName the module name
-     * @param string $modulePath the path to the module directory
-     * @param SimpleXml|object $moduleInfo the object representing the composer.json object, or
-     *          the xml object representing the content of module.xml of the module
+     * @param \Jelix\Core\Infos\ModuleInfos $module the module data
      */
-    function onModule($config, $moduleName, $modulePath, $moduleInfo, $isXml = false);
+    function onModule($config, \Jelix\Core\Infos\ModuleInfos $module);
 
     /**
      * called after processing module informations

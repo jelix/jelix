@@ -26,87 +26,103 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
         $config->_autoload_fallback = array('psr4'=>array(), 'psr0'=>array());
     }
 
-    function onModule($config, $moduleName, $path, $moduleInfo, $isXml = false) {
-        if ($isXml) {
+    function onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
+        if ($module->isXmlFile()) {
             // we have a deprecated module.xml file
-            $this->_onModuleXml($config, $moduleName, $path, $moduleInfo);
+            $this->_onModuleXml($config, $module);
             return;
         }
-        if (\Jelix\Core\Config\ComposerUtils::isLoaded($moduleInfo)) {
+        if (\Jelix\Core\Config\ComposerUtils::isLoaded($module->name)) {
             return;
         }
-        $this->_onModuleComposer($config, $moduleName, $path, $moduleInfo);
+        $this->_onModule($config, $module);
     }
 
     /**
      * @deprecated
      */
-    function _onModuleXml($config, $moduleName, $path, $xml) {
-        if (!isset($xml->autoload))
-            return;
-        foreach($xml->autoload->children() as $type=>$element) {
-            if (isset($element['suffix']))
-                $suffix = '|'.(string)$element['suffix'];
-            else
-                $suffix = '|.php';
-            switch ($type) {
-                case 'class':
-                    $p = $path.((string)$element['file']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this class file doesn\'t exists: '.$p);
-                    $config->_autoload_class[(string)$element['name']] = $p;
-                    break;
-                case 'classPattern':
-                    $p = $path.((string)$element['dir']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for classPattern doesn\'t exists: '.$p);
-                    if (!isset($config->_autoload_classpattern['regexp'])) {
-                        $config->_autoload_classpattern['regexp'] = array();
-                        $config->_autoload_classpattern['path'] = array();
-                    }
-                    $config->_autoload_classpattern['regexp'][] = (string)$element['pattern'];
-                    $config->_autoload_classpattern['path'][] =  $p.$suffix;
-                    break;
-                case 'namespace':
-                    $p = $path.((string)$element['dir']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for namespace doesn\'t exists: '.$p);
-                    $name = trim((string)$element['name'],'\\');
-                    if ($name == '') {
-                        $config->_autoload_fallback['psr0'][] = $p.$suffix;
-                    }
-                    else {
-                        $config->_autoload_namespace[$name] = $p.$suffix;
-                    }
-                    break;
-                case 'namespacePathMap':
-                    $p = $path.((string)$element['dir']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for namespacePathMap doesn\'t exists: '.$p);
-                    $name = trim((string)$element['name'],'\\');
-                    if ($name == '') {
-                        $config->_autoload_fallback['psr4'][] = $p.$suffix;
-                    }
-                    else {
-                        $config->_autoload_namespacepathmap[$name] = $p.$suffix;
-                    }
-                    break;
-                case 'includePath':
-                    $p = $path.((string)$element['dir']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for includePath doesn\'t exists: '.$p);
-                    if (!isset($config->_autoload_includepath['path'])) {
-                        $config->_autoload_includepath['path'] = array();
-                    }
-                    $config->_autoload_includepath['path'][] =  $p.$suffix;
-                    break;
-                case 'autoloader':
-                    $p = $path.((string)$element['file']);
-                    if (!file_exists($p))
-                        throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this autoloader doesn\'t exists: '.$p);
-                    $config->_autoload_autoloader[] = $p;
-                    break;
+    function _onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
+
+        $modulePath = $module->getPath().'/';
+
+        foreach($module->autoloaders as $path) {
+            $p = $modulePath.$path;
+            if (!file_exists($p))
+                throw new Exception ('Error in autoload configuration -- In '.$modulePath.'/module.xml, this autoloader doesn\'t exists: '.$p);
+            $config->_autoload_autoloader[] = $p;
+        }
+
+        foreach($module->autoloadIncludePath as $path) {
+            $p = $modulePath.$path[0];
+            if (!file_exists($p))
+                throw new Exception ('Error in autoload configuration -- In '.$modulePath.'/module.xml, this directory for includePath doesn\'t exists: '.$p);
+            if (!isset($config->_autoload_includepath['path'])) {
+                $config->_autoload_includepath['path'] = array();
             }
+            $config->_autoload_includepath['path'][] =  $modulePath.join("|", $path);
+        }
+
+        foreach($module->autoloadClasses as $className => $path) {
+            $p = $modulePath.$path;
+            if (!file_exists($p))
+                throw new Exception ('Error in autoload configuration -- In '.$modulePath.'/module.xml, this class file doesn\'t exists: '.$p);
+            $config->_autoload_class[$className] = $p;
+        }
+
+        foreach($module->autoloadClassPatterns as $pattern => $path) {
+            $p = $modulePath.$path[0];
+            if (!file_exists($p))
+                throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for classPattern doesn\'t exists: '.$p);
+            if (!isset($config->_autoload_classpattern['regexp'])) {
+                $config->_autoload_classpattern['regexp'] = array();
+                $config->_autoload_classpattern['path'] = array();
+            }
+            $config->_autoload_classpattern['regexp'][] = $pattern;
+            $config->_autoload_classpattern['path'][] =  $modulePath.join("|", $path);
+        }
+
+        $processNs = function($modulePath, $ns, $path, $config) {
+            $p = $modulePath.$path[0];
+            if (!file_exists($p))
+                throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for namespace psr0 doesn\'t exists: '.$p);
+            if ($ns === 0) {
+                $config->_autoload_fallback['psr0'][] = $modulePath.join("|", $path);
+            }
+            else {
+                $config->_autoload_namespace[$ns] = $modulePath.join("|", $path);
+            }
+        };
+
+        foreach($module->autoloadPsr0Namespaces[0] as $path) {
+            $processNs($modulePath, 0, $path, $config);
+        }
+
+        foreach($module->autoloadPsr0Namespaces as $ns => $path) {
+            if ($ns === 0)
+                continue;
+            $processNs($modulePath, $ns, $path, $config);
+        }
+
+        $processNs2 = function($modulePath, $ns, $path, $config) {
+            $p = $modulePath.$path[0];
+            if (!file_exists($p))
+                throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for namespace psr4 doesn\'t exists: '.$p);
+            if ($ns === 0) {
+                $config->_autoload_fallback['psr4'][] = $modulePath.join("|", $path);
+            }
+            else {
+                $config->_autoload_namespacepathmap[$ns] = $modulePath.join("|", $path);
+            }
+        };
+
+        foreach($module->autoloadPsr4Namespaces[0] as $path) {
+            $processNs2($modulePath, 0, $path, $config);
+        }
+
+        foreach($module->autoloadPsr4Namespaces as $ns => $path) {
+            if ($ns === 0)
+                continue;
+            $processNs2($modulePath, $ns, $path, $config);
         }
     }
 
@@ -231,7 +247,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
     }
 
     function atEnd($config) {
-        
+
     }
 }
 

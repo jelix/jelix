@@ -50,7 +50,8 @@ abstract class XmlParserAbstract {
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
 
         $object->id = (string)$xml->getAttribute('id');
-        $object->name = (string)$xml->getAttribute('name');
+        // the name has always to be the directory name
+        //$object->name = (string)$xml->getAttribute('name');
         $object->createDate = (string)$xml->getAttribute('createdate');
 
         $locale = array('label'=>$this->locale, 'description'=>$this->locale);

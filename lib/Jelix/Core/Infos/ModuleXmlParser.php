@@ -46,18 +46,18 @@ class ModuleXmlParser extends XmlParserAbstract {
                         $object->autoloadClasses[$attr['name']] = $attr['file'];
                         break;
                     case 'classPattern':
-                        $object->autoloadClassPatterns[$attr['pattern']] = $attr['dir'];
+                        $object->autoloadClassPatterns[$attr['pattern']] = $dir;
                         break;
                     case 'namespace':
                         if ($dir == '') {
                             break;
                         }
                         $namespace = (isset($attr['name'])?$attr['name']:'');
-                        if ($name == '') {
+                        if ($namespace == '') {
                             $object->autoloadPsr0Namespaces[0][] = $dir;
                         }
                         else {
-                            $object->autoloadPsr0Namespaces[$attr['name']] = $dir;
+                            $object->autoloadPsr0Namespaces[trim($namespace,'\\')] = $dir;
                         }
                         break;
                     case 'namespacePathMap':
@@ -65,11 +65,11 @@ class ModuleXmlParser extends XmlParserAbstract {
                             break;
                         }
                         $namespace = (isset($attr['name'])?$attr['name']:'');
-                        if ($name == '') {
+                        if ($namespace == '') {
                             $object->autoloadPsr4Namespaces[0][] = $dir;
                         }
                         else {
-                            $object->autoloadPsr4Namespaces[$attr['name']] = $dir;
+                            $object->autoloadPsr4Namespaces[trim($namespace,'\\')] = $dir;
                         }
                         break;
                     case 'includePath':
