@@ -18,46 +18,38 @@ use Jelix\IniFile\Manager as IniFileMgr;
  */
 class Compiler {
 
-    static protected $commonConfig;
+    protected $commonConfig;
 
-    private function __construct (){ }
+    protected $configFileName = '';
+
+    protected $isCli = false;
+
+    protected $pseudoScriptName = '';
 
     /**
-     * read the given ini file, for the current entry point, or for the entrypoint given
-     * in $pseudoScriptName. Merge it with the content of mainconfig.ini.php
-     * It also calculates some options.
-     * If you are in a CLI script but you want to load a configuration file for a web entry point
-     * or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
-     * @param string $configFile the config file name
-     * @param boolean $allModuleInfo may be true for the installer, which needs all informations
-     *                               else should be false, these extra informations are
-     *                               not needed to run the application
-     * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
+     * @var StdClass
+     */
+    protected $config;
+
+    /**
+     * @param string $configFile  the name and path of the config file related to config dir of the app
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
      *              corresponding to the readed configuration
-     * @return object an object which contains configuration values
+     * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
      */
-    static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
+    function __construct ($configFile, $pseudoScriptName = '', $isCli = null){
+        $this->isCli = ($isCli !== null? $isCli: \jServer::isCLI());
+        $this->pseudoScriptName = $pseudoScriptName;
+        $this->configFileName = $configFile;
+    }
 
-        $tempPath = App::tempBasePath();
+    protected function readConfigFiles($configFile) {
+
         $configPath = App::configPath();
 
-        if ($tempPath=='/') {
-            // if it equals to '/', this is because realpath has returned false in the application.init.php
-            // so this is because the path doesn't exist.
-            throw new Exception('Application temp directory doesn\'t exist !', 3);
-        }
-
-        if (!is_writable($tempPath)) {
-            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
-        }
-
-        if (!is_writable(App::logPath())) {
-            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
-        }
         // this is the defaultconfig file of JELIX itself
         $config = IniFileMgr::read(__DIR__.'/defaultconfig.ini.php', true);
-        self::$commonConfig = clone $config;
+        $this->commonConfig = clone $config;
 
         // read the main configuration of the app
         IniFileMgr::readAndMergeObject(App::mainConfigFile(), $config);
@@ -74,28 +66,53 @@ class Compiler {
             if ( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config))
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
-
-        self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
-        self::$commonConfig = null;
         return $config;
     }
 
     /**
+     * read the ini file given to the constructor. It Merges it with the content of
+     * mainconfig.ini.php. It also calculates some options.
+     * If you are in a CLI script but you want to load a configuration file for a web
+     * entry point or vice-versa, you need to indicate the $pseudoScriptName parameter
+     * with the name of the entry point
+     * @param boolean $allModuleInfo may be true for the installer, which needs all informations
+     *                               else should be false, these extra informations are
+     *                               not needed to run the application
+     *
+     * @return StdClass an object which contains configuration values
+     */
+    public function read($allModuleInfo = false){
+
+        $tempPath = App::tempBasePath();
+
+        if ($tempPath=='/') {
+            // if it equals to '/', this is because realpath has returned false in the application.init.php
+            // so this is because the path doesn't exist.
+            throw new Exception('Application temp directory doesn\'t exist !', 3);
+        }
+
+        if (!is_writable($tempPath)) {
+            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
+        }
+
+        if (!is_writable(App::logPath())) {
+            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
+        }
+        $this->config = $this->readConfigFiles($this->configFileName);
+        $this->prepareConfig($allModuleInfo);
+        return $this->config;
+    }
+
+    /**
      * Identical to read(), but also stores the result in a temporary file
-     * @param string $configFile the config file name
-     * @param boolean $isCli
-     * @param string $pseudoScriptName
      * @return object an object which contains configuration values
      */
-    static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
+    public function readAndCache() {
 
-        if ($isCli === null)
-            $isCli = \jServer::isCLI();
-
-        $config = self::read($configFile, false, $isCli, $pseudoScriptName);
+        $config = $this->read(false);
         $tempPath = App::tempPath();
         \jFile::createDir($tempPath);
-        $filename = $tempPath.str_replace('/','~',$configFile);
+        $filename = $tempPath.str_replace('/', '~', $this->configFileName);
 
         if (BYTECODE_CACHE_EXISTS) {
             $filename .= '.conf.php';
@@ -115,25 +132,21 @@ class Compiler {
 
     /**
      * fill some config properties with calculated values
-     * @param object $config  the config object
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
-     * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
-     * @param string $pseudoScriptName the name of the entry point, relative to the base path,
-     *              corresponding to the readed configuration
      */
-    static protected function prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName){
+    protected function prepareConfig($allModuleInfo){
 
-        self::checkMiscParameters($config);
-        self::getPaths($config->urlengine, $pseudoScriptName, $isCli);
-        $modules = self::_loadModulesInfo($config, $allModuleInfo);
-        self::_loadPluginsPathList($config);
-        self::checkCoordPluginsPath($config);
-        self::runConfigCompilerPlugins($config, $modules);
+        $this->checkMiscParameters($this->config);
+        $this->getPaths($this->config->urlengine, $this->pseudoScriptName, $this->isCli);
+        $modules = $this->_loadModulesInfo($this->config, $allModuleInfo);
+        $this->_loadPluginsPathList($this->config);
+        $this->checkCoordPluginsPath($this->config);
+        $this->runConfigCompilerPlugins($this->config, $modules);
     }
 
-    static protected function checkMiscParameters($config) {
+    protected function checkMiscParameters($config) {
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
         if (trim( $config->startAction) == '') {
             $config->startAction = ':';
@@ -148,7 +161,7 @@ class Compiler {
             trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
     }
 
-    static protected function checkCoordPluginsPath($config) {
+    protected function checkCoordPluginsPath($config) {
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (strpos($name, '.') !== false) {
@@ -168,7 +181,7 @@ class Compiler {
         $config->coordplugins = $coordplugins;
     }
 
-    static protected function runConfigCompilerPlugins($config, $modules) {
+    protected function runConfigCompilerPlugins($config, $modules) {
         if (!isset($config->_pluginsPathList_configcompiler)) {
             return;
         }
@@ -208,16 +221,16 @@ class Compiler {
             $plugin->atEnd($config);
         }
     }
-    
+
     /**
      * Find all activated modules and check their status
      * @param object $config  the config object
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
-     * @return \Jelix\Core\Infos\ModuleInfos[] 
+     * @return \Jelix\Core\Infos\ModuleInfos[]
      */
-    static protected function _loadModulesInfo($config, $allModuleInfo) {
+    protected function _loadModulesInfo($config, $allModuleInfo) {
 
         $installerFile = App::configPath('installer.ini.php');
 
@@ -243,8 +256,8 @@ class Compiler {
         }
 
         $list = preg_split('/ *, */',$config->modulesPath);
-        if (isset(self::$commonConfig->modulesPath)) {
-            $list = array_merge($list, preg_split('/ *, */',self::$commonConfig->modulesPath));
+        if (isset($this->commonConfig->modulesPath)) {
+            $list = array_merge($list, preg_split('/ *, */',$this->commonConfig->modulesPath));
         }
         array_unshift($list, JELIX_LIB_PATH.'core-modules/');
         $pathChecked = array();
@@ -270,7 +283,7 @@ class Compiler {
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
-                        $module = self::_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
+                        $module = $this->_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
                         if ($module !== null) {
                             $modules[$module->name] = $module;
                         }
@@ -285,7 +298,7 @@ class Compiler {
     /**
      * @return \Jelix\Core\Infos\ModuleInfos
      */
-    static protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
+    protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
 
         $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
         if ($moduleInfo->id == '' && $moduleInfo->name == '') {
@@ -324,8 +337,8 @@ class Compiler {
                 // that it is activated for an other entry point,
                 // and then we want the possibility to retrieve its
                 // urls, at least
-                if (isset(self::$commonConfig->modules[$f.'.access'])
-                    && self::$commonConfig->modules[$f.'.access'] > 0) {
+                if (isset($this->commonConfig->modules[$f.'.access'])
+                    && $this->commonConfig->modules[$f.'.access'] > 0) {
                     $config->modules[$f.'.access'] = 3;
                 }
             }
@@ -384,12 +397,12 @@ class Compiler {
         }
         return $moduleInfo;
     }
-    
+
     /**
      * Analyse plugin paths
      * @param object $config the config container
      */
-    static protected function _loadPluginsPathList($config) {
+    protected function _loadPluginsPathList($config) {
         $list = preg_split('/ *, */',$config->pluginsPath);
         array_unshift($list, JELIX_LIB_PATH.'plugins/');
         foreach($list as $k=>$path){
@@ -455,7 +468,7 @@ class Compiler {
      * @param array $urlconf  urlengine configuration. scriptNameServerVariable, basePath,
      * jelixWWWPath and jqueryPath should be present
      */
-    static public function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
+    protected function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
         // retrieve the script path+name.
         // for cli, it will be the path from the directory were we execute the script (given to the php exec).
         // for web, it is the path from the root of the url

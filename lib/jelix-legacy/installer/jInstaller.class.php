@@ -624,10 +624,11 @@ class jInstaller {
                 $ep->configIni->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $ep->config =
-                    jConfigCompiler::read($ep->configFile, true,
-                                          $ep->isCliScript,
-                                          $ep->scriptName);
+                $compiler =  new \Jelix\Core\Config\Compiler($ep->configFile,
+                                                             $ep->scriptName,
+                                                             $ep->isCliScript);
+                $ep->config = $compiler->read(true);
+
                 jApp::setConfig($ep->config);
             }
         } catch (jInstallerException $e) {
@@ -665,10 +666,10 @@ class jInstaller {
                 $ep->configIni->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $ep->config =
-                    jConfigCompiler::read($ep->configFile, true,
-                                          $ep->isCliScript,
-                                          $ep->scriptName);
+                $compiler =  new \Jelix\Core\Config\Compiler($ep->configFile,
+                                                             $ep->scriptName,
+                                                             $ep->isCliScript);
+                $ep->config = $compiler->read(true);
                 jApp::setConfig($ep->config);
             } catch (jInstallerException $e) {
                 $result = false;

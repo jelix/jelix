@@ -236,8 +236,8 @@ abstract class JelixScriptCommand {
 
       if ($configFile == '')
          throw new Exception("Entry point is unknown");
-
-      \Jelix\Core\App::setConfig(\Jelix\Core\Config\Compiler::read($configFile, true, true, $this->entryPointName));
+      $compiler = new \Jelix\Core\Config\Compiler($configFile, $this->entryPointName, true);
+      \Jelix\Core\App::setConfig($compiler->read(true));
    }
 
    /**

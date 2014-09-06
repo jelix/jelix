@@ -82,7 +82,8 @@ class Config {
             }
         }
         if (!self::$fromCache) {
-            return Config\Compiler::readAndCache($configFile);
+            $compiler = new Config\Compiler($configFile);
+            return $compiler->readAndCache();
         }
         else {
             return $config;

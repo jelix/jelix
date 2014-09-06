@@ -57,9 +57,10 @@ class jInstallerEntryPoint {
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->configIni = new jIniMultiFilesModifier($mainConfig, jApp::configPath($configFile));
-        $this->config = jConfigCompiler::read($configFile, true,
-                                              $this->isCliScript,
-                                              $this->scriptName);
+        $compiler = new \Jelix\Core\Config\Compiler($configFile,
+                                                    $this->scriptName,
+                                                    $this->isCliScript);
+        $this->config = $compiler->read(true);
     }
 
     /**

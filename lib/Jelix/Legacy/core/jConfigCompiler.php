@@ -13,4 +13,21 @@
  * @see \Jelix\Core\Config\Compiler
  * @deprecated
  */
-class jConfigCompiler extends \Jelix\Core\Config\Compiler { }
+class jConfigCompiler {
+
+    private function __construct (){ }
+
+    static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
+        $compiler = new \Jelix\Core\Config\Compiler ($configFile, $pseudoScriptName, $isCli);
+        return $compiler->read($allModuleInfo);
+    }
+
+    static public function readAndCache($configFile, $isCli = null, $pseudoScriptName = '') {
+        $compiler = new \Jelix\Core\Config\Compiler ($configFile, $pseudoScriptName, $isCli);
+        return $compiler->readAndCache();
+    }
+
+    static public function findServerName($ext = '.php', $isCli = false) {
+        return \Jelix\Core\Config\Compiler::findServerName($ext, $isCli);
+    }
+}
