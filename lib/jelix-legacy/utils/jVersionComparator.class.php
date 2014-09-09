@@ -18,6 +18,10 @@
 class jVersionComparator {
 
   /**
+   * Compare two version numbers.
+   *
+   * @param string $version1
+   * @param string $version2
    * @return int  0 if equal, -1 if $version1 < $version2, 1 if $version1 > $version2
    */
     static function compareVersion($version1, $version2) {
@@ -62,7 +66,7 @@ class jVersionComparator {
 
                 $v1pre = ($m1[4] == 'dev');
                 $v2pre = ($m2[4] == 'dev');
-                
+
                 if ($v1pre && !$v2pre) {
                     return -1;
                 }
@@ -164,5 +168,148 @@ class jVersionComparator {
         }
 
         return $sver;
+    }
+
+    /**
+     * @param string $version  a version number
+     * @param string $range  a version expression respecting Composer range syntax
+     * @return boolean  true if the given version match the given range
+     */
+    static public function compareVersionRange($version, $range) {
+
+        if ($version == $range)
+            return true;
+
+        $expression = self::compileRange($range);
+        return $expression->compare($version);
+    }
+
+    static protected function compileRange($range) {
+        $or = preg_split('/\|/',$range, 2);
+        if (count($or) > 1) {
+            $left = self::compileRange($or[0]);
+            $right = self::compileRange($or[1]);
+            return new versionRangeBinaryOperator(versionRangeBinaryOperator::OP_OR, $left, $right);
+        }
+        $and = preg_split("/,/",$range, 2);
+        if (count($and) > 1) {
+            $left = self::compileRange($and[0]);
+            $right = self::compileRange($and[1]);
+            return new versionRangeBinaryOperator(versionRangeBinaryOperator::OP_AND, $left, $right);
+        }
+        $val = trim($range);
+        if (preg_match("/^([\!>=<~]+)(.*)$/", $val, $m)) {
+            switch($m[1]) {
+                case '=':
+                    $op = versionRangeUnaryOperator::OP_EQ;
+                    break;
+                case '<':
+                    $op = versionRangeUnaryOperator::OP_LT;
+                    break;
+                case '>':
+                    $op = versionRangeUnaryOperator::OP_GT;
+                    break;
+                case '<=':
+                    $op = versionRangeUnaryOperator::OP_LTE;
+                    break;
+                case '>=':
+                    $op = versionRangeUnaryOperator::OP_GTE;
+                    break;
+                case '!=':
+                    $op = versionRangeUnaryOperator::OP_DIFF;
+                    break;
+                case '~':
+                    $exp1 = new versionRangeUnaryOperator(versionRangeUnaryOperator::OP_GTE, $m[2]);
+                    $v2 = explode('.', $m[2]);
+                    $v2 = (intval($v2[0])+1).".0pre";
+                    $exp2 = new versionRangeUnaryOperator(versionRangeUnaryOperator::OP_LT, $v2);
+                    return new versionRangeBinaryOperator(versionRangeBinaryOperator::OP_AND, $exp1, $exp2);
+                default:
+                    throw new Exception("Version comparator: bad operator in the range ".$range);
+            }
+            return new versionRangeUnaryOperator($op, $m[2]);
+        }
+        return new versionRangeUnaryOperator(versionRangeUnaryOperator::OP_EQ, $range);
+    }
+}
+
+/**
+ * Represents a binary operator (AND or OR) in a version range expression
+ */
+class versionRangeBinaryOperator {
+    const OP_OR = 0;
+    const OP_AND = 1;
+
+    protected $op = -1;
+
+    protected $left = null;
+
+    protected $right = null;
+
+    function __construct($operator, $left, $right) {
+        $this->op = $operator;
+        $this->left = $left;
+        $this->right = $right;
+    }
+
+    function compare($value) {
+        if ($this->op == self::OP_OR) {
+            if ($this->left->compare($value)) {
+                return true;
+            }
+            if ($this->right->compare($value)) {
+                return true;
+            }
+            return false;
+        }
+        if (!$this->left->compare($value)) {
+            return false;
+        }
+        if (!$this->right->compare($value)) {
+            return false;
+        }
+        return true;
+    }
+}
+
+/**
+ * Represents an unary operator (>,<,=,!=,<=,>=,~) in a version range expression
+ */
+class versionRangeUnaryOperator {
+    const OP_EQ = 0;
+    const OP_LT = 1;
+    const OP_GT = 2;
+    const OP_GTE = 3;
+    const OP_LTE = 4;
+    const OP_DIFF = 5;
+
+    protected $op = -1;
+
+    protected $operand = null;
+
+    function __construct($operator, $operand) {
+        $this->op = $operator;
+        $this->operand = $operand;
+    }
+
+    function compare($value) {
+        $result = jVersionComparator::compareVersion($value, $this->operand);
+        switch ($this->op) {
+            case self::OP_EQ:
+                return ($result === 0);
+            case self::OP_LT:
+                return ($result === -1);
+            case self::OP_GT:
+                return ($result === 1);
+            case self::OP_LTE:
+                return ($result < 1);
+                break;
+            case self::OP_GTE:
+                return ($result > -1);
+                break;
+            case self::OP_DIFF:
+                return ($result != 0);
+        }
+        return false;
     }
 }
