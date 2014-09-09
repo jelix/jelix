@@ -1,22 +1,17 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2010 Laurent Jouanneau
+* @copyright   2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-require_once (JELIX_LIB_UTILS_PATH."jVersionComparator.class.php");
+namespace Jelix\Installer;
 
 /**
 * a class to install a component (module or plugin) 
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-abstract class jInstallerComponentBase {
+abstract class AbstractInstallLauncher {
 
     /**
      *  @var string  name of the component
@@ -81,7 +76,7 @@ abstract class jInstallerComponentBase {
 
     /**
      * list of information about the module for each entry points
-     * @var array  key = epid,  value = jInstallerModuleInfos
+     * @var ModuleStatus[]  key = epid
      */
     protected $moduleInfos = array();
 
@@ -103,7 +98,7 @@ abstract class jInstallerComponentBase {
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     /**
-     * @param jInstallerModuleInfos $module module infos
+     * @param ModuleStatus $module module status
      */
     public function addModuleInfos ($epId, $module) {
         $this->moduleInfos[$epId] = $module;
@@ -140,11 +135,11 @@ abstract class jInstallerComponentBase {
 
     /**
      * get the object which is responsible to install the component. this
-     * object should implement jIInstallerComponent.
+     * object should implement InstallerInterface.
      *
      * @param jInstallerEntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
-     * @return jIInstallerComponent the installer, or null if there isn't any installer
+     * @return InstallerInterface the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
     abstract function getInstaller($ep, $installWholeApp);
@@ -158,8 +153,8 @@ abstract class jInstallerComponentBase {
      * installed/upgraded before calling this method
      * 
      * @param jInstallerEntryPoint $ep the entry point
-     * @throw jInstallerException  if an error occurs during the install.
-     * @return array   array of jIInstallerComponent
+     * @throw \Jelix\Installer\Exception  if an error occurs during the install.
+     * @return InstallerInterface[]
      */
     abstract function getUpgraders($ep);
 
@@ -186,10 +181,10 @@ abstract class jInstallerComponentBase {
      * read the identity file
      */
     protected function readIdentity() {
-        $xmlDescriptor = new DOMDocument();
+        $xmlDescriptor = new \DOMDocument();
 
         if(!$xmlDescriptor->load($this->path.$this->identityFile)){
-            throw new jInstallerException('install.invalid.xml.file',array($this->path.$this->identityFile));
+            throw new Exception('install.invalid.xml.file',array($this->path.$this->identityFile));
         }
 
         $root = $xmlDescriptor->documentElement;
@@ -241,7 +236,7 @@ abstract class jInstallerComponentBase {
 
                 $name = (string)$dependency['name'];
                 if (trim($name) == '' && $type != 'jelix')
-                    throw new Exception('Name is missing in a dependency declaration in module '.$this->name);
+                    throw new \Exception('Name is missing in a dependency declaration in module '.$this->name);
                 $id = (string)$dependency['id'];
 
                 if ($type == 'jelix') {
@@ -281,16 +276,16 @@ abstract class jInstallerComponentBase {
             }
         }
     }
-    
-    
+
+
     public function checkJelixVersion ($jelixVersion) {
-        return (jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
-                jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
+        return (\jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
+                \jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
     }
-    
+
     public function checkVersion($min, $max) {
-        return (jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
-                jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
+        return (\jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
+                \jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
     }
 }
 

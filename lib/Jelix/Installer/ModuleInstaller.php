@@ -1,20 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+
 
 /**
 * a class to install a module. 
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
+class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
 
     /**
      * Called before the installation of all other modules

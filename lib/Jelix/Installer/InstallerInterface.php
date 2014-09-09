@@ -1,19 +1,17 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009 Laurent Jouanneau
+* @copyright   2009-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+
 
 /**
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-interface jIInstallerComponent {
+interface InstallerInterface {
 
     /**
      * Called before the installation of all other components

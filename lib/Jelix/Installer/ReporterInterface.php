@@ -1,21 +1,19 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+
 
 /**
 * interface for classes used as reporter for installation or check etc...
 * This classes are responsible to show informations to the user
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-interface jIInstallReporter {
+interface ReporterInterface {
 
     /**
      * start the process

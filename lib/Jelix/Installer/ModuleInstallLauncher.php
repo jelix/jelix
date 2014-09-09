@@ -1,20 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+
 
 /**
 * a class to install a module.
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-class jInstallerComponentModule extends jInstallerComponentBase {
+class ModuleInstallLauncher extends AbstractInstallLauncher {
 
     /**
      * @var string the namespace of the xml file
@@ -67,11 +65,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
 
     /**
      * get the object which is responsible to install the component. this
-     * object should implement jIInstallerComponent.
+     * object should implement AbstractInstaller.
      *
      * @param jInstallerEntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
-     * @return jIInstallerComponent the installer, or null if there isn't any installer
+     * @return ModuleInstaller the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
     function getInstaller($ep, $installWholeApp) {
@@ -93,7 +91,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             require_once($this->path.'install/install.php');
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname))
-                throw new jInstallerException("module.installer.class.not.found",array($cname,$this->name));
+                throw new Exception("module.installer.class.not.found",array($cname,$this->name));
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
                                                 $this->path,
@@ -129,8 +127,8 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * installed/upgraded before calling this method
      *
      * @param jInstallerEntryPoint $ep the entry point
-     * @throw jInstallerException  if an error occurs during the install.
-     * @return array   array of jIInstallerComponent
+     * @throw \Jelix\Installer\Exception  if an error occurs during the install.
+     * @return ModuleInstaller[]
      */
     function getUpgraders($ep) {
 
@@ -169,7 +167,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
                 require_once($p.$fileInfo[0]);
                 $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
                 if (!class_exists($cname))
-                    throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
+                    throw new Exception("module.upgrader.class.not.found",array($cname,$this->name));
 
                 $upgrader = new $cname($this->name,
                                         $fileInfo[2],
@@ -191,11 +189,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $foundVersion = '';
             // check the version
             foreach($upgrader->targetVersions as $version) {
-                if (jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $version) >= 0 ) {
+                if (\jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
-                if (jVersionComparator::compareVersion($this->sourceVersion, $version) < 0 ) {
+                if (\jVersionComparator::compareVersion($this->sourceVersion, $version) < 0 ) {
                     // we don't execute upgraders having a version higher than the version indicated in the module.xml
                     continue;
                 }
@@ -247,7 +245,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
         usort($list, function ($upgA, $upgB) {
-                return jVersionComparator::compareVersion($upgA->version, $upgB->version);
+                return \jVersionComparator::compareVersion($upgA->version, $upgB->version);
         });
         return $list;
     }

@@ -1,20 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2012 Laurent Jouanneau
+* @copyright   2009-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+use Jelix\Core\App;
 
 /**
 * base class for installers
-* @package     jelix
-* @subpackage  installer
 * @since 1.2
 */
-abstract class jInstallerBase {
+abstract class AbstractInstaller {
 
     /**
      * @var string name of the component
@@ -55,13 +53,13 @@ abstract class jInstallerBase {
      * @var jIniMultiFilesModifier
      */
     public $config;
-    
+
     /**
      * the entry point property on which the installer is called
      * @var jInstallerEntryPoint
      */
     public $entryPoint;
-    
+
     /**
      * The path of the module
      * @var string
@@ -133,7 +131,7 @@ abstract class jInstallerBase {
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
      * @param jInstallerEntryPoint $ep the entry point
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param Jelix\IniFile\Modifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
@@ -163,8 +161,8 @@ abstract class jInstallerBase {
         $this->dbProfile = $dbProfile;
 
         // we check if it is an alias
-        if (file_exists(jApp::configPath('profiles.ini.php'))) {
-            $dbprofiles = parse_ini_file(jApp::configPath('profiles.ini.php'));
+        if (file_exists(App::configPath('profiles.ini.php'))) {
+            $dbprofiles = parse_ini_file(App::configPath('profiles.ini.php'));
             if (isset($dbprofiles['jdb'][$dbProfile]))
                 $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
         }
@@ -227,7 +225,7 @@ abstract class jInstallerBase {
      */
     protected function dbConnection () {
         if (!$this->_dbConn)
-            $this->_dbConn = jDb::getConnection($this->dbProfile);
+            $this->_dbConn = \jDb::getConnection($this->dbProfile);
         return $this->_dbConn;
     }
 
@@ -238,7 +236,7 @@ abstract class jInstallerBase {
     protected function getDbType($profile = null) {
         if (!$profile)
             $profile = $this->dbProfile;
-        $conn = jDb::getConnection($profile);
+        $conn = \jDb::getConnection($profile);
         return $conn->dbms;
     }
 
@@ -281,7 +279,7 @@ abstract class jInstallerBase {
                 $conn->commit();
             }
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             if ($inTransaction)
                 $conn->rollback();
             throw $e;
@@ -306,8 +304,8 @@ abstract class jInstallerBase {
      * @param string $targetPath
      */
     private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite) {
-        jFile::createDir($targetPath);
-        $dir = new DirectoryIterator($sourcePath);
+        \jFile::createDir($targetPath);
+        $dir = new \DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
             if ($dirContent->isFile()) {
                 $p = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
@@ -333,24 +331,24 @@ abstract class jInstallerBase {
         if (!$overwrite && file_exists($targetPath))
             return;
         $dir = dirname($targetPath);
-        jFile::createDir($dir);
+        \jFile::createDir($dir);
         copy ($this->path.'install/'.$relativeSourcePath, $targetPath);
     }
 
     protected function expandPath($path) {
          if (strpos($path, 'www:') === 0)
-            $path = str_replace('www:', jApp::wwwPath(), $path);
+            $path = str_replace('www:', App::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
             $p = $this->config->getValue('jelixWWWPath','urlengine');
             if (substr($p, -1) != '/')
                 $p.='/';
-            $path = str_replace('jelixwww:', jApp::wwwPath($p), $path);
+            $path = str_replace('jelixwww:', App::wwwPath($p), $path);
         }
         elseif (strpos($path, 'config:') === 0) {
-            $path = str_replace('config:', jApp::configPath(), $path);
+            $path = str_replace('config:', App::configPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::configPath($this->entryPoint->configFile));
+            $p = dirname(App::configPath($this->entryPoint->configFile));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         return $path;
@@ -366,7 +364,7 @@ abstract class jInstallerBase {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+        $profiles = new \Jelix\IniFile\Modifier(App::configPath('profiles.ini.php'));
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section
@@ -411,7 +409,7 @@ abstract class jInstallerBase {
             }
         }
         $profiles->save();
-        jProfiles::clear();
+        \Jelix\Core\Profiles::clear();
         return true;
     }
 
