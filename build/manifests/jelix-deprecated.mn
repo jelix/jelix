@@ -224,3 +224,14 @@ cd lib/jelix-legacy/events
   jEvent.class.php
   jEventCompiler.class.php
   jEventListener.class.php
+cd lib/jelix-legacy/installer
+  jInstallerModuleInfos.class.php
+  jInstallerException.class.php
+  jInstallerBase.class.php
+  jInstallerPlugin.class.php
+  jInstallerModule.class.php
+  jIInstallerComponent.iface.php
+  jIInstallReporter.iface.php
+  jInstallerComponentBase.class.php
+  jInstallerComponentModule.class.php
+  jInstallerComponentPlugin.class.php

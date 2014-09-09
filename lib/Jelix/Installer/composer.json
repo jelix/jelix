@@ -1,0 +1,28 @@
+{
+    "name": "jelix/installer",
+    "type": "library",
+    "description": "jelix modules installer",
+    "keywords": [],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+    },
+    "extra": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "Jelix\\Installer\\" : ""
+        }
+    }
+}
