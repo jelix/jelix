@@ -14,11 +14,6 @@ require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
 class testInstallerComponentModule extends jInstallerComponentModule {
 
-    protected function readIdentity() {
-        $xml = simplexml_load_string($this->mainInstaller->moduleXMLDesc[$this->name]);
-        $this->sourceVersion = (string) $xml->info[0]->version[0];
-        $this->readDependencies($xml);
-    }
 
 }
 
@@ -37,7 +32,12 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
         }
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->config = $configContent;
+
+        $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
+                                                    $this->scriptName,
+                                                    $this->isCliScript);
+        $this->config = $compiler->read(true, $configContent);
+        $this->modulesInfos = $compiler->getModulesInfos();
     }
     
     function getEpId() {
@@ -149,33 +149,10 @@ class testInstallerMain extends jInstaller {
         }   
     }
 
-    function initForTest($projectXml='<entry file="index.php" config="index/config.ini.php" />') {
-
-        $projectXml = '<?xml version="1.0" encoding="iso-8859-1"?>
-<project xmlns="http://jelix.org/ns/project/1.0">
-    <info id="test@jelix.org" name="test">
-        <version stability="stable" date="">1.0</version>
-        <label lang="en_US">Test</label>
-        <description lang="en_US">Application to test Jelix</description>
-        <copyright>2009 the company</copyright>
-        <creator name="Me" email="me@jelix.org" active="true" />
-    </info>
-    <dependencies>
-        <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
-    </dependencies>
-    <directories>
-        <config>var/config</config>
-        <log>var/log</log>
-        <var>var</var>
-        <www>www</www>
-        <temp>../temp/test</temp>
-    </directories>
-    <entrypoints>'.$projectXml.'
-    </entrypoints>
-</project>';
-
+    function initForTest() {
+        $appInfos = new \Jelix\Core\Infos\AppInfos(__DIR__.'/app1/project2.xml');
         $this->installerIni =  new testInstallerIniFileModifier('');
-        $this->readEntryPointData(simplexml_load_string($projectXml));
+        $this->readEntryPointsData($appInfos);
         $this->installerIni->save();
     }
 
@@ -183,13 +160,8 @@ class testInstallerMain extends jInstaller {
         return new testInstallerEntryPoint($this->mainConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
     }
     
-    protected function getComponentModule($name, $path, $installer) {
-        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jsoap'))) {
-            return new jInstallerComponentModule($name, $path, $installer);
-        }
-        else {
-            return new testInstallerComponentModule($name, $path, $installer);
-        }
+    protected function getModuleLauncher($moduleInfos, $installer) {
+        return new testInstallerComponentModule($moduleInfos, $installer);
     }
     
     public function doCheckDependencies ($list, $entrypoint = 'index.php') {

@@ -13,4 +13,4 @@
  * @see \Jelix\Installer\AbstractInstallLauncher
  * @deprecated
  */
-class jInstallerComponentBase extends \Jelix\Installer\AbstractInstallLauncher { }
+abstract class jInstallerComponentBase extends \Jelix\Installer\AbstractInstallLauncher { }

@@ -45,6 +45,9 @@ abstract class InfosAbstract {
      */
     public $dependencies = array();
 
+    /**
+     * @return string the path of the component, with trailing slash
+     */
     public function getPath() {
         return $this->path;
     }

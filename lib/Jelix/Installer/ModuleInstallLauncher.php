@@ -14,21 +14,6 @@ namespace Jelix\Installer;
 */
 class ModuleInstallLauncher extends AbstractInstallLauncher {
 
-    /**
-     * @var string the namespace of the xml file
-     */
-    protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
-
-    /**
-     * @var string the expected name of the root element in the xml file
-     */
-    protected $rootName = 'module';
-
-    /**
-     * @var string the name of the xml file
-     */
-    protected $identityFile = 'module.xml';
-
     protected $moduleInstaller = null;
 
     protected $moduleUpgraders = null;
@@ -40,11 +25,15 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
     protected $upgradersContexts = array();
 
-    function __construct($name, $path, $mainInstaller) {
-        parent::__construct($name, $path, $mainInstaller);
+    /**
+     * @param \Jelix\Core\Infos\ModuleInfos $moduleInfos
+     * @param jInstaller $mainInstaller
+     */
+    function __construct($moduleInfos, $mainInstaller) {
+        parent::__construct($moduleInfos, $mainInstaller);
         if ($mainInstaller) {
             $ini = $mainInstaller->installerIni;
-            $contexts = $ini->getValue($this->name.'.contexts','__modules_data');
+            $contexts = $ini->getValue($moduleInfos->name.'.contexts','__modules_data');
             if ($contexts !== null && $contexts !== "") {
                 $this->installerContexts = explode(',', $contexts);
             }
@@ -52,13 +41,13 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
     }
 
     protected function _setAccess($config) {
-        $access = $config->getValue($this->name.'.access', 'modules');
+        $access = $config->getValue($this->moduleInfos->name.'.access', 'modules');
         if ($access == 0 || $access == null) {
-            $config->setValue($this->name.'.access', 2, 'modules');
+            $config->setValue($this->moduleInfos->name.'.access', 2, 'modules');
             $config->save();
         }
         else if ($access == 3) {
-            $config->setValue($this->name.'.access', 1, 'modules');
+            $config->setValue($this->moduleInfos->name.'.access', 1, 'modules');
             $config->save();
         }
     }
@@ -84,35 +73,36 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
         $epId = $ep->getEpId();
 
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->path.'install/install.php') || $this->moduleInfos[$epId]->skipInstaller) {
+            if (!file_exists($this->moduleInfos->getPath().'install/install.php') ||
+                             $this->moduleStatuses[$epId]->skipInstaller) {
                 $this->moduleInstaller = false;
                 return null;
             }
-            require_once($this->path.'install/install.php');
-            $cname = $this->name.'ModuleInstaller';
+            require_once($this->moduleInfos->getPath().'install/install.php');
+            $cname = $this->moduleInfos->name.'ModuleInstaller';
             if (!class_exists($cname))
                 throw new Exception("module.installer.class.not.found",array($cname,$this->name));
-            $this->moduleInstaller = new $cname($this->name,
-                                                $this->name,
-                                                $this->path,
-                                                $this->sourceVersion,
+            $this->moduleInstaller = new $cname($this->moduleInfos->name,
+                                                $this->moduleInfos->name,
+                                                $this->moduleInfos->getPath(),
+                                                $this->moduleInfos->version,
                                                 $installWholeApp
                                                 );
         }
 
-        $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
+        $this->moduleInstaller->setParameters($this->moduleStatuses[$epId]->parameters);
 
-        $sparam = $ep->configIni->getValue($this->name.'.installparam','modules');
+        $sparam = $ep->configIni->getValue($this->moduleInfos->name.'.installparam','modules');
         if ($sparam === null)
             $sparam = '';
-        $sp = $this->moduleInfos[$epId]->serializeParameters();
+        $sp = $this->moduleStatuses[$epId]->serializeParameters();
         if ($sparam != $sp) {
-            $ep->configIni->setValue($this->name.'.installparam', $sp, 'modules');
+            $ep->configIni->setValue($this->moduleInfos->name.'.installparam', $sp, 'modules');
         }
 
         $this->moduleInstaller->setEntryPoint($ep,
                                               $ep->configIni,
-                                              $this->moduleInfos[$epId]->dbProfile,
+                                              $this->moduleStatuses[$epId]->dbProfile,
                                               $this->installerContexts);
 
         return $this->moduleInstaller;
@@ -138,8 +128,8 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
             $this->moduleUpgraders = array();
 
-            $p = $this->path.'install/';
-            if (!file_exists($p)  || $this->moduleInfos[$epId]->skipInstaller)
+            $p = $this->moduleInfos->getPath().'install/';
+            if (!file_exists($p)  || $this->moduleStatuses[$epId]->skipInstaller)
                 return array();
 
             // we get the list of files for the upgrade
@@ -165,13 +155,13 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
             // now we order the list of file
             foreach($fileList as $fileInfo) {
                 require_once($p.$fileInfo[0]);
-                $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
+                $cname = $this->moduleInfos->name.'ModuleUpgrader_'.$fileInfo[2];
                 if (!class_exists($cname))
                     throw new Exception("module.upgrader.class.not.found",array($cname,$this->name));
 
-                $upgrader = new $cname($this->name,
+                $upgrader = new $cname($this->moduleInfos->name,
                                         $fileInfo[2],
-                                        $this->path,
+                                        $this->moduleInfos->getPath(),
                                         $fileInfo[1],
                                         false);
 
@@ -189,11 +179,11 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
             $foundVersion = '';
             // check the version
             foreach($upgrader->targetVersions as $version) {
-                if (\jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $version) >= 0 ) {
+                if (\jVersionComparator::compareVersion($this->moduleStatuses[$epId]->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
-                if (\jVersionComparator::compareVersion($this->sourceVersion, $version) < 0 ) {
+                if (\jVersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
                     // we don't execute upgraders having a version higher than the version indicated in the module.xml
                     continue;
                 }
@@ -216,21 +206,21 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
                 $upgraderDate = $this->_formatDate($upgrader->date);
 
                 // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.firstversion.date', $epId));
+                $firstVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->moduleInfos->name.'.firstversion.date', $epId));
                 if ($firstVersionDate !== null) {
                     if ($firstVersionDate >= $upgraderDate)
                         continue;
                 }
 
                 // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.version.date', $epId));
+                $currentVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->moduleInfos->name.'.version.date', $epId));
                 if ($currentVersionDate !== null) {
                     if ($currentVersionDate >= $upgraderDate)
                         continue;
                 }
             }
 
-            $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
+            $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
             $class = get_class($upgrader);
 
             if (!isset($this->upgradersContexts[$class])) {
@@ -239,7 +229,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
             $upgrader->setEntryPoint($ep,
                                     $ep->configIni,
-                                    $this->moduleInfos[$epId]->dbProfile,
+                                    $this->moduleStatuses[$epId]->dbProfile,
                                     $this->upgradersContexts[$class]);
             $list[] = $upgrader;
         }
@@ -253,7 +243,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
     public function installFinished($ep) {
         $this->installerContexts = $this->moduleInstaller->getContexts();
         if ($this->mainInstaller)
-            $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
+            $this->mainInstaller->installerIni->setValue($this->moduleInfos->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
     public function upgradeFinished($ep, $upgrader) {

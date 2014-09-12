@@ -32,6 +32,11 @@ class Compiler {
     protected $config;
 
     /**
+     * @var \Jelix\Core\Infos\ModuleInfos[]
+     */
+    protected $modulesInfos = array();
+
+    /**
      * @param string $configFile  the name and path of the config file related to config dir of the app
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
      *              corresponding to the readed configuration
@@ -130,6 +135,10 @@ class Compiler {
         return $config;
     }
 
+    public function getModulesInfos() {
+        return $this->modulesInfos;
+    }
+
     /**
      * fill some config properties with calculated values
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
@@ -140,10 +149,10 @@ class Compiler {
 
         $this->checkMiscParameters($this->config);
         $this->getPaths($this->config->urlengine, $this->pseudoScriptName, $this->isCli);
-        $modules = $this->_loadModulesInfo($this->config, $allModuleInfo);
+        $this->modulesInfos = $this->_loadModulesInfo($this->config, $allModuleInfo);
         $this->_loadPluginsPathList($this->config);
         $this->checkCoordPluginsPath($this->config);
-        $this->runConfigCompilerPlugins($this->config, $modules);
+        $this->runConfigCompilerPlugins($this->config, $this->modulesInfos);
     }
 
     protected function checkMiscParameters($config) {
@@ -181,6 +190,10 @@ class Compiler {
         $config->coordplugins = $coordplugins;
     }
 
+    /**
+     * @param StdClass $config
+     * @param \Jelix\Core\Infos\ModuleInfos[] $modules
+     */
     protected function runConfigCompilerPlugins($config, $modules) {
         if (!isset($config->_pluginsPathList_configcompiler)) {
             return;

@@ -9,8 +9,8 @@
 */
 
 /**
- * dummy class for compatibility
+ * dummy interface for compatibility
  * @see \Jelix\Installer\ReporterInterface
  * @deprecated
  */
-class jIInstallReporter extends \Jelix\Installer\ReporterInterface { }
+interface jIInstallReporter extends \Jelix\Installer\ReporterInterface { }

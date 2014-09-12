@@ -19,7 +19,7 @@ class jInstallerEntryPoint {
     /** @var string the filename of the configuration file */
     public $configFile;
 
-    /** @var jIniMultiFilesModifier */
+    /** @var \Jelix\IniFile\MultiModifier */
     public $configIni;
 
     /**
@@ -44,6 +44,11 @@ class jInstallerEntryPoint {
     public $type;
 
     /**
+     * @var \Jelix\Core\Infos\ModuleInfos[]
+     */
+    protected $modulesInfos = array();
+
+    /**
      * @param jIniFileModifier    $mainConfig   the mainconfig.ini.php file
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
@@ -61,6 +66,7 @@ class jInstallerEntryPoint {
                                                     $this->scriptName,
                                                     $this->isCliScript);
         $this->config = $compiler->read(true);
+        $this->modulesInfos = $compiler->getModulesInfos();
     }
 
     /**
@@ -79,10 +85,28 @@ class jInstallerEntryPoint {
     }
 
     /**
-     * @return jInstallerModuleInfos informations about a specific module used
-     * by the entry point
+     * @deprecated
+     * @see getModuleStatus()
      */
     function getModule($moduleName) {
-        return new jInstallerModuleInfos($moduleName, $this->config->modules);
+        trigger_error("EntryPoint::getModule() is deprecated", E_WARNING);
+        return $this->getModuleStatus($moduleName);
+    }
+
+    /**
+     * @return \Jelix\Installer\ModuleStatus informations about the installation status of a module
+     */
+    function getModuleStatus($moduleName) {
+        return new \Jelix\Installer\ModuleStatus($moduleName, $this->config->modules);
+    }
+
+    /**
+     * @return \Jelix\Core\Infos\ModuleInfos information about the identity of the module
+     */
+    function getModuleInfos($moduleName) {
+        if (isset($this->modulesInfos[$moduleName])) {
+            return $this->modulesInfos[$moduleName];
+        }
+        return null;
     }
 }

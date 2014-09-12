@@ -9,8 +9,8 @@
 */
 
 /**
- * dummy class for compatibility
+ * dummy interface for compatibility
  * @see \Jelix\Installer\InstallerInterface
  * @deprecated
  */
-class jIInstallerComponent extends \Jelix\Installer\InstallerInterface { }
+interface jIInstallerComponent extends \Jelix\Installer\InstallerInterface { }

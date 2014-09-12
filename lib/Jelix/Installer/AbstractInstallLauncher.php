@@ -8,57 +8,16 @@
 namespace Jelix\Installer;
 
 /**
-* a class to install a component (module or plugin) 
+* a class to install a component (module or plugin)
 * @since 1.2
 */
 abstract class AbstractInstallLauncher {
 
     /**
-     *  @var string  name of the component
-     */
-    protected $name = '';
-
-    /**
-     * @var string the path of the directory of the component
-     * it should be set by the constructor
-     */
-    protected $path = '';
-    
-    /**
-     * @var string version of the current sources of the module
-     */
-    protected $sourceVersion = '';
-
-    /**
-     * @var string the date of the current sources of the module
-     */
-    protected $sourceDate = '';
-    
-    /**
-     * @var string the namespace of the xml file
-     */
-    protected $identityNamespace = '';
-    
-    /**
-     * @var string the expected name of the root element in the xml file
-     */
-    protected $rootName = '';
-    
-    /**
-     * @var string the name of the xml file
-     */
-    protected $identityFile = '';
-
-    /**
      * @var jInstaller the main installer controller
      */
     protected $mainInstaller = null;
-    
-    /**
-     * list of dependencies of the module
-     */
-    public $dependencies = array();
-    
+
     /**
      * @var string the minimum version of jelix for which the component is compatible
      */
@@ -75,62 +34,81 @@ abstract class AbstractInstallLauncher {
     public $inError = 0;
 
     /**
-     * list of information about the module for each entry points
-     * @var ModuleStatus[]  key = epid
+     * list of installation information about the module for each entry points
+     * @var array  key = epid, value = ModuleStatus
      */
-    protected $moduleInfos = array();
+    protected $moduleStatuses = array();
 
     /**
-     * @param string $name the name of the component
-     * @param string $path the path of the component
+     * @var \Jelix\Core\Infos\ModuleInfos
+     */
+    protected $moduleInfos = null;
+
+    /**
+     * @param \Jelix\Core\Infos\ModuleInfos $moduleInfos
      * @param jInstaller $mainInstaller
      */
-    function __construct($name, $path, $mainInstaller) {
-        $this->path = $path;
-        $this->name = $name;
+    function __construct($moduleInfos, $mainInstaller) {
+        $this->moduleInfos = $moduleInfos;
         $this->mainInstaller = $mainInstaller;
+
+        foreach($this->moduleInfos->dependencies as $dependency) {
+            if ($dependency['type'] == 'jelix') {
+                $this->jelixMaxVersion = $dependency['maxversion'];
+                $this->jelixMinVersion = $dependency['minversion'];
+                break;
+            }
+        }
     }
 
-    public function getName() { return $this->name; }
-    public function getPath() { return $this->path; }
-    public function getSourceVersion() { return $this->sourceVersion; }
-    public function getSourceDate() { return $this->sourceDate; }
+    public function getName() { return $this->moduleInfos->name; }
+    public function getPath() { return $this->moduleInfos->getPath(); }
+    public function getSourceVersion() { return $this->moduleInfos->version; }
+    public function getSourceDate() { return $this->moduleInfos->versionDate; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     /**
-     * @param ModuleStatus $module module status
+     * list of dependencies of the module
      */
-    public function addModuleInfos ($epId, $module) {
-        $this->moduleInfos[$epId] = $module;
+    public function getDependencies() {
+        return $this->moduleInfos->dependencies;
+    }
+
+    /**
+     * @param string $epId the id of the entrypoint
+     * @param ModuleStatus $moduleStatus module status
+     */
+    public function addModuleStatus ($epId, $moduleStatus) {
+        $this->moduleStatuses[$epId] = $moduleStatus;
     }
 
     public function getAccessLevel($epId) {
-        return $this->moduleInfos[$epId]->access;
+        return $this->moduleStatuses[$epId]->access;
     }
 
     public function isInstalled($epId) {
-        return $this->moduleInfos[$epId]->isInstalled;
+        return $this->moduleStatuses[$epId]->isInstalled;
     }
 
     public function isUpgraded($epId) {
         return ($this->isInstalled($epId) &&
-                (jVersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
+                (jVersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
     }
-    
+
     public function getInstalledVersion($epId) {
-        return $this->moduleInfos[$epId]->version;
+        return $this->moduleStatuses[$epId]->version;
     }
 
     public function setInstalledVersion($epId, $version) {
-        $this->moduleInfos[$epId]->version = $version;
+        $this->moduleStatuses[$epId]->version = $version;
     }
 
     public function setInstallParameters($epId, $parameters) {
-        $this->moduleInfos[$epId]->parameters = $parameters;
+        $this->moduleStatuses[$epId]->parameters = $parameters;
     }
 
     public function getInstallParameters($epId) {
-        return $this->moduleInfos[$epId]->parameters;
+        return $this->moduleStatuses[$epId]->parameters;
     }
 
     /**
@@ -147,11 +125,11 @@ abstract class AbstractInstallLauncher {
     /**
      * return the list of objects which are responsible to upgrade the component
      * from the current installed version of the component.
-     * 
+     *
      * this method should be called after verifying and resolving
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
-     * 
+     *
      * @param jInstallerEntryPoint $ep the entry point
      * @throw \Jelix\Installer\Exception  if an error occurs during the install.
      * @return InstallerInterface[]
@@ -162,130 +140,14 @@ abstract class AbstractInstallLauncher {
 
     public function upgradeFinished($ep, $upgrader) { }
 
-    /**
-     * @var boolean  indicate if the identify file has already been readed
-     */
-    protected $identityReaded = false;
-
-    /**
-     * initialize the object, by reading the identity file
-     */
-    public function init () {
-        if ($this->identityReaded)
-            return;
-        $this->identityReaded = true;
-        $this->readIdentity();
-    }
-    
-    /**
-     * read the identity file
-     */
-    protected function readIdentity() {
-        $xmlDescriptor = new \DOMDocument();
-
-        if(!$xmlDescriptor->load($this->path.$this->identityFile)){
-            throw new Exception('install.invalid.xml.file',array($this->path.$this->identityFile));
-        }
-
-        $root = $xmlDescriptor->documentElement;
-
-        if ($root->namespaceURI == $this->identityNamespace) {
-            $xml = simplexml_import_dom($xmlDescriptor);
-            $this->sourceVersion = (string) $xml->info[0]->version[0];
-            if (isset($xml->info[0]->version['date']))
-                $this->sourceDate = (string) $xml->info[0]->version['date'];
-            else
-                $this->sourceDate = '';
-            $this->readDependencies($xml);
-        }
-    }
-
-    protected function readDependencies($xml) {
-
-      /*  
-<module xmlns="http://jelix.org/ns/module/1.0">
-    <info id="jelix@modules.jelix.org" name="jelix" createdate="">
-        <version stability="stable" date="">1.0</version>
-        <label lang="en_US" locale="">Jelix Main Module</label>
-        <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
-        <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
-        <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" nickname="" email="" active="true"/>
-        <contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>
-        <homepageURL>http://jelix.org</homepageURL>
-        <updateURL>http://jelix.org</updateURL>
-    </info>
-    <dependencies>
-        <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
-        <module id="" name="" minversion="" maxversion="" />
-        <plugin id="" name="" minversion="" maxversion="" />
-    </dependencies>
-</module>
-      */
-
-        $this->dependencies = array();
-
-        if (isset($xml->dependencies)) {
-            foreach ($xml->dependencies->children() as $type=>$dependency) {
-                $minversion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
-                if (trim($minversion) == '')
-                    $minversion = '*';
-                $maxversion = isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*';
-                if (trim($maxversion) == '')
-                    $maxversion = '*';
-
-                $name = (string)$dependency['name'];
-                if (trim($name) == '' && $type != 'jelix')
-                    throw new \Exception('Name is missing in a dependency declaration in module '.$this->name);
-                $id = (string)$dependency['id'];
-
-                if ($type == 'jelix') {
-                    $this->jelixMinVersion = $minversion;
-                    $this->jelixMaxVersion = $maxversion;
-                    if ($this->name != 'jelix') {
-                        $this->dependencies[] = array(
-                            'type'=> 'module',
-                            'id' => 'jelix@jelix.org',
-                            'name' => 'jelix',
-                            'minversion' => $this->jelixMinVersion,
-                            'maxversion' => $this->jelixMaxVersion,
-                            ''
-                        );
-                    }
-                }
-                else if ($type == 'module') {
-                    $this->dependencies[] = array(
-                            'type'=> 'module',
-                            'id' => $id,
-                            'name' => $name,
-                            'minversion' => $minversion,
-                            'maxversion' => $maxversion,
-                            ''
-                            );
-                }
-                else if ($type == 'plugin') {
-                    $this->dependencies[] = array(
-                            'type'=> 'plugin',
-                            'id' => $id,
-                            'name' => $name,
-                            'minversion' => $minversion,
-                            'maxversion' => $maxversion,
-                            ''
-                            );
-                }
-            }
-        }
-    }
-
-
     public function checkJelixVersion ($jelixVersion) {
         return (\jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
                 \jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
     }
 
     public function checkVersion($min, $max) {
-        return (\jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
-                \jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
+        return (\jVersionComparator::compareVersion($min, $this->moduleInfos->version) <= 0 &&
+                \jVersionComparator::compareVersion($this->moduleInfos->version, $max) <= 0);
     }
 }
 

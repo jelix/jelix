@@ -16,10 +16,5 @@ namespace Jelix\Installer;
 */
 class PluginInstallLauncher extends AbstractInstallLauncher {
 
-    protected $identityNamespace = 'http://jelix.org/ns/plugin/1.0';
-    protected $rootName = 'plugin';
-    protected $identityFile = 'plugin.xml';
-
-
 }
 

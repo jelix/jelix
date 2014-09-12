@@ -27,7 +27,7 @@ class AppInfos extends InfosAbstract {
      *              call \Jelix\Core\App to retrieve it.
      */
     function __construct($path = '') {
-        $this->path = $path;
+        $this->path = rtrim($path, '/').'/';
 
         $config = \Jelix\Core\App::config();
         if ($config) {
@@ -45,7 +45,7 @@ class AppInfos extends InfosAbstract {
         }
 
         if (file_exists($path.'composer.json')) {
-            $parser = new ComposerJsonParser($path, $locale);
+            $parser = new ComposerJsonParser($path.'composer.json', $locale);
         }
         else if (file_exists($path.'project.xml')) {
             $this->isXml = true;

@@ -16,8 +16,8 @@ require_once(__DIR__.'/installer.lib.php');
 class testInstallerComponentModule2 extends jInstallerComponentModule {
 
     function setSourceVersionDate($version, $date) {
-        $this->sourceDate = $date;
-        $this->sourceVersion = $version;
+        $this->moduleInfos->versionDate = $date;
+        $this->moduleInfos->version = $version;
     }
 
 }
@@ -26,10 +26,6 @@ class testInstallerComponentModule2 extends jInstallerComponentModule {
 
 class testInstallerComponentForDependencies extends jInstallerComponentBase {
     
-    protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
-    protected $rootName = 'module';
-    protected $identityFile = 'module.xml';
-    
     function getInstaller($ep, $installWholeApp) {
         return null;
     }
@@ -37,13 +33,6 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     function getUpgraders($ep) {
         return null;
     }
-    
-    function readDependenciesFromString($xmlcontent) {
-        $xml = simplexml_load_string($xmlcontent);
-        //$this->sourceVersion = (string) $xml->info[0]->version[0];   
-        $this->readDependencies($xml);
-    }
-    
 }
 
 class jInstaller_ComponentTest extends jUnitTestCase {
@@ -60,103 +49,13 @@ class jInstaller_ComponentTest extends jUnitTestCase {
         jApp::restoreContext();
     }
 
-    public function testDependenciesReading() {
-        $comp = new testInstallerComponentForDependencies("test","", null);
-
-        $str = '<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="http://jelix.org/ns/module/1.0">
-</module>';
-        $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(), $comp->dependencies);
-        $this->assertEquals(array('*','*'), $comp->getJelixVersion());
-
-        $str = '<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="http://jelix.org/ns/module/1.0">
-    <dependencies>
-    </dependencies>
-</module>';
-        $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(), $comp->dependencies);
-        $this->assertEquals(array('*','*'), $comp->getJelixVersion());
-
-        $str = '<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="http://jelix.org/ns/module/1.0">
-    <dependencies>
-        <jelix minversion="1.0" maxversion="1.1" />
-    </dependencies>
-</module>';
-
-        $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(
-            array(
-                'type'=> 'module',
-                'id' => 'jelix@jelix.org',
-                'name' => 'jelix',
-                'minversion' => '1.0',
-                'maxversion' => '1.1',
-                ''
-            )
-            ), $comp->dependencies);
-        $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
-
-
-        $str = '<?xml version="1.0" encoding="UTF-8"?>
-<module xmlns="http://jelix.org/ns/module/1.0">
-    <dependencies>
-        <jelix minversion="1.0" maxversion="1.1" />
-        <module name="jauthdb" />
-        <module name="jacl2db" id="jacl2db@jelix.org"  />
-        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0"/>
-    </dependencies>
-</module>';
-
-        $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(
-            array(
-                'type'=> 'module',
-                'id' => 'jelix@jelix.org',
-                'name' => 'jelix',
-                'minversion' => '1.0',
-                'maxversion' => '1.1',
-                ''
-            ),
-            array(
-                'type'=> 'module',
-                'id' => '',
-                'name' => 'jauthdb',
-                'minversion' => '*',
-                'maxversion' => '*',
-                ''
-            ),
-            array(
-                'type'=> 'module',
-                'id' => 'jacl2db@jelix.org',
-                'name' => 'jacl2db',
-                'minversion' => '*',
-                'maxversion' => '*',
-                ''
-            ),
-            array(
-                'type'=> 'module',
-                'id' => 'jacldb@jelix.org',
-                'name' => 'jacldb',
-                'minversion' => '1.0',
-                'maxversion' => '*',
-                ''
-            ),
-            ), $comp->dependencies);
-        $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
-    }
-
-
     function testGetInstallerWithNoInstaller() {
         try {
             // dummy ini file modifier. not used by installer of tested modules
             $ini = new testInstallerIniFileModifier("test.ini.php");
-
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall1/');
             // testinstall1 has no install.php file
-            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
-            $component->init();
+            $component = new jInstallerComponentModule($moduleInfo , null);
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'default', 
@@ -165,7 +64,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules));
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules));
 
             $installer = $component->getInstaller($EPindex, true);
             $this->assertNull($installer);
@@ -181,10 +80,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             // dummy ini file modifier. not used by installer of tested modules
             $iniIndex = new testInstallerIniFileModifier('index/config.ini.php');
             $iniFoo = new testInstallerIniFileModifier('foo/config.ini.php');
-
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
             // testinstall2 has an install.php file
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
@@ -194,10 +92,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
+            $component->addModuleStatus($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules));
 
             $installer = $component->getInstaller($EPindex, true);
             $this->assertTrue (is_object($installer));
@@ -217,10 +115,11 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
             // dummy ini file modifier. not used by installer of tested modules
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall1/');
 
             // testinstall1 has no upgrade scripts
-            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
-            $component->init();
+            $component = new jInstallerComponentModule($moduleInfo, null);
+
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'default', 
@@ -228,7 +127,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall1.version'=>JELIX_VERSION,
             ));
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue(is_array($upgraders));
@@ -246,8 +145,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             //------------ testinstall2 has some upgraders file
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             // the current version is the latest one : no updaters
             $conf =(object) array( 'modules'=>array(
@@ -258,7 +157,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
@@ -275,9 +174,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
@@ -287,7 +186,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
 
             $upgraders = $component->getUpgraders($EPindex);
@@ -296,7 +195,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
             $this->assertTrue (is_array($upgraders));
@@ -316,8 +215,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
@@ -327,7 +226,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have second then newupgraderfilename
             $upgraders = $component->getUpgraders($EPindex);
@@ -338,7 +237,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
             $this->assertTrue (is_array($upgraders));
@@ -357,9 +256,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             // dummy ini file modifier. not used by installer of tested modules
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
-
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
@@ -369,7 +267,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have newupgraderfilename then second
 
@@ -381,7 +279,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
             $this->assertTrue (is_array($upgraders));
@@ -401,15 +299,12 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            
-
             file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
             $installer = $this->getMock('jInstaller', null, array(new testInstallReporter()) );
 
             $installer->installerIni = new jIniFileModifier(jApp::tempPath('dummyInstaller.ini'));
-
-            $component = new testInstallerComponentModule2('testinstall2', jApp::appPath('modules/testinstall2/'), $installer);
-            $component->init();
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
+            $component = new testInstallerComponentModule2($moduleInfo, $installer);
 
             // 1.1  1.1.2* 1.1.3** 1.1.5 1.2.2** 1.2.4*
 
@@ -426,7 +321,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
@@ -448,7 +343,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
@@ -467,8 +362,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is a very old one : all updaters
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
-            $component->init();
+            $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
+            $component = new jInstallerComponentModule($moduleInfo, null);
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
@@ -478,7 +373,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
 
             $EPindex = new testInstallerEntryPoint($this->defaultIni, $iniIndex, 'index.php', 'classic', $conf);
-            $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);
             $this->assertTrue (is_array($upgraders));
@@ -489,7 +384,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[3]));
 
             $EPfoo = new testInstallerEntryPoint($this->defaultIni, $iniFoo, 'foo.php', 'classic', $conf);
-            $component->addModuleInfos($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
+            $component->addModuleStatus($EPfoo->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPfoo);
             $this->assertTrue (is_array($upgraders));

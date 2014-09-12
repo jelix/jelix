@@ -16,11 +16,11 @@
  *
  */
 #if STANDALONE_CHECKER
-#includephp installer/jIInstallReporter.iface.php
+#includephp ../Jelix/Installer/ReporterInterface.php
 #includephp installer/jInstallerMessageProvider.class.php
 #includephp installer/jInstallChecker.class.php
 #else
-include __DIR__.'/installer/jIInstallReporter.iface.php';
+include __DIR__.'/../Jelix/Installer/ReporterInterface.php';
 include __DIR__.'/installer/jInstallerMessageProvider.class.php';
 include __DIR__.'/installer/jInstallChecker.class.php';
 #endif

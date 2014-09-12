@@ -3,19 +3,11 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2012 Laurent Jouanneau
+* @copyright   2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
@@ -159,7 +151,7 @@ class jInstaller {
     
     /**
      * list of entry point and their properties
-     * @var array of jInstallerEntryPoint. keys are entry point id.
+     * @var jInstallerEntryPoint[]  keys are entry point id.
      */
     protected $entryPoints = array();
 
@@ -173,13 +165,13 @@ class jInstaller {
 
     /**
      * list of modules for each entry point
-     * @var array first key: entry point id, second key: module name, value = jInstallerComponentModule
+     * @var jInstallerComponentModule[][]   first key: entry point id, second key: module name
      */
     protected $modules = array();
     
     /**
      * list of all modules of the application
-     * @var array key=path of the module, value = jInstallerComponentModule
+     * @var jInstallerComponentModule[]   key=path of the module
      */
     protected $allModules = array();
 
@@ -225,7 +217,8 @@ class jInstaller {
         $this->messages = new jInstallerMessageProvider($lang);
         $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
-        $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
+        $appInfos = new \Jelix\Core\Infos\AppInfos();
+        $this->readEntryPointsData($appInfos);
         $this->installerIni->save();
     }
 
@@ -247,19 +240,18 @@ class jInstaller {
     /**
      * read the list of entrypoint from the project.xml file
      * and read all modules data used by each entry point
-     * @param SimpleXmlElement $xml
+     * @param \Jelix\Core\Infos\AppInfos $appInfos
      */
-    protected function readEntryPointData($xml) {
+    protected function readEntryPointsData(\Jelix\Core\Infos\AppInfos $appInfos) {
 
         $configFileList = array();
 
         // read all entry points data
-        foreach ($xml->entrypoints->entry as $entrypoint) {
+        foreach ($appInfos->entrypoints as $file => $entrypoint) {
 
-            $file = (string)$entrypoint['file'];
-            $configFile = (string)$entrypoint['config'];
+            $configFile = $entrypoint['config'];
             if (isset($entrypoint['type'])) {
-                $type = (string)$entrypoint['type'];
+                $type = $entrypoint['type'];
             }
             else
                 $type = "classic";
@@ -281,17 +273,18 @@ class jInstaller {
 
             // now let's read all modules properties
             foreach ($ep->getModulesList() as $name=>$path) {
-                $module = $ep->getModule($name);
+                $moduleStatus = $ep->getModuleStatus($name);
+                $moduleInfos = $ep->getModuleInfos($name);
 
-                $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
-                $this->installerIni->setValue($name.'.version', $module->version, $epId);
+                $this->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
+                $this->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
 
                 if (!isset($this->allModules[$path])) {
-                    $this->allModules[$path] = $this->getComponentModule($name, $path, $this);
+                    $this->allModules[$path] = $this->getModuleLauncher($moduleInfos, $this);
                 }
 
                 $m = $this->allModules[$path];
-                $m->addModuleInfos($epId, $module);
+                $m->addModuleStatus($epId, $moduleStatus);
                 $this->modules[$epId][$name] = $m;
             }
         }
@@ -299,6 +292,7 @@ class jInstaller {
     
     /**
      * @internal for tests
+     * @return jInstallerEntryPoint
      */
     protected function getEntryPointObject($configFile, $file, $type) {
         return new jInstallerEntryPoint($this->mainConfig, $configFile, $file, $type);
@@ -306,9 +300,10 @@ class jInstaller {
 
     /**
      * @internal for tests
+     * @return \Jelix\Installer\ModuleInstallLauncher
      */
-    protected function getComponentModule($name, $path, $installer) {
-        return new jInstallerComponentModule($name, $path, $installer);
+    protected function getModuleLauncher($moduleInfos, $installer) {
+        return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, $installer);
     }
 
     /**
@@ -328,7 +323,6 @@ class jInstaller {
      */
     public function forceModuleVersion($moduleName, $version) {
         foreach(array_keys($this->entryPoints) as $epId) {
-            $modules = array();
             if (isset($this->modules[$epId][$moduleName])) {
                 $this->modules[$epId][$moduleName]->setInstalledVersion($epId, $version);
             }
@@ -705,8 +699,6 @@ class jInstaller {
             $this->_checkedCircularDependency = array();
             if (!isset($this->_checkedComponents[$component->getName()])) {
                 try {
-                    $component->init();
-
                     $this->_checkDependencies($component, $epId);
 
                     if ($this->entryPoints[$epId]->config->disableInstallers
@@ -745,7 +737,7 @@ class jInstaller {
         $this->_checkedCircularDependency[$component->getName()] = true;
 
         $compNeeded = '';
-        foreach ($component->dependencies as $compInfo) {
+        foreach ($component->getDependencies() as $compInfo) {
             // TODO : supports others type of components
             if ($compInfo['type'] != 'module')
                 continue;
