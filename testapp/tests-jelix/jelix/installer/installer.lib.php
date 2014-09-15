@@ -12,11 +12,6 @@
 
 require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
-class testInstallerComponentModule extends jInstallerComponentModule {
-
-
-}
-
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
     function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
@@ -38,10 +33,56 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
                                                     $this->isCliScript);
         $this->config = $compiler->read(true, $configContent);
         $this->modulesInfos = $compiler->getModulesInfos();
+        $this->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
     }
-    
+
     function getEpId() {
         return str_replace('.php', '', $this->file);
+    }
+
+    function setModuleData($name, $modInfos) {
+        $this->modulesInfos[$name] = $modInfos;
+        $this->config->_allModulesPathList[$name]='/';
+    }
+}
+
+class testInstallerModuleInfos extends \Jelix\Core\Infos\ModuleInfos {
+
+    function __construct($path, $xmlstring) {
+        $p = rtrim($path, '/');
+        $this->path = $p.'/';
+        $this->webAlias = $this->name = basename($p);
+
+        $config = \Jelix\Core\App::config();
+        if ($config) {
+            $locale = $config->locale;
+        }
+        else {
+            $locale = '';
+        }
+        $parser = new testInstallerModuleParser($this->path.'module.xml', 'en');
+        $parser->parse2($this, $xmlstring);
+    }
+}
+
+class testInstallerModuleParser extends \Jelix\Core\Infos\ModuleXmlParser {
+
+    public function parse2(\Jelix\Core\Infos\InfosAbstract $object, $xmlstring){
+        $xml = new XMLreader();
+        $xml->xml($xmlstring, '', LIBXML_COMPACT);
+
+        while ($xml->read()) {
+            if($xml->nodeType == \XMLReader::ELEMENT) {
+                $method = 'parse' . ucfirst($xml->name);
+                if (method_exists ($this, $method)) {
+                    $this->$method($xml, $object);
+                }
+            }
+        }
+        $xml->close();
+        return $object;
     }
 }
 
@@ -53,7 +94,7 @@ class testInstallReporter implements jIInstallReporter {
     public $startCounter = 0;
 
     public $endCounter = 0;
-    
+
     public $messages = array();
 
     function start() {
@@ -82,103 +123,4 @@ class testInstallerIniFileModifier extends jIniFileModifier {
     }
 
     public function saveAs($filename) {}
-}
-
-/**
- * mockup class for jInstaller
- */
-class testInstallerMain extends jInstaller {
-
-    public $moduleXMLDesc = array();
-
-    public $configContent = array(
-        'index/config.ini.php'=> array(
-            'dbProfils'=>"default",
-            "disableInstallers"=>false,
-            "enableAllModules"=>false,
-            'modules'=>array(
-            ),
-            'urlengine'=>array('urlScriptId'=>'index',
-                'urlScript'=>"/index.php",
-                'urlScriptPath'=>"/",
-                'urlScriptName'=>"index.php",
-                'urlScriptId'=>"index",
-                'urlScriptIdenc'=>"index"
-            ),
-            '_allModulesPathList'=>array(
-            ),
-            '_allBasePath'=>array(
-                0=>"/app/lib/jelix-modules/",
-                1=>"/app/testapp/modules/",
-                2=>"/app/lib/jelix-plugins/cache/",
-            ),
-            '_modulesPathList'=>array(
-            ),
-        ),
-    );
-
-    function __construct ($reporter) {
-        $this->reporter = $reporter;
-        $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
-        $this->messages = new jInstallerMessageProvider('en');
-        $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jsoap');
-        $config = jApp::config();
-        foreach ($this->configContent as $ep=>$conf) {
-            
-            foreach($nativeModules as $module) {
-                $this->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
-                $this->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
-                $this->configContent[$ep]['modules'][$module.'.installed'] = 0;
-                $this->configContent[$ep]['modules'][$module.'.version'] = JELIX_VERSION;
-                $this->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
-                $this->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
-            }
-        }
-
-    }
-
-    function testAddModule($name, $moduleXML, $access = 2, $installed = 0, $version = '1.0', $dbprofile='default') {
-        $this->moduleXMLDesc[$name] = $moduleXML;
-        foreach($this->configContent as $ep=>$conf) {
-            $this->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->configContent[$ep]['modules'][$name.'.access'] = $access;
-            $this->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
-            $this->configContent[$ep]['modules'][$name.'.installed'] = $installed;
-            $this->configContent[$ep]['modules'][$name.'.version'] = $version;
-        }   
-    }
-
-    function initForTest() {
-        $appInfos = new \Jelix\Core\Infos\AppInfos(__DIR__.'/app1/project2.xml');
-        $this->installerIni =  new testInstallerIniFileModifier('');
-        $this->readEntryPointsData($appInfos);
-        $this->installerIni->save();
-    }
-
-    protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($this->mainConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
-    }
-    
-    protected function getModuleLauncher($moduleInfos, $installer) {
-        return new testInstallerComponentModule($moduleInfos, $installer);
-    }
-    
-    public function doCheckDependencies ($list, $entrypoint = 'index.php') {
-
-        $epId = $this->epId[$entrypoint];
-        $allModules = &$this->modules[$epId];        
-        $modules = array();
-        // always install jelix
-        array_unshift($list, 'jelix');
-        foreach($list as $name) {
-            $modules[] = $allModules[$name];
-        }
-        return $this->checkDependencies($modules, $epId);
-    }
-
-    function getComponentsToInstall() {
-        return $this->_componentsToInstall;
-    }
-    
 }

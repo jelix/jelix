@@ -15,49 +15,56 @@ require_once(__DIR__.'/installer.lib.php');
 
 class jInstaller_DependenciesTest extends jUnitTestCase {
 
-    protected $installer;
-    protected $instReport;
+    protected $defaultIni;
 
     public function setUp() {
         self::initJelixConfig();
+        $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
         jApp::saveContext();
-        $this->instReport = new testInstallReporter();
-        $this->installer = new testInstallerMain($this->instReport);
     }
 
     public function tearDown() {
         jApp::restoreContext();
-        $this->instReport = null;
-        $this->installer = null;
     }
 
     public function testOneModuleNoDeps() {
-        
-        $this->installer->testAddModule('testA',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+        $ini = new testInstallerIniFileModifier("test.ini.php");
+        $conf =(object) array( 'modules'=>array(
+            'testA.access'=>2,
+            'testA.dbprofile'=>'default',
+            'testA.installed'=>false,
+            'testA.version'=>JELIX_VERSION,
+        ));
+        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+
+
+        $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->initForTest();
-        
-        $this->assertTrue($this->installer->doCheckDependencies(array('testA')));
-        
-        $result = $this->installer->getComponentsToInstall();
+                    </module>');
+        $ep->setModuleData('testA', $modInfos);
+        $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
+
+        $result = $ep->getOrderedDependencies(array('testA'=>$ep->getLauncher('testA')));
+
+        $this->assertTrue(is_array($result));
+
         $expected = '<?xml version="1.0"?>
     <array>
         <array>
-            <object class="jInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="true" />
+            <boolean value="false" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
             </object>
             <boolean value="true" />
@@ -65,21 +72,32 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
     </array>';
         $this->assertComplexIdenticalStr($result, $expected);
     }
-    
+
     public function test2Modules() {
-        
-        $this->installer->testAddModule('testA',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+        $ini = new testInstallerIniFileModifier("test.ini.php");
+        $conf =(object) array( 'modules'=>array(
+            'testA.access'=>2,
+            'testA.dbprofile'=>'default',
+            'testA.installed'=>false,
+            'testA.version'=>JELIX_VERSION,
+            'testB.access'=>2,
+            'testB.dbprofile'=>'default',
+            'testB.installed'=>false,
+            'testB.version'=>JELIX_VERSION,
+        ));
+        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+
+        $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testB',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testA', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testB',
+                    '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testB@modules.jelix.org" name="testB">
                             <version stability="stable">1.0</version>
                         </info>
@@ -87,29 +105,34 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                             <module name="testA" />
                         </dependencies>
-                    </module>' 
+                    </module>'
                     );
-        $this->installer->initForTest();
-        
-        $this->assertTrue($this->installer->doCheckDependencies(array('testB')));
-        
-        $result = $this->installer->getComponentsToInstall();
+        $ep->setModuleData('testB', $modInfos);
+
+        $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
+
+        $result = $ep->getOrderedDependencies(array('testB'=>$ep->getLauncher('testB')));
+
+        $this->assertTrue(is_array($result));
+
         $expected = '<?xml version="1.0"?>
     <array>
         <array>
-            <object class="jInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="true" />
+            <boolean value="false" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testB" />
             </object>
             <boolean value="true" />
@@ -119,14 +142,38 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
     }
 
     public function testComplexDependencies1() {
-        /*
-                A->B
-                A->C
-                D->B
-                D->E
-        */
-        $this->installer->testAddModule('testA',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+
+        //        A->B
+        //        A->C
+        //        D->B
+        //        D->E
+
+        $ini = new testInstallerIniFileModifier("test.ini.php");
+        $conf =(object) array( 'modules'=>array(
+            'testA.access'=>2,
+            'testA.dbprofile'=>'default',
+            'testA.installed'=>false,
+            'testA.version'=>JELIX_VERSION,
+            'testB.access'=>2,
+            'testB.dbprofile'=>'default',
+            'testB.installed'=>false,
+            'testB.version'=>JELIX_VERSION,
+            'testC.access'=>2,
+            'testC.dbprofile'=>'default',
+            'testC.installed'=>false,
+            'testC.version'=>JELIX_VERSION,
+            'testD.access'=>2,
+            'testD.dbprofile'=>'default',
+            'testD.installed'=>false,
+            'testD.version'=>JELIX_VERSION,
+            'testE.access'=>2,
+            'testE.dbprofile'=>'default',
+            'testE.installed'=>false,
+            'testE.version'=>JELIX_VERSION,
+        ));
+        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+
+        $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
                             <version stability="stable">1.0</version>
                         </info>
@@ -135,30 +182,27 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <module name="testB" />
                             <module name="testC" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testB',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testA', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testB', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testB@modules.jelix.org" name="testB">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testC',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testB', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testC', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testC@modules.jelix.org" name="testC">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testD',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testC', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testD', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testD@modules.jelix.org" name="testD">
                             <version stability="stable">1.0</version>
                         </info>
@@ -167,58 +211,60 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <module name="testB" />
                             <module name="testE" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testE',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testD', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testE', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testE@modules.jelix.org" name="testE">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
+                    </module>');
+        $ep->setModuleData('testE', $modInfos);
 
-        $this->installer->initForTest();
-        
-        $this->assertTrue($this->installer->doCheckDependencies(array('testA', 'testD')));
-        
-        $result = $this->installer->getComponentsToInstall();
+        $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
+
+        $result = $ep->getOrderedDependencies(array('testA'=>$ep->getLauncher('testA'), 'testD'=>$ep->getLauncher('testD')));
+
+        $this->assertTrue(is_array($result));
+
         $expected = '<?xml version="1.0"?>
     <array>
         <array>
-            <object class="jInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="true" />
+            <boolean value="false" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testB" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testC" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testE" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testD" />
             </object>
             <boolean value="true" />
@@ -229,15 +275,43 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
 
     public function testComplexDependencies2() {
-        /*
-                A->B
-                A->C
-                D->E
-                D->F
-                B->F
-        */
-        $this->installer->testAddModule('testA',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+
+        //  A->B
+        //  A->C
+        //  D->E
+        //  D->F
+        //  B->F
+
+        $ini = new testInstallerIniFileModifier("test.ini.php");
+        $conf =(object) array( 'modules'=>array(
+            'testA.access'=>2,
+            'testA.dbprofile'=>'default',
+            'testA.installed'=>false,
+            'testA.version'=>JELIX_VERSION,
+            'testB.access'=>2,
+            'testB.dbprofile'=>'default',
+            'testB.installed'=>false,
+            'testB.version'=>JELIX_VERSION,
+            'testC.access'=>2,
+            'testC.dbprofile'=>'default',
+            'testC.installed'=>false,
+            'testC.version'=>JELIX_VERSION,
+            'testD.access'=>2,
+            'testD.dbprofile'=>'default',
+            'testD.installed'=>false,
+            'testD.version'=>JELIX_VERSION,
+            'testE.access'=>2,
+            'testE.dbprofile'=>'default',
+            'testE.installed'=>false,
+            'testE.version'=>JELIX_VERSION,
+            'testF.access'=>2,
+            'testF.dbprofile'=>'default',
+            'testF.installed'=>false,
+            'testF.version'=>JELIX_VERSION,
+        ));
+        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+
+        $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
                             <version stability="stable">1.0</version>
                         </info>
@@ -246,10 +320,10 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <module name="testB" />
                             <module name="testC" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testB',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testA', $modInfos);
+
+        $modInfos = new testInstallerModuleInfos('/testB', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testB@modules.jelix.org" name="testB">
                             <version stability="stable">1.0</version>
                         </info>
@@ -257,20 +331,19 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                             <module name="testF" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testC',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testB', $modInfos);
+
+        $modInfos = new testInstallerModuleInfos('/testC', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testC@modules.jelix.org" name="testC">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testD',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testC', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testD', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testD@modules.jelix.org" name="testD">
                             <version stability="stable">1.0</version>
                         </info>
@@ -279,74 +352,75 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <module name="testE" />
                             <module name="testF" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testE',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testD', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testE', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testE@modules.jelix.org" name="testE">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
-        $this->installer->testAddModule('testF',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+                    </module>');
+        $ep->setModuleData('testE', $modInfos);
+        $modInfos = new testInstallerModuleInfos('/testF', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testF@modules.jelix.org" name="testF">
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                         </dependencies>
-                    </module>' 
-                    );
+                    </module>');
+        $ep->setModuleData('testF', $modInfos);
 
-        $this->installer->initForTest();
-        
-        $this->assertTrue($this->installer->doCheckDependencies(array('testA', 'testD')));
-        
-        $result = $this->installer->getComponentsToInstall();
+        $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
+
+        $result = $ep->getOrderedDependencies(array('testA'=>$ep->getLauncher('testA'), 'testD'=>$ep->getLauncher('testD')));
+
+        $this->assertTrue(is_array($result));
+
         $expected = '<?xml version="1.0"?>
     <array>
         <array>
-            <object class="jInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="true" />
+            <boolean value="false" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testF" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testB" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testC" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testE" />
             </object>
             <boolean value="true" />
         </array>
         <array>
-            <object class="testInstallerComponentModule">
+            <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testD" />
             </object>
             <boolean value="true" />
@@ -358,11 +432,27 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
 
    public function testCircularDependency() {
-        /*
-                A->B->C->A
-        */
-        $this->installer->testAddModule('testA',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+
+        // A->B->C->A
+
+        $ini = new testInstallerIniFileModifier("test.ini.php");
+        $conf =(object) array( 'modules'=>array(
+            'testA.access'=>2,
+            'testA.dbprofile'=>'default',
+            'testA.installed'=>false,
+            'testA.version'=>JELIX_VERSION,
+            'testB.access'=>2,
+            'testB.dbprofile'=>'default',
+            'testB.installed'=>false,
+            'testB.version'=>JELIX_VERSION,
+            'testC.access'=>2,
+            'testC.dbprofile'=>'default',
+            'testC.installed'=>false,
+            'testC.version'=>JELIX_VERSION,
+        ));
+        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+
+        $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
                             <version stability="stable">1.0</version>
                         </info>
@@ -370,11 +460,10 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                             <module name="testB" />
                         </dependencies>
-                    </module>' 
-                    );
+                    </module>');
+        $ep->setModuleData('testA', $modInfos);
 
-        $this->installer->testAddModule('testB',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+        $modInfos = new testInstallerModuleInfos('/testB', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testB@modules.jelix.org" name="testB">
                             <version stability="stable">1.0</version>
                         </info>
@@ -382,11 +471,10 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                             <module name="testC" />
                         </dependencies>
-                    </module>' 
-                    );
+                    </module>');
+        $ep->setModuleData('testB', $modInfos);
 
-        $this->installer->testAddModule('testC',
-                                       '<module xmlns="http://jelix.org/ns/module/1.0">
+        $modInfos = new testInstallerModuleInfos('/testC', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testC@modules.jelix.org" name="testC">
                             <version stability="stable">1.0</version>
                         </info>
@@ -394,26 +482,29 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
                             <module name="testA" />
                         </dependencies>
-                    </module>' 
-                    );
+                    </module>');
+        $ep->setModuleData('testC', $modInfos);
 
-        $this->installer->initForTest();
 
-        $this->assertFalse($this->installer->doCheckDependencies(array('testA')));
-        $max = count($this->instReport->messages);
-        $this->assertTrue($max > 0);
-        $error = $this->instReport->messages[$max-1];
-        $this->assertEquals('Circular dependency ! Cannot install the component testA', $error[0]);
-        $this->assertEquals('error', $error[1]);
+        $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+            return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
+        });
 
-        $this->instReport->messages = array();
+        try {
+            $ep->getOrderedDependencies(array('testA'=>$ep->getLauncher('testA')));
+            $this->assertFalse(true);
+        }
+        catch(\Jelix\Installer\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'module.circular.dependency');
+        }
 
-        $this->assertFalse($this->installer->doCheckDependencies(array('testB')));
-        $max = count($this->instReport->messages);
-        $this->assertTrue($max > 0);
-        $error = $this->instReport->messages[$max-1];
-        $this->assertEquals('Circular dependency ! Cannot install the component testB', $error[0]);
-        $this->assertEquals('error', $error[1]);
+        try {
+            $ep->getOrderedDependencies(array('testB'=>$ep->getLauncher('testB')));
+            $this->assertFalse(true);
+        }
+        catch(\Jelix\Installer\Exception $e) {
+            $this->assertEquals($e->getMessage(), 'module.circular.dependency');
+        }
     }
 }
 

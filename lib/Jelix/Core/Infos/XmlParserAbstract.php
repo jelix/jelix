@@ -118,8 +118,12 @@ abstract class XmlParserAbstract {
 
             if ($xml->nodeType == \XMLReader::ELEMENT) {
 
-                $dependency = array();
+                $dependency = array('type'=>$xml->name, 'name'=>'', 'minversion'=>'*', 'maxversion'=>'*');
                 $dependency['type'] = $xml->name;
+                if ($xml->name == 'jelix') {
+                    $dependency['type'] = 'module';
+                    $dependency['name'] = 'jelix';
+                }
 
                 while ($xml->moveToNextAttribute()) {
                     $attrName = $xml->name;

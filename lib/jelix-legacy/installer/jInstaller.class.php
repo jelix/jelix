@@ -20,11 +20,11 @@ class textInstallReporter implements jIInstallReporter {
      * @var string error, notice or warning
      */
     protected $level;
-    
+
     function __construct($level= 'notice') {
-       $this->level = $level; 
+       $this->level = $level;
     }
-    
+
     function start() {
         if ($this->level == 'notice')
             echo "Installation start..\n";
@@ -124,18 +124,6 @@ class jInstaller {
      */
     const ACCESS_PUBLIC = 2;
 
-    /**
-     * error code stored in a component: impossible to install
-     * the module because dependencies are missing
-     */
-    const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
-
-    /**
-     * error code stored in a component: impossible to install
-     * the module because of circular dependencies
-     */
-    const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
-
     const FLAG_INSTALL_MODULE = 1;
 
     const FLAG_UPGRADE_MODULE = 2;
@@ -148,7 +136,7 @@ class jInstaller {
      *  @var jIniFileModifier it represents the installer.ini.php file.
      */
     public $installerIni = null;
-    
+
     /**
      * list of entry point and their properties
      * @var jInstallerEntryPoint[]  keys are entry point id.
@@ -164,14 +152,8 @@ class jInstaller {
     protected $epId = array();
 
     /**
-     * list of modules for each entry point
-     * @var jInstallerComponentModule[][]   first key: entry point id, second key: module name
-     */
-    protected $modules = array();
-    
-    /**
      * list of all modules of the application
-     * @var jInstallerComponentModule[]   key=path of the module
+     * @var \Jelix\Installer\ModuleInstallLauncher[]   key=path of the module
      */
     protected $allModules = array();
 
@@ -269,41 +251,32 @@ class jInstaller {
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
-            $this->modules[$epId] = array();
 
-            // now let's read all modules properties
-            foreach ($ep->getModulesList() as $name=>$path) {
-                $moduleStatus = $ep->getModuleStatus($name);
-                $moduleInfos = $ep->getModuleInfos($name);
+            $installerIni = $this->installerIni;
+            $allModules = &$this->allModules;
+            $that = $this;
 
-                $this->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
-                $this->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
+            $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos) use($that, $epId){
+               $name = $moduleInfos->name;
+               $path = $moduleInfos->getPath();
+               $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
+               $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
 
-                if (!isset($this->allModules[$path])) {
-                    $this->allModules[$path] = $this->getModuleLauncher($moduleInfos, $this);
-                }
+               if (!isset($that->allModules[$path])) {
+                   $that->allModules[$path] = new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, $that);
+               }
 
-                $m = $this->allModules[$path];
-                $m->addModuleStatus($epId, $moduleStatus);
-                $this->modules[$epId][$name] = $m;
-            }
+               return $that->allModules[$path];
+            });
         }
     }
-    
+
     /**
      * @internal for tests
      * @return jInstallerEntryPoint
      */
     protected function getEntryPointObject($configFile, $file, $type) {
         return new jInstallerEntryPoint($this->mainConfig, $configFile, $file, $type);
-    }
-
-    /**
-     * @internal for tests
-     * @return \Jelix\Installer\ModuleInstallLauncher
-     */
-    protected function getModuleLauncher($moduleInfos, $installer) {
-        return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, $installer);
     }
 
     /**
@@ -322,9 +295,10 @@ class jInstaller {
      * @param string $version the new version
      */
     public function forceModuleVersion($moduleName, $version) {
-        foreach(array_keys($this->entryPoints) as $epId) {
-            if (isset($this->modules[$epId][$moduleName])) {
-                $this->modules[$epId][$moduleName]->setInstalledVersion($epId, $version);
+        foreach($this->entryPoints as $epId=>$ep) {
+            $launcher = $ep->getLauncher($moduleName);
+            if ($launcher) {
+               $launcher->setInstalledVersion($epId, $version);
             }
         }
     }
@@ -333,24 +307,30 @@ class jInstaller {
      * set parameters for the installer of a module
      * @param string $moduleName the name of the module
      * @param array $parameters  parameters
-     * @param string $entrypoint  the entry point for which parameters will be applied when installing the module.
+     * @param string $entrypoint  the entry point name for which parameters will be applied when installing the module.
      *                     if null, parameters are valid for all entry points
      */
     public function setModuleParameters($moduleName, $parameters, $entrypoint = null) {
         if ($entrypoint !== null) {
-            if (!isset($this->epId[$entrypoint]))
-                return;
+            if (!isset($this->epId[$entrypoint])) {
+                throw new Exception("Unknown entrypoint name");
+            }
             $epId = $this->epId[$entrypoint];
-            if (isset($this->entryPoints[$epId]) && isset($this->modules[$epId][$moduleName])) {
-                $this->modules[$epId][$moduleName]->setInstallParameters($epId, $parameters);
+            if (!isset($this->entryPoints[$epId])) {
+                throw new Exception("Unknown entrypoint name");
+            }
+
+            $launcher = $this->entryPoints[$epId]->getLauncher($moduleName);
+            if ($launcher) {
+               $launcher->setInstallParameters($epId, $parameters);
             }
         }
         else {
-            foreach(array_keys($this->entryPoints) as $epId) {
-                $modules = array();
-                if (isset($this->modules[$epId][$moduleName])) {
-                    $this->modules[$epId][$moduleName]->setInstallParameters($epId, $parameters);
-                }
+            foreach($this->entryPoints as $epId=>$ep) {
+               $launcher = $ep->getLauncher($moduleName);
+               if ($launcher) {
+                  $launcher->setInstallParameters($epId, $parameters);
+               }
             }
         }
     }
@@ -373,15 +353,15 @@ class jInstaller {
         $this->startMessage();
         $result = true;
 
-        foreach(array_keys($this->entryPoints) as $epId) {
+        foreach($this->entryPoints as $epId=>$ep) {
             $modules = array();
-            foreach($this->modules[$epId] as $name => $module) {
+            foreach($ep->getLaunchers() as $name => $module) {
                 $access = $module->getAccessLevel($epId);
                 if ($access != 1 && $access != 2)
                     continue;
                 $modules[$name] = $module;
             }
-            $result = $result & $this->_installModules($modules, $epId, true, $flags);
+            $result = $result & $this->_installModules($modules, $ep, true, $flags);
             if (!$result)
                 break;
         }
@@ -408,15 +388,16 @@ class jInstaller {
         }
 
         $epId = $this->epId[$entrypoint];
+        $ep = $this->entrypoints[$epId];
 
         $modules = array();
-        foreach($this->modules[$epId] as $name => $module) {
+        foreach($ep->getLaunchers() as $name => $module) {
             $access = $module->getAccessLevel($epId);
             if ($access != 1 && $access != 2)
                 continue;
             $modules[$name] = $module;
         }
-        $result = $this->_installModules($modules, $epId, true);
+        $result = $this->_installModules($modules, $ep, true);
 
         $this->installerIni->save();
         $this->endMessage();
@@ -435,18 +416,18 @@ class jInstaller {
         $this->startMessage();
         $entryPointList = array();
         if ($entrypoint == null) {
-            $entryPointList = array_keys($this->entryPoints);
+            $entryPointList = $this->entryPoints;
         }
         else if (isset($this->epId[$entrypoint])) {
-            $entryPointList = array($this->epId[$entrypoint]);
+            $entryPointList = array($this->entryPoints[$this->epId[$entrypoint]]);
         }
         else {
             throw new Exception("unknown entry point");
         }
 
-        foreach ($entryPointList as $epId) {
+        foreach ($entryPointList as $epId=>$ep) {
 
-            $allModules = &$this->modules[$epId];
+            $allModules = &$ep->getLaunchers();
 
             $modules = array();
             // always install jelix
@@ -459,7 +440,7 @@ class jInstaller {
                     $modules[] = $allModules[$name];
             }
 
-            $result = $this->_installModules($modules, $epId, false);
+            $result = $this->_installModules($modules, $ep, false);
             if (!$result)
                 break;
             $this->installerIni->save();
@@ -471,27 +452,26 @@ class jInstaller {
 
     /**
      * core of the installation
-     * @param array $modules list of jInstallerComponentModule
-     * @param string $epId  the entrypoint id
+     * @param \Jelix\Installer\ModuleInstallLauncher[] $modules
+     * @param jInstallerEntryPoint $ep  the entrypoint
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$modules, $epId, $installWholeApp, $flags=3) {
+    protected function _installModules(&$modules, $ep, $installWholeApp, $flags=3) {
 
+        $epId = $ep->getEpId();
         $this->notice('install.entrypoint.start', $epId);
-        $ep = $this->entryPoints[$epId];
         jApp::setConfig($ep->config);
 
         if ($ep->config->disableInstallers)
             $this->notice('install.entrypoint.installers.disabled');
 
         // first, check dependencies of the component, to have the list of component
-        // we should really install. It fills $this->_componentsToInstall, in the right
-        // order
-        $result = $this->checkDependencies($modules, $epId);
+        // we should really install.
+        $orderedModules = $ep->getOrderedDependencies($modules, $this);
 
-        if (!$result) {
+        if ($orderedModules === false) {
             $this->error('install.bad.dependencies');
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
@@ -504,7 +484,7 @@ class jInstaller {
         // the next step
         $componentsToInstall = array();
 
-        foreach($this->_componentsToInstall as $item) {
+        foreach($orderedModules as $item) {
             list($component, $toInstall) = $item;
             try {
                 if ($flags == self::FLAG_MIGRATION_11X) {
@@ -679,111 +659,6 @@ class jInstaller {
         return $result;
     }
 
-
-    protected $_componentsToInstall = array();
-    protected $_checkedComponents = array();
-    protected $_checkedCircularDependency = array();
-
-    /**
-     * check dependencies of given modules and plugins
-     *
-     * @param array $list  list of jInstallerComponentModule/jInstallerComponentPlugin objects
-     * @throw jException if the install has failed
-     */
-    protected function checkDependencies ($list, $epId) {
-
-        $this->_checkedComponents = array();
-        $this->_componentsToInstall = array();
-        $result = true;
-        foreach($list as $component) {
-            $this->_checkedCircularDependency = array();
-            if (!isset($this->_checkedComponents[$component->getName()])) {
-                try {
-                    $this->_checkDependencies($component, $epId);
-
-                    if ($this->entryPoints[$epId]->config->disableInstallers
-                        || !$component->isInstalled($epId)) {
-                        $this->_componentsToInstall[] = array($component, true);
-                    }
-                    else if (!$component->isUpgraded($epId)) {
-                        $this->_componentsToInstall[] = array($component, false);
-                    }
-                } catch (jInstallerException $e) {
-                    $result = false;
-                    $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                } catch (Exception $e) {
-                    $result = false;
-                    $this->error ($e->getMessage(). " comp=".$component->getName(), null, true);
-                }
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * check dependencies of a module
-     * @param jInstallerComponentBase $component
-     * @param string $epId
-     */
-    protected function _checkDependencies($component, $epId) {
-
-        if (isset($this->_checkedCircularDependency[$component->getName()])) {
-            $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
-            throw new jInstallerException ('module.circular.dependency',$component->getName());
-        }
-
-        //$this->ok('install.module.check.dependency', $component->getName());
-
-        $this->_checkedCircularDependency[$component->getName()] = true;
-
-        $compNeeded = '';
-        foreach ($component->getDependencies() as $compInfo) {
-            // TODO : supports others type of components
-            if ($compInfo['type'] != 'module')
-                continue;
-            $name = $compInfo['name'];
-            $comp = null;
-            if (isset($this->modules[$epId][$name]))
-                $comp = $this->modules[$epId][$name];
-            if (!$comp)
-                $compNeeded .= $name.', ';
-            else {
-                if (!isset($this->_checkedComponents[$comp->getName()])) {
-                    $comp->init();
-                }
-
-                if (!$comp->checkVersion($compInfo['minversion'], $compInfo['maxversion'])) {
-                    if ($name == 'jelix') {
-                        $args = $component->getJelixVersion();
-                        array_unshift($args, $component->getName());
-                        throw new jInstallerException ('module.bad.jelix.version', $args);
-                    }
-                    else
-                        throw new jInstallerException ('module.bad.dependency.version',array($component->getName(), $comp->getName(), $compInfo['minversion'], $compInfo['maxversion']));
-                }
-
-                if (!isset($this->_checkedComponents[$comp->getName()])) {
-                    $this->_checkDependencies($comp, $epId);
-                    if ($this->entryPoints[$epId]->config->disableInstallers
-                        || !$comp->isInstalled($epId)) {
-                        $this->_componentsToInstall[] = array($comp, true);
-                    }
-                    else if(!$comp->isUpgraded($epId)) {
-                        $this->_componentsToInstall[] = array($comp, false);
-                    }
-                }
-            }
-        }
-
-        $this->_checkedComponents[$component->getName()] = true;
-        unset($this->_checkedCircularDependency[$component->getName()]);
-
-        if ($compNeeded) {
-            $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-            throw new jInstallerException ('module.needed', array($component->getName(), $compNeeded));
-        }
-    }
-    
     protected function startMessage () {
         $this->nbError = 0;
         $this->nbOk = 0;
@@ -791,7 +666,7 @@ class jInstaller {
         $this->nbNotice = 0;
         $this->reporter->start();
     }
-    
+
     protected function endMessage() {
         $this->reporter->end(array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice));
     }

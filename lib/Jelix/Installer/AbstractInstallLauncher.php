@@ -19,16 +19,6 @@ abstract class AbstractInstallLauncher {
     protected $mainInstaller = null;
 
     /**
-     * @var string the minimum version of jelix for which the component is compatible
-     */
-    protected $jelixMinVersion = '*';
-
-    /**
-     * @var string the maximum version of jelix for which the component is compatible
-     */
-    protected $jelixMaxVersion = '*';
-
-    /**
      * code error of the installation
      */
     public $inError = 0;
@@ -51,21 +41,12 @@ abstract class AbstractInstallLauncher {
     function __construct($moduleInfos, $mainInstaller) {
         $this->moduleInfos = $moduleInfos;
         $this->mainInstaller = $mainInstaller;
-
-        foreach($this->moduleInfos->dependencies as $dependency) {
-            if ($dependency['type'] == 'jelix') {
-                $this->jelixMaxVersion = $dependency['maxversion'];
-                $this->jelixMinVersion = $dependency['minversion'];
-                break;
-            }
-        }
     }
 
     public function getName() { return $this->moduleInfos->name; }
     public function getPath() { return $this->moduleInfos->getPath(); }
     public function getSourceVersion() { return $this->moduleInfos->version; }
     public function getSourceDate() { return $this->moduleInfos->versionDate; }
-    public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     /**
      * list of dependencies of the module
@@ -92,7 +73,7 @@ abstract class AbstractInstallLauncher {
 
     public function isUpgraded($epId) {
         return ($this->isInstalled($epId) &&
-                (jVersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
+                (\jVersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
     }
 
     public function getInstalledVersion($epId) {
@@ -139,11 +120,6 @@ abstract class AbstractInstallLauncher {
     public function installFinished($ep) { }
 
     public function upgradeFinished($ep, $upgrader) { }
-
-    public function checkJelixVersion ($jelixVersion) {
-        return (\jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
-                \jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
-    }
 
     public function checkVersion($min, $max) {
         return (\jVersionComparator::compareVersion($min, $this->moduleInfos->version) <= 0 &&

@@ -51,24 +51,36 @@ class Manager {
         if ($newContent === false)
             return false;
 
-        foreach ($newContent as $k=>$v) {
-            if (!isset($content->$k)) {
-                $content->$k = $v;
+        return self::mergeIniObjectContents($content, $newContent);
+    }
+
+    /**
+     * merge two simple StdClass object
+     * @param StdClass $baseContent  the object which receives new properties
+     * @param StdClass $contentToImport  the object providing new properties
+     */
+    public static function mergeIniObjectContents($baseContent, $contentToImport) {
+        $contentToImport = (array) $contentToImport;
+
+        foreach ($contentToImport as $k=>$v) {
+            if (!isset($baseContent->$k)) {
+                $baseContent->$k = $v;
                 continue;
             }
 
             if ($k[1] == '_')
                 continue;
             if (is_array($v)) {
-                $content->$k = array_merge($content->$k, $v);
+                $baseContent->$k = array_merge($baseContent->$k, $v);
             }
             else {
-                $content->$k = $v;
+                $baseContent->$k = $v;
             }
         }
-        return $content;
+        return $baseContent;
     }
-
+    
+    
     /**
      * write some data in an ini file
      * the data array should follow the same structure returned by
@@ -124,5 +136,3 @@ class Manager {
         }
     }
 }
-
-

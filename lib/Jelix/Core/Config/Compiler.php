@@ -42,13 +42,13 @@ class Compiler {
      *              corresponding to the readed configuration
      * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
      */
-    function __construct ($configFile, $pseudoScriptName = '', $isCli = null){
+    function __construct ($configFile = '', $pseudoScriptName = '', $isCli = null){
         $this->isCli = ($isCli !== null? $isCli: \jServer::isCLI());
         $this->pseudoScriptName = $pseudoScriptName;
         $this->configFileName = $configFile;
     }
 
-    protected function readConfigFiles($configFile) {
+    protected function readConfigFiles($configFile, $additionalOptions) {
 
         $configPath = App::configPath();
 
@@ -57,19 +57,24 @@ class Compiler {
         $this->commonConfig = clone $config;
 
         // read the main configuration of the app
-        IniFileMgr::readAndMergeObject(App::mainConfigFile(), $config);
-
+        $mcf = App::mainConfigFile();
+        if ($mcf) {
+            IniFileMgr::readAndMergeObject($mcf, $config);
+        }
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
             IniFileMgr::readAndMergeObject($configPath.'localconfig.ini.php', $config);
         }
 
         // read the configuration specific to the entry point
-        if ($configFile != 'mainconfig.ini.php' && $configFile != 'defaultconfig.ini.php') {
+        if ($configFile != '' && $configPath.$configFile != $mcf) {
             if (!file_exists($configPath.$configFile))
                 throw new Exception("Configuration file is missing -- $configFile", 5);
             if ( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config))
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+        }
+        if ($additionalOptions) {
+            IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
         }
         return $config;
     }
@@ -83,10 +88,11 @@ class Compiler {
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application
+     * @param array  $additionalOptions  some options to add to the configuration
      *
      * @return StdClass an object which contains configuration values
      */
-    public function read($allModuleInfo = false){
+    public function read($allModuleInfo = false, $additionalOptions= null){
 
         $tempPath = App::tempBasePath();
 
@@ -103,7 +109,7 @@ class Compiler {
         if (!is_writable(App::logPath())) {
             throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
         }
-        $this->config = $this->readConfigFiles($this->configFileName);
+        $this->config = $this->readConfigFiles($this->configFileName, $additionalOptions);
         $this->prepareConfig($allModuleInfo);
         return $this->config;
     }
