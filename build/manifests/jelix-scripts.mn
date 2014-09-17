@@ -26,7 +26,6 @@ cd lib/jelix-scripts/commands
   installapp.cmd.php
   installmodule.cmd.php
   openapp.cmd.php
-  migrate.cmd.php
   resetfilesrights.cmd.php
 cd lib/jelix-scripts/commands-single/
   createapp.cmd.php
