@@ -17,8 +17,7 @@ class infosreaderTest extends jUnitTestCase {
         <string property="versionStability" value="" />
         <string property="label" value="simple" />
         <string property="description" value="" />
-        <array property="creators"></array>
-        <array property="contributors"></array>
+        <array property="authors"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="" />
         <string property="updateURL" value="" />
@@ -28,7 +27,7 @@ class infosreaderTest extends jUnitTestCase {
         <array property="dependencies">
             <array>
                 <string key="type" value="jelix" />
-                <string key="version" value=">=1.6,<=2.0" />
+                <string key="version" value="&gt;=1.6,&lt;=2.0" />
             </array>
             <!--<array>
                 <string key="type" value="" />
@@ -80,14 +79,13 @@ class infosreaderTest extends jUnitTestCase {
         <string property="createDate" value="" />
         <string property="label" value="Jelix tests" />
         <string property="description" value="unit tests for jelix" />
-        <array property="creators">
+        <array property="authors">
             <array>
                 <string key="name">Laurent Jouanneau</string>
                 <string key="email">laurent@jelix.org</string>
                 <string key="active">true</string>
             </array>
         </array>
-        <array property="contributors"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="http://jelix.org" />
         <string property="updateURL" value="" />
@@ -166,8 +164,7 @@ class infosreaderTest extends jUnitTestCase {
         <string property="versionStability" value="" />
         <string property="label" value="jelixtest/composerpackage" />
         <string property="description" value="A jelix module that is a composer package" />
-        <array property="creators"></array>
-        <array property="contributors"></array>
+        <array property="authors"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="" />
         <string property="updateURL" value="" />

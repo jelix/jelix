@@ -87,10 +87,15 @@
             <text />
          </element>
          <oneOrMore>
-            <element name="creator">
+            <element name="author">
                <ref name="person" />
             </element>
          </oneOrMore>
+         <zeroOrMore>
+            <element name="creator">
+               <ref name="person" />
+            </element>
+         </zeroOrMore>
          <zeroOrMore>
             <element name="contributor">
                <ref name="person" />

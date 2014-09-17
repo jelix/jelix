@@ -78,15 +78,13 @@ abstract class XmlParserAbstract {
                         }
                     }
                 }
-                elseif ('creator' == $property || 'contributor' == $property) {
+                elseif ('author' == $property || 'creator' == $property || 'contributor' == $property) {
                     $person = array();
                     while ($xml->moveToNextAttribute()) {
                         $attrName = $xml->name;
                         $person[$attrName] = $xml->value;
                     }
-                    $property .= 's';
-                    array_push($object->$property, $person);
-
+                    array_push($object->authors, $person);
                 }
                 else { // <version> <license> <copyright> <homepageURL> <updateURL>
                     while ($xml->moveToNextAttribute()) {

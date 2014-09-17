@@ -26,13 +26,9 @@ abstract class InfosAbstract {
     public $keywords = array();
     
     /**
-     * @var array of array('name'=>'','nickname'=>'','email'=>'','active'=>'',)
+     * @var array of array('name'=>'', 'email'=>'', 'role'=>'', 'homepage"=>'', 'nickname'=>'')
      */
-    public $creators = array();
-    /**
-     * @var array of array('name'=>'','nickname'=>'','email'=>'','active'=>'','since'=>'', 'role'=>'')
-     */
-    public $contributors = array();
+    public $authors = array();
     public $notes = '';
     public $homepageURL = '';
     public $updateURL = '';

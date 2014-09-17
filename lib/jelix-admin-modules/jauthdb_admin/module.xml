@@ -6,7 +6,7 @@
         <description lang="en_US"/>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU Public Licence</license>
         <copyright>2009-2011 Laurent Jouanneau</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
+        <author name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>

@@ -6,7 +6,7 @@
         <description lang="en_US">Main module of jelix which contains some ressources needed by jelix classes</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2005-2011 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" active="true"/>
+        <author name="Laurent Jouanneau"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
