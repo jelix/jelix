@@ -34,5 +34,29 @@
             "../lib/jelix-legacy/init.php"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra": {
+        "jelix": {
+            "configPath": "var/config",
+            "logPath": "var/log",
+            "varPath": "var",
+            "wwwPath": "www",
+            "tempPath": "../temp/testapp",
+            "entrypoints": [
+                { "file":"index.php",   "config":"index/config.ini.php"},
+                { "file":"rest.php",    "config":"rest/config.ini.php"},
+                { "file":"testnews.php", "config":"index/config.ini.php"},
+                { "file":"foo/bar.php", "config":"index/config.ini.php"},
+                { "file":"invisible.php", "config":"index/config.ini.php"},
+                { "file":"noep.php",    "config":"index/config.ini.php"},
+                { "file":"handlermodule.php", "config":"index/config.ini.php"},
+                { "file":"news.php",    "config":"index/config.ini.php"},
+                { "file":"soap.php",    "config":"soap/config.ini.php", "type":"soap"},
+                { "file":"jsonrpc.php", "config":"jsonrpc/config.ini.php", "type":"jsonrpc"},
+                { "file":"xmlrpc.php",  "config":"jsonrpc/config.ini.php", "type":"xmlrpc"},
+                { "file":"cmdline.php", "config":"cmdline/config.ini.php", "type":"cmdline"},
+                { "file":"tests.php",   "config":"cmdline/config.ini.php", "type":"cmdline"}
+            ]
+        }
+    }
 }

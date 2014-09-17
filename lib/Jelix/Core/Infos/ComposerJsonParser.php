@@ -52,28 +52,22 @@ class ComposerJsonParser {
             "extras" => array(),
             "minimum-stability"=> ""
         ),$json);
-        
+
         $json['autoload'] = array_merge(array(
             'files'=>array(),
             'classmap'=>array(),
             'psr-0'=>array(),
             'psr-4'=>array(),
         ),$json['autoload']);
-        
-        
+
+
         $object->id                 = $json['name'];
         $object->name               = $json['name'];
-        //$object->createDate         = $json[''];
         $object->version            = $json['version'];
-        //$object->versionDate        = $json[''];
-        //$object->versionStability   = $json[''];
         $object->label              = $json['name'];
         $object->description        = $json['description'];
         $object->keywords           = $json['keywords'];
-        // array('name'=>'','nickname'=>'','email'=>'','active'=>'',)
-        $object->creators           = $json['authors'];
-        // array('name'=>'','nickname'=>'','email'=>'','active'=>'','since'=>'', 'role'=>'')
-        //$object->contributors       = $json[''];
+        $object->authors            = $json['authors'];
         //$object->notes              = $json[''];
         $object->homepageURL        = $json['homepage'];
         //$object->updateURL          = $json[''];
@@ -82,16 +76,13 @@ class ComposerJsonParser {
         //$object->copyright          = $json[''];
 
         /**
-        * @var array of
-        * array('type'=>'jelix', 'maxversion'=>'','minversion'=>'','edition'=>'')
-        * or array('type'=>'module/plugin','maxversion'=>'','minversion'=>'','id'=>'','name'=>'')
+        * @var array of array('type'=>'module/plugin','version'=>'','id'=>'','name'=>'')
         */
 
         foreach($json['require'] as $name=>$version) {
             $object->dependencies[] = array(
                 'type' => ($name == 'php'?$name:'module'),
-                'minversion'=> $version,
-                'maxversion'=>'',
+                'version'=> $version,
                 'id' => $name,
                 'name' => $name
             );
@@ -101,24 +92,77 @@ class ComposerJsonParser {
         $object->archive = $json['archive'];
         $object->type = $json['type'];
 
-// FIXME
         // module
-        $object->autoloaders            = $json['autoload']['files'];
-        $object->autoloadClasses        = $json['autoload']['classmap'];
-        $object->autoloadNamespaces     = $json['autoload']['psr-0'];
-        $object->autoloadPsr4Namespaces = $json['autoload']['psr-4'];
-        //$object->autoloadIncludePath    = $json;
-
-        // app
-        if (isset($json['extras']['jelix'])) {
-            $j = $json['extras']['jelix'];
-            $object->configPath = $j['configPath'];
-            $object->logPath    = $j['logPath'];
-            $object->varPath    = $j['varPath'];
-            $object->wwwPath    = $j['wwwPath'];
-            $object->tempPath   = $j['tempPath'];
+        if (isset($json['autoload']['psr-4'])) {
+            foreach($json['autoload']['psr-4'] as $ns => $dir) {
+                if ($ns == '') {
+                    $object->autoloadPsr4Namespaces[0][] = $dir;
+                }
+                else {
+                    $object->autoloadPsr4Namespaces[trim($ns,'\\')] = $dir;
+                }
+            }
         }
 
+        if (isset($json['autoload']['psr-0'])) {
+            foreach($json['autoload']['psr-0'] as $ns => $dir) {
+                if ($ns == '') {
+                    $object->autoloadPsr0Namespaces[0][] = $dir;
+                }
+                else {
+                    $object->autoloadPsr0Namespaces[trim($ns,'\\')] = $dir;
+                }
+            }
+        }
+
+        if (isset ($json['autoload']['classmap'])) {
+            foreach($json['autoload']['classmap'] as $path) {
+                $classes = \Jelix\External\ClassMapGenerator::createMap($path);
+                $this->autoloadClasses = array_merge($this->autoloadClasses, $classes);
+            }
+        }
+
+        if (isset($json['autoload']['files'])) {
+            $object->autoloaders            = $json['autoload']['files'];
+        }
+        if (isset($json['autoload']['include-path'])) {
+            $object->autoloadIncludePath    = $json['autoload']['include-path'];
+        }
+
+        // app
+        if (isset($json['extra']['jelix'])) {
+            $j = $json['extra']['jelix'];
+            if(isset($j['configPath'])) {
+                $object->configPath = $j['configPath'];
+            }
+            if(isset($j['logPath'])) {
+                $object->logPath    = $j['logPath'];
+            }
+            if(isset($j['varPath'])) {
+                $object->varPath    = $j['varPath'];
+            }
+            if(isset($j['wwwPath'])) {
+                $object->wwwPath    = $j['wwwPath'];
+            }
+            if(isset($j['tempPath'])) {
+                $object->tempPath   = $j['tempPath'];
+            }
+            if(isset($j['entrypoints']) && is_array($j['entrypoints'])) {
+                foreach($j['entrypoints'] as $ep) {
+                    $object->entrypoints[$ep['file']] = array(
+                                                        'config'=>$ep['config'],
+                                                        'type'=>(isset($ep['type'])?$ep['type']:'classic'));
+                }
+            }
+
+            if ( isset($j['moduleWebAlias'])) {
+                $object->webAlias = $j['moduleWebAlias'];
+            }
+        }
+
+        if (isset($object->webAlias) && $object->webAlias == '') {
+            $object->webAlias = preg_replace("/[^a-z0-9_]/", "-", $object->name);
+        }
         return $object;
     }
 }
