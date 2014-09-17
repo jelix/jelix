@@ -118,7 +118,7 @@ abstract class XmlParserAbstract {
 
             if ($xml->nodeType == \XMLReader::ELEMENT) {
 
-                $dependency = array('type'=>$xml->name, 'name'=>'', 'minversion'=>'*', 'maxversion'=>'*');
+                $dependency = array('type'=>$xml->name, 'name'=>'', 'version'=>'');
                 $dependency['type'] = $xml->name;
                 if ($xml->name == 'jelix') {
                     $dependency['type'] = 'module';
@@ -127,14 +127,27 @@ abstract class XmlParserAbstract {
 
                 while ($xml->moveToNextAttribute()) {
                     $attrName = $xml->name;
-                    if ($attrName == 'minversion' || $attrName == 'maxversion') {
-                        $dependency[$attrName] = $this->fixVersion($xml->value);
+                    if ($attrName == 'minversion' && $xml->value != '') { // old attribute
+                        $v = '>='.$this->fixVersion($xml->value);
+                        if ($dependency['version'] != '') {
+                            $v = ','.$v;
+                        }
+                        $dependency['version'] .= $v;
+                    }
+                    else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
+                        $v = '<='.$this->fixVersion($xml->value);
+                        if ($dependency['version'] != '') {
+                            $v = ','.$v;
+                        }
+                        $dependency['version'] .= $v;
+                    }
+                    else if ($attrName == 'version' && $xml->value != '') {
+                        $dependency['version'] = $this->fixVersion($xml->value);
                     }
                     else {
                         $dependency[$attrName] = $xml->value;
                     }
                 }
-
                 array_push($object->$property, $dependency);
             }
         }
@@ -145,13 +158,9 @@ abstract class XmlParserAbstract {
      * Fix version for non built lib
      */
     protected function fixVersion($version) {
-        if ($version == '__LIB_VERSION__') {
-            return \Jelix\Core\Framework::version();
-        }
-        else if ($version == '__LIB_VERSION_MAX__') {
-            return \Jelix\Core\Framework::versionMax();
-        }
-        return $version;
+        $v = str_replace('__LIB_VERSION_MAX__', \Jelix\Core\Framework::versionMax(), $version);
+        $v = str_replace('__LIB_VERSION__', \Jelix\Core\Framework::version(), $v);
+        return $v;
     }
 }
 

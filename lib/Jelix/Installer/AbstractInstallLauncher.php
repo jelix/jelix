@@ -121,9 +121,8 @@ abstract class AbstractInstallLauncher {
 
     public function upgradeFinished($ep, $upgrader) { }
 
-    public function checkVersion($min, $max) {
-        return (\jVersionComparator::compareVersion($min, $this->moduleInfos->version) <= 0 &&
-                \jVersionComparator::compareVersion($this->moduleInfos->version, $max) <= 0);
+    public function checkVersion($versionExpression) {
+        return \jVersionComparator::compareVersionRange($this->moduleInfos->version, $versionExpression);
     }
 }
 

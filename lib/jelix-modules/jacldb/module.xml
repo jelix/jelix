@@ -10,8 +10,8 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="1.4pre" maxversion="__LIB_VERSION_MAX__"/>
-        <module name="jacl" minversion="1.3.0" maxversion="1.3.*" />
+#expand        <jelix version="&gt;=1.4pre,&lt;=__LIB_VERSION_MAX__"/>
+        <module name="jacl" version="&gt;=1.3.0" />
     </dependencies>
     <autoload>
         <classPattern pattern="/^jAclDb/" dir="classes/" suffix=".class.php" />

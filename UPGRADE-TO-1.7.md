@@ -50,5 +50,14 @@ WARNING: this is experimental!!
         You have to change this method in your plugins
         See Jelix\Core\Config\CompilerPluginInterface
 
+- Modify your module.xml files :
+    - attributes minversion and maxversion on <dependency> elements are deprecated. Replace
+      them by a version attribute, containing same syntax as in Composer
+      eg: minversion="1.0" maxversion="1.1"
+      should become version=">=1.0,<=1.1"
+
+- If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
+   you should know that their API have changed.
+
 - That's all for the moment.
 

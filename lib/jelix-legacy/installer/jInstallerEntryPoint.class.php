@@ -222,9 +222,9 @@ class jInstallerEntryPoint {
                 $compNeeded .= $name.', ';
             else {
 
-                if (!$comp->checkVersion($compInfo['minversion'], $compInfo['maxversion'])) {
+                if (!$comp->checkVersion($compInfo['version'])) {
                     throw new \Jelix\Installer\Exception ('module.bad.dependency.version',
-                                                   array($component->getName(), $comp->getName(), $compInfo['minversion'], $compInfo['maxversion']));
+                                                   array($component->getName(), $comp->getName(), $compInfo['version']));
                 }
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {

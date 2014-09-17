@@ -11,7 +11,7 @@
         <homepageURL>%%default_website%%</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version_next%%"/>
+        <jelix version="~%%jelix_version%%"/>
     </dependencies>
     <autoload>
         

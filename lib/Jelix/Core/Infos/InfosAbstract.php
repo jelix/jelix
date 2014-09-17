@@ -40,8 +40,7 @@ abstract class InfosAbstract {
     public $licenseURL = '';
     public $copyright = '';
     /**
-     * @var array of array('type'=>'jelix','maxversion'=>'','minversion'=>'','edition'=>'')
-     *       or array('type'=>'module/plugin','maxversion'=>'','minversion'=>'','id'=>'','name'=>'')
+     * @var array of array('type'=>'module/plugin','version'=>'','id'=>'','name'=>'')
      */
     public $dependencies = array();
 

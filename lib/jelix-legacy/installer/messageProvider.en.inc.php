@@ -76,7 +76,7 @@ return array(
         'module.circular.dependency'=>"Circular dependency ! Cannot install the component %s",
         'module.needed'         =>'To install %s these modules are needed: %s',
         'module.bad.jelix.version'=>'The module %s needs another jelix version (%s - %s)',
-        'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
+        'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s)',
         'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
         'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
 

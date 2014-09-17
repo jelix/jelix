@@ -43,7 +43,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testA', $modInfos);
@@ -92,7 +92,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testA', $modInfos);
@@ -102,7 +102,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testA" />
                         </dependencies>
                     </module>'
@@ -178,7 +178,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testB" />
                             <module name="testC" />
                         </dependencies>
@@ -189,7 +189,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testB', $modInfos);
@@ -198,7 +198,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testC', $modInfos);
@@ -207,7 +207,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testB" />
                             <module name="testE" />
                         </dependencies>
@@ -218,7 +218,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testE', $modInfos);
@@ -316,7 +316,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testB" />
                             <module name="testC" />
                         </dependencies>
@@ -328,7 +328,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testF" />
                         </dependencies>
                     </module>');
@@ -339,7 +339,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testC', $modInfos);
@@ -348,7 +348,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testE" />
                             <module name="testF" />
                         </dependencies>
@@ -359,7 +359,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testE', $modInfos);
@@ -368,7 +368,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                         </dependencies>
                     </module>');
         $ep->setModuleData('testF', $modInfos);
@@ -457,7 +457,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testB" />
                         </dependencies>
                     </module>');
@@ -468,7 +468,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testC" />
                         </dependencies>
                     </module>');
@@ -479,7 +479,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
                             <version stability="stable">1.0</version>
                         </info>
                         <dependencies>
-                            <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+                            <jelix version="'.JELIX_VERSION.'" />
                             <module name="testA" />
                         </dependencies>
                     </module>');

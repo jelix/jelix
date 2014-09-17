@@ -177,7 +177,7 @@ class jVersionComparator {
      */
     static public function compareVersionRange($version, $range) {
 
-        if ($version == $range)
+        if ($version == $range || $range == '' || $version == '')
             return true;
 
         $expression = self::compileRange($range);

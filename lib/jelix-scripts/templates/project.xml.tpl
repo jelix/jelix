@@ -10,7 +10,7 @@
         <homepageURL>%%default_website%%</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version_next%%" />
+        <jelix version="~%%jelix_version%%" />
     </dependencies>
     <entrypoints>
         <!-- file: the path to the entry point relative to the base path

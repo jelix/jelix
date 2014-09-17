@@ -8,8 +8,9 @@
       <define name="dependencies">
          <element name="dependencies">
             <element name="jelix">
-               <attribute name="maxversion" />
-               <attribute name="minversion" />
+               <attribute name="version" />
+               <optional><attribute name="maxversion" /></optional> <!-- deprecated -->
+               <optional><attribute name="minversion" /></optional> <!-- deprecated -->
             </element>
          </element>
       </define>

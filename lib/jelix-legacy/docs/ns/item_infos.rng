@@ -124,8 +124,9 @@
    <define name="dependencies">
       <element name="dependencies">
          <element name="jelix">
-            <attribute name="maxversion" />
-            <attribute name="minversion" />
+            <attribute name="version" />
+            <attribute name="maxversion" /> <!-- deprecated -->
+            <attribute name="minversion" /> <!-- deprecated -->
             <optional>
                <attribute name="edition">
                   <value>dev</value>
@@ -139,14 +140,16 @@
                <element name="module">
                   <attribute name="id" />
                   <attribute name="name" />
-                  <optional><attribute name="maxversion" /></optional>
-                  <optional><attribute name="minversion" /></optional>
+                  <optional><attribute name="version" /></optional>
+                  <optional><attribute name="maxversion" /></optional><!-- deprecated -->
+                  <optional><attribute name="minversion" /></optional><!-- deprecated -->
                </element>
                <element name="plugin">
                   <attribute name="id" />
                   <attribute name="name" />
-                  <optional><attribute name="maxversion" /></optional>
-                  <optional><attribute name="minversion" /></optional>
+                  <optional><attribute name="version" /></optional>
+                  <optional><attribute name="maxversion" /></optional><!-- deprecated -->
+                  <optional><attribute name="minversion" /></optional><!-- deprecated -->
                </element>
             </choice>
          </zeroOrMore>

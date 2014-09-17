@@ -28,13 +28,11 @@ class infosreaderTest extends jUnitTestCase {
         <array property="dependencies">
             <array>
                 <string key="type" value="jelix" />
-                <string key="maxversion" value="2.0" />
-                <string key="minversion" value="1.6" />
+                <string key="version" value=">=1.6,<=2.0" />
             </array>
             <!--<array>
                 <string key="type" value="" />
-                <string key="maxversion" value="" />
-                <string key="minversion" value="" />
+                <string key="version" value="" />
                 <string key="edition" value="" />
                 <string key="id" value="" />
                 <string key="name" value="" />
@@ -118,8 +116,7 @@ class infosreaderTest extends jUnitTestCase {
             </array>
             <!--<array>
                 <string key="type" value="" />
-                <string key="maxversion" value="" />
-                <string key="minversion" value="" />
+                <string key="version" value="" />
                 <string key="edition" value="" />
                 <string key="id" value="" />
                 <string key="name" value="" />
@@ -180,22 +177,19 @@ class infosreaderTest extends jUnitTestCase {
         <array property="dependencies">
             <array>
                 <string key="type" value="php" />
-                <string key="maxversion" value="" />
-                <string key="minversion" value="&gt;=5.3.3" />
+                <string key="version" value="&gt;=5.3.3" />
                 <string key="id" value="php" />
                 <string key="name" value="php" />
             </array>
             <array>
                 <string key="type" value="module" />
-                <string key="maxversion" value="" />
-                <string key="minversion" value="self:version" />
+                <string key="version" value="self:version" />
                 <string key="id" value="jelix/core" />
                 <string key="name" value="jelix/core" />
             </array>
             <!--<array>
                 <string key="type" value="" />
-                <string key="maxversion" value="" />
-                <string key="minversion" value="" />
+                <string key="version" value="" />
                 <string key="id" value="" />
                 <string key="name" value="" />
             </array>-->
