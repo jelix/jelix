@@ -1,23 +1,50 @@
 Installation of testapp
+=======================
 
-- download and install a "developer" edition of Jelix
+- download and extract an archive of Jelix
 - move the testapp directory at the same level of the lib/ directory of jelix.
-- install Composer: http://getcomposer.org
-- go in the testapp directory, and type
-   php composer.phar install
-- create a database in mysql
-- rename testapp/var/config/profiles.ini.php.dist to testapp/var/config/profiles.ini.php
-- configure parameters in profiles.ini.php:
-    - section jdb:testapp and jdb:testapp_mysqli for mysql,
-    - section jdb:testapppdo if you have pdo extension
-    - section jdb:testapp_pgsql if you have postgresql sql
-    don't touch other  "jdb" sections !
-- configure other section in profiles.ini.php: "jkvdb:", "jcache:", "jsoapclient:"
-- if you have specific configuration setting, set them into a testapp/var/config/localconfig.ini.php
-  instead of modifying testapp/var/config/mainconfig.ini.php
-- create the "testapp/"  directories in the temp directory of Jelix
-- put write access for apache on temp/testapp/, testapp/var/log/ and testapp/var/mails
-- run the script in install/installer.php 
-    cd testapp/install && php installer.php
-- configure your web server to access to testapp/www with a browser
-- you can then run testapp in your browser
+
+
+- install virtualbox and vagrant http://www.vagrantup.com/, then
+- go into the testapp directory
+- retrieve a virtual machine
+  vagrant box add ubuntu/trusty64
+
+- launch the vagrant virtual machine
+   
+   vagrant up
+   
+It will create a virtual machine with all needed software for tests: mysql,
+postgresql, redis, apache, php, phpunit etc.
+
+- then connect to the vm
+  
+  vagrant ssh
+  cd /jelixapp/testapp
+
+- launch the installation of the application
+
+  composer install
+  php install/installer.php
+
+
+Running tests
+=============
+
+- got into the testapp directory and launch the vagrant virtual machine
+  vagrant up
+
+- go into this vm
+  vagrant ssh
+
+- then
+
+cd /jelixapp/testapp/tests-jelix/
+phpunit
+
+
+Reinstall
+=========
+If you destroy the vagrant vm (vagrant destroy), remove the testapp/var/config/installer.ini.php file.
+so you could reinstall the application in a new vagrant vm.
+

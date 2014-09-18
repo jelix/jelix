@@ -5,9 +5,13 @@ startModule=testapp
 startAction="main:index"
 
 [coordplugins]
-jacl2 = 1
-jacl = 1
+jacl2=1
+jacl=1
 
 [responses]
 html=myHtmlResponse
 soap="jsoap~jResponseSoap"
+
+
+
+

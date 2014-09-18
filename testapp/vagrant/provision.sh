@@ -29,7 +29,7 @@ apt-get -y install redis-server memcached memcachedb
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
     echo "setting mysql database.."
-    mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS testapp CHARACTER SET utf8;CREATE USER testapp IDENTIFIED BY 'testapp';GRANT ALL ON testapp.* TO testapp;FLUSH PRIVILEGES;"
+    mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS testapp CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON testapp.* TO test_user;FLUSH PRIVILEGES;"
 fi
 
 # create a database into pgsql + users
@@ -43,7 +43,7 @@ cp $TESTAPPDIR/testapp/vagrant/testapp.conf /etc/apache2/sites-available/
 if [ ! -f "/etc/apache2/sites-enabled/010-testapp.conf" ]; then
     ln -s /etc/apache2/sites-available/testapp.conf /etc/apache2/sites-enabled/010-testapp.conf
 fi
-if [ ! -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
+if [ -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
     rm -f "/etc/apache2/sites-enabled/000-default.conf"
 fi
 
@@ -54,9 +54,16 @@ fi
 
 a2enmod actions alias fastcgi rewrite
 
+sed -i "/user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
+
+service php5-fpm restart
+
 # restart apache
 service apache2 reload
 
+echo "Install testapp configuration file"
 # create  profiles.ini.php
 if [ ! -f $TESTAPPDIR/testapp/var/config/profiles.ini.php ]; then
     cp -a $TESTAPPDIR/testapp/var/config/profiles.ini.php.dist $TESTAPPDIR/testapp/var/config/profiles.ini.php
@@ -71,12 +78,13 @@ if [ ! -d $TESTAPPDIR/temp/testapp ]; then
 fi
 
 # set rights
-WRITABLEDIRS="$TESTAPPDIR/temp/testapp/ $TESTAPPDIR/testapp/var/log/ $TESTAPPDIR/testapp/var/mails $TESTAPPDIR/testapp/var/db"
-chown -R www-data:www-data $WRITABLEDIRS
-chmod -R g+w $WRITABLEDIRS
+#WRITABLEDIRS="$TESTAPPDIR/temp/testapp/ $TESTAPPDIR/testapp/var/log/ $TESTAPPDIR/testapp/var/mails $TESTAPPDIR/testapp/var/db"
+#chown -R www-data:www-data $WRITABLEDIRS
+#chmod -R g+w $WRITABLEDIRS
 
+echo "Install composer.."
 if [ ! -f /usr/local/bin/composer ]; then
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer
 fi
-
+echo "Done."

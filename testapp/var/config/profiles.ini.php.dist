@@ -23,7 +23,7 @@ mysqli_profile = testapp_mysqli
 driver="mysql"
 database="testapp"
 host= "localhost"
-user= "testapp"
+user= "test_user"
 password=jelix
 persistent= on
 ; when you have charset issues, enable force_encoding so the connection will be
@@ -38,14 +38,14 @@ host=localhost
 database="testapp"
 usepdo=1
 ; you can change user option : use same value as user in testapp profiles
-user=testapp
+user=test_user
 ; you can change password option : use same value as password in testapp profiles
 password=jelix
 
 ; to run tests with pgsql. don't use pdo !
 [jdb:testapp_pgsql]
 driver="pgsql"
-host=
+host=localhost
 database=testapp
 user=test_user
 password=jelix
@@ -65,7 +65,7 @@ database="tests.sqlite3"
 driver="mysqli"
 database="testapp"
 host= "localhost"
-user= "testapp"
+user= "test_user"
 password=jelix
 persistent= on
 

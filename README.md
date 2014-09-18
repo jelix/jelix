@@ -15,7 +15,7 @@ Sources in the repository are not useable directly. You must "build" jelix.
 But it's certainly better for you to download a package containing Jelix ready to use.
 See [the download page](http://jelix.org/articles/en/download).
 
-Jelix 1.5+ is compatible only with PHP 5.3 or more.
+Jelix 1.7+ is compatible only with PHP 5.4 or more.
 
 Read [the first chapter of the manual to install Jelix and to create an application](http://docs.jelix.org/en/manual-1.5/getting-started)
 
