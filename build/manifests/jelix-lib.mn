@@ -381,8 +381,10 @@ cd lib/jelix/kvdb
   jKVDb.class.php
 
 cd lib/jelix/tpl/
-*  jTpl.class.php
-*  jTplCompiler.class.php
+  jTpl.class.php
+  jTplCompiler.class.php
+  jTplAbstract.php
+  jTplCompilerAbstract.php
 
 cd lib/jelix/utils/
   jAppManager.class.php

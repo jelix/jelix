@@ -243,7 +243,6 @@ if($IS_NIGHTLY){
 }
 
 $var = ENV::getAll();
-$var['JTPL_STANDALONE'] = true;
 $jtplpath = $BUILD_TARGET_PATH.'lib/installwizard/jtpl/';
 jBuildUtils::createDir($jtplpath);
 jManifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
