@@ -41,10 +41,6 @@ $BUILD_OPTIONS = array(
 'SOURCE_REVISION'=> array(
     false,
     ),
-'JTPL_STANDALONE'=> array(
-    false,
-    '1',
-    ),
 'PHP53'=> array(
     false,
     false,

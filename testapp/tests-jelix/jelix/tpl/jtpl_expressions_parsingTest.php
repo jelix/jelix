@@ -55,6 +55,15 @@ function testjtplcontentUserModifier($s){}
 
 class jtpl_expressions_parsingTest extends jUnitTestCase {
 
+    public function setUp() {
+        self::initJelixConfig();
+        jApp::saveContext();
+    }
+
+    public function tearDown() {
+        jApp::restoreContext();
+    }
+     
     protected $varexpr = array(
         'a'=>'a',
         '"aaa"'=>'"aaa"',
@@ -220,7 +229,7 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $this->assertEquals($t[0], $e->getLocaleKey());
                 $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(true, "Unknown Exception: ".$e->getMessage());
             }
         }
         foreach($this->badvarexprTrustedMode as $k=>$t){
@@ -231,7 +240,7 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $this->assertEquals($t[0], $e->getLocaleKey());
                 $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(true, "Unknown Exception: ".$e->getMessage());
             }
         }
     }
@@ -247,7 +256,7 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $this->assertEquals($t[0], $e->getLocaleKey());
                 $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(true, "Unknown Exception: ".$e->getMessage());
             }
         }
         foreach($this->badvarexprUnTrustedMode as $k=>$t){
@@ -258,7 +267,7 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $this->assertEquals($t[0], $e->getLocaleKey());
                 $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(true, "Unknown Exception: ".$e->getMessage());
             }
         }
     }
@@ -284,9 +293,9 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $res = $compil->testParseVariable($k);
                 $this->assertEquals($t, $res);
             }catch(jException $e){
-                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().')');
+                $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().') - '.$e->getFile(). '-' .$e->getLine());
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage().' - '.$e->getFile(). '-' .$e->getLine());
             }
         }
     }
@@ -331,7 +340,7 @@ class jtpl_expressions_parsingTest extends jUnitTestCase {
                 $this->assertEquals($t[0], $e->getLocaleKey());
                 $this->assertEquals($t[1], $e->getLocaleParameters());
             }catch(Exception $e){
-                $this->pass("Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(true, "Unknown Exception: ".$e->getMessage());
             }
         }
     }
