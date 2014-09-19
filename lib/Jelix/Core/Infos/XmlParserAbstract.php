@@ -158,6 +158,7 @@ abstract class XmlParserAbstract {
     protected function fixVersion($version) {
         $v = str_replace('__LIB_VERSION_MAX__', \Jelix\Core\Framework::versionMax(), $version);
         $v = str_replace('__LIB_VERSION__', \Jelix\Core\Framework::version(), $v);
+        $v = str_replace('__VERSION__', \Jelix\Core\App::version(), $v);
         return $v;
     }
 }

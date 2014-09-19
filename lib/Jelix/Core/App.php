@@ -9,7 +9,7 @@
 namespace Jelix\Core;
 
 /**
-* 
+*
 */
 class App {
 
@@ -63,6 +63,26 @@ class App {
         self::$configAutoloader = null;
         self::$_mainConfigFile = null;
     }
+
+    static protected $_version = null;
+
+    /**
+     * return the version of the application containing into a VERSION file
+     * It doesn't read the version from project.xml or composer.json.
+     * @return string
+     */
+    static public function version() {
+        if (self::$_version === null) {
+            if (file_exists(self::appPath('VERSION'))) {
+                self::$_version = str_replace('SERIAL', '0', file_get_contents(self::appPath('VERSION')));
+            }
+            else {
+                self::$_version = 0;
+            }
+        }
+        return self::$_version;
+    }
+
 
     /**
      * indicate if path have been set
@@ -175,7 +195,7 @@ class App {
      * @param \Jelix\Routing\Router $router set new current router
      */
     public static function setRouter($router) {
-        self::$_router = $router; 
+        self::$_router = $router;
     }
 
     /**
@@ -191,7 +211,7 @@ class App {
      */
     public static function setCoord($router) {
         //trigger_error("App::setCoord() is deprecated, use App::setRouter() instead", E_USER_DEPRECATED);
-        self::$_router = $router; 
+        self::$_router = $router;
     }
 
     protected static $contextBackup = array();
@@ -294,12 +314,12 @@ class App {
     }
 
     /**
-     * 
+     *
      */
     public static function getModuleInfoList($includingExternal = false) {
-        
+
     }
-    
+
     static protected $modulesContext = array();
 
     /**
