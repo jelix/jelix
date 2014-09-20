@@ -17,21 +17,16 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
 
     function atStart($config) {
         $config->_autoload_class = array();
-        $config->_autoload_namespace = array(); // psr0
+        $config->_autoload_namespacepsr0 = array(); // psr0
         $config->_autoload_classpattern = array();
         $config->_autoload_includepathmap = array();
         $config->_autoload_includepath = array();
-        $config->_autoload_namespacepathmap = array(); // psr4
+        $config->_autoload_namespacepsr4 = array(); // psr4
         $config->_autoload_autoloader = array();
         $config->_autoload_fallback = array('psr4'=>array(), 'psr0'=>array());
     }
 
     function onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
-        if ($module->isXmlFile()) {
-            // we have a deprecated module.xml file
-            $this->_onModuleXml($config, $module);
-            return;
-        }
         if (\Jelix\Core\Config\ComposerUtils::isLoaded($module->name)) {
             return;
         }
@@ -43,7 +38,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
      */
     function _onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
 
-        $modulePath = $module->getPath().'/';
+        $modulePath = $module->getPath();
 
         foreach($module->autoloaders as $path) {
             $p = $modulePath.$path;
@@ -53,13 +48,21 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
         }
 
         foreach($module->autoloadIncludePath as $path) {
-            $p = $modulePath.$path[0];
+            if (is_array($path)) {
+                $p = $modulePath.$path[0];
+                $finalpath = $modulePath.join("|", $path);
+            }
+            else {
+                $p = $modulePath.$path;
+                $finalpath = $p.'|.php';
+            }
+
             if (!file_exists($p))
                 throw new Exception ('Error in autoload configuration -- In '.$modulePath.'/module.xml, this directory for includePath doesn\'t exists: '.$p);
             if (!isset($config->_autoload_includepath['path'])) {
                 $config->_autoload_includepath['path'] = array();
             }
-            $config->_autoload_includepath['path'][] =  $modulePath.join("|", $path);
+            $config->_autoload_includepath['path'][] =  $finalpath;
         }
 
         foreach($module->autoloadClasses as $className => $path) {
@@ -70,7 +73,14 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
         }
 
         foreach($module->autoloadClassPatterns as $pattern => $path) {
-            $p = $modulePath.$path[0];
+            if (is_array($path)) {
+                $p = $modulePath.$path[0];
+                $finalpath = $modulePath.join("|", $path);
+            }
+            else {
+                $p = $modulePath.$path;
+                $finalpath = $p.'|.php';
+            }
             if (!file_exists($p))
                 throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for classPattern doesn\'t exists: '.$p);
             if (!isset($config->_autoload_classpattern['regexp'])) {
@@ -78,18 +88,25 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                 $config->_autoload_classpattern['path'] = array();
             }
             $config->_autoload_classpattern['regexp'][] = $pattern;
-            $config->_autoload_classpattern['path'][] =  $modulePath.join("|", $path);
+            $config->_autoload_classpattern['path'][] =  $finalpath;
         }
 
         $processNs = function($modulePath, $ns, $path, $config) {
-            $p = $modulePath.$path[0];
+            if (is_array($path)) {
+                $p = $modulePath.$path[0];
+                $finalpath = $modulePath.join("|", $path);
+            }
+            else {
+                $p = $modulePath.$path;
+                $finalpath = $p.'|.php';
+            }
             if (!file_exists($p))
                 throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for namespace psr0 doesn\'t exists: '.$p);
             if ($ns === 0) {
-                $config->_autoload_fallback['psr0'][] = $modulePath.join("|", $path);
+                $config->_autoload_fallback['psr0'][] = $finalpath;
             }
             else {
-                $config->_autoload_namespace[$ns] = $modulePath.join("|", $path);
+                $config->_autoload_namespacepsr0[$ns][] = $finalpath;
             }
         };
 
@@ -97,21 +114,30 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
             $processNs($modulePath, 0, $path, $config);
         }
 
-        foreach($module->autoloadPsr0Namespaces as $ns => $path) {
+        foreach($module->autoloadPsr0Namespaces as $ns => $pathList) {
             if ($ns === 0)
                 continue;
-            $processNs($modulePath, $ns, $path, $config);
+            foreach($pathList as $path) {
+                $processNs($modulePath, $ns, $path, $config);
+            }
         }
 
         $processNs2 = function($modulePath, $ns, $path, $config) {
-            $p = $modulePath.$path[0];
+            if (is_array($path)) {
+                $p = $modulePath.$path[0];
+                $finalpath = $modulePath.join("|", $path);
+            }
+            else {
+                $p = $modulePath.$path;
+                $finalpath = $p.'|.php';
+            }
             if (!file_exists($p))
                 throw new Exception ('Error in the autoload configuration -- In '.$modulePath.'/module.xml, this directory for namespace psr4 doesn\'t exists: '.$p);
             if ($ns === 0) {
-                $config->_autoload_fallback['psr4'][] = $modulePath.join("|", $path);
+                $config->_autoload_fallback['psr4'][] = $finalpath;
             }
             else {
-                $config->_autoload_namespacepathmap[$ns] = $modulePath.join("|", $path);
+                $config->_autoload_namespacepsr4[$ns][] = $finalpath;
             }
         };
 
@@ -119,10 +145,12 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
             $processNs2($modulePath, 0, $path, $config);
         }
 
-        foreach($module->autoloadPsr4Namespaces as $ns => $path) {
+        foreach($module->autoloadPsr4Namespaces as $ns => $pathList) {
             if ($ns === 0)
                 continue;
-            $processNs2($modulePath, $ns, $path, $config);
+            foreach($pathList as $path) {
+                $processNs2($modulePath, $ns, $path, $config);
+            }
         }
     }
 
@@ -141,7 +169,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                         if (!file_exists($p2))
                             throw new Exception ('Error in autoload configuration -- In '.$path.'/composer.json, this directory for psr-4 doesn\'t exists: '.$p2);
                         $name = trim($prefix);
-                        $config->_autoload_namespacepathmap[$name][] = $p2.$suffix;
+                        $config->_autoload_namespacepsr4[$name][] = $p2.$suffix;
                     }
                 }
                 else {
@@ -153,7 +181,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                         $config->_autoload_fallback['psr4'][] = $p.$suffix;
                     }
                     else {
-                        $config->_autoload_namespacepathmap[$name] = $p.$suffix;
+                        $config->_autoload_namespacepsr4[$name][] = $p.$suffix;
                     } 
                 }
             }
@@ -167,7 +195,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                         $p2 = $path.$p2;
                         if (!file_exists($p2))
                             throw new Exception ('Error in autoload configuration -- In '.$path.'/composer.json, this directory for psr-0 doesn\'t exists: '.$p2);
-                        $config->_autoload_namespace[$name][] = $p2.$suffix;
+                        $config->_autoload_namespacepsr0[$name][] = $p2.$suffix;
                     }
                 }
                 else {
@@ -181,7 +209,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
                         $config->_autoload_fallback['psr0'][] = $p.$suffix;
                     }
                     else {
-                        $config->_autoload_namespace[$name] = $p.$suffix;
+                        $config->_autoload_namespacepsr0[$name][] = $p.$suffix;
                     }
                 }
             }

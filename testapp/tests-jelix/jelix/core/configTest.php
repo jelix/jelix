@@ -2,8 +2,8 @@
 
 class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
 
-    static function test_read_module_info($config, $allModuleInfo, $path, &$installation, $section) {
-        self::_readModuleInfo($config, $allModuleInfo, $path, $installation, $section);
+    function test_read_module_info($config, $allModuleInfo, $path, &$installation, $section) {
+        $this->_readModuleInfo($config, $allModuleInfo, $path, $installation, $section);
     }
 }
 
@@ -25,7 +25,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = '/foo/bar';
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -37,7 +38,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = __DIR__;
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -49,7 +51,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/simple');
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array(
                                 'simple.access' => 0
                                 ), $config->modules);
@@ -64,7 +67,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/simple');
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array('simple.installed' => 0), $installation['index.php']);
         $this->assertEquals(array(
                                 'simple.access' => 0
@@ -79,7 +83,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/simple');
         $installation = array('index.php'=>array('simple.installed'=>1));
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array('simple.installed' => 1), $installation['index.php']);
         $this->assertEquals(array(
                                 'simple.access' => 1,
@@ -93,7 +98,7 @@ class configTest extends PHPUnit_Framework_TestCase {
         $config = new fakeConfig();
         $config->modules = array('simple.access'=>1);
         $installation = array('index.php'=>array('simple.installed'=>1));
-        fakeConfigCompiler::test_read_module_info($config, true, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, true, $modulePath, $installation, $section);
         $this->assertEquals(array('simple.installed' => 1,
                                     'simple.version' => '',
                                     'simple.dataversion' => ''
@@ -116,7 +121,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/package');
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array(
                                 'jelixtest/composerpackage.access' => 0
                                 ), $config->modules);
@@ -131,7 +137,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/package');
         $installation = array('index.php'=>array());
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array('jelixtest/composerpackage.installed' => 0), $installation['index.php']);
         $this->assertEquals(array(
                                 'jelixtest/composerpackage.access' => 0
@@ -146,7 +153,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $modulePath = realpath(__DIR__.'/app/modules/package');
         $installation = array('index.php'=>array('jelixtest/composerpackage.installed'=>1));
         $section = 'index.php';
-        fakeConfigCompiler::test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array('jelixtest/composerpackage.installed' => 1), $installation['index.php']);
         $this->assertEquals(array(
                                 'jelixtest/composerpackage.access' => 1,
@@ -160,7 +168,8 @@ class configTest extends PHPUnit_Framework_TestCase {
         $config = new fakeConfig();
         $config->modules = array('jelixtest/composerpackage.access'=>1);
         $installation = array('index.php'=>array('jelixtest/composerpackage.installed'=>1));
-        fakeConfigCompiler::test_read_module_info($config, true, $modulePath, $installation, $section);
+        $compiler = new fakeConfigCompiler();
+        $compiler->test_read_module_info($config, true, $modulePath, $installation, $section);
         $this->assertEquals(array('jelixtest/composerpackage.installed' => 1,
                                 'jelixtest/composerpackage.version' => '',
                                 'jelixtest/composerpackage.dataversion' => ''

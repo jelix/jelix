@@ -26,7 +26,8 @@ class infosreaderTest extends jUnitTestCase {
         <string property="copyright" value="" />
         <array property="dependencies">
             <array>
-                <string key="type" value="jelix" />
+                <string key="type" value="module" />
+                <string key="name" value="jelix" />
                 <string key="version" value="&gt;=1.6,&lt;=2.0" />
             </array>
             <!--<array>
@@ -94,7 +95,8 @@ class infosreaderTest extends jUnitTestCase {
         <string property="copyright" value="Copyright 2006-2011 jelix.org" />
         <array property="dependencies">
             <array>
-                <string key="type" value="jelix" />
+                <string key="type" value="module" />
+                <string key="name" value="jelix" />
             </array>
             <array>
                 <string key="type" value="module" />

@@ -57,7 +57,7 @@ class ModuleXmlParser extends XmlParserAbstract {
                             $object->autoloadPsr0Namespaces[0][] = $dir;
                         }
                         else {
-                            $object->autoloadPsr0Namespaces[trim($namespace,'\\')] = $dir;
+                            $object->autoloadPsr0Namespaces[trim($namespace,'\\')][] = $dir;
                         }
                         break;
                     case 'namespacePathMap':
@@ -69,7 +69,7 @@ class ModuleXmlParser extends XmlParserAbstract {
                             $object->autoloadPsr4Namespaces[0][] = $dir;
                         }
                         else {
-                            $object->autoloadPsr4Namespaces[trim($namespace,'\\')] = $dir;
+                            $object->autoloadPsr4Namespaces[trim($namespace,'\\')][] = $dir;
                         }
                         break;
                     case 'includePath':

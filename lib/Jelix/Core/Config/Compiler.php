@@ -320,7 +320,7 @@ class Compiler {
     protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
 
         $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
-        if ($moduleInfo->id == '' && $moduleInfo->name == '') {
+        if (!$moduleInfo->exists()) {
             return null;
         }
         $f = $moduleInfo->name;

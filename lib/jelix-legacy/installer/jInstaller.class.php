@@ -483,7 +483,7 @@ class jInstaller {
         // put also available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-
+        $result = true;
         foreach($orderedModules as $item) {
             list($component, $toInstall) = $item;
             try {

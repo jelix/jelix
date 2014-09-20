@@ -54,6 +54,8 @@ class AppInfos extends InfosAbstract {
         else {
             return;
         }
+
+        $this->_exists = true;
         $parser->parse($this);
     }
 }

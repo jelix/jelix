@@ -14,8 +14,8 @@ class configautoloaderTest extends PHPUnit_Framework_TestCase {
 
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespace]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr0]
+[_autoload_namespacepsr4]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
@@ -31,8 +31,8 @@ path[]="'.__DIR__.'/autoload/some|.php"
     
     function testClassPath() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
-[_autoload_namespace]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr0]
+[_autoload_namespacepsr4]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
@@ -51,11 +51,11 @@ foo\bateau="'.__DIR__.'/autoload/foobat.php"
     function testPathWithNamespacePSR0() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr4]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
-[_autoload_namespace]
+[_autoload_namespacepsr0]
 foo = "'.__DIR__.'/autoload/ns/bar|.php"
 blo_u\bl_i="'.__DIR__.'/autoload/ns/other|.php"
 [_autoload_fallback]
@@ -74,11 +74,11 @@ psr0[]="'.__DIR__.'/autoload/some|.php"
     function testPathWithNamespacePSR0WithMultipleDir() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr4]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
-[_autoload_namespace]
+[_autoload_namespacepsr0]
 foo[] = "'.__DIR__.'/autoload/ns/bar|.php"
 foo[] = "'.__DIR__.'/autoload/some|.php"
 [_autoload_fallback]
@@ -93,11 +93,11 @@ foo[] = "'.__DIR__.'/autoload/some|.php"
     function testPathWithNamespacePSR4WithMultipleDir() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespace]
+[_autoload_namespacepsr0]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr4]
 foo[] = "'.__DIR__.'/autoload/ns/bar/foo|.php"
 foo[] = "'.__DIR__.'/autoload/some/foo|.php"
 [_autoload_fallback]
@@ -112,11 +112,11 @@ foo[] = "'.__DIR__.'/autoload/some/foo|.php"
     function testPathWithNamespacePSR4() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespace]
+[_autoload_namespacepsr0]
 [_autoload_classpattern]
 [_autoload_includepathmap]
 [_autoload_includepath]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr4]
 foo = "'.__DIR__.'/autoload/ns/bar/foo|.php"
 [_autoload_fallback]
 psr0[]="'.__DIR__.'/autoload/some|.php"
@@ -132,8 +132,8 @@ psr0[]="'.__DIR__.'/autoload/some|.php"
     function testClassRegPath() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_class]
-[_autoload_namespace]
-[_autoload_namespacepathmap]
+[_autoload_namespacepsr0]
+[_autoload_namespacepsr4]
 [_autoload_includepathmap]
 [_autoload_includepath]
 [_autoload_classpattern]

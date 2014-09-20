@@ -13,27 +13,34 @@ namespace Jelix\Core\Infos;
 class ComposerJsonParser {
 
     /**
-     * @var the path of the json file to read
+     * @var string the path of the json file to read
      */
     protected $path;
 
     /**
-     * @param string $path the path of the xml file to read
+     * @var string the json content
+     */
+    protected $json;
+
+    /**
+     * @param string $path the path of the xml file to read, with trailing slash
      */
     public function __construct($path, $locale) {
+        if (!file_exists($path)) {
+            throw new \Exception($this->path ." does not exist");
+        }
         $this->path = $path;
         $this->locale = substr($locale, 0, 2);
+        $this->json = @json_decode(file_get_contents($this->path), true);
+        if (!is_array($this->json)) {
+            throw new \Exception($this->path ." is not a JSON file");
+        }
     }
 
     /**
      *
      */
     public function parse(InfosAbstract $object){
-
-        $json = @json_decode(file_get_contents($this->path), true);
-        if (!is_array($json)) {
-            throw new \Exception($this->path ." is not a JSON file");
-        }
 
         $json = array_merge(array(
             "name"=> "",
@@ -51,7 +58,7 @@ class ComposerJsonParser {
             "autoload" => array(),
             "extras" => array(),
             "minimum-stability"=> ""
-        ),$json);
+        ),$this->json);
 
         $json['autoload'] = array_merge(array(
             'files'=>array(),
@@ -95,8 +102,11 @@ class ComposerJsonParser {
         // module
         if (isset($json['autoload']['psr-4'])) {
             foreach($json['autoload']['psr-4'] as $ns => $dir) {
+                if(!is_array($dir)) {
+                    $dir = array($dir);
+                }
                 if ($ns == '') {
-                    $object->autoloadPsr4Namespaces[0][] = $dir;
+                    $object->autoloadPsr4Namespaces[0] = $dir;
                 }
                 else {
                     $object->autoloadPsr4Namespaces[trim($ns,'\\')] = $dir;
@@ -106,8 +116,11 @@ class ComposerJsonParser {
 
         if (isset($json['autoload']['psr-0'])) {
             foreach($json['autoload']['psr-0'] as $ns => $dir) {
+                if(!is_array($dir)) {
+                    $dir = array($dir);
+                }
                 if ($ns == '') {
-                    $object->autoloadPsr0Namespaces[0][] = $dir;
+                    $object->autoloadPsr0Namespaces[0] = $dir;
                 }
                 else {
                     $object->autoloadPsr0Namespaces[trim($ns,'\\')] = $dir;
@@ -116,9 +129,17 @@ class ComposerJsonParser {
         }
 
         if (isset ($json['autoload']['classmap'])) {
+            $basepath = $this->path;
             foreach($json['autoload']['classmap'] as $path) {
-                $classes = \Jelix\External\ClassMapGenerator::createMap($path);
-                $this->autoloadClasses = array_merge($this->autoloadClasses, $classes);
+                $classes = \Jelix\External\ClassMapGenerator::createMap($basepath.$path);
+                // remove directory base path
+                $classes = array_map(function($c) use ($basepath) {
+                    if (strpos($c, $basepath) === 0) {
+                        return substr($c, strlen($basepath));
+                    }
+                    return $c;
+                }, $classes);
+                $object->autoloadClasses = array_merge($object->autoloadClasses, $classes);
             }
         }
 

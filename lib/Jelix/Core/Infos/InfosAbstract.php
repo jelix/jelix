@@ -11,6 +11,7 @@ abstract class InfosAbstract {
 
     protected $path = '';
     protected $xmlFile = false;
+    protected $_exists = false;
 
     public $id='';
     public $name='';
@@ -49,5 +50,9 @@ abstract class InfosAbstract {
     
     public function isXmlFile() {
         return $this->xmlFile;
+    }
+
+    public function exists() {
+        return $this->_exists;
     }
 }
