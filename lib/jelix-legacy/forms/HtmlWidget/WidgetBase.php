@@ -41,10 +41,16 @@ abstract class WidgetBase implements WidgetInterface {
 
     protected $valuesSeparator = ' ';
 
+    protected $_endt = '/>';
+
     public function __construct($args) {
         $this->ctrl = $args[0];
         $this->builder = $args[1];
         $this->parentWidget = $args[2];
+
+        if (\jApp::coord()->response != null && \jApp::coord()->response->getType() == 'html') {
+            $this->_endt = (\jApp::coord()->response->isXhtml() ? '/>' : '>');
+        }
     }
     
     /**
