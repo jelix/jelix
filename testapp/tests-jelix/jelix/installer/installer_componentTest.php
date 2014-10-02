@@ -40,9 +40,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     protected $defaultIni;
 
     function setUp() {
+        jApp::saveContext();
         self::initJelixConfig();
         $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
-        jApp::saveContext();
     }
 
     function tearDown() {
@@ -108,7 +108,6 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
-
 
     function testGetUpgradersWithNoUpgraders() {
         try {

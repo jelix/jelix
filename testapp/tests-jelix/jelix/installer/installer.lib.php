@@ -33,9 +33,9 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
                                                     $this->isCliScript);
         $this->config = $compiler->read(true, $configContent);
         $this->modulesInfos = $compiler->getModulesInfos();
-        $this->createInstallLaunchers(function($moduleStatus, $moduleInfos){
+        /*$this->createInstallLaunchers(function($moduleStatus, $moduleInfos){
             return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
-        });
+        });*/
     }
 
     function getEpId() {

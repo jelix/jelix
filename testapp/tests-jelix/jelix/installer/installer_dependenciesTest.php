@@ -18,9 +18,9 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
     protected $defaultIni;
 
     public function setUp() {
+        jApp::saveContext();
         self::initJelixConfig();
         $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
-        jApp::saveContext();
     }
 
     public function tearDown() {
@@ -36,7 +36,6 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.version'=>JELIX_VERSION,
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
-
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
@@ -61,7 +60,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="false" />
+            <boolean value="true" />
         </array>
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
@@ -123,7 +122,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="false" />
+            <boolean value="true" />
         </array>
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
@@ -237,7 +236,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="false" />
+            <boolean value="true" />
         </array>
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
@@ -387,7 +386,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
-            <boolean value="false" />
+            <boolean value="true" />
         </array>
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">

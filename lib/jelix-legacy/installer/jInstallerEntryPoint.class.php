@@ -149,7 +149,7 @@ class jInstallerEntryPoint {
      *
      * @param \Jelix\Installer\AbstractInstallLauncher[] $list
      * @param jInstaller $installer to report error
-     * @return false|array the list of install launchers
+     * @return false|array  list of arrays: 0:ModuleInstallLauncher 1: true to install, false to update
      */
     public function getOrderedDependencies ($list, $installer = null) {
 
@@ -158,6 +158,7 @@ class jInstallerEntryPoint {
         $result = true;
         $epId = $this->getEpId();
         foreach($list as $component) {
+//echo "Check ".$component->getName()."\n";
             $this->_checkedCircularDependency = array();
             if (!isset($this->_checkedComponents[$component->getName()])) {
                 try {
@@ -206,12 +207,12 @@ class jInstallerEntryPoint {
             $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
             throw new \Jelix\Installer\Exception ('module.circular.dependency',$component->getName());
         }
-
+//echo "_checkDependencies ".$component->getName()."\n";
         $this->_checkedCircularDependency[$component->getName()] = true;
         $epId = $this->getEpId();
         $compNeeded = '';
         foreach ($component->getDependencies() as $compInfo) {
-
+//echo "dependencie ".$compInfo['name']." - ".$compInfo['type']."\n";
             // TODO : supports others type of components
             if ($compInfo['type'] != 'module')
                 continue;
@@ -228,13 +229,19 @@ class jInstallerEntryPoint {
                 }
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
+//echo "  check dependencies of the dependencie\n";
                     $this->_checkDependencies($comp);
                     if ($this->config->disableInstallers
                         || !$comp->isInstalled($epId)) {
+//echo "  add dependency ".$comp->getName()." to install\n";
                         $this->_componentsToInstall[] = array($comp, true);
                     }
                     else if(!$comp->isUpgraded($epId)) {
+//echo "  add dependency ".$comp->getName()." to upgrade\n";
                         $this->_componentsToInstall[] = array($comp, false);
+                    }
+                    else {
+//echo "  dependency ".$comp->getName()." ignore\n";
                     }
                 }
             }
