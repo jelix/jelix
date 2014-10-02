@@ -400,10 +400,8 @@ cd lib/jelix-legacy/forms/controls
 
 cd lib/jelix-legacy/installer
   closed.html
-  jInstaller.class.php
   jInstallerApplication.class.php
 * jInstallChecker.class.php
-  jInstallerEntryPoint.class.php
 * jInstallerMessageProvider.class.php
 * messageProvider.fr.inc.php
 * messageProvider.en.inc.php
@@ -925,6 +923,8 @@ cd lib/Jelix/Installer
   AbstractInstallLauncher.php
   ModuleInstallLauncher.php
   PluginInstallLauncher.php
+  Installer.php
+  EntryPoint.php
 cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php
   jInstallerException.php
@@ -936,3 +936,5 @@ cd lib/Jelix/Legacy/installer
   jInstallerComponentBase.php
   jInstallerComponentModule.php
   jInstallerComponentPlugin.php
+  jInstaller.php
+  jInstallerEntryPoint.php
