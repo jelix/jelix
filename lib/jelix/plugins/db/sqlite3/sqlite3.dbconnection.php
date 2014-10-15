@@ -84,6 +84,13 @@ class sqlite3DbConnection extends jDbConnection {
             }
         }
 
+        // set timeout
+        if (isset($this->profile['busytimeout']) ) {
+            $timeout = intval($this->profile['busytimeout']);
+            if ($timeout) {
+                $sqlite->busyTimeout($timeout);
+            }
+        }
         return $sqlite;
     }
 
