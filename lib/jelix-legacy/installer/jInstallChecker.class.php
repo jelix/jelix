@@ -23,7 +23,7 @@ class jInstallCheck {
 
     /**
      * the object responsible of the results output
-     * @var jIInstallReporter
+     * @var \Jelix\Installer\ReporterInterface
      */
     protected $reporter;
 
@@ -43,9 +43,10 @@ class jInstallCheck {
 
     public $checkForInstallation = false;
 
-    function __construct ($reporter, $lang=''){
+    function __construct (\Jelix\Installer\ReporterInterface $reporter,
+                          jInstallerMessageProvider $messages){
         $this->reporter = $reporter;
-        $this->messages = new jInstallerMessageProvider($lang);
+        $this->messages = $messages;
 #if STANDALONE_CHECKER
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',

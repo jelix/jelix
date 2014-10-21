@@ -1,12 +1,9 @@
 <?php
-
 /**
 * check a jelix installation
 *
-* @package     jelix
-* @subpackage  core
 * @author      Laurent Jouanneau
-* @copyright   2007-2010 Laurent Jouanneau
+* @copyright   2007-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since       1.0b2
@@ -17,69 +14,28 @@
  */
 #if STANDALONE_CHECKER
 #includephp ../Jelix/Installer/ReporterInterface.php
+#includephp ../Jelix/Installer/Reporter/Html.php
 #includephp installer/jInstallerMessageProvider.class.php
 #includephp installer/jInstallChecker.class.php
 #else
 include __DIR__.'/../Jelix/Installer/ReporterInterface.php';
+include __DIR__.'/../Jelix/Installer/Reporter/Html.php';
 include __DIR__.'/installer/jInstallerMessageProvider.class.php';
 include __DIR__.'/installer/jInstallChecker.class.php';
 #endif
-/**
- * an HTML reporter for jInstallChecker
- * @package jelix
- */
-class jHtmlInstallChecker implements jIInstallReporter {
 
-    function start(){
-        echo '<ul class="checkresults">';
-    }
+$messages = new jInstallerMessageProvider();
+$reporter =new \Jelix\Installer\Reporter\Html($messages);
 
-    function message($message, $type=''){
-        echo '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
-    }
-    
-    function end($results){
-        echo '</ul>';
-        
-        $nbError = $results['error'];
-        $nbWarning = $results['warning'];
-        $nbNotice = $results['notice'];
-
-        echo '<div class="results">';
-        if ($nbError) {
-            echo ' '.$nbError. $this->messageProvider->get( ($nbError > 1?'number.errors':'number.error'));
-        }
-        if ($nbWarning) {
-            echo ' '.$nbWarning. $this->messageProvider->get(($nbWarning > 1?'number.warnings':'number.warning'));
-        }
-        if ($nbNotice) {
-            echo ' '.$nbNotice. $this->messageProvider->get(($nbNotice > 1?'number.notices':'number.notice'));
-        }
-
-        if($nbError){
-            echo '<p>'.$this->messageProvider->get(($nbError > 1?'conclusion.errors':'conclusion.error')).'</p>';
-        }else if($nbWarning){
-            echo '<p>'.$this->messageProvider->get(($nbWarning > 1?'conclusion.warnings':'conclusion.warning')).'</p>';
-        }else if($nbNotice){
-            echo '<p>'.$this->messageProvider->get(($nbNotice > 1?'conclusion.notices':'conclusion.notice')).'</p>';
-        }else{
-            echo '<p>'.$this->messageProvider->get('conclusion.ok').'</p>';
-        }
-        echo "</div>";
-    }
-}
-
-$reporter = new jHtmlInstallChecker();
-$check = new jInstallCheck($reporter);
+$check = new jInstallCheck($reporter, $messages);
 $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
-$reporter->messageProvider = $check->messages;
 
 header("Content-type:text/html;charset=UTF-8");
 
 ?>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<?php echo $check->messages->getLang(); ?>" lang="<?php echo $check->messages->getLang(); ?>">
+<!DOCTYPE html>
+<html lang="<?php echo $check->messages->getLang(); ?>">
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>

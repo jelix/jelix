@@ -12,7 +12,6 @@
 */
 
 $lib_jelix = __DIR__.'/../../../jelix-legacy/';
-include $lib_jelix.'/installer/jIInstallReporter.iface.php';
 include $lib_jelix.'/installer/jInstallerMessageProvider.class.php';
 include $lib_jelix.'/installer/jInstallChecker.class.php';
 
@@ -30,7 +29,8 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
      */
     function show ($tpl) {
         $this->tpl = $tpl;
-        $check = new jInstallCheck($this);
+        $messages = new jInstallerMessageProvider();
+        $check = new jInstallCheck($this, $messages);
         if (isset($this->config['verbose'])) {
             $check->verbose = (!!$this->config['verbose']);
         }

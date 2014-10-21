@@ -924,6 +924,11 @@ cd lib/Jelix/Installer
   PluginInstallLauncher.php
   Installer.php
   EntryPoint.php
+cd lib/Jelix/Installer/Reporter
+  Console.php
+  Html.php
+  NoOutput.php
+
 cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php
   jInstallerException.php

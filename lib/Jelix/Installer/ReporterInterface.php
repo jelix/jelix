@@ -5,8 +5,8 @@
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-namespace Jelix\Installer;
-
+namespace Jelix\Installer { 
+// enclose namespace here because this file is inserted into checker.php in some builds
 
 /**
 * interface for classes used as reporter for installation or check etc...
@@ -36,3 +36,4 @@ interface ReporterInterface {
 
 }
 
+}// end of namespace

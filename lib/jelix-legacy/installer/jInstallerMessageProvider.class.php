@@ -5,7 +5,7 @@
 * @subpackage core
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
-* @copyright 2007-2009 Laurent Jouanneau, 2008 Bastien Jaillot
+* @copyright 2007-2014 Laurent Jouanneau, 2008 Bastien Jaillot
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0b2
@@ -29,7 +29,7 @@ class jInstallerMessageProvider {
         if($lang == '' && isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])){
             $languages = explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']);
             foreach($languages as $bl){
-                // pour les user-agents qui livrent un code internationnal
+                // For user agents which provide international code
                 if(preg_match("/^([a-zA-Z]{2,3})(?:[-_]([a-zA-Z]{2,3}))?(;q=[0-9]\\.[0-9])?$/",$bl,$match)){
                     $lang = strtolower($match[1]);
                     break;
