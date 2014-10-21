@@ -57,7 +57,12 @@ class ProjectXmlParser extends XmlParserAbstract {
                     }
                 }
                 if ($id) {
-                    $object->entrypoints[$id] = array('config'=>$config, 'type'=>$type);
+                    if (strpos($id, '.php') === false) {
+                        $id .= '.php';
+                    }
+                    $object->entrypoints[$id] = array('config'=>$config,
+                                                      'file'=>$id,
+                                                      'type'=>$type);
                 }
             }
         }

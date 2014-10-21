@@ -58,4 +58,15 @@ class AppInfos extends InfosAbstract {
         $this->_exists = true;
         $parser->parse($this);
     }
+
+    public function getEntryPointInfo($name) {
+        if (strpos($name, '.php') === false) {
+           $name .= '.php';
+        }
+        if (isset($this->entrypoints[$name])) {
+            return $this->entrypoints[$name];
+        }
+
+        return null;
+    }
 }

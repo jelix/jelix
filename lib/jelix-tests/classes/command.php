@@ -108,8 +108,13 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             $this->arguments['testFile'] = '';
         }
 
-        $appInstaller = new jInstallerApplication();
-        $this->epInfo = $appInstaller->getEntryPointInfo($this->entryPoint);
+        $appInfos = new \Jelix\Core\Infos\AppInfos();
+        $ep = $appInfos->getEntryPointInfo($this->entryPoint);
+        $mainConfig = new jIniFileModifier(jApp::mainConfigFile());
+        $this->epInfo = new \Jelix\Installer\EntryPoint($mainConfig,
+                                           $ep["config"],
+                                           $ep["file"],
+                                           $ep["type"]);
 
         // let's load configuration now, and coordinator. it could be needed by tests
         // (during load of their php files or during execution)

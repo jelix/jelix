@@ -400,7 +400,6 @@ cd lib/jelix-legacy/forms/controls
 
 cd lib/jelix-legacy/installer
   closed.html
-  jInstallerApplication.class.php
 * jInstallChecker.class.php
 * jInstallerMessageProvider.class.php
 * messageProvider.fr.inc.php

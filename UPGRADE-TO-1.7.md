@@ -59,5 +59,7 @@ WARNING: this is experimental!!
 - If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
    you should know that their API have changed.
 
-- That's all for the moment.
+- Classes that don't exist anymore:
+   - jInstallerApplication
 
+- That's all for the moment.

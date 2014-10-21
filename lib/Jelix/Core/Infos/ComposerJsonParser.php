@@ -170,8 +170,12 @@ class ComposerJsonParser {
             }
             if(isset($j['entrypoints']) && is_array($j['entrypoints'])) {
                 foreach($j['entrypoints'] as $ep) {
-                    $object->entrypoints[$ep['file']] = array(
-                                                        'config'=>$ep['config'],
+                    $file = $ep['file'];
+                    if (strpos($file, '.php') === false) {
+                        $file .= '.php';
+                    }
+                    $object->entrypoints[$file] = array('config'=>$ep['config'],
+                                                        'file'=> $file,
                                                         'type'=>(isset($ep['type'])?$ep['type']:'classic'));
                 }
             }

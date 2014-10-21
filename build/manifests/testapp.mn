@@ -349,7 +349,6 @@ cd testapp/tests-jelix/jelix/daos
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
-  installAppTest.php
   installer.lib.php
   installer_componentTest.php
   installer_dependenciesTest.php

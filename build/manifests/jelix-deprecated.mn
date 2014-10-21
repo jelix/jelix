@@ -240,3 +240,5 @@ cd lib/jelix-legacy/installer
   jInstallerComponentPlugin.class.php
   jInstaller.class.php
   jInstallerEntryPoint.class.php
+  jInstallerApplication.class.php
+
