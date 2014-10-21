@@ -11,6 +11,12 @@ fi
 hostname testapp.local
 echo "testapp.local" > /etc/hostname
 
+# local time
+echo "Europe/Paris" > /etc/timezone
+cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
+locale-gen fr_FR.UTF-8
+update-locale LC_ALL=fr_FR.UTF-8
+
 # activate multiverse repository to have libapache2-mod-fastcgi
 sed -i "/^# deb.*multiverse/ s/^# //" /etc/apt/sources.list
 
