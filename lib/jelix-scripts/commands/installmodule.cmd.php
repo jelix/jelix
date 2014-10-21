@@ -41,7 +41,6 @@ class installmoduleCommand extends JelixScriptCommand {
     }
 
     public function run(){
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         \Jelix\Core\AppManager::close();
 
@@ -67,11 +66,11 @@ class installmoduleCommand extends JelixScriptCommand {
         }
 
         if ($this->verbose())
-            $reporter = new textInstallReporter();
+            $reporter = new \Jelix\Installer\Reporter\Console();
         else
-            $reporter = new textInstallReporter('error');
+            $reporter = new \Jelix\Installer\Reporter\Console('error');
 
-        $installer = new jInstaller($reporter);
+        $installer = new \Jelix\Installer\Installer($reporter);
 
         if ($this->allEntryPoint) {
             if ($parameters)

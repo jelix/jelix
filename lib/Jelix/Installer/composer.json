@@ -1,7 +1,7 @@
 {
     "name": "jelix/installer",
     "type": "library",
-    "description": "jelix modules installer",
+    "description": "jInstaller: jelix modules installer",
     "keywords": [],
     "homepage": "http://jelix.org",
     "license": "LGPL-2.1",

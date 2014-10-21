@@ -50,5 +50,7 @@
     "jSelectorLoc": "\\Jelix\\Locale\\LocaleSelector",
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",
     "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector",
-    "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog"
+    "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog",
+    "textInstallReporter":"\\Jelix\\installer\\Reporter\\Console",
+    "ghostInstallReporter": "\\Jelix\\installer\\Reporter\\NoOutput"
 }

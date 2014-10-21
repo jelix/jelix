@@ -27,9 +27,10 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
     /**
      * @param \Jelix\Core\Infos\ModuleInfos $moduleInfos
-     * @param jInstaller $mainInstaller
+     * @param Installer $mainInstaller
      */
-    function __construct($moduleInfos, $mainInstaller) {
+    function __construct(\Jelix\Core\Infos\ModuleInfos $moduleInfos,
+                         Installer $mainInstaller = null) {
         parent::__construct($moduleInfos, $mainInstaller);
         if ($mainInstaller) {
             $ini = $mainInstaller->installerIni;
@@ -56,12 +57,12 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
      * get the object which is responsible to install the component. this
      * object should implement AbstractInstaller.
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param EntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return ModuleInstaller the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    function getInstaller($ep, $installWholeApp) {
+    function getInstaller(EntryPoint $ep, $installWholeApp) {
 
         $this->_setAccess($ep->configIni);
 
@@ -116,11 +117,11 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param EntryPoint $ep the entry point
      * @throw \Jelix\Installer\Exception  if an error occurs during the install.
      * @return ModuleInstaller[]
      */
-    function getUpgraders($ep) {
+    function getUpgraders(EntryPoint $ep) {
 
         $epId = $ep->getEpId();
 

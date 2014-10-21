@@ -158,8 +158,7 @@ class createentrypointCommand extends JelixScriptCommand {
         if ($this->verbose())
             echo "Project.xml has been updated.\n";
 
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new jInstaller(new textInstallReporter('warning'));
+        $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console('warning'));
         $installer->installEntryPoint($name.".php");
         if ($this->verbose())
             echo "All modules have been initialized for the new entry point.\n";

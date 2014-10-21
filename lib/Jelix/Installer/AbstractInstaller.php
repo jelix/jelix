@@ -50,13 +50,13 @@ abstract class AbstractInstaller {
 
     /**
      * default configuration of the application
-     * @var jIniMultiFilesModifier
+     * @var \Jelix\IniFile\MultiModifier
      */
     public $config;
 
     /**
      * the entry point property on which the installer is called
-     * @var jInstallerEntryPoint
+     * @var EntryPoint
      */
     public $entryPoint;
 
@@ -130,7 +130,7 @@ abstract class AbstractInstaller {
     /**
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param EntryPoint $ep the entry point
      * @param Jelix\IniFile\Modifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed

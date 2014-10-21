@@ -1,17 +1,16 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2010 Laurent Jouanneau
+* @copyright   2009-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+namespace Jelix\Installer;
 /**
  * container for entry points properties
  */
-class jInstallerEntryPoint {
+class EntryPoint {
 
     /**
      * error code stored in a component: impossible to install
@@ -67,19 +66,19 @@ class jInstallerEntryPoint {
     protected $moduleLaunchers = array();
 
     /**
-     * @param jIniFileModifier    $mainConfig   the mainconfig.ini.php file
+     * @param \Jelix\IniFile\Modifier    $mainConfig   the mainconfig.ini.php file
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct($mainConfig, $configFile, $file, $type) {
+    function __construct(\Jelix\IniFile\Modifier $mainConfig, $configFile, $file, $type) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->configIni = new jIniMultiFilesModifier($mainConfig, jApp::configPath($configFile));
+        $this->configIni = new \Jelix\IniFile\MultiModifier($mainConfig, \jApp::configPath($configFile));
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
                                                     $this->isCliScript);
@@ -147,8 +146,8 @@ class jInstallerEntryPoint {
     /**
      * check dependencies of given modules and plugins
      *
-     * @param \Jelix\Installer\AbstractInstallLauncher[] $list
-     * @param jInstaller $installer to report error
+     * @param AbstractInstallLauncher[] $list
+     * @param Installer $installer to report error
      * @return false|array  list of arrays: 0:ModuleInstallLauncher 1: true to install, false to update
      */
     public function getOrderedDependencies ($list, $installer = null) {
@@ -179,7 +178,7 @@ class jInstallerEntryPoint {
                     else {
                         throw $e;
                     }
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     $result = false;
                     if ($installer) {
                         $installer->error ($e->getMessage(). " comp=".$component->getName(), null, true);

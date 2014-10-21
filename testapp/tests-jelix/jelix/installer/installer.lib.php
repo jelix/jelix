@@ -10,7 +10,6 @@
 * @since 1.2
 */
 
-require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 

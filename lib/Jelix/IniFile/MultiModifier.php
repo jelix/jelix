@@ -15,12 +15,12 @@ namespace Jelix\IniFile;
 class MultiModifier {
 
     /**
-     * @var jIniFile\Modifier
+     * @var \Jelix\IniFile\Modifier
      */
     protected $master;
 
     /**
-     * @var jIniFileModifier
+     * @var \Jelix\IniFile\Modifier
      */
     protected $overrider;
 

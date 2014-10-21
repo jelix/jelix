@@ -26,11 +26,11 @@ class testInstallerComponentModule2 extends jInstallerComponentModule {
 
 class testInstallerComponentForDependencies extends jInstallerComponentBase {
     
-    function getInstaller($ep, $installWholeApp) {
+    function getInstaller(\Jelix\Installer\EntryPoint $ep, $installWholeApp) {
         return null;
     }
 
-    function getUpgraders($ep) {
+    function getUpgraders(\Jelix\Installer\EntryPoint $ep) {
         return null;
     }
 }

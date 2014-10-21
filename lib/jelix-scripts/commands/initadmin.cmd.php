@@ -142,11 +142,10 @@ class initadminCommand extends JelixScriptCommand {
 
         $inifile->save();
 
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $verbose = $this->verbose();
 
-        $reporter = new textInstallReporter(($verbose? 'notice':'warning'));
-        $installer = new jInstaller($reporter);
+        $reporter = new \Jelix\Installer\Reporter\Console(($verbose? 'notice':'warning'));
+        $installer = new \Jelix\Installer\Installer($reporter);
         $installer->installModules(array('master_admin'), $entrypoint.'.php');
 
         $authini = new jIniFileModifier(App::configPath($entrypoint.'/auth.coord.ini.php'));
@@ -176,7 +175,7 @@ class initadminCommand extends JelixScriptCommand {
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }
-            $installer = new jInstaller($reporter);
+            $installer = new \Jelix\Installer\Installer($reporter);
             $installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
             $installer->installModules(array('jacl2db', 'jacl2db_admin'), $entrypoint.'.php');
         }

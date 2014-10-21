@@ -1,84 +1,14 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2008-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
+use Jelix\Core\App as App;
 
-require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
-
-
-/**
- * simple text reporter
- */
-class textInstallReporter implements jIInstallReporter {
-    /**
-     * @var string error, notice or warning
-     */
-    protected $level;
-
-    function __construct($level= 'notice') {
-       $this->level = $level;
-    }
-
-    function start() {
-        if ($this->level == 'notice')
-            echo "Installation start..\n";
-    }
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    function message($message, $type='') {
-        if (($type == 'error' && $this->level != '')
-            || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
-            || (($type == 'notice' || $type =='') && $this->level == 'notice'))
-        echo ($type != ''?'['.$type.'] ':'').$message."\n";
-    }
-
-    /**
-     * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
-     */
-    function end($results) {
-        if ($this->level == 'notice')
-            echo "Installation ended.\n";
-    }
-}
-
-/**
- * a reporter which reports... nothing
- */
-class ghostInstallReporter implements jIInstallReporter {
-
-    function start() {
-    }
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    function message($message, $type='') {
-    }
-
-    /**
-     * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
-     */
-    function end($results) {
-    }
-}
-
-
 
 
 /**
@@ -91,13 +21,13 @@ class ghostInstallReporter implements jIInstallReporter {
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
  * @internal The object which drives the installation of a component
- * (module, plugin...) is an object which inherits from jInstallerComponentBase.
+ * (module, plugin...) is an object which inherits from AbstractInstallLauncher.
  * This object calls load a file from the directory of the component. this
- * file should contain a class which should inherits from jInstallerModule
- * or jInstallerPlugin. this class should implements processes to install
+ * file should contain a class which should inherits from ModuleInstallLauncher
+ * or PluginInstallLauncher. this class should implements processes to install
  * the component.
  */
-class jInstaller {
+class Installer {
 
     /** value for the installation status of a component: "uninstalled" status */
     const STATUS_UNINSTALLED = 0;
@@ -133,13 +63,13 @@ class jInstaller {
     const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
 
     /**
-     *  @var jIniFileModifier it represents the installer.ini.php file.
+     *  @var \Jelix\IniFile\Modifier it represents the installer.ini.php file.
      */
     public $installerIni = null;
 
     /**
      * list of entry point and their properties
-     * @var jInstallerEntryPoint[]  keys are entry point id.
+     * @var EntryPoint[]  keys are entry point id.
      */
     protected $entryPoints = array();
 
@@ -182,7 +112,7 @@ class jInstaller {
 
     /**
      * the defaultconfig.ini.php content
-     * @var jIniFileModifier
+     * @var \Jelix\IniFile\Modifier
      */
     public $mainConfig;
 
@@ -191,13 +121,13 @@ class jInstaller {
      *
      * it reads configurations files of all entry points, and prepare object for
      * each module, needed to install/upgrade modules.
-     * @param jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct ($reporter, $lang='') {
+    function __construct (ReporterInterface $reporter, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new jInstallerMessageProvider($lang);
-        $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
+        $this->messages = new \jInstallerMessageProvider($lang);
+        $this->mainConfig = new \Jelix\IniFile\Modifier(App::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
@@ -206,17 +136,17 @@ class jInstaller {
 
     /**
      * @internal mainly for tests
-     * @return jIniFileModifier the modifier for the installer.ini.php file
+     * @return \Jelix\IniFile\Modifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
-        if (!file_exists(jApp::configPath('installer.ini.php')))
-            if (false === @file_put_contents(jApp::configPath('installer.ini.php'), ";<?php die(''); ?>
+        if (!file_exists(App::configPath('installer.ini.php')))
+            if (false === @file_put_contents(App::configPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
 "))
-                throw new Exception('impossible to create var/config/installer.ini.php');
-        return new jIniFileModifier(jApp::configPath('installer.ini.php'));
+                throw new \Exception('impossible to create var/config/installer.ini.php');
+        return new \Jelix\IniFile\Modifier(App::configPath('installer.ini.php'));
     }
 
     /**
@@ -256,14 +186,15 @@ class jInstaller {
             $allModules = &$this->allModules;
             $that = $this;
 
-            $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos) use($that, $epId){
+            $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos)
+                                        use($that, $epId){
                $name = $moduleInfos->name;
                $path = $moduleInfos->getPath();
                $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
                $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
 
                if (!isset($that->allModules[$path])) {
-                   $that->allModules[$path] = new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, $that);
+                   $that->allModules[$path] = new ModuleInstallLauncher($moduleInfos, $that);
                }
 
                return $that->allModules[$path];
@@ -273,15 +204,15 @@ class jInstaller {
 
     /**
      * @internal for tests
-     * @return jInstallerEntryPoint
+     * @return EntryPoint
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint($this->mainConfig, $configFile, $file, $type);
+        return new EntryPoint($this->mainConfig, $configFile, $file, $type);
     }
 
     /**
      * @param string $epId an entry point id
-     * @return jInstallerEntryPoint the corresponding entry point object
+     * @return EntryPoint the corresponding entry point object
      */
     public function getEntryPoint($epId) {
         return $this->entryPoints[$epId];
@@ -313,11 +244,11 @@ class jInstaller {
     public function setModuleParameters($moduleName, $parameters, $entrypoint = null) {
         if ($entrypoint !== null) {
             if (!isset($this->epId[$entrypoint])) {
-                throw new Exception("Unknown entrypoint name");
+                throw new \Exception("Unknown entrypoint name");
             }
             $epId = $this->epId[$entrypoint];
             if (!isset($this->entryPoints[$epId])) {
-                throw new Exception("Unknown entrypoint name");
+                throw new \Exception("Unknown entrypoint name");
             }
 
             $launcher = $this->entryPoints[$epId]->getLauncher($moduleName);
@@ -384,7 +315,7 @@ class jInstaller {
         $this->startMessage();
 
         if (!isset($this->epId[$entrypoint])) {
-            throw new Exception("unknown entry point");
+            throw new \Exception("unknown entry point");
         }
 
         $epId = $this->epId[$entrypoint];
@@ -422,7 +353,7 @@ class jInstaller {
             $entryPointList = array($this->entryPoints[$this->epId[$entrypoint]]);
         }
         else {
-            throw new Exception("unknown entry point");
+            throw new \Exception("unknown entry point");
         }
 
         foreach ($entryPointList as $epId=>$ep) {
@@ -452,17 +383,17 @@ class jInstaller {
 
     /**
      * core of the installation
-     * @param \Jelix\Installer\ModuleInstallLauncher[] $modules
-     * @param jInstallerEntryPoint $ep  the entrypoint
+     * @param ModuleInstallLauncher[] $modules
+     * @param EntryPoint $ep  the entrypoint
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$modules, $ep, $installWholeApp, $flags=3) {
+    protected function _installModules(&$modules, EntryPoint $ep, $installWholeApp, $flags=3) {
 
         $epId = $ep->getEpId();
         $this->notice('install.entrypoint.start', $epId);
-        jApp::setConfig($ep->config);
+        App::setConfig($ep->config);
 
         if ($ep->config->disableInstallers)
             $this->notice('install.entrypoint.installers.disabled');
@@ -530,10 +461,10 @@ class jInstaller {
                     }
                     $componentsToInstall[] = array($upgraders, $component, $toInstall);
                 }
-            } catch (jInstallerException $e) {
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
@@ -603,12 +534,12 @@ class jInstaller {
                                                              $ep->isCliScript);
                 $ep->config = $compiler->read(true);
 
-                jApp::setConfig($ep->config);
+                App::setConfig($ep->config);
             }
-        } catch (jInstallerException $e) {
+        } catch (Exception $e) {
             $result = false;
             $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $result = false;
             $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
         }
@@ -644,11 +575,11 @@ class jInstaller {
                                                              $ep->scriptName,
                                                              $ep->isCliScript);
                 $ep->config = $compiler->read(true);
-                jApp::setConfig($ep->config);
-            } catch (jInstallerException $e) {
+                App::setConfig($ep->config);
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }

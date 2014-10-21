@@ -11,7 +11,7 @@ require_once (__DIR__.'/../application.init.php');
 
 Jelix\Core\App::setEnv('install');
 
-$installer = new jInstaller(new textInstallReporter());
+$installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 
 $installer->installApplication();
 

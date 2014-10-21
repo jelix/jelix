@@ -76,7 +76,6 @@ class createappCommand extends JelixScriptCommand {
 
     public function run() {
         require_once (LIB_PATH.'clearbricks/jelix.inc.php');
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $appPath = $this->getParam('path');
         $appPath = $this->getRealPath($appPath);
         $appName = basename($appPath);
@@ -207,7 +206,7 @@ class createappCommand extends JelixScriptCommand {
 
         $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
 
-        $installer = new jInstaller(new textInstallReporter('warning'));
+        $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console('warning'));
         $installer->installApplication();
 
         $moduleok = true;

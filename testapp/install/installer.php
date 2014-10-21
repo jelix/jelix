@@ -14,9 +14,9 @@ jApp::setEnv('install');
 
 jAppManager::close();
 
-$installer = new jInstaller(new textInstallReporter());
-
+$installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 $installer->installApplication();
+
 try {
     jAppManager::clearTemp();    
 }

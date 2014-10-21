@@ -27,7 +27,7 @@ class jInstallerApplication {
     protected $projectXmlFilename = 'project.xml';
 
     /**
-     * @var array list of entry point (jInstallerEntryPoint)
+     * @var \Jelix\Installer\EntryPoint[]  list of entry point
      */
     protected $entryPointList = null;
 
@@ -95,7 +95,7 @@ class jInstallerApplication {
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {
             $epElt = $listEp->item($i);
-            $ep = new jInstallerEntryPoint($mainConfig,
+            $ep = new \Jelix\Installer\EntryPoint($mainConfig,
                                            $epElt->getAttribute("config"),
                                            $epElt->getAttribute("file"),
                                            $epElt->getAttribute("type"));

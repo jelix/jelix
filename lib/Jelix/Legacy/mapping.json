@@ -55,5 +55,8 @@
     "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
     "jSelectorVar": "core/selector/jSelectorVar.php",
-    "jSyslogLogger": "core/log/jSyslogLogger.php"
+    "jSyslogLogger": "core/log/jSyslogLogger.php",
+    "textInstallReporter":"installer/textInstallReporter.php",
+    "ghostInstallReporter": "installer/ghostInstallReporter.php"
+    
 }

@@ -14,7 +14,7 @@ namespace Jelix\Installer;
 abstract class AbstractInstallLauncher {
 
     /**
-     * @var jInstaller the main installer controller
+     * @var Installer the main installer controller
      */
     protected $mainInstaller = null;
 
@@ -36,9 +36,10 @@ abstract class AbstractInstallLauncher {
 
     /**
      * @param \Jelix\Core\Infos\ModuleInfos $moduleInfos
-     * @param jInstaller $mainInstaller
+     * @param Installer $mainInstaller
      */
-    function __construct($moduleInfos, $mainInstaller) {
+    function __construct(\Jelix\Core\Infos\ModuleInfos $moduleInfos,
+                         Installer $mainInstaller = null) {
         $this->moduleInfos = $moduleInfos;
         $this->mainInstaller = $mainInstaller;
     }
@@ -96,12 +97,12 @@ abstract class AbstractInstallLauncher {
      * get the object which is responsible to install the component. this
      * object should implement InstallerInterface.
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param EntryPoint $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return InstallerInterface the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    abstract function getInstaller($ep, $installWholeApp);
+    abstract function getInstaller(EntryPoint $ep, $installWholeApp);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -111,11 +112,11 @@ abstract class AbstractInstallLauncher {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param EntryPoint $ep the entry point
      * @throw \Jelix\Installer\Exception  if an error occurs during the install.
      * @return InstallerInterface[]
      */
-    abstract function getUpgraders($ep);
+    abstract function getUpgraders(EntryPoint $ep);
 
     public function installFinished($ep) { }
 
