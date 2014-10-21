@@ -56,12 +56,12 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
         $expected = '<?xml version="1.0"?>
     <array>
-        <array>
+        <!--<array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
             <boolean value="true" />
-        </array>
+        </array>-->
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
@@ -118,12 +118,12 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
         $expected = '<?xml version="1.0"?>
     <array>
-        <array>
+        <!--<array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
             <boolean value="true" />
-        </array>
+        </array>-->
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testA" />
@@ -232,12 +232,12 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
         $expected = '<?xml version="1.0"?>
     <array>
-        <array>
+        <!--<array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
             <boolean value="true" />
-        </array>
+        </array>-->
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testB" />
@@ -382,12 +382,12 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
 
         $expected = '<?xml version="1.0"?>
     <array>
-        <array>
+        <!--<array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="jelix" />
             </object>
             <boolean value="true" />
-        </array>
+        </array>-->
         <array>
             <object class="\Jelix\Installer\ModuleInstallLauncher">
                 <string method="getName()" value="testF" />
