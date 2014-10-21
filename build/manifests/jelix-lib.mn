@@ -413,8 +413,8 @@ cd lib/jelix-legacy/kvdb
 cd lib/jelix-legacy/tpl/
   jTpl.class.php
   jTplCompiler.class.php
-  jTplAbstract.class.php
-  jTplCompilerAbstract.class.php
+  jTplAbstract.php
+  jTplCompilerAbstract.php
 
 cd lib/jelix-legacy/utils/
   jAtom10Reader.class.php

@@ -1,7 +1,7 @@
 dd .
 sd lib/jelix-legacy/tpl/
-   jTplAbstract.class.php
-   jTplCompilerAbstract.class.php
+   jTplAbstract.php
+   jTplCompilerAbstract.php
 *  jtpl_standalone_prepend.php
    VERSION
    CREDITS
