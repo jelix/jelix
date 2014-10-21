@@ -18,13 +18,21 @@ sed -i "/^# deb.*multiverse/ s/^# //" /etc/apt/sources.list
 apt-get update
 apt-get -y upgrade
 apt-get -y install debconf-utils
+export DEBIAN_FRONTEND=noninteractive
 echo "mysql-server-5.5 mysql-server/root_password password jelix" | debconf-set-selections
 echo "mysql-server-5.5 mysql-server/root_password_again password jelix" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/admin-pass password jelix" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/app-password-confirm password jelix" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/mysql/app-pass password jelix" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/password-confirm password jelix" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selections
 
 apt-get -y install apache2 libapache2-mod-fastcgi apache2-mpm-worker php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
-apt-get -y install phpunit
 apt-get -y install postgresql postgresql-client mysql-server mysql-client
 apt-get -y install redis-server memcached memcachedb
+apt-get -y install phpunit phpmyadmin
 
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
