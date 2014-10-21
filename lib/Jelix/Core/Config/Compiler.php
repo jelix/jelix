@@ -489,10 +489,11 @@ class Compiler {
             }
             $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
         }
-        $lastslash = strrpos ($urlconf['urlScript'], '/');
+        
 
         // now we separate the path and the name of the script, and then the basePath
         if ($isCli) {
+            $lastslash = strrpos ($urlconf['urlScript'], DIRECTORY_SEPARATOR);
             if ($lastslash === false) {
                 $urlconf['urlScriptPath'] = ($pseudoScriptName? App::appPath('/scripts/'): getcwd().'/');
                 $urlconf['urlScriptName'] = $urlconf['urlScript'];
@@ -506,6 +507,7 @@ class Compiler {
             $urlconf['urlScript'] = $basepath.$snp;
         }
         else {
+            $lastslash = strrpos ($urlconf['urlScript'], '/');
             $urlconf['urlScriptPath'] = substr ($urlconf['urlScript'], 0, $lastslash ).'/';
             $urlconf['urlScriptName'] = substr ($urlconf['urlScript'], $lastslash+1);
 
