@@ -23,8 +23,8 @@ mysqli_profile = testapp_mysqli
 driver="mysql"
 database="testapp"
 host= "localhost"
-user= "root"
-password=
+user= "test_user"
+password=jelix
 persistent= on
 ; when you have charset issues, enable force_encoding so the connection will be
 ; made with the charset indicated in jelix config
@@ -38,17 +38,17 @@ host=localhost
 database="testapp"
 usepdo=1
 ; you can change user option : use same value as user in testapp profiles
-user=root
+user=test_user
 ; you can change password option : use same value as password in testapp profiles
-password=
+password=jelix
 
 ; to run tests with pgsql. don't use pdo !
-;[jdb:testapp_pgsql]
-;driver="pgsql"
-;host=
-;database=testapp
-;user=
-;password=
+[jdb:testapp_pgsql]
+driver="pgsql"
+host=localhost
+database=testapp
+user=test_user
+password=jelix
 
 ; to run tests with sqlite
 [jdb:testapp_sqlite]
@@ -65,8 +65,8 @@ database="tests.sqlite3"
 driver="mysqli"
 database="testapp"
 host= "localhost"
-user= "root"
-password=
+user= "test_user"
+password=jelix
 persistent= on
 
 ;--------------- don't remove or change following "jdb:" sections !!!!!!!!
@@ -117,7 +117,7 @@ default =
 ;  host[] = memcache_host1:11211
 ;  host[] = memcache_host2:11211
 ;  ...
-;host = "localhost:11211"
+host = "localhost:11211"
 
 [jkvdb:usingfile]
 driver = file
@@ -135,9 +135,9 @@ automatic_cleaning_factor = 0
 ;file_umask =
 
 ;[jkvdb:usingredis]
-; driver=redis
-;host=localhost
-;port=6379
+driver=redis
+host=localhost
+port=6379
 
 [jkvdb:usingdb]
 driver = db
