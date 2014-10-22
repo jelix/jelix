@@ -12,7 +12,6 @@
 */
 
 $lib_jelix = __DIR__.'/../../../jelix-legacy/';
-include $lib_jelix.'/installer/jInstallerMessageProvider.class.php';
 include $lib_jelix.'/installer/jInstallChecker.class.php';
 
 /**

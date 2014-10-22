@@ -8,9 +8,6 @@
 namespace Jelix\Installer;
 use Jelix\Core\App as App;
 
-require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
-
-
 /**
  * main class for the installation
  *

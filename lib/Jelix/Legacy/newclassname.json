@@ -1,4 +1,5 @@
 {
+    "ghostInstallReporter": "\\Jelix\\installer\\Reporter\\NoOutput",
     "jApp": "\\Jelix\\Core\\App",
     "jAppManager": "\\Jelix\\Core\\jAppManager",
     "jAutoloader": "\\Jelix\\Core\\jAutoloader",
@@ -32,6 +33,7 @@
     "jInstallerComponentPlugin": "\\Jelix\\Installer\\PluginInstallLauncher",
     "jInstallerEntryPoint": "\\Jelix\\Installer\\EntryPoint",
     "jInstallerException": "\\Jelix\\Installer\\Exception",
+    "jInstallerMessageProvider": "\\Jelix\\SimpleLocalization\\Container",
     "jInstallerModule": "\\Jelix\\Installer\\ModuleInstaller",
     "jInstallerModuleInfos": "\\Jelix\\Installer\\ModuleStatus",
     "jInstallerPlugin": "\\Jelix\\Installer\\PluginInstaller",
@@ -51,6 +53,5 @@
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",
     "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector",
     "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog",
-    "textInstallReporter":"\\Jelix\\installer\\Reporter\\Console",
-    "ghostInstallReporter": "\\Jelix\\installer\\Reporter\\NoOutput"
+    "textInstallReporter": "\\Jelix\\installer\\Reporter\\Console"
 }

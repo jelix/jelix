@@ -401,7 +401,6 @@ cd lib/jelix-legacy/forms/controls
 cd lib/jelix-legacy/installer
   closed.html
 * jInstallChecker.class.php
-* jInstallerMessageProvider.class.php
 * messageProvider.fr.inc.php
 * messageProvider.en.inc.php
 
@@ -942,3 +941,6 @@ cd lib/Jelix/Legacy/installer
   jInstallerComponentPlugin.php
   jInstaller.php
   jInstallerEntryPoint.php
+  jInstallerMessageProvider.php
+cd lib/Jelix/SimpleLocalization
+  Container.php

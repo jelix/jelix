@@ -1,4 +1,5 @@
 {
+    "ghostInstallReporter": "installer/ghostInstallReporter.php",
     "jApp": "core/jApp.php",
     "jAppManager": "core/jAppManager.php",
     "jAutoloader": "core/jAutoloader.php",
@@ -32,6 +33,7 @@
     "jInstallerComponentPlugin": "installer/jInstallerComponentPlugin.php",
     "jInstallerEntryPoint": "installer/jInstallerEntryPoint.php",
     "jInstallerException": "installer/jInstallerException.php",
+    "jInstallerMessageProvider": "installer/jInstallerMessageProvider.php",
     "jInstallerModule": "installer/jInstallerModule.php",
     "jInstallerModuleInfos": "installer/jInstallerModuleInfos.php",
     "jInstallerPlugin": "installer/jInstallerPlugin.php",
@@ -56,7 +58,5 @@
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
     "jSelectorVar": "core/selector/jSelectorVar.php",
     "jSyslogLogger": "core/log/jSyslogLogger.php",
-    "textInstallReporter":"installer/textInstallReporter.php",
-    "ghostInstallReporter": "installer/ghostInstallReporter.php"
-    
+    "textInstallReporter": "installer/textInstallReporter.php"
 }

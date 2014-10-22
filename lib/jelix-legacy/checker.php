@@ -13,14 +13,15 @@
  *
  */
 #if STANDALONE_CHECKER
+// FIXME standalone checker completely broken
 #includephp ../Jelix/Installer/ReporterInterface.php
 #includephp ../Jelix/Installer/Reporter/Html.php
-#includephp installer/jInstallerMessageProvider.class.php
+//includephp installer/jInstallerMessageProvider.class.php
 #includephp installer/jInstallChecker.class.php
 #else
 include __DIR__.'/../Jelix/Installer/ReporterInterface.php';
 include __DIR__.'/../Jelix/Installer/Reporter/Html.php';
-include __DIR__.'/installer/jInstallerMessageProvider.class.php';
+include __DIR__.'/../Jelix/Legacy/installer/jInstallerMessageProvider.php';
 include __DIR__.'/installer/jInstallChecker.class.php';
 #endif
 
