@@ -104,10 +104,25 @@ class jManifestReader {
                         $m[3]=$m[2];
                     }
 
-                    $destfile = $currentdestdir.$m[3];
-                    $sourcefile = $this->sourcedir.$currentsrcdir.$m[2];
-
-                    $this->processFile($sourcefile, $destfile, $nbline, $m, $doPreprocessing, $doCompression);
+                    if ($m[2] == '__ALL__') {
+                        $dir = new DirectoryIterator($this->sourcedir.$currentsrcdir);
+                        foreach ($dir as $dirContent) {
+                            if (!$dirContent->isFile()) {
+                                continue;
+                            }
+                            $m[2] = $m[3] = $dirContent->getFileName();
+                            $destfile = $currentdestdir.$m[3];
+                            $sourcefile = $this->sourcedir.$currentsrcdir.$m[2];
+        
+                            $this->processFile($sourcefile, $destfile, $nbline, $m, $doPreprocessing, $doCompression);
+                        }
+                    }
+                    else {
+                        $destfile = $currentdestdir.$m[3];
+                        $sourcefile = $this->sourcedir.$currentsrcdir.$m[2];
+    
+                        $this->processFile($sourcefile, $destfile, $nbline, $m, $doPreprocessing, $doCompression);
+                    }
                 }
             }
             elseif(preg_match("!^\s*(\#.*)?$!",$line)){
