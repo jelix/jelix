@@ -6,7 +6,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer { 
-// enclose namespace here because this file is inserted into checker.php in some builds
+// enclose namespace here because this file is inserted into jelix_check_server.php by a build tool
 
 /**
 * interface for classes used as reporter for installation or check etc...

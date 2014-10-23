@@ -1,4 +1,3 @@
 
-sd lib/jelix-legacy/
-dd lib/
-* checker.php (jelix_check_server.php)
+cd lib/
+* jelix_check_server.php

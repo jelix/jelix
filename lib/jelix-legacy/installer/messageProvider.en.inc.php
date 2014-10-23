@@ -3,18 +3,13 @@
 return array(
     'title'=>'Jelix prequesites',
     'results'=>'Results',
-#ifnot STANDALONE_CHECKER
         'checker.title'     =>'Jelix Installation checking',
-#else
-#expand   'checker.title'   =>'Check your configuration server for Jelix __LIB_VERSION__',
-#endif
         'number.errors'     =>' errors.',
         'number.error'      =>' error.',
         'number.warnings'   =>' warnings.',
         'number.warning'    =>' warning.',
         'number.notices'    =>' notices.',
         'number.notice'     =>' notice.',
-#ifnot STANDALONE_CHECKER
         'build.not.found'   =>'BUILD jelix file is not found',
         'conclusion.error'  =>'You must fix the error in order to run your application correctly.',
         'conclusion.errors' =>'You must fix errors in order to run your application correctly.',
@@ -23,15 +18,6 @@ return array(
         'conclusion.notice' =>'The main prerequisites to run your application are ok, although there is a notice.',
         'conclusion.notices'=>'The main prerequisites to run your application are ok, although there are notices.',
         'conclusion.ok'     =>'The main prerequisites to run your application are ok',
-#else
-#expand       'conclusion.error'    =>'You must fix the error in order to run an application correctly with Jelix __LIB_VERSION__.',
-#expand       'conclusion.errors'   =>'You must fix errors in order to run an application correctly with Jelix __LIB_VERSION__.',
-#expand       'conclusion.warning'  =>'Your application for Jelix __LIB_VERSION__ may run without problems, but it is recommanded to fix the warning.',
-#expand       'conclusion.warnings' =>'Your application for Jelix __LIB_VERSION__ may run without problems, but it is recommanded to fix warnings.',
-#expand       'conclusion.notice'   =>'You can install an application for Jelix __LIB_VERSION__, although there is a notice.',
-#expand       'conclusion.notices'  =>'You can install an application for Jelix __LIB_VERSION__, although there are notices.',
-#expand       'conclusion.ok'       =>'You can install an application for Jelix __LIB_VERSION__.',
-#endif
         'cannot.continue'       =>'Cannot continue the checking: %s',
         'extension.not.installed'=>'The extension %s is not available',
         'extension.optional.not.installed'=>'the optional extension %s is not available',

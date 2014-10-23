@@ -4,18 +4,13 @@ return array(
     'title'=>'Prerequis',
     'results'=>'Resultats',
 
-#ifnot STANDALONE_CHECKER
        'checker.title'=>'Vérification de l\'installation de Jelix',
-#else
-#expand      'checker.title'=>'Vérification de votre serveur pour Jelix __LIB_VERSION__',
-#endif
         'number.errors'         =>' erreurs.',
         'number.error'          =>' erreur.',
         'number.warnings'       =>' avertissements.',
         'number.warning'        =>' avertissement.',
         'number.notices'        =>' remarques.',
         'number.notice'         =>' remarque.',
-#ifnot STANDALONE_CHECKER
         'build.not.found'       =>'Le fichier BUILD de jelix est introuvable',
         'conclusion.error'      =>'Vous devez corriger l\'erreur pour faire fonctionner correctement l\'application.',
         'conclusion.errors'     =>'Vous devez corriger les erreurs pour faire fonctionner correctement l\' application.',
@@ -24,15 +19,6 @@ return array(
         'conclusion.notice'     =>'Les prerequis essentiels pour faire fonctionner l\'application sont ok malgré la remarque.',
         'conclusion.notices'    =>'Les prerequis essentiels pour faire fonctionner l\'application sont ok malgré les remarques.',
         'conclusion.ok'         =>'Les prerequis essentiels pour faire fonctionner l\'application sont ok',
-#else
-#expand     'conclusion.error'      =>'Vous devez corriger l\'erreur pour faire fonctionner correctement une application Jelix __LIB_VERSION__.',
-#expand     'conclusion.errors'     =>'Vous devez corriger les erreurs pour faire fonctionner correctement une application Jelix __LIB_VERSION__.',
-#expand     'conclusion.warning'    =>'Une application Jelix __LIB_VERSION__ peut à priori fonctionner, mais il est préférable de corriger l\'avertissement pour être sûr.',
-#expand     'conclusion.warnings'   =>'Une application Jelix __LIB_VERSION__ peut à priori fonctionner, mais il est préférable de corriger les avertissements pour être sûr.',
-#expand     'conclusion.notice'     =>'Aucun problème pour installer une application pour Jelix  __LIB_VERSION__ malgré la remarque.',
-#expand     'conclusion.notices'    =>'Aucun problème pour installer une application pour Jelix  __LIB_VERSION__ malgré les remarques.',
-#expand     'conclusion.ok'         =>'Vous pouvez installer une application avec Jelix __LIB_VERSION__',
-#endif
         'cannot.continue'       =>'Les vérifications ne peuvent continuer : %s',
         'extension.not.installed'=>'L\'extension %s n\'est pas disponible',
         'extension.optional.not.installed'=>'L\'extension %s optionnelle n\'est pas disponible',
