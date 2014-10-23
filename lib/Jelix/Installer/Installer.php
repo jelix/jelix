@@ -123,7 +123,7 @@ class Installer {
      */
     function __construct (ReporterInterface $reporter, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new \jInstallerMessageProvider($lang);
+        $this->messages = new Checker\Messages($lang);
         $this->mainConfig = new \Jelix\IniFile\Modifier(App::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
         $appInfos = new \Jelix\Core\Infos\AppInfos();

@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
+        "jelix/simplelocalization":"self:version"
     },
     "extra": {
     },

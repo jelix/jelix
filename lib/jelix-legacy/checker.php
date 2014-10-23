@@ -1,38 +1,29 @@
 <?php
 /**
-* check a jelix installation
-*
 * @author      Laurent Jouanneau
 * @copyright   2007-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since       1.0b2
 */
+namespace Jelix\Installer\Checker;
+
+include __DIR__.'/installer/jInstallChecker.class.php';
 
 /**
- *
+ * show a page with results of jelix environment checking
  */
-#if STANDALONE_CHECKER
-// FIXME standalone checker completely broken
-#includephp ../Jelix/Installer/ReporterInterface.php
-#includephp ../Jelix/Installer/Reporter/Html.php
-//includephp installer/jInstallerMessageProvider.class.php
-#includephp installer/jInstallChecker.class.php
-#else
-include __DIR__.'/../Jelix/Installer/ReporterInterface.php';
-include __DIR__.'/../Jelix/Installer/Reporter/Html.php';
-include __DIR__.'/../Jelix/Legacy/installer/jInstallerMessageProvider.php';
-include __DIR__.'/installer/jInstallChecker.class.php';
-#endif
+class CheckerPage {
 
-$messages = new jInstallerMessageProvider();
-$reporter =new \Jelix\Installer\Reporter\Html($messages);
+    static public function show() {
 
-$check = new jInstallCheck($reporter, $messages);
-$check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
+        $messages = new Messages();
+        $reporter =new \Jelix\Installer\Reporter\Html($messages);
 
-header("Content-type:text/html;charset=UTF-8");
+        $check = new jInstallCheck($reporter, $messages);
+        $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
 
+        header("Content-type:text/html;charset=UTF-8");
 ?>
 
 <!DOCTYPE html>
@@ -40,9 +31,7 @@ header("Content-type:text/html;charset=UTF-8");
 <head>
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>
-
-    <style type="text/css">
-#includeraw ../jelix-www/design/jelix.css
+    <link type="text/css"  href="jelix/design/jelix.css" rel="stylesheet" />
 </style>
 
 </head><body >
@@ -51,3 +40,7 @@ header("Content-type:text/html;charset=UTF-8");
 <?php $check->run(); ?>
 </body>
 </html>
+<?php
+   }
+}
+

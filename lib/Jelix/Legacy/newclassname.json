@@ -33,7 +33,7 @@
     "jInstallerComponentPlugin": "\\Jelix\\Installer\\PluginInstallLauncher",
     "jInstallerEntryPoint": "\\Jelix\\Installer\\EntryPoint",
     "jInstallerException": "\\Jelix\\Installer\\Exception",
-    "jInstallerMessageProvider": "\\Jelix\\SimpleLocalization\\Container",
+    "jInstallerMessageProvider": "\\Jelix\\Installer\\Checker\\Messages",
     "jInstallerModule": "\\Jelix\\Installer\\ModuleInstaller",
     "jInstallerModuleInfos": "\\Jelix\\Installer\\ModuleStatus",
     "jInstallerPlugin": "\\Jelix\\Installer\\PluginInstaller",

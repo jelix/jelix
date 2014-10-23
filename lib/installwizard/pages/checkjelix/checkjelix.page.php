@@ -28,7 +28,7 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
      */
     function show ($tpl) {
         $this->tpl = $tpl;
-        $messages = new jInstallerMessageProvider();
+        $messages = new \Jelix\Installer\Checker\Messages();
         $check = new jInstallCheck($this, $messages);
         if (isset($this->config['verbose'])) {
             $check->verbose = (!!$this->config['verbose']);

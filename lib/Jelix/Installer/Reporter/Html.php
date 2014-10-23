@@ -15,11 +15,11 @@ namespace Jelix\Installer\Reporter {
 class Html implements \Jelix\Installer\ReporterInterface {
 
     /**
-     * @var \jInstallerMessageProvider
+     * @var \Jelix\SimpleLocalization\Container
      */
     protected $messageProvider;
 
-    function __construct(\jInstallerMessageProvider $messageProvider) {
+    function __construct(\Jelix\SimpleLocalization\Container $messageProvider) {
         $this->messageProvider = $messageProvider;
     }
 

@@ -13,56 +13,6 @@
 include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
 
 /**
- * an HTML reporter for jInstallChecker
- * @package jelix
- */
-class checkZoneInstallReporter implements \Jelix\Installer\ReporterInterface {
-    public $trace = '';
-    public $messageProvider = null;
-    protected $list='';
-    function __construct(jInstallerMessageProvider $messageProvider) {
-        $this->messageProvider = $messageProvider;
-    }
-    function start(){
-    }
-    function message($message, $type=''){
-        if ($type == 'error' || $type == 'warning' || $type == 'notice')
-            $this->list .= '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
-    }
-
-    function end($results){
-        if($this->list !='')
-            $this->trace = '<ul class="checkresults">'.$this->list.'</ul>';
-
-        $nbError = $results['error'];
-        $nbWarning = $results['warning'];
-        $nbNotice = $results['notice'];
-
-        $this->trace .= '<div class="results">';
-        if($nbError){
-            $this->trace .= ' '.$nbError. $this->messageProvider->get( ($nbError > 1?'number.errors':'number.error'));
-        }
-        if($nbWarning){
-            $this->trace .= ' '.$nbWarning. $this->messageProvider->get(($nbWarning > 1?'number.warnings':'number.warning'));
-        }
-        if($nbNotice){
-            $this->trace .= ' '.$nbNotice. $this->messageProvider->get(($nbNotice > 1?'number.notices':'number.notice'));
-        }
-
-        if($nbError){
-           $this->trace .= '<p>'.$this->messageProvider->get(($nbError > 1?'conclusion.errors':'conclusion.error')).'</p>';
-        }else  if($nbWarning){
-            $this->trace .= '<p>'.$this->messageProvider->get(($nbWarning > 1?'conclusion.warnings':'conclusion.warning')).'</p>';
-        }else  if($nbNotice){
-            $this->trace .= '<p>'.$this->messageProvider->get(($nbNotice > 1?'conclusion.notices':'conclusion.notice')).'</p>';
-        }else{
-            $this->trace .= '<p>'.$this->messageProvider->get('conclusion.ok').'</p>';
-        }
-        $this->trace .= "</div>";
-    }
-}
-
-/**
  * a zone to display a default start page with results of the installation check
  * @package jelix
  */
@@ -79,8 +29,8 @@ class check_installZone extends jZone {
             jApp::config()->locale = $locale;
         }
 
-        $messages = new jInstallerMessageProvider($lang);
-        $reporter = new checkZoneInstallReporter($messages);
+        $messages = new \Jelix\Installer\Checker\Messages($lang);
+        $reporter = new \Jelix\Installer\Reporter\HtmlBuffer($messages);
         $check = new jInstallCheck($reporter, $messages);
         $check->run();
 

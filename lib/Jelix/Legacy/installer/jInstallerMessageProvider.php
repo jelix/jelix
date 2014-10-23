@@ -10,7 +10,7 @@
 
 /**
  * dummy class for compatibility
- * @see \Jelix\SimpleLocalization\Container
+ * @see \Jelix\Installer\Checker\Messages
  * @deprecated
  */
-class jInstallerMessageProvider extends \Jelix\SimpleLocalization\Container { }
+class jInstallerMessageProvider extends \Jelix\Installer\Checker\Messages {}

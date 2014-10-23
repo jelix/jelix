@@ -28,7 +28,7 @@ class jInstallCheck {
     protected $reporter;
 
     /**
-     * @var jInstallerMessageProvider
+     * @var \Jelix\SimpleLocalization\Container
      */
     public $messages;
 
@@ -44,7 +44,7 @@ class jInstallCheck {
     public $checkForInstallation = false;
 
     function __construct (\Jelix\Installer\ReporterInterface $reporter,
-                          jInstallerMessageProvider $messages){
+                          \Jelix\SimpleLocalization\Container $messages){
         $this->reporter = $reporter;
         $this->messages = $messages;
 #if STANDALONE_CHECKER
