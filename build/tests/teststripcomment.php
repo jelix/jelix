@@ -9,20 +9,13 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-require_once(__DIR__.'/../lib/jManifest.class.php');
+require_once(__DIR__.'/../lib/jPhpCommentsRemover.php');
 
 require_once(__DIR__.'/../../lib/simpletest/unit_tester.php');
 require_once(__DIR__.'/../../lib/simpletest/reporter.php');
 require_once(__DIR__.'/../../lib/diff/difflib.php');
 
 define('SC_DATA_DIR','scdata/');
-
-
-class testManifest extends jManifest {
-    static function compressSource($content) {
-        return self::stripPhpComments($content);
-    }
-}
 
 
 
@@ -41,14 +34,13 @@ class StripCommentTestCase extends UnitTestCase {
 
     function testSimple(){
         foreach($this->testcase as $source=>$result){
-            $res = testManifest::compressSource(file_get_contents(SC_DATA_DIR.$source));
+            $res = jPhpCommentsRemover::stripComments(file_get_contents(SC_DATA_DIR.$source));
             //if (!file_exists(SC_DATA_DIR.$result))
             //    file_put_contents(SC_DATA_DIR.$result,$res);
 
             $expected = file_get_contents(SC_DATA_DIR.$result);
 
             if(!$this->assertEqual($res, $expected, "test $source / $result ")){
-                
                 $this->showDiff($expected, $res);
             }
         }
