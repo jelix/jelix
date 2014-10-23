@@ -1047,7 +1047,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         foreach( $ctrl->items as $itemName=>$listctrl){
             if (!$ctrl->isItemActivated($itemName))
                 continue;
-            echo '<li><label><input';
+            echo '<li id="'.$id.$itemName.'_item"><label><input';
             $attr['id'] = $id.$i;
             $attr['value'] = $itemName;
             if ($itemName==$value)
