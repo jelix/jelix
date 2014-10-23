@@ -153,6 +153,28 @@ cd lib/jelix-www/markitup/sets/default/images
   picture.png
   preview.png
   stroke.png
+
+cd lib/jelix-www/markitup/sets/markdown/
+  readme.txt
+  set.js
+  style.css
+cd lib/jelix-www/markitup/sets/markdown/images
+  bold.png
+  code.png
+  h1.png
+  h2.png
+  h3.png
+  h4.png
+  h5.png
+  h6.png
+  italic.png
+  link.png
+  list-bullet.png
+  list-numeric.png
+  picture.png
+  preview.png
+  quotes.png
+
 cd lib/jelix-www/markitup/sets/wiki
   set.js
   style.css
