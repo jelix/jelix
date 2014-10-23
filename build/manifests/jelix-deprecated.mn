@@ -274,8 +274,29 @@ cd lib/jelix-www/jquery/themes/smoothness/
   jquery-ui-1.8.2.custom.css
 cd lib/jelix-www/jquery/themes/smoothness/images
   ui-anim_basic_16x16.gif
-
 rmd lib/jelix-www/jquery/themes/default
+
+cd lib/jelix-www/wymeditor/
+   README
+rmd lib/jelix-www/wymeditor/lang
+cd lib/jelix-www/wymeditor/plugins/resizable
+  readme.txt
+cd lib/jelix-www/wymeditor/plugins/tidy/
+  README
+  tidy.php
+cd lib/jelix-www/wymeditor/skins/compact/
+  skin.js
+cd lib/jelix-www/wymeditor/skins/default/
+  skin.js
+cd lib/jelix-www/wymeditor/skins/minimal/
+  skin.js
+cd lib/jelix-www/wymeditor/skins/silver/
+  skin.js
+  README
+  COPYING
+cd lib/jelix-www/wymeditor/skins/twopanels/
+  skin.js
+
 rmd lib/jelix-www/xul
 
 rmd lib/jelix-www/wymeditor/config

@@ -18,14 +18,15 @@ cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
   wymiframe.css
 
 cd lib/jelix-www/wymeditor
-  jquery.wymeditor.js
+!  jquery.wymeditor.js
   GPL-license.txt
   MIT-license.txt
-  README
 cd lib/jelix-www/wymeditor/iframe/default
   __ALL__
-cd lib/jelix-www/wymeditor/lang
-c __ALL__
+cd lib/jelix-www/wymeditor/iframe/legacy/
+  __ALL__
+cd lib/jelix-www/wymeditor/iframe/pretty/
+  __ALL__
 cd lib/jelix-www/wymeditor/plugins/embed/
 c jquery.wymeditor.embed.js
 cd lib/jelix-www/wymeditor/plugins/fullscreen
@@ -35,12 +36,21 @@ cd lib/jelix-www/wymeditor/plugins/hovertools
 c jquery.wymeditor.hovertools.js
 cd lib/jelix-www/wymeditor/plugins/resizable
 c jquery.wymeditor.resizable.js
-  readme.txt
 cd lib/jelix-www/wymeditor/plugins/tidy
-  tidy.php
 c jquery.wymeditor.tidy.js
   wand.png
-  README
+cd lib/jelix-www/wymeditor/plugins/list/
+c  __ALL__
+cd lib/jelix-www/wymeditor/plugins/rdfa/
+c  __ALL__
+cd lib/jelix-www/wymeditor/plugins/structured_headings/
+c jquery.wymeditor.structured_headings.js
+  structured_headings.css
+  structured_headings_ie7_user.css
+  ruler_arrow.png
+  structured_headings_ie7_editor.css
+cd lib/jelix-www/wymeditor/plugins/table/
+c  __ALL__
 cd lib/jelix-www/wymeditor/skins
   wymeditor_icon.png
 cd lib/jelix-www/wymeditor/skins/compact
@@ -57,6 +67,11 @@ cd lib/jelix-www/wymeditor/skins/silver/images
   __ALL__
 cd lib/jelix-www/wymeditor/skins/twopanels
   __ALL__
+cd lib/jelix-www/wymeditor/skins/legacy/
+  __ALL__
+cd lib/jelix-www/wymeditor/skins/seamless/
+  __ALL__
+
 
 cd lib/jelix-www/jquery
   MIT-LICENSE.txt
