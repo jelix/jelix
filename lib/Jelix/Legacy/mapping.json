@@ -26,6 +26,7 @@
     "jIniFile": "utils/jIniFile.php",
     "jIniFileModifier": "utils/jIniFileModifier.php",
     "jIniMultiFilesModifier": "utils/jIniMultiFilesModifier.php",
+    "jInstallChecker": "installer/jInstallChecker.php",
     "jInstaller": "installer/jInstaller.php",
     "jInstallerBase": "installer/jInstallerBase.php",
     "jInstallerComponentBase": "installer/jInstallerComponentBase.php",

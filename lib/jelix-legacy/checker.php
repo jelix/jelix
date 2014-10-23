@@ -8,8 +8,6 @@
 */
 namespace Jelix\Installer\Checker;
 
-include __DIR__.'/installer/jInstallChecker.class.php';
-
 /**
  * show a page with results of jelix environment checking
  */
@@ -20,7 +18,7 @@ class CheckerPage {
         $messages = new Messages();
         $reporter =new \Jelix\Installer\Reporter\Html($messages);
 
-        $check = new jInstallCheck($reporter, $messages);
+        $check = new Checker($reporter, $messages);
         $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
 
         header("Content-type:text/html;charset=UTF-8");

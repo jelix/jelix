@@ -244,3 +244,4 @@ cd lib/jelix-legacy/installer
   messageProvider.fr.inc.php
   messageProvider.en.inc.php
   jInstallerMessageProvider.class.php
+  jInstallChecker.class.php

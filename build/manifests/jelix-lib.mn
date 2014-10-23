@@ -400,7 +400,6 @@ cd lib/jelix-legacy/forms/controls
 
 cd lib/jelix-legacy/installer
   closed.html
-* jInstallChecker.class.php
 
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
@@ -931,6 +930,7 @@ cd lib/Jelix/Installer/Checker
   installmessages.en.php
   installmessages.fr.php
 
+  Checker.php
 cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php
   jInstallerException.php
@@ -945,5 +945,6 @@ cd lib/Jelix/Legacy/installer
   jInstaller.php
   jInstallerEntryPoint.php
   jInstallerMessageProvider.php
+  jInstallChecker.php
 cd lib/Jelix/SimpleLocalization
   Container.php

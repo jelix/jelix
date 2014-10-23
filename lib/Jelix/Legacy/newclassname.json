@@ -26,6 +26,7 @@
     "jIniFile": "\\Jelix\\IniFile\\Manager",
     "jIniFileModifier": "\\Jelix\\IniFile\\Modifier",
     "jIniMultiFilesModifier": "\\Jelix\\IniFile\\MultiModifier",
+    "jInstallChecker": "\\Jelix\\Installer\\Checker\\Checker",
     "jInstaller": "\\Jelix\\Installer\\Installer",
     "jInstallerBase": "\\Jelix\\Installer\\AbstractInstaller",
     "jInstallerComponentBase": "\\Jelix\\Installer\\AbstractInstallLauncher",

@@ -10,8 +10,6 @@
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
-include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
-
 /**
  * a zone to display a default start page with results of the installation check
  * @package jelix
@@ -31,7 +29,7 @@ class check_installZone extends jZone {
 
         $messages = new \Jelix\Installer\Checker\Messages($lang);
         $reporter = new \Jelix\Installer\Reporter\HtmlBuffer($messages);
-        $check = new jInstallCheck($reporter, $messages);
+        $check = new \Jelix\Installer\Checker\Checker($reporter, $messages);
         $check->run();
 
         $this->_tpl->assign('wwwpath', jApp::wwwPath());

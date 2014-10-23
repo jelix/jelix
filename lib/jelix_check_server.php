@@ -10,13 +10,12 @@
 * @since       1.0b2
 */
 
+#includephp Jelix/Installer/Checker/Checker.php
 #includephp Jelix/Installer/ReporterInterface.php
 #includephp Jelix/Installer/Reporter/Html.php
 #includephp Jelix/SimpleLocalization/Container.php
 
 namespace {
-
-#includephp jelix-legacy/installer/jInstallChecker.class.php
 
     function getEnMessages() {
 #includephp Jelix/Installer/Checker/installmessages.en.php
@@ -24,7 +23,7 @@ namespace {
     function getFrMessages() {
 #includephp Jelix/Installer/Checker/installmessages.fr.php
     }
-    
+
     $en = array_merge(getEnMessages(),
                       array(
 #expand             'checker.title'   =>'Check your configuration server for Jelix __LIB_VERSION__',
@@ -57,9 +56,9 @@ namespace {
         );
     $reporter =new \Jelix\Installer\Reporter\Html($messages);
 
-    $check = new jInstallCheck($reporter, $messages);
+    $check = new \Jelix\Installer\Checker\Checker($reporter, $messages);
     $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
-    
+
     header("Content-type:text/html;charset=UTF-8");
 
 ?>
