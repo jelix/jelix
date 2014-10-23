@@ -7,6 +7,9 @@ cd .
 
 rmd lib/jelix/
 
+cd lib/jelix-legacy
+  checker.php
+
 cd lib/jelix-legacy/core/
   jApp.class.php
   jAutoloader.class.php

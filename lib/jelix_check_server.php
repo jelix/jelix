@@ -10,12 +10,24 @@
 * @since       1.0b2
 */
 
-#includephp Jelix/Installer/Checker/Checker.php
+#includephp Jelix/Installer/Checker/CheckerBase.php
 #includephp Jelix/Installer/ReporterInterface.php
 #includephp Jelix/Installer/Reporter/Html.php
 #includephp Jelix/SimpleLocalization/Container.php
 
 namespace {
+
+    class checker extends \Jelix\Installer\Checker\CheckerBase {
+        function __construct (\Jelix\Installer\ReporterInterface $reporter,
+                          \Jelix\SimpleLocalization\Container $messages) {
+            parent::__construct ($reporter, $messages);
+            $this->buildProperties = array(
+#expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
+            );
+        }
+
+    }
+
 
     function getEnMessages() {
 #includephp Jelix/Installer/Checker/installmessages.en.php
@@ -56,7 +68,7 @@ namespace {
         );
     $reporter =new \Jelix\Installer\Reporter\Html($messages);
 
-    $check = new \Jelix\Installer\Checker\Checker($reporter, $messages);
+    $check = new checker($reporter, $messages);
     $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
 
     header("Content-type:text/html;charset=UTF-8");

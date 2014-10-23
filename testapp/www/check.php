@@ -11,7 +11,5 @@
 
 require ('../application.init.php');
 
-require (JELIX_LIB_PATH.'checker.php');
-
 \Jelix\Installer\Checker\CheckerPage::show();
 

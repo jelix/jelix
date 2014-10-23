@@ -83,7 +83,6 @@ cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
 * init.php
-  checker.php
   INSTALL
   LICENCE
   VERSION
@@ -929,8 +928,10 @@ cd lib/Jelix/Installer/Checker
   Messages.php
   installmessages.en.php
   installmessages.fr.php
-
   Checker.php
+  CheckerBase.php
+  CheckerPage.php
+
 cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php
   jInstallerException.php
