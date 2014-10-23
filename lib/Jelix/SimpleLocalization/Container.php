@@ -64,7 +64,7 @@ class Container {
 
         if (strpos($filePath, '%LANG%') === false) {
             if (!file_exists($filePath)) {
-                throw new \Exception("SimpleLocalization/Container: No file for messages for $lang");
+                throw new \Exception("SimpleLocalization/Container: No file $filePath for messages for $lang");
             }
             $messages = include($filePath);
             if (!is_array($messages)) {
@@ -85,7 +85,7 @@ class Container {
         if (!file_exists($file)) {
             $file = str_replace('%LANG%', 'en', $filePath);
             if (!file_exists($file)) {
-                throw new \Exception("SimpleLocalization/Container: No file for messages for $lang");
+                throw new \Exception("SimpleLocalization/Container: No file $file for messages for $lang");
             }
         }
         $messages = include($file);

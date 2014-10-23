@@ -10,9 +10,9 @@ namespace Jelix\Installer\Checker;
 /**
  * Allow to access to some localized messages
  */
-class Messages extends \Jelix\SimpleLocalization {
+class Messages extends \Jelix\SimpleLocalization\Container {
 
     function __construct($lang = '' ) {
-        parent::__construct(__DIR__.'/installmessages.%LANG%.php/', $lang);
+        parent::__construct(__DIR__.'/installmessages.%LANG%.php', $lang);
     }
 }

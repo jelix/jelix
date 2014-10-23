@@ -17,7 +17,7 @@ namespace Jelix\Installer\Checker {
  * check an installation of a jelix application
  * @since 1.0b2
  */
-class Checker {
+class CheckerBase {
 
     /**
      * the object responsible of the results output
@@ -129,7 +129,7 @@ class Checker {
             $this->error('php.bad.version');
             $notice = $this->messages->get('php.version.required', $this->buildProperties['PHP_VERSION_TARGET']);
             $notice.= '. '.$this->messages->get('php.version.current',phpversion());
-            $this->reporter->showNotice($notice);
+            $this->reporter->message($notice, 'notice');
             $ok=false;
         }
         else if ($this->verbose) {
@@ -208,7 +208,7 @@ class Checker {
         return $ok;
     }
 
-    function checkPhpSettings(){
+    protected function checkPhpSettings(){
         $ok = true;
         if(ini_get('magic_quotes_gpc') == 1){
             $this->error('ini.magic_quotes_gpc');

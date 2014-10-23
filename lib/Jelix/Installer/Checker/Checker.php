@@ -109,10 +109,14 @@ class Checker extends CheckerBase {
     }
 
     protected function loadBuildFile() {
-        if (!file_exists(JELIX_LIB_PATH.'BUILD')){
+        $composerFile = __DIR__.'/../composer.json';
+        if (!file_exists($composerFile)){
             throw new \Exception($this->messages->get('build.not.found'));
         } else {
-            $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+            $content = json_decode(file_get_contents($composerFile));
+            preg_match('/([0-9\.]+)/', $content->require->php, $m);
+            echo "version:".$m[1];
+            $this->buildProperties['PHP_VERSION_TARGET'] = $m[1];
         }
     }
 
