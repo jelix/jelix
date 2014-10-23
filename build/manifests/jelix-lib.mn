@@ -401,8 +401,6 @@ cd lib/jelix-legacy/forms/controls
 cd lib/jelix-legacy/installer
   closed.html
 * jInstallChecker.class.php
-* messageProvider.fr.inc.php
-* messageProvider.en.inc.php
 
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
@@ -930,6 +928,8 @@ cd lib/Jelix/Installer/Reporter
   NoOutput.php
 cd lib/Jelix/Installer/Checker
   Messages.php
+  installmessages.en.php
+  installmessages.fr.php
 
 cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php

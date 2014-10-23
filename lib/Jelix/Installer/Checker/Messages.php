@@ -13,6 +13,6 @@ namespace Jelix\Installer\Checker;
 class Messages extends \Jelix\SimpleLocalization {
 
     function __construct($lang = '' ) {
-        parent::__construct(__DIR__.'/../../../jelix-legacy/installer/messageProvider.%LANG%.inc.php/', $lang);
+        parent::__construct(__DIR__.'/installmessages.%LANG%.php/', $lang);
     }
 }

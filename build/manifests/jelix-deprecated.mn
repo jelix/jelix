@@ -241,5 +241,6 @@ cd lib/jelix-legacy/installer
   jInstaller.class.php
   jInstallerEntryPoint.class.php
   jInstallerApplication.class.php
-
+  messageProvider.fr.inc.php
+  messageProvider.en.inc.php
   jInstallerMessageProvider.class.php

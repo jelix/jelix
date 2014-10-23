@@ -19,10 +19,10 @@ namespace {
 #includephp jelix-legacy/installer/jInstallChecker.class.php
 
     function getEnMessages() {
-#includephp jelix-legacy/installer/messageProvider.en.inc.php
+#includephp Jelix/Installer/Checker/installmessages.en.php
     }
     function getFrMessages() {
-#includephp jelix-legacy/installer/messageProvider.en.inc.php
+#includephp Jelix/Installer/Checker/installmessages.fr.php
     }
     
     $en = array_merge(getEnMessages(),
