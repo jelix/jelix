@@ -3,7 +3,7 @@ cd testapp
   .htaccess
   application.init.php
   composer.json
-  INSTALL.txt
+  README.md
   cmd.php
 cd testapp/plugins
   .htaccess
