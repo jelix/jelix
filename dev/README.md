@@ -23,6 +23,9 @@ vagrant ssh
 Go into the testapp dir built by updatesrc.sh, and launch the installer
 
 ```
+cd /jelixapp/_build/testapp/var/config/
+cp localconfig.ini.php.dist localconfig.ini.php
+cp profiles.ini.php.dist profiles.ini.php
 cd /jelixapp/_build/testapp/install/
 php installer.php
 ```
