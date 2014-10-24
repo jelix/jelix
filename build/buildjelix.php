@@ -252,7 +252,6 @@ file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
 // the standalone checker
 
 $var = ENV::getAll();
-$var['STANDALONE_CHECKER'] = true;
 jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , $var);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix-legacy/VERSION', $LIB_VERSION);
