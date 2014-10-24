@@ -37,17 +37,6 @@ class jHtmlRespReporter extends SimpleReporter {
       $this->_response->body->append('MAIN',$str);
    }
 
-   /*function paintPass($message) {
-      parent::paintPass($message);
-
-      $str = "<span class=\"pass\">Pass</span>: ";
-      $breadcrumb = $this->getTestList();
-      array_shift($breadcrumb);
-      $str.= implode(" -&gt; ", $breadcrumb);
-      $str.= " -&gt; " . $this->_htmlEntities($message) . "<br />\n";
-      $this->_response->body->append('MAIN',$str);
-   }*/
-
    function paintFail($message) {
       parent::paintFail($message);
 

@@ -931,9 +931,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputUpload($ctrl, &$attr) {
-        /*if($ctrl->maxsize){
-            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$ctrl->maxsize,'"',$this->_endt;
-        }*/
+
         $attr['type'] = 'file';
         $attr['value'] = '';
         echo '<input';

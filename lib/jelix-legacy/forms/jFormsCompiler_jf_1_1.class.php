@@ -246,9 +246,6 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         $this->attrReadOnly($source, $attributes);
         $source[]='$topctrl = $ctrl;';
         $ctrlcount = $this->readChildControls($source, 'group', $control, array('label'));
-        /*if ($ctrlcount == 0) {
-             throw new jException('jelix~formserr.no.child.control',array('group',$this->sourceFile));
-        }*/
         $source[]='$ctrl = $topctrl;';
         return false;
     }
@@ -303,10 +300,6 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             $ctrlcount = $this->readChildControls($source, 'choice', $item, array('label'), str_replace("'","\\'",$value));
             //$itemCount ++;
         }
-
-        /*if ($itemCount == 0) {
-            throw new jException('jelix~formserr.no.child.control',array('choice',$this->sourceFile));
-        }*/
 
         $source[]='$topctrl->defaultValue=\''.str_replace('\'','\\\'',$selectedvalue).'\';';
         $source[]='$ctrl = $topctrl;';

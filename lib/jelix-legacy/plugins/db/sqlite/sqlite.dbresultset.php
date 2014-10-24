@@ -20,15 +20,6 @@ class sqliteDbResultSet extends jDbResultSet {
     protected function  _fetch (){
         $ret =  sqlite_fetch_object($this->_idResult);
         return $ret;
-        /*if($this->_fetchMode == jDbConnection::FETCH_CLASS){
-            if ($this->_fetchModeCtoArgs)
-                $ret =  sqlite_fetch_object ($this->_idResult, $this->_fetchModeParam, $this->_fetchModeCtoArgs);
-            else
-                $ret =  sqlite_fetch_object ($this->_idResult, $this->_fetchModeParam);
-        }else{
-            $ret =  sqlite_fetch_object ($this->_idResult);
-        }
-        return $ret;*/
     }
     protected function _free (){
         return;

@@ -25,31 +25,7 @@ function JUTcompareTestName($a,$b){
 class jRunnerPreparer { 
     
     protected $testList = array();
-    
-    /*function getTestsList($accesType = 'cli' ){
-        $regAcces = ( $accesType=='cli' ) ? '(html_)?cli' : 'html(_cli)?' ;
-        $regCategory = '(\\.\w+)?' ;
-        foreach(jApp::config()->_modulesPathList as $module=>$path){
-            if(file_exists($path.'tests/')){
-                $dir = new DirectoryIterator($path.'tests/');
-                foreach ($dir as $dirContent) {
-                    if ($dirContent->isFile() && preg_match("/^(.+)\\.".$regAcces.$regCategory."\\.php$/", $dirContent->getFileName(), $m) ) {
-                        $lib = str_replace('.',': ',$m[1]);
-                        $lib = str_replace('_',' ',$lib);
-                        $category = isset($m[3]) ? str_replace('.','',$m[3]) : '';
-                        $testCategory = $category ? ' ('.$category.')' : '' ;
-                        $testName = $category ? $m[1].'.'.$category : $m[1] ;
-                        $this->testsList[$module][] = array($dirContent->getFileName(), $testName , $lib.$testCategory , $category ) ;
-                    }
-                }
-                if(isset($this->testsList[$module])){
-                    usort($this->testsList[$module], "JUTcompareTestName");
-                }
-            }
-        }
-        return $this->testsList;
-        
-    } */
+
     const REG_CATEGORY = '(\\.\w+)?' ;
     const REG_CLI = '(html_)?cli';
     const REG_HTML ='html(_cli)?';
@@ -92,7 +68,7 @@ class jRunnerPreparer {
             return false;
         }
     }
-    
+
     function filterTestsByCategory( $category = false , $testsList=array() ) { 
         if ( $category ==false || count($testsList)==0 ) {
             return $testsList;
@@ -107,5 +83,4 @@ class jRunnerPreparer {
             return $filtredTestsList;
         }
     }
-    
 }

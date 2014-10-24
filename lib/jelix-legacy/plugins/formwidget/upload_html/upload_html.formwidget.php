@@ -28,10 +28,6 @@ class upload_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
 
     function outputControl() {
         $attr = $this->getControlAttributes();
-
-        /*if($this->ctrl->maxsize){
-            echo '<input type="hidden" name="MAX_FILE_SIZE" value="',$this->ctrl->maxsize,'"','/>';
-        }*/
         $attr['type'] = 'file';
         $attr['value'] = '';
         echo '<input';

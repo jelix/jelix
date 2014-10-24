@@ -73,10 +73,6 @@ class mssqlDbConnection extends jDbConnection {
     protected function _connect (){
         $funcconnect = ($this->profile['persistent']? 'mssql_pconnect':'mssql_connect');
         if($cnx = @$funcconnect ($this->profile['host'], $this->profile['user'], $this->profile['password'])){
-            /*if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
-            && isset($this->_charsets[jApp::config()->charset])){
-                mssql_query("SET ANSI_DEFAULTS ON", $cnx);
-            }*/
             return $cnx;
         }else{
             throw new jException('jelix~db.error.connection',$this->profile['host']);

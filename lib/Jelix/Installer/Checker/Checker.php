@@ -99,12 +99,6 @@ class Checker extends CheckerBase {
         else
             throw new \Exception($this->messages->get('too.critical.error'));
 
-        /*if(!isset($GLOBALS['config_file']) ||
-           empty($GLOBALS['config_file']) ||
-           !file_exists(App::configPath($GLOBALS['config_file']))){
-            throw new \Exception($this->messages->get('config.file'));
-        }*/
-
         return $ok;
     }
 

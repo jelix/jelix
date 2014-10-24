@@ -133,8 +133,6 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
                 if ($plugin) {
                     $this->plugins[$name] = $plugin;
                 }
-                /*else
-                    throw new jException('');*/
             }
         }
     }

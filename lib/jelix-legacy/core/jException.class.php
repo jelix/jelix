@@ -57,14 +57,6 @@ class jException extends Exception {
     }
 
     /**
-     * magic function for echo
-     * @return string localized message
-     */
-    /*public function __toString() {
-        return $this->localizedMessage;
-    }*/
-
-    /**
      * getter for the locale parameters
      * @return string
      */
