@@ -23,16 +23,26 @@
     },
     "replace": {
         "jelix/core": "self.version",
-        "jelix/legacy": "self.version"
+        "jelix/event": "self.version",
+        "jelix/external": "self.version",
+        "jelix/inifile": "self.version",
+        "jelix/installer": "self.version",
+        "jelix/legacy": "self.version",
+        "jelix/locale": "self.version",
+        "jelix/logger": "self.version",
+        "jelix/routing": "self.version",
+        "jelix/simplelocalization": "self.version"
     },
     "autoload": {
         "psr-4": {
             "jelix\\": "lib/jelix-legacy",
             "Jelix\\": "lib/Jelix"
-            
         },
         "classmap": [ ],
-        "files": [ "lib/jelix-legacy/init.php" ]
+        "files": [
+            "lib/Jelix/Legacy/init.php",
+            "lib/jelix-legacy/init.php"
+        ]
     },
     "minimum-stability": "dev"
 }

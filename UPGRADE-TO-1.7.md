@@ -1,8 +1,7 @@
 Migration
-=========
+==========
 
-
-Here are instructions to migrate an Jelix 1.5.* application to the trunk version
+Here are instructions to migrate your Jelix application from Jelix 1.6 to the dev-master version
 
 WARNING: this is experimental!!
 
@@ -10,7 +9,7 @@ WARNING: this is experimental!!
 - Create a composer.json file into your application directory.
   If you already have a such file in your project, add the package "jelix/jelix"
   in requirements.
-  
+
   Here is an example of such file:
 
 ```
@@ -34,7 +33,8 @@ WARNING: this is experimental!!
    composer install
 ```
 
-- then Jelix 1.6 and all of its dependencies are installed into a yourapp/vendor/ directory.
+- then Jelix and all of its dependencies are installed into a yourapp/vendor/ directory.
+
 - in your application.init.php, you must replace
 
     require (__DIR__.'/../lib/jelix/init.php');
