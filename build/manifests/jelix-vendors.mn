@@ -74,39 +74,6 @@ cd lib/php5redis/
   Redis.php
   README.md
 
-cd lib/phpMailer
-! class.phpmailer.php
-! class.pop3.php
-! class.smtp.php
-! LICENSE
-! README
-
-cd lib/phpMailer/language
-! phpmailer.lang-br.php
-! phpmailer.lang-ca.php
-! phpmailer.lang-ch.php
-! phpmailer.lang-cz.php
-! phpmailer.lang-de.php
-! phpmailer.lang-dk.php
-! phpmailer.lang-en.php
-! phpmailer.lang-es.php
-! phpmailer.lang-et.php
-! phpmailer.lang-fi.php
-! phpmailer.lang-fo.php
-! phpmailer.lang-fr.php
-! phpmailer.lang-hu.php
-! phpmailer.lang-it.php
-! phpmailer.lang-ja.php
-! phpmailer.lang-nl.php
-! phpmailer.lang-no.php
-! phpmailer.lang-pl.php
-! phpmailer.lang-ro.php
-! phpmailer.lang-ru.php
-! phpmailer.lang-se.php
-! phpmailer.lang-tr.php
-! phpmailer.lang-zh.php
-! phpmailer.lang-zh_cn.php
-
 #if ENABLE_DEVELOPER
 cd lib/simpletest
   arguments.php

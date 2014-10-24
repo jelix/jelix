@@ -5,32 +5,26 @@
 * sendmail, PHP mail(), SMTP, or files for tests.  Methods are
 * based upon the standard AspEmail(tm) classes.
 *
-* @package     jelix
-* @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier, GeekBay, Julien Issler
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
 * @copyright   2010 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require(LIB_PATH.'phpMailer/class.phpmailer.php');
-
+namespace Jelix\Mailer;
 
 /**
  * jMailer based on PHPMailer - PHP email transport class
- * @package jelix
- * @subpackage  utils
  * @author Laurent Jouanneau
  * @contributor Kévin Lepeltier
- * @copyright   2006-2008 Laurent Jouanneau
+ * @copyright   2006-2014 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier
- * @since 1.0b1
  * @see PHPMailer
  */
-class jMailer extends PHPMailer {
+class Mailer extends \PHPMailer {
 
     /**
      * the selector of the template used for the mail.
@@ -55,8 +49,8 @@ class jMailer extends PHPMailer {
     /**
      * initialize some member
      */
-    function __construct(){
-        $config = jApp::config();
+    function __construct($exception = true){
+        $config = \Jelix\Core\App::config();
         $this->defaultLang = $config->locale;
         $this->CharSet = $config->charset;
         $this->Mailer = $config->mailer['mailerType'];
@@ -77,12 +71,11 @@ class jMailer extends PHPMailer {
         }
 
         $this->FromName = $config->mailer['webmasterName'];
-        $this->filePath = jApp::varPath($config->mailer['filesDir']);
+        $this->filePath = \Jelix\Core\App::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
 
         parent::__construct(true);
-        
     }
 
     /**
@@ -124,9 +117,9 @@ class jMailer extends PHPMailer {
      *                 IsHTML() is called.
      * @return jTpl the template object.
      */
-    function Tpl( $selector, $isHtml = false ) {
+    public function Tpl( $selector, $isHtml = false ) {
         $this->bodyTpl = $selector;
-        $this->tpl = new jTpl();
+        $this->tpl = new \jTpl();
         $this->IsHTML($isHtml);
         return $this->tpl;
     }
@@ -137,11 +130,11 @@ class jMailer extends PHPMailer {
      * variable to view description of the error.
      * @return bool
      */
-    function Send() {
+    public function send() {
 
         if (isset($this->bodyTpl) && $this->bodyTpl != "") {
             if ($this->tpl == null)
-                $this->tpl = new jTpl();
+                $this->tpl = new \jTpl();
             $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
@@ -185,7 +178,7 @@ class jMailer extends PHPMailer {
             $mailtpl->assign('FromName', $this->FromName );
 
             if ($this->ContentType == 'text/html') {
-                $this->MsgHTML($mailtpl->fetch( $this->bodyTpl, 'html'));
+                $this->msgHTML($mailtpl->fetch( $this->bodyTpl, 'html'));
             }
             else
                 $this->Body = $mailtpl->fetch( $this->bodyTpl, 'text');
@@ -194,7 +187,7 @@ class jMailer extends PHPMailer {
         return parent::Send();
     }
 
-    public function CreateHeader() {
+    public function createHeader() {
         if ($this->Mailer == 'file') {
             // to have all headers in the file, like cc, bcc...
             $this->Mailer = 'sendmail';
@@ -202,8 +195,9 @@ class jMailer extends PHPMailer {
             $this->Mailer = 'file';
             return $headers;
         }
-        else
+        else {
             return parent::CreateHeader();
+        }
     }
 
     /**
@@ -212,19 +206,19 @@ class jMailer extends PHPMailer {
      * @return bool
      */
     protected function FileSend($header, $body) {
-        return jFile::write ($this->getStorageFile(), $header.$body);
+        return \jFile::write ($this->getStorageFile(), $header.$body);
     }
 
     protected function getStorageFile() {
-        return rtrim($this->filePath,'/').'/mail.'.jApp::coord()->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        return rtrim($this->filePath,'/').'/mail.'.\Jelix\Core\App::coord()->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
 
-    function SetLanguage($lang_type = 'en', $lang_path = 'language/') {
+    public function setLanguage($lang_type = 'en', $lang_path = 'language/') {
         $lang = explode('_', $lang_type);
         return parent::SetLanguage($lang[0], $lang_path);
     }
 
-    protected function Lang($key) {
+    protected function lang($key) {
       if(count($this->language) < 1) {
         $this->SetLanguage($this->defaultLang); // set the default language
       }
@@ -235,30 +229,30 @@ class jMailer extends PHPMailer {
       }
     }
 
-    protected function SendmailSend($header, $body) {
+    protected function sendmailSend($header, $body) {
         if ($this->copyToFiles)
             $this->copyMail($header, $body);
-        return parent::SendmailSend($header, $body);
+        return parent::sendmailSend($header, $body);
     }
 
-    protected function MailSend($header, $body) {
+    protected function mailSend($header, $body) {
         if ($this->copyToFiles)
             $this->copyMail($header, $body);
         return parent::MailSend($header, $body);
     }
 
-    protected function SmtpSend($header, $body) {
+    protected function smtpSend($header, $body) {
         if ($this->copyToFiles)
             $this->copyMail($header, $body);
-        return parent::SmtpSend($header, $body);
+        return parent::smtpSend($header, $body);
     }
 
     protected function copyMail($header, $body) {
         $dir = rtrim($this->filePath,'/').'/copy-'.date('Ymd').'/';
-        if (isset(jApp::coord()->request))
-            $ip = jApp::coord()->request->getIP();
+        if (isset(\Jelix\Core\App::coord()->request))
+            $ip = \Jelix\Core\App::coord()->request->getIP();
         else $ip = "no-ip";
         $filename = $dir.'mail-'.$ip.'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
-        jFile::write ($filename, $header.$body);
+        \jFile::write ($filename, $header.$body);
     }
 }

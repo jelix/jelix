@@ -212,6 +212,8 @@ cd lib/php5redis
   README.txt
   Php5Redis.php
 
+rmd lib/phpMailer
+
 cd lib/jelix-scripts/commands/
   migrate.cmd.php
 

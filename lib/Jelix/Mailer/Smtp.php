@@ -6,14 +6,12 @@
 * and communicate with any SMTP server. It implements
 * all the SMTP functions defined in RFC821 except TURN.
 *
-* @package     jelix
-* @subpackage  utils
 * @author      Laurent Jouanneau
-* @copyright   2006-2008 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-require(LIB_PATH.'phpMailer/class.smtp.php');
+namespace Jelix\Mailer;
 
 /**
  * SMTP is rfc 821 compliant and implements all the rfc 821 SMTP
@@ -23,12 +21,9 @@ require(LIB_PATH.'phpMailer/class.smtp.php');
  *
  * This class is just a simple wrapper around SMTP.
  *
- * @package jelix
- * @subpackage  utils
- * @since 1.0b1
  * @see SMTP
  */
-class jSmtp extends SMTP {
+class Smtp extends \SMTP {
 
 
 }

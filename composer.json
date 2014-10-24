@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "phpmailer/phpmailer": "5.2.9"
     },
     "archive": {
         "exclude": ["/build", "/temp", "/testapp", "Makefile"]

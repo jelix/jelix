@@ -1,4 +1,5 @@
 cd .
+  composer.json
 
 cd lib
   .htaccess
@@ -953,5 +954,6 @@ cd lib/Jelix/Legacy/installer
 cd lib/Jelix/SimpleLocalization
   Container.php
 cd lib/Jelix/Mailer
+  composer.json
   Mailer.php
   Smtp.php
