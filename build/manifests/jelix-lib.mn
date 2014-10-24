@@ -51,6 +51,7 @@ cd lib/Jelix/Legacy/
   composer.json
   init.php
   mapping.json
+  Autoloader.php
 
 cd lib/Jelix/Legacy/core
   jApp.php
@@ -68,10 +69,10 @@ cd lib/Jelix/Legacy/core
   jLog.php
   jLocale.php
   jBundle.php
-
   jCoordinator.php
   jRequest.php
   jResponse.php
+
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
