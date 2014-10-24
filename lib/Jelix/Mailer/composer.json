@@ -1,0 +1,29 @@
+{
+    "name": "jelix/mailer",
+    "type": "library",
+    "description": "Wrapper around PHPMailer",
+    "keywords": [],
+    "homepage": "http://jelix.org",
+    "license": "LGPL-2.1",
+    "authors": [
+        {
+            "name": "Laurent Jouanneau",
+            "email": "laurent@jelix.org"
+        },
+        {
+            "name": "Jelix Community",
+            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "phpmailer/phpmailer": "5.2.9"
+    },
+    "extra": {
+    },
+    "autoload": {
+        "psr-4" : {
+            "Jelix\\Mailer\\" : ""
+        }
+    }
+}

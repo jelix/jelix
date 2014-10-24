@@ -44,6 +44,7 @@
     "jLogErrorMessage": "\\Jelix\\Logger\\Message\\Error",
     "jLogMessage": "\\Jelix\\Logger\\Message\\Text",
     "jMailLogger": "\\Jelix\\Logger\\Output\\Mail",
+    "jMailer": "\\Jelix\\Mailer\\Mailer",
     "jProfiles": "\\Jelix\\Core\\Profiles",
     "jRequest": "\\Jelix\\Routing\\ClientRequest",
     "jResponse": "\\Jelix\\Routing\\ServerResponse",
@@ -53,6 +54,7 @@
     "jSelectorLoc": "\\Jelix\\Locale\\LocaleSelector",
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",
     "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector",
+    "jSmtp": "\\Jelix\\Mailer\\Smtp",
     "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog",
     "textInstallReporter": "\\Jelix\\installer\\Reporter\\Console"
 }

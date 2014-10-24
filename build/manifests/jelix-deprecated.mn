@@ -39,6 +39,8 @@ cd lib/jelix-legacy/utils/
   jIniFile.class.php
   jIniFileModifier.class.php
   jIniMultiFilesModifier.class.php
+  jMailer.class.php
+  jSmtp.class.php
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
 

@@ -44,6 +44,7 @@
     "jLogErrorMessage": "core/log/jLogErrorMessage.php",
     "jLogMessage": "core/log/jLogMessage.php",
     "jMailLogger": "core/log/jMailLogger.php",
+    "jMailer": "utils/jMailer.php",
     "jProfiles": "utils/jProfiles.php",
     "jRequest": "core/jRequest.php",
     "jResponse": "core/jResponse.php",
@@ -58,6 +59,7 @@
     "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
     "jSelectorVar": "core/selector/jSelectorVar.php",
+    "jSmtp": "utils/jSmtp.php",
     "jSyslogLogger": "core/log/jSyslogLogger.php",
     "textInstallReporter": "installer/textInstallReporter.php"
 }

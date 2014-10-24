@@ -81,6 +81,8 @@ cd lib/Jelix/Legacy/utils
   jIniFileModifier.php
   jIniMultiFilesModifier.php
 
+  jMailer.php
+  jSmtp.php
 cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
@@ -428,13 +430,11 @@ cd lib/jelix-legacy/utils/
   jImageModifier.class.php
   jJson.class.php
   jJsonRpc.class.php
-  jMailer.class.php
   jMessage.class.php
   jMethodSniffer.class.php
   jRSS20Reader.class.php
   jRSS20Info.class.php
   jRSS20Item.class.php
-  jSmtp.class.php
   jSoapClient.class.php
   jSoapObject.class.php
   jVersionComparator.class.php
@@ -952,3 +952,6 @@ cd lib/Jelix/Legacy/installer
   jInstallChecker.php
 cd lib/Jelix/SimpleLocalization
   Container.php
+cd lib/Jelix/Mailer
+  Mailer.php
+  Smtp.php
