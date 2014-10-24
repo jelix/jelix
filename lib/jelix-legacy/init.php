@@ -52,63 +52,62 @@ define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_e
 
 error_reporting (E_ALL | E_STRICT);
 
-
 /**
- * contains path for __autoload function
- * @global array $gLibPath
- * @name $gLibPath
- * @see __autoload()
+ * Jelix Autoloader
  */
-$GLOBALS['gLibPath'] =array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
+class LegacyJelixAutoloader {
+
+    static public $libPath;
+
+    static public function loadClass($class) {
+        if (strpos($class, 'jelix\\') === 0) {
+            $f = LIB_PATH.'jelix-legacy/'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class,6)).'.php';
+        }
+        elseif (preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)) {
+            $f = self::$libPath[$m[1]].$class.'.class.php';
+        }
+        elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
+            // for DAO which are stored in sessions for example
+            if (!isset(jApp::config()->_modulesPathList[$m[1]])) {
+                //this may happen if we have several entry points, but the current one does not have this module accessible
+                return;
+            }
+            $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
+            if (jApp::config()->compilation['checkCacheFiletime']) {
+                // if it is needed to check the filetime, then we use jIncluder
+                // because perhaps we will have to recompile the dao before the include
+                jIncluder::inc($s);
+            }
+            else {
+                $f = $s->getCompiledFilePath();
+                // we should verify that the file is here and if not, we recompile
+                // (case where the temp has been cleaned, see bug #6062 on berlios.de)
+                if (!file_exists($f)) {
+                    jIncluder::inc($s);
+                }
+                else {
+                    require($f);
+                }
+            }
+            return;
+        }
+        else {
+            $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
+        }
+
+        if(file_exists($f)){
+            require($f);
+        }
+    }
+}
+
+LegacyJelixAutoloader::$libPath =array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/',
  'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
  'KV'=>JELIX_LIB_PATH.'kvdb/');
 
-/**
- * function used by php to try to load an unknown class
- */
-function jelix_autoload($class) {
-    if (strpos($class, 'jelix\\') === 0) {
-        $f = LIB_PATH.'jelix-legacy/'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class,6)).'.php';
-    }
-    else if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
-        $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    }
-    elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
-        // for DAO which are stored in sessions for example
-        if(!isset(jApp::config()->_modulesPathList[$m[1]])){
-            //this may happen if we have several entry points, but the current one does not have this module accessible
-            return;
-        }
-        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
-        if(jApp::config()->compilation['checkCacheFiletime']){
-            // if it is needed to check the filetime, then we use jIncluder
-            // because perhaps we will have to recompile the dao before the include
-            jIncluder::inc($s);
-        }else{
-            $f = $s->getCompiledFilePath();
-            // we should verify that the file is here and if not, we recompile
-            // (case where the temp has been cleaned, see bug #6062 on berlios.de)
-            if (!file_exists($f)) {
-                jIncluder::inc($s);
-            }
-            else
-                require($f);
-        }
-        return;
-    }else{
-        $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
-    }
-
-    if(file_exists($f)){
-        require($f);
-    }
-}
-
-spl_autoload_register("jelix_autoload");
-
-
+spl_autoload_register("LegacyJelixAutoloader::loadClass");
 
 
 #if ENABLE_OPTIMIZED_SOURCE
