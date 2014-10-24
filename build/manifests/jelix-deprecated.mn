@@ -220,31 +220,6 @@ cd lib/jelix-legacy/core/selector
   jSelectorSimpleFile.class.php
   jSelectorFile.lib.php
   jSelectorLoc.class.php
-cd lib/jelix-legacy/core/log
-  jLogErrorMessage.class.php
-  jLogMessage.class.php
-  jFileLogger.class.php
-  jMailLogger.class.php
-  jSyslogLogger.class.php
-cd lib/jelix-legacy/events
-  jEvent.class.php
-  jEventCompiler.class.php
-  jEventListener.class.php
-cd lib/jelix-legacy/installer
-  jInstallerModuleInfos.class.php
-  jInstallerException.class.php
-  jInstallerBase.class.php
-  jInstallerPlugin.class.php
-  jInstallerModule.class.php
-  jIInstallerComponent.iface.php
-  jIInstallReporter.iface.php
-  jInstallerComponentBase.class.php
-  jInstallerComponentModule.class.php
-  jInstallerComponentPlugin.class.php
-  jInstaller.class.php
-  jInstallerEntryPoint.class.php
-  jInstallerApplication.class.php
-  messageProvider.fr.inc.php
-  messageProvider.en.inc.php
-  jInstallerMessageProvider.class.php
-  jInstallChecker.class.php
+rmd lib/jelix-legacy/core/log
+rmd lib/jelix-legacy/events
+rmd lib/jelix-legacy/installer

@@ -150,64 +150,22 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
 /**
- * check if the application is opened. If not, it displays the yourapp/install/closed.html
- * file with a http error (or lib/jelix-legacy/installer/closed.html), and exit.
- * This function should be called in all entry point, before the creation of the coordinator.
- * @see jAppManager
- * @todo migrate the code to jAppManager or jApp
+ * @deprecated use \Jelix\Core\AppManager::errorIfAppClosed()
  */
 function checkAppOpened() {
-    if (!jApp::isInit()) {
-        header("HTTP/1.1 500 Application not available");
-        header('Content-type: text/html');
-        echo "checkAppOpened: jApp is not initialized!";
-        exit(1);
-    }
-    if (file_exists(jApp::configPath('CLOSED'))) {
-        $message = file_get_contents(jApp::configPath('CLOSED'));
-
-        if (jServer::isCLI()) {
-            echo "Application closed.". ($message?"\n$message\n":"\n");
-            exit(1);
-        }
-
-        if (file_exists(jApp::appPath('install/closed.html'))) {
-            $file = jApp::appPath('install/closed.html');
-        }
-        else
-            $file = JELIX_LIB_PATH.'installer/closed.html';
-
-        header("HTTP/1.1 500 Application not available");
-        header('Content-type: text/html');
-        echo str_replace('%message%', $message, file_get_contents($file));
-        exit(1);
-    }
+    \Jelix\Core\AppManager::errorIfAppClosed();
 }
 
 /**
- * check if the application is not installed. If the app is installed, an
- * error message appears and the scripts ends.
- * It should be called only by some scripts
- * like an installation wizard, not by an entry point.
- * @todo migrate the code to jAppManager or jApp
+ * @deprecated use \Jelix\Core\AppManager::errorIfAppInstalled();
  */
 function checkAppNotInstalled() {
-    if (isAppInstalled()) {
-         if (jServer::isCLI()) {
-            echo "Application is installed. The script cannot be runned.\n";
-        }
-        else {
-            header("HTTP/1.1 500 Application not available");
-            header('Content-type: text/plain');
-            echo "Application is installed. The script cannot be runned.\n";
-        }
-        exit(1);
-    }
+    \Jelix\Core\AppManager::errorIfAppInstalled();
 }
 
 /**
- * @todo migrate the code to jAppManager or jApp
+ * @deprecated use \Jelix\Core\AppManager::isAppInstalled();
  */
 function isAppInstalled() {
-    return file_exists(jApp::configPath('installer.ini.php'));
+    return \Jelix\Core\AppManager::isAppInstalled();
 }

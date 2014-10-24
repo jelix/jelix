@@ -14,6 +14,7 @@ cd lib/Jelix/Core
   ModuleClassBinding.php
   Profiles.php
   composer.json
+  closed.html
   VERSION
 
 cd lib/Jelix/Core/Config
@@ -398,7 +399,7 @@ cd lib/jelix-legacy/forms/controls
 
 
 cd lib/jelix-legacy/installer
-  closed.html
+  
 
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
