@@ -479,11 +479,13 @@ foo[]=aaa
 foo[]=bbb
 foo[]=ccc
 
-
 ';
         $parser->testParse($content);
         $this->assertEquals($result, $parser->generate() );
 
+        if (!file_exists(jApp::tempPath())) {
+            jFile::createDir(jApp::tempPath());
+        }
         file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
         $parser = new testIniFileModifier(jApp::tempPath().'test_jinifilemodifier.html_cli.php');
         $this->assertEquals($result, $parser->generate() );
@@ -561,7 +563,6 @@ foo[]=aaa
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $parser->generate());
     }
@@ -626,7 +627,6 @@ foo[]=aaa
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $parser->generate());
 
@@ -657,7 +657,6 @@ string=uuuuu
 
 
 afloatnumber=5.098
-
 
 ';
         $this->assertEquals($result, $parser->generate());
@@ -696,7 +695,6 @@ foo[]=aaa
 foo[]=bbb
 foo[]=ccc
 
-
 ';
         $ini->testParse($content);
 
@@ -725,7 +723,6 @@ foo[]=aaa
 ; key comment
 foo[]=bbb
 foo[]=ccc
-
 
 ';
         $ini2->testParse($content2);
@@ -771,7 +768,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 [newsection]
 truc=machin2
 
@@ -779,8 +775,6 @@ foo[]=aaa
 ; key comment
 foo[]=bbb
 foo[]=ccc
-
-
 
 ';
         $this->assertEquals($result, $ini->generate());
@@ -820,7 +814,6 @@ foo[]=aaa
 foo[]=bbb
 foo[]=ccc
 
-
 ';
         $ini->testParse($content);
 
@@ -845,8 +838,6 @@ supercar=ferrari
 [thesection]
 truc=machin3
 truck=on
-
-
 
 ';
         $ini2->testParse($content2);
@@ -885,7 +876,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 [blob]
 
 
@@ -903,7 +893,6 @@ isvalid=on
 truc=false
 
 supercar=ferrari
-
 ';
         $this->assertEquals($result, $ini->generate());
 
@@ -946,7 +935,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 [blob]
 
 
@@ -968,9 +956,6 @@ supercar=ferrari
 [blob:thesection]
 truc=machin3
 truck=on
-
-
-
 
 ';
         $this->assertEquals($result, $ini->generate());
@@ -1043,7 +1028,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $ini->generate());
 
@@ -1077,7 +1061,6 @@ foo[]=aaa
 ; key comment
 foo[]=bbb
 foo[]=ccc
-
 
 
 ';
@@ -1114,7 +1097,6 @@ foo[]=aaa
 ; key comment
 foo[]=bbb
 foo[]=ccc
-
 
 
 ';
@@ -1195,5 +1177,3 @@ foo[]=ccc
     }
 
 }
-
-?>

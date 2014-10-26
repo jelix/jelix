@@ -509,8 +509,10 @@ class Modifier {
 
     protected function generateIni() {
         $content = '';
+        $lastToken = null;
         foreach($this->content as $sectionname=>$section) {
             foreach($section as $item) {
+                $lastToken = $item[0];
                 switch($item[0]) {
                   case self::TK_SECTION:
                     if($item[1] != '0')
@@ -530,6 +532,10 @@ class Modifier {
                     break;
                 }
             }
+        }
+        if ($lastToken === self::TK_WS) {
+            // remove the last \n
+            $content = substr($content, 0, -1);
         }
         return $content;
     }
