@@ -71,6 +71,7 @@ return array(
         'install.entrypoint.end'    =>'Tous les modules sont installés ou mis à jour pour le point d\'entrée %s',
         'install.entrypoint.bad.end'=>'Installation interrompue pour cause d\'erreurs pour le point d\'entrée %s',
         'install.entrypoint.installers.disabled'=>'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.',
+        'install.entrypoint.installed'  =>'Le point d\'entrée %s est installé',
 
         'install.dependencies.ok'   =>'Toutes les dépendances des modules sont valides',
         'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances. Installation annulée.',

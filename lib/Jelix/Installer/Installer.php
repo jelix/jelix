@@ -154,6 +154,9 @@ class Installer {
     protected function readEntryPointsData(\Jelix\Core\Infos\AppInfos $appInfos) {
 
         $configFileList = array();
+        $installerIni = $this->installerIni;
+        $allModules = &$this->allModules;
+        $that = $this;
 
         // read all entry points data
         foreach ($appInfos->entrypoints as $file => $entrypoint) {
@@ -162,15 +165,9 @@ class Installer {
             if (isset($entrypoint['type'])) {
                 $type = $entrypoint['type'];
             }
-            else
+            else {
                 $type = "classic";
-
-            // ignore entry point which have the same config file of an other one
-            // FIXME: what about installer.ini ?
-            if (isset($configFileList[$configFile]))
-                continue;
-
-            $configFileList[$configFile] = true;
+            }
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
@@ -179,9 +176,13 @@ class Installer {
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
 
-            $installerIni = $this->installerIni;
-            $allModules = &$this->allModules;
-            $that = $this;
+            // ignore entry point which have the same config file of an other one
+            if (isset($configFileList[$configFile])) {
+               $ep->sameConfigAs = $configFileList[$configFile];
+               continue;
+            }
+
+            $configFileList[$configFile] = $epId;
 
             $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos)
                                         use($that, $epId){
@@ -282,6 +283,9 @@ class Installer {
         $result = true;
 
         foreach($this->entryPoints as $epId=>$ep) {
+            if ($ep->sameConfigAs) {
+               continue;
+            }
             $modules = array();
             foreach($ep->getLaunchers() as $name => $module) {
                 $access = $module->getAccessLevel($epId);
@@ -294,11 +298,25 @@ class Installer {
                 break;
         }
 
+        if ($result) {
+            $this->completeInstallStatus();
+        }
         $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
 
+    protected function completeInstallStatus() {
+      foreach($this->entryPoints as $epId=>$ep) {
+         if ($ep->sameConfigAs) {
+            // let's copy the installation information of the other entry point
+            $values = $this->installerIni->getValues($ep->sameConfigAs);
+            $this->installerIni->setValues($values, $epId);
+            $this->ok('install.entrypoint.installed', $epId);
+         }
+      }
+    }
+    
     /**
      * install and upgrade if needed, all modules for the given
      * entry point. Only modules which have an access property > 0
@@ -317,16 +335,22 @@ class Installer {
 
         $epId = $this->epId[$entrypoint];
         $ep = $this->entrypoints[$epId];
-
-        $modules = array();
-        foreach($ep->getLaunchers() as $name => $module) {
-            $access = $module->getAccessLevel($epId);
-            if ($access != 1 && $access != 2)
-                continue;
-            $modules[$name] = $module;
+        if ($ep->sameConfigAs) {
+           // let's copy the installation information of the other entry point
+           $values = $this->installerIni->getValues($ep->sameConfigAs);
+           $this->installerIni->setValues($values, $epId);
+           $this->ok('install.entrypoint.installed', $epId);
         }
-        $result = $this->_installModules($modules, $ep, true);
-
+        else {
+            $modules = array();
+            foreach($ep->getLaunchers() as $name => $module) {
+                $access = $module->getAccessLevel($epId);
+                if ($access != 1 && $access != 2)
+                    continue;
+                $modules[$name] = $module;
+            }
+            $result = $this->_installModules($modules, $ep, true);
+        }
         $this->installerIni->save();
         $this->endMessage();
         return $result;
@@ -354,7 +378,9 @@ class Installer {
         }
 
         foreach ($entryPointList as $epId=>$ep) {
-
+            if ($ep->sameConfigAs) {
+               continue;
+            }
             $allModules = &$ep->getLaunchers();
 
             $modules = array();
@@ -374,6 +400,8 @@ class Installer {
             $this->installerIni->save();
         }
 
+        $this->completeInstallStatus();
+        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }

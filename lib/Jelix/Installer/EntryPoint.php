@@ -33,6 +33,9 @@ class EntryPoint {
     /** @var \Jelix\IniFile\MultiModifier */
     public $configIni;
 
+    /** @var string entrypoint id of the entrypoint that have the same config */
+    public $sameConfigAs = null;
+
     /**
      * @var boolean true if the script corresponding to the configuration
      *                is a script for CLI
@@ -157,7 +160,7 @@ class EntryPoint {
         $result = true;
         $epId = $this->getEpId();
         foreach($list as $component) {
-//echo "Check ".$component->getName()."\n";
+
             $this->_checkedCircularDependency = array();
             if (!isset($this->_checkedComponents[$component->getName()])) {
                 try {
@@ -206,13 +209,12 @@ class EntryPoint {
             $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
             throw new \Jelix\Installer\Exception ('module.circular.dependency',$component->getName());
         }
-//echo "_checkDependencies ".$component->getName()."\n";
+
         $this->_checkedCircularDependency[$component->getName()] = true;
         $epId = $this->getEpId();
         $compNeeded = '';
         foreach ($component->getDependencies() as $compInfo) {
-//echo "dependencie ".$compInfo['name']." - ".$compInfo['type']."\n";
-            // TODO : supports others type of components
+
             if ($compInfo['type'] != 'module')
                 continue;
             $name = $compInfo['name'];
@@ -228,19 +230,14 @@ class EntryPoint {
                 }
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
-//echo "  check dependencies of the dependencie\n";
+
                     $this->_checkDependencies($comp);
                     if ($this->config->disableInstallers
                         || !$comp->isInstalled($epId)) {
-//echo "  add dependency ".$comp->getName()." to install\n";
                         $this->_componentsToInstall[] = array($comp, true);
                     }
                     else if(!$comp->isUpgraded($epId)) {
-//echo "  add dependency ".$comp->getName()." to upgrade\n";
                         $this->_componentsToInstall[] = array($comp, false);
-                    }
-                    else {
-//echo "  dependency ".$comp->getName()." ignore\n";
                     }
                 }
             }

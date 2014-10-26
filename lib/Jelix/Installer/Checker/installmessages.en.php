@@ -70,6 +70,7 @@ return array(
         'install.entrypoint.end'    =>'All modules are installed or upgraded for the entry point %s',
         'install.entrypoint.bad.end'=>'Installation/upgrade is aborted for the entry point %s',
         'install.entrypoint.installers.disabled'=>'Installation scripts and update scripts will not be executed: it is disabled in the configuration.',
+        'install.entrypoint.installed'  =>'Entry point %s is installed',
 
         'install.dependencies.ok'   =>'All modules dependencies are ok',
         'install.bad.dependencies'  =>'Error in dependencies. Installation cancelled.',
