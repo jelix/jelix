@@ -198,22 +198,6 @@ class App {
         self::$_router = $router;
     }
 
-    /**
-     * @deprecated
-     */
-    public static function coord() {
-        //trigger_error("App::coord() is deprecated, use App::router() instead", E_USER_DEPRECATED);
-        return self::$_router;
-    }
-
-    /**
-     * @deprecated
-     */
-    public static function setCoord($router) {
-        //trigger_error("App::setCoord() is deprecated, use App::setRouter() instead", E_USER_DEPRECATED);
-        self::$_router = $router;
-    }
-
     protected static $contextBackup = array();
 
     /**
@@ -311,13 +295,6 @@ class App {
             throw new \Exception('getModulePath : invalid module name');
         }
         return self::$_config->_modulesPathList[$module];
-    }
-
-    /**
-     *
-     */
-    public static function getModuleInfoList($includingExternal = false) {
-
     }
 
     static protected $modulesContext = array();
