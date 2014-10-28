@@ -745,7 +745,7 @@ class UTCreateUrls extends UnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEqual('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'], $url);
+        $this->assertEqual('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = 'testapp.local';

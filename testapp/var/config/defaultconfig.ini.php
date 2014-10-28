@@ -140,4 +140,5 @@ test = "http://www.junittest.com/"
 secure_test = "https://www.junittest.com/"
 foo_relPath="foo"
 foo_absPath="/foo"
-
+soap = "http://testapp14.local"
+localapp = "http://testapp14.local"

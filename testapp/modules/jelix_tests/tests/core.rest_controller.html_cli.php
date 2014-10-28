@@ -17,8 +17,19 @@ class UTRestController extends jUnitTestCase {
     function tearDown() {
     }
 
+    protected function getServerUri() {
+        $serverUri = jUrl::getRootUrlRessourceValue('localapp');
+        if ($serverUri === null) {
+            $serverUri = $_SERVER['HTTP_HOST'];
+        }
+        else {
+            $serverUri = str_replace('http://', '', $serverUri);
+        }
+        return $serverUri;
+    }
+
     function testRestGET() {
-        $http = new jHttp($_SERVER['HTTP_HOST']);
+        $http = new jHttp($this->getServerUri());
         $http->get(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEqual($http->getStatus(), 200);
 
@@ -26,7 +37,7 @@ class UTRestController extends jUnitTestCase {
     }
 
     function testRestPUT() {
-        $http = new jHttp($_SERVER['HTTP_HOST']);
+        $http = new jHttp($this->getServerUri());
         $http->put(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEqual($http->getStatus(), 200);
 
@@ -34,7 +45,7 @@ class UTRestController extends jUnitTestCase {
     }
 
     function testRestPOST() {
-        $http = new jHttp($_SERVER['HTTP_HOST']);
+        $http = new jHttp($this->getServerUri());
         $http->post(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEqual($http->getStatus(), 200);
 
@@ -42,7 +53,7 @@ class UTRestController extends jUnitTestCase {
     }
 
     function testRestDELETE() {
-        $http = new jHttp($_SERVER['HTTP_HOST']);
+        $http = new jHttp($this->getServerUri());
         $http->delete(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEqual($http->getStatus(), 200);
 
