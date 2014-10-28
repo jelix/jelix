@@ -9,16 +9,18 @@ cd .
   CREDITS
 
 cd lib
-   jBuild.inc.php
-   jBuildUtils.lib.php
-   preprocessor.lib.php
-   jManifest.class.php
-   jCmdUtils.class.php
-   class.JavaScriptPacker.php
+  class.JavaScriptPacker.php
+  jBuild.inc.php
+  jBuildUtils.lib.php
+  jCmdUtils.class.php
+  jManifest.class.php
+  jManifestReader.php
+  jPhpCommentsRemover.php
+  preprocessor.lib.php
 
 cd lib/filesystem
-    FileSystemInterface.php
-    FsGit.php
-    FsHg.php
-    FsOs.php
-    FsSvn.php
+  FileSystemInterface.php
+  FsGit.php
+  FsHg.php
+  FsOs.php
+  FsSvn.php

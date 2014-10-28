@@ -165,12 +165,17 @@ class Router {
             if ($request)
                 $this->setRequest($request);
 
+            jSession::start();
+
             $ctrl = $this->getController($this->action);
         }
         catch (\jException $e) {
             $config = App::config();
             if ($config->urlengine['notfoundAct'] =='') {
                 throw $e;
+            }
+            if (!jSession::isStarted()) {
+                jSession::start();
             }
             try {
                 $this->action = new \jSelectorAct($config->urlengine['notfoundAct']);
@@ -180,7 +185,6 @@ class Router {
                 throw $e;
             }
         }
-        \jSession::start();
 
         App::pushCurrentModule ($this->moduleName);
 

@@ -48,7 +48,7 @@ define ('JELIX_LIB_UTILS_PATH',   JELIX_LIB_PATH.'utils/');
 define ('LIB_PATH',               dirname(JELIX_LIB_PATH).'/');
 
 
-define ('BYTECODE_CACHE_EXISTS', function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
+define ('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') || function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
 
 error_reporting (E_ALL | E_STRICT);
 

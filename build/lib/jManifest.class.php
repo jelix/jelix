@@ -3,12 +3,14 @@
 * @package     jBuildTools
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2014 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
+require_once(__DIR__.'/jManifestReader.php');
+require_once(__DIR__.'/jPhpCommentsRemover.php');
 require_once(__DIR__.'/preprocessor.lib.php');
 require_once(__DIR__.'/jBuildUtils.lib.php');
 require_once(__DIR__.'/class.JavaScriptPacker.php');
@@ -84,241 +86,13 @@ class jManifest {
      * @param string $distpath main directory were files are copied
      */
     static public function process($ficlist, $sourcepath, $distpath, $preprocvars, $preprocmanifest=false){
-
-        $fs = self::getFileSystem($distpath);
-        $stripcomment = self::$stripComment;
-        $verbose = self::$verbose;
-        $preproc = new jPreProcessor();
-
-        $sourcedir = jBuildUtils::normalizeDir($sourcepath);
-        $distdir =  jBuildUtils::normalizeDir($distpath);
-
-        if ($preprocmanifest) {
-            $preproc->setVars($preprocvars);
-            try{
-                $content = $preproc->parseFile($ficlist);
-            }catch(Exception $e){
-                throw new Exception ( "cannot preprocess the manifest file ".$ficlist." (". $e .")\n");
-            }
-            $script = explode("\n", $content);
-        }
-        else
-            $script = file($ficlist);
-
-        $currentdestdir = '';
-        $currentsrcdir = '';
-
-        foreach($script as $nbline=>$line){
-            $nbline++;
-            if(preg_match(';^(cd|sd|dd|\*|!|\*!|c|\*c|cch)?\s+([a-zA-Z0-9\/.\-_]+)\s*(?:\(([a-zA-Z0-9\%\/.\-_]*)\))?\s*$;m', $line, $m)){
-                if($m[1] == 'dd'){
-                    // set destination dir
-                    $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    $fs->createDir($currentdestdir);
-                }elseif($m[1] == 'sd'){
-                    // set source dir
-                    $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
-                }elseif($m[1] == 'cd'){
-                    // set source dir and destination dir (same sub path)
-                    $currentsrcdir = jBuildUtils::normalizeDir($m[2]);
-                    $currentdestdir = jBuildUtils::normalizeDir($m[2]);
-                    $fs->createDir($currentdestdir);
-                }else{
-                    //
-                    $doPreprocessing = (strpos($m[1],'*') !== false);
-                    $doCompression = (strpos($m[1],'c') !== false && $m[1] != 'cch') || ($stripcomment && (strpos($m[1],'!') === false));
-
-                    if($m[2] == ''){
-                        throw new Exception ( "$ficlist : file required on line $nbline \n");
-                    }
-                    if(!isset($m[3]) || $m[3]=='')
-                        $m[3]=$m[2];
-
-                    $destfile = $currentdestdir.$m[3];
-                    $sourcefile = $sourcedir.$currentsrcdir.$m[2];
-
-                    if($doPreprocessing){
-                        if($verbose){
-                            echo "process  $sourcefile \tto\t$distdir"."$destfile \n";
-                        }
-
-                        $preproc->setVars($preprocvars);
-
-                        try{
-                            $contents = $preproc->parseFile($sourcefile);
-                        }catch(Exception $e){
-                            throw new Exception ( "$ficlist : line $nbline, cannot process file ".$m[2]." (". $e .")\n");
-                        }
-
-                        if($doCompression) {
-                            if( preg_match("/\.php$/",$destfile)) {
-                                if($verbose) echo "     strip php comment ";
-                                $contents = self::stripPhpComments($contents);
-                                if($verbose) echo "OK\n";
-                            }
-                            else if(preg_match("/\.js$/",$destfile)) {
-                                if($verbose) echo "compress javascript file \n";
-                                $packer = new JavaScriptPacker($contents, 0, true, false);
-                                $contents = $packer->pack();
-                            }
-                        }
-                        $fs->setFileContent($destfile, $contents);
-
-                    }elseif($doCompression && preg_match("/\.php$/",$destfile)){
-                        if($verbose)
-                            echo "strip comment in  $sourcefile\tto\t".$distdir.$destfile."\n";
-                        $src = file_get_contents($sourcefile);
-                        $fs->setFileContent($destfile, self::stripPhpComments($src));
-
-                    }elseif($doCompression && preg_match("/\.js$/",$destfile)) {
-                        if($verbose)
-                            echo "compress javascript file ".$destfile."\n";
-
-                        $script = file_get_contents($sourcefile);
-                        $packer = new JavaScriptPacker($script, 0, true, false);
-                        $fs->setFileContent($destfile, $packer->pack());
-
-                    }elseif($m[1] == 'cch') {
-
-                        if(strpos($m[3], '%charset%') === false) {
-                            throw new Exception ( "$ficlist : line $nbline, dest file ".$m[3]." doesn't contains %charset% pattern.\n");
-                        }
-
-                        if($verbose)
-                            echo "convert charset\tsources\t".$sourcefile."   ".$m[3]."\n";
-
-                        $encoding = preg_split('/[\s,]+/', self::$targetPropertiesFilesCharset);
-
-                        $content = file_get_contents( $sourcefile );
-                        if (self::$sourcePropertiesFilesDefaultCharset != '')
-                            $encode = self::$sourcePropertiesFilesDefaultCharset;
-                        else
-                            $encode = mb_detect_encoding($content);
-
-                        foreach ( $encoding as $val ) {
-                            $encodefile = str_replace('%charset%', $val, $destfile);
-                            if($verbose)
-                                echo "\tencode into ".$encodefile."\n";
-                            $fs->setFileContent($encodefile,  mb_convert_encoding($content, $val, $encode));
-                        }
-                    }else{
-                        if($verbose)
-                            echo "copy  ".$sourcefile."\tto\t".$distdir.$destfile."\n";
-
-                        if (!$fs->copyFile($sourcefile, $destfile)) {
-                            throw new Exception ( "$ficlist : cannot copy file ".$m[2].", line $nbline \n");
-                        }
-                    }
-                }
-            }elseif(preg_match("!^\s*(\#.*)?$!",$line)){
-                // we ignore comments
-            }else{
-                throw new Exception ( "$ficlist : syntax error on line $nbline \n");
-            }
-        }
-    }
-
-    static protected function stripPhpComments($content){
-
-        $tokens = token_get_all($content);
-        $result = '';
-        $firstcomment= true;
-        $currentWhitespace ='';
-        $firstPHPfound = false;
-        $canRemoveNextSpaces = false;
-        $operators = array(T_AND_EQUAL,T_BOOLEAN_AND,T_BOOLEAN_OR,T_CONCAT_EQUAL,T_DIV_EQUAL,T_DOUBLE_ARROW ,T_DOUBLE_COLON,
-                            T_IS_EQUAL,T_IS_GREATER_OR_EQUAL,T_IS_IDENTICAL, T_IS_NOT_EQUAL,T_IS_NOT_IDENTICAL,
-                            T_IS_SMALLER_OR_EQUAL,T_MINUS_EQUAL,T_MOD_EQUAL,T_MUL_EQUAL,T_OBJECT_OPERATOR,
-                            T_OR_EQUAL,T_PAAMAYIM_NEKUDOTAYIM,T_PLUS_EQUAL,T_SL, T_SL_EQUAL,T_SR,T_SR_EQUAL, T_XOR_EQUAL);
-        $signs = array('(',')','{','}','=',',', ';');
-        foreach($tokens as $token) {
-            if (is_string($token)) {
-                $isSign = in_array($token, $signs);
-                if($isSign && strpos($currentWhitespace, "\n") === false) {
-                   $currentWhitespace='';
-                }
-                $result.= self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
-                $canRemoveNextSpaces = $isSign;
-                $result.=$token;
-            } else {
-                switch ($token[0]) {
-                    case T_OPEN_TAG:
-                        $result.= self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
-                        $result.=$token[1];
-                        if(!$firstPHPfound) {
-                            $result.= "/* comments & extra-whitespaces have been removed by jBuildTools*/\n";
-                            $firstPHPfound=true;
-                        }
-                        break;
-                    case T_COMMENT:
-                        $currentWhitespace.="\n";
-                        break;
-                    case T_DOC_COMMENT:
-                        // wee keep the first doc comment
-                        if($firstcomment){
-                            $result.= self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
-                            $result.=$token[1];
-                            $firstcomment = false;
-                        }
-                        break;
-                    case T_WHITESPACE:
-                        $currentWhitespace.=$token[1];
-                        break;
-                    default:
-                        if (in_array($token[0], $operators)) {
-                            if(strpos($currentWhitespace, "\n") === false) {
-                                $currentWhitespace='';
-                            }
-                            $result.= self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
-                            $canRemoveNextSpaces = true;
-                        }
-                        else {
-                            $result.=self::strip_ws($currentWhitespace, $canRemoveNextSpaces);
-                        }
-                        $result.=$token[1];
-                        break;
-                }
-            }
-        }
-        return $result."\n";
-    }
-
-    static protected function strip_ws(& $s, &$canRemoveNextSpaces){
-
-        if ($s == '') {
-            $canRemoveNextSpaces = false;
-            return $s;
-        }
-
-        $indent = str_repeat(" ", self::$indentation);
-        $result = $s;
-        $result = str_replace("\r\n","\n",$result); // removed \r
-        $result = str_replace("\r","\n",$result); // removed standalone \r
-        $result = preg_replace("(\n+)", "\n", $result);
-        $result = str_replace("\t",$indent,$result);
-        $result = str_replace($indent,"\t",$result);
-
-        $result = preg_replace("/^([\n \t]+)\n([ \t]*)$/", "\n$2", $result);
-
-        if (strpos($result, "\n") === false && $canRemoveNextSpaces) {
-            $result = '';
-        }
-        else if (preg_match("/( +)$/", $result,$m)) {
-            // if there are  still spaces at the end, we remove it or replace it by a
-            // tab, depending of the len of this spaces.
-            $s = $m[1];
-            $l = strlen($s);
-            if ($l < strlen($result)) {
-                $result = substr($result, 0, -$l);
-                if ($l > (self::$indentation/2))
-                    $result .= "\t";
-            }
-            else if ($canRemoveNextSpaces)
-                $result = '';
-        }
-        $s = '';
-        $canRemoveNextSpaces = false;
-        return $result;
+        $manifest = new jManifestReader($ficlist, $sourcepath, $distpath);
+        $manifest->setVerbose(self::$verbose);
+        $manifest->setStripComment(self::$stripComment);
+        $manifest->setTargetCharset(self::$targetPropertiesFilesCharset);
+        $manifest->setSourceCharset(self::$sourcePropertiesFilesDefaultCharset);
+        $manifest->setIndentation(self::$indentation);
+        $manifest->process($preprocvars, $preprocmanifest);
     }
 
     /**
