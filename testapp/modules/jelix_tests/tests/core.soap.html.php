@@ -23,7 +23,11 @@ class UTsoap extends jUnitTestCase {
         ini_set('soap.wsdl_cache_enabled', 0);
 
         // Load the WSDL
-        $wsdlURI = "http://".$_SERVER['HTTP_HOST'].jUrl::get('jWSDL~WSDL:wsdl', array('service'=>'testapp~soap'));
+        $serverUri = jUrl::getRootUrlRessourceValue('soap');
+        if ($serverUri === null) {
+            $serverUri = "http://".$_SERVER['HTTP_HOST'];
+        }
+        $wsdlURI = $serverUri.jUrl::get('jWSDL~WSDL:wsdl', array('service'=>'testapp~soap'));
         $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
 
         $result = $client->__soapCall('getServerDate', array());
