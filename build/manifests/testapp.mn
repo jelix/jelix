@@ -241,7 +241,6 @@ cd testapp/modules/jelix_tests/forms
 cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
   core.urls_generation.html.php
-  jdao.factory_base.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -319,6 +318,7 @@ cd testapp/tests-jelix/jelix/daos
   jDaoImportTest.php
   jdao_conditionsTest.php
   jdao_eventsTest.php
+  jdao_factory_baseTest.php
   jdao_main_apiTest.php
   jdao_main_api_pdoTest.php
   jdao_main_api.lib.php
