@@ -1,9 +1,0 @@
-aaaaa
-
-bbbbb
-
-ccccc
-
- voici le contenu de FOO : "une variable foo" et celui de BAR : le bar est ouvert
-toto
-ffffff

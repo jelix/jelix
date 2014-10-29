@@ -21,6 +21,9 @@
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "5.2.9"
     },
+    "require-dev": {
+        "jelix/buildtools": "dev-master"
+    },
     "archive": {
         "exclude": [ "/build", "/temp", "/testapp", "Makefile"]
     },
