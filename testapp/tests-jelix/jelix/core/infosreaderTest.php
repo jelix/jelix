@@ -9,7 +9,7 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="id" value="simple@testapp.jelix.org" />
+        <string property="packageName" value="simple@testapp.jelix.org" />
         <string property="name" value="simple" />
         <string property="createDate" value="" />
         <string property="version" value="1.0" />
@@ -75,7 +75,7 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="id" value="jelix_tests@testapp.jelix.org" />
+        <string property="packageName" value="jelix_tests@testapp.jelix.org" />
         <string property="name" value="jelix_tests" />
         <string property="createDate" value="" />
         <string property="label" value="Jelix tests" />
@@ -158,8 +158,8 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="id" value="jelixtest/composerpackage" />
-        <string property="name" value="jelixtest/composerpackage" />
+        <string property="packageName" value="jelixtest/composerpackage" />
+        <string property="name" value="thepackage" />
         <string property="createDate" value="" />
         <string property="version" value="1.0" />
         <string property="versionDate" value="" />

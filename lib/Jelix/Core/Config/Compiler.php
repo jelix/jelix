@@ -374,9 +374,6 @@ class Compiler {
         if (!$config->modules[$f.'.access']) {
             return null;
         }
-        if (!isset($config->modules[$f.'.webalias'])) {
-            $config->modules[$f.'.webalias'] = $moduleInfo->webAlias;
-        }
 
         if (!isset($installation[$section][$f.'.dbprofile'])) {
             $config->modules[$f.'.dbprofile'] = 'default';

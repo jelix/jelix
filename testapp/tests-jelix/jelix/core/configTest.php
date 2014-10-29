@@ -88,8 +88,7 @@ class configTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array('simple.installed' => 1), $installation['index.php']);
         $this->assertEquals(array(
                                 'simple.access' => 1,
-                                'simple.dbprofile' => 'default',
-                                'simple.webalias' => 'simple'
+                                'simple.dbprofile' => 'default'
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -106,7 +105,6 @@ class configTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(array(
                                 'simple.access' => 1,
                                 'simple.dbprofile' => 'default',
-                                'simple.webalias' => 'simple',
                                 'simple.version' => '',
                                 'simple.dataversion' => '',
                                 'simple.installed' => 1
@@ -124,24 +122,24 @@ class configTest extends PHPUnit_Framework_TestCase {
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
         $this->assertEquals(array(
-                                'jelixtest/composerpackage.access' => 0
+                                'thepackage.access' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('jelixtest/composerpackage.installed' => 0), $installation['index.php']);
+        $this->assertEquals(array('thepackage.installed' => 0), $installation['index.php']);
     }
 
     function testReadModuleInfoNewModuleActivatedNotInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('jelixtest/composerpackage.access'=>1);
+        $config->modules = array('thepackage.access'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/package');
         $installation = array('index.php'=>array());
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('jelixtest/composerpackage.installed' => 0), $installation['index.php']);
+        $this->assertEquals(array('thepackage.installed' => 0), $installation['index.php']);
         $this->assertEquals(array(
-                                'jelixtest/composerpackage.access' => 0
+                                'thepackage.access' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -149,41 +147,39 @@ class configTest extends PHPUnit_Framework_TestCase {
 
     function testReadModuleInfoNewModuleActivatedInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('jelixtest/composerpackage.access'=>1);
+        $config->modules = array('thepackage.access'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/package');
-        $installation = array('index.php'=>array('jelixtest/composerpackage.installed'=>1));
+        $installation = array('index.php'=>array('thepackage.installed'=>1));
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('jelixtest/composerpackage.installed' => 1), $installation['index.php']);
+        $this->assertEquals(array('thepackage.installed' => 1), $installation['index.php']);
         $this->assertEquals(array(
-                                'jelixtest/composerpackage.access' => 1,
-                                'jelixtest/composerpackage.dbprofile' => 'default',
-                                'jelixtest/composerpackage.webalias' => 'thepackage'
+                                'thepackage.access' => 1,
+                                'thepackage.dbprofile' => 'default',
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
 
         // with all modules info
         $config = new fakeConfig();
-        $config->modules = array('jelixtest/composerpackage.access'=>1);
-        $installation = array('index.php'=>array('jelixtest/composerpackage.installed'=>1));
+        $config->modules = array('thepackage.access'=>1);
+        $installation = array('index.php'=>array('thepackage.installed'=>1));
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, true, $modulePath, $installation, $section);
-        $this->assertEquals(array('jelixtest/composerpackage.installed' => 1,
-                                'jelixtest/composerpackage.version' => '',
-                                'jelixtest/composerpackage.dataversion' => ''
+        $this->assertEquals(array('thepackage.installed' => 1,
+                                'thepackage.version' => '',
+                                'thepackage.dataversion' => ''
                                 ), $installation['index.php']);
         $this->assertEquals(array(
-                                'jelixtest/composerpackage.access' => 1,
-                                'jelixtest/composerpackage.dbprofile' => 'default',
-                                'jelixtest/composerpackage.webalias' => 'thepackage',
-                                'jelixtest/composerpackage.version' => '',
-                                'jelixtest/composerpackage.dataversion' => '',
-                                'jelixtest/composerpackage.installed' => 1
+                                'thepackage.access' => 1,
+                                'thepackage.dbprofile' => 'default',
+                                'thepackage.version' => '',
+                                'thepackage.dataversion' => '',
+                                'thepackage.installed' => 1
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('jelixtest/composerpackage'=>$modulePath.'/'), $config->_allModulesPathList);
+        $this->assertEquals(array('thepackage'=>$modulePath.'/'), $config->_allModulesPathList);
 
     }
 }

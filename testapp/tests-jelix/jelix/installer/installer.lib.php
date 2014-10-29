@@ -52,7 +52,7 @@ class testInstallerModuleInfos extends \Jelix\Core\Infos\ModuleInfos {
     function __construct($path, $xmlstring) {
         $p = rtrim($path, '/');
         $this->path = $p.'/';
-        $this->webAlias = $this->name = basename($p);
+        $this->name = basename($p);
 
         $config = \Jelix\Core\App::config();
         if ($config) {

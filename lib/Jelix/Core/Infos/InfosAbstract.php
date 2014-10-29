@@ -13,8 +13,12 @@ abstract class InfosAbstract {
     protected $xmlFile = false;
     protected $_exists = false;
 
-    public $id='';
+    /** @var string the package name, foo/bar for composer packages or baz@something for legacy jelix modules */
+    public $packageName='';
+
+    /** @var the name of the module, used as identifier in jelix selectors or other part of the code */
     public $name='';
+
     public $createDate='';
 
     public $version = '';

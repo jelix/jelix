@@ -49,9 +49,9 @@ abstract class XmlParserAbstract {
 
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
 
-        $object->id = (string)$xml->getAttribute('id');
-        // the name has always to be the directory name
-        //$object->name = (string)$xml->getAttribute('name');
+        $object->packageName = (string)$xml->getAttribute('id');
+        // we don't rely on the name attribute for the module/project name, in previous jelix version, it has always to be the directory name
+
         $object->createDate = (string)$xml->getAttribute('createdate');
 
         $locale = array('label'=>$this->locale, 'description'=>$this->locale);

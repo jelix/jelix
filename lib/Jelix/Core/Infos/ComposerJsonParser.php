@@ -67,20 +67,15 @@ class ComposerJsonParser {
             'psr-4'=>array(),
         ),$json['autoload']);
 
-
-        $object->id                 = $json['name'];
-        $object->name               = $json['name'];
+        $object->packageName        = $json['name'];
+        $object->name               = str_replace('/', '_',$json['name']);
         $object->version            = $json['version'];
         $object->label              = $json['name'];
         $object->description        = $json['description'];
         $object->keywords           = $json['keywords'];
         $object->authors            = $json['authors'];
-        //$object->notes              = $json[''];
         $object->homepageURL        = $json['homepage'];
-        //$object->updateURL          = $json[''];
         $object->license            = $json['license'];
-        //$object->licenseURL         = $json[''];
-        //$object->copyright          = $json[''];
 
         /**
         * @var array of array('type'=>'module/plugin','version'=>'','id'=>'','name'=>'')
@@ -180,14 +175,11 @@ class ComposerJsonParser {
                 }
             }
 
-            if ( isset($j['moduleWebAlias'])) {
-                $object->webAlias = $j['moduleWebAlias'];
+            if (isset($j['moduleName'])) {
+                $object->name = $j['moduleName'];
             }
         }
 
-        if (isset($object->webAlias) && $object->webAlias == '') {
-            $object->webAlias = preg_replace("/[^a-z0-9_]/", "-", $object->name);
-        }
         return $object;
     }
 }

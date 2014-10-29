@@ -13,11 +13,6 @@ class ModuleInfos extends InfosAbstract {
     public $type = 'library';
 
     /**
-     * the name used for url
-     */
-    public $webAlias = '';
-
-    /**
      * @var array of path
      */
     public $autoloaders = array();
@@ -53,7 +48,8 @@ class ModuleInfos extends InfosAbstract {
     function __construct($path) {
         $p = rtrim($path, '/');
         $this->path = $p.'/';
-        $this->webAlias = $this->name = basename($p);
+        // by default, the module name is the directory name of the module
+        $this->name = basename($p);
 
         $config = \Jelix\Core\App::config();
         if ($config) {

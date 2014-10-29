@@ -14,7 +14,7 @@
     },
     "extra" : {
         "jelix" : {
-            "moduleWebAlias" : "thepackage"
+            "moduleName" : "thepackage"
         }
     }
 }
