@@ -19,6 +19,9 @@
         "php": ">=5.3.3",
         "phpmailer/phpmailer": "5.2.9"
     },
+    "require-dev": {
+        "jelix/buildtools": "dev-master"
+    },
     "archive": {
         "exclude": ["/build", "/temp", "/testapp", "Makefile"]
     },

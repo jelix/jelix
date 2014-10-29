@@ -129,8 +129,8 @@ $BUILD_OPTIONS = array(
     ),*/
 );
 
-
-include(__DIR__.'/lib/jBuild.inc.php');
+require(__DIR__.'/../vendor/autoload.php');
+\Jelix\BuildTools\Legacy::inc();
 
 //----------------- Prepare environment variables
 
