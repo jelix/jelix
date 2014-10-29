@@ -165,7 +165,7 @@ class Router {
             if ($request)
                 $this->setRequest($request);
 
-            jSession::start();
+            \jSession::start();
 
             $ctrl = $this->getController($this->action);
         }
@@ -174,8 +174,8 @@ class Router {
             if ($config->urlengine['notfoundAct'] =='') {
                 throw $e;
             }
-            if (!jSession::isStarted()) {
-                jSession::start();
+            if (!\jSession::isStarted()) {
+                \jSession::start();
             }
             try {
                 $this->action = new \jSelectorAct($config->urlengine['notfoundAct']);

@@ -160,7 +160,7 @@ file="temp:kvdbdba.db4"
 [jsoapclient:default]
 
 ; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
-wsdl=   "http://testapp.local/index.php?service=testapp~soap&module=jsoap&action=WSDL:wsdl"
+wsdl=   "http://testapp.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
 ;trace=1
 soap_version=SOAP_1_1
 
@@ -182,29 +182,18 @@ ttl = 0
 ; Automatic cleaning configuration (not necessary with memcached. 0 means disabled, 1 means systematic cache cleaning of expired data (at each set call), greater values mean less frequent cleaning)
 automatic_cleaning_factor = 0
 
-
-; Parameters for db driver :
-
-; dao used
-dao = "jelix~jcache"
-; dbprofil (optional)
-dbprofile = ""
-
-
-; Parameters for memcached driver :
-
-; memcached servers.
-; Can be a list e.g
-;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
-;servers = localhost:11211
-
 [jcache:usingdb]
 enabled = 1
 driver = db
+dao = "jelix~jcache"
+dbprofile = ""
 
 [jcache:usingmemcache]
 enabled = 1
 driver = memcache
+; Can be a list e.g
+;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
+;servers = localhost:11211
 servers = localhost:11211
 
 [jcache:usingfile]
