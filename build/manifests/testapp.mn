@@ -231,7 +231,6 @@ cd testapp/modules/jelix_tests/forms
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
   core.jrequest.html_cli.php
-  core.urls_generation.html.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -303,6 +302,7 @@ cd testapp/tests-jelix/jelix/core/
   restcontrollerTest.php
   selectors_actionTest.php
   selectors_moduleTest.php
+  urlsGenerationTest.php
   urlsParsingTest.php
 cd testapp/tests-jelix/jelix/core/app/modules/simple/
   module.xml

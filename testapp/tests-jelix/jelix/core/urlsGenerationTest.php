@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTCreateUrls extends UnitTestCase {
+class UTCreateUrls extends jUnitTestCase {
     protected $oldUrlScriptPath;
     protected $oldParams;
     protected $oldRequestType;
@@ -17,39 +17,32 @@ class UTCreateUrls extends UnitTestCase {
     protected $oldReq;
 
     function setUp() {
-      $req = jApp::coord()->request;
-      $this->oldReq = $req = jApp::coord()->request;
-      $this->oldUrlScriptPath = $req->urlScriptPath;
-      $this->oldParams = $req->params;
-      $this->oldRequestType = $req->type;
-      $this->oldserver = $_SERVER;
-      jApp::saveContext();
+        $this->oldserver = $_SERVER;
+        jApp::saveContext();
+        self::initClassicRequest(TESTAPP_URL.'index.php');
+        jApp::pushCurrentModule('jelix_tests');
+        parent::setUp();
+    }
+    
+    function tearDown() {
+        jApp::popCurrentModule();
+        jUrl::getEngine(true);
+        jApp::restoreContext();
+        $_SERVER = $this->oldserver;
+        
     }
 
-    function tearDown() {
-      $req = jApp::coord()->request = $this->oldReq;
-      $req->urlScriptPath = $this->oldUrlScriptPath;
-      $req->params = $this->oldParams;
-      $req->type = $this->oldRequestType;
-      jApp::restoreContext();
-      $_SERVER = $this->oldserver;
-      jUrl::getEngine(true);
-    }
 
     protected function _doCompareUrl($title, $urlList, $trueResult ){
         //$this->sendMessage($title);
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertEqual($url, $trueResult[$k], 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url).' %s' );
+                $this->assertEquals($url, $trueResult[$k], 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url) );
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
                 $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
-            }catch(Exception $e){
-                $msgerr = '<br>generated exception, code='.$e->getCode().' msg='.$e->getMessage().' %s';
-                $this->sendMessage($msgerr);
-                throw $e;
             }
         }
     }
@@ -100,7 +93,7 @@ class UTCreateUrls extends UnitTestCase {
          'significantFile'=>'urls.xml',
        );
 
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+      jUrl::getEngine(true); // we reload the url engine
 
       $urlList=array();
       $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
@@ -148,7 +141,6 @@ class UTCreateUrls extends UnitTestCase {
       $trueResult[6]='https://testapp.local'.$trueResult[6];
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
-
 
 
     function testSimpleEngineError(){
@@ -369,7 +361,9 @@ class UTCreateUrls extends UnitTestCase {
             'significantFile'=>'urls.xml',
             'checkHttpsOnParsing'=>true
         );
-
+        $conf->_modulesPathList['news']='/';
+        $conf->_modulesPathList['articles']='/';
+        //$conf->availableLocales = array('fr_FR', 'en_US');
         jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
         $urlList = array();
@@ -463,15 +457,11 @@ class UTCreateUrls extends UnitTestCase {
             try{
                 jApp::config()->locale = $urldata[0];
                 $url = jUrl::get($urldata[1], $urldata[2]);
-                $this->assertEqual($url, $trueResult[$k], 'url '.$k.' - %s');
+                $this->assertEquals($url, $trueResult[$k], 'url '.$k.' - %s');
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
                 $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
-            }catch(Exception $e){
-                $msgerr = '<br>generated exception, code='.$e->getCode().' msg='.$e->getMessage().' %s';
-                $this->sendMessage($msgerr);
-                throw $e;
             }
         }
     }
@@ -648,13 +638,11 @@ class UTCreateUrls extends UnitTestCase {
           'significantFile'=>'urls.xml',
         );
 
-        /*
-         parameters
-            $_SERVER['HTTPS'] or not
-            $_SERVER['SERVER_NAME'] ot $conf->domainName
-            given domainName or not
-            jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
-        */
+        // parameters
+        //   $_SERVER['HTTPS'] or not
+        //   $_SERVER['SERVER_NAME'] ot $conf->domainName
+        //   given domainName or not
+        //   jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
 
         $_SERVER['SERVER_NAME'] = 'testapp.local';
         $_SERVER['SERVER_PORT'] = '80';
@@ -666,36 +654,36 @@ class UTCreateUrls extends UnitTestCase {
         $conf->domainName = '';
         jUrl::getEngine(true);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEqual('http://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
 
 
         // with given domain name, without domain name in config, without https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
-        $this->assertEqual('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // without given domain name, with domain name in config, without https
         $conf->domainName = 'configdomain.local';
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEqual('http://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
 
 
         // with given domain name, with domain name in config, without https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
-        $this->assertEqual('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://football.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
 
 
         $_SERVER['HTTPS'] = 'on';
@@ -705,39 +693,39 @@ class UTCreateUrls extends UnitTestCase {
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEqual('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // with given domain name, without domain name in config, with https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // without given domain name, with domain name in config, with https
         $conf->domainName = 'configdomain.local';
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEqual('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
 
         // with given domain name, with domain name in config, with https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,'football.local');
-        $this->assertEqual('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://football.local/index.php/jelix_tests/urlsig/url8', $url);
     }
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEqual('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'], $url);
+        $this->assertEquals('http://'.$_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'], $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = 'testapp.local';
@@ -776,10 +764,10 @@ class UTCreateUrls extends UnitTestCase {
         $req->getModuleAction();
 
         $url = jUrl::getCurrentUrl(false, false);
-        $this->assertEqual('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+        $this->assertEquals('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEqual('http://testapp.local/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+        $this->assertEquals('http://testapp.local/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
 
         $conf = jApp::config();
         $conf->domainName = 'testapp.local';
@@ -814,10 +802,10 @@ class UTCreateUrls extends UnitTestCase {
         $req->getModuleAction();
 
         $url = jUrl::getCurrentUrl(false, false);
-        $this->assertEqual('/zip/yo/?foo=bar', $url);
+        $this->assertEquals('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEqual('http://testapp.local/zip/yo/?foo=bar', $url);
+        $this->assertEquals('http://testapp.local/zip/yo/?foo=bar', $url);
 
     }
 }
