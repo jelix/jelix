@@ -13,4 +13,21 @@
  * @see \Jelix\Core\Includer
  * @deprecated
  */
-class jIncluder extends \Jelix\Core\Includer { }
+class jIncluder {
+
+    private function __construct() {}
+
+    public static function inc($aSelector) {
+        \Jelix\Core\Includer::inc($aSelector);
+    }
+
+    public static function incAll($aType){
+        return \Jelix\Core\Includer::incAll($aType);
+    }
+
+    public static function clear() {
+        \Jelix\Core\Includer::clear();
+    }
+
+
+}

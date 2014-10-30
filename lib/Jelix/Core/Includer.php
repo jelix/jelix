@@ -148,4 +148,16 @@ class Includer {
         }
         return $returnedValue;
     }
+
+    public static function clear() {
+        foreach(self::$_includedFiles as $cachefile => $ok) {
+            if (function_exists('opcache_invalidate')) {
+                opcache_invalidate ( $cachefile, true );
+            }
+            else if (function_exists('apc_delete_file')) {
+                apc_delete_file($cachefile);
+            }
+        }
+        self::$_includedFiles = array();
+    }
 }

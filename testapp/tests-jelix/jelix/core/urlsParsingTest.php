@@ -12,7 +12,7 @@
 
 require_once(JELIX_LIB_PATH.'plugins/urls/significant/significant.urls.php');
 
-class UTParseUrlsIncluder extends jIncluder {
+class UTParseUrlsIncluder extends \Jelix\Core\Includer {
 
     static function resetUrlCache() {
         $sel = new jSelectorUrlCfgSig(jApp::config()->urlengine['significantFile']);
