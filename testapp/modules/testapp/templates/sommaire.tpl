@@ -14,7 +14,6 @@
 
 <h3>Unit tests</h3>
 <ul>
-   <li><a href="{jurl 'junittests~default:index'}">PHP Unit tests</a></li>
    <li> JS unit tests :
       <ul>
         <li><a href="{jurl 'jelix_tests~jstests:jforms'}">jforms</a></li>

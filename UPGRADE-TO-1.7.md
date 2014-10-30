@@ -62,4 +62,6 @@ WARNING: this is experimental!!
 - Classes that don't exist anymore:
    - jInstallerApplication
 
+- Simpletest and the module junittest are gone. If you are using them, convert your tests to PHPUnit
+
 - That's all for the moment.

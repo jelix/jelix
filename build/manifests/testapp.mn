@@ -57,7 +57,6 @@ cd testapp/install/wizard
 
 cd testapp/scripts
     cmdline.php
-    tests.php
 
 cd testapp/modules/testapp
 *  module.xml
@@ -466,7 +465,6 @@ cd testapp/var/config/jsonrpc
   config.ini.php
 cd testapp/var/config/cmdline
   config.ini.php
-  configtests.ini.php
 cd testapp/var/config/soap
   config.ini.php
 cd testapp/var/locales/fr_FR/jelix_tests/locales/
@@ -474,8 +472,6 @@ cd testapp/var/locales/fr_FR/jelix_tests/locales/
   overload.UTF-8.properties
 cd testapp/var/themes/default/testapp
   hello2.tpl
-cd testapp/var/themes/default/junittests
-  main.tpl
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/

@@ -11,9 +11,6 @@ Contributors
 ------------
 By alphabetic order on the name
 
-* Rahal Aboulfeth
-   bug fix in the controller of junittest (#284)
-
 * Chris
     bug fix in jauth.listener.php ( ticket #221)
 
