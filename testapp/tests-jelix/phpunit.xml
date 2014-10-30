@@ -49,5 +49,8 @@
     <testsuite name="SimpleLocalization">
       <directory>jelix/SimpleLocalization/</directory>
     </testsuite>
+    <testsuite name="routing">
+      <directory>jelix/routing/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>

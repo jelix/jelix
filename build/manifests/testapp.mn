@@ -230,7 +230,6 @@ cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
 cd testapp/modules/jelix_tests/tests/
-  core.jrequest.html_cli.php
   test1.pu.php
   test2.unit.pu.php
 cd testapp/modules/jelix_tests/zones/
@@ -373,6 +372,11 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
   config.ini.php
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
+cd testapp/tests-jelix/jelix/routing/
+  requestsTest.php
+cd testapp/tests-jelix/jelix/app1/
+  __ALL__
+
 cd testapp/tests-jelix/jelix/utils/
   jClassesTest.php
   jDatatypeTest.php

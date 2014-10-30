@@ -1,0 +1,13 @@
+{
+    "name": "jelixtests/routingaaa",
+    "type": "library",
+    "description": "",
+    "require": {
+        "php": ">=5.3.3"
+    },
+    "extra" : {
+        "jelix": {
+            "moduleName" : "aaa"
+        }
+    }
+}
