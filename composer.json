@@ -20,7 +20,8 @@
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "5.2.9",
-        "tecnick.com/tcpdf": "6.0.*"
+        "tecnick.com/tcpdf": "6.0.*",
+        "mrclay/minify": "2.2.0"
     },
     "require-dev": {
         "jelix/buildtools": "dev-master"

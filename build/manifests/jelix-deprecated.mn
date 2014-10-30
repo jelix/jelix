@@ -297,6 +297,10 @@ cd lib/jelix-www/wymeditor/skins/default
 
 rmd lib/tcpdf/
 rmd lib/pdf-fonts/
+rmd lib/minify/min
+cd lib/minify/
+  README.txt
+  LICENSE.txt
 
 rmd lib/jelix-admin-modules/jacl2_admin
 

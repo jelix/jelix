@@ -16,59 +16,8 @@ cd lib/diff
 ! difftableformatter.php
   README
 
-
 cd lib/minify/
   jelix_minify.php
-  README.txt
-  LICENSE.txt
-
-cd lib/minify/min/
-! config.php
-! groupsConfig.php
-! utils.php
-  README.txt
-
-cd lib/minify/min/lib
-! JSMinPlus.php
-! Minify.php
-! JSMin.php
-! FirePHP.php
-
-cd lib/minify/min/lib/HTTP
-! ConditionalGet.php
-! Encoder.php
-
-cd lib/minify/min/lib/Minify
-! YUICompressor.php
-! ImportProcessor.php
-! Lines.php
-! CommentPreserver.php
-! Build.php
-! CSS.php
-! Source.php
-! Logger.php
-! HTML.php
-! Packer.php
-
-cd lib/minify/min/lib/Minify/Cache
-! APC.php
-! File.php
-! Memcache.php
-
-cd lib/minify/min/lib/Minify/CSS
-! UriRewriter.php
-! Compressor.php
-
-cd lib/minify/min/lib/Minify/Controller
-! Version1.php
-! Groups.php
-! Base.php
-! Files.php
-! Page.php
-! MinApp.php
-
-cd lib/minify/min/lib/Solar
-! Dir.php
 
 cd lib/php5redis/
   Redis.php
