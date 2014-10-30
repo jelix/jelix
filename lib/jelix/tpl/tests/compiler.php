@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once('../jTplCompiler.class.php');
+
 
 class testJtplContentCompiler extends jTplCompiler {
 
@@ -32,7 +32,7 @@ function testjtplcontentUserFunction($t,$a,$b) {
 }
 
 
-class UTjtplcontent extends jUnitTestCase {
+class jtplCompilerTest extends PHPUnit_Framework_TestCase {
 
     protected $content = array(
 0=>array(
@@ -161,11 +161,11 @@ function toto() {
         ),
 29=>array(
         '<p>ok<?xml echo $toto ?></p>',
-        '<p>ok<?xml echo $toto ?></p>',
+        '<p>ok<?php echo \'<?xml echo $toto ?>\'?></p>',
         ),
 30=>array(
         '<p>ok<?browser echo $toto ?></p>',
-        '<p>ok<?browser echo $toto ?></p>',
+        '<p>ok<?php echo \'<?browser echo $toto ?>\'?></p>',
         ),
 31=>array(
         '<p>ok<?php
@@ -192,22 +192,18 @@ function toto() {
         $compil->setRemoveASPtags(false);
         
         foreach($this->content as $k=>$t){
-            try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
-            }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
-            }
+            $this->assertEquals($t[1], $compil->compileContent2($t[0]));
         }
 
         $compil->setRemoveASPtags(false);
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));
-        $this->assertEqualOrDiff('<p>ok<?php echo \'<?xml
+        $this->assertEquals('<p>ok<?php echo \'<?xml version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml version="truc"?></p>'));
+        $this->assertEquals('<p>ok<?php echo \'<?xml version=\\\'truc\\\'?>\'?></p>', $compil->compileContent2('<p>ok<?xml version=\'truc\'?></p>'));
+        $this->assertEquals('<p>ok<?php echo \'<?xml
   version="truc"?>\'?></p>', $compil->compileContent2('<p>ok<?xml
   version="truc"?></p>'));
-        $this->assertEqualOrDiff('<p>ok<%=$truc%></p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
+        $this->assertEquals('<p>ok<%=$truc%></p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
         $compil->setRemoveASPtags(true);
-        $this->assertEqualOrDiff('<p>ok</p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
+        $this->assertEquals('<p>ok</p>', $compil->compileContent2('<p>ok<%=$truc%></p>'));
     }
 
     protected $contentUntrusted = array(
@@ -225,11 +221,7 @@ function toto() {
         $compil->trusted = false;
         $compil->setUserPlugins(array(), array('bla'=>'testjtplcontentUserFunction'));
         foreach($this->contentUntrusted as $k=>$t){
-            try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
-            }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
-            }
+            $this->assertEquals($t[1], $compil->compileContent2($t[0]));
         }
     }
 
@@ -247,11 +239,7 @@ function toto() {
         $compil->trusted = true;
 
         foreach($this->contentPlugins as $k=>$t){
-            try{
-                $this->assertEqualOrDiff($t[1], $compil->compileContent2($t[0]));
-            }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
-            }
+            $this->assertEquals($t[1], $compil->compileContent2($t[0]));
         }
     }
 
@@ -272,12 +260,14 @@ function toto() {
             $compil = new testJtplContentCompiler();
             $compil->outputType = 'html';
             $compil->trusted = true;
+            $ok = true;
             try{
                 $compil->compileContent2($t[0]);
-                $this->fail("Test '$k', exception didn't happen");
+                $ok = false;
             }catch(Exception $e){
-                $this->assertEqual($e->getMessage(), $t[1], "Test '$k': %s ");
+                $this->assertEquals($t[1], $e->getMessage(),  "Test '$k': %s ");
             }
+            $this->assertTrue($ok,"Test '$k', exception didn't happen");
         }
     }
 
@@ -293,15 +283,15 @@ function toto() {
             $compil = new testJtplContentCompiler();
             $compil->outputType = 'html';
             $compil->trusted = false;
+            $ok = true;
             try{
                 $compil->compileContent2($t[0]);
-                $this->fail("Test '$k', exception didn't happen");
+                $ok = false;
             }catch(Exception $e){
-                $this->assertEqual($e->getMessage(), $t[1], "Test '$k': %s ");
+                $this->assertEquals( $t[1], $e->getMessage(), "Test '$k': %s ");
             }
+            $this->assertTrue($ok,"Test '$k', exception didn't happen");
         }
     }
 
 }
-
-?>
