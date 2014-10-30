@@ -14,15 +14,15 @@ modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default
 
-; for junittests module
-enableTests = on
+; list of directories that contain modules, ie, a module.xml (deprecated) or
+; a composer.json in their subdirectories
+modulesPath = lib:jelix-modules/,app:modules/
 
 [modules]
 jelix.access = 2
 jelix_tests.access = 2
 testapp.access = 2
 testurls.access = 2
-junittests.access = 2
 jsoap.access = 2
 jacl.access = 1
 jacldb.access = 1

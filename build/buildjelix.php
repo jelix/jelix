@@ -37,7 +37,7 @@ $BUILD_OPTIONS = array(
     'dev',
     ),
 'ENABLE_DEVELOPER'=>array(
-    "include all developers tools in the distribution (simpletest &cie)",
+    "include all developers tools in the distribution",
     true,
     ),
 'ENABLE_OPTIMIZED_SOURCE'=>array(

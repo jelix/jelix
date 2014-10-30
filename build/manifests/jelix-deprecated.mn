@@ -342,8 +342,7 @@ cd lib/jelix-modules/jauthdb/install
 rmd lib/jelix-modules/jWSDL
 rmd lib/wshelper
 
-cd lib/jelix-modules/junittests/install/www/tests/
-  design.css
+rmd lib/jelix-modules/junittests
 
 cd lib/json
   JSON.php

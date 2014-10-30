@@ -47,15 +47,4 @@ cd lib/jelix-scripts/templates/var/config/
 cd lib/jelix-scripts/templates/www/
   rdf.php.tpl
 
-cd lib/jelix-modules/junittests/install
-  application-cli.init.php
-
-cd lib/simpletest/
-  parser.php
-cd lib/simpletest/test
-  parser_test.php
-  real_sites_test.php
-  test_groups.php
-  reflection_php4_test.php
-cd lib/simpletest/extensions
-  junit
+rmd lib/simpletest/

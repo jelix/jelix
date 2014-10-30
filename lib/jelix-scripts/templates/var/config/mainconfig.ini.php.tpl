@@ -37,7 +37,6 @@ jacldb.access = 0
 jacl2db.access = 0
 jauth.access = 0
 jauthdb.access = 0
-junittests.access = 0
 jsoap.access = 0
 
 [coordplugins]
