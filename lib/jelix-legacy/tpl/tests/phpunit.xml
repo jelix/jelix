@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<phpunit bootstrap="bootstrap.php">
+  <testsuites>
+    <testsuite name="Jelix Core">
+      <file>compiler.php</file>
+      <file>expressions_parsing.php</file>
+    </testsuite>
+  </testsuites>
+</phpunit>

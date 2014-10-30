@@ -51,7 +51,7 @@ class testJtplCompiler extends jTplCompiler {
 function testjtplcontentUserModifier($s){}
 
 
-class UTjtplexpr extends jUnitTestCase {
+class jtplCompilerExpressionTest extends PHPUnit_Framework_TestCase {
 
     protected $varexpr = array(
         'a'=>'a',
@@ -113,17 +113,17 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
         foreach($this->varexprTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
     }
@@ -134,17 +134,17 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
         foreach($this->varexprUnTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
     }
@@ -201,17 +201,17 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->badvarexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("No Exception for this test '$k' ");
+                $this->assertTrue(false, "No Exception for this test '$k' ");
             }catch(Exception $e){
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEquals($t[0], $e->getMessage());
             }
         }
         foreach($this->badvarexprTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("No Exception for this test '$k' ");
+                $this->assertTrue(false, "No Exception for this test '$k' ");
             }catch(Exception $e){
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEquals($t[0], $e->getMessage());
             }
         }
     }
@@ -222,17 +222,17 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->badvarexpr as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("No Exception for this test '$k' ");
+                $this->assertTrue(false, "No Exception for this test '$k' ");
             }catch(Exception $e){
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEquals($t[0], $e->getMessage());
             }
         }
         foreach($this->badvarexprUnTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseVarExpr($k);
-                $this->fail("No Exception for this test '$k' ");
+                $this->assertTrue(false, "No Exception for this test '$k' ");
             }catch(Exception $e){
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEquals($t[0], $e->getMessage());
             }
         }
     }
@@ -251,9 +251,9 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varTag as $k=>$t){
             try{
                 $res = $compil->testParseVariable($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
     }
@@ -280,9 +280,9 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varAssign as $k=>$t){
             try{
                 $res = $compil->testParseAssignExpr($k);
-                $this->assertEqualOrDiff($t, $res);
+                $this->assertEquals($t, $res);
             }catch(Exception $e){
-                $this->fail("Test '$k', Unknown Exception: ".$e->getMessage());
+                $this->assertTrue(false, "Test '$k', Unknown Exception: ".$e->getMessage());
             }
         }
 
@@ -291,9 +291,9 @@ class UTjtplexpr extends jUnitTestCase {
         foreach($this->varAssignUnTrustedMode as $k=>$t){
             try{
                 $res = $compil->testParseAssignExpr($k);
-                $this->fail("No Exception for this test '$k' ");
+                $this->assertTrue(false, "No Exception for this test '$k' ");
             }catch(Exception $e){
-                $this->assertEqualOrDiff($t[0], $e->getMessage());
+                $this->assertEquals($t[0], $e->getMessage());
             }
 
         }
