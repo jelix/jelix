@@ -4,7 +4,7 @@
 * @subpackage  jtcpdf module
 * @author      Julien Issler
 * @contributor Uriel Corfa, Laurent Jouanneau
-* @copyright   2007 Julien Issler, 2007 Emotic SARL, 2007-2012 Laurent Jouanneau
+* @copyright   2007 Julien Issler, 2007 Emotic SARL, 2007-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.0
@@ -46,8 +46,9 @@ class jResponseTcpdf  extends jResponse {
      */
     public function output(){
 
-        if(!($this->tcpdf instanceof jTcpdf))
+        if(!($this->tcpdf instanceof jTcpdf)) {
             throw new jException('jtcpdf~errors.reptcpdf.not_a_jtcpdf');
+        }
 
         $pdf_data = $this->tcpdf->Output('','S');
 
@@ -82,7 +83,11 @@ class jResponseTcpdf  extends jResponse {
     * @param String $encoding charset encoding;
     */
     public function initPdf($orientation='P', $unit='mm', $format='A4', $encoding=null){
-        $this->tcpdf = new jTcpdf($orientation, $unit, $format, $encoding);
+        if ($encoding === null) {
+            $encoding = jApp::config()->charset;
+        }
+        $unicode = ($encoding == 'UTF-8' || $encoding == 'UTF-16');
+        $this->tcpdf = new jTcpdf($orientation, $unit, $format, $unicode, $encoding);
     }
 
     /**
