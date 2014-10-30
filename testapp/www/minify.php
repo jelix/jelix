@@ -23,7 +23,9 @@ require ('../application.init.php');
 //$min_symlinks = array();
 //$min_uploaderHoursBehind = 0;
 
-//$min_groupConfigPath=jApp::configPath('minifyGroupsConfig.php');
+//$min_customConfigPaths = array(
+//    'groups' => 'path/to/mygroupconfig.php'
+//);
 
 require(LIB_PATH.'minify/jelix_minify.php');
 
