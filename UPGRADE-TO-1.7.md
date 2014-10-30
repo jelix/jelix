@@ -34,6 +34,8 @@ WARNING: this is experimental!!
 ```
 
 - then Jelix and all of its dependencies are installed into a yourapp/vendor/ directory.
+  Many external libs integrated into Jelix in previous version are now installed only
+  with Composer.
 
 - in your application.init.php, you must replace
 

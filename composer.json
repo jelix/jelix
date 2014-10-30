@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "phpmailer/phpmailer": "5.2.9"
+        "phpmailer/phpmailer": "5.2.9",
+        "tecnick.com/tcpdf": "6.0.*"
     },
     "require-dev": {
         "jelix/buildtools": "dev-master"
