@@ -8,7 +8,8 @@ charset = "UTF-8"
 ; if empty, jelix will try to get the default timezone
 timeZone = 
 
-pluginsPath = app:plugins/,lib:jelix-plugins/,module:jacl2db/plugins,module:jacldb/plugins
+
+pluginsPath = app:plugins/,lib:jelix-plugins/
 modulesPath = lib:jelix-modules/,app:modules/
 
 theme = default
@@ -76,7 +77,7 @@ basePath = ""
 defaultEntrypoint= index
 
 ; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur
-d'url simple simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
+simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions
