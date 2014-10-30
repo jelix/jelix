@@ -39,7 +39,8 @@ class Compiler {
     /**
      * @param string $configFile  the name and path of the config file related to config dir of the app
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
-     *              corresponding to the readed configuration
+     *              corresponding to the readed configuration. It should start with a leading /
+     *              for non cli script.
      * @param boolean $isCli  indicate if the configuration to read is for a CLI script or no
      */
     function __construct ($configFile = '', $pseudoScriptName = '', $isCli = null){
@@ -54,13 +55,14 @@ class Compiler {
 
         // this is the defaultconfig file of JELIX itself
         $config = IniFileMgr::read(__DIR__.'/defaultconfig.ini.php', true);
-        $this->commonConfig = clone $config;
 
         // read the main configuration of the app
         $mcf = App::mainConfigFile();
         if ($mcf) {
             IniFileMgr::readAndMergeObject($mcf, $config);
         }
+        $this->commonConfig = clone $config;
+
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
             IniFileMgr::readAndMergeObject($configPath.'localconfig.ini.php', $config);
@@ -406,7 +408,7 @@ class Compiler {
             $config->_externalModulesPathList[$f]=$path.'/';
         }
         elseif ($config->modules[$f.'.access']) {
-            $config->_modulesPathList[$f]=$path.'/';
+            $config->_modulesPathList[$f] = $path.'/';
             if (file_exists( $path.'/plugins')) {
                 $config->pluginsPath .= ',module:'.$f;
             }
@@ -498,7 +500,6 @@ class Compiler {
             }
             $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
         }
-        
 
         // now we separate the path and the name of the script, and then the basePath
         if ($isCli) {
