@@ -132,7 +132,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $ctrl = $this->ctrl;
         $attr = $this->getValueAttributes();
         $value = $this->getValue($ctrl);
-        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         if(is_array($value)){
             if(isset($value[0]))

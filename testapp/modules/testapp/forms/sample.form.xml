@@ -42,24 +42,31 @@
       <help>Simple test</help>
   </menulist>
 
-  <listbox ref="home">
-      <label>You leave at</label>
-      <item value="pa">Paris</item>
-      <item value="ma">Marseille</item>
-      <item value="ly">Lyon</item>
-      <item value="br">Brest</item>
-      <item value="li">Lille</item>
-      <item value="bo">Bordeaux</item>
-  </listbox>
-
-  <textarea ref="address">
-      <label>Your address</label>
-  </textarea>
+   <group ref="location" withcheckbox="true" defaultvalue="no-loc">
+      <label>Your location</label>
+      <oncheckvalue label="" value="has-location"/>
+      <onuncheckvalue label="no location" value="no-loc"/>
+      <input ref="country" required="true">
+         <label>Your country</label>
+      </input>
+      <listbox ref="home">
+          <label>You leave at</label>
+          <item value="pa">Paris</item>
+          <item value="ma">Marseille</item>
+          <item value="ly">Lyon</item>
+          <item value="br">Brest</item>
+          <item value="li">Lille</item>
+          <item value="bo">Bordeaux</item>
+      </listbox>
+      <textarea ref="address">
+          <label>Your address</label>
+      </textarea>
+   </group>
 
   <htmleditor ref="description">
       <label>Description in html</label>
   </htmleditor>
-
+   
   <wikieditor ref="wikicontent">
       <label>a wiki editor</label>
   </wikieditor>
