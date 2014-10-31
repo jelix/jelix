@@ -25,18 +25,16 @@ namespace {
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
             );
         }
-
-    }
-
-
-    function getEnMessages() {
+        static function getEnMessages() {
 #includephp Jelix/Installer/Checker/installmessages.en.php
-    }
-    function getFrMessages() {
+        }
+        static function getFrMessages() {
 #includephp Jelix/Installer/Checker/installmessages.fr.php
+        }
     }
 
-    $en = array_merge(getEnMessages(),
+
+    $en = array_merge(checker::getEnMessages(),
                       array(
 #expand             'checker.title'   =>'Check your configuration server for Jelix __LIB_VERSION__',
 #expand             'conclusion.error'    =>'You must fix the error in order to run an application correctly with Jelix __LIB_VERSION__.',
@@ -48,7 +46,7 @@ namespace {
 #expand             'conclusion.ok'       =>'You can install an application for Jelix __LIB_VERSION__.',
         ));
 
-    $fr = array_merge(getFrMessages(),
+    $fr = array_merge(checker::getFrMessages(),
                 array(
 #expand             'checker.title'=>'Vérification de votre serveur pour Jelix __LIB_VERSION__',
 #expand             'conclusion.error'      =>'Vous devez corriger l\'erreur pour faire fonctionner correctement une application Jelix __LIB_VERSION__.',

@@ -44,9 +44,9 @@ class admin_menuZone extends jZone {
             }
         }
 
-        usort($menu, "masterAdminItemSort");
+        usort($menu, "masterAdminItem::sortItems");
         foreach($menu as $topitem) {
-            usort($topitem->childItems, "masterAdminItemSort");
+            usort($topitem->childItems, "masterAdminItem::sortItems");
         }
         $this->_tpl->assign('menuitems', $menu);
         $this->_tpl->assign('selectedMenuItem', $this->param('selectedMenuItem',''));

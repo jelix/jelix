@@ -1,48 +1,51 @@
 <?php
 /**
  * minify controller for a jelix application
- * 
+ *
  * @author Laurent Jouanneau
  */
 
-function getDocumentRoot() {
-    if (isset($_SERVER['DOCUMENT_ROOT']))
-        return $_SERVER['DOCUMENT_ROOT'];
+class jelixMinify {
 
-    $config = parse_ini_file(jApp::mainConfigFile());
+    static function getDocumentRoot() {
+        if (isset($_SERVER['DOCUMENT_ROOT']))
+            return $_SERVER['DOCUMENT_ROOT'];
 
-    $urlengine = $config['urlengine'];
+        $config = parse_ini_file(jApp::mainConfigFile());
 
-    if($urlengine['scriptNameServerVariable'] == '') {
-        $urlengine['scriptNameServerVariable'] = jConfigCompiler::findServerName('.php');
-    }
-    $urlScript = $_SERVER[$urlengine['scriptNameServerVariable']];
-    $lastslash = strrpos ($urlScript, '/');
+        $urlengine = $config['urlengine'];
 
-    $urlScriptPath = substr ($urlScript, 0, $lastslash ).'/';
-
-    $basepath = $urlengine['basePath'];
-    if ($basepath == '') {
-        // for beginners or simple site, we "guess" the base path
-        $basepath = $urlScriptPath;
-    }
-    elseif ($basepath != '/') {
-        if($basepath[0] != '/') $basepath='/'.$basepath;
-        if(substr($basepath,-1) != '/') $basepath.='/';
-
-        if(strpos($urlScriptPath, $basepath) !== 0){
-            throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlengine['urlScriptPath']);
+        if($urlengine['scriptNameServerVariable'] == '') {
+            $urlengine['scriptNameServerVariable'] = jConfigCompiler::findServerName('.php');
         }
+        $urlScript = $_SERVER[$urlengine['scriptNameServerVariable']];
+        $lastslash = strrpos ($urlScript, '/');
+
+        $urlScriptPath = substr ($urlScript, 0, $lastslash ).'/';
+
+        $basepath = $urlengine['basePath'];
+        if ($basepath == '') {
+            // for beginners or simple site, we "guess" the base path
+            $basepath = $urlScriptPath;
+        }
+        elseif ($basepath != '/') {
+            if($basepath[0] != '/') $basepath='/'.$basepath;
+            if(substr($basepath,-1) != '/') $basepath.='/';
+
+            if(strpos($urlScriptPath, $basepath) !== 0){
+                throw new Exception('Jelix Error: basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlengine['urlScriptPath']);
+            }
+        }
+
+        if ($basepath == '/')
+            return jApp::wwwPath();
+
+        if(strpos(jApp::wwwPath(), $basepath) === false){
+            return jApp::wwwPath();
+        }
+
+        return substr(jApp::wwwPath(), 0, - (strlen($basepath)));
     }
-    
-    if ($basepath == '/')
-        return jApp::wwwPath();
-    
-    if(strpos(jApp::wwwPath(), $basepath) === false){
-        return jApp::wwwPath();
-    }
-    
-    return substr(jApp::wwwPath(), 0, - (strlen($basepath)));
 }
 
 // ============ configuration of Minify
@@ -60,7 +63,7 @@ if (!file_exists($min_cachePath))
     mkdir($min_cachePath, 0775);
 
 if (!isset($min_documentRoot))
-    $min_documentRoot = getDocumentRoot();
+    $min_documentRoot = jelixMinify::getDocumentRoot();
 
 if (!isset($min_cacheFileLocking))
     $min_cacheFileLocking = true;

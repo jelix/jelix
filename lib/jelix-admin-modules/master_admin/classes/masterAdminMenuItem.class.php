@@ -38,9 +38,8 @@ class masterAdminMenuItem {
         $this->icon = $item->icon;
         $this->childItems = array_merge($item->childItems, $this->childItems);
     }
-}
 
-function masterAdminItemSort($itemA, $itemB)
-{
-    return ($itemA->order - $itemB->order);
+    static public function sortItems($itemA, $itemB) {
+        return ($itemA->order - $itemB->order);
+    }
 }

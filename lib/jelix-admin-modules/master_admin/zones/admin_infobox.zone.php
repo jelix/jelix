@@ -18,7 +18,7 @@ class admin_infoboxZone extends jZone {
         
         $items = jEvent::notify('masteradminGetInfoBoxContent')->getResponse();
         
-        usort($items, "masterAdminItemSort");
+        usort($items, "masterAdminItem::sortItems");
 
         $this->_tpl->assign('infoboxitems', $items);
         $this->_tpl->assign('user', jAuth::getUserSession());

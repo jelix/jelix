@@ -36,8 +36,8 @@ $commandName = array_shift($argv); // get the command name
 
 require(JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
 
-set_error_handler('JelixScriptsErrorHandler');
-set_exception_handler('JelixScriptsExceptionHandler');
+set_error_handler('JelixScript::errorHandler');
+set_exception_handler('JelixScript::exceptionHandler');
 
 $config = JelixScript::loadConfig();
 

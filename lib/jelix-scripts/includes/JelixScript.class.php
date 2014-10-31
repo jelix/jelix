@@ -185,31 +185,27 @@ class JelixScript {
            exit(1);
     }
 
-}
+    static function errorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
 
+        if (error_reporting() == 0)
+            return;
 
-function JelixScriptsErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
+        if (preg_match('/^\s*\((\d+)\)(.+)$/',$errmsg,$m)) {
+           $code = $m[1];
+           $errmsg = $m[2];
+        }
+        else {
+           $code=1;
+        }
 
-    if (error_reporting() == 0)
-        return;
+        $trace = debug_backtrace();
+        array_shift($trace);
 
-    if (preg_match('/^\s*\((\d+)\)(.+)$/',$errmsg,$m)) {
-       $code = $m[1];
-       $errmsg = $m[2];
+        self::showError($code, $errmsg, $filename, $linenum, $trace, $errno);
     }
-    else {
-       $code=1;
+
+    static function exceptionHandler($e){
+        self::showError($e->getCode(), $e->getMessage(), $e->getFile(),
+                              $e->getLine(), $e->getTrace());
     }
-
-    $trace = debug_backtrace();
-    array_shift($trace);
-
-    JelixScript::showError($code, $errmsg, $filename, $linenum, $trace, $errno);
-}
-
-function JelixScriptsExceptionHandler($e){
-
-    JelixScript::showError($e->getCode(), $e->getMessage(), $e->getFile(),
-                          $e->getLine(), $e->getTrace());
-
 }

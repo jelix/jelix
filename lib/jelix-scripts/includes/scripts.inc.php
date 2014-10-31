@@ -28,8 +28,8 @@ $scriptName = array_shift($argv); // shift the script name
 
 // ------------ load the config and retrieve the command object
 
-set_error_handler('JelixScriptsErrorHandler');
-set_exception_handler('JelixScriptsExceptionHandler');
+set_error_handler('JelixScript::errorHandler');
+set_exception_handler('JelixScript::exceptionHandler');
 
 if (count($argv) > 0 && ($argv[0] == '-h' || $argv[0] == 'help')) {
     array_shift($argv);
