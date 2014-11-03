@@ -16,7 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3"
+        "php": ">=5.3.3",
+        "phpunit/phpunit": "4.3.*"
     },
     "replace": {
         "jelix/jelix":"self.version"
@@ -26,5 +27,5 @@
         "classmap": [ ],
         "files": [ "../lib/jelix/init.php"  ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

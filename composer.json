@@ -28,5 +28,5 @@
         "classmap": [ ],
         "files": [ "lib/jelix/init.php" ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "stable"
 }

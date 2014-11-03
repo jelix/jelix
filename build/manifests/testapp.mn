@@ -4,6 +4,7 @@ cd testapp
   application.init.php
   INSTALL.txt
   cmd.php
+  composer.json
 cd testapp/plugins
   .htaccess
 cd testapp/plugins/tpl/common/

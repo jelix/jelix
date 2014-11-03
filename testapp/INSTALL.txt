@@ -1,7 +1,31 @@
-Installation of testapp
+Testapp is a web application used to test Jelix. It contains some pages where you can try
+some features, and some unit tests.
 
+If you want to launch testapp and its tests from a Vagrant machine (virtual machine),
+install Testapp from the git repository. Else if you want to install all dependancies
+by hand, see section about the installation from the archive.
+
+
+Installation of testapp from the git repository
+===============================================
+
+- do
+
+    git clone https://github.com/jelix/jelix.git
+
+- then follow instruction in dev/README.md
+
+
+Installation of testapp from the archive
+========================================
+
+- Install [Composer](http://getcomposer.com)
 - download and install a "developer" edition of Jelix
 - move the testapp directory at the same level of the lib/ directory of jelix.
+- in the testapp/ directory, launch composer to install dependancies (phpunit..)
+
+  composer install
+
 - create a database in mysql
 - rename testapp/var/config/profiles.ini.php.dist to testapp/var/config/profiles.ini.php
 - configure parameters in profiles.ini.php:
@@ -18,3 +42,8 @@ Installation of testapp
     cd testapp/install && php installer.php
 - configure your web server to access to testapp/www with a browser
 - you can then run testapp in your browser
+
+To launch tests, go into tests-jelix and run phpunit.
+
+- If you use PHPUnit from composer package : ```../vendor/bin/phpunit```
+- If you use PHPUnit from pear: ```phpunit```
