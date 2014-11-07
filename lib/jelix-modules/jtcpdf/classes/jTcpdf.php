@@ -67,11 +67,13 @@ class jTcpdf extends TCPDF {
         if(!is_writable($path))
            throw new jException('jelix~errors.file.directory.notwritable',array($path));
 
-        if(file_put_contents(realpath($path).'/'.$filename, $this->Output('','S')))
-           return true;
+        $file = realpath($path).'/'.$filename;
+        if (file_put_contents($file, $this->Output('','S'))) {
+            chmod($file, jApp::config()->chmodFile);
+            return true;
+        }
 
         throw new jException('jelix~errors.file.write.error',array($path.'/'.$filename,''));
-
     }
 
 }

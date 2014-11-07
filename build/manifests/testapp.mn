@@ -293,6 +293,7 @@ cd testapp/tests-jelix/jelix/cache/
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
   configautoloaderTest.php
+  configTest.php
   jAppContextTest.php
   moduleAutoloadTest.php
   jLocaleTest.php

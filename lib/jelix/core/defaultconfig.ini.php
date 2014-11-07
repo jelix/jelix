@@ -44,6 +44,9 @@ fallbackLocale =
 forceHTTPPort =
 forceHTTPSPort =
 
+; chmod for files created by Jelix
+chmodFile=0664
+chmodDir=0775
 
 ; ---  don't set the following options to on, except if you know what you do
 

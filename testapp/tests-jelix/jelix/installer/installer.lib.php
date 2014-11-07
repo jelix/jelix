@@ -79,7 +79,7 @@ class testInstallerIniFileModifier extends jIniFileModifier {
 
     function __construct($filename) {}
 
-    public function save() {
+    public function save($chmod=null) {
         $this->modified = false;
     }
 
