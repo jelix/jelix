@@ -10,6 +10,12 @@ source $VAGRANTDIR/jelixapp/system.sh
 
 initsystem
 
+# for soap tests
+cp $VAGRANTDIR/vagrant/otherport.conf /etc/apache2/conf-available/
+a2enconf otherport
+service apache2 reload
+
+
 apt-get -y install postgresql postgresql-client
 apt-get -y install redis-server memcached memcachedb
 

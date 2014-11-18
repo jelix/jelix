@@ -9,6 +9,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require(__DIR__.'/../classes/soapstructs.php');
 
 /**
 * Web Services usefull to test SOAP request handling, WSDL generation, web servives documentation generation
@@ -27,7 +28,7 @@ class soapCtrl extends jController {
 
     /** 
      * Test with a simple parameter
-     * @param string $name
+     * @externalparam string $name
      * @return string
      */
     function hello() {
@@ -38,7 +39,7 @@ class soapCtrl extends jController {
 
     /** 
      * Test with a simple parameter
-     * @param string $name
+     * @externalparam string $name
      * @return void
      */
     function redirecttohello(){
@@ -50,9 +51,9 @@ class soapCtrl extends jController {
 
     /** 
      * Test with multiple string param
-     * @param string $string1 
-     * @param string $string2 
-     * @param string $string3
+     * @externalparam string $string1 
+     * @externalparam string $string2 
+     * @externalparam string $string3
      * @return string
      */
     function concatString() {
@@ -63,7 +64,7 @@ class soapCtrl extends jController {
 
     /** 
      * Test with an array as param
-     * @param string[] $myArray
+     * @externalparam string[] $myArray
      * @return string
      */
     function concatArray() {
@@ -74,7 +75,7 @@ class soapCtrl extends jController {
 
    /** 
      * Test with an associative array as param
-     * @param string[=>] $myArray
+     * @externalparam string[=>] $myArray
      * @return string
      */
     function concatAssociativeArray() {
@@ -128,7 +129,7 @@ class soapCtrl extends jController {
 
     /** 
      * Test that receive an object and return an object
-     * @param MyTestStruct $input
+     * @externalparam MyTestStruct $input
      * @return MyTestStruct
      */
     function receiveObject() {
@@ -163,86 +164,4 @@ class soapCtrl extends jController {
         return $rep;
     }
 
-}
-/**
- * Struct used for tests
- */
-class MyTestStruct{
-    /**
-     * @var string
-     */
-    public $name = 'De Vathaire';
-
-    /**
-     * @var string
-     */
-    public $firstName = 'Sylvain';
-
-    /**
-     * @var string
-     */
-    public $city = 'Paris';
-}
-
-/**
- * An other struct used for test, this one have an other object as member propertie
- */
-class MyTestStructBis{
-
-    /**
-     * @var MyTestStruct
-     */
-    public $test;
-
-    /**
-     * @var string
-     */
-    public $msg = 'hello';
-
-    function __construct(){
-        $this->test = new MyTestStruct();
-    }
-
-}
-
-/**
- * An other struct used for test, this one have is used to test circular references
- */
-class MyTestStructTer{
-
-    /**
-     * @var MyTestStructTer
-     */
-    public $test;
-
-    /**
-     * @var string
-     */
-    public $msg;
-
-    function __construct($msg){
-        $this->msg = $msg;
-    }
-
-}
-
-/**
- * An other struct used for test, this one is used to test associative array of objects
- */
-class MyTestStructQuatre{
-
-    /**
-     * @var string
-     */
-    public $name = 'De Vathaire';
-
-    /**
-     * @var string
-     */
-    public $firstName = 'Sylvain';
-
-    /**
-     * @var string
-     */
-    public $city = 'Paris';
 }

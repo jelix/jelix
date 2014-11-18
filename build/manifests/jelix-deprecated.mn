@@ -334,6 +334,7 @@ rmd lib/wshelper
 
 rmd lib/jelix-modules/junittests
 rmd lib/jelix-modules/jtcpdf
+rmd lib/jelix-modules/jsoap/classes/wshelper
 
 cd lib/json
   JSON.php

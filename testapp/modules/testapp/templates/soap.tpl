@@ -57,7 +57,9 @@ City : {$receiveObject->city}<br/>
 	City : {$returnAssociativeArrayOfObjects['arg'.$i]->city}<br/>
 {/for}
 </p>
-
+<pre>
+    {$returnAssociativeArrayOfObjectsEXPORT|eschtml}
+</pre>
 
 <h1>returnObjectBis()</h1>
 <p>Msg : {$returnObjectBis->msg}<br/>
