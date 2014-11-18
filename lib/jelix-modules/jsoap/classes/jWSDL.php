@@ -4,23 +4,10 @@
 * @subpackage  utils
 * @author      Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   2008 Sylvain de Vathaire, 2009-2012 Laurent Jouanneau
+* @copyright   2008 Sylvain de Vathaire, 2009-2014 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-
-require_once(__DIR__.'/wshelper/WSDLStruct.class.php');
-require_once(__DIR__.'/wshelper/WSDLException.class.php');
-require_once(__DIR__.'/wshelper/WSException.class.php');
-require_once(__DIR__.'/wshelper/IPXMLSchema.class.php');
-require_once(__DIR__.'/wshelper/IPPhpDoc.class.php');
-require_once(__DIR__.'/wshelper/IPReflectionClass.class.php');
-require_once(__DIR__.'/wshelper/IPReflectionCommentParser.class.php');
-require_once(__DIR__.'/wshelper/IPReflectionMethod.class.php');
-require_once(__DIR__.'/wshelper/IPReflectionProperty.class.php');
-
-
 
 /**
  * object to generate WSDL files and web services documentation
@@ -134,7 +121,7 @@ class jWSDL {
     public function getOperationParams($operationName){
 
        $IPReflectionMethod = new IPReflectionMethod($this->controllerClassName, $operationName);
-       return $IPReflectionMethod->parameters;
+       return $IPReflectionMethod->getParameters();
     }
 
     /**

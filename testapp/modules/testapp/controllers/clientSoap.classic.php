@@ -10,6 +10,8 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require(__DIR__.'/../classes/soapstructs.php');
+
 /**
 * Tests of soapCtrl web services 
 */
@@ -37,54 +39,52 @@ class clientSoapCtrl extends jController {
         // Load the WSDL
         try {
             $wsdlURI = "http://".$_SERVER['HTTP_HOST'].jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
-            $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
+            $client = new SoapClient($wsdlURI, array('trace' => 1,
+                                                     'soap_version'  => SOAP_1_1));
         } catch (SoapFault $fault) {
             throw new Exception($fault->getMessage());
         }
 
-        try {
-            $result = $client->__soapCall('getServerDate', array());
-            $tpl->assign("getServerDate", $result);
+        $result = $client->__soapCall('getServerDate', array());
+        $tpl->assign("getServerDate", $result);
 
-            $result =  $client->__soapCall('hello', array('Sylvain'));
-            $tpl->assign("hello", $result);
+        $result =  $client->__soapCall('hello', array('Sylvain'));
+        $tpl->assign("hello", $result);
 
-            $result =  $client->__soapCall('concatString', array('Hi ! ', 'Sylvain', 'How are you ?'));
-            $tpl->assign("concatString", $result);
+        $result =  $client->__soapCall('concatString', array('Hi ! ', 'Sylvain', 'How are you ?'));
+        $tpl->assign("concatString", $result);
 
-            $result =  $client->__soapCall('concatArray', array(array('Hi ! ', 'Sylvain', 'How are you ?')));
-            $tpl->assign("concatArray", $result);
+        $result =  $client->__soapCall('concatArray', array(array('Hi ! ', 'Sylvain', 'How are you ?')));
+        $tpl->assign("concatArray", $result);
 
-            $result =  $client->__soapCall('returnAssociativeArray', array());
-            $tpl->assign("returnAssociativeArray", $result);
+        $result =  $client->__soapCall('returnAssociativeArray', array());
+        $tpl->assign("returnAssociativeArray", $result);
 
-            $result =  $client->__soapCall('returnAssociativeArrayOfObjects', array());
-            $tpl->assign("returnAssociativeArrayOfObjects", $result);
+        $result =  $client->__soapCall('returnAssociativeArrayOfObjects', array());
+        $tpl->assign("returnAssociativeArrayOfObjects", $result);
+        $tpl->assign("returnAssociativeArrayOfObjectsEXPORT", var_export($result,true));
 
-            $result =  $client->__soapCall('concatAssociativeArray', array(array('arg1'=>'Hi ! ', 'arg2'=>'Sylvain', 'arg3'=>'How are you ?')));
-            $tpl->assign("concatAssociativeArray", $result);
+        $result =  $client->__soapCall('concatAssociativeArray', array(array('arg1'=>'Hi ! ', 'arg2'=>'Sylvain', 'arg3'=>'How are you ?')));
+        $tpl->assign("concatAssociativeArray", $result);
 
-            $result =  $client->__soapCall('returnObject', array());
-            $tpl->assign("returnObject", $result);
+        $result =  $client->__soapCall('returnObject', array());
+        $tpl->assign("returnObject", $result);
 
-            $result =  $client->__soapCall('receiveObject', array($result));
-            $tpl->assign("receiveObject", $result);
+        $o = new MyTestStruct();
+        $result =  $client->__soapCall('receiveObject', array($o));
+        $tpl->assign("receiveObject", $result);
 
-            $result =  $client->__soapCall('returnObjects', array());
-            $tpl->assign("returnObjects", $result);
+        $result =  $client->__soapCall('returnObjects', array());
+        $tpl->assign("returnObjects", $result);
 
-            $result =  $client->__soapCall('returnObjectBis', array());
-            $tpl->assign("returnObjectBis", $result);
+        $result =  $client->__soapCall('returnObjectBis', array());
+        $tpl->assign("returnObjectBis", $result);
 
-            $result =  $client->__soapCall('returnCircularReference', array());
-            $tpl->assign("returnCircularReference", $result);
-
-        } catch (SoapFault $fault) {
-            print_r($fault);
-            throw new Exception($fault->getMessage());
-        }
+        $result =  $client->__soapCall('returnCircularReference', array());
+        $tpl->assign("returnCircularReference", $result);
 
         $rep->body->assign('MAIN',$tpl->fetch('soap'));
         return $rep;
     }
 }
+

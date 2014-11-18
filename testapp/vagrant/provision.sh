@@ -62,10 +62,9 @@ if [ -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
 fi
 
 cp $TESTAPPDIR/testapp/vagrant/php5_fpm.conf /etc/apache2/conf-available/
-if [ ! -f "/etc/apache2/conf-enabled/php5_fpm.conf" ]; then
-    ln -s /etc/apache2/conf-available/php5_fpm.conf /etc/apache2/conf-enabled/php5_fpm.conf
-fi
+cp $TESTAPPDIR/testapp/vagrant/otherport.conf /etc/apache2/conf-available/
 
+a2enconf php5_fpm otherport
 a2enmod actions alias fastcgi rewrite
 
 sed -i "/user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
