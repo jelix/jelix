@@ -8,8 +8,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#includerawinto LOGOSESSIONDATA ../../htmlresponse/debugbar/icons/drive_user.png | base64
-
 /**
  * plugin to show content of a session
  */
@@ -40,7 +38,7 @@ class sessiondataDebugbarPlugin implements jIDebugbarPlugin {
      */
     function show($debugbar) {
         $info = new debugbarItemInfo('sessiondata', 'Session');
-#expand             $info->htmlLabel = '<img src="data:image/png;base64,__LOGOSESSIONDATA__" alt="Session data" title="Session data"/> ';
+        $info->htmlLabel = '<img src="data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/../../htmlresponse/debugbar/icons/drive_user.png')).'" alt="Session data" title="Session data"/> ';
 
         if (!isset($_SESSION) || count($_SESSION) == 0) {
             $info->htmlLabel .= '0';

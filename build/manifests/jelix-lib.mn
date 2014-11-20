@@ -550,16 +550,16 @@ cd lib/jelix-legacy/plugins/db/oci
   oci.dbtools.php
 
 cd lib/jelix-legacy/plugins/debugbar/sqllog
-* sqllog.debugbar.php
+  sqllog.debugbar.php
 
 cd lib/jelix-legacy/plugins/debugbar/sessiondata
-* sessiondata.debugbar.php
+  sessiondata.debugbar.php
 
 cd lib/jelix-legacy/plugins/debugbar/defaultlog
-* defaultlog.debugbar.php
+  defaultlog.debugbar.php
 
 cd lib/jelix-legacy/plugins/debugbar/soaplog
-* soaplog.debugbar.php
+  soaplog.debugbar.php
 
 cd lib/jelix-legacy/plugins/formbuilder/html
   html.formbuilder.php
@@ -658,10 +658,8 @@ cd lib/jelix-legacy/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
 cd lib/jelix-legacy/plugins/htmlresponse/debugbar
-* debugbar.htmlresponse.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-* errors.debugbar.php
-#endif
+  debugbar.htmlresponse.php
+  errors.debugbar.php
 
 cd lib/jelix-legacy/plugins/tpl/common
   block.ifuserconnected.php

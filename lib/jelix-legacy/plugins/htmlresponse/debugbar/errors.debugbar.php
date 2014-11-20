@@ -8,11 +8,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#includerawinto LOGOERROR icons/exclamation.png | base64
-#includerawinto LOGOWARNING icons/error.png | base64
-#includerawinto LOGONOERROR icons/accept.png | base64
-#includerawinto LOGONOTICE icons/information.png | base64
-
 /**
  * native plugin for the debugbar, which displays list of errors, warnings...
  * @since 1.3
@@ -20,15 +15,13 @@
 class errorsDebugbarPlugin implements jIDebugbarPlugin {
 
     function getCss() { return "
-##jxdb-errors li.jxdb-msg-error h5 span {background-image: url('".$this->getErrorIcon()."');}
-#expand #jxdb-errors li.jxdb-msg-notice h5 span {background-image: url('data:image/png;base64,__LOGONOTICE__');}
-##jxdb-errors li.jxdb-msg-warning h5 span {background-image: url('".$this->getWarningIcon()."'); }
+#jxdb-errors li.jxdb-msg-error h5 span {background-image: url('".$this->getErrorIcon()."');}
+#jxdb-errors li.jxdb-msg-notice h5 span {background-image: url('data:image/png;base64,". base64_encode(file_get_contents(__DIR__.'/icons/information.png'))."');}
+#jxdb-errors li.jxdb-msg-warning h5 span {background-image: url('".$this->getWarningIcon()."'); }
 ";}
 
-    function getJavascript() {return <<<EOS
-#includeraw errors.debugbar.js
-EOS
-;
+    function getJavascript() {
+        return file_get_contents(__DIR__.'/errors.debugbar.js');
     }
 
     function show($debugbarPlugin) {
@@ -48,7 +41,7 @@ EOS
         $c = count($messages);
         if ($c == 0) {
             $info->label = 'no error';
-#expand             $info->htmlLabel = '<img src="data:image/png;base64,__LOGONOERROR__" alt="no errors" title="no errors"/> 0';
+            $info->htmlLabel = '<img src="data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/icons/accept.png')).'" alt="no errors" title="no errors"/> 0';
         }
         else {
             $info->popupContent = '<ul id="jxdb-errors" class="jxdb-list">';
@@ -107,11 +100,11 @@ EOS
     }
 
     protected function getErrorIcon() {
-#expand    return 'data:image/png;base64,__LOGOERROR__';
+        return 'data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/icons/exclamation.png'));
     }
 
     protected function getWarningIcon() {
-#expand    return 'data:image/png;base64,__LOGOWARNING__';
+        return 'data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/icons/error.png'));
     }
 
 }
