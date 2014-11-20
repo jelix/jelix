@@ -8,8 +8,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#includerawinto LOGODEFAULTLOG ../../htmlresponse/debugbar/icons/book_open.png | base64
-
 /**
  * plugin to show general message logs
  */
@@ -36,7 +34,7 @@ class defaultlogDebugbarPlugin implements jIDebugbarPlugin {
      */
     function show($debugbar) {
         $info = new debugbarItemInfo('defaultlog', 'General logs');
-#expand             $info->htmlLabel = '<img src="data:image/png;base64,__LOGODEFAULTLOG__" alt="General logs" title="General logs"/> ';
+        $info->htmlLabel = '<img src="data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/../../htmlresponse/debugbar/icons/book_open.png')).'" alt="General logs" title="General logs"/> ';
 
         $messages = jLog::getMessages(array('default','debug'));
 

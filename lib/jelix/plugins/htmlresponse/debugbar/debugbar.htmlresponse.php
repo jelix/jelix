@@ -35,12 +35,7 @@ interface jIDebugbarPlugin {
 
 }
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp errors.debugbar.php
-#else
 require_once(__DIR__.'/errors.debugbar.php');
-#endif
-
 
 /**
  * information for a component a debug bar
@@ -88,9 +83,6 @@ class debugbarItemInfo {
         $this->popupOpened = $isOpened;
     }
 }
-
-#includerawinto LOGOBULLETPLUS icons/bullet_toggle_plus.png | base64
-#includerawinto LOGOBULLETMINUS icons/bullet_toggle_minus.png | base64
 
 /**
  * plugin for jResponseHTML, it displays a debugbar
@@ -151,24 +143,22 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
             $css .= $plugin->getCSS();
             $js .= $plugin->getJavascript();
         }
-        ?>
-<style type="text/css">
-#includeraw debugbar.css
-#expand ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,__LOGOBULLETPLUS__');}
-#expand ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,__LOGOBULLETMINUS__');}
-<?php echo $css ?>
-</style>
-<script type="text/javascript">//<![CDATA[
-#includeraw debugbar.js|jspacker
-<?php echo $js ?> //]]>
-</script>
-        <?php
+        echo "<style type=\"text/css\">\n";
+        require __DIR__ . '/debugbar.css';
+        $LOGOBULLETPLUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_plus.png'));
+        $LOGOBULLETMINUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_minus.png'));
+        echo "ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETPLUS."');}\n";
+        echo "ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETMINUS."');}\n";
+        echo $css."\n</style>\n";
+
+        echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
+        require __DIR__ . '/debugbar.js';
+        echo $js."\n//]]>\n</script>";
+
         foreach($this->plugins as $plugin) {
             $plugin->show($this);
         }
 
-#includerawinto LOGOJELIX jelix-dbg.png | base64
-#includerawinto LOGOSTOP icons/cancel.png | base64
         if (isset($_COOKIE['jxdebugbarpos']))
             $class = "jxdb-position-".$_COOKIE['jxdebugbarpos'];
         else
@@ -176,17 +166,23 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
         ?>
 <div id="jxdb" class="<?php echo $class;?>">
     <div id="jxdb-header">
-#expand    <a href="javascript:jxdb.selectTab('jxdb-panel-jelix');"><img src="data:image/png;base64,__LOGOJELIX__" alt="Jelix debug toolbar"/></a>
-<?php foreach ($this->tabs as $item) {
-    $label = ($item->htmlLabel ? $item->htmlLabel: htmlspecialchars($item->label));
-    if ($item->popupContent) {
-        echo '<span><a href="javascript:jxdb.selectTab(\'jxdb-panel-'.$item->id.'\');">'.$label.'</a></span>';
-    }
-    else
-        echo '<span>'.$label.'</span>';
-}
-?>
-#expand    <a href="javascript:jxdb.close();"><img src="data:image/png;base64,__LOGOSTOP__" alt="close" title="click to close the debug toolbar"/></a>
+        <?php
+
+        $LOGOJELIX = base64_encode(file_get_contents(__DIR__.'/jelix-dbg.png'));
+        $LOGOSTOP = base64_encode(file_get_contents(__DIR__.'/icons/cancel.png'));
+        echo "<a href=\"javascript:jxdb.selectTab('jxdb-panel-jelix');\"><img src=\"data:image/png;base64,".$LOGOJELIX."\" alt=\"Jelix debug toolbar\"/></a>\n";
+        foreach ($this->tabs as $item) {
+            $label = ($item->htmlLabel ? $item->htmlLabel: htmlspecialchars($item->label));
+            if ($item->popupContent) {
+                echo '<span><a href="javascript:jxdb.selectTab(\'jxdb-panel-'.$item->id.'\');">'.$label.'</a></span>';
+            }
+            else {
+                echo '<span>'.$label.'</span>';
+            }
+        }
+
+        echo "<a href=\"javascript:jxdb.close();\"><img src=\"data:image/png;base64,".$LOGOSTOP."\" alt=\"close\" title=\"click to close the debug toolbar\"/></a>\n";
+    ?>
     </div>
     <div id="jxdb-tabpanels">
         <div id="jxdb-panel-jelix" class="jxdb-tabpanel" style="display:none">

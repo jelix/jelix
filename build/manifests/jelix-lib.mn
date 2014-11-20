@@ -530,16 +530,16 @@ cd lib/jelix/plugins/db/oci
   oci.dbtools.php
 
 cd lib/jelix/plugins/debugbar/sqllog
-* sqllog.debugbar.php
+  sqllog.debugbar.php
 
 cd lib/jelix/plugins/debugbar/sessiondata
-* sessiondata.debugbar.php
+  sessiondata.debugbar.php
 
 cd lib/jelix/plugins/debugbar/defaultlog
-* defaultlog.debugbar.php
+  defaultlog.debugbar.php
 
 cd lib/jelix/plugins/debugbar/soaplog
-* soaplog.debugbar.php
+  soaplog.debugbar.php
 
 cd lib/jelix/plugins/formbuilder/html
   html.formbuilder.php
@@ -638,10 +638,8 @@ cd lib/jelix/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
 cd lib/jelix/plugins/htmlresponse/debugbar
-* debugbar.htmlresponse.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-* errors.debugbar.php
-#endif
+  debugbar.htmlresponse.php
+  errors.debugbar.php
 
 cd lib/jelix/plugins/tpl/common
   block.ifuserconnected.php

@@ -8,8 +8,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-#includerawinto LOGOSQLLOG ../../htmlresponse/debugbar/icons/database.png | base64
-
 /**
  * plugin to show all sql queries into the debug bar
  */
@@ -37,7 +35,7 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin {
     function show($debugbar) {
         $info = new debugbarItemInfo('sqllog', 'SQL queries');
         $messages = jLog::getMessages('sql');
-#expand             $info->htmlLabel = '<img src="data:image/png;base64,__LOGOSQLLOG__" alt="SQL queries" title="SQL queries"/> ';
+        $info->htmlLabel = '<img src="data:image/png;base64,'.base64_encode(file_get_contents(__DIR__.'/../../htmlresponse/debugbar/icons/database.png')).'" alt="SQL queries" title="SQL queries"/> ';
 
         if (!jLog::isPluginActivated('memory', 'sql')) {
             $info->htmlLabel .= '?';
