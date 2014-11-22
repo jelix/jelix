@@ -38,7 +38,7 @@ echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selecti
 apt-get -y install apache2 libapache2-mod-fastcgi apache2-mpm-worker php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
 apt-get -y install postgresql postgresql-client mysql-server mysql-client
 apt-get -y install redis-server memcached memcachedb
-apt-get -y install git phpunit phpmyadmin
+apt-get -y install git phpmyadmin
 
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
