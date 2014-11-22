@@ -57,10 +57,10 @@ class jLocaleTest extends jUnitTestCase {
     public function testBundle(){
         $firstlist = array(
         'test_A.properties' => '<null> </null>',
-        'test_B.properties' => '<array>array("aaa"=>"bbb","ccc"=>"")</array>',
-        'test_C.properties' => '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>',
-        'test_D.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
-        'test_E.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
+        'test_B.properties' => '<array>{"aaa":"bbb","ccc":""}</array>',
+        'test_C.properties' => '<array>{"aaa":"bbb","ccc":"ddd"}</array>',
+        'test_D.properties' => '<array>{"module.description":"Tests unitaires jelix"}</array>',
+        'test_E.properties' => '<array>{"module.description":"Tests unitaires jelix"}</array>',
         'test_F.properties' => '<array><string key="module.description" value="Tests unitaires jelix" /></array>',
         'test_G.properties' => '<array><string key="module.description" value="Tests unitaires jelix" />
                                     <string key="ooo" value="bbbb" />

@@ -40,15 +40,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'\\\'abc\\\'\',true))</array>
+            <array m="getValues ()">{"subject":["\'abc\'",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -69,15 +69,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array("mytext")</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">["mytext"]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'$mytext\',true))</array>
+            <array m="getValues ()">{"subject":["$mytext",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -97,15 +97,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -130,18 +130,18 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                     {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
+                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -166,18 +166,18 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","field_pattern"=>"CONCAT(%s, \'b\')","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","field_pattern"=>"LOWER(%s)","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                     {"field_id":"subject","field_pattern":"CONCAT(%s, \'b\')","value":"bar", "operator":"=", "isExpr":false},
+                     {"field_id":"texte","field_pattern":"LOWER(%s)","value":"machine", "operator":"=", "isExpr":false}]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -198,15 +198,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -227,15 +227,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -317,15 +317,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array(\'price\',\'price_big\')</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">["price","price_big"]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'price\'=>array(\'$price\',true), \'price_big\'=>array(\'$price_big\',true))</array>
+            <array m="getValues ()">{"price":["$price",true], "price_big":["$price_big",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>';

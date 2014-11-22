@@ -42,7 +42,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
     </object>
     <array method="getAllData()">
         <string key="name" value="" />
@@ -77,7 +77,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
@@ -106,18 +106,18 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->formLabelDescriptor = '
 <object class="cForm_jelix_tests_Jx_label">
     <object method="getContainer()" class="jFormsDataContainer">
-        <array property="formId">array(1,\'fr\')</array>
+        <array property="formId">[1,"fr"]</array>
         <string property="formSelector" value="jelix_tests~label" />
         <array property="data">
             <string key="label" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="label" value="" />
     </array>
-    <array method="id()">array(1,\'fr\')</array>
+    <array method="id()">[1,"fr"]</array>
     <array method="getControls()">
         <object key="label" class="jFormsControlInput">
             <string property="ref" value="label"/>
@@ -148,7 +148,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="1" />
         </object>
      </array>
@@ -170,7 +170,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
@@ -180,7 +180,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
@@ -200,7 +200,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="2" />
         </object>
         <object key="akey" class="jFormsDataContainer">
@@ -210,18 +210,18 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
@@ -263,7 +263,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="phone" />
             <string key="price" value="45" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="2" />
     </object>
     <array method="getAllData()">
@@ -304,7 +304,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="phone" />
             <string key="price" value="45" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
@@ -347,8 +347,8 @@ class jforms_sessionTest extends jUnitTestCase {
         <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
-            <array property="data">array()</array>
-            <array property="errors">array()</array>
+            <array property="data">[]</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="1" />
         </object>
         <object key="akey" class="jFormsDataContainer">
@@ -358,18 +358,18 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
@@ -390,18 +390,18 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
      <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
@@ -412,15 +412,15 @@ class jforms_sessionTest extends jUnitTestCase {
         jForms::destroy('product','akey');
         $verif='
 <array>
-     <array key="jelix_tests~product">array()</array>
+     <array key="jelix_tests~product">[]</array>
      <array key="jelix_tests~label">
         <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>
      </array>
@@ -447,7 +447,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="price" value="" />
                 <string key="instock" value="0" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>
      </array>
 </array>';
@@ -468,7 +468,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <integer key="price" value="56598" />
                 <string key="instock" value="1" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>
      </array>
 </array>';

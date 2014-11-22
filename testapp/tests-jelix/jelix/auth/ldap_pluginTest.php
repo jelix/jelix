@@ -60,9 +60,9 @@ class ldap_pluginAuthTest extends jUnitTestCase {
             <object class=\"jAuthUserLDAP\">
                 <string property=\"login\" value=\"testldap usr {$i}\" />
                 <string property=\"email\" value=\"\" />
-                <array property=\"cn\">array('testldap usr {$i}')</array>
-                <array property=\"distinguishedName\">array('CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}')</array>
-                <array property=\"name\">array('testldap usr {$i}')</array>
+                <array property=\"cn\">['testldap usr {$i}']</array>
+                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
+                <array property=\"name\">['testldap usr {$i}']</array>
                 <string property=\"password\" value=\"\" />
             </object>
             ";
@@ -76,10 +76,10 @@ class ldap_pluginAuthTest extends jUnitTestCase {
             $user="
             <object>
                 <string property=\"login\" value=\"testldap usr {$i}\" />
-                <array property=\"email\">array('usr{$i}.testldap@domain.com')</array>
-                <array property=\"cn\">array('testldap usr {$i}')</array>
-                <array property=\"distinguishedName\">array('CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}')</array>
-                <array property=\"name\">array('testldap usr {$i}')</array>
+                <array property=\"email\">['usr{$i}.testldap@domain.com']</array>
+                <array property=\"cn\">['testldap usr {$i}']</array>
+                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
+                <array property=\"name\">['testldap usr {$i}']</array>
                 <string property=\"password\" value=\"\" />
             </object>
             ";
@@ -97,11 +97,11 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         for($i=1;$i<=NB_USERS_LDAP;$i++){
             $users.="
             <object>
-                <array property=\"login\">array('testldap usr {$i}')</array>
-                <array property=\"email\">array('usr{$i}.testldap@domain.com')</array>
-                <array property=\"cn\">array('testldap usr {$i}')</array>
-                <array property=\"distinguishedName\">array('CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}')</array>
-                <array property=\"name\">array('testldap usr {$i}')</array>
+                <array property=\"login\">['testldap usr {$i}']</array>
+                <array property=\"email\">['usr{$i}.testldap@domain.com']</array>
+                <array property=\"cn\">['testldap usr {$i}']</array>
+                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
+                <array property=\"name\">['testldap usr {$i}']</array>
                 <string property=\"password\" value=\"\" />
             </object>
             ";

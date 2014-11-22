@@ -35,19 +35,19 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -60,19 +60,19 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="foo_news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -88,26 +88,26 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_rubriques_id"]</array>
+            <array key="fk" value="">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array(\'news_rubriques\')</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">["news_rubriques"]</array>
 </object>'
 ),
 
@@ -122,27 +122,27 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <!-- <array key="fk" value="">[]</array>-->
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_rubriques_id"]</array>
+            <array key="fk" value="">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[["news_rubriques",0]]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -158,34 +158,34 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <!-- <array key="fk" value="">[]</array>-->
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_rubriques_id"]</array>
+            <array key="fk" value="">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
         <array key="news_author">
             <string key="name" value="news_author" />
             <string key="realname" value="jx_authors_news" />
-            <array key="pk" value="">array(\'author_id\')</array>
-            <array key="fk" value="">array(\'author_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["author_id"]</array>
+            <array key="fk" value="">["author_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array(\'news_author\')</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[["news_rubriques",0]]</array>
+    <array method="getInnerJoins()">["news_author"]</array>
 </object>'
 ),
 

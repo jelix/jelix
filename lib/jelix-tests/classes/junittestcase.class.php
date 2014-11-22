@@ -155,10 +155,18 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                         $v = $value->$n;
                     }elseif(isset($child['method'])){
                         $n = (string)$child['method'];
-                        eval('$v=$value->'.$n.';');
+                        if(preg_match('/\(\)$/', $n)) {
+                            $n = substr($n,0,-2);
+                        }
+                        $n=trim($n);
+                        $v = $value->$n();
                     }elseif(isset($child['m'])){
                         $n = (string)$child['m'];
-                        eval('$v=$value->'.$n.';');
+                        if(preg_match('/\(\)$/', $n)) {
+                            $n = substr($n,0,-2);
+                        }
+                        $n=trim($n);
+                        $v = $value->$n();
                     }else{
                         trigger_error('no method or attribute on '.(dom_import_simplexml($child)->nodeName), E_USER_WARNING);
                         continue;
@@ -170,8 +178,9 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
             case 'array':
                 $this->assertInternalType('array', $value, $name.': not an array'.$errormessage);
                 if(trim((string)$xml) != ''){
-                    if( false === eval('$v='.(string)$xml.';')){
-                        $this->fail("invalid php array syntax");
+                    $v = json_decode((string)$xml, true);
+                    if ($v === null || !is_array($v)) {
+                        $this->fail("invalid php array syntax ".(string)$xml);
                         return false;
                     }
                     $this->assertEquals($v,$value,'negative test on '.$name.': '.$errormessage);
