@@ -7,6 +7,7 @@
 * @contributor Yannick Le Guédart
 * @contributor Laurent Raufaste
 * @contributor Julien Issler
+* @contributor Alexandre Zanelli
 * @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau, 2007-2008 Laurent Raufaste
 * @copyright  2009 Julien Issler
 * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
@@ -192,8 +193,12 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _autoCommitNotify ($state){
-		if ($state)
-			$this->_doExec('SET AUTOCOMMIT TO ON');
+		if (version_compare(pg_parameter_status($this->_connection, "server_version"),'7.4')<0) {
+			$this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
+		}
+		else {
+			if ($state) $this->_doExec('SET AUTOCOMMIT TO ON');
+		}
     }
 
     protected function _quote($text, $binary) {
