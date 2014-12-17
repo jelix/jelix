@@ -35,11 +35,11 @@ class pgsqlDbConnection extends jDbConnection {
         parent::__construct($profile);
         if(isset($this->profile['single_transaction']) && ($this->profile['single_transaction'])){
             $this->beginTransaction();
-			$this->setAutoCommit(false);
-		}
-		else
-		{
-			$this->setAutoCommit(true);
+            $this->setAutoCommit(false);
+        }
+        else
+        {
+            $this->setAutoCommit(true);
         }
     }
 
@@ -129,7 +129,7 @@ class pgsqlDbConnection extends jDbConnection {
                 pg_set_client_encoding($cnx, $this->_charsets[jApp::config()->charset]);
             }
         }
-		else {
+        else {
             throw new jException('jelix~db.error.connection',$this->profile['host']);
         }
 
@@ -193,12 +193,9 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _autoCommitNotify ($state){
-		if (version_compare(pg_parameter_status($this->_connection, "server_version"),'7.4')<0) {
-			$this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
-		}
-		else {
-			if ($state) $this->_doExec('SET AUTOCOMMIT TO ON');
-		}
+        if (version_compare(pg_parameter_status($this->_connection, "server_version"),'7.4')<0) {
+            $this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
+        }
     }
 
     protected function _quote($text, $binary) {
@@ -206,7 +203,7 @@ class pgsqlDbConnection extends jDbConnection {
             return pg_escape_bytea($this->_connection, $text);
         else
             return pg_escape_string($this->_connection, $text);
-	}
+    }
 
 
     /**
@@ -218,7 +215,7 @@ class pgsqlDbConnection extends jDbConnection {
     public function getAttribute($id) {
         switch($id) {
             case self::ATTR_CLIENT_VERSION:
-				$v = pg_version($this->_connection);
+                $v = pg_version($this->_connection);
                 return (array_key_exists($v['client']) ? $v['client'] : '');
             case self::ATTR_SERVER_VERSION:
                 return pg_parameter_status($this->_connection, "server_version");
