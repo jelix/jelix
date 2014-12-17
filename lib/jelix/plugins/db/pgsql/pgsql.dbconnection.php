@@ -192,8 +192,8 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     protected function _autoCommitNotify ($state){
-
-        $this->_doExec('SET AUTOCOMMIT TO '.($state ? 'ON' : 'OFF'));
+		if ($state)
+			$this->_doExec('SET AUTOCOMMIT TO ON');
     }
 
     protected function _quote($text, $binary) {
