@@ -166,7 +166,7 @@ class Mailer extends \PHPMailer {
 
             if (isset($metas['ReplyTo']))
                 foreach( $metas['ReplyTo'] as $val )
-                    $this->getAddrName($val, 'ReplyTo');
+                    $this->getAddrName($val, 'Reply-To');
             $mailtpl->assign('ReplyTo', $this->ReplyTo );
 
             if (isset($metas['From'])) {
