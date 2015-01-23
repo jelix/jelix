@@ -33,7 +33,7 @@ class jImageModifierTest extends jUnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30));
-        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::urlBasePath().$cacheName);
         $this->assertTrue(file_exists($cacheFile));
 
         $image = imagecreatefrompng($cacheFile);
@@ -52,7 +52,7 @@ class jImageModifierTest extends jUnitTestCase {
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('maxwidth'=>50, 'maxheight'=>30, 'omo'=>true));
         $this->assertTrue(file_exists($cacheFile));
-        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::urlBasePath().$cacheName);
         //$this->assertEquals('50', $attributes['width']);
         //$this->assertEquals('16', $attributes['height']);
 
@@ -71,7 +71,7 @@ class jImageModifierTest extends jUnitTestCase {
             unlink($cacheFile);
 
         $attributes = jImageModifier::get('imagemodifier/logo_test.png', array('width'=>50, 'height'=>30, 'omo'=>true));
-        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::config()->urlengine['basePath'].$cacheName);
+        $this->assertEquals($attributes['src'], jApp::coord()->request->getServerURI().jApp::urlBasePath().$cacheName);
         $this->assertEquals('50', $attributes['width']);
         $this->assertEquals('30', $attributes['height']);
         $this->assertTrue(file_exists($cacheFile));

@@ -137,7 +137,7 @@ class jtpl_pluginsTest extends jUnitTestCase {
             $output = $tpl->fetch ($t[0]); //, $outputtype='', $trusted = true, $callMeta=true
             $expected = $t[1];
             if(strpos($t[1],'%BASEPATH%') !== false){
-                $expected = str_replace('%BASEPATH%', jApp::config()->urlengine['basePath'], $expected);
+                $expected = str_replace('%BASEPATH%', jApp::urlBasePath(), $expected);
             }
             $this->assertEquals($expected, $output, 'testplugin['.$k.'], %s');
 

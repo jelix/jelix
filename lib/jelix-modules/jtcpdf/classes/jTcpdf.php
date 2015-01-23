@@ -14,7 +14,7 @@ define('K_TCPDF_EXTERNAL_CONFIG',true);
 define('K_PATH_MAIN', __DIR__.'/tcpdf/');
 define('K_PATH_URL',
        jApp::coord()->request->getServerURI() .
-       jApp::config()->urlengine['basePath']);
+       jApp::urlBasePath());
 define('K_PATH_FONTS', __DIR__.'/tcpdf/fonts/');
 define('K_PATH_CACHE', jApp::tempPath());
 define('K_PATH_IMAGES', jApp::appPath());

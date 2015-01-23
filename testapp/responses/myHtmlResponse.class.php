@@ -24,7 +24,7 @@ class myHtmlResponse extends jResponseHtml {
        $this->body->assignZone('menu','testapp~sommaire');
        $this->body->assignIfNone('MAIN','<p>No content</p>');
        $this->body->assignIfNone('page_title','Test App');
-       $this->addCSSLink(jApp::config()->urlengine['basePath'].'design/screen.css');
+       $this->addCSSLink(jApp::urlBasePath().'design/screen.css');
    }
 }
 ?>

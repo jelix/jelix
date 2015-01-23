@@ -21,9 +21,9 @@ class UTjrooturl extends jUnitTestCase {
         $this->assertEquals( 'http://www.junittest.com/',    jUrl::getRootUrl( 'test' ));
         $this->assertEquals( 'https://www.junittest.com/',   jUrl::getRootUrl( 'secure_test' ));
         $this->assertEquals( 'http://themes.junittest.com/', jUrl::getRootUrl( '/themes' ));
-        $this->assertEquals( jApp::config()->urlengine['basePath'].'foo', jUrl::getRootUrl( 'foo_relPath' ));
+        $this->assertEquals( jApp::urlBasePath().'foo', jUrl::getRootUrl( 'foo_relPath' ));
         $this->assertEquals( '/foo',                                jUrl::getRootUrl( 'foo_absPath' ));
-        $this->assertEquals( jApp::config()->urlengine['basePath'], jUrl::getRootUrl( 'notInConfig' ));
-        $this->assertEquals( jApp::config()->urlengine['basePath'], jUrl::getRootUrl( '/notInConfig' ));
+        $this->assertEquals( jApp::urlBasePath(), jUrl::getRootUrl( 'notInConfig' ));
+        $this->assertEquals( jApp::urlBasePath(), jUrl::getRootUrl( '/notInConfig' ));
     }
 }

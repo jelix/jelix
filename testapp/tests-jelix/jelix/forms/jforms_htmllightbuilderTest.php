@@ -55,7 +55,7 @@ class jforms_HtmlLightBuilderTest extends jUnitTestCaseDb {
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -70,7 +70,7 @@ jForms.declareForm(jForms.tForm);
         self::$builder->setOptions(array('method'=>'get'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="get" id="'.self::$builder->getName().'"><script type="text/javascript">
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="get" id="'.self::$builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1196,7 +1196,7 @@ jForms.tForm.addControl(c);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'" enctype="multipart/form-data"><script type="text/javascript">
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1287,7 +1287,7 @@ jForms.declareForm(jForms.tForm);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());
@@ -1306,7 +1306,7 @@ jForms.declareForm(jForms.tForm);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::config()->urlengine['basePath'].'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
 //<![CDATA[
 jForms.tForm = new jFormsForm(\'jforms_formtestlight1\');
 jForms.tForm.setErrorDecorator(new jFormsErrorDecoratorHtml());

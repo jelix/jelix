@@ -173,7 +173,7 @@ class jWSDL {
         $serviceURL = $serviceNameSpace = jApp::coord()->request->getServerURI();
 
         $serviceURL .= $url->toString();
-        $serviceNameSpace .= jApp::config()->urlengine['basePath'];
+        $serviceNameSpace .= jApp::urlBasePath();
 
         $wsdl = new WSDLStruct($serviceNameSpace, $serviceURL, SOAP_RPC, SOAP_ENCODED);
         $wsdl->setService(new IPReflectionClass($this->controllerClassName));
