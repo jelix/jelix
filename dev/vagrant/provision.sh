@@ -4,13 +4,18 @@ ROOTDIR="/jelixapp"
 TESTAPPDIR="$ROOTDIR/_build"
 VAGRANTDIR="$ROOTDIR/vagrant"
 
+if [ ! -d "$TESTAPPDIR" -o ! -d "$TESTAPPDIR/testapp" ]; then
+    >&2 echo "ERROR: you should run updatesrc.sh to generate a build of Jelix first."
+    exit 0
+fi
+
 # create hostname
-HOST=`grep testapp /etc/hosts`
+HOST=`grep testapp14 /etc/hosts`
 if [ "$HOST" == "" ]; then
-    echo "127.0.0.1 testapp.local" >> /etc/hosts
+    echo "127.0.0.1 testapp.local testapp14.local" >> /etc/hosts
 fi
 hostname testapp.local
-echo "testapp.local" > /etc/hostname
+echo "testapp14.local" > /etc/hostname
 
 # local time
 echo "Europe/Paris" > /etc/timezone
@@ -99,14 +104,18 @@ service php5-fpm restart
 # restart apache
 service apache2 reload
 
+echo "Install composer.."
+if [ ! -f /usr/local/bin/composer ]; then
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+fi
+
+
 echo "Install testapp configuration file"
 # create  profiles.ini.php
 if [ ! -f $TESTAPPDIR/testapp/var/config/profiles.ini.php ]; then
     cp -a $TESTAPPDIR/testapp/var/config/profiles.ini.php.dist $TESTAPPDIR/testapp/var/config/profiles.ini.php
 fi
-
-# touch localconfig.ini.php
-touch $TESTAPPDIR/testapp/var/config/localconfig.ini.php
 
 # create temp directory
 if [ ! -d $TESTAPPDIR/temp/testapp ]; then
@@ -118,9 +127,7 @@ fi
 #chown -R www-data:www-data $WRITABLEDIRS
 #chmod -R g+w $WRITABLEDIRS
 
-echo "Install composer.."
-if [ ! -f /usr/local/bin/composer ]; then
-    curl -sS https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
-fi
+cd $TESTAPPDIR/testapp/install
+php installer.php
+
 echo "Done."
