@@ -26,6 +26,14 @@
                 <in property="id_aclgrp" expr="$groups" />
             </conditions>
         </method>
+        <method name="getManageGroupRightsByGroups" type="select">
+            <parameter name="groups" />
+            <parameter name="resource" />
+            <conditions >
+                <eq property="id_aclres" expr="$resource"/>
+                <in property="id_aclgrp" expr="$groups" />
+            </conditions>
+        </method>
         <method name="getRightsByGroup" type="select">
             <parameter name="group" />
             <conditions >

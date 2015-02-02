@@ -63,6 +63,17 @@ class jAcl2 {
     }
 
     /**
+     * call this method to know if the current user has the right with the given value
+     * @param string $subject the key of the subject to check
+     * @param string $resource the id of a resource
+     * @return boolean true if yes
+     */
+    public static function checkManageGroup($subject, $resource=null){
+        $dr = self::_getDriver();
+        return $dr->getManageGroupRight($subject, $resource);
+    }
+    
+    /**
      * clear right cache
      * @since 1.0b2
      */

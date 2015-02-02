@@ -94,6 +94,35 @@ class dbAcl2Driver implements jIAcl2Driver {
             return true;
     }
 
+    /**
+     * return the value of the manage groupright on the given subject (and on the optional resource)
+     * @param string $subject the key of the subject
+     * @param string $resource the id of a resource
+     * @return boolean true if the right is ok
+     */
+    public function getManageGroupRight($subject, $resource = '-')
+    {
+        if (empty($resource))
+            $resource = '-';
+
+        if (!jAuth::isConnected()) {
+            return self::getAnonymousRight($subject, $resource);
+        }
+
+        // let's load all rights for the groups on which the current user is attached
+        $groups = jAcl2DbUserGroup::getGroups();
+
+        if (count($groups)) {
+            $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+            $right = $dao->getRightWithRes($subject, $groups, $resource);
+
+            if ($right === null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected function getAnonymousRight($subject, $resource='-') {
         if (empty($resource))
             $resource = '-';

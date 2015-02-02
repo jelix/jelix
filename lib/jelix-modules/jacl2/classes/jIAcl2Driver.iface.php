@@ -24,6 +24,14 @@ interface jIAcl2Driver {
     public function getRight($subject, $resource=null);
 
     /**
+     * Return the possible values of the manage group right on the given subject (and on the optional resource)
+     * @param string $subject the key of the subject
+     * @param string $resource the id of a resource
+     * @return array list of values corresponding to the right
+     */
+    public function getManageGroupRight($subject, $resource=null);
+    
+    /**
      * Clear some cached data, it a cache exists in the driver..
      */
     public function clearCache();
