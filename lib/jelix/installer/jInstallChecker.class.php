@@ -248,8 +248,8 @@ class jInstallCheck {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(jApp::configPath('mainconfig.ini.php'))
-                && !is_writable(jApp::configPath('mainconfig.ini.php'))) {
+            if (file_exists(jApp::mainConfigFile())
+                && !is_writable(jApp::mainConfigFile())) {
                 $this->error('path.mainconfig.writable');
                 $ok = false;
             }
