@@ -111,7 +111,6 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 
 
 #if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jICoordPlugin.iface.php
 #includephp core/jIUrlEngine.iface.php
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
@@ -130,7 +129,6 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #includephp core/jSession.class.php
 
 #else
-require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');

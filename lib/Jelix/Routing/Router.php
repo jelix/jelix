@@ -2,7 +2,7 @@
 /**
 * @author       Laurent Jouanneau
 * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav, Gaëtan MARROT
-* @copyright    2005-2014 laurent Jouanneau
+* @copyright    2005-2015 laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2008 Julien Issler
 * @copyright    2008-2010 Dominique Papin, 2012 Flav, 2013 Gaëtan MARROT
@@ -355,7 +355,7 @@ class Router {
     * gets a given router plugin if registered
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
-    * @return jICoordPlugin
+    * @return \Jelix\Routing\RouterPlugin
     */
     public function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);

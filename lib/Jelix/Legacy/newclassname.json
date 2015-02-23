@@ -15,6 +15,7 @@
     "jEventListener": "\\Jelix\\Event\\Listener",
     "jExceptionSelector": "\\Jelix\\Core\\Selector\\Exception",
     "jFileLogger": "\\Jelix\\Logger\\Output\\File",
+    "jICoordPlugin": "\\Jelix\\Routing\\RouterPlugin",
     "jIInstallReporter": "\\Jelix\\Installer\\ReporterInterface",
     "jIInstallerComponent": "\\Jelix\\Installer\\InstallerInterface",
     "jILogMessage": "\\Jelix\\Logger\\MessageInterface",

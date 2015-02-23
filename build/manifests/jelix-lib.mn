@@ -74,6 +74,7 @@ cd lib/Jelix/Legacy/core
   jRequest.php
   jResponse.php
 
+  jICoordPlugin.php
 cd lib/Jelix/Legacy/utils
   jClasses.php
   jClassBinding.php
@@ -119,7 +120,6 @@ cd lib/jelix-legacy/core
 * jUrl.class.php
 * jSession.class.php
   jServer.class.php
-  jICoordPlugin.iface.php
   jIUrlEngine.iface.php
 #endif
 
@@ -904,6 +904,7 @@ cd lib/Jelix/Routing
   ClientRequest.php
   ServerResponse.php
 
+  RouterPlugin.php
 cd lib/Jelix/External
   composer.json
   ClassMapGenerator.php

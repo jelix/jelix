@@ -15,6 +15,7 @@
     "jEventListener": "events/jEventListener.php",
     "jExceptionSelector": "core/jExceptionSelector.php",
     "jFileLogger": "core/log/jFileLogger.php",
+    "jICoordPlugin": "core/jICoordPlugin.php",
     "jIInstallReporter": "installer/jIInstallReporter.php",
     "jIInstallerComponent": "installer/jIInstallerComponent.php",
     "jILogMessage": "core/log/jILogMessage.php",

@@ -1,20 +1,17 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
 * @author     Laurent Jouanneau
-* @copyright  2005-2006 Laurent Jouanneau
+* @copyright  2005-2015 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Routing;
 
 
 /**
 * interface that should implement all coordinator plugins
-* @package  jelix
-* @subpackage core
 */
-interface jICoordPlugin {
+interface RouterPlugin {
 
     /**
      * @param    array  $config  content of the config ini file of the plugin
