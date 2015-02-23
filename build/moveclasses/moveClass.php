@@ -1,11 +1,23 @@
 <?php
-require(__DIR__.'/../lib/jCmdUtils.class.php');
-require(__DIR__.'/../lib/ManifestParser.php');
+/**
+* @package     jelix
+* @author      Laurent Jouanneau
+* @copyright   2014-2015 Laurent Jouanneau
+* @link        http://jelix.org
+* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+*/
+
+use Jelix\BuildTools\Cli\Params as CliParams;
+use Jelix\BuildTools\Manifest as Manifest;
+use Jelix\BuildTools\FileSystem\DirUtils as DirUtils;
+
+// we don't use the composer autoloader, as it load legacy init.php
+require(__DIR__.'/../../vendor/jelix/buildtools/lib/autoloader.php');
 
 $sws = array();
 $params = array('sourcedir'=>true, 'sourcefile'=>true, 'targetdir'=>true, 'targetfile'=>true);
 
-list($switches, $p) = jCmdUtils::getOptionsAndParams($_SERVER['argv'], $sws, $params);
+list($switches, $p) = CliParams::getOptionsAndParams($_SERVER['argv'], $sws, $params);
 
 $p['targetdir'] = trim($p['targetdir'], '/');
 $p['sourcedir'] = trim($p['sourcedir'], '/');
@@ -20,10 +32,10 @@ $legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
 
 // ------------------ update manifests
 
-$jelixLib = new ManifestParser(__DIR__.'/../manifests/jelix-lib.mn');
+$jelixLib = new Manifest\Modifier(__DIR__.'/../manifests/jelix-lib.mn');
 $jelixLib->parse();
 
-$deprecated = new ManifestParser(__DIR__.'/../manifests/jelix-deprecated.mn');
+$deprecated = new Manifest\Modifier(__DIR__.'/../manifests/jelix-deprecated.mn');
 $deprecated->parse();
 
 $jelixLib->removeFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
