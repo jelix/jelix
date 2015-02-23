@@ -3,10 +3,15 @@
 * @package     jelix
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2015 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+use Jelix\BuildTools as bt;
+use Jelix\BuildTools\Cli\Environment as Environment;
+use Jelix\BuildTools\Manifest\Manager as Manifest;
+use Jelix\BuildTools\FileSystem\DirUtils as DirUtils;
+
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
     "main directory where sources will be copied",  // meaning (false = hidden otion)
@@ -87,16 +92,16 @@ $BUILD_OPTIONS = array(
 );
 
 require(__DIR__.'/../vendor/autoload.php');
-\Jelix\BuildTools\Legacy::inc();
+bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 
 //----------------- Prepare environment variables
 
-$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+$MAIN_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH);
 
-$SOURCE_REVISION = Git::revision(__DIR__.'/../');
+$SOURCE_REVISION = bt\FileSystem\Git::revision(__DIR__.'/../');
 $TODAY = date('Y-m-d H:i');
 
-Env::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
+Environment::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
@@ -140,15 +145,15 @@ if ($TARGET_REPOSITORY != '') {
     $DELETE_DEPRECATED_FILES = true;
 }
 
-jManifest::$verbose = ($VERBOSE_MODE == '1');
-jManifest::setFileSystem($TARGET_REPOSITORY);
-jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
-jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
+Manifest::$verbose = ($VERBOSE_MODE == '1');
+Manifest::setFileSystem($TARGET_REPOSITORY);
+Manifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
+Manifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 
 //----------------- Source generation
 
 function generateModulePackage($moduleName, $modulesRepositoryPath) {
-    extract(ENV::getAll());
+    extract(Environment::getAll());
     global $BUILD_SUBPATH;
 
     // retrieve the version from module.xml
@@ -163,13 +168,13 @@ function generateModulePackage($moduleName, $modulesRepositoryPath) {
     }
 
     // create the directory
-    jBuildUtils::createDir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
+    DirUtils::createDir($MAIN_TARGET_PATH.$BUILD_SUBPATH);
     // execute manifest
     if ($DELETE_DEPRECATED_FILES && file_exists('build/manifests/modules/'.$moduleName.'-deprecated.mn')) {
-        jManifest::removeFiles('build/manifests/modules/'.$moduleName.'-deprecated.mn', $MAIN_TARGET_PATH.$BUILD_SUBPATH);
+        Manifest::removeFiles('build/manifests/modules/'.$moduleName.'-deprecated.mn', $MAIN_TARGET_PATH.$BUILD_SUBPATH);
     }
 
-    jManifest::process('build/manifests/modules/'.$moduleName.'.mn', $modulesRepositoryPath , $MAIN_TARGET_PATH.$BUILD_SUBPATH, ENV::getAll());
+    Manifest::process('build/manifests/modules/'.$moduleName.'.mn', $modulesRepositoryPath , $MAIN_TARGET_PATH.$BUILD_SUBPATH, Environment::getAll());
 
     // do package
     if($PACKAGE_TAR_GZ){

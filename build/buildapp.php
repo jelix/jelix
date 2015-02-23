@@ -3,11 +3,16 @@
 * @package     jelix
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2015 Laurent Jouanneau
 * @copyright   2008 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+use Jelix\BuildTools as bt;
+use Jelix\BuildTools\Cli\Environment as Environment;
+use Jelix\BuildTools\Manifest\Manager as Manifest;
+use Jelix\BuildTools\FileSystem\DirUtils as DirUtils;
+
 $BUILD_OPTIONS = array(
 'MAIN_TARGET_PATH'=> array(
     "main directory where sources will be copied",  // meaning (false = hidden otion)
@@ -53,20 +58,20 @@ $BUILD_OPTIONS = array(
     ),
 );
 require(__DIR__.'/../vendor/autoload.php');
-\Jelix\BuildTools\Legacy::inc();
+bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 
 //----------------- Prepare environment variables
 
 if(!$APPNAME){
     die("Error: APPNAME is empty");
 }
-$APPDIR = jBuildUtils::normalizeDir($APPNAME);
-$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+$APPDIR = DirUtils::normalizeDir($APPNAME);
+$MAIN_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH);
 $TODAY = date('Y-m-d H:i');
 
-Env::setFromFile('VERSION',$APPDIR.'/VERSION',true);
+Environment::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $VERSION = preg_replace('/\s+/m', '', $VERSION);
-$SOURCE_REVISION = Git::revision(__DIR__.'/../');
+$SOURCE_REVISION = bt\FileSystem\Git::revision(__DIR__.'/../');
 
 $IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
 
@@ -81,7 +86,7 @@ else {
 }
 
 
-Env::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
+Environment::setFromFile('LIB_VERSION','lib/jelix-legacy/VERSION', true);
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
@@ -96,16 +101,16 @@ else
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-    //$MAIN_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
+    //$MAIN_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME;
 }
 
 //----------------- Source generation
 
 //... directories creation
-jBuildUtils::createDir($MAIN_TARGET_PATH);
+DirUtils::createDir($MAIN_TARGET_PATH);
 
 //... manifests execution
-jManifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, ENV::getAll());
+Manifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, Environment::getAll());
 
 
 file_put_contents($MAIN_TARGET_PATH.$APPDIR.'/VERSION', $VERSION);
@@ -127,4 +132,3 @@ if($PACKAGE_ZIP){
 }
 
 exit(0);
-?>

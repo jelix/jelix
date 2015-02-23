@@ -23,7 +23,7 @@
         "jelix/webservice-helper": "1.5.2"
     },
     "require-dev": {
-        "jelix/buildtools": "dev-master"
+        "jelix/buildtools": "2.0.*"
     },
     "archive": {
         "exclude": ["/build", "/temp", "/testapp", "Makefile"]
