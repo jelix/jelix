@@ -309,9 +309,6 @@ cd testapp/tests-jelix/jelix/core/
   selectors_moduleTest.php
   urlsGenerationTest.php
   urlsParsingTest.php
-cd testapp/tests-jelix/jelix/soap/
-  soapcontrollerTest.php
-  soapclientTest.php
 cd testapp/tests-jelix/jelix/daos
   jDaoImportTest.php
   jdao_conditionsTest.php
@@ -326,65 +323,6 @@ cd testapp/tests-jelix/jelix/daos
   jdao_generatorTest.php
   jdao_generator_selectTest.php
   daotests.lib.php
-cd testapp/tests-jelix/jelix/events/
-  eventsTest.php
-cd testapp/tests-jelix/jelix/installer/
-  installAppTest.php
-  installer.lib.php
-  installer_componentTest.php
-  installer_dependenciesTest.php
-
-cd testapp/tests-jelix/jelix/installer/app1/
-  project.xml
-  project1.xml
-  project_empty.xml
-  project_empty2.xml
-cd testapp/tests-jelix/jelix/installer/app1/modules/aaa/
-  module.xml
-cd testapp/tests-jelix/jelix/installer/app1/plugins/
-cd testapp/tests-jelix/jelix/installer/app1/var/log
-  .dummy
-cd testapp/tests-jelix/jelix/installer/app1/var/config/
-  mainconfig.ini.php
-cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
-  config.ini.php
-cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
-  config.ini.php
-cd testapp/tests-jelix/jelix/prefs/
-  jPrefTest.php
-cd testapp/tests-jelix/jelix/routing/
-  requestsTest.php
-cd testapp/tests-jelix/jelix/routing/app1/
-  project.xml
-cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
-  module.xml
-cd testapp/tests-jelix/jelix/routing/app1/plugins/
-  .dummy
-cd testapp/tests-jelix/jelix/routing/app1/scripts/
-  .dummy
-cd testapp/tests-jelix/jelix/routing/app1/var/config
-  mainconfig.ini.php
-cd testapp/tests-jelix/jelix/routing/app1/var/config/index/
-  config.ini.php
-cd testapp/tests-jelix/jelix/routing/app1/var/log/
-  .dummy
-cd testapp/tests-jelix/jelix/routing/app1/www/
-  index.php
-
-cd testapp/tests-jelix/jelix/utils/
-  jClassesTest.php
-  jDatatypeTest.php
-  jDateTimeTest.php
-  jDurationTest.php
-  jFileTest.php
-  jFilterTest.php
-  jImageModifierTest.php
-  jIniFileModifierTest.php
-  jMailerTest.php
-  jRootUrlTest.php
-  minifyHTMLResponsePluginTest.php
-  profilesTest.php
-  versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
   jDb_sqlite3Test.php
@@ -399,13 +337,8 @@ cd testapp/tests-jelix/jelix/db/
   jdbschema_mysqlTest.php
   jdbtoolsTest.php
   jdbtools_mysqlTest.php
-cd testapp/tests-jelix/jelix/kvdb/
-  jkvdb_dbaTest.php
-  jkvdb_dbTest.php
-  jkvdb_fileTest.php
-  jkvdb_memcacheTest.php
-  jkvdb_redisTest.php
-  jkvdb.lib.php
+cd testapp/tests-jelix/jelix/events/
+  eventsTest.php
 cd testapp/tests-jelix/jelix/forms/
   jforms_check_dataTest.php
   jforms_compilerTest.php
@@ -421,12 +354,70 @@ cd testapp/tests-jelix/jelix/forms/
   jforms_newhtmlbuilder2Test.php
   jforms_sessionTest.php
   jforms_with_daoTest.php
+cd testapp/tests-jelix/jelix/installer/
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/modules/aaa
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/plugins
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/var/config
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/var/config/foo
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/var/config/index
+  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/var/log
+  __ALL__
+cd testapp/tests-jelix/jelix/kvdb/
+  jkvdb_dbaTest.php
+  jkvdb_dbTest.php
+  jkvdb_fileTest.php
+  jkvdb_memcacheTest.php
+  jkvdb_redisTest.php
+  jkvdb.lib.php
+cd testapp/tests-jelix/jelix/prefs/
+  jPrefTest.php
+cd testapp/tests-jelix/jelix/routing/
+  requestsTest.php
+cd testapp/tests-jelix/jelix/routing/app1/
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/plugins
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/www
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/var/config
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/var/config/index
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/var/log
+  __ALL__
+cd testapp/tests-jelix/jelix/soap/
+  soapcontrollerTest.php
+  soapclientTest.php
 cd testapp/tests-jelix/jelix/tpl/
   jtpl_compilerTest.php
   jtpl_expressions_parsingTest.php
   jtpl_fetchTest.php
   jtpl_pluginsTest.php
   jtpl_virtualTest.php
+cd testapp/tests-jelix/jelix/utils/
+  jClassesTest.php
+  jDatatypeTest.php
+  jDateTimeTest.php
+  jDurationTest.php
+  jFileTest.php
+  jFilterTest.php
+  jImageModifierTest.php
+  jIniFileModifierTest.php
+  jMailerTest.php
+  jRootUrlTest.php
+  minifyHTMLResponsePluginTest.php
+  profilesTest.php
+  versionComparatorTest.php
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 

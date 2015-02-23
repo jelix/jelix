@@ -3,11 +3,15 @@
 * @package     jelix
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier
-* @copyright   2006-2014 Laurent Jouanneau
+* @copyright   2006-2015 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+use Jelix\BuildTools as bt;
+use Jelix\BuildTools\Cli\Environment as Environment;
+use Jelix\BuildTools\Manifest\Manager as Manifest;
+use Jelix\BuildTools\FileSystem\DirUtils as DirUtils;
 
 $BUILD_OPTIONS = array(
   // each build options item should be an array
@@ -130,12 +134,12 @@ $BUILD_OPTIONS = array(
 );
 
 require(__DIR__.'/../vendor/autoload.php');
-\Jelix\BuildTools\Legacy::inc();
+bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 
 //----------------- Prepare environment variables
 
-Env::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
-$SOURCE_REVISION = Git::revision(__DIR__.'/../');
+Environment::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
+$SOURCE_REVISION = bt\FileSystem\Git::revision(__DIR__.'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
 $IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 $TODAY = date('Y-m-d H:i');
@@ -193,10 +197,10 @@ if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
     if($EDITION_NAME_x != '')
         $PACKAGE_NAME.='-'.$EDITION_NAME_x;
 
-    $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
+    $BUILD_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }
 else {
-    $BUILD_TARGET_PATH = jBuildUtils::normalizeDir($MAIN_TARGET_PATH);
+    $BUILD_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH);
 }
 
 if ($TARGET_REPOSITORY == 'none')
@@ -209,43 +213,43 @@ if ($TARGET_REPOSITORY != '') {
 //----------------- Génération des sources
 
 //... creation des repertoires
-jBuildUtils::createDir($BUILD_TARGET_PATH);
+DirUtils::createDir($BUILD_TARGET_PATH);
 
-jManifest::$stripComment = ($STRIP_COMMENT == '1');
-jManifest::$verbose = ($VERBOSE_MODE == '1');
-jManifest::setFileSystem($TARGET_REPOSITORY);
-jManifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
-jManifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
+Manifest::$stripComment = ($STRIP_COMMENT == '1');
+Manifest::$verbose = ($VERBOSE_MODE == '1');
+Manifest::setFileSystem($TARGET_REPOSITORY);
+Manifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
+Manifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 
 if ($DELETE_DEPRECATED_FILES) {
-    jManifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
+    Manifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
     if($ENABLE_DEVELOPER){
-        jManifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
+        Manifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
     }
 }
 
 //... execution des manifests
-jManifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
-jManifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
+Manifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
+Manifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
 
-jManifest::$stripComment = false;
+Manifest::$stripComment = false;
 
-jManifest::process('build/manifests/jelix-vendors.mn', '.', $BUILD_TARGET_PATH , ENV::getAll(), true);
-jManifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , ENV::getAll());
-jManifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll(), true);
-jManifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, ENV::getAll());
+Manifest::process('build/manifests/jelix-vendors.mn', '.', $BUILD_TARGET_PATH , Environment::getAll(), true);
+Manifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , Environment::getAll());
+Manifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
+Manifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll());
 
 // jtpl standalone for wizard
 
-Env::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
+Environment::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
 if($IS_NIGHTLY){
     $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
 }
 
-$var = ENV::getAll();
+$var = Environment::getAll();
 $jtplpath = $BUILD_TARGET_PATH.'lib/installwizard/jtpl/';
-jBuildUtils::createDir($jtplpath);
-jManifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
+DirUtils::createDir($jtplpath);
+Manifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
 file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
 
 
@@ -256,7 +260,7 @@ $view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
     'ENABLE_DEVELOPER',
     'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
 
-$infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".ENV::getIniContent($view);
+$infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".Environment::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 
