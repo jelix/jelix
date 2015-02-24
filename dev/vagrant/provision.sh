@@ -119,9 +119,12 @@ fi
 #chown -R www-data:www-data $WRITABLEDIRS
 #chmod -R g+w $WRITABLEDIRS
 
-# install phpunit, outside the synced dir because of issue with th
-su vagrant -c "composer global require 'phpunit/phpunit=4.3.*'"
-ln -s /home/vagrant/.composer/vendor/bin/phpunit  /usr/bin/phpunit
+# install phpunit
+cd $TESTAPPDIR/testapp/
+composer install
+if [ ! -f /usr/bin/phpunit ]; then
+    ln -s $TESTAPPDIR/testapp/vendor/bin/phpunit  /usr/bin/phpunit
+fi
 
 # install the application
 cd $TESTAPPDIR/testapp/install

@@ -68,14 +68,14 @@ To launch tests, go inside the vagrant machine (```vagrant ssh```) and:
 
 ```
 cd /jelixapp/_build/testapp/tests-jelix/
-../vendor/bin/phpunit
+phpunit
 ```
 
 To reinstall testapp
 ====================
 
-During development, it could appears that testapp is completely broken. You can reinstall
-it whitout recreating the whole vm.
+During development, it may appears that testapp is completely broken. You can reinstall
+it without recreating the whole vm.
 
 Follow these instructions:
 
@@ -86,8 +86,6 @@ vagrant ssh
 # in the vm, go into the right directory and lanch the script which reset all things
 cd /jelixapp/vagrant/
 ./reset_testapp.sh
-cd ../_build/testapp/install
-php installer.php
 ```
 
 
