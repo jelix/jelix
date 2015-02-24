@@ -33,6 +33,6 @@ Contribution & develppement
 
 If you want to contribute, you can use the provided Vagrant configuration
 which install all what is needed to run and test Jelix, and launch unit tests. See the
-dev/ directory in the repository.
+dev/README.md file in the repository.
 
 Fill issues on Github https://github.com/jelix/jelix/.

@@ -4,13 +4,18 @@ ROOTDIR="/jelixapp"
 TESTAPPDIR="$ROOTDIR/_build"
 VAGRANTDIR="$ROOTDIR/vagrant"
 
+if [ ! -d "$TESTAPPDIR" -o ! -d "$TESTAPPDIR/testapp" ]; then
+    >&2 echo "ERROR: you should run updatesrc.sh to generate a build of Jelix first."
+    exit 1
+fi
+
 # create hostname
-HOST=`grep testapp /etc/hosts`
+HOST=`grep testapp16 /etc/hosts`
 if [ "$HOST" == "" ]; then
-    echo "127.0.0.1 testapp.local" >> /etc/hosts
+    echo "127.0.0.1 testapp.local testapp16.local" >> /etc/hosts
 fi
 hostname testapp.local
-echo "testapp.local" > /etc/hostname
+echo "testapp16.local" > /etc/hostname
 
 # local time
 echo "Europe/Paris" > /etc/timezone
@@ -39,7 +44,7 @@ echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selecti
 apt-get -y install apache2 libapache2-mod-fastcgi apache2-mpm-worker php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
 apt-get -y install postgresql postgresql-client mysql-server mysql-client
 apt-get -y install redis-server memcached memcachedb
-apt-get -y install git mercurial phpmyadmin
+apt-get -y install phpmyadmin git
 
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
@@ -62,21 +67,38 @@ if [ -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
     rm -f "/etc/apache2/sites-enabled/000-default.conf"
 fi
 
-cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf-available/
-if [ ! -f "/etc/apache2/conf-enabled/php5_fpm.conf" ]; then
-    ln -s /etc/apache2/conf-available/php5_fpm.conf /etc/apache2/conf-enabled/php5_fpm.conf
+if [ -d /etc/apache2/conf.d ]; then
+    cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf.d
+else
+    if [ -d /etc/apache2/conf-available/ ]; then
+        cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf-available/
+        if [ ! -f "/etc/apache2/conf-enabled/php5_fpm.conf" ]; then
+            ln -s /etc/apache2/conf-available/php5_fpm.conf /etc/apache2/conf-enabled/php5_fpm.conf
+        fi
+    else
+        echo "------------- WARNING! php-fpm is not configured into apache"
+    fi
 fi
 
 a2enmod actions alias fastcgi rewrite
 
-sed -i "/user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
-sed -i "/group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
 
 service php5-fpm restart
 
+# to avoid bug https://github.com/mitchellh/vagrant/issues/351
+echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
+
 # restart apache
 service apache2 reload
+
+echo "Install composer.."
+if [ ! -f /usr/local/bin/composer ]; then
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+fi
 
 echo "Install testapp configuration file"
 # create  profiles.ini.php
@@ -97,9 +119,12 @@ fi
 #chown -R www-data:www-data $WRITABLEDIRS
 #chmod -R g+w $WRITABLEDIRS
 
-echo "Install composer.."
-if [ ! -f /usr/local/bin/composer ]; then
-    curl -sS https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
-fi
+# install phpunit, outside the synced dir because of issue with th
+su vagrant -c "composer global require 'phpunit/phpunit=4.3.*'"
+ln -s /home/vagrant/.composer/vendor/bin/phpunit  /usr/bin/phpunit
+
+# install the application
+cd $TESTAPPDIR/testapp/install
+php installer.php
+
 echo "Done."

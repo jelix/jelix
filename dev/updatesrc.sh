@@ -8,6 +8,6 @@ php build/buildapp.php dev/testapp.ini
 
 cd dev/
 
-if [ -d _build/temp/testapp/www/ ]; then
-    rm -rf _build/temp/testapp/www/*
-fi
+#if [ -d _build/temp/testapp/www/ ]; then
+#    rm -rf _build/temp/testapp/www/*
+#fi

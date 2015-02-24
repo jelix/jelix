@@ -170,9 +170,18 @@ class jWSDL {
         $url->clearParam ();
         $url->setParam('service',$this->module.'~'.$this->controller );
 
-        $serviceURL = $serviceNameSpace = jApp::coord()->request->getServerURI();
+        $serverUri = jUrl::getRootUrlRessourceValue('soap');
+        if ($serverUri === null) {
+            $serverUri = jUrl::getRootUrlRessourceValue('soap-'.$this->module);
+        }
+        if ($serverUri === null) {
+            $serverUri = jUrl::getRootUrlRessourceValue('soap-'.$this->module.'-'.$this->controller);
+        }
+        if ($serverUri === null) {
+            $serverUri = jApp::coord()->request->getServerURI();
+        }
 
-        $serviceURL .= $url->toString();
+        $serviceURL .= $serverUri .$url->toString();
         $serviceNameSpace .= jApp::urlBasePath();
 
         $wsdl = new WSDLStruct($serviceNameSpace, $serviceURL, SOAP_RPC, SOAP_ENCODED);

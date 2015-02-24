@@ -160,7 +160,7 @@ file="temp:kvdbdba.db4"
 [jsoapclient:default]
 
 ; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
-wsdl=   "http://testapp.local/index.php?service=testapp~soap&module=jsoap&action=WSDL:wsdl"
+wsdl=   "http://testapp16.local/index.php?service=testapp~soap&module=jsoap&action=WSDL:wsdl"
 ;trace=1
 soap_version=SOAP_1_1
 
@@ -191,6 +191,7 @@ dbprofile = ""
 [jcache:usingmemcache]
 enabled = 0
 driver = memcache
+; memcached servers.
 ; Can be a list e.g
 ;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
 ;servers = localhost:11211
