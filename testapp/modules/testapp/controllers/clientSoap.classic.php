@@ -40,7 +40,7 @@ class clientSoapCtrl extends jController {
             if ($serverUri === null) {
                 $serverUri = "http://".$_SERVER['HTTP_HOST'];
             }
-            $wsdlURI = $serverUri.jUrl::get('jWSDL~WSDL:wsdl', array('service'=>'testapp~soap'));
+            $wsdlURI = $serverUri.jUrl::get('jsoap~WSDL:wsdl', array('service'=>'testapp~soap'));
             $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
         } catch (SoapFault $fault) {
             throw new Exception($fault->getMessage());

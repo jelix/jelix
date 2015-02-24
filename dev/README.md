@@ -23,9 +23,9 @@ vagrant up
 It can take time the first time. It depends of your internet connection.
 
 When the "Done" message appears, and if there are no errors, Testapp is
-ready. Go on http://localhost:8014/ to see the app and launch Simpletests unit tests.
+ready. Go on http://localhost:8015/ to see the app and launch Simpletests unit tests.
 
-You have also phpmyadmin : http://localhost:8014/phpmyadmin/ (login:root, password: jelix)
+You have also phpmyadmin : http://localhost:8015/phpmyadmin/ (login:root, password: jelix)
 
 To shutdown the virtual machine, type
 
@@ -39,7 +39,7 @@ You can also add in your hosts file a declaration of the testapp.local domain
 127.0.0.1  testapp.local
 ```
 
-And then use http://testapp.local:8014/ instead of http://localhost:8014/
+And then use http://testapp.local:8015/ instead of http://localhost:8015/
 
 Update Jelix and testapp
 ========================
