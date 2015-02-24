@@ -7,6 +7,7 @@ VERSION=$1
 if [ "$VERSION" == "" ]; then
     echo "Error: parameters missing\n"
     echo "usage: set_new_version.sh <new version> <next version>"
+    echo "    ex: set_new_version.sh   1.4.0   1.4.1pre.SERIAL"
     exit 1
 fi
 
@@ -14,6 +15,7 @@ NEXTVERSION=$2
 if [ "$NEXTVERSION" == "" ]; then
     echo "Error: next version is missing"
     echo "usage: set_new_version.sh <new version> <next version>"
+    echo "    ex: set_new_version.sh   1.4.0   1.4.1pre.SERIAL"
     exit 1
 fi
 

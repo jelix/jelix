@@ -23,7 +23,7 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestGET() {
-        $http = new jHttp(TESTAPP_HOST);
+        $http = new jHttp($this->getServerUri());
         $http->get(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEquals(200, $http->getStatus());
 
@@ -31,7 +31,7 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestPUT() {
-        $http = new jHttp(TESTAPP_HOST);
+        $http = new jHttp($this->getServerUri());
         $http->put(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEquals(200, $http->getStatus());
 
@@ -39,7 +39,7 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestPOST() {
-        $http = new jHttp(TESTAPP_HOST);
+        $http = new jHttp($this->getServerUri());
         $http->post(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEquals(200, $http->getStatus());
 
@@ -47,13 +47,22 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestDELETE() {
-        $http = new jHttp(TESTAPP_HOST);
+        $http = new jHttp($this->getServerUri());
         $http->delete(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
         $this->assertEquals(200, $http->getStatus());
 
         $this->assertEquals('this is a DELETE response', $http->getContent());
     }
 
-
+    protected function getServerUri() {
+        $serverUri = jUrl::getRootUrlRessourceValue('localapp');
+        if ($serverUri === null) {
+            $serverUri = $_SERVER['HTTP_HOST'];
+        }
+        else {
+            $serverUri = str_replace('http://', '', $serverUri);
+        }
+        return $serverUri;
+    }
 }
 
