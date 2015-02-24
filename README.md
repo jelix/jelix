@@ -26,4 +26,14 @@ You have a full manual to learn Jelix. You can read it [direcly on the website](
 or you can [download the PDF edition](http://download.jelix.org/jelix/documentation/en/manual-jelix-1.4.pdf).
 
 You can ask your questions [on the forum](http://jelix.org/forums/forum/cat/2-english) or
-on our IRC Channel, #jelix, on the irc.freenode.net network. 
+on our IRC Channel, #jelix, on the irc.freenode.net network.
+
+
+Contribution & develppement
+===========================
+
+If you want to contribute, you can use the provided Vagrant configuration
+which install all what is needed to run and test Jelix, and launch unit tests. See the
+dev/README.md file in the repository.
+
+Fill issues on Github https://github.com/jelix/jelix/.

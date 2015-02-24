@@ -6,7 +6,7 @@ VAGRANTDIR="$ROOTDIR/vagrant"
 
 if [ ! -d "$TESTAPPDIR" -o ! -d "$TESTAPPDIR/testapp" ]; then
     >&2 echo "ERROR: you should run updatesrc.sh to generate a build of Jelix first."
-    exit 0
+    exit 1
 fi
 
 # create hostname
@@ -44,16 +44,7 @@ echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selecti
 apt-get -y install apache2 libapache2-mod-fastcgi apache2-mpm-worker php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
 apt-get -y install postgresql postgresql-client mysql-server mysql-client
 apt-get -y install redis-server memcached memcachedb
-apt-get -y install php-pear phpmyadmin
-
-pear upgrade pear
-pear channel-discover pear.phpunit.de
-pear channel-discover pear.symfony-project.com
-pear channel-discover components.ez.no
-pear update-channels
-pear upgrade-all
-pear install --alldeps phpunit/PHPUnit
-pear install phpunit/PHP_CodeCoverage
+apt-get -y install phpmyadmin git
 
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
@@ -101,6 +92,9 @@ sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
 
 service php5-fpm restart
 
+# to avoid bug https://github.com/mitchellh/vagrant/issues/351
+echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
+
 # restart apache
 service apache2 reload
 
@@ -109,7 +103,6 @@ if [ ! -f /usr/local/bin/composer ]; then
     curl -sS https://getcomposer.org/installer | php
     mv composer.phar /usr/local/bin/composer
 fi
-
 
 echo "Install testapp configuration file"
 # create  profiles.ini.php
@@ -127,6 +120,11 @@ fi
 #chown -R www-data:www-data $WRITABLEDIRS
 #chmod -R g+w $WRITABLEDIRS
 
+# install phpunit, outside the synced dir because of issue with th
+su vagrant -c "composer global require 'phpunit/phpunit=3.7.*'"
+ln -s /home/vagrant/.composer/vendor/bin/phpunit  /usr/bin/phpunit
+
+# install the application
 cd $TESTAPPDIR/testapp/install
 php installer.php
 

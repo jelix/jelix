@@ -25,7 +25,7 @@ It can take time the first time. It depends of your internet connection.
 When the "Done" message appears, and if there are no errors, Testapp is
 ready. Go on http://localhost:8014/ to see the app and launch Simpletests unit tests.
 
-You have also phpmyadmin : http://localhost:8016/phpmyadmin/ (root/jelix)
+You have also phpmyadmin : http://localhost:8014/phpmyadmin/ (login:root, password: jelix)
 
 To shutdown the virtual machine, type
 
@@ -81,12 +81,15 @@ Follow these instructions:
 
 ```
 cd dev/
+# connection into the vm
 vagrant ssh
+# in the vm, go into the right directory and lanch the script which reset all things
 cd /jelixapp/vagrant/
 ./reset_testapp.sh
 cd ../_build/testapp/install
 php installer.php
 ```
+
 
 
 
