@@ -10,12 +10,12 @@ if [ ! -d "$TESTAPPDIR" -o ! -d "$TESTAPPDIR/testapp" ]; then
 fi
 
 # create hostname
-HOST=`grep testapp16 /etc/hosts`
+HOST=`grep testapp17 /etc/hosts`
 if [ "$HOST" == "" ]; then
-    echo "127.0.0.1 testapp.local testapp16.local" >> /etc/hosts
+    echo "127.0.0.1 testapp.local testapp17.local" >> /etc/hosts
 fi
 hostname testapp.local
-echo "testapp16.local" > /etc/hostname
+echo "testapp17.local" > /etc/hostname
 
 # local time
 echo "Europe/Paris" > /etc/timezone
