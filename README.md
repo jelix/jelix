@@ -8,26 +8,38 @@ with modules, which allow to reuse features in several projects.
 
 For more informations, read http://jelix.org/articles/en/features
 
+About stable versions and branches
+==============================
+
+**WARNING**: many changes occurs in the master branch, because of a "namespacification"
+which is not finished yet. So API may change or may be broken (even if we try to no do it)
+**Don't use it for production for the moment**! However if you want to migrate an existing
+application to this unstable Jelix version ( **just for tests**! ), read the file
+[UPGRADE-TO-2.0.md].
+
+The master branch will be Jelix 2.0.
+
+For the current stable release, see the jelix-1.6.x branch. For the next stable release,
+see the jelix-1.7.x branch.
+
+**Please**, to fix issues on stable versions, do it on their corresponding branches,
+not master! So **do pull requests** on stable branches!
+
 Installation
-==============
+===========
 
-WARNING: many changes occurs in the master branch, because of a "namespacification" which
-is not finished yet. For a stable source code, see the jelix-1.6.x branch.
+The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.4 or more.
 
-The source code of the master branch is compatible only with PHP 5.4 or more.
-
-If you want to migrate an existing application to this unstable Jelix version,
-read the file [UPGRADE-TO-1.7.md].
-
-For a new application, you should use [Composer](http://getcomposer.org). Jelix packages
-are not yet into Packagist, so you should indicate the Jelix packages repository in your
-composer.json, and declare the jelix package dependency:
+For applications with the future Jelix 2.0, you should use
+[Composer](http://getcomposer.org). Jelix packages are not yet into Packagist, so you
+should indicate the Jelix packages repository in your composer.json, and declare the jelix
+package dependency:
 
 ```
 {
     "name": "...",
     "require": {
-        "php": ">=5.3.3",
+        "php": ">=5.4",
         "jelix/jelix": "dev-master"
     },
     "repositories" : [
@@ -45,7 +57,7 @@ php composer.phar install
 Then read [the documentation to create an application](http://docs.jelix.org/en/manual-1.7/create-application).
 
 Documentation and community
-===========================
+========================
 
 [The documentation](http://docs.jelix.org) is not updated yet with all changes since the
 release of Jelix 1.6.x. But it should be ok for most of things.
