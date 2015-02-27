@@ -720,7 +720,7 @@ class UTCreateUrls extends jUnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://testapp.local/index.php/testapp/main/', $url);
+        $this->assertEquals('http://'.$_SERVER['HTTP_HOST'].'/index.php/testapp/main/', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = 'testapp.local';

@@ -64,3 +64,12 @@ release of Jelix 1.6.x. But it should be ok for most of things.
 
 You can ask your questions [on the forum](http://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.
+
+Contribution & develppement
+===========================
+
+If you want to contribute, you can use the provided Vagrant configuration
+which install all what is needed to run and test Jelix, and launch unit tests. See the
+testapp/README.md file in the repository.
+
+Fill issues on Github https://github.com/jelix/jelix/.

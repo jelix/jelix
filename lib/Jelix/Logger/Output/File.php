@@ -11,6 +11,7 @@ namespace Jelix\Logger\Output;
  * logger storing message into a file
  */
 class File implements \Jelix\Logger\OutputInterface {
+
     /**
      * @param \Jelix\Logger\MessageInterface $message the message to log
      */
@@ -51,10 +52,12 @@ class File implements \Jelix\Logger\OutputInterface {
             }
             $file = \Jelix\Core\App::logPath($f);
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\t$type\t".$message->getFormatedMessage()."\n", 3, $file);
+            @chmod($file, \Jelix\Core\App::config()->chmodFile);
         }
         catch(\Exception $e) {
             $file = \Jelix\Core\App::logPath('errors.log');
             @error_log(date ("Y-m-d H:i:s")."\t".$ip."\terror\t".$e->getMessage()."\n", 3, $file);
+            @chmod($file, \Jelix\Core\App::config()->chmodFile);
         }
     }
 

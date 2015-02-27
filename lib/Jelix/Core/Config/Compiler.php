@@ -124,7 +124,7 @@ class Compiler {
 
         $config = $this->read(false);
         $tempPath = App::tempPath();
-        \jFile::createDir($tempPath);
+        \jFile::createDir($tempPath, $config->chmodDir);
         $filename = $tempPath.str_replace('/', '~', $this->configFileName);
 
         if (BYTECODE_CACHE_EXISTS) {
@@ -132,13 +132,14 @@ class Compiler {
             if ($f = @fopen($filename, 'wb')) {
                 fwrite($f, '<?php $config = '.var_export(get_object_vars($config),true).";\n?>");
                 fclose($f);
+                chmod($filename, $config->chmodFile);
             }
             else {
                 throw new Exception('Error while writing configuration cache file -- '.$filename);
             }
         }
         else {
-            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n");
+            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n", '', $config->chmodFile);
         }
         return $config;
     }
@@ -176,6 +177,9 @@ class Compiler {
 
         if ($config->urlengine['engine'] == 'simple')
             trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+
+        $config->chmodFile = octdec($config->chmodFile);
+        $config->chmodDir = octdec($config->chmodDir);
     }
 
     protected function checkCoordPluginsPath($config) {

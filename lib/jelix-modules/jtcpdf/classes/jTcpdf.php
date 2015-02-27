@@ -14,7 +14,7 @@ define('K_TCPDF_EXTERNAL_CONFIG',true);
 define('K_TCPDF_THROW_EXCEPTION_ERROR', true);
 define('K_PATH_URL',
        jApp::coord()->request->getServerURI() .
-       jApp::config()->urlengine['basePath']);
+       jApp::urlBasePath());
 define('K_PATH_CACHE', jApp::tempPath());
 define('K_PATH_IMAGES', jApp::appPath());
 define('K_BLANK_IMAGE', K_PATH_MAIN.'images/_blank.png');
@@ -57,8 +57,11 @@ class jTcpdf extends TCPDF {
         if(!is_writable($path))
            throw new jException('jelix~errors.file.directory.notwritable',array($path));
 
-        if(file_put_contents(realpath($path).'/'.$filename, $this->Output('','S')))
-           return true;
+        $file = realpath($path).'/'.$filename;
+        if (file_put_contents($file, $this->Output('','S'))) {
+            chmod($file, jApp::config()->chmodFile);
+            return true;
+        }
 
         throw new jException('jelix~errors.file.write.error',array($path.'/'.$filename,''));
     }

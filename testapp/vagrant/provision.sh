@@ -2,14 +2,13 @@
 
 TESTAPPDIR="/jelixapp"
 
-
 # create hostname
-HOST=`grep testapp /etc/hosts`
+HOST=`grep testapp20 /etc/hosts`
 if [ "$HOST" == "" ]; then
-    echo "127.0.0.1 testapp.local" >> /etc/hosts
+    echo "127.0.0.1 testapp.local testapp20.local" >> /etc/hosts
 fi
 hostname testapp.local
-echo "testapp.local" > /etc/hostname
+echo "testapp20.local" > /etc/hostname
 
 # local time
 echo "Europe/Paris" > /etc/timezone
@@ -67,14 +66,23 @@ cp $TESTAPPDIR/testapp/vagrant/otherport.conf /etc/apache2/conf-available/
 a2enconf php5_fpm otherport
 a2enmod actions alias fastcgi rewrite
 
-sed -i "/user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
-sed -i "/group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
+sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
 
 service php5-fpm restart
 
+# to avoid bug https://github.com/mitchellh/vagrant/issues/351
+echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
+
 # restart apache
 service apache2 reload
+
+echo "Install composer.."
+if [ ! -f /usr/local/bin/composer ]; then
+    curl -sS https://getcomposer.org/installer | php
+    mv composer.phar /usr/local/bin/composer
+fi
 
 echo "Install testapp configuration file"
 # create  profiles.ini.php
@@ -95,9 +103,15 @@ fi
 #chown -R www-data:www-data $WRITABLEDIRS
 #chmod -R g+w $WRITABLEDIRS
 
-echo "Install composer.."
-if [ ! -f /usr/local/bin/composer ]; then
-    curl -sS https://getcomposer.org/installer | php
-    mv composer.phar /usr/local/bin/composer
+# install phpunit
+cd $TESTAPPDIR/testapp/
+composer install
+if [ ! -f /usr/bin/phpunit ]; then
+    ln -s $TESTAPPDIR/testapp/vendor/bin/phpunit  /usr/bin/phpunit
 fi
+
+# install the application
+cd $TESTAPPDIR/testapp/install
+php installer.php
+
 echo "Done."

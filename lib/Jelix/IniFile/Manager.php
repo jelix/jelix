@@ -88,8 +88,9 @@ class Manager {
      * @param array $array the content of an ini file
      * @param string $filename the path and the name of the file use to store the content
      * @param string $header   some content to insert at the begining of the file
+     * @param integer $chmod   
      */
-    public static function write($array, $filename, $header='') {
+    public static function write($array, $filename, $header='', $chmod=null) {
         $result='';
         foreach ($array as $k => $v) {
             if (is_array($v)) {
@@ -106,6 +107,9 @@ class Manager {
         if ($f = @fopen($filename, 'wb')) {
             fwrite($f, $header.$result);
             fclose($f);
+            if ($chmod) {
+                chmod($f, $chmod);
+            }
         }
         else {
             throw new \Exception('Error while writing ini file '.$filename, 24);

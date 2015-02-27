@@ -39,7 +39,7 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
             return;
 
         $conf = &jApp::config()->jResponseHtml;
-        $basePath = jApp::config()->urlengine['basePath'];
+        $basePath = jApp::urlBasePath();
         if ($conf['minifyCSS']) {
             if ($conf['minifyExcludeCSS']) {
                 $this->excludeCSS = preg_split( '/\s*,\s*/', $conf['minifyExcludeCSS'] );
@@ -119,7 +119,7 @@ class minifyHTMLResponsePlugin implements jIHTMLResponsePlugin {
     }
 
     protected function generateMinifyUrl($urlsList) {
-        $url = jApp::config()->urlengine['basePath'].jApp::config()->jResponseHtml['minifyEntryPoint'].'?f=';
+        $url = jApp::urlBasePath().jApp::config()->jResponseHtml['minifyEntryPoint'].'?f=';
         $url .= implode(',', $urlsList);
         return $url;
     }

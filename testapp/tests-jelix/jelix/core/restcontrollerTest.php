@@ -23,37 +23,46 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestGET() {
-        $http = new jHttp(TESTAPP_HOST);
-        $http->get(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
+        $http = new jHttp($this->getServerUri());
+        $http->get(jApp::urlBasePath().'rest.php/test/rest');
         $this->assertEquals(200, $http->getStatus());
 
-        $this->assertEquals('this is a GET response. resturl='.jApp::config()->urlengine['basePath'].'rest.php/test/rest', $http->getContent());
+        $this->assertEquals('this is a GET response. resturl='.jApp::urlBasePath().'rest.php/test/rest', $http->getContent());
     }
 
     function testRestPUT() {
-        $http = new jHttp(TESTAPP_HOST);
-        $http->put(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
+        $http = new jHttp($this->getServerUri());
+        $http->put(jApp::urlBasePath().'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEquals(200, $http->getStatus());
 
         $this->assertEquals('this is a PUT response. module=jelix_tests action=myrest: foo=bar', $http->getContent());
     }
 
     function testRestPOST() {
-        $http = new jHttp(TESTAPP_HOST);
-        $http->post(jApp::config()->urlengine['basePath'].'rest.php/test/rest', array('foo'=>'bar'));
+        $http = new jHttp($this->getServerUri());
+        $http->post(jApp::urlBasePath().'rest.php/test/rest', array('foo'=>'bar'));
         $this->assertEquals(200, $http->getStatus());
 
         $this->assertEquals('this is a POST response. module=jelix_tests action=myrest: foo=bar', $http->getContent());
     }
 
     function testRestDELETE() {
-        $http = new jHttp(TESTAPP_HOST);
-        $http->delete(jApp::config()->urlengine['basePath'].'rest.php/test/rest');
+        $http = new jHttp($this->getServerUri());
+        $http->delete(jApp::urlBasePath().'rest.php/test/rest');
         $this->assertEquals(200, $http->getStatus());
 
         $this->assertEquals('this is a DELETE response', $http->getContent());
     }
 
-
+    protected function getServerUri() {
+        $serverUri = jUrl::getRootUrlRessourceValue('localapp');
+        if ($serverUri === null) {
+            $serverUri = $_SERVER['HTTP_HOST'];
+        }
+        else {
+            $serverUri = str_replace('http://', '', $serverUri);
+        }
+        return $serverUri;
+    }
 }
 

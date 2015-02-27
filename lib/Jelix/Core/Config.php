@@ -51,7 +51,7 @@ class Config {
         }
         else {
             $t = filemtime($file);
-            $dc = App::configPath(App::mainConfigFile());
+            $dc = App::mainConfigFile();
             $lc = App::configPath('localconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)

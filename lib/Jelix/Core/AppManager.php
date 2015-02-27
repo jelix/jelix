@@ -23,7 +23,11 @@ class AppManager {
      * @since 1.2
      */
     public static function close($message='') {
-        file_put_contents(App::configPath('CLOSED'), $message);
+        $file = App::configPath('CLOSED');
+        file_put_contents($file, $message);
+        if (App::config()) {
+            chmod($file, App::config()->chmodFile);
+        }
     }
 
     /**

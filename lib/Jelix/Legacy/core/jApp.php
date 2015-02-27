@@ -67,7 +67,9 @@ class jApp {
     public static function setEnv($env) {
         \Jelix\Core\App::setEnv($env);
     }
-
+    public static function urlBasePath() {
+        return \Jelix\Core\App::urlBasePath();
+    }
     public static function config() {
         return \Jelix\Core\App::config();
     }

@@ -5,6 +5,7 @@ cd testapp
   composer.json
   README.md
   cmd.php
+  composer.json
 cd testapp/plugins
   .htaccess
 cd testapp/plugins/tpl/common/
