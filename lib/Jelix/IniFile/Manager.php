@@ -40,7 +40,7 @@ class Manager {
      * @param string $filename the path and the name of the file to read
      * @param object $content
      * @return array the content of the file or false
-     * @since 1.7
+     * @since 2.0
      */
     public static function readAndMergeObject($filename, $content) {
         if (!file_exists ($filename)) {
