@@ -69,11 +69,13 @@ a2enmod actions alias fastcgi rewrite
 sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
 sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
+sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/cli/php.ini
 
 service php5-fpm restart
 
 # to avoid bug https://github.com/mitchellh/vagrant/issues/351
-echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
+echo "EnableSendfile Off" > /etc/apache2/conf-available/sendfileoff.conf
+a2enconf sendfileoff
 
 # restart apache
 service apache2 reload

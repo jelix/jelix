@@ -81,7 +81,7 @@ class EntryPoint {
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->configIni = new \Jelix\IniFile\MultiModifier($mainConfig, \jApp::configPath($configFile));
+        $this->configIni = new \Jelix\IniFile\MultiModifier($mainConfig, \Jelix\Core\App::configPath($configFile));
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
                                                     $this->isCliScript);

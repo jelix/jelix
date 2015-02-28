@@ -13,4 +13,4 @@
  * @see \Jelix\Routing\RouterPlugin
  * @deprecated
  */
-class jICoordPlugin extends \Jelix\Routing\RouterPlugin { }
+interface jICoordPlugin extends \Jelix\Routing\RouterPlugin { }
