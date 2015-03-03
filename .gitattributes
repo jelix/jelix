@@ -2,6 +2,5 @@
 .gitignore export-ignore
 testapp/* export-ignore
 build/* export-ignore
-dev/* export-ignore
 Makefile export-ignore
 TODO_RELEASE export-ignore
