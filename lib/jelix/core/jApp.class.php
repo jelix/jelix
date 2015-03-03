@@ -67,6 +67,27 @@ class jApp {
         self::$_mainConfigFile = null;
     }
 
+    static protected $_version = null;
+
+    /**
+     * return the version of the application containing into a VERSION file
+     * It doesn't read the version from project.xml or composer.json.
+     * @return string
+     */
+    static public function version() {
+        if (self::$_version === null) {
+            if (file_exists(self::appPath('VERSION'))) {
+                self::$_version =  trim(str_replace(array('SERIAL', "\n"),
+                                          array('0', ''),
+                                          file_get_contents(self::appPath('VERSION'))));
+            }
+            else {
+                self::$_version = '0';
+            }
+        }
+        return self::$_version;
+    }
+
     /**
      * indicate if path have been set
      * @return boolean  true if it is ok
