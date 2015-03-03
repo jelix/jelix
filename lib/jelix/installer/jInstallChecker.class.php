@@ -311,8 +311,8 @@ class jInstallCheck {
     function checkPhpSettings(){
         $ok = true;
 #ifnot STANDALONE_CHECKER
-        if (file_exists(jApp::configPath("maintconfig.ini.php")))
-            $defaultconfig = parse_ini_file(jApp::configPath("maintconfig.ini.php"), true);
+        if (file_exists(jApp::configPath("mainconfig.ini.php")))
+            $defaultconfig = parse_ini_file(jApp::configPath("mainconfig.ini.php"), true);
         else
             $defaultconfig = array();
         if (file_exists(jApp::configPath("index/config.ini.php")))
