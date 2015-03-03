@@ -196,9 +196,7 @@ abstract class jResponse {
             return true;
         }
         else {
-#ifndef PROD_VERSION
             trigger_error(jLocale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
-#endif
             return false;
         }
     }
