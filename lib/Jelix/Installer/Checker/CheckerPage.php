@@ -30,7 +30,6 @@ class CheckerPage {
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>
     <link type="text/css"  href="jelix/design/jelix.css" rel="stylesheet" />
-</style>
 
 </head><body >
     <h1 class="apptitle"><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>

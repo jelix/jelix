@@ -116,8 +116,8 @@ class Checker extends CheckerBase {
 
     protected function checkPhpSettings(){
 
-        if (file_exists(App::configPath("maintconfig.ini.php")))
-            $defaultconfig = parse_ini_file(App::configPath("maintconfig.ini.php"), true);
+        if (file_exists(App::configPath("mainconfig.ini.php")))
+            $defaultconfig = parse_ini_file(App::configPath("mainconfig.ini.php"), true);
         else
             $defaultconfig = array();
         if (file_exists(App::configPath("index/config.ini.php")))

@@ -103,7 +103,7 @@ class Container {
             }
         }
         if ($msg === null) {
-            throw new \Exception ("Error : don't find error message '$key'");
+            throw new \Exception ("Error: don't find message '$key'");
         }
 
         if ($params !== null || (is_array($params) && count($params) > 0)) {
