@@ -365,16 +365,18 @@ cd lib/jelix/installer
   jInstaller.class.php
   jInstallerApplication.class.php
   jInstallerBase.class.php
-* jInstallChecker.class.php
+  jInstallChecker.class.php
   jInstallerComponentBase.class.php
   jInstallerComponentModule.class.php
   jInstallerComponentPlugin.class.php
   jInstallerEntryPoint.class.php
   jInstallerException.class.php
-* jInstallerMessageProvider.class.php
+  jInstallerMessageProvider.class.php
   jInstallerModule.class.php
   jInstallerModuleInfos.class.php
   jInstallerPlugin.class.php
+  messageProvider.en.inc.php
+  messageProvider.fr.inc.php
 
 cd lib/jelix/kvdb
 * jKVDriver.class.php

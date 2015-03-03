@@ -14,12 +14,12 @@
 */
 
 /**
- * check an installation of a jelix application
+ * base class for a jelix installation checker
  * @package  jelix
  * @subpackage core
- * @since 1.0b2
+ * @since 1.7
  */
-class jInstallCheck {
+class jInstallCheckerBase {
 
     /**
      * the object responsible of the results output
@@ -37,20 +37,26 @@ class jInstallCheck {
     public $nbWarning = 0;
     public $nbNotice = 0;
 
-    protected $buildProperties;
+    protected $buildProperties = array();
 
     public $verbose = false;
 
     public $checkForInstallation = false;
 
+    /**
+     *
+     */
     function __construct ($reporter, $lang=''){
         $this->reporter = $reporter;
-        $this->messages = new jInstallerMessageProvider($lang);
-#if STANDALONE_CHECKER
-        $this->buildProperties = array(
-#expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
-        );
-#endif
+        if (is_string($lang)) {
+            $this->messages = new jInstallerMessageProvider($lang);
+        }
+        else if ($lang instanceof jInstallerMessageProvider) {
+            $this->messages = $lang;
+        }
+        else {
+            throw new Exception('Error checker: No message provider');
+        }
     }
 
     protected $otherExtensions = array();
@@ -89,10 +95,7 @@ class jInstallCheck {
         $this->nbNotice = 0;
         $this->reporter->start();
         try {
-#ifnot STANDALONE_CHECKER
-            $this->checkAppPaths();
-            $this->loadBuildFile();
-#endif
+            $this->_otherCheck();
             $this->checkPhpExtensions();
             $this->checkPhpSettings();
         }catch(Exception $e){
@@ -102,6 +105,8 @@ class jInstallCheck {
         $this->reporter->end($results);
     }
 
+    protected function _otherCheck() {}
+    
     protected function error($msg, $msgparams=array(), $extraMsg=''){
         if($this->reporter)
             $this->reporter->message($this->messages->get($msg, $msgparams).$extraMsg, 'error');
@@ -130,7 +135,7 @@ class jInstallCheck {
         $this->nbNotice ++;
     }
 
-    function checkPhpExtensions(){
+    protected function checkPhpExtensions(){
         $ok=true;
         if(!version_compare($this->buildProperties['PHP_VERSION_TARGET'], phpversion(), '<=')){
             $this->error('php.bad.version');
@@ -215,7 +220,59 @@ class jInstallCheck {
 
         return $ok;
     }
-#ifnot STANDALONE_CHECKER
+
+    protected function checkPhpSettings(){
+        $ok = true;
+
+        if(ini_get('magic_quotes_gpc') == 1){
+            $this->error('ini.magic_quotes_gpc');
+            $ok=false;
+        }
+
+        if(ini_get('magic_quotes_runtime') == 1){
+            $this->error('ini.magic_quotes_runtime');
+            $ok=false;
+        }
+
+        if(ini_get('session.auto_start') == 1){
+            $this->error('ini.session.auto_start');
+            $ok=false;
+        }
+
+        if(ini_get('safe_mode') == 1){
+            $this->error('ini.safe_mode');
+            $ok=false;
+        }
+
+        if(ini_get('register_globals') == 1){
+            $this->warning('ini.register_globals');
+            $ok=false;
+        }
+
+        if(ini_get('asp_tags') == 1){
+            $this->notice('ini.asp_tags');
+        }
+        if($ok){
+            $this->ok('ini.ok');
+        }
+        return $ok;
+    }
+}
+
+
+/**
+ * check an installation of a jelix application
+ * @package  jelix
+ * @subpackage core
+ * @since 1.0b2
+ */
+class jInstallCheck extends jInstallCheckerBase {
+
+    protected function _otherCheck() {
+        $this->checkAppPaths();
+        $this->loadBuildFile();
+    }
+
     function checkAppPaths(){
         $ok = true;
         if(!defined('JELIX_LIB_PATH') || !jApp::isInit()){
@@ -290,29 +347,21 @@ class jInstallCheck {
         else
             throw new Exception($this->messages->get('too.critical.error'));
 
-        /*if(!isset($GLOBALS['config_file']) ||
-           empty($GLOBALS['config_file']) ||
-           !file_exists(jApp::configPath($GLOBALS['config_file']))){
-            throw new Exception($this->messages->get('config.file'));
-        }*/
-
         return $ok;
     }
 
-    function loadBuildFile() {
+    protected function loadBuildFile() {
         if (!file_exists(JELIX_LIB_PATH.'BUILD')){
             throw new Exception($this->messages->get('build.not.found'));
         } else {
             $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
         }
     }
-#endif
 
-    function checkPhpSettings(){
-        $ok = true;
-#ifnot STANDALONE_CHECKER
-        if (file_exists(jApp::configPath("maintconfig.ini.php")))
-            $defaultconfig = parse_ini_file(jApp::configPath("maintconfig.ini.php"), true);
+    protected function checkPhpSettings(){
+
+        if (file_exists(jApp::configPath("mainconfig.ini.php")))
+            $defaultconfig = parse_ini_file(jApp::configPath("mainconfig.ini.php"), true);
         else
             $defaultconfig = array();
         if (file_exists(jApp::configPath("index/config.ini.php")))
@@ -320,38 +369,6 @@ class jInstallCheck {
         else
             $indexconfig = array();
 
-#endif
-        if(ini_get('magic_quotes_gpc') == 1){
-            $this->error('ini.magic_quotes_gpc');
-            $ok=false;
-        }
-
-        if(ini_get('magic_quotes_runtime') == 1){
-            $this->error('ini.magic_quotes_runtime');
-            $ok=false;
-        }
-
-        if(ini_get('session.auto_start') == 1){
-            $this->error('ini.session.auto_start');
-            $ok=false;
-        }
-
-        if(ini_get('safe_mode') == 1){
-            $this->error('ini.safe_mode');
-            $ok=false;
-        }
-
-        if(ini_get('register_globals') == 1){
-            $this->warning('ini.register_globals');
-            $ok=false;
-        }
-
-        if(ini_get('asp_tags') == 1){
-            $this->notice('ini.asp_tags');
-        }
-        if($ok){
-            $this->ok('ini.ok');
-        }
-        return $ok;
+        return parent::checkPhpSettings();
     }
 }

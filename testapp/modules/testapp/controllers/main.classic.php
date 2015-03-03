@@ -140,5 +140,10 @@ class mainCtrl extends jController {
      $resp->importFromUrlsXml();
      return $resp;
   }
-
+  
+  function installchecker() {
+      $rep = $this->getResponse('html');
+      $rep->body->assignZone('MAIN', 'jelix~check_install');
+      return $rep;
+  }
 }

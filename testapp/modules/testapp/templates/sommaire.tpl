@@ -10,6 +10,7 @@
    <li><a href="{jurl 'main:generatewarning'}">warning on a page</a></li>
    <li><a href="{jurl 'main:testminify'}">page using minify</a></li>
    <li><a href="{jurl 'main:sitemap'}">sitemap</a></li>
+   <li><a href="{jurl 'main:installchecker'}">Install checker</a></li>
 </ul>
 
 <h3>Unit tests</h3>
