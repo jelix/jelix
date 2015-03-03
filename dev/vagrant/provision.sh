@@ -67,19 +67,11 @@ if [ -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
     rm -f "/etc/apache2/sites-enabled/000-default.conf"
 fi
 
-if [ -d /etc/apache2/conf.d ]; then
-    cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf.d
-else
-    if [ -d /etc/apache2/conf-available/ ]; then
-        cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf-available/
-        if [ ! -f "/etc/apache2/conf-enabled/php5_fpm.conf" ]; then
-            ln -s /etc/apache2/conf-available/php5_fpm.conf /etc/apache2/conf-enabled/php5_fpm.conf
-        fi
-    else
-        echo "------------- WARNING! php-fpm is not configured into apache"
-    fi
-fi
+cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf-available/
+# to avoid bug https://github.com/mitchellh/vagrant/issues/351
+echo "EnableSendfile Off" > /etc/apache2/conf-available/sendfileoff.conf
 
+a2enconf php5_fpm sendfileoff
 a2enmod actions alias fastcgi rewrite
 
 sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
@@ -87,9 +79,6 @@ sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
 
 service php5-fpm restart
-
-# to avoid bug https://github.com/mitchellh/vagrant/issues/351
-echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
 
 # restart apache
 service apache2 reload

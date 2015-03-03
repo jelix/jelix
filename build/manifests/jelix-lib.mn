@@ -640,6 +640,13 @@ cd lib/jelix/plugins/htmlresponse/minify
 cd lib/jelix/plugins/htmlresponse/debugbar
   debugbar.htmlresponse.php
   errors.debugbar.php
+  debugbar.js
+  debugbar.css
+  errors.debugbar.js
+  jelix-dbg.png
+
+cd lib/jelix/plugins/htmlresponse/debugbar/icons
+  __ALL__
 
 cd lib/jelix/plugins/tpl/common
   block.ifuserconnected.php
