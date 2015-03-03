@@ -30,7 +30,12 @@
  * Version number of Jelix
  * @name  JELIX_VERSION
  */
+#ifdef LIB_VERSION
 #expand define ('JELIX_VERSION', '__LIB_VERSION__');
+#else
+define ('JELIX_VERSION', str_replace('SERIAL', '0', file_get_contents(__DIR__.'/VERSION')));
+#endif
+
 
 /**
  * base of namespace path used in xml files of jelix
