@@ -159,8 +159,14 @@ class jDbToolsTest extends jUnitTestCase {
         $this->assertEquals("59878723",$result);
         $result = $tools->escapeValue( 'integer',5987872,false);
         $this->assertEquals("5987872",$result);
-        $result = $tools->escapeValue( 'numeric',5987872320983209098238723,false);
-        $this->assertEquals("5987872320983209098238723",$result);
+        $result = $tools->escapeValue( 'numeric',598787232098320909,false);
+        $this->assertEquals("598787232098320909",$result);
+        $result = $tools->escapeValue( 'numeric',5987872320983209098,false);
+        $this->assertEquals("5987872320983209098",$result);
+        $result = $tools->escapeValue( 'numeric',59878723209832090982,false);
+        $this->assertEquals("59878723209832087552",$result);
+        //$result = $tools->escapeValue( 'numeric',5987872320983209098238723,false);
+        //$this->assertEquals("5987872320983209098238723",$result);
         
         $result = $tools->escapeValue( 'float',5,false);
         $this->assertEquals("5",$result);
