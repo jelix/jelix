@@ -507,8 +507,8 @@ abstract class JelixScriptCommand {
        if($deps && $deps->length > 0) {
            $jelix = $deps->item(0)->getElementsByTagName('jelix');
            if ($jelix && $jelix->length > 0) {
-               $minversion = $jelix->item(0)->getAttribute('minversion');
-               $maxversion = $jelix->item(0)->getAttribute('maxversion');
+               $minversion = $this->fixVersion($jelix->item(0)->getAttribute('minversion'));
+               $maxversion = $this->fixVersion($jelix->item(0)->getAttribute('maxversion'));
            }
        }
        return array($minversion, $maxversion);
@@ -628,4 +628,19 @@ abstract class JelixScriptCommand {
 
       return $prefix.implode($sep, $newPath);
    }
+
+    /**
+     * Fix version for non built lib
+     */
+    protected function fixVersion($version) {
+        switch($version) {
+            case '__LIB_VERSION_MAX__':
+                return jFramework::versionMax();
+            case '__LIB_VERSION__':
+                return jFramework::version();
+            case '__VERSION__':
+                return jApp::version();
+        }
+        return trim($version);
+    }
 }

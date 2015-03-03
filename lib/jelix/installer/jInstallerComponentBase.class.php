@@ -196,7 +196,7 @@ abstract class jInstallerComponentBase {
 
         if ($root->namespaceURI == $this->identityNamespace) {
             $xml = simplexml_import_dom($xmlDescriptor);
-            $this->sourceVersion = (string) $xml->info[0]->version[0];
+            $this->sourceVersion = $this->fixVersion((string) $xml->info[0]->version[0]);
             if (isset($xml->info[0]->version['date']))
                 $this->sourceDate = (string) $xml->info[0]->version['date'];
             else
@@ -232,10 +232,14 @@ abstract class jInstallerComponentBase {
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
-                $minversion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
+                $minversion = isset($dependency['minversion'])?
+                                $this->fixVersion((string)$dependency['minversion']):
+                                '*';
                 if (trim($minversion) == '')
                     $minversion = '*';
-                $maxversion = isset($dependency['maxversion'])?(string)$dependency['maxversion']:'*';
+                $maxversion = isset($dependency['maxversion'])?
+                                $this->fixVersion((string)$dependency['maxversion']):
+                                '*';
                 if (trim($maxversion) == '')
                     $maxversion = '*';
 
@@ -291,6 +295,21 @@ abstract class jInstallerComponentBase {
     public function checkVersion($min, $max) {
         return (jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
                 jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
+    }
+
+    /**
+     * Fix version for non built lib
+     */
+    protected function fixVersion($version) {
+        switch($version) {
+            case '__LIB_VERSION_MAX__':
+                return jFramework::versionMax();
+            case '__LIB_VERSION__':
+                return jFramework::version();
+            case '__VERSION__':
+                return jApp::version();
+        }
+        return trim($version);
     }
 }
 
