@@ -249,11 +249,6 @@ jManifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
 file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
 
 
-// the standalone checker
-
-$var = ENV::getAll();
-jManifest::process('build/manifests/jelix-checker.mn','.', $BUILD_TARGET_PATH , $var);
-
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file

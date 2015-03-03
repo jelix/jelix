@@ -2,12 +2,13 @@ cd .
 
 cd lib
   .htaccess
+* jelix_check_server.php
 
 cd lib/jelix
   CHANGELOG
   CREDITS
 * init.php
-* checker.php
+  checker.php
   INSTALL
   LICENCE
   VERSION
@@ -360,6 +361,7 @@ cd lib/jelix/forms/controls
 
 cd lib/jelix/installer
   closed.html
+  jHtmlInstallChecker.class.php
   jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
   jInstaller.class.php

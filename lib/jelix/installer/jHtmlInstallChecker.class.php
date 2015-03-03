@@ -1,20 +1,12 @@
 <?php
-
 /**
-* check a jelix installation
-*
 * @package     jelix
-* @subpackage  core
+* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2007-2015 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since       1.0b2
 */
-
-require "installer/jIInstallReporter.iface.php";
-require "installer/jInstallerMessageProvider.class.php";
-require "installer/jInstallChecker.class.php";
 
 /**
  * an HTML reporter for jInstallChecker
@@ -69,25 +61,3 @@ class jHtmlInstallChecker implements jIInstallReporter {
         echo "</div>";
     }
 }
-
-$messages = new jInstallerMessageProvider();
-$reporter = new jHtmlInstallChecker($messages);
-$check = new jInstallCheck($reporter, $messages);
-$check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
-
-header("Content-type:text/html;charset=UTF-8");
-
-?>
-<!DOCTYPE html>
-<html lang="<?php echo $check->messages->getLang(); ?>">
-<head>
-    <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
-    <title><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></title>
-    <link type="text/css"  href="jelix/design/jelix.css" rel="stylesheet" />
-
-</head><body >
-    <h1 class="apptitle"><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
-
-<?php $check->run(); ?>
-</body>
-</html>
