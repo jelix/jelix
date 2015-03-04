@@ -5,4 +5,4 @@ _dist/
 .komodotools
 *.kdev4
 vendor/
-temp/testapp/
+testapp/temp/

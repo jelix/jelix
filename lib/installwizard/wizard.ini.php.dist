@@ -3,7 +3,7 @@
 pagesPath = "../../lib/installwizard/pages/,pages/"
 customPath = "custom/"
 start = nom page de demarrage
-tempPath = "../../temp/myapp/"
+tempPath = "../temp/"
 supportedLang = en
 
 [welcome.step]

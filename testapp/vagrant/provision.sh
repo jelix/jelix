@@ -93,11 +93,11 @@ if [ -f $APPDIR/var/config/installer.ini.php ]; then
 fi
 
 # create temp directory
-if [ ! -d $ROOTDIR/temp/$APPNAME ]; then
-    mkdir $ROOTDIR/temp/$APPNAME
+if [ ! -d $APPDIR/temp/ ]; then
+    mkdir $APPDIR/temp/
 else
-    rm -rf $ROOTDIR/temp/$APPNAME/*
-    touch $ROOTDIR/temp/$APPNAME/.dummy
+    rm -rf $APPDIR/temp/*
+    touch $APPDIR/temp/.dummy
 fi
 if [ ! -d $APPDIR/var/log ]; then
     mkdir $APPDIR/var/log

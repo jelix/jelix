@@ -108,7 +108,7 @@ class JelixScriptCommandConfig {
      */
     public $verboseMode = false;
 
-    public $layoutTempPath = '%appdir%/../temp/%appname%/';
+    public $layoutTempPath = '%appdir%/temp/';
     public $layoutWwwPath = '%appdir%/www/';
     public $layoutVarPath = '%appdir%/var/';
     public $layoutLogPath = '%appdir%/var/log/';
@@ -150,7 +150,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2011 your name';
+    public $newAppInfoCopyright='2015 a name';
 
     /**
      * @var string

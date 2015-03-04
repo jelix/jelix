@@ -135,8 +135,7 @@ Installation of testapp without Vagrant
 - configure other section in profiles.ini.php: "jkvdb:", "jcache:", "jsoapclient:"
 - if you have specific configuration setting, set them into a testapp/var/config/localconfig.ini.php
   instead of modifying testapp/var/config/mainconfig.ini.php
-- create the "testapp/"  directories in the temp directory of Jelix
-- put write access for apache on temp/testapp/, testapp/var/log/ and testapp/var/mails
+- put write access for apache on testapp/temp/, testapp/var/log/ and testapp/var/mails
 - run the script in install/installer.php 
     cd testapp/install && php installer.php
 - configure your web server to access to testapp/www with a browser

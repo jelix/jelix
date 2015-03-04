@@ -10,8 +10,8 @@ if [ -f $APPDIR/var/config/CLOSED ]; then
     rm -f $APPDIR/var/config/CLOSED
 fi
 
-rm -rf $ROOTDIR/temp/$APPNAME/*
-touch $ROOTDIR/temp/$APPNAME/.dummy
+rm -rf $APPDIR/temp/*
+touch $APPDIR/temp/.dummy
 rm -f $APPDIR/var/config/installer.ini.php
 cp -a $APPDIR/var/config/profiles.ini.php.dist $APPDIR/var/config/profiles.ini.php
 cp -a $APPDIR/var/config/localconfig.ini.php.dist $APPDIR/var/config/localconfig.ini.php

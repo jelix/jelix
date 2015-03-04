@@ -825,5 +825,3 @@ cd lib/installwizard/pages/confmail/
   confmail.page.php
   confmail.tpl
 
-cd temp
-  .htaccess

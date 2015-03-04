@@ -183,13 +183,19 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(jApp::tempBasePath());
-        if (file_exists($temp.'/.gitignore')) {
-            $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
-            file_put_contents($temp.'/.gitignore', $gitignore);
+        $temp = dirname(trim(jApp::tempBasePath(),'/'));
+        if ($temp != trim($appPath,'/')) {
+            if (file_exists($temp.'/.gitignore')) {
+                $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
+                file_put_contents($temp.'/.gitignore', $gitignore);
+            }
+            else {
+                file_put_contents($temp.'/.gitignore', $appName."/*\n");
+            }
         }
         else {
-            file_put_contents($temp.'/.gitignore', $appName."/*\n");
+            $gitignore = file_get_contents($appPath.'.gitignore'). "\n".basename(rtrim(jApp::tempBasePath(),'/'))."/*\n";
+            file_put_contents($appPath.'.gitignore', $gitignore);
         }
 
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param, "Main entry point");
