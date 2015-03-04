@@ -1,9 +1,9 @@
 TAGS
 .DS_Store
 _dist/
-_dev/
 *.komodoproject
 .komodotools
 *.kdev4
 vendor/
 composer.lock
+temp/testapp/

@@ -3,7 +3,6 @@
 return array(
     'title'=>'Prerequis',
     'results'=>'Resultats',
-
        'checker.title'=>'Vérification de l\'installation de Jelix',
         'number.errors'         =>' erreurs.',
         'number.error'          =>' erreur.',

@@ -16,5 +16,3 @@ soap="jsoap~jResponseSoap"
 [urlengine]
 engine=significant
 significantFile=urls_rest.xml
-
-

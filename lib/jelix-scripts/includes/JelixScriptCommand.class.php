@@ -611,4 +611,5 @@ abstract class JelixScriptCommand {
 
       return $prefix.implode($sep, $newPath);
    }
+
 }

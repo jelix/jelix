@@ -11,7 +11,3 @@ jacl=1
 [responses]
 html=myHtmlResponse
 soap="jsoap~jResponseSoap"
-
-
-
-

@@ -8,3 +8,4 @@ var/log/*
 var/sessions/*
 var/uploads/*
 var/mails/*
+composer.lock

@@ -74,10 +74,12 @@ class App {
     static public function version() {
         if (self::$_version === null) {
             if (file_exists(self::appPath('VERSION'))) {
-                self::$_version = str_replace('SERIAL', '0', file_get_contents(self::appPath('VERSION')));
+                self::$_version =  trim(str_replace(array('SERIAL', "\n"),
+                                          array('0', ''),
+                                          file_get_contents(self::appPath('VERSION'))));
             }
             else {
-                self::$_version = 0;
+                self::$_version = '0';
             }
         }
         return self::$_version;

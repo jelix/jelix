@@ -2,10 +2,10 @@ cd testapp
 * project.xml
   .htaccess
   application.init.php
-  composer.json
-  README.md
   cmd.php
   composer.json
+  README.md
+  Vagrantfile
 cd testapp/plugins
   .htaccess
 cd testapp/plugins/tpl/common/
@@ -14,6 +14,12 @@ cd testapp/plugins/formwidget/textarea_as_input_html
   textarea_as_input_html.formwidget.php
 cd testapp/responses
   myHtmlResponse.class.php
+cd testapp/vagrant
+  create_pgsql_db.sh
+  php5_fpm.conf
+  provision.sh
+  reset_testapp.sh
+  testapp.conf
 cd testapp/www
   unittest.css
   jsonrpc.php

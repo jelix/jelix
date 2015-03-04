@@ -17,4 +17,3 @@ soap="jsoap~jResponseSoap"
 on_error=1
 error_message="jacl2~errors.action.right.needed"
 on_error_action="jelix~error:badright"
-

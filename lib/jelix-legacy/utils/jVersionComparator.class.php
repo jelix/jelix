@@ -78,10 +78,11 @@ class jVersionComparator {
                 }
             }
             elseif ($pm){
-                throw new Exception ("bad version number :". $version2);
+                throw new Exception ("bad version number: '$version2' (comparing to first version '$version1')");
             }
-            else
-                throw new Exception ("bad version number :".$version1);
+            else {
+                throw new Exception ("bad version number: '$version1' (comparing to second version '$version2')");
+            }
         }
 
         return 0;

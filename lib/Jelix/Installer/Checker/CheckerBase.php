@@ -123,7 +123,7 @@ class CheckerBase {
         $this->nbNotice ++;
     }
 
-    function checkPhpExtensions(){
+    protected function checkPhpExtensions(){
         $ok=true;
         if(!version_compare($this->buildProperties['PHP_VERSION_TARGET'], phpversion(), '<=')){
             $this->error('php.bad.version');

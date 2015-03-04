@@ -3,6 +3,7 @@ cd .
 
 cd lib
   .htaccess
+* jelix_check_server.php
 
 cd lib/Jelix/Core
   App.php
@@ -401,10 +402,6 @@ cd lib/jelix-legacy/forms/controls
   jFormsControlWikiEditor.class.php
 #endif
 
-
-cd lib/jelix-legacy/installer
-  
-
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
@@ -660,6 +657,13 @@ cd lib/jelix-legacy/plugins/htmlresponse/minify
 cd lib/jelix-legacy/plugins/htmlresponse/debugbar
   debugbar.htmlresponse.php
   errors.debugbar.php
+  debugbar.js
+  debugbar.css
+  errors.debugbar.js
+  jelix-dbg.png
+
+cd lib/jelix-legacy/plugins/htmlresponse/debugbar/icons
+  __ALL__
 
 cd lib/jelix-legacy/plugins/tpl/common
   block.ifuserconnected.php

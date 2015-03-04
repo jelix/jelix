@@ -1,7 +1,7 @@
 <?php
 /**
 * @author     Laurent Jouanneau
-* @copyright  2014 Laurent Jouanneau
+* @copyright  2014-2015 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -16,7 +16,9 @@ class Framework {
     
     static public function version() {
         if (self::$_version === null) {
-            self::$_version = str_replace('SERIAL', '0', file_get_contents(__DIR__.'/VERSION'));
+            self::$_version = trim(str_replace(array('SERIAL', "\n"),
+                                          array('0', ''),
+                                          file_get_contents(__DIR__.'/VERSION')));
         }
         return self::$_version;
     }

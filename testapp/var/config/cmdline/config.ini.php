@@ -5,6 +5,7 @@ startModule=testapp
 startAction="default:index"
 
 pluginsPath="app:plugins/,lib:jelix-plugins/,module:jacldb/plugins"
+
 [responses]
 soap="jsoap~jResponseSoap"
 
@@ -20,4 +21,3 @@ on_error_action="jelix~error:badright"
 on_error=1
 error_message="jacl~errors.action.right.needed"
 on_error_action="jelix~error:badright"
-
