@@ -82,7 +82,7 @@ class createappCommand extends JelixScriptCommand {
         $appName = basename($appPath);
         $appPath .= '/';
 
-        if (file_exists($appPath)) {
+        if (file_exists($appPath.'/project.xml')) {
             throw new Exception("this application is already created");
         }
 
@@ -125,13 +125,6 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir($appPath.'install');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
-        $this->createDir($appPath.'plugins/coord/');
-        $this->createDir($appPath.'plugins/tpl/');
-        $this->createDir($appPath.'plugins/tpl/common');
-        $this->createDir($appPath.'plugins/tpl/html');
-        $this->createDir($appPath.'plugins/tpl/text');
-        $this->createDir($appPath.'plugins/db/');
-        $this->createDir($appPath.'plugins/auth/');
         $this->createDir($appPath.'responses');
         $this->createDir($appPath.'tests');
         $this->createDir(jApp::scriptsPath());
