@@ -120,6 +120,7 @@ class EntryPoint {
     function createInstallLaunchers($launcherGetter) {
         $this->moduleLaunchers = array();
         $epId = $this->getEpId();
+
         // now let's read all modules properties
         foreach ($this->config->_allModulesPathList as $name=>$path) {
             $moduleStatus = new \Jelix\Installer\ModuleStatus($name, $this->config->modules);
@@ -134,6 +135,9 @@ class EntryPoint {
         return $this->moduleLaunchers;
     }
 
+    /**
+     * @return \Jelix\Installer\AbstractInstallLauncher
+     */
     function getLauncher($moduleName) {
         if(!isset($this->moduleLaunchers[$moduleName])) {
             return null;

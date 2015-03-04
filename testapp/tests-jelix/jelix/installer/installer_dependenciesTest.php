@@ -33,7 +33,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.access'=>2,
             'testA.dbprofile'=>'default',
             'testA.installed'=>false,
-            'testA.version'=>JELIX_VERSION,
+            'testA.version'=>'1.0',
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
 
@@ -49,7 +49,6 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
         $ep->createInstallLaunchers(function($moduleStatus, $moduleInfos){
             return new \Jelix\Installer\ModuleInstallLauncher($moduleInfos, null);
         });
-
         $result = $ep->getOrderedDependencies(array('testA'=>$ep->getLauncher('testA')));
 
         $this->assertTrue(is_array($result));
@@ -78,11 +77,11 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.access'=>2,
             'testA.dbprofile'=>'default',
             'testA.installed'=>false,
-            'testA.version'=>JELIX_VERSION,
+            'testA.version'=>"1.0",
             'testB.access'=>2,
             'testB.dbprofile'=>'default',
             'testB.installed'=>false,
-            'testB.version'=>JELIX_VERSION,
+            'testB.version'=>"1.0",
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
 
@@ -152,23 +151,23 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.access'=>2,
             'testA.dbprofile'=>'default',
             'testA.installed'=>false,
-            'testA.version'=>JELIX_VERSION,
+            'testA.version'=>"1.0",
             'testB.access'=>2,
             'testB.dbprofile'=>'default',
             'testB.installed'=>false,
-            'testB.version'=>JELIX_VERSION,
+            'testB.version'=>"1.0",
             'testC.access'=>2,
             'testC.dbprofile'=>'default',
             'testC.installed'=>false,
-            'testC.version'=>JELIX_VERSION,
+            'testC.version'=>"1.0",
             'testD.access'=>2,
             'testD.dbprofile'=>'default',
             'testD.installed'=>false,
-            'testD.version'=>JELIX_VERSION,
+            'testD.version'=>"1.0",
             'testE.access'=>2,
             'testE.dbprofile'=>'default',
             'testE.installed'=>false,
-            'testE.version'=>JELIX_VERSION,
+            'testE.version'=>"1.0",
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
 
@@ -286,27 +285,27 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.access'=>2,
             'testA.dbprofile'=>'default',
             'testA.installed'=>false,
-            'testA.version'=>JELIX_VERSION,
+            'testA.version'=>"1.0",
             'testB.access'=>2,
             'testB.dbprofile'=>'default',
             'testB.installed'=>false,
-            'testB.version'=>JELIX_VERSION,
+            'testB.version'=>"1.0",
             'testC.access'=>2,
             'testC.dbprofile'=>'default',
             'testC.installed'=>false,
-            'testC.version'=>JELIX_VERSION,
+            'testC.version'=>"1.0",
             'testD.access'=>2,
             'testD.dbprofile'=>'default',
             'testD.installed'=>false,
-            'testD.version'=>JELIX_VERSION,
+            'testD.version'=>"1.0",
             'testE.access'=>2,
             'testE.dbprofile'=>'default',
             'testE.installed'=>false,
-            'testE.version'=>JELIX_VERSION,
+            'testE.version'=>"1.0",
             'testF.access'=>2,
             'testF.dbprofile'=>'default',
             'testF.installed'=>false,
-            'testF.version'=>JELIX_VERSION,
+            'testF.version'=>"1.0",
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
 
@@ -439,15 +438,15 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.access'=>2,
             'testA.dbprofile'=>'default',
             'testA.installed'=>false,
-            'testA.version'=>JELIX_VERSION,
+            'testA.version'=>"1.0",
             'testB.access'=>2,
             'testB.dbprofile'=>'default',
             'testB.installed'=>false,
-            'testB.version'=>JELIX_VERSION,
+            'testB.version'=>"1.0",
             'testC.access'=>2,
             'testC.dbprofile'=>'default',
             'testC.installed'=>false,
-            'testC.version'=>JELIX_VERSION,
+            'testC.version'=>"1.0",
         ));
         $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
 
