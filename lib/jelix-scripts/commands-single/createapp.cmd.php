@@ -21,10 +21,11 @@ class createappCommand extends JelixScriptCommand {
     public  $name = 'createapp';
     public  $allowed_options=array('-nodefaultmodule'=>false,
                                    '-withcmdline'=>false,
+                                   '-modulename' =>true,
                                    '-wwwpath'=>true);
     public  $allowed_parameters=array('path'=>true);
 
-    public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-wwwpath a_path]";
+    public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-modulename a_name] [-wwwpath a_path]";
     public  $help='';
     public $commonSyntaxOptions = '[-v] ';
     public $commonOptionsHelp = array(
@@ -44,7 +45,7 @@ class createappCommand extends JelixScriptCommand {
         $this->help= array(
             'fr'=>"
     Crée une nouvelle application avec tous les répertoires nécessaires et un module
-    du même nom que l'application.
+    du même nom que l'application. Le nom du module peut-être changé avec l'option -modulename.
 
     Si l'option -nodefaultmodule est présente, le module n'est pas créé.
 
@@ -58,6 +59,7 @@ class createappCommand extends JelixScriptCommand {
     ",
             'en'=>"
     Create a new application with all directories and one module named as your application.
+    The module name can be changed with -modulename.
 
     If you give -nodefaultmodule option, it won't create the module.
 
@@ -142,10 +144,14 @@ class createappCommand extends JelixScriptCommand {
             $param['modulename'] = 'jelix';
         }
         else {
-            // note: since module name are used for name of generated name,
-            // only this characters are allowed
-            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9])/','_',$appName);
-            $param['tplname']    = $param['modulename'].'~main';
+            $moduleName = $this->getOption('-modulename');
+            if (!$moduleName) {
+                // note: since module name are used for name of generated name,
+                // only this characters are allowed
+                $moduleName = preg_replace('/([^a-zA-Z_0-9])/','_',$appName);
+            }
+            $param['modulename'] = $moduleName;
+            $param['tplname']    = $moduleName.'~main';
         }
 
         $param['config_file'] = 'index/config.ini.php';
@@ -164,11 +170,13 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(jApp::varPath().'sessions/.dummy', 'dummy.tpl', array());
         $this->createFile(jApp::varPath().'overloads/.dummy', 'dummy.tpl', array());
         $this->createFile(jApp::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile(jApp::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(jApp::scriptsPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(jApp::tempBasePath().'.dummy', 'dummy.tpl', array());
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
+        $this->createFile($appPath.'.gitignore','git_ignore.tpl', $param, ".gitignore");
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
         $this->createFile($configPath.'mainconfig.ini.php', 'var/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
