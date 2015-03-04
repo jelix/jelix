@@ -283,7 +283,7 @@ abstract class JelixScriptCommand {
          'default_creator_email' => $this->config->infoCreatorMail,
          'default_copyright'     => $this->config->infoCopyright,
          'createdate'            => date('Y-m-d'),
-         'jelix_version'         => file_get_contents(JELIX_LIB_PATH.'VERSION'),
+         'jelix_version'         => jFramework::version(),
          'appname'               => $this->config->appName,
          'default_timezone'      => $this->config->infoTimezone,
          'default_locale'        => $this->config->infoLocale,
