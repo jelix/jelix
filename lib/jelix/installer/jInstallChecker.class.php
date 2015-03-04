@@ -359,7 +359,6 @@ class jInstallCheck extends jInstallCheckerBase {
     }
 
     protected function checkPhpSettings(){
-
         if (file_exists(jApp::configPath("mainconfig.ini.php")))
             $defaultconfig = parse_ini_file(jApp::configPath("mainconfig.ini.php"), true);
         else
