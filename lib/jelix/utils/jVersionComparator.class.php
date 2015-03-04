@@ -18,6 +18,10 @@
 class jVersionComparator {
 
   /**
+   * Compare two version numbers.
+   *
+   * @param string $version1
+   * @param string $version2    
    * @return int  0 if equal, -1 if $version1 < $version2, 1 if $version1 > $version2
    */
     static function compareVersion($version1, $version2) {
@@ -74,10 +78,11 @@ class jVersionComparator {
                 }
             }
             elseif ($pm){
-                throw new Exception ("bad version number :". $version2);
+                throw new Exception ("bad version number: '$version2' (comparing to first version '$version1')");
             }
-            else
-                throw new Exception ("bad version number :".$version1);
+            else {
+                throw new Exception ("bad version number: '$version1' (comparing to second version '$version2')");
+            }
         }
 
         return 0;
