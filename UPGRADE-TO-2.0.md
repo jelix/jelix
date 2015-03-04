@@ -60,6 +60,9 @@ WARNING: this is experimental!!
 
 - If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
    you should know that their API have changed.
+   
+- Files that have gone
+   - lib/jelix/checker.php: if you included it, call ```\Jelix\Installer\Checker\CheckerPage::show();``` instead
 
 - Classes that don't exist anymore:
    - jInstallerApplication
