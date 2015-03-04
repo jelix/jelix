@@ -33,7 +33,10 @@
 #ifdef LIB_VERSION
 #expand define ('JELIX_VERSION', '__LIB_VERSION__');
 #else
-define ('JELIX_VERSION', str_replace('SERIAL', '0', file_get_contents(__DIR__.'/VERSION')));
+define ('JELIX_VERSION',
+        trim(str_replace(array('SERIAL', "\n"),
+                         array('0', ''),
+                         file_get_contents(__DIR__.'/VERSION'))));
 #endif
 
 
