@@ -142,7 +142,9 @@ abstract class XmlParserAbstract {
                     else if ($attrName == 'version' && $xml->value != '') {
                         $dependency['version'] = $this->fixVersion($xml->value);
                     }
-                    else {
+                    else if ($attrName != 'minversion' &&
+                             $attrName != 'maxversion' &&
+                             $attrName != 'version') {
                         $dependency[$attrName] = $xml->value;
                     }
                 }
