@@ -6,6 +6,7 @@ cd .
   README
 
 rmd lib/jelix/acl
+rmd lib/jelix/FakeServerConf
 
 cd lib/jelix/core
   jInstallChecker.class.php

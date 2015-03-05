@@ -110,6 +110,9 @@ if [ ! -f $APPDIR/var/db/sqlite3/tests.sqlite3.bak ]; then
     cp -a $APPDIR/var/db/sqlite3/tests.sqlite3 $APPDIR/var/db/sqlite3/tests.sqlite3.bak
 fi
 
+cd $ROOTDIR
+composer install
+
 # install phpunit
 cd $APPDIR
 composer install
