@@ -24,6 +24,9 @@ table.records-list thead th :link:hover, table.records-list thead th :visited:ho
  background-color: transparent;
 }
 table.records-list thead th a { border: none; padding-right: 12px }
+table.records-list thead th a.view-order { float: right; height: 11px; background: url(icons/order.png) no-repeat center right transparent; }
+table.records-list thead th a.view-order.order-asc { background-position: bottom right; }
+table.records-list thead th a.view-order.order-desc { background-position: top right; }
 table.records-list tbody td, table.records-list tbody th {
  border: 1px dotted #ddd;
  padding: .33em .5em;

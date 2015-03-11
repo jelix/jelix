@@ -5,9 +5,11 @@
 * @author       Laurent Jouanneau
 * @contributor  Bastien Jaillot
 * @contributor  Thibault Piront (nuKs)
+* @contributor  Bruno Perles (brunto)
 * @copyright    2007-2008 Laurent Jouanneau
 * @copyright    2007 Thibault Piront
 * @copyright    2007,2008 Bastien Jaillot
+* @copyright    2011 Bruno PERLES
 * @link         http://www.jelix.org
 * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 *
@@ -63,6 +65,14 @@ class jControllerDaoCrudDfk extends jController {
      * @var array
      */
     protected $propertiesForRecordsOrder = array();
+    
+    /**
+     * list of properties to display order link in the list page.
+     * if empty list (default), the link to arrange the results will not be displayed.
+     * key are properties name, and values are "asc" or "desc".
+     * @var array
+     */
+    protected $propertiesForListOrder = array();
 
     /**
      * template to display the list of records
@@ -188,6 +198,22 @@ class jControllerDaoCrudDfk extends jController {
 
         $dao = jDao::get($this->dao, $this->dbProfile);
 
+        $keyActionDao = $this->_getAction($this->dao);
+        if (count($this->propertiesForListOrder)) {
+            if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]))
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForListOrder;
+            if (($lo = $this->param('listorder')) && (array_key_exists($lo, $this->propertiesForListOrder))) {
+                $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
+                if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc')
+                    $listOrder[$lo] = 'desc';
+                elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc')
+                    unset($listOrder[$lo]);
+                else
+                    $listOrder[$lo] = 'asc';
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $listOrder;
+            }
+        }
+
         $cond = jDao::createConditions();
         $cond->addCondition($this->spkName, '=', $this->param($this->spkName));
         $this->_indexSetConditions($cond);
@@ -209,6 +235,8 @@ class jControllerDaoCrudDfk extends jController {
             $prop = array_keys($dao->getProperties());
         }
 
+        $tpl->assign('propertiesForListOrder', $this->propertiesForListOrder);
+        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])?$_SESSION['CRUD_LISTORDER'][$keyActionDao]:$this->propertiesForListOrder);
         $tpl->assign('properties', $prop);
         $tpl->assign('controls',$form->getControls());
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
@@ -243,9 +271,13 @@ class jControllerDaoCrudDfk extends jController {
      * @param jDaoConditions $cond the conditions
      */
     protected function _indexSetConditions($cond) {
-        foreach ($this->propertiesForRecordsOrder as $p=>$order) {
+        $keyActionDao = $this->_getAction($this->dao);
+        if (isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]))
+            $itemsOrder = array_merge($this->propertiesForRecordsOrder, $_SESSION['CRUD_LISTORDER'][$keyActionDao]);
+        else
+            $itemsOrder = $this->propertiesForRecordsOrder;
+        foreach ($itemsOrder as $p=>$order)
             $cond->addItemOrder($p, $order);
-        }
     }
 
     /**

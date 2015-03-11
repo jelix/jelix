@@ -22,6 +22,11 @@ class sampleCrudCtrl extends jControllerDaoCrud {
 
 
     protected $propertiesForRecordsOrder = array('price'=>'desc');
-}
+    protected $propertiesForListOrder = array('name'=>'asc', 'price'=>'asc', 'publish_date'=>'desc');
 
-?>
+    protected function _getResponse(){
+        $rep = parent::_getResponse();
+        $rep->addCSSLink(jApp::urlBasePath().'jelix/design/records_list.css');
+        return $rep;
+    }
+}
