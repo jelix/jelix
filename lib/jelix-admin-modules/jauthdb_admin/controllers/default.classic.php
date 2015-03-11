@@ -48,6 +48,8 @@ class defaultCtrl extends jController {
 
     protected $uploadsDirectory='';
 
+    protected $propertiesForList = array('login');
+
     function __construct ($request){
         parent::__construct($request);
         $plugin = jApp::coord()->getPlugin('auth');
@@ -56,8 +58,12 @@ class defaultCtrl extends jController {
         if (($driver == 'Db') || $hasDao) {
             $this->authConfig = $plugin->config[$driver];
             $this->dao = $this->authConfig['dao'];
-            if(isset($this->authConfig['form']))
+            if(isset($this->authConfig['form'])) {
                 $this->form = $this->authConfig['form'];
+            }
+            if(isset($this->authConfig['listProperties'])) {
+                $this->propertiesForList = preg_split('/ *, */', $this->authConfig['listProperties']);
+            }
             $this->dbProfile = $this->authConfig['profile'];
             if(isset($this->authConfig['uploadsDirectory']))
                 $this->uploadsDirectory =  $this->authConfig['uploadsDirectory'];
@@ -81,13 +87,40 @@ class defaultCtrl extends jController {
 
         $dao = jDao::get($this->dao, $this->dbProfile);
 
+        if (isset($_SESSION['AUTHDB_CRUD_LISTORDER'])) {
+            $listOrder = $_SESSION['AUTHDB_CRUD_LISTORDER'];
+        }
+        else {
+            $listOrder = array('login' => 'asc');
+        }
+
+        if (($lo = $this->param('listorder')) &&
+            (in_array($lo, $this->propertiesForList))) {
+
+            if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
+                $listOrder[$lo] = 'desc';
+            }
+            elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
+                unset($listOrder[$lo]);
+            }
+            else {
+                $listOrder[$lo] = 'asc';
+            }
+            $_SESSION['AUTHDB_CRUD_LISTORDER'] = $listOrder;
+        }
+
+
         $cond = jDao::createConditions();
-        $cond->addItemOrder('login', 'asc');
+        foreach($listOrder as $name => $order) {
+            $cond->addItemOrder($name, $order);
+        }
         $tpl->assign('list', $dao->findBy($cond,$offset,$this->listPageSize));
 
         $pk = $dao->getPrimaryKeyNames();
         $tpl->assign('primarykey', $pk[0]);
 
+        $tpl->assign('listOrder', $listOrder);
+        $tpl->assign('propertiesList', $this->propertiesForList);
         $tpl->assign('controls', jForms::create($this->form, '___$$$___')->getControls());
         $tpl->assign('listPageSize', $this->listPageSize);
         $tpl->assign('page',$offset);
