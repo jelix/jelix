@@ -21,8 +21,8 @@ class sampleCrudCtrl extends jControllerDaoCrud {
     protected $form = 'testapp~products';
 
 
-    protected $propertiesForRecordsOrder = array('price'=>'desc');
-    protected $propertiesForListOrder = array('name'=>'asc', 'price'=>'asc', 'publish_date'=>'desc');
+    protected $propertiesForRecordsOrder = array('name'=>'asc',
+                                                 'price'=>'asc', 'publish_date'=>'desc');
 
     protected function _getResponse(){
         $rep = parent::_getResponse();

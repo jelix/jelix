@@ -51,17 +51,17 @@ class jControllerDaoCrud extends jController {
      * list of properties which serve to order the record list.
      * if empty list (default), the list is in a natural order.
      * keys are properties name, and values are "asc" or "desc".
+     * Values can be changed by the user if showPropertiesOrderLinks is true.
+     * In this case, '' means undetermined.
      * @var array
      */
     protected $propertiesForRecordsOrder = array();
 
      /**
-     * list of properties to display order link in the list page.
-     * if empty list (default), the link to arrange the results will not be displayed.
-     * key are properties name, and values are "asc" or "desc".
-     * @var array
+     * indicate if we show links to allow the user to order records list
+     * @var boolean
      */
-    protected $propertiesForListOrder = array();
+    protected $showPropertiesOrderLinks = true;
 
     /**
      * template to display the list of records
@@ -189,17 +189,22 @@ class jControllerDaoCrud extends jController {
         $dao = jDao::get($this->dao, $this->dbProfile);
 
         $keyActionDao = $this->_getAction($this->dao);
-        if (count($this->propertiesForListOrder)) {
-            if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]))
-                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForListOrder;
-            if (($lo = $this->param('listorder')) && (array_key_exists($lo, $this->propertiesForListOrder))) {
+        if ($this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder)) {
+            if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
+            }
+            if (($lo = $this->param('listorder')) &&
+                (array_key_exists($lo, $this->propertiesForRecordsOrder))) {
                 $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
-                if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc')
+                if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                     $listOrder[$lo] = 'desc';
-                elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc')
+                }
+                elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
                     unset($listOrder[$lo]);
-                else
+                }
+                else {
                     $listOrder[$lo] = 'asc';
+                }
                 $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $listOrder;
             }
         }
@@ -223,8 +228,11 @@ class jControllerDaoCrud extends jController {
             $prop = array_keys($dao->getProperties());
         }
 
-        $tpl->assign('propertiesForListOrder', $this->propertiesForListOrder);
-        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])?$_SESSION['CRUD_LISTORDER'][$keyActionDao]:$this->propertiesForListOrder);
+        $tpl->assign('propertiesForListOrder', $this->propertiesForRecordsOrder);
+        $tpl->assign('showPropertiesOrderLinks', $this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder));
+        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])?
+                                                $_SESSION['CRUD_LISTORDER'][$keyActionDao]:
+                                                $this->propertiesForRecordsOrder);
         $tpl->assign('properties', $prop);
         $tpl->assign('controls',$form->getControls());
         $tpl->assign('editAction' , $this->_getAction('preupdate'));
@@ -262,12 +270,17 @@ class jControllerDaoCrud extends jController {
      */
     protected function _indexSetConditions($cond) {
         $keyActionDao = $this->_getAction($this->dao);
-        if (isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]))
-            $itemsOrder = array_merge($this->propertiesForRecordsOrder, $_SESSION['CRUD_LISTORDER'][$keyActionDao]);
-        else
+        if (isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
+            $itemsOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
+        }
+        else {
             $itemsOrder = $this->propertiesForRecordsOrder;
-jLog::dump($itemsOrder);
+        }
+
         foreach ($itemsOrder as $p=>$order) {
+            if ($order == '') {
+                continue;
+            }
             $cond->addItemOrder($p, $order);
         }
     }
