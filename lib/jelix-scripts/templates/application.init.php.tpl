@@ -9,6 +9,8 @@
 */
 
 require (%%php_rp_jelix%%.'init.php');
+// or if you use composer
+// require(__DIR__.'/vendor/autoload.php');
 
 jApp::initPaths(
     __DIR__.'/',
