@@ -20,7 +20,8 @@
         "phpmailer/phpmailer": "5.2.9",
         "tecnick.com/tcpdf": "6.0.*",
         "mrclay/minify": "2.2.0",
-        "jelix/webservice-helper": "1.5.2"
+        "jelix/webservice-helper": "1.5.2",
+        "jelix/fakeserverconf": "1.0.*"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"

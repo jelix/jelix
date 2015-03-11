@@ -502,4 +502,5 @@ cd testapp/var/db/sqlite/
 cd testapp/var/db/sqlite3/
   tests.sqlite3
 
-cd temp/testapp
+cd testapp/temp/
+  .dummy

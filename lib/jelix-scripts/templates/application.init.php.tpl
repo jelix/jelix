@@ -8,6 +8,7 @@
 * @license   %%default_license_url%% %%default_license%%
 */
 
+
 require (__DIR__.'/vendor/autoload.php');
 
 \Jelix\Core\App::initPaths(

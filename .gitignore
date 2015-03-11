@@ -6,4 +6,3 @@ _dist/
 *.kdev4
 vendor/
 composer.lock
-temp/testapp/

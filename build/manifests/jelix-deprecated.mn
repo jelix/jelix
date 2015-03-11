@@ -31,6 +31,7 @@ cd lib/jelix-legacy/core/
   jRequest.class.php
   jResponse.class.php
   jICoordPlugin.iface.php
+rmd lib/jelix-legacy/FakeServerConf
 cd lib/jelix-legacy/utils/
   jAppManager.class.php
   jClasses.class.php

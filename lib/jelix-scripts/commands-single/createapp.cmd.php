@@ -23,10 +23,11 @@ class createappCommand extends JelixScriptCommand {
     public  $name = 'createapp';
     public  $allowed_options=array('-nodefaultmodule'=>false,
                                    '-withcmdline'=>false,
+                                   '-modulename' =>true,
                                    '-wwwpath'=>true);
     public  $allowed_parameters=array('path'=>true);
 
-    public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-wwwpath a_path]";
+    public  $syntaxhelp = "[-nodefaultmodule] [-withcmdline] [-modulename a_name] [-wwwpath a_path]";
     public  $help='';
     public $commonSyntaxOptions = '[-v] ';
     public $commonOptionsHelp = array(
@@ -46,7 +47,7 @@ class createappCommand extends JelixScriptCommand {
         $this->help= array(
             'fr'=>"
     Crée une nouvelle application avec tous les répertoires nécessaires et un module
-    du même nom que l'application.
+    du même nom que l'application. Le nom du module peut-être changé avec l'option -modulename.
 
     Si l'option -nodefaultmodule est présente, le module n'est pas créé.
 
@@ -60,6 +61,7 @@ class createappCommand extends JelixScriptCommand {
     ",
             'en'=>"
     Create a new application with all directories and one module named as your application.
+    The module name can be changed with -modulename.
 
     If you give -nodefaultmodule option, it won't create the module.
 
@@ -81,7 +83,7 @@ class createappCommand extends JelixScriptCommand {
         $appName = basename($appPath);
         $appPath .= '/';
 
-        if (file_exists($appPath)) {
+        if (file_exists($appPath.'/project.xml')) {
             throw new Exception("this application is already created");
         }
 
@@ -124,13 +126,6 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir($appPath.'install');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
-        $this->createDir($appPath.'plugins/coord/');
-        $this->createDir($appPath.'plugins/tpl/');
-        $this->createDir($appPath.'plugins/tpl/common');
-        $this->createDir($appPath.'plugins/tpl/html');
-        $this->createDir($appPath.'plugins/tpl/text');
-        $this->createDir($appPath.'plugins/db/');
-        $this->createDir($appPath.'plugins/auth/');
         $this->createDir($appPath.'responses');
         $this->createDir($appPath.'tests');
         $this->createDir(App::scriptsPath());
@@ -143,10 +138,14 @@ class createappCommand extends JelixScriptCommand {
             $param['modulename'] = 'jelix';
         }
         else {
-            // note: since module name are used for name of generated name,
-            // only this characters are allowed
-            $param['modulename'] = preg_replace('/([^a-zA-Z_0-9])/','_',$appName);
-            $param['tplname']    = $param['modulename'].'~main';
+            $moduleName = $this->getOption('-modulename');
+            if (!$moduleName) {
+                // note: since module name are used for name of generated name,
+                // only this characters are allowed
+                $moduleName = preg_replace('/([^a-zA-Z_0-9])/','_',$appName);
+            }
+            $param['modulename'] = $moduleName;
+            $param['tplname']    = $moduleName.'~main';
         }
 
         $param['config_file'] = 'index/config.ini.php';
@@ -165,11 +164,13 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile(App::varPath().'sessions/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'overloads/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(App::scriptsPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(App::tempBasePath().'.dummy', 'dummy.tpl', array());
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
+        $this->createFile($appPath.'.gitignore','git_ignore.tpl', $param, ".gitignore");
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
         $this->createFile($configPath.'mainconfig.ini.php', 'var/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
@@ -184,13 +185,19 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(App::tempBasePath());
-        if (file_exists($temp.'/.gitignore')) {
-            $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
-            file_put_contents($temp.'/.gitignore', $gitignore);
+        $temp = dirname(trim(App::tempBasePath(),'/'));
+        if ($temp != trim($appPath,'/')) {
+            if (file_exists($temp.'/.gitignore')) {
+                $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
+                file_put_contents($temp.'/.gitignore', $gitignore);
+            }
+            else {
+                file_put_contents($temp.'/.gitignore', $appName."/*\n");
+            }
         }
         else {
-            file_put_contents($temp.'/.gitignore', $appName."/*\n");
+            $gitignore = file_get_contents($appPath.'.gitignore'). "\n".basename(rtrim(App::tempBasePath(),'/'))."/*\n";
+            file_put_contents($appPath.'.gitignore', $gitignore);
         }
 
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param, "Main entry point");

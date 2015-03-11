@@ -12,6 +12,13 @@
     <dependencies>
         <jelix version="~%%jelix_version%%" />
     </dependencies>
+    <directories>
+        <config>%%rp_conf%%</config>
+        <log>%%rp_log%%</log>
+        <var>%%rp_var%%</var>
+        <www>%%rp_www%%</www>
+        <temp>%%rp_temp%%</temp>
+    </directories>
     <entrypoints>
         <!-- file: the path to the entry point relative to the base path
             config: the path to the config file used by the entry point, relative

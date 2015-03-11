@@ -343,11 +343,6 @@ cd lib/jelix-legacy/events
 #ifnot ENABLE_OPTIMIZED_SOURCE
 #endif
 
-cd lib/jelix-legacy/FakeServerConf
-  ApacheCGI.php
-  ApacheMod.php
-  FakeServerConf.php
-
 cd lib/jelix-legacy/forms
   jForms.class.php
   jFormsBase.class.php
@@ -836,9 +831,6 @@ cd lib/installwizard/pages/confmail/
   confmail.fr.php
   confmail.page.php
   confmail.tpl
-
-cd temp
-  .htaccess
 
 cd lib/Jelix/Legacy/core/selector
   jSelectorClass.php

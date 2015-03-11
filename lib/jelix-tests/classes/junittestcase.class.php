@@ -54,7 +54,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @var \jelix\FakeServerConf\ApacheMod
+     * @var \Jelix\FakeServerConf\ApacheMod
      */
     protected static $fakeServer = null;
 
@@ -67,7 +67,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        self::$fakeServer = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer = new Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
         $config = jConfigCompiler::read($config, true, false, '/'.$entryPoint);
         $coord = new jCoordinatorForTest($config, false);

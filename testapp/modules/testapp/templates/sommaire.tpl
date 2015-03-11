@@ -58,3 +58,8 @@
    <li><a href="{jurl 'jsoap~WSDL:index'}">Web services documentation</a></li>
    <li><a href="{jurl 'jsoap~WSDL:wsdl', array('service'=>'testapp~soap')}">WSDL</a></li>
 </ul>
+
+<h3>Others</h3>
+<ul>
+   <li><a href="{$j_basepath}admin/index.php">Admin app</a></li>
+</ul>

@@ -17,7 +17,7 @@
         <log>var/log</log>
         <var>var</var>
         <www>www</www>
-        <temp>../temp/testapp</temp>
+        <temp>temp</temp>
     </directories>
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
