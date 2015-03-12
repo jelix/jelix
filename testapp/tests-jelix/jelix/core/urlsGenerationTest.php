@@ -10,15 +10,12 @@
 */
 
 class UTCreateUrls extends jUnitTestCase {
-    protected $oldUrlScriptPath;
-    protected $oldParams;
-    protected $oldRequestType;
     protected $oldserver;
-    protected $oldReq;
 
     function setUp() {
         $this->oldserver = $_SERVER;
         jApp::saveContext();
+        jIncluder::clear();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
@@ -38,7 +35,7 @@ class UTCreateUrls extends jUnitTestCase {
         foreach($urlList as $k=>$urldata){
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertEquals($url, $trueResult[$k], 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url) );
+                $this->assertEquals($trueResult[$k], $url, 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url) );
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
@@ -58,15 +55,15 @@ class UTCreateUrls extends jUnitTestCase {
 
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
-                $this->assertTrue( false, ($res[0]?$msg2:$msg).'<br>No thrown exception !!!');
+                $this->assertTrue( false, ($res[0]?$msg2:$msg).'No thrown exception !!!');
             }catch(jExceptionSelector $e){
-                $msgerr = '<br>generated exception, jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
+                $msgerr = 'generated exception, jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
                 $this->assertTrue( ($res[0]==2) ,$msg2.$msgerr);
             }catch(jException $e){
-                $msgerr = '<br>generated exception, jException code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
+                $msgerr = 'generated exception, jException code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
                 $this->assertTrue( ($res[0]==1) ,$msg2.$msgerr);
             }catch(Exception $e){
-                $msgerr = '<br>generated exception, Exception code='.$e->getCode().' (%s)';
+                $msgerr = 'generated exception, Exception code='.$e->getCode().' (%s)';
                 $this->assertTrue( ($res[0]==0) ,$msg.$msgerr);
 
             }
@@ -457,7 +454,7 @@ class UTCreateUrls extends jUnitTestCase {
             try{
                 jApp::config()->locale = $urldata[0];
                 $url = jUrl::get($urldata[1], $urldata[2]);
-                $this->assertEquals($url, $trueResult[$k], 'url '.$k.' - %s');
+                $this->assertEquals($trueResult[$k], $url, 'url '.$k.' - %s');
             }catch(jExceptionSelector $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
@@ -725,7 +722,7 @@ class UTCreateUrls extends jUnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'], $url);
+        $this->assertEquals('http://testapp.local/index.php/testapp/main/', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = 'testapp.local';
