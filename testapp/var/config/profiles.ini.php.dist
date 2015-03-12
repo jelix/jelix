@@ -189,7 +189,7 @@ dao = "jelix~jcache"
 dbprofile = ""
 
 [jcache:usingmemcache]
-enabled = 0
+enabled = 1
 driver = memcache
 ; memcached servers.
 ; Can be a list e.g
