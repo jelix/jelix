@@ -18,9 +18,9 @@ su postgres -c $VAGRANTDIR/create_pgsql_db.sh
 echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.3/main/pg_hba.conf
 service postgresql restart
 
-runComposer $ROOTDIR
+resetComposer $ROOTDIR
 
-runComposer $APPDIR
+resetComposer $APPDIR
 
 # install phpunit
 if [ ! -f /usr/bin/phpunit ]; then

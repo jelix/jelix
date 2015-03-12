@@ -142,7 +142,9 @@ SET SQL_MODE=\"NO_AUTO_VALUE_ON_ZERO\";
                           'jacl2_group','jacl2_user_group','jacl2_subject','jacl2_subject_group',
                           'jacl2_rights', 'jlx_user', 'myconfig', 'product_test',
                           'product_tags_test', 'labels_test', 'labels1_test', 'products', 'jlx_cache',
-                          'jsessions', 'testkvdb', 'towns');
+                          'jsessions', 'testkvdb', 'towns',
+                          'admin_jacl2_group', 'admin_jacl2_rights', 'admin_jacl2_subject',
+                          'admin_jacl2_subject_group', 'admin_jacl2_user_group', 'admin_jlx_user');
 
         $list = $tools->getTableList();
         sort($goodList);
