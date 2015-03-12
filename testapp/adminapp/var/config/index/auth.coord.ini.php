@@ -107,6 +107,13 @@ password_crypt_function=sha1
 ; name of the form for the jauthdb_admin module
 form="jauthdb_admin~jelixuser"
 
+; list of properties to see in the user list in jauthdb_admin
+listProperties = login,email
+
+; list of properties in which the filter will applied, in jauthdb_admin
+filteredProperties = login,email
+
+
 ; path of the directory where to store files uploaded by the form (jauthdb_admin module)
 ; should be related to the var directory of the application
 uploadsDirectory=

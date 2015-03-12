@@ -44,10 +44,10 @@ class usersCtrl extends jController {
             $groups[]=$grp;
         }
 
-        $listPageSize = 15;
+        $listPageSize = 4;
         $offset = $this->param('idx',0,true);
         $grpid = $this->param('grpid',-2,true);
-
+        $filter = trim($this->param('filter'));
         $p = 'jacl2_profile';
 
         if($grpid == -2) {
@@ -55,20 +55,26 @@ class usersCtrl extends jController {
             $dao = jDao::get('jacl2db~jacl2groupsofuser',$p);
             $cond = jDao::createConditions();
             $cond->addCondition('grouptype', '=', 2);
+            if ($filter) {
+                $cond->addCondition('login', 'LIKE', '%'.$filter.'%');
+            }
             $rs = $dao->findBy($cond,$offset,$listPageSize);
             $usersCount = $dao->countBy($cond);
 
         } elseif($grpid == -1) {
-            $cnx = jDb::getConnection($p);
             //only those who have no groups
+            $cnx = jDb::getConnection($p);
+            $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group');
+            if ($filter) {
+                $sql .= " WHERE login LIKE ".$db->quote('%'.$filter.'%');
+            }
+
             if($cnx->dbms != 'pgsql') {
                 // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
-                $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group').'
-                        GROUP BY login HAVING nbgrp < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING nbgrp < 2 ORDER BY login';
             } else {
                 // But PgSQL doesn't support the HAVING structure with an alias.
-                $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group').'
-                        GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
             }
 
             $rs = $cnx->query($sql);
@@ -76,8 +82,14 @@ class usersCtrl extends jController {
         } else {
             //in a specific group
             $dao = jDao::get('jacl2db~jacl2usergroup',$p);
-            $rs = $dao->getUsersGroupLimit($grpid, $offset, $listPageSize);
-            $usersCount = $dao->getUsersGroupCount($grpid);
+            if ($filter) {
+                $rs = $dao->getUsersGroupLimitAndFilter($grpid, '%'.$filter.'%', $offset, $listPageSize);
+                $usersCount = $dao->getUsersGroupCountAndFilter($grpid, '%'.$filter.'%');
+            }
+            else {
+                $rs = $dao->getUsersGroupLimit($grpid, $offset, $listPageSize);
+                $usersCount = $dao->getUsersGroupCount($grpid);
+            }
         }
         $users=array();
         $dao2 = jDao::get('jacl2db~jacl2groupsofuser',$p);
@@ -92,7 +104,8 @@ class usersCtrl extends jController {
         }
 
         $tpl = new jTpl();
-        $tpl->assign(compact('offset','grpid','listPageSize','groups','users','usersCount'));
+        $tpl->assign(compact('offset','grpid','listPageSize','groups',
+                             'users','usersCount', 'filter'));
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
         $rep->body->assign('selectedMenuItem','usersrights');
 

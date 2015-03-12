@@ -7,7 +7,6 @@ startAction="default:index"
 [modules]
 jacl.access=0
 jacldb.access=0
-junittests.access=0
 jsoap.access=0
 jauth.access=2
 master_admin.access=2

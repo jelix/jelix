@@ -44,6 +44,29 @@
                 <eq property="id_aclgrp" expr="$grp" />
             </conditions>
         </method>
+        <method name="getUsersGroupLimitAndFilter" type="select">
+            <parameter name="grp" />
+            <parameter name="login" />
+            <parameter name="offset" />
+            <parameter name="count" />
+            <parameter name="ordre" default="asc" />
+            <conditions>
+                <eq property="id_aclgrp" expr="$grp" />
+                <like property="login" expr="$login"/>
+            </conditions>
+            <order>
+                <orderitem property="login" way="$ordre" />
+            </order>
+            <limit offset="$offset" count="$count" />
+        </method>
+        <method name="getUsersGroupCountAndFilter" type="count">
+            <parameter name="grp" />
+            <parameter name="login" />
+            <conditions>
+                <eq property="id_aclgrp" expr="$grp" />
+                <like property="login" expr="$login"/>
+            </conditions>
+        </method>
         <method name="deleteByUser" type="delete">
            <parameter name="login" />
            <conditions>
