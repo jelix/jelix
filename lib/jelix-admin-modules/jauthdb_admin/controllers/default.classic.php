@@ -50,6 +50,8 @@ class defaultCtrl extends jController {
 
     protected $propertiesForList = array('login');
 
+    protected $filteredProperties = array('login');
+
     function __construct ($request){
         parent::__construct($request);
         $plugin = jApp::coord()->getPlugin('auth');
@@ -63,6 +65,9 @@ class defaultCtrl extends jController {
             }
             if(isset($this->authConfig['listProperties'])) {
                 $this->propertiesForList = preg_split('/ *, */', $this->authConfig['listProperties']);
+            }
+            if(isset($this->authConfig['filteredProperties'])) {
+                $this->filteredProperties = preg_split('/ *, */', $this->authConfig['filteredProperties']);
             }
             $this->dbProfile = $this->authConfig['profile'];
             if(isset($this->authConfig['uploadsDirectory']))
@@ -109,16 +114,31 @@ class defaultCtrl extends jController {
             $_SESSION['AUTHDB_CRUD_LISTORDER'] = $listOrder;
         }
 
-
         $cond = jDao::createConditions();
         foreach($listOrder as $name => $order) {
             $cond->addItemOrder($name, $order);
         }
+
+        $filter = trim($this->param('filter'));
+        if ($filter && count($this->filteredProperties)) {
+            if (count($this->filteredProperties) == 1) {
+                $cond->addCondition($this->filteredProperties[0], 'LIKE', '%'.$filter.'%');
+            }
+            else {
+                $cond->startGroup('OR');
+                foreach($this->filteredProperties as $prop) {
+                    $cond->addCondition($prop, 'LIKE', '%'.$filter.'%');
+                }
+                $cond->endGroup();
+            }
+        }
+
         $tpl->assign('list', $dao->findBy($cond,$offset,$this->listPageSize));
 
         $pk = $dao->getPrimaryKeyNames();
         $tpl->assign('primarykey', $pk[0]);
-
+        $tpl->assign('showfilter', count($this->filteredProperties));
+        $tpl->assign('filter', $filter);
         $tpl->assign('listOrder', $listOrder);
         $tpl->assign('propertiesList', $this->propertiesForList);
         $tpl->assign('controls', jForms::create($this->form, '___$$$___')->getControls());

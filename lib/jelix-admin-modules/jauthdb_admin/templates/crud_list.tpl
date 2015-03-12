@@ -1,5 +1,15 @@
 <h1>{@jauthdb_admin~crud.title.list@}</h1>
 
+{if $showfilter}
+<form action="{formurl 'jauthdb_admin~default:index'}" method="get">
+    <div>
+        <!--<label for="user-list-filter">{@jauthdb_admin~crud.search.form.keyword.label@}</label>-->
+        <input type="text" name="filter" value="{$filter|eschtml}" id="user-list-filter" />
+        <button type="submit">{@jauthdb_admin~crud.search.button.label@}</button>
+    </div>
+</form>
+{/if}
+
 <table class="records-list">
 <thead>
 <tr>
@@ -28,7 +38,7 @@
 </tbody>
 </table>
 {if $recordCount > $listPageSize}
-<div class="record-pages-list">Pages : {pagelinks 'jauthdb_admin~default:index', array(),  $recordCount, $page, $listPageSize, 'offset' }</div>
+<div class="record-pages-list">Pages : {pagelinks 'jauthdb_admin~default:index', array('filter'=>$filter),  $recordCount, $page, $listPageSize, 'offset' }</div>
 {/if}
 {if $cancreate}
 <p><a href="{jurl 'jauthdb_admin~default:precreate'}" class="crud-link">{@jauthdb_admin~crud.link.create.record@}</a>.</p>
