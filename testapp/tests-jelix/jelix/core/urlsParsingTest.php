@@ -71,7 +71,7 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'alimentation');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_EN');
+      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_US');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
@@ -245,11 +245,11 @@ class UTParseUrls extends jUnitTestCase {
 
         $resultList=array();
         $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1', 'p1'=>'foo', 'lang'=>'fr'));
-        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1', 'p1'=>'foo', 'lang'=>'en', 'bar'=>'baz')); // FIXME should be en_US
+        $resultList[]= array('en_US', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1', 'p1'=>'foo', 'lang'=>'en', 'bar'=>'baz')); // FIXME should be en_US
         $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'fr_FR'));
         $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'fr_FR'));
-        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'en_EN')); // FIXME should be en_US
-        $resultList[]= array('en_EN', array('module'=>'jelix_tests', 'action'=>'urlsig:lang2', 'p1'=>'foo', 'lang'=>'en'));// FIXME should be en_US
+        $resultList[]= array('en_US', array('module'=>'jelix_tests', 'action'=>'urlsig:lang1bis', 'p1'=>'foo', 'lang'=>'en_US')); // FIXME should be en_US
+        $resultList[]= array('en_US', array('module'=>'jelix_tests', 'action'=>'urlsig:lang2', 'p1'=>'foo', 'lang'=>'en'));// FIXME should be en_US
         $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang2', 'p1'=>'foo', 'lang'=>'fr'));
         $resultList[]= array('en_US', array('module'=>'jelix_tests', 'action'=>'urlsig:lang3', 'p1'=>'foo', 'lang'=>'en_US'));
         $resultList[]= array('fr_FR', array('module'=>'jelix_tests', 'action'=>'urlsig:lang3', 'p1'=>'foo', 'lang'=>'fr_FR'));

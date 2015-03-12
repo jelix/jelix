@@ -218,7 +218,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
       $urlList[]= array('jelix_tests~urlsig:url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
       $urlList[]= array('jelix_tests~urlsig:url13', array('rubrique'=>'@%alimentation',  'id_article'=>'26')); // with special char
-      $urlList[]= array('jelix_tests~urlsig:url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'en_EN'));
+      $urlList[]= array('jelix_tests~urlsig:url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'en_US'));
       $urlList[]= array('jelix_tests~urlsig:url20', array('mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR'));
       $urlList[]= array('jelix_tests~urlsig:url20', array('mois'=>'08',  'annee'=>'2007'));
       $urlList[]= array('jelix_tests~urlsig:url30', array());
@@ -396,7 +396,7 @@ class UTCreateUrls extends jUnitTestCase {
 
             "/index.php/url-with-lang/test1bis/fr_FR/foo",
             "/index.php/url-with-lang/test1bis/en_US/foo",
-            "/index.php/url-with-lang/test1bis/en_EN/foo", // FIXME
+            "/index.php/url-with-lang/test1bis/en_US/foo",
             "/index.php/url-with-lang/test1bis/en_US/foo",
 
             "/index.php/url-with-lang/test2/en/foo",
@@ -427,7 +427,7 @@ class UTCreateUrls extends jUnitTestCase {
 
             "/index/url-with-lang/test1bis/fr_FR/foo",
             "/index/url-with-lang/test1bis/en_US/foo",
-            "/index/url-with-lang/test1bis/en_EN/foo", // FIXME
+            "/index/url-with-lang/test1bis/en_US/foo",
             "/index/url-with-lang/test1bis/en_US/foo",
 
             "/index/url-with-lang/test2/en/foo",

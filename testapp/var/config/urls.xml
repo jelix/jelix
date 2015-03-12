@@ -43,7 +43,7 @@
         <url pathinfo="/articles/en/:annee/:mois" module="jelix_tests" action="urlsig:url20">
               <param name="annee" escape="true" type="year"/>
               <param name="mois" escape="false" />
-              <static name="lang" value="en_EN" />
+              <static name="lang" value="en_US" />
         </url>
         <url pathinfo="/hello" module="jelix_tests" action="urlsig:url30" />
         <url pathinfo="/hello2" module="jelix_tests" action="hello2" />

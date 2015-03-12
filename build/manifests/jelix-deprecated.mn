@@ -68,20 +68,6 @@ cd lib/jelix/core-modules/jelix/daos
    jacl2usergroup.dao.xml
    jacl2groupsofuser.dao.xml
 
-cd lib/jelix/core-modules/jelix/locales/en_EN
-   soap.UTF-8.properties
-   soap.ISO-8859-1.properties
-   soap.ISO-8859-15.properties
-   acldb.UTF-8.properties
-   acldb.ISO-8859-1.properties
-   acldb.ISO-8859-15.properties
-   acl2db.UTF-8.properties
-   acl2db.ISO-8859-1.properties
-   acl2db.ISO-8859-15.properties
-   prefs.UTF-8.properties
-   prefs.ISO-8859-1.properties
-   prefs.ISO-8859-15.properties   
-
 cd lib/jelix/core-modules/jelix/locales/en_US
    soap.UTF-8.properties
    soap.ISO-8859-1.properties

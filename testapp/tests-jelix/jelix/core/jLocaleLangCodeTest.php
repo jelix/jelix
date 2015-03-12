@@ -39,6 +39,10 @@ class jLocaleLangCodeTest extends jUnitTestCase {
     function testGetCorrespondingLocale() {
         jApp::config()->availableLocales = array('en_US');
 
+        $this->assertEquals(array('en'=>'en_US'), jApp::config()->langToLocale);
+        $this->assertEquals('en_US', jLocale::getCorrespondingLocale('en'));
+
+        jApp::config()->langToLocale = array('en'=>'en_EN');
         $this->assertEquals(array('en'=>'en_EN'), jApp::config()->langToLocale);
         $this->assertEquals('', jLocale::getCorrespondingLocale('en'));
 

@@ -253,7 +253,7 @@ cd jtcpdf/install/
 cd jtcpdf/responses/
   jResponseTcpdf.class.php
   
-cd jtcpdf/locales/en_EN
+cd jtcpdf/locales/en_GB
   errors.UTF-8.properties
 
 cd jtcpdf/locales/en_US
