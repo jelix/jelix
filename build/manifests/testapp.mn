@@ -15,11 +15,14 @@ cd testapp/plugins/formwidget/textarea_as_input_html
 cd testapp/responses
   myHtmlResponse.class.php
 cd testapp/vagrant
-  create_pgsql_db.sh
-  php5_fpm.conf
+  create_pgsql_db.sh 
   provision.sh
   reset_testapp.sh
-  testapp.conf
+  otherport.conf
+cd testapp/vagrant/jelixapp
+  app.conf
+  php5_fpm.conf
+  system.sh
 cd testapp/www
   unittest.css
   jsonrpc.php

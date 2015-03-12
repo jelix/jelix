@@ -21,9 +21,9 @@ service postgresql restart
 #cp $VAGRANTDIR/otherport.conf /etc/apache2/conf-available/
 #a2enconf otherport
 
-runComposer $ROOTDIR
+resetComposer $ROOTDIR
 
-runComposer $APPDIR
+resetComposer $APPDIR
 
 # install phpunit
 if [ ! -f /usr/bin/phpunit ]; then

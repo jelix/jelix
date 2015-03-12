@@ -114,10 +114,10 @@ function resetJelixInstall() {
     fi
 
     if [ -f $appdir/var/config/profiles.ini.php.dist ]; then
-        cp -a $appdir/var/config/profiles.ini.php.dist $APPDIR/var/config/profiles.ini.php
+        cp -a $appdir/var/config/profiles.ini.php.dist $appdir/var/config/profiles.ini.php
     fi
     if [ -f $appdir/var/config/localconfig.ini.php.dist ]; then
-        cp -a $appdir/var/config/localconfig.ini.php.dist $APPDIR/var/config/localconfig.ini.php
+        cp -a $appdir/var/config/localconfig.ini.php.dist $appdir/var/config/localconfig.ini.php
     fi
     if [ -f $appdir/var/config/installer.ini.php ]; then
         rm -f $appdir/var/config/installer.ini.php
@@ -126,6 +126,14 @@ function resetJelixInstall() {
 
 function runComposer() {
     cd $1
+    composer install
+}
+
+function resetComposer() {
+    cd $1
+    if [ -f composer.lock ]; then
+        rm -f composer.lock
+    fi
     composer install
 }
 

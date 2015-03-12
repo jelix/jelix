@@ -19,7 +19,7 @@ class requestsTest extends jUnitTestCase {
         $this->server = $_SERVER;
         jApp::saveContext();
         jApp::initPaths(__DIR__.'/app1/');
-        $tempPath = __DIR__.'/../../../../temp/testapp/routingapp1';
+        $tempPath = __DIR__.'/../../../temp/routingapp1';
         if (!file_exists($tempPath)) {
             mkdir($tempPath);
         }
@@ -52,7 +52,7 @@ class requestsTest extends jUnitTestCase {
 
     function testSimpleUrl_MODPHP5_SCRIPT_NAME() {
         jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/foo/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/foo/index.php');
         $req = $this->initRequest('http://testapp.local/foo/index.php/aaa',
                                   $serverconf);
         $this->assertEquals('/foo/', $req->urlScriptPath);
@@ -64,7 +64,7 @@ class requestsTest extends jUnitTestCase {
     //  /foo/index.php, CGI cgi.fix_pathinfo=1
     function testSimpleUrl_CGI_1_SCRIPT_NAME() {
         jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';// 'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
-        $serverconf = new jelix\FakeServerConf\ApacheCGI(jApp::wwwPath(),
+        $serverconf = new \Jelix\FakeServerConf\ApacheCGI(jApp::wwwPath(),
                                                          '/foo/index.php',
                                                          '/usr/lib/cgi-bin/php5',
                                                          '/cgi-bin/php5');
@@ -78,7 +78,7 @@ class requestsTest extends jUnitTestCase {
     }
 
     function testGetServerURI_HTTP_80() {
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');
@@ -188,7 +188,7 @@ class requestsTest extends jUnitTestCase {
 
     function testGetServerURI_HTTP_8082() {
 
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');
@@ -297,7 +297,7 @@ class requestsTest extends jUnitTestCase {
     
     function testGetServerURI_HTTPS_443() {
 
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');
@@ -407,7 +407,7 @@ class requestsTest extends jUnitTestCase {
     
     function testGetServerURI_HTTPS_4435() {
 
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');
@@ -517,7 +517,7 @@ class requestsTest extends jUnitTestCase {
     
     function testGetServerURI_HTTPS_80() {
 
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');
@@ -629,7 +629,7 @@ class requestsTest extends jUnitTestCase {
     
     function testGetServerURI_HTTP_443() {
 
-        $serverconf = new jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
+        $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/index.php');
         $request = $this->initRequest('http://foo.local/index.php',
                                   $serverconf,
                                   '/index.php');

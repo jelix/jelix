@@ -49,7 +49,7 @@ class AppInfos extends InfosAbstract {
         }
         else if (file_exists($path.'project.xml')) {
             $this->isXml = true;
-            $parser = new AppXmlParser($path.'project.xml', $locale);
+            $parser = new ProjectXmlParser($path.'project.xml', $locale);
         }
         else {
             return;
