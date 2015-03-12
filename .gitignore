@@ -5,5 +5,4 @@ _dist/
 .komodotools
 *.kdev4
 vendor/
-testapp/temp/
 composer.lock
