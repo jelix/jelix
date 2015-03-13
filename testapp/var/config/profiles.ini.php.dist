@@ -51,11 +51,6 @@ user=test_user
 password=jelix
 
 ; to run tests with sqlite
-[jdb:testapp_sqlite]
-driver=sqlite
-database="tests.sqlite"
-
-; to run tests with sqlite
 [jdb:testapp_sqlite3]
 driver=sqlite3
 database="tests.sqlite3"

@@ -6,7 +6,7 @@
 default = "%%appname%%"
 
 [jdb:%%appname%%]
-; the driver name : mysql, pgsql, sqlite...
+; the driver name : mysql, pgsql, sqlite3...
 driver="mysql"
 
 ; For most of drivers:

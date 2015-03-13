@@ -385,7 +385,6 @@ cd testapp/tests-jelix/jelix/utils/
   versionComparatorTest.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
-  jDb_sqliteTest.php
   jDb_sqlite3Test.php
   jdb_queriesTest.php
   jdb_queries_with_pdoTest.php
@@ -470,8 +469,6 @@ cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
   overload.UTF-8.properties
-cd testapp/var/db/sqlite/
-  tests.sqlite
 cd testapp/var/db/sqlite3/
   tests.sqlite3
 

@@ -16,7 +16,7 @@ next=dbprofile
 
 [dbprofile.step]
 next=installapp
-availabledDrivers="mysql,sqlite,pgsql"
+availabledDrivers="mysql,sqlite3,pgsql"
 ignoreProfiles="jelix_tests_mysql,jelix_tests_forward"
 messageHeader="message.header.dbProfile"
 

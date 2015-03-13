@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009 Laurent Jouanneau
+* @copyright   2009-2015 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -12,7 +12,7 @@
 include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/pgsql/pgsql.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/oci/oci.dbtools.php');
-include_once (JELIX_LIB_PATH.'plugins/db/sqlite/sqlite.dbtools.php');
+include_once (JELIX_LIB_PATH.'plugins/db/sqlite3/sqlite3.dbtools.php');
 
 
 class jDbToolsTest extends jUnitTestCase {
@@ -35,7 +35,7 @@ class jDbToolsTest extends jUnitTestCase {
         $result = $tools->encloseName('foo');
         $this->assertEquals('foo',$result);
 
-        $tools= new sqliteDbTools(null);
+        $tools= new sqlite3DbTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('foo',$result);
     }

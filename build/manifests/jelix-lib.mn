@@ -488,13 +488,6 @@ cd lib/jelix/plugins/db/pgsql
   pgsql.dbtools.php
   pgsql.daobuilder.php
 
-cd lib/jelix/plugins/db/sqlite
-  sqlite.dbconnection.php
-  sqlite.dbresultset.php
-  sqlite.dbschema.php
-  sqlite.dbtools.php
-  sqlite.daobuilder.php
-
 cd lib/jelix/plugins/db/sqlite3
   sqlite3.dbconnection.php
   sqlite3.dbresultset.php
