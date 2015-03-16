@@ -35,7 +35,17 @@ class admin_menuZone extends jZone {
                 if(!isset($menu[$item->parentId])) {
                     $menu[$item->parentId] = new masterAdminMenuItem($item->parentId, '', '');
                 }
-                $menu[$item->parentId]->childItems[] = $item;
+                $isRedefining = false;
+                foreach($menu[$item->parentId]->childItems as $child) {
+                    if ($child->id == $item->id) {
+                        $child->copyFrom($item);
+                        $isRedefining = true;
+                        break;
+                    }
+                }
+                if (!$isRedefining) {
+                    $menu[$item->parentId]->childItems[] = $item;
+                }
             }
             else {
                 if(isset($menu[$item->id])) {
