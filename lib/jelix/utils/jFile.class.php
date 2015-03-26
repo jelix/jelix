@@ -188,6 +188,9 @@ class jFile {
         if (array_key_exists($ext, self::$mimeTypes)) {
             return self::$mimeTypes[$ext];
         }
+        else if (isset(jApp::config()->mimeTypes[$ext])) {
+            return jApp::config()->mimeTypes[$ext];
+        }
         else
             return 'application/octet-stream';
     }

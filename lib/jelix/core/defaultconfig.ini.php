@@ -446,3 +446,7 @@ jelix.cache=cache/
 [disabledListeners]
 ; list of jEvent listener to not call
 ; eventname[]="module~listenerName"
+
+[mimeTypes]
+;list of mime types for some file extension. ext=mime type
+
