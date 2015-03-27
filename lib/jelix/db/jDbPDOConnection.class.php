@@ -54,20 +54,22 @@ class jDbPDOConnection extends PDO {
             $this->dbms = $this->driverName = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
             $dsn = $profile['dsn'];
             unset($prof['dsn']);
-            if ($this->dbms == 'sqlite')
-                $dsn = jFile::parseJelixPath( $dsn );
+            if ($this->dbms == 'sqlite') {
+                $dsn = 'sqlite:'.$this->_parseSqlitePath(substr($dsn, 7));
+            }
         }
         else {
             $this->dbms = $this->driverName = $profile['driver'];
+            if ($this->dbms == 'sqlite3') {
+                $this->dbms = $this->driverName = 'sqlite';
+            }
             $db = $profile['database'];
             $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
-            if($this->dbms != 'sqlite')
+            if ($this->dbms != 'sqlite') {
                 $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
+            }
             else {
-                if (preg_match('/^(app|lib|var)\:/', $db, $m))
-                    $dsn = 'sqlite:' . jFile::parseJelixPath( $db );
-                else
-                    $dsn = 'sqlite:'.jApp::varPath('db/sqlite/'.$db);
+                $dsn = 'sqlite:'.$this->_parseSqlitePath($db);
             }
         }
         if(isset($prof['usepdo']))
@@ -110,6 +112,25 @@ class jDbPDOConnection extends PDO {
             elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
                 $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'");
             }
+        }
+    }
+
+    protected function _parseSqlitePath($path) {
+        if (preg_match('/^(app|lib|var|temp|www)\:/', $db, $m)) {
+            return jFile::parseJelixPath( $db );
+        }
+        else if (preg_match('!^[a-z]\\:(\\\\|/)[a-z]!i', $db) || // windows path
+                 $db[0] == '/' // *nix path
+                ) {
+            if (file_exists($db) || file_exists(dirname($db))) {
+                return $db;
+            }
+            else {
+                throw new Exception ('jDbPDOConnection, sqlite: unknown database path scheme');
+            }
+        }
+        else {
+            return jApp::varPath('db/sqlite/'.$db);
         }
     }
 
