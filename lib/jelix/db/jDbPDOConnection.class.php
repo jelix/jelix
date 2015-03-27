@@ -30,6 +30,8 @@ class jDbPDOConnection extends PDO {
 
     /**
      * The database type name (mysql, pgsql ...)
+     * It is not the driver name. Several drivers could connect to the same database
+     * type. This type name is often used to know whish SQL language we should use.
      * @var string
      */
     public $dbms;
@@ -72,8 +74,9 @@ class jDbPDOConnection extends PDO {
                 $dsn = 'sqlite:'.$this->_parseSqlitePath($db);
             }
         }
-        if(isset($prof['usepdo']))
+        if(isset($prof['usepdo'])) {
             unset($prof['usepdo']);
+        }
 
         // we check user and password because some db like sqlite doesn't have user/password
         if (isset($prof['user'])) {
@@ -96,13 +99,15 @@ class jDbPDOConnection extends PDO {
         // we cannot launch two queries at the same time with PDO ! except if
         // we use mysql with the attribute MYSQL_ATTR_USE_BUFFERED_QUERY
         // TODO check if PHP 5.3 or higher fixes this issue
-        if ($this->dbms == 'mysql')
+        if ($this->dbms == 'mysql') {
             $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
 
         // Oracle returns names of columns in upper case by default. so here
         // we force the case in lower.
-        if ($this->dbms == 'oci')
+        if ($this->dbms == 'oci') {
             $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        }
 
         if (isset($prof['force_encoding']) && $prof['force_encoding']==true) {
             $charset = jApp::config()->charset;
@@ -214,8 +219,9 @@ class jDbPDOConnection extends PDO {
      * @since 1.0
      */
     public function prefixTable($table_name) {
-        if (!isset($this->profile['table_prefix']))
+        if (!isset($this->profile['table_prefix'])) {
             return $table_name;
+        }
         return $this->profile['table_prefix'].$table_name;
     }
 
@@ -272,8 +278,9 @@ class jDbPDOConnection extends PDO {
         if (!$this->_tools) {
             $dbms = ($this->dbms === 'sqlite') ? 'sqlite3' : $this->dbms; 
             $this->_tools = jApp::loadPlugin($dbms, 'db', '.dbtools.php', $dbms.'DbTools', $this);
-            if (is_null($this->_tools))
+            if (is_null($this->_tools)) {
                 throw new jException('jelix~db.error.driver.notfound', $dbms);
+            }
         }
 
         return $this->_tools;
@@ -294,6 +301,4 @@ class jDbPDOConnection extends PDO {
 
         return parent::lastInsertId($fromSequence);
     }
-
 }
-
