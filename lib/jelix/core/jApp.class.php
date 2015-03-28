@@ -249,12 +249,10 @@ class jApp {
             if (!isset(jApp::config()->$optname))
                 return null;
             $opt = & jApp::config()->$optname;
-#ifnot ENABLE_OPTIMIZED_SOURCE
             if (!isset($opt[$name])
                 || !file_exists($opt[$name].$name.$suffix) ){
                 return null;
             }
-#endif
             require_once($opt[$name].$name.$suffix);
         }
         if (!is_null($args))
