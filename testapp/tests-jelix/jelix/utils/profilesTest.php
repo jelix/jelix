@@ -1,9 +1,18 @@
 <?php
 
+class testjProfilesCompiler extends jProfilesCompiler {
+    function __construct($sources) {
+        $this->sources = $sources;
+    }
+}
+
+
+
 class testJProfiles extends jProfiles {
 
     static function testSetProfiles($profiles) {
-        self::$_profiles = $profiles;
+        $compil = new testjProfilesCompiler($profiles);
+        self::$_profiles = $compil->compile();
     }
 
     static function testGetProfiles() {
@@ -71,8 +80,8 @@ class profilesTest extends jUnitTestCase
         $this->assertEquals($readedDefaultProfile, $profile);
 
         $this->assertEquals( array(
-            'foo'=>array('default'=>'server1'),
-            'foo:server1'=> $readedDefaultProfile
+            'foo:server1'=> $readedDefaultProfile,
+            'foo:default'=> $readedDefaultProfile
             ), testJProfiles::testGetProfiles());
 
         try {
@@ -113,9 +122,9 @@ class profilesTest extends jUnitTestCase
         $this->assertEquals($readedProfile, $profile);
 
         $this->assertEquals( array(
-            'foo'=>array('default'=>'server1',
-                'myserver'=>'server1'),
-            'foo:server1'=>  $readedProfile
+            'foo:server1'=>  $readedProfile,
+            'foo:default'=>  $readedProfile,
+            'foo:myserver'=>  $readedProfile,
             ), testJProfiles::testGetProfiles());
 
         try {
@@ -132,26 +141,20 @@ class profilesTest extends jUnitTestCase
         $myProfile = array('wsdl'=>'books.wsdl', 'option'=>'foo');
         $readedProfile = array('wsdl'=>'books.wsdl', 'option'=>'foo', '_name'=>'server1');
 
-        $allProfiles = array(
-            'foo'=>array('default'=>'server1',
-                'myserver'=>'server1'),
-            'foo:server1'=>  $myProfile
-        );
-
         testJProfiles::createVirtualProfile('foo', 'myalias', 'server1');
         $this->assertEquals( array(
-            'foo'=>array('default'=>'server1',
-                'myserver'=>'server1',
-                'myalias'=>'server1'),
-            'foo:server1'=>  $readedProfile
+            'foo:server1'=>  $readedProfile,
+            'foo:default'=>  $readedProfile,
+            'foo:myserver'=>  $readedProfile,
+            'foo:myalias'=>  $readedProfile,
             ), testJProfiles::testGetProfiles());
 
         testJProfiles::createVirtualProfile('foo', 'new', array('bla'=>'ok'));
         $this->assertEquals( array(
-            'foo'=>array('default'=>'server1',
-                'myserver'=>'server1',
-                'myalias'=>'server1'),
             'foo:server1'=>  $readedProfile,
+            'foo:default'=>  $readedProfile,
+            'foo:myserver'=>  $readedProfile,
+            'foo:myalias'=>  $readedProfile,
             'foo:new'=>array('bla'=>'ok', '_name'=>'new')
             ), testJProfiles::testGetProfiles());
     }

@@ -231,6 +231,8 @@ class jInstaller {
         $this->installerIni = $this->getInstallerIni();
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
+        // be sure temp path is ready
+        jFile::createDir(jApp::tempPath(), intval($this->mainConfig->getValue('chmodDirValue'),8));
     }
 
     /**
