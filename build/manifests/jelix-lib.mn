@@ -244,6 +244,7 @@ cd lib/jelix/dao
 cd lib/jelix/db
 * jDb.class.php
   jDbColumn.class.php
+  jDbParameters.class.php
   jDbPDOConnection.class.php
   jDbPDOConnectionDebug.class.php
   jDbPDOResultSet.class.php

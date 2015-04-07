@@ -392,6 +392,7 @@ cd testapp/tests-jelix/jelix/db/
   jdb.lib.php
   jdb_mysqlTest.php
   jdb_mysqliTest.php
+  jdb_parametersTest.php
   jdb_pgsqlTest.php
   jdbschema_mysqlTest.php
   jdbtoolsTest.php

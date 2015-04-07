@@ -104,7 +104,7 @@ class mysqliDbConnection extends jDbConnection {
             throw new jException('jelix~db.error.connection',$this->profile['host']);
         }
         else{
-            if(isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
+            if($this->profile['force_encoding'] == true
               && isset($this->_charsets[jApp::config()->charset])){
                 $cnx->set_charset($this->_charsets[jApp::config()->charset]);
             }
