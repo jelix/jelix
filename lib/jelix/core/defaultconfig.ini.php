@@ -23,12 +23,6 @@ httpVersion=""
 ; if empty, jelix will try to get the default timezone
 timeZone =
 
-; list of directories where the framework can find plugins
-pluginsPath = app:plugins/
-
-; list of directories where the framework can find modules
-modulesPath = lib:jelix-modules/,app:modules/
-
 ; Default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 ; For cli script, fill it.

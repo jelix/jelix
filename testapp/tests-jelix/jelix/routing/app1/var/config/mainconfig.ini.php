@@ -1,7 +1,5 @@
 ;---
 
-modulesPath = app:modules/
-
 disableInstallers = on
 ;enableAllModules = on
 

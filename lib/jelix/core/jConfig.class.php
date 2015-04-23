@@ -38,7 +38,7 @@ class jConfig {
      * @see jConfigCompiler
      */
     static public function load($configFile){
-        $config=array();
+        $config = array();
         $file = jApp::tempPath().str_replace('/','~',$configFile);
 
         if (BYTECODE_CACHE_EXISTS)
