@@ -268,6 +268,10 @@ class jApp {
         }
     }
 
+    public static function getDeclaredModulesDir() {
+        return array_keys(self::$_modulesDirPath);
+    }
+
     static protected $_modulesPath = array();
 
     /**

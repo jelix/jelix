@@ -139,13 +139,13 @@ class jConfigCompiler {
             $config->startAction = ':';
         }
 
-        if ($config->domainName == "" && isset($_SERVER['SERVER_NAME']))
+        if ($config->domainName == "" && isset($_SERVER['SERVER_NAME'])) {
             $config->domainName = $_SERVER['SERVER_NAME'];
+        }
 
-        $config->_allBasePath = array();
-
-        if ($config->urlengine['engine'] == 'simple')
+        if ($config->urlengine['engine'] == 'simple') {
             trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+        }
 
         $config->chmodFile = octdec($config->chmodFile);
         $config->chmodDir = octdec($config->chmodDir);
@@ -224,24 +224,26 @@ class jConfigCompiler {
             $installation = array ();
         }
         else if (!file_exists($installerFile)) {
-            if ($allModuleInfo)
+            if ($allModuleInfo) {
                 $installation = array ();
-            else
+            } else {
                 throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
+            }
         }
-        else
+        else {
             $installation = parse_ini_file($installerFile,true);
-
+        }
         $section = $config->urlengine['urlScriptId'];
 
-        if (!isset($installation[$section]))
+        if (!isset($installation[$section])) {
             $installation[$section] = array();
+        }
 
-/*
- *                if ($k!=0 && $config->compilation['checkCacheFiletime']) {
-                   $config->_allBasePath[] = $path;
-                }
-*/
+        if ($config->compilation['checkCacheFiletime']) {
+            $config->_allBasePath = jApp::getDeclaredModulesDir();
+        } else {
+            $config->_allBasePath = array();
+        }
             
         $list = jApp::getAllModulesPath();
         foreach($list as $f => $path) {
@@ -337,7 +339,7 @@ class jConfigCompiler {
                     if ($f[0] != '.' && is_dir($p.$f)) {
                         if ($subdir = opendir($p.$f)) {
                             if($k!=0 && $config->compilation['checkCacheFiletime']) {
-                               $config->_allBasePath[]=$p.$f.'/';
+                               $config->_allBasePath[] = $p.$f.'/';
                             }
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
