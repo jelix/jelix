@@ -22,7 +22,10 @@ jApp::initPaths(
 );
 jApp::setTempBasePath(realpath(__DIR__.'/temp').'/');
 
-jApp::declareModulesDir(array(
+
+require (__DIR__.'/vendor/jelix_app_path.php');
+
+/*jApp::declareModulesDir(array(
                         __DIR__.'/../lib/jelix-modules/',
                         __DIR__.'/../lib/jelix-admin-modules/',
                         __DIR__.'/modules/'
@@ -31,5 +34,5 @@ jApp::declarePluginsDir(array(
                         __DIR__.'/../lib/jelix-plugins/',
                         __DIR__.'/plugins'
                     ));
-
+*/
 

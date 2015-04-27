@@ -406,9 +406,9 @@ class jApp {
 
         if (!class_exists($classname,false)) {
             $optname = '_pluginsPathList_'.$type;
-            if (!isset(jApp::config()->$optname))
+            if (!isset(self::config()->$optname))
                 return null;
-            $opt = & jApp::config()->$optname;
+            $opt = & self::config()->$optname;
             if (!isset($opt[$name])
                 || !file_exists($opt[$name].$name.$suffix) ){
                 return null;

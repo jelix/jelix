@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "jelix/fakeserverconf": "1.0.*"
+        "jelix/fakeserverconf": "1.0.*",
+        "jelix/composer-module-setup": "0.2"
     },
     "archive": {
         "exclude": [ "/build", "/temp", "/testapp", "Makefile"]
@@ -29,5 +30,16 @@
         "classmap": [ ],
         "files": [ "lib/jelix/init.php" ]
     },
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra" : {
+        "jelix": {
+            "modules-dir" : [
+                "lib/jelix-modules",
+                "lib/jelix-admin-modules"
+            ],
+            "plugins-dir" : [
+                "lib/jelix-plugins"
+            ]
+        }
+    }
 }

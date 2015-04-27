@@ -1,28 +1,18 @@
 {
-    "name": "jelix/testapp",
+    "name": "%%appname%%",
     "type": "application",
-    "description": "Jelix Application for tests",
-    "keywords": [],
-    "homepage": "http://jelix.org",
-    "license": "LGPL-2.1",
+    "description": "",
+    "homepage": "%%default_website%%",
+    "license": "",
     "authors": [
         {
-            "name": "Laurent Jouanneau",
-            "email": "laurent@jelix.org"
-        },
-        {
-            "name": "Jelix Community",
-            "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+            "name": "%%default_creator_name%%",
+           
         }
     ],
     "require": {
         "php": ">=5.3.3",
-        "phpunit/phpunit": "4.3.*",
-        "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.2"
-    },
-    "replace": {
-        "jelix/jelix":"self.version"
     },
     "autoload": {
         "psr-0": { },
