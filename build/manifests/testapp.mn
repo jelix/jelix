@@ -295,6 +295,7 @@ cd testapp/tests-jelix/jelix/cache/
   httpcacheTest.php
   jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/
+  jAppTest.php
   autoloaderTest.php
   configautoloaderTest.php
   configTest.php
@@ -375,6 +376,7 @@ cd testapp/tests-jelix/jelix/utils/
   jDatatypeTest.php
   jDateTimeTest.php
   jDurationTest.php
+  jFileTest.php
   jFilterTest.php
   jImageModifierTest.php
   jIniFileModifierTest.php
