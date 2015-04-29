@@ -133,13 +133,6 @@ cd lib/jelix/core-modules/jelix/daos
    jcache.dao.xml
 cd lib/jelix/core-modules/jelix/install
   install.php
-  upgrade_to_1.3b2pre.1959_fixmailinimigration.php
-  upgrade_to_1.3pre.1753_newlog.php
-  upgrade_to_1.3pre.1754_newerrormanager.php
-  upgrade_to_1.3pre.1760_minify.php
-  upgrade_to_1.3pre.1871_jprofiles.php
-  upgrade_to_1.3pre.1919_cmd.php
-  upgrade_availablelocales.php
   upgrade_modulejacl2.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql

@@ -101,27 +101,7 @@ cd lib/jelix-modules/jacl2db/install
   groups.sql
   user.sql
   install.php
-  upgrade_to_1.2b1pre.1422_namedgroup.php
-  upgrade_to_1.3a1_codegroup.php
-  upgrade_to_1.3a2_subjectsgroup.php
-  upgrade_to_1.3a3_cancelrights.php
-  upgrade_to_1.3RC2.2100_typecanceled.php
   upgrade_localesmoved.php
-  upgrade_newresdefaultvalue.php
-
-cd lib/jelix-modules/jacl2db/install/sql/
-  upgrade_codegroup_1.mysql.sql
-  upgrade_codegroup_2.mysql.sql
-  upgrade_codegroup_1.pgsql.sql
-  upgrade_codegroup_2.pgsql.sql
-  upgrade_codegroup_1.sqlite.sql
-  upgrade_codegroup_2.sqlite.sql
-  upgrade_subjectgroup_data.sql
-  upgrade_type_canceled.pgsql.sql
-  upgrade_newresdefaultvalue.mysql.sql
-  upgrade_newresdefaultvalue.pgsql.sql
-  upgrade_newresdefaultvalue.sqlite.sql
-  upgrade_newresdefaultvalue.oci.sql
   
 cd lib/jelix-modules/jacl2db/locales/en_GB/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
@@ -142,7 +122,6 @@ cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.pgsql.sql
   install_jauth.schema.sqlite.sql
   install.php
-  upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth
 * module.xml
