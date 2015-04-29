@@ -643,4 +643,58 @@ abstract class JelixScriptCommand {
         }
         return trim($version);
     }
+
+    protected function registerModulesDir($repository, $repositoryPath) {
+        
+        $allDirs = jApp::getDeclaredModulesDir();
+        $path = realpath($repositoryPath);
+        if ($path == '') {
+            throw new Exception('The modules dir '.$repository.' is not a valid path');
+        }
+        $path = jFile::shortestPath(jApp::appPath(), $path);
+
+        $found = false;
+        foreach($allDirs as $dir) {
+            $dir = jFile::shortestPath(jApp::appPath(), $dir);
+            if ($dir == $path) {
+                $found = true;
+                break;
+            }
+        }
+        // the modules dir is not known, we should register it.
+        if (!$found) {
+            $this->createDir($repositoryPath);
+            if (fileExists(jApp::appPath('composer.json')) && file_exists(jApp::appPath('vendor'))) {
+                // we update composer.json
+                $json = json_decode(file_get_contents(jApp::appPath('composer.json')), true);
+                if (!$json) {
+                    throw new Exception('composer.json has bad json format');
+                }
+                if (!isset($json['extra'])) {
+                    $json['extra'] = array('jelix'=>array('modules-dir'=>array()));
+                }
+                else if (!isset($json['extra']['jelix'])) {
+                    $json['extra']['jelix'] = array('modules-dir'=>array());
+                }
+                else if (!isset($json['extra']['jelix']['modules-dir'])) {
+                    $json['extra']['jelix']['modules-dir'] = array();
+                }
+                $json['extra']['jelix']['modules-dir'][] = $path;
+                file_put_contents(jApp::appPath('composer.json'), json_encode($json, JSON_PRETTY_PRINT));
+                if ($this->verbose()) {
+                    echo "The given modules dir has been added into your composer.json\n";
+                }
+                echo "You should launch 'composer update' to have your module repository recognized\n";
+            }
+            else if (fileExists(jApp::appPath('application.init.php'))) {{
+                // we modify the application.init.php directly
+                $content = file_get_contents(jApp::appPath('application.init.php'));
+                $content .= "\njApp::declareModulesDir(__DIR__.'/".$path."');\n";
+                file_put_contents(jApp::appPath('application.init.php'), $content);
+                if ($this->verbose()) {
+                    echo "The given modules dir has been added into your application.init.php\n";
+                }
+            }
+        }
+    }
 }

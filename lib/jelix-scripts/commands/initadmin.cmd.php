@@ -85,12 +85,9 @@ class initadminCommand extends JelixScriptCommand {
 
         $inifile->setValue('startModule', 'master_admin');
         $inifile->setValue('startAction', 'default:index');
-        $modulePath = $inifile->getValue("modulesPath",0,null,true);
-        if (strpos($modulePath, 'lib:jelix-admin-modules') === false) {
-            // we set it on mainconfig.ini.php, so if the url engine is "significant"
-            // it could know the admin modules during the parsing of modules
-            $inifile->setValue('modulesPath', 'lib:jelix-admin-modules/,'.$modulePath, 0, null, true);
-        }
+        
+        $repositoryPath = jFile::parseJelixPath( 'lib:jelix-admin-modules' );
+        $this->registerModulesDir('lib:jelix-admin-modules', $repositoryPath);
 
         $installConfig->setValue('jacl.installed', '0', $entrypoint);
         $inifile->setValue('jacl.access', '0', 'modules');
@@ -182,7 +179,7 @@ class initadminCommand extends JelixScriptCommand {
             $inifile->setValue('jacl2db_admin.access', '0', 'modules');
             $inifile->save();
         }
-        
+
         $installer->installModules(array('jpref_admin'), $entrypoint.'.php');
     }
 }
