@@ -4,7 +4,6 @@
 startModule=testapp
 startAction="default:index"
 
-pluginsPath="app:plugins/,lib:jelix-plugins/,module:jacldb/plugins,module:jacl2db/plugins"
 [responses]
 soap="jsoap~jResponseSoap"
 
