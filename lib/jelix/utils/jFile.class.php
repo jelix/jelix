@@ -330,7 +330,7 @@ class jFile {
             }
         }
 
-        if (strpos($path,'./') === false) {
+        if (strpos($path,'./') === false && substr($path, -1) != '.') {
             if ($alwaysArray) {
                 if ($path == '') {
                     return array($prefix, array(), $absolute);
