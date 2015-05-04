@@ -19,7 +19,6 @@
  */
 class jDbPDOConnection extends PDO {
 
-    private $_mysqlCharsets = array('UTF-8'=>'utf8', 'ISO-8859-1'=>'latin1');
     private $_pgsqlCharsets = array('UTF-8'=>'UNICODE', 'ISO-8859-1'=>'LATIN1');
 
     /**
@@ -42,51 +41,56 @@ class jDbPDOConnection extends PDO {
 
     /**
      * Use a profile to do the connection
-     * @param array $profile the profile data readed from the ini file
+     * @param array $profile the profile data. Its content must be normalized by jDbParameters
      */
     function __construct($profile) {
         $this->profile = $profile;
-        $prof = $profile;
         $user = '';
         $password = '';
-        $dsn = '';
-        if (isset($profile['dsn'])) {
-            $this->dbms = $this->driverName = substr($profile['dsn'],0,strpos($profile['dsn'],':'));
-            $dsn = $profile['dsn'];
-            unset($prof['dsn']);
-            if ($this->dbms == 'sqlite')
-                $dsn = jFile::parseJelixPath( $dsn );
-        }
-        else {
-            $this->dbms = $this->driverName = $profile['driver'];
-            $db = $profile['database'];
-            $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
-            if($this->dbms != 'sqlite')
-                $dsn = $this->dbms.':host='.$profile['host'].';dbname='.$db;
-            else {
-                if (preg_match('/^(app|lib|var)\:/', $db, $m))
-                    $dsn = 'sqlite:' . jFile::parseJelixPath( $db );
-                else
-                    $dsn = 'sqlite:'.jApp::varPath('db/sqlite/'.$db);
+        $this->dbms = $profile['dbtype'];
+        $this->driverName = $profile['driver'];
+
+        $dsn = $profile['dsn'];
+        if ($this->dbms == 'sqlite') {
+            $path = substr($dsn, 7);
+            if (preg_match('/^(app|lib|var)\:/', $path, $m)) {
+                $dsn = 'sqlite:' . jFile::parseJelixPath( $path );
+            } else {
+                $dsn = 'sqlite:'.jApp::varPath('db/sqlite/'.$path);
             }
         }
-        if(isset($prof['usepdo']))
-            unset($prof['usepdo']);
 
         // we check user and password because some db like sqlite doesn't have user/password
-        if (isset($prof['user'])) {
-            $user = $prof['user'];
-            unset($prof['user']);
+        if (isset($profile['user'])) {
+            $user = $profile['user'];
         }
 
-        if (isset($prof['password'])) {
+        if (isset($profile['password'])) {
             $password = $profile['password'];
-            unset($prof['password']);
+        }
+    
+        $pdoOptions = array();
+        if ($profile['pdooptions'] != '') {
+            foreach(explode(",", $profile['pdooptions']) as $optname) {
+                $pdoOptions[$optname] = $profile[$optname];
+            }
         }
 
-        unset($prof['driver']);
+        $initsql = '';
+        if ($profile['force_encoding']) {
+            $charset = jApp::config()->charset;
+            if ($profile['pdodriver'] == 'mysql' ||
+                $profile['pdodriver'] == 'mssql' ||
+                $profile['pdodriver'] == 'sybase'||
+                $profile['pdodriver'] == 'oci') {
+                $dsn .= ';charset='.$charset;
+            }
+            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
+                $initsql = "SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'";
+            }
+        }
 
-        parent::__construct($dsn, $user, $password, $prof);
+        parent::__construct($dsn, $user, $password, $pdoOptions);
 
         $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -94,22 +98,18 @@ class jDbPDOConnection extends PDO {
         // we cannot launch two queries at the same time with PDO ! except if
         // we use mysql with the attribute MYSQL_ATTR_USE_BUFFERED_QUERY
         // TODO check if PHP 5.3 or higher fixes this issue
-        if ($this->dbms == 'mysql')
+        if ($this->dbms == 'mysql') {
             $this->setAttribute(PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, true);
+        }
 
         // Oracle returns names of columns in upper case by default. so here
         // we force the case in lower.
-        if ($this->dbms == 'oci')
+        if ($this->dbms == 'oci') {
             $this->setAttribute(PDO::ATTR_CASE, PDO::CASE_LOWER);
+        }
 
-        if (isset($prof['force_encoding']) && $prof['force_encoding']==true) {
-            $charset = jApp::config()->charset;
-            if ($this->dbms == 'mysql' && isset($this->_mysqlCharsets[$charset])) {
-                $this->exec("SET NAMES '".$this->_mysqlCharsets[$charset]."'");
-            }
-            elseif($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
-                $this->exec("SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'");
-            }
+        if ($initsql) {
+            $this->exec($initsql);
         }
     }
 
@@ -193,8 +193,6 @@ class jDbPDOConnection extends PDO {
      * @since 1.0
      */
     public function prefixTable($table_name) {
-        if (!isset($this->profile['table_prefix']))
-            return $table_name;
         return $this->profile['table_prefix'].$table_name;
     }
 
@@ -206,7 +204,7 @@ class jDbPDOConnection extends PDO {
      * @since 1.0
      */
     public function hasTablePrefix() {
-        return (isset($this->profile['table_prefix']) && $this->profile['table_prefix']!='');
+        return ($this->profile['table_prefix'] != '');
     }
 
     /**
@@ -249,13 +247,32 @@ class jDbPDOConnection extends PDO {
      */
     public function tools () {
         if (!$this->_tools) {
-            $dbms = ($this->dbms === 'sqlite') ? 'sqlite3' : $this->dbms; 
-            $this->_tools = jApp::loadPlugin($dbms, 'db', '.dbtools.php', $dbms.'DbTools', $this);
-            if (is_null($this->_tools))
-                throw new jException('jelix~db.error.driver.notfound', $dbms);
+            $this->_tools = jApp::loadPlugin($this->driverName, 'db', '.dbtools.php', $this->driverName.'DbTools', $this);
+            if (is_null($this->_tools)) {
+                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
+            }
         }
 
         return $this->_tools;
+    }
+
+    /**
+     * @var jDbSchema
+     */
+    protected $_schema = null;
+    
+    /**
+     * @return jDbSchema
+     */
+    public function schema () {
+        if (!$this->_schema) {
+            $this->_schema = jApp::loadPlugin($this->driverName, 'db', '.dbschema.php', $this->driverName.'DbSchema', $this);
+            if (is_null($this->_schema)) {
+                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
+            }
+        }
+
+        return $this->_schema;
     }
 
     /**

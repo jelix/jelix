@@ -612,4 +612,72 @@ abstract class JelixScriptCommand {
       return $prefix.implode($sep, $newPath);
    }
 
+    /**
+     * Fix version for non built lib
+     */
+    protected function fixVersion($version) {
+        switch($version) {
+            case '__LIB_VERSION_MAX__':
+                return jFramework::versionMax();
+            case '__LIB_VERSION__':
+                return jFramework::version();
+            case '__VERSION__':
+                return jApp::version();
+        }
+        return trim($version);
+    }
+
+    protected function registerModulesDir($repository, $repositoryPath) {
+        
+        $allDirs = \Jelix\Core\App::getDeclaredModulesDir();
+        $path = realpath($repositoryPath);
+        if ($path == '') {
+            throw new Exception('The modules dir '.$repository.' is not a valid path');
+        }
+        $path = jFile::shortestPath(\Jelix\Core\App::appPath(), $path);
+
+        $found = false;
+        foreach($allDirs as $dir) {
+            $dir = jFile::shortestPath(\Jelix\Core\App::appPath(), $dir);
+            if ($dir == $path) {
+                $found = true;
+                break;
+            }
+        }
+        // the modules dir is not known, we should register it.
+        if (!$found) {
+            $this->createDir($repositoryPath);
+            if (fileExists(\Jelix\Core\App::appPath('composer.json')) && file_exists(\Jelix\Core\App::appPath('vendor'))) {
+                // we update composer.json
+                $json = json_decode(file_get_contents(\Jelix\Core\App::appPath('composer.json')), true);
+                if (!$json) {
+                    throw new Exception('composer.json has bad json format');
+                }
+                if (!isset($json['extra'])) {
+                    $json['extra'] = array('jelix'=>array('modules-dir'=>array()));
+                }
+                else if (!isset($json['extra']['jelix'])) {
+                    $json['extra']['jelix'] = array('modules-dir'=>array());
+                }
+                else if (!isset($json['extra']['jelix']['modules-dir'])) {
+                    $json['extra']['jelix']['modules-dir'] = array();
+                }
+                $json['extra']['jelix']['modules-dir'][] = $path;
+                file_put_contents(\Jelix\Core\App::appPath('composer.json'), json_encode($json, JSON_PRETTY_PRINT));
+                if ($this->verbose()) {
+                    echo "The given modules dir has been added into your composer.json\n";
+                }
+                echo "You should launch 'composer update' to have your module repository recognized\n";
+            }
+            else if (fileExists(\Jelix\Core\App::appPath('application.init.php'))) {{
+                // we modify the application.init.php directly
+                $content = file_get_contents(\Jelix\Core\App::appPath('application.init.php'));
+                $content .= "\n\\Jelix\\Core\\App::declareModulesDir(__DIR__.'/".$path."');\n";
+                file_put_contents(\Jelix\Core\App::appPath('application.init.php'), $content);
+                if ($this->verbose()) {
+                    echo "The given modules dir has been added into your application.init.php\n";
+                }
+            }
+        }
+    }
 }

@@ -29,7 +29,15 @@ class Profiles {
 
     protected static function loadProfiles() {
         $file = App::configPath('profiles.ini.php');
-        self::$_profiles = parse_ini_file($file, true);
+        $tempFile = App::tempPath('profiles.cache.php');
+        if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
+            $compiler = new \jProfilesCompiler($file);
+            self::$_profiles = $compiler->compile();
+            \Jelix\IniFile\Manager::write(self::$_profiles, $tempFile);
+        }
+        else {
+            self::$_profiles = parse_ini_file($tempFile, true);
+        }
     }
 
     /**
@@ -52,60 +60,27 @@ class Profiles {
             self::loadProfiles();
         }
 
-        if ($name == '')
+        if ($name == '') {
             $name = 'default';
-        $section = $category.':'.$name;
-        $targetName = $section;
-
-        if (isset(self::$_profiles[$category.':__common__'])) {
-            $common = self::$_profiles[$category.':__common__'];
         }
-        else
-            $common = null;
+        $section = $category.':'.$name;
 
         // the name attribute created in this method will be the name of the connection
         // in the connections pool. So profiles of aliases and real profiles should have
         // the same name attribute.
 
         if (isset(self::$_profiles[$section])) {
-            self::$_profiles[$section]['_name'] = $name;
-            if ($common)
-                return array_merge($common, self::$_profiles[$section]);
             return self::$_profiles[$section];
         }
-        else if (isset(self::$_profiles[$category][$name])) {
-            // it is an alias
-            $name = self::$_profiles[$category][$name];
-            $targetName = $category.':'.$name;
-        }
         // if the profile doesn't exist, we take the default one
-        elseif (!$noDefault) {
-            if (isset(self::$_profiles[$category.':default'])) {
-                self::$_profiles[$category.':default']['_name'] = 'default';
-                if ($common)
-                    return array_merge($common, self::$_profiles[$category.':default']);
-                return self::$_profiles[$category.':default'];
-            }
-            elseif (isset(self::$_profiles[$category]['default'])) {
-                $name = self::$_profiles[$category]['default'];
-                $targetName = $category.':'.$name;
-            }
+        elseif (!$noDefault && isset(self::$_profiles[$category.':default'])) {
+            return self::$_profiles[$category.':default'];
         }
         else {
             if ($name == 'default')
                 throw new \jException('jelix~errors.profile.default.unknown', $category);
             else
                 throw new \jException('jelix~errors.profile.unknown',array($name, $category));
-        }
-
-        if (isset(self::$_profiles[$targetName]) && is_array(self::$_profiles[$targetName])) {
-            self::$_profiles[$targetName]['_name'] = $name;
-            if ($common)
-                return array_merge($common, self::$_profiles[$targetName]);
-            return self::$_profiles[$targetName];
-        }
-        else {
-            throw new \jException('jelix~errors.profile.unknown', array($name, $category));
         }
     }
 
@@ -167,16 +142,31 @@ class Profiles {
         if (self::$_profiles === null) {
             self::loadProfiles();
         }
+
         if (is_string($params)) {
-            self::$_profiles[$category][$name] = $params;
+            if (isset(self::$_profiles[$category.':'.$params])) {
+                self::$_profiles[$category.':'.$name] = self::$_profiles[$category.':'.$params];
+            }
+            else {
+                throw new \jException('jelix~errors.profile.unknown',array($params, $category));
+            }
         }
         else {
-            $params['_name'] = $name;
-            self::$_profiles[$category.':'.$name] = $params;
+            $plugin = App::loadPlugin($category, 'profiles', '.profiles.php', $category.'ProfilesCompiler', $category);
+            if (!$plugin) {
+                $plugin = new \jProfilesCompilerPlugin($category);
+            }
+            
+            if (isset(self::$_profiles[$category.':__common__'])) {
+                $plugin->setCommon(self::$_profiles[$category.':__common__']);
+            }
+            $plugin->addProfile($name, $params);
+            $plugin->getProfiles(self::$_profiles);
         }
         unset (self::$_objectPool[$category][$name]); // close existing connection with the same pool name
-        if (gc_enabled())
+        if (gc_enabled()) {
             gc_collect_cycles();
+        }
     }
 
     /**
@@ -186,7 +176,8 @@ class Profiles {
     public static function clear() {
         self::$_profiles = null;
         self::$_objectPool = array();
-        if (gc_enabled())
+        if (gc_enabled()) {
             gc_collect_cycles();
+        }
     }
 }

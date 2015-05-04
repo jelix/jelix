@@ -24,6 +24,8 @@ class requestsTest extends jUnitTestCase {
             mkdir($tempPath);
         }
         jApp::setTempBasePath(realpath($tempPath).'/');
+        jApp::clearModulesPluginsPath();
+        jApp::declareModulesDir(__DIR__.'/app1/modules/');
 
         //self::initClassicRequest(TESTAPP_URL.'index.php');
         parent::setUp();

@@ -19,3 +19,12 @@ jApp::initPaths(
     __DIR__.'/scripts/'
 );
 jApp::setTempBasePath(__DIR__.'/../temp/');
+
+jApp::declareModulesDir(array(
+                        __DIR__.'/../../lib/jelix-modules/',
+                        __DIR__.'/../../lib/jelix-admin-modules/',
+                        __DIR__.'/modules/'
+                    ));
+jApp::declarePluginsDir(array(
+                        __DIR__.'/../../lib/jelix-plugins/'
+                    ));

@@ -9,8 +9,6 @@ cd lib/jelix-modules/jacl/classes
 * jAcl.class.php
 cd lib/jelix-modules/jacl/install
   install.php
-cd lib/jelix-modules/jacl/locales/en_EN/
-cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/locales/en_GB/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/locales/en_US/
@@ -49,11 +47,8 @@ cd lib/jelix-modules/jacldb/install
   install_jacl.data.mysql.sql
   install_jacl.data.pgsql.sql
   install.php
-  upgrade_pluginmoved.php
   upgrade_localesmoved.php
 cd lib/jelix-modules/jacldb/locales/en_US
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
-cd lib/jelix-modules/jacldb/locales/en_EN
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
 cd lib/jelix-modules/jacldb/locales/en_GB
 cch acldb.UTF-8.properties(acldb.%charset%.properties)
@@ -68,8 +63,6 @@ cd lib/jelix-modules/jacl2
 cd lib/jelix-modules/jacl2/classes
 * jAcl2.class.php
   jIAcl2Driver.iface.php
-cd lib/jelix-modules/jacl2/locales/en_EN/
-cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/en_GB/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl2/locales/en_US/
@@ -108,31 +101,8 @@ cd lib/jelix-modules/jacl2db/install
   groups.sql
   user.sql
   install.php
-  upgrade_to_1.2b1pre.1422_namedgroup.php
-  upgrade_to_1.3a1_codegroup.php
-  upgrade_to_1.3a2_subjectsgroup.php
-  upgrade_to_1.3a3_cancelrights.php
-  upgrade_to_1.3RC2.2100_typecanceled.php
-  upgrade_pluginmoved.php
   upgrade_localesmoved.php
-  upgrade_newresdefaultvalue.php
-
-cd lib/jelix-modules/jacl2db/install/sql/
-  upgrade_codegroup_1.mysql.sql
-  upgrade_codegroup_2.mysql.sql
-  upgrade_codegroup_1.pgsql.sql
-  upgrade_codegroup_2.pgsql.sql
-  upgrade_codegroup_1.sqlite.sql
-  upgrade_codegroup_2.sqlite.sql
-  upgrade_subjectgroup_data.sql
-  upgrade_type_canceled.pgsql.sql
-  upgrade_newresdefaultvalue.mysql.sql
-  upgrade_newresdefaultvalue.pgsql.sql
-  upgrade_newresdefaultvalue.sqlite.sql
-  upgrade_newresdefaultvalue.oci.sql
   
-cd lib/jelix-modules/jacl2db/locales/en_EN/
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/en_GB/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/en_US/
@@ -152,7 +122,6 @@ cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.pgsql.sql
   install_jauth.schema.sqlite.sql
   install.php
-  upgrade_to_1.2b1pre.1303_newdao.php
 
 cd lib/jelix-modules/jauth
 * module.xml
@@ -170,9 +139,6 @@ cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php
   authsw.coord.ini.php
 cd lib/jelix-modules/jauth/locales/en_US
-cch auth.UTF-8.properties(auth.%charset%.properties)
-cch autherror.UTF-8.properties(autherror.%charset%.properties)
-cd lib/jelix-modules/jauth/locales/en_EN
 cch auth.UTF-8.properties(auth.%charset%.properties)
 cch autherror.UTF-8.properties(autherror.%charset%.properties)
 cd lib/jelix-modules/jauth/locales/en_GB
@@ -195,8 +161,6 @@ cd lib/jelix-modules/jsoap/classes
   jSoapRequest.class.php
 cd lib/jelix-modules/jsoap/controllers
   WSDL.classic.php
-cd lib/jelix-modules/jsoap/locales/en_EN
-cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jsoap/locales/en_GB
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jsoap/locales/en_US
@@ -220,8 +184,6 @@ cd lib/jelix-modules/jpref/classes/
 cd lib/jelix-modules/jpref/locales/en_US
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix-modules/jpref/locales/en_GB
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-cd lib/jelix-modules/jpref/locales/en_EN
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix-modules/jpref/locales/fr_FR
 cch prefs.UTF-8.properties(prefs.%charset%.properties)

@@ -36,7 +36,7 @@ class Config {
      * @see Jelix\Core\Config\Compiler
      */
     static public function load($configFile){
-        $config=array();
+        $config = array();
         $file = App::tempPath().str_replace('/','~',$configFile);
 
         if (BYTECODE_CACHE_EXISTS)

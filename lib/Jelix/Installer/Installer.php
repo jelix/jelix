@@ -129,6 +129,8 @@ class Installer {
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
         $this->installerIni->save();
+        // be sure temp path is ready
+        \jFile::createDir(App::tempPath(), intval($this->mainConfig->getValue('chmodDirValue'),8));
     }
 
     /**

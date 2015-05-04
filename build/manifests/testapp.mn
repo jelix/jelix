@@ -295,10 +295,10 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_dbTest.php
   jcache_fileTest.php
   jcache_memcacheTest.php
-  jcache_memcache22Test.php
   httpcacheTest.php
   jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/
+  jAppTest.php
   autoloaderTest.php
   configautoloaderTest.php
   configCompilerAutoloadInfoTest.php
@@ -357,7 +357,6 @@ cd testapp/tests-jelix/jelix/daos
   daotests.lib.php
 cd testapp/tests-jelix/jelix/db/
   jDb_profilesTest.php
-  jDb_sqliteTest.php
   jDb_sqlite3Test.php
   jdb_queriesTest.php
   jdb_queries_with_pdoTest.php
@@ -365,6 +364,7 @@ cd testapp/tests-jelix/jelix/db/
   jdb.lib.php
   jdb_mysqlTest.php
   jdb_mysqliTest.php
+  jdb_parametersTest.php
   jdb_pgsqlTest.php
   jdbschema_mysqlTest.php
   jdbtoolsTest.php
@@ -419,6 +419,8 @@ cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/plugins
   __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/scripts/
+  __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/temp
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/www
@@ -447,6 +449,7 @@ cd testapp/tests-jelix/jelix/utils/
   jDatatypeTest.php
   jDateTimeTest.php
   jDurationTest.php
+  jFileTest.php
   jFilterTest.php
   jImageModifierTest.php
   jIniFileModifierTest.php
@@ -500,8 +503,6 @@ cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
   overload.UTF-8.properties
-cd testapp/var/db/sqlite/
-  tests.sqlite
 cd testapp/var/db/sqlite3/
   tests.sqlite3
 

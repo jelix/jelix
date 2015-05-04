@@ -21,7 +21,8 @@
         "tecnick.com/tcpdf": "6.0.*",
         "mrclay/minify": "2.2.0",
         "jelix/webservice-helper": "1.5.2",
-        "jelix/fakeserverconf": "1.0.*"
+        "jelix/fakeserverconf": "1.0.*",
+        "jelix/composer-module-setup": "0.2"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"
@@ -52,5 +53,16 @@
             "lib/jelix-legacy/init.php"
         ]
     },
-    "minimum-stability": "dev"
+    "minimum-stability": "dev",
+    "extra" : {
+        "jelix": {
+            "modules-dir" : [
+                "lib/jelix-modules",
+                "lib/jelix-admin-modules"
+            ],
+            "plugins-dir" : [
+                "lib/jelix-plugins"
+            ]
+        }
+    }
 }

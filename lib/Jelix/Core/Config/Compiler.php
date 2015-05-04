@@ -170,13 +170,13 @@ class Compiler {
             $config->startAction = ':';
         }
 
-        if ($config->domainName == "" && isset($_SERVER['SERVER_NAME']))
+        if ($config->domainName == "" && isset($_SERVER['SERVER_NAME'])) {
             $config->domainName = $_SERVER['SERVER_NAME'];
+        }
 
-        $config->_allBasePath = array();
-
-        if ($config->urlengine['engine'] == 'simple')
+        if ($config->urlengine['engine'] == 'simple') {
             trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+        }
 
         $config->chmodFile = octdec($config->chmodFile);
         $config->chmodDir = octdec($config->chmodDir);
@@ -265,56 +265,31 @@ class Compiler {
         else if (!file_exists($installerFile)) {
             if ($allModuleInfo) {
                 $installation = array ();
-            }
-            else {
+            } else {
                 throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
             }
         }
         else {
             $installation = parse_ini_file($installerFile,true);
         }
-
         $section = $config->urlengine['urlScriptId'];
 
         if (!isset($installation[$section])) {
             $installation[$section] = array();
         }
 
-        $list = preg_split('/ *, */',$config->modulesPath);
-        if (isset($this->commonConfig->modulesPath)) {
-            $list = array_merge($list, preg_split('/ *, */',$this->commonConfig->modulesPath));
+        if ($config->compilation['checkCacheFiletime']) {
+            $config->_allBasePath = App::getDeclaredModulesDir();
+        } else {
+            $config->_allBasePath = array();
         }
-        array_unshift($list, JELIX_LIB_PATH.'core-modules/');
-        $pathChecked = array();
+
         $modules = array();
-
+        $list = App::getAllModulesPath();
         foreach($list as $k=>$path){
-            if(trim($path) == '') continue;
-            $p = \jFile::parseJelixPath( $path );
-            if (!file_exists($p)) {
-                throw new Exception('Error in the configuration file -- The path, '.$path.' given in the jelix config, doesn\'t exist', 10);
-            }
-            if (substr($p,-1) !='/')
-                $p.='/';
-            if (isset($pathChecked[$p]))
-                continue;
-            $pathChecked[$p] = true;
-
-             // don't include the core-modules into the list of base path. this list is to verify
-             // if modules have been modified into repositories
-            if ($k!=0 && $config->compilation['checkCacheFiletime'])
-                $config->_allBasePath[]=$p;
-
-            if ($handle = opendir($p)) {
-                while (false !== ($f = readdir($handle))) {
-                    if ($f[0] != '.' && is_dir($p.$f)) {
-                        $module = $this->_readModuleInfo($config, $allModuleInfo, $p.$f, $installation, $section);
-                        if ($module !== null) {
-                            $modules[$module->name] = $module;
-                        }
-                    }
-                }
-                closedir($handle);
+            $module = $this->_readModuleInfo($config, $allModuleInfo, $path, $installation, $section);
+            if ($module !== null) {
+                $modules[$module->name] = $module;
             }
         }
         return $modules;
@@ -346,8 +321,7 @@ class Compiler {
                     || $installation[$section][$f.'.installed']
                     || $allModuleInfo) {
                     $config->modules[$f.'.access'] = 2;
-                }
-                else {
+                } else {
                     $config->modules[$f.'.access'] = 0;
                 }
             }
@@ -383,8 +357,7 @@ class Compiler {
 
         if (!isset($installation[$section][$f.'.dbprofile'])) {
             $config->modules[$f.'.dbprofile'] = 'default';
-        }
-        else {
+        } else {
             $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
         }
 
@@ -405,17 +378,13 @@ class Compiler {
             $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
             $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
 
-            $config->_allModulesPathList[$f]=$path.'/';
+            $config->_allModulesPathList[$f] = $path;
         }
 
         if ($config->modules[$f.'.access'] == 3) {
-            $config->_externalModulesPathList[$f]=$path.'/';
-        }
-        elseif ($config->modules[$f.'.access']) {
-            $config->_modulesPathList[$f] = $path.'/';
-            if (file_exists( $path.'/plugins')) {
-                $config->pluginsPath .= ',module:'.$f;
-            }
+            $config->_externalModulesPathList[$f] = $path;
+        } elseif ($config->modules[$f.'.access']) {
+            $config->_modulesPathList[$f] = $path;
         }
         return $moduleInfo;
     }
@@ -425,51 +394,24 @@ class Compiler {
      * @param object $config the config container
      */
     protected function _loadPluginsPathList($config) {
-        $list = preg_split('/ *, */',$config->pluginsPath);
-        array_unshift($list, JELIX_LIB_PATH.'plugins/');
-        foreach($list as $k=>$path){
-            if(trim($path) == '') continue;
-            if (preg_match('@^module:([^/]+)(/.*)?$@', $path, $m)) {
-                $mod = $m[1];
-                if (isset($config->_modulesPathList[$mod])) {
-                    $p = $config->_modulesPathList[$mod];
-                    if (isset($m[2]) && strlen($m[2]) > 1)
-                        $p.=$m[2];
-                    else
-                        $p.= '/plugins/';
-                }
-                else {
-                    trigger_error('Error in main configuration on pluginsPath -- Path given in pluginsPath for the module '.$mod.' is ignored, since this module is unknown or deactivated', E_USER_NOTICE);
-                    continue;
-                }
-            }
-            else {
-                $p = \jFile::parseJelixPath( $path );
-            }
-            if (!file_exists($p)) {
-                trigger_error('Error in main configuration on pluginsPath -- The path, '.$path.' given in the jelix config, doesn\'t exists !', E_USER_ERROR);
-                exit;
-            }
-            if(substr($p,-1) !='/') {
-                $p.='/';
-            }
-
+        $list = App::getAllPluginsPath();
+        foreach ($list as $k=>$p) {
             if ($handle = opendir($p)) {
                 while (false !== ($f = readdir($handle))) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
                         if ($subdir = opendir($p.$f)) {
                             if ($k!=0 && $config->compilation['checkCacheFiletime']) {
-                               $config->_allBasePath[]=$p.$f.'/';
+                               $config->_allBasePath[] = $p.$f.'/';
                             }
                             while (false !== ($subf = readdir($subdir))) {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if ($f == 'tpl') {
                                         $prop = '_tplpluginsPathList_'.$subf;
-                                        if (!isset($config->{$prop}))
+                                        if (!isset($config->{$prop})) {
                                             $config->{$prop} = array();
+                                        }
                                         array_unshift($config->{$prop}, $p.$f.'/'.$subf.'/');
-                                    }
-                                    else{
+                                    } else {
                                         $prop = '_pluginsPathList_'.$f;
                                         $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
                                     }

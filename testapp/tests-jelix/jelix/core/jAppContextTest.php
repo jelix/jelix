@@ -66,5 +66,4 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($scriptsPath, jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
     }
-
 }

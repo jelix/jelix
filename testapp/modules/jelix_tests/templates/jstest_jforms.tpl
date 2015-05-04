@@ -594,7 +594,7 @@ jFormsJQ.tForm.addControl(c);
 c = new jFormsJQControlDate('datenaissance', 'Your birthday');
 c.multiFields = true;
 c.errInvalid='"Your birthday" field is invalid';
-jelix_datepicker_default(c,'en_EN','/');
+jelix_datepicker_default(c,'en_US','/');
 jFormsJQ.tForm.addControl(c);
 
 

@@ -4,7 +4,7 @@
 * @subpackage  db
 * @author      Laurent Jouanneau, Gerald Croes
 * @contributor Julien Issler
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2015 Laurent Jouanneau
 * @copyright   2007-2009 Julien Issler
 * @copyright 2001-2005 CopixTeam
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -85,11 +85,12 @@ abstract class jDbConnection {
     protected $_debugMode = false;
     /**
     * do a connection to the database, using properties of the given profile
-    * @param array $profile  profile properties
+    * @param array $profile  profile properties. Its content must be normalized by jDbParameters
     */
     function __construct($profile) {
         $this->profile = & $profile;
-        $this->dbms = $this->driverName = $profile['driver'];
+        $this->driverName = $profile['driver'];
+        $this->dbms = $profile['dbtype'];
         $this->_connection = $this->_connect();
 #ifnot ENABLE_OPTIMIZED_SOURCE
         $this->_debugMode = true;
@@ -223,8 +224,6 @@ abstract class jDbConnection {
       * @since 1.0
       */
     public function prefixTable($table_name){
-        if(!isset($this->profile['table_prefix']))
-            return $table_name;
         return $this->profile['table_prefix'].$table_name;
     }
 
@@ -236,7 +235,7 @@ abstract class jDbConnection {
       * @since 1.0
       */
     public function hasTablePrefix(){
-        return (isset($this->profile['table_prefix']) && $this->profile['table_prefix'] != '');
+        return ($this->profile['table_prefix'] != '');
     }
 
     /**
@@ -377,9 +376,10 @@ abstract class jDbConnection {
      */
     public function tools () {
         if (!$this->_tools) {
-            require_once(jApp::config()->_pluginsPathList_db[$this->driverName].$this->driverName.'.dbtools.php');
-            $class = $this->driverName.'DbTools';
-            $this->_tools = new $class($this);
+            $this->_tools = jApp::loadPlugin($this->driverName, 'db', '.dbtools.php', $this->driverName.'DbTools', $this);
+            if (is_null($this->_tools)) {
+                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
+            }
         }
 
         return $this->_tools;
@@ -398,9 +398,10 @@ abstract class jDbConnection {
      */
     public function schema () {
         if (!$this->_schema) {
-            require_once(jApp::config()->_pluginsPathList_db[$this->driverName].$this->driverName.'.dbschema.php');
-            $class = $this->driverName.'DbSchema';
-            $this->_schema = new $class($this);
+            $this->_schema = jApp::loadPlugin($this->driverName, 'db', '.dbschema.php', $this->driverName.'DbSchema', $this);
+            if (is_null($this->_schema)) {
+                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
+            }
         }
 
         return $this->_schema;

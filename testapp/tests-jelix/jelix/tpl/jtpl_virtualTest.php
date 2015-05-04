@@ -39,7 +39,7 @@ world
 
     public function testTemplateWithLocale() {
 
-        jApp::config()->locale = 'en_EN';
+        jApp::config()->locale = 'en_US';
         $template = 'hello
 {@jelix_tests~tests1.first.locale@}
 {assign $value="third"}
@@ -47,9 +47,9 @@ world
 {@jelix_tests~tests1.$value.locale@}';
 
         $expected = 'hello
-this is an en_EN sentence
+this is an en_US sentence
 
-this is the 3th en_EN sentence';
+this is the 3th en_US sentence';
 
         $tpl = new jTpl();
         $result = $tpl->fetchFromString($template, 'text');

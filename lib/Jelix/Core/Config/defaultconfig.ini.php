@@ -23,13 +23,6 @@ httpVersion=""
 ; if empty, jelix will try to get the default timezone
 timeZone =
 
-; list of directories where the framework can find plugins
-pluginsPath = app:plugins/
-
-; list of directories that contain modules, ie, a module.xml (deprecated) or
-; a composer.json in their subdirectories
-modulesPath = lib:jelix-modules/,app:modules/
-
 ; Default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 ; For cli script, fill it.
@@ -447,3 +440,7 @@ jelix.cache=cache/
 [disabledListeners]
 ; list of Jelix\Event listener to not call
 ; eventname[]="module~listenerName"
+
+[mimeTypes]
+;list of mime types for some file extension. ext=mime type
+

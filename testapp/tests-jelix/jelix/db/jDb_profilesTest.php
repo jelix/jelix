@@ -28,9 +28,16 @@ class jDb_profilesTest  extends jUnitTestCase
             'host'=> "localhost_mysql",
             'user'=> "plop_mysql",
             'password'=> "futchball_mysql",
-            'persistent'=> '1',
-            'force_encoding'=>1,
+            'persistent'=> true,
+            'force_encoding'=>true,
             '_name'=>'jelix_tests_mysql',
+            'usepdo' => false,
+            'dbtype' => 'mysql',
+            'phpext' => 'mysql',
+            'pdoext' => 'pdo_mysql',
+            'pdodriver' => 'mysql',
+            'table_prefix' => '',
+            'pdooptions' => ''
         );
 
         $this->assertEquals($expected, $p);
@@ -42,9 +49,16 @@ class jDb_profilesTest  extends jUnitTestCase
             'host'=> "localhost_forward",
             'user'=> "plop_forward",
             'password'=> "futchball_forward",
-            'persistent'=> '1',
-            'force_encoding'=>0,
+            'persistent'=> true,
+            'force_encoding'=>false,
             '_name'=>'jelix_tests_forward',
+            'usepdo' => false,
+            'dbtype' => 'mysql',
+            'phpext' => 'mysql',
+            'pdoext' => 'pdo_mysql',
+            'pdodriver' => 'mysql',
+            'table_prefix' => '',
+            'pdooptions' => ''
         );
 
         $this->assertEquals($expected, $p);
@@ -73,6 +87,15 @@ class jDb_profilesTest  extends jUnitTestCase
 
         $p = jProfiles::get('jdb', 'foobar');
         $profile['_name'] = 'foobar';
+        $profile['usepdo'] = false;
+        $profile['dbtype'] = 'mysql';
+        $profile['phpext'] = 'mysql';
+        $profile['pdoext'] = 'pdo_mysql';
+        $profile['pdodriver'] = 'mysql';
+        $profile['persistent'] = true;
+        $profile['force_encoding'] = true;
+        $profile['table_prefix'] = '';
+        $profile['pdooptions'] = '';
 
         $this->assertEquals($profile, $p);
     }

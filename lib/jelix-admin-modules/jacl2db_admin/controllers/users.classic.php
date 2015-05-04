@@ -44,7 +44,7 @@ class usersCtrl extends jController {
             $groups[]=$grp;
         }
 
-        $listPageSize = 4;
+        $listPageSize = 15;
         $offset = $this->param('idx',0,true);
         $grpid = $this->param('grpid',-2,true);
         $filter = trim($this->param('filter'));

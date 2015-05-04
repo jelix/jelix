@@ -11,8 +11,6 @@ cd lib/jelix-admin-modules/master_admin/install
    install.php
 cd lib/jelix-admin-modules/master_admin/locales/en_GB
 cch    gui.UTF-8.properties(gui.%charset%.properties)
-cd lib/jelix-admin-modules/master_admin/locales/en_EN
-cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/locales/en_US
 cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/locales/fr_FR
@@ -34,8 +32,6 @@ cd lib/jelix-admin-modules/jacl2db_admin
    urls.xml
 cd lib/jelix-admin-modules/jacl2db_admin/classes/
   jacl2db_admin.listener.php
-cd lib/jelix-admin-modules/jacl2db_admin/locales/en_EN
-cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_GB
 cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_US
@@ -71,10 +67,6 @@ cd lib/jelix-admin-modules/jauthdb_admin/forms
   jelixuser.form.xml
 cd lib/jelix-admin-modules/jauthdb_admin/install
   install.php
-cd lib/jelix-admin-modules/jauthdb_admin/locales/en_EN
-cch   auth.UTF-8.properties(auth.%charset%.properties)
-cch   crud.UTF-8.properties(crud.%charset%.properties)
-cch   user.UTF-8.properties(user.%charset%.properties)
 cd lib/jelix-admin-modules/jauthdb_admin/locales/en_GB
 cch   auth.UTF-8.properties(auth.%charset%.properties)
 cch   crud.UTF-8.properties(crud.%charset%.properties)
@@ -108,8 +100,6 @@ cd lib/jelix-admin-modules/jpref_admin/forms
   pref.form.xml
 cd lib/jelix-admin-modules/jpref_admin/install
   install.php
-cd lib/jelix-admin-modules/jpref_admin/locales/en_EN
-cch   admin.UTF-8.properties(admin.%charset%.properties)
 cd lib/jelix-admin-modules/jpref_admin/locales/en_GB
 cch   admin.UTF-8.properties(admin.%charset%.properties)
 cd lib/jelix-admin-modules/jpref_admin/locales/en_US

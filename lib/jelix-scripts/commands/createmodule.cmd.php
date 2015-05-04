@@ -40,8 +40,8 @@ class createmoduleCommand extends JelixScriptCommand {
     -ver {version} (facultatif) : indique le numéro de version initial du module
 
     MODULE : le nom du module à créer.
-    REPOSITORY: le depot de modules où créer le module. même syntaxe que pour modulesPath
-                dans la configuration. Le dépôt par défaut est app:module/",
+    REPOSITORY: le repertoires de modules où créer le module. On peut utiliser les raccourcis
+                comme app:, lib: etc. Le dépôt par défaut est app:module/",
         'en'=>"
     Create a new module, with all necessary files and sub-directories.
 
@@ -54,8 +54,8 @@ class createmoduleCommand extends JelixScriptCommand {
                         additionnal file and set additionnal configuration stuff
     -ver {version} (optional) : indicates the initial version of the module
     MODULE: name of the new module.
-    REPOSITORY: the path of the directory where to create the module. same syntax as modulesPath
-                in the configuration. default repository is app:module/"
+    REPOSITORY: the path of the directory where to create the module. we can use shortcut
+         like app:, lib: etc. Default repository is app:module/"
     );
 
 
@@ -64,8 +64,9 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $module = $this->getParam('module');
         $initialVersion = $this->getOption('-ver');
-        if ($initialVersion === false)
+        if ($initialVersion === false) {
             $initialVersion = '0.1pre';
+        }
 
         // note: since module name are used for name of generated name,
         // only this characters are allowed
@@ -86,31 +87,11 @@ class createmoduleCommand extends JelixScriptCommand {
 
         // verify the given repository
         $repository = $this->getParam('repository', 'app:modules/');
-        if (substr($repository,-1) != '/')
+        if (substr($repository,-1) != '/') {
             $repository .= '/';
-        $repositoryPath = jFile::parseJelixPath( $repository );
-
-        $iniDefault = new jIniFileModifier(App::mainConfigFile());
-
-        $this->updateModulePath($iniDefault, $iniDefault->getValue('modulesPath'), $repository, $repositoryPath);
-        if ($this->verbose())
-            echo "modulePath updated in the main configuration\n";
-
-        if (!$this->allEntryPoint) {
-            $list = $this->getEntryPointsList();
-            foreach ($list as $k => $entryPoint) {
-                if ($entryPoint['file'] == $this->entryPointName) {
-                    $ini = new jIniFileModifier(App::configPath($entryPoint['config']));
-                    break;
-                }
-            }
-            if (!$ini) {
-                throw new Exception("entry point is unknown");
-            }
-            $this->updateModulePath($ini, App::config()->modulesPath, $repository, $repositoryPath);
-            if ($this->verbose())
-                echo "modulePath updated in the configuration ".$entryPoint['config']."\n";
         }
+        $repositoryPath = jFile::parseJelixPath( $repository );
+        $this->registerModulesDir($repository, $repositoryPath);
 
         $path = $repositoryPath.$module.'/';
         $this->createDir($path);
@@ -142,20 +123,23 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createDir($path.'locales/en_US/');
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
-            if ($this->verbose())
+            if ($this->verbose()) {
                 echo "Sub directories have been created in the new module $module.\n";
+            }
             $this->createFile($path.'install/install.php','module/install.tpl',$param);
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
         $isdefault = $this->getOption('-defaultmodule');
 
+        $iniDefault = new jIniFileModifier(App::mainConfigFile());
         // activate the module in the application
         if ($isdefault) {
             $iniDefault->setValue('startModule', $module);
             $iniDefault->setValue('startAction', 'default:index');
-            if ($this->verbose())
+            if ($this->verbose()) {
                 echo "The new module $module becomes the default module\n";
+            }
         }
 
         $iniDefault->setValue($module.'.access', ($this->allEntryPoint?2:1) , 'modules');
@@ -170,10 +154,12 @@ class createmoduleCommand extends JelixScriptCommand {
             $configFile = App::configPath($entryPoint['config']);
             $epconfig = new jIniFileModifier($configFile);
 
-            if ($this->allEntryPoint)
+            if ($this->allEntryPoint) {
                 $access = 2;
-            else
+            }
+            else {
                 $access = ($entryPoint['file'] == $this->entryPointName?2:0);
+            }
 
             $epconfig->setValue($module.'.access', $access, 'modules');
             $epconfig->save();
@@ -195,8 +181,9 @@ class createmoduleCommand extends JelixScriptCommand {
                     }
                 }
             }
-            if ($this->verbose())
+            if ($this->verbose()) {
                 echo "The module is initialized for the entry point ".$entryPoint['file'].".\n";
+            }
         }
 
         $install->save();
@@ -220,31 +207,6 @@ class createmoduleCommand extends JelixScriptCommand {
             $this->createFile($path.'events.xml', 'module/events.xml.tpl', $param);
             file_put_contents($path.'locales/en_US/interface.UTF-8.properties', 'menu.item='.$module);
             file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);
-        }
-    }
-
-    protected function updateModulePath($ini, $currentModulesPath, $repository, $repositoryPath) {
-        $listRepos = preg_split('/ *, */',$currentModulesPath);
-        $repositoryFound = false;
-        foreach($listRepos as $path){
-            if(trim($path) == '') continue;
-            $p = jFile::parseJelixPath( $path );
-            if (substr($p,-1) != '/')
-                $p .= '/';
-            if ($p == $repositoryPath) {
-                $repositoryFound = true;
-                break;
-            }
-        }
-
-        // the repository doesn't exist in the configuration
-        // let's add it into the configuration
-        if (!$repositoryFound) {
-
-            $ini->setValue('modulesPath', $currentModulesPath.','.$repository);
-            $ini->save();
-
-            $this->createDir($repositoryPath);
         }
     }
 }

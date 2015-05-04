@@ -14,10 +14,6 @@ timeZone="Europe/Paris"
 
 theme=default
 
-pluginsPath="lib:jelix-plugins/"
-
-modulesPath="lib:jelix-admin-modules/,lib:jelix-modules/"
-
 ; default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName=

@@ -6,7 +6,7 @@
 default = "adminapp"
 
 [jdb:adminapp]
-; the driver name : mysql, pgsql, sqlite...
+; the driver name : mysql, pgsql, sqlite3...
 driver="mysqli"
 
 ; For most of drivers:

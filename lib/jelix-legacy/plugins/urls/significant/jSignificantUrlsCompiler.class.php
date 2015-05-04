@@ -146,7 +146,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
         $this->readProjectXml();
-        $this->retrieveModulePaths(jApp::mainConfigFile());
+        $this->modulesPath = jApp::getAllModulesPath();
 
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
         $this->checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
@@ -177,9 +177,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $optionalTrailingSlash = (isset($tag['optionalTrailingSlash']) && $tag['optionalTrailingSlash'] == 'true');
 
             $this->parseInfos = array($this->defaultUrl->isDefault);
-
-            //let's read the modulesPath of the entry point
-            $this->retrieveModulePaths($this->getEntryPointConfig($this->defaultUrl->entryPoint));
 
             // if this is the default entry point for the request type,
             // then we add a rule which will match urls which are not
@@ -335,50 +332,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     protected $entryPoints = array();
 
     /**
-     * list all modules repository
-     */
-    protected $modulesRepositories = array();
-
-    /**
      * list all modules path
      */
     protected $modulesPath = array();
-
-    /**
-     * since urls.xml declare all entrypoints, current entry point does not have
-     * access to all modules, so doesn't know all their paths.
-     * this method retrieve all module paths declared in the configuration
-     * of an entry point or the global configuration
-     * @param string $configFile the config file name
-     */
-    protected function retrieveModulePaths($configFile) {
-        $conf = parse_ini_file($configFile);
-        if (!array_key_exists('modulesPath',$conf))
-            return;
-        $list = preg_split('/ *, */',$conf['modulesPath']);
-        array_unshift($list, JELIX_LIB_PATH.'core-modules/');
-
-        foreach($list as $k=>$path){
-            if(trim($path) == '') continue;
-            $p = jFile::parseJelixPath( $path );
-            if (!file_exists($p)) {
-                continue;
-            }
-            if (substr($p,-1) !='/')
-                $p.='/';
-            if (isset($this->modulesRepositories[$p]))
-                continue;
-            $this->modulesRepositories[$p] = true;
-            if ($handle = opendir($p)) {
-                while (false !== ($f = readdir($handle))) {
-                    if ($f[0] != '.' && is_dir($p.$f)) {
-                        $this->modulesPath[$f]=$p.$f.'/';
-                    }
-                }
-                closedir($handle);
-            }
-        }
-    }
 
     /**
      * @param significantUrlInfoParsing $u

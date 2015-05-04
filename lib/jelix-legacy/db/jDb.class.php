@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste, Julien Issler
 * @contributor Christophe Thiriot
-* @copyright   2005-2012 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2005-2015 Laurent Jouanneau, 2008 Laurent Raufaste
 * @copyright   2011 Julien Issler
 #if ENABLE_OPTIMIZED_SOURCE
 * @copyright   2001-2005 CopixTeam
@@ -167,7 +167,7 @@ class jDb {
     * @return jDbConnection|jDbPDOConnection  database connector
     */
     public static function _createConnector ($profile) {
-        if ($profile['driver'] == 'pdo' || (isset($profile['usepdo']) && $profile['usepdo'])) {
+        if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
 #ifnot ENABLE_OPTIMIZED_SOURCE
             /*
 #else
