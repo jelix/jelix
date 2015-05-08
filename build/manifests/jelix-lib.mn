@@ -629,6 +629,9 @@ cd lib/jelix-legacy/plugins/htmlresponse/debugbar
 cd lib/jelix-legacy/plugins/htmlresponse/debugbar/icons
   __ALL__
 
+cd lib/jelix-legacy/plugins/profiles/jdb
+  jdb.profiles.php
+
 cd lib/jelix-legacy/plugins/tpl/common
   block.ifuserconnected.php
   block.ifusernotconnected.php
