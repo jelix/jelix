@@ -18,8 +18,6 @@ class jacldbModuleInstaller extends jInstallerModule {
         if ($this->entryPoint->type != 'cmdline')
             return;
 
-        $this->declarePluginsPath('module:jacldb');
-
         if (!$this->firstDbExec())
             return;
 

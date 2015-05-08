@@ -70,14 +70,14 @@ class jFile {
 
         // Delete the file if it allready exists (this is needed on Win,
         // because it cannot overwrite files with rename()
-        if (jApp::config()->isWindows && file_exists($file)) {
+        if (jApp::config() && jApp::config()->isWindows && file_exists($file)) {
             unlink($file);
         }
         rename($_tmp_file, $file);
         if ($chmod) {
             chmod($file, $chmod);
         }
-        else {
+        else if (jApp::config()) {
             chmod($file, jApp::config()->chmodFile);
         }
 
@@ -94,7 +94,15 @@ class jFile {
         // so should do own recursion
         if (!file_exists($dir)) {
             self::createDir(dirname($dir), $chmod);
-            mkdir($dir, ($chmod?$chmod:jApp::config()->chmodDir));
+            if ($chmod) {
+                mkdir($dir, $chmod);
+            }
+            else if (jApp::config()) {
+                mkdir($dir, jApp::config()->chmodDir);
+            }
+            else {
+                mkdir($dir);
+            }
         }
     }
 
@@ -188,7 +196,7 @@ class jFile {
         if (array_key_exists($ext, self::$mimeTypes)) {
             return self::$mimeTypes[$ext];
         }
-        else if (isset(jApp::config()->mimeTypes[$ext])) {
+        else if (jApp::config() && isset(jApp::config()->mimeTypes[$ext])) {
             return jApp::config()->mimeTypes[$ext];
         }
         else
@@ -330,7 +338,7 @@ class jFile {
             }
         }
 
-        if (strpos($path,'./') === false) {
+        if (strpos($path,'./') === false && substr($path, -1) != '.') {
             if ($alwaysArray) {
                 if ($path == '') {
                     return array($prefix, array(), $absolute);

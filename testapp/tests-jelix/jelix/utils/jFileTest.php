@@ -15,9 +15,13 @@ class jFileTest extends jUnitTestCase {
     public function testShortestPath() {
         $this->assertEquals('.', jFile::shortestPath('/', '/'));
         $this->assertEquals('.', jFile::shortestPath('/aaaa', '/aaaa'));
+        $this->assertEquals('.', jFile::shortestPath('/aaaa', '/aaaa/.'));
+        $this->assertEquals('.', jFile::shortestPath('/aaaa/.', '/aaaa/.'));
+        $this->assertEquals('.', jFile::shortestPath('/aaaa/.', '/aaaa'));
         $this->assertEquals('.', jFile::shortestPath('/aaaa/bbbb', '/aaaa/bbbb'));
         $this->assertEquals('aaaa', jFile::shortestPath('/', '/aaaa/'));
         $this->assertEquals('..', jFile::shortestPath('/aaaa', '/'));
+        $this->assertEquals('../../dddd', jFile::shortestPath('/aaaa/bbbb/cccc', '/aaaa/dddd/'));
         $this->assertEquals('../../dddd', jFile::shortestPath('/aaaa/bbbb/cccc', '/aaaa/dddd/'));
         $this->assertEquals('../../dddd/eeeee', jFile::shortestPath('/aaaa/bbbb/cccc', '/aaaa/dddd/eeeee'));
         $this->assertEquals('cccc', jFile::shortestPath('/aaaa/bbbb', '/aaaa/bbbb/cccc'));
@@ -43,6 +47,8 @@ class jFileTest extends jUnitTestCase {
         $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa/bbb/ccc/'));
         $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa////bbb/ccc/'));
         $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa/./bbb/ccc/'));
+        $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa/./bbb/ccc/.'));
+        $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa/bbb/ccc/.'));
         $this->assertEquals('/aaa/bbb/ccc', jFile::normalizePath('/aaa/./bbb/./././ccc/'));
         $this->assertEquals('/aaa/ccc', jFile::normalizePath('/aaa/bbb/../ccc/'));
         $this->assertEquals('/ccc', jFile::normalizePath('/aaa/bbb/../../ccc/'));

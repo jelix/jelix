@@ -22,7 +22,7 @@
         "mrclay/minify": "2.2.0",
         "jelix/webservice-helper": "1.5.2",
         "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.2"
+        "jelix/composer-module-setup": "0.*"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"

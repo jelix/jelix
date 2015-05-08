@@ -628,7 +628,7 @@ abstract class JelixScriptCommand {
     }
 
     protected function registerModulesDir($repository, $repositoryPath) {
-        
+
         $allDirs = \Jelix\Core\App::getDeclaredModulesDir();
         $path = realpath($repositoryPath);
         if ($path == '') {
