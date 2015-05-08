@@ -645,7 +645,7 @@ abstract class JelixScriptCommand {
     }
 
     protected function registerModulesDir($repository, $repositoryPath) {
-        
+
         $allDirs = jApp::getDeclaredModulesDir();
         $path = realpath($repositoryPath);
         if ($path == '') {
@@ -686,7 +686,7 @@ abstract class JelixScriptCommand {
                 }
                 echo "You should launch 'composer update' to have your module repository recognized\n";
             }
-            else if (fileExists(jApp::appPath('application.init.php'))) {{
+            else if (fileExists(jApp::appPath('application.init.php'))) {
                 // we modify the application.init.php directly
                 $content = file_get_contents(jApp::appPath('application.init.php'));
                 $content .= "\njApp::declareModulesDir(__DIR__.'/".$path."');\n";

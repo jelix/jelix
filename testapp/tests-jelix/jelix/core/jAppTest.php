@@ -40,8 +40,8 @@ class jAppTest extends PHPUnit_Framework_TestCase {
         
         $this->assertEquals(array(
             JELIX_LIB_PATH.'plugins/',
-            LIB_PATH.'jelix-plugins/',
             jApp::appPath('plugins/'),
+            LIB_PATH.'jelix-plugins/',
             LIB_PATH.'jelix-modules/jacl/plugins/',
             LIB_PATH.'jelix-modules/jacl2/plugins/',
             LIB_PATH.'jelix-modules/jacldb/plugins/',
