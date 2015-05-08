@@ -263,14 +263,14 @@ class App {
             foreach($basePath as $path) {
                 $p = realpath($path);
                 if ($p == '') {
-                    throw new Exception('Given modules dir '.$path.'does not exists');
+                    throw new \Exception('Given modules dir '.$path.'does not exists');
                 }
                 self::$_modulesDirPath[$p] = null;
             }
         } else {
             $p = realpath($basePath);
             if ($p == '') {
-                throw new Exception('Given modules dir '.$basePath.'does not exists');
+                throw new \Exception('Given modules dir '.$basePath.'does not exists');
             }
             self::$_modulesDirPath[$p] = $modules;
         }
@@ -295,7 +295,7 @@ class App {
         foreach($modulePath as $path) {
             $p = realpath($path);
             if ($p == '') {
-                throw new Exception('Given module dir '.$path.'does not exists');
+                throw new \Exception('Given module dir '.$path.'does not exists');
             }
             self::$_modulesPath[] = $p;
         }
@@ -326,7 +326,7 @@ class App {
         foreach($basePath as $path) {
             $p = realpath($path);
             if ($p == '') {
-                throw new Exception('Given plugin dir '.$path.'does not exists');
+                throw new \Exception('Given plugin dir '.$path.'does not exists');
             }
             self::$_pluginsDirPath[] = $p;
         }
@@ -341,7 +341,7 @@ class App {
     public static function getAllModulesPath() {
         if (self::$_allModulesPath === null) {
             self::$_allModulesPath = array();
-            self::$_allModulesPath['jelix'] = realpath(__DIR__.'/../core-modules/jelix/').DIRECTORY_SEPARATOR;
+            self::$_allModulesPath['jelix'] = realpath(__DIR__.'/../../jelix-legacy/core-modules/jelix/').DIRECTORY_SEPARATOR;
 
             foreach(self::$_modulesPath as $modulePath) {
                 self::$_allModulesPath[basename($modulePath)] = dirname($modulePath).DIRECTORY_SEPARATOR;
@@ -393,7 +393,7 @@ class App {
                 }
             }
 
-            $bundled = realpath(__DIR__.'/../plugins/').DIRECTORY_SEPARATOR;
+            $bundled = realpath(__DIR__.'/../../jelix-legacy/plugins/').DIRECTORY_SEPARATOR;
             if (file_exists($bundled) &&  !in_array($p, self::$_allPluginsPath)) {
                 array_unshift(self::$_allPluginsPath , $bundled);
             }

@@ -115,6 +115,34 @@ class jApp {
         \Jelix\Core\App::restoreContext();
     }
 
+    public static function declareModulesDir($basePath, $modules=null) {
+        \Jelix\Core\App::declareModulesDir($basePath, $modules);
+    }
+
+    public static function getDeclaredModulesDir() {
+        return \Jelix\Core\App::getDeclaredModulesDir();
+    }
+
+    public static function declareModule($modulePath) {
+        \Jelix\Core\App::declareModule($modulePath);
+    }
+
+    public static function clearModulesPluginsPath() {
+        \Jelix\Core\App::clearModulesPluginsPath();
+    }
+
+    public static function declarePluginsDir($basePath) {
+        \Jelix\Core\App::declarePluginsDir($basePath);
+    }
+
+    public static function getAllModulesPath() {
+        return \Jelix\Core\App::getAllModulesPath();
+    }
+
+    public static function getAllPluginsPath() {
+        return \Jelix\Core\App::getAllPluginsPath();
+    }
+
     public static function loadPlugin($name, $type, $suffix, $classname, $args = null) {
         return \Jelix\Core\App::loadPlugin($name, $type, $suffix, $classname, $args);
     }

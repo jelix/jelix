@@ -80,7 +80,7 @@ class configTest extends PHPUnit_Framework_TestCase {
     function testReadModuleInfoOldModuleActivatedInstalled() {
         $config = new fakeConfig();
         $config->modules = array('simple.access'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/simple');
+        $modulePath = realpath(__DIR__.'/app/modules/simple').'/';
         $installation = array('index.php'=>array('simple.installed'=>1));
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
@@ -109,14 +109,14 @@ class configTest extends PHPUnit_Framework_TestCase {
                                 'simple.dataversion' => '',
                                 'simple.installed' => 1
                                 ), $config->modules);
-        $this->assertEquals(array('simple'=>$modulePath.'/'), $config->_allModulesPathList);
+        $this->assertEquals(array('simple'=>$modulePath), $config->_allModulesPathList);
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
 
     }
 
     function testReadModuleInfoNewModuleNotActivated() {
         $config = new fakeConfig();
-        $modulePath = realpath(__DIR__.'/app/modules/package');
+        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
         $installation = array('index.php'=>array());
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
@@ -132,7 +132,7 @@ class configTest extends PHPUnit_Framework_TestCase {
     function testReadModuleInfoNewModuleActivatedNotInstalled() {
         $config = new fakeConfig();
         $config->modules = array('thepackage.access'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/package');
+        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
         $installation = array('index.php'=>array());
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
@@ -148,7 +148,7 @@ class configTest extends PHPUnit_Framework_TestCase {
     function testReadModuleInfoNewModuleActivatedInstalled() {
         $config = new fakeConfig();
         $config->modules = array('thepackage.access'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/package');
+        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
         $installation = array('index.php'=>array('thepackage.installed'=>1));
         $section = 'index.php';
         $compiler = new fakeConfigCompiler();
@@ -179,7 +179,7 @@ class configTest extends PHPUnit_Framework_TestCase {
                                 'thepackage.installed' => 1
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('thepackage'=>$modulePath.'/'), $config->_allModulesPathList);
+        $this->assertEquals(array('thepackage'=>$modulePath), $config->_allModulesPathList);
 
     }
 }
