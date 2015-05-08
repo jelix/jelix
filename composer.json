@@ -18,7 +18,7 @@
     "require": {
         "php": ">=5.3.3",
         "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.2"
+        "jelix/composer-module-setup": "0.*"
     },
     "archive": {
         "exclude": [ "/build", "/temp", "/testapp", "Makefile"]
