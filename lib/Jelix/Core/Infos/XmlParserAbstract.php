@@ -49,6 +49,9 @@ abstract class XmlParserAbstract {
 
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
         // we don't read the name attribute for the module name as in previous jelix version, it has always to be the directory name
+        if ($object->type == 'application') {
+            $object->name = (string)$xml->getAttribute('name');
+        }
 
         $object->createDate = (string)$xml->getAttribute('createdate');
 
@@ -83,6 +86,14 @@ abstract class XmlParserAbstract {
                         $person[$attrName] = $xml->value;
                     }
                     array_push($object->authors, $person);
+                }
+                elseif ('licence' == $property) { // we support licence and license, but store always as license
+                    while ($xml->moveToNextAttribute()) {
+                        $attrProperty = 'license' . ucfirst($xml->name);
+                        $object->$attrProperty = $xml->value;
+                    }
+                    $xml->read();
+                    $object->license = $xml->value;
                 }
                 else { // <version> <license> <copyright> <homepageURL> <updateURL>
                     // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability

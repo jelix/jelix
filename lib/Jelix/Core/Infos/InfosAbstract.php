@@ -11,7 +11,7 @@ abstract class InfosAbstract {
 
     /** @var the path to the module/app */
     protected $path = '';
-    protected $xmlFile = false;
+    protected $isXml = false;
     protected $_exists = false;
 
     /** @var the name of the module, used as identifier in jelix selectors or other part of the code */
@@ -51,7 +51,7 @@ abstract class InfosAbstract {
     }
     
     public function isXmlFile() {
-        return $this->xmlFile;
+        return $this->isXml;
     }
 
     public function exists() {

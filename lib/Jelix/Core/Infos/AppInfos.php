@@ -27,7 +27,6 @@ class AppInfos extends InfosAbstract {
      *              call \Jelix\Core\App to retrieve it.
      */
     function __construct($path = '') {
-        $this->path = rtrim($path, '/').'/';
 
         $config = \Jelix\Core\App::config();
         if ($config) {
@@ -44,12 +43,14 @@ class AppInfos extends InfosAbstract {
             }
         }
 
-        if (file_exists($path.'jelix-app.json')) {
-            $parser = new AppJsonParser($path.'jelix-app.json', $locale);
+        $this->path = rtrim($path, '/').'/';
+
+        if (file_exists($this->path.'jelix-app.json')) {
+            $parser = new AppJsonParser($this->path.'jelix-app.json', $locale);
         }
-        else if (file_exists($path.'project.xml')) {
+        else if (file_exists($this->path.'project.xml')) {
             $this->isXml = true;
-            $parser = new ProjectXmlParser($path.'project.xml', $locale);
+            $parser = new ProjectXmlParser($this->path.'project.xml', $locale);
         }
         else {
             return;

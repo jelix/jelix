@@ -27,7 +27,7 @@ abstract class JsonParserAbstract {
      */
     public function __construct($path, $locale) {
         if (!file_exists($path)) {
-            throw new \Exception($this->path ." does not exist");
+            throw new \Exception($path ." does not exist");
         }
         $this->path = $path;
         $this->locale = substr($locale, 0, 2);
@@ -50,7 +50,6 @@ abstract class JsonParserAbstract {
             "label" => "",
             "description"=> "",
             "homepage"=> "",
-            "license"=> "",
             "copyright"=>"",
             "authors" => array(),
         ),$this->json);
@@ -61,7 +60,19 @@ abstract class JsonParserAbstract {
         $object->description        = $json['description'];
         $object->authors            = $json['authors'];
         $object->homepageURL        = $json['homepage'];
-        $object->license            = $json['license'];
+        if (isset($json['license'])) {
+            $object->license        = $json['license'];
+        }
+        else if (isset($json['licence'])) {
+            $object->license        = $json['licence'];
+        }
+        if (isset($json['licenseURL'])) {
+            $object->licenseURL     = $json['licenseURL'];
+        }
+        else if (isset($json['licenceURL'])) {
+            $object->licenseURL     = $json['licenceURL'];
+        }
+
         $object->versionStability   = $json['stability'];
         $object->versionDate        = $json['date'];
         $object->copyright          = $json['copyright'];
