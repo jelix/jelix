@@ -12,6 +12,56 @@ namespace Jelix\Core\Infos;
  */
 class ModuleXmlParser extends XmlParserAbstract {
 
+    protected function parseDependencies (\XMLReader $xml, InfosAbstract $object) {
+
+        $property = $xml->name;
+
+        while ($xml->read()) {
+
+            if ($xml->nodeType == \XMLReader::END_ELEMENT && 'dependencies' == $xml->name) {
+                break;
+            }
+
+            if ($xml->nodeType == \XMLReader::ELEMENT) {
+
+                $dependency = array('type'=>$xml->name, 'name'=>'', 'version'=>'');
+                $dependency['type'] = $xml->name;
+                if ($xml->name == 'jelix') {
+                    $dependency['type'] = 'module';
+                    $dependency['name'] = 'jelix';
+                }
+
+                while ($xml->moveToNextAttribute()) {
+                    $attrName = $xml->name;
+                    if ($attrName == 'minversion' && $xml->value != '') { // old attribute
+                        $v = '>='.$this->fixVersion($xml->value);
+                        if ($dependency['version'] != '') {
+                            $v = ','.$v;
+                        }
+                        $dependency['version'] .= $v;
+                    }
+                    else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
+                        $v = '<='.$this->fixVersion($xml->value);
+                        if ($dependency['version'] != '') {
+                            $v = ','.$v;
+                        }
+                        $dependency['version'] .= $v;
+                    }
+                    else if ($attrName == 'version' && $xml->value != '') {
+                        $dependency['version'] = $this->fixVersion($xml->value);
+                    }
+                    else if ($attrName != 'minversion' &&
+                             $attrName != 'maxversion' &&
+                             $attrName != 'version') {
+                        $dependency[$attrName] = $xml->value;
+                    }
+                }
+                array_push($object->$property, $dependency);
+            }
+        }
+        return $object;
+    }
+
     protected function parseAutoload (\XMLReader $xml, ModuleInfos $object) {
         $property = $xml->name;
 

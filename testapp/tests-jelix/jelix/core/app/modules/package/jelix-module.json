@@ -1,0 +1,11 @@
+{
+    "name": "thepackage",
+    "version" : "1.0",
+    "description": "A jelix module using new jelix-module.json",
+    "required-modules": {
+    },
+    "autoload": {
+        "psr-4" : {
+        }
+    }
+}

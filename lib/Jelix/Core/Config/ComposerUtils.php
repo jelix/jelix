@@ -41,7 +41,6 @@ class ComposerUtils {
         return self::$packages;
     }
 
-
     /**
      * Says if the given package has been loaded by Composer.
      * @param string $packageName  

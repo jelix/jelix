@@ -9,7 +9,6 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="packageName" value="simple@testapp.jelix.org" />
         <string property="name" value="simple" />
         <string property="createDate" value="" />
         <string property="version" value="1.0" />
@@ -26,19 +25,11 @@ class infosreaderTest extends jUnitTestCase {
         <string property="copyright" value="" />
         <array property="dependencies">
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="jelix" />
                 <string key="version" value="&gt;=1.6,&lt;=2.0" />
             </array>
-            <!--<array>
-                <string key="type" value="" />
-                <string key="version" value="" />
-                <string key="edition" value="" />
-                <string key="id" value="" />
-                <string key="name" value="" />
-            </array>-->
         </array>
-        <string property="type" value="library" />
+        <string property="type" value="module" />
         <array property="autoloaders">
             <!--<array>
             </array>-->
@@ -75,7 +66,6 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="packageName" value="jelix_tests@testapp.jelix.org" />
         <string property="name" value="jelix_tests" />
         <string property="createDate" value="" />
         <string property="label" value="Jelix tests" />
@@ -95,34 +85,22 @@ class infosreaderTest extends jUnitTestCase {
         <string property="copyright" value="Copyright 2006-2011 jelix.org" />
         <array property="dependencies">
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="jelix" />
             </array>
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="testurls" />
             </array>
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="jauthdb" />
             </array>
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="jacl2db" />
             </array>
             <array>
-                <string key="type" value="module" />
                 <string key="name" value="jacldb" />
             </array>
-            <!--<array>
-                <string key="type" value="" />
-                <string key="version" value="" />
-                <string key="edition" value="" />
-                <string key="id" value="" />
-                <string key="name" value="" />
-            </array>-->
         </array>
-        <string property="type" value="library" />
+        <string property="type" value="module" />
         <array property="autoloaders">
             <string>autoloadtest/myautoloader.php</string>
         </array>
@@ -158,14 +136,13 @@ class infosreaderTest extends jUnitTestCase {
         $result = new \Jelix\Core\Infos\ModuleInfos($path);
         $expected = '<?xml version="1.0"?>
     <object>
-        <string property="packageName" value="jelixtest/composerpackage" />
         <string property="name" value="thepackage" />
         <string property="createDate" value="" />
         <string property="version" value="1.0" />
         <string property="versionDate" value="" />
         <string property="versionStability" value="" />
-        <string property="label" value="jelixtest/composerpackage" />
-        <string property="description" value="A jelix module that is a composer package" />
+        <string property="label" value="thepackage" />
+        <string property="description" value="A jelix module using new jelix-module.json" />
         <array property="authors"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="" />
@@ -174,26 +151,8 @@ class infosreaderTest extends jUnitTestCase {
         <string property="licenseURL" value="" />
         <string property="copyright" value="" />
         <array property="dependencies">
-            <array>
-                <string key="type" value="php" />
-                <string key="version" value="&gt;=5.3.3" />
-                <string key="id" value="php" />
-                <string key="name" value="php" />
-            </array>
-            <array>
-                <string key="type" value="module" />
-                <string key="version" value="self:version" />
-                <string key="id" value="jelix/core" />
-                <string key="name" value="jelix/core" />
-            </array>
-            <!--<array>
-                <string key="type" value="" />
-                <string key="version" value="" />
-                <string key="id" value="" />
-                <string key="name" value="" />
-            </array>-->
         </array>
-        <string property="type" value="jelix-module" />
+        <string property="type" value="module" />
         <array property="autoloaders">
             <!--<array>
             </array>-->
@@ -218,6 +177,46 @@ class infosreaderTest extends jUnitTestCase {
             <!--<array>
             </array>-->
         </array>    
+    </object>';
+        $this->assertComplexIdenticalStr($result, $expected);
+    }
+
+    function testReadAppJsonInfo() {
+        $path = __DIR__.'/app/';
+        $result = new \Jelix\Core\Infos\AppInfos($path);
+        $expected = '<?xml version="1.0"?>
+    <object>
+        <string property="name" value="myappname" />
+        <string property="createDate" value="" />
+        <string property="version" value="1.0" />
+        <string property="versionDate" value="2015-04-14" />
+        <string property="versionStability" value="" />
+        <string property="label" value="a label" />
+        <string property="description" value="a description" />
+        <array property="authors">
+           <array>
+               <string key="name" value="me" />
+               <string key="email" value="me@example.com" />
+           </array>
+        </array>
+        <string property="homepageURL" value="http://jelix.org" />
+        <string property="updateURL" value="" />
+        <string property="license" value="MIT" />
+        <string property="licenseURL" value="" />
+        <string property="copyright" value="2015 somebody" />
+        <string property="type" value="application" />
+        <string property="configPath" value="var/config" />
+        <string property="logPath" value="var/log" />
+        <string property="varPath" value="var" />
+        <string property="wwwPath" value="www" />
+        <string property="tempPath" value="temp/" />
+        <array property="entrypoints">
+            <array key="entrypoint.php">
+                <string key="file" value="entrypoint.php" />
+                <string key="config" value="config.ini.php" />
+                <string key="type" value="classic" />
+            </array>
+        </array>
     </object>';
         $this->assertComplexIdenticalStr($result, $expected);
     }

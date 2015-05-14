@@ -44,8 +44,8 @@ class AppInfos extends InfosAbstract {
             }
         }
 
-        if (file_exists($path.'composer.json')) {
-            $parser = new ComposerJsonParser($path.'composer.json', $locale);
+        if (file_exists($path.'jelix-app.json')) {
+            $parser = new AppJsonParser($path.'jelix-app.json', $locale);
         }
         else if (file_exists($path.'project.xml')) {
             $this->isXml = true;

@@ -33,9 +33,10 @@ cd lib/Jelix/Core/Includer
 
 cd lib/Jelix/Core/Infos
   AppInfos.php
-  ComposerJsonParser.php
+  AppJsonParser.php
   InfosAbstract.php
   ModuleInfos.php
+  ModuleJsonParser.php
   ModuleXmlParser.php
   ProjectXmlParser.php
   XmlParserAbstract.php

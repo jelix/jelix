@@ -669,7 +669,7 @@ abstract class JelixScriptCommand {
                 }
                 echo "You should launch 'composer update' to have your module repository recognized\n";
             }
-            else if (fileExists(\Jelix\Core\App::appPath('application.init.php'))) {{
+            else if (fileExists(\Jelix\Core\App::appPath('application.init.php'))) {
                 // we modify the application.init.php directly
                 $content = file_get_contents(\Jelix\Core\App::appPath('application.init.php'));
                 $content .= "\n\\Jelix\\Core\\App::declareModulesDir(__DIR__.'/".$path."');\n";

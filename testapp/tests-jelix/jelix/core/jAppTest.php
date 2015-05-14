@@ -42,10 +42,10 @@ class jAppTest extends PHPUnit_Framework_TestCase {
             JELIX_LIB_PATH.'plugins/',
             jApp::appPath('plugins/'),
             LIB_PATH.'jelix-plugins/',
+            LIB_PATH.'jelix-modules/jacl2db/plugins/',
+            LIB_PATH.'jelix-modules/jacldb/plugins/',
             LIB_PATH.'jelix-modules/jacl/plugins/',
             LIB_PATH.'jelix-modules/jacl2/plugins/',
-            LIB_PATH.'jelix-modules/jacldb/plugins/',
-            LIB_PATH.'jelix-modules/jacl2db/plugins/',
             ), $plugins);
 
         jApp::saveContext();

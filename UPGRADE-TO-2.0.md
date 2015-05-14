@@ -1,7 +1,12 @@
 Migration
 ==========
 
-Here are instructions to migrate your Jelix application from Jelix 1.6 to the dev-master version
+Here are instructions to migrate your Jelix application from Jelix 1.6 to the dev-master
+version.
+
+
+## Composerify your application
+
 
 WARNING: this is experimental!!
 
@@ -12,18 +17,14 @@ WARNING: this is experimental!!
 
   Here is an example of such file:
 
-```
+```json
   {
     "name": "MyCompany/MyApp",
     "type": "application",
     "description": "",
     "require": {
-        "php": ">=5.3.3",
         "jelix/jelix": "dev-master"
-    },
-    "repositories" : [
-      { "type": "composer", "url":"http://packages.jelix.org" }
-    ]
+    }
   }
 ```
 
@@ -45,6 +46,62 @@ WARNING: this is experimental!!
 
     require (__DIR__.'/vendor/autoload.php');
 
+## Module and app identity changed
+
+module.xml and project.xml files are deprecated. Replace them by respectively jelix-module.json
+and jelix-app.json
+
+jelix-module.json:
+```json
+{
+    "name":"the module name",
+    "version": "the module version",
+    "date": "date of the release",
+    "label": "a label",
+    "description": "a description",
+    "homepage":"",
+    "license":"",
+    "authors":[],
+    "autoload" :{ same syntax content as in a composer.json },
+    "required-modules" : {
+        "module name": "version (composer.json syntax)"
+    }
+}
+```
+
+jelix-app.json:
+```json
+    {
+        "name":"the app name",
+        "version": "the app version",
+        "date": "date of the release",
+        "label": "a label",
+        "description": "a description",
+        "homepage":"",
+        "license":"",
+        "authors":[],
+        "directories": {
+            "config":"",
+            "var":"",
+            "www":"",
+            "log":"",
+            "temp":""
+        },
+        "entrypoints" : [
+            { "file": "entrypoint.php", "config":"config file", "type": "classic|soap|jsonrpc..."}
+        ]
+    }
+```
+
+if you want to keep your module.xml files, modify them:
+
+- attributes minversion and maxversion on <dependency> elements are deprecated. Replace
+  them by a version attribute, containing same syntax as in Composer
+  eg: ```minversion="1.0" maxversion="1.1"```
+  should become ```version=">=1.0,<=1.1"```
+
+
+## API changed
 
 - If you use plugins, you have to change their base class name for some of them:
    - jelix\core\ConfigCompilerPluginInterface to Jelix\Core\Config\CompilerPluginInterface
@@ -52,21 +109,18 @@ WARNING: this is experimental!!
         You have to change this method in your plugins
         See Jelix\Core\Config\CompilerPluginInterface
 
-- Modify your module.xml files :
-    - attributes minversion and maxversion on <dependency> elements are deprecated. Replace
-      them by a version attribute, containing same syntax as in Composer
-      eg: minversion="1.0" maxversion="1.1"
-      should become version=">=1.0,<=1.1"
 
 - If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
    you should know that their API have changed.
-   
+
 - Files that have gone
    - lib/jelix/checker.php: if you included it, call ```\Jelix\Installer\Checker\CheckerPage::show();``` instead
 
 - Classes that don't exist anymore:
    - jInstallerApplication
 
-- Simpletest and the module junittest are gone. If you are using them, convert your tests to PHPUnit
+## Modules gone
 
-- That's all for the moment.
+- Simpletest and the module junittest are gone. If you are using them, convert your tests
+  to PHPUnit.
+

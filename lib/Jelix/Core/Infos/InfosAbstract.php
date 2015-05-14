@@ -9,27 +9,28 @@ namespace Jelix\Core\Infos;
 
 abstract class InfosAbstract {
 
+    /** @var the path to the module/app */
     protected $path = '';
     protected $xmlFile = false;
     protected $_exists = false;
 
-    /** @var string the package name, foo/bar for composer packages or baz@something for legacy jelix modules */
-    public $packageName='';
-
     /** @var the name of the module, used as identifier in jelix selectors or other part of the code */
-    public $name='';
+    public $name = '';
 
-    public $createDate='';
+    /** @var the birth date of the module/app. optional */
+    public $createDate = '';
 
+    /** @var version of the module/app. required for modules */
     public $version = '';
+    /** @var the release date of the module/app. required for modules */
     public $versionDate = '';
+    
     public $versionStability = '';
 
     public $label = '';
+
     public $description = '';
 
-    public $keywords = array();
-    
     /**
      * @var array of array('name'=>'', 'email'=>'', 'role'=>'', 'homepage"=>'', 'nickname'=>'')
      */
@@ -40,10 +41,7 @@ abstract class InfosAbstract {
     public $license = '';
     public $licenseURL = '';
     public $copyright = '';
-    /**
-     * @var array of array('type'=>'module/plugin','version'=>'','id'=>'','name'=>'')
-     */
-    public $dependencies = array();
+
 
     /**
      * @return string the path of the component, with trailing slash

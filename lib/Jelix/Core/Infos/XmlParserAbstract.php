@@ -48,9 +48,7 @@ abstract class XmlParserAbstract {
     }
 
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
-
-        $object->packageName = (string)$xml->getAttribute('id');
-        // we don't rely on the name attribute for the module/project name, in previous jelix version, it has always to be the directory name
+        // we don't read the name attribute for the module name as in previous jelix version, it has always to be the directory name
 
         $object->createDate = (string)$xml->getAttribute('createdate');
 
@@ -87,6 +85,7 @@ abstract class XmlParserAbstract {
                     array_push($object->authors, $person);
                 }
                 else { // <version> <license> <copyright> <homepageURL> <updateURL>
+                    // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
                     while ($xml->moveToNextAttribute()) {
                         $attrProperty = $property . ucfirst($xml->name);
                         $object->$attrProperty = $xml->value;
@@ -104,55 +103,6 @@ abstract class XmlParserAbstract {
         return $object;
     }
 
-    protected function parseDependencies (\XMLReader $xml, InfosAbstract $object) {
-
-        $property = $xml->name;
-
-        while ($xml->read()) {
-
-            if ($xml->nodeType == \XMLReader::END_ELEMENT && 'dependencies' == $xml->name) {
-                break;
-            }
-
-            if ($xml->nodeType == \XMLReader::ELEMENT) {
-
-                $dependency = array('type'=>$xml->name, 'name'=>'', 'version'=>'');
-                $dependency['type'] = $xml->name;
-                if ($xml->name == 'jelix') {
-                    $dependency['type'] = 'module';
-                    $dependency['name'] = 'jelix';
-                }
-
-                while ($xml->moveToNextAttribute()) {
-                    $attrName = $xml->name;
-                    if ($attrName == 'minversion' && $xml->value != '') { // old attribute
-                        $v = '>='.$this->fixVersion($xml->value);
-                        if ($dependency['version'] != '') {
-                            $v = ','.$v;
-                        }
-                        $dependency['version'] .= $v;
-                    }
-                    else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
-                        $v = '<='.$this->fixVersion($xml->value);
-                        if ($dependency['version'] != '') {
-                            $v = ','.$v;
-                        }
-                        $dependency['version'] .= $v;
-                    }
-                    else if ($attrName == 'version' && $xml->value != '') {
-                        $dependency['version'] = $this->fixVersion($xml->value);
-                    }
-                    else if ($attrName != 'minversion' &&
-                             $attrName != 'maxversion' &&
-                             $attrName != 'version') {
-                        $dependency[$attrName] = $xml->value;
-                    }
-                }
-                array_push($object->$property, $dependency);
-            }
-        }
-        return $object;
-    }
 
     /**
      * Fix version for non built lib

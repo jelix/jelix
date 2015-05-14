@@ -314,12 +314,14 @@ cd testapp/tests-jelix/jelix/core/
   selectors_moduleTest.php
   urlsGenerationTest.php
   urlsParsingTest.php
+cd testapp/tests-jelix/jelix/core/app/
+  jelix-app.json
 cd testapp/tests-jelix/jelix/core/app/modules/simple/
   module.xml
 cd testapp/tests-jelix/jelix/core/app/modules/notamodule/
   .dummy
 cd testapp/tests-jelix/jelix/core/app/modules/package/
-  composer.json
+  jelix-module.json
 cd testapp/tests-jelix/jelix/core/autoload
   foobat.php
 cd testapp/tests-jelix/jelix/core/autoload/ns/bar

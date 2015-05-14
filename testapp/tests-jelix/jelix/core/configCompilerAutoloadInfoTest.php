@@ -1,7 +1,7 @@
 <?php
 require_once(JELIX_LIB_PATH.'plugins/configcompiler/nsautoloader/nsautoloader.configcompiler.php');
 
-class testComposerJsonParser extends \Jelix\Core\Infos\ComposerJsonParser {
+class testModuleJsonParser extends \Jelix\Core\Infos\ModuleJsonParser {
     public function __construct($path, $locale, $jsonContent){
         $this->path = $path;
         $this->locale = substr($locale, 0, 2);
@@ -61,7 +61,7 @@ class configCompilerAutoloadInfoTest extends PHPUnit_Framework_TestCase {
         }';
 
         $path = __DIR__."/";
-        $jsonParser = new testComposerJsonParser($path, 'en', $composerjson);
+        $jsonParser = new testModuleJsonParser($path, 'en', $composerjson);
         $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
         $jsonParser->parse($moduleInfo);
         $config = new stdClass();

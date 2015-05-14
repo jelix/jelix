@@ -10,7 +10,12 @@ namespace Jelix\Core\Infos;
 
 class ModuleInfos extends InfosAbstract {
 
-    public $type = 'library';
+    public $type = 'module';
+
+    /**
+     * @var array of array('name'=>'', 'version'=>'')
+     */
+    public $dependencies = array();
 
     /**
      * @var array of path
@@ -59,8 +64,8 @@ class ModuleInfos extends InfosAbstract {
             $locale = '';
         }
 
-        if (file_exists($this->path.'composer.json')) {
-            $parser = new ComposerJsonParser($this->path.'composer.json', $locale);
+        if (file_exists($this->path.'jelix-module.json')) {
+            $parser = new ModuleJsonParser($this->path.'jelix-module.json', $locale);
         }
         else if (file_exists($this->path.'module.xml')) {
             $this->isXml = true;

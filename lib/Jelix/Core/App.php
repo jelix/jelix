@@ -68,7 +68,7 @@ class App {
 
     /**
      * return the version of the application containing into a VERSION file
-     * It doesn't read the version from project.xml or composer.json.
+     * It doesn't read the version from project.xml or jelix-app.json.
      * @return string
      */
     static public function version() {
