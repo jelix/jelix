@@ -105,7 +105,6 @@ class createmoduleCommand extends JelixScriptCommand {
 
         $param = array();
         $param['module'] = $module;
-        $param['default_id'] = $module.$this->config->infoIDSuffix;
         $param['version'] = $initialVersion;
 
         $this->createFile($path.'jelix-module.json', 'module/jelix-module.json.tpl', $param);

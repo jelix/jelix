@@ -88,7 +88,6 @@ class createappCommand extends JelixScriptCommand {
         }
 
         $this->config = JelixScript::loadConfig($appName);
-        $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
         $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
@@ -131,7 +130,6 @@ class createappCommand extends JelixScriptCommand {
         $this->createDir(App::scriptsPath());
 
         $param = array();
-        $param['default_id'] = $appName.$this->config->infoIDSuffix;
 
         if($this->getOption('-nodefaultmodule')) {
             $param['tplname']    = 'jelix~defaultmain';

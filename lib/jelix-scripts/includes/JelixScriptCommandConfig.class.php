@@ -14,11 +14,6 @@
 class JelixScriptCommandConfig {
 
     /**
-     * @var string the suffix part of generated name of new modules. value readed from project.xml
-     */
-    public $infoIDSuffix='@yourwebsite.undefined';
-
-    /**
      * @var string the web site of the project or your company. value readed from jelix-app.json/project.xml
      */
     public $infoWebsite='http://www.yourwebsite.undefined';
@@ -126,11 +121,6 @@ class JelixScriptCommandConfig {
     public $layoutConfigPath = '/etc/jelix-apps/%appname%/';
     public $layoutScriptsPath = '%appdir%/scripts/';
     */
-
-    /**
-     * @var string the suffix part of generated name of modules in a new project
-     */
-    public $newAppInfoIDSuffix='@yourwebsite.undefined';
 
     /**
      * @var string the web site of the project or your company, used in a new project
