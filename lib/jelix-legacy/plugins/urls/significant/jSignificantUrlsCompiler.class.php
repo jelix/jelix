@@ -145,7 +145,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime'] &&( \n";
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
-        $this->readAppInfos();
         $this->modulesPath = jApp::getAllModulesPath();
 
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
@@ -307,27 +306,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
         return true;
     }
-
-    protected function readAppInfos() {
-        $infos = new \Jelix\Core\Infos\AppInfos(jApp::appPath());
-        foreach ($infos->entrypoints as $file => $entrypoint) {
-            $this->entryPoints[$file] = $entrypoint['config'];
-        }
-    }
-
-    protected function getEntryPointConfig($entrypoint) {
-        if (substr($entrypoint, -4) != '.php') {
-            $entrypoint.='.php';
-        }
-        if (!isset($this->entryPoints[$entrypoint])) {
-            throw new Exception('The entry point "'.$entrypoint.'" is not declared into project.xml/jelix-app.json');
-        }
-        return jApp::configPath($this->entryPoints[$entrypoint]);
-    }
-    /**
-     * list all entry points and their config
-     */
-    protected $entryPoints = array();
 
     /**
      * list all modules path
