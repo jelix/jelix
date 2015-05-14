@@ -36,7 +36,7 @@ cd lib/jelix-scripts/includes
   JelixScriptCommandConfig.class.php
   scripts.inc.php
 cd lib/jelix-scripts/templates
-  project.xml.tpl
+  jelix-app.json.tpl
   application.init.php.tpl
   cmd.php.tpl
   composer.json.tpl
@@ -63,7 +63,7 @@ cd lib/jelix-scripts/templates/module/
   locales.tpl
   main.tpl.tpl
   masteradminmenu.listener.php.tpl
-  module.xml.tpl
+  jelix-module.json.tpl
   template.tpl
   urls.xml.tpl
   zone.tpl

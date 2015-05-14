@@ -69,4 +69,47 @@ class AppInfos extends InfosAbstract {
 
         return null;
     }
+
+    public function addEntryPointInfo($fileName, $configFileName, $type) {
+        $this->entrypoints[$fileName] = $entrypoint = array('file'=>$fileName,
+                                                    'config'=>$configFileName, 'type'=>$type);
+        if ($this->isXmlFile()) {
+            $doc = new \DOMDocument();
+
+            if (!$doc->load($this->path.'project.xml')) {
+                throw new Exception("addEntryPointInfo: cannot load project.xml");
+            }
+            if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
+                throw new Exception("addEntryPointInfo: bad namespace in project.xml");
+            }
+
+            $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
+            $elem->setAttribute("file", $fileName);
+            $elem->setAttribute("config", $configFileName);
+            $elem->setAttribute("type", $type);
+
+            $ep = $doc->documentElement->getElementsByTagName("entrypoints");
+            if (!$ep->length) {
+                $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+                $doc->documentElement->appendChild($ep);
+                $ep->appendChild($elem);
+            }
+            else {
+                $ep->item(0)->appendChild($elem);
+            }
+
+            $doc->save($this->path.'project.xml');
+        }
+        else {
+            $json = @json_decode(file_get_contents($this->path.'jelix-app.json'), true);
+            if (!is_array($json)) {
+                throw new \Exception($this->path ."jelix-app.json is not a JSON file");
+            }
+            if (!isset($json['entrypoints'])) {
+                $json['entrypoints'] = array();
+            }
+            $json['entrypoints'][] = $entrypoint;
+            file_put_contents($this->path.'jelix-app.json', json_encode($json));
+        }
+    }
 }

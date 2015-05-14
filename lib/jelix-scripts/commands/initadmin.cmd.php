@@ -65,7 +65,7 @@ class initadminCommand extends JelixScriptCommand {
                 $cmd = JelixScript::getCommand('createentrypoint', $this->config);
                 $cmd->initOptParam(array(),array('name'=>$entrypoint));
                 $cmd->run();
-                $this->projectXml = null;
+                $this->appInfos = null;
                 $ep = $this->getEntryPointInfo($entrypoint);
             }
             catch (Exception $e) {

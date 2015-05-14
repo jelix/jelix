@@ -26,7 +26,7 @@ class createmoduleCommand extends JelixScriptCommand {
     public  $syntaxhelp = "[-nosubdir] [-nocontroller] [-cmdline] [-addinstallzone] [-defaultmodule] [-admin] MODULE [REPOSITORY]";
     public  $help=array(
         'fr'=>"
-    Crée un nouveau module, avec son fichier module.xml, et un contrôleur
+    Crée un nouveau module, avec son fichier jelix-module.json, et un contrôleur
     par défaut, ainsi que tous les sous-répertoires courants
     (zones, templates, daos, locales, classes...).
 
@@ -108,7 +108,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $param['default_id'] = $module.$this->config->infoIDSuffix;
         $param['version'] = $initialVersion;
 
-        $this->createFile($path.'module.xml', 'module/module.xml.tpl', $param);
+        $this->createFile($path.'jelix-module.json', 'module/jelix-module.json.tpl', $param);
 
         // create all sub directories of a module
         if (!$this->getOption('-nosubdir')) {
@@ -149,7 +149,7 @@ class createmoduleCommand extends JelixScriptCommand {
         $install = new jIniFileModifier(App::configPath('installer.ini.php'));
 
         // install the module for all needed entry points
-        foreach ($list as $k => $entryPoint) {
+        foreach ($list as $entryPoint) {
 
             $configFile = App::configPath($entryPoint['config']);
             $epconfig = new jIniFileModifier($configFile);

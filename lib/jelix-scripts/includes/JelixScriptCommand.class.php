@@ -220,25 +220,21 @@ abstract class JelixScriptCommand {
 
    function loadAppConfig() {
 
-      if (\Jelix\Core\App::config())
-         return;
+        if (\Jelix\Core\App::config()) {
+            return;
+        }
 
-      $xml = simplexml_load_file(\Jelix\Core\App::appPath('project.xml'));
-      $configFile = '';
+        $ep = $this->getEntryPointInfo($this->entryPointName);
+        if ($ep) {
+            $configFile = $ep['config'];
+        }
 
-      foreach ($xml->entrypoints->entry as $entrypoint) {
-         $file = (string)$entrypoint['file'];
-         if ($file == $this->entryPointName) {
-            $configFile = (string)$entrypoint['config'];
-            break;
-         }
-      }
-
-      if ($configFile == '')
-         throw new Exception($this->name.": Entry point is unknown");
-      $compiler = new \Jelix\Core\Config\Compiler($configFile, $this->entryPointName, true);
-      \Jelix\Core\App::setConfig($compiler->read(true));
-   }
+        if ($configFile == '')  {
+            throw new Exception($this->name.": Entry point is unknown");
+        }
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $this->entryPointName, true);
+        \Jelix\Core\App::setConfig($compiler->read(true));
+    }
 
    /**
     * helper method to retrieve the path of the module
@@ -411,88 +407,62 @@ abstract class JelixScriptCommand {
     }
 
    /**
-    * @var DOMDocument the content of the project.xml file, loaded by loadProjectXml
+    * @var \Jelix\Core\Infos\AppInfos the content of the project.xml or jelix-app.json file
     */
-   protected $projectXml = null;
+   protected $appInfos = null;
 
    /**
-    * load the content of the project.xml file, and store the corresponding DOM
-    * into the $projectXml property
+    * load the content of the project.xml or jelix-app.json file, and store it
+    * into the $appInfos property
     */
-   protected function loadProjectXml() {
-
-      if ($this->projectXml)
+   protected function loadAppInfos() {
+      if ($this->appInfos) {
          return;
+      }
+      $this->appInfos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
 
       $doc = new DOMDocument();
 
-      if (!$doc->load(\Jelix\Core\App::appPath('project.xml'))){
-         throw new Exception($this->name.": cannot load project.xml");
+      if (!$this->appInfos->exists()){
+         throw new Exception($this->name.": cannot load jelix-app.json/project.xml");
       }
-
-      if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
-         throw new Exception($this->name.": bad namespace in project.xml");
-      }
-      $this->projectXml = $doc;
    }
 
+   /**
+    * @return generator  which returns arrays {'file'=>'', 'config'=>'', 'isCli'=>bool, 'type=>''}
+    */
    protected function getEntryPointsList() {
-      $this->loadProjectXml();
-      $listEps = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-      if (!$listEps->length) {
-         return array();
-      }
+        $this->loadAppInfos();
+        if (!count($this->appInfos->entrypoints)) {
+            return array();
+        }
+        $generator = function($entrypoints) {
+            foreach($entrypoints as $file=>$epElt) {
+                $ep = array(
+                   'file'=>$epElt["file"],
+                   'config'=>$epElt["config"],
+                   'isCli'=> ($epElt["type"] == 'cmdline'),
+                   'type'=>$epElt["type"],
+                );
+                if (($p = strpos($ep['file'], '.php')) !== false) {
+                   $ep['id'] = substr($ep['file'],0,$p);
+                }
+                else {
+                   $ep['id'] = $ep['file'];
+                }
+                yield $ep;
+            }
 
-      $listEp = $listEps->item(0)->getElementsByTagName("entry");
-      if(!$listEp->length) {
-         return array();
-      }
-
-      $list = array();
-      for ($i=0; $i < $listEp->length; $i++) {
-         $epElt = $listEp->item($i);
-         $ep = array(
-            'file'=>$epElt->getAttribute("file"),
-            'config'=>$epElt->getAttribute("config"),
-            'isCli'=> ($epElt->getAttribute("type") == 'cmdline'),
-            'type'=>$epElt->getAttribute("type"),
-         );
-         if (($p = strpos($ep['file'], '.php')) !== false)
-            $ep['id'] = substr($ep['file'],0,$p);
-         else
-            $ep['id'] = $ep['file'];
-
-         $list[] = $ep;
-      }
-      return $list;
-   }
+        };
+        return $generator($this->appInfos->entrypoints);
+    }
 
    protected function getEntryPointInfo($name) {
-      $this->loadProjectXml();
-      $listEps = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-      if (!$listEps->length) {
-         return null;
-      }
-
-      $listEp = $listEps->item(0)->getElementsByTagName("entry");
-      if(!$listEp->length) {
-         return null;
-      }
-
-      for ($i=0; $i < $listEp->length; $i++) {
-         $epElt = $listEp->item($i);
-         $ep = array(
-            'file'=>$epElt->getAttribute("file"),
-            'config'=>$epElt->getAttribute("config"),
-            'isCli'=> ($epElt->getAttribute("type") == 'cmdline'),
-            'type'=>$epElt->getAttribute("type"),
-         );
-         if (($p = strpos($ep['file'], '.php')) !== false)
-            $ep['id'] = substr($ep['file'],0,$p);
-         else
-            $ep['id'] = $ep['file'];
-         if ($ep['id'] == $name)
+      $listEp = $this->getEntryPointsList();
+      foreach ($listEp as $ep) {
+         if ($ep['id'] == $name) {
             return $ep;
+         }
       }
       return null;
    }

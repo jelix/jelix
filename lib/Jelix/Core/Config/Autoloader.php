@@ -9,7 +9,7 @@
 namespace Jelix\Core\Config;
 
 /**
- * Autoloader for informations stored in module.xml files
+ * Autoloader for informations stored in jelix-module.json or module.xml files
  */
 class Autoloader {
 

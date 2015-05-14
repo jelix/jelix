@@ -19,17 +19,17 @@ class JelixScriptCommandConfig {
     public $infoIDSuffix='@yourwebsite.undefined';
 
     /**
-     * @var string the web site of the project or your company. value readed from project.xml
+     * @var string the web site of the project or your company. value readed from jelix-app.json/project.xml
      */
     public $infoWebsite='http://www.yourwebsite.undefined';
 
     /**
-     * @var string the licence of generated files. value readed from project.xml
+     * @var string the licence of generated files. value readed from jelix-app.json/project.xml
      */
     public $infoLicence='All rights reserved';
 
     /**
-     * @var string link to the licence. value readed from project.xml
+     * @var string link to the licence. value readed from jelix-app.json/project.xml
      */
     public $infoLicenceUrl='';
 
@@ -44,9 +44,9 @@ class JelixScriptCommandConfig {
     public $infoCreatorMail='your-email@yourwebsite.undefined';
 
     /**
-     * @var string copyright of new files. value readed from project.xml
+     * @var string copyright of new files. value readed from jelix-app.json/project.xml
      */
-    public $infoCopyright='2011 your name';
+    public $infoCopyright='2015 your name';
 
     /**
      * @var string default timezone for new app
@@ -180,51 +180,21 @@ class JelixScriptCommandConfig {
     }
 
     /**
-     * fill some properties from informations stored into the project.xml file.
+     * fill some properties from informations stored into the project.xml or jelix-app.json file.
      * @return string the application name
      */
     function loadFromProject() {
 
-        $doc = new DOMDocument();
-
-        if (!$doc->load(\Jelix\Core\App::appPath('project.xml'))){
-            throw new Exception("cannot load project.xml");
+        $infos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
+        if (!$infos->exists()){
+            throw new Exception("cannot load jelix-app.json or project.xml");
         }
 
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
-            throw new Exception("bad namespace in project.xml");
-        }
-
-        $info = $doc->getElementsByTagName('info');
-        $info = $info->item(0);
-        $id = $info->getAttribute('id');
-        list($name, $suffix) = explode('@', $id);
-        if ($suffix=='')
-            $suffix = $name;
-        $this->infoIDSuffix = $suffix;
-        if ($info->getAttribute('name')) {
-            $name = $info->getAttribute('name');
-        }
-
-        $licence = $info->getElementsByTagName('licence');
-        if ($licence->length) {
-            $licence = $licence->item(0);
-            $this->infoLicence = $licence->textContent;
-            $this->infoLicenceUrl = $licence->getAttribute('URL');
-        }
-
-        $copyright = $info->getElementsByTagName('copyright');
-        if ($copyright->length) {
-            $copyright = $copyright->item(0);
-            $this->infoCopyright = $copyright->textContent;
-        }
-
-        $website = $info->getElementsByTagName('homepageURL');
-        if ($website->length) {
-            $website = $website->item(0);
-            $this->infoWebsite = $website->textContent;
-        }
-        return $name;
+        $this->infoLicence = $infos->license;
+        $this->infoLicenceUrl = $infos->licenseURL;
+        $this->infoCopyright = $infos->copyright;
+        $this->infoWebsite = $infos->homepageURL;
+        return $infos->name;
     }
 
     /**

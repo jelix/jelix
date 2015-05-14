@@ -35,6 +35,10 @@ cd lib/jelix-scripts/templates
   template.tpl
   zone.tpl
   locales.tpl
+  project.xml.tpl
+
+cd lib/jelix-scripts/templates/module
+  module.xml.tpl
 
 cd lib/jelix-scripts/templates/var/config/
    dbprofils.ini.php.tpl

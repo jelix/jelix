@@ -185,7 +185,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
                     continue;
                 }
                 if (\jVersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
-                    // we don't execute upgraders having a version higher than the version indicated in the module.xml
+                    // we don't execute upgraders having a version higher than the version indicated in the module.xml/jelix-module.json
                     continue;
                 }
                 $foundVersion = $version;

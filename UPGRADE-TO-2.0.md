@@ -4,7 +4,6 @@ Migration
 Here are instructions to migrate your Jelix application from Jelix 1.6 to the dev-master
 version.
 
-
 ## Composerify your application
 
 

@@ -83,7 +83,7 @@ class createentrypointCommand extends JelixScriptCommand {
 
         $entryPointDir = dirname($entryPointFullPath).'/';
 
-        $this->loadProjectXml();
+        $this->loadAppInfos();
 
         // retrieve the config file name
         $configFile = $this->getParam('config');
@@ -154,33 +154,14 @@ class createentrypointCommand extends JelixScriptCommand {
             $inifile->save();
         }
 
-        $this->updateProjectXml($name.".php", $configFile , $type);
-        if ($this->verbose())
-            echo "Project.xml has been updated.\n";
+        $this->appInfos->addEntryPointInfo($name.".php", $configFile , $type);
+        if ($this->verbose()) {
+            echo "Project.xml/jelix-app.json has been updated.\n";
+        }
 
         $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console('warning'));
         $installer->installEntryPoint($name.".php");
         if ($this->verbose())
             echo "All modules have been initialized for the new entry point.\n";
-    }
-
-    protected function updateProjectXml ($fileName, $configFileName, $type) {
-
-        $elem = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $fileName);
-        $elem->setAttribute("config", $configFileName);
-        $elem->setAttribute("type", $type);
-
-        $ep = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-
-        if (!$ep->length) {
-            $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
-            $ep->appendChild($elem);
-        }
-        else
-            $ep->item(0)->appendChild($elem);
-
-        $this->projectXml->save(App::appPath('project.xml'));
     }
 }
