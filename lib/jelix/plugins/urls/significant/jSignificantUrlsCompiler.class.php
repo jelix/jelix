@@ -145,7 +145,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime'] &&( \n";
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
-        $this->readProjectXml();
         $this->modulesPath = jApp::getAllModulesPath();
 
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
@@ -307,29 +306,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
         return true;
     }
-
-    protected function readProjectXml() {
-        $xml = simplexml_load_file(jApp::appPath('project.xml'));
-        foreach ($xml->entrypoints->entry as $entrypoint) {
-            $file = (string)$entrypoint['file'];
-            if (substr($file, -4) != '.php')
-                $file.='.php';
-            $configFile = (string)$entrypoint['config'];
-            $this->entryPoints[$file] = $configFile;
-        }
-    }
-
-    protected function getEntryPointConfig($entrypoint) {
-        if (substr($entrypoint, -4) != '.php')
-            $entrypoint.='.php';
-        if (!isset($this->entryPoints[$entrypoint]))
-            throw new Exception('The entry point "'.$entrypoint.'" is not declared into project.xml');
-        return jApp::configPath($this->entryPoints[$entrypoint]);
-    }
-    /**
-     * list all entry points and their config
-     */
-    protected $entryPoints = array();
 
     /**
      * list all modules path
