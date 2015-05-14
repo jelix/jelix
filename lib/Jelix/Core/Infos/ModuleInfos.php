@@ -77,4 +77,12 @@ class ModuleInfos extends InfosAbstract {
         $this->_exists = true;
         $parser->parse($this);
     }
+
+    public function getFile() {
+        if ($this->isXml) {
+            return 'module.xml';
+        }
+        return 'jelix-module.json';
+    }
+
 }

@@ -57,4 +57,6 @@ abstract class InfosAbstract {
     public function exists() {
         return $this->_exists;
     }
+
+    public abstract function getFile();
 }

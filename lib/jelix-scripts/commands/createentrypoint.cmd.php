@@ -156,7 +156,7 @@ class createentrypointCommand extends JelixScriptCommand {
 
         $this->appInfos->addEntryPointInfo($name.".php", $configFile , $type);
         if ($this->verbose()) {
-            echo "Project.xml/jelix-app.json has been updated.\n";
+            echo $this->appInfos->getFile()." has been updated.\n";
         }
 
         $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console('warning'));

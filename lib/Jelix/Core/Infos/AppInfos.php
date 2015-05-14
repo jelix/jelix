@@ -113,4 +113,11 @@ class AppInfos extends InfosAbstract {
             file_put_contents($this->path.'jelix-app.json', json_encode($json));
         }
     }
+
+    public function getFile() {
+        if ($this->isXml) {
+            return 'project.xml';
+        }
+        return 'jelix-app.json';
+    }
 }

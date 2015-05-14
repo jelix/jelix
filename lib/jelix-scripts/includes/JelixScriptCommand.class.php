@@ -424,7 +424,7 @@ abstract class JelixScriptCommand {
       $doc = new DOMDocument();
 
       if (!$this->appInfos->exists()){
-         throw new Exception($this->name.": cannot load jelix-app.json/project.xml");
+         throw new Exception($this->name.": cannot load jelix-app.json or project.xml");
       }
    }
 
