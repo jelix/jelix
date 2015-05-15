@@ -39,6 +39,7 @@ cd lib/jelix-scripts/includes
 cd lib/jelix-scripts/templates
   project.xml.tpl
   application.init.php.tpl
+  application2.init.php.tpl
   cmd.php.tpl
   composer.json.tpl
   htaccess_deny

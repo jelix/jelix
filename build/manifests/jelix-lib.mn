@@ -1,9 +1,10 @@
 cd .
-  composer.json
+  README.md
 
 cd lib
   .htaccess
 * jelix_check_server.php
+  composer.json
 
 cd lib/jelix
   CHANGELOG

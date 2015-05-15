@@ -265,20 +265,24 @@ $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".Envi
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
 
 //... packages
+$oldpath = getcwd();
 if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {
   file_put_contents($MAIN_TARGET_PATH.'/PACKAGE_NAME',$PACKAGE_NAME);
+  chdir($BUILD_TARGET_PATH.'/lib');
+  exec('composer install --prefer-dist --no-dev --no-progress --no-ansi --no-interaction --quiet');
+  unlink('composer.json');
+  unlink('composer.lock');
+  chdir($oldpath);
 }
-
 
 if($PACKAGE_TAR_GZ){
     exec('tar czf '.$MAIN_TARGET_PATH.'/'.$PACKAGE_NAME.'.tar.gz -C '.$MAIN_TARGET_PATH.' '.$PACKAGE_NAME);
 }
 
 if($PACKAGE_ZIP){
-    $oldpath = getcwd();
     chdir($MAIN_TARGET_PATH);
     exec('zip -r '.$PACKAGE_NAME.'.zip '.$PACKAGE_NAME);
-    chdir($oldpath);
+    
 }
-
+chdir($oldpath);
 exit(0);

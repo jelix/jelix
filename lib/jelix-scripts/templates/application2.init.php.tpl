@@ -7,7 +7,9 @@
 * @link      %%default_website%%
 * @license   %%default_license_url%% %%default_license%%
 */
-require (%%php_rp_jelix%%.'init.php');
+$vendorDir = %%php_rp_vendor%%;
+require($vendorDir.'autoload.php');
+require($vendorDir.'jelix_app_path.php');
 
 jApp::initPaths(
     __DIR__.'/',
@@ -19,12 +21,11 @@ jApp::initPaths(
 );
 jApp::setTempBasePath(%%php_rp_temp%%);
 
+// if you use composer, you can declares these path in the composer.json
+// file instead of declaring them here...
 jApp::declareModulesDir(array(
-                        LIB_PATH.'/jelix-modules/',
-                        LIB_PATH.'/jelix-admin-modules/',
                         __DIR__.'/modules/'
                     ));
 jApp::declarePluginsDir(array(
-                        LIB_PATH.'/jelix-plugins/',
                         __DIR__.'/plugins'
                     ));
