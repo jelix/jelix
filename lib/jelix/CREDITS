@@ -77,10 +77,6 @@ Thanks for all users, especially those who reported bugs. :-)
 Thanks for their works:
 -----------------------
 
-Brent R. Matzelle
-    for his PHPMailer class (jMailer in Jelix)
-Chris Ryan
-    for his SMTP classe (jSmtp in Jelix)
 Copix Team
     in particulary Gerald Croes, co-author of source parts from Copix project
     (version 2.3dev20050901), under copyright 2001-2005 Copix Team

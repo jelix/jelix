@@ -339,3 +339,5 @@ cd lib/json
 cd lib/php5redis
   README.txt
   Php5Redis.php
+
+rmd lib/phpMailer

@@ -1,4 +1,5 @@
 cd .
+  composer.json
 
 cd lib
   .htaccess
@@ -788,4 +789,3 @@ cd lib/installwizard/pages/confmail/
   confmail.fr.php
   confmail.page.php
   confmail.tpl
-
