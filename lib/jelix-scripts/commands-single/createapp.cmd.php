@@ -185,8 +185,8 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(trim(jApp::tempBasePath(),'/'));
-        if ($temp != trim($appPath,'/')) {
+        $temp = dirname(rtrim(jApp::tempBasePath(),'/'));
+        if ($temp != rtrim($appPath,'/')) {
             if (file_exists($temp.'/.gitignore')) {
                 $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
                 file_put_contents($temp.'/.gitignore', $gitignore);
@@ -210,6 +210,7 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_www']  = $this->convertRp($param['rp_www']);
         $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
         $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
+        $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);
 
         $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
 
@@ -223,6 +224,7 @@ class createappCommand extends JelixScriptCommand {
                 $cmd = JelixScript::getCommand('createmodule', $this->config);
                 $options = $this->getCommonActiveOption();
                 $options['-addinstallzone'] = true;
+                $options['-noregistration'] = true;
                 $cmd->initOptParam($options, array('module'=>$param['modulename']));
                 $cmd->run();
                 $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, "Main template");

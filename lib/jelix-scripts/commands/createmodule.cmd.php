@@ -19,6 +19,7 @@ class createmoduleCommand extends JelixScriptCommand {
                                    '-addinstallzone'=>false,
                                    '-defaultmodule'=>false,
                                    '-admin'=>false,
+                                   '-noregistration'=>false,
                                    '-ver'=>true);
     public  $allowed_parameters=array('module'=>true, 'repository'=>false);
 
@@ -90,7 +91,9 @@ class createmoduleCommand extends JelixScriptCommand {
             $repository .= '/';
         }
         $repositoryPath = jFile::parseJelixPath( $repository );
-        $this->registerModulesDir($repository, $repositoryPath);
+        if (!$this->getOption('-noregistration')) {
+            $this->registerModulesDir($repository, $repositoryPath);
+        }
 
         $path = $repositoryPath.$module.'/';
         $this->createDir($path);
