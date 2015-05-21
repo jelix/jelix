@@ -24,7 +24,6 @@ jauthdb.access=1
 jauth.access=1
 jpref.access=1
 jminify.access=1
-jredis.access=1
 
 [coordplugins]
 auth=auth.coord.ini.php
