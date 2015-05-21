@@ -67,6 +67,7 @@ class jAppTest extends PHPUnit_Framework_TestCase {
             jApp::appPath('plugins/'),
             LIB_PATH.'jelix-plugins/',
             jApp::appPath('vendor/jelix/minify-module/jminify/plugins/'),
+            jApp::appPath('vendor/jelix/php-redis-module/jredis/plugins/'),
             LIB_PATH.'jelix-modules/jacl2db/plugins/',
             LIB_PATH.'jelix-modules/jacldb/plugins/',
             LIB_PATH.'jelix-modules/jacl/plugins/',

@@ -16,10 +16,6 @@ cd lib/diff
 ! difftableformatter.php
   README
 
-cd lib/php5redis/
-  Redis.php
-  README.md
-
 cd lib/wikirenderer
   CHANGELOG
   CREDITS

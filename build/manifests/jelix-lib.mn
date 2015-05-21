@@ -599,9 +599,6 @@ cd lib/jelix/plugins/kvdb/file2/
 cd lib/jelix/plugins/kvdb/memcache/
   memcache.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/redis/
-  redis.kvdriver.php
-
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php
 

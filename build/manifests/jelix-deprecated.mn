@@ -148,6 +148,7 @@ rmd lib/jelix/plugins/db/intuition
 rmd lib/jelix/plugins/db/sqlite
 rmd lib/jelix/plugins/coord/magicquotes
 rmd lib/jelix/plugins/htmlresponse/minify
+rmd lib/jelix/plugins/kvdb/redis/
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
@@ -338,8 +339,5 @@ cd lib/json
   JSON.php
   LICENSE
 
-cd lib/php5redis
-  README.txt
-  Php5Redis.php
-
+rmd lib/php5redis
 rmd lib/phpMailer
