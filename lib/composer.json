@@ -6,8 +6,7 @@
     "require": {
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
-        "phpmailer/phpmailer": "5.2.9",
-        "mrclay/minify": "2.2.0"
+        "phpmailer/phpmailer": "5.2.9"
     },
     "autoload": {
         "psr-0": { "jelix\\": "." },

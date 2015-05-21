@@ -19,7 +19,9 @@
         "php": ">=5.3.3",
         "phpunit/phpunit": "4.3.*",
         "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.2"
+        "jelix/composer-module-setup": "0.3",
+        "jelix/minify-module": "1.7.*",
+        "phpmailer/phpmailer": "5.2.9"
     },
     "replace": {
         "jelix/jelix":"self.version"

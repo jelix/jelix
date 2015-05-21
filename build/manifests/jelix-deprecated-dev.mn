@@ -46,5 +46,6 @@ cd lib/jelix-scripts/templates/var/config/
 
 cd lib/jelix-scripts/templates/www/
   rdf.php.tpl
+  minify.php.tpl
 
 rmd lib/simpletest/

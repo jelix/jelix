@@ -1,7 +1,7 @@
 <?php
 
 require_once(JELIX_LIB_PATH.'core/response/jResponseHtml.class.php');
-require_once(JELIX_LIB_PATH.'plugins/htmlresponse/minify/minify.htmlresponse.php');
+require_once(__DIR__.'/../../../vendor/jelix/minify-module/jminify/plugins/htmlresponse/minify/minify.htmlresponse.php');
 
 class testMinifyHTMLResponsePlugin extends minifyHTMLResponsePlugin {
 

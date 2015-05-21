@@ -16,9 +16,6 @@ cd lib/diff
 ! difftableformatter.php
   README
 
-cd lib/minify/
-  jelix_minify.php
-
 cd lib/php5redis/
   Redis.php
   README.md

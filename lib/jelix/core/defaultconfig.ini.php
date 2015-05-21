@@ -108,15 +108,6 @@ sitemap = jResponseSitemap
 ; list of active plugins for jResponseHtml
 plugins =
 
-; path to the minify entry point, relative to basepath
-minifyEntryPoint = minify.php
-;concatenate and minify CSS and/or JS files :
-minifyCSS = off
-minifyJS = off
-; list of filenames which shouldn't be minified. Path relative to basePath:
-minifyExcludeCSS = ""
-minifyExcludeJS = "jelix/wymeditor/jquery.wymeditor.js"
-
 [debugbar]
 plugins = sqllog,sessiondata,defaultlog
 defaultPosition=right

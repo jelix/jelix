@@ -50,9 +50,10 @@ class moduleAutoloadTest extends jUnitTestCase
 
     function testNamespacePathMapSection() {
         $conf = jApp::config();
-        $this->assertEquals(1, count($conf->_autoload_namespacepathmap), '_autoload_namespacepathmap should have 1 declaration');
+        $this->assertEquals(2, count($conf->_autoload_namespacepathmap), '_autoload_namespacepathmap should have 2 declaration ');
         $this->assertTrue(isset($conf->_autoload_namespacepathmap['jelixTests\bar']), '_autoload_namespacepathmap should declare jelixTests\bar namespace');
         $this->assertEquals(self::$modulePath.'autoloadtest/barns|.class.php', $conf->_autoload_namespacepathmap['jelixTests\bar'] , 'check path');
+        $this->assertTrue(isset($conf->_autoload_namespacepathmap['Jelix\Minify']), '_autoload_namespacepathmap should declare Jelix\Minify namespace');
     }
 
     function testIncludePathSection() {

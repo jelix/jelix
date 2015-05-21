@@ -146,8 +146,8 @@ rmd lib/jelix/plugins/coord/jacl2/
 rmd lib/jelix/plugins/cache/memcached
 rmd lib/jelix/plugins/db/intuition
 rmd lib/jelix/plugins/db/sqlite
-
 rmd lib/jelix/plugins/coord/magicquotes
+rmd lib/jelix/plugins/htmlresponse/minify
 
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
@@ -297,10 +297,7 @@ cd lib/jelix-www/wymeditor/skins/default
 
 rmd lib/tcpdf/
 rmd lib/pdf-fonts/
-rmd lib/minify/min
-cd lib/minify/
-  README.txt
-  LICENSE.txt
+rmd lib/minify
 
 rmd lib/jelix-admin-modules/jacl2_admin
 

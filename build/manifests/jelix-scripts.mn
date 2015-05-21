@@ -78,7 +78,6 @@ cd lib/jelix-scripts/templates/www
   index.php.tpl
   jsonrpc.php.tpl
   soap.php.tpl
-  minify.php.tpl
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
