@@ -5,7 +5,7 @@ class jAppTest extends PHPUnit_Framework_TestCase {
 
 
     
-    function testModulePath() {
+    function testModulesDirPath() {
         $modules = jApp::getAllModulesPath();
 
          // first save
@@ -33,6 +33,30 @@ class jAppTest extends PHPUnit_Framework_TestCase {
         // pop the first save, we should be with initial paths
         jApp::restoreContext();
         $this->assertEquals($modules, jApp::getAllModulesPath());
+    }
+
+    function testModulePath() {
+        jApp::saveContext();
+        jApp::clearModulesPluginsPath();
+
+        // verify that we have only jelix as modules
+        $this->assertEquals(array('jelix'=> JELIX_LIB_PATH.'core-modules/jelix/'), jApp::getAllModulesPath());
+
+        jApp::declareModule(array(
+            __DIR__.'/../installer/app1/modules/aaa/',
+            jApp::appPath('modules/testapp')
+        ));
+
+        $this->assertEquals(
+            array(
+                  'jelix'=> JELIX_LIB_PATH.'core-modules/jelix/',
+                  'aaa'=>realpath(__DIR__.'/../installer/app1/modules/aaa/').'/',
+                  'testapp'=>realpath(jApp::appPath('modules/testapp')).'/'
+            ),
+            jApp::getAllModulesPath());
+
+        // pop the first save, we should be with initial paths
+        jApp::restoreContext();
     }
 
     function testPluginPath() {
