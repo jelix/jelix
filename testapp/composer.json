@@ -21,7 +21,7 @@
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.3.*",
         "jelix/minify-module": "1.7.*",
-        "jelix/php-redis-plugin": "dev-master",
+        "jelix/php-redis-plugin": "1.7.1",
         "phpmailer/phpmailer": "5.2.9"
     },
     "replace": {
@@ -32,7 +32,7 @@
         "classmap": [ ],
         "files": [ "../lib/jelix/init.php"  ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "extra" : {
         "jelix": {
             "modules-dir" : [
