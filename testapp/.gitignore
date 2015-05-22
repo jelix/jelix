@@ -4,6 +4,7 @@ Thumbs.db
 var/config/installer.ini.php
 var/config/profiles.ini.php
 var/config/localconfig.ini.php
+var/db/sqlite3/tests.sqlite3
 var/log/*
 !var/log/.dummy
 var/sessions/*
