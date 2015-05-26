@@ -46,7 +46,12 @@ cd lib/jelix-scripts/templates/var/config/
    cache.ini.php.tpl
    defaultconfig.ini.php.tpl
 
+cd lib/jelix-scripts/templates/var/config/soap/
+  config.ini.php.tpl
+
 cd lib/jelix-scripts/templates/www/
   rdf.php.tpl
+  minify.php.tpl
+  soap.php.tpl
 
 rmd lib/simpletest/

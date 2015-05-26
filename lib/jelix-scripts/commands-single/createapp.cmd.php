@@ -155,6 +155,17 @@ class createappCommand extends JelixScriptCommand {
         $param['rp_www']   = $this->getRelativePath($appPath, $wwwpath);
         $param['rp_cmd']   = $this->getRelativePath($appPath, App::scriptsPath());
         $param['rp_jelix'] = $this->getRelativePath($appPath, JELIX_LIB_PATH);
+        $param['rp_vendor'] = '';
+        foreach (array(LIB_PATH. 'vendor/',   // jelix is installed from a zip/tgz package
+                        LIB_PATH . '../vendor/', // jelix is installed from git
+                        LIB_PATH. '../../../' // jelix is installed with Composer
+                        ) as $path) {
+           if (file_exists($path)) {
+              $param['rp_vendor'] = $this->getRelativePath($appPath, realpath($path).'/');
+              break;
+           }
+        }
+
         $param['rp_app']   = $this->getRelativePath($wwwpath, $appPath);
 
         $this->createFile(App::logPath().'.dummy', 'dummy.tpl', array());
@@ -185,8 +196,8 @@ class createappCommand extends JelixScriptCommand {
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(trim(App::tempBasePath(),'/'));
-        if ($temp != trim($appPath,'/')) {
+        $temp = dirname(rtrim(App::tempBasePath(),'/'));
+        if ($temp != rtrim($appPath,'/')) {
             if (file_exists($temp.'/.gitignore')) {
                 $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
                 file_put_contents($temp.'/.gitignore', $gitignore);
@@ -210,8 +221,13 @@ class createappCommand extends JelixScriptCommand {
         $param['php_rp_www']  = $this->convertRp($param['rp_www']);
         $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
         $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
-
-        $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
+        if ($param['rp_vendor']) {
+           $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);
+           $this->createFile($appPath.'application.init.php','application2.init.php.tpl',$param, "Bootstrap file");
+        }
+        else {
+           $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
+        }
 
         $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console('warning'));
         $installer->installApplication();
@@ -223,6 +239,7 @@ class createappCommand extends JelixScriptCommand {
                 $cmd = JelixScript::getCommand('createmodule', $this->config);
                 $options = $this->getCommonActiveOption();
                 $options['-addinstallzone'] = true;
+                $options['-noregistration'] = true;
                 $cmd->initOptParam($options, array('module'=>$param['modulename']));
                 $cmd->run();
                 $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, "Main template");

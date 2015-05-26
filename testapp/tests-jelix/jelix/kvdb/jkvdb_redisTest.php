@@ -9,7 +9,8 @@
 */
 
 require_once(__DIR__.'/jkvdb.lib.php');
-require_once(LIB_PATH . 'php5redis/Redis.php');
+require_once(__DIR__.'/../../../vendor/jelix/php-redis-plugin/lib/Redis.php');
+
 /**
 * Tests API jKVDb
 * @package     testapp

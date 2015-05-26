@@ -27,6 +27,7 @@ require ('../application.init.php');
 //    'groups' => 'path/to/mygroupconfig.php'
 //);
 
-require(LIB_PATH.'minify/jelix_minify.php');
+require(jApp::getAllModulesPath()['jminify'].'lib/MinifySetup.php');
+\Jelix\Minify\MinifySetup::init();
 
-
+require(__DIR__.'/../vendor/mrclay/minify/min/index.php');

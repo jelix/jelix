@@ -22,6 +22,7 @@ cd lib/jelix-legacy/core/
   jSelector.class.php
   jISelector.iface.php
   jLog.class.php
+
   jLocale.class.php
   jBundle.class.php
   lang_to_locale.ini.php
@@ -43,6 +44,42 @@ cd lib/jelix-legacy/utils/
   jIniMultiFilesModifier.class.php
   jMailer.class.php
   jSmtp.class.php
+  jMinifier.class.php
+  jWSDL.class.php
+  jTcpdf.class.php
+
+rmd lib/jelix-legacy/plugins/kvdb/redis/
+rmd lib/jelix-legacy/plugins/htmlresponse/minify
+
+cd lib/jelix/plugins/acl/db/
+  db.acl.php
+
+cd lib/jelix/plugins/acl2/db
+  db.acl2.php
+
+cd lib/jelix/plugins/tpl/common
+  block.ifacl.php
+  block.ifnotacl.php
+  block.ifacl2.php
+  block.ifnotacl2.php
+  
+cd lib/jelix/plugins/tpl/html
+  block.formdatas.php
+  function.formdatasfull.php
+
+cd lib/jelix/plugins/jforms/html
+  html.jformscompiler.php
+
+rmd lib/jelix/plugins/tpl/xul/
+rmd lib/jelix/plugins/coord/jacl/
+rmd lib/jelix/plugins/coord/jacl2/
+
+rmd lib/jelix/plugins/cache/memcached
+rmd lib/jelix/plugins/db/intuition
+rmd lib/jelix/plugins/db/sqlite
+rmd lib/jelix/plugins/coord/magicquotes
+rmd lib/jelix/plugins/htmlresponse/minify
+rmd lib/jelix/plugins/kvdb/redis/
 rmd lib/jelix/plugins/kvstore/
 rmd lib/jelix-plugins/kvstore/
 
@@ -191,10 +228,7 @@ cd lib/jelix-www/wymeditor/skins/default
 
 rmd lib/tcpdf/
 rmd lib/pdf-fonts/
-rmd lib/minify/min
-cd lib/minify/
-  README.txt
-  LICENSE.txt
+rmd lib/minify
 
 rmd lib/jelix-admin-modules/jacl2_admin
 
@@ -226,19 +260,17 @@ cd lib/jelix-modules/jauthdb/install
   _installclass.php
 
 rmd lib/jelix-modules/jWSDL
+rmd lib/jelix-modules/jsoap
 rmd lib/wshelper
 
 rmd lib/jelix-modules/junittests
-rmd lib/jelix-modules/jsoap/classes/wshelper
+rmd lib/jelix-modules/jtcpdf
 
 cd lib/json
   JSON.php
   LICENSE
 
-cd lib/php5redis
-  README.txt
-  Php5Redis.php
-
+rmd lib/php5redis
 rmd lib/phpMailer
 
 cd lib/jelix-scripts/commands/

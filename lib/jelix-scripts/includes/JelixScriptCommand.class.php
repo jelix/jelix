@@ -617,7 +617,7 @@ abstract class JelixScriptCommand {
         // the modules dir is not known, we should register it.
         if (!$found) {
             $this->createDir($repositoryPath);
-            if (fileExists(\Jelix\Core\App::appPath('composer.json')) && file_exists(\Jelix\Core\App::appPath('vendor'))) {
+            if (file_exists(\Jelix\Core\App::appPath('composer.json')) && file_exists(\Jelix\Core\App::appPath('vendor'))) {
                 // we update composer.json
                 $json = json_decode(file_get_contents(\Jelix\Core\App::appPath('composer.json')), true);
                 if (!$json) {
@@ -639,7 +639,7 @@ abstract class JelixScriptCommand {
                 }
                 echo "You should launch 'composer update' to have your module repository recognized\n";
             }
-            else if (fileExists(\Jelix\Core\App::appPath('application.init.php'))) {
+            else if (file_exists(\Jelix\Core\App::appPath('application.init.php'))) {
                 // we modify the application.init.php directly
                 $content = file_get_contents(\Jelix\Core\App::appPath('application.init.php'));
                 $content .= "\n\\Jelix\\Core\\App::declareModulesDir(__DIR__.'/".$path."');\n";

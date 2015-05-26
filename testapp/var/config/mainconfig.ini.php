@@ -1,31 +1,32 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-locale = "en_US"
-charset = "UTF-8"
+locale=en_US
+charset=UTF-8
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
-timeZone = 
+timeZone=
 
-theme = default
+theme=default
 
 [modules]
-jelix.access = 2
-jelix_tests.access = 2
-testapp.access = 2
-testurls.access = 2
-jsoap.access = 2
-jacl.access = 1
-jacldb.access = 1
-jacl2.access = 1
-jacl2db.access = 1
-jauthdb.access = 1
-jauth.access = 1
+jelix.access=2
+jelix_tests.access=2
+testapp.access=2
+testurls.access=2
+jsoap.access=2
+jacl.access=1
+jacldb.access=1
+jacl2.access=1
+jacl2db.access=1
+jauthdb.access=1
+jauth.access=1
 jpref.access=1
+jminify.access=1
 
 [coordplugins]
-auth = auth.coord.ini.php
+auth=auth.coord.ini.php
 
 [coordplugin_jacl2]
 on_error=2
@@ -43,18 +44,18 @@ on_error_action="jelix~error:badright"
 ;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
 [compilation]
-checkCacheFiletime  = on
-force  = off
+checkCacheFiletime=on
+force=off
 
 [urlengine]
-engine        = basic_significant
+engine=basic_significant
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
 ; you use the significant engine. If you use the simple url engine, you can set to off.
-enableParser = on
+enableParser=on
 
-multiview = off
+multiview=off
 
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
@@ -64,12 +65,12 @@ multiview = off
 ; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php 
 ; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
 ; : basePath="/aaa/" )
-basePath = ""
+basePath=
 
-defaultEntrypoint= index
+defaultEntrypoint=index
 
 ; liste des actions requerant https (syntaxe expliquée dessous), pour le moteur
-simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
+simple_urlengine_https="unittest~urlsig:url8@classic @xmlrpc"
 
 [simple_urlengine_entrypoints]
 ; paramètres pour le moteur d'url simple : liste des points d'entrées avec les actions
@@ -82,48 +83,53 @@ simple_urlengine_https = "unittest~urlsig:url8@classic @xmlrpc"
 ;   m~*@r    -> pour toute action du module m répondant au type de requete r
 ;   @r       -> toute action de tout module répondant au type de requete r
 
-index = "@classic"
-xmlrpc = "@xmlrpc"
-jsonrpc = "@jsonrpc"
-testnews = "jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
-foo__bar = "jelix_tests~urlsig:url4@classic"
-news = "new~*@classic"
-soap = "@soap"
-actu = "jelix_tests~actu:*@classic"
-noep = "jelix_tests~urlsig:bug1488@classic"
+index="@classic"
+xmlrpc="@xmlrpc"
+jsonrpc="@jsonrpc"
+testnews="jelix_tests~urlsig:url2@classic jelix_tests~urlsig:url3@classic"
+foo__bar="jelix_tests~urlsig:url4@classic"
+news="new~*@classic"
+soap="@soap"
+actu="jelix_tests~actu:*@classic"
+noep="jelix_tests~urlsig:bug1488@classic"
 
 [basic_significant_urlengine_entrypoints]
 ; for each entry point, it indicates if the entry point name
 ; should be include in the url or not
-index = on
-xmlrpc = on
-jsonrpc = on
-testnews = off
-foo__bar = on
-news = on
-soap = on
-noep = on
+index=on
+xmlrpc=on
+jsonrpc=on
+testnews=off
+foo__bar=on
+news=on
+soap=on
+noep=on
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
-plugins = debugbar
+plugins="debugbar,minify"
 
 
+minifyCSS=off
+minifyJS=on
+minifyExcludeCSS=
+minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyEntryPoint=minify.php
 [mailLogger]
 ;email = root@localhost
 ;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
 [acl]
-driver = db
+driver=db
 
 [acl2]
-driver = db
+driver=db
 
 [rootUrls]
 /themes = "http://themes.junittest.com/"
-test = "http://www.junittest.com/"
-secure_test = "https://www.junittest.com/"
-foo_relPath="foo"
+test="http://www.junittest.com/"
+secure_test="https://www.junittest.com/"
+foo_relPath=foo
 foo_absPath="/foo"
 soap = "http://testapp20.local"
 localapp = "http://testapp20.local"

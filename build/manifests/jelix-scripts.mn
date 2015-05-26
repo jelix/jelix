@@ -38,6 +38,7 @@ cd lib/jelix-scripts/includes
 cd lib/jelix-scripts/templates
   jelix-app.json.tpl
   application.init.php.tpl
+  application2.init.php.tpl
   cmd.php.tpl
   composer.json.tpl
   htaccess_deny
@@ -75,8 +76,7 @@ cd lib/jelix-scripts/templates/www
   xmlrpc.php.tpl
   index.php.tpl
   jsonrpc.php.tpl
-  soap.php.tpl
-  minify.php.tpl
+
 cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/var/config/
@@ -95,8 +95,6 @@ cd lib/jelix-scripts/templates/var/config/jsonrpc/
 cd lib/jelix-scripts/templates/var/config/xmlrpc/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/var/config/cmdline/
-  config.ini.php.tpl
-cd lib/jelix-scripts/templates/var/config/soap/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/tests/
   runtests.php

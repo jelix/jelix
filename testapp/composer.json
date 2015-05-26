@@ -19,7 +19,11 @@
         "php": ">=5.3.3",
         "phpunit/phpunit": "4.3.*",
         "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.2"
+        "jelix/composer-module-setup": "0.3.*",
+        "jelix/minify-module": "1.7.*",
+        "jelix/php-redis-plugin": "1.7.1",
+        "phpmailer/phpmailer": "5.2.9",
+        "jelix/soap-server-module": "1.7.*"
     },
     "autoload": {
         "psr-4": {

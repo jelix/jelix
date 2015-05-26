@@ -7,7 +7,7 @@
 *
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier, GeekBay, Julien Issler
-* @copyright   2006-2014 Laurent Jouanneau
+* @copyright   2006-2015 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
 * @copyright   2010 Julien Issler
 * @link        http://jelix.org
@@ -20,7 +20,7 @@ namespace Jelix\Mailer;
  * jMailer based on PHPMailer - PHP email transport class
  * @author Laurent Jouanneau
  * @contributor Kévin Lepeltier
- * @copyright   2006-2014 Laurent Jouanneau
+ * @copyright   2006-2015 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier
  * @see PHPMailer
  */
@@ -238,7 +238,7 @@ class Mailer extends \PHPMailer {
     protected function mailSend($header, $body) {
         if ($this->copyToFiles)
             $this->copyMail($header, $body);
-        return parent::MailSend($header, $body);
+        return parent::mailSend($header, $body);
     }
 
     protected function smtpSend($header, $body) {

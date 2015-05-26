@@ -344,7 +344,7 @@ class App {
             self::$_allModulesPath['jelix'] = realpath(__DIR__.'/../../jelix-legacy/core-modules/jelix/').DIRECTORY_SEPARATOR;
 
             foreach(self::$_modulesPath as $modulePath) {
-                self::$_allModulesPath[basename($modulePath)] = dirname($modulePath).DIRECTORY_SEPARATOR;
+                self::$_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;
             }
 
             foreach(self::$_modulesDirPath as $basePath=>$names) {

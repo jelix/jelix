@@ -7,8 +7,9 @@
 * @link      %%default_website%%
 * @license   %%default_license_url%% %%default_license%%
 */
-
-require (__DIR__.'/vendor/autoload.php');
+$vendorDir = %%php_rp_vendor%%;
+require($vendorDir.'autoload.php');
+require($vendorDir.'jelix_app_path.php');
 
 \Jelix\Core\App::initPaths(
     __DIR__.'/',
@@ -18,15 +19,13 @@ require (__DIR__.'/vendor/autoload.php');
     %%php_rp_conf%%,
     %%php_rp_cmd%%
 );
-
 \Jelix\Core\App::setTempBasePath(%%php_rp_temp%%);
 
+// if you use composer, you can declares these path in the composer.json
+// file instead of declaring them here...
 \Jelix\Core\App::declareModulesDir(array(
-                        LIB_PATH.'/jelix-modules/',
-                        LIB_PATH.'/jelix-admin-modules/',
                         __DIR__.'/modules/'
                     ));
 \Jelix\Core\App::declarePluginsDir(array(
-                        LIB_PATH.'/jelix-plugins/',
                         __DIR__.'/plugins'
                     ));

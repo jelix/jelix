@@ -1,0 +1,29 @@
+{
+    "name": "jelix/for-classic-package",
+    "type": "library",
+    "description": "this is a composer file to download dependencies and include them into the official zip/tgz package",
+    "license": "LGPL-2.1",
+    "require": {
+        "jelix/fakeserverconf": "1.0.*",
+        "jelix/composer-module-setup": "0.*",
+        "phpmailer/phpmailer": "5.2.9",
+        "jelix/soap-server-module": "1.7.*"
+    },
+    "autoload": {
+        "psr-0": { "jelix\\": "." },
+        "classmap": [ ],
+        "files": [ "jelix/init.php" ]
+    },
+    "minimum-stability": "stable",
+    "extra" : {
+        "jelix": {
+            "modules-dir" : [
+                "jelix-modules",
+                "jelix-admin-modules"
+            ],
+            "plugins-dir" : [
+                "jelix-plugins"
+            ]
+        }
+    }
+}

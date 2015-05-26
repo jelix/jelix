@@ -506,7 +506,7 @@ cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
   overload.UTF-8.properties
 cd testapp/var/db/sqlite3/
-  tests.sqlite3
+  tests.sqlite3.dist
 
 cd testapp/temp/
   .dummy

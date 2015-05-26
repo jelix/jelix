@@ -24,7 +24,7 @@ class moduleAutoloadTest extends jUnitTestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(9, count($conf->_autoload_class), '_autoload_class should have 5 declarations (for jelix_tests, jsoap, jacl, jacl2 modules)');
+        $this->assertEquals(11, count($conf->_autoload_class), '_autoload_class should have 11 declarations (for jelix_tests, jsoap, jacl, jacl2 modules)');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }
@@ -50,9 +50,10 @@ class moduleAutoloadTest extends jUnitTestCase
 
     function testNamespacePathMapSection() {
         $conf = jApp::config();
-        $this->assertEquals(1, count($conf->_autoload_namespacepsr4), '_autoload_namespacepsr4 should have 1 declaration');
+        $this->assertEquals(2, count($conf->_autoload_namespacepsr4), '_autoload_namespacepsr4 should have 2 declaration ');
         $this->assertTrue(isset($conf->_autoload_namespacepsr4['jelixTests\bar']), '_autoload_namespacepsr4 should declare jelixTests\bar namespace');
         $this->assertEquals(array(self::$modulePath.'autoloadtest/barns|.class.php'), $conf->_autoload_namespacepsr4['jelixTests\bar'] , 'check path');
+        $this->assertTrue(isset($conf->_autoload_namespacepsr4['Jelix\Minify']), '_autoload_namespacepsr4 should declare Jelix\Minify namespace');
     }
 
     function testIncludePathSection() {

@@ -1,9 +1,10 @@
 cd .
-  composer.json
+  README.md
 
 cd lib
   .htaccess
 * jelix_check_server.php
+  composer.json
 
 cd lib/Jelix/Core
   App.php
@@ -610,14 +611,8 @@ cd lib/jelix-legacy/plugins/kvdb/file2/
 cd lib/jelix-legacy/plugins/kvdb/memcache/
   memcache.kvdriver.php
 
-cd lib/jelix-legacy/plugins/kvdb/redis/
-  redis.kvdriver.php
-
 cd lib/jelix-legacy/plugins/logger/firebug
   firebug.logger.php
-
-cd lib/jelix-legacy/plugins/htmlresponse/minify
-  minify.htmlresponse.php
 
 cd lib/jelix-legacy/plugins/htmlresponse/debugbar
   debugbar.htmlresponse.php
@@ -925,3 +920,4 @@ cd lib/Jelix/Mailer
   composer.json
   Mailer.php
   Smtp.php
+
