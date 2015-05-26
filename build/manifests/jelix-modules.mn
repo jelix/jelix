@@ -153,27 +153,6 @@ cd lib/jelix-modules/jauth/templates
 cd lib/jelix-modules/jauth/zones
 ! loginform.zone.php
 
-cd lib/jelix-modules/jsoap
-* module.xml
-cd lib/jelix-modules/jsoap/classes
-  jWSDL.php
-  jSoapCoordinator.class.php
-  jSoapRequest.class.php
-cd lib/jelix-modules/jsoap/controllers
-  WSDL.classic.php
-cd lib/jelix-modules/jsoap/locales/en_GB
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jsoap/locales/en_US
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jsoap/locales/fr_FR
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jsoap/install
-  install.php
-cd lib/jelix-modules/jsoap/responses
-  jResponseSoap.class.php
-cd lib/jelix-modules/jsoap/templates
-  soap_doc.tpl
-
 cd lib/jelix-modules/jpref
 * module.xml
 cd lib/jelix-modules/jpref/classes/

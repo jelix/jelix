@@ -93,8 +93,6 @@ class initadminCommand extends JelixScriptCommand {
         $inifile->setValue('jacl.access', '0', 'modules');
         $installConfig->setValue('jacldb.installed', '0', $entrypoint);
         $inifile->setValue('jacldb.access', '0', 'modules');
-        $installConfig->setValue('jsoap.installed', '0', $entrypoint);
-        $inifile->setValue('jsoap.access', '0', 'modules');
 
         $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
         if ($urlconf === null || $urlconf == '') {

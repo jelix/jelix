@@ -330,11 +330,11 @@ cd lib/jelix-modules/jauthdb/install
   _installclass.php
 
 rmd lib/jelix-modules/jWSDL
+rmd lib/jelix-modules/jsoap
 rmd lib/wshelper
 
 rmd lib/jelix-modules/junittests
 rmd lib/jelix-modules/jtcpdf
-rmd lib/jelix-modules/jsoap/classes/wshelper
 
 cd lib/json
   JSON.php
