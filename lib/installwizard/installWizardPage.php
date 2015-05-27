@@ -52,12 +52,12 @@ class installWizardPage {
     
     /**
      * action to display the page.
-     * @param jTpl $tpl the template container which will be used
+     * @param \Jelix\Castor\Castor $tpl the template container which will be used
      * to display the page. The template should be store in the
      * same directory of the page class, with the same prefix.
      * @return boolean true if the wizard can continue
      */
-    function show ($tpl) {
+    function show (\Jelix\Castor\Castor $tpl) {
         return true;
     }
 

@@ -15,9 +15,9 @@ class endWizPage extends installWizardPage {
     
     /**
      * action to display the page
-     * @param jTpl $tpl the template container
+     * @param \Jelix\Castor\Castor $tpl the template container
      */
-    function show ($tpl) {
+    function show (\Jelix\Castor\Castor $tpl) {
         return false;
     }
     

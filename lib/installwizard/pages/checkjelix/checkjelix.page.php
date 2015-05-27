@@ -26,9 +26,9 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
 
     /**
      * action to display the page
-     * @param jTpl $tpl the template container
+     * @param \Jelix\Castor\Castor $tpl the template container
      */
-    function show ($tpl) {
+    function show (\Jelix\Castor\Castor $tpl) {
         $this->tpl = $tpl;
         $messages = new jInstallerMessageProvider();
         $check = new jInstallCheck($this, $messages);

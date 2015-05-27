@@ -34,7 +34,7 @@ nightlies:
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
-	$(PHP) build/buildjtpl.php -D $(DISTPATHSWITCH) ./build/config/jtpl-dist.ini
+
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 #	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/

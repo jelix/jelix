@@ -114,10 +114,6 @@ $BUILD_OPTIONS = array(
     "show messages",
     false,
     ),
-'JTPL_VERSION'=> array(
-    false,
-    '',
-    ),
 'TODAY'=> array(
     false,
     '',
@@ -224,19 +220,7 @@ Manifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , E
 Manifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
 Manifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll());
 
-// jtpl standalone for wizard
-
-Environment::setFromFile('JTPL_VERSION','lib/jelix/tpl/VERSION', true);
-if($IS_NIGHTLY){
-    $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
-}
-
 $var = Environment::getAll();
-$jtplpath = $BUILD_TARGET_PATH.'lib/installwizard/jtpl/';
-DirUtils::createDir($jtplpath);
-Manifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
-file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
-
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 

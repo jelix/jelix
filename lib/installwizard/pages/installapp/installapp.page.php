@@ -16,9 +16,9 @@ class installappWizPage extends installWizardPage {
     
     /**
      * action to display the page
-     * @param jTpl $tpl the template container
+     * @param \Jelix\Castor\Castor $tpl the template container
      */
-    function show ($tpl) {
+    function show (\Jelix\Castor\Castor $tpl) {
         if (isset($this->config['level'])) {
             $level = $this->config['level'];
             if (!in_array($level, array('error', 'notice', 'warning')))
