@@ -672,14 +672,12 @@ cd lib/jelix-legacy/plugins/tpl/ltx2pdf
   function.jurl.php
 
 cd lib/jelix-legacy/plugins/tpl/text
-  cfunction.const.php
   function.jfullurl.php
   function.jlocale.php
   function.jurl.php
   function.formdatafull.php
 
 cd lib/jelix-legacy/plugins/tpl/xml
-  cfunction.const.php
   function.jfullurl.php
   function.jlocale.php
   function.jurl.php
