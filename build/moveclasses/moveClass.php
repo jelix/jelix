@@ -35,16 +35,11 @@ $legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
 $jelixLib = new Manifest\Modifier(__DIR__.'/../manifests/jelix-lib.mn');
 $jelixLib->parse();
 
-$deprecated = new Manifest\Modifier(__DIR__.'/../manifests/jelix-deprecated.mn');
-$deprecated->parse();
-
 $jelixLib->removeFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
-$deprecated->addFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
 $jelixLib->addFile('lib/Jelix/'.$p['targetdir'], $p['targetfile']);
 $jelixLib->addFile($legacyDir, $oldclass.'.php');
 
 $jelixLib->save();
-$deprecated->save();
 
 //-------------------  create dummy class
 
