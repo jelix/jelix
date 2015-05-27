@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<phpunit>
-  <testsuites>
-    <testsuite name="jTpl Standalone">
-      <directory>standalone/</directory>
-    </testsuite>
-  </testsuites>
-</phpunit>

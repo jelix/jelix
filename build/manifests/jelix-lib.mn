@@ -382,8 +382,6 @@ cd lib/jelix-legacy/kvdb
 cd lib/jelix-legacy/tpl/
   jTpl.class.php
   jTplCompiler.class.php
-  jTplAbstract.php
-  jTplCompilerAbstract.php
 
 cd lib/jelix-legacy/utils/
   jAtom10Reader.class.php
@@ -631,42 +629,11 @@ cd lib/jelix-legacy/plugins/profiles/jdb
 cd lib/jelix-legacy/plugins/tpl/common
   block.ifuserconnected.php
   block.ifusernotconnected.php
-  block.stripws.php
-  cfunction.break.php
   cfunction.fetchzone.php
   cfunction.zone.php
-  cfunction.include.php
-  function.counter.php
-  function.counter_init.php
-  function.counter_reset.php
-  function.counter_reset_all.php
-  function.cycle_init.php
-  function.cycle.php
-  function.cycle_reset.php
-  function.repeat_string.php
-  modifier.cat.php
-  modifier.count_array.php
-  modifier.count_characters.php
-  modifier.count_paragraphs.php
-  modifier.count_records.php
-  modifier.count_sentences.php
-  modifier.count_words.php
-  modifier.date_format.php
   modifier.datetime.php
-  modifier.indent.php
-  modifier.implode.php
   modifier.jdatetime.php
-  modifier.number_format.php
-  modifier.regex_replace.php
-  modifier.replace.php
-  modifier.round.php
-  modifier.spacify.php
-  modifier.sprintf.php
-  modifier.strip.php
-  modifier.truncate.php
-  modifier.truncatehtml.php
   modifier.wiki.php
-  modifier.wordwrap.php
 
 cd lib/jelix-legacy/plugins/tpl/html
   block.form.php
@@ -674,12 +641,7 @@ cd lib/jelix-legacy/plugins/tpl/html
   block.formdata.php
   block.formsubmits.php
   block.ifctrl.php
-  block.jscompress.php
-  block.swf.php
-  block.swfjs.php
-  cfunction.const.php
   cfunction.formfull.php
-  cfunction.swfbiscuit.php
   function.breadcrumb.php
   function.ctrl_control.php
   function.ctrl_label.php
@@ -692,7 +654,6 @@ cd lib/jelix-legacy/plugins/tpl/html
   function.formurl.php
   function.formurlparam.php
   function.hook.php
-  function.gravatar.php
   function.image.php
   function.jmessage.php
   function.jfullurl.php
@@ -700,20 +661,15 @@ cd lib/jelix-legacy/plugins/tpl/html
   function.jrooturl.php
   function.jurl.php
   function.link_to_remote.php
-  function.mailto.php
   function.pagelinks.php
   function.resurl.php
   function.urljsstring.php
   meta.html.php
   meta.htmlmodule.php
-  modifier.nl2br.php
 
 cd lib/jelix-legacy/plugins/tpl/ltx2pdf
   function.jlocale.php
   function.jurl.php
-  modifier.latex.php
-  block.lenv.php
-  block.lcmd.php
 
 cd lib/jelix-legacy/plugins/tpl/text
   cfunction.const.php

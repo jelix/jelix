@@ -5,12 +5,10 @@
 *
 * @package     InstallWizard
 * @author      Laurent Jouanneau
-* @copyright   2010-2011 Laurent Jouanneau
+* @copyright   2010-2015 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-
-require(__DIR__.'/jtpl/jtpl_standalone_prepend.php');
 require(__DIR__.'/installWizardPage.php');
 
 /**
@@ -35,6 +33,10 @@ class installWizard {
 
     protected $locales = array();
 
+    /**
+     * @var \Jelix\Castor\Config
+     */
+    protected $tplConfig;
     /**
      * @param string $config an ini file for the installation
      * should contain this parameter:
@@ -237,9 +239,9 @@ class installWizard {
                 $this->stepName = $this->getStepName();
             }
 
-            jTplConfig::$lang = $this->lang;
-            jTplConfig::$localesGetter = array($this, 'getLocale');
-            jTplConfig::$cachePath = $this->tempPath;
+            $this->tplConfig = new \Jelix\Castor\Config($this->tempPath);
+            $this->tplConfig->setLang($this->lang);
+            $this->tplConfig->localesGetter = array($this, 'getLocale');
 
             $page = $this->loadPage();
 
@@ -254,7 +256,7 @@ class installWizard {
                 }
             }
 
-            $tpl = new jTpl();
+            $tpl = new \Jelix\Castor\Castor($this->tplConfig);
             $tpl->assign($page->config);
             $tpl->assign($page->getErrors());
             $tpl->assign('appname', isset($this->config['appname'])?$this->config['appname']:'');
@@ -294,7 +296,7 @@ class installWizard {
         if ($tplfile === false)
             throw new Exception ("No template file for the given step");
 
-        jTplConfig::$templatePath = dirname($tplfile).'/';
+        $this->tplConfig->templatePath = dirname($tplfile).'/';
 
         $page = new $class($this->config[$stepname.'.step'], $this->locales);
         return $page;
@@ -303,12 +305,12 @@ class installWizard {
     protected function showMainTemplate($page, $content, $continue) {
         $filename = "wiz_layout.tpl";
         $path = $this->getRealPath('', $filename);
-        jTplConfig::$templatePath = dirname($path).'/';
+        $this->tplConfig->templatePath = dirname($path).'/';
 
         $this->loadLocales('', 'wiz_layout');
 
         $conf = $this->config[$this->stepName.'.step'];
-        $tpl = new jTpl();
+        $tpl = new \Jelix\Castor\Castor($this->tplConfig);
         $tpl->assign('title', $page->getLocale($page->title));
         if (isset($conf['messageHeader']))
             $tpl->assign('messageHeader', $conf['messageHeader']);

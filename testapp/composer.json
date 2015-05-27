@@ -23,7 +23,8 @@
         "jelix/minify-module": "1.7.*",
         "jelix/php-redis-plugin": "1.7.1",
         "phpmailer/phpmailer": "5.2.9",
-        "jelix/soap-server-module": "1.7.*"
+        "jelix/soap-server-module": "1.7.*",
+        "jelix/castor": "dev-master"
     },
     "autoload": {
         "psr-4": {

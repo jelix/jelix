@@ -4,8 +4,8 @@
     <meta content="text/html; charset=UTF-8" http-equiv="content-type"/>
     <title>Installation Wizard</title>
 
+    <link rel="stylesheet" href="/jelix/design/jelix.css" />
     <style type="text/css">{literal}
-#includeraw ../jelix-www/design/jelix.css
    #buttons { margin: 0 auto; width: 924px; text-align:center}
     {/literal}</style>
 

@@ -82,10 +82,6 @@ $BUILD_OPTIONS = array(
     false,
     false,
     ),
-'DELETE_DEPRECATED_FILES'=> array(
-    "If 'on', deprecated files will be deleted",
-    true
-    ),
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), git, hg or svn",
     '',
@@ -117,10 +113,6 @@ $BUILD_OPTIONS = array(
 'VERBOSE_MODE'=> array(
     "show messages",
     false,
-    ),
-'JTPL_VERSION'=> array(
-    false,
-    '',
     ),
 'TODAY'=> array(
     false,
@@ -206,10 +198,6 @@ else {
 if ($TARGET_REPOSITORY == 'none')
   $TARGET_REPOSITORY = '';
 
-if ($TARGET_REPOSITORY != '') {
-    $DELETE_DEPRECATED_FILES = true;
-}
-
 //----------------- Génération des sources
 
 //... creation des repertoires
@@ -220,13 +208,6 @@ Manifest::$verbose = ($VERBOSE_MODE == '1');
 Manifest::setFileSystem($TARGET_REPOSITORY);
 Manifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 Manifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
-
-if ($DELETE_DEPRECATED_FILES) {
-    Manifest::removeFiles('build/manifests/jelix-deprecated.mn', $BUILD_TARGET_PATH);
-    if($ENABLE_DEVELOPER){
-        Manifest::removeFiles('build/manifests/jelix-deprecated-dev.mn', $BUILD_TARGET_PATH);
-    }
-}
 
 //... execution des manifests
 Manifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
@@ -240,16 +221,8 @@ Manifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, E
 Manifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll());
 
 // jtpl standalone for wizard
-Environment::setFromFile('JTPL_VERSION','lib/jelix-legacy/tpl/VERSION', true);
-if($IS_NIGHTLY){
-    $JTPL_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $JTPL_VERSION);
-}
 
 $var = Environment::getAll();
-$jtplpath = $BUILD_TARGET_PATH.'lib/installwizard/jtpl/';
-DirUtils::createDir($jtplpath);
-Manifest::process('build/manifests/jtpl-standalone.mn', '.', $jtplpath, $var);
-file_put_contents($jtplpath.'/VERSION', $JTPL_VERSION);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix-legacy/VERSION', $LIB_VERSION);
 

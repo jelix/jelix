@@ -3,7 +3,7 @@
 pagesPath = "../../lib/installwizard/pages/"
 customPath = "wizard/"
 start = welcome
-tempPath = "../../temp/testapp/"
+tempPath = "../temp/"
 supportedLang = en
 
 appname = TestApp

@@ -4,19 +4,17 @@
 * @subpackage  jtpl
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin
-* @copyright   2005-2014 Laurent Jouanneau, 2007 Dominique Papin
+* @copyright   2005-2015 Laurent Jouanneau, 2007 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-require_once(__DIR__.'/jTplAbstract.php');
 
 /**
  * template engine
  * @package     jelix
  * @subpackage  jtpl
  */
-class jTpl extends jTplAbstract {
+class jTpl extends \Jelix\Castor\CastorCore {
 
     public function __construct () {
         $config = jApp::config();
@@ -148,9 +146,13 @@ class jTpl extends jTplAbstract {
     }
 
 
-    protected function loadCompiler() {
+    protected function getCachePath() {
+        return  jApp::tempPath('compiled/templates/');
+    }
+
+    protected function getCompiler() {
         require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
-        return  jApp::tempPath('compiled/templates/virtuals/');
+        return new jTplCompiler();
     }
 
     protected function compilationNeeded($cacheFile) {
