@@ -16,7 +16,6 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
         "phpmailer/phpmailer": "5.2.9",
         "tecnick.com/tcpdf": "6.0.*",
         "mrclay/minify": "2.2.0",
