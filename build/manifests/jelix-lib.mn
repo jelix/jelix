@@ -96,9 +96,6 @@ cd lib/jelix/core/response
   jResponseXmlrpc.class.php
   jResponseXml.class.php
   jResponseZip.class.php
-  jResponseXmlFeed.class.php
-  jResponseRss20.class.php
-  jResponseAtom10.class.php
   jResponseCss.class.php
   jResponseHtmlFragment.class.php
   jResponseSitemap.class.php
@@ -201,8 +198,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 cd lib/jelix/core-modules/jelix/templates
   403.html.tpl
   404.html.tpl
-  rss20.tpl
-  atom10.tpl
   crud_list.tpl
   crud_edit.tpl
   crud_view.tpl
@@ -364,9 +359,6 @@ cd lib/jelix/tpl/
 
 cd lib/jelix/utils/
   jAppManager.class.php
-  jAtom10Reader.class.php
-  jAtom10Info.class.php
-  jAtom10Item.class.php
   jCache.class.php
   jClasses.class.php
   jClassBinding.class.php
@@ -390,17 +382,11 @@ cd lib/jelix/utils/
   jProfiles.class.php
   jProfilesCompiler.class.php
   jProfilesCompilerPlugin.class.php
-  jRSS20Reader.class.php
-  jRSS20Info.class.php
-  jRSS20Item.class.php
   jSmtp.class.php
   jSoapClient.class.php
   jSoapObject.class.php
   jVersionComparator.class.php
 * jWiki.class.php
-  jXMLFeedReader.class.php
-  jXMLFeedInfo.class.php
-  jXMLFeedItem.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php

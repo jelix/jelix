@@ -407,6 +407,7 @@ cd testapp/tests-jelix/jelix/tpl/
   jtpl_pluginsTest.php
   jtpl_virtualTest.php
 cd testapp/tests-jelix/jelix/utils/
+  feedsTest.php
   jClassesTest.php
   jDatatypeTest.php
   jDateTimeTest.php
