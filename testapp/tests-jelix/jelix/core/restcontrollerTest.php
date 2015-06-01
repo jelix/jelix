@@ -23,44 +23,39 @@ class restcontrollerTest extends jUnitTestCase {
     }
 
     function testRestGET() {
-        $http = new jHttp($this->getServerUri());
-        $http->get(jApp::urlBasePath().'rest.php/test/rest');
-        $this->assertEquals(200, $http->getStatus());
-
-        $this->assertEquals('this is a GET response. resturl='.jApp::urlBasePath().'rest.php/test/rest', $http->getContent());
+        $client = new \GuzzleHttp\Client();
+        $res = $client->get($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest', array());
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals('this is a GET response. resturl='.jApp::urlBasePath().'rest.php/test/rest', (string)$res->getBody());
     }
 
     function testRestPUT() {
-        $http = new jHttp($this->getServerUri());
-        $http->put(jApp::urlBasePath().'rest.php/test/rest', array('foo'=>'bar'));
-        $this->assertEquals(200, $http->getStatus());
-
-        $this->assertEquals('this is a PUT response. module=jelix_tests action=myrest: foo=bar', $http->getContent());
+        $client = new \GuzzleHttp\Client();
+        $res = $client->put($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest', array('headers'=>array('Content-type'=>'application/x-www-form-urlencoded'),
+                                                                                                  'query'=>array('foo'=>'bar')));
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals('this is a PUT response. foo=bar module=jelix_tests action=myrest:', (string)$res->getBody());
     }
 
     function testRestPOST() {
-        $http = new jHttp($this->getServerUri());
-        $http->post(jApp::urlBasePath().'rest.php/test/rest', array('foo'=>'bar'));
-        $this->assertEquals(200, $http->getStatus());
-
-        $this->assertEquals('this is a POST response. module=jelix_tests action=myrest: foo=bar', $http->getContent());
+        $client = new \GuzzleHttp\Client();
+        $res = $client->post($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest', array('headers'=>array('Content-type'=>'application/x-www-form-urlencoded'),
+                                                                                                  'query'=>array('foo'=>'bar')));
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals('this is a POST response. foo=bar module=jelix_tests action=myrest:', (string)$res->getBody());
     }
 
     function testRestDELETE() {
-        $http = new jHttp($this->getServerUri());
-        $http->delete(jApp::urlBasePath().'rest.php/test/rest');
-        $this->assertEquals(200, $http->getStatus());
-
-        $this->assertEquals('this is a DELETE response', $http->getContent());
+        $client = new \GuzzleHttp\Client();
+        $res = $client->delete($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest');
+        $this->assertEquals(200, $res->getStatusCode());
+        $this->assertEquals('this is a DELETE response', (string)$res->getBody());
     }
 
     protected function getServerUri() {
         $serverUri = jUrl::getRootUrlRessourceValue('localapp');
         if ($serverUri === null) {
-            $serverUri = $_SERVER['HTTP_HOST'];
-        }
-        else {
-            $serverUri = str_replace('http://', '', $serverUri);
+            $serverUri = 'http://'.$_SERVER['HTTP_HOST'];
         }
         return $serverUri;
     }

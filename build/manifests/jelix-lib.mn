@@ -366,7 +366,6 @@ cd lib/jelix/utils/
   jDuration.class.php
 * jFile.class.php
 * jFilter.class.php
-  jHttp.class.php
   jImageModifier.class.php
   jIniFile.class.php
   jIniFileModifier.class.php
