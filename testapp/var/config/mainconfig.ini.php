@@ -24,6 +24,8 @@ jauthdb.access=1
 jauth.access=1
 jpref.access=1
 jminify.access=1
+jfeeds.access=2
+jsitemap.access=2
 
 [coordplugins]
 auth=auth.coord.ini.php
@@ -39,6 +41,9 @@ error_message="jacl~errors.action.right.needed"
 on_error_action="jelix~error:badright"
 
 [responses]
+rss2.0="jfeeds~jResponseRss20"
+atom1.0="jfeeds~jResponseAtom10"
+sitemap="jsitemap~jResponseSitemap"
 
 [error_handling]
 ;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."

@@ -77,12 +77,9 @@ json = jResponseJson
 xmlrpc = jResponseXmlrpc
 xml = jResponseXml
 zip = jResponseZip
-rss2.0 = jResponseRss20
-atom1.0 = jResponseAtom10
 css= jResponseCss
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
-sitemap = jResponseSitemap
 
 [_coreResponses]
 html = jResponseHtml
@@ -97,12 +94,9 @@ json = jResponseJson
 xmlrpc = jResponseXmlrpc
 xml = jResponseXml
 zip = jResponseZip
-rss2.0 = jResponseRss20
-atom1.0 = jResponseAtom10
 css= jResponseCss
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
-sitemap = jResponseSitemap
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

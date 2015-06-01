@@ -18,7 +18,7 @@ class syndicationCtrl extends jController {
         $rep->infos->webSiteUrl = 'http://testapp.jelix.org';
         $rep->infos->copyright = ' 2006 jelix.org';
         $rep->infos->categories = array('foo','bar');
-        $rep->infos->description = 'test de syndication en rss 1.0 dans testapp';
+        $rep->infos->description = 'test de syndication en rss 2.0 dans testapp';
 
         $rep->addItem($rep->createItem('foo1','http://testapp.jelix.org/1', '2006-11-11 12:32:41'));
         $rep->addItem($rep->createItem('foo2','http://testapp.jelix.org/2', '2006-11-11 12:32:42'));
@@ -33,7 +33,7 @@ class syndicationCtrl extends jController {
         $rep->infos->id = 'http://testapp.jelix.org';
         $rep->infos->copyright = ' 2006 jelix.org';
         $rep->infos->categories = array('foo','bar');
-        $rep->infos->description = 'test de syndication en rss 1.0 dans testapp';
+        $rep->infos->description = 'test de syndication en atom 1.0 dans testapp';
 
         $rep->addItem($rep->createItem('foo1','http://testapp.jelix.org/1', '2006-11-11 12:32:41'));
         $rep->addItem($rep->createItem('foo2','http://testapp.jelix.org/2', '2006-11-11 12:32:42'));

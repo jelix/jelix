@@ -148,12 +148,8 @@ cd lib/jelix-legacy/core/response
   jResponseXmlrpc.class.php
   jResponseXml.class.php
   jResponseZip.class.php
-  jResponseXmlFeed.class.php
-  jResponseRss20.class.php
-  jResponseAtom10.class.php
   jResponseCss.class.php
   jResponseHtmlFragment.class.php
-  jResponseSitemap.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix-legacy/core/selector
@@ -247,8 +243,6 @@ cch ui.UTF-8.properties(ui.%charset%.properties)
 cd lib/jelix-legacy/core-modules/jelix/templates
   403.html.tpl
   404.html.tpl
-  rss20.tpl
-  atom10.tpl
   crud_list.tpl
   crud_edit.tpl
   crud_view.tpl
@@ -256,8 +250,6 @@ cd lib/jelix-legacy/core-modules/jelix/templates
   cruddfk_edit.tpl
   cruddfk_view.tpl
   defaultmain.tpl
-  sitemap.tpl
-  sitemapindex.tpl
   check_install.tpl
 cd lib/jelix-legacy/core-modules/jelix/templates/en_GB
   check_install.tpl
@@ -384,9 +376,6 @@ cd lib/jelix-legacy/tpl/
   jTplCompiler.class.php
 
 cd lib/jelix-legacy/utils/
-  jAtom10Reader.class.php
-  jAtom10Info.class.php
-  jAtom10Item.class.php
   jCache.class.php
   jCmdUtils.class.php
   jCrypt.class.php
@@ -395,7 +384,6 @@ cd lib/jelix-legacy/utils/
   jDuration.class.php
 * jFile.class.php
 * jFilter.class.php
-  jHttp.class.php
   jImageModifier.class.php
   jJson.class.php
   jJsonRpc.class.php
@@ -403,16 +391,10 @@ cd lib/jelix-legacy/utils/
   jMethodSniffer.class.php
   jProfilesCompiler.class.php
   jProfilesCompilerPlugin.class.php
-  jRSS20Reader.class.php
-  jRSS20Info.class.php
-  jRSS20Item.class.php
   jSoapClient.class.php
   jSoapObject.class.php
   jVersionComparator.class.php
 * jWiki.class.php
-  jXMLFeedReader.class.php
-  jXMLFeedInfo.class.php
-  jXMLFeedItem.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
