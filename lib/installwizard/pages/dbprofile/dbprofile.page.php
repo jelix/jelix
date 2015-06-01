@@ -74,7 +74,7 @@ class dbprofileWizPage extends installWizardPage {
 
     function process() {
 
-        $ini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+        $ini = new \Jelix\IniFile\IniModifier(jApp::configPath('profiles.ini.php'));
         $hasErrors = false;
         $_SESSION['dbprofiles']['data'] = $_POST;
 
@@ -221,7 +221,7 @@ table_prefix=
 ");
         }
 
-        $ini = new jIniFileModifier($file);
+        $ini = new \Jelix\IniFile\IniModifier($file);
 
         $data = array(
             'driver'=>array(),

@@ -129,13 +129,13 @@ class jPrefManager{
     }
 
     protected static function _getPrefFile(){
-        return jIniFile::read(jApp::configPath(self::$_pref_config_file));
+        return \Jelix\IniFile\Util::read(jApp::configPath(self::$_pref_config_file));
     }
     
     
     protected function _loadIniModifier(){
         if(!self::$_ini){
-            self::$_ini = new jIniFileModifier(jApp::configPath(self::$_pref_config_file));
+            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::configPath(self::$_pref_config_file));
         }
         return self::$_ini;
     }

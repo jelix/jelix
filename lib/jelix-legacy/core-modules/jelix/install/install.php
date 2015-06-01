@@ -30,7 +30,7 @@ class jelixModuleInstaller extends jInstallerModule {
         $cachefile = jApp::configPath('profiles.ini.php');
 
         if (file_exists($cachefile)) {
-            $ini = new jIniFileModifier($cachefile);
+            $ini = new \Jelix\IniFile\IniModifier($cachefile);
 
             foreach ($ini->getSectionList() as $section) {
                 if (substr($section,0,7) != 'jcache:')

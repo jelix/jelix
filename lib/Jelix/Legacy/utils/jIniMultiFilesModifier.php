@@ -10,7 +10,7 @@
 
 /**
  * dummy class for compatibility
- * @see \Jelix\IniFile\MultiModifier
+ * @see \Jelix\IniFile\MultiIniModifier
  * @deprecated
  */
-class jIniMultiFilesModifier extends \Jelix\IniFile\MultiModifier { }
+class jIniMultiFilesModifier extends \Jelix\IniFile\MultiIniModifier { }

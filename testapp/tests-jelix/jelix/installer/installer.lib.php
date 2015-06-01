@@ -10,7 +10,6 @@
 * @since 1.2
 */
 
-
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
     function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
@@ -18,11 +17,11 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
         $this->isCliScript = ($type == 'cmdline');
         if (is_object($configFile)) {
             $this->configFile = $configFile->getFileName();
-            $this->configIni = new jIniMultiFilesModifier($defaultConfig, $configFile);
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, $configFile);
         }
         else {
             $this->configFile = $configFile;
-            $this->configIni = new jIniMultiFilesModifier($defaultConfig, new testInstallerIniFileModifier($configFile));
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, new testInstallerIniFileModifier($configFile));
         }
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
@@ -110,7 +109,7 @@ class testInstallReporter implements jIInstallReporter {
 /**
  * ini file modifier without file load/save supports
  */
-class testInstallerIniFileModifier extends jIniFileModifier {
+class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
     function __construct($filename) {}
 

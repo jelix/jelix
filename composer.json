@@ -25,7 +25,8 @@
         "phpmailer/phpmailer": "5.2.9",
         "jelix/soap-server-module": "1.7.*",
         "jelix/castor": "dev-master",
-        "jelix/feeds-module": "1.7.*"
+        "jelix/feeds-module": "1.7.*",
+        "jelix/inifile": "1.7.*"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"
@@ -40,7 +41,6 @@
         "jelix/core": "self.version",
         "jelix/event": "self.version",
         "jelix/external": "self.version",
-        "jelix/inifile": "self.version",
         "jelix/installer": "self.version",
         "jelix/legacy": "self.version",
         "jelix/locale": "self.version",

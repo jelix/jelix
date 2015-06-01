@@ -69,19 +69,19 @@ class EntryPoint {
     protected $moduleLaunchers = array();
 
     /**
-     * @param \Jelix\IniFile\Modifier    $mainConfig   the mainconfig.ini.php file
+     * @param \Jelix\IniFile\IniModifier    $mainConfig   the mainconfig.ini.php file
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct(\Jelix\IniFile\Modifier $mainConfig, $configFile, $file, $type) {
+    function __construct(\Jelix\IniFile\IniModifier $mainConfig, $configFile, $file, $type) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->configIni = new \Jelix\IniFile\MultiModifier($mainConfig, \Jelix\Core\App::configPath($configFile));
+        $this->configIni = new \Jelix\IniFile\MultiIniModifier($mainConfig, \Jelix\Core\App::configPath($configFile));
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
                                                     $this->isCliScript);

@@ -50,7 +50,7 @@ abstract class AbstractInstaller {
 
     /**
      * default configuration of the application
-     * @var \Jelix\IniFile\MultiModifier
+     * @var \Jelix\IniFile\MultiIniModifier
      */
     public $config;
 
@@ -131,7 +131,7 @@ abstract class AbstractInstaller {
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
      * @param EntryPoint $ep the entry point
-     * @param Jelix\IniFile\Modifier $config the configuration of the entry point
+     * @param Jelix\IniFile\MultiIniModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
@@ -364,7 +364,7 @@ abstract class AbstractInstaller {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new \Jelix\IniFile\Modifier(App::configPath('profiles.ini.php'));
+        $profiles = new \Jelix\IniFile\IniModifier(App::configPath('profiles.ini.php'));
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section

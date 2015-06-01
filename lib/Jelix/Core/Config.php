@@ -67,7 +67,7 @@ class Config {
                     $config = (object) $config;
                 }
                 else {
-                    $config = \Jelix\IniFile\Manager::read($file, true);
+                    $config = \Jelix\IniFile\Util::read($file, true);
                 }
 
                 // we check all directories to see if it has been modified

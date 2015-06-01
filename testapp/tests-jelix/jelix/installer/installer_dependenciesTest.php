@@ -20,7 +20,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
     public function setUp() {
         jApp::saveContext();
         self::initJelixConfig();
-        $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
+        $this->defaultIni = new \Jelix\IniFile\IniModifier(jApp::configPath().'mainconfig.ini.php');
     }
 
     public function tearDown() {

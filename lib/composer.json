@@ -9,7 +9,8 @@
         "phpmailer/phpmailer": "5.2.9",
         "jelix/soap-server-module": "1.7.*",
         "jelix/castor": "dev-master",
-        "jelix/feeds-module": "1.7.*"
+        "jelix/feeds-module": "1.7.*",
+        "jelix/inifile": "1.7.*"
     },
     "autoload": {
         "psr-0": { "jelix\\": "." },

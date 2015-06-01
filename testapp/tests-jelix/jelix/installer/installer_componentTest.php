@@ -42,7 +42,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function setUp() {
         jApp::saveContext();
         self::initJelixConfig();
-        $this->defaultIni = new jIniFileModifier(jApp::configPath().'mainconfig.ini.php');
+        $this->defaultIni = new \Jelix\IniFile\IniModifier(jApp::configPath().'mainconfig.ini.php');
     }
 
     function tearDown() {
@@ -301,7 +301,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
             $installer = $this->getMock('jInstaller', null, array(new testInstallReporter()) );
 
-            $installer->installerIni = new jIniFileModifier(jApp::tempPath('dummyInstaller.ini'));
+            $installer->installerIni = new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
             $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
             $component = new testInstallerComponentModule2($moduleInfo, $installer);
 

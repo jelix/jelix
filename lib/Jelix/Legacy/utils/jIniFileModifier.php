@@ -10,7 +10,7 @@
 
 /**
  * dummy class for compatibility
- * @see \Jelix\IniFile\Modifier
+ * @see \Jelix\IniFile\IniModifier
  * @deprecated
  */
-class jIniFileModifier extends \Jelix\IniFile\Modifier { }
+class jIniFileModifier extends \Jelix\IniFile\IniModifier { }

@@ -110,7 +110,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $ep = $appInfos->getEntryPointInfo($this->entryPoint);
-        $mainConfig = new jIniFileModifier(jApp::mainConfigFile());
+        $mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
         $this->epInfo = new \Jelix\Installer\EntryPoint($mainConfig,
                                            $ep["config"],
                                            $ep["file"],

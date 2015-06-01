@@ -60,7 +60,7 @@ class Installer {
     const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
 
     /**
-     *  @var \Jelix\IniFile\Modifier it represents the installer.ini.php file.
+     *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
      */
     public $installerIni = null;
 
@@ -109,7 +109,7 @@ class Installer {
 
     /**
      * the defaultconfig.ini.php content
-     * @var \Jelix\IniFile\Modifier
+     * @var \Jelix\IniFile\IniModifier
      */
     public $mainConfig;
 
@@ -124,7 +124,7 @@ class Installer {
     function __construct (ReporterInterface $reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new Checker\Messages($lang);
-        $this->mainConfig = new \Jelix\IniFile\Modifier(App::mainConfigFile());
+        $this->mainConfig = new \Jelix\IniFile\IniModifier(App::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
@@ -135,7 +135,7 @@ class Installer {
 
     /**
      * @internal mainly for tests
-     * @return \Jelix\IniFile\Modifier the modifier for the installer.ini.php file
+     * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
         if (!file_exists(App::configPath('installer.ini.php')))
@@ -145,7 +145,7 @@ class Installer {
 
 "))
                 throw new \Exception('impossible to create var/config/installer.ini.php');
-        return new \Jelix\IniFile\Modifier(App::configPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
     }
 
     /**

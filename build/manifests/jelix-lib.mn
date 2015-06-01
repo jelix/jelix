@@ -748,12 +748,6 @@ cd lib/Jelix/Legacy/core/selector
   jSelectorLib.php
   jSelectorLoc.php
 
-cd lib/Jelix/IniFile
-  composer.json
-  Manager.php
-  Modifier.php
-  MultiModifier.php
-
 cd lib/Jelix/Logger
   composer.json
   Log.php

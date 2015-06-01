@@ -130,9 +130,7 @@ class createentrypointCommand extends JelixScriptCommand {
             }
         }
 
-        require_once (JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');
-
-        $inifile = new jIniMultiFilesModifier(App::mainConfigFile(), $configFilePath);
+        $inifile = new \Jelix\IniFile\MultiIniModifier(App::mainConfigFile(), $configFilePath);
 
         $param = array();
         $param['modulename'] = $inifile->getValue('startModule');
