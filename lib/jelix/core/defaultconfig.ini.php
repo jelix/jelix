@@ -80,7 +80,6 @@ zip = jResponseZip
 css= jResponseCss
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
-sitemap = jResponseSitemap
 
 [_coreResponses]
 html = jResponseHtml
@@ -98,7 +97,6 @@ zip = jResponseZip
 css= jResponseCss
 htmlfragment = jResponseHtmlFragment
 htmlauth = jResponseHtml
-sitemap = jResponseSitemap
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

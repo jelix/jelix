@@ -98,7 +98,6 @@ cd lib/jelix/core/response
   jResponseZip.class.php
   jResponseCss.class.php
   jResponseHtmlFragment.class.php
-  jResponseSitemap.class.php
 
 #ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/core/selector
@@ -205,8 +204,6 @@ cd lib/jelix/core-modules/jelix/templates
   cruddfk_edit.tpl
   cruddfk_view.tpl
   defaultmain.tpl
-  sitemap.tpl
-  sitemapindex.tpl
   check_install.tpl
 cd lib/jelix/core-modules/jelix/templates/en_GB
   check_install.tpl
