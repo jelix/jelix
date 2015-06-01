@@ -90,7 +90,7 @@ class jInstallerApplication {
             return $this->entryPointList;
         }
 
-        $mainConfig = new jIniFileModifier(jApp::mainConfigFile());
+        $mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
 
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {

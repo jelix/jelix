@@ -415,7 +415,6 @@ cd testapp/tests-jelix/jelix/utils/
   jFileTest.php
   jFilterTest.php
   jImageModifierTest.php
-  jIniFileModifierTest.php
   jMailerTest.php
   jRootUrlTest.php
   minifyHTMLResponsePluginTest.php

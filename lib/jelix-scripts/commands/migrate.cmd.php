@@ -97,7 +97,7 @@ class migrateCommand extends JelixScriptCommand {
      */
     protected function updateConfig() {
         // retrieve the default config
-        $defaultconfig = new jIniFileModifier(jApp::configPath('defaultconfig.ini.php'));
+        $defaultconfig = new \Jelix\IniFile\IniModifier(jApp::configPath('defaultconfig.ini.php'));
 
         $this->defaultModulesPath = $defaultconfig->getValue('modulesPath');
         if (!$this->defaultModulesPath) {
@@ -162,7 +162,7 @@ class migrateCommand extends JelixScriptCommand {
                 if (isset($configList[$ep['config']]))
                     continue;
 
-                $config = new jIniFileModifier(jApp::configPath($ep['config']));
+                $config = new \Jelix\IniFile\IniModifier(jApp::configPath($ep['config']));
 
                 $modulesPath = $config->getValue('modulesPath');
                 if (!$modulesPath) {
@@ -237,7 +237,7 @@ class migrateCommand extends JelixScriptCommand {
             foreach($eplist as $ep) {
                 if (isset($configList[$ep['config']]))
                     continue;
-                $config = new jIniFileModifier(jApp::configPath($ep['config']));
+                $config = new \Jelix\IniFile\IniModifier(jApp::configPath($ep['config']));
 
                 $modulesPath = $config->getValue('modulesPath');
                 if (!$modulesPath) {

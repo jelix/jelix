@@ -35,7 +35,7 @@ class jProfiles {
         if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
             $compiler = new jProfilesCompiler($file);
             self::$_profiles = $compiler->compile();
-            jIniFile::write(self::$_profiles, $tempFile);
+            \Jelix\IniFile\Util::write(self::$_profiles, $tempFile);
         }
         else {
             self::$_profiles = parse_ini_file($tempFile, true);

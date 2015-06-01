@@ -18,9 +18,6 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-require_once(JELIX_LIB_PATH.'utils/jIniFile.class.php');
-require_once(JELIX_LIB_PATH.'utils/jIniFileModifier.class.php');
-require_once(JELIX_LIB_PATH.'utils/jIniMultiFilesModifier.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 
@@ -157,7 +154,7 @@ class jInstaller {
     const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
 
     /**
-     *  @var jIniFileModifier it represents the installer.ini.php file.
+     *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
      */
     public $installerIni = null;
     
@@ -212,7 +209,7 @@ class jInstaller {
 
     /**
      * the defaultconfig.ini.php content
-     * @var jIniFileModifier
+     * @var \Jelix\IniFile\IniModifier
      */
     public $mainConfig;
 
@@ -227,7 +224,7 @@ class jInstaller {
     function __construct ($reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
-        $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
+        $this->mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
         $this->installerIni = $this->getInstallerIni();
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
@@ -237,7 +234,7 @@ class jInstaller {
 
     /**
      * @internal mainly for tests
-     * @return jIniFileModifier the modifier for the installer.ini.php file
+     * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
         if (!file_exists(jApp::configPath('installer.ini.php')))
@@ -247,7 +244,7 @@ class jInstaller {
 
 "))
                 throw new Exception('impossible to create var/config/installer.ini.php');
-        return new jIniFileModifier(jApp::configPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(jApp::configPath('installer.ini.php'));
     }
 
     /**

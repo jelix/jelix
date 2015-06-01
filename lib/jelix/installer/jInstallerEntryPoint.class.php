@@ -19,7 +19,7 @@ class jInstallerEntryPoint {
     /** @var string the filename of the configuration file */
     public $configFile;
 
-    /** @var jIniMultiFilesModifier */
+    /** @var \Jelix\IniFile\MultiIniModifier */
     public $configIni;
 
     /**
@@ -44,7 +44,7 @@ class jInstallerEntryPoint {
     public $type;
 
     /**
-     * @param jIniFileModifier    $mainConfig   the mainconfig.ini.php file
+     * @param \Jelix\IniFile\IniModifier    $mainConfig   the mainconfig.ini.php file
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
      * @param string $file the filename of the entry point
@@ -56,7 +56,7 @@ class jInstallerEntryPoint {
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->configIni = new jIniMultiFilesModifier($mainConfig, jApp::configPath($configFile));
+        $this->configIni = new \Jelix\IniFile\MultiIniModifier($mainConfig, jApp::configPath($configFile));
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,
                                               $this->scriptName);

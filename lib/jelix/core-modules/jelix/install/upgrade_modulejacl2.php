@@ -41,7 +41,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule {
             $on_error_action = "jelix~error:badright";
         }
         else {
-            $ini = new jIniFileModifier($jacl2File);
+            $ini = new \Jelix\IniFile\IniModifier($jacl2File);
             $message = $ini->getValue('error_message'); // = ');
             if ($message == "jelix~errors.acl.action.right.needed") {
                 $message = $module."~errors.action.right.needed";

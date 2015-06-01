@@ -71,9 +71,9 @@ class initadminCommand extends JelixScriptCommand {
             }
         }
 
-        $installConfig = new jIniFileModifier(jApp::configPath('installer.ini.php'));
+        $installConfig = new \Jelix\IniFile\IniModifier(jApp::configPath('installer.ini.php'));
 
-        $inifile = new jIniMultiFilesModifier(jApp::mainConfigFile(),
+        $inifile = new \Jelix\IniFile\MultiIniModifier(jApp::mainConfigFile(),
                                               jApp::configPath($ep['config']));
 
         $params = array();
@@ -140,7 +140,7 @@ class initadminCommand extends JelixScriptCommand {
         $installer = new jInstaller($reporter);
         $installer->installModules(array('master_admin'), $entrypoint.'.php');
 
-        $authini = new jIniFileModifier(jApp::configPath($entrypoint.'/auth.coord.ini.php'));
+        $authini = new \Jelix\IniFile\IniModifier(jApp::configPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
         $authini->setValue('timeout','30');
         $authini->save();
@@ -163,7 +163,7 @@ class initadminCommand extends JelixScriptCommand {
 
         if (!$this->getOption('-noacl2db')) {
             if ($profile != '') {
-                $dbini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+                $dbini = new \Jelix\IniFile\IniModifier(jApp::configPath('profiles.ini.php'));
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }

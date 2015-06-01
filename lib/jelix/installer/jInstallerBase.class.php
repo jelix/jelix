@@ -52,7 +52,7 @@ abstract class jInstallerBase {
 
     /**
      * default configuration of the application
-     * @var jIniMultiFilesModifier
+     * @var \Jelix\IniFile\MultiIniModifier
      */
     public $config;
     
@@ -133,7 +133,7 @@ abstract class jInstallerBase {
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
      * @param jInstallerEntryPoint $ep the entry point
-     * @param jIniMultiFilesModifier $config the configuration of the entry point
+     * @param \Jelix\IniFile\MultiIniModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
@@ -366,7 +366,7 @@ abstract class jInstallerBase {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
+        $profiles = new \Jelix\IniFile\IniModifier(jApp::configPath('profiles.ini.php'));
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section

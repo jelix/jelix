@@ -16,7 +16,7 @@ if (function_exists('jelix_version')) {
 else {
 
 function jelix_read_ini($fileName, $config = null) {
-    $conf = jIniFile::read($fileName);
+    $conf = \Jelix\IniFile\Util::read($fileName);
     if ($config !== null) {
         foreach ($conf as $k=>$v) {
             if (!isset($config->$k)) {
