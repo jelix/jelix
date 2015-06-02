@@ -29,6 +29,8 @@ class jDbPDOConnection extends PDO {
 
     /**
      * The database type name (mysql, pgsql ...)
+     * It is not the driver name. Several drivers could connect to the same database
+     * type. This type name is often used to know whish SQL language we should use.
      * @var string
      */
     public $dbms;
@@ -52,12 +54,7 @@ class jDbPDOConnection extends PDO {
 
         $dsn = $profile['dsn'];
         if ($this->dbms == 'sqlite') {
-            $path = substr($dsn, 7);
-            if (preg_match('/^(app|lib|var)\:/', $path, $m)) {
-                $dsn = 'sqlite:' . jFile::parseJelixPath( $path );
-            } else {
-                $dsn = 'sqlite:'.jApp::varPath('db/sqlite/'.$path);
-            }
+            $dsn = 'sqlite:'.$this->_parseSqlitePath(substr($dsn, 7));
         }
 
         // we check user and password because some db like sqlite doesn't have user/password
@@ -110,6 +107,25 @@ class jDbPDOConnection extends PDO {
 
         if ($initsql) {
             $this->exec($initsql);
+        }
+    }
+
+    protected function _parseSqlitePath($path) {
+        if (preg_match('/^(app|lib|var|temp|www)\:/', $db, $m)) {
+            return jFile::parseJelixPath( $db );
+        }
+        else if (preg_match('!^[a-z]\\:(\\\\|/)[a-z]!i', $db) || // windows path
+                 $db[0] == '/' // *nix path
+                ) {
+            if (file_exists($db) || file_exists(dirname($db))) {
+                return $db;
+            }
+            else {
+                throw new Exception ('jDbPDOConnection, sqlite: unknown database path scheme');
+            }
+        }
+        else {
+            return jApp::varPath('db/sqlite/'.$db);
         }
     }
 
@@ -290,6 +306,4 @@ class jDbPDOConnection extends PDO {
 
         return parent::lastInsertId($fromSequence);
     }
-
 }
-

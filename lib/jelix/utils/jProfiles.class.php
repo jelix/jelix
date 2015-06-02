@@ -97,7 +97,7 @@ class jProfiles {
     }
 
     /**
-     * store an object in the objects pool, corresponding to a profile
+     * get an object from the objects pool, corresponding to a profile
      * @param string $category the profile category
      * @param string $name the name of the profile (value of _name in the retrieved profile)
      * @return object|null the stored object
