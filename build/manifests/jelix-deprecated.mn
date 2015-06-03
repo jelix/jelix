@@ -352,3 +352,12 @@ cd lib/json
 cd lib/php5redis
   README.txt
   Php5Redis.php
+  
+cd lib/phpMailer
+  ChangeLog.txt
+  README
+  class.phpmailer.php.original
+  jelix.patch
+
+cd lib/phpMailer/language
+  phpmailer.lang-en.php
