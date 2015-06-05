@@ -382,7 +382,6 @@ cd lib/jelix/utils/
   jSoapClient.class.php
   jSoapObject.class.php
   jVersionComparator.class.php
-* jWiki.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
@@ -600,7 +599,6 @@ cd lib/jelix/plugins/tpl/common
   cfunction.zone.php
   modifier.datetime.php
   modifier.jdatetime.php
-  modifier.wiki.php
 
 cd lib/jelix/plugins/tpl/html
   block.form.php

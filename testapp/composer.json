@@ -27,7 +27,8 @@
         "jelix/castor": "dev-master",
         "jelix/feeds-module": "1.7.*",
         "jelix/sitemap-module": "1.7.*",
-        "jelix/inifile": "1.7.*"
+        "jelix/inifile": "1.7.*",
+        "jelix/wikirenderer-plugin": "1.7.0"
     },
     "replace": {
         "jelix/jelix":"self.version"

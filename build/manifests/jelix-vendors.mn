@@ -4,23 +4,3 @@ cd lib/diff
 ! diffhtml.php
 ! difftableformatter.php
   README
-
-cd lib/wikirenderer
-  CHANGELOG
-  CREDITS
-  LICENCE
-  VERSION
-! WikiRenderer.lib.php
-
-cd lib/wikirenderer/rules
-! classicwr_to_text.php
-! classicwr_to_wr3.php
-! classicwr_to_xhtml.php
-! dokuwiki_to_docbook.php
-! dokuwiki_to_xhtml.php
-! jwiki_to_xhtml.php
-! phpwiki_to_dokuwiki.php
-! trac_to_xhtml.php
-! wr3_to_docbook.php
-! wr3_to_text.php
-! wr3_to_xhtml.php
