@@ -58,6 +58,7 @@ error_reporting (E_ALL | E_STRICT);
 
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp core/jApp.class.php
+#includephp core/jAppInstance.php
 #includephp core/jFramework.class.php
 #includephp core/jelix_api.php
 #includephp core/jICoordPlugin.iface.php
@@ -97,6 +98,7 @@ error_reporting (E_ALL | E_STRICT);
 
 #else
 require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
+require (JELIX_LIB_CORE_PATH . 'jAppInstance.php');
 require (JELIX_LIB_CORE_PATH . 'jFramework.class.php');
 require (JELIX_LIB_CORE_PATH . 'jelix_api.php');
 require (JELIX_LIB_CORE_PATH . 'jICoordPlugin.iface.php');

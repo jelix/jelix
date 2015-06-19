@@ -40,6 +40,7 @@ cd lib/jelix/core
   jCmdlineCoordinator.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
+  jAppInstance.php
   jBasicErrorHandler.class.php
   jBundle.class.php
 * jConfig.class.php
