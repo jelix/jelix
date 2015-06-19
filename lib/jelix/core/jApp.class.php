@@ -12,6 +12,20 @@
 
 /**
  *
+ * @method public static function setConfig($config)
+ * @method public static function declareModulesDir($basePath, $modules = null)
+ * @method public static function getDeclaredModulesDir()
+ * @method public static function declareModule($modulePath)
+ * @method public static function clearModulesPluginsPath()
+ * @method public static function declarePluginsDir($basePath)
+ * @method public static function getAllModulesPath()
+ * @method public static function getAllPluginsPath()
+ * @method public static function loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method public static function isModuleEnabled($moduleName, $includingExternal = false)
+ * @method public static function getModulePath($module, $includingExternal = false)
+ * @method public static function pushCurrentModule($module)
+ * @method public static function popCurrentModule()
+ * @method public static function getCurrentModule()
  */
 class jApp
 {
@@ -140,11 +154,6 @@ class jApp
         return self::$_currentApp->config;
     }
 
-    public static function setConfig($config)
-    {
-        self::$_currentApp->setConfig($config);
-    }
-
     /**
      * Load the configuration from the given file.
      *
@@ -228,141 +237,14 @@ class jApp
     }
 
     /**
-     * Declare a list of modules.
-     *
-     * @param string|array $basePath the directory path containing modules that can be used
-     * @param null|string[]  list of module name to declare, from the directory. By default: all sub-directories (null).
-     *                               parameter used only if $basePath is a string
+     * allows to call some methods on the current instance as static methods
+     * on jApp
      */
-    public static function declareModulesDir($basePath, $modules = null)
+    public static function __callStatic($name, $arguments)
     {
-        self::$_currentApp->declareModulesDir($basePath, $modules);
-    }
-
-    public static function getDeclaredModulesDir()
-    {
-        return self::$_currentApp->getDeclaredModulesDir();
-    }
-
-    /**
-     * declare a module.
-     *
-     * @param string $path the path of the module directory
-     */
-    public static function declareModule($modulePath)
-    {
-        self::$_currentApp->declareModule($modulePath);
-    }
-
-    public static function clearModulesPluginsPath()
-    {
-        self::$_currentApp->clearModulesPluginsPath();
-    }
-
-    /**
-     * Declare a directory containing some plugins. Note that it does not
-     * need to declare 'plugins/' inside modules, as there are declared automatically
-     * when you declare modules.
-     *
-     * @param string|string[] $basePath the directory path containing plugins that can be used
-     */
-    public static function declarePluginsDir($basePath)
-    {
-        self::$_currentApp->declarePluginsDir($basePath);
-    }
-
-    /**
-     * returns all modules path, even those are not used by the application.
-     *
-     * @return string[] keys are module name, values are paths
-     */
-    public static function getAllModulesPath()
-    {
-        return self::$_currentApp->getAllModulesPath();
-    }
-
-    /**
-     * return all paths of directories containing plugins, even those which are
-     * in disabled modules.
-     *
-     * @return string[]
-     */
-    public static function getAllPluginsPath()
-    {
-        return self::$_currentApp->getAllPluginsPath();
-    }
-
-    /**
-     * load a plugin from a plugin directory (any type of plugins).
-     *
-     * @param string $name      the name of the plugin
-     * @param string $type      the type of the plugin
-     * @param string $suffix    the suffix of the filename
-     * @param string $classname the name of the class to instancy
-     * @param mixed  $args      the argument for the constructor of the class. null = no argument.
-     *
-     * @return null|object null if the plugin doesn't exists
-     */
-    public static function loadPlugin($name, $type, $suffix, $classname, $args = null)
-    {
-        return self::$_currentApp->loadPlugin($name, $type, $suffix, $classname, $args);
-    }
-
-    /**
-     * Says if the given module $name is enabled.
-     *
-     * @param string $moduleName
-     * @param bool   $includingExternal true if we want to know if the module
-     *                                  is also an external module, e.g. in an other entry point
-     *
-     * @return bool true : module is ok
-     */
-    public static function isModuleEnabled($moduleName, $includingExternal = false)
-    {
-        return self::$_currentApp->isModuleEnabled($moduleName, $includingExternal);
-    }
-
-    /**
-     * return the real path of an enabled module.
-     *
-     * @param string $module            a module name
-     * @param bool   $includingExternal true if we want the path of a module
-     *                                  enabled in an other entry point.
-     *
-     * @return string the corresponding path
-     */
-    public static function getModulePath($module, $includingExternal = false)
-    {
-        return self::$_currentApp->getModulePath($module, $includingExternal);
-    }
-
-    /**
-     * set the context to the given module.
-     *
-     * @param string $module the module name
-     */
-    public static function pushCurrentModule($module)
-    {
-        self::$_currentApp->pushCurrentModule($module);
-    }
-
-    /**
-     * cancel the current context and set the context to the previous module.
-     *
-     * @return string the obsolet module name
-     */
-    public static function popCurrentModule()
-    {
-        return self::$_currentApp->popCurrentModule();
-    }
-
-    /**
-     * get the module name of the current context.
-     *
-     * @return string name of the current module
-     */
-    public static function getCurrentModule()
-    {
-        return self::$_currentApp->getCurrentModule();
+        if (self::$_currentApp == null) {
+            throw new \Exception("jApp not initialized");
+        }
+        return call_user_func_array(array(self::$_currentApp, $name), $arguments);
     }
 }
