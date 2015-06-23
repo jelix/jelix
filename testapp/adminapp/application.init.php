@@ -9,7 +9,7 @@
 */
 
 require(__DIR__.'/../vendor/autoload.php');
-jApp::setEnv('admin');
+
 jApp::initPaths(
     __DIR__.'/',
     __DIR__.'/../www/',
@@ -19,7 +19,10 @@ jApp::initPaths(
     __DIR__.'/scripts/'
 );
 jApp::setTempBasePath(__DIR__.'/../temp/');
+jApp::setEnv('admin');
 
+require (__DIR__.'/../vendor/jelix_app_path.php');
+/*
 jApp::declareModulesDir(array(
                         __DIR__.'/../../lib/jelix-modules/',
                         __DIR__.'/../../lib/jelix-admin-modules/'
@@ -27,3 +30,4 @@ jApp::declareModulesDir(array(
 jApp::declarePluginsDir(array(
                         __DIR__.'/../../lib/jelix-plugins/'
                     ));
+*/

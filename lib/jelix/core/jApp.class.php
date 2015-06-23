@@ -131,6 +131,9 @@ class jApp
 
     public static function setEnv($env)
     {
+        if (self::$_currentApp == null) {
+            throw new \Exception("jApp not initialized");
+        }
         if (substr($env, -1) != '/') {
             $env .= '/';
         }
