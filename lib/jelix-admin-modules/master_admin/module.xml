@@ -11,6 +11,5 @@
     </info>
     <dependencies>
 #expand        <jelix minversion="1.3" maxversion="__LIB_VERSION_MAX__"/>
-        <module name="jauth"/>
     </dependencies>
 </module>
