@@ -97,8 +97,6 @@ class loginCtrl extends jController {
                 $rep->url = jUrl::get($conf['after_logout']);
             }
         }
-
-        $rep->url = $url_return;
         return $rep;
     }
 
