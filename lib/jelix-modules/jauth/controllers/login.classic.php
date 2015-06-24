@@ -98,7 +98,6 @@ class loginCtrl extends jController {
             }
         }
 
-        $rep->url = $url_return;
         return $rep;
     }
 
