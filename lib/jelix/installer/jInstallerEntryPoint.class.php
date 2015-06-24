@@ -22,6 +22,9 @@ class jInstallerEntryPoint {
     /** @var \Jelix\IniFile\MultiIniModifier */
     public $configIni;
 
+    /** @var jIniMultiFilesModifier */
+    public $localConfigIni;
+
     /**
      * @var boolean true if the script corresponding to the configuration
      *                is a script for CLI
