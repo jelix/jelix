@@ -22,22 +22,17 @@ class loginCtrl extends jController {
     */
     function in (){
         $conf = jAuth::loadConfig();
-        $url_return = '/';
 
         // both after_login and after_logout config fields are required
-        if ($conf['after_login'] == '')
+        if ($conf['after_login'] == '') {
             throw new jException ('jauth~autherror.no.after_login');
-
-        if ($conf['after_logout'] == '')
-            throw new jException ('jauth~autherror.no.after_logout');
-
-        // if after_login_override = off or url_return doesnt exists, set url_return to after_login
-        // if auth_url_return exists, redirect to it
-        if (!($conf['enable_after_login_override'] &&
-              $url_return= $this->param('auth_url_return'))){
-            $url_return =  jUrl::get($conf['after_login']);
         }
 
+        if ($conf['after_logout'] == '') {
+            throw new jException ('jauth~autherror.no.after_logout');
+        }
+
+        $rep = $this->getResponse('redirectUrl');
         if (!jAuth::login($this->param('login'),
                           $this->param('password'),
                           $this->param('rememberMe'))) {
@@ -47,11 +42,23 @@ class loginCtrl extends jController {
             if($conf['enable_after_login_override']) {
                 $params['auth_url_return'] = $this->param('auth_url_return');
             }
-            $url_return = jUrl::get($conf['after_logout'],$params);
+            $rep->url = jUrl::get($conf['after_logout'], $params);
+        }
+        else {
+            if ($conf['enable_after_login_override']) {
+                $url_return = $this->param('auth_url_return');
+                if ($url_return) {
+                    $rep->url = $url_return;
+                }
+                else {
+                    $rep->url =  jUrl::get($conf['after_login']);
+                }
+            }
+            else {
+                $rep->url =  jUrl::get($conf['after_login']);
+            }
         }
 
-        $rep = $this->getResponse('redirectUrl');
-        $rep->url = $url_return;
         return $rep;
     }
 
@@ -59,6 +66,7 @@ class loginCtrl extends jController {
     *
     */
     function out(){
+        $rep = $this->getResponse('redirectUrl');
         jAuth::logout();
         $conf = jAuth::loadConfig();
 
@@ -66,17 +74,30 @@ class loginCtrl extends jController {
             throw new jException ('jauth~autherror.no.after_logout');
         }
 
-        $url_return = $this->param('auth_url_return');
-        if (!$conf['enable_after_logout_override'] ||
-            $url_return == null ||
-            $url_return == jUrl::getCurrentUrl()) {
-            // we don't want to return to the current page if authentification is missing
-            // for this page
-            $url_return =  jUrl::get($conf['after_logout'],
-                                     array('auth_url_return'=>$url_return));
+        if (jApp::coord()->execOriginalAction()) {
+            if ($conf['enable_after_logout_override']) {
+                $url_return = $this->param('auth_url_return');
+                if ($url_return) {
+                    $rep->url = $url_return;
+                }
+                else {
+                    $rep->url =  jUrl::get($conf['after_logout']);
+                }
+            }
+        }
+        else {
+            // we are here because of an internal redirection (authentication missing)
+            // if we can indicate the url to go after the login, let's pass this url
+            // to the next action (which is in most of case a login form)
+            if ($conf['enable_after_login_override']) {
+                $rep->url = jUrl::get($conf['after_logout'],
+                                      array('auth_url_return'=> jUrl::getCurrentUrl()));
+            }
+            else {
+                $rep->url = jUrl::get($conf['after_logout']);
+            }
         }
 
-        $rep = $this->getResponse('redirectUrl');
         $rep->url = $url_return;
         return $rep;
     }
