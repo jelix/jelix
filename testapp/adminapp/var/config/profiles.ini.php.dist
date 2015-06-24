@@ -4,6 +4,7 @@
 [jdb]
 ; name of the default profile to use for any connection
 default = "adminapp"
+jacl2_profile=adminapp
 
 [jdb:adminapp]
 ; the driver name : mysql, pgsql, sqlite3...
@@ -25,3 +26,11 @@ table_prefix = admin_
 ; to use pdo
 ;usepdo=on
 
+[jkvdb]
+; default profile
+default =
+
+;----------------- jKVDb for jPref
+[jkvdb:jpref]
+driver = memcache
+host = "localhost:11211"
