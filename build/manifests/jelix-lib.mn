@@ -25,6 +25,7 @@ cd lib/jelix/auth
   jAuthDriverBase.class.php
 #endif
   password.php
+  hash_equals.php
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
