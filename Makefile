@@ -30,7 +30,7 @@ default:
 	@echo "     Génération de la doc"
 
 nightlies:
-	composer install
+	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini

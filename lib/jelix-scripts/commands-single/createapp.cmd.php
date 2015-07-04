@@ -77,7 +77,6 @@ class createappCommand extends JelixScriptCommand {
     }
 
     public function run() {
-        require_once (LIB_PATH.'clearbricks/jelix.inc.php');
         $appPath = $this->getParam('path');
         $appPath = $this->getRealPath($appPath);
         $appName = basename($appPath);

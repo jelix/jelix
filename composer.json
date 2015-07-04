@@ -26,7 +26,8 @@
         "jelix/soap-server-module": "1.7.*",
         "jelix/castor": "dev-master",
         "jelix/feeds-module": "1.7.*",
-        "jelix/inifile": "1.7.*"
+        "jelix/inifile": "1.7.*",
+        "jelix/wikirenderer-plugin": "1.7.0"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"

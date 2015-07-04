@@ -96,7 +96,7 @@ class jDbParameters
      * it gives the name of the jDb driver and the database type indicated in a profile.
      * (or corresponding to the PDO dsn indicated in the profile).
      *
-     * @param  array  'driver' key is required. It should indicates 'pdo' or a jdb driver.
+     * @param  array  $profile 'driver' key is required. It should indicates 'pdo' or a jdb driver.
      *    if 'pdo', a 'dsn' key is required.
      *
      * @return array ['database type', 'native extension name', 'pdo extension name', 'jdb driver name', 'pdo driver name']
@@ -218,6 +218,10 @@ class jDbParameters
         'mssql' => array('host', 'database'),
         'sybase' => array('host', 'database'),
     );
+
+    public static function getDriversInfosList() {
+        return self::$driversInfos;
+    }
 
     protected function getPDODsn($profile)
     {

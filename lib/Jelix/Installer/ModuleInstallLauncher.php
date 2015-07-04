@@ -93,7 +93,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
         $this->moduleInstaller->setParameters($this->moduleStatuses[$epId]->parameters);
 
-        $sparam = $ep->configIni->getValue($this->moduleInfos->name.'.installparam','modules');
+        $sparam = $ep->localConfigIni->getValue($this->moduleInfos->name.'.installparam','modules');
         if ($sparam === null)
             $sparam = '';
         $sp = $this->moduleStatuses[$epId]->serializeParameters();

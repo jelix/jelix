@@ -108,10 +108,16 @@ class Installer {
     public $nbNotice = 0;
 
     /**
-     * the defaultconfig.ini.php content
+     * the mainconfig.ini.php content
      * @var \Jelix\IniFile\IniModifier
      */
     public $mainConfig;
+
+    /**
+     * the localconfig.ini.php content
+     * @var \Jelix\IniFile\IniModifier
+     */
+    public $localConfig;
 
     /**
      * initialize the installation
@@ -125,6 +131,19 @@ class Installer {
         $this->reporter = $reporter;
         $this->messages = new Checker\Messages($lang);
         $this->mainConfig = new \Jelix\IniFile\IniModifier(App::mainConfigFile());
+
+        $localConfig = App::configPath('localconfig.ini.php');
+        if (!file_exists($localConfig)) {
+           $localConfigDist = App::configPath('localconfig.ini.php.dist');
+           if (file_exists($localConfigDist)) {
+              copy($localConfigDist, $localConfig);
+           }
+           else {
+              file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
+           }
+        }
+        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, $localConfig);
+
         $this->installerIni = $this->getInstallerIni();
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
@@ -173,6 +192,8 @@ class Installer {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
+            // not to the constructor, to no break API. FIXME
+            $ep->localConfigIni =  new \Jelix\IniFile\MultiIniModifier($this->localConfig, App::configPath($configFile));
             $epId = $ep->getEpId();
 
             $this->epId[$file] = $epId;

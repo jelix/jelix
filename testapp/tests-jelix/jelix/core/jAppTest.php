@@ -60,30 +60,35 @@ class jAppTest extends PHPUnit_Framework_TestCase {
     }
 
     function testPluginPath() {
-        $plugins = jApp::getAllPluginsPath();
-        
-        $this->assertEquals(array(
+        $expected = array(
             JELIX_LIB_PATH.'plugins/',
             jApp::appPath('vendor/jelix/php-redis-plugin/plugins/'),
             jApp::appPath('plugins/'),
             LIB_PATH.'jelix-plugins/',
             jApp::appPath('vendor/jelix/minify-module/jminify/plugins/'),
-            LIB_PATH.'jelix-modules/jacl2db/plugins/',
-            LIB_PATH.'jelix-modules/jacldb/plugins/',
             LIB_PATH.'jelix-modules/jacl/plugins/',
             LIB_PATH.'jelix-modules/jacl2/plugins/',
-            ), $plugins);
+            LIB_PATH.'jelix-modules/jacldb/plugins/',
+            LIB_PATH.'jelix-modules/jacl2db/plugins/',
+        );
+        sort($expected);
+        
+        $plugins = jApp::getAllPluginsPath();
+        sort($plugins);
+
+        $this->assertEquals($expected, $plugins);
 
         jApp::saveContext();
-
-        $this->assertEquals($plugins, jApp::getAllPluginsPath());
-        
+        $plugins2 = jApp::getAllPluginsPath();
+        sort($plugins2);
+        $this->assertEquals($plugins, $plugins2);
 
         jApp::clearModulesPluginsPath();
         $this->assertEquals(array(JELIX_LIB_PATH.'plugins/'), jApp::getAllPluginsPath());
 
-        
         jApp::restoreContext();
-        $this->assertEquals($plugins, jApp::getAllPluginsPath());
+        $plugins2 = jApp::getAllPluginsPath();
+        sort($plugins2);
+        $this->assertEquals($plugins, $plugins2);
     }
 }

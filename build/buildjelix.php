@@ -215,7 +215,6 @@ Manifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, Envir
 
 Manifest::$stripComment = false;
 
-Manifest::process('build/manifests/jelix-vendors.mn', '.', $BUILD_TARGET_PATH , Environment::getAll(), true);
 Manifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , Environment::getAll());
 Manifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
 Manifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll());

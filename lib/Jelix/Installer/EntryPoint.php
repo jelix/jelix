@@ -33,6 +33,9 @@ class EntryPoint {
     /** @var \Jelix\IniFile\MultiModifier */
     public $configIni;
 
+    /** @var \Jelix\IniFile\MultiModifier */
+    public $localConfigIni;
+
     /** @var string entrypoint id of the entrypoint that have the same config */
     public $sameConfigAs = null;
 

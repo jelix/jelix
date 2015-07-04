@@ -8,6 +8,7 @@ cd lib
 
 cd lib/Jelix/Core
   App.php
+  AppInstance.php
   AppManager.php
   Autoloader.php
   Config.php
@@ -106,6 +107,7 @@ cd lib/jelix-legacy/auth
   jAuthDriverBase.class.php
 #endif
   password.php
+  hash_equals.php
 
 cd lib/jelix-legacy/controllers
   jControllerCmdLine.class.php
@@ -114,6 +116,7 @@ cd lib/jelix-legacy/controllers
 
 cd lib/jelix-legacy/core
   jCmdlineCoordinator.class.php
+  jCoordinatorDebug.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jBasicErrorHandler.class.php
 * jController.class.php
@@ -394,7 +397,6 @@ cd lib/jelix-legacy/utils/
   jSoapClient.class.php
   jSoapObject.class.php
   jVersionComparator.class.php
-* jWiki.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
@@ -615,7 +617,6 @@ cd lib/jelix-legacy/plugins/tpl/common
   cfunction.zone.php
   modifier.datetime.php
   modifier.jdatetime.php
-  modifier.wiki.php
 
 cd lib/jelix-legacy/plugins/tpl/html
   block.form.php
@@ -629,7 +630,6 @@ cd lib/jelix-legacy/plugins/tpl/html
   function.ctrl_label.php
   function.ctrl_rawvalue.php
   function.ctrl_value.php
-  function.diff.php
   function.formdatafull.php
   function.formreset.php
   function.formsubmit.php

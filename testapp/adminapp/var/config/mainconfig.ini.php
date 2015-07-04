@@ -26,6 +26,21 @@ domainName=
 ; 2 if public (accessible through the web)
 
 jelix.access=2
+jacl.access=0
+jacldb.access=0
+jsoap.access=0
+jauth.access=2
+master_admin.access=2
+jauthdb.access=2
+jauthdb.installparam=defaultuser
+jauthdb_admin.access=2
+jacl2.access=2
+jacl2db.access=2
+jacl2db.installparam=defaultuser
+jacl2db_admin.access=2
+jpref.access=2
+jpref_admin.access=2
+
 
 [coordplugins]
 ;name = file_ini_name or 1
@@ -92,7 +107,7 @@ simple_urlengine_https=
 ;   m~c:*@r  -> for all actions of the controller "c" of the module "m" and for the request of type "r"
 ;   m~*@r    -> for all actions of the module "m" and for the request of type "r"
 ;   @r       -> for all actions for the request of type "r"
-index="jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic"
+index="jacl2db~*@classic, jauth~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic"
 
 [basic_significant_urlengine_entrypoints]
 ; for each entry point, it indicates if the entry point name
@@ -139,7 +154,7 @@ webmasterName=
 
 ; How to send mail : "mail" (mail()), "sendmail" (call sendmail), "smtp" (send directly to a smtp)
 ;                   or "file" (store the mail into a file, in filesDir directory)
-mailerType=mail
+mailerType=file
 ; Sets the hostname to use in Message-Id and Received headers
 ; and as default HELO string. If empty, the value returned
 ; by SERVER_NAME is used or 'localhost.localdomain'.
