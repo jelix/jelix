@@ -339,6 +339,7 @@ cd testapp/tests-jelix/jelix/installer/app1/var/log
   .dummy
 cd testapp/tests-jelix/jelix/installer/app1/var/config/
   mainconfig.ini.php
+  localconfig.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/foo/
   config.ini.php
 cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
