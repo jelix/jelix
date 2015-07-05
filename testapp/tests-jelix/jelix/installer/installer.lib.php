@@ -120,6 +120,7 @@ class testInstallerMain extends jInstaller {
     function __construct ($reporter) {
         $this->reporter = $reporter;
         $this->mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
+        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, jApp::configPath('localconfig.ini.php'));
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
         $config = jApp::config();
