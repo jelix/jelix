@@ -164,13 +164,6 @@ class testInstallerMain extends jInstaller {
     <dependencies>
         <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
     </dependencies>
-    <directories>
-        <config>var/config</config>
-        <log>var/log</log>
-        <var>var</var>
-        <www>www</www>
-        <temp>../temp/test</temp>
-    </directories>
     <entrypoints>'.$projectXml.'
     </entrypoints>
 </project>';

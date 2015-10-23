@@ -22,7 +22,9 @@
             <ref name="notes" />
          </optional>
          <ref name="dependencies" />
-         <ref name="directories"/>
+         <optional>
+            <ref name="directories"/>
+         </optional>
          <ref name="entrypoints"/>
       </element>
    </start>

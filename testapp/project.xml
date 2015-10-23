@@ -12,13 +12,6 @@
     <dependencies>
 #expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
     </dependencies>
-    <directories>
-        <config>var/config</config>
-        <log>var/log</log>
-        <var>var</var>
-        <www>www</www>
-        <temp>temp</temp>
-    </directories>
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
         <entry file="rest.php" config="rest/config.ini.php" />
