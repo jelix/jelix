@@ -17,6 +17,8 @@
 */
 
 require(LIB_PATH.'phpMailer/class.phpmailer.php');
+require(LIB_PATH.'phpMailer/class.smtp.php');
+require(LIB_PATH.'phpMailer/class.pop3.php');
 
 
 /**
