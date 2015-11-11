@@ -3,7 +3,9 @@
 * @package    jelix-modules
 * @subpackage jelix
 * @author     Laurent Jouanneau
+* @contributor Julien Issler
 * @copyright  2010 Laurent Jouanneau
+* @copyright  2015 Julien Issler
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
 
@@ -53,7 +55,19 @@ class jformsCtrl extends jController {
             $form->setData($ctname, $this->param($ctname));
         }
 
-        $rep->data = array('data'=> $control->datasource->getData($form));
+        $rep->data = array();
+        if($control->datasource->hasGroupedData()){
+            foreach($control->datasource->getData($form) as $k=>$items){
+                $data = array();
+                foreach($items as $k2=>$v)
+                    $data[] = array('value'=>$k2,'label'=>$v);
+                $rep->data[] = array('items'=>$data,'label'=>$k);
+            }
+        }
+        else{
+            foreach($control->datasource->getData($form) as $k=>$v)
+                $rep->data[] = array('value'=>$k,'label'=>$v);
+        }
 
         return $rep;
     }
