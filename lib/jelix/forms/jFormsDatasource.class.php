@@ -6,7 +6,7 @@
 * @contributor Dominique Papin, Julien Issler
 * @copyright   2006-2014 Laurent Jouanneau
 * @copyright   2008 Dominique Papin
-* @copyright   2010 Julien Issler
+* @copyright   2010-2015 Julien Issler
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -68,6 +68,16 @@ interface jIFormsDatasource2 extends jIFormsDatasource {
 
 }
 
+/**
+ * Interface for objects which provides a source of data to fill some controls in a form,
+ * like menulist, listbox etc...
+ * @package     jelix
+ * @subpackage  forms
+ */
+interface jIFormsDynamicDatasource extends jIFormsDatasource2 {
+    public function getDependentControls();
+    public function setCriteriaFrom($criteriaFrom = null);
+}
 
 /**
  * A datasource which is based on static values.
@@ -80,7 +90,7 @@ class jFormsStaticDatasource implements jIFormsDatasource2 {
      * @var array
      */
     public $data = array();
-    
+
     protected $grouped = false;
 
     public function getData($form){
@@ -112,6 +122,42 @@ class jFormsStaticDatasource implements jIFormsDatasource2 {
     }
 }
 
+/**
+ * A datasource which is based on a class
+ * @package     jelix
+ * @subpackage  forms
+ */
+abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource{
+    protected $criteriaFrom = null;
+    protected $groupeBy = '';
+
+    public function __construct($formid) {
+    }
+
+    abstract public function getData($form);
+
+    abstract public function getLabel2($key, $form);
+
+    public function getLabel($key) {
+        throw new Exception("should not be called");
+    }
+
+    public function hasGroupedData() {
+        return $this->groupeBy;
+    }
+
+    public function setGroupBy($group) {
+        $this->groupeBy = $group;
+    }
+
+    public function getDependentControls(){
+        return $this->criteriaFrom;
+    }
+
+    public function setCriteriaFrom($criteriaFrom = null){
+        $this->criteriaFrom = $criteriaFrom;
+    }
+}
 
 /**
  * A datasource which is based on a dao
@@ -202,7 +248,7 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
             $countPKeys = count($this->dao->getPrimaryKeyNames());
             if ($this->criteria !== null) {
                 $values = $this->criteria;
-                array_unshift($values, $key);                
+                array_unshift($values, $key);
             }
             else if ($this->criteriaFrom !== null) {
                 $values = array($key);

@@ -43,7 +43,7 @@ class jformsCtrl extends jController {
         if (!$control || ! ($control instanceof jFormsControlDatasource))
             throw new Exception('bad control');
 
-        if (!($control->datasource instanceof jFormsDaoDatasource))
+        if (!($control->datasource instanceof jFormsDaoDatasource || $control->datasource instanceof jIFormsDynamicDatasource))
             throw new Exception('not supported datasource type');
 
         $dependentControls = $control->datasource->getDependentControls();
