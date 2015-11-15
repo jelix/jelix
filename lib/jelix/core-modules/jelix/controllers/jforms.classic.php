@@ -46,7 +46,7 @@ class jformsCtrl extends jController {
         if (!($control->datasource instanceof jFormsDaoDatasource || $control->datasource instanceof jIFormsDynamicDatasource))
             throw new Exception('not supported datasource type');
 
-        $dependentControls = $control->datasource->getDependentControls();
+        $dependentControls = $control->datasource->getCriteriaControls();
         if (!$dependentControls) {
             throw new Exception('no dependent controls');
         }

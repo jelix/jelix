@@ -32,7 +32,7 @@ class listbox_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $this->parentWidget->addJs($js);
         if ($ctrl instanceof jFormsControlDatasource
             && ($ctrl->datasource instanceof jFormsDaoDatasource || $ctrl->datasource instanceof jIFormsDynamicDatasource)) {
-            $dependentControls = $ctrl->datasource->getDependentControls();
+            $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','",$dependentControls)."'];\n");
                 $this->parentWidget->addFinalJs("jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref.($ctrl->multiple?'[]':'')."');\n");

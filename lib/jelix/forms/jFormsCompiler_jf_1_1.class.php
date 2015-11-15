@@ -414,8 +414,9 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
                 $source[]='jClasses::inc(\''.$attrs['class'].'\');';
                 $source[]='$datasource = new '.$class->className.'($this->id());';
                 $source[]='if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;';
-                if(isset($attrs['criteriafrom']))
-                    $source[]='if($datasource instanceof jIFormsDynamicDatasource) $datasource->setCriteriaFrom(array(\''.join('\',\'',explode(',',$attrs['criteriafrom'])).'\'));';
+                if (isset($attrs['criteriafrom'])) {
+                    $source[] = 'if($datasource instanceof jIFormsDynamicDatasource) $datasource->setCriteriaControls(array(\''.join('\',\'',preg_split('/[\s,]+/',$attrs['criteriafrom'])).'\'));';
+                }
                 $source[]='}';
                 $source[]='else{$ctrl->datasource=new jFormsStaticDatasource();}';
                 if($controltype == 'submit'){

@@ -138,7 +138,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jFormsDaoDatasource) {
-            $dependentControls = $ctrl->datasource->getDependentControls();
+            $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
                 $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";

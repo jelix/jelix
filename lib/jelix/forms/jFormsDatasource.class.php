@@ -75,8 +75,18 @@ interface jIFormsDatasource2 extends jIFormsDatasource {
  * @subpackage  forms
  */
 interface jIFormsDynamicDatasource extends jIFormsDatasource2 {
-    public function getDependentControls();
-    public function setCriteriaFrom($criteriaFrom = null);
+
+    /**
+     * Return the list of controls name that provide criterion values
+     * @return string[]
+     */
+    public function getCriteriaControls();
+
+    /**
+     * set the list of controls name that provide critrion values
+     * @param string[] $criteriaFrom
+     */
+    public function setCriteriaControls($criteriaFrom = null);
 }
 
 /**
@@ -123,11 +133,12 @@ class jFormsStaticDatasource implements jIFormsDatasource2 {
 }
 
 /**
- * A datasource which is based on a class
+ * Base class for a datasource which is based on a class and can be used for dynamic
+ * listboxes or menulists
  * @package     jelix
  * @subpackage  forms
  */
-abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource{
+abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource {
     protected $criteriaFrom = null;
     protected $groupeBy = '';
 
@@ -150,11 +161,11 @@ abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource{
         $this->groupeBy = $group;
     }
 
-    public function getDependentControls(){
+    public function getCriteriaControls(){
         return $this->criteriaFrom;
     }
 
-    public function setCriteriaFrom($criteriaFrom = null){
+    public function setCriteriaControls($criteriaFrom = null){
         $this->criteriaFrom = $criteriaFrom;
     }
 }
@@ -187,10 +198,12 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
         $this->method = $method ;
         $this->labelProperty = preg_split('/[\s,]+/',$label);
         $this->labelSeparator = $labelSeparator;
-        if ( $criteria !== null )
+        if ($criteria !== null) {
             $this->criteria = preg_split('/[\s,]+/',$criteria) ;
-        if ( $criteriaFrom !== null )
-            $this->criteriaFrom = preg_split('/[\s,]+/',$criteriaFrom) ;
+        }
+        if ($criteriaFrom !== null) {
+            $this->setCriteriaControls(preg_split('/[\s,]+/',$criteriaFrom));
+        }
 
         if($key == ''){
             $rec = jDao::createRecord($this->selector, $this->profile);
@@ -293,8 +306,20 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
         return $label ;
     }
 
+    /**
+     * @deprecated
+     * @see getCriteriaControls
+     */
     public function getDependentControls() {
+        return $this->getCriteriaControls();
+    }
+
+    public function getCriteriaControls(){
         return $this->criteriaFrom;
+    }
+
+    public function setCriteriaControls($criteriaFrom = null){
+        $this->criteriaFrom = $criteriaFrom;
     }
 
     public function hasGroupedData() {
