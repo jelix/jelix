@@ -40,11 +40,13 @@ class jformsCtrl extends jController {
 
         // retrieve the control to fill
         $control = $form->getControl($this->param('__ref'));
-        if (!$control || ! ($control instanceof jFormsControlDatasource))
+        if (!$control || ! ($control instanceof jFormsControlDatasource)) {
             throw new Exception('bad control');
+        }
 
-        if (!($control->datasource instanceof jFormsDaoDatasource || $control->datasource instanceof jIFormsDynamicDatasource))
+        if (!($control->datasource instanceof jIFormsDynamicDatasource)) {
             throw new Exception('not supported datasource type');
+        }
 
         $dependentControls = $control->datasource->getCriteriaControls();
         if (!$dependentControls) {
@@ -59,14 +61,16 @@ class jformsCtrl extends jController {
         if($control->datasource->hasGroupedData()){
             foreach($control->datasource->getData($form) as $k=>$items){
                 $data = array();
-                foreach($items as $k2=>$v)
+                foreach ($items as $k2=>$v) {
                     $data[] = array('value'=>$k2,'label'=>$v);
+                }
                 $rep->data[] = array('items'=>$data,'label'=>$k);
             }
         }
         else{
-            foreach($control->datasource->getData($form) as $k=>$v)
+            foreach($control->datasource->getData($form) as $k=>$v) {
                 $rep->data[] = array('value'=>$k,'label'=>$v);
+            }
         }
 
         return $rep;

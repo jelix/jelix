@@ -24,7 +24,7 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
 
         $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
         if ($ctrl instanceof jFormsControlDatasource
-            && ($ctrl->datasource instanceof jFormsDaoDatasource || $ctrl->datasource instanceof jIFormsDynamicDatasource)) {
+            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','",$dependentControls)."'];\n");

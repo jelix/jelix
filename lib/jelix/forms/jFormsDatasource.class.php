@@ -175,7 +175,7 @@ abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource {
  * @package     jelix
  * @subpackage  forms
  */
-class jFormsDaoDatasource implements jIFormsDatasource2 {
+class jFormsDaoDatasource extends jFormsDynamicDatasource {
 
     protected $selector;
     protected $method;
@@ -186,11 +186,8 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
     protected $profile;
 
     protected $criteria = null;
-    protected $criteriaFrom = null;
 
     protected $dao = null;
-
-    protected $groupeBy = '';
 
     function __construct ($selector ,$method , $label, $key, $profile='', $criteria=null, $criteriaFrom=null, $labelSeparator=''){
         $this->selector  = $selector;
@@ -244,10 +241,6 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
             }
         }
         return $result;
-    }
-
-    public function getLabel($key) {
-        throw new Exception("should not be called");
     }
 
     public function getLabel2($key, $form){
@@ -312,22 +305,6 @@ class jFormsDaoDatasource implements jIFormsDatasource2 {
      */
     public function getDependentControls() {
         return $this->getCriteriaControls();
-    }
-
-    public function getCriteriaControls(){
-        return $this->criteriaFrom;
-    }
-
-    public function setCriteriaControls($criteriaFrom = null){
-        $this->criteriaFrom = $criteriaFrom;
-    }
-
-    public function hasGroupedData() {
-        return $this->groupeBy;
-    }
-
-    public function setGroupBy($group) {
-        $this->groupeBy = $group;
     }
 }
 
