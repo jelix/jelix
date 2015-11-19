@@ -229,4 +229,47 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
     function testFieldNameEnclosure(){
         $this->assertEquals('"toto"', jDb::getConnection($this->dbProfile)->encloseName('toto'));
     }
+
+    /**
+     * @depends testFieldNameEnclosure
+     */
+    function testPreparedQueries(){
+        $this->emptyTable('product_test');
+        $cnx = jDb::getConnection($this->dbProfile);
+
+        $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES(:i, :na, :pr, :po)');
+
+        $stmt->bindValue('i',1);
+        $stmt->bindValue('na', 'assiettes');
+        $stmt->bindValue('pr',3.87);
+        $stmt->bindValue('po', 'f');
+        $stmt->execute();
+
+        $name = 'fourchettes';
+        $price = 1.54;
+        $stmt->bindValue('i',2);
+        $stmt->bindParam('na', $name);
+        $stmt->bindParam('pr',$price);
+        $stmt->bindValue('po', 't');
+        $stmt->execute();
+
+        $stmt->execute(array('i'=>3, 'na'=>'verres', 'pr'=>2.43, 'po'=>'f'));
+
+        $this->records = array(
+            array('id'=>1,
+            'name'=>'assiettes',
+            'price'=>3.87,
+            'promo'=>'f'),
+            array('id'=>2,
+            'name'=>'fourchettes',
+            'price'=>1.54,
+            'promo'=>'t'),
+            array('id'=>3,
+            'name'=>'verres',
+            'price'=>2.43,
+            'promo'=>'f'),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+    }
+
 }

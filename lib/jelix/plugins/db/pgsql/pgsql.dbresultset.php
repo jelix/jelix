@@ -22,10 +22,13 @@ class pgsqlDbResultSet extends jDbResultSet {
     protected $_stmtId;
     protected $_cnt;
 
-    function __construct ($idResult, $stmtId = null, $cnt=null) {
+    protected $parameterNames = array();
+
+    function __construct ($idResult, $stmtId = null, $cnt=null, $parameterNames = array()) {
         $this->_idResult = $idResult;
         $this->_stmtId = $stmtId;
         $this->_cnt = $cnt;
+        $this->parameterNames = $parameterNames;
     }
 
     public function fetch() {
@@ -72,20 +75,51 @@ class pgsqlDbResultSet extends jDbResultSet {
         throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn'));
     }
 
-    //TODO
-    public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
-       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
+    public function bindValue($parameter, $value, $dataType = PDO::PARAM_STR) {
+        if (!$this->_stmtId) {
+            throw new Exception('Not a prepared statement');
+        }
+        $this->boundParameters[$parameter] = $value;
+        return true;
+    }
 
-    //TODO
-    public function bindValue($parameter, $value, $data_type)
-       {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
+    public function bindParam($parameter, &$variable, $dataType= PDO::PARAM_STR, $length=null, $driverOptions=null) {
+        if (!$this->_stmtId) {
+            throw new Exception('Not a prepared statement');
+        }
+        $this->boundParameters[$parameter] = &$variable;
+        return true;
+    }
 
     public function columnCount() {
         return pg_num_fields($this->_idResult);
     }
 
-    public function execute($parameters=array()) {
-        $this->_idResult = pg_execute($this->_cnt, $this->_stmtId, $parameters);
+    public function execute($parameters=null) {
+        if (!$this->_stmtId) {
+            throw new Exception('Not a prepared statement');
+        }
+
+        if ($this->_idResult) {
+            pg_free_result ($this->_idResult);
+            $this->_idResult = null;
+        }
+
+        if ($parameters === null && count($this->boundParameters)) {
+            $parameters = & $this->boundParameters;
+        }
+
+        $params = array();
+        foreach($this->parameterNames as $name) {
+            if (isset($parameters[$name])) {
+                $params[] = & $parameters[$name];
+            }
+            else {
+                $params[] = '';
+            }
+        }
+
+        $this->_idResult = pg_execute($this->_cnt, $this->_stmtId, $params);
         return true;
     }
 
