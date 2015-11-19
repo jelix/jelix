@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2007-2012 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2007-2015 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -50,6 +50,15 @@ class sqlite3DbConnection extends jDbConnection {
     *
     */
     public function prepare ($query){
+        $res = $this->_connection->prepare($query);
+        if ($res) {
+            $rs = new sqlite3DbResultSet(null, $res);
+        }
+        else {
+            throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');
+        }
+        return $rs;
+
         throw new jException('jelix~db.error.feature.unsupported', array('sqlite','prepare'));
     }
 

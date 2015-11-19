@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2008-2012 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2008-2015 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -34,6 +34,17 @@ class sqlite3DbResultSet extends jDbResultSet {
      * rowCount() have been called
      */
     protected $buffer = array();
+
+    protected $_stmt = null;
+
+    /**
+     * @param SQLite3Result $result
+     * @param SQLite3Stmt $stmt
+     */
+    function __construct ($result, $stmt = null) {
+       parent::__construct($result);
+       $this->_stmt = $stmt;
+    }
 
     protected function _fetch () {
         if (count($this->buffer)) {
@@ -85,15 +96,56 @@ class sqlite3DbResultSet extends jDbResultSet {
         return $this->numRows;
     }
 
-    public function bindColumn ($column, &$param , $type=null)
-      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite3','bindColumn')); }
-    public function bindParam($parameter, &$variable , $data_type =PDO::PARAM_STR, $length=null,  $driver_options=null)
-      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite3','bindParam')); }
-    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
-      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite3','bindValue')); }
-    public function columnCount()
-      { return $this->_idResult->numColumns(); }
-    public function execute($parameters=null)
-      {throw new jException('jelix~db.error.feature.unsupported', array('sqlite3','bindColumn')); }
+    public function bindColumn ($column, &$param , $type=null) {
+        throw new jException('jelix~db.error.feature.unsupported', array('sqlite3','bindColumn'));
+    }
+
+    protected function getSqliteType( $pdoType) {
+        $type = array(
+            PDO::PARAM_INT => SQLITE3_INTEGER,
+            PDO::PARAM_STR => SQLITE3_TEXT,
+            PDO::PARAM_LOB => SQLITE3_BLOB
+        );
+        if (isset($type[$pdoType])) {
+            return $type[$pdoType];
+        }
+        return SQLITE3_TEXT;
+    }
+
+    public function bindParam($parameter, &$variable , $data_type =PDO::PARAM_STR, $length=null,  $driver_options=null) {
+        if (!$this->_stmt) {
+            throw new Exception('Not a prepared statement');
+        }
+        $this->_stmt->bindParam($parameter, $variable, $this->getSqliteType($data_type));
+    }
+
+    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR) {
+        if (!$this->_stmt) {
+            throw new Exception('Not a prepared statement');
+        }
+        $this->_stmt->bindValue($parameter, $value, $this->getSqliteType($data_type));
+    }
+
+    public function columnCount() {
+        return $this->_idResult->numColumns();
+    }
+
+    public function execute($parameters=null) {
+        if (!$this->_stmt) {
+            throw new Exception('Not a prepared statement');
+        }
+        if (is_array($parameters)) {
+            foreach($parameters as $name=>$val) {
+                $type = is_integer($val) ? SQLITE3_INTEGER: SQLITE3_TEXT;
+                $this->_stmt->bindValue($name, $val, $type);
+            }
+        }
+        if ($this->_idResult) {
+            $this->_free();
+            $this->_idResult = null;
+        }
+        $this->_idResult = $this->_stmt->execute();
+        return true;
+    }
 }
 
