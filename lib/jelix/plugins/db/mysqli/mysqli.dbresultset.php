@@ -140,7 +140,10 @@ class mysqliDbResultSet extends jDbResultSet {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
-
+        if ($this->_idResult) {
+            @$this->_idResult->free_result();
+            $this->_idResult = null;
+        }
         $types = $this->boundParameterTypes;
         if ($parameters !== null) {
             $types = array_fill(0, count($parameters), 's');
