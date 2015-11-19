@@ -71,10 +71,11 @@ class mysqliDbConnection extends jDbConnection {
     /**
     * 
     */
-    public function prepare ($query){
-        $res = $this->_connection->prepare($query);
+    public function prepare ($query) {
+        list($newQuery, $parameterNames) = $this->findParameters($query, '?');
+        $res = $this->_connection->prepare($newQuery);
         if ($res) {
-            $rs = new mysqliDbResultSet(null, $res);
+            $rs = new mysqliDbResultSet(null, $res, $parameterNames);
         }
         else {
             throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');

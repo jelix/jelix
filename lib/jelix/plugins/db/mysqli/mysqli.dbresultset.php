@@ -22,13 +22,16 @@ class mysqliDbResultSet extends jDbResultSet {
 
     private $_usesMysqlnd = true;
 
-    function __construct ($resultSet, $stmt = null) {
+    protected $parameterNames = array();
+
+    function __construct ($resultSet, $stmt = null, $parameterNames = array()) {
         parent::__construct($resultSet);
 
         $this->_stmt = $stmt;
         if ($stmt) {
             $this->_usesMysqlnd = is_callable (array($stmt, 'get_result'));
         }
+        $this->parameterNames = $parameterNames;
     }
 
     protected function _fetch () {
@@ -92,20 +95,34 @@ class mysqliDbResultSet extends jDbResultSet {
 
     protected $boundParameterTypes = array();
 
+    /** 
+     * 
+     */
     protected function addParamType ($parameter, $dataType) {
-        if (!is_string($dataType)) {
+        if (is_integer($dataType)) {
             $types = array(
                   PDO::PARAM_INT => "i",
                   PDO::PARAM_STR => "s",
                   PDO::PARAM_LOB => "b",
             );
-            $dataType = $types[$dataType];
+            if (isset($types[$dataType])) {
+                $dataType = $types[$dataType];
+            }
+            else {
+                $dataType = 's';
+            }
+        }
+        else {
+            $dataType = 's';
         }
         $this->boundParameterTypes[$parameter] = $dataType;
     }
     
     protected $boundParameters = array();
 
+    /**
+     * @param string $parameter
+     */
     public function bindParam($parameter, &$variable, $dataType=null, $length=null, $driverOptions=null) {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
@@ -115,25 +132,39 @@ class mysqliDbResultSet extends jDbResultSet {
         return true;
     }
 
+    /** 
+     * 
+     */
     public function execute($parameters=null) {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
 
-        if (count($this->boundParameters)) {
-            $allParams = array(implode("", $this->boundParameterTypes));
-            $allParams = array_merge($allParams, $this->boundParameters);
-            $method = new ReflectionMethod('mysqli_stmt', 'bind_param');
-            $method->invokeArgs($this->_stmt, $allParams);
+        $types = $this->boundParameterTypes;
+        if ($parameters !== null) {
+            $types = array_fill(0, count($parameters), 's');
+        }
+        else if (count($this->boundParameters)) {
+            $parameters = & $this->boundParameters;
         }
         else if (count($this->boundValues)) {
-            $allParams = array(implode("", $this->boundParameterTypes));
-            foreach($this->boundValues as $k => $val) {
-                $allParams[$k+1] = & $this->boundValues[$k];
-            }
-            $method = new ReflectionMethod('mysqli_stmt', 'bind_param');
-            $method->invokeArgs($this->_stmt, $allParams); 
+            $parameters = $this->boundValues;
         }
+
+        if (count($parameters) != count($this->parameterNames)) {
+            throw new Exception('Execute: number of parameters should equals number of parameters declared in the query');
+        }
+
+        $allParams = array(implode("", $types));
+        foreach($this->parameterNames as $k=>$name) {
+            if (!isset($parameters[$name])) {
+                throw new Exception("Execute: parameter '$name' is missing from parameters");
+            }
+            $allParams[] = &$parameters[$name];
+        }
+
+        $method = new ReflectionMethod('mysqli_stmt', 'bind_param');
+        $method->invokeArgs($this->_stmt, $allParams);
 
         $this->_stmt->execute();
 
@@ -141,18 +172,19 @@ class mysqliDbResultSet extends jDbResultSet {
         $this->boundParameterTypes = array();
         $this->boundValues = array();
 
-        if($this->_stmt->result_metadata()){
+        if ($this->_stmt->result_metadata()) {
             //the query prodeces a result
-            try{
-                if( $this->_usesMysqlnd ) {
+            try {
+                if ($this->_usesMysqlnd) {
                     //with the MySQL native driver - mysqlnd (by default in php 5.3.0)
                     $this->_idResult = $this->_stmt->get_result();
-                } else {
+                }
+                else {
                     $this->_idResult = $this->_stmt;
                     $this->deprecatedBindResults($this->_stmt);
                 }
             }
-            catch(Exception $e){
+            catch(Exception $e) {
                 throw new jException('jelix~db.error.query.bad', $this->_stmt->errno);
             }
         }

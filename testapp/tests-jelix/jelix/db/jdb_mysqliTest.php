@@ -77,34 +77,34 @@ class jDb_MysqliTest extends jUnitTestCaseDb {
         $cnx = jDb::getConnection($this->dbProfile);
 
         //INSERT
-        $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (?, ?, ?)');
+        $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (:k, :lg, :lb)');
         $this->assertTrue($stmt instanceof mysqliDbResultSet);
 
         $key = 11; $lang = 'fr'; $label = "France";
-        $bind = $stmt->bindParam(1, $key, 'i');
-        $bind = $stmt->bindParam(2, $lang, 's');
-        $bind = $stmt->bindParam(3, $label, 's');
+        $bind = $stmt->bindParam('lg', $lang, 's');
+        $bind = $stmt->bindParam('k', $key, 'i');
+        $bind = $stmt->bindParam('lb', $label, 's');
         $stmt->execute();
 
         $key = 15; $lang = 'fr'; $label = "test";
-        $bind = $stmt->bindParam(1, $key, 'i');
-        $bind = $stmt->bindParam(2, $lang, 's');
-        $bind = $stmt->bindParam(3, $label, 's');
+        $bind = $stmt->bindParam('lb', $label, 's');
+        $bind = $stmt->bindParam('k', $key, 'i');
+        $bind = $stmt->bindParam('lg', $lang, 's');
         $stmt->execute();
 
-        $bind = $stmt->bindValue(1, 22, 'i');
-        $bind = $stmt->bindValue(2, 'en', 's');
-        $bind = $stmt->bindValue(3, 'test2', 's');
+        $bind = $stmt->bindValue('k', 22, 'i');
+        $bind = $stmt->bindValue('lg', 'en', 's');
+        $bind = $stmt->bindValue('lb', 'test2', 's');
         $stmt->execute();
 
         $this->assertTableHasNRecords('labels_test', 3);
         $stmt = null;
 
         //SELECT
-        $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = ? ORDER BY `key` asc');
+        $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = :la ORDER BY `key` asc');
         $this->assertTrue($stmt instanceof mysqliDbResultSet);
         $lang = 'fr';
-        $bind = $stmt->bindParam(1, $lang, 's');
+        $bind = $stmt->bindParam('la', $lang, 's');
         $this->assertTrue($bind);
 
         $stmt->execute();

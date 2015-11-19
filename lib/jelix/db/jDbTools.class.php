@@ -280,6 +280,10 @@ abstract class jDbTools {
      */
     protected $dbmsStyle = array('/^\s*#/', '/;\s*$/');
 
+    /**
+     * execute a list of queries stored in a file
+     * @param string $file path of the sql file
+     */
     public function execSQLScript ($file) {
         if(!isset($this->_conn->profile['table_prefix']))
             $prefix = '';

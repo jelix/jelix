@@ -68,10 +68,15 @@ class pgsqlDbResultSet extends jDbResultSet {
         return pg_num_rows($this->_idResult);
     }
 
-    public function bindColumn($column, &$param , $type=null )
-      {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn')); }
+    public function bindColumn($column, &$param , $type=null ) {
+        throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindColumn'));
+    }
+
+    //TODO
     public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
        {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindParam')); }
+
+    //TODO
     public function bindValue($parameter, $value, $data_type)
        {throw new jException('jelix~db.error.feature.unsupported', array('pgsql','bindValue')); }
 
@@ -80,7 +85,7 @@ class pgsqlDbResultSet extends jDbResultSet {
     }
 
     public function execute($parameters=array()) {
-        $this->_idResult= pg_execute($this->_cnt, $this->_stmtId, $parameters);
+        $this->_idResult = pg_execute($this->_cnt, $this->_stmtId, $parameters);
         return true;
     }
 
