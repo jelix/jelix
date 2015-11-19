@@ -85,11 +85,12 @@ class mysqliDbResultSet extends jDbResultSet {
         throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindColumn'));
     }
 
-    protected $boundValues = array();
-
-    public function bindValue($parameter, $value, $dataType) {
+    public function bindValue($parameter, $value, $dataType=PDO::PARAM_STR) {
+        if (!$this->_stmt) {
+            throw new Exception('Not a prepared statement');
+        }
         $this->addParamType($parameter, $dataType);
-        $this->boundValues[$parameter] = $value;
+        $this->boundParameters[$parameter] = $value;
         return true;
     }
 
@@ -117,13 +118,13 @@ class mysqliDbResultSet extends jDbResultSet {
         }
         $this->boundParameterTypes[$parameter] = $dataType;
     }
-    
+
     protected $boundParameters = array();
 
     /**
      * @param string $parameter
      */
-    public function bindParam($parameter, &$variable, $dataType=null, $length=null, $driverOptions=null) {
+    public function bindParam($parameter, &$variable, $dataType=PDO::PARAM_STR, $length=null, $driverOptions=null) {
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
@@ -146,9 +147,6 @@ class mysqliDbResultSet extends jDbResultSet {
         }
         else if (count($this->boundParameters)) {
             $parameters = & $this->boundParameters;
-        }
-        else if (count($this->boundValues)) {
-            $parameters = $this->boundValues;
         }
 
         if (count($parameters) != count($this->parameterNames)) {

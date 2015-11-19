@@ -264,9 +264,11 @@ abstract class jDbConnection {
     abstract public function rollback ();
 
     /**
-     * prepare a query
+     * prepare a query. It may contain some named parameters declared as ':a_name'
+     * in the query.
      * @param string $query a sql query with parameters
-     * @return statement a statement
+     * @return jDbResultSet a statement with which you can bind values or variables to
+     * named parameters, and execute the statement.
      */
     abstract public function prepare ($query);
 
@@ -411,9 +413,14 @@ abstract class jDbConnection {
 
     /**
      * replace named parameters into the given query, by the given marker, for
-     * db API that doesn't support named parameters for prepared queries.
-     * 
-     * @return array  0:the new sql, 1: list of parameters 'name'=>index or 'name'=>array(index, index)
+     * db API that don't support named parameters for prepared queries.
+     *
+     * @param string $sql
+     * @param string $marker a string which will replace each named parameter in the query.
+     *    it may end by a '%' so named parameters are replaced by numerical parameter.
+     *    ex : '$%' : named parameters will be replaced by $1, $2, $3...
+     * @return array  0:the new sql, 1: list of parameters names, in the order they
+     * appear into the query
      */
     protected function findParameters($sql, $marker) {
         $queryParts = preg_split("/([`\"'\\\\])/", $sql, -1, PREG_SPLIT_DELIM_CAPTURE);

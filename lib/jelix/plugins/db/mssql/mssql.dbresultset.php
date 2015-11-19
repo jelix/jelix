@@ -34,11 +34,11 @@ class mssqlDbResultSet extends jDbResultSet {
         throw new jException('jelix~db.error.feature.unsupported', array('mssql','bindColumn'));
     }
 
-    public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null) {
+    public function bindParam($parameter, &$variable , $data_type = PDO::PARAM_STR, $length=null,  $driver_options=null) {
         throw new jException('jelix~db.error.feature.unsupported', array('mssql','bindParam'));
     }
 
-    public function bindValue($parameter, $value, $data_type) {
+    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR) {
         throw new jException('jelix~db.error.feature.unsupported', array('mssql','bindValue'));
     }
 

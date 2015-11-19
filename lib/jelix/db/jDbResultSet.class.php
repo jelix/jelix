@@ -144,12 +144,12 @@ abstract class jDbResultSet implements Iterator {
     /**
      * Binds a parameter to the specified variable name
      */
-    abstract public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null);
+    abstract public function bindParam($parameterName, &$variable , $data_type = PDO::PARAM_STR, $length=null,  $driver_options=null);
 
     /**
      *  Binds a value to a parameter
      */
-    abstract public function bindValue($parameter, $value, $data_type);
+    abstract public function bindValue($parameterName, $value, $data_type = PDO::PARAM_STR);
 
     /**
      * Returns the number of columns in the result set
@@ -158,6 +158,9 @@ abstract class jDbResultSet implements Iterator {
 
     /**
      * execute a prepared statement
+     * It may accepted an array of named parameters and their value, if bindValue
+     * or bindParam() did not called.
+     * @param array $parameters
      */
     abstract public function execute($parameters=null);
 
