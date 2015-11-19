@@ -49,6 +49,10 @@ class mysqliDbConnection extends jDbConnection {
     * begin a transaction
     */
     public function beginTransaction (){
+        if (method_exists( $this->_connection ,'begin_transaction')) {
+            // for PHP55+
+            $this->_connection->begin_transaction();
+        }
         $this->_autoCommitNotify(false);
     }
 

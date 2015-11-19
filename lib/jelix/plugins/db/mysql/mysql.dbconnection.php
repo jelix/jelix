@@ -50,7 +50,7 @@ class mysqlDbConnection extends jDbConnection {
     */
     public function beginTransaction (){
         $this->_doExec ('SET AUTOCOMMIT=0');
-        $this->_doExec ('BEGIN');
+        $this->_doExec ('START TRANSACTION');
     }
 
     /**
