@@ -78,38 +78,39 @@ class jDb_MysqliTest extends jUnitTestCaseDb {
 
         //INSERT
         $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (?, ?, ?)');
-        $this->assertTrue($stmt instanceof mysqliDbStatement);
+        $this->assertTrue($stmt instanceof mysqliDbResultSet);
 
         $key = 11; $lang = 'fr'; $label = "France";
-        $bind = $stmt->bindParam('iss', $key, $lang, $label);
-        $this->assertTrue($bind);
-        $res = $stmt->execute();
+        $bind = $stmt->bindParam(1, $key, 'i');
+        $bind = $stmt->bindParam(2, $lang, 's');
+        $bind = $stmt->bindParam(3, $label, 's');
+        $stmt->execute();
 
         $key = 15; $lang = 'fr'; $label = "test";
-        $bind = $stmt->bindParam('iss', $key, $lang, $label);
-        $this->assertTrue($bind);
-        $res = $stmt->execute();
+        $bind = $stmt->bindParam(1, $key, 'i');
+        $bind = $stmt->bindParam(2, $lang, 's');
+        $bind = $stmt->bindParam(3, $label, 's');
+        $stmt->execute();
 
-        $key = 22; $lang = 'en'; $label = "test2";
-        $bind = $stmt->bindParam('iss', $key, $lang, $label);
-        $this->assertTrue($bind);
-        $res = $stmt->execute();
+        $bind = $stmt->bindValue(1, 22, 'i');
+        $bind = $stmt->bindValue(2, 'en', 's');
+        $bind = $stmt->bindValue(3, 'test2', 's');
+        $stmt->execute();
 
         $this->assertTableHasNRecords('labels_test', 3);
         $stmt = null;
 
         //SELECT
         $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = ? ORDER BY `key` asc');
-        $this->assertTrue($stmt instanceof mysqliDbStatement);
+        $this->assertTrue($stmt instanceof mysqliDbResultSet);
         $lang = 'fr';
-        $bind = $stmt->bindParam('s', $lang);
+        $bind = $stmt->bindParam(1, $lang, 's');
         $this->assertTrue($bind);
 
-        $res = $stmt->execute();
-        $this->assertTrue($res instanceof mysqliDbResultSet);
-        $this->assertEquals(2, $res->rowCount());
+        $stmt->execute();
+        $this->assertEquals(2, $stmt->rowCount());
 
-        $result = $res->fetch();
+        $result = $stmt->fetch();
         $this->assertEquals('11', $result->key);
         $this->assertEquals('fr', $result->lang);
         $this->assertEquals('France', $result->label);

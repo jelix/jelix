@@ -241,7 +241,6 @@ cd lib/jelix/db
   jDbSchema.class.php
   jDbTable.class.php
   jDbTools.class.php
-  jDbStatement.class.php
   jDbWidget.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jDbConnection.class.php
@@ -457,7 +456,6 @@ cd lib/jelix/plugins/db/mysqli
   mysqli.dbconnection.php
   mysqli.dbresultset.php
   mysqli.dbschema.php
-  mysqli.dbstatement.php
   mysqli.dbtools.php
   mysqli.daobuilder.php
 

@@ -80,7 +80,7 @@ class pgsqlDbResultSet extends jDbResultSet {
     }
 
     public function execute($parameters=array()) {
-        $this->_idResult= pg_execute($this->_cnt,$this->_stmtId, $parameters);
+        $this->_idResult= pg_execute($this->_cnt, $this->_stmtId, $parameters);
         return true;
     }
 
