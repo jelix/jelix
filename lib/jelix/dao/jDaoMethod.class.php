@@ -202,7 +202,7 @@ class jDaoMethod {
         'binary_op'=>'dummy');
       // 'between'=>'BETWEEN',  'notbetween'=>'NOT BETWEEN',
 
-    private $_attrcond = array('property', 'pattern', 'expr', 'operator', 'driver'); //, 'min', 'max', 'exprmin', 'exprmax'
+    private $_attrcond = array('property', 'pattern', 'expr', 'operator', 'driver', 'dbtype'); //, 'min', 'max', 'exprmin', 'exprmax'
 
     private function _addCondition($op, $cond){
 
@@ -245,7 +245,13 @@ class jDaoMethod {
                 if (!isset($attr['operator']) || empty($attr['operator'])) {
                     throw new jDaoXmlException ($this->_parser->selector, 'method.condition.operator.missing', array($this->name, $op,$field_id));
                 }
-                if (isset($attr['driver']) && !empty($attr['driver'])) {
+                if (isset($attr['dbtype']) && !empty($attr['dbtype'])) {
+                    if ($this->_parser->selector->dbtype != $attr['dbtype']) {
+                        throw new jDaoXmlException ($this->_parser->selector, 'method.condition.dbtype.notallowed', array($this->name, $op,$field_id));
+                    }
+                }
+                // deprecated
+                else if (isset($attr['driver']) && !empty($attr['driver'])) {
                     if ($this->_parser->selector->driver != $attr['driver']) {
                         throw new jDaoXmlException ($this->_parser->selector, 'method.condition.driver.notallowed', array($this->name, $op,$field_id));
                     }
@@ -264,7 +270,13 @@ class jDaoMethod {
                 if (!isset($attr['operator']) || empty($attr['operator'])) {
                     throw new jDaoXmlException ($this->_parser->selector, 'method.condition.operator.missing', array($this->name, $op,$field_id));
                 }
-                if (isset($attr['driver']) && !empty($attr['driver'])) {
+                if (isset($attr['dbtype']) && !empty($attr['dbtype'])) {
+                    if ($this->_parser->selector->dbtype != $attr['dbtype']) {
+                        throw new jDaoXmlException ($this->_parser->selector, 'method.condition.dbtype.notallowed', array($this->name, $op,$field_id));
+                    }
+                }
+                // deprecated
+                else if (isset($attr['driver']) && !empty($attr['driver'])) {
                     if ($this->_parser->selector->driver != $attr['driver']) {
                         throw new jDaoXmlException ($this->_parser->selector, 'method.condition.driver.notallowed', array($this->name, $op,$field_id));
                     }
