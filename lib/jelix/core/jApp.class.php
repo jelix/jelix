@@ -21,6 +21,7 @@
  * @method public static function getAllModulesPath()
  * @method public static function getAllPluginsPath()
  * @method public static function loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method public static function includePlugin($name, $type, $suffix, $classname)
  * @method public static function isModuleEnabled($moduleName, $includingExternal = false)
  * @method public static function getModulePath($module, $includingExternal = false)
  * @method public static function pushCurrentModule($module)
