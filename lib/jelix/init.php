@@ -165,7 +165,7 @@ function jelix_autoload($class) {
             //this may happen if we have several entry points, but the current one does not have this module accessible
             return;
         }
-        $s = new jSelectorDao($m[1].'~'.$m[2], $m[3], false);
+        $s = new jSelectorDaoDb($m[1].'~'.$m[2], '', $m[3]);
         if(jApp::config()->compilation['checkCacheFiletime']){
             // if it is needed to check the filetime, then we use jIncluder
             // because perhaps we will have to recompile the dao before the include

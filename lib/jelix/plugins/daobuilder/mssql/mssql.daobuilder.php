@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage db_driver
+ * @subpackage daobuilder_driver
  * @author     Yann Lecommandoux
  * @copyright  2008 Yann Lecommandoux
  * @link     http://www.jelix.org
@@ -47,5 +47,3 @@ class mssqlDaoBuilder extends jDaoGenerator {
         return null;
     }
 }
-
-?>
