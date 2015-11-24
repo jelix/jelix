@@ -14,6 +14,8 @@ if [ $EXITCODE != 0 ]; then
         curl http://testapp.local/index.php
         echo "--------------------------------------------- info"
         curl http://testapp.local/info.php
+        echo "--------------------------------------------- vhost"
+        cat /etc/apache2/sites-available/default
     fi
 fi
 exit $EXITCODE
