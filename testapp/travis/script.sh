@@ -10,6 +10,10 @@ if [ $EXITCODE != 0 ]; then
         cat ../var/log/errors.log
     else
         echo "/!\\ no errors.log file"
+        echo "--------------------------------------------- index"
+        curl http://testapp.local/index.php
+        echo "--------------------------------------------- info"
+        curl http://testapp.local/info.php
     fi
 fi
 exit $EXITCODE
