@@ -4,8 +4,8 @@ cp -a testapp/var/config/profiles.ini.php.dist testapp/var/config/profiles.ini.p
 cp -a testapp/var/config/localconfig.ini.php.dist testapp/var/config/localconfig.ini.php
 
 
-composer install
+composer install --prefer-source
 cd testapp
-composer install
+composer install --prefer-source
 
 php install/installer.php
