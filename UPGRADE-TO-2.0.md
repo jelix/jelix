@@ -1,26 +1,20 @@
 Migration
 ==========
 
-Here are instructions to migrate your Jelix application from Jelix 1.6 to the dev-master
+Here are instructions to migrate your Jelix application from Jelix 1.7 to the dev-master
 version.
 
-## Composerify your application
+If you didn't use Composer with Jelix 1.7, or if you used Jelix 1.6, first upgrade to Jelix 1.7 with Composer.
+Read the migration documentation of Jelix 1.7. You have to do some things in
+your application.init.php and configuration first.
 
+## Composer
 
-WARNING: this is experimental!!
-
-- Install Composer http://getcomposer.org
-- Create a composer.json file into your application directory.
-  If you already have a such file in your project, add the package "jelix/jelix"
-  in requirements.
-
-  Here is an example of such file:
+Modify your composer.json file to require this version of Jelix
 
 ```json
   {
-    "name": "MyCompany/MyApp",
-    "type": "application",
-    "description": "",
+    ...
     "require": {
         "jelix/jelix": "dev-master"
     }
@@ -33,22 +27,12 @@ WARNING: this is experimental!!
    composer install
 ```
 
-- then Jelix and all of its dependencies are installed into a yourapp/vendor/ directory.
-  Many external libs integrated into Jelix in previous version are now installed only
-  with Composer.
-
-- in your application.init.php, you must replace
-
-    require (__DIR__.'/../lib/jelix/init.php');
-
-  by
-
-    require (__DIR__.'/vendor/autoload.php');
+Then Jelix and all of its dependencies are installed into a yourapp/vendor/ directory.
 
 ## Module and app identity changed
 
 module.xml and project.xml files are deprecated. Replace them by respectively jelix-module.json
-and jelix-app.json
+and jelix-app.json files.
 
 jelix-module.json:
 ```json
@@ -61,7 +45,7 @@ jelix-module.json:
     "homepage":"",
     "license":"",
     "authors":[],
-    "autoload" :{ same syntax content as in a composer.json },
+    "autoload" : { /*same syntax content as in a composer.json*/ },
     "required-modules" : {
         "module name": "version (composer.json syntax)"
     }
@@ -69,6 +53,7 @@ jelix-module.json:
 ```
 
 jelix-app.json:
+
 ```json
     {
         "name":"the app name",
@@ -108,15 +93,19 @@ if you want to keep your module.xml files, modify them:
         You have to change this method in your plugins
         See Jelix\Core\Config\CompilerPluginInterface
 
-
 - If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
    you should know that their API have changed.
 
 - Files that have gone
-   - lib/jelix/checker.php: if you included it, call ```\Jelix\Installer\Checker\CheckerPage::show();``` instead
+   - lib/jelix/checker.php: if you included these file, replace the inclusion instruction
+     by a call to ```\Jelix\Installer\Checker\CheckerPage::show();```
 
 - Classes that don't exist anymore:
    - jInstallerApplication
+
+- in your entry points, replace `checkAppNotInstalled()` and/or `checkAppOpened()`
+  by `\Jelix\Core\AppManager::errorIfAppInstalled()` and `\Jelix\Core\AppManager::errorIfAppClosed()`
+
 
 ## Modules gone
 
