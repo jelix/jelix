@@ -264,9 +264,11 @@ abstract class jDbConnection {
     abstract public function rollback ();
 
     /**
-     * prepare a query
+     * prepare a query. It may contain some named parameters declared as ':a_name'
+     * in the query.
      * @param string $query a sql query with parameters
-     * @return statement a statement
+     * @return jDbResultSet a statement with which you can bind values or variables to
+     * named parameters, and execute the statement.
      */
     abstract public function prepare ($query);
 
@@ -363,13 +365,13 @@ abstract class jDbConnection {
     protected function _quote($text, $binary){
         return addslashes($text);
     }
-    
+
     /**
      * @var jDbTools
      * @since 1.2
      */
     protected $_tools = null;
-    
+
     /**
      * @return jDbTools
      * @since 1.2
@@ -385,13 +387,12 @@ abstract class jDbConnection {
         return $this->_tools;
     }
 
-
     /**
      * @var jDbSchema
      * @since 1.2
      */
     protected $_schema = null;
-    
+
     /**
      * @return jDbSchema
      * @since 1.2
@@ -403,8 +404,83 @@ abstract class jDbConnection {
                 throw new jException('jelix~db.error.driver.notfound', $this->driverName);
             }
         }
-
         return $this->_schema;
     }
+
+    protected $foundParameters = array();
+    protected $parameterMarker = '?';
+    protected $numericalMarker = false;
+
+    /**
+     * replace named parameters into the given query, by the given marker, for
+     * db API that don't support named parameters for prepared queries.
+     *
+     * @param string $sql
+     * @param string $marker a string which will replace each named parameter in the query.
+     *    it may end by a '%' so named parameters are replaced by numerical parameter.
+     *    ex : '$%' : named parameters will be replaced by $1, $2, $3...
+     * @return array  0:the new sql, 1: list of parameters names, in the order they
+     * appear into the query
+     */
+    protected function findParameters($sql, $marker) {
+        $queryParts = preg_split("/([`\"'\\\\])/", $sql, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $finalQuery = '';
+        $ignoreNext = false;
+        $insideString = false;
+        $this->foundParameters = array();
+        $this->numericalMarker = (substr($marker, -1) == '%');
+        if ($this->numericalMarker) {
+            $this->parameterMarker = substr($marker,0,-1);
+        }
+        else {
+            $this->parameterMarker = $marker;
+        }
+
+        foreach($queryParts as $token) {
+            if ($token == '\\') {
+                $ignoreNext = true;
+                $finalQuery .= $token;
+            }
+            else if ($token == '"' || $token == "'" || $token =='`') {
+                if ($ignoreNext) {
+                    $ignoreNext = false;
+                    $finalQuery .= $token;
+                }
+                else if ($insideString == $token) {
+                    $insideString = false;
+                    $finalQuery .= $token;
+                }
+                else if ($insideString === false) {
+                    $insideString = $token;
+                    $finalQuery .= $token;
+                }
+                else if ($insideString !== false) {
+                    $finalQuery .= $token;
+                }
+            }
+            else if ($insideString !== false) {
+                $finalQuery .= $token;
+            }
+            else {
+                $finalQuery .= preg_replace_callback("/(\\:)([a-zA-Z0-9_]+)/", array($this, '_replaceParam'), $token);
+            }
+        }
+
+        return array($finalQuery, $this->foundParameters);
+    }
     
+    protected function _replaceParam($matches) {
+        if ($this->numericalMarker) {
+            $index = array_search($matches[2], $this->foundParameters);
+            if ($index === false) {
+                $this->foundParameters[] = $matches[2];
+                $index = count($this->foundParameters) -1;
+            }
+            return $this->parameterMarker.($index+1);
+        }
+        else {
+            $this->foundParameters[] = $matches[2];
+            return $this->parameterMarker;
+        }
+    }
 }

@@ -3,13 +3,13 @@
 * @package    jelix
 * @subpackage db
 * @author      Laurent Jouanneau
-* @copyright  2005-2010 Laurent Jouanneau
+* @copyright  2005-2015 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
 /**
- * represent a statement
+ * represent a statement result set or a prepared statement result set
  * @package  jelix
  * @subpackage db
  */
@@ -69,6 +69,7 @@ abstract class jDbResultSet implements Iterator {
         $this->_fetchModeParam = $param;
         $this->_fetchModeCtoArgs = $ctoargs;
     }
+
     /**
      * fetch a result. The result is returned as an object.
      * @return object|boolean result object or false if there is no more result
@@ -120,40 +121,68 @@ abstract class jDbResultSet implements Iterator {
     }
 
     /**
-     * not implemented
+     * Retrieve a statement attribute
+     * @param int $attr
      */
-    public function getAttribute($attr){return null;}
-    /**
-     * not implemented
-     */
-    public function setAttribute($attr, $value){}
+    public function getAttribute($attr) {
+        return null;
+    }
 
     /**
-     * not implemented
+     * Set a statement attribute
+     * @param int $attr
+     * @param mixed $value
+     */
+    public function setAttribute($attr, $value) {
+    }
+
+    /**
+     *  Bind a column to a PHP variable
      */
     abstract public function bindColumn($column, &$param , $type=null );
+
     /**
-     * not implemented
+     * Binds a parameter to the specified variable name
      */
-    abstract public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null);
+    abstract public function bindParam($parameterName, &$variable , $data_type = PDO::PARAM_STR, $length=null,  $driver_options=null);
+
     /**
-     * not implemented
+     *  Binds a value to a parameter
      */
-    abstract public function bindValue($parameter, $value, $data_type);
+    abstract public function bindValue($parameterName, $value, $data_type = PDO::PARAM_STR);
+
     /**
-     * not implemented
+     * Returns the number of columns in the result set
      */
     abstract public function columnCount();
 
     /**
-     * not implemented
+     * execute a prepared statement
+     * It may accepted an array of named parameters and their value, if bindValue
+     * or bindParam() did not called.
+     * @param array $parameters
      */
     abstract public function execute($parameters=null);
 
+    /**
+     *  Returns the number of rows affected by the last SQL statement
+     */
     abstract public function rowCount();
 
+    /**
+     * method responsible to free resources. called by the destructor
+     */
     abstract protected function _free ();
+
+    /**
+     * deep implementation of fetch().
+     * @return object|boolean
+     */
     abstract protected function _fetch ();
+
+    /**
+     * move the cursor to the first record
+     */
     abstract protected function _rewind ();
 
     //--------------- interface Iterator

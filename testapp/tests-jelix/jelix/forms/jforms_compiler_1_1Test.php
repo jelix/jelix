@@ -792,7 +792,8 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 jClasses::inc(\'jelix_tests~mydatasource\');
 $datasource = new mydatasource($this->id());
-if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;}
+if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;
+}
 else{$ctrl->datasource=new jFormsStaticDatasource();}
 $this->addControl($ctrl);',
 76=>'$ctrl= new jFormsControlgroup(\'agroup\');

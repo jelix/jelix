@@ -114,4 +114,49 @@ class jDb_sqlite3Test extends jUnitTestCase {
         unset($res);
     }
 
+    /**
+
+     */
+    function testPreparedQueries(){
+        $cnx = jDb::getConnection('testapp_sqlite3');
+        $cnx->exec("DELETE FROM products");
+
+        $stmt = $cnx->prepare('INSERT INTO products (id, name, price) VALUES(:i, :na, :pr)');
+
+        $stmt->bindValue('i',1, PDO::PARAM_INT);
+        $stmt->bindValue('na', 'assiettes');
+        $stmt->bindValue('pr',3.87);
+        $stmt->execute();
+
+        $name = 'fourchettes';
+        $price = 1.54;
+        $stmt->bindValue('i',2, PDO::PARAM_INT);
+        $stmt->bindParam('na', $name);
+        $stmt->bindParam('pr',$price);
+        $stmt->execute();
+
+        $stmt->execute(array('i'=>3, 'na'=>'verres', 'pr'=>2.43));
+
+        $res = $cnx->query("SELECT count(*) as cnt FROM products");
+        $rec = $res->fetch();
+        $this->assertNotEquals(false, $rec);
+        $this->assertEquals(3, $rec->cnt);
+        unset($rec);
+        unset($res);
+
+        $res = $cnx->query("SELECT id, name, price FROM products ORDER by id asc");
+        $all = $res->fetchAll();
+        $this->assertEquals(3, count($all));
+        unset($res);
+        $this->assertEquals($all[0]->id, 1);
+        $this->assertEquals($all[0]->name, 'assiettes');
+        $this->assertEquals($all[0]->price, 3.87);
+        $this->assertEquals($all[1]->id, 2);
+        $this->assertEquals($all[1]->name, 'fourchettes');
+        $this->assertEquals($all[1]->price, 1.54);
+        $this->assertEquals($all[2]->id, 3);
+        $this->assertEquals($all[2]->name, 'verres');
+        $this->assertEquals($all[2]->price, 2.43);
+    }
+
 }

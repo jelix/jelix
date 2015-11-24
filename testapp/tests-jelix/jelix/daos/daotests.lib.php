@@ -10,13 +10,13 @@
 */
 
 require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
-require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
+require_once(JELIX_LIB_PATH.'plugins/daobuilder/mysql/mysql.daobuilder.php');
 include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbtools.php');
 
 
 class fakejSelectorDao extends jSelectorDao {
   
-  function __construct($module='', $resource='', $driver='mysql') {
+  function __construct($module='', $resource='', $driver='mysqli', $dbType='mysql') {
       $this->driver = $driver;
       $this->_compiler = 'jDaoCompiler';
       $this->_compilerPath = JELIX_LIB_PATH.'dao/jDaoCompiler.class.php';
@@ -24,6 +24,7 @@ class fakejSelectorDao extends jSelectorDao {
       $this->resource = $resource;
       $this->_path = '';
       $this->_where =   '';
+      $this->dbType = $dbType;
   }
 }
 

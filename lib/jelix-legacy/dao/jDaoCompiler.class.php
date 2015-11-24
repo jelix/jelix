@@ -27,6 +27,7 @@ class jDaoCompiler  implements jISimpleCompiler {
 
     /**
     * compile the given class id.
+    * @param jSelectorDao $selector
     */
     public function compile ($selector) {
 
@@ -50,8 +51,10 @@ class jDaoCompiler  implements jISimpleCompiler {
         $parser = new jDaoParser ($selector);
         $parser->parse(simplexml_import_dom($doc), $tools);
 
-        require_once(jApp::config()->_pluginsPathList_db[$selector->driver].$selector->driver.'.daobuilder.php');
-        $class = $selector->driver.'DaoBuilder';
+        $class = $selector->dbType.'DaoBuilder';
+        if (!jApp::includePlugin($selector->dbType, 'daobuilder', '.daobuilder.php', $class)) {
+            throw new jException('jelix~dao.error.builder.notfound', $selector->dbType); 
+        }
         $generator = new $class ($selector, $tools, $parser);
 
         // generation of PHP classes corresponding to the DAO definition

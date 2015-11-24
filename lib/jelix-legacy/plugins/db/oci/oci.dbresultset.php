@@ -3,8 +3,9 @@
 * @package    jelix
 * @subpackage db_driver
 * @author     Philippe Villiers
-* @copyright  2013 Philippe Villiers
-*
+* @contributor Laurent Jouanneau
+* @copyright  2013 Philippe Villiers, 2015 Laurent Jouanneau
+* 
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -76,16 +77,32 @@ class ociDbResultSet extends jDbResultSet {
         return oci_num_rows($this->_idResult);
     }
 
+    protected function getOCIType( $pdoType) {
+        $type = array(
+            PDO::PARAM_INT => SQLT_INT,
+            PDO::PARAM_STR => SQLT_CHR,
+            PDO::PARAM_LOB => SQLT_BLOB,
+            PDO::PARAM_BOOL => SQLT_BOL
+        );
+        if (isset($type[$pdoType])) {
+            return $type[$pdoType];
+        }
+        return SQLT_CHR;
+    }
     public function bindColumn($column, &$param , $type=null ) {
         throw new jException('jelix~db.error.feature.unsupported', array('oci','bindColumn'));
     }
 
-    public function bindParam($parameter, &$variable, $data_type = SQLT_CHR, $length = -1,  $driver_options=null) {
-        return oci_bind_by_name($this->_idResult, $parameter, $variable, $length, $data_type);
+    public function bindParam($parameter, &$variable, $data_type = PDO::PARAM_STR, $length = -1,  $driver_options=null) {
+        return oci_bind_by_name($this->_idResult, $parameter, $variable, $length,
+                                $this->getOCIType($data_type));
     }
 
-    public function bindValue($parameter, $value, $data_type) {
-        throw new jException('jelix~db.error.feature.unsupported', array('oci','bindValue'));
+    protected $boundValues = array();
+    public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR) {
+        $this->boundValues[$parameter] = $value;
+        return oci_bind_by_name($this->_idResult, $parameter, $this->boundValues[$parameter],
+                                    -1, $this->getOCIType($data_type));
     }
 
     public function columnCount() {

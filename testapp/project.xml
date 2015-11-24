@@ -9,13 +9,6 @@
         <author name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
-    <directories>
-        <config>var/config</config>
-        <log>var/log</log>
-        <var>var</var>
-        <www>www</www>
-        <temp>temp</temp>
-    </directories>
     <entrypoints>
         <entry file="index.php" config="index/config.ini.php" />
         <entry file="rest.php" config="rest/config.ini.php" />

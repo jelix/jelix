@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Laurent Raufaste, Pulsation
-* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
+* @copyright  2001-2005 CopixTeam, 2005-2015 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
 *
 * This class was get originally from the Copix project (CopixZone, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -114,21 +114,12 @@ class jZone {
         $dir = jApp::tempPath('zonecache/');
         if(!file_exists($dir)) return;
 
-        if($name !=''){
+        if ($name !='') {
             $sel = new jSelectorZone($name);
-            $fic = '~'.$sel->module.'~'.strtolower($sel->resource).'zone~';
-        }else{
-            $fic = '~';
+            $dir .= $sel->module.'/'.strtolower($sel->resource).'zone/';
         }
 
-        if ($dh = opendir($dir)) {
-           while (($file = readdir($dh)) !== false) {
-               if(strpos($file, $fic) === 0){
-                   unlink($dir.$file);
-               }
-           }
-           closedir($dh);
-       }
+        jFile::removeDir($dir, false);
     }
 
     /**
@@ -257,16 +248,16 @@ class jZone {
         $ar = $this->_params;
         ksort($ar);
         $id=md5(serialize($ar));
-        $cacheFiles = array( 'content' => jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~'.$id.'.php') );
+        $cacheFiles = array( 'content' => jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/'.$id.'.php') );
         if( $forCurrentResponse ) {
             //make distinct a cache files for metas according to response type as meta handling is often different for different responses
             $respType = jApp::coord()->response->getType();
-            $cacheFiles['meta'] = jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~meta~'.$respType.'~'.$id.'.php');
+            $cacheFiles['meta'] = jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/meta~'.$respType.'~'.$id.'.php');
         } else {
             foreach( jApp::config()->responses as $respType ) {
                 //list all response types
                 if( substr($respType, -5) != '.path' ) {
-                    $cacheFiles['meta.'.$respType] = jApp::tempPath('zonecache/~'.$module.'~'.strtolower(get_class($this)).'~meta~'.$respType.'~'.$id.'.php');
+                    $cacheFiles['meta.'.$respType] = jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/meta~'.$respType.'~'.$id.'.php');
                 }
             }
         }

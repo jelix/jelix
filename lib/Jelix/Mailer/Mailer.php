@@ -9,7 +9,7 @@
 * @contributor Kévin Lepeltier, GeekBay, Julien Issler
 * @copyright   2006-2015 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
-* @copyright   2010 Julien Issler
+* @copyright   2010-2015 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -40,7 +40,7 @@ class Mailer extends \PHPMailer {
      * if mailer is file.
     */
     public $filePath = '';
-    
+
     /**
      * indicates if mails should be copied into files, so the developer can verify that all mails are sent.
      */

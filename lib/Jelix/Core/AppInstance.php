@@ -325,30 +325,49 @@ class AppInstance
      * @param string $type      the type of the plugin
      * @param string $suffix    the suffix of the filename
      * @param string $classname the name of the class to instancy
-     * @param mixed  $args      the argument for the constructor of the class. null = no argument.
+     * @param mixed  $constructArg the single argument for the constructor of the class. null = no argument.
      *
      * @return null|object null if the plugin doesn't exists
      */
-    public function loadPlugin($name, $type, $suffix, $classname, $args = null)
+    public function loadPlugin($name, $type, $suffix, $classname, $constructArg = null)
     {
-        if (!class_exists($classname, false)) {
-            $optname = '_pluginsPathList_'.$type;
-            if (!isset($this->config->$optname)) {
-                return;
-            }
-            $opt = & $this->config->$optname;
-            if (!isset($opt[$name])
-                || !file_exists($opt[$name].$name.$suffix)) {
-                return;
-            }
-            require_once $opt[$name].$name.$suffix;
+        if (!$this->includePlugin($name, $type, $suffix, $classname)) {
+            return null;
         }
-        if (!is_null($args)) {
-            return new $classname($args);
+        if (!is_null($constructArg)) {
+            return new $classname($constructArg);
         } else {
             return new $classname();
         }
     }
+
+    /**
+     * include the file of a plugin from a plugin directory (any type of plugins).
+     *
+     * @param string $name      the name of the plugin
+     * @param string $type      the type of the plugin
+     * @param string $suffix    the suffix of the filename
+     * @param string $classname the name of the class to instancy
+     *
+     * @return bool true if the plugin exists
+     */
+    public function includePlugin($name, $type, $suffix, $classname)
+    {
+        if (!class_exists($classname, false)) {
+            $optname = '_pluginsPathList_'.$type;
+            if (!isset($this->config->$optname)) {
+                return false;
+            }
+            $opt = & $this->config->$optname;
+            if (!isset($opt[$name])
+                || !file_exists($opt[$name].$name.$suffix)) {
+                return false;
+            }
+            require_once $opt[$name].$name.$suffix;
+        }
+        return true;
+    }
+
     /**
      * Says if the given module $name is enabled.
      *

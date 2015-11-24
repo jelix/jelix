@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage db_driver
+* @subpackage daobuilder_driver
 * @author     Laurent Jouanneau
 * @contributor Loic Mathaud <loic@mathaud.net>
 * @contributor Steven Jehannet
@@ -13,9 +13,9 @@
 /**
  * driver for jDaoCompiler
  * @package    jelix
- * @subpackage db_driver
+ * @subpackage daobuilder_driver
  */
-class sqlite3DaoBuilder extends jDaoGenerator {
+class sqliteDaoBuilder extends jDaoGenerator {
 
     protected $propertiesListForInsert = 'PrimaryFieldsExcludeAutoIncrement';
 

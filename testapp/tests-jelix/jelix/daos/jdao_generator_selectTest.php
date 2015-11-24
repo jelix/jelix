@@ -18,7 +18,7 @@ class jdao_generator_selectTest extends jUnitTestCase {
     protected $_tools;
 
     function setUp() {
-        $this->_selector = new fakejSelectorDao("foo", "bar", "mysql");
+        $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
         $this->_tools= new mysqlDbTools(null);
     }
 

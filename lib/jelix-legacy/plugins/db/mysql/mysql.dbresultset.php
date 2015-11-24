@@ -47,9 +47,9 @@ class mysqlDbResultSet extends jDbResultSet {
 
     public function bindColumn($column, &$param , $type=null )
       {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindColumn')); }
-    public function bindParam($parameter, &$variable , $data_type =null, $length=null,  $driver_options=null)
+    public function bindParam($parameter, &$variable , $data_type =PDO::PARAM_STR, $length=null,  $driver_options=null)
       {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindParam')); }
-    public function bindValue($parameter, $value, $data_type)
+    public function bindValue($parameter, $value, $data_type=PDO::PARAM_STR)
       {throw new jException('jelix~db.error.feature.unsupported', array('mysql','bindValue')); }
     public function columnCount()
       { return mysql_num_fields($this->_idResult); }

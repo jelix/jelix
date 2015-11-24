@@ -102,12 +102,16 @@ class jDaoParser {
      * @var jSelectorDao[]
      */
     private $_importedDao = null;
-    
+
+    /**
+     * @var jSelectorDao
+     */
     public $selector;
+
     /**
     * Constructor
     */
-    function __construct($selector) {
+    function __construct(jSelectorDao $selector) {
         $this->selector = $selector;
     }
 
@@ -130,7 +134,7 @@ class jDaoParser {
 
             jApp::pushCurrentModule($this->selector->module);
             // Keep the same driver as current used
-            $importSel = new jSelectorDao($import, $this->selector->driver);
+            $importSel = new jSelectorDaoDb($import, $this->selector->driver, $this->selector->dbType);
             jApp::popCurrentModule();
 
             $doc = new DOMDocument();

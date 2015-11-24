@@ -13,7 +13,6 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 require_once(__DIR__.'/mysqli.dbresultset.php');
-require_once(__DIR__.'/mysqli.dbstatement.php');
 
 /**
  *
@@ -50,6 +49,10 @@ class mysqliDbConnection extends jDbConnection {
     * begin a transaction
     */
     public function beginTransaction (){
+        if (method_exists( $this->_connection ,'begin_transaction')) {
+            // for PHP55+
+            $this->_connection->begin_transaction();
+        }
         $this->_autoCommitNotify(false);
     }
 
@@ -72,18 +75,13 @@ class mysqliDbConnection extends jDbConnection {
     /**
     * 
     */
-    public function prepare ($query){
-        $res = $this->_connection->prepare($query);
-        if( $this->_usesMysqlnd === null ) {
-            if( is_callable( array($res, 'get_result') ) ) {
-                $this->_usesMysqlnd = true;
-            } else {
-                $this->_usesMysqlnd = false;
-            }
+    public function prepare ($query) {
+        list($newQuery, $parameterNames) = $this->findParameters($query, '?');
+        $res = $this->_connection->prepare($newQuery);
+        if ($res) {
+            $rs = new mysqliDbResultSet(null, $res, $parameterNames);
         }
-        if($res){
-            $rs= new mysqliDbStatement($res, $this->_usesMysqlnd);
-        }else{
+        else {
             throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');
         }
         return $rs;

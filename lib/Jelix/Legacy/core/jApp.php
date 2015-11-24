@@ -147,6 +147,10 @@ class jApp {
         return \Jelix\Core\App::loadPlugin($name, $type, $suffix, $classname, $args);
     }
 
+    public static function includePlugin($name, $type, $suffix, $classname) {
+        return \Jelix\Core\App::includePlugin($name, $type, $suffix, $classname);
+    }
+
     public static function isModuleEnabled ($moduleName, $includingExternal = false) {
         return \Jelix\Core\App::isModuleEnabled ($moduleName, $includingExternal);
     }

@@ -2,8 +2,9 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2015 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -139,7 +140,7 @@ class initadminCommand extends JelixScriptCommand {
 
         $reporter = new \Jelix\Installer\Reporter\Console(($verbose? 'notice':'warning'));
         $installer = new \Jelix\Installer\Installer($reporter);
-        $installer->installModules(array('master_admin'), $entrypoint.'.php');
+        $installer->installModules(array('jauth','master_admin'), $entrypoint.'.php');
 
         $authini = new \Jelix\IniFile\IniModifier(App::configPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');

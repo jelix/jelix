@@ -73,11 +73,13 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     public function prepare ($query){
-        $id=(string)mktime();
-        $res = pg_prepare($this->_connection, $id, $query);
-        if($res){
-            $rs= new pgsqlDbResultSet ($res, $id, $this->_connection );
-        }else{
+        list ($newQuery, $parameterNames) = $this->findParameters($query, '$%');
+        $id= (string) time();
+        $res = pg_prepare($this->_connection, $id, $newQuery);
+        if ($res) {
+            $rs= new pgsqlDbResultSet ($res, $id, $this->_connection, $parameterNames);
+        }
+        else {
             throw new jException('jelix~db.error.query.bad',  pg_last_error($this->_connection).'('.$query.')');
         }
         return $rs;

@@ -83,7 +83,7 @@ class jDaoGenerator {
     function __construct($selector, $tools, $daoParser){
         $this->_daoId = $selector->toString();
         $this->_daoPath = $selector->getPath();
-        $this->_dbType = $selector->driver;
+        $this->_dbType = $selector->dbType;
         $this->_dataParser = $daoParser;
         $this->_DaoClassName = $selector->getDaoClass();
         $this->_DaoRecordClassName = $selector->getDaoRecordClass();
