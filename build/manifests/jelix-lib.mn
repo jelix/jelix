@@ -75,6 +75,7 @@ cd lib/Jelix/Legacy/core
   jLocale.php
   jBundle.php
   jCoordinator.php
+  jCoordinatorDebug.php
   jRequest.php
   jResponse.php
 
@@ -116,7 +117,6 @@ cd lib/jelix-legacy/controllers
 
 cd lib/jelix-legacy/core
   jCmdlineCoordinator.class.php
-  jCoordinatorDebug.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jBasicErrorHandler.class.php
 * jController.class.php
@@ -795,10 +795,11 @@ cd lib/Jelix/Routing
   composer.json
   Exception.php
   Router.php
+  RouterDebug.php
   ClientRequest.php
   ServerResponse.php
-
   RouterPlugin.php
+
 cd lib/Jelix/External
   composer.json
   ClassMapGenerator.php

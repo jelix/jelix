@@ -10,6 +10,7 @@
     "jConfigAutoloader": "core/jConfigAutoloader.php",
     "jConfigCompiler": "core/jConfigCompiler.php",
     "jCoordinator": "core/jCoordinator.php",
+    "jCoordinatorDebug": "core/jCoordinatorDebug.php",
     "jEvent": "events/jEvent.php",
     "jEventCompiler": "events/jEventCompiler.php",
     "jEventListener": "events/jEventListener.php",

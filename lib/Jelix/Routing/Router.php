@@ -13,7 +13,7 @@ namespace Jelix\Routing;
 use Jelix\Core\App;
 
 /**
- * the main class of the jelix core
+ * the main class of the routing core
  *
  * this is the "chief orchestra" of the framework. Its goal is
  * to load the configuration, to get the request parameters
@@ -41,7 +41,7 @@ class Router {
 
     /**
      * the selector of the current action
-     * @var jSelectorAct
+     * @var jSelectorActFast
      */
     public $action = null;
 
@@ -132,7 +132,7 @@ class Router {
     * @throw \jException if the module is unknown or the action name format is not valid
     * @see Router::process()
     */
-    protected function setRequest ($request) {
+    protected function setRequest (ClientRequest $request) {
 
         $config = App::config();
         $this->request = $request;
@@ -170,8 +170,9 @@ class Router {
     public function process ($request=null) {
 
         try {
-            if ($request)
+            if ($request) {
                 $this->setRequest($request);
+            }
 
             \jSession::start();
 
@@ -241,9 +242,9 @@ class Router {
 
     /**
      * get the controller corresponding to the selector
-     * @param jSelectorAct $selector
+     * @param jSelectorActFast $selector
      */
-    protected function getController($selector){
+    protected function getController(\jSelectorActFast $selector){
 
         $ctrlpath = $selector->getPath();
         if(!file_exists($ctrlpath)){
@@ -313,7 +314,7 @@ class Router {
      * @param   Exception   $e  the exception object
      * @since 1.4
      */
-    function exceptionHandler($e) {
+    function exceptionHandler(\Exception $e) {
         $this->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
                           $e->getLine(), $e->getTrace());
     }
