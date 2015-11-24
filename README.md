@@ -1,7 +1,7 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP 5.5 and higher.
+Jelix is an open-source framework for PHP.
 
 It has a modular and extensible architecture. Applications based on Jelix are made
 with modules, which allow to reuse features in several projects.
@@ -28,12 +28,11 @@ not master! So **do pull requests** on stable branches!
 Installation
 ===========
 
-The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.4 or more.
+The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.6 or more.
 
 For applications with the future Jelix 2.0, you should use
-[Composer](http://getcomposer.org). Jelix packages are not yet into Packagist, so you
-should indicate the Jelix packages repository in your composer.json, and declare the jelix
-package dependency:
+[Composer](http://getcomposer.org). You should indicate the Jelix packages repository
+in your composer.json, and declare the jelix package dependency:
 
 ```
 {
