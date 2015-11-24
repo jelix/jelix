@@ -13,5 +13,5 @@ composer install --prefer-source
 php install/installer.php
 
 cd adminapp/install
-php install/installer.php
+php installer.php
 

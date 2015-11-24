@@ -16,7 +16,6 @@
         }
     ],
     "require": {
-        "phpmailer/phpmailer": "5.2.9",
         "tecnickcom/tcpdf": "6.0.*",
         "mrclay/minify": "2.2.0",
         "jelix/webservice-helper": "1.5.2",
