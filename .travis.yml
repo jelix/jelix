@@ -26,8 +26,10 @@ services:
    - postgresql
 
 before_install:
-   - sudo ./testapp/travis/before_install.sh
    - phpenv config-add testapp/travis/phpconf.ini
+   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+   - sudo ./testapp/travis/before_install.sh
 
 install:
    - ./testapp/travis/install.sh

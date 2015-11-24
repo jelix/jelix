@@ -12,8 +12,6 @@ apt-get install apache2 libapache2-mod-fastcgi
 a2enmod rewrite actions fastcgi alias
 
 # php-fpm
-cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
 
 # configure apache virtual hosts
 cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/default
@@ -31,6 +29,4 @@ psql -d testapp -U postgres -c "GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA 
 psql -d testapp -U postgres -c "GRANT ALL PRIVILEGES ON ALL FUNCTIONS IN SCHEMA public TO test_user;"
 
 # prepare mysql base
-mysql -u root -e "CREATE DATABASE IF NOT EXISTS testapp CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON $APPNAME.* TO test_user;FLUSH PRIVILEGES;"
-
-chown -R :www-data testapp/var/log/ testapp/temp/ testapp/var/
+mysql -u root -e "CREATE DATABASE IF NOT EXISTS testapp CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON testapp.* TO test_user;FLUSH PRIVILEGES;"
