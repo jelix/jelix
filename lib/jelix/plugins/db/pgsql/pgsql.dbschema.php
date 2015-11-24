@@ -16,6 +16,41 @@
  * @notimplemented
  */
 class pgsqlDbTable extends jDbTable {
+    protected function _loadColumns() {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _alterColumn(jDbColumn $old, jDbColumn $new) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _addColumn(jDbColumn $new) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _loadIndexesAndKeys() {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _createIndex(jDbIndex $index) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _dropIndex(jDbIndex $index) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _loadReferences() {
+        throw new Exception ('Not Implemented');
+    }
+    
+    protected function _createReference(jDbReference $ref) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _dropReference(jDbReference $ref) {
+        throw new Exception ('Not Implemented');
+    }
 
 }
 
@@ -30,7 +65,7 @@ class pgsqlDbSchema extends jDbSchema {
      *
      */
     function createTable($name, $columns, $primaryKeys, $attributes=array()) {
-        
+        throw new Exception ('Not Implemented');
     }
 
     /**

@@ -100,6 +100,26 @@ abstract class jDbSchema {
     }
 
     /**
+     * @return jDbTable object corresponding to the new table
+     */
+    public function renameTable(jDbTable $table, $newName) {
+        if ($this->tables === null) {
+            $this->tables = $this->_getTables();
+        }
+        $name = $table->getName();
+        if (isset($this->tables[$newName]) ||
+            !isset($this->tables[$name]) ||
+            $name == $newName) {
+            return false;
+        }
+        
+        $newTable = $this->_renameTable($table, $newName);
+        unset($this->tables[$name]);
+        $this->tables[$newName] = $newTable;
+        return $newTable;
+    }
+
+    /**
      * create the given table into the database
      * @param string $name
      * @param array $columns list of jDbColumn
@@ -110,6 +130,14 @@ abstract class jDbSchema {
     abstract protected function _createTable($name, $columns, $primaryKey, $attributes = array());
 
     abstract protected function _getTables();
+
+    /**
+     * @return jDbTable object corresponding to the new table
+     */
+    protected function _renameTable(jDbTable $table, $newName) {
+        $this->conn->exec('ALTER TABLE '.$this->conn->encloseName($table->name).
+                          ' RENAME TO '.$this->conn->encloseName($newName));
+    }
 
     protected function _dropTable($name) {
         $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));

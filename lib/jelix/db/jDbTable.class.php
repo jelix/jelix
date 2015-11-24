@@ -25,7 +25,7 @@ abstract class jDbTable {
     protected $schema;
   
     /**
-     * @var array of jDbColumns. null means "columns are not loaded"
+     * @var jDbColumns[]. null means "columns are not loaded"
      */
     protected $columns = null;
     
@@ -35,17 +35,17 @@ abstract class jDbTable {
     protected $primaryKey = null;
 
     /**
-     * @var array list unique keys, jDbUniqueKey. null means "unique key are not loaded"
+     * @var jDbUniqueKey[]. null means "unique key are not loaded"
      */
     protected $uniqueKeys = null;
 
     /**
-     * @var array list of indexes, jDbIndex. null means "indexes are not loaded"
+     * @var jDbIndex[]. null means "indexes are not loaded"
      */
     protected $indexes = null;
 
     /**
-     * @var array list of references, jDbReference. null means "references are not loaded"
+     * @var jDbReference[]. null means "references are not loaded"
      */
     protected $references = null;
 
@@ -75,26 +75,50 @@ abstract class jDbTable {
     }
 
     public function getColumn($name) {
+        if ($this->columns === null) {
+            $this->_loadColumns();
+        }
         if (isset($this->columns[$name])) {
             return $this->columns[$name];
         }
         return null;
     }
 
+    /**
+     * add a column
+     * @return boolean  true if the column is added, false if not (already there)
+     */
     public function addColumn(jDbColumn $column) {
+        $col = $this->getColumn($column->name);
+        if ($col) {
+            return false;
+        }
         $this->_addColumn($column);
         $this->columns[$column->name] = $column;
+        return false;
     }
 
-    public function alterColumn(jDbColumn $column, $oldName = '') {
+    /**
+     * change a column definition. If the column does not exist,
+     * it is created.
+     * @param jDbColumn $column  the colum with its new properties
+     * @param string $oldName  the name of the column to change (if the name is changed)
+     * @param boolean $doNotCreate true if the column shoul dnot be created when it does not exist
+     * @return boolean true if changed/created
+     */
+    public function alterColumn(jDbColumn $column, $oldName = '', $doNotCreate=false) {
         $oldColumn = $this->getColumn(($oldName?:$column->name));
         if (!$oldColumn) {
-            $this->addColumn($column);
-            return;
+            if ($doNotCreate) {
+                return false;
+            }
+            $this->_addColumn($column);
         }
-    
-        $this->_alterColumn($oldColumn, $column);
+        else {
+            $this->_alterColumn($oldColumn, $column);
+        }
         $this->columns[$column->name] = $column;
+        return true;
     }
 
     public function dropColumn($name) {
