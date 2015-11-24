@@ -30,6 +30,7 @@ before_install:
    - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
    - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
    - sudo ./testapp/travis/before_install.sh
+   - ~/.phpenv/versions/$(phpenv version-name)/bin/composer self-update
 
 install:
    - ./testapp/travis/install.sh
