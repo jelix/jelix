@@ -13,7 +13,6 @@
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-require(LIB_PATH.'phpMailer/class.smtp.php');
 
 /**
  * SMTP is rfc 821 compliant and implements all the rfc 821 SMTP
