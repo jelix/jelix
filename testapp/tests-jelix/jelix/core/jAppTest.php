@@ -63,6 +63,7 @@ class jAppTest extends PHPUnit_Framework_TestCase {
         $expected = array(
             JELIX_LIB_PATH.'plugins/',
             jApp::appPath('vendor/jelix/php-redis-plugin/plugins/'),
+            jApp::appPath('vendor/jelix/wikirenderer-plugin/plugins/'),
             jApp::appPath('plugins/'),
             LIB_PATH.'jelix-plugins/',
             jApp::appPath('vendor/jelix/minify-module/jminify/plugins/'),
@@ -76,7 +77,7 @@ class jAppTest extends PHPUnit_Framework_TestCase {
         $plugins = jApp::getAllPluginsPath();
         sort($plugins);
 
-        $this->assertEquals($expected, $plugins);
+        $this->assertEquals($expected, $plugins, print_r($plugins,true)." does not equal to ".print_r($expected,true));
 
         jApp::saveContext();
         $plugins2 = jApp::getAllPluginsPath();

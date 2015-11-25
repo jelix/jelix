@@ -20,15 +20,15 @@ class feedReaderTest extends jUnitTestCase
 
         $this->assertEquals('foo1', $items[0]->title);
         $this->assertEquals('http://testapp.jelix.org/1', $items[0]->link);
-        $this->assertEquals('2006-11-11 11:32:41', $items[0]->published);
+        $this->assertEquals('2006-11-11 12:32:41', $items[0]->published);
 
         $this->assertEquals('foo2', $items[1]->title);
         $this->assertEquals('http://testapp.jelix.org/2', $items[1]->link);
-        $this->assertEquals('2006-11-11 11:32:42', $items[1]->published);
+        $this->assertEquals('2006-11-11 12:32:42', $items[1]->published);
 
         $this->assertEquals('foo3', $items[2]->title);
         $this->assertEquals('http://testapp.jelix.org/3', $items[2]->link);
-        $this->assertEquals('2006-11-11 11:32:43', $items[2]->published);
+        $this->assertEquals('2006-11-11 12:32:43', $items[2]->published);
     }
 
 
