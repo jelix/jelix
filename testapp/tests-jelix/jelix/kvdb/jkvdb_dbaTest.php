@@ -3,7 +3,7 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
-* @copyright   201 Laurent Jouanneau
+* @copyright   2010-2015 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -31,8 +31,10 @@ class jkvdb_dbaTest extends jKVDbTest {
         self::initJelixConfig();
         if (!$this->_kvdbSetUp())
             return;
-
-        //$this->mmc = dba_open(jApp::tempPath('kvdbdba.db4'), 'rl', 'db4');
+        if (!in_array('db4', dba_handlers())) {
+            $this->markTestSkipped(get_class($this).' cannot be run: no db4 handler');
+            return;
+        }
 
         parent::setUp();
     }
@@ -45,4 +47,3 @@ class jkvdb_dbaTest extends jKVDbTest {
     }
 }
 
-?>
