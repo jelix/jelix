@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd testapp/tests-jelix/
-../vendor/bin/phpunit
+../vendor/bin/phpunit -v -d xdebug.overload_var_dump=0
 EXITCODE=$?
 
 if [ $EXITCODE != 0 ]; then
@@ -12,10 +12,8 @@ if [ $EXITCODE != 0 ]; then
         echo "/!\\ no errors.log file"
         #echo "--------------------------------------------- index"
         #curl http://testapp.local/index.php
-        #echo "--------------------------------------------- info"
-        #curl http://testapp.local/info.php
     fi
-    echo "--------------------------------------------- info"
-    curl http://testapp.local/info.php
+    #echo "--------------------------------------------- info"
+    #curl http://testapp.local/info.php
 fi
 exit $EXITCODE
