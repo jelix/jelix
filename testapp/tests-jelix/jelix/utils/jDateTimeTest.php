@@ -143,7 +143,7 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
             "2007-12-25T20:30:19Z");
         $this->assertEquals($dt->toString(jDateTime::TIMESTAMP_FORMAT),
             "1198611019");
-        $this->assertEquals($dt->toString(jDateTime::RFC822_FORMAT), "Tue, 25 Dec 2007 20:30:19 +0100");
+        $this->assertEquals("Tue, 25 Dec 2007 20:30:19 +0000", $dt->toString(jDateTime::RFC822_FORMAT));
     }
 
     // Tests string parsing.
@@ -194,5 +194,38 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
         
         $this->assertEquals('2012-04-15T10:00:00Z', $utc);
         
-    }   
+    }
+
+    function testRFC822() {
+        $dt = new jDateTime();
+        $dt->setFromString('Tue, 27 Oct 2015 12:51:00 +0100', jDateTime::RFC2822_FORMAT);
+        $this->assertEquals(2015, $dt->year);
+        $this->assertEquals(10, $dt->month);
+        $this->assertEquals(27, $dt->day);
+        $this->assertEquals(11, $dt->hour);
+        $this->assertEquals(51, $dt->minute);
+        $this->assertEquals(0, $dt->second);
+
+        $utc = $dt->toString(jDateTime::RFC2822_FORMAT);
+
+        $this->assertEquals('Tue, 27 Oct 2015 11:51:00 +0000', $utc);
+        $this->assertEquals('2015-10-27 11:51:00', $dt->toString(jDateTime::DB_DTFORMAT));
+    }
+
+    function testRFC822Fromdbformat() {
+        $dt = new jDateTime();
+        $dt->setFromString('2015-10-27 12:51:00', jDateTime::DB_DTFORMAT);
+        $this->assertEquals(2015, $dt->year);
+        $this->assertEquals(10, $dt->month);
+        $this->assertEquals(27, $dt->day);
+        $this->assertEquals(12, $dt->hour);
+        $this->assertEquals(51, $dt->minute);
+        $this->assertEquals(0, $dt->second);
+
+        $utc = $dt->toString(jDateTime::RFC2822_FORMAT);
+
+        $this->assertEquals('Tue, 27 Oct 2015 12:51:00 +0000', $utc);
+
+    }
+
 }
