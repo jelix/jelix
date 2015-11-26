@@ -6,3 +6,4 @@ _dev/
 .komodotools
 *.kdev4
 vendor/
+nbproject/
