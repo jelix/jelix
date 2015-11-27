@@ -14,7 +14,11 @@
         "jelix/wikirenderer-plugin": "1.7.0"
     },
     "autoload": {
-        "psr-0": { "jelix\\": "." },
+        "psr-0": { "jelix\\": "."
+        },
+        "psr-4": {
+            "Jelix\\DevHelper\\": "../jelix-scripts/DevHelper/"
+        },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]
     },

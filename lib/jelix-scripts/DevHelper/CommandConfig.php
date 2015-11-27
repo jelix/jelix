@@ -1,17 +1,17 @@
 <?php
 /**
-* @package    jelix-scripts
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2015 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace Jelix\DevHelper;
 
 /**
  * configuration for commands
  */
-class JelixScriptCommandConfig {
+class CommandConfig {
 
     /**
      * @var string the suffix part of generated name of new modules. value readed from project.xml
@@ -46,7 +46,7 @@ class JelixScriptCommandConfig {
     /**
      * @var string copyright of new files. value readed from project.xml
      */
-    public $infoCopyright='2011 your name';
+    public $infoCopyright='2015 your name';
 
     /**
      * @var string default timezone for new app
@@ -168,7 +168,7 @@ class JelixScriptCommandConfig {
         $appname = basename($applicationDir);
         $search = array( '%appdir%', '%appname%');
         $replace = array($applicationDir, $appname);
-        jApp::initPaths(
+        \jApp::initPaths(
             $applicationDir.'/',
             str_replace($search, $replace, $this->layoutWwwPath),
             str_replace($search, $replace, $this->layoutVarPath),
@@ -176,7 +176,7 @@ class JelixScriptCommandConfig {
             str_replace($search, $replace, $this->layoutConfigPath),
             str_replace($search, $replace, $this->layoutScriptsPath)
         );
-        jApp::setTempBasePath(str_replace($search, $replace, $this->layoutTempPath));
+        \jApp::setTempBasePath(str_replace($search, $replace, $this->layoutTempPath));
     }
 
     /**
@@ -185,14 +185,14 @@ class JelixScriptCommandConfig {
      */
     function loadFromProject() {
 
-        $doc = new DOMDocument();
+        $doc = new \DOMDocument();
 
-        if (!$doc->load(jApp::appPath('project.xml'))){
-            throw new Exception("cannot load project.xml");
+        if (!$doc->load(\jApp::appPath('project.xml'))){
+            throw new \Exception("cannot load project.xml");
         }
 
         if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
-            throw new Exception("bad namespace in project.xml");
+            throw new \Exception("bad namespace in project.xml");
         }
 
         $info = $doc->getElementsByTagName('info');
