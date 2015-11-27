@@ -61,6 +61,10 @@
     },
     "minimum-stability": "dev",
     "extra" : {
+        "branch-alias": {
+            "dev-master": "2.0-dev",
+            "dev-jelix-1.7.x": "1.7-dev"
+        },
         "jelix": {
             "modules-dir" : [
                 "lib/jelix-modules",
