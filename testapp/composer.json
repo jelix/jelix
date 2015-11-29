@@ -15,41 +15,30 @@
             "homepage": "https://github.com/jelix/jelix/graphs/contributors"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../lib/"
+        }
+    ],
     "require": {
-        "php": ">=5.3.3",
         "phpunit/phpunit": "4.3.*",
-        "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.3.*",
+        "jelix/for-classic-package" : "@dev",
         "jelix/minify-module": "1.7.*",
         "jelix/php-redis-plugin": "1.7.1",
-        "phpmailer/phpmailer": "5.2.9",
-        "jelix/soap-server-module": "1.7.*",
-        "jelix/castor": "dev-master",
-        "jelix/feeds-module": "1.7.*",
-        "jelix/sitemap-module": "1.7.*",
-        "jelix/inifile": "1.7.*",
-        "jelix/wikirenderer-plugin": "1.7.0"
-    },
-    "replace": {
-        "jelix/jelix":"self.version"
+        "jelix/sitemap-module": "1.7.*"
     },
     "autoload": {
-        "psr-0": { },
-        "classmap": [ ],
-        "files": [ "../lib/jelix/init.php"  ]
     },
-    "minimum-stability": "stable",
     "extra" : {
         "jelix": {
             "modules-dir" : [
-                "modules/",
-                "../lib/jelix-modules",
-                "../lib/jelix-admin-modules"
+                "modules/"
             ],
             "plugins-dir" : [
-                "plugins/",
-                "../lib/jelix-plugins"
+                "plugins/"
             ]
         }
-    }
+    },
+    "minimum-stability": "stable"
 }
