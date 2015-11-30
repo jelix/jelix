@@ -3,6 +3,10 @@ require_once(LIB_PATH.'jelix-scripts/includes/JelixScriptCommand.class.php');
 
 class testCommand extends JelixScriptCommand {
 
+   function __construct() {
+      $this->config = null;
+   }
+
     function run() {
 
     }
