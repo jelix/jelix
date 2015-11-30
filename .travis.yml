@@ -1,0 +1,58 @@
+language: php
+php:
+  - 5.6
+  
+#sudo: false
+
+branches:
+  only:
+    - master
+
+addons:
+    hosts:
+        - testapp.local
+        - testapp17.local
+
+#cache:
+#    directories:
+
+matrix:
+    fast_finish: true
+
+services:
+   - memcached
+   - redis-server
+   - mysql
+   - postgresql
+
+before_install:
+   - phpenv config-add testapp/travis/phpconf.ini
+   - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+   - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+   - sudo ./testapp/travis/before_install.sh
+   - ~/.phpenv/versions/$(phpenv version-name)/bin/composer self-update
+
+install:
+   - ./testapp/travis/install.sh
+
+before_script:
+   - ./testapp/travis/before_script.sh
+
+script:
+   - ./testapp/travis/script.sh
+
+#after_success:
+    
+#after_failure:
+
+#before_deploy:
+
+#deploy:
+#    skip_cleanup: true
+
+
+#after_deploy:
+    
+#after_script:
+
+
