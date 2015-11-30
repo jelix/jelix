@@ -43,14 +43,14 @@ Installation
 The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.6 or more.
 
 For applications with the future Jelix 2.0, you should use
-[Composer](http://getcomposer.org). You should indicate the Jelix packages repository
-in your composer.json, and declare the jelix package dependency:
+[Composer](http://getcomposer.org). You should declare the jelix package dependency in
+your composer.json:
 
 ```
 {
     "name": "...",
     "require": {
-        "php": ">=5.4",
+        "php": ">=5.6",
         "jelix/jelix": "dev-master"
     }
 }

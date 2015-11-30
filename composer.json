@@ -16,9 +16,6 @@
         }
     ],
     "require": {
-        "tecnickcom/tcpdf": "6.0.*",
-        "mrclay/minify": "2.2.0",
-        "jelix/webservice-helper": "1.5.2",
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "5.2.9",
