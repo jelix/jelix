@@ -121,7 +121,7 @@ class jBasicErrorHandler {
             @error_log($errorLog->getFormatedMessage()."\n", 3, jApp::logPath('errors.log'));
 
             $msg = $errorLog->getMessage();
-            if (strpos($msg, '--') !== false) {
+            if (!ini_get('display_errors') && strpos($msg, '--') !== false) {
                 list($msg, $bin) = explode('--', $msg, 2); // remove confidential data
             }
 
