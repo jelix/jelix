@@ -15,30 +15,22 @@
             "homepage": "https://github.com/jelix/jelix/graphs/contributors"
         }
     ],
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../lib/"
+        }
+    ],
     "require": {
-        "php": ">=5.3.3",
+        "jelix/for-classic-package" : "@dev",
         "phpunit/phpunit": "4.3.*",
-        "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.3.*",
         "jelix/minify-module": "1.7.*",
         "jelix/php-redis-plugin": "1.7.1",
-        "phpmailer/phpmailer": "5.2.9",
-        "jelix/soap-server-module": "1.7.*",
-        "jelix/castor": "dev-master",
-        "jelix/feeds-module": "1.7.*",
-        "jelix/sitemap-module": "1.7.*",
-        "jelix/inifile": "1.7.*",
-        "jelix/wikirenderer-plugin": "1.7.0"
+        "jelix/sitemap-module": "1.7.*"
     },
     "autoload": {
-        "psr-4": {
-        },
-        "classmap": [ ],
-        "files": [
-            "../vendor/autoload.php"
-        ]
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "extra": {
         "jelix": {
             "configPath": "var/config",

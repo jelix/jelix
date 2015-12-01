@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 cp -a testapp/var/config/profiles.ini.php.dist testapp/var/config/profiles.ini.php
 cp -a testapp/var/config/localconfig.ini.php.dist testapp/var/config/localconfig.ini.php

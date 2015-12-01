@@ -16,17 +16,15 @@
         }
     ],
     "require": {
+        "php": ">=5.6",
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "5.2.9",
         "jelix/soap-server-module": "1.7.*",
-        "jelix/castor": "dev-master",
+        "jelix/castor": "1.0.*",
         "jelix/feeds-module": "1.7.*",
         "jelix/inifile": "1.7.*",
         "jelix/wikirenderer-plugin": "1.7.0"
-    },
-    "require-dev": {
-        "jelix/buildtools": "2.0.*"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"
