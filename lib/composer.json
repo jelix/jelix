@@ -1,7 +1,7 @@
 {
     "name": "jelix/for-classic-package",
     "type": "library",
-    "description": "used to declare jelix dependencies for testapp or the official zip/tgz package",
+    "description": "used to declare jelix dependencies for testapp or other packages",
     "license": "LGPL-2.1",
     "require": {
         "jelix/fakeserverconf": "1.0.*",
@@ -11,7 +11,8 @@
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "1.7.*",
         "jelix/inifile": "1.7.*",
-        "jelix/wikirenderer-plugin": "1.7.0"
+        "jelix/wikirenderer-plugin": "1.7.0",
+        "symfony/console":"2.8.*"
     },
     "autoload": {
         "psr-0": { "jelix\\": "."
