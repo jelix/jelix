@@ -7,6 +7,7 @@ php:
 branches:
   only:
     - master
+    - jelix-1.7.x
 
 addons:
     hosts:
