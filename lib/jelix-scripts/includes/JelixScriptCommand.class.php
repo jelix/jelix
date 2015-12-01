@@ -109,14 +109,14 @@ abstract class JelixScriptCommand {
 
 
    /**
-    * @var JelixScriptCommandConfig
+    * @var Jelix\DevHelper\CommandConfig
     */
    protected $config;
 
    /**
-    * @param JelixScriptCommandConfig $config
+    * @param Jelix\DevHelper\CommandConfig $config
     */
-   function __construct($config) {
+   function __construct(\Jelix\DevHelper\CommandConfig $config) {
       $this->config = $config;
    }
 

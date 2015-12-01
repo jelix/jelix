@@ -180,7 +180,6 @@ if($EDITION_NAME ==''){
 }
 
 
-
 if( ! $ENABLE_OPTIMIZED_SOURCE)
     $STRIP_COMMENT='';
 
@@ -198,9 +197,9 @@ else {
 if ($TARGET_REPOSITORY == 'none')
   $TARGET_REPOSITORY = '';
 
-//----------------- Génération des sources
+//----------------- Package building
 
-//... creation des repertoires
+//... creating directories
 DirUtils::createDir($BUILD_TARGET_PATH);
 
 Manifest::$stripComment = ($STRIP_COMMENT == '1');
@@ -209,15 +208,16 @@ Manifest::setFileSystem($TARGET_REPOSITORY);
 Manifest::$sourcePropertiesFilesDefaultCharset = $DEFAULT_CHARSET;
 Manifest::$targetPropertiesFilesCharset = $PROPERTIES_CHARSET_TARGET;
 
-//... execution des manifests
-Manifest::process('build/manifests/jelix-lib.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
-Manifest::process('build/manifests/jelix-www.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
+//... processing manifest
+$repoDir = realpath(__DIR__.'/../');
+Manifest::process('build/manifests/jelix-lib.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll(), true);
+Manifest::process('build/manifests/jelix-www.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll(), true);
 
 Manifest::$stripComment = false;
 
-Manifest::process('build/manifests/jelix-scripts.mn','.', $BUILD_TARGET_PATH , Environment::getAll());
-Manifest::process('build/manifests/jelix-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll(), true);
-Manifest::process('build/manifests/jelix-admin-modules.mn', '.', $BUILD_TARGET_PATH, Environment::getAll());
+Manifest::process('build/manifests/jelix-scripts.mn',$repoDir, $BUILD_TARGET_PATH , Environment::getAll());
+Manifest::process('build/manifests/jelix-modules.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll(), true);
+Manifest::process('build/manifests/jelix-admin-modules.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll());
 
 // jtpl standalone for wizard
 

@@ -2,11 +2,10 @@
 /**
 * @package    jelix-scripts
 * @author     Laurent Jouanneau
-* @copyright  2011-2012 Laurent Jouanneau
+* @copyright  2011-2015 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-require_once(__DIR__.'/JelixScriptCommandConfig.class.php');
 require_once(__DIR__.'/JelixScriptCommand.class.php');
 
 
@@ -17,10 +16,10 @@ class JelixScript {
     /**
      * load the configuration of jelix-scripts
      * @param string $appname the application name
-     * @return JelixScriptCommandConfig
+     * @return Jelix\DevHelper\CommandConfig
      */
     static function loadConfig($appname='') {
-        $config = new JelixScriptCommandConfig();
+        $config = new \Jelix\DevHelper\CommandConfig();
 
         if ($appname === '')
             $appname = $config->loadFromProject();
@@ -96,9 +95,9 @@ class JelixScript {
     * load a command object
     * @param string $cmdName the name of the command
     * @param JelixScriptCommandConfig $config
-    * @return JelixScriptCommand  the command
+    * @return Jelix\DevHelper\CommandConfig  the command
     */
-    static function getCommand($cmdName, $config, $standaloneScript=false) {
+    static function getCommand($cmdName, \Jelix\DevHelper\CommandConfig $config, $standaloneScript=false) {
         if ($standaloneScript)
             $commandfile = JELIX_SCRIPTS_PATH.'commands-single/'.$cmdName.'.cmd.php';
         else

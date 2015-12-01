@@ -1,17 +1,17 @@
 <?php
 /**
-* @package    jelix-scripts
 * @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
+* @copyright  2011-2015 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+namespace Jelix\DevHelper;
 
 /**
  * configuration for commands
  */
-class JelixScriptCommandConfig {
+class CommandConfig {
 
     /**
      * @var string the web site of the project or your company. value readed from jelix-app.json/project.xml

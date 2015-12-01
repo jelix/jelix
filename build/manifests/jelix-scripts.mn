@@ -29,11 +29,12 @@ cd lib/jelix-scripts/commands
   resetfilesrights.cmd.php
 cd lib/jelix-scripts/commands-single/
   createapp.cmd.php
+cd lib/jelix-scripts/DevHelper
+  CommandConfig.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php
   JelixScriptCommand.class.php
-  JelixScriptCommandConfig.class.php
   scripts.inc.php
 cd lib/jelix-scripts/templates
   jelix-app.json.tpl

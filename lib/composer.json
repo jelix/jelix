@@ -1,7 +1,7 @@
 {
     "name": "jelix/for-classic-package",
     "type": "library",
-    "description": "this is a composer file to download dependencies and include them into the official zip/tgz package or into testapp",
+    "description": "used to declare jelix dependencies for testapp or other packages",
     "license": "LGPL-2.1",
     "require": {
         "jelix/fakeserverconf": "1.0.*",
@@ -14,9 +14,16 @@
         "jelix/wikirenderer-plugin": "1.7.0"
     },
     "autoload": {
-        "psr-0": { "jelix\\": "." },
+        "psr-0": { "jelix\\": "."
+        },
+        "psr-4": {
+            "Jelix\\DevHelper\\": "../jelix-scripts/DevHelper/"
+        },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]
+    },
+    "replace": {
+        "jelix/jelix":"self.version"
     },
     "minimum-stability": "stable",
     "replace": {

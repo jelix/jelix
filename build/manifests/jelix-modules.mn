@@ -96,6 +96,7 @@ cd lib/jelix-modules/jacl2db/daos
 cd lib/jelix-modules/jacl2db/install
   install_jacl2.schema.mysql.sql
   install_jacl2.schema.pgsql.sql
+  install_jacl2.schema.oci.sql
   install_jacl2.schema.sqlite.sql
   data.sql
   groups.sql
@@ -119,6 +120,7 @@ cd lib/jelix-modules/jauthdb/daos
   jelixuser.dao.xml
 cd lib/jelix-modules/jauthdb/install/
   install_jauth.schema.mysql.sql
+  install_jauth.schema.oci.sql
   install_jauth.schema.pgsql.sql
   install_jauth.schema.sqlite.sql
   install.php
@@ -169,3 +171,5 @@ cch prefs.UTF-8.properties(prefs.%charset%.properties)
 
 
 cd lib/jelix-plugins
+  INSTALL
+  LICENCE

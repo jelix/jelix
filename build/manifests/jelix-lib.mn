@@ -450,45 +450,50 @@ cd lib/jelix-legacy/plugins/coord/traceexec
   plugin.xml
   traceexec.coord.ini.php.dist
 
+cd lib/jelix-legacy/plugins/daobuilder/mssql
+  mssql.daobuilder.php
+cd lib/jelix-legacy/plugins/daobuilder/mysql
+  mysql.daobuilder.php
+cd lib/jelix-legacy/plugins/daobuilder/oci
+  oci.daobuilder.php
+cd lib/jelix-legacy/plugins/daobuilder/pgsql
+  pgsql.daobuilder.php
+cd lib/jelix-legacy/plugins/daobuilder/sqlite
+  sqlite.daobuilder.php
+
 cd lib/jelix-legacy/plugins/db/mssql
   mssql.dbconnection.php
   mssql.dbresultset.php
   mssql.dbschema.php
   mssql.dbtools.php
-  mssql.daobuilder.php
 
 cd lib/jelix-legacy/plugins/db/mysql
   mysql.dbconnection.php
   mysql.dbresultset.php
   mysql.dbschema.php
   mysql.dbtools.php
-  mysql.daobuilder.php
 
 cd lib/jelix-legacy/plugins/db/mysqli
   mysqli.dbconnection.php
   mysqli.dbresultset.php
   mysqli.dbschema.php
   mysqli.dbtools.php
-  mysqli.daobuilder.php
 
 cd lib/jelix-legacy/plugins/db/pgsql
   pgsql.dbconnection.php
   pgsql.dbresultset.php
   pgsql.dbschema.php
   pgsql.dbtools.php
-  pgsql.daobuilder.php
 
 cd lib/jelix-legacy/plugins/db/sqlite3
   sqlite3.dbconnection.php
   sqlite3.dbresultset.php
   sqlite3.dbschema.php
   sqlite3.dbtools.php
-  sqlite3.daobuilder.php
 
 cd lib/jelix-legacy/plugins/db/oci
   oci.dbconnection.php
   oci.dbresultset.php
-  oci.daobuilder.php
   oci.dbschema.php
   oci.dbtools.php
 

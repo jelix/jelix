@@ -53,13 +53,10 @@
                 { "file":"cmdline.php", "config":"cmdline/config.ini.php", "type":"cmdline"}
             ],
             "modules-dir" : [
-                "modules/",
-                "../lib/jelix-modules",
-                "../lib/jelix-admin-modules"
+                "modules/"
             ],
             "plugins-dir" : [
-                "plugins/",
-                "../lib/jelix-plugins"
+                "plugins/"
             ]
         }
     }
