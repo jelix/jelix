@@ -13,7 +13,11 @@
 #includephp Jelix/Installer/Checker/CheckerBase.php
 #includephp Jelix/Installer/ReporterInterface.php
 #includephp Jelix/Installer/Reporter/Html.php
-#includephp Jelix/SimpleLocalization/Container.php
+
+namespace Jelix\SimpleLocalization {
+#includephp ../vendor/jelix/simplelocalization/lib/Container.php
+#includephp ../vendor/jelix/simplelocalization/lib/Exception.php
+}
 
 namespace {
 

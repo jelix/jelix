@@ -433,10 +433,6 @@ cd testapp/tests-jelix/jelix/routing/app1/var/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
   __ALL__
-cd testapp/tests-jelix/jelix/SimpleLocalization/
-  __ALL__
-cd testapp/tests-jelix/jelix/SimpleLocalization/messages
-  __ALL__
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php

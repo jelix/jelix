@@ -11,16 +11,19 @@
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "1.7.*",
         "jelix/inifile": "1.7.*",
-        "jelix/wikirenderer-plugin": "1.7.0"
+        "jelix/wikirenderer-plugin": "1.7.0",
+        "jelix/simplelocalization": "1.7.1"
     },
     "autoload": {
-        "psr-0": { "jelix\\": "."
-        },
         "psr-4": {
-            "Jelix\\DevHelper\\": "../jelix-scripts/DevHelper/"
+            "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
+            "Jelix\\": "Jelix/",
+            "jelix\\": "jelix-legacy/"
         },
-        "classmap": [ ],
-        "files": [ "jelix/init.php" ]
+        "files": [
+            "Jelix/Legacy/init.php",
+            "jelix-legacy/init.php"
+        ]
     },
     "replace": {
         "jelix/jelix":"self.version"

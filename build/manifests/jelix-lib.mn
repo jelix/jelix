@@ -848,8 +848,6 @@ cd lib/Jelix/Legacy/installer
   jInstallerEntryPoint.php
   jInstallerMessageProvider.php
   jInstallChecker.php
-cd lib/Jelix/SimpleLocalization
-  Container.php
 cd lib/Jelix/Mailer
   composer.json
   Mailer.php

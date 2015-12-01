@@ -46,9 +46,6 @@
     <testsuite name="Jelix soap">
       <directory>jelix/soap/</directory>
     </testsuite>
-    <testsuite name="SimpleLocalization">
-      <directory>jelix/SimpleLocalization/</directory>
-    </testsuite>
     <testsuite name="routing">
       <directory>jelix/routing/</directory>
     </testsuite>

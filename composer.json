@@ -25,7 +25,8 @@
         "jelix/feeds-module": "1.7.*",
         "jelix/inifile": "1.7.*",
         "jelix/wikirenderer-plugin": "1.7.0",
-        "symfony/console":"2.8.*"
+        "symfony/console":"2.8.*",
+        "jelix/simplelocalization": "1.7.1"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"
@@ -41,8 +42,7 @@
         "jelix/legacy": "self.version",
         "jelix/locale": "self.version",
         "jelix/logger": "self.version",
-        "jelix/routing": "self.version",
-        "jelix/simplelocalization": "self.version"
+        "jelix/routing": "self.version"
     },
     "autoload": {
         "psr-4": {
