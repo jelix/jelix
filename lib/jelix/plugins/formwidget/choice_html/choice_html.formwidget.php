@@ -29,9 +29,9 @@
  * c2.addControl(c, 'choice3');
  * c2.addControl(c, 'choice4');
  * c2.addControl(c, 'choice4');
- * c2.activate(''); 
+ * c2.activate('');
  */
- 
+
 class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                             implements \jelix\forms\HtmlWidget\ParentWidgetInterface {
 
@@ -80,6 +80,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             else
                 $value='';
         }
+        $value = (string) $value;
 
         $i=0;
         $attr['name'] = $ctrl->ref;
@@ -96,7 +97,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             echo '<li id="'.$id.$itemName.'_item"><input';
             $attr['id'] = $id.$i;
             $attr['value'] = $itemName;
-            if ($itemName==$value)
+            if ((string) $itemName===$value)
                 $attr['checked'] = 'checked';
             else
                 unset($attr['checked']);
