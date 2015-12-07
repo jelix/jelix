@@ -286,7 +286,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
 
         $this->attrReadOnly($source, $attributes);
         $this->readHelpHintAlert($source, $control);
-        $source[]='$topctrl = $ctrl;';
+        $source[]='$choicectrl = $ctrl;';
         $hasSelected = false;
         $selectedvalue = null;
 
@@ -319,11 +319,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             if(isset($item->label['locale'])){
                 $label='';
                 $labellocale=(string)$item->label['locale'];
-                $source[]='$topctrl->createItem(\''.str_replace("'","\\'",$value).'\', jLocale::get(\''.$labellocale.'\'));';
+                $source[]='$choicectrl->createItem(\''.str_replace("'","\\'",$value).'\', jLocale::get(\''.$labellocale.'\'));';
             }else{
                 $label=(string)$item->label;
                 $labellocale='';
-                $source[]='$topctrl->createItem(\''.str_replace("'","\\'",$value).'\', \''.str_replace("'","\\'",$label).'\');';
+                $source[]='$choicectrl->createItem(\''.str_replace("'","\\'",$value).'\', \''.str_replace("'","\\'",$label).'\');';
             }
 
             $ctrlcount = $this->readChildControls($source, 'choice', $item, array('label'), str_replace("'","\\'",$value));
@@ -334,8 +334,8 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             throw new jException('jelix~formserr.no.child.control',array('choice',$this->sourceFile));
         }*/
 
-        $source[]='$topctrl->defaultValue=\''.str_replace('\'','\\\'',$selectedvalue).'\';';
-        $source[]='$ctrl = $topctrl;';
+        $source[]='$choicectrl->defaultValue=\''.str_replace('\'','\\\'',$selectedvalue).'\';';
+        $source[]='$ctrl = $choicectrl;';
         return false;
     }
 
@@ -349,16 +349,23 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
             if(in_array($ctrltype, $ignore))
                 continue;
             if(!in_array($ctrltype, array('input','textarea', 'output','checkbox','checkboxes','radiobuttons','button',
-                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor','date','datetime','wikieditor'))) {
+                        'menulist','listbox','secret', 'upload', 'hidden','htmleditor','date','datetime','wikieditor','choice'))) {
                 throw new jException('jelix~formserr.control.not.allowed',array($ctrltype, $controltype,$this->sourceFile));
             }
             $ctrlcount++;
             $src = array();
             $twocontrols = $this->_generatePHPControl($src, $ctrltype, $control);
 
-            $src[]='$topctrl->addChildControl($ctrl'.$itemname.');';
-            if ($twocontrols)
-                $src[]='$topctrl->addChildControl($ctrl2'.$itemname.');';
+            if($controltype == 'choice'){
+                $src[]='$choicectrl->addChildControl($ctrl'.$itemname.');';
+                if ($twocontrols)
+                    $src[]='$choicectrl->addChildControl($ctrl2'.$itemname.');';
+            }
+            else{
+                $src[]='$topctrl->addChildControl($ctrl'.$itemname.');';
+                if ($twocontrols)
+                    $src[]='$topctrl->addChildControl($ctrl2'.$itemname.');';
+            }
             $source[]= implode("\n", $src);
         }
         return $ctrlcount;
