@@ -7,7 +7,7 @@
 * @contributor Bastien Jaillot, Steven Jehannet
 * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
 * @copyright   2006-2010 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
-* @copyright   2008-2009 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
+* @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -787,11 +787,6 @@ abstract class jFormsBase {
     public function addControl($control){
         $this->rootControls [$control->ref] = $control;
         $this->addChildControl($control);
-
-        if($control instanceof jFormsControlGroups) {
-            foreach($control->getChildControls() as $ctrl)
-                $this->addChildControl($ctrl);
-        }
     }
 
     /**
@@ -867,6 +862,11 @@ abstract class jFormsBase {
             else {
                 $this->container->data[$control->ref] = $control->defaultValue;
             }
+        }
+
+        if($control instanceof jFormsControlGroups) {
+            foreach($control->getChildControls() as $ctrl)
+                $this->addChildControl($ctrl);
         }
     }
 
