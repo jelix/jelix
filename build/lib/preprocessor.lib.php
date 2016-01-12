@@ -2,8 +2,9 @@
 /**
 * @package     jBuildTools
 * @author      Laurent Jouanneau
-* @contributor
+* @contributor Julien Issler
 * @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2016 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -71,7 +72,16 @@ class jPreProcessor{
     const ERR_EXPR_SYNTAX = 5;
     const ERR_EXPR_SYNTAX_TOK = 6;
 
+    protected $authorizedToken=array(T_DNUMBER, T_BOOLEAN_AND, T_BOOLEAN_OR,
+        T_IS_EQUAL,T_IS_GREATER_OR_EQUAL,T_IS_IDENTICAL,T_IS_NOT_EQUAL,T_IS_NOT_IDENTICAL,
+        T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_LNUMBER,
+        T_CONSTANT_ENCAPSED_STRING, T_WHITESPACE);
+
+    protected $authorizedChar = array('.', '+', '-', '/', '*','<','>', '!');
+
     public function __construct(){
+        if(defined('T_CHARACTER'))
+            $this->authorizedToken[] = T_CHARACTER;
     }
 
     public function setVar($name, $value=''){
@@ -178,7 +188,11 @@ class jPreProcessor{
 
             }elseif(preg_match('/^\#(expand)\s(.*)$/m',$sline,$m)){
                 if($isOpen){
-                    $tline=preg_replace('/\_\_(\w*)\_\_/e', '(isset($this->_variables["\\1"])&&$this->_variables["\\1"]!==\'\'?$this->_variables["\\1"]:"__\\1__")',$m[2]);
+                    $tline = preg_replace_callback('/\_\_(\w*)\_\_/',
+                        function($matches){
+                            return (isset($this->_variables[$matches[1]]) && $this->_variables[$matches[1]] !== '') ? $this->_variables[$matches[1]] : ('__'.$matches[1].'__');
+                        },
+                        $m[2]);
                 }else{
                     $tline=false;
                 }
@@ -275,7 +289,7 @@ class jPreProcessor{
                         $options = preg_split('/\s*\|\s*/',$m[4]);
                     }
                     else $options = array();
-                    
+
                     $this->_variables[$m[2]] = $this->readInclude($filename, $nb, $path, ($m[1]  == 'raw'), $options);
                 }
                 $tline=false;
@@ -310,13 +324,6 @@ class jPreProcessor{
 
         return $result;
     }
-
-    protected $authorizedToken=array(T_DNUMBER, T_BOOLEAN_AND, T_BOOLEAN_OR, T_CHARACTER,
-        T_IS_EQUAL,T_IS_GREATER_OR_EQUAL,T_IS_IDENTICAL,T_IS_NOT_EQUAL,T_IS_NOT_IDENTICAL,
-        T_IS_SMALLER_OR_EQUAL, T_LOGICAL_AND, T_LOGICAL_OR, T_LOGICAL_XOR, T_LNUMBER, 
-        T_CONSTANT_ENCAPSED_STRING, T_WHITESPACE);
-
-    protected $authorizedChar = array('.', '+', '-', '/', '*','<','>', '!');
 
     protected function evalExpression($expression, $filename,$nb){
 
@@ -365,7 +372,7 @@ class jPreProcessor{
         }
         if(file_exists($path) && !is_dir($path)){
             if ($raw) {
-                $tline = file_get_contents($path);  
+                $tline = file_get_contents($path);
             }
             else {
                 $preproc = new jPreProcessor();
@@ -378,7 +385,7 @@ class jPreProcessor{
         }else{
             throw new jExceptionPreProc($currentFilename, $currentLine, self::ERR_INVALID_FILENAME, $path);
         }
-        
+
         if (count($options))
             $tline = $this->applyIncludeOptions($tline, $options);
         return $tline;
