@@ -11,7 +11,7 @@ First installation
 
 ```
 cd dev/
-./udpdatesrc.sh
+./updatesrc.sh
 ```
 
 - launch vagrant

@@ -89,7 +89,14 @@ sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
 service php5-fpm restart
 
 # to avoid bug https://github.com/mitchellh/vagrant/issues/351
-echo "EnableSendfile Off" > /etc/apache2/conf.d/sendfileoff.conf
+if [ -d /etc/apache2/conf.d ]; then
+    echo "EnableSendfile Off" > /etc/apache2/conf-d/sendfileoff.conf
+else
+    echo "EnableSendfile Off" > /etc/apache2/conf-available/sendfileoff.conf
+    if [ ! -f "/etc/apache2/conf-enabled/sendfileoff.conf" ]; then
+        ln -s /etc/apache2/conf-available/sendfileoff.conf /etc/apache2/conf-enabled/sendfileoff.conf
+    fi
+fi
 
 # restart apache
 service apache2 reload
