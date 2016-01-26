@@ -95,6 +95,7 @@ cd lib/jelix-modules/jacl2db/daos
    jacl2groupsofuser.dao.xml
 cd lib/jelix-modules/jacl2db/install
   install_jacl2.schema.mysql.sql
+  install_jacl2.schema.oci.sql
   install_jacl2.schema.pgsql.sql
   install_jacl2.schema.oci.sql
   install_jacl2.schema.sqlite.sql

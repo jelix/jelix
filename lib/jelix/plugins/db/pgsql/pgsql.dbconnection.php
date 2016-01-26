@@ -98,26 +98,35 @@ class pgsqlDbConnection extends jDbConnection {
 
         $str = '';
 
-        // we do a distinction because if the host is given == TCP/IP connection else unix socket
-        if($this->profile['host'] != '')
-            $str = 'host=\''.$this->profile['host'].'\''.$str;
-
-        if (isset($this->profile['port'])) {
-            $str .= ' port=\''.$this->profile['port'].'\'';
+        // Service is PostgreSQL way to store credentials in a file :
+        // http://www.postgresql.org/docs/9.1/static/libpq-pgservice.html
+        // If given, no need to add host, user, database, port and password
+        if(isset($this->profile['service']) && $this->profile['service'] != ''){
+            $useService = true;
+            $str = 'service=\''.$this->profile['service'].'\''.$str;
         }
-
-        if ($this->profile['database'] != '') {
-            $str .= ' dbname=\''.$this->profile['database'].'\'';
-        }
-
-        // we do isset instead of equality test against an empty string, to allow to specify
-        // that we want to use configuration set in environment variables
-        if (isset($this->profile['user'])) {
-            $str .= ' user=\''.$this->profile['user'].'\'';
-        }
-
-        if (isset($this->profile['password'])) {
-            $str .= ' password=\''.$this->profile['password'].'\'';
+        else {
+            // we do a distinction because if the host is given == TCP/IP connection else unix socket
+            if($this->profile['host'] != '')
+                $str = 'host=\''.$this->profile['host'].'\''.$str;
+    
+            if (isset($this->profile['port'])) {
+                $str .= ' port=\''.$this->profile['port'].'\'';
+            }
+    
+            if ($this->profile['database'] != '') {
+                $str .= ' dbname=\''.$this->profile['database'].'\'';
+            }
+    
+            // we do isset instead of equality test against an empty string, to allow to specify
+            // that we want to use configuration set in environment variables
+            if (isset($this->profile['user'])) {
+                $str .= ' user=\''.$this->profile['user'].'\'';
+            }
+    
+            if (isset($this->profile['password'])) {
+                $str .= ' password=\''.$this->profile['password'].'\'';
+            }
         }
 
         if (isset($this->profile['timeout']) && $this->profile['timeout'] != '') {
@@ -227,7 +236,7 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     /**
-     * 
+     *
      * @param integer $id the attribut id
      * @param string $value the attribute value
      * @see PDO::setAttribute()
