@@ -45,7 +45,7 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
         }
-        
+
         $header = "if (jApp::config()->compilation['checkCacheFiletime'] &&\n";
         $header .= "filemtime('".$this->_sourceFile.'\') > '.filemtime($this->_sourceFile)."){ return false;\n} else {\n";
         $footer = "return true;}\n";
