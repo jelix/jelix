@@ -145,8 +145,9 @@ class jTplCompiler
      * Initialize some properties
      */
     function __construct () {
-        if(defined('T_CHARACTER'))
-            $this->_vartype = T_CHARACTER;
+        if(defined('T_CHARACTER')) {
+            $this->_vartype[] = T_CHARACTER;
+        }
         $this->_allowedInVar = array_merge($this->_vartype, array(T_INC, T_DEC, T_DOUBLE_ARROW));
         $this->_allowedInExpr = array_merge($this->_vartype, $this->_op);
         $this->_allowedAssign = array_merge($this->_vartype, $this->_assignOp, $this->_op);
