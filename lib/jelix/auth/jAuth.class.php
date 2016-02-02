@@ -391,8 +391,10 @@ class jAuth {
     */
     public static function getUserSession (){
         $config = self::loadConfig();
-        if (! isset ($_SESSION[$config['session_name']]))
+        if (!isset ($_SESSION[$config['session_name']]) ||
+            !$_SESSION[$config['session_name']]) {
             $_SESSION[$config['session_name']] = new jAuthDummyUser();
+        }
         return $_SESSION[$config['session_name']];
     }
 
