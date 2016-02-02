@@ -174,9 +174,7 @@
          <label>linked lists</label>
          <menulist ref="listdep2">
             <label>Departments list</label>
-            <item value="finistere">Finistère</item>
-            <item value="touraine">Touraine</item>
-            <item value="polynesia">Polynésie</item>
+            <datasource class="testapp~geo/regions" />
         </menulist>
         <menulist ref="listtown2">
             <label>Towns list, updated when department is selected</label>
