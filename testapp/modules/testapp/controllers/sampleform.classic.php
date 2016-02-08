@@ -11,11 +11,18 @@
 
 class sampleFormCtrl extends jController {
 
+  protected function prepareForm($form) {
+    $form->deactivate('unwanted');
+    $c = $form->getControl('objects_datasource');
+    $c->datasource->data = array('ic'=>'ice cream', 'pot'=>'potatoes', 'bean'=>'beans');
+    //$form->setReadOnly('listdep2');
+  }
+
   function newform(){
       jForms::destroy('sample');
       // création d'un formulaire vierge
       $form = jForms::create('sample');
-      $form->deactivate('unwanted');
+      $this->prepareForm($form);
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform:show";
       //$form->setReadOnly('conf');
@@ -30,8 +37,7 @@ class sampleFormCtrl extends jController {
           $form = jForms::create('sample');
           $form->deactivate('unwanted');
       }
-
-      //$form->setReadOnly('listdep2');
+      $this->prepareForm($form);
 
       $rep = $this->getResponse('html');
       $rep->title = 'Form editing';
@@ -54,8 +60,11 @@ class sampleFormCtrl extends jController {
       // récuper le formulaire
       // et le rempli avec les données reçues de la requête
       $rep= $this->getResponse("redirect");
-
-      $form = jForms::fill('sample');
+      
+      
+      $form = jForms::get('sample');
+      $this->prepareForm($form);
+      $form->initFromRequest();
       if($form->check())
           $rep->action="sampleform:ok";
       else
@@ -65,10 +74,12 @@ class sampleFormCtrl extends jController {
 
    function ok(){
       $form = jForms::get('sample');
+
       $rep = $this->getResponse('html');
       $rep->title = 'Form editing';
 
       if($form){
+        $this->prepareForm($form);
         $tpl = new jTpl();
         $tpl->assign('form', $form);
         $rep->body->assign('MAIN',$tpl->fetch('sampleformresult'));
@@ -103,5 +114,3 @@ class sampleFormCtrl extends jController {
    }
 
 }
-
-?>

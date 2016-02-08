@@ -79,6 +79,12 @@
       <item value="assiette">a plate</item>
   </checkboxes>
 
+
+  <checkboxes ref="objects_datasource" required="true">
+      <label>List using user datasource </label>
+  </checkboxes>
+
+
   <!--<input ref="datenaissance" type="localedate">
       <label>Your birthday</label>
       <help>date format is dd/mm/yyyy</help>
