@@ -304,7 +304,7 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), false);
-        $this->assertEquals(' `grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEquals(' `grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, is_array($group)?$group:array($group))).\') AND `parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), false);
@@ -353,7 +353,7 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method7']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method7']->getParameters(), true);
-        $this->assertEquals(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, $group)).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
+        $this->assertEquals(' `grp`.`grouptype` IN (\'.implode(\',\', array_map( function($__e){return intval($__e);}, is_array($group)?$group:array($group))).\') AND `grp`.`parent_id` \'.\' < \'.intval($parent).\'',$where);
 
         $where = $generator->BuildSQLCondition ($methods['method8']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method8']->getParameters(), true);

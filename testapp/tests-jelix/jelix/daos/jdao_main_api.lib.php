@@ -349,6 +349,49 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     /**
      * @depends testFindByCountByConditionsOrder
      */
+    function testFindWithIn(){
+        $dao = jDao::create ('products');
+        $res = $dao->findBySomeNames();
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+        $this->assertEquals(1, count($list), 'findBySomeNames doesn\'t return default product. %s ');
+        $this->assertEquals($list[0]->id, self::$prod2->id);
+        $verif='<array>
+    <object>
+        <string property="id" value="'.self::$prod2->id.'" />
+        <string property="name" value="fourchette" />
+        <string property="price" value="1.54" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+
+        $res = $dao->findBySomeNames(array('verre', 'assiette nouvelle'));
+        $list = array();
+        foreach($res as $r){
+            $list[] = $r;
+        }
+
+        $this->assertEquals(2, count($list), 'findBySomeNames doesn\'t return selected products. %s ');
+        $verif='<array>
+    <object>
+        <string property="id" value="'.self::$prod1->id.'" />
+        <string property="name" value="assiette nouvelle" />
+        <string property="price" value="5.90" />
+    </object>
+    <object>
+        <string property="id" value="'.self::$prod3->id.'" />
+        <string property="name" value="verre" />
+        <string property="price" value="2.43" />
+    </object>
+</array>';
+        $this->assertComplexIdenticalStr($list, $verif);
+    }
+
+    /**
+     * @depends testFindWithIn
+     */
     function testDelete(){
         $dao = jDao::create ('products');
         $dao->delete(self::$prod1->id);
