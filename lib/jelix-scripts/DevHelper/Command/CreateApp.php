@@ -22,12 +22,26 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\ArrayInput;
 use Jelix\FileUtilities\Path;
 
 class CreateApp extends \Jelix\DevHelper\AbstractCommand
 {
 
     protected $applicationRequirement = 1;
+
+    /**
+     * @var \Symfony\Component\Console\Application
+     */
+    protected $appApplication;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        
+        
+    }
 
     protected function configure()
     {
@@ -67,6 +81,31 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         ;
     }
 
+    protected function prepareSubCommandApp($appName, $appPath) {
+        $this->config = \JelixScript::loadConfig($appName);
+        $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
+        $this->config->infoWebsite = $this->config->newAppInfoWebsite;
+        $this->config->infoLicence = $this->config->newAppInfoLicence;
+        $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
+        $this->config->infoLocale = $this->config->newAppInfoLocale;
+        $this->config->infoCopyright = $this->config->newAppInfoCopyright;
+        $this->config->initAppPaths($appPath);
+
+        if ($this->appApplication) {
+            return;
+        }
+        $this->appApplication = new Application();
+        $this->appApplication->add(new CreateCtrl($this->config));
+        $this->appApplication->add(new CreateModule($this->config));
+        $this->appApplication->add(new CreateEntryPoint($this->config));
+    }
+
+    protected function executeSubCommand($name, $arguments, $output) {
+        $command = $this->appApplication->find($name);
+        $input = new ArrayInput($arguments);
+        return $command->run($input, $output);
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $appPath = $input->getArgument('path');
@@ -78,14 +117,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
-        $this->config = \JelixScript::loadConfig($appName);
-        $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
-        $this->config->infoWebsite = $this->config->newAppInfoWebsite;
-        $this->config->infoLicence = $this->config->newAppInfoLicence;
-        $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
-        $this->config->infoLocale = $this->config->newAppInfoLocale;
-        $this->config->infoCopyright = $this->config->newAppInfoCopyright;
-        $this->config->initAppPaths($appPath);
+        $this->prepareSubCommandApp($appName, $appPath);
 
         \jApp::setEnv('jelix-scripts');
 
@@ -116,15 +148,16 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                 if ($output->isVerbose()) {
                     $output->writeln("Create default module ".$param['modulename']);
                 }
-                $cmd = \JelixScript::getCommand('createmodule', $this->config);
-                $options = array();
-                $options['-addinstallzone'] = true;
-                $options['-noregistration'] = true;
+                $options = array(
+                    'module'=>$param['modulename'],
+                    '--addinstallzone' => true,
+                    '--noregistration' => true,
+                );
                 if ($output->isVerbose()) {
                     $options['-v'] = true;
                 }
-                $cmd->initOptParam($options, array('module'=>$param['modulename']));
-                $cmd->run();
+                
+                $this->executeSubCommand('module:create', $options, $output);
                 if ($output->isVerbose()) {
                     $output->writeln("Create main template");
                 }
@@ -142,27 +175,29 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                     $output->writeln("Create a controller in the default module for the cli script");
                 }
 
-                $agcommand = \JelixScript::getCommand('createctrl', $this->config);
-                $options = array();
-                $options['-cmdline'] = true;
+                $options = array(
+                    'module'=>$param['modulename'],
+                    'controller'=>'default',
+                    'method'=>'index',
+                    '--cmdline'=> true,
+                );
                 if ($output->isVerbose()) {
                     $options['-v'] = true;
                 }
-                $agcommand->initOptParam($options, array('module'=>$param['modulename'], 'name'=>'default','method'=>'index'));
-                $agcommand->run();
+                $this->executeSubCommand('module:createctrl', $options, $output);
             }
             if ($output->isVerbose()) {
                 $output->writeln("Create the cli script");
             }
-            $agcommand = \JelixScript::getCommand('createentrypoint', $this->config);
-            $options = array();
-            $options['-type'] = 'cmdline';
+
+            $options = array(
+                'entrypoint'=>$param['modulename'],
+                '--type' => 'cmdline'
+            );
             if ($output->isVerbose()) {
                 $options['-v'] = true;
             }
-            $parameters = array('name'=>$param['modulename']);
-            $agcommand->initOptParam($options, $parameters);
-            $agcommand->run();
+            $this->executeSubCommand('app:createentrypoint', $options, $output);
         }
     }
 

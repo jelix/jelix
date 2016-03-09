@@ -6,8 +6,6 @@
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-require_once(__DIR__.'/JelixScriptCommand.class.php');
-
 
 class JelixScript {
 
@@ -89,34 +87,6 @@ class JelixScript {
             closedir($dh);
         }
         return $list;
-    }
-
-    /**
-    * load a command object
-    * @param string $cmdName the name of the command
-    * @param JelixScriptCommandConfig $config
-    * @return Jelix\DevHelper\CommandConfig  the command
-    */
-    static function getCommand($cmdName, \Jelix\DevHelper\CommandConfig $config, $standaloneScript=false) {
-        if ($standaloneScript)
-            $commandfile = JELIX_SCRIPTS_PATH.'commands-single/'.$cmdName.'.cmd.php';
-        else
-            $commandfile = JELIX_SCRIPTS_PATH.'commands/'.$cmdName.'.cmd.php';
-
-        if (!file_exists($commandfile)) {
-            throw new Exception("Error: unknown command $cmdName");
-        }
-
-        require_once($commandfile);
-
-        $cmdName.='Command';
-
-        if (!class_exists($cmdName)) {
-            throw new Exception("Error: can't find the command runtime");
-        }
-
-        $command = new $cmdName($config);
-        return $command;
     }
 
     static function checkTempPath() {

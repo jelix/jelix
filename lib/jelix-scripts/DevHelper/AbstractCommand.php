@@ -121,9 +121,7 @@ class AbstractCommand extends Command
                                            $line);
         }
 
-        $f = fopen($filename, 'w');
-        fwrite($f, implode('', $tpl));
-        fclose($f);
+        file_put_contents($filename, implode('', $tpl));
 
         if ($this->config->doChmod) {
             chmod($filename, intval($this->config->chmodFileValue, 8));
