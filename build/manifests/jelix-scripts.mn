@@ -28,10 +28,12 @@ cd lib/jelix-scripts/commands
   openapp.cmd.php
   migrate.cmd.php
   resetfilesrights.cmd.php
-cd lib/jelix-scripts/commands-single/
-  createapp.cmd.php
 cd lib/jelix-scripts/DevHelper
   CommandConfig.php
+  AbstractCommand.php
+  CreateApplication.php
+cd lib/jelix-scripts/DevHelper/Command/
+  CreateApp.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php

@@ -196,7 +196,7 @@ class jAppInstance
     /**
      * declare a module.
      *
-     * @param string $path the path of the module directory
+     * @param string|array $path the path of the module directory
      */
     public function declareModule($modulePath)
     {

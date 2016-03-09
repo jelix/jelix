@@ -79,7 +79,8 @@ class createmoduleCommand extends JelixScriptCommand {
         try {
             $path = $this->getModulePath($module);
         }
-        catch (Exception $e) {}
+        catch (Exception $e) {
+        }
 
         if ($path != '') {
             throw new Exception("module '".$module."' already exists");
@@ -189,6 +190,7 @@ class createmoduleCommand extends JelixScriptCommand {
         }
 
         $install->save();
+        jApp::declareModule($path);
 
         // create a default controller
         if(!$this->getOption('-nocontroller')){
