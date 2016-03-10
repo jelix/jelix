@@ -9,7 +9,6 @@ cd lib/jelix-scripts/commands
   aclgroup.cmd.php
   aclright.cmd.php
   aclvalue.cmd.php
-  closeapp.cmd.php
   createaction.cmd.php
   createclassfromdao.cmd.php
   createdao.cmd.php
@@ -21,7 +20,6 @@ cd lib/jelix-scripts/commands
   initadmin.cmd.php
   installmodule.cmd.php
   migrate.cmd.php
-  openapp.cmd.php
   resetfilesrights.cmd.php
 cd lib/jelix-scripts/DevHelper
   AbstractCommand.php
@@ -30,11 +28,13 @@ cd lib/jelix-scripts/DevHelper
   CreateAppApplication.php
 cd lib/jelix-scripts/DevHelper/Command/
   ClearTemp.php
+  CloseApp.php
   CreateApp.php
   CreateCtrl.php
   CreateEntryPoint.php
   CreateModule.php
   InstallApp.php
+  OpenApp.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php
