@@ -9,35 +9,35 @@ cd lib/jelix-scripts/commands
   aclgroup.cmd.php
   aclright.cmd.php
   aclvalue.cmd.php
-  cleartemp.cmd.php
   closeapp.cmd.php
   createaction.cmd.php
-  createctrl.cmd.php
-  createdao.cmd.php
   createclassfromdao.cmd.php
+  createdao.cmd.php
   createdaocrud.cmd.php
-  createentrypoint.cmd.php
   createform.cmd.php
   createlangpackage.cmd.php
-  createmodule.cmd.php
   createzone.cmd.php
   help.cmd.php
   initadmin.cmd.php
-  installapp.cmd.php
   installmodule.cmd.php
-  openapp.cmd.php
   migrate.cmd.php
+  openapp.cmd.php
   resetfilesrights.cmd.php
 cd lib/jelix-scripts/DevHelper
-  CommandConfig.php
   AbstractCommand.php
-  CreateApplication.php
+  AbstractCommandForApp.php
+  CommandConfig.php
+  CreateAppApplication.php
 cd lib/jelix-scripts/DevHelper/Command/
+  ClearTemp.php
   CreateApp.php
+  CreateCtrl.php
+  CreateEntryPoint.php
+  CreateModule.php
+  InstallApp.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php
-  JelixScriptCommand.class.php
   scripts.inc.php
 cd lib/jelix-scripts/templates
   project.xml.tpl

@@ -34,6 +34,7 @@ $application->add(new InstallApp($jelixScriptConfig));
 $application->add(new CreateCtrl($jelixScriptConfig));
 $application->add(new CreateModule($jelixScriptConfig));
 $application->add(new CreateEntryPoint($jelixScriptConfig));
+$application->add(new ClearTemp($jelixScriptConfig));
 
 if(!defined('DECLARE_MYCOMMANDS')) {
     $application->run();
