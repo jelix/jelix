@@ -37,6 +37,7 @@ $application->add(new CreateEntryPoint($jelixScriptConfig));
 $application->add(new ClearTemp($jelixScriptConfig));
 $application->add(new CloseApp($jelixScriptConfig));
 $application->add(new OpenApp($jelixScriptConfig));
+$application->add(new FilesRights($jelixScriptConfig));
 
 if(!defined('DECLARE_MYCOMMANDS')) {
     $application->run();
