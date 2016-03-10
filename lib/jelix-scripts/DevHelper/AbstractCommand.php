@@ -15,21 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class AbstractCommand extends Command
 {
-    const APP_MUST_NOT_EXIST = 1;
-    const APP_MUST_EXIST = 2;
-    const APP_MAY_EXIST = 3;
-
-    /**
-     * @var int indicate how the application is required for the command
-     *
-     * @see APP_* const
-     */
-    protected $applicationRequirement = 2;
-
-    public function isApplicationRequired() {
-        return $this->applicationRequirement;
-    }
-
     /**
      * @var Jelix\DevHelper\CommandConfig
      */

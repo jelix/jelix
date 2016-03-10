@@ -29,8 +29,6 @@ use Jelix\FileUtilities\Path;
 class CreateApp extends \Jelix\DevHelper\AbstractCommand
 {
 
-    protected $applicationRequirement = 1;
-
     /**
      * @var \Symfony\Component\Console\Application
      */

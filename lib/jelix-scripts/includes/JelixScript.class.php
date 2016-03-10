@@ -75,20 +75,6 @@ class JelixScript {
         return $config;
     }
 
-    static function commandList() {
-        $list=array();
-        $dir = JELIX_SCRIPTS_PATH.'commands/';
-        if ($dh = opendir($dir)) {
-            while (($file = readdir($dh)) !== false) {
-                if(is_file($dir . $file) && strpos($file,'.cmd.php') !==false){
-                   $list[]=substr($file,0, -8);
-                }
-            }
-            closedir($dh);
-        }
-        return $list;
-    }
-
     static function checkTempPath() {
         $tempBasePath = jApp::tempBasePath();
 
@@ -102,83 +88,4 @@ class JelixScript {
         }
         jFile::removeDir(jApp::tempPath(), false, array('.svn', '.dummy'));
     }
-
-    static function showError($errcode, $errmsg, $filename, $linenum, $trace, $errno=E_ERROR) {
-        $codeString = array(
-            E_ERROR         => 'error',
-            E_RECOVERABLE_ERROR => 'error',
-            E_WARNING       => 'warning',
-            E_NOTICE        => 'notice',
-            E_DEPRECATED    => 'deprecated',
-            E_USER_ERROR    => 'error',
-            E_USER_WARNING  => 'warning',
-            E_USER_NOTICE   => 'notice',
-            E_USER_DEPRECATED => 'deprecated',
-            E_STRICT        => 'strict'
-         );
-
-        if (isset ($codeString[$errno])){
-           $codestr = $codeString[$errno];
-        }
-        else {
-           $codestr = 'error';
-        }
-
-        if (self::$debugMode) {
-            $messageLog = strtr("\n[%typeerror%:%code%]\t%msg%\t%file%\t%line%\n", array(
-               '%date%' => date("Y-m-d H:i:s"),
-               '%typeerror%'=>$codestr,
-               '%code%' => $errcode,
-               '%msg%'  => $errmsg,
-               '%file%' => $filename,
-               '%line%' => $linenum,
-            ));
-            $traceLog = '';
-            $messageLog.="\ttrace:";
-            foreach($trace as $k=>$t){
-                $traceLog.="\n\t$k\t".(isset($t['class'])?$t['class'].$t['type']:'').$t['function']."()\t";
-                $traceLog.=(isset($t['file'])?$t['file']:'[php]').' : '.(isset($t['line'])?$t['line']:'');
-            }
-            $messageLog.=$traceLog."\n";
-        }
-        else {
-            $messageLog = strtr("\n[%typeerror%:%code%]\t%msg%\n", array(
-                '%typeerror%'=>$codestr,
-                '%code%' => $errcode,
-                '%msg%'  => $errmsg,
-             ));
-        }
-
-        echo $messageLog;
-        if ($codestr == 'error')
-           exit(1);
-    }
-
-}
-
-
-function JelixScriptsErrorHandler($errno, $errmsg, $filename, $linenum, $errcontext){
-
-    if (error_reporting() == 0)
-        return;
-
-    if (preg_match('/^\s*\((\d+)\)(.+)$/',$errmsg,$m)) {
-       $code = $m[1];
-       $errmsg = $m[2];
-    }
-    else {
-       $code=1;
-    }
-
-    $trace = debug_backtrace();
-    array_shift($trace);
-
-    JelixScript::showError($code, $errmsg, $filename, $linenum, $trace, $errno);
-}
-
-function JelixScriptsExceptionHandler($e){
-
-    JelixScript::showError($e->getCode(), $e->getMessage(), $e->getFile(),
-                          $e->getLine(), $e->getTrace());
-
 }

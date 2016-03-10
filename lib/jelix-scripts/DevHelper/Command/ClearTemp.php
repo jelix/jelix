@@ -45,13 +45,8 @@ class ClearTemp extends \Jelix\DevHelper\AbstractCommandForApp {
             }
         }
         catch (\Exception $e) {
-            if ($this->config->helpLang == 'fr') {
-                $output->writeln("Un ou plusieurs répertoires n'ont pas pu être supprimés");
-                $output->writeln("<error>Message d'erreur : " . $e->getMessage()."</error>");
-            } else {
-                $output->writeln("One or more directories couldn't be deleted.");
-                $output->writeln("<error>Error: " . $e->getMessage()."</error>");
-            }
+            $output->writeln("One or more directories couldn't be deleted.");
+            $output->writeln("<error>Error: " . $e->getMessage()."</error>");
             return 2;
         }
     }

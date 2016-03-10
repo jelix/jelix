@@ -16,7 +16,6 @@ cd lib/jelix-scripts/commands
   createform.cmd.php
   createlangpackage.cmd.php
   createzone.cmd.php
-  help.cmd.php
   initadmin.cmd.php
   installmodule.cmd.php
   migrate.cmd.php
