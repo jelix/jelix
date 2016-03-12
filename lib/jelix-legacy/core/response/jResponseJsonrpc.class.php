@@ -41,7 +41,7 @@ final class jResponseJsonRpc extends jResponse {
         $this->_httpHeaders['Content-Type'] = "application/json";
         $req = jApp::coord()->request;
         if($req->jsonRequestId !== null){
-            $content = jJsonRpc::encodeResponse($this->response, $req->jsonRequestId);
+            $content = '{"result":'.json_encode($this->response).',"error":null,"id":'.json_encode($req->jsonRequestId).'}';
             $this->_httpHeaders['Content-length'] = strlen($content);
             $this->sendHttpHeaders();
             echo $content;
@@ -71,7 +71,7 @@ final class jResponseJsonRpc extends jResponse {
         $this->_httpStatusCode ='500';
         $this->_httpStatusMsg ='Internal Server Error';
         $this->_httpHeaders['Content-Type'] = "application/json";
-        $content = jJsonRpc::encodeFaultResponse($errorCode, $errorMessage, $coord->request->jsonRequestId);
+        $content = '{"result":null,"error":{"code": '.json_encode($errorCode).', "string":'.json_encode($errorMessage).' },"id":'.json_encode($coord->request->jsonRequestId).'}';
         $this->_httpHeaders['Content-length'] = strlen($content);
         $this->sendHttpHeaders();
         echo $content;

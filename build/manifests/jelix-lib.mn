@@ -388,7 +388,6 @@ cd lib/jelix-legacy/utils/
 * jFilter.class.php
   jImageModifier.class.php
   jJson.class.php
-  jJsonRpc.class.php
   jMessage.class.php
   jMethodSniffer.class.php
   jProfilesCompiler.class.php

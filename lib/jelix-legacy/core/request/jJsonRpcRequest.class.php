@@ -9,11 +9,6 @@
 */
 
 /**
- * the jJsonRpcRequest require jJsonRpc class
- */
-require(JELIX_LIB_UTILS_PATH.'jJsonRpc.class.php');
-
-/**
 * handle a JSON-rpc call. The response has to be a json rpc response.
 * @package  jelix
 * @subpackage core_request
@@ -41,7 +36,7 @@ class jJsonRpcRequest extends jRequest {
         }
 
         // Decode the request
-        $requestobj = jJsonRpc::decodeRequest($request);
+        $requestobj = json_decode($request,true);;
         if($requestobj['method']){
             list($module, $action) = explode('~',$requestobj['method']);
         }else{
