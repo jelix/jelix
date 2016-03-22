@@ -9,11 +9,14 @@
 * @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2012 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+* @copyright   2005-2016 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
+use \Jelix\FileUtilities\File;
+use \Jelix\FileUtilities\Directory;
+use \Jelix\FileUtilities\Path;
 
 /**
  * A class helper to read or create files
@@ -41,47 +44,10 @@ class jFile {
     * @link http://www.copix.org
     */
     public static function write ($file, $data, $chmod=null){
-        $_dirname = dirname($file);
-
-        //asking to create the directory structure if needed.
-        self::createDir ($_dirname);
-
-        if(!@is_writable($_dirname)) {
-            // cache_dir not writable, see if it exists
-            if(!@is_dir($_dirname)) {
-                throw new jException('jelix~errors.file.directory.notexists', array ($_dirname));
-            }
-            throw new jException('jelix~errors.file.directory.notwritable', array ($file, $_dirname));
+        if (!$chmod && jApp::config()) {
+            $chmod = jApp::config()->chmodFile;
         }
-
-        // write to tmp file, then rename it to avoid
-        // file locking race condition
-        $_tmp_file = tempnam($_dirname, 'wrt');
-
-        if (!($fd = @fopen($_tmp_file, 'wb'))) {
-            $_tmp_file = $_dirname . '/' . uniqid('wrt');
-            if (!($fd = @fopen($_tmp_file, 'wb'))) {
-                throw new jException('jelix~errors.file.write.error', array ($file, $_tmp_file));
-            }
-        }
-
-        fwrite($fd, $data);
-        fclose($fd);
-
-        // Delete the file if it allready exists (this is needed on Win,
-        // because it cannot overwrite files with rename()
-        if (jApp::config() && jApp::config()->isWindows && file_exists($file)) {
-            unlink($file);
-        }
-        rename($_tmp_file, $file);
-        if ($chmod) {
-            chmod($file, $chmod);
-        }
-        else if (jApp::config()) {
-            chmod($file, jApp::config()->chmodFile);
-        }
-
-        return true;
+        return File::write($file, $data, $chmod);
     }
 
     /**
@@ -90,20 +56,15 @@ class jFile {
     * @param string $dir the path of the directory
     */
     public static function createDir ($dir, $chmod=null){
-        // recursive feature on mkdir() is broken with PHP 5.0.4 for Windows
-        // so should do own recursion
-        if (!file_exists($dir)) {
-            self::createDir(dirname($dir), $chmod);
-            if ($chmod) {
-                mkdir($dir, $chmod);
-            }
-            else if (jApp::config()) {
-                mkdir($dir, jApp::config()->chmodDir);
+        if ($chmod === null) {
+            if (jApp::config()) {
+                $chmod =  jApp::config()->chmodDir;
             }
             else {
-                mkdir($dir);
+                $chmod = 0775;
             }
         }
+        return Directory::create($dir, $chmod);
     }
 
     /**
@@ -117,57 +78,12 @@ class jFile {
      * @return boolean true if all the content has been removed
      */
     public static function removeDir($path, $deleteParent=true, $except=array()) {
-
-        if($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR)
-            throw new jException('jelix~errors.file.directory.cannot.remove.fs.root'); //see ticket #840
-
-        if (!file_exists($path))
-            return true;
-
-        $allIsDeleted = true;
-
-        $dir = new DirectoryIterator($path);
-        foreach ($dir as $dirContent) {
-            if (count($except)) {
-                // test if the basename matches one of patterns
-                $exception = false;
-                foreach($except as $pattern) {
-                    if ($pattern[0] == '*') { // for pattern like *.foo
-                        if ($dirContent->getBasename() != $dirContent->getBasename(substr($pattern, 1))) {
-                            $allIsDeleted = false;
-                            $exception = true;
-                            break;
-                        }
-                    }
-                    else if ($pattern == $dirContent->getBasename()) {
-                        $allIsDeleted = false;
-                        $exception = true;
-                        break;
-                    }
-                }
-                if ($exception)
-                    continue;
-            }
-            // file deletion
-            if ($dirContent->isFile() || $dirContent->isLink()) {
-                    unlink($dirContent->getPathName());
-            } else {
-                // recursive directory deletion
-                if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $removed = self::removeDir($dirContent->getPathName(), true, $except);
-                    if (!$removed)
-                        $allIsDeleted = false;
-                }
-            }
+        if (is_array($except) && count($except)) {
+            return Directory::removeExcept($path, $except, $deleteParent);
         }
-        unset($dir); // see bug #733
-        unset($dirContent);
-
-        // removes the parent directory
-        if ($deleteParent && $allIsDeleted) {
-            rmdir($path);
+        else {
+            return Directory::remove($path, $deleteParent);
         }
-        return $allIsDeleted;
     }
 
     /**
@@ -178,10 +94,7 @@ class jFile {
      * @since 1.1.6
      */
     public static function getMimeType($file){
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $type = finfo_file($finfo, $file);
-        finfo_close($finfo);
-        return $type;
+        return File::getMimeType($file);
     }
 
     /**
@@ -192,15 +105,13 @@ class jFile {
      * @since 1.1.10
      */
     public static function getMimeTypeFromFilename($fileName){
-        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        if (array_key_exists($ext, self::$mimeTypes)) {
-            return self::$mimeTypes[$ext];
-        }
-        else if (jApp::config() && isset(jApp::config()->mimeTypes[$ext])) {
+        $mimetype = File::getMimeTypeFromFilename($fileName);
+        if ($mimetype == 'application/octet-stream' &&
+            jApp::config() &&
+            isset(jApp::config()->mimeTypes[$ext])) {
             return jApp::config()->mimeTypes[$ext];
         }
-        else
-            return 'application/octet-stream';
+        return $mimetype;
     }
 
     /**
@@ -275,35 +186,7 @@ class jFile {
      * @return string relative path between the two path
      */
     public static function shortestPath($from, $to) {
-        list($fromprefix, $from, $fromabsolute) = self::_normalizePath($from, true);
-        list($toprefix, $to, $toabsolute) = self::_normalizePath($to, true);
-        if (!$fromabsolute || !$toabsolute) {
-            throw new Exception('Absolute path is required');
-        }
-        if ($fromprefix != $toprefix) {
-            return $toprefix.'/'.rtrim(implode('/', $to),'/');
-        }
-        while(count($from) && count($to) && $from[0] == $to[0]) {
-            array_shift($from);
-            array_shift($to);
-        }
-
-        if (!count($from)) {
-            if (!count($to)) {
-                return '.';
-            }
-            $prefix = '';
-        }
-        else {
-            $prefix = rtrim(str_repeat('../', count($from)),'/');
-        }
-        if (!count($to)) {
-            $suffix = '';
-        }
-        else {
-            $suffix = implode('/', $to);
-        }
-        return $prefix.($suffix != '' && $prefix !='' ?'/':'').$suffix;
+        return Path::shortestPath($from, $to);
     }
 
     /**
@@ -313,172 +196,6 @@ class jFile {
      * @return string the normalized path
      */
     public static function normalizePath($path) {
-        list($prefix, $path, $absolute) = self::_normalizePath($path, false);
-        if (!is_string($path)) {
-            $path = implode('/',$path);
-        }
-        return $prefix.($absolute?'/':'').$path;
+        return Path::normalizePath($path);
     }
-
-    protected static function _normalizePath($path, $alwaysArray) {
-        $path = str_replace('\\', '/', $path);
-        $path = preg_replace("#(/+)#", "/" , $path);
-        $prefix = '';
-        $absolute = false;
-        if (preg_match("#^([a-z]:)/#i", $path, $m)) {
-            $prefix = strtoupper($m[1]);
-            $path = substr($path, 2);
-            $absolute = true;
-        }
-        else {
-            $absolute = ($path[0] == '/');
-        }
-        if ($absolute && $path != '') {
-            if ($path == '/') {
-                $path = '';
-            }
-            else {
-                $path = substr($path, 1);
-            }
-        }
-
-        if (strpos($path,'./') === false && substr($path, -1) != '.') {
-            if ($alwaysArray) {
-                if ($path == '') {
-                    return array($prefix, array(), $absolute);
-                }
-                return array($prefix, explode('/', rtrim($path, '/')), $absolute);
-            }
-            else {
-                if ($path == '') {
-                    return array($prefix, $path, $absolute);
-                }
-                return array($prefix, rtrim($path, '/'), $absolute);
-            }
-        }
-        $path = explode('/', $path);
-        $path2 = array();
-        $up = false;
-        foreach ($path as $chunk) {
-            if ($chunk === '..') {
-                if (count($path2)) {
-                    array_pop($path2);
-                }
-            } elseif ($chunk !== '' && $chunk != '.') {
-                $path2[] = $chunk;
-            }
-        }
-        return array($prefix, $path2, $absolute);
-    }
-
-    protected static $mimeTypes = array(
-
-        'txt' => 'text/plain',
-        'htm' => 'text/html',
-        'html' => 'text/html',
-        'xhtml' => 'application/xhtml+xml',
-        'xht' => 'application/xhtml+xml',
-        'php' => 'text/html',
-        'css' => 'text/css',
-        'js' => 'application/javascript',
-        'json' => 'application/json',
-        'xml' => 'application/xml',
-        'xslt' => 'application/xslt+xml',
-        'xsl' => 'application/xml',
-        'dtd' => 'application/xml-dtd',
-        'atom'=>'application/atom+xml',
-        'mathml'=>'application/mathml+xml',
-        'rdf'=>'application/rdf+xml',
-        'smi'=>'application/smil',
-        'smil'=>'application/smil',
-        'vxml'=>'application/voicexml+xml',
-        'latex'=>'application/x-latex',
-        'tcl'=>'application/x-tcl',
-        'tex'=>'application/x-tex',
-        'texinfo'=>'application/x-texinfo',
-        'wrl'=>'model/vrml',
-        'wrml'=>'model/vrml',
-        'ics'=>'text/calendar',
-        'ifb'=>'text/calendar',
-        'sgml'=>'text/sgml',
-        'htc'=>'text/x-component',
-
-        // images
-        'png' => 'image/png',
-        'jpe' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
-        'gif' => 'image/gif',
-        'bmp' => 'image/bmp',
-        'ico' => 'image/x-icon',
-        'tiff' => 'image/tiff',
-        'tif' => 'image/tiff',
-        'svg' => 'image/svg+xml',
-        'svgz' => 'image/svg+xml',
-        'djvu' => 'image/vnd.djvu',
-        'djv'  => 'image/vnd.djvu',
-
-        // archives
-        'zip' => 'application/zip',
-        'rar' => 'application/x-rar-compressed',
-        'exe' => 'application/x-msdownload',
-        'msi' => 'application/x-msdownload',
-        'cab' => 'application/vnd.ms-cab-compressed',
-        'tar' => 'application/x-tar',
-        'gz'  => 'application/x-gzip',
-        'tgz'  => 'application/x-gzip',
-
-        // audio/video
-        'mp2' => 'audio/mpeg',
-        'mp3' => 'audio/mpeg',
-        'qt' => 'video/quicktime',
-        'mov' => 'video/quicktime',
-        'mpeg' => 'video/mpeg',
-        'mpg' => 'video/mpeg',
-        'mpe' => 'video/mpeg',
-        'wav' => 'audio/wav',
-        'aiff' => 'audio/aiff',
-        'aif' => 'audio/aiff',
-        'avi' => 'video/msvideo',
-        'wmv' => 'video/x-ms-wmv',
-        'ogg' => 'application/ogg',
-        'flv' => 'video/x-flv',
-        'dvi' => 'application/x-dvi',
-        'au'=> 'audio/basic',
-        'snd'=> 'audio/basic',
-        'mid' => 'audio/midi',
-        'midi' => 'audio/midi',
-        'm3u' => 'audio/x-mpegurl',
-        'm4u' => 'video/vnd.mpegurl',
-        'ram' => 'audio/x-pn-realaudio',
-        'ra' => 'audio/x-pn-realaudio',
-        'rm' => 'application/vnd.rn-realmedia',
-
-        // adobe
-        'pdf' => 'application/pdf',
-        'psd' => 'image/vnd.adobe.photoshop',
-        'ai' => 'application/postscript',
-        'eps' => 'application/postscript',
-        'ps' => 'application/postscript',
-        'swf' => 'application/x-shockwave-flash',
-
-        // ms office
-        'doc' => 'application/msword',
-        'docx' => 'application/msword',
-        'rtf' => 'application/rtf',
-        'xls' => 'application/vnd.ms-excel',
-        'xlm' => 'application/vnd.ms-excel',
-        'xla' => 'application/vnd.ms-excel',
-        'xld' => 'application/vnd.ms-excel',
-        'xlt' => 'application/vnd.ms-excel',
-        'xlc' => 'application/vnd.ms-excel',
-        'xlw' => 'application/vnd.ms-excel',
-        'xll' => 'application/vnd.ms-excel',
-        'ppt' => 'application/vnd.ms-powerpoint',
-        'pps' => 'application/vnd.ms-powerpoint',
-
-        // open office
-        'odt' => 'application/vnd.oasis.opendocument.text',
-        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-    );
 }

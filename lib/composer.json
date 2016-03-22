@@ -13,7 +13,8 @@
         "jelix/inifile": "1.7.*",
         "jelix/wikirenderer-plugin": "1.7.0",
         "jelix/simplelocalization": "1.7.1",
-        "symfony/console":"2.8.*"
+        "symfony/console":"2.8.*",
+        "jelix/file-utilities": "1.8.*"
     },
     "autoload": {
         "psr-4": {
