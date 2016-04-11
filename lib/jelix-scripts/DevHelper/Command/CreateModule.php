@@ -53,12 +53,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                'To create a controller for a command line script'
             )
             ->addOption(
-               'cmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'To create a controller for a command line script'
-            )
-            ->addOption(
                'addinstallzone',
                null,
                InputOption::VALUE_NONE,
@@ -238,14 +232,18 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 'controller'=>'default',
                 'method'=>'index',
             );
+
             if ($input->getOption('entry-point')) {
-                $options['--entry-point'] = $input->getOption('entry-point');
+                $arguments['--entry-point'] = $input->getOption('entry-point');
             }
             if ($input->getOption('cmdline')) {
-                $options['--cmdline'] = true;
+                $arguments['--cmdline'] = true;
             }
             if ($addInstallZone) {
-                $options['--addinstallzone'] =true;
+                $arguments['--addinstallzone'] =true;
+            }
+            if ($output->isVerbose()) {
+                $arguments['-v'] = true;
             }
             $this->executeSubCommand('module:createctrl', $arguments, $output);
         }
