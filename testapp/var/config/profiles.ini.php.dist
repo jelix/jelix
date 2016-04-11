@@ -213,3 +213,9 @@ driver = file
 ;file_name_prefix = ""
 ; umask for cache files (default '0600')
 ;cache_file_umask =
+
+[jcache:usingredis]
+enabled = 1
+driver=redis
+host=localhost
+port=6379

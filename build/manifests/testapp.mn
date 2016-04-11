@@ -290,6 +290,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_fileTest.php
   jcache_memcacheTest.php
   jcache_memcache22Test.php
+  jcache_redisTest.php
   httpcacheTest.php
   jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/

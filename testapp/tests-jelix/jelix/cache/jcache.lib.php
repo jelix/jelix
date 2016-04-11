@@ -79,8 +79,9 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         jCache::set('expiredKey','data expired',strtotime("-1 day"),$this->profile);
 
         $data = jCache::get(array('getKey','expiredKey','inexistentKey'),$this->profile);
-        if ($this->assertTrue(isset($data['getKey'])))
-            $this->assertTrue($data['getKey']=='string for data');
+        if ($this->assertTrue(isset($data['getKey']))) {
+            $this->assertEquals('string for data', $data['getKey']);
+        }
         $this->assertTrue(!isset($data['expiredKey']));
         $this->assertTrue(!isset($data['inexistentKey']));
     }
@@ -91,9 +92,9 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         $myClass = new testCache();
 
         $returnData=jCache::call(array('testCache','staticMethod'),array(1,2),0,$this->profile);
-        $this->assertTrue($returnData==3);
+        $this->assertEquals(3, $returnData);
         $dataCached=jCache::get(md5(serialize(array('testCache','staticMethod')).serialize(array(1,2))),$this->profile);
-        $this->assertTrue($dataCached==$returnData);
+        $this->assertEquals($dataCached,$returnData);
 
         try{
             jCache::call(array('testCache','missingStaticMethod'),null,0,$this->profile);
@@ -103,9 +104,9 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         }
 
         $returnData=jCache::call(array($myClass,'method'),array(1,2),0,$this->profile);
-        $this->assertTrue($returnData==3);
+        $this->assertEquals(3, $returnData);
         $dataCached=jCache::get(md5(serialize(array($myClass,'method')).serialize(array(1,2))),$this->profile);
-        $this->assertTrue($dataCached==$returnData);
+        $this->assertEquals($dataCached,$returnData);
 
         try{
             jCache::call(array($myClass,'missingMethod'),null,0,$this->profile);
@@ -115,9 +116,9 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         }
 
         $returnData=jCache::call('testFunction',array(1,2),0,$this->profile);
-        $this->assertTrue($returnData==3);
+        $this->assertEquals(3, $returnData);
         $dataCached=jCache::get(md5(serialize('testFunction').serialize(array(1,2))),$this->profile);
-        $this->assertTrue($dataCached==$returnData);
+        $this->assertEquals($dataCached,$returnData);
 
         try{
             jCache::call('testFunction_missing',null,0,$this->profile);
