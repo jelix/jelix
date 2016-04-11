@@ -633,6 +633,9 @@ cd lib/jelix/plugins/kvdb/redis/
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php
 
+cd lib/jelix/plugins/logger/legacysyslog
+  legacysyslog.logger.php
+
 cd lib/jelix/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
