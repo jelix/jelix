@@ -10,18 +10,12 @@ source $VAGRANTDIR/jelixapp/system.sh
 
 initsystem
 
-# for soap tests
-cp $VAGRANTDIR/vagrant/otherport.conf /etc/apache2/conf-available/
-a2enconf otherport
-service apache2 reload
-
-
 apt-get -y install postgresql postgresql-client
 apt-get -y install redis-server memcached memcachedb
 
 # create a database into pgsql + users
 su postgres -c $VAGRANTDIR/create_pgsql_db.sh
-echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.4/main/pg_hba.conf
 service postgresql restart
 
 resetComposer $ROOTDIR
