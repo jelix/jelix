@@ -6,9 +6,6 @@ cd lib/jelix-scripts
 cd lib/jelix-scripts/commands
   acl2group.cmd.php
   acl2right.cmd.php
-  aclgroup.cmd.php
-  aclright.cmd.php
-  aclvalue.cmd.php
   createaction.cmd.php
   createclassfromdao.cmd.php
   createdao.cmd.php
