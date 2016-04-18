@@ -5,7 +5,6 @@ cd lib/jelix-scripts
   CREDITS
 cd lib/jelix-scripts/commands
   acl2group.cmd.php
-  acl2right.cmd.php
   createaction.cmd.php
   createclassfromdao.cmd.php
   createdao.cmd.php
@@ -39,6 +38,10 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2
   SubjectList.php
   SubjectCreate.php
   SubjectDelete.php
+  SubjectGroupList.php
+  SubjectGroupCreate.php
+  SubjectGroupDelete.php
+
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php

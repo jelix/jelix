@@ -47,7 +47,9 @@ $application->add(new Acl2\RemoveRight($jelixScriptConfig));
 $application->add(new Acl2\SubjectList($jelixScriptConfig));
 $application->add(new Acl2\SubjectCreate($jelixScriptConfig));
 $application->add(new Acl2\SubjectDelete($jelixScriptConfig));
-
+$application->add(new Acl2\SubjectGroupList($jelixScriptConfig));
+$application->add(new Acl2\SubjectGroupCreate($jelixScriptConfig));
+$application->add(new Acl2\SubjectGroupDelete($jelixScriptConfig));
 
 if(!defined('DECLARE_MYCOMMANDS')) {
     $application->run();

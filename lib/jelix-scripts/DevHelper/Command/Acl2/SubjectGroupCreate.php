@@ -14,33 +14,28 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
+class SubjectGroupCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function configure()
     {
         $this
-            ->setName('acl2:subject-create')
-            ->setDescription('Create a subject')
+            ->setName('acl2:sg-create')
+            ->setDescription('Add a subject group')
             ->setHelp('')
             ->addArgument(
-                'subject',
+                'group',
                 InputArgument::REQUIRED,
-                'the subject id to create'
+                'Name of the subject group'
             )
             ->addArgument(
                 'labelkey',
                 InputArgument::REQUIRED,
-                'the selector of the label of the subject'
+                'the selector of the label'
             )
             ->addArgument(
-                'subjectgroup',
-                InputArgument::OPTIONAL,
-                'the id of the subjet group'
-            )
-            ->addArgument(
-                'subjectlabel',
-                InputArgument::OPTIONAL,
-                'The label of the subject if the given selector does not exists'
+                'label',
+                InputArgument::REQUIRED,
+                'The label of the subject group if the given selector does not exists'
             )
         ;
         parent::configure();
@@ -49,39 +44,33 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $subject = $input->getArgument('subject');
+        $group = $input->getArgument('group');
         $labelkey = $input->getArgument('labelkey');
-        $subjectGroup = $input->getArgument('subjectgroup');
-        $subjectlabel = $input->getArgument('subjectlabel');
-        
-        $sql = "SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
-            ." WHERE id_aclsbj=".$cnx->quote($subject);
+        $label = $input->getArgument('label');
+
+        $cnx = \jDb::getConnection('jacl2_profile');
+
+        $sql = "SELECT id_aclsbjgrp FROM ".$cnx->prefixTable('jacl2_subject_group')
+            ." WHERE id_aclsbjgrp=".$cnx->quote($group);
         $rs = $cnx->query($sql);
         if ($rs->fetch()) {
-            throw new \Exception("This subject already exists");
+            throw new \Exception("This subject group already exists");
         }
 
-        $sql = "INSERT into ".$cnx->prefixTable('jacl2_subject').
-            " (id_aclsbj, label_key, id_aclsbjgrp) VALUES (";
-        $sql .= $cnx->quote($subject).',';
-        $sql .= $cnx->quote($labelkey);
-        if ($subjectGroup && $subjectGroup != 'null') {
-            $sql.=','.$cnx->quote($subjectGroup);
-        }
-        else {
-            $sql.=", NULL";
-        }
+        $sql="INSERT into ".$cnx->prefixTable('jacl2_subject_group')." (id_aclsbjgrp, label_key) VALUES (";
+        $sql.=$cnx->quote($group).',';
+        $sql.=$cnx->quote($labelkey);
         $sql .= ')';
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
-            $output->writeln("Rights: subject ".$subject." is created");
+        if ($ouput->verbose()) {
+            $ouput->writeln("Rights: group of subjects '".$group."' is created");
         }
 
-        if ($subjectlabel &&
+        if ($label &&
             preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $labelkey, $m)) {
 
-            $localestring = "\n".$m[3].'='.$subjectlabel;
+            $localestring = "\n".$m[3].'='.$label;
             $path = $this->getModulePath($m[1]);
             $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.'.
                     \jApp::config()->charset.'.properties';
