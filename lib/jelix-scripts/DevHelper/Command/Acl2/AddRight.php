@@ -73,7 +73,7 @@ class AddRight  extends AbstractAcl2Cmd {
         $sql.=$resource.')';
 
         $cnx->exec($sql);
-        if ($this->verbose()) {
+        if ($output->verbose()) {
             $output->writeln("Right is added on subject $subject with group $group and resource $resource");
         }
     }

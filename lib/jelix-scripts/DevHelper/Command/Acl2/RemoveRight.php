@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 class RemoveRight  extends AbstractAcl2Cmd {
 
@@ -44,6 +45,12 @@ class RemoveRight  extends AbstractAcl2Cmd {
                InputOption::VALUE_NONE,
                'remove also all resource rights with the given subject'
             )
+            ->addOption(
+               'confirm',
+               null,
+               InputOption::VALUE_NONE,
+               'Avoid to wait after user confirmation'
+            )
         ;
         parent::configure();
     }
@@ -57,6 +64,15 @@ class RemoveRight  extends AbstractAcl2Cmd {
         $subject = $cnx->quote($input->getArgument('subject'));
         $resource = $cnx->quote($input->getArgument('resource'));
         $allResource = $input->getOption('allres');
+
+        if (!$input->getOption('confirm')) {
+            $helper = $this->getHelper('question');
+            $question = new ConfirmationQuestion('are you sure you want to delete right (y/N)?', false);
+            if (!$helper->ask($input, $output, $question)) {
+                $output->writeln('command canceled');
+                return;
+            }
+        }
 
         $sql="SELECT * FROM ".$cnx->prefixTable('jacl2_rights')."
                 WHERE id_aclgrp=".$group."
@@ -78,7 +94,7 @@ class RemoveRight  extends AbstractAcl2Cmd {
         }
         $cnx->exec($sql);
 
-        if ($this->verbose()) {
+        if ($output->verbose()) {
             if ($allResource) {
                 $output->writeln("Rights on subject $subject with group $group have been deleted");
             } else {
