@@ -13,7 +13,6 @@ cd lib/jelix-scripts/commands
   createclassfromdao.cmd.php
   createdao.cmd.php
   createdaocrud.cmd.php
-  createform.cmd.php
   createlangpackage.cmd.php
   createzone.cmd.php
   initadmin.cmd.php
@@ -30,6 +29,7 @@ cd lib/jelix-scripts/DevHelper/Command/
   CreateApp.php
   CreateCtrl.php
   CreateEntryPoint.php
+  CreateForm.php
   CreateModule.php
   FilesRights.php
   InstallApp.php
