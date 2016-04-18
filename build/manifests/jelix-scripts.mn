@@ -36,6 +36,9 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2
   AddRight.php
   RemoveRight.php
   RightsList.php
+  SubjectList.php
+  SubjectCreate.php
+  SubjectDelete.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php

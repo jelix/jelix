@@ -44,6 +44,9 @@ $application->add(new FilesRights($jelixScriptConfig));
 $application->add(new Acl2\RightsList($jelixScriptConfig));
 $application->add(new Acl2\AddRight($jelixScriptConfig));
 $application->add(new Acl2\RemoveRight($jelixScriptConfig));
+$application->add(new Acl2\SubjectList($jelixScriptConfig));
+$application->add(new Acl2\SubjectCreate($jelixScriptConfig));
+$application->add(new Acl2\SubjectDelete($jelixScriptConfig));
 
 
 if(!defined('DECLARE_MYCOMMANDS')) {
