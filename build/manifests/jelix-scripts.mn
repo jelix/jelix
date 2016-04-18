@@ -41,7 +41,12 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2
   SubjectGroupList.php
   SubjectGroupCreate.php
   SubjectGroupDelete.php
-
+cd lib/jelix-scripts/DevHelper/Command/Acl2Groups
+  GroupsList.php
+  GroupCreate.php
+  GroupDelete.php
+cd lib/jelix-scripts/DevHelper/Command/Acl2Users
+  UsersList.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php

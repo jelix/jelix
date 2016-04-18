@@ -19,53 +19,15 @@ class acl2groupCommand extends JelixScriptCommand {
 
     public  $syntaxhelp = " ACTION [arg1 [arg2 ...]]";
     public  $help=array(
-        'fr'=>"
-jAcl2 : gestion des groupes d'utilisateurs
-
-ACTION:
- * list
-    liste les groupes d'utilisateurs
- * userslist groupid
-    liste les utilisateurs d'un groupe
- * alluserslist
-    liste tous les utilisateurs inscrits
- * [-defaultgroup] create  id [nom]
-    crée un groupe. Si il y a l'option -defaultgroup, ce nouveau
-    groupe sera un groupe par défaut pour les nouveaux utilisateurs
- * setdefault groupid [true|false]
-    fait du groupe indiqué un groupe par defaut (ou n'est plus
-    un groupe par defaut si false est indiqué)
- * changename groupid nouveaunom
-    change le nom d'un groupe
- * delete   groupid
-    efface un groupe
- * createuser login
-    crée un utilisateur et son groupe privé
- * adduser groupid login
-    ajoute un utilisateur dans un groupe
- * removeuser login groupid
-    enlève un utilisateur d'un groupe
-",
         'en'=>"
 jAcl2: user group management
 
 ACTION:
- * list
-    list users groups
- * userslist groupid
-    list users of a group
- * alluserslist
-    list all users
- * [-defaultgroup] create id [name]
-    create a group. If there is -defaultgroup option, this new group
-    becomes a default group for new users
  * setdefault groupid [true|false]
     the given group becomes a default group or does not
     become a default group if false is given
  * changename groupid newname
     change a group name
- * delete groupid
-    delete a group
  * createuser login
     add a user and its private group
  * adduser groupid login
@@ -76,27 +38,9 @@ ACTION:
     );
 
     protected $titles = array(
-        'fr'=>array(
-            'list'=>"Liste des groupes d'utilisateurs",
-            'create'=>"Création d'un nouveau groupe",
-            'setdefault'=>"Change la propriété 'defaut' d'un groupe",
-            'changename'=>"Change le nom d'un groupe",
-            'delete'=>"Efface un groupe d'utilisateurs",
-            'userslist'=>"Liste des utilisateurs d'un groupe",
-            'alluserslist'=>"Liste de tous les utilisateurs",
-            'adduser'=>"Ajoute un utilisateur",
-            'removeuser'=>"Enlève un utilisateur",
-            'createuser'=>"Crée un utilisateur dans jAcl2",
-            'destroyuser'=>"Enlève un utilisateur de jAcl2",
-            ),
         'en'=>array(
-            'list'=>"List of users groups",
-            'create'=>"Create a new group",
             'setdefault'=>"Change the 'default' property of a group",
             'changename'=>"Change the name of a group",
-            'delete'=>"Delete a group",
-            'userslist'=>"List of user of a group",
-            'alluserslist'=>"All registered users",
             'adduser'=>"Add a user in a group",
             'removeuser'=>"Remove a user from a group",
             'createuser'=>"Create a user in jAcl2",
@@ -116,118 +60,6 @@ ACTION:
         $meth= 'cmd_'.$action;
         echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
-    }
-
-
-    protected function cmd_list(){
-        $cnx = jDb::getConnection('jacl2_profile');
-        $sql="SELECT id_aclgrp, name, grouptype FROM "
-            .$cnx->prefixTable('jacl2_group')
-            ." WHERE grouptype <2 ORDER BY name";
-        $rs = $cnx->query($sql);
-        echo "id\tlabel name\t\tdefault\n--------------------------------------------------------\n";
-        foreach($rs as $rec){
-            if($rec->grouptype==1)
-                $type='yes';
-            else
-                $type='';
-            echo $rec->id_aclgrp,"\t",$rec->name,"\t\t",$type,"\n";
-        }
-    }
-
-    protected function cmd_userslist(){
-        $params = $this->getParam('...');
-        if(!is_array($params) || count($params) != 1)
-            throw new Exception("wrong parameter count");
-
-        $id = $this->_getGrpId($params[0]);
-
-        $cnx = jDb::getConnection('jacl2_profile');
-        $sql = "SELECT login FROM ".$cnx->prefixTable('jacl2_user_group')
-            ." WHERE id_aclgrp =".$id;
-        $rs = $cnx->query($sql);
-        echo "Login\n-------------------------\n";
-        foreach($rs as $rec){
-            echo $rec->login,"\n";
-        }
-    }
-
-    protected function cmd_alluserslist(){
-
-        $cnx = jDb::getConnection('jacl2_profile');
-
-        $sql="SELECT login, u.id_aclgrp, name FROM "
-            .$cnx->prefixTable('jacl2_user_group')." u, "
-            .$cnx->prefixTable('jacl2_group')." g
-            WHERE g.grouptype <2 AND u.id_aclgrp = g.id_aclgrp ORDER BY login";
-
-        $rs = $cnx->query($sql);
-        echo "Login\t\tgroups\n--------------------------------------------------------\n";
-        $login = '';
-        foreach($rs as $rec){
-            if($login != $rec->login) {
-                echo "\n", $rec->login,"\t\t";
-                $login = $rec->login;
-            }
-            echo $rec->name," (",$rec->id_aclgrp,")";
-        }
-        echo "\n\n";
-    }
-
-
-    protected function cmd_create(){
-        $params = $this->getParam('...');
-        if(!is_array($params) || count($params) > 2)
-            throw new Exception("wrong parameter count");
-
-        $cnx = jDb::getConnection('jacl2_profile');
-
-        $id = $params[0];
-        if (isset($params[1]))
-            $name = $params[1];
-        else
-            $name = $id;
-
-
-        try {
-            $sql="INSERT into ".$cnx->prefixTable('jacl2_group')
-                ." (id_aclgrp, name, grouptype, ownerlogin) VALUES (";
-            $sql.=$cnx->quote($id).',';
-            $sql.=$cnx->quote($name).',';
-            if($this->getOption('-defaultgroup'))
-                $sql.='1, NULL)';
-            else
-                $sql.='0, NULL)';
-
-            $cnx->exec($sql);
-        }
-        catch(Exception $e) {
-            throw new Exception("this group already exists");
-        }
-        if ($this->verbose())
-            echo "Rights: group $name ($id) is created.\n";
-    }
-
-    protected function cmd_delete(){
-        $params = $this->getParam('...');
-        if(!is_array($params) || count($params) != 1)
-            throw new Exception("wrong parameter count");
-
-        $cnx = jDb::getConnection('jacl2_profile');
-
-        $id = $this->_getGrpId($params[0]);
-
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclgrp=".$id;
-        $cnx->exec($sql);
-
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')." WHERE id_aclgrp=".$id;
-        $cnx->exec($sql);
-
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_group')." WHERE id_aclgrp=".$id;
-        $cnx->exec($sql);
-
-        if ($this->verbose())
-            echo "Rights: group $id and all corresponding rights have been deleted.\n";
     }
 
     protected function cmd_setdefault(){

@@ -51,6 +51,11 @@ $application->add(new Acl2\SubjectGroupList($jelixScriptConfig));
 $application->add(new Acl2\SubjectGroupCreate($jelixScriptConfig));
 $application->add(new Acl2\SubjectGroupDelete($jelixScriptConfig));
 
+$application->add(new Acl2Groups\GroupsList($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupCreate($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupDelete($jelixScriptConfig));
+$application->add(new Acl2Users\UsersList($jelixScriptConfig));
+
 if(!defined('DECLARE_MYCOMMANDS')) {
     $application->run();
 }
