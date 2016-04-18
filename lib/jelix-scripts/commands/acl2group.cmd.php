@@ -23,11 +23,6 @@ class acl2groupCommand extends JelixScriptCommand {
 jAcl2: user group management
 
 ACTION:
- * setdefault groupid [true|false]
-    the given group becomes a default group or does not
-    become a default group if false is given
- * changename groupid newname
-    change a group name
  * createuser login
     add a user and its private group
  * adduser groupid login
@@ -39,8 +34,6 @@ ACTION:
 
     protected $titles = array(
         'en'=>array(
-            'setdefault'=>"Change the 'default' property of a group",
-            'changename'=>"Change the name of a group",
             'adduser'=>"Add a user in a group",
             'removeuser'=>"Remove a user from a group",
             'createuser'=>"Create a user in jAcl2",
@@ -60,47 +53,6 @@ ACTION:
         $meth= 'cmd_'.$action;
         echo "----", $this->titles[$this->config->helpLang][$action],"\n\n";
         $this->$meth();
-    }
-
-    protected function cmd_setdefault(){
-        $params = $this->getParam('...');
-        if(!is_array($params) || count($params) == 0 || count($params) > 2)
-            throw new Exception("wrong parameter count");
-
-        $cnx = jDb::getConnection('jacl2_profile');
-
-        $id = $this->_getGrpId($params[0]);
-
-        $def=1;
-        if(isset($params[1])){
-            if($params[1]=='false')
-                $def=0;
-            elseif($params[1]=='true')
-                $def=1;
-            else
-                throw new Exception("bad value for last parameter");
-        }
-
-        $sql="UPDATE ".$cnx->prefixTable('jacl2_group')
-            ." SET grouptype=$def  WHERE id_aclgrp=".$id;
-        $cnx->exec($sql);
-        if ($this->verbose())
-            echo "Rights: group $id is ".($def?' now a default group':' no more a default group')."\n";
-    }
-
-    protected function cmd_changename(){
-        $params = $this->getParam('...');
-        if(!is_array($params) || count($params) != 2)
-            throw new Exception("wrong parameter count");
-
-        $id = $this->_getGrpId($params[0]);
-
-        $cnx = jDb::getConnection('jacl2_profile');
-        $sql="UPDATE ".$cnx->prefixTable('jacl2_group')
-            ." SET name=".$cnx->quote($params[1])."  WHERE id_aclgrp=".$id;
-        $cnx->exec($sql);
-        if ($this->verbose())
-            echo "Rights: group $id is renamed to '".$params[1]."'.\n";
     }
 
     protected function cmd_adduser(){

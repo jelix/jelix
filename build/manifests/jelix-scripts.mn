@@ -45,6 +45,8 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2Groups
   GroupsList.php
   GroupCreate.php
   GroupDelete.php
+  GroupName.php
+  GroupDefault.php
 cd lib/jelix-scripts/DevHelper/Command/Acl2Users
   UsersList.php
 cd lib/jelix-scripts/includes
