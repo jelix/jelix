@@ -31,6 +31,11 @@ cd lib/jelix-scripts/DevHelper/Command/
   FilesRights.php
   InstallApp.php
   OpenApp.php
+cd lib/jelix-scripts/DevHelper/Command/Acl2
+  AbstractAcl2Cmd.php
+  AddRight.php
+  RemoveRight.php
+  RightsList.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php

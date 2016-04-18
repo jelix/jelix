@@ -41,6 +41,11 @@ $application->add(new CloseApp($jelixScriptConfig));
 $application->add(new OpenApp($jelixScriptConfig));
 $application->add(new FilesRights($jelixScriptConfig));
 
+$application->add(new Acl2\RightsList($jelixScriptConfig));
+$application->add(new Acl2\AddRight($jelixScriptConfig));
+$application->add(new Acl2\RemoveRight($jelixScriptConfig));
+
+
 if(!defined('DECLARE_MYCOMMANDS')) {
     $application->run();
 }
