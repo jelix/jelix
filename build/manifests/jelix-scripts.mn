@@ -4,10 +4,6 @@ cd lib/jelix-scripts
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
-  createaction.cmd.php
-  createclassfromdao.cmd.php
-  createdao.cmd.php
-  createdaocrud.cmd.php
   createlangpackage.cmd.php
   initadmin.cmd.php
   installmodule.cmd.php
@@ -22,6 +18,9 @@ cd lib/jelix-scripts/DevHelper/Command/
   CloseApp.php
   CreateApp.php
   CreateCtrl.php
+  CreateDao.php
+  CreateDaoCrud.php
+  CreateClassFromDao.php
   CreateEntryPoint.php
   CreateForm.php
   CreateModule.php
