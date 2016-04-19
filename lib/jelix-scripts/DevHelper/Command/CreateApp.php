@@ -270,6 +270,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['rp_www']   = Path::shortestPath($appPath, $wwwpath).'/';
         $param['rp_cmd']   = Path::shortestPath($appPath, \jApp::scriptsPath()).'/';
         $param['rp_jelix'] = Path::shortestPath($appPath, JELIX_LIB_PATH).'/';
+        $param['rp_lib']   = Path::shortestPath($appPath, LIB_PATH).'/';
         $param['rp_vendor'] = '';
         foreach (array(LIB_PATH. 'vendor/',   // jelix is installed from a zip/tgz package
                         LIB_PATH . '../vendor/', // jelix is installed from git

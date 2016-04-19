@@ -17,19 +17,19 @@
     "autoload": {
         "psr-0": { },
         "classmap": [ ],
-        "files": [ "../lib/jelix/init.php"  ]
+        "files": [ "%%rp_jelix%%init.php"  ]
     },
     "minimum-stability": "stable",
     "extra" : {
         "jelix": {
             "modules-dir" : [
                 "modules/",
-                "../lib/jelix-modules",
-                "../lib/jelix-admin-modules"
+                "%%rp_lib%%jelix-modules",
+                "%%rp_lib%%jelix-admin-modules"
             ],
             "plugins-dir" : [
                 "plugins/",
-                "../lib/jelix-plugins"
+                "%%rp_lib%%jelix-plugins"
             ]
         }
     }
