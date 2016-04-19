@@ -18,16 +18,16 @@ if (!\jServer::isCLI()) {
     echo "Error: you're not allowed to execute this script outside a command line shell.\n";
     exit(1);
 }
-require(JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
+
 if (!\jApp::isInit()) {
     echo "Error: should run within an application\n";
     exit(1);
 }
 
 \jApp::setEnv('jelix-scripts');
-\JelixScript::checkTempPath();
+\Jelix\DevHelper\JelixScript::checkTempPath();
 
-$jelixScriptConfig = \JelixScript::loadConfig();
+$jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
 $application = new Application();
 $application->add(new InstallApp($jelixScriptConfig));

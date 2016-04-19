@@ -13,6 +13,7 @@ cd lib/jelix-scripts/DevHelper
   AbstractCommandForApp.php
   CommandConfig.php
   CreateAppApplication.php
+  JelixScript.php
 cd lib/jelix-scripts/DevHelper/Command/
   ClearTemp.php
   CloseApp.php
@@ -53,7 +54,6 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2Users
   UserRemoveGroup.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
-  JelixScript.class.php
   scripts.inc.php
 cd lib/jelix-scripts/templates
   project.xml.tpl

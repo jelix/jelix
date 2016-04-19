@@ -80,7 +80,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
     }
 
     protected function prepareSubCommandApp($appName, $appPath) {
-        $this->config = \JelixScript::loadConfig($appName);
+        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
         $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
@@ -119,7 +119,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::setEnv('jelix-scripts');
 
-        \JelixScript::checkTempPath();
+        \Jelix\DevHelper\JelixScript::checkTempPath();
 
         if ($p = $input->getOption('wwwpath')) {
             $wwwpath = Path::shortestPath($appPath , $p).'/';

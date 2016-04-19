@@ -2,10 +2,11 @@
 /**
 * @package    jelix-scripts
 * @author     Laurent Jouanneau
-* @copyright  2011-2015 Laurent Jouanneau
+* @copyright  2011-2016 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
+namespace Jelix\DevHelper;
 
 class JelixScript {
 
@@ -17,7 +18,7 @@ class JelixScript {
      * @return Jelix\DevHelper\CommandConfig
      */
     static function loadConfig($appname='') {
-        $config = new \Jelix\DevHelper\CommandConfig();
+        $config = new CommandConfig();
 
         if ($appname === '')
             $appname = $config->loadFromProject();
@@ -76,16 +77,16 @@ class JelixScript {
     }
 
     static function checkTempPath() {
-        $tempBasePath = jApp::tempBasePath();
+        $tempBasePath = \jApp::tempBasePath();
 
         // we always clean the temp directory. But first, let's check the temp path (see ticket #840)...
 
         if ($tempBasePath == DIRECTORY_SEPARATOR || $tempBasePath == '' || $tempBasePath == '/') {
-            throw new Exception("Error: bad path in jApp::tempBasePath(), it is equals to '".$tempBasePath."' !!\n".
+            throw new \Exception("Error: bad path in jApp::tempBasePath(), it is equals to '".$tempBasePath."' !!\n".
                                 "       Jelix cannot clear the content of the temp directory.\n".
                                 "       Correct the path for the temp directory or create the directory you\n".
                                 "       indicated with jApp in your application.init.php.\n");
         }
-        jFile::removeDir(jApp::tempPath(), false, array('.svn', '.dummy'));
+        \jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy'));
     }
 }

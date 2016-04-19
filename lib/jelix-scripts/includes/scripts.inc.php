@@ -11,7 +11,6 @@
 error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', __DIR__.'/../');
 //require (JELIX_SCRIPTS_PATH.'../jelix/init.php');
-require (JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
 
 if (!jServer::isCLI()) {
     echo "Error: you're not allowed to execute this script outside a command line shell.\n";
