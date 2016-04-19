@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 
 
-class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Comd {
+class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
