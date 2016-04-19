@@ -4,7 +4,6 @@ cd lib/jelix-scripts
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
-  acl2group.cmd.php
   createaction.cmd.php
   createclassfromdao.cmd.php
   createdao.cmd.php
@@ -49,6 +48,10 @@ cd lib/jelix-scripts/DevHelper/Command/Acl2Groups
   GroupDefault.php
 cd lib/jelix-scripts/DevHelper/Command/Acl2Users
   UsersList.php
+  UserRegister.php
+  UserUnregister.php
+  UserAddGroup.php
+  UserRemoveGroup.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php
