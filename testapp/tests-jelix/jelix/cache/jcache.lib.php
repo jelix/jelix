@@ -39,29 +39,22 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
     }
 
     public function testSet (){
+        $this->assertTrue(jCache::set('hello',"lorem ipsum",null, $this->profile));
+        $this->assertTrue(jCache::set('hello/foo/bar',"lorem ipsum1",null, $this->profile));
+        $this->assertTrue(jCache::set('/hello/foo/bar',"lorem ipsum2",null, $this->profile));
+        $this->assertTrue(jCache::set('hello:foo/bar-baz.yo',"lorem ipsum3",null, $this->profile));
+        $this->assertEquals("lorem ipsum", jCache::get('hello', $this->profile));
+        $this->assertEquals("lorem ipsum1", jCache::get('hello/foo/bar', $this->profile));
+        $this->assertEquals("lorem ipsum2", jCache::get('/hello/foo/bar', $this->profile));
+        $this->assertEquals("lorem ipsum3", jCache::get('hello:foo/bar-baz.yo', $this->profile));
+    }
 
-        $myData=(object)array(
-            'id'=>1,
-            'content'=>'Lorem ipsum dolor sit amét, conséctetuer adipiscing elit. Donec at odio vitae libero tempus convallis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum purus mauris, dapibus eu, sagittis quis, sagittis quis, mi. Morbi fringilla massa quis velit. Curabitur metus massa, semper mollis, molestie vel, adipiscing nec, massa. Phasellus vitae felis sed lectus dapibus facilisis. In ultrices sagittis ipsum. In at est. Integer iaculis turpis vel magna. Cras eu est. Integer porttitor ligula a tellus. Curabitur accumsan ipsum a velit. Sed laoreet lectus quis leo. Nulla pellentesque molestie ante. Quisque vestibulum est id justo. Ut pellentesque ante in neque.'
-        );
-        $myObj=(object)array('property1'=>'string','property2'=>'integer');
-        
+    public function testSetDisabledProfile (){
+        $this->assertFalse(jCache::set('defaultProfileDisabledKey',"lorem ipsum"));
+    }
 
-        $this->assertFalse(jCache::set('defaultProfileDisabledKey',$myData));
-
-        $this->assertTrue(jCache::set('noExpireKey',$myData,0,$this->profile));
-        $this->assertTrue(jCache::get('noExpireKey',$this->profile)==$myData);
-
-        $this->assertFalse(jCache::set('expiredKey','data expired',strtotime("-1 day"),$this->profile));
-        $this->assertFalse(jCache::get('expiredKey',$this->profile));
-
-
-        $this->assertTrue(jCache::set('ttlInDateKey',$myObj,'2020-12-31 00:00:00',$this->profile));
-        $this->assertTrue(jCache::get('ttlInDateKey',$this->profile)==$myObj);
-
-        $this->assertTrue(jCache::set('ttlInSecondesKey',$myObj,30,$this->profile));
-        $this->assertTrue(jCache::get('ttlInSecondesKey',$this->profile)==$myObj);
-
+    public function testSetInvalidKey (){
+        $this->assertFalse(jCache::set('defaultProfileDisabledKey',"lorem ipsum"));
         try{
             jCache::set('invalid Key','data for an invalid key',0,$this->profile);
             $this->fail();
@@ -72,6 +65,27 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         $this->assertTrue(is_resource($tmpFile));
         $this->assertFalse(jCache::set('unableToSerializeDataKey',$tmpFile,0,$this->profile));
         fclose($tmpFile);
+    }
+    
+    public function testSetWithTtl (){
+
+        $myData=(object)array(
+            'id'=>1,
+            'content'=>'Lorem ipsum dolor sit amét, conséctetuer adipiscing elit. Donec at odio vitae libero tempus convallis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum purus mauris, dapibus eu, sagittis quis, sagittis quis, mi. Morbi fringilla massa quis velit. Curabitur metus massa, semper mollis, molestie vel, adipiscing nec, massa. Phasellus vitae felis sed lectus dapibus facilisis. In ultrices sagittis ipsum. In at est. Integer iaculis turpis vel magna. Cras eu est. Integer porttitor ligula a tellus. Curabitur accumsan ipsum a velit. Sed laoreet lectus quis leo. Nulla pellentesque molestie ante. Quisque vestibulum est id justo. Ut pellentesque ante in neque.'
+        );
+        $myObj=(object)array('property1'=>'string','property2'=>'integer');
+
+        $this->assertTrue(jCache::set('noExpireKey',$myData,0,$this->profile));
+        $this->assertTrue(jCache::get('noExpireKey',$this->profile)==$myData);
+
+        $this->assertFalse(jCache::set('expiredKey','data expired',strtotime("-1 day"),$this->profile));
+        $this->assertFalse(jCache::get('expiredKey',$this->profile));
+
+        $this->assertTrue(jCache::set('ttlInDateKey',$myObj,'2020-12-31 00:00:00',$this->profile));
+        $this->assertTrue(jCache::get('ttlInDateKey',$this->profile)==$myObj);
+
+        $this->assertTrue(jCache::set('ttlInSecondesKey',$myObj,30,$this->profile));
+        $this->assertTrue(jCache::get('ttlInSecondesKey',$this->profile)==$myObj);
     }
 
     public function testGet (){
