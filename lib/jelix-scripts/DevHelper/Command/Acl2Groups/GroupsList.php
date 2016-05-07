@@ -33,7 +33,7 @@ class GroupsList  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
         $table->setHeaders(array('Id', 'label', 'default'));

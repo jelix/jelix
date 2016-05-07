@@ -52,13 +52,12 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $module = $input->getArgument('module');
         $formName = $input->getArgument('form');
         $daoName = $input->getArgument('dao');
 
-        $this->loadAppConfig();
         require_once(JELIX_LIB_PATH.'dao/jDaoParser.class.php');
 
         $path = $this->getModulePath($module);
@@ -97,13 +96,13 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp {
             return;
         }
 
-        \jApp::config()->startModule = $this->_parameters['module'];
-        \jApp::pushCurrentModule($this->_parameters['module']);
+        \jApp::config()->startModule = $module;
+        \jApp::pushCurrentModule($module);
 
         $tools = \jDb::getConnection()->tools();
 
         // we're going to parse the dao
-        $selector = new \jSelectorDao($dao,'');
+        $selector = new \jSelectorDao($daoName,'');
 
         $doc = new \DOMDocument();
         $daoPath = $selector->getPath();

@@ -41,7 +41,7 @@ class UserRemoveGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
         $login = $input->getArgument('login');
@@ -53,7 +53,7 @@ class UserRemoveGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
             ." WHERE login=".$cnx->quote($login)." AND id_aclgrp=$groupid";
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("User '".$login."' is removed from group '".$group."'");
         }
     }

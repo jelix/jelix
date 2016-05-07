@@ -28,9 +28,8 @@ class RightsList  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
-
         $cnx = \jDb::getConnection('jacl2_profile');
 
         $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
@@ -41,7 +40,7 @@ class RightsList  extends \Jelix\DevHelper\AbstractCommandForApp {
         $rs = $cnx->query($sql);
 
         $table = new Table($output);
-        $table->setHeaders(array('Group', 'Subject', 'Resource'));
+        $table->setHeaders(array('Group id', 'Group name', 'Subject', 'Resource'));
 
         foreach($rs as $rec){
             $table->addRow(array(
@@ -61,7 +60,8 @@ class RightsList  extends \Jelix\DevHelper\AbstractCommandForApp {
         $rs = $cnx->query($sql);
         foreach($rs as $rec){
             $table->addRow(array(
-                                $rec->id_aclgrp.' ('.$rec->grp.')',
+                                $rec->id_aclgrp,
+                                $rec->grp,
                                 $rec->id_aclsbj,
                                 $rec->id_aclres
                                 ));

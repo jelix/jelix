@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GroupName  extends \Jelix\DevHelper\AbstractCommandForApp {
+class GroupName  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -41,7 +41,7 @@ class GroupName  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
         $name = $input->getArgument('name');
@@ -49,10 +49,10 @@ class GroupName  extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $cnx = \jDb::getConnection('jacl2_profile');
         $sql="UPDATE ".$cnx->prefixTable('jacl2_group')
-            ." SET name=".$cnx->quote($name)."  WHERE id_aclgrp=".$id;
+            ." SET name=".$cnx->quote($name)."  WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is renamed to $name");
         }
     }

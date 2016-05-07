@@ -48,13 +48,10 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
                'The name of the configuration file to copy as new configuration file'
             )
         ;
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-
         // retrieve the type of entry point we want to create
         $type = $input->getOption('type');
         if(!in_array($type, array('classic','jsonrpc','xmlrpc','soap','cmdline'))) {
@@ -166,6 +163,10 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         if ($this->verbose()) {
             $output->writeln("All modules have been initialized for the new entry point.");
         }
+    }
+
+    protected function _execute(InputInterface $input, OutputInterface $output)
+    {
     }
 
     protected function updateProjectXml ($fileName, $configFileName, $type) {

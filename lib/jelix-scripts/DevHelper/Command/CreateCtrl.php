@@ -21,7 +21,7 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
     protected function configure()
     {
         $this
-            ->setName('module:createctrl')
+            ->setName('module:create-ctrl')
             ->setDescription('Create a new controller, either a jController or jControllerCmdLine')
             ->setHelp('')
             ->addArgument(
@@ -56,9 +56,8 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
         $module = $input->getArgument('module');
         $controller = $input->getArgument('controller');
 
@@ -94,4 +93,3 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
        $this->createFile($agfilename, $tplname, $param, 'Controller');
     }
 }
-

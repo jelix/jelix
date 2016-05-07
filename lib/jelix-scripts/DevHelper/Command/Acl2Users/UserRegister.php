@@ -36,7 +36,7 @@ class UserRegister  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $login = $input->getArgument('login');
 
@@ -62,7 +62,7 @@ class UserRegister  extends \Jelix\DevHelper\AbstractCommandForApp {
             ." (login, id_aclgrp) VALUES(".$loginq.", ".$groupid.")";
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("user $login is added into rights system and has a private group $groupid");
         }
     }

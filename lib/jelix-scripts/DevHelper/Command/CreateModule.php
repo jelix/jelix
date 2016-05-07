@@ -87,11 +87,8 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-        $this->loadAppConfig();
-
         $module = $input->getArgument('module');
         $initialVersion = $input->getOption('ver');
         if (!$initialVersion) {
@@ -245,7 +242,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             if ($output->isVerbose()) {
                 $arguments['-v'] = true;
             }
-            $this->executeSubCommand('module:createctrl', $arguments, $output);
+            $this->executeSubCommand('module:create-ctrl', $arguments, $output);
         }
 
         if ($input->getOption('admin')) {

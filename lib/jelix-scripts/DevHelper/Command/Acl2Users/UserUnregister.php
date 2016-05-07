@@ -43,7 +43,7 @@ class UserUnregister  extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $login = $input->getArgument('login');
         if (!$input->getOption('confirm')) {
@@ -65,7 +65,7 @@ class UserUnregister  extends \Jelix\DevHelper\AbstractCommandForApp {
             ." WHERE login=".$cnx->quote($login);
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("User '".$login."' is unregistered from rights system.");
         }
     }

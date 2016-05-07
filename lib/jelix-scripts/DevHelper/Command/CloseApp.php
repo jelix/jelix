@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CloseApp  extends \Jelix\DevHelper\AbstractCommandForApp {
+class CloseApp  extends \Jelix\DevHelper\AbstractCommand {
 
     protected function configure()
     {
@@ -27,14 +27,13 @@ class CloseApp  extends \Jelix\DevHelper\AbstractCommandForApp {
                 'A message for user, indicating the reason.'
             )
         ;
-        parent::configure();
     }
 
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         \jAppManager::close($input->getArgument('message'));
-        if ($this->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Application is closed.");
         }
     }

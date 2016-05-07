@@ -28,10 +28,8 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         \jAppManager::close();

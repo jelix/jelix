@@ -62,9 +62,7 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) {
-
-       $this->loadAppConfig();
+    protected function _execute(InputInterface $input, OutputInterface $output) {
 
        $module = $input->getArgument('module');
        $daoname = $input->getArgument('daoname');

@@ -47,7 +47,7 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $subject = $input->getArgument('subject');
         $labelkey = $input->getArgument('labelkey');
@@ -74,7 +74,7 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
         $sql .= ')';
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Rights: subject ".$subject." is created");
         }
 
@@ -89,7 +89,7 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
                 $localestring = file_get_contents($file).$localestring;
             }
             file_put_contents($file, $localestring);
-            if ($output->verbose()) {
+            if ($output->isVerbose()) {
                 $output->writeln("locale string ".$m[3]." is created into ".$file);
             }
         }

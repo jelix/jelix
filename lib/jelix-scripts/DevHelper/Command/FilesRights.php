@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FilesRights extends \Jelix\DevHelper\AbstractCommandForApp {
+class FilesRights extends \Jelix\DevHelper\AbstractCommand {
 
     protected function configure()
     {
@@ -22,7 +22,6 @@ class FilesRights extends \Jelix\DevHelper\AbstractCommandForApp {
             ->setDescription('Set rights and owners on files and directories of the application, according to the configuration in your jelix-scripts.ini.')
             ->setHelp('It could need to launch this command as \'root\' user.')
         ;
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

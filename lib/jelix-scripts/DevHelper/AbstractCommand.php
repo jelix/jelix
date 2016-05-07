@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AbstractCommand extends Command
+abstract class AbstractCommand extends Command
 {
     /**
      * @var Jelix\DevHelper\CommandConfig
@@ -24,6 +24,12 @@ class AbstractCommand extends Command
 
     /** @var OutputInterface */
     protected $output = null;
+
+    public function __construct(CommandConfig $config)
+    {
+        $this->config = $config;
+        parent::__construct();
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -81,7 +87,7 @@ class AbstractCommand extends Command
         $tplparam = array_merge($defaultparams, $tplparam);
 
         if (file_exists($filename)) {
-            $this->output->writeln('<warning>Warning: '.$fileType.' '.$displayedFilename.' already exists.</warning>');
+            $this->output->writeln('<error>Warning: '.$fileType.' '.$displayedFilename.' already exists.</error>');
             return false;
         }
         $tplpath = JELIX_SCRIPTS_PATH.'templates/'.$template;

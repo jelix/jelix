@@ -47,7 +47,7 @@ class GroupCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
         $name = $input->getArgument('name');
@@ -60,7 +60,7 @@ class GroupCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
         try {
             $sql = "INSERT into ".$cnx->prefixTable('jacl2_group')
                 ." (id_aclgrp, name, grouptype, ownerlogin) VALUES (";
-            $sql .= $cnx->quote($id).',';
+            $sql .= $cnx->quote($group).',';
             $sql .= $cnx->quote($name).',';
             if($isDefault) {
                 $sql.='1, NULL)';
@@ -74,7 +74,7 @@ class GroupCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
             throw new \Exception("this group already exists");
         }
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is created");
         }
     }

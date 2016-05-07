@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class GroupDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
+class GroupDelete  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -43,7 +43,7 @@ class GroupDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $id = $this->_getGrpId($input, true);
         if (!$input->getOption('confirm')) {
@@ -57,16 +57,16 @@ class GroupDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $cnx = \jDb::getConnection('jacl2_profile');
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclgrp=".$id;
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')." WHERE id_aclgrp=".$id;
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')." WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_group')." WHERE id_aclgrp=".$id;
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_group')." WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Rights: group '".$id."' and all corresponding rights have been deleted.");
         }
     }

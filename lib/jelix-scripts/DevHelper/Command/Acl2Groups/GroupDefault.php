@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GroupDefault  extends \Jelix\DevHelper\AbstractCommandForApp {
+class GroupDefault  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -42,7 +42,7 @@ class GroupDefault  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
         $def = ($input->getOption('no-default')?0:1);
@@ -51,9 +51,9 @@ class GroupDefault  extends \Jelix\DevHelper\AbstractCommandForApp {
         $cnx = \jDb::getConnection('jacl2_profile');
 
         $sql="UPDATE ".$cnx->prefixTable('jacl2_group')
-            ." SET grouptype=$def  WHERE id_aclgrp=".$id;
+            ." SET grouptype=$def  WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is ".($def?' now a default group':' no more a default group'));
         }
     }

@@ -39,7 +39,7 @@ class SubjectGroupDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
 
@@ -69,7 +69,7 @@ class SubjectGroupDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
         $sql.=$cnx->quote($group);
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Rights: group of subjects '".$group."' is deleted.");
         }
  

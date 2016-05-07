@@ -28,7 +28,7 @@ class SubjectGroupList  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
         $table->setHeaders(array('id', 'label key'));

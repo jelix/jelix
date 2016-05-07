@@ -42,8 +42,9 @@ class AddRight  extends AbstractAcl2Cmd {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
+
         $cnx = \jDb::getConnection('jacl2_profile');
 
         $group = $cnx->quote($this->_getGrpId($input));
@@ -73,7 +74,7 @@ class AddRight  extends AbstractAcl2Cmd {
         $sql.=$resource.')';
 
         $cnx->exec($sql);
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Right is added on subject $subject with group $group and resource $resource");
         }
     }

@@ -30,7 +30,7 @@ class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
             ->setHelp('')
             ->addArgument(
                 'group',
-                InputArgument::REQUIRED,
+                InputArgument::OPTIONAL,
                 'the group id filter'
             )
         ;
@@ -38,23 +38,25 @@ class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
+        $cnx = \jDb::getConnection('jacl2_profile');
         $table = new Table($output);
         $groupFiler = false;
 
         if ($input->getArgument('group')) {
             $id = $this->_getGrpId($input, true);
             $sql = "SELECT login FROM ".$cnx->prefixTable('jacl2_user_group')
-                    ." WHERE id_aclgrp =".$id;
+                    ." WHERE id_aclgrp =".$cnx->quote($id);
             $table->setHeaders(array('Login'));
             $groupFiler = true;
         }
         else {
-            $sql="SELECT login, u.id_aclgrp, name FROM "
-                .$cnx->prefixTable('jacl2_user_group')." u, "
-                .$cnx->prefixTable('jacl2_group')." g
-                WHERE g.grouptype <2 AND u.id_aclgrp = g.id_aclgrp ORDER BY login";
+            $sql="SELECT login, g.id_aclgrp, name FROM "
+                .$cnx->prefixTable('jacl2_user_group')." AS u "
+                ." LEFT JOIN ".$cnx->prefixTable('jacl2_group')." AS g
+                ON (u.id_aclgrp = g.id_aclgrp AND g.grouptype < 2)
+                ORDER BY login";
             $table->setHeaders(array('Login', 'group', 'group id'));
         }
 

@@ -14,7 +14,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class AbstractCommandForApp extends AbstractCommand
+abstract class AbstractCommandForApp extends AbstractCommand
 {
     /**
      * indicate if the command apply for any entrypoints.
@@ -34,19 +34,12 @@ class AbstractCommandForApp extends AbstractCommand
      */
     protected $entryPointId = 'index';
 
-
-    public function __construct(CommandConfig $config)
-    {
-        $this->config = $config;
-        parent::__construct();
-    }
-
     protected function configure()
     {
         $this
             ->addOption(
                'entry-point',
-               'ep',
+               'e',
                InputOption::VALUE_REQUIRED,
                'indicate the entry point on which this command should be applied'
             )
@@ -58,8 +51,12 @@ class AbstractCommandForApp extends AbstractCommand
     {
         parent::execute($input, $output);
         $this->readEPOption($input);
+        $this->loadAppConfig();
+        return $this->_execute($input, $output);
     }
 
+    abstract protected function _execute(InputInterface $input, OutputInterface $output);
+    
     protected function readEPOption(InputInterface $input)
     {
         // check entry point
@@ -244,7 +241,7 @@ class AbstractCommandForApp extends AbstractCommand
         if ($path == '') {
             throw new \Exception('The modules dir '.$repository.' is not a valid path');
         }
-        $path = \jFile::shortestPath(jApp::appPath(), $path);
+        $path = \jFile::shortestPath(\jApp::appPath(), $path);
 
         $found = false;
         foreach ($allDirs as $dir) {

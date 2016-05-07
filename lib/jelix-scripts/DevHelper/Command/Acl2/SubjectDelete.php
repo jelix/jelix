@@ -39,7 +39,7 @@ class SubjectDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $subject = $input->getArgument('subject');
         $cnx = \jDb::getConnection('jacl2_profile');
@@ -68,7 +68,7 @@ class SubjectDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
         $sql.=$cnx->quote($subject);
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Rights: subject ".$subject." is deleted");
         }
     }

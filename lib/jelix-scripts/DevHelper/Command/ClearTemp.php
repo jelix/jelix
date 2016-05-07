@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ClearTemp extends \Jelix\DevHelper\AbstractCommandForApp {
+class ClearTemp extends \Jelix\DevHelper\AbstractCommand {
 
     protected function configure()
     {
@@ -24,7 +24,6 @@ class ClearTemp extends \Jelix\DevHelper\AbstractCommandForApp {
             ->setDescription('Delete cache files')
             ->setHelp('')
         ;
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -37,10 +36,10 @@ class ClearTemp extends \Jelix\DevHelper\AbstractCommandForApp {
                 $output->writeln("       Correct the path in your application.init.php or create the corresponding directory");
                 return 1;
             }
-            if (!jFile::removeDir($tempPath, false, array('.svn', '.git', '.dummy'))) {
+            if (!\jFile::removeDir($tempPath, false, array('.svn', '.git', '.dummy'))) {
                  $output->writeln("Some temp files were not removed");
             }
-            else if ($this->verbose()) {
+            else if ($output->isVerbose()) {
                 $output->writeln("All temp files have been removed");
             }
         }

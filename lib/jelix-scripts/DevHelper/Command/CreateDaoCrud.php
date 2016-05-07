@@ -77,9 +77,8 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        $this->loadAppConfig();
         $module = $input->getArgument('module');
         $path = $this->getModulePath($module);
 
@@ -103,7 +102,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
 
         // create the dao file
         $options = array('module'=>$module,
-                         'name'=>$table,
+                         'daoname'=>$table,
                          'table'=>$table);
         $profile = '';
         if ($input->getOption('profile')) {
@@ -117,7 +116,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
         $options = array('module'=>$module,
                          'form'=>$table,
                          'dao'=>$table);
-         if ($this->getOption('createlocales')) {
+         if ($input->getOption('createlocales')) {
             $options['--createlocales'] = true;
         }
         $options = array_merge($arguments, $options);
@@ -222,7 +221,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
 
             if (!file_exists($path.'urls.xml')) {
                 $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
-                if ($this->verbose()) {
+                if ($output->isVerbose()) {
                     $output->writeln("Notice: you should link the urls.xml of the module ".$module."', into the urls.xml in var/config.");
                 }
             }
@@ -294,7 +293,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
             $url->addAttribute('action', $ctrlname.':delete');
 
             $result = $xml->asXML($path.'urls.xml');
-            if ($this->verbose() && $result) {
+            if ($output->isVerbose() && $result) {
                 $output->writeln("urls.xml in module '".$module."' has been updated.");
             }
             else if (!$result) {

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class OpenApp extends \Jelix\DevHelper\AbstractCommandForApp {
+class OpenApp extends \Jelix\DevHelper\AbstractCommand {
 
     protected function configure()
     {
@@ -22,13 +22,12 @@ class OpenApp extends \Jelix\DevHelper\AbstractCommandForApp {
             ->setDescription('Open the application. It will be accessible from the web.')
             ->setHelp('')
         ;
-        parent::configure();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         \jAppManager::open();
-        if ($this->verbose()) {
+        if ($output->isVerbose()) {
             $output->writeln("Application is opened.");
         }
     }

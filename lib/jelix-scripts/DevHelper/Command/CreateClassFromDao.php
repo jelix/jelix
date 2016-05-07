@@ -41,7 +41,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $module = $input->getArgument('module');
         $daoname = $input->getArgument('daoname');
@@ -95,7 +95,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp {
         $this->createFile($targetClassPath,
                           'module/classfromdao.class.tpl',
                           array('properties'=>$classContent,
-                                'name'=>$this->_parameters['classname']),
+                                'name'=>$classname),
                           "Class");
     }
 }

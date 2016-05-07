@@ -20,7 +20,7 @@ class RemoveRight  extends AbstractAcl2Cmd {
     protected function configure()
     {
         $this
-            ->setName('acl2:rights-list')
+            ->setName('acl2:remove')
             ->setDescription('Remove a right')
             ->setHelp('')
             ->addArgument(
@@ -56,7 +56,7 @@ class RemoveRight  extends AbstractAcl2Cmd {
     }
 
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function _execute(InputInterface $input, OutputInterface $output)
     {
         $cnx = \jDb::getConnection('jacl2_profile');
 
@@ -94,7 +94,7 @@ class RemoveRight  extends AbstractAcl2Cmd {
         }
         $cnx->exec($sql);
 
-        if ($output->verbose()) {
+        if ($output->isVerbose()) {
             if ($allResource) {
                 $output->writeln("Rights on subject $subject with group $group have been deleted");
             } else {
