@@ -25,7 +25,7 @@
         "jelix/for-classic-package" : "@dev",
         "phpunit/phpunit": "4.3.*",
         "jelix/minify-module": "1.7.*",
-        "jelix/php-redis-plugin": "1.7.1",
+        "jelix/php-redis-plugin": "1.7.*",
         "jelix/sitemap-module": "1.7.*"
     },
     "autoload": {

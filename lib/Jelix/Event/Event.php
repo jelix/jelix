@@ -182,9 +182,11 @@ class Event {
     * @return array of objects
     */
     protected static function loadListenersFor ($eventName) {
+
         if (!self::$listenersConfig) {
-            self::$compilerData[3] = App::config()->urlengine['urlScriptId'].'.'.self::$compilerData[3];
-            self::$listenersConfig = Includer::incAll(self::$compilerData);
+            $compilerData = self::$compilerData;
+            $compilerData[3] = App::config()->urlengine['urlScriptId'].'.'.self::$compilerData[3];
+            self::$listenersConfig = Includer::incAll($compilerData, true);
         }
 
         $inf = & self::$listenersConfig;

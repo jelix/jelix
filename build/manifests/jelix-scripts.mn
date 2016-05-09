@@ -4,37 +4,55 @@ cd lib/jelix-scripts
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
-  acl2group.cmd.php
-  acl2right.cmd.php
-  aclgroup.cmd.php
-  aclright.cmd.php
-  aclvalue.cmd.php
-  cleartemp.cmd.php
-  closeapp.cmd.php
-  createaction.cmd.php
-  createctrl.cmd.php
-  createdao.cmd.php
-  createclassfromdao.cmd.php
-  createdaocrud.cmd.php
-  createentrypoint.cmd.php
-  createform.cmd.php
   createlangpackage.cmd.php
-  createmodule.cmd.php
-  createzone.cmd.php
-  help.cmd.php
   initadmin.cmd.php
-  installapp.cmd.php
   installmodule.cmd.php
-  openapp.cmd.php
-  resetfilesrights.cmd.php
-cd lib/jelix-scripts/commands-single/
-  createapp.cmd.php
 cd lib/jelix-scripts/DevHelper
+  AbstractCommand.php
+  AbstractCommandForApp.php
   CommandConfig.php
+  CreateAppApplication.php
+  JelixScript.php
+cd lib/jelix-scripts/DevHelper/Command/
+  ClearTemp.php
+  CloseApp.php
+  CreateApp.php
+  CreateCtrl.php
+  CreateDao.php
+  CreateDaoCrud.php
+  CreateClassFromDao.php
+  CreateEntryPoint.php
+  CreateForm.php
+  CreateModule.php
+  CreateZone.php
+  FilesRights.php
+  InstallApp.php
+  OpenApp.php
+cd lib/jelix-scripts/DevHelper/Command/Acl2
+  AbstractAcl2Cmd.php
+  AddRight.php
+  RemoveRight.php
+  RightsList.php
+  SubjectList.php
+  SubjectCreate.php
+  SubjectDelete.php
+  SubjectGroupList.php
+  SubjectGroupCreate.php
+  SubjectGroupDelete.php
+cd lib/jelix-scripts/DevHelper/Command/Acl2Groups
+  GroupsList.php
+  GroupCreate.php
+  GroupDelete.php
+  GroupName.php
+  GroupDefault.php
+cd lib/jelix-scripts/DevHelper/Command/Acl2Users
+  UsersList.php
+  UserRegister.php
+  UserUnregister.php
+  UserAddGroup.php
+  UserRemoveGroup.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
-  JelixScript.class.php
-  JelixScriptCommand.class.php
   scripts.inc.php
 cd lib/jelix-scripts/templates
   jelix-app.json.tpl

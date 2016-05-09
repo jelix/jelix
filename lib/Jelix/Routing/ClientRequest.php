@@ -391,6 +391,9 @@ abstract class ClientRequest {
       $input = file_get_contents("php://input");
       $values = array();
 
+      if (!isset($_SERVER["CONTENT_TYPE"])) {
+        return $input;
+      }
       if (strpos($_SERVER["CONTENT_TYPE"], "application/x-www-form-urlencoded") === 0) {
          parse_str($input, $values);
          return $values;

@@ -1,6 +1,9 @@
 cd .
   README.md
 
+cd bin
+  createapp.php
+
 cd lib
   .htaccess
 * jelix_check_server.php

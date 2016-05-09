@@ -90,12 +90,10 @@ class Includer {
     *    );
     *  @return mixed arbitrary value from the cached
     */
-    public static function incAll($aType){
-        $returnedValue = null;
-
+    public static function incAll($aType, $force = false){
         $cachefile = App::tempPath('compiled/'.$aType[3]);
-        if (isset(self::$_includedFiles[$cachefile])) {
-            return $returnedValue ;
+        if(isset(self::$_includedFiles[$cachefile]) && !$force){
+            return;
         }
 
         $config = App::config();

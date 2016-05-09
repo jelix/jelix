@@ -84,11 +84,6 @@ class CommandConfig {
     public $chownGroup = '';
 
     /**
-     * @var boolean true = help messages in console are displayed with utf-8 charset
-     */
-    public $displayHelpUtf8 = true;
-
-    /**
      * @var string the lang code for help messages
      */
     public $helpLang = 'en';

@@ -79,6 +79,12 @@
       <item value="assiette">a plate</item>
   </checkboxes>
 
+
+  <checkboxes ref="objects_datasource" required="true">
+      <label>List using user datasource </label>
+  </checkboxes>
+
+
   <!--<input ref="datenaissance" type="localedate">
       <label>Your birthday</label>
       <help>date format is dd/mm/yyyy</help>
@@ -174,9 +180,7 @@
          <label>linked lists</label>
          <menulist ref="listdep2">
             <label>Departments list</label>
-            <item value="finistere">Finistère</item>
-            <item value="touraine">Touraine</item>
-            <item value="polynesia">Polynésie</item>
+            <datasource class="testapp~geo/regions" />
         </menulist>
         <menulist ref="listtown2">
             <label>Towns list, updated when department is selected</label>

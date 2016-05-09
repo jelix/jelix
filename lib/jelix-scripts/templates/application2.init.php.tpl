@@ -9,7 +9,6 @@
 */
 $vendorDir = %%php_rp_vendor%%;
 require($vendorDir.'autoload.php');
-require($vendorDir.'jelix_app_path.php');
 
 \Jelix\Core\App::initPaths(
     __DIR__.'/',
@@ -21,6 +20,8 @@ require($vendorDir.'jelix_app_path.php');
 );
 \Jelix\Core\App::setTempBasePath(%%php_rp_temp%%);
 
+require($vendorDir.'jelix_app_path.php');
+
 // if you use composer, you can declares these path in the composer.json
 // file instead of declaring them here...
 \Jelix\Core\App::declareModulesDir(array(
@@ -29,3 +30,4 @@ require($vendorDir.'jelix_app_path.php');
 \Jelix\Core\App::declarePluginsDir(array(
                         __DIR__.'/plugins'
                     ));
+

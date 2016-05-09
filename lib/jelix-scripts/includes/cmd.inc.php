@@ -3,10 +3,13 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2011 Laurent Jouanneau
+* @copyright   2005-2016 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+namespace Jelix\DevHelper\Command;
+use Symfony\Component\Console\Application;
+
 
 error_reporting(E_ALL);
 define ('JELIX_SCRIPTS_PATH', __DIR__.'/../');
@@ -16,49 +19,60 @@ if(!class_exists('jCoordinator', false)) { // for old application.init.php which
     exit(1);
 }
 
-if (!jServer::isCLI()) {
+if (!\jServer::isCLI()) {
     echo "Error: you're not allowed to execute this script outside a command line shell.\n";
     exit(1);
 }
-
-// ------------- retrieve the name of the jelix command
-
-if ($_SERVER['argc'] < 2) {
-    echo "Error: command is missing. See '".$_SERVER['argv'][0]." help'.\n";
-    exit(1);
-}
-
-$argv = $_SERVER['argv'];
-$scriptName = array_shift($argv); // shift the script name
-$commandName = array_shift($argv); // get the command name
-
-// ------------ load the config and retrieve the command object
-
-require(JELIX_SCRIPTS_PATH.'includes/JelixScript.class.php');
-
-set_error_handler('JelixScript::errorHandler');
-set_exception_handler('JelixScript::exceptionHandler');
-
-$config = JelixScript::loadConfig();
-
-$command = JelixScript::getCommand($commandName, $config);
 
 if (!\Jelix\Core\App::isInit()) {
     echo "Error: should run within an application\n";
     exit(1);
 }
-if ($command->applicationRequirement == JelixScriptCommand::APP_MUST_NOT_EXIST) {
-    echo "Error: This command doesn't apply on an existing application\n";
-    exit(1);
-}
+
 
 \Jelix\Core\App::setEnv('jelix-scripts');
+\Jelix\DevHelper\JelixScript::checkTempPath();
 
-JelixScript::checkTempPath();
+$jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
-// --------- launch the command now
+$application = new Application();
+$application->add(new InstallApp($jelixScriptConfig));
+$application->add(new CreateCtrl($jelixScriptConfig));
+$application->add(new CreateDao($jelixScriptConfig));
+$application->add(new CreateDaoCrud($jelixScriptConfig));
+$application->add(new CreateClassFromDao($jelixScriptConfig));
+$application->add(new CreateModule($jelixScriptConfig));
+$application->add(new CreateEntryPoint($jelixScriptConfig));
+$application->add(new CreateForm($jelixScriptConfig));
+$application->add(new CreateZone($jelixScriptConfig));
+$application->add(new ClearTemp($jelixScriptConfig));
+$application->add(new CloseApp($jelixScriptConfig));
+$application->add(new OpenApp($jelixScriptConfig));
+$application->add(new FilesRights($jelixScriptConfig));
 
-$command->init($argv);
-$command->run();
+$application->add(new Acl2\RightsList($jelixScriptConfig));
+$application->add(new Acl2\AddRight($jelixScriptConfig));
+$application->add(new Acl2\RemoveRight($jelixScriptConfig));
+$application->add(new Acl2\SubjectList($jelixScriptConfig));
+$application->add(new Acl2\SubjectCreate($jelixScriptConfig));
+$application->add(new Acl2\SubjectDelete($jelixScriptConfig));
+$application->add(new Acl2\SubjectGroupList($jelixScriptConfig));
+$application->add(new Acl2\SubjectGroupCreate($jelixScriptConfig));
+$application->add(new Acl2\SubjectGroupDelete($jelixScriptConfig));
 
-exit(0);
+$application->add(new Acl2Groups\GroupsList($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupCreate($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupDelete($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupName($jelixScriptConfig));
+$application->add(new Acl2Groups\GroupDefault($jelixScriptConfig));
+
+$application->add(new Acl2Users\UsersList($jelixScriptConfig));
+$application->add(new Acl2Users\UserRegister($jelixScriptConfig));
+$application->add(new Acl2Users\UserUnregister($jelixScriptConfig));
+$application->add(new Acl2Users\UserAddGroup($jelixScriptConfig));
+$application->add(new Acl2Users\UserRemoveGroup($jelixScriptConfig));
+
+if(!defined('DECLARE_MYCOMMANDS')) {
+    $application->run();
+}
+

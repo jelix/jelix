@@ -72,6 +72,8 @@ cd testapp/modules/testapp
 *  module.xml
    urls.xml
    urls2.xml
+cd testapp/modules/testapp/classes/geo
+   regions.class.php
 cd testapp/modules/testapp/locales/en_US
   parameter.ISO-8859-1.properties
 cd testapp/modules/testapp/locales/fr_FR
@@ -295,6 +297,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_dbTest.php
   jcache_fileTest.php
   jcache_memcacheTest.php
+  jcache_redisTest.php
   httpcacheTest.php
   jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/

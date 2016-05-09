@@ -501,14 +501,15 @@ class Compiler {
                     throw new Exception('Error in main configuration on basePath -- basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
                 }
             }
-
             $urlconf['basePath'] = $basepath;
 
-            if($urlconf['jelixWWWPath'][0] != '/')
+            if ($urlconf['jelixWWWPath'][0] != '/') {
                 $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
-            if($urlconf['jqueryPath'][0] != '/')
+            }
+            if ($urlconf['jqueryPath'][0] != '/') {
                 $urlconf['jqueryPath'] = $basepath.$urlconf['jqueryPath'];
-            $snp = substr($urlconf['urlScript'],strlen($localBasePath));
+            }
+            $snp = substr($urlconf['urlScript'], strlen($localBasePath));
 
             if ($localBasePath == '/') {
                 $urlconf['documentRoot'] = App::wwwPath();
@@ -530,6 +531,7 @@ class Compiler {
         if ($pos !== false) {
             $snp = substr($snp,0,$pos);
         }
+
         $urlconf['urlScriptId'] = $snp;
         $urlconf['urlScriptIdenc'] = rawurlencode($snp);
     }

@@ -37,9 +37,6 @@
     <testsuite name="jPref ">
       <directory>jelix/prefs/</directory>
     </testsuite>
-    <testsuite name="Jelix Scripts">
-      <directory>jelix-scripts/</directory>
-    </testsuite>
     <testsuite name="Jelix tpl">
       <directory>jelix/tpl/</directory>
     </testsuite>
