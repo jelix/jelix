@@ -41,6 +41,9 @@ class pgsqlDbConnection extends jDbConnection {
         {
             $this->setAutoCommit(true);
         }
+        if (version_compare(pg_parameter_status($this->_connection, "server_version"),'9.0') > -1) {
+            $this->_doExec('SET bytea_output = "escape"');
+        }
     }
 
     /**

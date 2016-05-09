@@ -42,6 +42,14 @@
                 <eq property="dummy" value="started" />
             </conditions>
        </method>
+
+       <method name="findBySomeNames" type="select">
+           <parameter name="names" default="fourchette" />
+           <conditions>
+                <in property="name" expr="$names" />
+            </conditions>
+       </method>
+
    </factory>
 </dao>
 
