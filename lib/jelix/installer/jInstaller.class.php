@@ -248,7 +248,13 @@ class jInstaller {
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
         // be sure temp path is ready
-        jFile::createDir(jApp::tempPath(), intval($this->mainConfig->getValue('chmodDirValue'),8));
+        $chmod = $this->mainConfig->getValue('chmodDir');
+        if (!$chmod) {
+            $config = \Jelix\IniFile\Util::read(jConfig::getDefaultConfigFile(), true);
+            $chmod = $config->chmodDir;
+        }
+
+        jFile::createDir(jApp::tempPath(), intval($chmod,8));
     }
 
     /**

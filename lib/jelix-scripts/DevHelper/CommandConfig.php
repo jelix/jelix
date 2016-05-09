@@ -71,7 +71,7 @@ class CommandConfig {
     /**
      * @var integer chmod value on new dir
      */
-    public $chmodDirValue = 0644;
+    public $chmodDirValue = 0755;
 
     /**
      * @var boolean true = a chown is done on new files and directories

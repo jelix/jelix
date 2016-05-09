@@ -90,5 +90,9 @@ class jConfig {
             return $config;
         }
     }
+
+    static function getDefaultConfigFile() {
+        return __DIR__.'/defaultconfig.ini.php';
+    }
 }
 
