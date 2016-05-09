@@ -404,8 +404,6 @@ cd lib/jelix/plugins/cache/db
   db.cache.php
 cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
-cd lib/jelix/plugins/cache/redis
-  redis.cache.php
 
 cd lib/jelix/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
