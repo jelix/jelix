@@ -89,5 +89,9 @@ class Config {
             return $config;
         }
     }
+
+    static function getDefaultConfigFile() {
+        return __DIR__.'/Config/defaultconfig.ini.php';
+    }
 }
 
