@@ -383,6 +383,7 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_fileTest.php
   jkvdb_memcacheTest.php
   jkvdb_redisTest.php
+  jkvdb_redis2Test.php
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/forms/
   jforms_check_dataTest.php
