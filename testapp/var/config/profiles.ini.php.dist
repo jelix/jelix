@@ -224,3 +224,11 @@ enabled = 1
 driver=redis
 host=localhost
 port=6379
+
+[jcache:usingredis2]
+enabled = 1
+driver=redis
+host=localhost
+port=6379
+key_prefix=abc:
+db=1

@@ -89,6 +89,10 @@ class redisCacheDriver implements jICacheDriver {
 
         // OK, let's connect now
         $this->redis = new Redis($params['host'], $params['port']);
+
+        if (isset($params['db']) && intval($params['db']) != 0) {
+            $this->redis->select_db($params['db']);
+        }
     }
 
     /**
@@ -159,7 +163,7 @@ class redisCacheDriver implements jICacheDriver {
     */
     public function increment($key, $incvalue = 1) {
         $used_key = $this->getUsedKey($key);
-        $val = $this->get($used_key);
+        $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($incvalue)) {
             return false;
         }
@@ -183,7 +187,7 @@ class redisCacheDriver implements jICacheDriver {
     */
     public function decrement($key, $decvalue = 1) {
         $used_key = $this->getUsedKey($key);
-        $val = $this->get($used_key);
+        $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($decvalue)) {
             return false;
         }
@@ -211,7 +215,7 @@ class redisCacheDriver implements jICacheDriver {
         if ($this->redis->exists($used_key) == 0) {
             return false;
         }
-        return $this->set($used_key, $var, $ttl);
+        return $this->set($key, $var, $ttl);
     }
 
     /**
@@ -236,13 +240,14 @@ class redisCacheDriver implements jICacheDriver {
             return $key;
         }
 
+        $prefix = $this->key_prefix;
         if (is_array($key)) {
-            return array_walk($key, function(&$item, $k, $prefix) {
-                $item = $prefix.$item;
-            }, $this->key_prefix);
+            return array_map(function($k) use($prefix) {
+                return $prefix.$k;
+            }, $key);
         }
 
-        return $this->key_prefix.$key;
+        return $prefix.$key;
     }
 
     protected function esc($val) {
