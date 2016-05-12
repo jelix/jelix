@@ -144,6 +144,9 @@ cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/plugins/acl2/db/
   db.acl2.php
 
+cd lib/jelix-modules/jacl2db/plugins/acl2/dbcache/
+  dbcache.acl2.php
+
 cd lib/jelix-modules/jauthdb
 * module.xml
 cd lib/jelix-modules/jauthdb/daos

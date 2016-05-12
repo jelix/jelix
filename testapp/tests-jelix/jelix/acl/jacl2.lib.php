@@ -9,15 +9,22 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once(LIB_PATH.'jelix-modules/jacl2/classes/jAcl2.class.php');
+
 abstract class jacl2APITest extends jUnitTestCaseDb {
 
+    protected static $driver = 'db';
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
     public function setUp (){
         $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
+
         if (!self::$coordAuthPlugin) {
+            jApp::config()->acl2['driver'] = self::$driver;
+            jAcl2::unloadDriver();
+            jAcl2::clearCache();
 
             require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
             $confContent = parse_ini_file(jApp::configPath().'auth_class.coord.ini.php',true);
@@ -92,6 +99,12 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         $this->assertTrue(jAcl2::check('super.cms.update',122)); // ressource non repertoriée
         $this->assertFalse(jAcl2::check('super.cms.delete',122)); // ressource non repertoriée
 
+    }
+
+    /**
+    * @depends testCheckRight
+    */
+    public function testAddRight(){
         jAcl2DbManager::addRight('group1', 'admin.access');
 
         $this->assertTrue(jAcl2::check('admin.access'));
@@ -99,7 +112,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
     }
 
     /**
-    * @depends testCheckRight
+    * @depends testAddRight
     */
     public function testCheckCanceledRight(){
         $usergroups=array(
@@ -145,7 +158,6 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         jAcl2DbManager::addRight('__anonymous', 'super.cms.list' );
         $this->assertTrue(jAcl2::check('super.cms.list'));
         $this->assertFalse(jAcl2::check('admin.access'));
-        jAcl2::clearCache();
-        jAcl2DbUserGroup::clearCache();
+        $this->assertTrue(jAcl2::check('super.cms.list',154));
     }
 }
