@@ -3,12 +3,12 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2010 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once (JELIX_LIB_UTILS_PATH."jVersionComparator.class.php");
+use Jelix\Version\VersionComparator;
 
 /**
 * a class to install a component (module or plugin) 
@@ -119,7 +119,7 @@ abstract class jInstallerComponentBase {
 
     public function isUpgraded($epId) {
         return ($this->isInstalled($epId) &&
-                (jVersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
+                (VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
     }
     
     public function getInstalledVersion($epId) {
@@ -234,9 +234,9 @@ abstract class jInstallerComponentBase {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
                 $minversion = isset($dependency['minversion'])?
                                 $this->fixVersion((string)$dependency['minversion']):
-                                '*';
+                                '0';
                 if (trim($minversion) == '')
-                    $minversion = '*';
+                    $minversion = '0';
                 $maxversion = isset($dependency['maxversion'])?
                                 $this->fixVersion((string)$dependency['maxversion']):
                                 '*';
@@ -288,13 +288,14 @@ abstract class jInstallerComponentBase {
     
     
     public function checkJelixVersion ($jelixVersion) {
-        return (jVersionComparator::compareVersion($this->jelixMinVersion, $jelixVersion) <= 0 &&
-                jVersionComparator::compareVersion($jelixVersion, $this->jelixMaxVersion) <= 0);
+        return VersionComparator::compareVersionRange($jelixVersion, $this->jelixMinVersion.' - '.$this->jelixMaxVersion);
     }
     
     public function checkVersion($min, $max) {
-        return (jVersionComparator::compareVersion($min, $this->sourceVersion) <= 0 &&
-                jVersionComparator::compareVersion($this->sourceVersion, $max) <= 0);
+        if ($max == '*') {
+            return VersionComparator::compareVersionRange($this->sourceVersion, '>='.$min);
+        }
+        return VersionComparator::compareVersionRange($this->sourceVersion, $min.' - '.$max);
     }
 
     /**

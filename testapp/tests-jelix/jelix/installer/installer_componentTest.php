@@ -124,7 +124,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'type'=> 'module',
                 'id' => '',
                 'name' => 'jauthdb',
-                'minversion' => '*',
+                'minversion' => '0',
                 'maxversion' => '*',
                 ''
             ),
@@ -132,7 +132,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'type'=> 'module',
                 'id' => 'jacl2db@jelix.org',
                 'name' => 'jacl2db',
-                'minversion' => '*',
+                'minversion' => '0',
                 'maxversion' => '*',
                 ''
             ),

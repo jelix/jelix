@@ -422,7 +422,6 @@ cd testapp/tests-jelix/jelix/utils/
   jRootUrlTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
-  versionComparatorTest.php
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 
