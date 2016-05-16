@@ -7,7 +7,6 @@ cd lib/jelix-scripts/commands
   createlangpackage.cmd.php
   initadmin.cmd.php
   installmodule.cmd.php
-  migrate.cmd.php
 cd lib/jelix-scripts/DevHelper
   AbstractCommand.php
   AbstractCommandForApp.php
