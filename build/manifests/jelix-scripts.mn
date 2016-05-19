@@ -4,7 +4,6 @@ cd lib/jelix-scripts
   INSTALL
   CREDITS
 cd lib/jelix-scripts/commands
-  createlangpackage.cmd.php
   initadmin.cmd.php
 cd lib/jelix-scripts/DevHelper
   AbstractCommand.php
@@ -22,6 +21,7 @@ cd lib/jelix-scripts/DevHelper/Command/
   CreateClassFromDao.php
   CreateEntryPoint.php
   CreateForm.php
+  CreateLangPackage.php
   CreateModule.php
   CreateZone.php
   FilesRights.php
