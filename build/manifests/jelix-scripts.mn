@@ -3,8 +3,6 @@ cd lib/jelix-scripts
   LICENCE
   INSTALL
   CREDITS
-cd lib/jelix-scripts/commands
-  initadmin.cmd.php
 cd lib/jelix-scripts/DevHelper
   AbstractCommand.php
   AbstractCommandForApp.php
@@ -25,6 +23,7 @@ cd lib/jelix-scripts/DevHelper/Command/
   CreateModule.php
   CreateZone.php
   FilesRights.php
+  InitAdmin.php
   InstallModule.php
   InstallApp.php
   OpenApp.php

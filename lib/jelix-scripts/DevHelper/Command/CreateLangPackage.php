@@ -43,7 +43,6 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function _execute(InputInterface $input, OutputInterface $output) {
 
-        $this->loadAppConfig();
         $config = \jApp::config();
 
         $model_lang = $input->getArgument('model_lang');
