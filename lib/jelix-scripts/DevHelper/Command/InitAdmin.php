@@ -54,7 +54,12 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
         $this->loadAppConfig();
+        return $this->_execute($input, $output);
+    }
+
+    protected function _execute(InputInterface $input, OutputInterface $output) {
         $entrypoint = $input->getArgument('entrypoint');
         if (($p = strpos($entrypoint, '.php')) !== false) {
             $entrypoint = substr($entrypoint,0,$p);
@@ -191,4 +196,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $installer->installModules(array('jpref_admin'), $entrypoint.'.php');
     }
+
+    
 }
