@@ -134,6 +134,13 @@ driver=redis
 host=localhost
 port=6379
 
+[jkvdb:usingredis2]
+driver=redis
+host=localhost
+port=6379
+db=1
+key_prefix=bcd/
+
 [jkvdb:usingdb]
 driver = db
 table=testkvdb
@@ -219,3 +226,17 @@ enabled = 1
 driver=redis
 host=localhost
 port=6379
+
+[jcache:usingredis2]
+enabled = 1
+driver=redis
+host=localhost
+port=6379
+key_prefix=abc:
+db=1
+
+[jcache:acl2db]
+enabled = 1
+driver = file
+directory_level = 2
+file_name_prefix=acl2dbcache

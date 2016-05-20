@@ -165,7 +165,7 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         $this->assertFalse(jCache::increment('InexistentKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('integerDataKey',100,1,$this->profile));
-        $this->assertTrue(jCache::increment('integerDataKey',1,$this->profile)==101);
+        $this->assertEquals(101, jCache::increment('integerDataKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('floatDataKey',100.5,1,$this->profile));
         $this->assertEquals(100.5, jCache::get('floatDataKey',$this->profile));
@@ -194,13 +194,13 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
         $this->assertFalse(jCache::decrement('InexistentKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('integerDataKey',100,1,$this->profile));
-        $this->assertTrue(jCache::decrement('integerDataKey',1,$this->profile)==99);
+        $this->assertEquals(99, jCache::decrement('integerDataKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('floatDataKey',100.5,1,$this->profile));
-        $this->assertTrue(jCache::decrement('floatDataKey',1,$this->profile)==99);
+        $this->assertEquals(99, jCache::decrement('floatDataKey',1,$this->profile));
 
         $this->assertTrue(jCache::set('floatDecrementationKey',100,1,$this->profile));
-        $this->assertTrue(jCache::decrement('floatDecrementationKey',1.5,$this->profile)==99);
+        $this->assertEquals(99, jCache::decrement('floatDecrementationKey',1.5,$this->profile));
 
         $this->assertTrue(jCache::set('stringDecrementationKey',1,1,$this->profile));
         $this->assertFalse(jCache::decrement('stringDecrementationKey','decrement by string',$this->profile));
