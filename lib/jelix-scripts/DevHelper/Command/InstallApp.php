@@ -22,7 +22,7 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
     {
         $this
             ->setName('app:install')
-            ->setDescription('Exectute install/update scripts from all activated modules')
+            ->setDescription('Execute install/update scripts from all activated modules')
             ->setHelp('')
         ;
         parent::configure();

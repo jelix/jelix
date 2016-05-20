@@ -397,7 +397,6 @@ cd lib/jelix-legacy/utils/
   jProfilesCompilerPlugin.class.php
   jSoapClient.class.php
   jSoapObject.class.php
-  jVersionComparator.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php

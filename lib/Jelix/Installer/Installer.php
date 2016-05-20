@@ -156,7 +156,6 @@ class Installer {
         }
 
         \jFile::createDir(App::tempPath(), intval($chmod,8));
-
     }
 
     /**

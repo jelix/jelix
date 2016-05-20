@@ -20,17 +20,26 @@ class wwwCtrl extends jController {
             throw new jException('jelix~errors.module.untrusted',$module);
         }
 
-        $rep = $this->getResponse('binary');
-        $rep->doDownload = false;
         $dir = jApp::getModulePath($module).'www/';
-        $rep->fileName = realpath($dir.str_replace('..', '', $this->param('file')));
+        $filename = realpath($dir.str_replace('..', '', $this->param('file')));
 
-        if (!is_file($rep->fileName)) {
+        if (!is_file($filename)) {
             $rep = $this->getResponse('html', true);
             $rep->bodyTpl = 'jelix~404.html';
             $rep->setHttpStatus('404', 'Not Found');
             return $rep;
         }
+
+        $rep = $this->getResponse('binary');
+
+        $dateModif = new DateTime();
+        $dateModif->setTimestamp(filemtime($fileName));
+        if ($rep->isValidCache($dateModif)) {
+            return $rep;
+        }
+
+        $rep->doDownload = false;
+        $rep->fileName = $filename;
         $rep->mimeType = jFile::getMimeTypeFromFilename($rep->fileName);
         return $rep;
     }

@@ -286,6 +286,7 @@ cd testapp/tests-jelix/jelix/acl/
   jacl_managerTest.php
   jacl_users_and_groupsTest.php
   jacl2_main_apiTest.php
+  jacl2_main_apicacheTest.php
   jacl2_main_api_pgsqlTest.php
   jacl2_managerTest.php
   jacl2_users_groupsTest.php
@@ -298,6 +299,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_fileTest.php
   jcache_memcacheTest.php
   jcache_redisTest.php
+  jcache_redis2Test.php
   httpcacheTest.php
   jzone_cacheTest.php
 cd testapp/tests-jelix/jelix/core/
@@ -413,6 +415,7 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_fileTest.php
   jkvdb_memcacheTest.php
   jkvdb_redisTest.php
+  jkvdb_redis2Test.php
   jkvdb.lib.php
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
@@ -458,7 +461,6 @@ cd testapp/tests-jelix/jelix/utils/
   jRootUrlTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
-  versionComparatorTest.php
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 

@@ -74,7 +74,7 @@ abstract class AbstractInstallLauncher {
 
     public function isUpgraded($epId) {
         return ($this->isInstalled($epId) &&
-                (\jVersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
+                (\Jelix\Version\VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
     }
 
     public function getInstalledVersion($epId) {
@@ -123,7 +123,7 @@ abstract class AbstractInstallLauncher {
     public function upgradeFinished($ep, $upgrader) { }
 
     public function checkVersion($versionExpression) {
-        return \jVersionComparator::compareVersionRange($this->moduleInfos->version, $versionExpression);
+        return \Jelix\Version\VersionComparator::compareVersionRange($this->moduleInfos->version, $versionExpression);
     }
 }
 

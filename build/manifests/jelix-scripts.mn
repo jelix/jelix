@@ -3,10 +3,6 @@ cd lib/jelix-scripts
   LICENCE
   INSTALL
   CREDITS
-cd lib/jelix-scripts/commands
-  createlangpackage.cmd.php
-  initadmin.cmd.php
-  installmodule.cmd.php
 cd lib/jelix-scripts/DevHelper
   AbstractCommand.php
   AbstractCommandForApp.php
@@ -23,9 +19,12 @@ cd lib/jelix-scripts/DevHelper/Command/
   CreateClassFromDao.php
   CreateEntryPoint.php
   CreateForm.php
+  CreateLangPackage.php
   CreateModule.php
   CreateZone.php
   FilesRights.php
+  InitAdmin.php
+  InstallModule.php
   InstallApp.php
   OpenApp.php
 cd lib/jelix-scripts/DevHelper/Command/Acl2

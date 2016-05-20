@@ -1,12 +1,14 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2014 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer;
 
+
+use Jelix\Version\VersionComparator;
 
 /**
 * a class to install a module.
@@ -186,11 +188,11 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
             $foundVersion = '';
             // check the version
             foreach($upgrader->targetVersions as $version) {
-                if (\jVersionComparator::compareVersion($this->moduleStatuses[$epId]->version, $version) >= 0 ) {
+                if (VersionComparator::compareVersion($this->moduleStatuses[$epId]->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
-                if (\jVersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
+                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
                     // we don't execute upgraders having a version higher than the version indicated in the module.xml/jelix-module.json
                     continue;
                 }
@@ -242,7 +244,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
         usort($list, function ($upgA, $upgB) {
-                return \jVersionComparator::compareVersion($upgA->version, $upgB->version);
+                return VersionComparator::compareVersion($upgA->version, $upgB->version);
         });
         return $list;
     }

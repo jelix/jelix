@@ -155,7 +155,6 @@ class Compiler {
      *                               not needed to run the application
      */
     protected function prepareConfig($allModuleInfo){
-
         $this->checkMiscParameters($this->config);
         $this->getPaths($this->config->urlengine, $this->pseudoScriptName, $this->isCli);
         $this->modulesInfos = $this->_loadModulesInfo($this->config, $allModuleInfo);
@@ -233,8 +232,9 @@ class Compiler {
                         });
 
         // run plugins
-        foreach($plugins as $plugin)
+        foreach($plugins as $plugin) {
             $plugin->atStart($config);
+        }
 
         foreach ($modules as $moduleName=>$module) {
             foreach ($plugins as $plugin) {
