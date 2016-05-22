@@ -141,6 +141,7 @@ cd lib/jelix-modules/jauth/controllers
 ! loginsw.classic.php
 cd lib/jelix-modules/jauth/install/
   install.php
+  upgrade_changepersistantkey.php
 cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php
   authsw.coord.ini.php
