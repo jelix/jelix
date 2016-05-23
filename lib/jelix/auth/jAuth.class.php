@@ -95,8 +95,7 @@ class jAuth {
             $password_hash_options = (isset($config['password_hash_options'])?$config['password_hash_options']:'');
             if ($password_hash_options != '') {
                 $list = '{"'.str_replace(array('=',';'), array('":"', '","'), $config['password_hash_options']).'"}';
-                $json = new jJson(SERVICES_JSON_LOOSE_TYPE);
-                $password_hash_options = @$json->decode($list);
+                $password_hash_options = @json_decode($list, true);
                 if (!$password_hash_options)
                     $password_hash_options = array();
             }
