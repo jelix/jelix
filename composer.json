@@ -27,7 +27,8 @@
         "jelix/wikirenderer-plugin": "1.7.0",
         "symfony/console":"2.8.*",
         "jelix/file-utilities": "1.8.*",
-        "jelix/version": "1.0.*"
+        "jelix/version": "1.0.*",
+        "defuse/php-encryption": "^2.0"
     },
     "require-dev": {
         "jelix/buildtools": "2.0.*"

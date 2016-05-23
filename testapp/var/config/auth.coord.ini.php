@@ -62,11 +62,8 @@ enable_after_logout_override=off
 ; enable the persistance of the authentification between two sessions
 persistant_enable=off
 
-; key to use to crypt the password in the cookie.
-persistant_crypt_key=exampleOfCryptKey
-
 ; the name of the cookie which is used to store data for the authentification
-persistant_cookie_name=jelixAuthentificationCookie
+persistant_cookie_name=jauthSession
 
 ; duration of the validity of the cookie (in days). default is 1 day.
 persistant_duration=1

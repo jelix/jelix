@@ -18,7 +18,8 @@ class jauthModuleInstaller extends jInstallerModule {
     function install() {
 
         if (self::$key === null) {
-            self::$key = jAuth::getRandomPassword(30, true);
+            $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
+            self::$key = $cryptokey->saveToAsciiSafeString();
         }
 
         $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
@@ -45,11 +46,6 @@ class jauthModuleInstaller extends jInstallerModule {
             }
         }
 
-        $ini = new jIniFileModifier(jApp::configPath($authconfig));
-        $key = $ini->getValue('persistant_crypt_key');
-        if ($key === 'exampleOfCryptKey' || $key == '') {
-            $ini->setValue('persistant_crypt_key', self::$key);
-            $ini->save();
-        }
+        $this->getLocalConfigIni()->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
     }
 }
