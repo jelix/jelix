@@ -262,13 +262,18 @@ class jInstaller {
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
-        if (!file_exists(jApp::configPath('installer.ini.php')))
+        if (!file_exists(jApp::configPath('installer.ini.php'))) {
             if (false === @file_put_contents(jApp::configPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
-"))
+")) {
                 throw new Exception('impossible to create var/config/installer.ini.php');
+            }
+        }
+        else {
+            copy(jApp::configPath('installer.ini.php'), jApp::configPath('installer.bak.ini.php'));
+        }
         return new \Jelix\IniFile\IniModifier(jApp::configPath('installer.ini.php'));
     }
 
