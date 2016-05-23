@@ -40,7 +40,7 @@ class wwwCtrl extends jController {
 
         $rep->doDownload = false;
         $rep->fileName = $filename;
-        $rep->mimeType = jFile::getMimeTypeFromFilename($rep->fileName);
+        $rep->mimeType = \Jelix\FileUtilities\File::getMimeTypeFromFilename($rep->fileName);
         return $rep;
     }
 }

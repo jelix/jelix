@@ -176,12 +176,11 @@ class jFile {
      * @param string $file The full path of the file
      * @return string the MIME type of the file
      * @since 1.1.6
+     * @deprecated  use \Jelix\FileUtilities\File::getMimeType() instead
      */
     public static function getMimeType($file){
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $type = finfo_file($finfo, $file);
-        finfo_close($finfo);
-        return $type;
+        trigger_error("jFile::getMimeType is deprecated. Use \\Jelix\\FileUtilities\\File::getMimeType() instead.", E_USER_DEPRECATED);
+        return \Jelix\FileUtilities\File::getMimeType($file);
     }
 
     /**
@@ -190,17 +189,11 @@ class jFile {
      * @param string $fileName the file name
      * @return string the MIME type of the file
      * @since 1.1.10
+     * @deprecated use \Jelix\FileUtilities\File::getMimeTypeFromFilename() instead
      */
     public static function getMimeTypeFromFilename($fileName){
-        $ext = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
-        if (array_key_exists($ext, self::$mimeTypes)) {
-            return self::$mimeTypes[$ext];
-        }
-        else if (jApp::config() && isset(jApp::config()->mimeTypes[$ext])) {
-            return jApp::config()->mimeTypes[$ext];
-        }
-        else
-            return 'application/octet-stream';
+        trigger_error("jFile::getMimeTypeFromFilename is deprecated. Use \\Jelix\\FileUtilities\\File::getMimeTypeFromFilename() instead.", E_USER_DEPRECATED);
+        return \Jelix\FileUtilities\File::getMimeTypeFromFilename($fileName);
     }
 
     /**
@@ -273,37 +266,11 @@ class jFile {
      * @param string $from  absolute path from which we should start
      * @param string $to  absolute path to which we should go
      * @return string relative path between the two path
+     * @deprecated use \Jelix\FileUtilities\Path::shortestPath() instead
      */
     public static function shortestPath($from, $to) {
-        list($fromprefix, $from, $fromabsolute) = self::_normalizePath($from, true);
-        list($toprefix, $to, $toabsolute) = self::_normalizePath($to, true);
-        if (!$fromabsolute || !$toabsolute) {
-            throw new Exception('Absolute path is required');
-        }
-        if ($fromprefix != $toprefix) {
-            return $toprefix.'/'.rtrim(implode('/', $to),'/');
-        }
-        while(count($from) && count($to) && $from[0] == $to[0]) {
-            array_shift($from);
-            array_shift($to);
-        }
-
-        if (!count($from)) {
-            if (!count($to)) {
-                return '.';
-            }
-            $prefix = '';
-        }
-        else {
-            $prefix = rtrim(str_repeat('../', count($from)),'/');
-        }
-        if (!count($to)) {
-            $suffix = '';
-        }
-        else {
-            $suffix = implode('/', $to);
-        }
-        return $prefix.($suffix != '' && $prefix !='' ?'/':'').$suffix;
+        trigger_error("jFile::shortestPath() is deprecated. Use \\Jelix\\FileUtilities\\Path::shortestPath() instead.", E_USER_DEPRECATED);
+        return \Jelix\FileUtilities\Path::shortestPath($from, $to);
     }
 
     /**
@@ -311,174 +278,10 @@ class jFile {
      * support windows path.
      * @param string $path
      * @return string the normalized path
+     * @deprecated Use \Jelix\FileUtilities\Path::normalizePath() instead
      */
     public static function normalizePath($path) {
-        list($prefix, $path, $absolute) = self::_normalizePath($path, false);
-        if (!is_string($path)) {
-            $path = implode('/',$path);
-        }
-        return $prefix.($absolute?'/':'').$path;
+        trigger_error("jFile::normalizePath is deprecated. Use \\Jelix\\FileUtilities\\Path::normalizePath() instead.", E_USER_DEPRECATED);
+        return \Jelix\FileUtilities\Path::normalizePath($path);
     }
-
-    protected static function _normalizePath($path, $alwaysArray) {
-        $path = str_replace('\\', '/', $path);
-        $path = preg_replace("#(/+)#", "/" , $path);
-        $prefix = '';
-        $absolute = false;
-        if (preg_match("#^([a-z]:)/#i", $path, $m)) {
-            $prefix = strtoupper($m[1]);
-            $path = substr($path, 2);
-            $absolute = true;
-        }
-        else {
-            $absolute = ($path[0] == '/');
-        }
-        if ($absolute && $path != '') {
-            if ($path == '/') {
-                $path = '';
-            }
-            else {
-                $path = substr($path, 1);
-            }
-        }
-
-        if (strpos($path,'./') === false && substr($path, -1) != '.') {
-            if ($alwaysArray) {
-                if ($path == '') {
-                    return array($prefix, array(), $absolute);
-                }
-                return array($prefix, explode('/', rtrim($path, '/')), $absolute);
-            }
-            else {
-                if ($path == '') {
-                    return array($prefix, $path, $absolute);
-                }
-                return array($prefix, rtrim($path, '/'), $absolute);
-            }
-        }
-        $path = explode('/', $path);
-        $path2 = array();
-        $up = false;
-        foreach ($path as $chunk) {
-            if ($chunk === '..') {
-                if (count($path2)) {
-                    array_pop($path2);
-                }
-            } elseif ($chunk !== '' && $chunk != '.') {
-                $path2[] = $chunk;
-            }
-        }
-        return array($prefix, $path2, $absolute);
-    }
-
-    protected static $mimeTypes = array(
-
-        'txt' => 'text/plain',
-        'htm' => 'text/html',
-        'html' => 'text/html',
-        'xhtml' => 'application/xhtml+xml',
-        'xht' => 'application/xhtml+xml',
-        'php' => 'text/html',
-        'css' => 'text/css',
-        'js' => 'application/javascript',
-        'json' => 'application/json',
-        'xml' => 'application/xml',
-        'xslt' => 'application/xslt+xml',
-        'xsl' => 'application/xml',
-        'dtd' => 'application/xml-dtd',
-        'atom'=>'application/atom+xml',
-        'mathml'=>'application/mathml+xml',
-        'rdf'=>'application/rdf+xml',
-        'smi'=>'application/smil',
-        'smil'=>'application/smil',
-        'vxml'=>'application/voicexml+xml',
-        'latex'=>'application/x-latex',
-        'tcl'=>'application/x-tcl',
-        'tex'=>'application/x-tex',
-        'texinfo'=>'application/x-texinfo',
-        'wrl'=>'model/vrml',
-        'wrml'=>'model/vrml',
-        'ics'=>'text/calendar',
-        'ifb'=>'text/calendar',
-        'sgml'=>'text/sgml',
-        'htc'=>'text/x-component',
-
-        // images
-        'png' => 'image/png',
-        'jpe' => 'image/jpeg',
-        'jpeg' => 'image/jpeg',
-        'jpg' => 'image/jpeg',
-        'gif' => 'image/gif',
-        'bmp' => 'image/bmp',
-        'ico' => 'image/x-icon',
-        'tiff' => 'image/tiff',
-        'tif' => 'image/tiff',
-        'svg' => 'image/svg+xml',
-        'svgz' => 'image/svg+xml',
-        'djvu' => 'image/vnd.djvu',
-        'djv'  => 'image/vnd.djvu',
-
-        // archives
-        'zip' => 'application/zip',
-        'rar' => 'application/x-rar-compressed',
-        'exe' => 'application/x-msdownload',
-        'msi' => 'application/x-msdownload',
-        'cab' => 'application/vnd.ms-cab-compressed',
-        'tar' => 'application/x-tar',
-        'gz'  => 'application/x-gzip',
-        'tgz'  => 'application/x-gzip',
-
-        // audio/video
-        'mp2' => 'audio/mpeg',
-        'mp3' => 'audio/mpeg',
-        'qt' => 'video/quicktime',
-        'mov' => 'video/quicktime',
-        'mpeg' => 'video/mpeg',
-        'mpg' => 'video/mpeg',
-        'mpe' => 'video/mpeg',
-        'wav' => 'audio/wav',
-        'aiff' => 'audio/aiff',
-        'aif' => 'audio/aiff',
-        'avi' => 'video/msvideo',
-        'wmv' => 'video/x-ms-wmv',
-        'ogg' => 'application/ogg',
-        'flv' => 'video/x-flv',
-        'dvi' => 'application/x-dvi',
-        'au'=> 'audio/basic',
-        'snd'=> 'audio/basic',
-        'mid' => 'audio/midi',
-        'midi' => 'audio/midi',
-        'm3u' => 'audio/x-mpegurl',
-        'm4u' => 'video/vnd.mpegurl',
-        'ram' => 'audio/x-pn-realaudio',
-        'ra' => 'audio/x-pn-realaudio',
-        'rm' => 'application/vnd.rn-realmedia',
-
-        // adobe
-        'pdf' => 'application/pdf',
-        'psd' => 'image/vnd.adobe.photoshop',
-        'ai' => 'application/postscript',
-        'eps' => 'application/postscript',
-        'ps' => 'application/postscript',
-        'swf' => 'application/x-shockwave-flash',
-
-        // ms office
-        'doc' => 'application/msword',
-        'docx' => 'application/msword',
-        'rtf' => 'application/rtf',
-        'xls' => 'application/vnd.ms-excel',
-        'xlm' => 'application/vnd.ms-excel',
-        'xla' => 'application/vnd.ms-excel',
-        'xld' => 'application/vnd.ms-excel',
-        'xlt' => 'application/vnd.ms-excel',
-        'xlc' => 'application/vnd.ms-excel',
-        'xlw' => 'application/vnd.ms-excel',
-        'xll' => 'application/vnd.ms-excel',
-        'ppt' => 'application/vnd.ms-powerpoint',
-        'pps' => 'application/vnd.ms-powerpoint',
-
-        // open office
-        'odt' => 'application/vnd.oasis.opendocument.text',
-        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-    );
 }
