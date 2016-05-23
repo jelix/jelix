@@ -21,8 +21,8 @@ class jauthModuleInstaller extends jInstallerModule {
             self::$key = jAuth::getRandomPassword(30, true);
         }
 
-        $authconfig = $this->config->getValue('auth','coordplugins');
-        $authconfigMaster = $this->config->getValue('auth','coordplugins', null, true);
+        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
+        $authconfigMaster = $this->getLocalConfigIni()->getValue('auth','coordplugins');
         $forWS = (in_array($this->entryPoint->type, array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
         if (!$authconfig || ($forWS && $authconfig == $authconfigMaster)) {
@@ -34,7 +34,7 @@ class jauthModuleInstaller extends jInstallerModule {
                 $pluginIni = 'auth.coord.ini.php';
             }
 
-            $authconfig = dirname($this->entryPoint->configFile).'/'.$pluginIni;
+            $authconfig = dirname($this->entryPoint->getConfigFile()).'/'.$pluginIni;
 
             if ($this->firstExec('auth:'.$authconfig)) {
                 // no configuration, let's install the plugin for the entry point

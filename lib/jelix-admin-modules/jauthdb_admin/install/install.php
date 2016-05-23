@@ -13,7 +13,7 @@
 class jauthdb_adminModuleInstaller extends jInstallerModule {
 
     function install() {
-        $authconfig = $this->config->getValue('auth','coordplugins');
+        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
 
         if ($authconfig && $this->entryPoint->type != 'cmdline' && $this->firstExec($authconfig)) {
 

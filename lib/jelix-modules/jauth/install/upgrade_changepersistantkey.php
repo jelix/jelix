@@ -20,11 +20,22 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
         if (self::$key === null) {
             self::$key = jAuth::getRandomPassword(30, true);
         }
-        $conf = $this->config->getValue('auth', 'coordplugins');
+        $conf = $this->getConfigIni()->getValue('auth', 'coordplugins');
         if ($conf == '1') {
-            $key = $this->config->getValue('persistant_crypt_key', 'coordplugin_auth');
-            if ($key === 'exampleOfCryptKey' || $key == '') {
-                $this->config->setValue('persistant_crypt_key', self::$key, 'coordplugin_auth');
+            $key = $this->getConfigIni()->getValue('persistant_crypt_key', 'coordplugin_auth');
+            if ($key !== null) {
+                $changed = false;
+                if ($key === 'exampleOfCryptKey' || $key == '') {
+                    $key = self::$key;
+                    $changed = true;
+                }
+                if (null !== $this->getConfigIni()->getOverrider()->getValue('persistant_crypt_key', 'coordplugin_auth')) {
+                    $changed = true;
+                    $this->getConfigIni()->getOverrider()->removeValue('persistant_crypt_key', 'coordplugin_auth');
+                }
+                if ($change) {
+                    $this->getLocalConfigIni()->setValue('persistant_crypt_key', $key, 'coordplugin_auth');
+                }
             }
         }
         else if ($conf) {

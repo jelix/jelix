@@ -19,7 +19,7 @@ abstract class jInstallerBase {
     /**
      * @var string name of the component
      */
-    public $componentName;
+    protected $componentName;
 
     /**
      * @var string name of the installer
@@ -51,16 +51,17 @@ abstract class jInstallerBase {
     public $version = '0';
 
     /**
-     * default configuration of the application
+     * configuration of the entry point.
      * @var \Jelix\IniFile\MultiIniModifier
+     * @deprecated use entryPoint methods to access to different configuration files.
      */
-    public $config;
+    protected $config = null;
     
     /**
      * the entry point property on which the installer is called
      * @var jInstallerEntryPoint
      */
-    public $entryPoint;
+    protected $entryPoint;
     
     /**
      * The path of the module
@@ -133,13 +134,12 @@ abstract class jInstallerBase {
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
      * @param jInstallerEntryPoint $ep the entry point
-     * @param \Jelix\IniFile\MultiIniModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint($ep, $config, $dbProfile, $contexts) {
-        $this->config = $config;
+    public function setEntryPoint($ep, $dbProfile, $contexts) {
         $this->entryPoint = $ep;
+        $this->config = $ep->getConfigIni();
         $this->contextId = $contexts;
         $this->newContextId = array();
 
@@ -148,6 +148,33 @@ abstract class jInstallerBase {
         }
         else
             $this->useDbProfile($dbProfile);
+    }
+
+    /**
+     * the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getMainConfigIni() {
+        return $this->entryPoint->getMainConfigIni();
+    }
+
+    /**
+     * the localconfig.ini.php file combined with $mainConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getLocalConfigIni() {
+        return $this->entryPoint->getLocalConfigIni();
+    }
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getConfigIni() {
+        return $this->entryPoint->getConfigIni();
     }
 
     /**

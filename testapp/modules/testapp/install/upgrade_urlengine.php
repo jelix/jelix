@@ -15,6 +15,6 @@ class testappModuleUpgrader_urlengine extends jInstallerModule {
     public $date = '2012-07-20';
 
     function install() {
-        $this->config->setValue('engine', 'basic_significant', 'urlengine', null, true);
+        $this->getMainConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
     }
 }

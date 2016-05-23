@@ -119,7 +119,6 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
 
         $this->moduleInstaller->setEntryPoint($ep,
-                                              $ep->getConfigIni(),
                                               $this->moduleInfos[$epId]->dbProfile,
                                               $this->installerContexts);
 
@@ -246,7 +245,6 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
 
             $upgrader->setEntryPoint($ep,
-                                    $ep->getConfigIni(),
                                     $this->moduleInfos[$epId]->dbProfile,
                                     $this->upgradersContexts[$class]);
             $list[] = $upgrader;
