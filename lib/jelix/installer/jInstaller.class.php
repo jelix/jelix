@@ -208,16 +208,16 @@ class jInstaller {
     public $nbNotice = 0;
 
     /**
-     * the mainconfig.ini.php content
-     * @var \Jelix\IniFile\IniModifier
+     * the mainconfig.ini.php combined with the defaultconfig.ini.php
+     * @var \Jelix\IniFile\MultiIniModifier
      */
-    public $mainConfig;
+    protected $mainConfig;
 
     /**
-     * the localconfig.ini.php content
-     * @var jIniFileModifier
+     * the localconfig.ini.php content combined with $mainConfig
+     * @var \Jelix\IniFile\MultiIniModifier
      */
-    public $localConfig;
+    protected $localConfig;
 
     /**
      * initialize the installation
@@ -231,8 +231,6 @@ class jInstaller {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
 
-        $this->mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
-
         $localConfig = jApp::configPath('localconfig.ini.php');
         if (!file_exists($localConfig)) {
            $localConfigDist = jApp::configPath('localconfig.ini.php.dist');
@@ -243,18 +241,18 @@ class jInstaller {
               file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
            }
         }
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, $localConfig);
+
+        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(),
+                                                                jApp::mainConfigFile());
+        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
+                                                                 $localConfig);
         $this->installerIni = $this->getInstallerIni();
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
+
         // be sure temp path is ready
         $chmod = $this->mainConfig->getValue('chmodDir');
-        if (!$chmod) {
-            $config = \Jelix\IniFile\Util::read(jConfig::getDefaultConfigFile(), true);
-            $chmod = $config->chmodDir;
-        }
-
-        jFile::createDir(jApp::tempPath(), intval($chmod,8));
+        jFile::createDir(jApp::tempPath(), intval($chmod, 8));
     }
 
     /**
@@ -294,8 +292,9 @@ class jInstaller {
             if (isset($entrypoint['type'])) {
                 $type = (string)$entrypoint['type'];
             }
-            else
+            else {
                 $type = "classic";
+            }
 
             // ignore entry point which have the same config file of an other one
             // FIXME: what about installer.ini ?
@@ -306,8 +305,6 @@ class jInstaller {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
-            // not to the constructor, to no break API. FIXME
-            $ep->localConfigIni =  new \Jelix\IniFile\MultiIniModifier($this->localConfig, jApp::configPath($configFile));
             $epId = $ep->getEpId();
 
             $this->epId[$file] = $epId;
@@ -336,7 +333,8 @@ class jInstaller {
      * @internal for tests
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint($this->mainConfig, $configFile, $file, $type);
+        return new jInstallerEntryPoint($this->mainConfig, $this->localConfig,
+                                        $configFile, $file, $type);
     }
 
     /**
@@ -522,10 +520,11 @@ class jInstaller {
 
         $this->notice('install.entrypoint.start', $epId);
         $ep = $this->entryPoints[$epId];
-        jApp::setConfig($ep->config);
+        jApp::setConfig($ep->getConfigObj());
 
-        if ($ep->config->disableInstallers)
+        if ($ep->getConfigObj()->disableInstallers) {
             $this->notice('install.entrypoint.installers.disabled');
+        }
 
         // first, check dependencies of the component, to have the list of component
         // we should really install. It fills $this->_componentsToInstall, in the right
@@ -554,7 +553,7 @@ class jInstaller {
                     $this->installerIni->setValue($component->getName().'.version',
                                                    $component->getSourceVersion(), $epId);
 
-                    if ($ep->config->disableInstallers) {
+                    if ($ep->getConfigObj()->disableInstallers) {
                         $upgraders = array();
                     }
                     else {
@@ -565,10 +564,9 @@ class jInstaller {
                     }
 
                     $componentsToInstall[] = array($upgraders, $component, false);
-
                 }
                 else if ($toInstall) {
-                    if ($ep->config->disableInstallers)
+                    if ($ep->getConfigObj()->disableInstallers)
                         $installer = null;
                     else
                         $installer = $component->getInstaller($ep, $installWholeApp);
@@ -577,7 +575,7 @@ class jInstaller {
                         $installer->preInstall();
                 }
                 else {
-                    if ($ep->config->disableInstallers) {
+                    if ($ep->getConfigObj()->disableInstallers) {
                         $upgraders = array();
                     }
                     else {
@@ -656,14 +654,14 @@ class jInstaller {
                     $installedModules[] = array($installer, $component, false);
                 }
                 // we always save the configuration, so it invalidates the cache
-                $ep->configIni->save();
+                $ep->getConfigIni()->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $ep->config =
-                    jConfigCompiler::read($ep->configFile, true,
+                $ep->setConfigObj(
+                    jConfigCompiler::read($ep->getConfigFile(), true,
                                           $ep->isCliScript,
-                                          $ep->scriptName);
-                jApp::setConfig($ep->config);
+                                          $ep->scriptName));
+                jApp::setConfig($ep->getConfigObj());
             }
         } catch (jInstallerException $e) {
             $result = false;
@@ -697,14 +695,14 @@ class jInstaller {
                 }
 
                 // we always save the configuration, so it invalidates the cache
-                $ep->configIni->save();
+                $ep->getConfigIni()->save();
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $ep->config =
-                    jConfigCompiler::read($ep->configFile, true,
+                $ep->setConfigObj(
+                    jConfigCompiler::read($ep->getConfigFile(), true,
                                           $ep->isCliScript,
-                                          $ep->scriptName);
-                jApp::setConfig($ep->config);
+                                          $ep->scriptName));
+                jApp::setConfig($ep->getConfigObj());
             } catch (jInstallerException $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
@@ -743,7 +741,7 @@ class jInstaller {
 
                     $this->_checkDependencies($component, $epId);
 
-                    if ($this->entryPoints[$epId]->config->disableInstallers
+                    if ($this->entryPoints[$epId]->getConfigObj()->disableInstallers
                         || !$component->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($component, true);
                     }
@@ -806,7 +804,7 @@ class jInstaller {
 
                 if (!isset($this->_checkedComponents[$comp->getName()])) {
                     $this->_checkDependencies($comp, $epId);
-                    if ($this->entryPoints[$epId]->config->disableInstallers
+                    if ($this->entryPoints[$epId]->getConfigObj()->disableInstallers
                         || !$comp->isInstalled($epId)) {
                         $this->_componentsToInstall[] = array($comp, true);
                     }

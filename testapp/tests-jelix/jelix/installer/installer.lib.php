@@ -24,20 +24,24 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
-    function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
+    function __construct($mainConfigIni,
+                         $localConfigIni,
+                         $configFile, $file, $type, $configContent) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
         if (is_object($configFile)) {
             $this->configFile = $configFile->getFileName();
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, $configFile);
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, $configFile);
         }
         else {
             $this->configFile = $configFile;
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, new testInstallerIniFileModifier($configFile));
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, new testInstallerIniFileModifier($configFile));
         }
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;
+        $this->mainConfigIni = $mainConfigIni;
+        $this->localConfigIni = $localConfigIni;
     }
     
     function getEpId() {
@@ -119,7 +123,7 @@ class testInstallerMain extends jInstaller {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
-        $this->mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
+        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(), jApp::mainConfigFile());
         $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, jApp::configPath('localconfig.ini.php'));
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
@@ -174,7 +178,9 @@ class testInstallerMain extends jInstaller {
     }
 
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($this->mainConfig, $configFile, $file, $type, (object) $this->configContent[$configFile]);
+        return new testInstallerEntryPoint($this->mainConfig, $this->localConfig,
+                                           $configFile, $file, $type,
+                                           (object) $this->configContent[$configFile]);
     }
     
     protected function getComponentModule($name, $path, $installer) {

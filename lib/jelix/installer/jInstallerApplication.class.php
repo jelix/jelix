@@ -90,12 +90,27 @@ class jInstallerApplication {
             return $this->entryPointList;
         }
 
-        $mainConfig = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
+        $localConfig = jApp::configPath('localconfig.ini.php');
+        if (!file_exists($localConfig)) {
+           $localConfigDist = jApp::configPath('localconfig.ini.php.dist');
+           if (file_exists($localConfigDist)) {
+              copy($localConfigDist, $localConfig);
+           }
+           else {
+              file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
+           }
+        }
+
+        $mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(),
+                                                                jApp::mainConfigFile());
+        $localConfig = new \Jelix\IniFile\MultiIniModifier($mainConfig,
+                                                                 $localConfig);
 
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {
             $epElt = $listEp->item($i);
             $ep = new jInstallerEntryPoint($mainConfig,
+                                           $localConfig,
                                            $epElt->getAttribute("config"),
                                            $epElt->getAttribute("file"),
                                            $epElt->getAttribute("type"));

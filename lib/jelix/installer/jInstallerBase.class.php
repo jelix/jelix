@@ -204,7 +204,7 @@ abstract class jInstallerBase {
      */
     protected function firstConfExec($config = '') {
         if ($config == '')
-            $config = $this->entryPoint->configFile;
+            $config = $this->entryPoint->getConfigFile();
         return $this->firstExec('cf:'.$config);
     }
 
@@ -260,7 +260,7 @@ abstract class jInstallerBase {
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->entryPoint->config->_modulesPathList;
+            $conf = $this->entryPoint->getConfigObj()->_modulesPathList;
             if (!isset($conf[$module])) {
                 throw new Exception('execSQLScript : invalid module name');
             }
@@ -350,7 +350,7 @@ abstract class jInstallerBase {
             $path = str_replace('config:', jApp::configPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::configPath($this->entryPoint->configFile));
+            $p = dirname(jApp::configPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         return $path;

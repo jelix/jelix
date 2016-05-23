@@ -78,7 +78,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      */
     function getInstaller($ep, $installWholeApp) {
 
-        $this->_setAccess($ep->configIni);
+        $this->_setAccess($ep->getConfigIni());
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
@@ -105,21 +105,21 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
 
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
-        if ($ep->localConfigIni) {
-            $sparam = $ep->localConfigIni->getValue($this->name.'.installparam','modules');
+        if ($ep->getLocalConfigIni()) {
+            $sparam = $ep->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         }
         else {
-            $sparam = $ep->configIni->getValue($this->name.'.installparam','modules');
+            $sparam = $ep->getConfigIni()->getValue($this->name.'.installparam','modules');
         }
         if ($sparam === null)
             $sparam = '';
         $sp = $this->moduleInfos[$epId]->serializeParameters();
         if ($sparam != $sp) {
-            $ep->configIni->setValue($this->name.'.installparam', $sp, 'modules');
+            $ep->getConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
         }
 
         $this->moduleInstaller->setEntryPoint($ep,
-                                              $ep->configIni,
+                                              $ep->getConfigIni(),
                                               $this->moduleInfos[$epId]->dbProfile,
                                               $this->installerContexts);
 
@@ -246,7 +246,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
 
             $upgrader->setEntryPoint($ep,
-                                    $ep->configIni,
+                                    $ep->getConfigIni(),
                                     $this->moduleInfos[$epId]->dbProfile,
                                     $this->upgradersContexts[$class]);
             $list[] = $upgrader;

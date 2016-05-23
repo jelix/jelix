@@ -14,16 +14,28 @@
 class jInstallerEntryPoint {
 
     /** @var StdObj   configuration parameters. compiled content of config files */
-    public $config;
+    protected $config;
 
     /** @var string the filename of the configuration file */
-    public $configFile;
+    protected $configFile;
 
-    /** @var \Jelix\IniFile\MultiIniModifier */
-    public $configIni;
+    /**
+     * the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @var \Jelix\IniFile\MultiIniModifier
+     */
+    protected $mainConfigIni;
 
-    /** @var jIniMultiFilesModifier */
-    public $localConfigIni;
+    /**
+     * the localconfig.ini.php file combined with $mainConfigIni
+     * @var \Jelix\IniFile\MultiIniModifier
+     */
+    protected $localConfigIni;
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @var \Jelix\IniFile\MultiIniModifier
+     */
+    protected $configIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -47,19 +59,24 @@ class jInstallerEntryPoint {
     public $type;
 
     /**
-     * @param \Jelix\IniFile\IniModifier    $mainConfig   the mainconfig.ini.php file
+     * @param \Jelix\IniFile\MultiIniModifier $mainConfig   the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @param \Jelix\IniFile\MultiIniModifier $localConfig   the localconfig.ini.php file combined with $mainConfig
      * @param string $configFile the path of the configuration file, relative
      *                           to the var/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct($mainConfig, $configFile, $file, $type) {
+    function __construct(\Jelix\IniFile\MultiIniModifier $mainConfig,
+                         \Jelix\IniFile\MultiIniModifier $localConfig,
+                         $configFile, $file, $type) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->configIni = new \Jelix\IniFile\MultiIniModifier($mainConfig, jApp::configPath($configFile));
+        $this->mainConfigIni = $mainConfig;
+        $this->localConfigIni = $localConfig;
+        $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, jApp::configPath($configFile));
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,
                                               $this->scriptName);
@@ -87,4 +104,51 @@ class jInstallerEntryPoint {
     function getModule($moduleName) {
         return new jInstallerModuleInfos($moduleName, $this->config->modules);
     }
+
+    /**
+     * the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    function getMainConfigIni() {
+        return $this->mainConfigIni;
+    }
+
+    /**
+     * the localconfig.ini.php file combined with $mainConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    function getLocalConfigIni() {
+        return $this->localConfigIni;
+    }
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    function getConfigIni() {
+        return $this->configIni;
+    }
+
+    /**
+     * @return string the config file name of the entry point
+     */
+    function getConfigFile() {
+        return $this->configFile;
+    }
+
+    /**
+     * @return stdObj the config content of the entry point, as seen when
+     * calling jApp::config()
+     */
+    function getConfigObj() {
+        return $this->config;
+    }
+
+    function setConfigObj($config) {
+        $this->config = $config;
+    }
+
 }
