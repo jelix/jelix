@@ -27,8 +27,6 @@ cd lib/jelix/auth
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jAuthDriverBase.class.php
 #endif
-  password.php
-  hash_equals.php
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php

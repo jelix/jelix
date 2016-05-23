@@ -92,16 +92,6 @@ class jAuth {
                 $password_hash_method= intval($password_hash_method);
             }
 
-            if ($password_hash_method > 0) {
-                require_once(__DIR__.'/password.php');
-                if (!can_use_password_API()) {
-                    $password_hash_method = 0;
-                }
-            }
-            else {
-                require_once(__DIR__.'/hash_equals.php');
-            }
-
             $password_hash_options = (isset($config['password_hash_options'])?$config['password_hash_options']:'');
             if ($password_hash_options != '') {
                 $list = '{"'.str_replace(array('=',';'), array('":"', '","'), $config['password_hash_options']).'"}';
