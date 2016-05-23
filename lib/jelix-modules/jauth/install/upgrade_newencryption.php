@@ -28,7 +28,7 @@ class jauthModuleUpgrader_newencryption extends jInstallerModule {
         else if ($conf) {
             $conff = jApp::configPath($conf);
             if (file_exists($conff)) {
-                $ini = new jIniFileModifier($conff);
+                $ini = new \Jelix\IniFile\IniModifier($conff);
                 $ini->removeValue('persistant_crypt_key');
             }
         }

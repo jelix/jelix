@@ -17,3 +17,6 @@
 * @deprecated 
 */
 class jIniFile extends \Jelix\IniFile\Util { }
+
+
+trigger_error ("jIniFile is deprecated, use \\Jelix\\IniFile\\Util instead", E_USER_DEPRECATED);

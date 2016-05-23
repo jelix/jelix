@@ -18,3 +18,5 @@
 * @deprecated
 */
 class jIniMultiFilesModifier  extends \Jelix\IniFile\MultiIniModifier {}
+
+trigger_error ("jIniMultiFilesModifier is deprecated, use \\Jelix\\IniFile\\MultiIniModifier instead", E_USER_DEPRECATED);

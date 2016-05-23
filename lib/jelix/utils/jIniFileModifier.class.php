@@ -19,3 +19,5 @@
 * @deprecated
 */
 class jIniFileModifier  extends \Jelix\IniFile\IniModifier { }
+
+trigger_error ("jIniFileModifier is deprecated, use \\Jelix\\IniFile\\IniModifier instead", E_USER_DEPRECATED);
