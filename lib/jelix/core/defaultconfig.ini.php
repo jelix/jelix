@@ -29,7 +29,7 @@ timeZone =
 domainName =
 
 ; the locale to fallback when the asked string doesn't exist in the current locale
-fallbackLocale =
+fallbackLocale = 
 
 ; indicate HTTP(s) port if it should be forced to a specific value that PHP cannot
 ; guess (if the application is behind a proxy on a specific port for example)

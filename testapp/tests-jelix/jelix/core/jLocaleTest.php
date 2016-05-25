@@ -96,6 +96,7 @@ class jLocaleTest extends jUnitTestCase {
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
         $this->assertEquals('ceci est une phrase fr_FR avec tiret',jLocale::get('tests1.first-dash-locale'));
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'fr_FR'));
+        $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'de_DE'));
         $this->assertEquals('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
         $this->assertEquals('Chaîne à tester à foison',jLocale::get('tests1.multiline.locale.with.accent2'));
         $this->assertEquals(utf8_decode('Chaîne à tester'),jLocale::get('testunit.multiline.locale.with.accent',null,null,'ISO-8859-1'));
@@ -106,16 +107,6 @@ class jLocaleTest extends jUnitTestCase {
     }
 
     function testException() {
-        jApp::config()->locale = 'fr_FR';
-        try {
-            $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
-            self::fail('no exception');
-        }catch(jException $e) {
-            self::fail('wrong exception type');
-        }catch(Exception $e) {
-            $this->assertEquals('(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)', $e->getMessage());
-        }
-
         jApp::config()->locale = 'de_DE';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
@@ -123,7 +114,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e) {
             self::fail('wrong exception type');
         }catch(Exception $e) {
-            $this->assertEquals('(200)The given locale key "tests1.first.locale" is invalid (for charset UTF-8, lang de_DE)', $e->getMessage());
+            $this->assertEquals('(212)No locale file found for the given locale key "tests1.first.locale" in any other default languages (charset UTF-8)', $e->getMessage());
         }
     }
 
@@ -145,7 +136,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests1.fourth.locale locale');
         }catch(Exception $e){
-            $this->assertEquals('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang and in the fallback lang for the UTF-8 charset', $e->getMessage());
+            $this->assertEquals('(213)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in any default languages for the UTF-8 charset', $e->getMessage());
         }
 
         jApp::config()->fallbackLocale = '';
@@ -157,7 +148,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests1.fourth.locale locale');
         }catch(Exception $e){
-            $this->assertEquals('(210)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in the default lang for the UTF-8 charset', $e->getMessage());
+            $this->assertEquals('(213)The given locale key "jelix_tests~tests1.fourth.locale" does not exists in any default languages for the UTF-8 charset', $e->getMessage());
         }
     }
 
@@ -179,7 +170,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests3.first.locale');
         }catch(Exception $e){
-            $this->assertEquals('(200)The given locale key "jelix_tests~tests3.first.locale" is invalid (for charset UTF-8, lang fr_FR)', $e->getMessage());
+            $this->assertEquals('(212)No locale file found for the given locale key "jelix_tests~tests3.first.locale" in any other default languages (charset UTF-8)', $e->getMessage());
         }
     }
 
@@ -192,7 +183,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
         } catch(Exception $e) {
-           $this->assertEquals('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-1, lang fr_FR)', $e->getMessage());
+           $this->assertEquals('(212)No locale file found for the given locale key "tests1.second.locale" in any other default languages (charset ISO-8859-1)', $e->getMessage());
         }
 
         try {
@@ -202,7 +193,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
         } catch(Exception $e) {
-           $this->assertEquals('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-1, lang de_DE)', $e->getMessage());
+           $this->assertEquals('(212)No locale file found for the given locale key "tests1.second.locale" in any other default languages (charset ISO-8859-1)', $e->getMessage());
         }
 
         // ok now, we change to ISO-8859-11 : error message of jelix don't exists in this charset
@@ -215,7 +206,7 @@ class jLocaleTest extends jUnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests1.second.locale locale ('.$e->getMessage().')');
         } catch(Exception $e) {
-           $this->assertEquals('(200)The given locale key "tests1.second.locale" is invalid (for charset ISO-8859-11, lang fr_FR)', $e->getMessage());
+           $this->assertEquals('(212)No locale file found for the given locale key "tests1.second.locale" in any other default languages (charset ISO-8859-11)', $e->getMessage());
         }
     }
 
