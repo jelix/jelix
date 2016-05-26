@@ -51,7 +51,7 @@ abstract class jInstallerBase {
     public $version = '0';
 
     /**
-     * configuration of the entry point.
+     * combination between mainconfig.ini.php (master) and entrypoint config (overrider)
      * @var \Jelix\IniFile\MultiIniModifier
      * @deprecated use entryPoint methods to access to different configuration files.
      */

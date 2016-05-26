@@ -143,6 +143,7 @@ cd lib/jelix-modules/jauth/install/
   install.php
   upgrade_changepersistantkey.php
   upgrade_newencryption.php
+
 cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php
   authsw.coord.ini.php

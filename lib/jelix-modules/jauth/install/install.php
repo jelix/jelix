@@ -24,6 +24,7 @@ class jauthModuleInstaller extends jInstallerModule {
 
         $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
         $authconfigMaster = $this->getLocalConfigIni()->getValue('auth','coordplugins');
+
         $forWS = (in_array($this->entryPoint->type, array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
         if (!$authconfig || ($forWS && $authconfig == $authconfigMaster)) {

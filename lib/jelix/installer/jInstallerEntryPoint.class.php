@@ -13,10 +13,17 @@
  */
 class jInstallerEntryPoint {
 
-    /** @var StdObj   configuration parameters. compiled content of config files */
+    /**
+      * @var StdObj   configuration parameters. compiled content of config files
+      *  result of the merge of entry point config, localconfig.ini.php,
+      *  mainconfig.ini.php and defaultconfig.ini.php
+      */
     protected $config;
 
-    /** @var string the filename of the configuration file */
+    /**
+     * @var string the filename of the configuration file dedicated to the entry point
+     *       ex: <apppath>/var/config/index/config.ini.php
+     */
     protected $configFile;
 
     /**
@@ -36,6 +43,12 @@ class jInstallerEntryPoint {
      * @var \Jelix\IniFile\MultiIniModifier
      */
     protected $configIni;
+
+    /**
+      * entrypoint config
+      * @var \Jelix\IniFile\IniModifier
+      */
+    protected $epConfigIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -76,7 +89,8 @@ class jInstallerEntryPoint {
         $this->file = $file;
         $this->mainConfigIni = $mainConfig;
         $this->localConfigIni = $localConfig;
-        $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, jApp::configPath($configFile));
+        $this->epConfigIni = new \Jelix\IniFile\IniModifier(jApp::configPath($configFile));
+        $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,
                                               $this->scriptName);
@@ -132,6 +146,15 @@ class jInstallerEntryPoint {
         return $this->configIni;
     }
 
+    /*
+     * the entry point config alone
+     * @return \Jelix\IniFile\IniModifier
+     * @since 1.6.8
+     */
+    function getEpConfigIni() {
+        return $this->epConfigIni;
+    }
+
     /**
      * @return string the config file name of the entry point
      */
@@ -150,5 +173,4 @@ class jInstallerEntryPoint {
     function setConfigObj($config) {
         $this->config = $config;
     }
-
 }

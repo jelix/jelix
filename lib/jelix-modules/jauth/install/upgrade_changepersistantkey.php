@@ -10,7 +10,7 @@
 
 class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
 
-    public $targetVersions = array('1.3.0');
+    public $targetVersions = array('1.3.0', '1.7.0-beta.1');
     public $date = '2016-05-20 23:55';
 
     protected static $key = null;

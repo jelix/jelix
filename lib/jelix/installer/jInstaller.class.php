@@ -655,6 +655,7 @@ class jInstaller {
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
@@ -696,6 +697,7 @@ class jInstaller {
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
