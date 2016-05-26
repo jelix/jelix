@@ -8,19 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-
-
-class bundleTest extends jBundle {
-
-    public function readProperties($fichier){
-        $this->_loadResources($fichier,'UTF-8');
-        if(isset($this->_strings['UTF-8']))
-            return $this->_strings['UTF-8'];
-        else return null;
-    }
-
-}
+require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 
 class jLocaleTest extends jUnitTestCase {
 
@@ -44,25 +32,25 @@ class jLocaleTest extends jUnitTestCase {
 
     public function testBundleUnknownFile(){
         $this->assertTrue($this->filePath != '');
-        $b = new bundleTest('','');
         try {
-            $b->readProperties($this->filePath.'unknownfile');
+            $parser = new jPropertiesFileReader ($this->filePath.'unknownfile');
+            $parser->parse();
             self::fail('should throw an exception when trying reading unknownfile');
         }catch(Exception $e){
             $this->assertEquals('Cannot load the resource '.$this->filePath.'unknownfile', $e->getMessage(),
             'should throw the right exception when trying reading unknownfile (wrong message: '.$e->getMessage().')');
         }
-
     }
-    public function testBundle(){
-        $firstlist = array(
-        'test_A.properties' => '<null> </null>',
-        'test_B.properties' => '<array>array("aaa"=>"bbb","ccc"=>"")</array>',
-        'test_C.properties' => '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>',
-        'test_D.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
-        'test_E.properties' => '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>',
-        'test_F.properties' => '<array><string key="module.description" value="Tests unitaires jelix" /></array>',
-        'test_G.properties' => '<array><string key="module.description" value="Tests unitaires jelix" />
+
+    public function getPropertiesContent(){
+        return array(
+            array('test_A.properties', '<array> </array>'),
+            array('test_B.properties', '<array>array("aaa"=>"bbb","ccc"=>"")</array>'),
+            array('test_C.properties', '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>'),
+            array('test_D.properties', '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>'),
+            array('test_E.properties', '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>'),
+            array('test_F.properties', '<array><string key="module.description" value="Tests unitaires jelix" /></array>'),
+            array('test_G.properties', '<array><string key="module.description" value="Tests unitaires jelix" />
                                     <string key="ooo" value="bbbb" />
                                     <string key="bbb" value=" " />
                                     <string key="ddd" value="lorem ipsum &amp;#65; &lt;html&gt; &amp;quote; test &amp;gt;" />
@@ -71,26 +59,31 @@ class jLocaleTest extends jUnitTestCase {
                                     <string key="hh" value="    "/>
                                     <string key="ii" value="   '.utf8_encode(chr(160)).' bidule"/>
                                     <string key="jj" value="truc"/>
-                                </array>',
-        'test_H.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
-        'test_I.properties' => '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>',
-        'test_J.properties' => '<array>
+                                </array>'),
+            array('test_H.properties', '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>'),
+            array('test_I.properties', '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>'),
+            array('test_J.properties', '<array>
                 <string key="text.key" value="bug 639 there shouldn\'t have a notice during the parsing of this property " />
                 <string key="text.key2" value="same problem but with spaces at the end of the last line " />
-                <string key="text.key3" value="youpa" /></array>',
+                <string key="text.key3" value="youpa" /></array>'),
         );
-
-        foreach($firstlist as $file=>$content){
-            $b = new bundleTest('','');
-            try{
-                $strings = $b->readProperties($this->filePath.$file);
-                $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",$file );
-            }catch(Exception $e){
-                self::fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());
-            }
-        }
     }
 
+    /**
+     * @dataProvider getPropertiesContent
+     */
+    public function testBundle($file, $content){
+        try {
+            $parser = new jPropertiesFileReader ($this->filePath.$file);
+            $parser->parse();
+            $strings = $parser->getProperties();
+            $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",$file );
+        }
+        catch(Exception $e){
+            self::fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());
+        }
+    }
+    
     function testSimpleLocale(){
         jApp::config()->locale = 'fr_FR';
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale'));
@@ -106,6 +99,9 @@ class jLocaleTest extends jUnitTestCase {
         $this->assertEquals('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));
     }
 
+    /**
+     *
+     */
     function testException() {
         jApp::config()->locale = 'de_DE';
         try {
@@ -227,5 +223,4 @@ class jLocaleTest extends jUnitTestCase {
         jApp::config()->locale = 'fr_FR';
         $this->assertEquals('bonne valeur',jLocale::get('jelix_tests~newoverload.test'));
     }
-
 }

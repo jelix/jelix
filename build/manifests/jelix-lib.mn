@@ -54,6 +54,7 @@ cd lib/jelix/core
 * jIncluder.class.php
   jLocale.class.php
 * jLog.class.php
+  jPropertiesFileReader.class.php
   jRequest.class.php
 * jResponse.class.php
 * jSelector.class.php

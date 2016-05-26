@@ -4,13 +4,11 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @contributor Julien Issler, Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
 * enhancement by Laurent Jouanneau for Jelix.
-* @copyright 2008 Julien Issler, 2008 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -105,6 +103,7 @@ class jLocale {
         //try to get the message from the bundle.
         $string = $bundle->get ($file->messageKey, $file->charset);
         if ($string === null) {
+
             // locale key has not been found
             if (!$tryOtherLocales) {
                 throw new Exception('(210)The given locale key "'.$file->toString().

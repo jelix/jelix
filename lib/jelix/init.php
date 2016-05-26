@@ -91,6 +91,7 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jRequest.class.php
 #includephp core/jResponse.class.php
 #includephp core/jBundle.class.php
+#includephp core/jPropertiesFileReader.class.php
 #includephp core/jLocale.class.php
 #includephp core/jLog.class.php
 #includephp core/jIncluder.class.php
@@ -131,6 +132,7 @@ require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require (JELIX_LIB_CORE_PATH . 'jBundle.class.php');
+require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLog.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
