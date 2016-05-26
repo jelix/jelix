@@ -8,7 +8,6 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 
 class jLocaleTest extends jUnitTestCase {
 
