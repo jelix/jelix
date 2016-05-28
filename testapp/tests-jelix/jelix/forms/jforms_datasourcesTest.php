@@ -16,7 +16,10 @@ class jforms_datasourcesTest extends jUnitTestCaseDb {
     function setUp(){
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        $_SESSION['JFORMS'] = array();
+        if (isset($_SESSION['JFORMS_SESSION'])) {
+            unset($_SESSION['JFORMS_SESSION']);
+        };
+        jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
         $form = jForms::create('product');
         $this->savedParams = jApp::coord()->request->params;
 

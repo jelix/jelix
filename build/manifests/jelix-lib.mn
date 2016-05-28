@@ -283,6 +283,7 @@ cd lib/jelix/forms
 * jFormsControl.class.php
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
+  jFormsSession.class.php
 
 cd lib/jelix/forms/Builder
   BuilderBase.php

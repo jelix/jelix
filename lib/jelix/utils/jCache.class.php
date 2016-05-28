@@ -87,10 +87,9 @@ class jCache {
     *
     * @param mixed   $key   key or array of keys used for storing data in the cache
     * @param string  $profile the cache profile name to use. if empty, use the default profile
-    * @return mixed  $data      data stored
+    * @return mixed  $data      data stored. False if not found
     */
     public static function get ($key, $profile='') {
-
         $drv = self::_getDriver($profile);
 
         if (!$drv->enabled) {
