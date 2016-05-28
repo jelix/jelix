@@ -12,20 +12,26 @@
 
 class testInstallerEntryPoint extends jInstallerEntryPoint {
 
-    function __construct($defaultConfig, $configFile, $file, $type, $configContent) {
+    function __construct($mainConfigIni,
+                         $localConfigIni,
+                         $configFile, $file, $type, $configContent) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
+        
         if (is_object($configFile)) {
+            $this->epConfigIni = $configFile;
             $this->configFile = $configFile->getFileName();
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, $configFile);
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, $configFile);
         }
         else {
+            $this->epConfigIni = new testInstallerIniFileModifier($configFile);
             $this->configFile = $configFile;
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($defaultConfig, new testInstallerIniFileModifier($configFile));
+            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, $this->epConfigIni);
         }
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
-
+        $this->mainConfigIni = $mainConfigIni;
+        $this->localConfigIni = $localConfigIni;
         $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
                                                     $this->scriptName,
                                                     $this->isCliScript);

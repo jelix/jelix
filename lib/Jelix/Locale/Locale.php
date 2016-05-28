@@ -2,13 +2,11 @@
 /**
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @contributor Julien Issler, Yannick Le Guédart
-* @copyright  2001-2005 CopixTeam, 2005-2014 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
 * enhancement by Laurent Jouanneau for Jelix.
-* @copyright 2008 Julien Issler, 2008 Yannick Le Guédart
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -55,9 +53,12 @@ class Locale {
     * @param array $args arguments to apply to the localized string with sprintf
     * @param string $locale  the lang code. if null, use the default language
     * @param string $charset the charset code. if null, use the default charset
+    * @param boolean $tryOtherLocales if true and if the method does not find
+    *                   the locale file or the key, it will try with the default
+    *                   locale, the fallback local or similar locale
     * @return string the localized string
     */
-    static function get ($key, $args=null, $locale=null, $charset=null) {
+    static function get ($key, $args=null, $locale=null, $charset=null, $tryOtherLocales=true) {
 
         $config = App::config();
         try {
@@ -65,16 +66,27 @@ class Locale {
         }
         catch (\Jelix\Core\Selector\Exception $e) {
             // the file is not found
-            if ($e->getCode() == 12) throw $e;
-            if ($locale === null)  $locale = $config->locale;
-            if ($charset === null) $charset = $config->charset;
-            if ($locale != $config->fallbackLocale && $config->fallbackLocale) {
-                return self::get ($key, $args, $config->fallbackLocale, $charset);
+            if ($e->getCode() == 12) {
+                // unknown module..
+                throw $e;
             }
-            else
-                throw new Exception('(200)The given locale key "'.$key
-                                .'" is invalid (for charset '.$charset
-                                .', lang '.$locale.')');
+            if ($locale === null)  {
+                $locale = $config->locale;
+            }
+            if ($charset === null) {
+                $charset = $config->charset;
+            }
+            if (!$tryOtherLocales) {
+                throw new Exception('(211)No locale file found for the given locale key "'.$key
+                                .'" (charset '.$charset.', lang '.$locale.')');
+            }
+
+            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
+            if ($words === null) {
+                throw new Exception('(212)No locale file found for the given locale key "'.$key
+                                .'" in any other default languages (charset '.$charset.')');
+            }
+            return $words;
         }
 
         $locale = $file->locale;
@@ -89,17 +101,20 @@ class Locale {
         //try to get the message from the bundle.
         $string = $bundle->get ($file->messageKey, $file->charset);
         if ($string === null) {
-            if ($locale == $config->fallbackLocale) {
-                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang and in the fallback lang for the '.$file->charset.' charset');
+
+            // locale key has not been found
+            if (!$tryOtherLocales) {
+                throw new Exception('(210)The given locale key "'.$file->toString().
+                                    '" does not exists (lang:'.$file->locale.
+                                    ', charset:'.$file->charset.')');
             }
-            // if the message was not found, we're gonna
-            //use the default language and country.
-            else if ($locale == $config->locale) {
-                if ($config->fallbackLocale)
-                    return self::get ($key, $args, $config->fallbackLocale, $charset);
-                throw new Exception('(210)The given locale key "'.$file->toString().'" does not exists in the default lang for the '.$file->charset.' charset');
+
+            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
+            if ($words === null) {
+                throw new Exception('(213)The given locale key "'.$file->toString().
+                                    '" does not exists in any default languages for the '.$file->charset.' charset');
             }
-            return self::get ($key, $args, $config->locale);
+            return $words;
         }
         else {
             //here, we know the message
@@ -110,6 +125,31 @@ class Locale {
         }
     }
 
+    static protected function tryOtherLocales($key, $args, $locale, $charset, $config) {
+            $otherLocales = array();
+            $similarLocale = self::langToLocale(substr($locale, 0, strpos($locale, '_')));
+            if ($similarLocale != $locale) {
+                $otherLocales[] = $similarLocale;
+            }
+
+            if ($locale != $config->locale) {
+                $otherLocales[] = $config->locale;
+            }
+
+            if ($config->fallbackLocale && $locale != $config->fallbackLocale) {
+                $otherLocales[] = $config->fallbackLocale;
+            }
+
+            foreach($otherLocales as $loc) {
+                try {
+                    return Locale::get ($key, $args, $loc, $charset, false);
+                }
+                catch(\Exception $e) {
+                }
+            }
+            return null;
+    }
+    
     /**
      * says if the given locale or lang code is available in the application
      * @param string $locale the locale code (xx_YY) or a lang code (xx)

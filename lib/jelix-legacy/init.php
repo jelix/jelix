@@ -130,6 +130,7 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #includephp core/jUrl.class.php
 #includephp core/jController.class.php
 #includephp core/jSession.class.php
+#includephp core/jPropertiesFileReader.class.php
 
 #else
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
@@ -148,6 +149,7 @@ require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
+require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 #endif
 
 /**

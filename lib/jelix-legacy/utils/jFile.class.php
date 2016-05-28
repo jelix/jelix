@@ -56,13 +56,8 @@ class jFile {
     * @param string $dir the path of the directory
     */
     public static function createDir ($dir, $chmod=null){
-        if ($chmod === null) {
-            if (jApp::config()) {
-                $chmod =  jApp::config()->chmodDir;
-            }
-            else {
-                $chmod = 0775;
-            }
+        if ($chmod === null && jApp::config()) {
+            $chmod =  jApp::config()->chmodDir;
         }
         return Directory::create($dir, $chmod);
     }
@@ -92,8 +87,10 @@ class jFile {
      * @param string $file The full path of the file
      * @return string the MIME type of the file
      * @since 1.1.6
+     * @deprecated  use \Jelix\FileUtilities\File::getMimeType() instead
      */
     public static function getMimeType($file){
+        trigger_error("jFile::getMimeType is deprecated. Use \\Jelix\\FileUtilities\\File::getMimeType() instead.", E_USER_DEPRECATED);
         return File::getMimeType($file);
     }
 
@@ -184,8 +181,10 @@ class jFile {
      * @param string $from  absolute path from which we should start
      * @param string $to  absolute path to which we should go
      * @return string relative path between the two path
+     * @deprecated use \Jelix\FileUtilities\Path::shortestPath() instead
      */
     public static function shortestPath($from, $to) {
+        trigger_error("jFile::shortestPath() is deprecated. Use \\Jelix\\FileUtilities\\Path::shortestPath() instead.", E_USER_DEPRECATED);
         return Path::shortestPath($from, $to);
     }
 
@@ -194,8 +193,10 @@ class jFile {
      * support windows path.
      * @param string $path
      * @return string the normalized path
+     * @deprecated Use \Jelix\FileUtilities\Path::normalizePath() instead
      */
     public static function normalizePath($path) {
+        trigger_error("jFile::normalizePath is deprecated. Use \\Jelix\\FileUtilities\\Path::normalizePath() instead.", E_USER_DEPRECATED);
         return Path::normalizePath($path);
     }
 }

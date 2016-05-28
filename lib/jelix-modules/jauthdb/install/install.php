@@ -19,7 +19,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
         //if ($this->entryPoint->type == 'cmdline')
         //    return;
 
-        $authconfig = $this->config->getValue('auth','coordplugins');
+        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
 
         if ($authconfig && $this->firstExec($authconfig)) {
             // a config file for the auth plugin exists, so we can install

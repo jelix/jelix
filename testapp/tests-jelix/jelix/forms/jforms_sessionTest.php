@@ -27,7 +27,10 @@ class jforms_sessionTest extends jUnitTestCase {
     protected $form1Descriptor, $form2Descriptor, $formLabelDescriptor;
 
     static function setUpBeforeClass() {
-        $_SESSION['JFORMS'] = array();
+        if (isset($_SESSION['JFORMS_SESSION'])) {
+            unset($_SESSION['JFORMS_SESSION']);
+        };
+        jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
     }
     
     function setUp(){
@@ -131,6 +134,7 @@ class jforms_sessionTest extends jUnitTestCase {
     }
 
     function tearDown(){
+        $_SESSION['JFORMS_SESSION']->save();
         jApp::popCurrentModule();
     }
 
@@ -138,11 +142,17 @@ class jforms_sessionTest extends jUnitTestCase {
         $form1 = jForms::create('product');
         $this->assertComplexIdenticalStr($form1, $this->form1Descriptor);
 
-        $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+        $this->assertTrue(isset($_SESSION['JFORMS_SESSION']));
+        $this->assertInstanceOf('jFormsSession',$_SESSION['JFORMS_SESSION']);
+
+        list($selector, $formId, $key1) = $_SESSION['JFORMS_SESSION']->getCacheKey('product', null);
+        $this->assertEquals('jelix_tests~product', $selector->toString());
+        $this->assertEquals(0, $formId);
+        $this->assertFalse(jCache::get($key1, 'jforms'));
+
+        $verifContainer1='
+        <object class="jFormsDataContainer">
+            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
@@ -150,30 +160,23 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="1" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        $this->assertComplexIdenticalStr($form1->getContainer(), $verifContainer1);
+
         // second time
         $form1 = jForms::create('product');
         $this->assertEquals(2, $form1->getContainer()->refcount);
 
         $form2 = jForms::create('product', 'akey');
         $this->assertComplexIdenticalStr($form2, $this->form2Descriptor);
-        $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="jelix_tests~product" />
-            <array property="data">
-                <string key="name" value="" />
-                <string key="price" value="" />
-            </array>
-            <array property="errors">[]</array>
-            <integer property="refcount" value="2" />
-        </object>
-        <object key="akey" class="jFormsDataContainer">
+
+        list($selector, $formId, $key2) = $_SESSION['JFORMS_SESSION']->getCacheKey('product', 'akey');
+        $this->assertEquals('jelix_tests~product', $selector->toString());
+        $this->assertEquals('akey', $formId);
+        $this->assertFalse(jCache::get($key2, 'jforms'));
+
+        $verifContainer2='
+        <object class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -182,40 +185,20 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        $this->assertComplexIdenticalStr($form2->getContainer(), $verifContainer2);
 
-
+        // with a complex form id
         $formLabel = jForms::create('label', array(1,'fr'));
         $this->assertComplexIdenticalStr($formLabel, $this->formLabelDescriptor);
-        $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
-            <string property="formSelector" value="jelix_tests~product" />
-            <array property="data">
-                <string key="name" value="" />
-                <string key="price" value="" />
-            </array>
-            <array property="errors">[]</array>
-            <integer property="refcount" value="2" />
-        </object>
-        <object key="akey" class="jFormsDataContainer">
-            <string property="formId" value="akey" />
-            <string property="formSelector" value="jelix_tests~product" />
-            <array property="data">
-                <string key="name" value="" />
-                <string key="price" value="" />
-            </array>
-            <array property="errors">[]</array>
-            <integer property="refcount" value="0" />
-        </object>
-     </array>
-     <array key="jelix_tests~label">
-        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+
+        list($selector, $formId, $key3) = $_SESSION['JFORMS_SESSION']->getCacheKey('label', array(1,'fr'));
+        $this->assertEquals('jelix_tests~label', $selector->toString());
+        $this->assertEquals(array(1,'fr'), $formId);
+        $this->assertFalse(jCache::get($key3, 'jforms'));
+
+        $verifContainer3='
+        <object class="jFormsDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -223,12 +206,72 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        $this->assertComplexIdenticalStr($formLabel->getContainer(), $verifContainer3);
+        return array($key1, $key2, $key3);
     }
 
+    /**
+     * @depends testCreate
+     */
+    function testSessionSave($keys) {
+        $container = jCache::get($keys[0], 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $verifContainer1='
+        <object class="jFormsDataContainer">
+            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="" />
+                <string key="price" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="2" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer1);
+
+        $container = jCache::get($keys[1], 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $verifContainer2='
+        <object class="jFormsDataContainer">
+            <string property="formId" value="akey" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="" />
+                <string key="price" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer2);
+        $container = jCache::get($keys[2], 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+
+        $verifContainer3='
+        <object class="jFormsDataContainer">
+            <array property="formId">[1,"fr"]</array>
+            <string property="formSelector" value="jelix_tests~label" />
+            <array property="data">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer3);
+    }
+
+    /**
+     * @depends testCreate
+     */
     function testGet(){
         $f1 = jForms::get('product');
         $this->assertComplexIdenticalStr($f1, $this->form1Descriptor);
@@ -243,6 +286,9 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertComplexIdenticalStr($f4, $this->formLabelDescriptor);
     }
 
+    /**
+     * @depends testGet
+     */
     function testFill(){
         $req = jApp::coord()->request;
         $savedParams = $req->params;
@@ -294,6 +340,7 @@ class jforms_sessionTest extends jUnitTestCase {
         $form = jForms::get('product', 'akey');
         $this->assertComplexIdenticalStr($form, $this->form2Descriptor);
 
+        $req->params['price'] = '23';
         $form = jForms::fill('product', 'akey');
         $verif = '
 <object class="cForm_jelix_tests_Jx_product">
@@ -302,7 +349,7 @@ class jforms_sessionTest extends jUnitTestCase {
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="phone" />
-            <string key="price" value="45" />
+            <string key="price" value="23" />
         </array>
         <array property="errors">[]</array>
         <integer property="refcount" value="0" />
@@ -333,7 +380,71 @@ class jforms_sessionTest extends jUnitTestCase {
         $req->params= $savedParams;
     }
 
+    /**
+     * @depends testFill
+     */
+    function testSessionSavedAfterFill($keys) {
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', null);
+        $container = jCache::get($key, 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $verifContainer1='
+        <object class="jFormsDataContainer">
+            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="phone" />
+                <string key="price" value="45" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="2" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer1);
 
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', 'akey');
+        $container = jCache::get($key, 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $verifContainer2='
+        <object class="jFormsDataContainer">
+            <string property="formId" value="akey" />
+            <string property="formSelector" value="jelix_tests~product" />
+            <array property="data">
+                <string key="name" value="phone" />
+                <string key="price" value="23" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer2);
+
+        list($sel, $formId, $key) = $_SESSION['JFORMS_SESSION']->getCacheKey('label', array(1,'fr'));
+        $container = jCache::get($key, 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+
+        $verifContainer3='
+        <object class="jFormsDataContainer">
+            <array property="formId">[1,"fr"]</array>
+            <string property="formSelector" value="jelix_tests~label" />
+            <array property="data">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer3);
+    }
+
+    /**
+     * @depends testSessionSavedAfterFill
+     */
     function testDestroy(){
 
         // first destroy of the default instance
@@ -341,29 +452,33 @@ class jforms_sessionTest extends jUnitTestCase {
         // the instance
         jForms::destroy('product');
 
-        $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+        $verifProduct0='
+        <object class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">[]</array>
             <array property="errors">[]</array>
             <integer property="refcount" value="1" />
-        </object>
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
+        $this->assertComplexIdenticalStr($container, $verifProduct0);
+
+        $verifProduct1='
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="phone" />
-                <string key="price" value="45" />
+                <string key="price" value="23" />
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-     <array key="jelix_tests~label">
-        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
+        $this->assertComplexIdenticalStr($container, $verifProduct1);
+
+        $verifProduct2='
+        <object class="jFormsDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -371,31 +486,31 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
-
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
+        $this->assertComplexIdenticalStr($container, $verifProduct2);
 
         // second destroy, we should have no more default instance
         jForms::destroy('product');
-
-        $verif='
-<array>
-     <array key="jelix_tests~product">
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
+        $this->assertNull($container);
+        
+        $verifProduct1='
         <object key="akey" class="jFormsDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="phone" />
-                <string key="price" value="45" />
+                <string key="price" value="23" />
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-     <array key="jelix_tests~label">
-        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
+        $this->assertComplexIdenticalStr($container, $verifProduct1);
+
+        $verifProduct2='
+        <object class="jFormsDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -403,18 +518,18 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
+        $this->assertComplexIdenticalStr($container, $verifProduct2);
 
-
+        // destroy other instance of product
         jForms::destroy('product','akey');
-        $verif='
-<array>
-     <array key="jelix_tests~product">[]</array>
-     <array key="jelix_tests~label">
-        <object key="a:2:{i:0;i:1;i:1;s:2:&quot;fr&quot;;}" class="jFormsDataContainer">
+
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
+        $this->assertNull($container);
+
+        $verifProduct2='
+        <object class="jFormsDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -422,14 +537,46 @@ class jforms_sessionTest extends jUnitTestCase {
             </array>
             <array property="errors">[]</array>
             <integer property="refcount" value="0" />
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
+        $this->assertComplexIdenticalStr($container, $verifProduct2);
     }
 
+    /**
+     * @depends testDestroy
+     */
+    function testSessionSavedAfterDestroy() {
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', null);
+        $container = jCache::get($key, 'jforms');
+        $this->assertFalse($container);
 
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', 'akey');
+        $container = jCache::get($key, 'jforms');
+        $this->assertFalse($container);
 
+        list($sel, $formId, $key) = $_SESSION['JFORMS_SESSION']->getCacheKey('label', array(1,'fr'));
+        $container = jCache::get($key, 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+
+        $verifContainer3='
+        <object class="jFormsDataContainer">
+            <array property="formId">[1,"fr"]</array>
+            <string property="formSelector" value="jelix_tests~label" />
+            <array property="data">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer3);
+    }
+
+    /**
+     * @depends testSessionSavedAfterDestroy
+     */
     function testPrepareObjectFromControls() {
         $f = jForms::create('product');
         $ctrl= new jFormsControlcheckbox('instock');
@@ -437,9 +584,7 @@ class jforms_sessionTest extends jUnitTestCase {
         $f->addControl($ctrl);
         
         $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+        <object class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -448,19 +593,16 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="instock" value="0" />
             </array>
             <array property="errors">[]</array>
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
+        $this->assertComplexIdenticalStr($container, $verif);
 
         $f->setData('name', 'car');
         $f->setData('price', 56598);
         $f->setData('instock', true);
 
         $verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.jForms::DEFAULT_ID.'" class="jFormsDataContainer">
+        <object  class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -469,10 +611,9 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="instock" value="1" />
             </array>
             <array property="errors">[]</array>
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
+        $this->assertComplexIdenticalStr($container, $verif);
 
         $o = new UTjformsDummyObject();
         $f->prepareObjectFromControls($o);
@@ -485,9 +626,44 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertComplexIdenticalStr($o, $verif);
 
         jForms::destroy('product');
+    } 
+
+    /**
+     * @depends testPrepareObjectFromControls
+     */
+    function testSessionSavedPrepareObjectFromControls() {
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', null);
+        $container = jCache::get($key, 'jforms');
+        $this->assertFalse($container);
+
+        list($sel, $formId, $key)  = $_SESSION['JFORMS_SESSION']->getCacheKey('product', 'akey');
+        $container = jCache::get($key, 'jforms');
+        $this->assertFalse($container);
+
+        list($sel, $formId, $key) = $_SESSION['JFORMS_SESSION']->getCacheKey('label', array(1,'fr'));
+        $container = jCache::get($key, 'jforms');
+        $this->assertTrue($container !== false);
+        $this->assertTrue(is_string($container));
+        $container = unserialize($container);
+        $this->assertInstanceOf('jFormsDataContainer', $container);
+
+        $verifContainer3='
+        <object class="jFormsDataContainer">
+            <array property="formId">[1,"fr"]</array>
+            <string property="formSelector" value="jelix_tests~label" />
+            <array property="data">
+                <string key="label" value="" />
+            </array>
+            <array property="errors">[]</array>
+            <integer property="refcount" value="0" />
+        </object>';
+        $this->assertComplexIdenticalStr($container, $verifContainer3);
     }
-    
-    
+
+
+    /**
+     * @depends testSessionSavedPrepareObjectFromControls
+     */
     public function testTokenGenerationDefaultId() {
         $f = jForms::create('product');
         $c = $f->getContainer();
@@ -501,6 +677,9 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertEquals($t, $f->createNewToken());
     }
 
+    /**
+     * @depends testTokenGenerationDefaultId
+     */
     public function testTokenGenerationStringIntId() {
         $f = jForms::create('product', "8");
         $c = $f->getContainer();
@@ -514,6 +693,9 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertEquals($t, $f->createNewToken());
     }
 
+    /**
+     * @depends testTokenGenerationStringIntId
+     */
     public function testTokenGenerationString0Id() {
         $f = jForms::create('product', "0");
         $c = $f->getContainer();
@@ -527,6 +709,9 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertEquals($t, $f->createNewToken());
     }
 
+    /**
+     * @depends testTokenGenerationString0Id
+     */
     public function testTokenGenerationIntId() {
         $f = jForms::create('product', 8);
         $c = $f->getContainer();
@@ -540,6 +725,9 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->assertEquals($t, $f->createNewToken());
     }
 
+    /**
+     * @depends testTokenGenerationIntId
+     */
     public function testTokenGeneration0Id() {
         $f = jForms::create('product', 0);
         $c = $f->getContainer();

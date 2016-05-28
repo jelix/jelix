@@ -15,12 +15,16 @@ require_once(__DIR__.'/installer.lib.php');
 
 class jInstaller_DependenciesTest extends jUnitTestCase {
 
-    protected $defaultIni;
+    protected $mainConfig;
+    protected $localConfig;
 
     public function setUp() {
         jApp::saveContext();
         self::initJelixConfig();
-        $this->defaultIni = new \Jelix\IniFile\IniModifier(jApp::configPath().'mainconfig.ini.php');
+        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(),
+                                                                \Jelix\Core\App::mainConfigFile());
+        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
+                                                                 \Jelix\Core\App::configPath('localconfig.ini.php'));
     }
 
     public function tearDown() {
@@ -35,7 +39,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testA.installed'=>false,
             'testA.version'=>'1.0',
         ));
-        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+        $ep = new testInstallerEntryPoint($this->mainConfig, $this->localConfig, $ini, 'index.php', 'classic', $conf);
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
@@ -83,7 +87,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testB.installed'=>false,
             'testB.version'=>"1.0",
         ));
-        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+        $ep = new testInstallerEntryPoint($this->mainConfig, $this->localConfig, $ini, 'index.php', 'classic', $conf);
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
@@ -169,7 +173,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testE.installed'=>false,
             'testE.version'=>"1.0",
         ));
-        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+        $ep = new testInstallerEntryPoint($this->mainConfig, $this->localConfig, $ini, 'index.php', 'classic', $conf);
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
@@ -307,7 +311,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testF.installed'=>false,
             'testF.version'=>"1.0",
         ));
-        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+        $ep = new testInstallerEntryPoint($this->mainConfig, $this->localConfig, $ini, 'index.php', 'classic', $conf);
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">
@@ -448,7 +452,7 @@ class jInstaller_DependenciesTest extends jUnitTestCase {
             'testC.installed'=>false,
             'testC.version'=>"1.0",
         ));
-        $ep = new testInstallerEntryPoint($this->defaultIni, $ini, 'index.php', 'classic', $conf);
+        $ep = new testInstallerEntryPoint($this->mainConfig, $this->localConfig, $ini, 'index.php', 'classic', $conf);
 
         $modInfos = new testInstallerModuleInfos('/testA', '<module xmlns="http://jelix.org/ns/module/1.0">
                         <info id="testA@modules.jelix.org" name="testA">

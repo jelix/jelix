@@ -59,13 +59,10 @@ enable_after_logout_override=off
 ;============ Parameters for the persistance of the authentification
 
 ; enable the persistance of the authentification between two sessions
-persistant_enable=off
-
-; key to use to crypt the password in the cookie. replace it by your own words !
-persistant_crypt_key=exampleOfCryptKey
+persistant_enable=on
 
 ; the name of the cookie which is used to store data for the authentification
-persistant_cookie_name=jelixAuthentificationCookie
+persistant_cookie_name=jauthSession
 
 ; duration of the validity of the cookie (in days). default is 1 day.
 persistant_duration=1
@@ -108,10 +105,10 @@ password_crypt_function=sha1
 form="jauthdb_admin~jelixuser"
 
 ; list of properties to see in the user list in jauthdb_admin
-listProperties = login,email
+listProperties="login,email"
 
 ; list of properties in which the filter will applied, in jauthdb_admin
-filteredProperties = login,email
+filteredProperties="login,email"
 
 
 ; path of the directory where to store files uploaded by the form (jauthdb_admin module)

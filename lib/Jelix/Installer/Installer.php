@@ -108,16 +108,16 @@ class Installer {
     public $nbNotice = 0;
 
     /**
-     * the mainconfig.ini.php content
-     * @var \Jelix\IniFile\IniModifier
+     * the mainconfig.ini.php combined with the defaultconfig.ini.php
+     * @var \Jelix\IniFile\MultiIniModifier
      */
-    public $mainConfig;
+    protected $mainConfig;
 
     /**
-     * the localconfig.ini.php content
-     * @var \Jelix\IniFile\IniModifier
+     * the localconfig.ini.php content combined with $mainConfig
+     * @var \Jelix\IniFile\MultiIniModifier
      */
-    public $localConfig;
+    protected $localConfig;
 
     /**
      * initialize the installation
@@ -130,7 +130,6 @@ class Installer {
     function __construct (ReporterInterface $reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new Checker\Messages($lang);
-        $this->mainConfig = new \Jelix\IniFile\IniModifier(App::mainConfigFile());
 
         $localConfig = App::configPath('localconfig.ini.php');
         if (!file_exists($localConfig)) {
@@ -142,20 +141,19 @@ class Installer {
               file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
            }
         }
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, $localConfig);
 
+        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(),
+                                                                App::mainConfigFile());
+        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
+                                                                 $localConfig);
         $this->installerIni = $this->getInstallerIni();
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
         $this->installerIni->save();
+
         // be sure temp path is ready
         $chmod = $this->mainConfig->getValue('chmodDir');
-        if (!$chmod) {
-            $config = \Jelix\IniFile\Util::read(\Jelix\Core\Config::getDefaultConfigFile(), true);
-            $chmod = $config->chmodDir;
-        }
-
-        \jFile::createDir(App::tempPath(), intval($chmod,8));
+        \jFile::createDir(App::tempPath(), intval($chmod, 8));
     }
 
     /**
@@ -163,13 +161,18 @@ class Installer {
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
-        if (!file_exists(App::configPath('installer.ini.php')))
+        if (!file_exists(App::configPath('installer.ini.php'))) {
             if (false === @file_put_contents(App::configPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
-"))
+")) {
                 throw new \Exception('impossible to create var/config/installer.ini.php');
+            }
+        }
+        else {
+            copy(App::configPath('installer.ini.php'), App::configPath('installer.bak.ini.php'));
+        }
         return new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
     }
 
@@ -198,8 +201,6 @@ class Installer {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
-            // not to the constructor, to no break API. FIXME
-            $ep->localConfigIni =  new \Jelix\IniFile\MultiIniModifier($this->localConfig, App::configPath($configFile));
             $epId = $ep->getEpId();
 
             $this->epId[$file] = $epId;
@@ -234,7 +235,7 @@ class Installer {
      * @return EntryPoint
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new EntryPoint($this->mainConfig, $configFile, $file, $type);
+        return new EntryPoint($this->mainConfig, $this->localConfig, $configFile, $file, $type);
     }
 
     /**
@@ -447,10 +448,12 @@ class Installer {
 
         $epId = $ep->getEpId();
         $this->notice('install.entrypoint.start', $epId);
-        App::setConfig($ep->config);
+        $ep = $this->entryPoints[$epId];
+        App::setConfig($ep->getConfigObj());
 
-        if ($ep->config->disableInstallers)
+        if ($ep->getConfigObj()->disableInstallers) {
             $this->notice('install.entrypoint.installers.disabled');
+        }
 
         // first, check dependencies of the component, to have the list of component
         // we should really install.
@@ -478,7 +481,7 @@ class Installer {
                     $this->installerIni->setValue($component->getName().'.version',
                                                    $component->getSourceVersion(), $epId);
 
-                    if ($ep->config->disableInstallers) {
+                    if ($ep->getConfigObj()->disableInstallers) {
                         $upgraders = array();
                     }
                     else {
@@ -489,10 +492,9 @@ class Installer {
                     }
 
                     $componentsToInstall[] = array($upgraders, $component, false);
-
                 }
                 else if ($toInstall) {
-                    if ($ep->config->disableInstallers)
+                    if ($ep->getConfigObj()->disableInstallers)
                         $installer = null;
                     else
                         $installer = $component->getInstaller($ep, $installWholeApp);
@@ -501,7 +503,7 @@ class Installer {
                         $installer->preInstall();
                 }
                 else {
-                    if ($ep->config->disableInstallers) {
+                    if ($ep->getConfigObj()->disableInstallers) {
                         $upgraders = array();
                     }
                     else {
@@ -580,15 +582,16 @@ class Installer {
                     $installedModules[] = array($installer, $component, false);
                 }
                 // we always save the configuration, so it invalidates the cache
-                $ep->configIni->save();
+                $ep->getConfigIni()->save();
+
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $compiler =  new \Jelix\Core\Config\Compiler($ep->configFile,
+                $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
                                                              $ep->scriptName,
                                                              $ep->isCliScript);
-                $ep->config = $compiler->read(true);
+                $ep->setConfigObj($compiler->read(true));
 
-                App::setConfig($ep->config);
+                App::setConfig($ep->getConfigObj());
             }
         } catch (Exception $e) {
             $result = false;
@@ -622,14 +625,15 @@ class Installer {
                 }
 
                 // we always save the configuration, so it invalidates the cache
-                $ep->configIni->save();
+                $ep->getConfigIni()->save();
+
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
-                $compiler =  new \Jelix\Core\Config\Compiler($ep->configFile,
+                $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
                                                              $ep->scriptName,
                                                              $ep->isCliScript);
-                $ep->config = $compiler->read(true);
-                App::setConfig($ep->config);
+                $ep->setConfigObj($compiler->read(true));
+                App::setConfig($ep->getConfigObj());
             } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());

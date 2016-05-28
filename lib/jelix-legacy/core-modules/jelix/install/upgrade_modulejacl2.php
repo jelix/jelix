@@ -20,11 +20,23 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule {
     }
     
     protected function _upgradeconf($module) {
-        $isMaster = false;
-        $jacl2File = $this->config->getOverrider()->getValue($module, 'coordplugins');
+        $conf = null;
+        // get from entrypoint config
+        $jacl2File = $this->getConfigIni()->getOverrider()->getValue($module, 'coordplugins');
         if ($jacl2File == '') {
-            $jacl2File = $this->config->getMaster()->getValue($module, 'coordplugins');
-            $isMaster = true;
+            // get from localConfig.ini.php
+            $jacl2File = $this->getLocalConfigIni()->getOverrider()->getValue($module, 'coordplugins');
+            if ($jacl2File == '') {
+                // get from mainConfig.ini.php
+                $jacl2File = $this->getMainConfigIni()->getOverrider()->getValue($module, 'coordplugins');
+                $conf = $this->getMainConfigIni()->getOverrider();
+            }
+            else {
+                $conf = $this->getLocalConfigIni()->getOverrider();
+            }
+        }
+        else {
+            $conf = $this->getConfigIni()->getOverrider();
         }
 
         if ($jacl2File == '' || $jacl2File == '1')
@@ -49,11 +61,6 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule {
             $onerror = $ini->getValue('on_error');
             $on_error_action = $ini->getValue('on_error_action');
         }
-
-        if ($isMaster)
-            $conf = $this->config->getMaster();
-        else
-            $conf = $this->config->getOverrider();
 
         $conf->setValue($module, '1', 'coordplugins');
         $conf->setValue('on_error', $onerror, 'coordplugin_'.$module);

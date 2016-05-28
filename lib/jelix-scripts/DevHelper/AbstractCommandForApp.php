@@ -184,11 +184,11 @@ abstract class AbstractCommandForApp extends AbstractCommand
         if ($path == '') {
             throw new \Exception('The modules dir '.$repository.' is not a valid path');
         }
-        $path = \jFile::shortestPath(\Jelix\Core\App::appPath(), $path);
+        $path = \Jelix\FileUtilities\Path::shortestPath(\Jelix\Core\App::appPath(), $path);
 
         $found = false;
         foreach ($allDirs as $dir) {
-            $dir = \jFile::shortestPath(\Jelix\Core\App::appPath(), $dir);
+            $dir = \Jelix\FileUtilities\Path::shortestPath(\Jelix\Core\App::appPath(), $dir);
             if ($dir == $path) {
                 $found = true;
                 break;

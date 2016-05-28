@@ -12,6 +12,7 @@
  *
  */
 require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
+require_once(JELIX_LIB_PATH.'forms/jFormsSession.class.php');
 
 /**
  * static class to manage and call a form
@@ -38,6 +39,13 @@ class jForms {
      */
     private function __construct(){ }
 
+    protected static function getSession () {
+        if (!isset($_SESSION['JFORMS_SESSION'])) {
+            $_SESSION['JFORMS_SESSION'] = new jFormsSession();
+        }
+        return $_SESSION['JFORMS_SESSION'];
+    }
+
     /**
      * Create a new form with empty data
      *
@@ -50,26 +58,11 @@ class jForms {
      * @return jFormBase the object representing the form
      */
     public static function create($formSel, $formId=null){
-        $sel = new jSelectorForm($formSel);
-        // normalize the selector to avoid conflict in session
-        $formSel = $sel->toString(); 
+        $session = self::getSession();
+        list($container, $sel) = $session->getContainer($formSel, $formId, true);
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        if($formId === null || $formId === '')
-            $formId = self::DEFAULT_ID;
-        $fid = is_array($formId) ? serialize($formId) : $formId;
-        if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
-            $dc = $_SESSION['JFORMS'][$formSel][$fid]= new jFormsDataContainer($formSel, $formId);
-            if (is_numeric($formId) && $formId == self::DEFAULT_ID) {
-                $dc->refcount = 1;
-            }
-        }
-        else {
-            $dc = $_SESSION['JFORMS'][$formSel][$fid];
-            if (is_numeric($formId) && $formId == self::DEFAULT_ID) 
-                $dc->refcount++;
-        }
-        $form = new $c($formSel, $dc, true);
+        $form = new $c($container->formSelector, $container, true);
         return $form;
     }
 
@@ -84,22 +77,14 @@ class jForms {
      */
     static public function get($formSel, $formId=null){
 
-        if($formId === null || $formId === '')
-            $formId= self::DEFAULT_ID;
-        $fid = is_array($formId) ? serialize($formId) : $formId;
-
-        $sel = new jSelectorForm($formSel);
-        // normalize the selector to avoid conflict in session
-        $formSel = $sel->toString();
-
-        if(!isset($_SESSION['JFORMS'][$formSel][$fid])){
+        $session = self::getSession();
+        list($container, $sel) = $session->getContainer($formSel, $formId, false);
+        if (!$container) {
             return null;
         }
-
         jIncluder::inc($sel);
         $c = $sel->getClass();
-        $form = new $c($formSel, $_SESSION['JFORMS'][$formSel][$fid],false);
-
+        $form = new $c($container->formSelector, $container, false);
         return $form;
     }
 
@@ -128,52 +113,17 @@ class jForms {
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      */
     static public function destroy($formSel, $formId=null){
-
-        if($formId === null || $formId === '')  $formId = self::DEFAULT_ID;
-        if(is_array($formId)) $formId = serialize($formId);
-        
-        // normalize the selector to avoid conflict in session
-        $sel = new jSelectorForm($formSel);
-        $formSel = $sel->toString();
-
-        if(isset($_SESSION['JFORMS'][$formSel][$formId])){
-            if (is_numeric($formId) && $formId == self::DEFAULT_ID) {
-                if((--$_SESSION['JFORMS'][$formSel][$formId]->refcount) > 0) {
-                    $_SESSION['JFORMS'][$formSel][$formId]->clear();
-                    return;
-                }
-            }
-            unset($_SESSION['JFORMS'][$formSel][$formId]);
-        }
+        $session = self::getSession();
+        $session->deleteContainer($formSel, $formId);
     }
 
     /**
      * destroy all form which are too old and unused
-     * @param integer $life the number of second of a life of a form
+     *
+     * parameters are deprecated and unused
      */
     static public function clean($formSel='', $life=86400) {
-        if(!isset($_SESSION['JFORMS'])) return;
-        if($formSel=='') {
-            $t = time();
-            foreach($_SESSION['JFORMS'] as $sel=>$f) {
-                // don't call clean itself, see bug #1154
-                foreach($_SESSION['JFORMS'][$sel] as $id=>$cont) {
-                    if($t-$cont->updatetime > $life)
-                        unset($_SESSION['JFORMS'][$sel][$id]);
-                }
-            }
-        } else {
-            // normalize the selector to avoid conflict in session
-            $sel = new jSelectorForm($formSel);
-            $formSel = $sel->toString();
-            
-            if(isset($_SESSION['JFORMS'][$formSel])) {
-                $t = time();
-                foreach($_SESSION['JFORMS'][$formSel] as $id=>$cont) {
-                    if($t-$cont->updatetime > $life)
-                        unset($_SESSION['JFORMS'][$formSel][$id]);
-                }
-            }
-        }
+        $session = self::getSession();
+        $session->garbage();
     }
 }

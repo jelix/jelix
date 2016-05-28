@@ -16,7 +16,10 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
     protected $backupGlobalsBlacklist = array('_SESSION');
 
     static function setUpBeforeClass() {
-        $_SESSION['JFORMS'] = array();
+        if (isset($_SESSION['JFORMS_SESSION'])) {
+            unset($_SESSION['JFORMS_SESSION']);
+        };
+        jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         $form = jForms::create('product');
@@ -173,18 +176,16 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
     function testLoadDao(){
         jForms::destroy('product');
         jForms::destroy('product', self::$id);
-        $verif='
-<array>
-     <array key="jelix_tests~product">[]</array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
+        $this->assertNull($container);
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
+        $this->assertNull($container);
 
         $form = jForms::create('product', self::$id);
 
-$verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.self::$id.'" class="jFormsDataContainer">
+        $verif='
+        <object class="jFormsDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -193,17 +194,14 @@ $verif='
                 <array key="tag">[]</array>
             </array>
             <array property="errors">[]</array>
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
+        $this->assertComplexIdenticalStr($container, $verif);
 
         $form->initFromDao('products');
 
-$verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.self::$id.'" class="jFormsDataContainer">
+        $verif='
+        <object class="jFormsDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -212,17 +210,13 @@ $verif='
                 <array key="tag">[]</array>
             </array>
             <array property="errors">[]</array>
-        </object>
-     </array>
-</array>';
-
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
+        $this->assertComplexIdenticalStr($container, $verif);
 
         $form->initControlFromDao('tag', 'product_tags');
-$verif='
-<array>
-     <array key="jelix_tests~product">
-        <object key="'.self::$id.'" class="jFormsDataContainer">
+        $verif='
+        <object class="jFormsDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -231,10 +225,9 @@ $verif='
                 <array key="tag">["best seller", "high tech"]</array>
             </array>
             <array property="errors">[]</array>
-        </object>
-     </array>
-</array>';
-        $this->assertComplexIdenticalStr($_SESSION['JFORMS'], $verif);
+        </object>';
+        list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
+        $this->assertComplexIdenticalStr($container, $verif);
     }
 
     /**

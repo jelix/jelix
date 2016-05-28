@@ -35,7 +35,10 @@ class jforms_HTMLBuilder2Test extends jUnitTestCaseDb {
     function setUp() {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        $_SESSION['JFORMS'] = array();
+        if (isset($_SESSION['JFORMS_SESSION'])) {
+            unset($_SESSION['JFORMS_SESSION']);
+        };
+        jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
         $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testJFormsHtmlBuilder2($this->form);

@@ -18,7 +18,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
      * Called before the installation of all other modules
      * (dependents modules or the whole application).
      * Here, you should check if the module can be installed or not
-     * @throw jException if an error occurs during the check of the installation
+     * @throw Exception if the module cannot be installed
      */
     function preInstall() {
 
@@ -28,7 +28,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
      * should configure the module, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throw jException  if an error occurs during the install.
+     * @throw Exception  if an error occurs during the installation.
      */
     function install() {
         
@@ -37,7 +37,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
     /**
      * Redefine this method if you do some additionnal process after the installation of
      * all other modules (dependents modules or the whole application)
-     * @throw jException  if an error occurs during the post installation.
+     * @throw Exception  if an error occurs during the post installation.
      */
     function postInstall() {
         
@@ -47,7 +47,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
      * Called before the uninstallation of all other modules
      * (dependents modules or the whole application).
      * Here, you should check if the module can be uninstalled or not
-     * @throw jException if an error occurs during the check of the installation
+     * @throw Exception if the module cannot be uninstalled
      * @notimplemented not used for the current version of the installer
      */
     function preUninstall() {
@@ -56,7 +56,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
 
     /**
      * should configure the module, install table into the database etc.. 
-     * @throw jException  if an error occurs during the install.
+     * @throw Exception  if an error occurs during the install.
      * @notimplemented not used for the current version of the installer
      */
     function uninstall() {
@@ -65,7 +65,7 @@ class ModuleInstaller  extends AbstractInstaller implements InstallerInterface {
 
     /**
      * 
-     * @throw jException  if an error occurs during the install.
+     * @throw Exception  if an error occurs during the install.
      * @notimplemented not used for the current version of the installer
      */
     function postUninstall() {

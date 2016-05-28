@@ -27,9 +27,10 @@ class jacl2dbModuleInstaller extends jInstallerModule {
             return;
 
         $this->declareDbProfile('jacl2_profile', null, false);
-        $driver = $this->config->getValue('driver','acl2');
-        if ($driver != 'db')
-            $this->config->setValue('driver','db','acl2');
+        $driver = $this->getConfigIni()->getValue('driver','acl2');
+        if ($driver != 'db') {
+            $this->getConfigIni()->setValue('driver','db','acl2');
+        }
         $this->execSQLScript('install_jacl2.schema');
 
         $this->execSQLScript('data.sql');

@@ -11,15 +11,16 @@
 class jacl2ModuleInstaller extends jInstallerModule {
     function install() {
         if ($this->firstConfExec()) {
-            if (null == $this->config->getValue('jacl2', 'coordplugins')) {
-                $this->config->setValue('jacl2', '1', 'coordplugins');
+            $conf = $this->getConfigIni();
+            if (null == $conf->getValue('jacl2', 'coordplugins')) {
+                $conf->setValue('jacl2', '1', 'coordplugins');
                 if ($this->entryPoint->type != 'classic')
                     $onerror = 1;
                 else
                     $onerror = 2;
-                $this->config->setValue('on_error', $onerror, 'coordplugin_jacl2');
-                $this->config->setValue('error_message', "jacl2~errors.action.right.needed", 'coordplugin_jacl2');
-                $this->config->setValue('on_error_action', "jelix~error:badright", 'coordplugin_jacl2');
+                $conf->setValue('on_error', $onerror, 'coordplugin_jacl2');
+                $conf->setValue('error_message', "jacl2~errors.action.right.needed", 'coordplugin_jacl2');
+                $conf->setValue('on_error_action', "jelix~error:badright", 'coordplugin_jacl2');
             }
         }
     }

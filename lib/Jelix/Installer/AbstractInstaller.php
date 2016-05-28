@@ -17,7 +17,7 @@ abstract class AbstractInstaller {
     /**
      * @var string name of the component
      */
-    public $componentName;
+    protected $componentName;
 
     /**
      * @var string name of the installer
@@ -49,17 +49,18 @@ abstract class AbstractInstaller {
     public $version = '0';
 
     /**
-     * default configuration of the application
+     * combination between mainconfig.ini.php (master) and entrypoint config (overrider)
      * @var \Jelix\IniFile\MultiIniModifier
+     * @deprecated use entryPoint methods to access to different configuration files.
      */
-    public $config;
-
+    protected $config = null;
+    
     /**
      * the entry point property on which the installer is called
      * @var EntryPoint
      */
-    public $entryPoint;
-
+    protected $entryPoint;
+    
     /**
      * The path of the module
      * @var string
@@ -131,13 +132,12 @@ abstract class AbstractInstaller {
      * is called to indicate that the installer will be called for the given
      * configuration, entry point and db profile.
      * @param EntryPoint $ep the entry point
-     * @param Jelix\IniFile\MultiIniModifier $config the configuration of the entry point
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint($ep, $config, $dbProfile, $contexts) {
-        $this->config = $config;
+    public function setEntryPoint($ep, $dbProfile, $contexts) {
         $this->entryPoint = $ep;
+        $this->config = $ep->getConfigIni();
         $this->contextId = $contexts;
         $this->newContextId = array();
 
@@ -146,6 +146,33 @@ abstract class AbstractInstaller {
         }
         else
             $this->useDbProfile($dbProfile);
+    }
+
+    /**
+     * the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getMainConfigIni() {
+        return $this->entryPoint->getMainConfigIni();
+    }
+
+    /**
+     * the localconfig.ini.php file combined with $mainConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getLocalConfigIni() {
+        return $this->entryPoint->getLocalConfigIni();
+    }
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getConfigIni() {
+        return $this->entryPoint->getConfigIni();
     }
 
     /**
@@ -202,7 +229,7 @@ abstract class AbstractInstaller {
      */
     protected function firstConfExec($config = '') {
         if ($config == '')
-            $config = $this->entryPoint->configFile;
+            $config = $this->entryPoint->getConfigFile();
         return $this->firstExec('cf:'.$config);
     }
 
@@ -258,7 +285,7 @@ abstract class AbstractInstaller {
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->entryPoint->config->_modulesPathList;
+            $conf = $this->entryPoint->getConfigObj()->_modulesPathList;
             if (!isset($conf[$module])) {
                 throw new Exception('execSQLScript : invalid module name');
             }
@@ -348,7 +375,7 @@ abstract class AbstractInstaller {
             $path = str_replace('config:', App::configPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(App::configPath($this->entryPoint->configFile));
+            $p = dirname(App::configPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         return $path;

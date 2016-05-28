@@ -83,41 +83,31 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector {
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
 
-        $locales = array($this->locale);
-        $lang = substr($this->locale, 0, strpos($this->locale,'_'));
-        // FIXME we should drop support of such locales 'en_EN', and supports directory with lang name 'en'
-        // study impact of such changes
-        $generic_locale = $lang.'_'.strtoupper($lang);
-        if($this->locale !== $generic_locale)
-            $locales[] = $generic_locale;
+        // check if the locale has been overloaded
+        $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
+        if (is_readable ($overloadedPath)){
+            $this->_path = $overloadedPath;
+            $this->_where = 'overloaded/';
+            $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
+            return;
+        }
 
-        foreach($locales as $locale){
-            // check if the locale has been overloaded
-            $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
-            if (is_readable ($overloadedPath)){
-                $this->_path = $overloadedPath;
-                $this->_where = 'overloaded/';
-                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
-                return;
-            }
+        // check if the locale is available in the locales directory
+        $localesPath = App::varPath('locales/'.$this->locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        if (is_readable ($localesPath)){
+            $this->_path = $localesPath;
+            $this->_where = 'locales/';
+            $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
+            return;
+        }
 
-            // check if the locale is available in the locales directory
-            $localesPath = App::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
-            if (is_readable ($localesPath)){
-                $this->_path = $localesPath;
-                $this->_where = 'locales/';
-                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
-                return;
-            }
-
-            // else check for the original locale file in the module
-            $path = App::config()->_modulesPathList[$this->module].'locales/'.$locale.'/'.$this->resource.$this->_suffix;
-            if (is_readable ($path)){
-                $this->_where = 'modules/';
-                $this->_path = $path;
-                $this->_cacheSuffix = '.'.$locale.'.'.$this->charset.'.php';
-                return;
-            }
+        // else check for the original locale file in the module
+        $path = App::config()->_modulesPathList[$this->module].'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
+        if (is_readable ($path)){
+            $this->_where = 'modules/';
+            $this->_path = $path;
+            $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
+            return;
         }
 
         // to avoid infinite loop in a specific lang or charset, we should check if we don't

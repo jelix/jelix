@@ -66,7 +66,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
      */
     function getInstaller(EntryPoint $ep, $installWholeApp) {
 
-        $this->_setAccess($ep->configIni);
+        $this->_setAccess($ep->getConfigIni());
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
@@ -95,22 +95,21 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
         $this->moduleInstaller->setParameters($this->moduleStatuses[$epId]->parameters);
 
-        if ($ep->localConfigIni) {
-            $sparam = $ep->localConfigIni->getValue($this->moduleInfos->name.'.installparam','modules');
+        if ($ep->getLocalConfigIni()) {
+            $sparam = $ep->getLocalConfigIni()->getValue($this->moduleInfos->name.'.installparam','modules');
         }
         else {
-            $sparam = $ep->configIni->getValue($this->moduleInfos->name.'.installparam','modules');
+            $sparam = $ep->getConfigIni()->getValue($this->moduleInfos->name.'.installparam','modules');
         }
 
         if ($sparam === null)
             $sparam = '';
         $sp = $this->moduleStatuses[$epId]->serializeParameters();
         if ($sparam != $sp) {
-            $ep->configIni->setValue($this->moduleInfos->name.'.installparam', $sp, 'modules');
+            $ep->getConfigIni()->setValue($this->moduleInfos->name.'.installparam', $sp, 'modules');
         }
 
         $this->moduleInstaller->setEntryPoint($ep,
-                                              $ep->configIni,
                                               $this->moduleStatuses[$epId]->dbProfile,
                                               $this->installerContexts);
 
@@ -237,7 +236,6 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
             }
 
             $upgrader->setEntryPoint($ep,
-                                    $ep->configIni,
                                     $this->moduleStatuses[$epId]->dbProfile,
                                     $this->upgradersContexts[$class]);
             $list[] = $upgrader;
