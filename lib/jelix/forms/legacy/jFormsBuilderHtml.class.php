@@ -283,7 +283,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $this->_outputAttr($attributes);
         echo '>';
 
-        if (isset($attributes['separator']))
+        if ($separator)
         $value = $this->_form->getData($ctrl->ref);
         $value = $ctrl->getDisplayValue($value);
         if(is_array($value)){
