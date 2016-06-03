@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  urls_engine
  * @author      Laurent Jouanneau
- * @copyright   2005-2014 Laurent Jouanneau
+ * @copyright   2005-2016 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -100,6 +100,12 @@ class significantUrlEngine implements jIUrlEngine {
     */
     protected $dataParseUrl =  null;
 
+    const ESCAPE_URLENCODE = 0;
+    const ESCAPE_SLASH = 1;
+    const ESCAPE_NON_ASCII = 2;
+    const ESCAPE_LANG = 4;
+    const ESCAPE_LOCALE = 8;
+
     /**
      * Parse a url from the request
      * @param jRequest $request
@@ -180,6 +186,7 @@ class significantUrlEngine implements jIUrlEngine {
         $urlact = null;
         $isDefault = false;
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
+        $needHttps = false;
 
         foreach ($this->dataParseUrl as $k=>$infoparsing) {
             // the first element indicates if the entry point is a default entry point or not
@@ -190,14 +197,19 @@ class significantUrlEngine implements jIUrlEngine {
 
             if (count($infoparsing) < 7) {
                 // an handler will parse the request URI
-                list($module, $action, $reg, $selectorHandler, $secondariesActions, $needHttps) = $infoparsing;
+                list($module, $action, $reg, $selectorHandler,
+                     $secondariesActions, $needHttps) = $infoparsing;
                 $url2 = clone $url;
                 if ($reg != '') {
-                    if (preg_match($reg, $pathinfo, $m))
+                    // if the path info match the regexp, we have the right handler
+                    if (preg_match($reg, $pathinfo, $m)) {
                         $url2->pathInfo = isset($m[1])?$m[1]:'/';
-                    else
+                    }
+                    else {
                         continue;
+                    }
                 }
+                // load the handler
                 $s = new jSelectorUrlHandler($selectorHandler);
                 include_once($s->getPath());
                 $c = $s->className.'UrlsHandler';
@@ -212,24 +224,30 @@ class significantUrlEngine implements jIUrlEngine {
                     if (strpos($params['action'], ':') === false) {
                         $params['action'] = 'default:'.$params['action'];
                     }
-                    if (in_array($params['action'], $secondariesActions))
-                        // action peut avoir été écrasé par une itération précédente
+                    if (in_array($params['action'], $secondariesActions)) {
+                        // there is a secondary action in parameters, let's use it.
                         $url2->params['action'] = $params['action'];
-                    else
+                    }
+                    else {
                         $url2->params['action'] = $action;
+                    }
                 }
                 else {
                     $url2->params['action'] = $action;
                 }
-                // appel au handler
+                // call the url handler
                 if ($urlact = $handler->parse($url2)) {
                     break;
                 }
             }
             elseif (preg_match ($infoparsing[2], $pathinfo, $matches)) {
 
-                /* we have this array
-                array( 0=>'module', 1=>'action', 2=>'regexp_pathinfo',
+                /*
+                we have this array
+                array(
+                0=>'module',
+                1=>'action',
+                2=>'regexp_pathinfo',
                 3=>array('year','month'), // list of dynamic value included in the url,
                                       // alphabetical ascendant order
                 4=>array(0, 1..), // list of integer which indicates for each
@@ -237,13 +255,21 @@ class significantUrlEngine implements jIUrlEngine {
 
                 5=>array('bla'=>'whatIWant' ), // list of static values
                 6=>false or array('secondaries','actions')
+                7=>true/false  true if https is needed
                 */
                 list($module, $action, $reg, $dynamicValues, $escapes,
                      $staticValues, $secondariesActions, $needHttps) = $infoparsing;
 
-                if (isset($params['module']) && $params['module'] !== $module)
+                if (isset($params['module']) && $params['module'] !== $module) {
+                    // when several modules are dedicated to the same entrypoint,
+                    // and without defining pathinfo, we have then same
+                    // regexp, and module is indicated into parameters, so we should
+                    // skip this definition if module does not correspond.
+                    // FIXME: an issue here : when there is a module parameter
+                    // and any other kind of definition, the definition is skipped
+                    // whereas it is legitimate.
                     continue;
-
+                }
                 $params['module'] = $module;
 
                 // if the action parameter exists in the current url
@@ -268,10 +294,11 @@ class significantUrlEngine implements jIUrlEngine {
                         if (!empty($v) && $v[0] == '$') { // special statique value
                             $typeStatic = $v[1];
                             $v = substr($v,2);
-                            if ($typeStatic == 'l')
+                            if ($typeStatic == 'l') {
                                 jApp::config()->locale = jLocale::langToLocale($v);
-                            else if ($typeStatic == 'L')
+                            } else if ($typeStatic == 'L') {
                                 jApp::config()->locale = $v;
+                            }
                         }
                         $params[$n] = $v;
                     }
@@ -282,27 +309,29 @@ class significantUrlEngine implements jIUrlEngine {
                     array_shift($matches);
                     foreach ($dynamicValues as $k=>$name){
                         if (isset($matches[$k])) {
-                            if ($escapes[$k] & 2) {
+                            if ($escapes[$k] & self::ESCAPE_NON_ASCII) {
                                 $params[$name] = jUrl::unescape($matches[$k]);
                             }
                             else {
                                 $params[$name] = $matches[$k];
-                                if ($escapes[$k] & 4) {
+                                if ($escapes[$k] & self::ESCAPE_LANG) {
                                     $v = $matches[$k];
-                                    if (preg_match('/^\w{2,3}$/', $v, $m))
+                                    if (preg_match('/^\w{2,3}$/', $v, $m)) {
                                         jApp::config()->locale = jLocale::langToLocale($v);
+                                    }
                                     else {
                                         jApp::config()->locale = $v;
                                         $params[$name] = substr($v, 0, strpos('_'));
                                     }
                                 }
-                                else if ($escapes[$k] & 8) {
+                                else if ($escapes[$k] & self::ESCAPE_LOCALE) {
                                     $v = $matches[$k];
                                     if (preg_match('/^\w{2,3}$/', $v, $m)) {
                                         jApp::config()->locale = $params[$name] = jLocale::langToLocale($v);
                                     }
-                                    else
+                                    else {
                                         jApp::config()->locale = $v;
+                                    }
                                 }
                             }
                         }
@@ -486,15 +515,15 @@ class significantUrlEngine implements jIUrlEngine {
         elseif($urlinfo[0] == 1) {
             $pi = $urlinfo[5];
             foreach ($urlinfo[3] as $k=>$param){
-                $typeParam = $urlinfo[4][$k];
+                $escape = $urlinfo[4][$k];
                 $value = $url->getParam($param,'');
-                if ($typeParam & 2) {
+                if ($escape & self::ESCAPE_NON_ASCII) {
                     $value = jUrl::escape($value, true);
                 }
-                else if ($typeParam & 1) {
+                else if ($escape & self::ESCAPE_SLASH) {
                     $value = str_replace('%2F', '/', urlencode($value));
                 }
-                else if ($typeParam & 4) {
+                else if ($escape & self::ESCAPE_LANG) {
                     if ($value == '') {
                         $value = jLocale::getCurrentLang();
                     }
@@ -502,7 +531,7 @@ class significantUrlEngine implements jIUrlEngine {
                         $value = $m[1];
                     }
                 }
-                else if ($typeParam & 8) {
+                else if ($escape & self::ESCAPE_LOCALE) {
                     if ($value == '') {
                         $value = jApp::config()->locale;
                     }

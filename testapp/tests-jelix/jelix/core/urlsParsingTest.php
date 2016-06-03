@@ -137,14 +137,13 @@ class UTParseUrls extends jUnitTestCase {
           array('index.php', "/wiki/foo/bar/", array()),
        );
 
-      //$this->sendMessage("significant, multiview = false");
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
          $p = $url->params;
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertEquals($resultList[$k], $p, 'test '.$k);
       }
 
       $config->urlengine['checkHttpsOnParsing'] = true;
@@ -170,7 +169,6 @@ class UTParseUrls extends jUnitTestCase {
       $this->assertEquals($url->params['module'], 'jelix');
       $this->assertEquals($url->params['action'], 'default:notfound');
 
-      //$this->sendMessage("significant, multiview = true");
       $config->urlengine['multiview']=true;
       $request=array(
           array("index","/test/news/2005/10/35",array()),
@@ -218,7 +216,7 @@ class UTParseUrls extends jUnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'test '.$k.' created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertEquals( $resultList[$k], $p, 'test '.$k);
       }
 
     }
@@ -272,8 +270,8 @@ class UTParseUrls extends jUnitTestCase {
             $p = $url->params;
             ksort($p);
             ksort($resultList[$k][1]);
-            $this->assertEquals($p, $resultList[$k][1], 'test '.$k. ' - %s');
-            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+            $this->assertEquals($p, $resultList[$k][1], 'test '.$k);
+            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k);
         }
 
         $config->urlengine['checkHttpsOnParsing'] = true;
@@ -299,8 +297,8 @@ class UTParseUrls extends jUnitTestCase {
             $p = $url->params;
             ksort($p);
             ksort($resultList[$k][1]);
-            $this->assertEquals($p, $resultList[$k][1], 'test '.$k. ' - %s');
-            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k. ' - %s');
+            $this->assertEquals($p, $resultList[$k][1], 'test '.$k);
+            $this->assertEquals(jApp::config()->locale, $resultList[$k][0], 'test '.$k);
         }
     }
 
@@ -363,7 +361,7 @@ class UTParseUrls extends jUnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertEquals($resultList[$k], $p, 'test '.$k);
       }
 
       $config->urlengine['multiview']=true;
@@ -389,11 +387,9 @@ class UTParseUrls extends jUnitTestCase {
          ksort($p);
          ksort($resultList[$k]);
 
-         $this->assertTrue( ($p == $resultList[$k]), 'created:'.var_export($p,true).' expected:'.var_export($resultList[$k],true));
+         $this->assertEquals($resultList[$k], $p, 'test '.$k);
       }
 
     }
 
 }
-
-?>

@@ -59,12 +59,28 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     protected $createUrlContentInc;
     protected $checkHttps = true;
 
-    protected $typeparam = array('string'=>'([^\/]+)','char'=>'([^\/])', 'letter'=>'(\w)',
-        'number'=>'(\d+)', 'int'=>'(\d+)', 'integer'=>'(\d+)', 'digit'=>'(\d)',
+    protected $typeparam = array(
+        'string'=>'([^\/]+)',
+        'char'=>'([^\/])',
+        'letter'=>'(\w)',
+        'number'=>'(\d+)',
+        'int'=>'(\d+)',
+        'integer'=>'(\d+)',
+        'digit'=>'(\d)',
         'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))',
-        'year'=>'([0-2]\d{3})', 'month'=>'(0[1-9]|1[0-2])', 'day'=>'([0-2][1-9]|[1-2]0|3[0-1])',
-        'path'=>'(.*)', 'locale'=>'(\w{2,3}(?:(?:\-|_)\w{2,3})?)', 'lang'=>'(\w{2,3})'
-        );
+        'year'=>'([0-2]\d{3})',
+        'month'=>'(0[1-9]|1[0-2])',
+        'day'=>'([0-2][1-9]|[1-2]0|3[0-1])',
+        'path'=>'(.*)',
+        'locale'=>'(\w{2,3}(?:(?:\-|_)\w{2,3})?)',
+        'lang'=>'(\w{2,3})'
+    );
+
+    const ESCAPE_URLENCODE = 0;
+    const ESCAPE_SLASH = 1;
+    const ESCAPE_NON_ASCII = 2;
+    const ESCAPE_LANG = 4;
+    const ESCAPE_LOCALE = 8;
 
     /**
      *
@@ -382,16 +398,18 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 $type = '';
                 if (isset($var['type'])) {
                     $type = (string)$var['type'];
-                    if (isset($this->typeparam[$type]))
+                    if (isset($this->typeparam[$type])) {
                         $regexp = $this->typeparam[$type];
-                    else
-                        $regexp = '([^\/]+)';
+                    }
+                    else {
+                        $regexp = $this->typeparam['string'];
+                    }
                 }
                 elseif (isset ($var['regexp'])) {
                     $regexp = '('.(string)$var['regexp'].')';
                 }
                 else {
-                    $regexp = '([^\/]+)';
+                    $regexp = $this->typeparam['string'];
                 }
 
                 $u->escapes[$k] = 0;
