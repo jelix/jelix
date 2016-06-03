@@ -381,10 +381,12 @@ class jAuth {
         }
 
         if(isset($config['persistant_enable']) && $config['persistant_enable']){
-            if(!isset($config['persistant_cookie_name'])) {
-                throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name');
+            if(isset($config['persistant_cookie_name'])) {
+                setcookie($config['persistant_cookie_name'].'[auth]', '', time() - 3600, $config['persistant_cookie_path'], "", false, true);
             }
-            setcookie($config['persistant_cookie_name'].'[auth]', '', time() - 3600, $config['persistant_cookie_path'], "", false, true);
+            else {
+                jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name'), 'error');
+            }
         }
     }
 
@@ -481,7 +483,7 @@ class jAuth {
                 }
             }
             else {
-                throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
+                jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key'), 'error');
             }
         }
     }
@@ -496,7 +498,8 @@ class jAuth {
                 !isset($config['persistant_cookie_name']) ||
                 trim($config['persistant_crypt_key']) == '' ||
                 trim($config['persistant_cookie_name']) == '') {
-                throw new jException('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key');
+                jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig','persistant_cookie_name, persistant_crypt_key'), 'error');
+                return 0;
             }
 
             if (isset($config['persistant_duration'])) {
