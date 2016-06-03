@@ -244,8 +244,7 @@ class significantUrlEngine implements jIUrlEngine {
                 if (isset($params['module']) && $params['module'] !== $module)
                     continue;
 
-                if ($module != '')
-                    $params['module'] = $module;
+                $params['module'] = $module;
 
                 // if the action parameter exists in the current url
                 // and if it is one of secondaries actions, then we keep it

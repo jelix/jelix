@@ -189,7 +189,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             foreach ($tag->children() as $tagname => $url) {
                 $u = clone $this->defaultUrl;
-                $u->module = (string)$url['module'];
+                if (!isset($url['module']) || trim((string)$url['module']) == '') {
+                    throw new Exception('urls definition: module is missing on a <url> element');
+                }
+
+                $u->module = trim((string)$url['module']);
 
                 if (isset($url['https'])) {
                     $u->isHttps = (((string)$url['https']) == 'true');
