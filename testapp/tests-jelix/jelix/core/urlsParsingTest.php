@@ -69,6 +69,7 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'news',        'action'=>'main:bar',     'aaa'=>'bbb');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url11', 'rubrique'=>'vetements',  'id_article'=>'65');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
+      //10
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'alimentation');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_US');
@@ -79,6 +80,7 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla', 'first'=>'premier');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlb');
+      //20
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlc');
       $resultList[]= array('module'=>'news',        'action'=>'main:chou',     'e'=>'g');
       $resultList[]= array('module'=>'articles',    'action'=>'default:zap',   't'=>'r');
@@ -89,6 +91,7 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'login:out');
       $resultList[]= array('module'=>'testapp',   'action'=>'login:form');
       $resultList[]= array('module'=>'testapp',   'action'=>'user:index', 'user'=>'laurent');
+      //30
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburlsfoo');
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburls');
       $resultList[]= array('module'=>'testapp',   'action'=>'main:indexghost');
@@ -108,6 +111,7 @@ class UTParseUrls extends jUnitTestCase {
           array("news.php","",array('aaa'=>'bbb','action'=>'main:bar')),
           array("index.php","/shop/vetements/65",array()),
           array("index.php","/shop/bricolage/34/",array()),
+          //10
           array("index.php","/supershop/alimentation",array()),
           array("index.php","/supershop/chaussures",array()),
           array("index.php","/articles/en/2007/08",array()),
@@ -118,6 +122,7 @@ class UTParseUrls extends jUnitTestCase {
           array("handlermodule.php","/myhand/urlsig/urla",array()),
           array("handlermodule.php","/myhand/urlsig/urla",array('first'=>'premier')),
           array("handlermodule.php","/myhand/urlsig/urlb",array()),
+          //20
           array("handlermodule.php","/myhand/urlsig/urlc",array()),
           array("news.php","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
           array("news.php","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
@@ -128,6 +133,7 @@ class UTParseUrls extends jUnitTestCase {
           array("index.php","/auth/dologout", array()),
           array("index.php","/auth/login/", array()),
           array("index.php","/auth/user/laurent", array()),
+          //30
           array("index.php","/suburl/foo", array()),
           array("index.php","/suburl/", array()),
           array("index.php","/", array()),

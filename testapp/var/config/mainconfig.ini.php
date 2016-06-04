@@ -26,6 +26,8 @@ jpref.access=1
 jminify.access=1
 jfeeds.access=2
 jsitemap.access=2
+news.access=2
+articles.access=2
 
 [coordplugins]
 auth=auth.coord.ini.php
