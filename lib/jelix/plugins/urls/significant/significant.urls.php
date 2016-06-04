@@ -106,6 +106,7 @@ class significantUrlEngine implements jIUrlEngine {
     const ESCAPE_LANG = 4;
     const ESCAPE_LOCALE = 8;
 
+    protected $entryPointTypeHavingActionInBody = array('xmlrpc','jsonrpc','soap');
     /**
      * Parse a url from the request
      * @param jRequest $request
@@ -187,11 +188,18 @@ class significantUrlEngine implements jIUrlEngine {
         $isDefault = false;
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
         $needHttps = false;
+        $dedicatedModules = array();
+        $requestType = 'classic';
+
+        // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
+        $checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
 
         foreach ($this->dataParseUrl as $k=>$infoparsing) {
             // the first element indicates if the entry point is a default entry point or not
             if ($k==0) {
-                $isDefault = $infoparsing;
+                $isDefault = $infoparsing['isDefault'];
+                $requestType = $infoparsing['requestType'];
+                $dedicatedModules = $infoparsing['dedicatedModules'];
                 continue;
             }
 
@@ -260,16 +268,6 @@ class significantUrlEngine implements jIUrlEngine {
                 list($module, $action, $reg, $dynamicValues, $escapes,
                      $staticValues, $secondariesActions, $needHttps) = $infoparsing;
 
-                if (isset($params['module']) && $params['module'] !== $module) {
-                    // when several modules are dedicated to the same entrypoint,
-                    // and without defining pathinfo, we have then same
-                    // regexp, and module is indicated into parameters, so we should
-                    // skip this definition if module does not correspond.
-                    // FIXME: an issue here : when there is a module parameter
-                    // and any other kind of definition, the definition is skipped
-                    // whereas it is legitimate.
-                    continue;
-                }
                 $params['module'] = $module;
 
                 // if the action parameter exists in the current url
@@ -341,24 +339,72 @@ class significantUrlEngine implements jIUrlEngine {
                 break;
             }
         }
+
         if (!$urlact) {
-            if ($isDefault && $pathinfo == '') {
-                // if we didn't find the url in the mapping, and if this is the default
-                // entry point, then we do anything
-                $urlact = new jUrlAction($params);
+            // let's try to parse url as /<module>/[<controller>/[<method>/]]
+            // only for dedicated modules
+            $pathinfo = trim($pathinfo,'/');
+            $pathInfoParts = explode('/', $pathinfo);
+
+            if ($pathinfo == '') {
+                if (in_array($requestType, $this->entryPointTypeHavingActionInBody)) {
+                    // in theory, we don't reach this code, since the
+                    // specific request object doesn't call the url parser..
+                    // but we need it for some unit tests...
+                    if (isset($params['module'])) {
+                        unset($params['module']);
+                    }
+                    if (isset($params['action'])) {
+                        unset($params['action']);
+                    }
+                    $urlact =  new jUrlAction($params);
+                }
+                else {
+                    // let's search the default dedicated module
+                    // and let's take it as default module for "/"
+                    foreach($dedicatedModules as $mod=>$info) {
+                        if ($info[1]) {
+                            $params['module'] = $mod;
+                            $params['action'] = 'default:index';
+                            $urlact =  new jUrlAction($params);
+                            $needHttps = $info[0];
+                            break;
+                        }
+                    }
+                }
             }
-            else {
-                try {
-                    $urlact = jUrl::get(jApp::config()->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
+            else if (isset($dedicatedModules[$pathInfoParts[0]])) {
+                $params['module'] = $pathInfoParts[0];
+                $co = count($pathInfoParts);
+                if ($co == 1) {
+                    $params['action'] = 'default:index';
                 }
-                catch (Exception $e) {
-                    $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+                else if ($co == 2) {
+                    $params['action'] = $pathInfoParts[1].':index';
                 }
+                else {
+                    $params['action'] = $pathInfoParts[1].':'.$pathInfoParts[2];
+                }
+                $needHttps = $dedicatedModules[$pathInfoParts[0]][0];
+                $urlact =  new jUrlAction($params);
             }
         }
-        else if ($needHttps && ! $isHttps) {
-            // the url is declared for HTTPS, but the request does not come from HTTPS
-            // -> 404 not found
+
+        if ($urlact) {
+            // the action corresponding to the url has been found
+            if ($checkHttps && $needHttps && ! $isHttps) {
+                // the url is declared for HTTPS, but the request does not come from HTTPS
+                // -> 404 not found
+                $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+            }
+            return $urlact;
+        }
+
+        // we display the 404 page.
+        try {
+            $urlact = jUrl::get(jApp::config()->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
+        }
+        catch (Exception $e) {
             $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
         }
         return $urlact;
@@ -415,6 +461,7 @@ class significantUrlEngine implements jIUrlEngine {
                 }
             }
         }
+
         /*
         urlinfo =
           or array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
@@ -427,7 +474,7 @@ class significantUrlEngine implements jIUrlEngine {
                   array('bla'=>'whatIWant' ) // list of static values
                   )
           or array(2,'entrypoint', https true/false), // for the patterns "@request"
-          or array(3,'entrypoint', https true/false), // for the patterns "module~@request"
+          or array(3,'entrypoint', https true/false, $defaultmodule true/false), // for the patterns "module~@request"
           or array(4, array(1,...), array(1,...)...)
         */
         if ($urlinfo[0] == 4) {
@@ -487,8 +534,9 @@ class significantUrlEngine implements jIUrlEngine {
         // at this step, we have informations to build the url
 
         $url->scriptName = jApp::urlBasePath().$urlinfo[1];
-        if ($urlinfo[2])
+        if ($urlinfo[2]) {
             $url->scriptName = jApp::coord()->request->getServerURI(true).$url->scriptName;
+        }
 
         if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
             $url->scriptName .= '.php';
@@ -498,7 +546,7 @@ class significantUrlEngine implements jIUrlEngine {
         // so we remove them
         // it's a bit dirty to do that hardcoded here, but it would be a pain
         // to load the request class to check whether we can remove or not
-        if (in_array($urlact->requestType, array('xmlrpc','jsonrpc','soap'))) {
+        if (in_array($urlact->requestType, $this->entryPointTypeHavingActionInBody)) {
             $url->clearParam();
             return $url;
         }
@@ -546,17 +594,33 @@ class significantUrlEngine implements jIUrlEngine {
                 $url->delParam($param);
             }
             $url->pathInfo = $pi;
-            if ($urlinfo[6])
+            if ($urlinfo[6]) {
                 $url->setParam('action',$action);
+            }
             // removed parameters corresponding to static values
             foreach ($urlinfo[7] as $name=>$value) {
                 $url->delParam($name);
             }
         }
         elseif ($urlinfo[0] == 3) {
-            if ($urlinfo[3]) {
-                $url->delParam('module');
+            if (!$urlinfo[3]) {
+                if ($action != 'default:index') {
+                    $url->pathInfo = '/'.$module.'/'.str_replace(':', '/', $action);
+                }
             }
+            else {
+                $url->pathInfo = '/'.$module;
+                if ($action != 'default:index') {
+                    $url->pathInfo .= '/'.str_replace(':', '/', $action);
+                }
+            }
+            $url->delParam('module');
+            $url->delParam('action');
+        }
+        elseif ($urlinfo[0] == 2) {
+            $url->pathInfo = '/'.$module.'/'.str_replace(':', '/', $action);
+            $url->delParam('module');
+            $url->delParam('action');
         }
 
         return $url;

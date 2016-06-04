@@ -60,29 +60,37 @@ class UTParseUrls extends jUnitTestCase {
       $resultList=array();
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
+      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
-      // this result has no definition in urls.xml, it si normal
-      $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab');
+      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      //10
       $resultList[]= array();
       $resultList[]= array('module'=>'news',        'action'=>'main:bar',     'aaa'=>'bbb');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url11', 'rubrique'=>'vetements',  'id_article'=>'65');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url12', 'rubrique'=>'bricolage',  'id_article'=>'34');
-      //10
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'alimentation');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url13', 'rubrique'=>'chaussures');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'en_US');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url20', 'mois'=>'08',  'annee'=>'2007','lang'=>'fr_FR');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url30');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello2');
+      //20
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:hello3');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urla', 'first'=>'premier');
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlb');
-      //20
       $resultList[]= array('module'=>'testurls', 'action'=>'urlsig:urlc');
-      $resultList[]= array('module'=>'news',        'action'=>'main:chou',     'e'=>'g');
+      $resultList[]= array('module'=>'news',        'action'=>'default:index', 'aaa'=>'bbb');
+      $resultList[]= array('module'=>'news',        'action'=>'default:index', 'e'=>'g');
+      $resultList[]= array('module'=>'news',        'action'=>'default:index', 't'=>'r');
+      $resultList[]= array('module'=>'articles',    'action'=>'default:index',   't'=>'r');
+      $resultList[]= array('module'=>'articles',    'action'=>'default:index',   't'=>'r');
+      //30
       $resultList[]= array('module'=>'articles',    'action'=>'default:zap',   't'=>'r');
       $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/');
       $resultList[]= array('module'=>'jelix_tests',    'action'=>'default:wikishow',   'page'=>'/foo/bar');
@@ -91,9 +99,9 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'login:out');
       $resultList[]= array('module'=>'testapp',   'action'=>'login:form');
       $resultList[]= array('module'=>'testapp',   'action'=>'user:index', 'user'=>'laurent');
-      //30
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburlsfoo');
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburls');
+      //40
       $resultList[]= array('module'=>'testapp',   'action'=>'main:indexghost');
       $resultList[]= array('module'=>'jelix', 'action'=>'default:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'');
@@ -103,29 +111,39 @@ class UTParseUrls extends jUnitTestCase {
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
           array("index.php","/test/news/2005/10/35",array("action"=>"urlsig:url8")),
+          array("index.php","",array("action"=>"urlsig:url1", "module"=>"jelix_tests", "annee"=>"2016", "mois"=>"12", "id"=>"3")),
           array("testnews.php","/2004/05",array()),
+          array("testnews","/fooo/05",array()),
+          array("testnews","/jelix_tests/urlsig/url2",array("annee"=>"2015", "mois"=>"12")),
           array("index.php","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
           array("index.php",'',array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab')),
+          // this url has no definition in urls.xml, it si normal
+          array("index.php",'/jelix_tests/urlsig/url5',array( 'foo'=>'oof',  'bar'=>'rab')),
+          //10
           array("xmlrpc.php","",array()),
-          array("news.php","",array('aaa'=>'bbb','action'=>'main:bar')),
+          array("news.php","/news/main/bar",array('aaa'=>'bbb')),
           array("index.php","/shop/vetements/65",array()),
           array("index.php","/shop/bricolage/34/",array()),
-          //10
           array("index.php","/supershop/alimentation",array()),
           array("index.php","/supershop/chaussures",array()),
           array("index.php","/articles/en/2007/08",array()),
           array("index.php","/articles/fr/2007/08",array()),
           array("index.php","/hello",array()),
           array("index.php","/hello2",array()),
+          //20
           array("index.php","/hello3",array()),
           array("handlermodule.php","/myhand/urlsig/urla",array()),
           array("handlermodule.php","/myhand/urlsig/urla",array('first'=>'premier')),
           array("handlermodule.php","/myhand/urlsig/urlb",array()),
-          //20
           array("handlermodule.php","/myhand/urlsig/urlc",array()),
+          array("news.php","",array('aaa'=>'bbb','action'=>'main:bar')),
           array("news.php","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
           array("news.php","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
+          array("news.php","/articles",array('t'=>'r','action'=>'default:zap')),
+          array("news.php","/articles/default",array('t'=>'r')),
+          //30
+          array("news.php","/articles/default/zap",array('t'=>'r')),
           array("index.php","/super/wiki/",array()),
           array("index.php","/super/wiki/foo/bar",array()),
           array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
@@ -133,9 +151,9 @@ class UTParseUrls extends jUnitTestCase {
           array("index.php","/auth/dologout", array()),
           array("index.php","/auth/login/", array()),
           array("index.php","/auth/user/laurent", array()),
-          //30
           array("index.php","/suburl/foo", array()),
           array("index.php","/suburl/", array()),
+          //40
           array("index.php","/", array()),
           array('index.php', "/wiki", array()),
           array('index.php', "/wiki/", array()),
@@ -179,12 +197,16 @@ class UTParseUrls extends jUnitTestCase {
       $request=array(
           array("index","/test/news/2005/10/35",array()),
           array("index","/test/news/2005/10/35",array("action"=>"urlsig:url8")),
+          array("index","",array("action"=>"urlsig:url1", "module"=>"jelix_tests", "annee"=>"2016", "mois"=>"12", "id"=>"3")),
           array("testnews","/2004/05",array()),
+          array("testnews","/fooo/05",array()),
+          array("testnews","/jelix_tests/urlsig/url2",array("annee"=>"2015", "mois"=>"12")),
           array("index","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar","/withhandler/premier/deuxieme",array()),
           array("index",'',array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab')),
+          array("index",'/jelix_tests/urlsig/url5',array( 'foo'=>'oof',  'bar'=>'rab')),
           array("xmlrpc","",array()),
-          array("news","",array('aaa'=>'bbb','action'=>'main:bar')),
+          array("news","/news/main/bar",array('aaa'=>'bbb',)),
           array("index","/shop/vetements/65",array()),
           array("index","/shop/bricolage/34/",array()),
           array("index","/supershop/alimentation",array()),
@@ -198,8 +220,12 @@ class UTParseUrls extends jUnitTestCase {
           array("handlermodule","/myhand/urlsig/urla",array('first'=>'premier')),
           array("handlermodule","/myhand/urlsig/urlb",array()),
           array("handlermodule","/myhand/urlsig/urlc",array()),
+          array("news","",array('aaa'=>'bbb','action'=>'main:bar')),
           array("news","",array('module'=>'news', 'e'=>'g','action'=>'main:chou')),
           array("news","",array('module'=>'articles', 't'=>'r','action'=>'default:zap')),
+          array("news","/articles",array('t'=>'r','action'=>'default:zap')),
+          array("news","/articles/default",array('t'=>'r')),
+          array("news","/articles/default/zap",array('t'=>'r')),
           array("index.php","/super/wiki/",array()),
           array("index.php","/super/wiki/foo/bar",array()),
           array("index.php","/super/wiki/foo/bar",array('action'=>"default:wikiedit")),
