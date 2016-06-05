@@ -63,6 +63,9 @@ class significantUrlInfoParsing {
     }
 }
 
+class jUrlCompilerException extends Exception {
+}
+
 /**
 * Compiler for significant url engine
 * @package  jelix
@@ -105,12 +108,18 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     const ESCAPE_LOCALE = 8;
 
     /**
+     * @var string
+     */
+    protected $xmlfile = '';
+
+    /**
      *
      */
     public function compile($aSelector) {
 
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
+        $this->xmlfile = $aSelector->file;
 
         $xml = simplexml_load_file ($sourceFile);
         if (!$xml) {
@@ -194,7 +203,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
-                throw new Exception("Urls xml file: Unknown element $tagname");
+                throw new jUrlCompilerException($this->getErrorMsg($tag, "Unknown element $tagname"));
             }
             $type = $m[1];
             if ($type == '') {
@@ -241,14 +250,20 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             foreach ($tag->children() as $tagname => $url) {
                 $u = clone $defaultUrl;
-                if (!isset($url['module']) || trim((string)$url['module']) == '') {
-                    throw new Exception('urls definition: module is missing on a <url> element');
+                $include = isset($url['include'])?trim((string)$url['include']):'';
+                $handler = isset($url['handler'])?trim((string)$url['handler']):'';
+                $u->module = isset($url['module'])?trim((string)$url['module']):'';
+
+                if (!$u->module) {
+                    throw new jUrlCompilerException($this->getErrorMsg($url, 'module is missing'));
                 }
 
-                $u->module = trim((string)$url['module']);
+                if ($handler && $include) {
+                    throw new jUrlCompilerException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
+                }
 
-                if (!isset($this->modulesPath[$u->module])) {
-                    throw new Exception ('urls.xml: the module '.$u->module.' does not exist');
+                if ($u->module && !isset($this->modulesPath[$u->module])) {
+                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'the module '.$u->module.' does not exist'));
                 }
 
                 $modulesDedicatedToDefaultEp[$u->requestType][$u->module] = false;
@@ -263,8 +278,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
                 $u->isDefault = (isset($url['default']) ? (((string)$url['default']) == 'true'):false);
 
-                if (isset($url['include'])) {
-                    $this->readInclude($url, $u);
+                if ($include) {
+                    $this->readInclude($url, $u, $include);
                     continue;
                 }
 
@@ -354,6 +369,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         return true;
     }
 
+    protected function getErrorMsg($xml, $message) {
+        $xml = $xml->asXML();
+        $xml = substr($xml, 0, strpos($xml, '>')+1);
+
+        return $this->xmlfile.': '.$message.' ('.$xml.')';
+    }
+
     /**
      * list all modules path
      */
@@ -422,6 +444,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $regexppath = $this->buildDynamicParamsRegexp($url, $path, $u);
         }
         else {
+            // FIXME warning: it will catch everything!
             $regexppath = '.*';
             $path = '';
         }
@@ -524,7 +547,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                     case 'lang': $t = '$l'; break;
                     case 'locale': $t = '$L'; break;
                     default:
-                        throw new Exception('urls definition: invalid type on a <static> element');
+                        throw new jUrlCompilerException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }
             }
             $u->statics[(string)$var['name']] = $t . (string)$var['value'];
@@ -556,26 +579,40 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      * @param simpleXmlElement $url
      * @param significantUrlInfoParsing $uInfo
     */
-    protected function readInclude($url, $uInfo) {
+    protected function readInclude($url, $uInfo, $file) {
+        if (isset($url['action'])) {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'action is forbidden with include'));
+        }
 
-        $file = (string)$url['include'];
         $pathinfo = '/'.trim((string)$url['pathinfo'], '/');
 
         $path = $this->modulesPath[$uInfo->module];
 
-        if (!file_exists($path.$file))
-            throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' does not exist');
+        if (!file_exists($path.$file)) {
+            throw new jUrlCompilerException ($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
+        }
 
         $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.filemtime($path.$file)."\n";
 
         $xml = simplexml_load_file ($path.$file);
         if (!$xml) {
-           throw new Exception ('urls.xml: include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file');
+           throw new jUrlCompilerException ($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file'));
         }
         $optionalTrailingSlash = (isset($xml['optionalTrailingSlash']) && $xml['optionalTrailingSlash'] == 'true');
 
+        $mainXmlFile = $this->xmlfile;
+        $this->xmlfile = $uInfo->module.'/'.$file;
+
         foreach ($xml->url as $url) {
             $u = clone $uInfo;
+
+            if (isset($url['module'])) {
+                throw new jUrlCompilerException($this->getErrorMsg($url, 'module is forbidden in module url files'));
+            }
+
+            if (isset($url['include'])) {
+                throw new jUrlCompilerException($this->getErrorMsg($url, 'include is forbidden in module url files'));
+            }
 
             $u->setAction((string)$url['action']);
 
@@ -608,5 +645,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 }
             }
         }
+        $this->xmlfile = $mainXmlFile;
     }
 }
