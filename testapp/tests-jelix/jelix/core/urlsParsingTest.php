@@ -49,7 +49,7 @@ class UTParseUrls extends jUnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls.xml',
+         'significantFile'=>'urls_tests.xml',
          'checkHttpsOnParsing'=>false
        );
         $config->compilation['force'] = true;
@@ -266,7 +266,7 @@ class UTParseUrls extends jUnitTestCase {
             'basePath'=>'/',
             'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~notfound',
-            'significantFile'=>'urls.xml',
+            'significantFile'=>'urls_tests.xml',
             'checkHttpsOnParsing'=>false
         );
         $config->compilation['force'] = true;
@@ -347,7 +347,7 @@ class UTParseUrls extends jUnitTestCase {
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls.xml',
+         'significantFile'=>'urls_tests.xml',
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
