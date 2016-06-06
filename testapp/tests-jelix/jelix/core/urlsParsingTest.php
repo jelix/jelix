@@ -60,13 +60,13 @@ class UTParseUrls extends jUnitTestCase {
       $resultList=array();
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
-      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'testapp',       'action'=>'main:indexghost', "annee"=>"2016", "mois"=>"12", "id"=>"3");
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
       $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
       $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
-      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'testapp',     'action'=>'main:indexghost', 'foo'=>'oof',  'bar'=>'rab');
       $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
       //10
       $resultList[]= array();

@@ -214,6 +214,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
+      //10
       $urlList[]= array('jelix_tests~urlsig:url8', array('mois'=>'23',  'annee'=>'2007', 'id'=>'74'));
       $urlList[]= array('jelix_tests~urlsig:url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
       $urlList[]= array('jelix_tests~urlsig:url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
@@ -224,6 +225,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:url30', array());
       $urlList[]= array('jelix_tests~default:hello2', array());
       $urlList[]= array('jelix_tests~default:hello3', array());
+      //20
       $urlList[]= array('jelix_tests~hello3', array());
       $urlList[]= array('jelix_tests~urlsig:bug599', array('first'=>'premier',  'second'=>'deuxieme'));
       $urlList[]= array('testurls~urlsig:urla', array());
@@ -234,6 +236,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~default:wikishow', array('page'=>'foo'));
       $urlList[]= array('testapp~login:in', array('login'=>'foo', 'password'=>'pass'));
       $urlList[]= array('testapp~login:out', array());
+      //30
       $urlList[]= array('testapp~login:form', array());
       $urlList[]= array('testapp~user:index', array('user'=>'laurent'));
       $urlList[]= array('testapp~main:suburlsfoo', array());
@@ -243,7 +246,6 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'/'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo/bar/'));
-
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -256,6 +258,7 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/jelix_tests/urlsig/url5?foo=oof&bar=rab",
           "/xmlrpc.php",
           "/news.php/news/default/bar?aaa=bbb",
+          // 10
           "/index.php/test/news/2007/23/74?action=urlsig:url8",
           "/index.php/shop/vetements/98",
           "/index.php/shop/bricolage/53/",
@@ -266,6 +269,7 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/hello",
           "/index.php/hello2",
           "/index.php/hello3",
+          //20
           "/index.php/hello3",
           "/withhandler/premier/deuxieme",
           "/myhand/urlsig/urla",
@@ -276,11 +280,12 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/super/wiki/foo",
           "/index.php/auth/dologin?login=foo&password=pass",
           "/index.php/auth/dologout",
+          //30
           "/index.php/auth/login",
           "/index.php/auth/user/laurent",
           "/index.php/suburl/foo",
           "/index.php/suburl",
-          "/index.php/",
+          "/index.php",
           "/index.php/wiki/",
           "/index.php/wiki//",
           "/index.php/wiki/foo",
@@ -327,7 +332,7 @@ class UTCreateUrls extends jUnitTestCase {
           "/index/auth/user/laurent",
           "/index/suburl/foo",
           "/index/suburl",
-          "/index/",
+          "/index",
           "/index/wiki/",
           "/index/wiki//",
           "/index/wiki/foo",

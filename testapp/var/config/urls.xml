@@ -6,5 +6,5 @@
     </entrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true" />
     <jsonrpcentrypoint name="jsonrpc" default="true" />
-    <entrypoint name="soap" default="true" />
+    <entrypoint name="soap" type="soap" default="true" />
 </urls>

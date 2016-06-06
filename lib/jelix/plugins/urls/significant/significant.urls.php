@@ -184,6 +184,9 @@ class significantUrlEngine implements jIUrlEngine {
     */
     protected function _parse($scriptNamePath, $pathinfo, $params, $isHttps){
 
+        if ($pathinfo == '') {
+            $pathinfo = '/';
+        }
         $urlact = null;
         $isDefault = false;
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
@@ -558,6 +561,9 @@ class significantUrlEngine implements jIUrlEngine {
             $handler->create($urlact, $url);
             if ($urlinfo[4] != '') {
                 $url->pathInfo = $urlinfo[4].$url->pathInfo;
+                if ($url->pathInfo == '/') {
+                    $url->pathInfo = '';
+                }
             }
         }
         elseif($urlinfo[0] == 1) {

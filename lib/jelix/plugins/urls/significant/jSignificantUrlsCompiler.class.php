@@ -205,6 +205,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
                 throw new jUrlCompilerException($this->getErrorMsg($tag, "Unknown element $tagname"));
             }
+
             $type = $m[1];
             if ($type == '') {
                 if (isset($tag['type']))
@@ -243,10 +244,14 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             // then we add a rule which will match urls which are not
             // defined.
             if ($defaultUrl->isDefault) {
+                if (isset($this->createUrlInfos['@'.$defaultUrl->requestType])) {
+                    throw new jUrlCompilerException($this->getErrorMsg($tag, "Only one default entry point for the type ".$defaultUrl->requestType." is allowed"));
+                }
                 $this->createUrlInfos['@'.$defaultUrl->requestType] = array(2, $defaultUrl->entryPoint, $defaultUrl->isHttps);
             }
 
             $createUrlInfosDedicatedModules = array();
+            $hasDefaultUrl = false;
 
             foreach ($tag->children() as $tagname => $url) {
                 $u = clone $defaultUrl;
@@ -278,6 +283,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
                 $u->isDefault = (isset($url['default']) ? (((string)$url['default']) == 'true'):false);
 
+                if ($u->isDefault) {
+                    if ($hasDefaultUrl) {
+                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'Only one default url by entry point is allowed'));
+                    }
+                    $hasDefaultUrl = true;
+                }
+
                 if ($include) {
                     $this->readInclude($url, $u, $include);
                     continue;
@@ -307,7 +319,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 }
 
                 // parse dynamic parameters
-                list($path, $regexppath) = $this->extractDynamicParams($url, $u, $optionalTrailingSlash);
+                list($path, $regexppath) = $this->extractDynamicParams($url, $u,
+                                                                       $optionalTrailingSlash);
 
                 // parse static parameters
                 $this->extractStaticParams($url, $u);
@@ -377,6 +390,33 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     }
 
     /**
+     * returns the combination between $rootPathInfo and the pathinfo
+     * attribute of the given $url
+     * @return string full pathinfo, or "" if both are empty or "/"
+     */
+    protected function getFinalPathInfo(SimpleXMLElement $url, $rootPathInfo) {
+        $subpathinfo = '';
+        $pathinfo = '';
+
+        if (isset($url['pathinfo'])) {
+            $subpathinfo = ltrim((string)$url['pathinfo'], '/');
+        }
+
+        if ($subpathinfo == '') {
+            if ($rootPathInfo != '/') {
+                $pathinfo = $rootPathInfo;
+            }
+        }
+        else if ($rootPathInfo != '/') {
+            $pathinfo = $rootPathInfo.'/'.$subpathinfo;
+        }
+        else {
+            $pathinfo = $rootPathInfo.$subpathinfo;
+        }
+        return $pathinfo;
+    }
+
+    /**
      * list all modules path
      */
     protected $modulesPath = array();
@@ -385,7 +425,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      * @param significantUrlInfoParsing $u
      * @param simpleXmlElement $url
     */
-    protected function newHandler($u, $url, $pathinfo = '') {
+    protected function newHandler($u, $url, $rootPathInfo = '/') {
         $class = (string)$url['handler'];
         // we must have a module name in the selector, because, during the parsing of
         // the url in the request process, we are not still in a module context
@@ -401,24 +441,26 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         if (!isset($url['action'])) {
             $u->action = '*';
         }
-        $regexp = '';
 
-        if (isset($url['pathinfo'])) {
-            $pathinfo .= '/'.trim((string)$url['pathinfo'], '/');
-        }
+        $pathinfo = $this->getFinalPathInfo($url, $rootPathInfo);
 
         if ($pathinfo != '/') {
             $regexp = '!^'.preg_quote($pathinfo, '!').'(/.*)?$!';
+        }
+        else {
+            $regexp = '';
         }
 
         $this->createUrlContentInc .= "include_once('".$s->getPath()."');\n";
         $this->parseInfos[] = array($u->module, $u->action, $regexp, $selclass,
                                     $u->actionOverride, $u->isHttps);
-        $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps, $selclass, $pathinfo);
+        $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps,
+                                                        $selclass, $pathinfo);
         if ($u->actionOverride) {
             foreach ($u->actionOverride as $ao) {
                 $u->action = $ao;
-                $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps, $selclass, $pathinfo);
+                $this->createUrlInfos[$u->getFullSel()] =
+                    array(0, $u->entryPointUrl, $u->isHttps, $selclass, $pathinfo);
             }
         }
     }
@@ -433,34 +475,29 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      *                second element is the correponding regular expression
      */
     protected function extractDynamicParams($url, significantUrlInfoParsing $u,
-                                            $optionalTrailingSlash, $rootPathInfo='') {
-        if (isset($url['pathinfo'])) {
-            if ($rootPathInfo) {
-                $path = $rootPathInfo.($rootPathInfo !='/'?'/':'').trim((string)$url['pathinfo'],'/');
-            }
-            else {
-                $path = (string)$url['pathinfo'];
-            }
-            $regexppath = $this->buildDynamicParamsRegexp($url, $path, $u);
-        }
-        else {
-            // FIXME warning: it will catch everything!
-            $regexppath = '.*';
-            $path = '';
-        }
+                                            $optionalTrailingSlash, $rootPathInfo='/') {
 
         if (isset($url['optionalTrailingSlash'])) {
-            $optionalTrailingSlash = ($url['optionalTrailingSlash'] == 'true');
+            $optionalTrailingSlash = ((string)$url['optionalTrailingSlash'] == 'true');
         }
-        if ($optionalTrailingSlash) {
-            if (substr($regexppath, -1) == '/') {
-                $regexppath .= '?';
-            }
-            else {
-                $regexppath .= '\/?';
+
+        $pathInfo = $this->getFinalPathInfo($url, $rootPathInfo);
+        if ($pathInfo != '/' && $pathInfo != '') {
+            $regexppath = $this->buildDynamicParamsRegexp($url, $pathInfo, $u);
+            if ($optionalTrailingSlash) {
+                if (substr($regexppath, -1) == '/') {
+                    $regexppath .= '?';
+                }
+                else {
+                    $regexppath .= '\/?';
+                }
             }
         }
-        return array($path, $regexppath);
+        else {
+            $regexppath = '\/?';
+        }
+
+        return array($pathInfo, $regexppath);
     }
 
     /**
@@ -470,7 +507,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      * @param significantUrlInfoParsing $u
      * @return string the correponding regular expression
      */
-    protected function buildDynamicParamsRegexp($url, $pathinfo, significantUrlInfoParsing $u) {
+    protected function buildDynamicParamsRegexp($url, $pathinfo,
+                                                significantUrlInfoParsing $u) {
         $regexppath = preg_quote($pathinfo , '!');
         if (preg_match_all("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
@@ -561,7 +599,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
      */
     protected function appendUrlInfo($u, $path, $secondaryAction) {
         $cuisel = $u->getFullSel();
-        $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes, $path, $secondaryAction, $u->statics);
+        $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes,
+                     $path, $secondaryAction, $u->statics);
         if (isset($this->createUrlInfos[$cuisel])) {
             if ($this->createUrlInfos[$cuisel][0] == 4) {
                 $this->createUrlInfos[$cuisel][] = $arr;
@@ -584,7 +623,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             throw new jUrlCompilerException($this->getErrorMsg($url, 'action is forbidden with include'));
         }
 
-        $pathinfo = '/'.trim((string)$url['pathinfo'], '/');
+        if (isset($url['pathinfo'])) {
+            $pathinfo = '/'.trim((string)$url['pathinfo'], '/');
+        }
+        else {
+            $pathinfo = '/';
+        }
 
         $path = $this->modulesPath[$uInfo->module];
 
@@ -592,7 +636,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             throw new jUrlCompilerException ($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
         }
 
-        $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.filemtime($path.$file)."\n";
+        $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.
+                                 filemtime($path.$file)."\n";
 
         $xml = simplexml_load_file ($path.$file);
         if (!$xml) {
@@ -629,7 +674,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             }
 
             // parse dynamic parameters
-            list($path, $regexppath) = $this->extractDynamicParams($url, $u, $optionalTrailingSlash, $pathinfo);
+            list($path, $regexppath) = $this->extractDynamicParams($url,
+                                                                   $u,
+                                                                   $optionalTrailingSlash,
+                                                                   $pathinfo);
 
             // parse static parameters
             $this->extractStaticParams($url, $u);
