@@ -4,7 +4,7 @@
 * @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2016 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -23,10 +23,9 @@ class significantUrlInfoParsing {
     public $params = array();
     public $escapes = array();
 
-    function __construct($rt, $ep, $isDefault, $isHttps) {
+    function __construct($rt, $ep, $isHttps) {
         $this->requestType = $rt;
         $this->entryPoint = $this->entryPointUrl = $ep;
-        $this->isDefault = $isDefault;
         $this->isHttps = $isHttps;
     }
 
@@ -71,7 +70,7 @@ class jUrlCompilerException extends Exception {
 * @package  jelix
 * @subpackage urls_engine
 */
-class jSignificantUrlsCompiler implements jISimpleCompiler{
+class jSignificantUrlsCompiler implements jISimpleCompiler {
 
     protected $parseInfos;
     protected $createUrlInfos;
@@ -120,7 +119,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
         $this->xmlfile = $aSelector->file;
-
         $xml = simplexml_load_file ($sourceFile);
         if (!$xml) {
            return false;
@@ -194,6 +192,9 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
         $this->createUrlContentInc = '';
         $this->modulesPath = jApp::getAllModulesPath();
 
+        // contain the significantUrlInfoParsing object corresponding of the default entrypoint of each type
+        $defaultEntrypointsByType = array();
+
         // contains, for each entrypoint type, the list of modules that don't appear
         // in any url definitions of any entrypoint of the same type
         // theses modules will then be attached to the default entrypoint of the
@@ -208,10 +209,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
 
             $type = $m[1];
             if ($type == '') {
-                if (isset($tag['type']))
+                if (isset($tag['type'])) {
                     $type = (string)$tag['type'];
-                if ($type == '')
+                }
+                if ($type == '') {
                     $type = 'classic';
+                }
             }
 
             if (!isset($modulesDedicatedToDefaultEp[$type])) {
@@ -219,42 +222,43 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                                                         array_fill(0, count($this->modulesPath), true));
             }
 
-            $defaultUrl = new significantUrlInfoParsing (
+            if (!isset($defaultEntrypointsByType[$type])) {
+                $defaultEntrypointsByType[$type] = null;
+            }
+
+            $urlModel = new significantUrlInfoParsing (
                 $type,
                 (string)$tag['name'],
-                (isset($tag['default']) ? (((string)$tag['default']) == 'true'):false),
                 (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false)
             );
 
             if (isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true') {
-                $defaultUrl->entryPointUrl = '';
+                $urlModel->entryPointUrl = '';
+            }
+
+            $isDefault = (isset($tag['default']) && (string)$tag['default'] == 'true');
+            if ($isDefault) {
+                if ($defaultEntrypointsByType[$type] !== null) {
+                    throw new jUrlCompilerException($this->getErrorMsg($tag, "Only one default entry point for the type ".$type." is allowed"));
+                }
+                $defaultEntrypointsByType[$type] = $urlModel;
             }
 
             $optionalTrailingSlash = (isset($tag['optionalTrailingSlash']) && $tag['optionalTrailingSlash'] == 'true');
 
             $this->parseInfos = array(
                     array(
-                        "isDefault" => $defaultUrl->isDefault,
-                        "requestType" => $defaultUrl->requestType,
+                        "isDefault" => $isDefault,
+                        "requestType" => $urlModel->requestType,
                         "dedicatedModules" => array()
                     )
                 );
-
-            // if this is the default entry point for the request type,
-            // then we add a rule which will match urls which are not
-            // defined.
-            if ($defaultUrl->isDefault) {
-                if (isset($this->createUrlInfos['@'.$defaultUrl->requestType])) {
-                    throw new jUrlCompilerException($this->getErrorMsg($tag, "Only one default entry point for the type ".$defaultUrl->requestType." is allowed"));
-                }
-                $this->createUrlInfos['@'.$defaultUrl->requestType] = array(2, $defaultUrl->entryPoint, $defaultUrl->isHttps);
-            }
 
             $createUrlInfosDedicatedModules = array();
             $hasDefaultUrl = false;
 
             foreach ($tag->children() as $tagname => $url) {
-                $u = clone $defaultUrl;
+                $u = clone $urlModel;
                 $include = isset($url['include'])?trim((string)$url['include']):'';
                 $handler = isset($url['handler'])?trim((string)$url['handler']):'';
                 $u->module = isset($url['module'])?trim((string)$url['module']):'';
@@ -338,31 +342,58 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
                 }
             } // end of loop on urls
 
-            $this->entrypoints[$defaultUrl->entryPoint] = array($defaultUrl,
+            $this->entrypoints[$urlModel->entryPoint] = array($urlModel,
                                                                 $this->parseInfos,
                                                                 $createUrlInfosDedicatedModules);
         } // end of loop on entrypoints
 
-        // write cache files containing parsing informations
-        foreach ($this->entrypoints as $epName => $epInfos) {
-            list ($defaultUrl, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
-
-            if ($defaultUrl->isDefault) {
-                foreach($modulesDedicatedToDefaultEp[$defaultUrl->requestType] as $mod => $ok) {
-                    if ($ok) {
-                        $parseInfos[0]['dedicatedModules'][$mod] = array($defaultUrl->isHttps, false);
-                        $createUrlInfosDedicatedModules[$mod.'~*@'.$defaultUrl->requestType]
-                            = array(3, $defaultUrl->entryPointUrl, $defaultUrl->isHttps, true);
+        // search for default entrypoint of each type
+        foreach($defaultEntrypointsByType as $type => $urlModel) {
+            if (!$urlModel) {
+                $entrypoints = array();
+                foreach ($this->entrypoints as $epName => $epInfos) {
+                    if ($epInfos[0]->requestType == $type) {
+                        $entrypoints[] = $epInfos[0];
                     }
                 }
-                $modulesDedicatedToDefaultEp[$defaultUrl->requestType] = array();
+                if (count($entrypoints) > 1) {
+                    throw new jUrlCompilerException ('There are several entrypoint of the same type '.$type.', but no one as default');
+                }
+                if (count($entrypoints) == 1) {
+                    $urlModel = $entrypoints[0];
+                    $this->entrypoints[$urlModel->entryPoint][1][0]['isDefault'] = true;
+                }
+                else {
+                    continue;
+                }
+            }
+
+            // if this is the default entry point for the request type,
+            // then we add a rule which will match urls which are not
+            // defined.
+            $this->createUrlInfos['@'.$urlModel->requestType] = array(2, $urlModel->entryPoint, $urlModel->isHttps);
+        }
+
+        // write cache files containing parsing informations
+        foreach ($this->entrypoints as $epName => $epInfos) {
+            list ($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
+
+            if ($urlModel->isDefault) {
+                foreach($modulesDedicatedToDefaultEp[$urlModel->requestType] as $mod => $ok) {
+                    if ($ok) {
+                        $parseInfos[0]['dedicatedModules'][$mod] = array($urlModel->isHttps, false);
+                        $createUrlInfosDedicatedModules[$mod.'~*@'.$urlModel->requestType]
+                            = array(3, $urlModel->entryPointUrl, $urlModel->isHttps, true);
+                    }
+                }
+                $modulesDedicatedToDefaultEp[$urlModel->requestType] = array();
             }
 
             $parseContent = "<?php \n";
-            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($defaultUrl->entryPoint).'\'] = '
+            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
                             .var_export($parseInfos, true).";\n?>";
 
-            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($defaultUrl->entryPoint).'.entrypoint.php'),$parseContent);
+            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'),$parseContent);
 
             $c = count($createUrlInfosDedicatedModules);
             foreach ($createUrlInfosDedicatedModules as $actionSelector=>$inf) {

@@ -334,6 +334,47 @@ class UTParseUrls extends jUnitTestCase {
         }
     }
 
+    public function getErrors() {
+        return array(
+            array('urlsfiles/url_twodefaultep.xml', 'urlsfiles/url_twodefaultep.xml: Only one default entry point for the type classic is allowed (<entrypoint name="testnews" default="true">)'),
+            array('urlsfiles/url_nodefaultep.xml', 'There are several entrypoint of the same type classic, but no one as default')
+        );
+    }
+
+    /**
+     * @dataProvider getErrors
+     */
+    function testErrorSignificantEngine($file, $error) {
+
+       $req = jApp::coord()->request;
+       $req->urlScriptPath = '/';
+       $req->params = array();
+       $config = jApp::config();
+       $config->urlengine = array(
+         'engine'=>'significant',
+         'enableParser'=>true,
+         'multiview'=>false,
+         'basePath'=>'/',
+         'defaultEntrypoint'=>'index',
+         'notfoundAct'=>'jelix~notfound',
+         'significantFile'=>$file,
+         'checkHttpsOnParsing'=>false
+       );
+        $config->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+        try {
+            $url = jUrl::parse ('index.php', '/', array());
+            $this->assertFalse(true, 'No expected error');
+        }
+        catch(jUrlCompilerException $e) {
+            $this->assertEquals($error, $e->getMessage());
+        }
+        catch(Exception $e) {
+            $this->assertFalse(true, 'Not the expected error: '.$e->getMessage());
+        }
+    }
+
     function testBasicSignificantEngine() {
        $req = jApp::coord()->request;
        $req->urlScriptPath = '/';
@@ -421,7 +462,5 @@ class UTParseUrls extends jUnitTestCase {
 
          $this->assertEquals($resultList[$k], $p, 'test '.$k);
       }
-
     }
-
 }
