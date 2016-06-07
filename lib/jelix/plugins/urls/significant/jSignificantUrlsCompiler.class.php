@@ -106,6 +106,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
     const ESCAPE_LANG = 4;
     const ESCAPE_LOCALE = 8;
 
+    protected $entryPointTypeHavingActionInBody = array('xmlrpc','jsonrpc','soap');
+
     /**
      * @var string
      */
@@ -249,6 +251,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
             $this->parseInfos = array(
                     array(
                         "isDefault" => $isDefault,
+                        "startModule" => '',
+                        "startAction" => '',
                         "requestType" => $urlModel->requestType,
                         "dedicatedModules" => array()
                     )
@@ -285,6 +289,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                     $u->entryPointUrl = '';
                 }
 
+
+                if ($include) {
+                    $this->readInclude($url, $u, $include);
+                    continue;
+                }
+
                 $u->isDefault = (isset($url['default']) ? (((string)$url['default']) == 'true'):false);
 
                 if ($u->isDefault) {
@@ -294,16 +304,29 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                     $hasDefaultUrl = true;
                 }
 
-                if ($include) {
-                    $this->readInclude($url, $u, $include);
-                    continue;
-                }
-
-                // in the case of a non default entry point, if there is just an
-                // <url module="" />, so all actions of this module will be assigned
-                // to this entry point.
+                // if there is just an <url module="" />, so all actions of this
+                // module will be assigned to this entry point.
                 if (!isset($url['action']) && !isset($url['handler'])) {
-                    $this->parseInfos[0]["dedicatedModules"][$u->module] = array($u->isHttps, $u->isDefault);
+                    $pathinfo = (isset($url['pathinfo']) ? ((string)$url['pathinfo']):'');
+
+                    if ($u->isDefault && $pathinfo != '' && $pathinfo !='/') {
+                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
+                    }
+
+                    if ($u->isDefault) {
+                        if ($this->parseInfos[0]["startModule"] != '') {
+                            throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                        }
+                        $this->parseInfos[0]["startModule"] = $u->module;
+                        $this->parseInfos[0]["startAction"] = "default:index";
+                        $this->parseInfos[] = array($u->module, "default:index", '!^/?$!',
+                                                    array(), array(), array(),
+                                                    array(), $u->isHttps);
+                        $u->action = 'default:index';
+                        $this->appendUrlInfo($u, '/', false);
+                        $u->action = '';
+                    }
+                    $this->parseInfos[0]["dedicatedModules"][$u->module] = $u->isHttps;
                     $createUrlInfosDedicatedModules[$u->getFullSel()] = array(3, $u->entryPointUrl, $u->isHttps, true);
                     continue;
                 }
@@ -328,6 +351,18 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
 
                 // parse static parameters
                 $this->extractStaticParams($url, $u);
+
+                if ($path == '' || $path == '/') {
+                    $u->isDefault = true;
+                    if ($this->parseInfos[0]["startModule"] != '') {
+                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                    }
+                    $this->parseInfos[0]["startModule"] = $u->module;
+                    $this->parseInfos[0]["startAction"] = $u->action;
+                }
+                else if ($u->isDefault) {
+                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
+                }
 
                 $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
                                             $u->params, $u->escapes, $u->statics,
@@ -378,15 +413,39 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
         foreach ($this->entrypoints as $epName => $epInfos) {
             list ($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
 
-            if ($urlModel->isDefault) {
+            if ($parseInfos[0]['isDefault']) {
+                // add all modules that isn't used in other entrypoint, to this
+                // entry point
                 foreach($modulesDedicatedToDefaultEp[$urlModel->requestType] as $mod => $ok) {
                     if ($ok) {
-                        $parseInfos[0]['dedicatedModules'][$mod] = array($urlModel->isHttps, false);
+                        $parseInfos[0]['dedicatedModules'][$mod] = $urlModel->isHttps;
                         $createUrlInfosDedicatedModules[$mod.'~*@'.$urlModel->requestType]
                             = array(3, $urlModel->entryPointUrl, $urlModel->isHttps, true);
                     }
                 }
                 $modulesDedicatedToDefaultEp[$urlModel->requestType] = array();
+            }
+
+            // check if there is a default url
+            if ($parseInfos[0]['startModule'] == '' &&
+                !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
+                if (count($parseInfos[0]['dedicatedModules']) == 1) {
+                    foreach($parseInfos[0]['dedicatedModules'] as $module => $isHttps) {
+                        $parseInfos[0]["startModule"] = $module;
+                        $parseInfos[0]["startAction"] = "default:index";
+                    }
+                    $arr = array(1, $urlModel->entryPointUrl, $urlModel->isHttps,
+                                 array(), array(), "/", false, array());
+                    $this->createUrlInfos[$parseInfos[0]["startModule"].'~'.$parseInfos[0]["startAction"].'@'.$parseInfos[0]["requestType"]] = $arr;
+                }
+                /*else if ($parseInfos[0]['isDefault']) {
+                    throw new jUrlCompilerException ('Default url is missing for the entry point '.$epName);
+                }*/
+                else {
+                    // for inexistant default url, let's say that / is a 404 error
+                    $parseInfos[0]["startModule"] = "jelix";
+                    $parseInfos[0]["startAction"] = "error:notfound";
+                }
             }
 
             $parseContent = "<?php \n";
@@ -479,6 +538,16 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
             $regexp = '!^'.preg_quote($pathinfo, '!').'(/.*)?$!';
         }
         else {
+            if ($u->isDefault) {
+                if ($this->parseInfos[0]["startModule"] != '') {
+                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                }
+                if ($u->action == '*') {
+                    throw new jUrlCompilerException ($this->getErrorMsg($url, '"default" attribute is not allowed on url handler without specific action'));
+                }
+                $this->parseInfos[0]["startModule"] = $u->module;
+                $this->parseInfos[0]["startAction"] = $u->action;
+            }
             $regexp = '';
         }
 
@@ -650,6 +719,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
      * @param significantUrlInfoParsing $uInfo
     */
     protected function readInclude($url, $uInfo, $file) {
+        if (isset($url['default'])) {
+            throw new jUrlCompilerException ($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
+        }
+
         if (isset($url['action'])) {
             throw new jUrlCompilerException($this->getErrorMsg($url, 'action is forbidden with include'));
         }
@@ -690,6 +763,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                 throw new jUrlCompilerException($this->getErrorMsg($url, 'include is forbidden in module url files'));
             }
 
+            if (isset($url['default'])) {
+                throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is forbidden in module url files'));
+            }
+
             $u->setAction((string)$url['action']);
 
             if (isset($url['actionoverride'])) {
@@ -709,6 +786,15 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                                                                    $u,
                                                                    $optionalTrailingSlash,
                                                                    $pathinfo);
+
+            if ($path == '' || $path == '/') {
+                $u->isDefault = true;
+                if ($this->parseInfos[0]["startModule"] != '') {
+                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                }
+                $this->parseInfos[0]["startModule"] = $u->module;
+                $this->parseInfos[0]["startAction"] = $u->action;
+            }
 
             // parse static parameters
             $this->extractStaticParams($url, $u);

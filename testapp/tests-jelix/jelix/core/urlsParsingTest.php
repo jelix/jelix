@@ -48,8 +48,8 @@ class UTParseUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls_tests.xml',
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>false
        );
         $config->compilation['force'] = true;
@@ -62,12 +62,12 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url8', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
       $resultList[]= array('module'=>'testapp',       'action'=>'main:indexghost', "annee"=>"2016", "mois"=>"12", "id"=>"3");
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url2', 'mois'=>'05',  'annee'=>'2004', "mystatic"=>"valeur statique");
-      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
-      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix',       'action'=>'error:notfound');
+      $resultList[]= array('module'=>'jelix',       'action'=>'error:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url3', 'rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c est la fete au village');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url4', 'first'=>'premier',  'second'=>'deuxieme');
       $resultList[]= array('module'=>'testapp',     'action'=>'main:indexghost', 'foo'=>'oof',  'bar'=>'rab');
-      $resultList[]= array('module'=>'jelix',       'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix',       'action'=>'error:notfound');
       //10
       $resultList[]= array();
       $resultList[]= array('module'=>'news',        'action'=>'main:bar',     'aaa'=>'bbb');
@@ -103,10 +103,11 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'testapp',   'action'=>'main:suburls');
       //40
       $resultList[]= array('module'=>'testapp',   'action'=>'main:indexghost');
-      $resultList[]= array('module'=>'jelix', 'action'=>'default:notfound');
+      $resultList[]= array('module'=>'jelix', 'action'=>'error:notfound');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo/bar/');
+      $resultList[]= array('module'=>'jelix', 'action'=>'error:notfound');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -159,6 +160,7 @@ class UTParseUrls extends jUnitTestCase {
           array('index.php', "/wiki/", array()),
           array('index.php', "/wiki/foo", array()),
           array('index.php', "/wiki/foo/bar/", array()),
+          array('testnews.php', "/", array())
        );
 
       foreach($request as $k=>$urldata){
@@ -191,7 +193,7 @@ class UTParseUrls extends jUnitTestCase {
       $this->assertEquals($url->params['action'], 'urlsig:url31');
       $url = jUrl::parse ("index.php", "/helloUhtml",array());
       $this->assertEquals($url->params['module'], 'jelix');
-      $this->assertEquals($url->params['action'], 'default:notfound');
+      $this->assertEquals($url->params['action'], 'error:notfound');
 
       $config->urlengine['multiview']=true;
       $request=array(
@@ -240,6 +242,7 @@ class UTParseUrls extends jUnitTestCase {
           array('index', "/wiki/", array()),
           array('index', "/wiki/foo", array()),
           array('index', "/wiki/foo/bar/", array()),
+          array('testnews', "", array())
 
        );
       foreach($request as $k=>$urldata){
@@ -265,8 +268,8 @@ class UTParseUrls extends jUnitTestCase {
             'multiview'=>false,
             'basePath'=>'/',
             'defaultEntrypoint'=>'index',
-            'notfoundAct'=>'jelix~notfound',
-            'significantFile'=>'urls_tests.xml',
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_maintests.xml',
             'checkHttpsOnParsing'=>false
         );
         $config->compilation['force'] = true;
@@ -334,10 +337,144 @@ class UTParseUrls extends jUnitTestCase {
         }
     }
 
+
+    function testDedicatedModule() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+        $config = jApp::config();
+        $config->urlengine = array(
+          'engine'=>'significant',
+          'enableParser'=>true,
+          'multiview'=>false,
+          'basePath'=>'/',
+          'defaultEntrypoint'=>'index',
+          'notfoundAct'=>'jelix~error:notfound',
+          'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
+          'checkHttpsOnParsing'=>false
+        );
+        $config->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+
+        $resultList=array();
+        $resultList[]= array('module'=>'testapp', 'action'=>'default:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'default:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'default:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'default:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'foo:bar');
+        $resultList[]= array('module'=>'testapp', 'action'=>'foo:bar');
+
+        $request=array(
+            array("index.php","", array()),
+            array("index.php","/", array()),
+            array("index.php","/testapp", array()),
+            array("index.php","/testapp/", array()),
+            array("index.php","/testapp/foo", array()),
+            array("index.php","/testapp/foo/", array()),
+            array("index.php","/testapp/foo/bar", array()),
+            array("index.php","/testapp/foo/bar/", array()),
+        );
+
+        foreach($request as $k=>$urldata) {
+            $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+            $p = $url->params;
+            ksort($p);
+            ksort($resultList[$k]);
+            $this->assertEquals($resultList[$k], $p, 'test '.$k);
+        }
+    }
+
+    function testDefaultAction() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+        $config = jApp::config();
+        $config->urlengine = array(
+          'engine'=>'significant',
+          'enableParser'=>true,
+          'multiview'=>false,
+          'basePath'=>'/',
+          'defaultEntrypoint'=>'index',
+          'notfoundAct'=>'jelix~error:notfound',
+          'significantFile'=>'urlsfiles/url_defaultaction.xml',
+          'checkHttpsOnParsing'=>false
+        );
+        $config->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+
+        $resultList=array();
+        $resultList[]= array('module'=>'testapp', 'action'=>'main:index');
+        $resultList[]= array('module'=>'testapp', 'action'=>'main:index');
+        $resultList[]= array('module'=>'jelix', 'action'=>'error:notfound');
+        $resultList[]= array('module'=>'testapp', 'action'=>'default:test1', 'annee'=>'2010', 'mois'=>'12', 'bla'=>'cequejeveux');
+
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'main:index');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'something');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:index');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'default:index');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'foo:bar');
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'foo:bar');
+
+        $resultList[]= array('module'=>'testapp', 'action'=>'main:index2');
+        $resultList[]= array('module'=>'jelix', 'action'=>'error:notfound');
+
+        $resultList[]= array('module'=>'news', 'action'=>'default:index');
+        $resultList[]= array('module'=>'news', 'action'=>'default:index');
+        $resultList[]= array('module'=>'news', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'news', 'action'=>'foo:bar');
+        $resultList[]= array('module'=>'articles', 'action'=>'default:index');
+        $resultList[]= array('module'=>'articles', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'articles', 'action'=>'foo:bar');
+
+        $request=array(
+            array("index.php","", array()),
+            array("index.php","/", array()),
+            array("index.php","/testapp", array()),
+            array("index.php","/test/2010/12", array()),
+
+            array("noep.php","/", array()),
+            array("noep.php","/zip/something/", array()),
+            array("noep.php","/jelix_tests", array()),
+            array("noep.php","/jelix_tests/", array()),
+            array("noep.php","/jelix_tests/foo", array()),
+            array("noep.php","/jelix_tests/foo/", array()),
+            array("noep.php","/jelix_tests/foo/bar", array()),
+            array("noep.php","/jelix_tests/foo/bar/", array()),
+
+            array("testnews.php","/", array()),
+            array("testnews.php","/testapp", array()),
+
+            array("news.php","/", array()),
+            array("news.php","/news/", array()),
+            array("news.php","/news/foo", array()),
+            array("news.php","/news/foo/bar", array()),
+            array("news.php","/articles/", array()),
+            array("news.php","/articles/foo", array()),
+            array("news.php","/articles/foo/bar", array()),
+        );
+
+        foreach($request as $k=>$urldata) {
+            $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+            $p = $url->params;
+            ksort($p);
+            ksort($resultList[$k]);
+            $this->assertEquals($resultList[$k], $p, 'test '.$k);
+        }
+    }
+
     public function getErrors() {
         return array(
             array('urlsfiles/url_twodefaultep.xml', 'urlsfiles/url_twodefaultep.xml: Only one default entry point for the type classic is allowed (<entrypoint name="testnews" default="true">)'),
-            array('urlsfiles/url_nodefaultep.xml', 'There are several entrypoint of the same type classic, but no one as default')
+            array('urlsfiles/url_nodefaultep.xml', 'There are several entrypoint of the same type classic, but no one as default'),
+            //array('urlsfiles/url_empty.xml', 'Default url is missing for the entry point index')
         );
     }
 
@@ -356,7 +493,7 @@ class UTParseUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
+         'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>$file,
          'checkHttpsOnParsing'=>false
        );
@@ -387,8 +524,8 @@ class UTParseUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls_tests.xml',
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url

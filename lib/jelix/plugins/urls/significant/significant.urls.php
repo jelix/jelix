@@ -193,6 +193,8 @@ class significantUrlEngine implements jIUrlEngine {
         $needHttps = false;
         $dedicatedModules = array();
         $requestType = 'classic';
+        $startModule = '';
+        $startAction = '';
 
         // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
         $checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
@@ -203,6 +205,8 @@ class significantUrlEngine implements jIUrlEngine {
                 $isDefault = $infoparsing['isDefault'];
                 $requestType = $infoparsing['requestType'];
                 $dedicatedModules = $infoparsing['dedicatedModules'];
+                $startModule = $infoparsing['startModule'];
+                $startAction = $infoparsing['startAction'];
                 continue;
             }
 
@@ -285,8 +289,9 @@ class significantUrlEngine implements jIUrlEngine {
                     }
                 }
                 else {
-                    if ($action !='')
+                    if ($action !='') {
                         $params['action'] = $action;
+                    }
                 }
 
                 // let's merge static parameters
@@ -338,6 +343,7 @@ class significantUrlEngine implements jIUrlEngine {
                         }
                     }
                 }
+
                 $urlact = new jUrlAction($params);
                 break;
             }
@@ -362,18 +368,13 @@ class significantUrlEngine implements jIUrlEngine {
                     }
                     $urlact =  new jUrlAction($params);
                 }
-                else {
-                    // let's search the default dedicated module
-                    // and let's take it as default module for "/"
-                    foreach($dedicatedModules as $mod=>$info) {
-                        if ($info[1]) {
-                            $params['module'] = $mod;
-                            $params['action'] = 'default:index';
-                            $urlact =  new jUrlAction($params);
-                            $needHttps = $info[0];
-                            break;
-                        }
+                else if ($startModule) {
+                    $params['module'] = $startModule;
+                    $params['action'] = $startAction;
+                    if (isset($dedicatedModules[$startModule])) {
+                        $needHttps = $dedicatedModules[$startModule];
                     }
+                    $urlact =  new jUrlAction($params);
                 }
             }
             else if (isset($dedicatedModules[$pathInfoParts[0]])) {
@@ -388,19 +389,18 @@ class significantUrlEngine implements jIUrlEngine {
                 else {
                     $params['action'] = $pathInfoParts[1].':'.$pathInfoParts[2];
                 }
-                $needHttps = $dedicatedModules[$pathInfoParts[0]][0];
+                $needHttps = $dedicatedModules[$pathInfoParts[0]];
                 $urlact =  new jUrlAction($params);
             }
         }
 
         if ($urlact) {
             // the action corresponding to the url has been found
-            if ($checkHttps && $needHttps && ! $isHttps) {
-                // the url is declared for HTTPS, but the request does not come from HTTPS
-                // -> 404 not found
-                $urlact = new jUrlAction(array('module'=>'jelix', 'action'=>'error:notfound'));
+            if (!($checkHttps && $needHttps && ! $isHttps)) {
+                return $urlact;
             }
-            return $urlact;
+            // the url is declared for HTTPS, but the request does not come from HTTPS
+            // -> 404 not found
         }
 
         // we display the 404 page.
@@ -599,7 +599,7 @@ class significantUrlEngine implements jIUrlEngine {
                 $pi = str_replace(':'.$param, $value, $pi);
                 $url->delParam($param);
             }
-            $url->pathInfo = $pi;
+            $url->pathInfo = ($pi != '/'?$pi:'');
             if ($urlinfo[6]) {
                 $url->setParam('action',$action);
             }
@@ -609,15 +609,23 @@ class significantUrlEngine implements jIUrlEngine {
             }
         }
         elseif ($urlinfo[0] == 3) {
-            if (!$urlinfo[3]) {
+            if ($urlinfo[3]) { // if default module
                 if ($action != 'default:index') {
-                    $url->pathInfo = '/'.$module.'/'.str_replace(':', '/', $action);
+                    $act = explode(':', $action);
+                    $url->pathInfo = '/'.$module.'/'.$act[0];
+                    if ($act[1] != 'index') {
+                        $url->pathInfo .= '/'.$act[1];
+                    }
                 }
             }
             else {
                 $url->pathInfo = '/'.$module;
                 if ($action != 'default:index') {
-                    $url->pathInfo .= '/'.str_replace(':', '/', $action);
+                    $act = explode(':', $action);
+                    $url->pathInfo .= '/'.$act[0];
+                    if ($act[1] != 'index') {
+                        $url->pathInfo .= '/'.$act[1];
+                    }
                 }
             }
             $url->delParam('module');

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <urls xmlns="http://jelix.org/ns/urls/1.0">
     <entrypoint name="index" default="true">
-        <!--<url module="testapp" action="main:index" />-->
-        <url module="testapp" default="true"/>
+        <url module="testapp" action="main:index" />
+        <url module="testapp"/>
     </entrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true" />
     <jsonrpcentrypoint name="jsonrpc" default="true" />

@@ -87,7 +87,7 @@ class UTCreateUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls_tests.xml',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
        );
 
       jUrl::getEngine(true); // we reload the url engine
@@ -152,9 +152,9 @@ class UTCreateUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
+         'notfoundAct'=>'jelix~error:notfound',
          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls_tests.xml',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
        );
 
       $urlList=array();
@@ -192,8 +192,8 @@ class UTCreateUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls_tests.xml',
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true
        );
 
@@ -359,8 +359,8 @@ class UTCreateUrls extends jUnitTestCase {
             'multiview'=>false,
             'basePath'=>'/',
             'defaultEntrypoint'=>'index',
-            'notfoundAct'=>'jelix~notfound',
-            'significantFile'=>'urls_tests.xml',
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_maintests.xml',
             'checkHttpsOnParsing'=>true
         );
         $conf->_modulesPathList['news']='/';
@@ -468,6 +468,46 @@ class UTCreateUrls extends jUnitTestCase {
         }
     }
 
+    function testDedicatedModule() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+ 
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = true;
+        $conf->forceHTTPSPort = true;
+        $conf->urlengine = array(
+            'engine'=>'significant',
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'defaultEntrypoint'=>'index',
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
+            'checkHttpsOnParsing'=>true
+        );
+
+        $conf->_modulesPathList['news']='/';
+        $conf->_modulesPathList['articles']='/';
+
+        jUrl::getEngine(true);
+
+        $urlList = array();
+        $urlList[]= array('testapp~default:index', array());
+        $urlList[]= array('testapp~foo:index', array());
+        $urlList[]= array('testapp~foo:bar', array());
+
+        $trueResult=array(
+            "/index.php",
+            "/index.php/testapp/foo",
+            "/index.php/testapp/foo/bar",
+        );
+
+        $this->_doCompareUrl("testDedicatedModule", $urlList, $trueResult);
+    }
+    
     function testSignificantEngineError(){
 
        $req = jApp::coord()->request;
@@ -481,8 +521,8 @@ class UTCreateUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls_tests.xml',
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true
        );
 
@@ -530,7 +570,7 @@ class UTCreateUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls_tests.xml',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
        );
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
@@ -597,9 +637,9 @@ class UTCreateUrls extends jUnitTestCase {
          'multiview'=>false,
          'basePath'=>'/',
          'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
+         'notfoundAct'=>'jelix~error:notfound',
          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls_tests.xml',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
        );
 
       $urlList=array();
@@ -637,7 +677,7 @@ class UTCreateUrls extends jUnitTestCase {
           'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
           'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-          'significantFile'=>'urls_tests.xml',
+          'significantFile'=>'urlsfiles/url_maintests.xml',
         );
 
         // parameters
@@ -746,7 +786,7 @@ class UTCreateUrls extends jUnitTestCase {
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
           'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-          'significantFile'=>'urls_tests.xml',
+          'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
           'urlScriptName'=>'noep.php',
@@ -785,7 +825,7 @@ class UTCreateUrls extends jUnitTestCase {
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
           'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-          'significantFile'=>'urls_tests.xml',
+          'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
           'urlScriptName'=>'noep.php',

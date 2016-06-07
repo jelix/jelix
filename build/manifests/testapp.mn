@@ -461,6 +461,13 @@ cd testapp/var/config/cmdline
   config.ini.php
 cd testapp/var/config/soap
   config.ini.php
+cd testapp/var/config/urlsfiles
+  url_maintests.xml
+  url_dedicatedmodule.xml
+  url_defaultaction.xml
+  url_empty.xml
+  url_nodefaultep.xml
+  url_twodefaultep.xml
 cd testapp/var/locales/fr_FR/jelix_tests/locales/
   newoverload.UTF-8.properties
   overload.UTF-8.properties
