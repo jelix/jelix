@@ -499,10 +499,23 @@ class UTCreateUrls extends jUnitTestCase {
         $urlList[]= array('testapp~foo:index', array());
         $urlList[]= array('testapp~foo:bar', array());
 
+        $urlList[]= array('news~default:index', array());
+        $urlList[]= array('news~foo:index', array());
+        $urlList[]= array('news~foo:bar', array());
+        $urlList[]= array('articles~default:index', array());
+        $urlList[]= array('articles~foo:index', array());
+        $urlList[]= array('articles~foo:bar', array());
+
         $trueResult=array(
             "/index.php",
             "/index.php/testapp/foo",
             "/index.php/testapp/foo/bar",
+            "/news.php",
+            "/news.php/news/foo",
+            "/news.php/news/foo/bar",
+            "/news.php/mynews",
+            "/news.php/mynews/foo",
+            "/news.php/mynews/foo/bar",
         );
 
         $this->_doCompareUrl("testDedicatedModule", $urlList, $trueResult);

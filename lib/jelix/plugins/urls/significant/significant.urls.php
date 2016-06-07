@@ -288,9 +288,22 @@ class significantUrlEngine implements jIUrlEngine {
                         $params['action'] = $action;
                     }
                 }
-                else {
-                    if ($action !='') {
-                        $params['action'] = $action;
+                else if ($action !='') {
+                    $params['action'] = $action;
+                }
+                else if (count($matches) == 2) {
+                    if ($matches[1] == '/' || $matches[1] == '') {
+                        $params['action'] = 'default:index';
+                    }
+                    else {
+                        $pathInfoParts = explode('/',$matches[1]);
+                        $co = count($pathInfoParts);
+                        if ($co == 2) {
+                            $params['action'] = $pathInfoParts[1].':index';
+                        }
+                        else {
+                            $params['action'] = $pathInfoParts[1].':'.$pathInfoParts[2];
+                        }
                     }
                 }
 
@@ -477,7 +490,7 @@ class significantUrlEngine implements jIUrlEngine {
                   array('bla'=>'whatIWant' ) // list of static values
                   )
           or array(2,'entrypoint', https true/false), // for the patterns "@request"
-          or array(3,'entrypoint', https true/false, $defaultmodule true/false), // for the patterns "module~@request"
+          or array(3,'entrypoint', https true/false, $defaultmodule true/false, 'pathinfobase'), // for the patterns "module~@request"
           or array(4, array(1,...), array(1,...)...)
         */
         if ($urlinfo[0] == 4) {
@@ -619,7 +632,7 @@ class significantUrlEngine implements jIUrlEngine {
                 }
             }
             else {
-                $url->pathInfo = '/'.$module;
+                $url->pathInfo = ($urlinfo[4]?:'/'.$module);
                 if ($action != 'default:index') {
                     $act = explode(':', $action);
                     $url->pathInfo .= '/'.$act[0];

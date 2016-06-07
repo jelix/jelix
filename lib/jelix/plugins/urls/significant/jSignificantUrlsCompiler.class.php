@@ -185,7 +185,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                   or
                   array(2,'entrypoint', https true/false), // for the patterns "@request"
                   or
-                  array(3,'entrypoint', https true/false), // for the patterns "module~@request"
+                  array(3,'entrypoint', https true/false, pathinfobase), // for the patterns "module~@request"
         */
 
         $this->createUrlInfos = array();
@@ -319,15 +319,27 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                         }
                         $this->parseInfos[0]["startModule"] = $u->module;
                         $this->parseInfos[0]["startAction"] = "default:index";
+                        // add parser and creator information for the default action
                         $this->parseInfos[] = array($u->module, "default:index", '!^/?$!',
                                                     array(), array(), array(),
                                                     array(), $u->isHttps);
                         $u->action = 'default:index';
                         $this->appendUrlInfo($u, '/', false);
                         $u->action = '';
+                        $pathinfo = '';
+                    }
+                    else if ($pathinfo != '/' && $pathinfo != '') {
+                        $pathinfo = '/'.trim($pathinfo,'/');
+                        $this->parseInfos[] = array($u->module, '',
+                            '!^'.preg_quote($pathinfo,'!').'(/.*)?$!',
+                            array(), array(), array(), false, $u->isHttps);
+                        $createUrlInfosDedicatedModules[$u->getFullSel()] =
+                            array(3, $u->entryPointUrl, $u->isHttps, true, $pathinfo);
+                        continue;
                     }
                     $this->parseInfos[0]["dedicatedModules"][$u->module] = $u->isHttps;
-                    $createUrlInfosDedicatedModules[$u->getFullSel()] = array(3, $u->entryPointUrl, $u->isHttps, true);
+                    $createUrlInfosDedicatedModules[$u->getFullSel()] =
+                        array(3, $u->entryPointUrl, $u->isHttps, true, '');
                     continue;
                 }
 
@@ -420,7 +432,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                     if ($ok) {
                         $parseInfos[0]['dedicatedModules'][$mod] = $urlModel->isHttps;
                         $createUrlInfosDedicatedModules[$mod.'~*@'.$urlModel->requestType]
-                            = array(3, $urlModel->entryPointUrl, $urlModel->isHttps, true);
+                            = array(3, $urlModel->entryPointUrl, $urlModel->isHttps, true, '');
                     }
                 }
                 $modulesDedicatedToDefaultEp[$urlModel->requestType] = array();

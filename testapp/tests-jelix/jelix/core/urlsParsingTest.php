@@ -368,6 +368,14 @@ class UTParseUrls extends jUnitTestCase {
         $resultList[]= array('module'=>'testapp', 'action'=>'foo:bar');
         $resultList[]= array('module'=>'testapp', 'action'=>'foo:bar');
 
+        $resultList[]= array('module'=>'news', 'action'=>'default:index');
+        $resultList[]= array('module'=>'news', 'action'=>'default:index');
+        $resultList[]= array('module'=>'news', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'news', 'action'=>'foo:bar');
+        $resultList[]= array('module'=>'articles', 'action'=>'default:index');
+        $resultList[]= array('module'=>'articles', 'action'=>'foo:index');
+        $resultList[]= array('module'=>'articles', 'action'=>'foo:bar');
+
         $request=array(
             array("index.php","", array()),
             array("index.php","/", array()),
@@ -377,6 +385,14 @@ class UTParseUrls extends jUnitTestCase {
             array("index.php","/testapp/foo/", array()),
             array("index.php","/testapp/foo/bar", array()),
             array("index.php","/testapp/foo/bar/", array()),
+
+            array("news.php","/", array()),
+            array("news.php","/news/", array()),
+            array("news.php","/news/foo", array()),
+            array("news.php","/news/foo/bar", array()),
+            array("news.php","/mynews/", array()),
+            array("news.php","/mynews/foo", array()),
+            array("news.php","/mynews/foo/bar", array()),
         );
 
         foreach($request as $k=>$urldata) {
