@@ -82,11 +82,11 @@ class jIncluder {
      * check the cache, compile if needed, and include the cache
      * @param    jISelector   $aSelectorId    the selector corresponding to the file
     */
-    public static function inc($aSelector){
+    public static function inc($aSelector, $forceReloadCache = false){
 
         $cachefile = $aSelector->getCompiledFilePath();
 
-        if($cachefile == '' || isset(jIncluder::$_includedFiles[$cachefile])){
+        if($cachefile == '' || (!$forceReloadCache && isset(jIncluder::$_includedFiles[$cachefile]))){
             return;
         }
 
