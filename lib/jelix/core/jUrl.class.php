@@ -272,8 +272,9 @@ class jUrl extends jUrlBase {
         if($engine === null || $reset){
             $name = jApp::config()->urlengine['engine'];
             $engine = jApp::loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
-            if(is_null($engine))
+            if (is_null($engine)) {
                 throw new jException('jelix~errors.urls.engine.notfound', $name);
+            }
         }
         return $engine;
     }

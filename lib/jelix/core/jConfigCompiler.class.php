@@ -141,8 +141,9 @@ class jConfigCompiler {
             $config->domainName = $_SERVER['SERVER_NAME'];
         }
 
-        if ($config->urlengine['engine'] == 'simple') {
-            trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
+        if ($config->urlengine['engine'] == 'simple' ||
+            $config->urlengine['engine'] == 'basic_significant') {
+            throw new \Exception("The 'simple' and 'basic_significant' url engine do not exist anymore. use 'significant' url engine");
         }
 
         $config->chmodFile = octdec($config->chmodFile);

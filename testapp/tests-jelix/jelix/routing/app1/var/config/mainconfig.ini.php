@@ -8,7 +8,7 @@ jelix.access = 2
 aaa.access = 2 
 
 [urlengine]
-engine        = basic_significant
+engine        = significant
 enableParser = on
 multiview = off
 scriptNameServerVariable =

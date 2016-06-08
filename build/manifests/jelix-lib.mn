@@ -663,12 +663,6 @@ cd lib/jelix/plugins/urls/significant
 * jSignificantUrlsCompiler.class.php
 * significant.urls.php
 
-cd lib/jelix/plugins/urls/simple
-  simple.urls.php
-
-cd lib/jelix/plugins/urls/basic_significant
-  basic_significant.urls.php
-
 cd lib/jelix-plugins/cache/file
 * file.cache.php
   LICENCE

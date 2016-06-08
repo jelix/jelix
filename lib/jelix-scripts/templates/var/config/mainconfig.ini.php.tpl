@@ -51,8 +51,8 @@ html=myHtmlResponse
 ;force  = off
 
 [urlengine]
-; name of url engine :  "simple", "basic_significant" or "significant"
-engine        = basic_significant
+; deprecated
+engine        = significant
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
@@ -89,6 +89,7 @@ notfoundAct = "jelix~error:notfound"
 simple_urlengine_https =
 
 [simple_urlengine_entrypoints]
+; deprecated
 ; parameters for the simple url engine. This is the list of entry points
 ; with list of actions attached to each entry points
 
