@@ -16,6 +16,8 @@
  */
 class jUrlAction extends jUrlBase {
 
+    public $needsHttps = false;
+
     /**
      * the request type
      * @var string
@@ -25,7 +27,7 @@ class jUrlAction extends jUrlBase {
     /**
      * constructor...
      */
-    function __construct ($params=array(),$request=''){
+    function __construct ($params=array(), $request='') {
         $this->params=$params;
         if($request == ''){
             $this->requestType = jApp::coord()->request->type;

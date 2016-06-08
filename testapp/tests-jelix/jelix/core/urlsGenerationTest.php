@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,7 +15,6 @@ class UTCreateUrls extends jUnitTestCase {
     function setUp() {
         $this->oldserver = $_SERVER;
         jApp::saveContext();
-        jIncluder::clear();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
@@ -23,10 +22,9 @@ class UTCreateUrls extends jUnitTestCase {
     
     function tearDown() {
         jApp::popCurrentModule();
-        jUrl::getEngine(true);
         jApp::restoreContext();
         $_SERVER = $this->oldserver;
-        
+        jUrl::getEngine(true);
     }
 
 
@@ -88,7 +86,8 @@ class UTCreateUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
-         'checkHttpsOnParsing'=>true
+         'checkHttpsOnParsing'=>true,
+         'urlScriptIdenc'=>'index'
        );
 
       $conf->_modulesPathList['news']='/';
@@ -255,7 +254,8 @@ class UTCreateUrls extends jUnitTestCase {
             'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_maintests.xml',
-            'checkHttpsOnParsing'=>true
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index'
         );
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
@@ -380,7 +380,8 @@ class UTCreateUrls extends jUnitTestCase {
             'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
-            'checkHttpsOnParsing'=>true
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index'
         );
 
         $conf->_modulesPathList['news']='/';
@@ -433,7 +434,8 @@ class UTCreateUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
-         'checkHttpsOnParsing'=>true
+         'checkHttpsOnParsing'=>true,
+         'urlScriptIdenc'=>'index'
        );
 
       $conf->_modulesPathList['news']='/';
@@ -476,6 +478,7 @@ class UTCreateUrls extends jUnitTestCase {
           'notfoundAct'=>'jelix~error:notfound',
           'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
           'significantFile'=>'urls.xml',
+          'urlScriptIdenc'=>'index'
         );
 
         // parameters

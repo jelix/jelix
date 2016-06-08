@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
-* @copyright   2005-2009 Laurent Jouanneau
+* @copyright   2005-2016 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -26,13 +26,15 @@ class UTParseUrlsIncluder extends jIncluder {
 class UTParseUrls extends jUnitTestCase {
 
     function setUp() {
+        jApp::saveContext();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
-    
+
     function tearDown() {
         jApp::popCurrentModule();
+        jApp::restoreContext();
         jUrl::getEngine(true);
     }
 
@@ -50,7 +52,8 @@ class UTParseUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
-         'checkHttpsOnParsing'=>false
+         'checkHttpsOnParsing'=>false,
+         'urlScriptIdenc'=>'index'
        );
         $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
@@ -270,7 +273,8 @@ class UTParseUrls extends jUnitTestCase {
             'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_maintests.xml',
-            'checkHttpsOnParsing'=>false
+            'checkHttpsOnParsing'=>false,
+            'urlScriptIdenc'=>'index'
         );
         $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
@@ -352,7 +356,8 @@ class UTParseUrls extends jUnitTestCase {
           'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
           'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
-          'checkHttpsOnParsing'=>false
+          'checkHttpsOnParsing'=>false,
+          'urlScriptIdenc'=>'index'
         );
         $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
@@ -418,7 +423,8 @@ class UTParseUrls extends jUnitTestCase {
           'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
           'significantFile'=>'urlsfiles/url_defaultaction.xml',
-          'checkHttpsOnParsing'=>false
+          'checkHttpsOnParsing'=>false,
+          'urlScriptIdenc'=>'index'
         );
         $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
@@ -511,13 +517,13 @@ class UTParseUrls extends jUnitTestCase {
          'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>$file,
-         'checkHttpsOnParsing'=>false
+         'checkHttpsOnParsing'=>false,
+         'urlScriptIdenc'=>'index'
        );
         $config->compilation['force'] = true;
         UTParseUrlsIncluder::resetUrlCache();
-        jUrl::getEngine(true);
         try {
-            $url = jUrl::parse ('index.php', '/', array());
+            jUrl::getEngine(true);
             $this->assertFalse(true, 'No expected error');
         }
         catch(jUrlCompilerException $e) {

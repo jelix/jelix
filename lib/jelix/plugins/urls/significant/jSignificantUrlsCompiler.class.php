@@ -1,16 +1,16 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  urls_engine
 * @author      Laurent Jouanneau
 * @contributor Thibault Piront (nuKs)
+*
 * @copyright   2005-2016 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
+*
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
-class significantUrlInfoParsing {
+class significantUrlInfoParsing
+{
     public $entryPoint = '';
     public $entryPointUrl = '';
     public $isHttps = false;
@@ -23,36 +23,40 @@ class significantUrlInfoParsing {
     public $params = array();
     public $escapes = array();
 
-    function __construct($rt, $ep, $isHttps) {
+    public function __construct($rt, $ep, $isHttps)
+    {
         $this->requestType = $rt;
         $this->entryPoint = $this->entryPointUrl = $ep;
         $this->isHttps = $isHttps;
     }
 
-    function getFullSel() {
+    public function getFullSel()
+    {
         if ($this->action) {
             $act = $this->action;
-            if (substr($act,-1) == ':') // this is a rest action
+            if (substr($act, -1) == ':') { // this is a rest action
                 // we should add index because jSelectorAct resolve a "ctrl:" as "ctrl:index"
                 // and then create the corresponding selector so url create infos will be found
                 $act .= 'index';
-        }
-        else {
+            }
+        } else {
             $act = '*';
         }
+
         return $this->module.'~'.$act.'@'.$this->requestType;
     }
 
-    function setAction($action) {
+    public function setAction($action)
+    {
         if (strpos($action, ':') === false) {
             $this->action = 'default:'.$action;
-        }
-        else {
+        } else {
             $this->action = $action;
         }
     }
 
-    function setActionOverride($actionoverride) {
+    public function setActionOverride($actionoverride)
+    {
         $this->actionOverride = preg_split("/[\s,]+/", $actionoverride);
         foreach ($this->actionOverride as &$each) {
             if (strpos($each, ':') === false) {
@@ -62,42 +66,59 @@ class significantUrlInfoParsing {
     }
 }
 
-class jUrlCompilerException extends Exception {
+class jUrlCompilerException extends Exception
+{
 }
 
 /**
-* Compiler for significant url engine
-* @package  jelix
-* @subpackage urls_engine
-*/
-class jSignificantUrlsCompiler implements jISimpleCompiler {
-
+ * Compiler for significant url engine.
+ */
+class jSignificantUrlsCompiler implements jISimpleCompiler
+{
     protected $parseInfos;
     protected $createUrlInfos;
     protected $createUrlContent;
     protected $createUrlContentInc;
 
+    protected $createUrlInfosDedicatedModules;
+
+    /**
+     * contains, for each entrypoint type, the list of modules that don't appear
+     * in any url definitions of any entrypoint of the same type
+     * theses modules will then be attached to the default entrypoint of the
+     * corresponding entrypoint type.
+     * 
+     * @var array key = entrypoint type, value = list of modules
+     */
+    protected $modulesDedicatedToDefaultEp;
+
+    /**
+     * contain the significantUrlInfoParsing object corresponding of the default
+     * entrypoint of each type.
+     */
+    protected $defaultEntrypointsByType = array();
+
     /**
      * first element is significantUrlInfoParsing
-     * second element is a parseInfos array
+     * second element is a parseInfos array.
      */
     protected $entrypoints = array();
 
     protected $typeparam = array(
-        'string'=>'([^\/]+)',
-        'char'=>'([^\/])',
-        'letter'=>'(\w)',
-        'number'=>'(\d+)',
-        'int'=>'(\d+)',
-        'integer'=>'(\d+)',
-        'digit'=>'(\d)',
-        'date'=>'([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))',
-        'year'=>'([0-2]\d{3})',
-        'month'=>'(0[1-9]|1[0-2])',
-        'day'=>'([0-2][1-9]|[1-2]0|3[0-1])',
-        'path'=>'(.*)',
-        'locale'=>'(\w{2,3}(?:(?:\-|_)\w{2,3})?)',
-        'lang'=>'(\w{2,3})'
+        'string' => '([^\/]+)',
+        'char' => '([^\/])',
+        'letter' => '(\w)',
+        'number' => '(\d+)',
+        'int' => '(\d+)',
+        'integer' => '(\d+)',
+        'digit' => '(\d)',
+        'date' => '([0-2]\d{3}\-(?:0[1-9]|1[0-2])\-(?:[0-2][1-9]|3[0-1]))',
+        'year' => '([0-2]\d{3})',
+        'month' => '(0[1-9]|1[0-2])',
+        'day' => '([0-2][1-9]|[1-2]0|3[0-1])',
+        'path' => '(.*)',
+        'locale' => '(\w{2,3}(?:(?:\-|_)\w{2,3})?)',
+        'lang' => '(\w{2,3})',
     );
 
     const ESCAPE_URLENCODE = 0;
@@ -106,24 +127,26 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
     const ESCAPE_LANG = 4;
     const ESCAPE_LOCALE = 8;
 
-    protected $entryPointTypeHavingActionInBody = array('xmlrpc','jsonrpc','soap');
+    protected $entryPointTypeHavingActionInBody = array('xmlrpc', 'jsonrpc', 'soap');
 
     /**
      * @var string
      */
     protected $xmlfile = '';
 
+    protected $epHasDefaultUrl = false;
+
     /**
      *
      */
-    public function compile($aSelector) {
-
+    public function compile($aSelector)
+    {
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
         $this->xmlfile = $aSelector->file;
-        $xml = simplexml_load_file ($sourceFile);
+        $xml = simplexml_load_file($sourceFile);
         if (!$xml) {
-           return false;
+            return false;
         }
         /*
         <urls>
@@ -194,208 +217,225 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
         $this->createUrlContentInc = '';
         $this->modulesPath = jApp::getAllModulesPath();
 
-        // contain the significantUrlInfoParsing object corresponding of the default entrypoint of each type
-        $defaultEntrypointsByType = array();
+        $this->parseXml($xml);
 
-        // contains, for each entrypoint type, the list of modules that don't appear
-        // in any url definitions of any entrypoint of the same type
-        // theses modules will then be attached to the default entrypoint of the
-        // corresponding entrypoint type.
-        // key = entrypoint type, value = list of modules
-        $modulesDedicatedToDefaultEp = array();
+        // write cache files containing parsing informations
+        foreach ($this->entrypoints as $epName => $epInfos) {
+            list($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
+            $parseContent = "<?php \n";
+            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
+                            .var_export($parseInfos, true).";\n?>";
+
+            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
+        }
+
+        // write cache file containing url creation informations
+        $this->createUrlContent .= ")) { return false; } else {\n";
+        $this->createUrlContent .= $this->createUrlContentInc;
+        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
+        $this->createUrlContent .= "\n}\n";
+        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
+
+        return true;
+    }
+
+    protected function parseXml($xml)
+    {
+        $this->defaultEntrypointsByType = array();
+
+        $this->modulesDedicatedToDefaultEp = array();
 
         foreach ($xml->children() as $tagname => $tag) {
-            if (!preg_match("/^(.*)entrypoint$/", $tagname, $m)) {
+            if (!preg_match('/^(.*)entrypoint$/', $tagname, $m)) {
                 throw new jUrlCompilerException($this->getErrorMsg($tag, "Unknown element $tagname"));
             }
-
-            $type = $m[1];
-            if ($type == '') {
-                if (isset($tag['type'])) {
-                    $type = (string)$tag['type'];
-                }
-                if ($type == '') {
-                    $type = 'classic';
-                }
-            }
-
-            if (!isset($modulesDedicatedToDefaultEp[$type])) {
-                $modulesDedicatedToDefaultEp[$type] = array_combine(array_keys($this->modulesPath),
-                                                        array_fill(0, count($this->modulesPath), true));
-            }
-
-            if (!isset($defaultEntrypointsByType[$type])) {
-                $defaultEntrypointsByType[$type] = null;
-            }
-
-            $urlModel = new significantUrlInfoParsing (
-                $type,
-                (string)$tag['name'],
-                (isset($tag['https']) ? (((string)$tag['https']) == 'true'):false)
-            );
-
-            if (isset($tag['noentrypoint']) && (string)$tag['noentrypoint'] == 'true') {
-                $urlModel->entryPointUrl = '';
-            }
-
-            $isDefault = (isset($tag['default']) && (string)$tag['default'] == 'true');
-            if ($isDefault) {
-                if ($defaultEntrypointsByType[$type] !== null) {
-                    throw new jUrlCompilerException($this->getErrorMsg($tag, "Only one default entry point for the type ".$type." is allowed"));
-                }
-                $defaultEntrypointsByType[$type] = $urlModel;
-            }
-
-            $optionalTrailingSlash = (isset($tag['optionalTrailingSlash']) && $tag['optionalTrailingSlash'] == 'true');
-
-            $this->parseInfos = array(
-                    array(
-                        "isDefault" => $isDefault,
-                        "startModule" => '',
-                        "startAction" => '',
-                        "requestType" => $urlModel->requestType,
-                        "dedicatedModules" => array()
-                    )
-                );
-
-            $createUrlInfosDedicatedModules = array();
-            $hasDefaultUrl = false;
-
-            foreach ($tag->children() as $tagname => $url) {
-                $u = clone $urlModel;
-                $include = isset($url['include'])?trim((string)$url['include']):'';
-                $handler = isset($url['handler'])?trim((string)$url['handler']):'';
-                $u->module = isset($url['module'])?trim((string)$url['module']):'';
-
-                if (!$u->module) {
-                    throw new jUrlCompilerException($this->getErrorMsg($url, 'module is missing'));
-                }
-
-                if ($handler && $include) {
-                    throw new jUrlCompilerException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
-                }
-
-                if ($u->module && !isset($this->modulesPath[$u->module])) {
-                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'the module '.$u->module.' does not exist'));
-                }
-
-                $modulesDedicatedToDefaultEp[$u->requestType][$u->module] = false;
-
-                if (isset($url['https'])) {
-                    $u->isHttps = (((string)$url['https']) == 'true');
-                }
-
-                if (isset($url['noentrypoint']) && ((string)$url['noentrypoint']) == 'true') {
-                    $u->entryPointUrl = '';
-                }
-
-
-                if ($include) {
-                    $this->readInclude($url, $u, $include);
-                    continue;
-                }
-
-                $u->isDefault = (isset($url['default']) ? (((string)$url['default']) == 'true'):false);
-
-                if ($u->isDefault) {
-                    if ($hasDefaultUrl) {
-                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'Only one default url by entry point is allowed'));
-                    }
-                    $hasDefaultUrl = true;
-                }
-
-                // if there is just an <url module="" />, so all actions of this
-                // module will be assigned to this entry point.
-                if (!isset($url['action']) && !isset($url['handler'])) {
-                    $pathinfo = (isset($url['pathinfo']) ? ((string)$url['pathinfo']):'');
-
-                    if ($u->isDefault && $pathinfo != '' && $pathinfo !='/') {
-                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
-                    }
-
-                    if ($u->isDefault) {
-                        if ($this->parseInfos[0]["startModule"] != '') {
-                            throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
-                        }
-                        $this->parseInfos[0]["startModule"] = $u->module;
-                        $this->parseInfos[0]["startAction"] = "default:index";
-                        // add parser and creator information for the default action
-                        $this->parseInfos[] = array($u->module, "default:index", '!^/?$!',
-                                                    array(), array(), array(),
-                                                    array(), $u->isHttps);
-                        $u->action = 'default:index';
-                        $this->appendUrlInfo($u, '/', false);
-                        $u->action = '';
-                        $pathinfo = '';
-                    }
-                    else if ($pathinfo != '/' && $pathinfo != '') {
-                        $pathinfo = '/'.trim($pathinfo,'/');
-                        $this->parseInfos[] = array($u->module, '',
-                            '!^'.preg_quote($pathinfo,'!').'(/.*)?$!',
-                            array(), array(), array(), false, $u->isHttps);
-                        $createUrlInfosDedicatedModules[$u->getFullSel()] =
-                            array(3, $u->entryPointUrl, $u->isHttps, true, $pathinfo);
-                        continue;
-                    }
-                    $this->parseInfos[0]["dedicatedModules"][$u->module] = $u->isHttps;
-                    $createUrlInfosDedicatedModules[$u->getFullSel()] =
-                        array(3, $u->entryPointUrl, $u->isHttps, true, '');
-                    continue;
-                }
-
-                $u->setAction((string)$url['action']);
-
-                if (isset($url['actionoverride'])) {
-                    $u->setActionOverride((string)$url['actionoverride']);
-                }
-
-                // if there is an indicated handler, so, for the given module
-                // (and optional action), we should call the given handler to
-                // parse or create an url
-                if (isset($url['handler'])) {
-                    $this->newHandler($u, $url);
-                    continue;
-                }
-
-                // parse dynamic parameters
-                list($path, $regexppath) = $this->extractDynamicParams($url, $u,
-                                                                       $optionalTrailingSlash);
-
-                // parse static parameters
-                $this->extractStaticParams($url, $u);
-
-                if ($path == '' || $path == '/') {
-                    $u->isDefault = true;
-                    if ($this->parseInfos[0]["startModule"] != '') {
-                        throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
-                    }
-                    $this->parseInfos[0]["startModule"] = $u->module;
-                    $this->parseInfos[0]["startAction"] = $u->action;
-                }
-                else if ($u->isDefault) {
-                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
-                }
-
-                $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
-                                            $u->params, $u->escapes, $u->statics,
-                                            $u->actionOverride, $u->isHttps);
-                $this->appendUrlInfo($u, $path, false);
-
-                if ($u->actionOverride) {
-                    foreach ($u->actionOverride as $ao) {
-                        $u->action = $ao;
-                        $this->appendUrlInfo($u, $path, true);
-                    }
-                }
-            } // end of loop on urls
-
-            $this->entrypoints[$urlModel->entryPoint] = array($urlModel,
-                                                                $this->parseInfos,
-                                                                $createUrlInfosDedicatedModules);
-        } // end of loop on entrypoints
+            $this->parseEntryPointElement($tag, $m[1]);
+        }
 
         // search for default entrypoint of each type
-        foreach($defaultEntrypointsByType as $type => $urlModel) {
+        $this->registerDefaultEntrypoints();
+
+        // register all modules dedicated to specific entrypoints
+        $this->registerDedicatedModules();
+    }
+
+    /**
+     * extract informations from an <entrypoint> element.
+     */
+    protected function parseEntryPointElement(SimpleXMLElement $tag, $type)
+    {
+        if ($type == '') {
+            if (isset($tag['type'])) {
+                $type = (string) $tag['type'];
+            }
+            if ($type == '') {
+                $type = 'classic';
+            }
+        }
+
+        if (!isset($this->modulesDedicatedToDefaultEp[$type])) {
+            $this->modulesDedicatedToDefaultEp[$type] = array_combine(array_keys($this->modulesPath),
+                                                    array_fill(0, count($this->modulesPath), true));
+        }
+
+        if (!isset($this->defaultEntrypointsByType[$type])) {
+            $this->defaultEntrypointsByType[$type] = null;
+        }
+
+        $urlModel = new significantUrlInfoParsing(
+            $type,
+            (string) $tag['name'],
+            (isset($tag['https']) ? (((string) $tag['https']) == 'true') : false)
+        );
+
+        if (isset($tag['noentrypoint']) && (string) $tag['noentrypoint'] == 'true') {
+            $urlModel->entryPointUrl = '';
+        }
+
+        $isDefault = (isset($tag['default']) && (string) $tag['default'] == 'true');
+        if ($isDefault) {
+            if ($this->defaultEntrypointsByType[$type] !== null) {
+                throw new jUrlCompilerException($this->getErrorMsg($tag, 'Only one default entry point for the type '.$type.' is allowed'));
+            }
+            $this->defaultEntrypointsByType[$type] = $urlModel;
+        }
+
+        $optionalTrailingSlash = (isset($tag['optionalTrailingSlash']) && $tag['optionalTrailingSlash'] == 'true');
+
+        $this->parseInfos = array(
+                array(
+                    'isDefault' => $isDefault,
+                    'startModule' => '',
+                    'startAction' => '',
+                    'requestType' => $urlModel->requestType,
+                    'dedicatedModules' => array(),
+                ),
+            );
+
+        $this->createUrlInfosDedicatedModules = array();
+        $this->epHasDefaultUrl = false;
+
+        // parse <url> elements
+        foreach ($tag->children() as $tagname => $url) {
+            $u = clone $urlModel;
+            $this->parseUrlElement($url, $u, $optionalTrailingSlash);
+        }
+
+        $this->entrypoints[$urlModel->entryPoint] =
+                                array($urlModel,
+                                      $this->parseInfos,
+                                      $this->createUrlInfosDedicatedModules, );
+    }
+
+    /**
+     * extract informations from an <url> element.
+     */
+    protected function parseUrlElement(SimpleXMLElement $url,
+                                       significantUrlInfoParsing $u,
+                                       $optionalTrailingSlash)
+    {
+        $include = isset($url['include']) ? trim((string) $url['include']) : '';
+        $handler = isset($url['handler']) ? trim((string) $url['handler']) : '';
+        $u->module = isset($url['module']) ? trim((string) $url['module']) : '';
+
+        if (!$u->module) {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'module is missing'));
+        }
+
+        if ($handler && $include) {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
+        }
+
+        if ($u->module && !isset($this->modulesPath[$u->module])) {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'the module '.$u->module.' does not exist'));
+        }
+
+        $this->modulesDedicatedToDefaultEp[$u->requestType][$u->module] = false;
+
+        if (isset($url['https'])) {
+            $u->isHttps = (((string) $url['https']) == 'true');
+        }
+
+        if (isset($url['noentrypoint']) && ((string) $url['noentrypoint']) == 'true') {
+            $u->entryPointUrl = '';
+        }
+
+        if ($include) {
+            $this->readInclude($url, $u, $include);
+
+            return;
+        }
+
+        $u->isDefault = (isset($url['default']) ? (((string) $url['default']) == 'true') : false);
+
+        if ($u->isDefault) {
+            if ($this->epHasDefaultUrl) {
+                throw new jUrlCompilerException($this->getErrorMsg($url, 'Only one default url by entry point is allowed'));
+            }
+            $this->epHasDefaultUrl = true;
+        }
+
+        // if there is just an <url module="" />, so all actions of this
+        // module will be assigned to this entry point.
+        if (!isset($url['action']) && !isset($url['handler'])) {
+            $this->newDedicatedModule($u, $url);
+
+            return;
+        }
+
+        $u->setAction((string) $url['action']);
+
+        if (isset($url['actionoverride'])) {
+            $u->setActionOverride((string) $url['actionoverride']);
+        }
+
+        // if there is an indicated handler, so, for the given module
+        // (and optional action), we should call the given handler to
+        // parse or create an url
+        if (isset($url['handler'])) {
+            $this->newHandler($u, $url);
+
+            return;
+        }
+
+        // parse dynamic parameters
+        list($path, $regexppath) = $this->extractDynamicParams($url, $u,
+                                                               $optionalTrailingSlash);
+
+        // parse static parameters
+        $this->extractStaticParams($url, $u);
+
+        if ($path == '' || $path == '/') {
+            $u->isDefault = true;
+            if ($this->parseInfos[0]['startModule'] != '') {
+                throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+            }
+            $this->parseInfos[0]['startModule'] = $u->module;
+            $this->parseInfos[0]['startAction'] = $u->action;
+        } elseif ($u->isDefault) {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
+        }
+
+        $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
+                                    $u->params, $u->escapes, $u->statics,
+                                    $u->actionOverride, $u->isHttps, );
+        $this->appendUrlInfo($u, $path, false);
+
+        if ($u->actionOverride) {
+            foreach ($u->actionOverride as $ao) {
+                $u->action = $ao;
+                $this->appendUrlInfo($u, $path, true);
+            }
+        }
+    }
+
+    /**
+     * Verify that there is a default entrypoint for each entrypoint type
+     * and register these default entrypoints into url parser/generator data.
+     */
+    protected function registerDefaultEntrypoints()
+    {
+        foreach ($this->defaultEntrypointsByType as $type => $urlModel) {
             if (!$urlModel) {
                 $entrypoints = array();
                 foreach ($this->entrypoints as $epName => $epInfos) {
@@ -404,13 +444,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                     }
                 }
                 if (count($entrypoints) > 1) {
-                    throw new jUrlCompilerException ('There are several entrypoint of the same type '.$type.', but no one as default');
+                    throw new jUrlCompilerException('There are several entrypoint of the same type '.$type.', but no one as default');
                 }
                 if (count($entrypoints) == 1) {
                     $urlModel = $entrypoints[0];
                     $this->entrypoints[$urlModel->entryPoint][1][0]['isDefault'] = true;
-                }
-                else {
+                } else {
                     continue;
                 }
             }
@@ -420,124 +459,162 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
             // defined.
             $this->createUrlInfos['@'.$urlModel->requestType] = array(2, $urlModel->entryPoint, $urlModel->isHttps);
         }
+    }
 
-        // write cache files containing parsing informations
+    /**
+     * register all modules dedicated to specific entrypoints
+     * into urls parser/generator data.
+     */
+    protected function registerDedicatedModules()
+    {
         foreach ($this->entrypoints as $epName => $epInfos) {
-            list ($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
+            list($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
 
             if ($parseInfos[0]['isDefault']) {
                 // add all modules that isn't used in other entrypoint, to this
                 // entry point
-                foreach($modulesDedicatedToDefaultEp[$urlModel->requestType] as $mod => $ok) {
+                foreach ($this->modulesDedicatedToDefaultEp[$urlModel->requestType] as $mod => $ok) {
                     if ($ok) {
                         $parseInfos[0]['dedicatedModules'][$mod] = $urlModel->isHttps;
-                        $createUrlInfosDedicatedModules[$mod.'~*@'.$urlModel->requestType]
+                        $this->createUrlInfosDedicatedModules[$mod.'~*@'.$urlModel->requestType]
                             = array(3, $urlModel->entryPointUrl, $urlModel->isHttps, true, '');
                     }
                 }
-                $modulesDedicatedToDefaultEp[$urlModel->requestType] = array();
+                $this->modulesDedicatedToDefaultEp[$urlModel->requestType] = array();
             }
 
             // check if there is a default url
             if ($parseInfos[0]['startModule'] == '' &&
                 !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
                 if (count($parseInfos[0]['dedicatedModules']) == 1) {
-                    foreach($parseInfos[0]['dedicatedModules'] as $module => $isHttps) {
-                        $parseInfos[0]["startModule"] = $module;
-                        $parseInfos[0]["startAction"] = "default:index";
+                    foreach ($parseInfos[0]['dedicatedModules'] as $module => $isHttps) {
+                        $parseInfos[0]['startModule'] = $module;
+                        $parseInfos[0]['startAction'] = 'default:index';
                     }
                     $arr = array(1, $urlModel->entryPointUrl, $urlModel->isHttps,
-                                 array(), array(), "/", false, array());
-                    $this->createUrlInfos[$parseInfos[0]["startModule"].'~'.$parseInfos[0]["startAction"].'@'.$parseInfos[0]["requestType"]] = $arr;
+                                 array(), array(), '/', false, array(), );
+                    $this->createUrlInfos[$parseInfos[0]['startModule'].'~'.$parseInfos[0]['startAction'].'@'.$parseInfos[0]['requestType']] = $arr;
                 }
                 /*else if ($parseInfos[0]['isDefault']) {
                     throw new jUrlCompilerException ('Default url is missing for the entry point '.$epName);
                 }*/
                 else {
                     // for inexistant default url, let's say that / is a 404 error
-                    $parseInfos[0]["startModule"] = "jelix";
-                    $parseInfos[0]["startAction"] = "error:notfound";
+                    $parseInfos[0]['startModule'] = 'jelix';
+                    $parseInfos[0]['startAction'] = 'error:notfound';
                 }
             }
 
-            $parseContent = "<?php \n";
-            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
-                            .var_export($parseInfos, true).";\n?>";
-
-            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'),$parseContent);
+            $this->entrypoints[$epName][1] = $parseInfos;
 
             $c = count($createUrlInfosDedicatedModules);
-            foreach ($createUrlInfosDedicatedModules as $actionSelector=>$inf) {
+            foreach ($createUrlInfosDedicatedModules as $actionSelector => $inf) {
                 if ($c > 1) {
                     $inf[3] = false;
                 }
                 $this->createUrlInfos[$actionSelector] = $inf;
             }
         }
-
-        // write cache file containing url creation informations
-        $this->createUrlContent .= ")) { return false; } else {\n";
-        $this->createUrlContent .= $this->createUrlContentInc;
-        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
-        $this->createUrlContent .= "\n}\n";
-        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
-        return true;
     }
 
-    protected function getErrorMsg($xml, $message) {
+    protected function getErrorMsg($xml, $message)
+    {
         $xml = $xml->asXML();
-        $xml = substr($xml, 0, strpos($xml, '>')+1);
+        $xml = substr($xml, 0, strpos($xml, '>') + 1);
 
         return $this->xmlfile.': '.$message.' ('.$xml.')';
     }
 
     /**
      * returns the combination between $rootPathInfo and the pathinfo
-     * attribute of the given $url
+     * attribute of the given $url.
+     *
      * @return string full pathinfo, or "" if both are empty or "/"
      */
-    protected function getFinalPathInfo(SimpleXMLElement $url, $rootPathInfo) {
+    protected function getFinalPathInfo(SimpleXMLElement $url, $rootPathInfo)
+    {
         $subpathinfo = '';
         $pathinfo = '';
 
         if (isset($url['pathinfo'])) {
-            $subpathinfo = ltrim((string)$url['pathinfo'], '/');
+            $subpathinfo = ltrim((string) $url['pathinfo'], '/');
         }
 
         if ($subpathinfo == '') {
             if ($rootPathInfo != '/') {
                 $pathinfo = $rootPathInfo;
             }
-        }
-        else if ($rootPathInfo != '/') {
+        } elseif ($rootPathInfo != '/') {
             $pathinfo = $rootPathInfo.'/'.$subpathinfo;
-        }
-        else {
+        } else {
             $pathinfo = $rootPathInfo.$subpathinfo;
         }
+
         return $pathinfo;
     }
 
     /**
-     * list all modules path
+     * all actions of this module will be assigned to this entry point.
+     */
+    protected function newDedicatedModule($u, $url)
+    {
+        $pathinfo = (isset($url['pathinfo']) ? ((string) $url['pathinfo']) : '');
+
+        if ($u->isDefault && $pathinfo != '' && $pathinfo != '/') {
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
+        }
+
+        if ($u->isDefault) {
+            if ($this->parseInfos[0]['startModule'] != '') {
+                throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+            }
+            $this->parseInfos[0]['startModule'] = $u->module;
+            $this->parseInfos[0]['startAction'] = 'default:index';
+            // add parser and creator information for the default action
+            $this->parseInfos[] = array($u->module, 'default:index', '!^/?$!',
+                                        array(), array(), array(),
+                                        array(), $u->isHttps, );
+            $u->action = 'default:index';
+            $this->appendUrlInfo($u, '/', false);
+            $u->action = '';
+            $pathinfo = '';
+        } elseif ($pathinfo != '/' && $pathinfo != '') {
+            $pathinfo = '/'.trim($pathinfo, '/');
+            $this->parseInfos[] = array($u->module, '',
+                '!^'.preg_quote($pathinfo, '!').'(/.*)?$!',
+                array(), array(), array(), false, $u->isHttps, );
+            $this->createUrlInfosDedicatedModules[$u->getFullSel()] =
+                array(3, $u->entryPointUrl, $u->isHttps, true, $pathinfo);
+
+            return;
+        }
+        $this->parseInfos[0]['dedicatedModules'][$u->module] = $u->isHttps;
+        $this->createUrlInfosDedicatedModules[$u->getFullSel()] =
+            array(3, $u->entryPointUrl, $u->isHttps, true, '');
+    }
+
+    /**
+     * list all modules path.
      */
     protected $modulesPath = array();
 
     /**
      * @param significantUrlInfoParsing $u
-     * @param simpleXmlElement $url
-    */
-    protected function newHandler($u, $url, $rootPathInfo = '/') {
-        $class = (string)$url['handler'];
+     * @param simpleXmlElement          $url
+     */
+    protected function newHandler($u, $url, $rootPathInfo = '/')
+    {
+        $class = (string) $url['handler'];
         // we must have a module name in the selector, because, during the parsing of
         // the url in the request process, we are not still in a module context
-        $p = strpos($class,'~');
-        if ($p === false)
+        $p = strpos($class, '~');
+        if ($p === false) {
             $selclass = $u->module.'~'.$class;
-        elseif ($p == 0)
+        } elseif ($p == 0) {
             $selclass = $u->module.$class;
-        else
+        } else {
             $selclass = $class;
+        }
 
         $s = new jSelectorUrlHandler($selclass);
         if (!isset($url['action'])) {
@@ -548,26 +625,25 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
 
         if ($pathinfo != '/') {
             $regexp = '!^'.preg_quote($pathinfo, '!').'(/.*)?$!';
-        }
-        else {
+        } else {
             if ($u->isDefault) {
-                if ($this->parseInfos[0]["startModule"] != '') {
-                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                if ($this->parseInfos[0]['startModule'] != '') {
+                    throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
                 }
                 if ($u->action == '*') {
-                    throw new jUrlCompilerException ($this->getErrorMsg($url, '"default" attribute is not allowed on url handler without specific action'));
+                    throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is not allowed on url handler without specific action'));
                 }
-                $this->parseInfos[0]["startModule"] = $u->module;
-                $this->parseInfos[0]["startAction"] = $u->action;
+                $this->parseInfos[0]['startModule'] = $u->module;
+                $this->parseInfos[0]['startAction'] = $u->action;
             }
             $regexp = '';
         }
 
         $this->createUrlContentInc .= "include_once('".$s->getPath()."');\n";
         $this->parseInfos[] = array($u->module, $u->action, $regexp, $selclass,
-                                    $u->actionOverride, $u->isHttps);
+                                    $u->actionOverride, $u->isHttps, );
         $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps,
-                                                        $selclass, $pathinfo);
+                                                        $selclass, $pathinfo, );
         if ($u->actionOverride) {
             foreach ($u->actionOverride as $ao) {
                 $u->action = $ao;
@@ -578,19 +654,21 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
     }
 
     /**
-     * extract all dynamic parts of a pathinfo, read <param> elements
-     * @param simpleXmlElement $url the url element
+     * extract all dynamic parts of a pathinfo, read <param> elements.
+     *
+     * @param simpleXmlElement          $url                   the url element
      * @param significantUrlInfoParsing $u
-     * @param boolean $optionalTrailingSlash
-     * @param string $rootPathInfo  the path info prefix
-     * @return array  first element is the final pathinfo
-     *                second element is the correponding regular expression
+     * @param bool                      $optionalTrailingSlash
+     * @param string                    $rootPathInfo          the path info prefix
+     *
+     * @return array first element is the final pathinfo
+     *               second element is the correponding regular expression
      */
     protected function extractDynamicParams($url, significantUrlInfoParsing $u,
-                                            $optionalTrailingSlash, $rootPathInfo='/') {
-
+                                            $optionalTrailingSlash, $rootPathInfo = '/')
+    {
         if (isset($url['optionalTrailingSlash'])) {
-            $optionalTrailingSlash = ((string)$url['optionalTrailingSlash'] == 'true');
+            $optionalTrailingSlash = ((string) $url['optionalTrailingSlash'] == 'true');
         }
 
         $pathInfo = $this->getFinalPathInfo($url, $rootPathInfo);
@@ -599,13 +677,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
             if ($optionalTrailingSlash) {
                 if (substr($regexppath, -1) == '/') {
                     $regexppath .= '?';
-                }
-                else {
+                } else {
                     $regexppath .= '\/?';
                 }
             }
-        }
-        else {
+        } else {
             $regexppath = '\/?';
         }
 
@@ -613,21 +689,23 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
     }
 
     /**
-     * build the regexp corresponding to dynamic parts of a pathinfo
-     * @param simpleXmlElement $url the url element
-     * @param string $path  the path info
+     * build the regexp corresponding to dynamic parts of a pathinfo.
+     *
+     * @param simpleXmlElement          $url  the url element
+     * @param string                    $path the path info
      * @param significantUrlInfoParsing $u
+     *
      * @return string the correponding regular expression
      */
     protected function buildDynamicParamsRegexp($url, $pathinfo,
-                                                significantUrlInfoParsing $u) {
-        $regexppath = preg_quote($pathinfo , '!');
+                                                significantUrlInfoParsing $u)
+    {
+        $regexppath = preg_quote($pathinfo, '!');
         if (preg_match_all("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
 
             // process parameters which are declared in a <param> element
             foreach ($url->param as $var) {
-
                 $name = (string) $var['name'];
                 $k = array_search($name, $u->params);
                 if ($k === false) {
@@ -637,33 +715,28 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
 
                 $type = '';
                 if (isset($var['type'])) {
-                    $type = (string)$var['type'];
+                    $type = (string) $var['type'];
                     if (isset($this->typeparam[$type])) {
                         $regexp = $this->typeparam[$type];
-                    }
-                    else {
+                    } else {
                         $regexp = $this->typeparam['string'];
                     }
-                }
-                elseif (isset ($var['regexp'])) {
-                    $regexp = '('.(string)$var['regexp'].')';
-                }
-                else {
+                } elseif (isset($var['regexp'])) {
+                    $regexp = '('.(string) $var['regexp'].')';
+                } else {
                     $regexp = $this->typeparam['string'];
                 }
 
                 $u->escapes[$k] = 0;
                 if ($type == 'path') {
                     $u->escapes[$k] = 1;
-                }
-                else if (isset($var['escape'])) {
-                    $u->escapes[$k] = (((string)$var['escape']) == 'true'?2:0);
+                } elseif (isset($var['escape'])) {
+                    $u->escapes[$k] = (((string) $var['escape']) == 'true' ? 2 : 0);
                 }
 
                 if ($type == 'lang') {
                     $u->escapes[$k] |= 4;
-                }
-                else if ($type == 'locale') {
+                } elseif ($type == 'locale') {
                     $u->escapes[$k] |= 8;
                 }
 
@@ -671,7 +744,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
             }
 
             // process parameters that are only declared in the pathinfo
-            foreach ($u->params as $k=>$name) {
+            foreach ($u->params as $k => $name) {
                 if (isset($u->escapes[$k])) {
                     continue;
                 }
@@ -679,19 +752,20 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
-        $regexppath = str_replace("\\\\\\:", "\:", $regexppath);
+        $regexppath = str_replace('\\\\\\:', "\:", $regexppath);
+
         return $regexppath;
     }
 
     /**
-     *
-     * @param simpleXmlElement $url the url element
-     * @param string $path  the path info
+     * @param simpleXmlElement          $url  the url element
+     * @param string                    $path the path info
      * @param significantUrlInfoParsing $u
      */
-    protected function extractStaticParams($url, significantUrlInfoParsing $u) {
+    protected function extractStaticParams($url, significantUrlInfoParsing $u)
+    {
         foreach ($url->static as $var) {
-            $t = "";
+            $t = '';
             if (isset($var['type'])) {
                 switch ((string) $var['type']) {
                     case 'lang': $t = '$l'; break;
@@ -700,39 +774,40 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                         throw new jUrlCompilerException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }
             }
-            $u->statics[(string)$var['name']] = $t . (string)$var['value'];
+            $u->statics[(string) $var['name']] = $t.(string) $var['value'];
         }
     }
 
     /**
-     * register the given url informations
+     * register the given url informations.
+     *
      * @param significantUrlInfoParsing $u
-     * @param string $path
+     * @param string                    $path
      */
-    protected function appendUrlInfo($u, $path, $secondaryAction) {
+    protected function appendUrlInfo($u, $path, $secondaryAction)
+    {
         $cuisel = $u->getFullSel();
         $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes,
-                     $path, $secondaryAction, $u->statics);
+                     $path, $secondaryAction, $u->statics, );
         if (isset($this->createUrlInfos[$cuisel])) {
             if ($this->createUrlInfos[$cuisel][0] == 4) {
                 $this->createUrlInfos[$cuisel][] = $arr;
-            }
-            else {
+            } else {
                 $this->createUrlInfos[$cuisel] = array(4, $this->createUrlInfos[$cuisel], $arr);
             }
-        }
-        else {
+        } else {
             $this->createUrlInfos[$cuisel] = $arr;
         }
     }
 
     /**
-     * @param simpleXmlElement $url
+     * @param simpleXmlElement          $url
      * @param significantUrlInfoParsing $uInfo
-    */
-    protected function readInclude($url, $uInfo, $file) {
+     */
+    protected function readInclude($url, $uInfo, $file)
+    {
         if (isset($url['default'])) {
-            throw new jUrlCompilerException ($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
+            throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
         }
 
         if (isset($url['action'])) {
@@ -740,24 +815,23 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
         }
 
         if (isset($url['pathinfo'])) {
-            $pathinfo = '/'.trim((string)$url['pathinfo'], '/');
-        }
-        else {
+            $pathinfo = '/'.trim((string) $url['pathinfo'], '/');
+        } else {
             $pathinfo = '/';
         }
 
         $path = $this->modulesPath[$uInfo->module];
 
         if (!file_exists($path.$file)) {
-            throw new jUrlCompilerException ($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
         }
 
         $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.
                                  filemtime($path.$file)."\n";
 
-        $xml = simplexml_load_file ($path.$file);
+        $xml = simplexml_load_file($path.$file);
         if (!$xml) {
-           throw new jUrlCompilerException ($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file'));
+            throw new jUrlCompilerException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file'));
         }
         $optionalTrailingSlash = (isset($xml['optionalTrailingSlash']) && $xml['optionalTrailingSlash'] == 'true');
 
@@ -779,10 +853,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
                 throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is forbidden in module url files'));
             }
 
-            $u->setAction((string)$url['action']);
+            $u->setAction((string) $url['action']);
 
             if (isset($url['actionoverride'])) {
-                $u->setActionOverride((string)$url['actionoverride']);
+                $u->setActionOverride((string) $url['actionoverride']);
             }
 
             // if there is an indicated handler, so, for the given module
@@ -801,11 +875,11 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
 
             if ($path == '' || $path == '/') {
                 $u->isDefault = true;
-                if ($this->parseInfos[0]["startModule"] != '') {
-                    throw new jUrlCompilerException ($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                if ($this->parseInfos[0]['startModule'] != '') {
+                    throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
                 }
-                $this->parseInfos[0]["startModule"] = $u->module;
-                $this->parseInfos[0]["startAction"] = $u->action;
+                $this->parseInfos[0]['startModule'] = $u->module;
+                $this->parseInfos[0]['startAction'] = $u->action;
             }
 
             // parse static parameters
@@ -813,7 +887,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler {
 
             $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
                                         $u->params, $u->escapes, $u->statics,
-                                        $u->actionOverride, $u->isHttps);
+                                        $u->actionOverride, $u->isHttps, );
             $this->appendUrlInfo($u, $path, false);
             if ($u->actionOverride) {
                 foreach ($u->actionOverride as $ao) {
