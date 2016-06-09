@@ -271,9 +271,10 @@ abstract class jDbTools {
     * Retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key
+    * @param string $schemaName the name of the schema (for postgresql)
     * @return   array    keys are field names and values are jDbFieldProperties objects
     */
-    abstract public function getFieldList ($tableName, $sequence='');
+    abstract public function getFieldList ($tableName, $sequence='', $schemaName='');
 
     /**
      * regular expression to detect comments and end of query
