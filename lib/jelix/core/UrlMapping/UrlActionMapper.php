@@ -6,84 +6,7 @@
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-
-/**
- * a specific selector for the xml files which contains the configuration of the engine.
- *
- * @author      Laurent Jouanneau
- * @copyright   2005-2016 Laurent Jouanneau
- */
-class jSelectorUrlCfgSig extends jSelectorCfg
-{
-    public $type = 'urlcfgsig';
-
-    public function getCompiler()
-    {
-        require_once __DIR__.'/jSignificantUrlsCompiler.class.php';
-        $o = new jSignificantUrlsCompiler();
-
-        return $o;
-    }
-    public function getCompiledFilePath()
-    {
-        return jApp::tempPath('compiled/urlsig/'.$this->file.'.creationinfos_15.php');
-    }
-}
-
-/**
- * a specific selector for user url handler.
- *
- * @author      Laurent Jouanneau
- * @copyright   2005-2006 Laurent Jouanneau
- */
-class jSelectorUrlHandler extends jSelectorClass
-{
-    public $type = 'urlhandler';
-    protected $_suffix = '.urlhandler.php';
-
-    protected function _createPath()
-    {
-        $conf = jApp::config();
-        if (isset($conf->_modulesPathList[$this->module])) {
-            $p = $conf->_modulesPathList[$this->module];
-        } elseif (isset($conf->_externalModulesPathList[$this->module])) {
-            $p = $conf->_externalModulesPathList[$this->module];
-        } else {
-            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
-        }
-        $this->_path = $p.$this->_dirname.$this->subpath.$this->className.$this->_suffix;
-
-        if (!file_exists($this->_path) || strpos($this->subpath, '..') !== false) { // second test for security issues
-            throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));
-        }
-    }
-}
-
-/**
- * interface for user url handler.
- *
- * @author      Laurent Jouanneau
- * @copyright   2005-2006 Laurent Jouanneau
- */
-interface jIUrlSignificantHandler
-{
-    /**
-     * create the jUrlAction corresponding to the given jUrl. Return false if it doesn't correspond.
-     *
-     * @param jUrl $url
-     *
-     * @return jUrlAction|false
-     */
-    public function parse($url);
-
-    /**
-     * fill the given jurl object depending the jUrlAction object.
-     *
-     * @param jUrlAction $urlact
-     * @param jUrl       $url
-     */
-    public function create($urlact, $url);
-}
+namespace Jelix\Routing\UrlMapping;
 
 /**
  * an url engine to parse,analyse and create significant url
@@ -92,7 +15,7 @@ interface jIUrlSignificantHandler
  * @author      Laurent Jouanneau
  * @copyright   2005-2016 Laurent Jouanneau
  */
-class significantUrlEngine implements jIUrlEngine
+class UrlActionMapper
 {
     /**
      * data to create significant url.
@@ -116,43 +39,42 @@ class significantUrlEngine implements jIUrlEngine
 
     protected $entryPointTypeHavingActionInBody = array('xmlrpc', 'jsonrpc', 'soap');
 
-    protected $enableParser = true;
-
-    protected $entryPointName = '';
-
-    protected $basePath = '';
-
     protected $xmlfileSelector = null;
 
-    public function __construct()
+    /**
+     * @param MapperConfig
+     */
+    protected $config = null;
+    
+    public function __construct(MapperConfig $config)
     {
-        $conf = &jApp::config()->urlengine;
-        $this->enableParser = $conf['enableParser'];
-        $this->entryPointName = $conf['urlScriptIdenc'];
-        $this->basePath = $conf['basePath'];
-        $this->xmlfileSelector = new jSelectorUrlCfgSig($conf['significantFile']);
-        jIncluder::inc($this->xmlfileSelector, true);
-
+        $this->config = $config;
+        $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile);
+        \jIncluder::inc($this->xmlfileSelector, true);
         $this->dataCreateUrl = &$GLOBALS['SIGNIFICANT_CREATEURL'];
+    }
+
+    function __clone() {
+        $this->config = clone $this->config;
     }
 
     /**
      * Parse a url from the request.
      *
-     * @param jRequest $request
+     * @param \jRequest $request
      * @param array    $params  url parameters
      *
-     * @return jUrlAction
+     * @return \jUrlAction
      *
      * @since 1.1
      */
-    public function parseFromRequest($request, $params)
+    public function parseFromRequest(\jRequest $request, $params)
     {
-        if ($this->enableParser) {
-            $file = jApp::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$this->entryPointName.'.entrypoint.php');
+        if ($this->config->enableParser) {
+            $file = \jApp::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$this->config->entryPointName.'.entrypoint.php');
             if (file_exists($file)) {
                 require $file;
-                $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$this->entryPointName];
+                $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$this->config->entryPointName];
             }
 
             $isHttps = ($request->getProtocol() == 'https://');
@@ -160,7 +82,7 @@ class significantUrlEngine implements jIUrlEngine
             return $this->_parse($request->urlScript, $request->urlPathInfo, $params, $isHttps);
         }
 
-        $urlact = new jUrlAction($params);
+        $urlact = new \jUrlAction($params);
 
         return $urlact;
     }
@@ -172,13 +94,13 @@ class significantUrlEngine implements jIUrlEngine
      * @param string $pathinfo       the path info part of the url (part between script name and query)
      * @param array  $params         url parameters (query part e.g. $_REQUEST)
      *
-     * @return jUrlAction
+     * @return \jUrlAction
      */
     public function parse($scriptNamePath, $pathinfo, $params)
     {
-        if ($this->enableParser) {
-            if (strpos($scriptNamePath, $this->basePath) === 0) {
-                $snp = substr($scriptNamePath, strlen($this->basePath));
+        if ($this->config->enableParser) {
+            if (strpos($scriptNamePath, $this->config->basePath) === 0) {
+                $snp = substr($scriptNamePath, strlen($this->config->basePath));
             } else {
                 $snp = $scriptNamePath;
             }
@@ -187,7 +109,7 @@ class significantUrlEngine implements jIUrlEngine
                 $snp = substr($snp, 0, $pos);
             }
             $snp = rawurlencode($snp);
-            $file = jApp::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$snp.'.entrypoint.php');
+            $file = \jApp::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$snp.'.entrypoint.php');
             if (file_exists($file)) {
                 require $file;
                 $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
@@ -195,7 +117,7 @@ class significantUrlEngine implements jIUrlEngine
                 return $this->_parse($scriptNamePath, $pathinfo, $params, false);
             }
         }
-        $urlact = new jUrlAction($params);
+        $urlact = new \jUrlAction($params);
 
         return $urlact;
     }
@@ -206,7 +128,7 @@ class significantUrlEngine implements jIUrlEngine
      * @param array  $params         url parameters (query part e.g. $_REQUEST)
      * @param bool   $isHttps        says if the given url is asked with https or not
      *
-     * @return jUrlAction
+     * @return \jUrlAction
      */
     protected function _parse($scriptNamePath, $pathinfo, $params, $isHttps)
     {
@@ -214,11 +136,9 @@ class significantUrlEngine implements jIUrlEngine
             $pathinfo = '/';
         }
         $urlact = null;
-        $url = new jUrl($scriptNamePath, $params, $pathinfo);
+        $url = new \jUrl($scriptNamePath, $params, $pathinfo);
         $needHttps = false;
 
-        // for an app on a simple http server behind an https proxy, we shouldn't check HTTPS
-        $checkHttps = jApp::config()->urlengine['checkHttpsOnParsing'];
         $basicPathInfoConf = null;
 
         foreach ($this->dataParseUrl as $k => $infoparsing) {
@@ -249,7 +169,7 @@ class significantUrlEngine implements jIUrlEngine
 
         if ($urlact) {
             // the action corresponding to the url has been found
-            if (!($checkHttps && $urlact->needsHttps && !$isHttps)) {
+            if (!($this->config->checkHttpsOnParsing && $urlact->needsHttps && !$isHttps)) {
                 return $urlact;
             }
             // the url is declared for HTTPS, but the request does not come from HTTPS
@@ -258,9 +178,9 @@ class significantUrlEngine implements jIUrlEngine
 
         // we display the 404 page.
         try {
-            $urlact = jUrl::get(jApp::config()->urlengine['notfoundAct'], array(), jUrl::JURLACTION);
-        } catch (Exception $e) {
-            $urlact = new jUrlAction(array('module' => 'jelix', 'action' => 'error:notfound'));
+            $urlact = \jUrl::get($this->config->notFoundAct, array(), \jUrl::JURLACTION);
+        } catch (\Exception $e) {
+            $urlact = new \jUrlAction(array('module' => 'jelix', 'action' => 'error:notfound'));
         }
 
         return $urlact;
@@ -269,9 +189,9 @@ class significantUrlEngine implements jIUrlEngine
     /**
      * Create a jurl object with the given action data.
      *
-     * @param jUrlAction $url information about the action
+     * @param \jUrlAction $url information about the action
      *
-     * @return jUrl the url correspondant to the action
+     * @return \jUrl the url correspondant to the action
      *
      * @author      Laurent Jouanneau
      * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
@@ -280,9 +200,9 @@ class significantUrlEngine implements jIUrlEngine
      *   in an experimental version of Copix Framework v2.3dev20050901,
      *   http://www.copix.org.
      */
-    public function create($urlact)
+    public function create(\jUrlAction $urlact)
     {
-        $url = new jUrl('', $urlact->params, '');
+        $url = new \jUrl('', $urlact->params, '');
 
         // retrieve informations corresponding to the action
         // warning: it may delete module and action parameter from $url
@@ -291,12 +211,12 @@ class significantUrlEngine implements jIUrlEngine
         // at this step, we have informations to build the url
 
         // setup script name
-        $url->scriptName = jApp::urlBasePath().$urlinfo[1];
+        $url->scriptName = \jApp::urlBasePath().$urlinfo[1];
         if ($urlinfo[2]) {
-            $url->scriptName = jApp::coord()->request->getServerURI(true).$url->scriptName;
+            $url->scriptName = \jApp::coord()->request->getServerURI(true).$url->scriptName;
         }
 
-        if ($urlinfo[1] && !jApp::config()->urlengine['multiview']) {
+        if ($urlinfo[1] && $this->config->extensionNeeded) {
             $url->scriptName .= '.php';
         }
 
@@ -317,7 +237,7 @@ class significantUrlEngine implements jIUrlEngine
         } elseif ($urlinfo[0] == 3) {
             $this->buildForDedicatedModule($urlact, $url, $urlinfo);
         } elseif ($urlinfo[0] == 2) {
-            $url->pathInfo = '/'.$urlact->getParam('module', jApp::getCurrentModule()).'/'.str_replace(':', '/', $urlact->getParam('action'));
+            $url->pathInfo = '/'.$urlact->getParam('module', \jApp::getCurrentModule()).'/'.str_replace(':', '/', $urlact->getParam('action'));
             $url->delParam('module');
             $url->delParam('action');
         }
@@ -343,9 +263,9 @@ class significantUrlEngine implements jIUrlEngine
      *               or array(3,'entrypoint', https true/false, $defaultmodule true/false, 'pathinfobase'), // for the patterns "module~@request"
      *               or array(4, array(1,...), array(1,...)...)
      */
-    protected function getUrlBuilderInfo(jUrlAction $urlact, jUrl $url)
+    protected function getUrlBuilderInfo(\jUrlAction $urlact, \jUrl $url)
     {
-        $module = $url->getParam('module', jApp::getCurrentModule());
+        $module = $url->getParam('module', \jApp::getCurrentModule());
 
         $urlinfo = null;
 
@@ -369,7 +289,7 @@ class significantUrlEngine implements jIUrlEngine
                 if (isset($this->dataCreateUrl [$id])) {
                     $urlinfo = $this->dataCreateUrl[$id];
                 } else {
-                    throw new Exception("Significant url engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
+                    throw new \Exception("Significant url engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
                 }
             }
         }
@@ -395,15 +315,15 @@ class significantUrlEngine implements jIUrlEngine
                         $v = substr($v, 2);
                         if ($typePS == 'l') {
                             if ($paramStatic === null) {
-                                $paramStatic = jLocale::getCurrentLang();
+                                $paramStatic = \jLocale::getCurrentLang();
                             } elseif (preg_match('/^(\w{2,3})_\w{2,3}$/', $paramStatic, $m)) { // if the value is a locale instead of lang, translate it
                                 $paramStatic = $m[1];
                             }
                         } elseif ($typePS == 'L') {
                             if ($paramStatic === null) {
-                                $paramStatic = jApp::config()->locale;
+                                $paramStatic = \jApp::config()->locale;
                             } elseif (preg_match('/^\w{2,3}$/', $paramStatic, $m)) { // if the value is a lang instead of locale, translate it
-                                $paramStatic = jLocale::langToLocale($paramStatic);
+                                $paramStatic = \jLocale::langToLocale($paramStatic);
                             }
                         }
                     }
@@ -437,9 +357,9 @@ class significantUrlEngine implements jIUrlEngine
      *                       'handler selector',
      *                       'basepathinfo')
      */
-    protected function buildWithHandler(jUrlAction $urlact, jUrl $url, $urlinfo)
+    protected function buildWithHandler(\jUrlAction $urlact, \jUrl $url, $urlinfo)
     {
-        $s = new jSelectorUrlHandler($urlinfo[3]);
+        $s = new SelectorUrlHandler($urlinfo[3]);
         $c = $s->resource.'UrlsHandler';
         $handler = new $c();
         $handler->create($urlact, $url);
@@ -462,27 +382,27 @@ class significantUrlEngine implements jIUrlEngine
      *                       array('bla'=>'whatIWant' ) // list of static values
      *                       )
      */
-    protected function buildWithSpecificPathinfo(jUrlAction $urlact, jUrl $url, $urlinfo)
+    protected function buildWithSpecificPathinfo(\jUrlAction $urlact, \jUrl $url, $urlinfo)
     {
         $pi = $urlinfo[5];
         foreach ($urlinfo[3] as $k => $param) {
             $escape = $urlinfo[4][$k];
             $value = $url->getParam($param, '');
             if ($escape & self::ESCAPE_NON_ASCII) {
-                $value = jUrl::escape($value, true);
+                $value = \jUrl::escape($value, true);
             } elseif ($escape & self::ESCAPE_SLASH) {
                 $value = str_replace('%2F', '/', urlencode($value));
             } elseif ($escape & self::ESCAPE_LANG) {
                 if ($value == '') {
-                    $value = jLocale::getCurrentLang();
+                    $value = \jLocale::getCurrentLang();
                 } elseif (preg_match('/^(\w{2,3})_\w{2,3}$/', $value, $m)) {
                     $value = $m[1];
                 }
             } elseif ($escape & self::ESCAPE_LOCALE) {
                 if ($value == '') {
-                    $value = jApp::config()->locale;
+                    $value = \jApp::config()->locale;
                 } elseif (preg_match('/^\w{2,3}$/', $value, $m)) {
-                    $value = jLocale::langToLocale($value);
+                    $value = \jLocale::langToLocale($value);
                 }
             } else {
                 $value = urlencode($value);
@@ -509,7 +429,7 @@ class significantUrlEngine implements jIUrlEngine
      *                       boolean defaultmodule true/false,
      *                       'pathinfobase'), 
      */
-    protected function buildForDedicatedModule(jUrlAction $urlact, jUrl $url, $urlinfo)
+    protected function buildForDedicatedModule(\jUrlAction $urlact, \jUrl $url, $urlinfo)
     {
         $module = $urlact->getParam('module');
         $action = $urlact->getParam('action');
@@ -538,9 +458,9 @@ class significantUrlEngine implements jIUrlEngine
     /**
      * call an handler to parse the url.
      *
-     * @return jUrlAction or null if the handler does not accept the url
+     * @return \jUrlAction or null if the handler does not accept the url
      */
-    protected function parseWithHandler($infoparsing, jUrl $url)
+    protected function parseWithHandler($infoparsing, \jUrl $url)
     {
         list($module, $action, $reg, $selectorHandler,
                     $secondariesActions, $needsHttps) = $infoparsing;
@@ -554,7 +474,7 @@ class significantUrlEngine implements jIUrlEngine
         }
 
         // load the handler
-        $s = new jSelectorUrlHandler($selectorHandler);
+        $s = new SelectorUrlHandler($selectorHandler);
         include_once $s->getPath();
         $c = $s->className.'UrlsHandler';
         $handler = new $c();
@@ -602,9 +522,9 @@ class significantUrlEngine implements jIUrlEngine
      *                   7=>true/false  true if https is needed
      * @params array $matches  result of the match with the regexp corresponding to the url
      *
-     * @return jUrlAction or null if the handler does not accept the url
+     * @return \jUrlAction or null if the handler does not accept the url
      */
-    protected function parseGetParams($infoparsing, jUrl $url, $matches)
+    protected function parseGetParams($infoparsing, \jUrl $url, $matches)
     {
         list($module, $action, $reg, $dynamicValues, $escapes,
              $staticValues, $secondariesActions, $needsHttps) = $infoparsing;
@@ -645,9 +565,9 @@ class significantUrlEngine implements jIUrlEngine
                     $typeStatic = $v[1];
                     $v = substr($v, 2);
                     if ($typeStatic == 'l') {
-                        jApp::config()->locale = jLocale::langToLocale($v);
+                        \jApp::config()->locale = \jLocale::langToLocale($v);
                     } elseif ($typeStatic == 'L') {
-                        jApp::config()->locale = $v;
+                        \jApp::config()->locale = $v;
                     }
                 }
                 $params[$n] = $v;
@@ -660,36 +580,36 @@ class significantUrlEngine implements jIUrlEngine
             foreach ($dynamicValues as $k => $name) {
                 if (isset($matches[$k])) {
                     if ($escapes[$k] & self::ESCAPE_NON_ASCII) {
-                        $params[$name] = jUrl::unescape($matches[$k]);
+                        $params[$name] = \jUrl::unescape($matches[$k]);
                     } else {
                         $params[$name] = $matches[$k];
                         if ($escapes[$k] & self::ESCAPE_LANG) {
                             $v = $matches[$k];
                             if (preg_match('/^\w{2,3}$/', $v, $m)) {
-                                jApp::config()->locale = jLocale::langToLocale($v);
+                                \jApp::config()->locale = \jLocale::langToLocale($v);
                             } else {
-                                jApp::config()->locale = $v;
+                                \jApp::config()->locale = $v;
                                 $params[$name] = substr($v, 0, strpos('_'));
                             }
                         } elseif ($escapes[$k] & self::ESCAPE_LOCALE) {
                             $v = $matches[$k];
                             if (preg_match('/^\w{2,3}$/', $v, $m)) {
-                                jApp::config()->locale = $params[$name] = jLocale::langToLocale($v);
+                                \jApp::config()->locale = $params[$name] = \jLocale::langToLocale($v);
                             } else {
-                                jApp::config()->locale = $v;
+                                \jApp::config()->locale = $v;
                             }
                         }
                     }
                 }
             }
         }
-        $urlact = new jUrlAction($params);
+        $urlact = new \jUrlAction($params);
         $urlact->needsHttps = $needsHttps;
 
         return $urlact;
     }
 
-    protected function parseBasicPathinfo($infoparsing, jUrl $url)
+    protected function parseBasicPathinfo($infoparsing, \jUrl $url)
     {
         $isDefault = $infoparsing['isDefault'];
         $requestType = $infoparsing['requestType'];
@@ -715,11 +635,11 @@ class significantUrlEngine implements jIUrlEngine
                 if (isset($params['action'])) {
                     unset($params['action']);
                 }
-                $urlact = new jUrlAction($params);
+                $urlact = new \jUrlAction($params);
             } elseif ($startModule) {
                 $params['module'] = $startModule;
                 $params['action'] = $startAction;
-                $urlact = new jUrlAction($params);
+                $urlact = new \jUrlAction($params);
                 if (isset($dedicatedModules[$startModule])) {
                     $urlact->needsHttps = $dedicatedModules[$startModule];
                 }
@@ -734,7 +654,7 @@ class significantUrlEngine implements jIUrlEngine
             } else {
                 $params['action'] = $pathInfoParts[1].':'.$pathInfoParts[2];
             }
-            $urlact = new jUrlAction($params);
+            $urlact = new \jUrlAction($params);
             $urlact->needsHttps = $dedicatedModules[$pathInfoParts[0]];
         }
 

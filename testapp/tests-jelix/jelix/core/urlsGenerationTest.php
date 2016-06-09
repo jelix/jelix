@@ -24,7 +24,6 @@ class UTCreateUrls extends jUnitTestCase {
         jApp::popCurrentModule();
         jApp::restoreContext();
         $_SERVER = $this->oldserver;
-        jUrl::getEngine(true);
     }
 
 
@@ -190,6 +189,8 @@ class UTCreateUrls extends jUnitTestCase {
 
 
       $conf->urlengine['multiview']=true;
+      jUrl::getEngine(true);
+
       $trueResult=array(
           "/index/test/news/2005/10/01",
           "/index/test/news/2005/10/09?action=urlsig:url9",
@@ -318,6 +319,8 @@ class UTCreateUrls extends jUnitTestCase {
         $this->_doCompareUrlLang("significant, multiview = false", $urlList, $trueResult);
 
         $conf->urlengine['multiview']=true;
+        jUrl::getEngine(true);
+
         $trueResult=array(
             "/index/url-with-lang/test1/fr/foo",
             "/index/url-with-lang/test1/en/foo",
@@ -601,7 +604,7 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $req = jApp::coord()->request = new jClassicRequest();
-        $req->init();
+        $req->init(jApp::coord()->getUrlActionMapper());
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
         $req->getModuleAction();
 
@@ -639,7 +642,7 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $req = jApp::coord()->request = new jClassicRequest();
-        $req->init();
+        $req->init(jApp::coord()->getUrlActionMapper());
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
         $req->getModuleAction();
 

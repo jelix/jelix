@@ -9,71 +9,12 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-class significantUrlInfoParsing
-{
-    public $entryPoint = '';
-    public $entryPointUrl = '';
-    public $isHttps = false;
-    public $isDefault = false;
-    public $action = '';
-    public $module = '';
-    public $actionOverride = false;
-    public $requestType = '';
-    public $statics = array();
-    public $params = array();
-    public $escapes = array();
-
-    public function __construct($rt, $ep, $isHttps)
-    {
-        $this->requestType = $rt;
-        $this->entryPoint = $this->entryPointUrl = $ep;
-        $this->isHttps = $isHttps;
-    }
-
-    public function getFullSel()
-    {
-        if ($this->action) {
-            $act = $this->action;
-            if (substr($act, -1) == ':') { // this is a rest action
-                // we should add index because jSelectorAct resolve a "ctrl:" as "ctrl:index"
-                // and then create the corresponding selector so url create infos will be found
-                $act .= 'index';
-            }
-        } else {
-            $act = '*';
-        }
-
-        return $this->module.'~'.$act.'@'.$this->requestType;
-    }
-
-    public function setAction($action)
-    {
-        if (strpos($action, ':') === false) {
-            $this->action = 'default:'.$action;
-        } else {
-            $this->action = $action;
-        }
-    }
-
-    public function setActionOverride($actionoverride)
-    {
-        $this->actionOverride = preg_split("/[\s,]+/", $actionoverride);
-        foreach ($this->actionOverride as &$each) {
-            if (strpos($each, ':') === false) {
-                $each = 'default:'.$each;
-            }
-        }
-    }
-}
-
-class jUrlCompilerException extends Exception
-{
-}
+namespace Jelix\Routing\UrlMapping;
 
 /**
  * Compiler for significant url engine.
  */
-class jSignificantUrlsCompiler implements jISimpleCompiler
+class XmlMapParser implements \jISimpleCompiler
 {
     protected $parseInfos;
     protected $createUrlInfos;
@@ -93,13 +34,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     protected $modulesDedicatedToDefaultEp;
 
     /**
-     * contain the significantUrlInfoParsing object corresponding of the default
+     * contain the UrlMapData object corresponding of the default
      * entrypoint of each type.
      */
     protected $defaultEntrypointsByType = array();
 
     /**
-     * first element is significantUrlInfoParsing
+     * first element is UrlMapData
      * second element is a parseInfos array.
      */
     protected $entrypoints = array();
@@ -139,7 +80,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     /**
      *
      */
-    public function compile($aSelector)
+    public function compile(/*SelectorUrlXmlMap*/ $aSelector)
     {
         $sourceFile = $aSelector->getPath();
         $cachefile = $aSelector->getCompiledFilePath();
@@ -215,7 +156,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime'] &&( \n";
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
-        $this->modulesPath = jApp::getAllModulesPath();
+        $this->modulesPath = \jApp::getAllModulesPath();
 
         $this->parseXml($xml);
 
@@ -226,7 +167,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
             $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
                             .var_export($parseInfos, true).";\n?>";
 
-            jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
+            \jFile::write(\jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
         }
 
         // write cache file containing url creation informations
@@ -234,7 +175,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         $this->createUrlContent .= $this->createUrlContentInc;
         $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
         $this->createUrlContent .= "\n}\n";
-        jFile::write(jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
+        \jFile::write(\jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
 
         return true;
     }
@@ -247,7 +188,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
 
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match('/^(.*)entrypoint$/', $tagname, $m)) {
-                throw new jUrlCompilerException($this->getErrorMsg($tag, "Unknown element $tagname"));
+                throw new MapParserException($this->getErrorMsg($tag, "Unknown element $tagname"));
             }
             $this->parseEntryPointElement($tag, $m[1]);
         }
@@ -262,7 +203,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     /**
      * extract informations from an <entrypoint> element.
      */
-    protected function parseEntryPointElement(SimpleXMLElement $tag, $type)
+    protected function parseEntryPointElement(\SimpleXMLElement $tag, $type)
     {
         if ($type == '') {
             if (isset($tag['type'])) {
@@ -282,7 +223,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
             $this->defaultEntrypointsByType[$type] = null;
         }
 
-        $urlModel = new significantUrlInfoParsing(
+        $urlModel = new UrlMapData(
             $type,
             (string) $tag['name'],
             (isset($tag['https']) ? (((string) $tag['https']) == 'true') : false)
@@ -295,7 +236,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         $isDefault = (isset($tag['default']) && (string) $tag['default'] == 'true');
         if ($isDefault) {
             if ($this->defaultEntrypointsByType[$type] !== null) {
-                throw new jUrlCompilerException($this->getErrorMsg($tag, 'Only one default entry point for the type '.$type.' is allowed'));
+                throw new MapParserException($this->getErrorMsg($tag, 'Only one default entry point for the type '.$type.' is allowed'));
             }
             $this->defaultEntrypointsByType[$type] = $urlModel;
         }
@@ -330,8 +271,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     /**
      * extract informations from an <url> element.
      */
-    protected function parseUrlElement(SimpleXMLElement $url,
-                                       significantUrlInfoParsing $u,
+    protected function parseUrlElement(\SimpleXMLElement $url,
+                                       UrlMapData $u,
                                        $optionalTrailingSlash)
     {
         $include = isset($url['include']) ? trim((string) $url['include']) : '';
@@ -339,15 +280,15 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         $u->module = isset($url['module']) ? trim((string) $url['module']) : '';
 
         if (!$u->module) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'module is missing'));
+            throw new MapParserException($this->getErrorMsg($url, 'module is missing'));
         }
 
         if ($handler && $include) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
+            throw new MapParserException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
         }
 
         if ($u->module && !isset($this->modulesPath[$u->module])) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'the module '.$u->module.' does not exist'));
+            throw new MapParserException($this->getErrorMsg($url, 'the module '.$u->module.' does not exist'));
         }
 
         $this->modulesDedicatedToDefaultEp[$u->requestType][$u->module] = false;
@@ -370,7 +311,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
 
         if ($u->isDefault) {
             if ($this->epHasDefaultUrl) {
-                throw new jUrlCompilerException($this->getErrorMsg($url, 'Only one default url by entry point is allowed'));
+                throw new MapParserException($this->getErrorMsg($url, 'Only one default url by entry point is allowed'));
             }
             $this->epHasDefaultUrl = true;
         }
@@ -408,12 +349,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         if ($path == '' || $path == '/') {
             $u->isDefault = true;
             if ($this->parseInfos[0]['startModule'] != '') {
-                throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
             }
             $this->parseInfos[0]['startModule'] = $u->module;
             $this->parseInfos[0]['startAction'] = $u->action;
         } elseif ($u->isDefault) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
+            throw new MapParserException($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
         }
 
         $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
@@ -444,7 +385,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
                     }
                 }
                 if (count($entrypoints) > 1) {
-                    throw new jUrlCompilerException('There are several entrypoint of the same type '.$type.', but no one as default');
+                    throw new MapParserException('There are several entrypoint of the same type '.$type.', but no one as default');
                 }
                 if (count($entrypoints) == 1) {
                     $urlModel = $entrypoints[0];
@@ -496,7 +437,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
                     $this->createUrlInfos[$parseInfos[0]['startModule'].'~'.$parseInfos[0]['startAction'].'@'.$parseInfos[0]['requestType']] = $arr;
                 }
                 /*else if ($parseInfos[0]['isDefault']) {
-                    throw new jUrlCompilerException ('Default url is missing for the entry point '.$epName);
+                    throw new MapParserException ('Default url is missing for the entry point '.$epName);
                 }*/
                 else {
                     // for inexistant default url, let's say that / is a 404 error
@@ -531,7 +472,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
      *
      * @return string full pathinfo, or "" if both are empty or "/"
      */
-    protected function getFinalPathInfo(SimpleXMLElement $url, $rootPathInfo)
+    protected function getFinalPathInfo(\SimpleXMLElement $url, $rootPathInfo)
     {
         $subpathinfo = '';
         $pathinfo = '';
@@ -556,17 +497,17 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     /**
      * all actions of this module will be assigned to this entry point.
      */
-    protected function newDedicatedModule($u, $url)
+    protected function newDedicatedModule(UrlMapData $u, \SimpleXMLElement $url)
     {
         $pathinfo = (isset($url['pathinfo']) ? ((string) $url['pathinfo']) : '');
 
         if ($u->isDefault && $pathinfo != '' && $pathinfo != '/') {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
+            throw new MapParserException($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
         }
 
         if ($u->isDefault) {
             if ($this->parseInfos[0]['startModule'] != '') {
-                throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
             }
             $this->parseInfos[0]['startModule'] = $u->module;
             $this->parseInfos[0]['startAction'] = 'default:index';
@@ -599,10 +540,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     protected $modulesPath = array();
 
     /**
-     * @param significantUrlInfoParsing $u
-     * @param simpleXmlElement          $url
+     * @param UrlMapData $u
+     * @param SimpleXmlElement          $url
      */
-    protected function newHandler($u, $url, $rootPathInfo = '/')
+    protected function newHandler(UrlMapData $u,
+                                  \SimpleXmlElement $url,
+                                  $rootPathInfo = '/')
     {
         $class = (string) $url['handler'];
         // we must have a module name in the selector, because, during the parsing of
@@ -616,7 +559,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
             $selclass = $class;
         }
 
-        $s = new jSelectorUrlHandler($selclass);
+        $s = new SelectorUrlHandler($selclass);
         if (!isset($url['action'])) {
             $u->action = '*';
         }
@@ -628,10 +571,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         } else {
             if ($u->isDefault) {
                 if ($this->parseInfos[0]['startModule'] != '') {
-                    throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                    throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
                 }
                 if ($u->action == '*') {
-                    throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is not allowed on url handler without specific action'));
+                    throw new MapParserException($this->getErrorMsg($url, '"default" attribute is not allowed on url handler without specific action'));
                 }
                 $this->parseInfos[0]['startModule'] = $u->module;
                 $this->parseInfos[0]['startAction'] = $u->action;
@@ -657,15 +600,17 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
      * extract all dynamic parts of a pathinfo, read <param> elements.
      *
      * @param simpleXmlElement          $url                   the url element
-     * @param significantUrlInfoParsing $u
+     * @param UrlMapData                $u
      * @param bool                      $optionalTrailingSlash
      * @param string                    $rootPathInfo          the path info prefix
      *
      * @return array first element is the final pathinfo
      *               second element is the correponding regular expression
      */
-    protected function extractDynamicParams($url, significantUrlInfoParsing $u,
-                                            $optionalTrailingSlash, $rootPathInfo = '/')
+    protected function extractDynamicParams(\SimpleXmlElement$url,
+                                            UrlMapData $u,
+                                            $optionalTrailingSlash,
+                                            $rootPathInfo = '/')
     {
         if (isset($url['optionalTrailingSlash'])) {
             $optionalTrailingSlash = ((string) $url['optionalTrailingSlash'] == 'true');
@@ -693,12 +638,13 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
      *
      * @param simpleXmlElement          $url  the url element
      * @param string                    $path the path info
-     * @param significantUrlInfoParsing $u
+     * @param UrlMapData $u
      *
      * @return string the correponding regular expression
      */
-    protected function buildDynamicParamsRegexp($url, $pathinfo,
-                                                significantUrlInfoParsing $u)
+    protected function buildDynamicParamsRegexp(\SimpleXmlElement $url,
+                                                $pathinfo,
+                                                UrlMapData $u)
     {
         $regexppath = preg_quote($pathinfo, '!');
         if (preg_match_all("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
@@ -758,11 +704,12 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     }
 
     /**
-     * @param simpleXmlElement          $url  the url element
+     * @param SimpleXmlElement          $url  the url element
      * @param string                    $path the path info
-     * @param significantUrlInfoParsing $u
+     * @param UrlMapData $u
      */
-    protected function extractStaticParams($url, significantUrlInfoParsing $u)
+    protected function extractStaticParams(\SimpleXmlElement $url,
+                                           UrlMapData $u)
     {
         foreach ($url->static as $var) {
             $t = '';
@@ -771,7 +718,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
                     case 'lang': $t = '$l'; break;
                     case 'locale': $t = '$L'; break;
                     default:
-                        throw new jUrlCompilerException($this->getErrorMsg($var, 'invalid type on a <static> element'));
+                        throw new MapParserException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }
             }
             $u->statics[(string) $var['name']] = $t.(string) $var['value'];
@@ -781,10 +728,10 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     /**
      * register the given url informations.
      *
-     * @param significantUrlInfoParsing $u
+     * @param UrlMapData $u
      * @param string                    $path
      */
-    protected function appendUrlInfo($u, $path, $secondaryAction)
+    protected function appendUrlInfo(UrlMapData $u, $path, $secondaryAction)
     {
         $cuisel = $u->getFullSel();
         $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes,
@@ -801,17 +748,19 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
     }
 
     /**
-     * @param simpleXmlElement          $url
-     * @param significantUrlInfoParsing $uInfo
+     * @param SimpleXmlElement      $url
+     * @param UrlMapData            $uInfo
      */
-    protected function readInclude($url, $uInfo, $file)
+    protected function readInclude(\SimpleXmlElement $url,
+                                   UrlMapData $uInfo,
+                                   $file)
     {
         if (isset($url['default'])) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
+            throw new MapParserException($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
         }
 
         if (isset($url['action'])) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'action is forbidden with include'));
+            throw new MapParserException($this->getErrorMsg($url, 'action is forbidden with include'));
         }
 
         if (isset($url['pathinfo'])) {
@@ -823,7 +772,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
         $path = $this->modulesPath[$uInfo->module];
 
         if (!file_exists($path.$file)) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
+            throw new MapParserException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
         }
 
         $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.
@@ -831,7 +780,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
 
         $xml = simplexml_load_file($path.$file);
         if (!$xml) {
-            throw new jUrlCompilerException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file'));
+            throw new MapParserException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' is not a valid xml file'));
         }
         $optionalTrailingSlash = (isset($xml['optionalTrailingSlash']) && $xml['optionalTrailingSlash'] == 'true');
 
@@ -842,15 +791,15 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
             $u = clone $uInfo;
 
             if (isset($url['module'])) {
-                throw new jUrlCompilerException($this->getErrorMsg($url, 'module is forbidden in module url files'));
+                throw new MapParserException($this->getErrorMsg($url, 'module is forbidden in module url files'));
             }
 
             if (isset($url['include'])) {
-                throw new jUrlCompilerException($this->getErrorMsg($url, 'include is forbidden in module url files'));
+                throw new MapParserException($this->getErrorMsg($url, 'include is forbidden in module url files'));
             }
 
             if (isset($url['default'])) {
-                throw new jUrlCompilerException($this->getErrorMsg($url, '"default" attribute is forbidden in module url files'));
+                throw new MapParserException($this->getErrorMsg($url, '"default" attribute is forbidden in module url files'));
             }
 
             $u->setAction((string) $url['action']);
@@ -876,7 +825,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler
             if ($path == '' || $path == '/') {
                 $u->isDefault = true;
                 if ($this->parseInfos[0]['startModule'] != '') {
-                    throw new jUrlCompilerException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
+                    throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
                 }
                 $this->parseInfos[0]['startModule'] = $u->module;
                 $this->parseInfos[0]['startAction'] = $u->action;

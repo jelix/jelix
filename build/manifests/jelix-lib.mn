@@ -66,7 +66,6 @@ cd lib/jelix/core
   jelix_api.php
   jICoordPlugin.iface.php
   jISelector.iface.php
-  jIUrlEngine.iface.php
 #endif
 ! lang_to_locale.ini.php
 
@@ -120,6 +119,16 @@ cd lib/jelix/core/selector
   jSelectorTpl.class.php
   jSelectorZone.class.php
 #endif
+
+cd lib/jelix/core/UrlMapping
+  CustomUrlHandlerInterface.php
+  MapParserException.php
+  MapperConfig.php
+  SelectorUrlXmlMap.php
+  SelectorUrlHandler.php
+  UrlActionMapper.php
+  UrlMapData.php
+  XmlMapParser.php
 
 cd lib/jelix/core-modules/jelix
 *  module.xml
@@ -658,10 +667,6 @@ cd lib/jelix/plugins/tpl/xml
   function.jlocale.php
   function.jurl.php
   meta.xml.php
-
-cd lib/jelix/plugins/urls/significant
-* jSignificantUrlsCompiler.class.php
-* significant.urls.php
 
 cd lib/jelix-plugins/cache/file
 * file.cache.php

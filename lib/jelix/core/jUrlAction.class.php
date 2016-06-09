@@ -50,7 +50,7 @@ class jUrlAction extends jUrlBase {
      * @return jUrl
      */
     public function toUrl() {
-        return jUrl::getEngine()->create($this);
+        return jApp::coord()->getUrlActionMapper()->create($this);
     }
 }
 

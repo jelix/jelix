@@ -10,12 +10,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'plugins/urls/significant/significant.urls.php');
-
 class UTParseUrlsIncluder extends jIncluder {
 
     static function resetUrlCache() {
-        $sel = new jSelectorUrlCfgSig(jApp::config()->urlengine['significantFile']);
+        $sel = new \Jelix\Routing\UrlMapping\SelectorUrlXmlMap(jApp::config()->urlengine['significantFile']);
         $file = $sel->getCompiledFilePath();
 
         unset(self::$_includedFiles[$file]);
@@ -35,7 +33,6 @@ class UTParseUrls extends jUnitTestCase {
     function tearDown() {
         jApp::popCurrentModule();
         jApp::restoreContext();
-        jUrl::getEngine(true);
     }
 
     function testSignificantEngine() {
@@ -526,7 +523,7 @@ class UTParseUrls extends jUnitTestCase {
             jUrl::getEngine(true);
             $this->assertFalse(true, 'No expected error');
         }
-        catch(jUrlCompilerException $e) {
+        catch(\Jelix\Routing\UrlMapping\MapParserException $e) {
             $this->assertEquals($error, $e->getMessage());
         }
         catch(Exception $e) {

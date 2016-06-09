@@ -86,12 +86,18 @@ abstract class jRequest {
      */
     public $action = '';
 
+    /**
+     * @var \Jelix\Routing\UrlMapping\UrlActionMapper
+     */
+    protected $urlMapper;
+    
     function __construct(){  }
 
     /**
      * initialize the request : analyse of http request etc..
      */
-    public function init(){
+    public function init(\Jelix\Routing\UrlMapping\UrlActionMapper $urlMapper){
+        $this->urlMapper = $urlMapper;
         $this->_initUrlData();
         $this->_initParams();
     }

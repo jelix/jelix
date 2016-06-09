@@ -9,9 +9,9 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class urlhandlermoduleUrlsHandler implements jIUrlSignificantHandler {
+class urlhandlermoduleUrlsHandler implements \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface {
 
-    function parse($url){
+    function parse(jUrl $url){
         if(preg_match("/^\/myhand\/(.*)\/(.*)$/",$url->pathInfo,$match)){
             $urlact = new jUrlAction($url->params);
             $urlact->setParam('action',$match[1].':'.$match[2]);
@@ -20,7 +20,7 @@ class urlhandlermoduleUrlsHandler implements jIUrlSignificantHandler {
             return false;
     }
 
-    function create($urlact, $url){
+    function create(jUrlAction $urlact, jUrl $url){
 
         list($aa,$bb) = explode(':',$urlact->getParam('action'));
 
@@ -28,5 +28,3 @@ class urlhandlermoduleUrlsHandler implements jIUrlSignificantHandler {
         $url->delParam('action');
     }
 }
-
-?>

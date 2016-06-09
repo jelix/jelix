@@ -23,7 +23,7 @@ class jCssRequest extends jRequest {
     public $authorizedResponseClass = 'jResponseCss';
 
     protected function _initParams(){
-        $url  = jUrl::getEngine()->parseFromRequest($this, $_GET);
+        $url  = $this->urlMapper->parseFromRequest($this, $_GET);
         $this->params = array_merge($url->params, $_POST);
     }
 
