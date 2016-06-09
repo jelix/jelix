@@ -59,6 +59,13 @@ class UrlActionMapper
     }
 
     /**
+     * @return MapperConfig
+     */
+    function getConfig() {
+        return $this->config;
+    }
+
+    /**
      * Parse a url from the request.
      *
      * @param \jRequest $request

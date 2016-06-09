@@ -74,7 +74,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         }
         $config = jApp::config();
         $www = $config->urlengine['jelixWWWPath'];
-        $bp = $config->urlengine['basePath'];
+        $bp = jApp::urlBasePath();
         $resp->addJSLink($www.'js/jforms_light.js');
         $resp->addCSSLink($www.'design/jform.css');
         $heConf = &$config->htmleditors;

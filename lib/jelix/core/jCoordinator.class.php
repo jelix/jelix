@@ -198,15 +198,15 @@ class jCoordinator {
             $ctrl = $this->getController($this->action);
         }
         catch (jException $e) {
-            $config = jApp::config();
-            if ($config->urlengine['notfoundAct'] =='') {
+            $notFoundAct = $this->urlActionMapper->getConfig()->notfoundAct;
+            if ( $notFoundAct =='') {
                 throw $e;
             }
             if (!jSession::isStarted()) {
                 jSession::start();
             }
             try {
-                $this->action = new jSelectorAct($config->urlengine['notfoundAct']);
+                $this->action = new jSelectorAct($notFoundAct);
                 $ctrl = $this->getController($this->action);
             }
             catch(jException $e2) {
