@@ -303,7 +303,6 @@ class XmlMapParser implements \jISimpleCompiler
 
         if ($include) {
             $this->readInclude($url, $u, $include);
-
             return;
         }
 
@@ -335,7 +334,6 @@ class XmlMapParser implements \jISimpleCompiler
         // parse or create an url
         if (isset($url['handler'])) {
             $this->newHandler($u, $url);
-
             return;
         }
 

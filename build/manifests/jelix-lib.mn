@@ -128,6 +128,8 @@ cd lib/jelix/core/UrlMapping
   SelectorUrlHandler.php
   UrlActionMapper.php
   UrlMapData.php
+  XmlEntryPoint.php
+  XmlMapModifier.php
   XmlMapParser.php
 
 cd lib/jelix/core-modules/jelix

@@ -389,6 +389,7 @@ cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/routing/
   requestsTest.php
+  xmlmapTest.php
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
@@ -402,6 +403,8 @@ cd testapp/tests-jelix/jelix/routing/app1/var/config
 cd testapp/tests-jelix/jelix/routing/app1/var/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/urls
   __ALL__
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
