@@ -15,8 +15,9 @@ addons:
         - testapp.local
         - testapp17.local
 
-#cache:
-#    directories:
+cache:
+    directories:
+    - $HOME/.composer/cache
 
 matrix:
     fast_finish: true
