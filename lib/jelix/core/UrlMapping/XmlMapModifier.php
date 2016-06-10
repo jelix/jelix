@@ -18,10 +18,19 @@ class XmlMapModifier
      */
     protected $currentEntryPoint = null;
 
-    function __construct($file) {
+    function __construct($file, $createIfNotExists=false) {
         $this->file = $file;
         $this->document = new \DOMDocument();
-        $this->document->load($file);
+        if (!file_exists($file)) {
+            if (!$createIfNotExists) {
+                throw new \Exception("Url mapping file does not exists -- ".$file);
+            }
+            $this->document->loadXML('<'.'?xml version="1.0" encoding="utf-8"?>'."\n".
+                    '<urls xmlns="http://jelix.org/ns/urls/1.1">'."\n</urls>");
+        }
+        else {
+            $this->document->load($file);
+        }
         $this->currentEntryPoint = $this->getEntryPoint('index');
     }
 
@@ -35,6 +44,7 @@ class XmlMapModifier
      *          https=true/(false)
      *          noentrypoint=true/(false)
      *          optionalTrailingSlash=true/(false)
+     * @return XmlEntryPoint
      */
     function addEntryPoint($name, $type="classic", $options=array()) {
         $ep = $this->getEntryPoint($name, $type);

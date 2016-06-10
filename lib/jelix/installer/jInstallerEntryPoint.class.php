@@ -7,6 +7,7 @@
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Routing\UrlMapping\XmlEntryPoint;
 
 /**
  * container for entry points properties
@@ -72,6 +73,11 @@ class jInstallerEntryPoint {
     public $type;
 
     /**
+     * @var XmlEntryPoint
+     */
+    protected $urlMap;
+
+    /**
      * @param \Jelix\IniFile\MultiIniModifier $mainConfig   the mainconfig.ini.php file combined with defaultconfig.ini.php
      * @param \Jelix\IniFile\MultiIniModifier $localConfig   the localconfig.ini.php file combined with $mainConfig
      * @param string $configFile the path of the configuration file, relative
@@ -94,6 +100,14 @@ class jInstallerEntryPoint {
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,
                                               $this->scriptName);
+    }
+
+    public function setUrlMap(XmlEntryPoint $urlEp) {
+        $this->urlMap = $urlEp;
+    }
+
+    public function getUrlMap() {
+        return $this->urlMap;
     }
 
     /**

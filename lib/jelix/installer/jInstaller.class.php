@@ -220,6 +220,11 @@ class jInstaller {
     protected $localConfig;
 
     /**
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    protected $xmlMapFile;
+
+    /**
      * initialize the installation
      *
      * it reads configurations files of all entry points, and prepare object for
@@ -247,12 +252,16 @@ class jInstaller {
         $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
                                                                  $localConfig);
         $this->installerIni = $this->getInstallerIni();
-        $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
-        $this->installerIni->save();
+
+        $urlfile = jApp::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
+        $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
 
         // be sure temp path is ready
         $chmod = $this->mainConfig->getValue('chmodDir');
         jFile::createDir(jApp::tempPath(), intval($chmod, 8));
+
+        $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
+        $this->installerIni->save();
     }
 
     /**
@@ -305,7 +314,9 @@ class jInstaller {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
+
             $epId = $ep->getEpId();
+            $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
@@ -655,6 +666,7 @@ class jInstaller {
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+                $this->xmlMapFile->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
@@ -697,6 +709,7 @@ class jInstaller {
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+                $this->xmlMapFile->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
