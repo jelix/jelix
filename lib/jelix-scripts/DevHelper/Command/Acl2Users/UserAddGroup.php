@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserAddGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
+class UserAddGroup  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -50,7 +50,7 @@ class UserAddGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
         $groupid = $this->_getGrpId($input);
 
         $sql = "SELECT * FROM ".$cnx->prefixTable('jacl2_user_group')
-            ." WHERE login= ".$cnx->quote($login)." AND id_aclgrp = $groupid";
+            ." WHERE login= ".$cnx->quote($login)." AND id_aclgrp = ". $cnx->quote($groupid);
         $rs = $cnx->query($sql);
         if ($rec = $rs->fetch()) {
              throw new \Exception("The user is already in this group");
@@ -65,7 +65,7 @@ class UserAddGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $sql="INSERT INTO ".$cnx->prefixTable('jacl2_user_group')
-            ." (login, id_aclgrp) VALUES(".$cnx->quote($login).", ".$groupid.")";
+            ." (login, id_aclgrp) VALUES(".$cnx->quote($login).", ". $cnx->quote($groupid).")";
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {

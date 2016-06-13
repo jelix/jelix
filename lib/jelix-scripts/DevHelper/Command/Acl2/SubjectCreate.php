@@ -53,7 +53,8 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
         $labelkey = $input->getArgument('labelkey');
         $subjectGroup = $input->getArgument('subjectgroup');
         $subjectlabel = $input->getArgument('subjectlabel');
-        
+
+        $cnx = \jDb::getConnection('jacl2_profile');
         $sql = "SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
             ." WHERE id_aclsbj=".$cnx->quote($subject);
         $rs = $cnx->query($sql);
