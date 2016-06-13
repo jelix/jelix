@@ -49,6 +49,7 @@
         "classmap": [ ],
         "files": [ "lib/jelix/init.php" ]
     },
+    "bin": ["bin/createapp.php"],
     "minimum-stability": "stable",
     "extra" : {
         "branch-alias": {
