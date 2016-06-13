@@ -7,11 +7,8 @@ default = "adminapp"
 jacl2_profile=adminapp
 
 [jdb:adminapp]
-; the driver name : mysql, pgsql, sqlite3...
+; the driver name : mysqli, pgsql, sqlite3...
 driver="mysqli"
-
-; For most of drivers:
-driver="mysql"
 database="testapp"
 host= "localhost"
 user= "test_user"

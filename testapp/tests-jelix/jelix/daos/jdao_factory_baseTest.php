@@ -26,12 +26,12 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function setUp() {
-        $this->conn = $this->getMockBuilder('mysqlDbConnection')
+        $this->conn = $this->getMockBuilder('mysqliDbConnection')
                         ->disableOriginalConstructor()
                         ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect'))
                         ->getMock();
 
-        $this->rs =  $this->getMockBuilder('mysqlDbResultSet')
+        $this->rs =  $this->getMockBuilder('mysqliDbResultSet')
                         ->disableOriginalConstructor()
                         ->getMock();
         $this->conn->expects($this->any())

@@ -466,12 +466,6 @@ cd lib/jelix/plugins/db/mssql
   mssql.dbschema.php
   mssql.dbtools.php
 
-cd lib/jelix/plugins/db/mysql
-  mysql.dbconnection.php
-  mysql.dbresultset.php
-  mysql.dbschema.php
-  mysql.dbtools.php
-
 cd lib/jelix/plugins/db/mysqli
   mysqli.dbconnection.php
   mysqli.dbresultset.php

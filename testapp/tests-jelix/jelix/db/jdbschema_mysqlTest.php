@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbschema.php');
+include_once (JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbschema.php');
 
 class jDbSchema_MysqlTest extends jUnitTestCase {
 

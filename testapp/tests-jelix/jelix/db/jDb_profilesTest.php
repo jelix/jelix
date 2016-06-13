@@ -23,7 +23,7 @@ class jDb_profilesTest  extends jUnitTestCase
     function testProfile() {
         $p = jProfiles::get('jdb', 'jelix_tests_mysql');
         $expected = array(
-            'driver'=>"mysql",
+            'driver'=>"mysqli",
             'database'=>"testapp_mysql",
             'host'=> "localhost_mysql",
             'user'=> "plop_mysql",
@@ -33,7 +33,7 @@ class jDb_profilesTest  extends jUnitTestCase
             '_name'=>'jelix_tests_mysql',
             'usepdo' => false,
             'dbtype' => 'mysql',
-            'phpext' => 'mysql',
+            'phpext' => 'mysqli',
             'pdoext' => 'pdo_mysql',
             'pdodriver' => 'mysql',
             'table_prefix' => '',
@@ -44,7 +44,7 @@ class jDb_profilesTest  extends jUnitTestCase
 
         $p = jProfiles::get('jdb', 'forward');
         $expected= array(
-            'driver'=>"mysql",
+            'driver'=>"mysqli",
             'database'=>"jelix_tests_forward",
             'host'=> "localhost_forward",
             'user'=> "plop_forward",
@@ -54,7 +54,7 @@ class jDb_profilesTest  extends jUnitTestCase
             '_name'=>'jelix_tests_forward',
             'usepdo' => false,
             'dbtype' => 'mysql',
-            'phpext' => 'mysql',
+            'phpext' => 'mysqli',
             'pdoext' => 'pdo_mysql',
             'pdodriver' => 'mysql',
             'table_prefix' => '',
