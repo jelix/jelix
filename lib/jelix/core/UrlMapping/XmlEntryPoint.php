@@ -16,8 +16,14 @@ class XmlEntryPoint {
      */
     protected $ep;
 
-    function __construct(\DOMElement $ep) {
+    /**
+     * @var XmlMapModifier
+     */
+    protected $map;
+
+    function __construct(XmlMapModifier $map, \DOMElement $ep) {
         $this->ep = $ep;
+        $this->map = $map;
     }
 
     public function setOptions($options) {
@@ -45,9 +51,16 @@ class XmlEntryPoint {
                 }
                 if ($opt == 'actionoverride') {
                     $element->setAttribute($opt, $value); 
-                }
-                else {
-                    $element->setAttribute($opt, ($value?'true':'false')); 
+                } else if ($opt == 'default') {
+                    if ($value) {
+                        $this->map->setNewDefaultEntryPoint($this->getName(), $this->getType());
+                    } else {
+                        $element->removeAttribute($opt);
+                    }
+                } else if ($value) {
+                    $element->setAttribute($opt, 'true');
+                } else {
+                    $element->removeAttribute($opt);
                 }
             }
         }

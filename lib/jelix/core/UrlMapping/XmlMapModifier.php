@@ -57,24 +57,21 @@ class XmlMapModifier
             $this->document->documentElement->appendChild($sep);
             $this->document->documentElement->appendChild($xmlep);
             $this->document->documentElement->appendChild($sep2);
-            $ep = new XmlEntryPoint($xmlep);
+            $ep = new XmlEntryPoint($this, $xmlep);
         }
         $ep->setOptions($options);
-
-        if ($ep->isDefault()) {
-            // remove default atttribute from other entrypoint of the same type
-            $entrypoints = $this->getEntryPointsOfType($type);
-            foreach($entrypoints as $ep2) {
-                if ($name == $ep2->getAttribute('name')) {
-                    continue;
-                }
-                $x = new XmlEntryPoint($ep2);
-                if ($x->isDefault()) {
-                    $ep2->removeAttribute('default');
-                }
-            }
-        }
         return $ep;
+    }
+
+    public function setNewDefaultEntryPoint($name, $type) {
+        $entrypoints = $this->getEntryPointsOfType($type);
+        foreach($entrypoints as $ep2) {
+            if ($name == $ep2->getAttribute('name')) {
+                $ep2->setAttribute('default', 'true');
+                continue;
+            }
+            $ep2->removeAttribute('default');
+        }
     }
 
     public function setCurrentEntryPoint($name, $type="classic") {
@@ -96,7 +93,7 @@ class XmlMapModifier
             
             if (preg_match('/^.*entrypoint$/',$item->localName) &&
                 $item->getAttribute('name') == $name) {
-                return new XmlEntryPoint($item);
+                return new XmlEntryPoint($this, $item);
             }
         }
         return null;
