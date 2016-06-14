@@ -108,6 +108,9 @@ class UTParseUrls extends jUnitTestCase {
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo');
       $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:wiki', 'path'=>'foo/bar/');
       $resultList[]= array('module'=>'jelix', 'action'=>'error:notfound');
+      $resultList[]= array('module'=>'jfeeds', 'action'=>'myctrl:index');
+      $resultList[]= array('module'=>'jfeeds', 'action'=>'myctrl:index');
+      $resultList[]= array('module'=>'jfeeds', 'action'=>'myctrl:foo');
 
       $request=array(
           array("index.php","/test/news/2005/10/35",array()),
@@ -160,7 +163,10 @@ class UTParseUrls extends jUnitTestCase {
           array('index.php', "/wiki/", array()),
           array('index.php', "/wiki/foo", array()),
           array('index.php', "/wiki/foo/bar/", array()),
-          array('testnews.php', "/", array())
+          array('testnews.php', "/", array()),
+          array('index.php', "/dynamic/method", array()),
+          array('index.php', "/dynamic/method/", array()),
+          array('index.php', "/dynamic/method/foo", array()),
        );
 
       foreach($request as $k=>$urldata){
@@ -242,8 +248,10 @@ class UTParseUrls extends jUnitTestCase {
           array('index', "/wiki/", array()),
           array('index', "/wiki/foo", array()),
           array('index', "/wiki/foo/bar/", array()),
-          array('testnews', "", array())
-
+          array('testnews', "", array()),
+          array('index', "/dynamic/method", array()),
+          array('index', "/dynamic/method/", array()),
+          array('index', "/dynamic/method/foo", array()),
        );
       foreach($request as $k=>$urldata){
          $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);

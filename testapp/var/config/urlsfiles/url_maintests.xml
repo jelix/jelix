@@ -90,6 +90,7 @@
             <static name="lang" value="fr_FR" type="locale" />
         </url>
 
+        <url pathinfo="/dynamic/method" module="jfeeds" controller="myctrl" />
     </classicentrypoint>
     <entrypoint name="testnews">
        <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig:url2">
@@ -102,6 +103,7 @@
        <url pathinfo="/zip/:var/" module="jelix_tests" action="urlsig:bug1488">
           <param name="var" />
         </url>
+       
     </entrypoint>
     <entrypoint name="foo/bar" type="classic">
        <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />

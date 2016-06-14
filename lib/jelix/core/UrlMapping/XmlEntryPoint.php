@@ -127,6 +127,39 @@ class XmlEntryPoint {
     }
 
     /**
+     * add an url controller
+     *
+     * the url matches any methods of a controller
+     *
+     * It if already exists, and if $options is not null,
+     * existing options will be changed.
+     * 
+     * @param string $pathinfo
+     * @param string $module
+     * @param string $controller
+     * @param array $options options are :
+     *      default => true/(false)
+     *      https => true/(false)
+     *      noentrypoint => true/(false)
+     */
+    public function addUrlController($pathinfo, $module, $controller, $options=null) {
+
+        $url = $this->getUrlByModuleController($module, $controller);
+        if (!$url) {
+            $url = $this->ep->ownerDocument->createElement('url');
+            $url->setAttribute('pathinfo', $pathinfo);
+            $url->setAttribute('module', $module);
+            $url->setAttribute('controller', $controller);
+            $this->appendElement($this->ep, $url);
+        }
+        else {
+            $url->setAttribute('pathinfo', $pathinfo);
+        }
+
+        $this->setElementOptions($url, $options, array('https','noentrypoint'));
+    }
+
+    /**
      * add an url module
      *
      * the entrypoint is dedicated to this module and url are automatic
@@ -142,7 +175,7 @@ class XmlEntryPoint {
      *      https => true/(false)
      *      noentrypoint => true/(false)
      */
-    public function addUrlModule($module, $pathinfo='', $options=null) {
+    public function addUrlModule($pathinfo, $module, $options=null) {
 
         $url = $this->getUrlByDedicatedModule($module);
         if (!$url) {
@@ -156,7 +189,6 @@ class XmlEntryPoint {
         }
 
         $this->setElementOptions($url, $options, array('default','https','noentrypoint'));
-
     }
 
     /**
@@ -175,7 +207,7 @@ class XmlEntryPoint {
      *      noentrypoint => true/(false)
      *      actionoverride => list of method name
      */
-    public function addUrlHandler($handler, $module, $pathinfo, $action='', $options = null) {
+    public function addUrlHandler($pathinfo, $handler, $module, $action='', $options = null) {
         $url = $this->getUrlByHandler($handler, $module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
@@ -273,6 +305,17 @@ class XmlEntryPoint {
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module &&
                 $item->getAttribute('action') == $action) {
+                return $item;
+            }
+        }
+        return null;
+    }
+
+    protected function getUrlByModuleController($module, $controller) {
+        $list = $this->ep->getElementsByTagName('url');
+        foreach($list as $item) {
+            if ($item->getAttribute('module') == $module &&
+                $item->getAttribute('controller') == $controller) {
                 return $item;
             }
         }

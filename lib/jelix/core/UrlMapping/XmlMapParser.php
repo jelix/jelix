@@ -277,6 +277,8 @@ class XmlMapParser implements \jISimpleCompiler
     {
         $include = isset($url['include']) ? trim((string) $url['include']) : '';
         $handler = isset($url['handler']) ? trim((string) $url['handler']) : '';
+        $controller = isset($url['controller']) ? trim((string) $url['controller']) : '';
+        $action = isset($url['action']) ? trim((string) $url['action']) : '';
         $u->module = isset($url['module']) ? trim((string) $url['module']) : '';
 
         if (!$u->module) {
@@ -284,7 +286,7 @@ class XmlMapParser implements \jISimpleCompiler
         }
 
         if ($handler && $include) {
-            throw new MapParserException($this->getErrorMsg($url, 'It cannot have an handler and an include at the same time'));
+            throw new MapParserException($this->getErrorMsg($url, 'It cannot have an handler and an include attributes at the same time'));
         }
 
         if ($u->module && !isset($this->modulesPath[$u->module])) {
@@ -302,6 +304,9 @@ class XmlMapParser implements \jISimpleCompiler
         }
 
         if ($include) {
+            if ($controller) {
+                throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an include attributes at the same time'));
+            }
             $this->readInclude($url, $u, $include);
             return;
         }
@@ -317,13 +322,24 @@ class XmlMapParser implements \jISimpleCompiler
 
         // if there is just an <url module="" />, so all actions of this
         // module will be assigned to this entry point.
-        if (!isset($url['action']) && !isset($url['handler'])) {
+        if (!$action && !$handler && !$controller) {
             $this->newDedicatedModule($u, $url);
-
             return;
         }
 
-        $u->setAction((string) $url['action']);
+        if ($controller) {
+            if ($action) {
+                throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an action attributes at the same time'));
+            }
+            if ($u->isDefault) {
+                throw new MapParserException($this->getErrorMsg($url, 'A controller mapping url cannot be a default url'));
+            }
+            $u->action = $controller.':*';
+            $this->newWholeController($u, $url);
+            return;
+        }
+
+        $u->setAction($action);
 
         if (isset($url['actionoverride'])) {
             $u->setActionOverride((string) $url['actionoverride']);
@@ -332,7 +348,7 @@ class XmlMapParser implements \jISimpleCompiler
         // if there is an indicated handler, so, for the given module
         // (and optional action), we should call the given handler to
         // parse or create an url
-        if (isset($url['handler'])) {
+        if ($handler) {
             $this->newHandler($u, $url);
             return;
         }
@@ -492,6 +508,17 @@ class XmlMapParser implements \jISimpleCompiler
         return $pathinfo;
     }
 
+    protected function checkStaticPathInfo(\SimpleXMLElement $url) {
+        if (!isset($url['pathinfo'])) {
+            return true;
+        }
+        $pathInfo = (string)$url['pathinfo'];
+        if (preg_match("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $pathInfo)) {
+            throw new MapParserException($this->getErrorMsg($url, 'pathinfo can content dynamic part only for actions'));
+        }
+        return true;
+    }
+    
     /**
      * all actions of this module will be assigned to this entry point.
      */
@@ -502,6 +529,7 @@ class XmlMapParser implements \jISimpleCompiler
         if ($u->isDefault && $pathinfo != '' && $pathinfo != '/') {
             throw new MapParserException($this->getErrorMsg($url, 'Url with a pathinfo different from "/" cannot be the default url when the corresponding module is assigned on a dedicated entrypoint'));
         }
+        $this->checkStaticPathInfo($url);
 
         if ($u->isDefault) {
             if ($this->parseInfos[0]['startModule'] != '') {
@@ -533,6 +561,20 @@ class XmlMapParser implements \jISimpleCompiler
     }
 
     /**
+     * all methods of a specific controller will be assigned to this entry point.
+     */
+    protected function newWholeController(UrlMapData $u, \SimpleXMLElement $url, $rootPathInfo = '')
+    {
+        $this->checkStaticPathInfo($url);
+        $pathinfo = $this->getFinalPathInfo($url, $rootPathInfo);
+
+        $this->parseInfos[] = array($u->module, $u->action,
+                '!^'.preg_quote($pathinfo, '!').'(?:/(.*))?$!',
+                array(), array(), array(), false, $u->isHttps, );
+        $this->createUrlInfos[$u->getFullSel()] = array(5, $u->entryPointUrl, $u->isHttps, $pathinfo);
+    }
+
+    /**
      * list all modules path.
      */
     protected $modulesPath = array();
@@ -561,7 +603,7 @@ class XmlMapParser implements \jISimpleCompiler
         if (!isset($url['action'])) {
             $u->action = '*';
         }
-
+        $this->checkStaticPathInfo($url);
         $pathinfo = $this->getFinalPathInfo($url, $rootPathInfo);
 
         if ($pathinfo != '/') {
@@ -762,6 +804,7 @@ class XmlMapParser implements \jISimpleCompiler
         }
 
         if (isset($url['pathinfo'])) {
+            $this->checkStaticPathInfo($url);
             $pathinfo = '/'.trim((string) $url['pathinfo'], '/');
         } else {
             $pathinfo = '/';
@@ -798,6 +841,14 @@ class XmlMapParser implements \jISimpleCompiler
 
             if (isset($url['default'])) {
                 throw new MapParserException($this->getErrorMsg($url, '"default" attribute is forbidden in module url files'));
+            }
+
+            if (isset($url['controller'])) {
+                if (isset($url['action'])) {
+                    throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an action attributes at the same time'));
+                }
+                $this->newDedicatedController($u, $url, $pathinfo);
+                continue;
             }
 
             $u->setAction((string) $url['action']);

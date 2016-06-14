@@ -138,6 +138,8 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'/'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo/bar/'));
+      $urlList[]= array('jfeeds~myctrl:index', array());
+      $urlList[]= array('jfeeds~myctrl:foo', array());
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -182,6 +184,8 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/wiki//",
           "/index.php/wiki/foo",
           "/index.php/wiki/foo/bar/",
+          "/index.php/dynamic/method",
+          "/index.php/dynamic/method/foo"
        );
 
       $trueResult[11]='https://testapp.local'.$trueResult[11];
@@ -231,6 +235,8 @@ class UTCreateUrls extends jUnitTestCase {
           "/index/wiki//",
           "/index/wiki/foo",
           "/index/wiki/foo/bar/",
+          "/index/dynamic/method",
+          "/index/dynamic/method/foo"
        );
       $trueResult[11]='https://testapp.local'.$trueResult[11];
       $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);

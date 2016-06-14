@@ -163,6 +163,7 @@ class UrlActionMapper
                     break;
                 }
             } elseif (preg_match($infoparsing[2], $pathinfo, $matches)) {
+
                 // the pathinfo match the regexp, we found the informations
                 // to extract parameters and module/action
                 $urlact = $this->parseGetParams($infoparsing, $url, $matches);
@@ -171,6 +172,8 @@ class UrlActionMapper
         }
 
         if (!$urlact) {
+            // we didn't find a pathinfo that match the url's one
+            // let's parse the pathinfo as /module/controller/method
             $urlact = $this->parseBasicPathinfo($basicPathInfoConf, $url);
         }
 
@@ -243,6 +246,8 @@ class UrlActionMapper
             $this->buildWithSpecificPathinfo($urlact, $url, $urlinfo);
         } elseif ($urlinfo[0] == 3) {
             $this->buildForDedicatedModule($urlact, $url, $urlinfo);
+        } elseif ($urlinfo[0] == 5) {
+            $this->buildForWholeController($urlact, $url, $urlinfo);
         } elseif ($urlinfo[0] == 2) {
             $url->pathInfo = '/'.$urlact->getParam('module', \jApp::getCurrentModule()).'/'.str_replace(':', '/', $urlact->getParam('action'));
             $url->delParam('module');
@@ -257,8 +262,8 @@ class UrlActionMapper
      * given module/action.
      * 
      * @return array the informations. It may be: 
-     *               array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
-     *               or array(1,'entrypoint', https true/false,
+     *               - array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
+     *               - array(1,'entrypoint', https true/false,
      *               array('year','month',), // list of dynamic values included in the url
      *               array(true, false..), // list of integers which indicates for each
      *               // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
@@ -266,9 +271,10 @@ class UrlActionMapper
      *               true/false, // false : this is a secondary action
      *               array('bla'=>'whatIWant' ) // list of static values
      *               )
-     *               or array(2,'entrypoint', https true/false), // for the patterns "@request"
-     *               or array(3,'entrypoint', https true/false, $defaultmodule true/false, 'pathinfobase'), // for the patterns "module~@request"
-     *               or array(4, array(1,...), array(1,...)...)
+     *               - array(2,'entrypoint', https true/false), // for the patterns "@request"
+     *               - array(3,'entrypoint', https true/false, $defaultmodule true/false, 'pathinfobase'), // for the patterns "module~@request"
+     *               - array(4, array(1,...), array(1,...)...)
+     *               - array(5, 'entrypoint', https true/false,)
      */
     protected function getUrlBuilderInfo(\jUrlAction $urlact, \jUrl $url)
     {
@@ -285,18 +291,25 @@ class UrlActionMapper
             $url->delParam('module');
             $url->delParam('action');
         } else {
-            $id = $module.'~*@'.$urlact->requestType;
+            list($ctrl, $method) = explode(':', $url->getParam('action'));
+            $id = $module.'~'.$ctrl.':*@'.$urlact->requestType;
             if (isset($this->dataCreateUrl[$id])) {
                 $urlinfo = $this->dataCreateUrl[$id];
-                if ($urlinfo[0] != 3 || $urlinfo[3] === true) {
-                    $url->delParam('module');
-                }
+                $url->delParam('module');
             } else {
-                $id = '@'.$urlact->requestType;
-                if (isset($this->dataCreateUrl [$id])) {
+                $id = $module.'~*@'.$urlact->requestType;
+                if (isset($this->dataCreateUrl[$id])) {
                     $urlinfo = $this->dataCreateUrl[$id];
+                    if ($urlinfo[0] != 3 || $urlinfo[3] === true) {
+                        $url->delParam('module');
+                    }
                 } else {
-                    throw new \Exception("Significant url engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
+                    $id = '@'.$urlact->requestType;
+                    if (isset($this->dataCreateUrl [$id])) {
+                        $urlinfo = $this->dataCreateUrl[$id];
+                    } else {
+                        throw new \Exception("Significant url engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
+                    }
                 }
             }
         }
@@ -463,6 +476,25 @@ class UrlActionMapper
     }
 
     /**
+     * for the patterns "module~ctrl:*@request".
+     *
+     * @param array $urlinfo
+     *                       array(5, 'entrypoint',
+     *                       boolean https true/false,
+     *                       'pathinfobase'), 
+     */
+    protected function buildForWholeController(\jUrlAction $urlact, \jUrl $url, $urlinfo)
+    {
+        list($ctrl, $method) = explode(':', $urlact->getParam('action'));
+        $url->pathInfo = $urlinfo[3];
+        if ($method != 'index') {
+            $url->pathInfo .= '/'.$method;
+        }
+        $url->delParam('module');
+        $url->delParam('action');
+    }
+
+    /**
      * call an handler to parse the url.
      *
      * @return \jUrlAction or null if the handler does not accept the url
@@ -539,19 +571,33 @@ class UrlActionMapper
 
         $params['module'] = $module;
 
-        // if the action parameter exists in the current url
-        // and if it is one of secondaries actions, then we keep it
-        // else we take the action indicated in the url mapping
         if ($secondariesActions && isset($params['action'])) {
+            // if the action parameter exists in the current url
+            // and if it is one of secondaries actions, then we keep it
+            // else we take the action indicated in the url mapping
             if (strpos($params['action'], ':') === false) {
                 $params['action'] = 'default:'.$params['action'];
             }
             if (!in_array($params['action'], $secondariesActions) && $action != '') {
                 $params['action'] = $action;
             }
+
         } elseif ($action != '') {
+            if (substr($action, -2) == ':*') {
+                $action = substr($action, 0, -1);
+                // This is an url for a whole controller
+                if (isset($matches[1]) && $matches[1]) {
+                    $action .= $matches[1];
+                } else {
+                    $action .= 'index';
+                }
+                $matches = array();
+            }
+            // else this is an url for a specific action
             $params['action'] = $action;
+
         } elseif (count($matches) == 2) {
+            // this an url for a whole module
             if ($matches[1] == '/' || $matches[1] == '') {
                 $params['action'] = 'default:index';
             } else {
@@ -563,6 +609,7 @@ class UrlActionMapper
                     $params['action'] = $pathInfoParts[1].':'.$pathInfoParts[2];
                 }
             }
+            $matches = array();
         }
 
         // let's merge static parameters

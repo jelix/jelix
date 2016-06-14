@@ -16,6 +16,7 @@
         </url>
         <url pathinfo="/news" module="news"/>
         <url handler="superhandler" pathinfo="/articles" module="cms"/>
+        <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl"/>
     </entrypoint>
     <entrypoint type="soap" name="mysoap"/>
     <classicentrypoint name="news">
