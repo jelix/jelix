@@ -62,7 +62,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                'defaultmodule',
                null,
                InputOption::VALUE_NONE,
-               'the new module become the default module.'
+               'the new module become the default module for the default entry point.'
             )
             ->addOption(
                'admin',
@@ -166,15 +166,29 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
 
         $iniDefault = new \Jelix\IniFile\IniModifier(\jApp::mainConfigFile());
+
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($iniDefault->getValue('significantFile', 'urlengine'), true);
+
         // activate the module in the application
         if ($isdefault) {
-            $iniDefault->setValue('startModule', $module);
-            $iniDefault->setValue('startAction', 'default:index');
-            if ($this->verbose()) {
-                $output->writeln("The new module $module becomes the default module");
+            if ($this->allEntryPoint) {
+                $xmlEp = $xmlMap->getDefaultEntryPoint($type);
+            }
+            else {
+                $xmlEp = $xmlMap->getEntryPoint($this->entryPointId);
+            }
+            if ($xmlEp) {
+                $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default'=>true));
+                $xmlEp->addUrlModule('', $module);
+                if ($this->verbose()) {
+                    $output->writeln("The new module $module becomes the default module");
+                }
+            }
+            else if ($this->verbose()) {
+                $output->writeln("No default entry point found: the new module cannot be the default module");
             }
         }
-
+        $xmlMap->save();
         $iniDefault->setValue($module.'.access', ($this->allEntryPoint?2:1) , 'modules');
         $iniDefault->save();
 
@@ -200,19 +214,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             if ($this->allEntryPoint || $entryPoint['file'] == $this->entryPointName) {
                 $install->setValue($module.'.installed', 1, $entryPoint['id']);
                 $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
-            }
-
-            if ($isdefault) {
-                // we set the module as default module for one or all entry points.
-                // we set the startModule option for all entry points except
-                // if an entry point is indicated on the command line
-                if ($this->allEntryPoint || $entryPoint['file'] == $this->entryPointName) {
-                    if ($epconfig->getValue('startModule') != '') {
-                        $epconfig->setValue('startModule', $module);
-                        $epconfig->setValue('startAction', 'default:index');
-                        $epconfig->save();
-                    }
-                }
             }
             if ($this->verbose()) {
                 $output->writeln("The module is initialized for the entry point ".$entryPoint['file']);

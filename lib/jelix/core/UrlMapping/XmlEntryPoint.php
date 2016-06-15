@@ -233,7 +233,7 @@ class XmlEntryPoint {
      *      noentrypoint => true/(false)
      *      actionoverride => list of method name
      */
-    public function addUrlHandler($pathinfo, $handler, $module, $action='', $options = null) {
+    public function addUrlHandler($pathinfo, $module, $handler, $action='', $options = null) {
         $url = $this->getUrlByHandler($handler, $module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
@@ -265,7 +265,7 @@ class XmlEntryPoint {
      *      https => true/(false)
      *      noentrypoint => true/(false)
      */
-    public function addUrlInclude($include, $module, $pathinfo, $options = null) {
+    public function addUrlInclude($pathinfo, $module, $include, $options = null) {
         $url = $this->getUrlByInclude($include, $module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');

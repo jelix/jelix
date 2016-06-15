@@ -74,6 +74,22 @@ class XmlMapModifier
         }
     }
 
+    /**
+     * @return XmlEntryPoint
+     */
+    public function getDefaultEntryPoint($type) {
+        $entrypoints = $this->getEntryPointsOfType($type);
+        foreach($entrypoints as $ep2) {
+            if ($ep2->getAttribute('default') == 'true') {
+                return new XmlEntryPoint($this, $ep2);
+            }
+        }
+        if (count($entrypoints) == 1) {
+            return $entrypoints[0];
+        }
+        return null;
+    }
+
     public function setCurrentEntryPoint($name, $type="classic") {
         $this->currentEntryPoint = $this->getEntryPoint($name);
     }

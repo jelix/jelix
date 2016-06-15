@@ -97,57 +97,27 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                           "Response for login page");
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
         $inifile->setValue('htmlauth', 'adminLoginHtmlResponse', 'responses');
-
-
-        $inifile->setValue('startModule', 'master_admin');
-        $inifile->setValue('startAction', 'default:index');
         
         $repositoryPath = \jFile::parseJelixPath( 'lib:jelix-admin-modules' );
         $this->registerModulesDir('lib:jelix-admin-modules', $repositoryPath);
+
 
         $installConfig->setValue('jacl.installed', '0', $entrypoint);
         $inifile->setValue('jacl.access', '0', 'modules');
         $installConfig->setValue('jacldb.installed', '0', $entrypoint);
         $inifile->setValue('jacldb.access', '0', 'modules');
-
-        $urlconf = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints', null, true);
-        if ($urlconf === null || $urlconf == '') {
-            // in defaultconfig
-            $inifile->setValue($entrypoint, 'jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic', 'simple_urlengine_entrypoints', null, true);
-            // in the config of the entry point
-            $inifile->setValue($entrypoint, 'jacl2db~*@classic, jauth~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, jpref_admin~*@classic', 'simple_urlengine_entrypoints');
-        }
-        else {
-            $urlconf2 = $inifile->getValue($entrypoint, 'simple_urlengine_entrypoints');
-
-            if(strpos($urlconf, 'jacl2db_admin~*@classic') === false)
-                $urlconf .= ',jacl2db_admin~*@classic';
-            if(strpos($urlconf, 'jauthdb_admin~*@classic') === false)
-                $urlconf .= ',jauthdb_admin~*@classic';
-            if(strpos($urlconf, 'master_admin~*@classic') === false)
-                $urlconf .= ',master_admin~*@classic';
-            if(strpos($urlconf2, 'jacl2db_admin~*@classic') === false)
-                $urlconf2 .= ',jacl2db_admin~*@classic';
-            if(strpos($urlconf2, 'jauthdb_admin~*@classic') === false)
-                $urlconf2 .= ',jauthdb_admin~*@classic';
-            if(strpos($urlconf2, 'master_admin~*@classic') === false)
-                $urlconf2 .= ',master_admin~*@classic';
-            if(strpos($urlconf2, 'jacl2db~*@classic') === false)
-                $urlconf2 .= ',jacl2db~*@classic';
-            if(strpos($urlconf2, 'jauth~*@classic') === false)
-                $urlconf2 .= ',jauth~*@classic';
-            if(strpos($urlconf2, 'jpref_admin~*@classic') === false)
-                $urlconf2 .= ',jpref_admin~*@classic';
-
-            $inifile->setValue($entrypoint, $urlconf, 'simple_urlengine_entrypoints', null, true);
-            $inifile->setValue($entrypoint, $urlconf2, 'simple_urlengine_entrypoints');
-        }
-
-        if (null == $inifile->getValue($entrypoint, 'basic_significant_urlengine_entrypoints', null, true)) {
-            $inifile->setValue($entrypoint, '1', 'basic_significant_urlengine_entrypoints',null,true);
-        }
-
         $inifile->save();
+
+
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($inifile->getValue('significantFile', 'urlengine'), true);
+        $xmlEp = $xmlMap->getEntryPoint($entrypoint);
+        $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));
+        $xmlEp->addUrlModule('', 'master_admin');
+        $xmlEp->addUrlInclude('/admin/acl', 'jacl2db_admin', 'urls.xml');
+        $xmlEp->addUrlInclude('/admin/auth', 'jauthdb_admin', 'urls.xml');
+        $xmlEp->addUrlInclude('/admin/pref', 'jpref_admin', 'urls.xml');
+        $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
+        $xmlMap->save();
 
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
@@ -196,6 +166,4 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $installer->installModules(array('jpref_admin'), $entrypoint.'.php');
     }
-
-    
 }

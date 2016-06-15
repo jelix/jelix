@@ -96,7 +96,6 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp {
             return;
         }
 
-        \jApp::config()->startModule = $module;
         \jApp::pushCurrentModule($module);
 
         $tools = \jDb::getConnection()->tools();
