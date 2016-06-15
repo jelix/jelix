@@ -88,7 +88,7 @@ class Router {
             App::loadConfig($configFile, $enableErrorHandler);
         }
 
-        $mapperConfig = new \Jelix\Routing\UrlMapping\MapperConfig(jApp::config()->urlengine);
+        $mapperConfig = new \Jelix\Routing\UrlMapping\MapperConfig(App::config()->urlengine);
         $this->urlActionMapper = new \Jelix\Routing\UrlMapping\UrlActionMapper($mapperConfig);
         $this->_loadPlugins();
     }

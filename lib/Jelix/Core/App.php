@@ -245,7 +245,7 @@ class App {
 
     /**
      * allows to call some methods on the current instance as static methods
-     * on jApp
+     * on App
      */
     public static function __callStatic($name, $arguments)
     {

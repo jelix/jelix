@@ -153,7 +153,7 @@ class Installer {
                                                                  $localConfig);
         $this->installerIni = $this->getInstallerIni();
 
-        $urlfile = jApp::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
+        $urlfile = App::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
         $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
 
         $appInfos = new \Jelix\Core\Infos\AppInfos();

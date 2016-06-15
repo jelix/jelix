@@ -7,6 +7,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 namespace Jelix\Routing\UrlMapping;
+use Jelix\Core\App;
 
 /**
  * a specific selector for user url handler.
@@ -18,7 +19,7 @@ class SelectorUrlHandler extends \jSelectorClass
 
     protected function _createPath()
     {
-        $conf = \jApp::config();
+        $conf = App::config();
         if (isset($conf->_modulesPathList[$this->module])) {
             $p = $conf->_modulesPathList[$this->module];
         } elseif (isset($conf->_externalModulesPathList[$this->module])) {

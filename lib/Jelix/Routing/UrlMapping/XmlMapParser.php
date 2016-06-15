@@ -10,6 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Routing\UrlMapping;
+use Jelix\Core\App;
 
 /**
  * Compiler for the url engine. It can parse urls.xml files
@@ -156,7 +157,7 @@ class XmlMapParser implements \jISimpleCompiler
         $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime'] &&( \n";
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
-        $this->modulesPath = \jApp::getAllModulesPath();
+        $this->modulesPath = App::getAllModulesPath();
 
         $this->parseXml($xml);
 
@@ -167,7 +168,7 @@ class XmlMapParser implements \jISimpleCompiler
             $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
                             .var_export($parseInfos, true).";\n?>";
 
-            \jFile::write(\jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
+            \jFile::write(App::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
         }
 
         // write cache file containing url creation informations
@@ -175,7 +176,7 @@ class XmlMapParser implements \jISimpleCompiler
         $this->createUrlContent .= $this->createUrlContentInc;
         $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
         $this->createUrlContent .= "\n}\n";
-        \jFile::write(\jApp::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
+        \jFile::write(App::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
 
         return true;
     }

@@ -22,6 +22,6 @@ class SelectorUrlXmlMap extends \jSelectorCfg
 
     public function getCompiledFilePath()
     {
-        return \jApp::tempPath('compiled/urlsig/'.$this->file.'.creationinfos_15.php');
+        return \Jelix\Core\App::tempPath('compiled/urlsig/'.$this->file.'.creationinfos_15.php');
     }
 }
