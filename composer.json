@@ -60,7 +60,7 @@
         ]
     },
     "bin": ["bin/createapp.php"],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "extra" : {
         "branch-alias": {
             "dev-master": "2.0-dev",

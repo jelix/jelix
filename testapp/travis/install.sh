@@ -13,9 +13,15 @@ if [ ! -d testapp/adminapp/temp ]; then
     mkdir testapp/adminapp/temp
 fi
 
-composer install --prefer-source
+composer install --prefer-dist
 cd testapp
-composer install --prefer-source
+composer install --prefer-dist
+
+if [ -d $HOME/.composer/ ]; then
+    ls -al $HOME/.composer/
+else
+    echo "No $HOME/.composer "
+fi
 
 php install/installer.php
 
