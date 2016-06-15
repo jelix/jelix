@@ -30,8 +30,6 @@ services:
 
 before_install:
    - phpenv config-add testapp/travis/phpconf.ini
-   - phpenv config-rm xdebug.ini
-   - if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then cat ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default; fi
    - if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.d/www.conf; fi
    - cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
    - ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
