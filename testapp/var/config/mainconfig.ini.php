@@ -48,6 +48,7 @@ atom1.0="jfeeds~jResponseAtom10"
 sitemap="jsitemap~jResponseSitemap"
 
 soap="jsoap~jResponseSoap"
+
 [error_handling]
 ;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
@@ -77,13 +78,16 @@ basePath=
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
 plugins="debugbar,minify"
-
-
 minifyCSS=off
 minifyJS=on
 minifyExcludeCSS=
 minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
 minifyEntryPoint=minify.php
+
+
+[logger]
+soap=file
+
 [mailLogger]
 ;email = root@localhost
 ;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"

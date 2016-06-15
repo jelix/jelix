@@ -15,5 +15,14 @@ if [ $EXITCODE != 0 ]; then
     fi
     #echo "--------------------------------------------- info"
     #curl http://testapp.local/info.php
+
+    echo ""
+    echo "messages.log:"
+    if [ -f ../var/log/messages.log ]; then
+        cat ../var/log/messages.log
+    else
+        echo "/!\\ no messages.log file"
+    fi
+
 fi
 exit $EXITCODE

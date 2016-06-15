@@ -163,7 +163,7 @@ file="temp:kvdbdba.db4"
 
 ; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
 wsdl=   "http://testapp.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
-;trace=1
+trace=1
 soap_version=SOAP_1_1
 
 ;----------------- jCache
