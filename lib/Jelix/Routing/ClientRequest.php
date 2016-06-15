@@ -82,12 +82,18 @@ abstract class ClientRequest {
      */
     public $action = '';
 
+    /**
+     * @var \Jelix\Routing\UrlMapping\UrlActionMapper
+     */
+    protected $urlMapper;
+    
     function __construct(){  }
 
     /**
      * initialize the request : analyse of http request etc..
      */
-    public function init(){
+    public function init(\Jelix\Routing\UrlMapping\UrlActionMapper $urlMapper){
+        $this->urlMapper = $urlMapper;
         $this->_initUrlData();
         $this->_initParams();
     }
@@ -145,18 +151,14 @@ abstract class ClientRequest {
             $this->module = $this->params['module'];
         }
         else {
-            $this->module = $conf->startModule;
+            $this->module = 'main';
         }
 
         if (isset($this->params['action']) && trim($this->params['action']) != '') {
             $this->action = $this->params['action'];
         }
         else {
-            if($this->module == $conf->startModule)
-                $this->action = $conf->startAction;
-            else {
-                $this->action = 'default:index';
-            }
+            $this->action = 'default:index';
         }
         return array($this->module, $this->action);
     }

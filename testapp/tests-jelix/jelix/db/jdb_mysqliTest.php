@@ -116,5 +116,7 @@ class jDb_MysqliTest extends jUnitTestCaseDb {
         $this->assertEquals('France', $result->label);
     }
 
-
+    function testFieldNameEnclosure(){
+        $this->assertEquals('`toto`', jDb::getConnection()->encloseName('toto'));
+    }
 }

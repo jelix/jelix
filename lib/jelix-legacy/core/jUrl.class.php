@@ -9,10 +9,9 @@
 * @copyright   2005-2013 Laurent Jouanneau
 * @copyright   2007 Thibault Piront
 * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
-* Some parts of this file are took from an experimental branch of the Copix project (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
-* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this parts are Gerald Croes and Laurent Jouanneau,
-* and this parts were adapted for Jelix by Laurent Jouanneau
+* @copyright   2001-2005 CopixTeam
+* Original code comes from an experimental branch of the Copix Framework (CopixUrl.class.php, Copix 2.3dev20050901, http://www.copix.org),
+* Initial authors of the original code are Gerald Croes and Laurent Jouanneau,
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -164,7 +163,7 @@ class jUrl extends jUrlBase {
 
         if($what == 3) return $ua;
 
-        $url = jUrl::getEngine()->create($ua);
+        $url = jApp::coord()->geturlActionMapper()->create($ua);
 
         if($what == 2) return $url;
 
@@ -215,7 +214,7 @@ class jUrl extends jUrlBase {
      * @return jUrlAction
      */
     static function parse($scriptNamePath, $pathinfo, $params ){
-         return jUrl::getEngine()->parse($scriptNamePath,$pathinfo, $params);
+         return jApp::coord()->geturlActionMapper()->parse($scriptNamePath, $pathinfo, $params);
     }
 
     /**
@@ -262,24 +261,19 @@ class jUrl extends jUrlBase {
     }
 
     /**
+     * @deprecated  FIXME, TO REMOVE
      * return the current url engine
-     * @return jIUrlEngine
+     * @return \Jelix\Routing\UrlMapping\UrlActionMapper
      * @internal call with true parameter, to force to re-instancy the engine. useful for test suite
      */
     static function getEngine($reset=false){
-        static $engine = null;
-
-        if($engine === null || $reset){
-            $name = jApp::config()->urlengine['engine'];
-            $engine = jApp::loadPlugin($name, 'urls', '.urls.php', $name.'UrlEngine');
-            if(is_null($engine))
-                throw new jException('jelix~errors.urls.engine.notfound', $name);
+        if ($reset) {
+            $mapperConfig = new \Jelix\Routing\UrlMapping\MapperConfig(jApp::config()->urlengine);
+            $urlActionMapper = new \Jelix\Routing\UrlMapping\UrlActionMapper($mapperConfig);
+            jApp::coord()->setUrlActionMapper($urlActionMapper);
         }
-        return $engine;
+        return jApp::coord()->getUrlActionMapper();
     }
-
-
-
 
     /**
     * get the root url for a given ressource type. Root URLs are stored in config file.

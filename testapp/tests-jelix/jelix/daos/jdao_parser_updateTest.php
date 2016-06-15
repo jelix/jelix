@@ -260,7 +260,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqlDbTools(null);
+        $tools = new mysqliDbTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
@@ -293,7 +293,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqlDbTools(null);
+        $tools = new mysqliDbTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
@@ -412,7 +412,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqlDbTools(null);
+        $tools = new mysqliDbTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
@@ -445,7 +445,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqlDbTools(null);
+        $tools = new mysqliDbTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 

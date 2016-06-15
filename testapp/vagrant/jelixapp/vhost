@@ -19,7 +19,7 @@ server {
     }
 
     location ~ [^/]\.php(/|$) {
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_split_path_info ^(.+\.php)(/.*)$;
 
         # because of bug http://trac.nginx.org/nginx/ticket/321
         set $path_info $fastcgi_path_info; 

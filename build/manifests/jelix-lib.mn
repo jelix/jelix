@@ -128,7 +128,6 @@ cd lib/jelix-legacy/core
 * jUrl.class.php
 * jSession.class.php
   jServer.class.php
-  jIUrlEngine.iface.php
 #endif
 
 cd lib/jelix-legacy/core/request
@@ -167,6 +166,18 @@ cd lib/jelix-legacy/core/selector
   jSelectorZone.class.php
 #endif
 
+cd lib/jelix-legacy/core/UrlMapping
+  CustomUrlHandlerInterface.php
+  MapParserException.php
+  MapperConfig.php
+  SelectorUrlXmlMap.php
+  SelectorUrlHandler.php
+  UrlActionMapper.php
+  UrlMapData.php
+  XmlEntryPoint.php
+  XmlMapModifier.php
+  XmlMapParser.php
+
 cd lib/jelix-legacy/core-modules/jelix
 *  module.xml
    urls.xml
@@ -175,6 +186,7 @@ cd lib/jelix-legacy/core-modules/jelix/controllers
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
+  redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
 cd lib/jelix-legacy/core-modules/jelix/daos
@@ -183,6 +195,8 @@ cd lib/jelix-legacy/core-modules/jelix/daos
 cd lib/jelix-legacy/core-modules/jelix/install
   install.php
   upgrade_modulejacl2.php
+  upgrade_newurlengine.php
+  UrlEngineUpgrader.php
 cd lib/jelix-legacy/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -389,15 +403,6 @@ cd lib/jelix-legacy/utils/
 * jFile.class.php
 * jFilter.class.php
   jImageModifier.class.php
-<<<<<<< HEAD
-  jJson.class.php
-=======
-  jIniFile.class.php
-  jIniFileModifier.class.php
-  jIniMultiFilesModifier.class.php
-  jJsonRpc.class.php
-  jMailer.class.php
->>>>>>> origin/jelix-1.7.x
   jMessage.class.php
   jMethodSniffer.class.php
   jProfilesCompiler.class.php
@@ -474,12 +479,6 @@ cd lib/jelix-legacy/plugins/db/mssql
   mssql.dbresultset.php
   mssql.dbschema.php
   mssql.dbtools.php
-
-cd lib/jelix-legacy/plugins/db/mysql
-  mysql.dbconnection.php
-  mysql.dbresultset.php
-  mysql.dbschema.php
-  mysql.dbtools.php
 
 cd lib/jelix-legacy/plugins/db/mysqli
   mysqli.dbconnection.php
@@ -675,16 +674,6 @@ cd lib/jelix-legacy/plugins/tpl/xml
   function.jlocale.php
   function.jurl.php
   meta.xml.php
-
-cd lib/jelix-legacy/plugins/urls/significant
-* jSignificantUrlsCompiler.class.php
-* significant.urls.php
-
-cd lib/jelix-legacy/plugins/urls/simple
-  simple.urls.php
-
-cd lib/jelix-legacy/plugins/urls/basic_significant
-  basic_significant.urls.php
 
 cd lib/jelix-plugins/cache/file
 * file.cache.php

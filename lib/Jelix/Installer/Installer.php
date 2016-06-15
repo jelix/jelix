@@ -120,6 +120,11 @@ class Installer {
     protected $localConfig;
 
     /**
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    protected $xmlMapFile;
+
+    /**
      * initialize the installation
      *
      * it reads configurations files of all entry points, and prepare object for
@@ -147,6 +152,10 @@ class Installer {
         $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
                                                                  $localConfig);
         $this->installerIni = $this->getInstallerIni();
+
+        $urlfile = jApp::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
+        $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
+
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
         $this->installerIni->save();
@@ -201,7 +210,9 @@ class Installer {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
+
             $epId = $ep->getEpId();
+            $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
@@ -583,6 +594,7 @@ class Installer {
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+                $this->xmlMapFile->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
@@ -626,6 +638,7 @@ class Installer {
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
+                $this->xmlMapFile->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.

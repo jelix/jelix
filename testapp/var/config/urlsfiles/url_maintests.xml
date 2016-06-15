@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <classicentrypoint name="index" default="true">
+        <url pathinfo="/test/:annee/:mois" module="testapp" action="test1">
+              <param name="annee" escape="true" type="year"/>
+              <!--<param name="mois" escape="false" />-->
+              <static name="bla" value="cequejeveux" />
+        </url>
+
+        <url pathinfo="/test/news/:annee/:mois/:id" module="jelix_tests" action="urlsig:url1" actionoverride="urlsig:url8,urlsig:url9,urlsig:url10">
+           <param name="annee" regexp="\d{4}"/>
+           <param name="mois"  regexp="\d{2}" />
+           <param name="id"   regexp="\d{2}" />
+        </url>
+
+        <url pathinfo="/test/cms/:rubrique/:id_art-:article" module="jelix_tests" action="urlsig:url3">
+           <param name="rubrique" />
+           <param name="id_art" regexp="\d+"/>
+           <param name="article" escape="true" type="string"/>
+        </url>
+
+        <url pathinfo="/test/cms2/:rubrique/:id_art" module="jelix_tests" action="urlsig:url6" noentrypoint="true">
+           <param name="rubrique" />
+           <param name="id_art" regexp="\d+"/>
+        </url>
+
+        <url pathinfo="/shop/:rubrique/:id_article" module="jelix_tests" https="true" action="urlsig:url11">
+           <param name="rubrique" />
+           <param name="id_article" type="int"/>
+        </url>
+        <url pathinfo="/shop/:rubrique/:id_article/" module="jelix_tests" action="urlsig:url12">
+           <param name="rubrique" />
+           <param name="id_article" type="int"/>
+        </url>
+        <url pathinfo="/supershop/:rubrique" module="jelix_tests" action="urlsig:url13" optionalTrailingSlash="true">
+           <param name="rubrique" />
+        </url>
+        <url pathinfo="/articles/fr/:annee/:mois" module="jelix_tests" action="urlsig:url20">
+              <param name="annee" escape="true" type="year"/>
+              <param name="mois" escape="false" />
+              <static name="lang" value="fr_FR" />
+        </url>
+        <url pathinfo="/articles/en/:annee/:mois" module="jelix_tests" action="urlsig:url20">
+              <param name="annee" escape="true" type="year"/>
+              <param name="mois" escape="false" />
+              <static name="lang" value="en_US" />
+        </url>
+        <url pathinfo="/hello" module="jelix_tests" action="urlsig:url30" />
+        <url pathinfo="/hello2" module="jelix_tests" action="hello2" />
+        <url pathinfo="/hello3" module="jelix_tests" action="default:hello3" />
+        <url pathinfo="/super/wiki" handler="urlsigwiki" module="jelix_tests" action="default:wikishow"
+             actionoverride="default:wikiedit,default:wikidelete" />
+
+        <url pathinfo="/auth" module="testapp" include="urls.xml" />
+        <url pathinfo="/" module="testapp" include="urls2.xml" />
+
+        <url pathinfo="/hello.html" module="jelix_tests" action="urlsig:url31" />
+
+        <url pathinfo="/wiki/:path" module="jelix_tests" action="urlsig:wiki">
+            <param name="path" type="path" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test1/:lang/:p1" module="jelix_tests" action="urlsig:lang1">
+            <param name="p1" />
+            <param name="lang" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test1bis/:lang/:p1" module="jelix_tests" action="urlsig:lang1bis">
+            <param name="p1" />
+            <param name="lang" type="locale" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test2/en/:p1" module="jelix_tests" action="urlsig:lang2">
+            <param name="p1" />
+            <static name="lang" value="en" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test2/fr/:p1" module="jelix_tests" action="urlsig:lang2">
+            <param name="p1" />
+            <static name="lang" value="fr" type="lang" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test3/en/:p1" module="jelix_tests" action="urlsig:lang3">
+            <param name="p1" />
+            <static name="lang" value="en_US" type="locale" />
+        </url>
+
+        <url pathinfo="/url-with-lang/test3/fr/:p1" module="jelix_tests" action="urlsig:lang3">
+            <param name="p1" />
+            <static name="lang" value="fr_FR" type="locale" />
+        </url>
+
+        <url pathinfo="/dynamic/method" module="jfeeds" controller="myctrl" />
+    </classicentrypoint>
+    <entrypoint name="testnews">
+       <url pathinfo="/:annee/:mois" module="jelix_tests" action="urlsig:url2">
+          <param name="annee" type="year"/>
+          <param name="mois"  type="mounth" />
+          <static name="mystatic" value="valeur statique" />
+        </url>
+    </entrypoint>
+    <entrypoint name="noep"  noentrypoint="true">
+       <url pathinfo="/zip/:var/" module="jelix_tests" action="urlsig:bug1488">
+          <param name="var" />
+        </url>
+       
+    </entrypoint>
+    <entrypoint name="foo/bar" type="classic">
+       <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />
+    </entrypoint>
+    <classicentrypoint name="invisible"  noentrypoint="true">
+        <url handler="urlsig" module="jelix_tests" action="urlsig:bug599"/>
+    </classicentrypoint>
+    <classicentrypoint name="handlermodule"  noentrypoint="true">
+        <url handler="urlhandlermodule" module="testurls" />
+    </classicentrypoint>
+
+    <classicentrypoint name="news">
+        <url module="news" default="true"/>
+        <url module="articles" />
+    </classicentrypoint>
+    <xmlrpcentrypoint name="xmlrpc" default="true" />
+    <jsonrpcentrypoint name="jsonrpc" default="true" />
+</urls>

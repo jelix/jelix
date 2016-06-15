@@ -1,8 +1,8 @@
 allow from all
 
 # uncomment these lines if you want to remove the index.php from the url
-# with the basic_significant or significant url engine of jelix
-# see http://docs.jelix.org/en/manual-1.7/urls/significant#mod_rewrite-and-just-removing-the-name-of-the-entry-point-in-the-url
+# with the url engine of jelix
+# see http://docs.jelix.org/en/manual-1.7/urls/mapping#mod_rewrite-and-just-removing-the-name-of-the-entry-point-in-the-url
 #<IfModule mod_rewrite.c>
 #    RewriteEngine On
 #    RewriteBase /

@@ -369,7 +369,6 @@ cd testapp/tests-jelix/jelix/db/
   jdb_queries_with_pdoTest.php
   jdb_queries_with_mysqliTest.php
   jdb.lib.php
-  jdb_mysqlTest.php
   jdb_mysqliTest.php
   jdb_parametersTest.php
   jdb_pgsqlTest.php
@@ -421,6 +420,8 @@ cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/routing/
   requestsTest.php
+  xmlmapTest.php
+  urlUpgradeTest.php
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
@@ -438,6 +439,8 @@ cd testapp/tests-jelix/jelix/routing/app1/var/config
 cd testapp/tests-jelix/jelix/routing/app1/var/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
+  __ALL__
+cd testapp/tests-jelix/jelix/routing/urls
   __ALL__
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
@@ -497,6 +500,13 @@ cd testapp/var/config/cmdline
   config.ini.php
 cd testapp/var/config/soap
   config.ini.php
+cd testapp/var/config/urlsfiles
+  url_maintests.xml
+  url_dedicatedmodule.xml
+  url_defaultaction.xml
+  url_empty.xml
+  url_nodefaultep.xml
+  url_twodefaultep.xml
 cd testapp/var/locales/fr_FR/jelix_tests/locales/
   newoverload.UTF-8.properties
   overload.UTF-8.properties

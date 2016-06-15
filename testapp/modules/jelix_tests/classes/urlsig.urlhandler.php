@@ -9,7 +9,7 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class urlsigUrlsHandler implements jIUrlSignificantHandler {
+class urlsigUrlsHandler implements \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface {
 
     // exemple de handler.
     // ici les traitements sont simples, c'est juste pour montrer le principe
@@ -17,7 +17,7 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
     // on peut utiliser le même handler pour plusieurs actions
     // il suffit de tester les parametres de l'objet url
 
-    function parse($url){
+    function parse(jUrl $url){
         if(preg_match("/^\/withhandler\/(.*)\/(.*)$/",$url->pathInfo,$match)){
             $urlact = new jUrlAction($url->params);
             $urlact->setParam('first',jUrl::unescape($match[1]));
@@ -27,7 +27,7 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
             return false;
     }
 
-    function create($urlact, $url){
+    function create(jUrlAction $urlact, jUrl $url){
 
         $f=jUrl::escape($url->getParam('first'));
         $s=jUrl::escape($url->getParam('second'));
@@ -38,5 +38,3 @@ class urlsigUrlsHandler implements jIUrlSignificantHandler {
         $url->delParam('second');
     }
 }
-
-?>

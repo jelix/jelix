@@ -3,8 +3,9 @@
 * Initialize all defines and includes necessary files
 *
 #if ENABLE_OPTIMIZED_SOURCE
-* Some lines of code were get from Copix project (Copix 2.3dev20050901)
-* and are copyrighted 2001-2005 CopixTeam (LGPL Licence)
+* Original code of some classes come from an experimental branch of the Copix
+* Framework (Copix 2.3dev20050901, http://www.copix.org),
+* Initial authors of the Original code are Gerald Croes and Laurent Jouanneau
 #endif
 * @package  jelix
 * @subpackage core
@@ -114,7 +115,6 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 
 
 #if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jIUrlEngine.iface.php
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
 #includephp core/jServer.class.php
@@ -133,7 +133,6 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #includephp core/jPropertiesFileReader.class.php
 
 #else
-require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jServer.class.php');
@@ -151,6 +150,16 @@ require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 #endif
+
+/**
+* @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead
+*/
+interface jIUrlSignificantHandler
+{
+    public function parse($url);
+
+    public function create($urlact, $url);
+}
 
 /**
  * @deprecated use \Jelix\Core\AppManager::errorIfAppClosed()

@@ -60,16 +60,16 @@ class RouterDebug extends Router {
             $ctrl = $this->getController($this->action);
         }
         catch (\jException $e) {
-            $config = App::config();
-            if ($config->urlengine['notfoundAct'] =='') {
+            $notFoundAct = $this->urlActionMapper->getConfig()->notfoundAct;
+            if ($notFoundAct =='') {
                 throw $e;
             }
             if (!\jSession::isStarted()) {
                 \jSession::start();
             }
             try {
-                Log::log("Exception: get notfoundact ctrl (".$config->urlengine['notfoundAct'].")");
-                $this->action = new \jSelectorAct($config->urlengine['notfoundAct']);
+                Log::log("Exception: get notfoundact ctrl (".$notFoundAct.")");
+                $this->action = new \jSelectorAct($notFoundAct);
                 $ctrl = $this->getController($this->action);
             }
             catch(\jException $e2) {

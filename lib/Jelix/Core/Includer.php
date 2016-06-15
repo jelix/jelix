@@ -36,11 +36,11 @@ class Includer {
      * check the cache, compile if needed, and include the cache
      * @param    Selector\SelectorInterface   $aSelectorId    the selector corresponding to the file
     */
-    public static function inc($aSelector) {
+    public static function inc($aSelector, $forceReloadCache = false){
 
         $cachefile = $aSelector->getCompiledFilePath();
 
-        if ($cachefile == '' || isset(self::$_includedFiles[$cachefile])){
+        if($cachefile == '' || (!$forceReloadCache && isset(self::$_includedFiles[$cachefile]))){
             return;
         }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+
+    <entrypoint name="index" type="classic" default="true">
+        <url pathinfo="/" module="foo" action="bar:baz" default="true"/>
+        <url module="foo"/>
+    </entrypoint>
+</urls>

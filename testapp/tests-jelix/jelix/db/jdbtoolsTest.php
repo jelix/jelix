@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbtools.php');
+include_once (JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/pgsql/pgsql.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/oci/oci.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/sqlite3/sqlite3.dbtools.php');
@@ -23,7 +23,7 @@ class jDbToolsTest extends jUnitTestCase {
 
     function testEncloseName(){
 
-        $tools= new mysqlDbTools(null);
+        $tools= new mysqliDbTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('`foo`',$result);
 
@@ -63,7 +63,7 @@ class jDbToolsTest extends jUnitTestCase {
 
     function testStringToPhpValue(){
     
-        $tools= new mysqlDbTools(null);
+        $tools= new mysqliDbTools(null);
 
         try {
             $tools->stringToPhpValue('int','5', false);
@@ -115,7 +115,7 @@ class jDbToolsTest extends jUnitTestCase {
 
     function testEscapeValue(){
     
-        $tools= new mysqlDbTools(null);
+        $tools= new mysqliDbTools(null);
 
         try {
             $tools->escapeValue('int','5', false);

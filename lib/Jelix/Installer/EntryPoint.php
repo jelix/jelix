@@ -5,8 +5,10 @@
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
 namespace Jelix\Installer;
+
+use Jelix\Routing\UrlMapping\XmlEntryPoint;
+
 /**
  * container for entry points properties
  */
@@ -86,6 +88,11 @@ class EntryPoint {
     public $type;
 
     /**
+     * @var XmlEntryPoint
+     */
+    protected $urlMap;
+
+    /**
      * @var \Jelix\Core\Infos\ModuleInfos[]
      */
     protected $modulesInfos = array();
@@ -122,6 +129,14 @@ class EntryPoint {
                                                     $this->isCliScript);
         $this->config = $compiler->read(true);
         $this->modulesInfos = $compiler->getModulesInfos();
+    }
+
+    public function setUrlMap(XmlEntryPoint $urlEp) {
+        $this->urlMap = $urlEp;
+    }
+
+    public function getUrlMap() {
+        return $this->urlMap;
     }
 
     /**

@@ -37,7 +37,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
 
     // If there are at least two pages of results
     if ($itemsTotal > $pageSize) {
-        $jUrlEngine = jUrl::getEngine();
+        $jUrlEngine = jApp::coord()->getUrlActionMapper();
 
         $urlaction = jUrl::get($action, $actionParams, jUrl::JURLACTION);
 

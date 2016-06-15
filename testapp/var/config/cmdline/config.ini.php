@@ -1,9 +1,6 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-startModule=testapp
-startAction="default:index"
-
 [responses]
 soap="jsoap~jResponseSoap"
 
@@ -19,3 +16,8 @@ on_error_action="jelix~error:badright"
 on_error=1
 error_message="jacl~errors.action.right.needed"
 on_error_action="jelix~error:badright"
+
+[simple_urlengine_entrypoints]
+soap="@soap"
+[basic_significant_urlengine_entrypoints]
+soap=1

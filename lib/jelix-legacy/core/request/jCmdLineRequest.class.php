@@ -27,30 +27,41 @@ class jCmdLineRequest extends jRequest {
     public $authorizedResponseClass = 'jResponseCmdline';
 
     protected $onlyDefaultAction = false;
-    
+
+    protected $startModule = '';
+
+    protected $startAction = '';
+
     /**
      * If you want to have a CLI script dedicated to the default action,
      * tell it by given true, so you haven't to indicate the action
      * on the command line. It means of course you couldn't execute any other
      * actions with this script.
-     * @param boolean $onlyDefaultAction 
+     * @param boolean $onlyDefaultAction
+     * @param string $module   module for the default action
+     * @param string $action   action for the default action
      */
-    function __construct($onlyDefaultAction = false){
+    function __construct($onlyDefaultAction = false, $module='', $action=''){
         $this->onlyDefaultAction = $onlyDefaultAction;
+        if ($onlyDefaultAction && ($module == '' || $action == '')) {
+            throw new Exception('No default module and action has been given to jCmdLineRequest');
+        }
+        $this->startAction = $action;
+        $this->startModule = $module;
     }
 
     protected function _initUrlData(){
         $this->urlScriptPath = '/'; 
         $this->urlScriptName = $this->urlScript = $_SERVER['SCRIPT_NAME']; 
-        $this->urlPathInfo = ''; 
+        $this->urlPathInfo = '';
     }
 
     protected function _initParams(){
         $argv = $_SERVER['argv'];
         $scriptName = array_shift($argv); // shift the script name
 
-        $mod = jApp::config()->startModule;
-        $act = jApp::config()->startAction;
+        $mod = $this->startModule;
+        $act = $this->startAction;
 
         if ($this->onlyDefaultAction) {
             if ($_SERVER['argc'] > 1 && $argv[0] == 'help') {

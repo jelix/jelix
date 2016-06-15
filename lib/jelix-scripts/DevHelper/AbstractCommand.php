@@ -33,7 +33,11 @@ abstract class AbstractCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->isVerbose = (OutputInterface::VERBOSITY_VERBOSE === $output->getVerbosity());
+        $this->isVerbose = (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity());
+        if (!$this->isVerbose && $this->config->verboseMode) {
+            $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
+            $this->isVerbose = true;
+        }
         $this->output = $output;
     }
 

@@ -11,7 +11,7 @@
 class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
 
     public $targetVersions = array('1.3.0', '1.7.0-beta.1');
-    public $date = '2016-05-20 23:55';
+    public $date = '2016-05-21 23:55';
 
     protected static $key = null;
 
@@ -20,34 +20,18 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
         if (self::$key === null) {
             self::$key = jAuth::getRandomPassword(30, true);
         }
+
         $conf = $this->getConfigIni()->getValue('auth', 'coordplugins');
-        if ($conf == '1') {
-            $key = $this->getConfigIni()->getValue('persistant_crypt_key', 'coordplugin_auth');
-            if ($key !== null) {
-                $changed = false;
-                if ($key === 'exampleOfCryptKey' || $key == '') {
-                    $key = self::$key;
-                    $changed = true;
-                }
-                if (null !== $this->getConfigIni()->getOverrider()->getValue('persistant_crypt_key', 'coordplugin_auth')) {
-                    $changed = true;
-                    $this->getConfigIni()->getOverrider()->removeValue('persistant_crypt_key', 'coordplugin_auth');
-                }
-                if ($change) {
-                    $this->getLocalConfigIni()->setValue('persistant_crypt_key', $key, 'coordplugin_auth');
-                }
-            }
-        }
-        else if ($conf) {
+        if ($conf != '1') {
             $conff = jApp::configPath($conf);
             if (file_exists($conff)) {
                 $ini = new \Jelix\IniFile\IniModifier($conff);
-                $key = $ini->getValue('persistant_crypt_key');
-                if ($key === 'exampleOfCryptKey' || $key == '') {
-                    $ini->setValue('persistant_crypt_key', self::$key);
-                    $ini->save();
-                }
+                $ini->removeValue('persistant_crypt_key');
+                $ini->save();
             }
         }
+
+        $localConfigIni = $this->getLocalConfigIni();
+        $localConfigIni->getMaster()->setValue('persistant_crypt_key', self::$key, 'coordplugin_auth');
     }
 }

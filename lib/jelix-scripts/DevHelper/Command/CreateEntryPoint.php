@@ -114,18 +114,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
                 }
             }
             else {
-                // else we create a new config file, with the startmodule of the default
-                // config as a module name.
+                // else we create a new config file
                 $mainConfig = parse_ini_file(App::mainConfigFile(), true);
-
                 $param = array();
-                if (isset($mainConfig['startModule'])) {
-                    $param['modulename'] = $mainConfig['startModule'];
-                }
-                else {
-                    $param['modulename'] = 'jelix';
-                }
-
                 $this->createFile($configFilePath,
                                   'var/config/index/config.ini.php.tpl',
                                   $param, "Configuration file");
@@ -133,9 +124,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $inifile = new \Jelix\IniFile\MultiIniModifier(App::mainConfigFile(), $configFilePath);
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($inifile->getValue('significantFile', 'urlengine'), true);
 
         $param = array();
-        $param['modulename'] = $inifile->getValue('startModule');
         // creation of the entry point
         $this->createDir($entryPointDir);
         $param['rp_app']   = Path::shortestPath($entryPointDir, App::appPath());
@@ -144,14 +135,11 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         $this->createFile($entryPointFullPath, $entryPointTemplate, $param, "Entry point");
 
         if ($type != 'cmdline') {
-            if (null === $inifile->getValue($name, 'simple_urlengine_entrypoints', null, true)) {
-                $inifile->setValue($name, '', 'simple_urlengine_entrypoints', null, true);
-            }
-
-            if (null === $inifile->getValue($name, 'basic_significant_urlengine_entrypoints', null, true)) {
-                $inifile->setValue($name, '1', 'basic_significant_urlengine_entrypoints', null, true);
-            }
-            $inifile->save();
+            $xmlEp = $xmlMap->addEntryPoint($name, $type);
+            /*if ($type == 'classic') {
+                $xmlEp->addUrlAction('/', $module, $action);
+            }*/
+            $xmlMap->save();
         }
 
         $this->appInfos->addEntryPointInfo($name.".php", $configFile , $type);

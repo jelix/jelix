@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+
+    <entrypoint name="index" type="classic" default="true">
+        
+        <url pathinfo="/" module="view" action="default:index" default="true"/>
+        <url module="view"/>
+    </entrypoint>
+    <entrypoint name="admin" type="classic">
+        <url module="jacl2db"/>
+        <url module="jacl2db_admin"/>
+        <url module="jauthdb_admin"/>
+        <url module="master_admin"/>
+        <url module="admin"/>
+        <url module="jauth"/>
+        <url pathinfo="/" module="master_admin" action="default:index" default="true"/>
+    </entrypoint>
+</urls>

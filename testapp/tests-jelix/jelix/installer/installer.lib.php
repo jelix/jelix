@@ -125,3 +125,4 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
     public function saveAs($filename) {}
 }
+

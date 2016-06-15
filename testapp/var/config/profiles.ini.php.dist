@@ -20,7 +20,7 @@ mysqli_profile = testapp_mysqli
 [jdb:testapp]
 ; you can change following options : database name, user, password, according to your database configuration
 ; do not change the driver ! testapp really need a mysql database for this profile
-driver="mysql"
+driver="mysqli"
 database="testapp"
 host= "localhost"
 user= "test_user"
@@ -33,7 +33,7 @@ persistent= on
 ; to run all test, you should install pdo on your server
 ; and setup a pdo connection
 [jdb:testapppdo]
-driver=mysql
+driver=mysqli
 host=localhost
 database="testapp"
 usepdo=1
@@ -69,7 +69,7 @@ persistent= on
 ;--- don't set one of this profile as default profile
 
 [jdb:jelix_tests_mysql]
-driver="mysql"
+driver="mysqli"
 database="testapp_mysql"
 host= "localhost_mysql"
 user= "plop_mysql"
@@ -78,7 +78,7 @@ persistent= on
 force_encoding=1
 
 [jdb:jelix_tests_forward]
-driver="mysql"
+driver="mysqli"
 database="jelix_tests_forward"
 host= "localhost_forward"
 user= "plop_forward"

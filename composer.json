@@ -23,7 +23,7 @@
         "jelix/soap-server-module": "1.7.*",
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "1.7.*",
-        "jelix/inifile": "1.7.*",
+        "jelix/inifile": "^1.7.1",
         "jelix/wikirenderer-plugin": "^1.7.1",
         "symfony/console":"2.8.*",
         "jelix/file-utilities": "1.8.*",
@@ -59,6 +59,7 @@
             "lib/jelix-legacy/init.php"
         ]
     },
+    "bin": ["bin/createapp.php"],
     "minimum-stability": "dev",
     "extra" : {
         "branch-alias": {

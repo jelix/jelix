@@ -71,6 +71,11 @@ class Router {
     protected $errorMessage = null;
 
     /**
+     * @var \Jelix\Routing\UrlMapping\UrlActionMapper
+     */
+    protected $urlActionMapper = null;
+
+    /**
      * @param  string|object $config filename of the ini file to configure the framework, or the config object itself
      *              this parameter is optional if App::loadConfig has been already called
      * @param  boolean $enableErrorHandler enable the error handler of jelix.
@@ -83,7 +88,13 @@ class Router {
             App::loadConfig($configFile, $enableErrorHandler);
         }
 
+        $mapperConfig = new \Jelix\Routing\UrlMapping\MapperConfig(jApp::config()->urlengine);
+        $this->urlActionMapper = new \Jelix\Routing\UrlMapping\UrlActionMapper($mapperConfig);
         $this->_loadPlugins();
+    }
+
+    function __clone() {
+        $this->urlActionMapper = clone $this->urlActionMapper;
     }
 
     /**
@@ -118,6 +129,14 @@ class Router {
         }
     }
 
+    public function getUrlActionMapper() {
+        return $this->urlActionMapper;
+    }
+
+    public function setUrlActionMapper (\Jelix\Routing\UrlMapping\UrlActionMapper $urlActionMapper) {
+        $this->urlActionMapper = $urlActionMapper;
+    }
+
     /**
     * initialize the given request and some properties of the router
     *
@@ -147,7 +166,7 @@ class Router {
             }
         }
 
-        $this->request->init();
+        $this->request->init($this->urlActionMapper);
 
         list($this->moduleName, $this->actionName) = $request->getModuleAction();
         App::pushCurrentModule($this->moduleName);
@@ -179,15 +198,15 @@ class Router {
             $ctrl = $this->getController($this->action);
         }
         catch (\jException $e) {
-            $config = App::config();
-            if ($config->urlengine['notfoundAct'] =='') {
+            $notFoundAct = $this->urlActionMapper->getConfig()->notfoundAct;
+            if ( $notFoundAct =='') {
                 throw $e;
             }
             if (!\jSession::isStarted()) {
                 \jSession::start();
             }
             try {
-                $this->action = new \jSelectorAct($config->urlengine['notfoundAct']);
+                $this->action = new \jSelectorAct($notFoundAct);
                 $ctrl = $this->getController($this->action);
             }
             catch(\jException $e2) {

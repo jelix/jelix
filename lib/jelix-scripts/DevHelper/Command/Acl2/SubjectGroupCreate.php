@@ -63,7 +63,7 @@ class SubjectGroupCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
         $sql .= ')';
         $cnx->exec($sql);
 
-        if ($ouput->verbose()) {
+        if ($this->verbose()) {
             $ouput->writeln("Rights: group of subjects '".$group."' is created");
         }
 

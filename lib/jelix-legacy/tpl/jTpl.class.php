@@ -18,10 +18,11 @@ class jTpl extends \Jelix\Castor\CastorCore {
 
     public function __construct () {
         $config = jApp::config();
-        $this->_vars['j_basepath'] = $config->urlengine['basePath'];
+        $basePath = jApp::urlBasePath();
+        $this->_vars['j_basepath'] = $basePath;
         $this->_vars['j_jelixwww'] = $config->urlengine['jelixWWWPath'];
         $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
-        $this->_vars['j_themepath'] = $config->urlengine['basePath'].'themes/'.$config->theme.'/';
+        $this->_vars['j_themepath'] = $basePath.'themes/'.$config->theme.'/';
         $this->_vars['j_locale'] = $config->locale;
         parent::__construct();
     }

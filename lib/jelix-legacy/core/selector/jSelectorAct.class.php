@@ -33,10 +33,10 @@ class jSelectorAct extends jSelectorActFast {
         $coord = jApp::coord();
         $this->forUrl = $toRetrieveUrl;
 
-        // jSelectorAct is called by the significant url engine parser, before
+        // jSelectorAct is called by the url engine parser, before
         // jcoordinator set its properties, so we set a value to avoid a
         // parameter error on jelix_scan_action_sel. the value doesn't matter
-        // since the significant parser call jSelectorAct only for 404 page
+        // since the parser call jSelectorAct only for 404 page
         if ($coord->actionName === null)
             $coord->actionName = 'default:index';
 

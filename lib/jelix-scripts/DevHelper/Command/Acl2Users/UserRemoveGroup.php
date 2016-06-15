@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserRemoveGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
+class UserRemoveGroup  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -50,7 +50,7 @@ class UserRemoveGroup  extends \Jelix\DevHelper\AbstractCommandForApp {
         $groupid = $this->_getGrpId($input);
 
         $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')
-            ." WHERE login=".$cnx->quote($login)." AND id_aclgrp=$groupid";
+            ." WHERE login=".$cnx->quote($login)." AND id_aclgrp=".$cnx->quote($groupid);
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {

@@ -165,16 +165,9 @@ class Compiler {
 
     protected function checkMiscParameters($config) {
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
-        if (trim( $config->startAction) == '') {
-            $config->startAction = ':';
-        }
 
         if ($config->domainName == "" && isset($_SERVER['SERVER_NAME'])) {
             $config->domainName = $_SERVER['SERVER_NAME'];
-        }
-
-        if ($config->urlengine['engine'] == 'simple') {
-            trigger_error("The 'simple' url engine is deprecated. use 'basic_significant' or 'significant' url engine", E_USER_NOTICE);
         }
 
         $config->chmodFile = octdec($config->chmodFile);

@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2009 Laurent Jouanneau
+* @copyright   2006-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,7 +15,6 @@ class UTCreateUrls extends jUnitTestCase {
     function setUp() {
         $this->oldserver = $_SERVER;
         jApp::saveContext();
-        jIncluder::clear();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
@@ -23,7 +22,6 @@ class UTCreateUrls extends jUnitTestCase {
     
     function tearDown() {
         jApp::popCurrentModule();
-        jUrl::getEngine(true);
         jApp::restoreContext();
         $_SERVER = $this->oldserver;
     }
@@ -68,112 +66,6 @@ class UTCreateUrls extends jUnitTestCase {
         }
     }
 
-    function testSimpleEngine() {
-
-       $req = jApp::coord()->request;
-       $req->urlScriptPath = '/';
-       $req->params = array();
-       $conf = jApp::config();
-       $conf->domainName = 'testapp.local';
-       $conf->forceHTTPPort = true;
-       $conf->forceHTTPSPort = true;
-       $conf->urlengine = array(
-         'engine'=>'simple',
-         'enableParser'=>true,
-         'multiview'=>false,
-         'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~error:notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls.xml',
-       );
-
-      jUrl::getEngine(true); // we reload the url engine
-
-      $urlList=array();
-      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
-      $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
-      // celle ci n'a pas de définition dans urls.xml *exprés*
-      $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
-      $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
-      $urlList[]= array('jelix_tests~urlsig:url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
-      $urlList[]= array('jelix_tests~actu:foo', array('aaa'=>'bbb'));
-      $urlList[]= array('jelix_tests~actu:bar', array('aaa'=>'@%bbb')); // with special char
-
-      $trueResult=array(
-          "/index.php?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
-          "/testnews.php?mois=05&annee=2004&module=jelix_tests&action=urlsig:url2",
-          "/testnews.php?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig:url3",
-          "/foo/bar.php?first=premier&second=deuxieme&module=jelix_tests&action=urlsig:url4",
-          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
-          "/xmlrpc.php",
-          "/index.php?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
-          "/actu.php?aaa=bbb&module=jelix_tests&action=actu:foo",
-          "/actu.php?aaa=%40%25bbb&module=jelix_tests&action=actu:bar",
-       );
-
-
-      $trueResult[5]='https://testapp.local'.$trueResult[5];
-      $trueResult[6]='https://testapp.local'.$trueResult[6];
-      $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
-
-      $conf->urlengine['multiview']=true;
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
-      $trueResult=array(
-          "/index?mois=10&annee=2005&id=35&module=jelix_tests&action=urlsig:url1",
-          "/testnews?mois=05&annee=2004&module=jelix_tests&action=urlsig:url2",
-          "/testnews?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village&module=jelix_tests&action=urlsig:url3",
-          "/foo/bar?first=premier&second=deuxieme&module=jelix_tests&action=urlsig:url4",
-          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
-          "/xmlrpc",
-          "/index?rubrique=vetements&id_article=98&module=jelix_tests&action=urlsig:url8",
-          "/actu?aaa=bbb&module=jelix_tests&action=actu:foo",
-          "/actu?aaa=%40%25bbb&module=jelix_tests&action=actu:bar",
-       );
-      $trueResult[5]='https://testapp.local'.$trueResult[5];
-      $trueResult[6]='https://testapp.local'.$trueResult[6];
-      $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
-    }
-
-
-    function testSimpleEngineError(){
-
-       $req = jApp::coord()->request;
-       $req->urlScriptPath = '/';
-       $req->params = array();
-       $conf = jApp::config();
-       $conf->urlengine = array(
-         'engine'=>'simple',
-         'enableParser'=>true,
-         'multiview'=>false,
-         'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls.xml',
-       );
-
-      $urlList=array();
-      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
-
-      $trueResult=array(
-          // type exception : 0 Exception, 1 jException, 2 jExceptionSelector
-          // code
-          // local key
-          array(2,11,'jelix~errors.selector.invalid.target'),
-       );
-
-      $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
-
-      $conf->urlengine['multiview']=true;
-      $trueResult=array(
-          array(2,11,'jelix~errors.selector.invalid.target'),
-       );
-      $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
-    }
-
     function testSignificantEngine() {
 
        $req = jApp::coord()->request;
@@ -185,14 +77,13 @@ class UTCreateUrls extends jUnitTestCase {
        $conf->forceHTTPPort = true;
        $conf->forceHTTPSPort = true;
        $conf->urlengine = array(
-         'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls.xml',
-         'checkHttpsOnParsing'=>true
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
+         'checkHttpsOnParsing'=>true,
+         'urlScriptIdenc'=>'index'
        );
 
       $conf->_modulesPathList['news']='/';
@@ -212,6 +103,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));
+      //10
       $urlList[]= array('jelix_tests~urlsig:url8', array('mois'=>'23',  'annee'=>'2007', 'id'=>'74'));
       $urlList[]= array('jelix_tests~urlsig:url11', array('rubrique'=>'vetements',  'id_article'=>'98'));
       $urlList[]= array('jelix_tests~urlsig:url12', array('rubrique'=>'bricolage',  'id_article'=>'53'));
@@ -222,6 +114,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:url30', array());
       $urlList[]= array('jelix_tests~default:hello2', array());
       $urlList[]= array('jelix_tests~default:hello3', array());
+      //20
       $urlList[]= array('jelix_tests~hello3', array());
       $urlList[]= array('jelix_tests~urlsig:bug599', array('first'=>'premier',  'second'=>'deuxieme'));
       $urlList[]= array('testurls~urlsig:urla', array());
@@ -232,6 +125,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~default:wikishow', array('page'=>'foo'));
       $urlList[]= array('testapp~login:in', array('login'=>'foo', 'password'=>'pass'));
       $urlList[]= array('testapp~login:out', array());
+      //30
       $urlList[]= array('testapp~login:form', array());
       $urlList[]= array('testapp~user:index', array('user'=>'laurent'));
       $urlList[]= array('testapp~main:suburlsfoo', array());
@@ -241,7 +135,8 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'/'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo'));
       $urlList[]= array('jelix_tests~urlsig:wiki', array('path'=>'foo/bar/'));
-
+      $urlList[]= array('jfeeds~myctrl:index', array());
+      $urlList[]= array('jfeeds~myctrl:foo', array());
 
       $trueResult=array(
           "/index.php/test/news/2005/10/01",
@@ -251,9 +146,10 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar.php/withhandler/premier/deuxieme",
-          "/index.php?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
+          "/index.php/jelix_tests/urlsig/url5?foo=oof&bar=rab",
           "/xmlrpc.php",
-          "/news.php?aaa=bbb&module=news&action=default:bar",
+          "/news.php/news/default/bar?aaa=bbb",
+          // 10
           "/index.php/test/news/2007/23/74?action=urlsig:url8",
           "/index.php/shop/vetements/98",
           "/index.php/shop/bricolage/53/",
@@ -264,32 +160,38 @@ class UTCreateUrls extends jUnitTestCase {
           "/index.php/hello",
           "/index.php/hello2",
           "/index.php/hello3",
+          //20
           "/index.php/hello3",
           "/withhandler/premier/deuxieme",
           "/myhand/urlsig/urla",
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
-          "/news.php?f=g&module=articles&action=default:zap",
+          "/news.php/articles/default/zap?f=g",
           "/index.php/super/wiki/",
           "/index.php/super/wiki/foo",
           "/index.php/auth/dologin?login=foo&password=pass",
           "/index.php/auth/dologout",
+          //30
           "/index.php/auth/login",
           "/index.php/auth/user/laurent",
           "/index.php/suburl/foo",
           "/index.php/suburl",
-          "/index.php/",
+          "/index.php",
           "/index.php/wiki/",
           "/index.php/wiki//",
           "/index.php/wiki/foo",
           "/index.php/wiki/foo/bar/",
+          "/index.php/dynamic/method",
+          "/index.php/dynamic/method/foo"
        );
 
       $trueResult[11]='https://testapp.local'.$trueResult[11];
-      $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
+      $this->_doCompareUrl("multiview = false", $urlList,$trueResult);
 
 
       $conf->urlengine['multiview']=true;
+      jUrl::getEngine(true);
+
       $trueResult=array(
           "/index/test/news/2005/10/01",
           "/index/test/news/2005/10/09?action=urlsig:url9",
@@ -298,9 +200,9 @@ class UTCreateUrls extends jUnitTestCase {
           "/index/test/cms/actualite/65-c-est-la-fete-au-village",
           "/test/cms2/actualite/65",
           "/foo/bar/withhandler/premier/deuxieme",
-          "/index?foo=oof&bar=rab&module=jelix_tests&action=urlsig:url5",
+          "/index/jelix_tests/urlsig/url5?foo=oof&bar=rab",
           "/xmlrpc",
-          "/news?aaa=bbb&module=news&action=default:bar",
+          "/news/news/default/bar?aaa=bbb",
           "/index/test/news/2007/23/74?action=urlsig:url8",
           "/index/shop/vetements/98",
           "/index/shop/bricolage/53/",
@@ -316,7 +218,7 @@ class UTCreateUrls extends jUnitTestCase {
           "/myhand/urlsig/urla",
           "/myhand/urlsig/urla?first=premier",
           "/myhand/urlsig/urlb",
-          "/news?f=g&module=articles&action=default:zap",
+          "/news/articles/default/zap?f=g",
           "/index/super/wiki/",
           "/index/super/wiki/foo",
           "/index/auth/dologin?login=foo&password=pass",
@@ -325,14 +227,16 @@ class UTCreateUrls extends jUnitTestCase {
           "/index/auth/user/laurent",
           "/index/suburl/foo",
           "/index/suburl",
-          "/index/",
+          "/index",
           "/index/wiki/",
           "/index/wiki//",
           "/index/wiki/foo",
           "/index/wiki/foo/bar/",
+          "/index/dynamic/method",
+          "/index/dynamic/method/foo"
        );
       $trueResult[11]='https://testapp.local'.$trueResult[11];
-      $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
+      $this->_doCompareUrl("multiview = true", $urlList,$trueResult);
 
     }
 
@@ -347,14 +251,13 @@ class UTCreateUrls extends jUnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'engine'=>'significant',
             'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
-            'defaultEntrypoint'=>'index',
-            'notfoundAct'=>'jelix~notfound',
-            'significantFile'=>'urls.xml',
-            'checkHttpsOnParsing'=>true
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_maintests.xml',
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index'
         );
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
@@ -414,9 +317,11 @@ class UTCreateUrls extends jUnitTestCase {
          );
 
 
-        $this->_doCompareUrlLang("significant, multiview = false", $urlList, $trueResult);
+        $this->_doCompareUrlLang("multiview = false", $urlList, $trueResult);
 
         $conf->urlengine['multiview']=true;
+        jUrl::getEngine(true);
+
         $trueResult=array(
             "/index/url-with-lang/test1/fr/foo",
             "/index/url-with-lang/test1/en/foo",
@@ -444,7 +349,7 @@ class UTCreateUrls extends jUnitTestCase {
 
         );
 
-        $this->_doCompareUrlLang("significant, multiview = true", $urlList,$trueResult);
+        $this->_doCompareUrlLang("multiview = true", $urlList,$trueResult);
     }
 
     protected function _doCompareUrlLang($title, $urlList, $trueResult ){
@@ -461,6 +366,61 @@ class UTCreateUrls extends jUnitTestCase {
         }
     }
 
+    function testDedicatedModule() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+ 
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = true;
+        $conf->forceHTTPSPort = true;
+        $conf->urlengine = array(
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index'
+        );
+
+        $conf->_modulesPathList['news']='/';
+        $conf->_modulesPathList['articles']='/';
+
+        jUrl::getEngine(true);
+
+        $urlList = array();
+        $urlList[]= array('testapp~default:index', array());
+        $urlList[]= array('testapp~foo:index', array());
+        $urlList[]= array('testapp~foo:bar', array());
+
+        $urlList[]= array('news~default:index', array());
+        $urlList[]= array('news~foo:index', array());
+        $urlList[]= array('news~foo:bar', array());
+        $urlList[]= array('articles~default:index', array());
+        $urlList[]= array('articles~foo:index', array());
+        $urlList[]= array('articles~foo:bar', array());
+
+        $urlList[]= array('jelix~jforms:getListData@classic', array());
+
+        $trueResult=array(
+            "/index.php",
+            "/index.php/testapp/foo",
+            "/index.php/testapp/foo/bar",
+            "/news.php",
+            "/news.php/news/foo",
+            "/news.php/news/foo/bar",
+            "/news.php/mynews",
+            "/news.php/mynews/foo",
+            "/news.php/mynews/foo/bar",
+            "/index.php/jelix/jforms/getListData"
+        );
+
+        $this->_doCompareUrl("testDedicatedModule", $urlList, $trueResult);
+    }
+    
     function testSignificantEngineError(){
 
        $req = jApp::coord()->request;
@@ -469,14 +429,13 @@ class UTCreateUrls extends jUnitTestCase {
 
        $conf = jApp::config();
        $conf->urlengine = array(
-         'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'significantFile'=>'urls.xml',
-         'checkHttpsOnParsing'=>true
+         'notfoundAct'=>'jelix~error:notfound',
+         'significantFile'=>'urlsfiles/url_maintests.xml',
+         'checkHttpsOnParsing'=>true,
+         'urlScriptIdenc'=>'index'
        );
 
       $conf->_modulesPathList['news']='/';
@@ -501,119 +460,7 @@ class UTCreateUrls extends jUnitTestCase {
           array(2,11,'jelix~errors.selector.invalid.target'),
        );
       $this->_doCompareError("significant, errors multiview = true", $urlList,$trueResult);
-
-
     }
-
-    function testBasicSignificantEngine() {
-
-       $req = jApp::coord()->request;
-       $req->urlScriptPath = '/';
-       $req->params = array();
-
-       $conf = jApp::config();
-       $conf->domainName = 'testapp.local';
-       $conf->forceHTTPPort = true;
-       $conf->forceHTTPSPort = true;
-       $conf->urlengine = array(
-         'engine'=>'basic_significant',
-         'enableParser'=>true,
-         'multiview'=>false,
-         'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~error:notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls.xml',
-       );
-
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
-
-      $urlList=array();
-      $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
-      $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
-      $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
-      $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'%@deuxieme')); // with special char
-      // celle ci n'a pas de définition dans urls.xml *exprés*
-      $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
-      $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
-      $urlList[]= array('jelix_tests~urlsig:url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
-      $urlList[]= array('jelix_tests~default:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
-      $urlList[]= array('jelix_tests~urlsig:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
-
-      $trueResult=array(
-          "/index.php/jelix_tests/urlsig/url1?mois=10&annee=2005&id=35",
-          "/jelix_tests/urlsig/url2?mois=05&annee=2004",
-          "/jelix_tests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
-          "/foo/bar.php/jelix_tests/urlsig/url4?first=premier&second=%25%40deuxieme",
-          "/index.php/jelix_tests/urlsig/url5?foo=oof&bar=rab",
-          "/xmlrpc.php",
-          "/index.php/jelix_tests/urlsig/url8?rubrique=vetements&id_article=98",
-          "/index.php/jelix_tests/?rubrique=vetements&id_article=98",
-          "/index.php/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
-       );
-
-
-      $trueResult[5]='https://testapp.local'.$trueResult[5];
-      $trueResult[6]='https://testapp.local'.$trueResult[6];
-      $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
-
-      $conf->urlengine['multiview']=true;
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
-      $trueResult=array(
-          "/index/jelix_tests/urlsig/url1?mois=10&annee=2005&id=35",
-          "/jelix_tests/urlsig/url2?mois=05&annee=2004",
-          "/jelix_tests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
-          "/foo/bar/jelix_tests/urlsig/url4?first=premier&second=%25%40deuxieme",
-          "/index/jelix_tests/urlsig/url5?foo=oof&bar=rab",
-          "/xmlrpc",
-          "/index/jelix_tests/urlsig/url8?rubrique=vetements&id_article=98",
-          "/index/jelix_tests/?rubrique=vetements&id_article=98",
-          "/index/jelix_tests/urlsig/?rubrique=vetements&id_article=98",
-       );
-      $trueResult[5]='https://testapp.local'.$trueResult[5];
-      $trueResult[6]='https://testapp.local'.$trueResult[6];
-      $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
-    }
-
-
-
-    function testBasicSignificantEngineError(){
-
-       $req = jApp::coord()->request;
-       $req->urlScriptPath = '/';
-       $req->params = array();
-
-       $conf = jApp::config();
-       $conf->urlengine = array(
-         'engine'=>'basic_significant',
-         'enableParser'=>true,
-         'multiview'=>false,
-         'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
-         'notfoundAct'=>'jelix~notfound',
-         'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-         'significantFile'=>'urls.xml',
-       );
-
-      $urlList=array();
-      $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
-
-      $trueResult=array(
-          // type exception : 0 Exception, 1 jException, 2 jExceptionSelector
-          // code
-          // local key
-          array(2,11,'jelix~errors.selector.invalid.target'),
-       );
-
-      $this->_doCompareError("simple, errors, multiview = false", $urlList,$trueResult);
-
-      $conf->urlengine['multiview']=true;
-      $trueResult=array(
-          array(2,11,'jelix~errors.selector.invalid.target'),
-       );
-      $this->_doCompareError("simple, errors multiview = true", $urlList,$trueResult);
-    }
-
 
     function testGetFullUrl() {
 
@@ -623,14 +470,12 @@ class UTCreateUrls extends jUnitTestCase {
 
         $conf = jApp::config();
         $conf->urlengine = array(
-          'engine'=>'basic_significant',
           'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
-          'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
           'significantFile'=>'urls.xml',
+          'urlScriptIdenc'=>'index'
         );
 
         // parameters
@@ -653,7 +498,6 @@ class UTCreateUrls extends jUnitTestCase {
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
         $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
-
 
         // with given domain name, without domain name in config, without https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
@@ -720,7 +564,7 @@ class UTCreateUrls extends jUnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.$_SERVER['HTTP_HOST'].'/index.php/testapp/main/', $url);
+        $this->assertEquals('http://'.$_SERVER['HTTP_HOST'].'/index.php', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = 'testapp.local';
@@ -728,18 +572,14 @@ class UTCreateUrls extends jUnitTestCase {
         $conf = jApp::config();
         $conf->domainName = 'testapp.local';
         $conf->urlengine = array(
-          'engine'=>'basic_significant',
           'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'defaultEntrypoint'=>'index',
-          'entrypointExtension'=>'.php',
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-          'significantFile'=>'urls.xml',
+          'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
           'urlScriptName'=>'noep.php',
@@ -754,31 +594,27 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $req = jApp::coord()->request = new jClassicRequest();
-        $req->init();
+        $req->init(jApp::coord()->getUrlActionMapper());
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo');
         $req->getModuleAction();
 
         $url = jUrl::getCurrentUrl(false, false);
-        $this->assertEquals('/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+        $this->assertEquals('/zip/yo/', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://testapp.local/noep.php/jelix_tests/urlsig/bug1488?var=yo', $url);
+        $this->assertEquals('http://testapp.local/zip/yo/', $url);
 
         $conf = jApp::config();
         $conf->domainName = 'testapp.local';
         $conf->urlengine = array(
-          'engine'=>'significant',
           'enableParser'=>true,
           'multiview'=>true,
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'defaultEntrypoint'=>'index',
-          'entrypointExtension'=>'.php',
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
-          'significantFile'=>'urls.xml',
+          'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
           'urlScriptName'=>'noep.php',
@@ -792,7 +628,7 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $req = jApp::coord()->request = new jClassicRequest();
-        $req->init();
+        $req->init(jApp::coord()->getUrlActionMapper());
         $req->params = array('module'=>'jelix_tests', 'action'=>'urlsig:bug1488', 'var'=>'yo', 'foo'=>'bar');
         $req->getModuleAction();
 
