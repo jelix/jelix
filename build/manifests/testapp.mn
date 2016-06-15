@@ -389,6 +389,7 @@ cd testapp/tests-jelix/jelix/prefs/
 cd testapp/tests-jelix/jelix/routing/
   requestsTest.php
   xmlmapTest.php
+  urlUpgradeTest.php
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa

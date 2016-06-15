@@ -117,4 +117,15 @@ class XmlMapModifier
         }
         return $results;
     }
+
+    public function removeUrlModuleInOtherEntryPoint($module, XmlEntryPoint $except) {
+        $list = $this->getEntryPointsOfType($except->getType());
+        foreach($list as $ep) {
+            if ($ep->getAttribute('name') == $except->getName()) {
+                continue;
+            }
+            $xmlEp = new XmlEntryPoint($this, $ep);
+            $xmlEp->removeUrlModule($module);
+        }
+    }
 }

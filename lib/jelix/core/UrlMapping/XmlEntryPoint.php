@@ -51,7 +51,7 @@ class XmlEntryPoint {
                 }
                 if ($opt == 'actionoverride') {
                     $element->setAttribute($opt, $value); 
-                } else if ($opt == 'default') {
+                } else if ($opt == 'default' && $element->localName != 'url') {
                     if ($value) {
                         $this->map->setNewDefaultEntryPoint($this->getName(), $this->getType());
                     } else {
@@ -193,15 +193,28 @@ class XmlEntryPoint {
         $url = $this->getUrlByDedicatedModule($module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
-            $url->setAttribute('pathinfo', $pathinfo);
+            if ($pathinfo) {
+                $url->setAttribute('pathinfo', $pathinfo);
+            }
             $url->setAttribute('module', $module);
             $this->appendElement($this->ep, $url);
+            $this->map->removeUrlModuleInOtherEntryPoint($module, $this);
+        }
+        else if ($pathinfo) {
+            $url->setAttribute('pathinfo', $pathinfo);
         }
         else {
-            $url->setAttribute('pathinfo', $pathinfo);
+            $url->removeAttribute('pathinfo');
         }
 
         $this->setElementOptions($url, $options, array('default','https','noentrypoint'));
+    }
+
+    public function removeUrlModule($module) {
+        $url = $this->getUrlByDedicatedModule($module);
+        if ($url) {
+            $url->parentNode->removeChild($url);
+        }
     }
 
     /**
