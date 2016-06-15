@@ -213,6 +213,7 @@ class Installer {
 
             $epId = $ep->getEpId();
             $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
+            $ep->setAppInfos($appInfos);
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;

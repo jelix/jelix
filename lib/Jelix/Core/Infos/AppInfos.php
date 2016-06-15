@@ -78,26 +78,37 @@ class AppInfos extends InfosAbstract {
             $doc = new \DOMDocument();
 
             if (!$doc->load($this->path.'project.xml')) {
-                throw new Exception("addEntryPointInfo: cannot load project.xml");
+                throw new \Exception("addEntryPointInfo: cannot load project.xml");
             }
             if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0'){
-                throw new Exception("addEntryPointInfo: bad namespace in project.xml");
+                throw new \Exception("addEntryPointInfo: bad namespace in project.xml");
             }
 
+            $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
+            if (!$eplist->length) {
+                $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+                $doc->documentElement->appendChild($ep);
+            }
+            else {
+                $ep = $eplist->item(0);
+                foreach($ep->getElementsByTagName("entry") as $entry){
+                    if ($entry->getAttribute("file") == $fileName){
+                        $entryType = $entry->getAttribute("type") ?: 'classic';
+                        if ($entryType != $type) {
+                            throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
+                        }
+                        return;
+                    }
+                }
+            }
+
+            $ep->appendChild(new \DOMText("\n        "));
             $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
             $elem->setAttribute("file", $fileName);
             $elem->setAttribute("config", $configFileName);
             $elem->setAttribute("type", $type);
-
-            $ep = $doc->documentElement->getElementsByTagName("entrypoints");
-            if (!$ep->length) {
-                $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-                $doc->documentElement->appendChild($ep);
-                $ep->appendChild($elem);
-            }
-            else {
-                $ep->item(0)->appendChild($elem);
-            }
+            $ep->appendChild($elem);
+            $ep->appendChild(new \DOMText("\n    "));
 
             $doc->save($this->path.'project.xml');
         }

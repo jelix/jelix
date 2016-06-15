@@ -104,6 +104,11 @@ class EntryPoint {
     protected $moduleLaunchers = array();
 
     /**
+     * @var Jelix\Core\Infos\AppInfos
+     */
+    protected $appInfos;
+
+    /**
      * @param \Jelix\IniFile\MultiIniModifier $mainConfig   the mainconfig.ini.php file combined with defaultconfig.ini.php
      * @param \Jelix\IniFile\MultiIniModifier $localConfig   the localconfig.ini.php file combined with $mainConfig
      * @param string $configFile the path of the configuration file, relative
@@ -137,6 +142,20 @@ class EntryPoint {
 
     public function getUrlMap() {
         return $this->urlMap;
+    }
+
+    /**
+     * @param Jelix\Core\Infos\AppInfos $app
+     */
+    public function setAppInfos(\Jelix\Core\Infos\AppInfos $app) {
+        $this->appInfos = $app;
+    }
+
+    /**
+     * @return Jelix\Core\Infos\AppInfos
+     */
+    public function getAppInfos() {
+        return $this->appInfos;
     }
 
     /**
