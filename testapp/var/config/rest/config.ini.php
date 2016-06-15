@@ -12,9 +12,3 @@ soap="jsoap~jResponseSoap"
 
 [urlengine]
 significantFile=urls_rest.xml
-
-
-[simple_urlengine_entrypoints]
-soap="@soap"
-[basic_significant_urlengine_entrypoints]
-soap=1

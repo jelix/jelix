@@ -15,9 +15,3 @@ on_error=1
 
 [coordplugin_jacl]
 on_error=1
-
-
-[simple_urlengine_entrypoints]
-soap="@soap"
-[basic_significant_urlengine_entrypoints]
-soap=1

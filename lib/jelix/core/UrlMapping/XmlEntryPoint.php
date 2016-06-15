@@ -43,6 +43,10 @@ class XmlEntryPoint {
         return $this->ep->getAttribute('type');
     }
 
+    public function getMapModifier() {
+        return $this->map;
+    }
+
     protected function setElementOptions($element, $options, $authorizedOptions) {
         if ($options && is_array($options)) {
             foreach($options as $opt=>$value) {

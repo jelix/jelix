@@ -47,6 +47,7 @@ rss2.0="jfeeds~jResponseRss20"
 atom1.0="jfeeds~jResponseAtom10"
 sitemap="jsitemap~jResponseSitemap"
 
+soap="jsoap~jResponseSoap"
 [error_handling]
 ;errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
