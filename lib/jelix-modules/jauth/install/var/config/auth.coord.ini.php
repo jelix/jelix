@@ -78,8 +78,6 @@ password_hash_method =
 ; options for the hash method. list of "name:value" separated by a ";"
 password_hash_options = 
 
-
-
 ;=========== Parameters for drivers
 
 ;------- parameters for the "Db" driver

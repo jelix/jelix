@@ -399,3 +399,8 @@ jelix.cache=cache/
 [mimeTypes]
 ;list of mime types for some file extension. ext=mime type
 
+[coordplugin_auth]
+; key to use to crypt the password in the cookie
+; Warning: the value of this parameter should be stored into localconfig.ini.php
+persistant_encryption_key=
+

@@ -140,6 +140,7 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
+  redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
 cd lib/jelix/core-modules/jelix/daos
