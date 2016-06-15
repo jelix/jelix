@@ -40,7 +40,7 @@ General purpose:
 ");
         } else {
             if (!preg_match('/(?:([\w\.]+)~)/', $cmd_name)) {
-                $cmd_name = jApp::config()->startModule.'~'.$cmd_name;
+                throw new Exception("module name is missing in the action selector");
             }
             $selector = new jSelectorAct($cmd_name);
 
