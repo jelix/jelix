@@ -15,4 +15,3 @@ on_error=1
 
 [coordplugin_jacl]
 on_error=1
-

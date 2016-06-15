@@ -16,8 +16,3 @@ on_error_action="jelix~error:badright"
 on_error=1
 error_message="jacl~errors.action.right.needed"
 on_error_action="jelix~error:badright"
-
-[simple_urlengine_entrypoints]
-soap="@soap"
-[basic_significant_urlengine_entrypoints]
-soap=1

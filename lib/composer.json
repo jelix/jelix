@@ -7,7 +7,7 @@
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "5.2.9",
-        "jelix/soap-server-module": "1.7.*",
+        "jelix/soap-server-module": "^1.7.2",
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "1.7.*",
         "jelix/inifile": "^1.7.1",

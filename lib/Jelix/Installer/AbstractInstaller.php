@@ -148,6 +148,49 @@ abstract class AbstractInstaller {
             $this->useDbProfile($dbProfile);
     }
 
+    protected function declareNewEntryPoint($epId, $epType, $configFileName) {
+        if (!$this->firstExec('EP_'.$epId)) {
+            return;
+        }
+        $mapModifier = $this->entryPoint->getUrlMap()->getMapModifier();
+        $mapModifier->addEntryPoint($epId, $epType);
+
+        $doc = $this->loadProjectXml();
+        $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
+        if (!$eplist->length) {
+            $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+            $doc->documentElement->appendChild($ep);
+        }
+        else {
+            $ep = $eplist->item(0);
+            foreach($ep->getElementsByTagName("entry") as $entry){
+                if ($entry->getAttribute("file") == $epId.'.php'){
+                    $entryType = $entry->getAttribute("type") ?: 'classic';
+                    if ($entryType != $epType) {
+                        throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
+                    }
+                    return;
+                }
+            }
+        }
+
+        $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
+        $elem->setAttribute("file", $epId.'.php');
+        $elem->setAttribute("config", $configFileName);
+        $elem->setAttribute("type", $epType);
+        $ep->appendChild($elem);
+        $ep->appendChild(new \DOMText("\n    "));
+        $doc->save(jApp::appPath('project.xml'));
+    }
+
+    private function loadProjectXml() {
+        $doc = new \DOMDocument();
+        if (!$doc->load(jApp::appPath('project.xml'))) {
+            throw new \Exception("addEntryPointInfo: cannot load project.xml");
+        }
+        return $doc;
+    }
+
     /**
      * the mainconfig.ini.php file combined with defaultconfig.ini.php
      * @return \Jelix\IniFile\MultiIniModifier
