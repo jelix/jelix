@@ -17,12 +17,6 @@ composer install --prefer-dist
 cd testapp
 composer install --prefer-dist
 
-if [ -d $HOME/.composer/ ]; then
-    ls -al $HOME/.composer/
-else
-    echo "No $HOME/.composer "
-fi
-
 php install/installer.php
 
 cd adminapp/install
