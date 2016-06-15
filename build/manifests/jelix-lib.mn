@@ -166,17 +166,7 @@ cd lib/jelix-legacy/core/selector
   jSelectorZone.class.php
 #endif
 
-cd lib/jelix-legacy/core/UrlMapping
-  CustomUrlHandlerInterface.php
-  MapParserException.php
-  MapperConfig.php
-  SelectorUrlXmlMap.php
-  SelectorUrlHandler.php
-  UrlActionMapper.php
-  UrlMapData.php
-  XmlEntryPoint.php
-  XmlMapModifier.php
-  XmlMapParser.php
+
 
 cd lib/jelix-legacy/core-modules/jelix
 *  module.xml
@@ -799,6 +789,18 @@ cd lib/Jelix/Routing
   ClientRequest.php
   ServerResponse.php
   RouterPlugin.php
+
+cd lib/Jelix/Routing/UrlMapping
+  CustomUrlHandlerInterface.php
+  MapParserException.php
+  MapperConfig.php
+  SelectorUrlXmlMap.php
+  SelectorUrlHandler.php
+  UrlActionMapper.php
+  UrlMapData.php
+  XmlEntryPoint.php
+  XmlMapModifier.php
+  XmlMapParser.php
 
 cd lib/Jelix/External
   composer.json
