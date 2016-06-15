@@ -48,8 +48,6 @@ html=myHtmlResponse
 ;force  = off
 
 [urlengine]
-; deprecated
-engine        = significant
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
@@ -60,8 +58,7 @@ jelixWWWPath = "jelix/"
 jqueryPath="jelix/jquery/"
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
-; (like mod_rewrite in apache), if the rewrite of the url corresponds to a simple url, and if
-; you use the significant engine. If you use the simple url engine, you can set to off.
+; (like mod_rewrite in apache)
 enableParser = on
 
 multiview = off
@@ -76,36 +73,9 @@ multiview = off
 ; : basePath="/aaa/" )
 basePath = ""
 
-defaultEntrypoint= index
-
 ; action to show the 'page not found' error
 notfoundAct = "jelix~error:notfound"
 
-; list of actions which require https protocol for the simple url engine
-; syntax of the list is the same as explained in the simple_urlengine_entrypoints
-simple_urlengine_https =
-
-[simple_urlengine_entrypoints]
-; deprecated
-; parameters for the simple url engine. This is the list of entry points
-; with list of actions attached to each entry points
-
-; script_name_without_suffix = "list of action selectors separated by a space"
-; selector syntax :
-;   m~a@r    -> for the action "a" of the module "m" and for the request of type "r"
-;   m~c:*@r  -> for all actions of the controller "c" of the module "m" and for the request of type "r"
-;   m~*@r    -> for all actions of the module "m" and for the request of type "r"
-;   @r       -> for all actions for the request of type "r"
-
-index = "@classic"
-
-
-[basic_significant_urlengine_entrypoints]
-; for each entry point, it indicates if the entry point name
-; should be include in the url or not
-index = on
-xmlrpc = on
-jsonrpc = on
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

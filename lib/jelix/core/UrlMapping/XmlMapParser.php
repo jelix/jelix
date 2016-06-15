@@ -12,7 +12,7 @@
 namespace Jelix\Routing\UrlMapping;
 
 /**
- * Compiler for significant url engine.
+ * Compiler for the url engine. It can parse urls.xml files
  */
 class XmlMapParser implements \jISimpleCompiler
 {

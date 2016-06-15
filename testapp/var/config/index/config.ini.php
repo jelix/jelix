@@ -9,3 +9,8 @@ jacl=1
 html=myHtmlResponse
 soap="jsoap~jResponseSoap"
 
+
+[simple_urlengine_entrypoints]
+soap="@soap"
+[basic_significant_urlengine_entrypoints]
+soap=1

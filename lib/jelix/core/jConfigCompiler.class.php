@@ -138,12 +138,6 @@ class jConfigCompiler {
             $config->domainName = $_SERVER['SERVER_NAME'];
         }
 
-        if (isset($config->urlengine['engine']) && (
-            $config->urlengine['engine'] == 'simple' ||
-            $config->urlengine['engine'] == 'basic_significant')) {
-            throw new \Exception("The 'simple' and 'basic_significant' url engine do not exist anymore. use 'significant' url engine");
-        }
-
         $config->chmodFile = octdec($config->chmodFile);
         $config->chmodDir = octdec($config->chmodDir);
     }

@@ -308,7 +308,7 @@ class UrlActionMapper
                     if (isset($this->dataCreateUrl [$id])) {
                         $urlinfo = $this->dataCreateUrl[$id];
                     } else {
-                        throw new \Exception("Significant url engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
+                        throw new \Exception("URL engine doesn't find corresponding url to this action: ".$module.'~'.$action.'@'.$urlact->requestType);
                     }
                 }
             }

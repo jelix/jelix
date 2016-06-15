@@ -78,11 +78,9 @@ class UTCreateUrls extends jUnitTestCase {
        $conf->forceHTTPPort = true;
        $conf->forceHTTPSPort = true;
        $conf->urlengine = array(
-         'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
@@ -189,7 +187,7 @@ class UTCreateUrls extends jUnitTestCase {
        );
 
       $trueResult[11]='https://testapp.local'.$trueResult[11];
-      $this->_doCompareUrl("significant, multiview = false", $urlList,$trueResult);
+      $this->_doCompareUrl("multiview = false", $urlList,$trueResult);
 
 
       $conf->urlengine['multiview']=true;
@@ -239,7 +237,7 @@ class UTCreateUrls extends jUnitTestCase {
           "/index/dynamic/method/foo"
        );
       $trueResult[11]='https://testapp.local'.$trueResult[11];
-      $this->_doCompareUrl("significant, multiview = true", $urlList,$trueResult);
+      $this->_doCompareUrl("multiview = true", $urlList,$trueResult);
 
     }
 
@@ -254,11 +252,9 @@ class UTCreateUrls extends jUnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'engine'=>'significant',
             'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
-            'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_maintests.xml',
             'checkHttpsOnParsing'=>true,
@@ -322,7 +318,7 @@ class UTCreateUrls extends jUnitTestCase {
          );
 
 
-        $this->_doCompareUrlLang("significant, multiview = false", $urlList, $trueResult);
+        $this->_doCompareUrlLang("multiview = false", $urlList, $trueResult);
 
         $conf->urlengine['multiview']=true;
         jUrl::getEngine(true);
@@ -354,7 +350,7 @@ class UTCreateUrls extends jUnitTestCase {
 
         );
 
-        $this->_doCompareUrlLang("significant, multiview = true", $urlList,$trueResult);
+        $this->_doCompareUrlLang("multiview = true", $urlList,$trueResult);
     }
 
     protected function _doCompareUrlLang($title, $urlList, $trueResult ){
@@ -382,11 +378,9 @@ class UTCreateUrls extends jUnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'engine'=>'significant',
             'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
-            'defaultEntrypoint'=>'index',
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
             'checkHttpsOnParsing'=>true,
@@ -436,11 +430,9 @@ class UTCreateUrls extends jUnitTestCase {
 
        $conf = jApp::config();
        $conf->urlengine = array(
-         'engine'=>'significant',
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'defaultEntrypoint'=>'index',
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
@@ -479,13 +471,10 @@ class UTCreateUrls extends jUnitTestCase {
 
         $conf = jApp::config();
         $conf->urlengine = array(
-          'engine'=>'significant',
           'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
-          'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
           'significantFile'=>'urls.xml',
           'urlScriptIdenc'=>'index'
         );
@@ -584,16 +573,13 @@ class UTCreateUrls extends jUnitTestCase {
         $conf = jApp::config();
         $conf->domainName = 'testapp.local';
         $conf->urlengine = array(
-          'engine'=>'significant',
           'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
           'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
@@ -622,16 +608,13 @@ class UTCreateUrls extends jUnitTestCase {
         $conf = jApp::config();
         $conf->domainName = 'testapp.local';
         $conf->urlengine = array(
-          'engine'=>'significant',
           'enableParser'=>true,
           'multiview'=>true,
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'defaultEntrypoint'=>'index',
           'notfoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
-          'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
           'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
           'urlScriptPath'=>'/',
