@@ -155,18 +155,14 @@ abstract class jRequest {
             $this->module = $this->params['module'];
         }
         else {
-            $this->module = $conf->startModule;
+            $this->module = 'main';
         }
 
         if (isset($this->params['action']) && trim($this->params['action']) != '') {
             $this->action = $this->params['action'];
         }
         else {
-            if($this->module == $conf->startModule)
-                $this->action = $conf->startAction;
-            else {
-                $this->action = 'default:index';
-            }
+            $this->action = 'default:index';
         }
         return array($this->module, $this->action);
     }

@@ -67,7 +67,7 @@ class xmlmapTest extends jUnitTestCase {
                           array("static1"=>array('value'=>'statval'))
                         );
         $ep->addUrlModule('/news', 'news');
-        $ep->addUrlHandler('/articles', 'superhandler', 'cms');
+        $ep->addUrlHandler('/articles', 'cms', 'superhandler');
         $ep->addUrlController("/dynamic/method", "firstmodule", "myctrl");
 
         $modifier->save();

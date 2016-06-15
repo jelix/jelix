@@ -1,3 +1,3 @@
 ;---
 
-startModule = "foo"
+isitme = "foo"

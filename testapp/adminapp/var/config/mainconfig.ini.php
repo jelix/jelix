@@ -2,9 +2,6 @@
 ;for security reasons , don't remove or modify the first line
 ;this file doesn't list all possible properties. See lib/jelix/core/defaultconfig.ini.php for that
 
-startModule=master_admin
-startAction="default:index"
-
 locale=en_US
 availableLocales=en_US
 charset=UTF-8

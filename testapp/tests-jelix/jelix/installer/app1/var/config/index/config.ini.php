@@ -1,2 +1,2 @@
 ;---
-startModule = "aaa"
+isitme = "aaa"

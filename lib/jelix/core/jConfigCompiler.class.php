@@ -133,16 +133,14 @@ class jConfigCompiler {
 
     static protected function checkMiscParameters($config) {
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
-        if(trim( $config->startAction) == '') {
-            $config->startAction = ':';
-        }
 
         if ($config->domainName == "" && isset($_SERVER['SERVER_NAME'])) {
             $config->domainName = $_SERVER['SERVER_NAME'];
         }
 
-        if ($config->urlengine['engine'] == 'simple' ||
-            $config->urlengine['engine'] == 'basic_significant') {
+        if (isset($config->urlengine['engine']) && (
+            $config->urlengine['engine'] == 'simple' ||
+            $config->urlengine['engine'] == 'basic_significant')) {
             throw new \Exception("The 'simple' and 'basic_significant' url engine do not exist anymore. use 'significant' url engine");
         }
 

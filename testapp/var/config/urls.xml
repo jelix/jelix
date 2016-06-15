@@ -7,7 +7,9 @@
         <url module="jelix_tests"/>
     </entrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true"/>
-    <jsonrpcentrypoint name="jsonrpc" default="true"/>
+    <entrypoint name="jsonrpc" type="jsonrpc" default="true">
+        <url pathinfo="/" module="jelix_tests" action="jstests:first"/>
+    </entrypoint>
     <entrypoint name="soap" type="soap" default="true"/>
     <entrypoint name="rest" type="classic"/>
     <entrypoint name="cmdline" type="cmdline"/>

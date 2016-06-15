@@ -1,9 +1,6 @@
 ;<?php die(''); ?>
 ;for security reasons , don't remove or modify the first line
 
-startModule = "jelix"
-startAction = "default:index"
-
 ; the default locale used in the application
 locale = "en_US"
 

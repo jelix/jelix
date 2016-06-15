@@ -37,13 +37,13 @@ class installAppTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('/index.php', $ep->scriptName);
         $this->assertEquals('index.php', $ep->file);
         $this->assertEquals('', $ep->type);
-        $this->assertEquals('aaa', $ep->getConfigObj()->startModule);
+        $this->assertEquals('aaa', $ep->getConfigObj()->isitme);
 
         $ep = $app->getEntryPointInfo('foo');
         $this->assertFalse($ep->isCliScript);
         $this->assertEquals('/foo.php', $ep->scriptName);
         $this->assertEquals('foo.php', $ep->file);
         $this->assertEquals('', $ep->type);
-        $this->assertEquals('foo', $ep->getConfigObj()->startModule);
+        $this->assertEquals('foo', $ep->getConfigObj()->isitme);
     }
 }
