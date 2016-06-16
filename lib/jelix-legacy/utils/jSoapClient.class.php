@@ -191,8 +191,6 @@ class jSoapClient {
         //$context = stream_context_create( array('http' => array('max_redirects' => 3)));
         //$profile['stream_context'] = $context;
         unset ($profile['_name']);
-jLog::log("client: $client");
-jLog::dump($profile);
         return new $client($wsdl, $profile);
     }
 }
