@@ -88,6 +88,9 @@ minifyEntryPoint=minify.php
 [logger]
 soap=file
 
+[fileLogger]
+soap=messages.log
+
 [mailLogger]
 ;email = root@localhost
 ;emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
