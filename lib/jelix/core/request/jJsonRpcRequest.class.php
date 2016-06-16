@@ -32,13 +32,7 @@ class jJsonRpcRequest extends jRequest {
      * Analyze the HTTP request and set the params property
      */
     protected function _initParams(){
-        global $HTTP_RAW_POST_DATA;
-        if(isset($HTTP_RAW_POST_DATA)){
-            $request = $HTTP_RAW_POST_DATA;
-        }else{
-            $request = file('php://input');
-            $request = implode("\n",$request);
-        }
+        $request = file_get_contents('php://input');
 
         // Decode the request
         $requestobj = jJsonRpc::decodeRequest($request);

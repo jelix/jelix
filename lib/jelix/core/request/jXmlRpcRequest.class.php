@@ -34,13 +34,8 @@ class jXmlRpcRequest extends jRequest {
      * Analyze the HTTP request and set the params property
      */
     protected function _initParams(){
-        global $HTTP_RAW_POST_DATA;
-        if(isset($HTTP_RAW_POST_DATA)){
-            $requestXml = $HTTP_RAW_POST_DATA;
-        }else{
-            $requestXml = file('php://input');
-            $requestXml = implode("\n",$requestXml);
-        }
+
+        $requestXml = file_get_contents('php://input');
 
         // Decode the request
         list($nom,$vars) = jXmlRpc::decodeRequest($requestXml);
