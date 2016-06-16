@@ -17,7 +17,7 @@ abstract class ClientRequest {
 
    /**
     * request parameters
-    * could set from $_GET, $_POST, or from data processing of $HTTP_RAW_POST_DATA
+    * could set from $_GET, $_POST, or from php://input data
     * @var array
     */
     public $params;
