@@ -10,7 +10,7 @@ namespace Jelix\Logger\Message;
 /**
  * class that handles a dump of a php value, for a logger
  */
-class Dump  extends \Jelix\Logger\MessageInterface {
+class Dump extends Text {
     /**
      * @var string the additionnal label
      */
