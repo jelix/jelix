@@ -146,8 +146,9 @@ class jSoapClient {
         }
         if (isset($profile['trace'])) {
             $profile['trace'] = intval($profile['trace']); // SoapClient recognize only true integer
-            if ($profile['trace'])
+            if ($profile['trace']) {
                 $client = 'SoapClientDebug';
+            }
         }
         if (isset($profile['exceptions'])) {
             $profile['exceptions'] = intval($profile['exceptions']); // SoapClient recognize only true integer
@@ -190,7 +191,8 @@ class jSoapClient {
         //$context = stream_context_create( array('http' => array('max_redirects' => 3)));
         //$profile['stream_context'] = $context;
         unset ($profile['_name']);
-
+jLog::log("client: $client");
+jLog::dump($profile);
         return new $client($wsdl, $profile);
     }
 }
