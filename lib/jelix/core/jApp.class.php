@@ -194,10 +194,7 @@ class jApp
 
         $configFileName = self::$_currentApp->configPath.'mainconfig.ini.php';
         if (!file_exists($configFileName)) {
-            // support of legacy configuration file
-            // TODO: support of defaultconfig.ini.php should be dropped in version > 1.6
-            $configFileName = self::$_currentApp->configPath.'defaultconfig.ini.php';
-            trigger_error('the config file defaultconfig.ini.php is deprecated and will be removed in the next major release', E_USER_DEPRECATED);
+            throw new \Exception("Don't find the mainconfig.ini.php file");
         }
         self::$_mainConfigFile = $configFileName;
 

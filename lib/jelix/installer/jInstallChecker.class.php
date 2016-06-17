@@ -310,12 +310,6 @@ class jInstallCheck extends jInstallCheckerBase {
                 $this->error('path.mainconfig.writable');
                 $ok = false;
             }
-            // TODO: remove it in future jelix > 1.6
-            elseif (file_exists(jApp::configPath('defaultconfig.ini.php'))
-                && !is_writable(jApp::configPath('defaultconfig.ini.php'))) {
-                $this->error('path.mainconfig.writable');
-                $ok = false;
-            }
             if (file_exists(jApp::configPath('installer.ini.php'))
                 && !is_writable(jApp::configPath('installer.ini.php'))) {
                 $this->error('path.installer.writable');
