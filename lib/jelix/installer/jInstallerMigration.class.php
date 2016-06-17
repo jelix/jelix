@@ -39,6 +39,25 @@ class jInstallerMigration {
 
     protected function migrate_1_7_0() {
         $this->reporter->message('Start migration to 1.7.0', 'notice');
+        $newConfigPath = jApp::appPath('app/config/');
+        if (!file_exists($newConfigPath)) {
+            $this->reporter->message('Create app/config/', 'notice');
+            jFile::createDir($newConfigPath);
+        }
+
+        if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
+            if (!file_exists(jApp::configPath('mainconfig.ini.php'))) {
+                if (!file_exists(jApp::configPath('defaultconfig.ini.php'))) {
+                    throw new \Exception("Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?");
+                }
+                $this->reporter->message('Move var/config/defaultconfig.ini.php to app/config/mainconfig.ini.php', 'notice');
+                rename(jApp::configPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+            }
+            else {
+                $this->reporter->message('Move var/config/mainconfig.ini.php to app/config/', 'notice');
+                rename(jApp::configPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+            }
+        }
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');
     }
 

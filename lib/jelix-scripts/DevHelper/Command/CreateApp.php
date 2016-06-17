@@ -236,6 +236,8 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($varPath.'uploads/');
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
+
+        $this->createDir(jApp::appConfigPath());
         $this->createDir($appPath.'install');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
@@ -299,7 +301,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
-        $this->createFile($configPath.'mainconfig.ini.php', 'var/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile(jApp::appConfigPath('mainconfig.ini.php'), 'var/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");

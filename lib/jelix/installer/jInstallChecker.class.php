@@ -273,6 +273,10 @@ class jInstallCheck extends jInstallCheckerBase {
             $this->error('path.var');
             $ok=false;
         }
+        if(!file_exists(jApp::appConfigPath())){
+            $this->error('path.config');
+            $ok=false;
+        }
         if(!file_exists(jApp::configPath())){
             $this->error('path.config');
             $ok=false;
@@ -285,11 +289,6 @@ class jInstallCheck extends jInstallCheckerBase {
             if (file_exists(jApp::configPath('profiles.ini.php'))
                 && !is_writable(jApp::configPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
-                $ok = false;
-            }
-            if (file_exists(jApp::mainConfigFile())
-                && !is_writable(jApp::mainConfigFile())) {
-                $this->error('path.mainconfig.writable');
                 $ok = false;
             }
             if (file_exists(jApp::configPath('installer.ini.php'))
@@ -335,14 +334,20 @@ class jInstallCheck extends jInstallCheckerBase {
     }
 
     protected function checkPhpSettings(){
-        if (file_exists(jApp::configPath("mainconfig.ini.php")))
-            $defaultconfig = parse_ini_file(jApp::configPath("mainconfig.ini.php"), true);
-        else
+        /*
+        if (file_exists(jApp::mainConfigFile())) {
+            $defaultconfig = parse_ini_file(jApp::mainConfigFile(), true);
+        }
+        else {
             $defaultconfig = array();
-        if (file_exists(jApp::configPath("index/config.ini.php")))
+        }
+        if (file_exists(jApp::configPath("index/config.ini.php"))) {
             $indexconfig = parse_ini_file(jApp::configPath("index/config.ini.php"), true);
-        else
+        }
+        else {
             $indexconfig = array();
+        }
+        */
 
         return parent::checkPhpSettings();
     }

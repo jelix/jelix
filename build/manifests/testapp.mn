@@ -6,6 +6,12 @@ cd testapp
   composer.json
   README.md
   Vagrantfile
+
+cd testapp/app/
+  .htaccess
+cd testapp/app/config
+  mainconfig.ini.php
+
 cd testapp/plugins
   .htaccess
 cd testapp/plugins/tpl/common/
@@ -392,6 +398,8 @@ cd testapp/tests-jelix/jelix/routing/
   urlUpgradeTest.php
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/app/config
+  __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/plugins
@@ -446,7 +454,7 @@ cd testapp/var/config
   auth_class.coord.ini.php
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
-  mainconfig.ini.php
+
   localconfig.ini.php.dist
   profiles.ini.php.dist
   urls.xml
