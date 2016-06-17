@@ -13,6 +13,7 @@
  * @package jelix
  */
 class jHtmlInstallChecker implements jIInstallReporter {
+    use jInstallerReporterTrait;
 
     /**
      * @var \jInstallerMessageProvider
@@ -28,15 +29,16 @@ class jHtmlInstallChecker implements jIInstallReporter {
     }
 
     function message($message, $type=''){
+        $this->addMessageType($type);
         echo '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
     }
     
-    function end($results){
+    function end(){
         echo '</ul>';
-        
-        $nbError = $results['error'];
-        $nbWarning = $results['warning'];
-        $nbNotice = $results['notice'];
+
+        $nbError = $this->getMessageCounter('error');
+        $nbWarning = $this->getMessageCounter('warning');
+        $nbNotice = $this->getMessageCounter('notice');
 
         echo '<div class="results">';
         if ($nbError) {

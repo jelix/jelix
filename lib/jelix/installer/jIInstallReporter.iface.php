@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -20,21 +20,24 @@ interface jIInstallReporter {
     /**
      * start the process
      */
-    function start();
+    public function start();
 
     /**
      * displays a message
      * @param string $message the message to display
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
-    function message($message, $type='');
+    public function message($message, $type='');
 
     /**
      * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
      */
-    function end($results);
+    public function end();
 
+    /**
+     * return the number of messages of a specific type
+     * @return integer
+     */
+    public function getMessageCounter($type);
 }
 

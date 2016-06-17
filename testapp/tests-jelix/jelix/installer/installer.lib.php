@@ -56,6 +56,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
  *
  */
 class testInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
 
     public $startCounter = 0;
 
@@ -68,10 +69,11 @@ class testInstallReporter implements jIInstallReporter {
     }
 
     function message($message, $type='') {
+        $this->addMessageType($type);
         $this->messages[] = array($message, $type);
     }
 
-    function end($results) {
+    function end() {
         $this->endCounter ++;
     }
 }

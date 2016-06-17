@@ -12,12 +12,15 @@
 
 include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
 include (JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
+include (JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 
 /**
  * an HTML reporter for jInstallChecker
  * @package jelix
  */
 class checkZoneInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
+
     public $trace = '';
     protected $messageProvider = null;
     protected $list='';
@@ -26,20 +29,23 @@ class checkZoneInstallReporter implements jIInstallReporter {
         $this->messageProvider = $messageProvider;
     }
     
-    function start(){
+    function start($message){
     }
     function message($message, $type=''){
-        if ($type == 'error' || $type == 'warning' || $type == 'notice')
+        $this->addMessageType($type);
+        if ($type == 'error' || $type == 'warning' || $type == 'notice') {
             $this->list .= '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
+        }
     }
 
-    function end($results){
-        if($this->list !='')
+    function end($message){
+        if($this->list !='') {
             $this->trace = '<ul class="checkresults">'.$this->list.'</ul>';
+        }
 
-        $nbError = $results['error'];
-        $nbWarning = $results['warning'];
-        $nbNotice = $results['notice'];
+        $nbError = $this->getMessageCounter('error');
+        $nbWarning = $this->getMessageCounter('warning');
+        $nbNotice = $this->getMessageCounter('notice');
 
         $this->trace .= '<div class="results">';
         if($nbError){

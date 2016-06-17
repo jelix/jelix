@@ -9,6 +9,7 @@
 */
 
 require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
@@ -25,6 +26,8 @@ require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
  * simple text reporter
  */
 class textInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
+
     /**
      * @var string error, notice or warning
      */
@@ -45,6 +48,7 @@ class textInstallReporter implements jIInstallReporter {
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
     function message($message, $type='') {
+        $this->addMessageType($type);
         if (($type == 'error' && $this->level != '')
             || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
             || (($type == 'notice' || $type =='') && $this->level == 'notice'))
@@ -53,10 +57,8 @@ class textInstallReporter implements jIInstallReporter {
 
     /**
      * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
      */
-    function end($results) {
+    function end() {
         if ($this->level == 'notice')
             echo "Installation ended.\n";
     }
@@ -66,6 +68,7 @@ class textInstallReporter implements jIInstallReporter {
  * a reporter which reports... nothing
  */
 class ghostInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
 
     function start() {
     }
@@ -76,14 +79,13 @@ class ghostInstallReporter implements jIInstallReporter {
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
     function message($message, $type='') {
+        $this->addMessageType($type);
     }
 
     /**
      * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
      */
-    function end($results) {
+    function end() {
     }
 }
 
@@ -195,18 +197,6 @@ class jInstaller {
      */
     public $messages;
 
-    /** @var integer the number of errors appeared during the installation */
-    public $nbError = 0;
-
-    /** @var integer the number of ok messages appeared during the installation */
-    public $nbOk = 0;
-
-    /** @var integer the number of warnings appeared during the installation */
-    public $nbWarning = 0;
-
-    /** @var integer the number of notices appeared during the installation */
-    public $nbNotice = 0;
-
     /**
      * the mainconfig.ini.php combined with the defaultconfig.ini.php
      * @var \Jelix\IniFile\MultiIniModifier
@@ -232,7 +222,7 @@ class jInstaller {
      * @param jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct ($reporter, $lang='') {
+    function __construct (jIInstallReporter $reporter, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
 
@@ -840,52 +830,39 @@ class jInstaller {
     }
     
     protected function startMessage () {
-        $this->nbError = 0;
-        $this->nbOk = 0;
-        $this->nbWarning = 0;
-        $this->nbNotice = 0;
         $this->reporter->start();
     }
-    
+
     protected function endMessage() {
-        $this->reporter->end(array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice));
+        $this->reporter->end();
     }
 
     protected function error($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'error');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbError ++;
+        $this->reporter->message($msg, 'error');
     }
 
     protected function ok($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, '');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbOk ++;
+        $this->reporter->message($msg, '');
     }
 
     protected function warning($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'warning');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbWarning ++;
+        $this->reporter->message($msg, 'warning');
     }
 
     protected function notice($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'notice');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbNotice ++;
+        $this->reporter->message($msg, 'notice');
     }
-
 }
 
