@@ -3,13 +3,15 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2012 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
+require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
@@ -22,72 +24,6 @@ require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 
-/**
- * simple text reporter
- */
-class textInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
-
-    /**
-     * @var string error, notice or warning
-     */
-    protected $level;
-    
-    function __construct($level= 'notice') {
-       $this->level = $level; 
-    }
-    
-    function start() {
-        if ($this->level == 'notice')
-            echo "Installation start..\n";
-    }
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    function message($message, $type='') {
-        $this->addMessageType($type);
-        if (($type == 'error' && $this->level != '')
-            || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
-            || (($type == 'notice' || $type =='') && $this->level == 'notice'))
-        echo ($type != ''?'['.$type.'] ':'').$message."\n";
-    }
-
-    /**
-     * called when the installation is finished
-     */
-    function end() {
-        if ($this->level == 'notice')
-            echo "Installation ended.\n";
-    }
-}
-
-/**
- * a reporter which reports... nothing
- */
-class ghostInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
-
-    function start() {
-    }
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    function message($message, $type='') {
-        $this->addMessageType($type);
-    }
-
-    /**
-     * called when the installation is finished
-     */
-    function end() {
-    }
-}
 
 
 

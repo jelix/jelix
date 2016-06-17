@@ -8,11 +8,16 @@
 */
 
 require_once (__DIR__.'/../application.init.php');
-
 jApp::setEnv('install');
 
-$installer = new jInstaller(new textInstallReporter());
+jAppManager::close();
 
+// launch the low-level migration
+$migrator = new \jInstallerMigration(new textInstallReporter('notice', 'Low-level migration'));
+$migrator->migrate();
+
+// we can now launch the installer/updater
+$installer = new jInstaller(new textInstallReporter());
 $installer->installApplication();
 
 try {
@@ -21,3 +26,4 @@ try {
 catch(Exception $e) {
     echo "WARNING: temporary files cannot be deleted because of this error: ".$e->getMessage().".\nWARNING: Delete temp files by hand immediately!\n";
 }
+jAppManager::open();

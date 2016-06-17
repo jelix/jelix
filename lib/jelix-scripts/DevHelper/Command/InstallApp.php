@@ -34,12 +34,23 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
 
         \jAppManager::close();
         if ($this->verbose()) {
-            $reporter = new \textInstallReporter();
+            $reporter = new \textInstallReporter('notice', 'Low-level migration');
+        }
+        else {
+            $reporter = new \textInstallReporter('error', 'Low-level migration');
+        }
+
+        // launch the low-level migration
+        $migrator = new \jInstallerMigration($reporter);
+        $migrator->migrate();
+
+        // we can now launch the installer/updater
+        if ($this->verbose()) {
+            $reporter = new \textInstallReporter('notice');
         }
         else {
             $reporter = new \textInstallReporter('error');
         }
-
         $installer = new \jInstaller($reporter);
 
         if ($input->getOption('entry-point')) {

@@ -346,6 +346,7 @@ cd lib/jelix/forms/controls
 
 cd lib/jelix/installer
   closed.html
+  ghostInstallReporter.class.php
   jHtmlInstallChecker.class.php
   jIInstallerComponent.iface.php
   jIInstallReporter.iface.php
@@ -359,12 +360,14 @@ cd lib/jelix/installer
   jInstallerEntryPoint.class.php
   jInstallerException.class.php
   jInstallerMessageProvider.class.php
+  jInstallerMigration.class.php
   jInstallerModule.class.php
   jInstallerModuleInfos.class.php
   jInstallerPlugin.class.php
   jInstallReporterTrait.trait.php
   messageProvider.en.inc.php
   messageProvider.fr.inc.php
+  textInstallReporter.class.php
 
 cd lib/jelix/kvdb
 * jKVDriver.class.php

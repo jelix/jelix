@@ -14,9 +14,14 @@ jApp::setEnv('install');
 
 jAppManager::close();
 
-$installer = new jInstaller(new textInstallReporter());
+// launch the low-level migration
+$migrator = new \jInstallerMigration(new textInstallReporter('notice', 'Low-level migration'));
+$migrator->migrate();
 
+// we can now launch the installer/updater
+$installer = new jInstaller(new textInstallReporter());
 $installer->installApplication();
+
 try {
     jAppManager::clearTemp();    
 }
