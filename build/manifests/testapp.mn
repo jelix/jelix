@@ -370,6 +370,8 @@ cd testapp/tests-jelix/jelix/installer/
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/
   __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/app/config/
+  __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/plugins
