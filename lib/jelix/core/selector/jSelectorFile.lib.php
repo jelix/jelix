@@ -26,7 +26,7 @@ class jSelectorVar extends jSelectorSimpleFile {
 }
 
 /**
- * Selector for files stored in the config directory
+ * Selector for files stored in the var/config directory
  *
  * @package    jelix
  * @subpackage core_selector
@@ -38,6 +38,21 @@ class jSelectorCfg extends jSelectorSimpleFile {
         parent::__construct($sel);
     }
 }
+
+/**
+ * Selector for files stored in the app/config directory
+ *
+ * @package    jelix
+ * @subpackage core_selector
+ */
+class jSelectorAppCfg extends jSelectorSimpleFile {
+    protected $type = 'appcfg';
+    function __construct($sel){
+        $this->_basePath = jApp::appConfigPath();
+        parent::__construct($sel);
+    }
+}
+
 
 /**
  * Selector for files stored in the temp directory
