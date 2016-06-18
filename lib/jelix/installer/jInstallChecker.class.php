@@ -341,8 +341,8 @@ class jInstallCheck extends jInstallCheckerBase {
         else {
             $defaultconfig = array();
         }
-        if (file_exists(jApp::configPath("index/config.ini.php"))) {
-            $indexconfig = parse_ini_file(jApp::configPath("index/config.ini.php"), true);
+        if (file_exists(jApp::appConfigPath("index/config.ini.php"))) {
+            $indexconfig = parse_ini_file(jApp::appConfigPath("index/config.ini.php"), true);
         }
         else {
             $indexconfig = array();

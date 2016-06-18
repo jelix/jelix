@@ -40,6 +40,7 @@ class jConfigCompiler {
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
+        $appConfigPath = jApp::appConfigPath();
         $configPath = jApp::configPath();
 
         if($tempPath=='/'){
@@ -71,10 +72,10 @@ class jConfigCompiler {
         if ($configFile == 'mainconfig.ini.php') {
             throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
         }
-        if(!file_exists($configPath.$configFile)) {
+        if(!file_exists($appConfigPath.$configFile)) {
             throw new Exception("Configuration file is missing -- $configFile", 5);
         }
-        if( false === @jelix_read_ini($configPath.$configFile, $config)) {
+        if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
             throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
 

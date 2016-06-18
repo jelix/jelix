@@ -45,6 +45,7 @@ class jInstallerMigration {
             jFile::createDir($newConfigPath);
         }
 
+        // move mainconfig.php to app/config/
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
             if (!file_exists(jApp::configPath('mainconfig.ini.php'))) {
                 if (!file_exists(jApp::configPath('defaultconfig.ini.php'))) {
@@ -58,6 +59,27 @@ class jInstallerMigration {
                 rename(jApp::configPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
+
+        // move entrypoint configs to app/config
+        $projectxml = simplexml_load_file(jApp::appPath('project.xml'));
+        // read all entry points data
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $configFile = (string)$entrypoint['config'];
+            $dest = jApp::appConfigPath($configFile);
+            if (file_exists($dest)) {
+                continue;
+            }
+
+            if (!file_exists(jApp::configPath($configFile))) {
+                $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
+                continue;
+            }
+
+            $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
+            jFile::createDir(dirname($dest));
+            rename(jApp::configPath($configFile), $dest);
+        }
+
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');
     }
 

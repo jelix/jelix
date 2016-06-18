@@ -419,8 +419,11 @@ abstract class jInstallerBase {
         elseif (strpos($path, 'config:') === 0) {
             $path = str_replace('config:', jApp::configPath(), $path);
         }
+        elseif (strpos($path, 'appconfig:') === 0) {
+            $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
+        }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::configPath($this->entryPoint->getConfigFile()));
+            $p = dirname(jApp::appConfigPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         return $path;

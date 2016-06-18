@@ -107,13 +107,15 @@ cd lib/jelix-scripts/templates/var/config/
   profiles.ini.php.tpl
   preferences.ini.php.tpl
   urls.xml.tpl
-cd lib/jelix-scripts/templates/var/config/index/
+cd lib/jelix-scripts/templates/app/config/index/
   config.ini.php.tpl
-cd lib/jelix-scripts/templates/var/config/jsonrpc/
+cd lib/jelix-scripts/templates/app/config/jsonrpc/
   config.ini.php.tpl
-cd lib/jelix-scripts/templates/var/config/xmlrpc/
+cd lib/jelix-scripts/templates/app/config/xmlrpc/
   config.ini.php.tpl
-cd lib/jelix-scripts/templates/var/config/cmdline/
+cd lib/jelix-scripts/templates/app/config/cmdline/
+  config.ini.php.tpl
+cd lib/jelix-scripts/templates/app/config/soap/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/tests/
   runtests.php

@@ -57,7 +57,7 @@ class jConfig {
             $lc = jApp::configPath('localconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(jApp::configPath($configFile))>$t
+                || filemtime(jApp::appConfigPath($configFile))>$t
                 || (file_exists($lc) && filemtime($lc)>$t)){
                 // one of the config files have been modified: let's compile
                 self::$fromCache = false;

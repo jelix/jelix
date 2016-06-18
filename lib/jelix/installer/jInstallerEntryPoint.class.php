@@ -23,7 +23,7 @@ class jInstallerEntryPoint {
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/var/config/index/config.ini.php
+     *       ex: <apppath>/app/config/index/config.ini.php
      */
     protected $configFile;
 
@@ -81,7 +81,7 @@ class jInstallerEntryPoint {
      * @param \Jelix\IniFile\MultiIniModifier $mainConfig   the mainconfig.ini.php file combined with defaultconfig.ini.php
      * @param \Jelix\IniFile\MultiIniModifier $localConfig   the localconfig.ini.php file combined with $mainConfig
      * @param string $configFile the path of the configuration file, relative
-     *                           to the var/config directory
+     *                           to the app/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
@@ -95,7 +95,7 @@ class jInstallerEntryPoint {
         $this->file = $file;
         $this->mainConfigIni = $mainConfig;
         $this->localConfigIni = $localConfig;
-        $this->epConfigIni = new \Jelix\IniFile\IniModifier(jApp::configPath($configFile));
+        $this->epConfigIni = new \Jelix\IniFile\IniModifier(jApp::appConfigPath($configFile));
         $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,

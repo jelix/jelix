@@ -198,7 +198,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {
 
-            $configFile = \jApp::configPath($entryPoint['config']);
+            $configFile = \jApp::appConfigPath($entryPoint['config']);
             $epconfig = new \Jelix\IniFile\IniModifier($configFile);
 
             if ($this->allEntryPoint) {

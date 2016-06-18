@@ -378,9 +378,9 @@ cd testapp/tests-jelix/jelix/installer/app1/plugins
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/var/config
   __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/var/config/foo
+cd testapp/tests-jelix/jelix/installer/app1/app/config/foo
   __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/var/config/index
+cd testapp/tests-jelix/jelix/installer/app1/app/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/var/log
   __ALL__
@@ -410,7 +410,7 @@ cd testapp/tests-jelix/jelix/routing/app1/www
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/config
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/var/config/index
+cd testapp/tests-jelix/jelix/routing/app1/app/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
   __ALL__
@@ -462,17 +462,17 @@ cd testapp/var/config
   urls.xml
   urls_rest.xml
   urls_old.xml
-cd testapp/var/config/index
+cd testapp/app/config/index
   config.ini.php
-cd testapp/var/config/rest
+cd testapp/app/config/rest
   config.ini.php
-cd testapp/var/config/xmlrpc
+cd testapp/app/config/xmlrpc
   config.ini.php
-cd testapp/var/config/jsonrpc
+cd testapp/app/config/jsonrpc
   config.ini.php
-cd testapp/var/config/cmdline
+cd testapp/app/config/cmdline
   config.ini.php
-cd testapp/var/config/soap
+cd testapp/app/config/soap
   config.ini.php
 cd testapp/var/config/urlsfiles
   url_maintests.xml

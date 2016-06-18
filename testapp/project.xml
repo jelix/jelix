@@ -23,7 +23,7 @@
         <entry file="news.php" config="index/config.ini.php" />
         <entry file="soap.php" config="soap/config.ini.php" type="soap"/>
         <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" type="jsonrpc"/>
-        <entry file="xmlrpc.php" config="jsonrpc/config.ini.php" type="xmlrpc"/>
+        <entry file="xmlrpc.php" config="xmlrpc/config.ini.php" type="xmlrpc"/>
         <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
     </entrypoints>
 </project>
