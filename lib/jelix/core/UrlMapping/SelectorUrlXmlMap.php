@@ -11,9 +11,9 @@ namespace Jelix\Routing\UrlMapping;
 /**
  * a specific selector for the xml files which contains the configuration of the UrlMapper.
  */
-class SelectorUrlXmlMap extends \jSelectorCfg
+class SelectorUrlXmlMap extends \jSelectorAppCfg
 {
-    public $type = 'urlcfgsig';
+    public $type = 'urlxmlmap';
 
     public function getCompiler()
     {

@@ -131,7 +131,7 @@ class testInstallerMain extends jInstaller {
         $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(), jApp::mainConfigFile());
         $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, jApp::configPath('localconfig.ini.php'));
 
-        copy (jApp::configPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
+        copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
         $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('installer_urls.xml'), true);
 
         $this->messages = new jInstallerMessageProvider('en');

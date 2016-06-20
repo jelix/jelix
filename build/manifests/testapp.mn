@@ -11,6 +11,27 @@ cd testapp/app/
   .htaccess
 cd testapp/app/config
   mainconfig.ini.php
+  urls.xml
+  urls_rest.xml
+cd testapp/app/config/index
+  config.ini.php
+cd testapp/app/config/rest
+  config.ini.php
+cd testapp/app/config/xmlrpc
+  config.ini.php
+cd testapp/app/config/jsonrpc
+  config.ini.php
+cd testapp/app/config/cmdline
+  config.ini.php
+cd testapp/app/config/soap
+  config.ini.php
+cd testapp/var/config/urlsfiles
+  url_maintests.xml
+  url_dedicatedmodule.xml
+  url_defaultaction.xml
+  url_empty.xml
+  url_nodefaultep.xml
+  url_twodefaultep.xml
 
 cd testapp/plugins
   .htaccess
@@ -456,31 +477,10 @@ cd testapp/var/config
   auth_class.coord.ini.php
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
-
   localconfig.ini.php.dist
   profiles.ini.php.dist
-  urls.xml
-  urls_rest.xml
-  urls_old.xml
-cd testapp/app/config/index
-  config.ini.php
-cd testapp/app/config/rest
-  config.ini.php
-cd testapp/app/config/xmlrpc
-  config.ini.php
-cd testapp/app/config/jsonrpc
-  config.ini.php
-cd testapp/app/config/cmdline
-  config.ini.php
-cd testapp/app/config/soap
-  config.ini.php
-cd testapp/var/config/urlsfiles
-  url_maintests.xml
-  url_dedicatedmodule.xml
-  url_defaultaction.xml
-  url_empty.xml
-  url_nodefaultep.xml
-  url_twodefaultep.xml
+
+
 cd testapp/var/locales/fr_FR/jelix_tests/locales/
   newoverload.UTF-8.properties
   overload.UTF-8.properties
@@ -495,3 +495,44 @@ cd testapp/var/db/sqlite3/
 
 cd testapp/temp/
   .dummy
+
+cd testapp/adminapp/
+  .gitignore
+  .htaccess
+  application.init.php
+  cmd.php
+  project.xml
+
+cd testapp/adminapp/app/config/
+  mainconfig.ini.php
+  urls.xml
+
+cd testapp/adminapp/app/config/index/
+  config.ini.php
+
+cd testapp/adminapp/install/
+  installer.php
+
+cd testapp/adminapp/responses/
+  adminHtmlResponse.class.php
+  adminLoginHtmlResponse.class.php
+
+cd testapp/adminapp/temp
+  .dummy
+
+cd testapp/adminapp/var/config/
+  localconfig.ini.dist
+  preferences.ini.php
+  profiles.ini.php.dist
+cd testapp/adminapp/var/config/index
+  auth.coord.ini.php
+
+cd testapp/adminapp/var/log/
+  .dummy
+cd testapp/adminapp/var/mails/
+  .dummy
+cd testapp/adminapp/var/overloads/
+  .dummy
+cd testapp/adminapp/var/themes/default/
+  .dummy
+

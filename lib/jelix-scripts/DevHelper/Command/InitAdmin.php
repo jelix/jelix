@@ -108,8 +108,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $inifile->setValue('jacldb.access', '0', 'modules');
         $inifile->save();
 
-
-        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($inifile->getValue('significantFile', 'urlengine'), true);
+        $urlsFile = jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));
         $xmlEp->addUrlModule('', 'master_admin');

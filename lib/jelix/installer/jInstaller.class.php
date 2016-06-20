@@ -179,7 +179,7 @@ class jInstaller {
                                                                  $localConfig);
         $this->installerIni = $this->getInstallerIni();
 
-        $urlfile = jApp::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
+        $urlfile = jApp::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
         $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
 
         // be sure temp path is ready
@@ -189,7 +189,6 @@ class jInstaller {
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
         $this->installerIni->save();
     }
-
     /**
      * @internal mainly for tests
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file

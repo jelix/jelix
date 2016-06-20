@@ -100,7 +100,7 @@ class UTCreateUrls extends jUnitTestCase {
       $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
       $urlList[]= array('jelix_tests~urlsig:url6', array('rubrique'=>'actualite',  'id_art'=>'65'));
       $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
-      // celle ci n'a pas de définition dans urls.xml *exprés*
+      // For this one, no definition in urls.xml, this is intentional
       $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
       $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
       $urlList[]= array('news~bar', array('aaa'=>'bbb'));

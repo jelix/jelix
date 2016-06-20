@@ -103,6 +103,7 @@ class jIncluder {
         }
 
         $sourcefile = $aSelector->getPath();
+
 #ifnot ENABLE_OPTIMIZED_SOURCE
         if($sourcefile == '' || !file_exists($sourcefile)){
             throw new jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));

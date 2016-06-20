@@ -99,6 +99,7 @@ cd lib/jelix-scripts/templates/scripts
   cmdline.php.tpl
 cd lib/jelix-scripts/templates/app/config/
 * mainconfig.ini.php.tpl
+  urls.xml.tpl
 cd lib/jelix-scripts/templates/var/config/
   auth.coord.ini.php.tpl
   jacl2.coord.ini.php.tpl
@@ -106,7 +107,6 @@ cd lib/jelix-scripts/templates/var/config/
   localconfig.ini.php.tpl
   profiles.ini.php.tpl
   preferences.ini.php.tpl
-  urls.xml.tpl
 cd lib/jelix-scripts/templates/app/config/index/
   config.ini.php.tpl
 cd lib/jelix-scripts/templates/app/config/jsonrpc/
