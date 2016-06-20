@@ -39,7 +39,7 @@ cd testapp/plugins/tpl/common/
   meta.testinc.php
 cd testapp/plugins/formwidget/textarea_as_input_html
   textarea_as_input_html.formwidget.php
-cd testapp/responses
+cd testapp/app/responses
   myHtmlResponse.class.php
 cd testapp/vagrant
   create_pgsql_db.sh 
@@ -513,7 +513,7 @@ cd testapp/adminapp/app/config/index/
 cd testapp/adminapp/install/
   installer.php
 
-cd testapp/adminapp/responses/
+cd testapp/adminapp/app/responses/
   adminHtmlResponse.class.php
   adminLoginHtmlResponse.class.php
 

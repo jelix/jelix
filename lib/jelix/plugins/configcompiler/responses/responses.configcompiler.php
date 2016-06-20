@@ -36,7 +36,7 @@ class responsesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginI
         foreach ($copylist as $type=>$class) {
             if (strpos($class,'app:') === 0) {
                 $config->{$list}[$type] = $class = substr($class, 4);
-                $config->{$list}[$type.'.path'] = $path = jApp::appPath('responses/'.$class.'.class.php');
+                $config->{$list}[$type.'.path'] = $path = jApp::appPath('app/responses/'.$class.'.class.php');
                 if (file_exists($path))
                     continue;
             }
@@ -57,7 +57,7 @@ class responsesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginI
                 $config->{$list}[$type.'.path'] = $path;
                 continue;
             }
-            else if (file_exists($path=jApp::appPath('responses/'.$class.'.class.php'))) {
+            else if (file_exists($path=jApp::appPath('app/responses/'.$class.'.class.php'))) {
                 $config->{$list}[$type.'.path'] = $path;
                 continue;
             }

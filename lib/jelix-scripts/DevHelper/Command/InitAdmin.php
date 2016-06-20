@@ -87,12 +87,12 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                                               \jApp::appConfigPath($ep['config']));
 
         $params = array();
-        $this->createFile(\jApp::appPath('responses/adminHtmlResponse.class.php'),
-                          'responses/adminHtmlResponse.class.php.tpl',
+        $this->createFile(\jApp::appPath('app/responses/adminHtmlResponse.class.php'),
+                          'app/responses/adminHtmlResponse.class.php.tpl',
                           $params,
                           "Response for admin interface");
-        $this->createFile(\jApp::appPath('responses/adminLoginHtmlResponse.class.php'),
-                          'responses/adminLoginHtmlResponse.class.php.tpl',
+        $this->createFile(\jApp::appPath('app/responses/adminLoginHtmlResponse.class.php'),
+                          'app/responses/adminLoginHtmlResponse.class.php.tpl',
                           $params,
                           "Response for login page");
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');

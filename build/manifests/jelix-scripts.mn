@@ -86,7 +86,7 @@ cd lib/jelix-scripts/templates/module/
   template.tpl
   urls.xml.tpl
   zone.tpl
-cd lib/jelix-scripts/templates/responses/
+cd lib/jelix-scripts/templates/app/responses/
   adminHtmlResponse.class.php.tpl
   adminLoginHtmlResponse.class.php.tpl
   myHtmlResponse.class.php.tpl

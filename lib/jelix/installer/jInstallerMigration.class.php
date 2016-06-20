@@ -101,6 +101,11 @@ class jInstallerMigration {
         }
 
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');
+
+        if (!file_exists(jApp::appPath('app/responses'))) {
+            $this->reporter->message("Move responses/ to app/responses/", 'notice');
+            rename(jApp::appPath('responses'), jApp::appPath('app/responses'));
+        }
     }
 
     protected function error($msg){
