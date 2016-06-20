@@ -232,8 +232,8 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($configPath);
         $this->createDir(\jApp::appConfigPath('index/'));
         $this->createDir($varPath.'overloads/');
-        $this->createDir($varPath.'themes/');
-        $this->createDir($varPath.'themes/default/');
+        $this->createDir(\jApp::appPath('app/themes'));
+        $this->createDir(\jApp::appPath('app/themes/default/'));
         $this->createDir($varPath.'uploads/');
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
@@ -290,7 +290,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(\jApp::varPath().'mails/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::varPath().'sessions/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::varPath().'overloads/.dummy', 'dummy.tpl', array());
-        $this->createFile(\jApp::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile(\jApp::appPath().'app/themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::scriptsPath().'.dummy', 'dummy.tpl', array());
