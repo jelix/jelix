@@ -42,11 +42,19 @@ class jSelectorForm extends jSelectorModule {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
 
-        // we see if the forms have been redefined
+        // we see if the forms have been redefined in var/
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
         if (is_readable ($overloadedPath)){
            $this->_path = $overloadedPath;
-           $this->_where = 'overloaded/';
+           $this->_where = 'var/';
+           return;
+        }
+
+        // we see if the forms have been redefined in app/
+        $overloadedPath = jApp::appPath('app/overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
+        if (is_readable ($overloadedPath)){
+           $this->_path = $overloadedPath;
+           $this->_where = 'app/';
            return;
         }
 
@@ -60,11 +68,11 @@ class jSelectorForm extends jSelectorModule {
     protected function _createCachePath(){
         // don't share the same cache for all the possible dirs
         // in case of overload removal
-        $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_15'.$this->_cacheSuffix);
+        $this->_cachePath = jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'/'.$this->resource.'_15'.$this->_cacheSuffix);
     }
 
     public function getCompiledBuilderFilePath ($type){
-        return jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'~'.$this->resource.'_builder_'.$type.$this->_cacheSuffix);
+        return jApp::tempPath('compiled/'.$this->_dirname.$this->_where.$this->module.'/'.$this->resource.'_builder_'.$type.$this->_cacheSuffix);
     }
 
 }

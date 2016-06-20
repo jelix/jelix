@@ -519,6 +519,10 @@ cd testapp/adminapp/install/
 cd testapp/adminapp/app/responses/
   adminHtmlResponse.class.php
   adminLoginHtmlResponse.class.php
+cd testapp/adminapp/app/overloads/
+  .dummy
+cd testapp/adminapp/app/themes/default/
+  .dummy
 
 cd testapp/adminapp/temp
   .dummy
@@ -533,9 +537,5 @@ cd testapp/adminapp/var/config/index
 cd testapp/adminapp/var/log/
   .dummy
 cd testapp/adminapp/var/mails/
-  .dummy
-cd testapp/adminapp/var/overloads/
-  .dummy
-cd testapp/adminapp/var/themes/default/
   .dummy
 

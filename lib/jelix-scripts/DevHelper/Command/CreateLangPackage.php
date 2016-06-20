@@ -58,10 +58,10 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp {
             }
 
             if ($input->getOption('to-overload')) {
-                $target_dir = \jApp::varPath('overloads/'.$module.'/locales/'.$lang.'/');
+                $target_dir = \jApp::appPath('app/overloads/'.$module.'/locales/'.$lang.'/');
             }
             else {
-                $target_dir = \jApp::varPath('locales/'.$lang.'/'.$module.'/locales/');
+                $target_dir = \jApp::appPath('app/locales/'.$lang.'/'.$module.'/locales/');
             }
 
             \jFile::createDir($target_dir);
