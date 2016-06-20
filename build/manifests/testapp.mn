@@ -34,6 +34,12 @@ cd testapp/app/config/urlsfiles
   url_twodefaultep.xml
 cd testapp/app/themes/default/testapp
   hello2.tpl
+cd testapp/app/locales/fr_FR/jelix_tests/locales/
+  newoverload.UTF-8.properties
+  overload.UTF-8.properties
+
+
+
 
 cd testapp/plugins
   .htaccess
@@ -483,9 +489,6 @@ cd testapp/var/config
   profiles.ini.php.dist
 
 
-cd testapp/var/locales/fr_FR/jelix_tests/locales/
-  newoverload.UTF-8.properties
-  overload.UTF-8.properties
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
