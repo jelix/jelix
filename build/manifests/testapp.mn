@@ -232,7 +232,6 @@ cd testapp/modules/jelix_tests/locales/en_EN
 cd testapp/modules/jelix_tests/templates
   jstest_include.tpl
   jstest_jforms.tpl
-  jstest_jsonrpc.tpl
   jstest_jsonrpc2.tpl
   menu.tpl
   test_include.tpl
