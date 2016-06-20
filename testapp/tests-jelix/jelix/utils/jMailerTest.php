@@ -39,11 +39,11 @@ class jMailerTest extends PHPUnit_Framework_TestCase {
         $mail->IsFile();
         $mail->Send();
 
-        $this->assertEquals(jApp::varPath().'mails/', $mail->filePath);
-        $this->assertEquals(jApp::varPath().'mails/mail.txt', $mail->getStorageFile2());
+        $this->assertEquals(jApp::varPath('mails/'), $mail->filePath);
+        $this->assertEquals(jApp::varPath('mails/mail.txt'), $mail->getStorageFile2());
 
-        $this->assertTrue(file_exists(jApp::varPath().'mails/mail.txt'));
-        $content = file_get_contents(jApp::varPath().'mails/mail.txt');
+        $this->assertTrue(file_exists(jApp::varPath('mails/mail.txt')));
+        $content = file_get_contents(jApp::varPath('mails/mail.txt'));
 
         $this->assertTrue(strpos($content, 'To: titi@machin.local, toto@machin.local') !== false);
         $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);

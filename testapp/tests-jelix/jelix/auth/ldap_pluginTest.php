@@ -32,7 +32,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         
-        $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
+        $conf = parse_ini_file(jApp::configPath('auth_ldap.coord.ini.php'),true);
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 

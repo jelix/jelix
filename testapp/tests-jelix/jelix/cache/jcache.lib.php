@@ -29,7 +29,7 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
     }
 
     function setUp() {
-        $conf = parse_ini_file(jApp::configPath().'profiles.ini.php', true);
+        $conf = parse_ini_file(jApp::configPath('profiles.ini.php'), true);
         if (isset($conf['jcache:'.$this->profile]) && $conf['jcache:'.$this->profile]['enabled']) {
             $this->conf = $conf['jcache:'.$this->profile];
         }
