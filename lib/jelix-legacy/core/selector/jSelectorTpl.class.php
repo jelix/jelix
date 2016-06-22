@@ -58,29 +58,55 @@ class jSelectorTpl extends jSelectorModule {
         $lpath = $this->module.'/'.jApp::config()->locale.'/'.$this->resource;
 
         if(($theme = jApp::config()->theme) != 'default'){
-            // check if there is a redefined template for the current theme
-            $this->_where = 'themes/'.$theme.'/'.$lpath;
-            $this->_path = jApp::varPath($this->_where.'.tpl');
+            // check if there is a redefined template for the current theme in var/theme
+            $this->_where = 'var/themes/'.$theme.'/'.$lpath;
+            $this->_path = jApp::varPath('themes/'.$theme.'/'.$lpath.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
-            // check if there is a redefined template for the current localized theme
-            $this->_where = 'themes/'.$theme.'/'.$path;
-            $this->_path = jApp::varPath($this->_where.'.tpl');
+            // check if there is a redefined template for the current localized theme in var/theme
+            $this->_where = 'var/themes/'.$theme.'/'.$path;
+            $this->_path = jApp::varPath('themes/'.$theme.'/'.$path.'.tpl');
+            if (is_readable ($this->_path)){
+                return;
+            }
+
+            // check if there is a redefined template for the current theme in app/theme
+            $this->_where = 'app/themes/'.$theme.'/'.$lpath;
+            $this->_path = jApp::appPath($this->_where.'.tpl');
+            if (is_readable ($this->_path)){
+                return;
+            }
+            // check if there is a redefined template for the current localized theme in app/theme
+            $this->_where = 'app/themes/'.$theme.'/'.$path;
+            $this->_path = jApp::appPath($this->_where.'.tpl');
             if (is_readable ($this->_path)){
                 return;
             }
         }
 
-       // check if there is a redefined template for the default theme
-        $this->_where = 'themes/default/'.$lpath;
-        $this->_path = jApp::varPath($this->_where.'.tpl');
+        // check if there is a redefined template for the default theme in var/themes
+        $this->_where = 'var/themes/default/'.$lpath;
+        $this->_path = jApp::varPath('themes/default/'.$lpath.'.tpl');
         if (is_readable ($this->_path)){
             return;
         }
 
-        $this->_where = 'themes/default/'.$path;
-        $this->_path = jApp::varPath($this->_where.'.tpl');
+        $this->_where = 'var/themes/default/'.$path;
+        $this->_path = jApp::varPath('themes/default/'.$path.'.tpl');
+        if (is_readable ($this->_path)){
+            return;
+        }
+
+        // check if there is a redefined template for the default theme in app/themes
+        $this->_where = 'app/themes/default/'.$lpath;
+        $this->_path = jApp::appPath($this->_where.'.tpl');
+        if (is_readable ($this->_path)){
+            return;
+        }
+
+        $this->_where = 'app/themes/default/'.$path;
+        $this->_path = jApp::appPath($this->_where.'.tpl');
         if (is_readable ($this->_path)){
             return;
         }

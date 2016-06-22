@@ -34,6 +34,7 @@ class jXmlRpcRequest extends jRequest {
      * Analyze the HTTP request and set the params property
      */
     protected function _initParams(){
+
         $requestXml = file_get_contents('php://input');
 
         // Decode the request

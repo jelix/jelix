@@ -164,6 +164,7 @@ cd lib/jelix-legacy/core/selector
   jSelectorForm.class.php
   jSelectorTpl.class.php
   jSelectorZone.class.php
+  jSelectorAppCfg.class.php
 #endif
 
 
@@ -375,6 +376,10 @@ cd lib/jelix-legacy/forms/controls
   jFormsControlDatetime.class.php
   jFormsControlWikiEditor.class.php
 #endif
+
+cd lib/jelix/installer
+  jInstallerMigration.class.php
+  jInstallReporterTrait.trait.php
 
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php

@@ -30,17 +30,15 @@ class CheckerBase {
      */
     public $messages;
 
-    public $nbError = 0;
-    public $nbOk = 0;
-    public $nbWarning = 0;
-    public $nbNotice = 0;
-
     protected $buildProperties = array();
 
     public $verbose = false;
 
     public $checkForInstallation = false;
 
+    /**
+     *
+     */
     function __construct (\Jelix\Installer\ReporterInterface $reporter,
                           \Jelix\SimpleLocalization\Container $messages){
         $this->reporter = $reporter;
@@ -77,10 +75,6 @@ class CheckerBase {
      * run the ckecking
      */
     function run(){
-        $this->nbError = 0;
-        $this->nbOk = 0;
-        $this->nbWarning = 0;
-        $this->nbNotice = 0;
         $this->reporter->start();
         try {
             $this->_otherCheck();
@@ -89,38 +83,28 @@ class CheckerBase {
         }catch(Exception $e){
             $this->error('cannot.continue',$e->getMessage());
         }
-        $results = array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice);
-        $this->reporter->end($results);
+        $this->reporter->end();
     }
 
     protected function _otherCheck() {}
 
     protected function error($msg, $msgparams=array(), $extraMsg=''){
-        if($this->reporter)
-            $this->reporter->message($this->messages->get($msg, $msgparams).$extraMsg, 'error');
-        $this->nbError ++;
+        $this->reporter->message($this->messages->get($msg, $msgparams).$extraMsg, 'error');
     }
 
     protected function ok($msg, $msgparams=array()){
-        if($this->reporter)
-            $this->reporter->message($this->messages->get($msg, $msgparams), 'ok');
-        $this->nbOk ++;
+        $this->reporter->message($this->messages->get($msg, $msgparams), 'ok');
     }
     /**
      * generate a warning
      * @param string $msg  the key of the message to display
      */
     protected function warning($msg, $msgparams=array()){
-        if($this->reporter)
-            $this->reporter->message($this->messages->get($msg, $msgparams), 'warning');
-        $this->nbWarning ++;
+        $this->reporter->message($this->messages->get($msg, $msgparams), 'warning');
     }
 
     protected function notice($msg, $msgparams=array()){
-        if($this->reporter) {
-            $this->reporter->message($this->messages->get($msg, $msgparams), 'notice');
-        }
-        $this->nbNotice ++;
+        $this->reporter->message($this->messages->get($msg, $msgparams), 'notice');
     }
 
     protected function checkPhpExtensions(){
@@ -202,8 +186,9 @@ class CheckerBase {
             }
         }
 
-        if($ok)
+        if($ok) {
             $this->ok('extensions.required.ok');
+        }
 
         return $ok;
     }

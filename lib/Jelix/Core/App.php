@@ -41,7 +41,7 @@ class App {
      * @param string $wwwPath    www directory
      * @param string $varPath    var directory
      * @param string $logPath    log directory
-     * @param string $configPath config directory
+     * @param string $configPath var config directory
      * @param string $scriptPath scripts directory
      */
     public static function initPaths($appPath,
@@ -88,6 +88,11 @@ class App {
     public static function appPath($file = '')
     {
         return self::$_currentApp->appPath.$file;
+    }
+
+    public static function appConfigPath($file = '')
+    {
+        return self::$_currentApp->appPath.'app/config/'.$file;
     }
 
     public static function varPath($file = '')
@@ -191,12 +196,12 @@ class App {
             return self::$_mainConfigFile;
         }
 
-        $configFileName = self::$_currentApp->configPath.'mainconfig.ini.php';
+        $configFileName = self::$_currentApp->appPath.'app/config/mainconfig.ini.php';
         if (!file_exists($configFileName)) {
-            // support of legacy configuration file
-            // TODO: support of defaultconfig.ini.php should be dropped in version > 1.6
-            $configFileName = self::$_currentApp->configPath.'defaultconfig.ini.php';
-            trigger_error('the config file defaultconfig.ini.php is deprecated and will be removed in the next major release', E_USER_DEPRECATED);
+            if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
+                throw new \Exception("Don't find the app/config/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
+            }
+            throw new \Exception("Don't find the app/config/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
         }
         self::$_mainConfigFile = $configFileName;
 

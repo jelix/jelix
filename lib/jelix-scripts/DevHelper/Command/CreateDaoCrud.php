@@ -220,7 +220,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
         if (!file_exists($path.'urls.xml')) {
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
             if ($output->isVerbose()) {
-                $output->writeln("Notice: you should link the urls.xml of the module ".$module."', into the urls.xml in var/config.");
+                $output->writeln("Notice: you should link the urls.xml of the module ".$module."', into the app/config/urls.xml file.");
             }
         }
 

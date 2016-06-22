@@ -22,7 +22,7 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testSimpleUpgrade() {
-        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/var/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
+        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
         $xmlEp = $modifier->addEntryPoint('index', 'classic', null);
         $upgraderUrl = new UrlEngineUpgrader($config, 'index', $xmlEp);
@@ -36,7 +36,7 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testSimple2Upgrade() {
-        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/var/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
+        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
         $config->setValue('index','jauth~*@classic', 'simple_urlengine_entrypoints');
         $config->setValue('admin',"jacl2db~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, admin~*@classic, jauth~*@classic", 'simple_urlengine_entrypoints');
         $config->setValue('startModule', 'view');
@@ -52,7 +52,7 @@ class urlUpgradeTest extends jUnitTestCase {
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
                             file_get_contents(jApp::tempPath('config.ini')));
 
-        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/var/config/mainconfig.ini.php', jApp::tempPath('config2.ini') );
+        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php', jApp::tempPath('config2.ini') );
         $config->setValue('startModule', 'master_admin');
         $config->setValue('startAction', 'default:index');
         $xmlEp = $modifier->addEntryPoint('admin', 'classic', null);
@@ -69,7 +69,7 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testBasicSignificantUpgrade() {
-        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/var/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
+        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php', jApp::tempPath('config.ini') );
         $config->setValue('engine','basic_significant', 'urlengine');
         $config->setValue('index','jauth~*@classic', 'simple_urlengine_entrypoints');
         $config->setValue('admin',"jacl2db~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, admin~*@classic, jauth~*@classic", 'simple_urlengine_entrypoints');
@@ -89,7 +89,7 @@ class urlUpgradeTest extends jUnitTestCase {
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
                             file_get_contents(jApp::tempPath('config.ini')));
 
-        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/var/config/mainconfig.ini.php', jApp::tempPath('config2.ini') );
+        $config = new \Jelix\IniFile\MultiIniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php', jApp::tempPath('config2.ini') );
         $config->setValue('startModule', 'master_admin');
         $config->setValue('startAction', 'default:index');
         $xmlEp = $modifier->addEntryPoint('admin', 'classic', null);

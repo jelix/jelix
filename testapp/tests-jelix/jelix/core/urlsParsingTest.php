@@ -121,7 +121,7 @@ class UTParseUrls extends jUnitTestCase {
           array("index.php","/test/cms/actualite/65-c-est-la-fete-au-village",array()),
           array("foo/bar.php","/withhandler/premier/deuxieme",array()),
           array("index.php",'',array('module'=>'jelix_tests', 'action'=>'urlsig:url5', 'foo'=>'oof',  'bar'=>'rab')),
-          // this url has no definition in urls.xml, it si normal
+          // this url has no definition in urls.xml, it is intentional
           array("index.php",'/jelix_tests/urlsig/url5',array( 'foo'=>'oof',  'bar'=>'rab')),
           //10
           array("xmlrpc.php","",array()),

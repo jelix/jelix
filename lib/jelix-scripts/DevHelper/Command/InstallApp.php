@@ -31,6 +31,19 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
         \Jelix\Core\AppManager::close();
+
+        if ($this->verbose()) {
+            $reporter = new \Jelix\Installer\Reporter\Console('notice', 'Low-level migration');
+        }
+        else {
+            $reporter = new \Jelix\Installer\Reporter\Console('error', 'Low-level migration');
+        }
+
+        // launch the low-level migration
+        $migrator = new \jInstallerMigration($reporter);
+        $migrator->migrate();
+
+        // we can now launch the installer/updater
         if ($this->verbose()) {
             $reporter = new \Jelix\Installer\Reporter\Console();
         }

@@ -11,18 +11,24 @@ namespace Jelix\Installer\Reporter;
  * simple text reporter
  */
 class Console implements \Jelix\Installer\ReporterInterface {
+    use \jInstallerReporterTrait;
+
     /**
      * @var string error, notice or warning
      */
     protected $level;
 
-    function __construct($level= 'notice') {
+    protected $title = '';
+
+    function __construct($level= 'notice', $title='Installation') {
        $this->level = $level;
+       $this->title = $title;
     }
 
     function start() {
-        if ($this->level == 'notice')
-            echo "Installation start..\n";
+        if ($this->level == 'notice') {
+            echo $this->title." is starting\n";
+        }
     }
 
     /**
@@ -31,6 +37,7 @@ class Console implements \Jelix\Installer\ReporterInterface {
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
     function message($message, $type='') {
+        $this->addMessageType($type);
         if (($type == 'error' && $this->level != '')
             || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
             || (($type == 'notice' || $type =='') && $this->level == 'notice'))
@@ -39,11 +46,10 @@ class Console implements \Jelix\Installer\ReporterInterface {
 
     /**
      * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
      */
-    function end($results) {
-        if ($this->level == 'notice')
-            echo "Installation ended.\n";
+    function end() {
+        if ($this->level == 'notice') {
+            echo $this->title." is finished\n";
+        }
     }
 }

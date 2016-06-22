@@ -1,7 +1,7 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2014 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -95,18 +95,6 @@ class Installer {
      */
     public $messages;
 
-    /** @var integer the number of errors appeared during the installation */
-    public $nbError = 0;
-
-    /** @var integer the number of ok messages appeared during the installation */
-    public $nbOk = 0;
-
-    /** @var integer the number of warnings appeared during the installation */
-    public $nbWarning = 0;
-
-    /** @var integer the number of notices appeared during the installation */
-    public $nbNotice = 0;
-
     /**
      * the mainconfig.ini.php combined with the defaultconfig.ini.php
      * @var \Jelix\IniFile\MultiIniModifier
@@ -153,7 +141,7 @@ class Installer {
                                                                  $localConfig);
         $this->installerIni = $this->getInstallerIni();
 
-        $urlfile = App::configPath($this->mainConfig->getValue('significantFile', 'urlengine'));
+        $urlfile = App::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
         $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
 
         $appInfos = new \Jelix\Core\Infos\AppInfos();
@@ -164,7 +152,6 @@ class Installer {
         $chmod = $this->mainConfig->getValue('chmodDir');
         \jFile::createDir(App::tempPath(), intval($chmod, 8));
     }
-
     /**
      * @internal mainly for tests
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
@@ -663,52 +650,39 @@ class Installer {
     }
 
     protected function startMessage () {
-        $this->nbError = 0;
-        $this->nbOk = 0;
-        $this->nbWarning = 0;
-        $this->nbNotice = 0;
         $this->reporter->start();
     }
 
     protected function endMessage() {
-        $this->reporter->end(array('error'=>$this->nbError, 'warning'=>$this->nbWarning, 'ok'=>$this->nbOk,'notice'=>$this->nbNotice));
+        $this->reporter->end();
     }
 
     protected function error($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'error');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbError ++;
+        $this->reporter->message($msg, 'error');
     }
 
     protected function ok($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, '');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbOk ++;
+        $this->reporter->message($msg, '');
     }
 
     protected function warning($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'warning');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbWarning ++;
+        $this->reporter->message($msg, 'warning');
     }
 
     protected function notice($msg, $params=null, $fullString=false){
-        if($this->reporter) {
-            if (!$fullString)
-                $msg = $this->messages->get($msg,$params);
-            $this->reporter->message($msg, 'notice');
+        if (!$fullString) {
+            $msg = $this->messages->get($msg,$params);
         }
-        $this->nbNotice ++;
+        $this->reporter->message($msg, 'notice');
     }
-
 }
 

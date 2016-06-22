@@ -8,6 +8,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $appPath = jApp::appPath();
         $varPath = jApp::varPath();
         $logPath = jApp::logPath();
+        $appConfigPath = jApp::appConfigPath();
         $configPath = jApp::configPath();
         $wwwPath = jApp::wwwPath();
         $scriptsPath = jApp::scriptsPath();
@@ -20,6 +21,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($appPath, jApp::appPath());
         $this->assertEquals($varPath, jApp::varPath());
         $this->assertEquals($logPath, jApp::logPath());
+        $this->assertEquals($appConfigPath, jApp::appConfigPath());
         $this->assertEquals($configPath, jApp::configPath());
         $this->assertEquals($wwwPath, jApp::wwwPath());
         $this->assertEquals($scriptsPath, jApp::scriptsPath());
@@ -28,6 +30,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         // change the path
         jApp::initPaths('/myapp/');
         $this->assertEquals('/myapp/', jApp::appPath());
+        $this->assertEquals('/myapp/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp/var/', jApp::varPath());
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
         $this->assertEquals('/myapp/var/config/', jApp::configPath());
@@ -39,6 +42,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         jApp::saveContext();
         jApp::initPaths('/myapp2/');
         $this->assertEquals('/myapp2/', jApp::appPath());
+        $this->assertEquals('/myapp2/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp2/var/', jApp::varPath());
         $this->assertEquals('/myapp2/var/log/', jApp::logPath());
         $this->assertEquals('/myapp2/var/config/', jApp::configPath());
@@ -49,6 +53,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         // pop the second save, we should be with the first saved values
         jApp::restoreContext();
         $this->assertEquals('/myapp/', jApp::appPath());
+        $this->assertEquals('/myapp/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp/var/', jApp::varPath());
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
         $this->assertEquals('/myapp/var/config/', jApp::configPath());
@@ -59,6 +64,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         // pop the first save, we should be with initial paths
         jApp::restoreContext();
         $this->assertEquals($appPath, jApp::appPath());
+        $this->assertEquals($appConfigPath, jApp::appConfigPath());
         $this->assertEquals($varPath, jApp::varPath());
         $this->assertEquals($logPath, jApp::logPath());
         $this->assertEquals($configPath, jApp::configPath());

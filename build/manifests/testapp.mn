@@ -6,13 +6,48 @@ cd testapp
   composer.json
   README.md
   Vagrantfile
+
+cd testapp/app/
+  .htaccess
+cd testapp/app/config
+  mainconfig.ini.php
+  urls.xml
+  urls_rest.xml
+cd testapp/app/config/index
+  config.ini.php
+cd testapp/app/config/rest
+  config.ini.php
+cd testapp/app/config/xmlrpc
+  config.ini.php
+cd testapp/app/config/jsonrpc
+  config.ini.php
+cd testapp/app/config/cmdline
+  config.ini.php
+cd testapp/app/config/soap
+  config.ini.php
+cd testapp/app/config/urlsfiles
+  url_maintests.xml
+  url_dedicatedmodule.xml
+  url_defaultaction.xml
+  url_empty.xml
+  url_nodefaultep.xml
+  url_twodefaultep.xml
+cd testapp/app/themes/default/testapp
+  hello2.tpl
+cd testapp/app/locales/fr_FR/jelix_tests/locales/
+  newoverload.UTF-8.properties
+  overload.UTF-8.properties
+
+
+
+
 cd testapp/plugins
   .htaccess
 cd testapp/plugins/tpl/common/
   meta.testinc.php
 cd testapp/plugins/formwidget/textarea_as_input_html
   textarea_as_input_html.formwidget.php
-cd testapp/responses
+cd testapp/app/responses
   myHtmlResponse.class.php
 cd testapp/vagrant
   create_pgsql_db.sh 
@@ -198,7 +233,6 @@ cd testapp/modules/jelix_tests/locales/en_EN
 cd testapp/modules/jelix_tests/templates
   jstest_include.tpl
   jstest_jforms.tpl
-  jstest_jsonrpc.tpl
   jstest_jsonrpc2.tpl
   menu.tpl
   test_include.tpl
@@ -396,15 +430,17 @@ cd testapp/tests-jelix/jelix/installer/
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/
   __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/app/config/
+  __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/plugins
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/var/config
   __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/var/config/foo
+cd testapp/tests-jelix/jelix/installer/app1/app/config/foo
   __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/var/config/index
+cd testapp/tests-jelix/jelix/installer/app1/app/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/var/log
   __ALL__
@@ -424,6 +460,8 @@ cd testapp/tests-jelix/jelix/routing/
   urlUpgradeTest.php
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
+cd testapp/tests-jelix/jelix/routing/app1/app/config
+  __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/plugins
@@ -436,7 +474,7 @@ cd testapp/tests-jelix/jelix/routing/app1/www
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/config
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/var/config/index
+cd testapp/tests-jelix/jelix/routing/app1/app/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
   __ALL__
@@ -482,36 +520,10 @@ cd testapp/var/config
   auth_class.coord.ini.php
   auth_ws.coord.ini.php
   auth_ldap.coord.ini.php.dist
-  mainconfig.ini.php
   localconfig.ini.php.dist
   profiles.ini.php.dist
-  urls.xml
-  urls_rest.xml
-  urls_old.xml
-cd testapp/var/config/index
-  config.ini.php
-cd testapp/var/config/rest
-  config.ini.php
-cd testapp/var/config/xmlrpc
-  config.ini.php
-cd testapp/var/config/jsonrpc
-  config.ini.php
-cd testapp/var/config/cmdline
-  config.ini.php
-cd testapp/var/config/soap
-  config.ini.php
-cd testapp/var/config/urlsfiles
-  url_maintests.xml
-  url_dedicatedmodule.xml
-  url_defaultaction.xml
-  url_empty.xml
-  url_nodefaultep.xml
-  url_twodefaultep.xml
-cd testapp/var/locales/fr_FR/jelix_tests/locales/
-  newoverload.UTF-8.properties
-  overload.UTF-8.properties
-cd testapp/var/themes/default/testapp
-  hello2.tpl
+
+
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
@@ -521,3 +533,44 @@ cd testapp/var/db/sqlite3/
 
 cd testapp/temp/
   .dummy
+
+cd testapp/adminapp/
+  .gitignore
+  .htaccess
+  application.init.php
+  cmd.php
+  project.xml
+
+cd testapp/adminapp/app/config/
+  mainconfig.ini.php
+  urls.xml
+
+cd testapp/adminapp/app/config/index/
+  config.ini.php
+
+cd testapp/adminapp/install/
+  installer.php
+
+cd testapp/adminapp/app/responses/
+  adminHtmlResponse.class.php
+  adminLoginHtmlResponse.class.php
+cd testapp/adminapp/app/overloads/
+  .dummy
+cd testapp/adminapp/app/themes/default/
+  .dummy
+
+cd testapp/adminapp/temp
+  .dummy
+
+cd testapp/adminapp/var/config/
+  localconfig.ini.dist
+  preferences.ini.php
+  profiles.ini.php.dist
+cd testapp/adminapp/var/config/index
+  auth.coord.ini.php
+
+cd testapp/adminapp/var/log/
+  .dummy
+cd testapp/adminapp/var/mails/
+  .dummy
+

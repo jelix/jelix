@@ -91,6 +91,7 @@ class testInstallerModuleParser extends \Jelix\Core\Infos\ModuleXmlParser {
  *
  */
 class testInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
 
     public $startCounter = 0;
 
@@ -103,10 +104,11 @@ class testInstallReporter implements jIInstallReporter {
     }
 
     function message($message, $type='') {
+        $this->addMessageType($type);
         $this->messages[] = array($message, $type);
     }
 
-    function end($results) {
+    function end() {
         $this->endCounter ++;
     }
 }
@@ -125,4 +127,3 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
     public function saveAs($filename) {}
 }
-

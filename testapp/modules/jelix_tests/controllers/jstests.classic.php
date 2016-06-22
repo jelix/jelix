@@ -35,23 +35,10 @@ class jstestsCtrl extends jController {
       $rep = $this->getResponse('html', true);
       $rep->setXhtmlOutput(false);
       $rep->title = 'Unit tests for jsonrpc';
-      $rep->bodyTpl = 'jstest_jsonrpc';
-      $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
-      $rep->addJsLink(jApp::urlBasePath().'qunit/testrunner.js');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/json.js');
-      return $rep;
-  }
-
-  function jsonrpc2() {
-      $rep = $this->getResponse('html', true);
-      $rep->setXhtmlOutput(false);
-      $rep->title = 'Unit tests for jsonrpc';
       $rep->bodyTpl = 'jstest_jsonrpc2';
       $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
       $rep->addJsLink(jApp::urlBasePath().'qunit/testrunner.js');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/json2.js');
       return $rep;
   }
 

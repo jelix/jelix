@@ -39,13 +39,13 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
         echo '<table class="jforms-table" border="0">';
         foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl){
-            if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') {
+            if ($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') {
                 continue;
             }
-            if(!$this->_form->isActivated($ctrlref)) {
+            if (!$this->_form->isActivated($ctrlref)) {
                 continue;
             }
-            if($ctrl->type == 'group') {
+            if ($ctrl->type == 'group') {
                 echo '<tr><td colspan="2">';
                 $this->outputControl($ctrl);
                 echo '</td></tr>';
@@ -58,14 +58,14 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
             }
         }
         echo '</table> <div class="jforms-submit-buttons">';
-        if ( $ctrl = $this->_form->getReset() ) {
+        if ($ctrl = $this->_form->getReset() ) {
             if ($this->_form->isActivated($ctrl->ref)) {
                 $this->outputControl($ctrl);
                 echo ' ';
             }
         }
-        foreach( $this->_form->getSubmits() as $ctrlref=>$ctrl){
-            if($this->_form->isActivated($ctrlref)) {
+        foreach ($this->_form->getSubmits() as $ctrlref=>$ctrl) {
+            if ($this->_form->isActivated($ctrlref)) {
                 $this->outputControl($ctrl);
                 echo ' ';
             }

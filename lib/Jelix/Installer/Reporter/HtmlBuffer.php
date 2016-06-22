@@ -13,6 +13,7 @@ namespace Jelix\Installer\Reporter;
  * an HTML reporter storing generated content into a string
  */
 class HtmlBuffer implements \Jelix\Installer\ReporterInterface {
+    use \jInstallerReporterTrait;
 
     public $messageProvider = null;
 
@@ -26,20 +27,21 @@ class HtmlBuffer implements \Jelix\Installer\ReporterInterface {
     }
 
     function message($message, $type=''){
+        $this->addMessageType($type);
         if ($type == 'error' || $type == 'warning' || $type == 'notice') {
             $this->html .= '<li class="'.$type.'">'.htmlspecialchars($message).'</li>';
         }
     }
 
-    function end($results) {
+    function end() {
 
         if ($this->html !='') {
             $this->html = '<ul class="checkresults">'.$this->html.'</ul>';
         }
 
-        $nbError = $results['error'];
-        $nbWarning = $results['warning'];
-        $nbNotice = $results['notice'];
+        $nbError = $this->getMessageCounter('error');
+        $nbWarning = $this->getMessageCounter('warning');
+        $nbNotice = $this->getMessageCounter('notice');
 
         $this->html .= '<div class="results">';
         if ($nbError) {

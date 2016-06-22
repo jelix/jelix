@@ -166,7 +166,8 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $iniDefault = new \Jelix\IniFile\IniModifier(App::mainConfigFile());
-        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($iniDefault->getValue('significantFile', 'urlengine'), true);
+        $urlsFile = App::appConfigPath($iniDefault->getValue('significantFile', 'urlengine'));
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
         // activate the module in the application
         if ($isdefault) {
@@ -197,7 +198,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         // install the module for all needed entry points
         foreach ($list as $entryPoint) {
 
-            $configFile = App::configPath($entryPoint['config']);
+            $configFile = App::appConfigPath($entryPoint['config']);
             $epconfig = new \Jelix\IniFile\IniModifier($configFile);
 
             if ($this->allEntryPoint) {

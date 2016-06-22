@@ -55,7 +55,7 @@ class Config {
             $lc = App::configPath('localconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(App::configPath($configFile))>$t
+                || filemtime(App::appConfigPath($configFile))>$t
                 || (file_exists($lc) && filemtime($lc)>$t)){
                 // one of the config files have been modified: let's compile
                 self::$fromCache = false;

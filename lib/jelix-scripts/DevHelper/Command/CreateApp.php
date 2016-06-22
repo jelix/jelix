@@ -227,18 +227,20 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $configPath = App::configPath();
         $this->createDir($varPath);
         $this->createDir(App::logPath());
+        $this->createDir(App::appConfigPath());
         $this->createDir($configPath);
-        $this->createDir($configPath.'index/');
-        $this->createDir($varPath.'overloads/');
-        $this->createDir($varPath.'themes/');
-        $this->createDir($varPath.'themes/default/');
+        $this->createDir(App::appConfigPath('index/'));
+        $this->createDir(App::appPath('app/overloads/'));
+        $this->createDir(App::appPath('app/themes'));
+        $this->createDir(App::appPath('app/themes/default/'));
         $this->createDir($varPath.'uploads/');
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
+
         $this->createDir($appPath.'install');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
-        $this->createDir($appPath.'responses');
+        $this->createDir(App::appPath('app/responses'));
         $this->createDir($appPath.'tests');
         $this->createDir(App::scriptsPath());
 
@@ -285,8 +287,8 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(App::logPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'mails/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'sessions/.dummy', 'dummy.tpl', array());
-        $this->createFile(App::varPath().'overloads/.dummy', 'dummy.tpl', array());
-        $this->createFile(App::varPath().'themes/default/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::appPath().'app/overloads/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::appPath().'app/themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(App::scriptsPath().'.dummy', 'dummy.tpl', array());
@@ -298,15 +300,15 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'jelix-app.json','jelix-app.json.tpl', $param, "Project description file");
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
-        $this->createFile($configPath.'mainconfig.ini.php', 'var/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile(App::appConfigPath('mainconfig.ini.php'), 'app/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
         $this->createFile($configPath.'preferences.ini.php', 'var/config/preferences.ini.php.tpl', $param, "Preferences file");
-        $this->createFile($configPath.'urls.xml', 'var/config/urls.xml.tpl', $param, "URLs mapping file");
+        $this->createFile(App::appConfigPath('urls.xml'), 'app/config/urls.xml.tpl', $param, "URLs mapping file");
 
-        $this->createFile($configPath.'index/config.ini.php', 'var/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
-        $this->createFile($appPath.'responses/myHtmlResponse.class.php', 'responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
+        $this->createFile(App::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
+        $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 

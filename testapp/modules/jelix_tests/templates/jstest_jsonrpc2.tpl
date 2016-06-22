@@ -68,7 +68,7 @@ test("test third call with response parsing", function() {
 </script>
 {/literal}
 
- <h2 id="banner">Unit tests for jsonRpc (with json2.js)</h2>
+ <h2 id="banner">Unit tests for jsonRpc</h2>
  <h2 id="userAgent"></h2>
  <ol id="tests"></ol>
  <div id="main"></div>

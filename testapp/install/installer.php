@@ -14,6 +14,11 @@ jApp::setEnv('install');
 
 jAppManager::close();
 
+// launch the low-level migration
+$migrator = new \jInstallerMigration(new \Jelix\Installer\Reporter\Console('notice', 'Low-level migration'));
+$migrator->migrate();
+
+// we can now launch the installer/updater
 $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 $installer->installApplication();
 

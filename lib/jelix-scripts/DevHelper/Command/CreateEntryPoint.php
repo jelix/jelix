@@ -97,34 +97,34 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         // let's create the config file if needed
-        $configFilePath = App::configPath($configFile);
+        $configFilePath = App::appConfigPath($configFile);
         if (!file_exists($configFilePath)) {
             $this->createDir(dirname($configFilePath));
             // the file doesn't exists
             // if there is a -copy-config parameter, we copy this file
             $originalConfig = $input->getOption('copy-config');
             if ($originalConfig) {
-                if (! file_exists(App::configPath($originalConfig))) {
-                    throw new Exception ("unknown original configuration file");
+                if (! file_exists(App::appConfigPath($originalConfig))) {
+                    throw new \Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
-                                  file_get_contents(App::configPath($originalConfig)));
+                                  file_get_contents(App::appConfigPath($originalConfig)));
                 if ($this->verbose()) {
                     $output->writeln("Configuration file $configFile has been created from the config file $originalConfig.");
                 }
             }
             else {
                 // else we create a new config file
-                $mainConfig = parse_ini_file(App::mainConfigFile(), true);
                 $param = array();
                 $this->createFile($configFilePath,
-                                  'var/config/index/config.ini.php.tpl',
+                                  'app/config/index/config.ini.php.tpl',
                                   $param, "Configuration file");
             }
         }
 
         $inifile = new \Jelix\IniFile\MultiIniModifier(App::mainConfigFile(), $configFilePath);
-        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($inifile->getValue('significantFile', 'urlengine'), true);
+        $urlsFile = App::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
         $param = array();
         // creation of the entry point

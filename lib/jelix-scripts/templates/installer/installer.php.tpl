@@ -11,8 +11,16 @@ require_once (__DIR__.'/../application.init.php');
 
 Jelix\Core\App::setEnv('install');
 
+\Jelix\Core\AppManager::close();
+
 $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 
+// launch the low-level migration
+$migrator = new \jInstallerMigration(new textInstallReporter('notice', 'Low-level migration'));
+$migrator->migrate();
+
+// we can now launch the installer/updater
+$installer = new jInstaller(new textInstallReporter());
 $installer->installApplication();
 
 try {
@@ -21,3 +29,4 @@ try {
 catch(Exception $e) {
     echo "WARNING: temporary files cannot be deleted because of this error: ".$e->getMessage().".\nWARNING: Delete temp files by hand immediately!\n";
 }
+\Jelix\Core\AppManager::open();

@@ -42,6 +42,10 @@ class Checker extends CheckerBase {
             $this->error('path.var');
             $ok=false;
         }
+        if(!file_exists(App::appConfigPath())){
+            $this->error('path.config');
+            $ok=false;
+        }
         if(!file_exists(App::configPath())){
             $this->error('path.config');
             $ok=false;
@@ -54,17 +58,6 @@ class Checker extends CheckerBase {
             if (file_exists(App::configPath('profiles.ini.php'))
                 && !is_writable(App::configPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
-                $ok = false;
-            }
-            if (file_exists(App::configPath('mainconfig.ini.php'))
-                && !is_writable(App::configPath('mainconfig.ini.php'))) {
-                $this->error('path.mainconfig.writable');
-                $ok = false;
-            }
-            // TODO: remove it in future jelix > 1.6
-            elseif (file_exists(App::configPath('defaultconfig.ini.php'))
-                && !is_writable(App::configPath('defaultconfig.ini.php'))) {
-                $this->error('path.mainconfig.writable');
                 $ok = false;
             }
             if (file_exists(App::configPath('installer.ini.php'))
@@ -116,14 +109,20 @@ class Checker extends CheckerBase {
 
     protected function checkPhpSettings(){
 
-        if (file_exists(App::configPath("mainconfig.ini.php")))
-            $defaultconfig = parse_ini_file(App::configPath("mainconfig.ini.php"), true);
-        else
+        /*
+        if (file_exists(App::mainConfigFile())) {
+            $defaultconfig = parse_ini_file(App::mainConfigFile(), true);
+        }
+        else {
             $defaultconfig = array();
-        if (file_exists(App::configPath("index/config.ini.php")))
-            $indexconfig = parse_ini_file(App::configPath("index/config.ini.php"), true);
-        else
+        }
+        if (file_exists(App::appConfigPath("index/config.ini.php"))) {
+            $indexconfig = parse_ini_file(App::appConfigPath("index/config.ini.php"), true);
+        }
+        else {
             $indexconfig = array();
+        }
+        */
 
         return parent::checkPhpSettings();
     }

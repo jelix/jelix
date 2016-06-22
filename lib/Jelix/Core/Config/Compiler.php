@@ -51,6 +51,7 @@ class Compiler {
 
     protected function readConfigFiles($configFile, $additionalOptions) {
 
+        $appConfigPath = App::appConfigPath();
         $configPath = App::configPath();
 
         // this is the defaultconfig file of JELIX itself
@@ -69,11 +70,14 @@ class Compiler {
         }
 
         // read the configuration specific to the entry point
-        if ($configFile != '' && $configPath.$configFile != $mcf) {
-            if (!file_exists($configPath.$configFile))
-                throw new Exception("Configuration file is missing -- $configFile", 5);
-            if ( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config))
-                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+        if ($configFile == 'mainconfig.ini.php') {
+            throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
+        }
+        if(!file_exists($appConfigPath.$configFile)) {
+            throw new Exception("Configuration file is missing -- $configFile", 5);
+        }
+        if( false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
+            throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
         if ($additionalOptions) {
             IniFileMgr::mergeIniObjectContents($config, $additionalOptions);

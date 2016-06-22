@@ -11,6 +11,7 @@ namespace Jelix\Installer\Reporter;
  * a reporter which reports... nothing
  */
 class NoOutput implements \Jelix\Installer\ReporterInterface {
+    use \jInstallerReporterTrait;
 
     function start() {
     }
@@ -21,13 +22,12 @@ class NoOutput implements \Jelix\Installer\ReporterInterface {
      * @param string $type the type of the message : 'error', 'notice', 'warning', ''
      */
     function message($message, $type='') {
+        $this->addMessageType($type);
     }
 
     /**
      * called when the installation is finished
-     * @param array $results an array which contains, for each type of message,
-     * the number of messages
      */
-    function end($results) {
+    function end() {
     }
 }

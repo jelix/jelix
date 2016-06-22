@@ -125,6 +125,7 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #includephp core/selector/jSelectorForm.class.php
 #includephp core/selector/jSelectorTpl.class.php
 #includephp core/selector/jSelectorZone.class.php
+#includephp core/selector/jSelectorAppCfg.class.php
 #includephp core/jUrlBase.class.php
 #includephp core/jUrlAction.class.php
 #includephp core/jUrl.class.php
@@ -143,6 +144,7 @@ require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
+require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAppCfg.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlBase.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');

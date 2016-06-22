@@ -86,15 +86,16 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $installConfig = new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
 
         $inifile = new \Jelix\IniFile\MultiIniModifier(App::mainConfigFile(),
-                                              App::configPath($ep['config']));
+                                              App::appConfigPath($ep['config']));
 
         $params = array();
-        $this->createFile(App::appPath('responses/adminHtmlResponse.class.php'),
-                          'responses/adminHtmlResponse.class.php.tpl',
+        $this->createFile(App::appPath('app/responses/adminHtmlResponse.class.php'),
+                          'app/responses/adminHtmlResponse.class.php.tpl',
                           $params,
                           "Response for admin interface");
-        $this->createFile(App::appPath('responses/adminLoginHtmlResponse.class.php'),
-                          'responses/adminLoginHtmlResponse.class.php.tpl',
+
+        $this->createFile(App::appPath('app/responses/adminLoginHtmlResponse.class.php'),
+                          'app/responses/adminLoginHtmlResponse.class.php.tpl',
                           $params,
                           "Response for login page");
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
@@ -110,8 +111,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $inifile->setValue('jacldb.access', '0', 'modules');
         $inifile->save();
 
-
-        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($inifile->getValue('significantFile', 'urlengine'), true);
+        $urlsFile = jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));
         $xmlEp->addUrlModule('', 'master_admin');
