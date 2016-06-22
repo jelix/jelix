@@ -412,8 +412,6 @@ cd lib/jelix/plugins/auth/db
   db.auth.php
 cd lib/jelix/plugins/auth/class
 * class.auth.php
-cd lib/jelix/plugins/auth/lds
-  lds.auth.php
 
 cd lib/jelix/plugins/cache/db
   db.cache.php

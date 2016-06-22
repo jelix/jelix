@@ -3,7 +3,7 @@
 
 ;============= Main parameters
 
-; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
+; driver name : "ldap", "Db", "Class" (respect the case of characters)
 driver=Db
 
 ;============ Parameters for the plugin
@@ -95,9 +95,6 @@ class=
 
 ; name of the php function to crypt the password in the database
 password_crypt_function=md5
-
-;------- parameters for the "LDS" driver
-[LDS]
 
 ;------- parameters for the "ldap" driver
 [ldap]

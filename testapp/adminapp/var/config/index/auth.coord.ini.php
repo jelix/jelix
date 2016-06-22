@@ -3,7 +3,7 @@
 
 ;============= Main parameters
 
-; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
+; driver name : "ldap", "Db", "Class" (respect the case of characters)
 driver=Db
 
 ;============ Parameters for the plugin
@@ -131,8 +131,6 @@ password_crypt_function=sha1
 ; salt for bcrypt algorithm, must be alphanumeric and 22 characters in length
 ;password_salt = "salt_of_22_alphanumeric_characters_for_bcrypt_algo"
 
-;------- parameters for the "LDS" driver
-[LDS]
 
 ;------- parameters for the "ldap" driver
 [ldap]

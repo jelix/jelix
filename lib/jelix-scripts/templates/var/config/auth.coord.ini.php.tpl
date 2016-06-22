@@ -3,7 +3,7 @@
 
 ;============= Main parameters
 
-; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
+; driver name : "ldap", "Db", "Class" (respect the case of characters)
 driver = Db
 
 ;============ Parameters for the plugin
@@ -118,10 +118,6 @@ password_crypt_function = sha1
 ; if you want to use a salt with sha1:
 ;password_crypt_function = "1:sha1WithSalt"
 ;password_salt = "here_your_salt"
-
-
-;------- parameters for the "LDS" driver
-[LDS]
 
 ;------- parameters for the "ldap" driver
 [ldap]
