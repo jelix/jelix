@@ -377,10 +377,6 @@ cd lib/jelix-legacy/forms/controls
   jFormsControlWikiEditor.class.php
 #endif
 
-cd lib/jelix/installer
-  jInstallerMigration.class.php
-  jInstallReporterTrait.trait.php
-
 cd lib/jelix-legacy/kvdb
 * jKVDriver.class.php
   jKVDb.class.php
@@ -819,11 +815,13 @@ cd lib/Jelix/Installer
   ModuleInstaller.php
   InstallerInterface.php
   ReporterInterface.php
+  ReporterTrait.php
   AbstractInstallLauncher.php
   ModuleInstallLauncher.php
   PluginInstallLauncher.php
   Installer.php
   EntryPoint.php
+  Migration.php
 cd lib/Jelix/Installer/Reporter
   Console.php
   Html.php
@@ -851,6 +849,7 @@ cd lib/Jelix/Legacy/installer
   jInstaller.php
   jInstallerEntryPoint.php
   jInstallerMessageProvider.php
+  jInstallerMigration.php
   jInstallChecker.php
 cd lib/Jelix/Mailer
   composer.json

@@ -11,7 +11,7 @@ namespace Jelix\Installer\Reporter;
  * simple text reporter
  */
 class Console implements \Jelix\Installer\ReporterInterface {
-    use \jInstallerReporterTrait;
+    use \Jelix\Installer\ReporterTrait;
 
     /**
      * @var string error, notice or warning

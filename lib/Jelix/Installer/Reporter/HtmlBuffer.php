@@ -13,7 +13,7 @@ namespace Jelix\Installer\Reporter;
  * an HTML reporter storing generated content into a string
  */
 class HtmlBuffer implements \Jelix\Installer\ReporterInterface {
-    use \jInstallerReporterTrait;
+    use \Jelix\Installer\ReporterTrait;
 
     public $messageProvider = null;
 

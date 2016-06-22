@@ -13,7 +13,7 @@ namespace Jelix\Installer\Reporter {
  * an HTML reporter
  */
 class Html implements \Jelix\Installer\ReporterInterface {
-    use \jInstallerReporterTrait;
+    use \Jelix\Installer\ReporterTrait;
 
     /**
      * @var \Jelix\SimpleLocalization\Container

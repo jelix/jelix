@@ -38,6 +38,7 @@
     "jInstallerEntryPoint": "installer/jInstallerEntryPoint.php",
     "jInstallerException": "installer/jInstallerException.php",
     "jInstallerMessageProvider": "installer/jInstallerMessageProvider.php",
+    "jInstallerMigration": "installer/jInstallerMigration.php",
     "jInstallerModule": "installer/jInstallerModule.php",
     "jInstallerModuleInfos": "installer/jInstallerModuleInfos.php",
     "jInstallerPlugin": "installer/jInstallerPlugin.php",

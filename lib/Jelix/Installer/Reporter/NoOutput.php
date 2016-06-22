@@ -11,7 +11,7 @@ namespace Jelix\Installer\Reporter;
  * a reporter which reports... nothing
  */
 class NoOutput implements \Jelix\Installer\ReporterInterface {
-    use \jInstallerReporterTrait;
+    use \Jelix\Installer\ReporterTrait;
 
     function start() {
     }

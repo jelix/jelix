@@ -12,6 +12,7 @@
 
 #includephp Jelix/Installer/Checker/CheckerBase.php
 #includephp Jelix/Installer/ReporterInterface.php
+#includephp Jelix/Installer/ReporterTrait.php
 #includephp Jelix/Installer/Reporter/Html.php
 
 namespace Jelix\SimpleLocalization {

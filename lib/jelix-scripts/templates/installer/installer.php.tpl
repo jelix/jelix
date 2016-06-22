@@ -9,18 +9,17 @@
 
 require_once (__DIR__.'/../application.init.php');
 
-Jelix\Core\App::setEnv('install');
+\Jelix\Core\App::setEnv('install');
 
 \Jelix\Core\AppManager::close();
 
-$installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 
 // launch the low-level migration
-$migrator = new \jInstallerMigration(new textInstallReporter('notice', 'Low-level migration'));
+$migrator = new \Jelix\Installer\Migration(new \Jelix\Installer\Reporter\Console('notice', 'Low-level migration'));
 $migrator->migrate();
 
 // we can now launch the installer/updater
-$installer = new jInstaller(new textInstallReporter());
+$installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
 $installer->installApplication();
 
 try {

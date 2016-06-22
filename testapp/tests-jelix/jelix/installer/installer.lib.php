@@ -91,7 +91,7 @@ class testInstallerModuleParser extends \Jelix\Core\Infos\ModuleXmlParser {
  *
  */
 class testInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+    use \Jelix\Installer\ReporterTrait;
 
     public $startCounter = 0;
 
