@@ -240,3 +240,15 @@ enabled = 1
 driver = file
 directory_level = 2
 file_name_prefix=acl2dbcache
+
+
+[authldap:test]
+; default "localhost"
+hostname=
+; default 389
+port=
+
+; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
+ldapUser=
+; password used to connect with LDAP
+ldapPassword=

@@ -125,15 +125,11 @@ password_crypt_function = sha1
 
 ;------- parameters for the "ldap" driver
 [ldap]
-; default "localhost"
-hostname=
-; default 389
-port=
+; profile in profiles.ini.php containing ldap connection informations
+profile=jauth
 
-; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser=
-; password used to connect with LDAP
-ldapPassword=
+; following parameters can be stored in the profile too.
+
 
 ; LDAP search params 
 ; search base, example for Active Directory: "ou=ADAM users,o=Microsoft,c=US"
