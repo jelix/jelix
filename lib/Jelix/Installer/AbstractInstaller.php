@@ -385,7 +385,7 @@ abstract class AbstractInstaller {
             $path = str_replace('config:', App::configPath(), $path);
         }
         elseif (strpos($path, 'appconfig:') === 0) {
-            $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
+            $path = str_replace('appconfig:', App::appConfigPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
             $p = dirname(App::appConfigPath($this->entryPoint->getConfigFile()));

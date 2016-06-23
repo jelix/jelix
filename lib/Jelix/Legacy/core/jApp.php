@@ -45,6 +45,10 @@ class jApp {
         return \Jelix\Core\App::logPath($file);
     }
 
+    public static function appConfigPath($file='') {
+        return \Jelix\Core\App::appConfigPath($file);
+    }
+
     public static function configPath($file='') {
         return \Jelix\Core\App::configPath($file);
     }

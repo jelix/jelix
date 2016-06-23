@@ -102,7 +102,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector {
         }
 
         // check if the locale has been overloaded in app/
-        $overloadedPath = jApp::appPath('app/overloads/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
+        $overloadedPath = App::appPath('app/overloads/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
         if (is_readable ($overloadedPath)){
             $this->_path = $overloadedPath;
             $this->_where = 'app/overloaded/';
@@ -110,7 +110,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector {
         }
 
         // check if the locale is available in the locales directory in app/
-        $localesPath = jApp::appPath('app/locales/'.$this->locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        $localesPath = App::appPath('app/locales/'.$this->locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
         if (is_readable ($localesPath)){
             $this->_path = $localesPath;
             $this->_where = 'app/locales/';

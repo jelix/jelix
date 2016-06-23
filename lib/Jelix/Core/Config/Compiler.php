@@ -73,11 +73,13 @@ class Compiler {
         if ($configFile == 'mainconfig.ini.php') {
             throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
         }
-        if(!file_exists($appConfigPath.$configFile)) {
+
+        if (file_exists($appConfigPath.$configFile)) {
+            if (false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+            }
+        } else if (!$additionalOptions) {
             throw new Exception("Configuration file is missing -- $configFile", 5);
-        }
-        if( false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
-            throw new Exception("Syntax error in the configuration file -- $configFile", 6);
         }
         if ($additionalOptions) {
             IniFileMgr::mergeIniObjectContents($config, $additionalOptions);

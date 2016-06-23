@@ -17,7 +17,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
                          $configFile, $file, $type, $configContent) {
         $this->type = $type;
         $this->isCliScript = ($type == 'cmdline');
-        
+
         if (is_object($configFile)) {
             $this->epConfigIni = $configFile;
             $this->configFile = $configFile->getFileName();
@@ -119,7 +119,9 @@ class testInstallReporter implements jIInstallReporter {
  */
 class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
-    function __construct($filename) {}
+    function __construct($filename) {
+        $this->filename = $filename;
+    }
 
     public function save($chmod=null) {
         $this->modified = false;

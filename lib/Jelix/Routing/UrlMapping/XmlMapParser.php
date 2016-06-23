@@ -154,7 +154,7 @@ class XmlMapParser implements \jISimpleCompiler
         */
 
         $this->createUrlInfos = array();
-        $this->createUrlContent = "<?php \nif (jApp::config()->compilation['checkCacheFiletime'] &&( \n";
+        $this->createUrlContent = "<?php \nif (\\Jelix\\Core\\App::config()->compilation['checkCacheFiletime'] &&( \n";
         $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
         $this->createUrlContentInc = '';
         $this->modulesPath = App::getAllModulesPath();
