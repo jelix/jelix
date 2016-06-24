@@ -270,6 +270,7 @@ cd lib/jelix/db
   jDbTools.class.php
   jDbStatement.class.php
   jDbWidget.class.php
+  jDbParameters.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jDbConnection.class.php
   jDbResultSet.class.php
