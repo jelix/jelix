@@ -94,6 +94,8 @@ cd testapp/modules/testapp/templates
   sampleform.tpl
   sampleformfull.tpl
   sampleformresult.tpl
+  sampleformcontainer.tpl
+  sampleajaxform.tpl
   forms_edit.tpl
   forms_liste.tpl
   forms_view.tpl
