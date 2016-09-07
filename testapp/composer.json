@@ -17,10 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "phpunit/phpunit": "4.3.*"
-    },
-    "replace": {
-        "jelix/jelix":"self.version"
+        "phpunit/phpunit": "4.8.*"
     },
     "autoload": {
         "psr-0": { },
