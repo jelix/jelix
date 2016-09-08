@@ -14,9 +14,10 @@ cd dev/
 ./updatesrc.sh
 ```
 
-- launch vagrant
+- launch vagrant either for php 5.6 or php 7 (you must not run both at the same time)
 
 ```
+cd php56/
 vagrant up
 ```
 
@@ -84,7 +85,7 @@ cd dev/
 # connection into the vm
 vagrant ssh
 # in the vm, go into the right directory and lanch the script which reset all things
-cd /jelixapp/vagrant/
+cd /vagrantscripts/
 ./reset_testapp.sh
 ```
 

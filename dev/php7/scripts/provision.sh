@@ -2,7 +2,7 @@
 
 ROOTDIR="/jelixapp"
 TESTAPPDIR="$ROOTDIR/_build"
-VAGRANTDIR="$ROOTDIR/vagrant"
+VAGRANTDIR="/vagrantscripts"
 
 if [ ! -d "$TESTAPPDIR" -o ! -d "$TESTAPPDIR/testapp" ]; then
     >&2 echo "ERROR: you should run updatesrc.sh to generate a build of Jelix first."
@@ -23,16 +23,13 @@ cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
 locale-gen fr_FR.UTF-8
 update-locale LC_ALL=fr_FR.UTF-8
 
-# activate multiverse repository to have libapache2-mod-fastcgi
-sed -i "/^# deb.*multiverse/ s/^# //" /etc/apt/sources.list
-
 # install all packages
 apt-get update
 apt-get -y upgrade
 apt-get -y install debconf-utils
 export DEBIAN_FRONTEND=noninteractive
-echo "mysql-server-5.5 mysql-server/root_password password jelix" | debconf-set-selections
-echo "mysql-server-5.5 mysql-server/root_password_again password jelix" | debconf-set-selections
+echo "mysql-server-5.7 mysql-server/root_password password jelix" | debconf-set-selections
+echo "mysql-server-5.7 mysql-server/root_password_again password jelix" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/mysql/admin-pass password jelix" | debconf-set-selections
@@ -41,10 +38,12 @@ echo "phpmyadmin phpmyadmin/mysql/app-pass password jelix" | debconf-set-selecti
 echo "phpmyadmin phpmyadmin/password-confirm password jelix" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selections
 
-apt-get -y install apache2 libapache2-mod-fastcgi apache2-mpm-worker php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
+
+apt-get -y install nginx
+apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba
 apt-get -y install postgresql postgresql-client mysql-server mysql-client
 apt-get -y install redis-server memcached memcachedb
-apt-get -y install phpmyadmin git
+apt-get -y install phpmyadmin git vim
 
 # create a database into mysql + users
 if [ ! -d /var/lib/mysql/testapp/ ]; then
@@ -54,52 +53,27 @@ fi
 
 # create a database into pgsql + users
 su postgres -c $VAGRANTDIR/create_pgsql_db.sh
-echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.3/main/pg_hba.conf
+echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 service postgresql restart
 
 # install default vhost for apache
-cp $VAGRANTDIR/testapp.conf /etc/apache2/sites-available/
+cp $VAGRANTDIR/testapp.conf /etc/nginx/sites-available/
 
-if [ ! -f "/etc/apache2/sites-enabled/010-testapp.conf" ]; then
-    ln -s /etc/apache2/sites-available/testapp.conf /etc/apache2/sites-enabled/010-testapp.conf
+if [ ! -f "/etc/nginx/sites-enabled/010-testapp.conf" ]; then
+    ln -s /etc/nginx/sites-available/testapp.conf /etc/nginx/sites-enabled/010-testapp.conf
 fi
-if [ -f "/etc/apache2/sites-enabled/000-default.conf" ]; then
-    rm -f "/etc/apache2/sites-enabled/000-default.conf"
-fi
-
-if [ -d /etc/apache2/conf.d ]; then
-    cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf.d
-else
-    if [ -d /etc/apache2/conf-available/ ]; then
-        cp $VAGRANTDIR/php5_fpm.conf /etc/apache2/conf-available/
-        if [ ! -f "/etc/apache2/conf-enabled/php5_fpm.conf" ]; then
-            ln -s /etc/apache2/conf-available/php5_fpm.conf /etc/apache2/conf-enabled/php5_fpm.conf
-        fi
-    else
-        echo "------------- WARNING! php-fpm is not configured into apache"
-    fi
+if [ -f "/etc/nginx/sites-enabled/default" ]; then
+    rm -f "/etc/nginx/sites-enabled/default"
 fi
 
-a2enmod actions alias fastcgi rewrite
-
-sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
-sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
-sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
+sed -i "/^user = www-data/c\user = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
+sed -i "/^group = www-data/c\group = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
+sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/fpm/php.ini
+sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/cli/php.ini
 
 service php5-fpm restart
 
-# to avoid bug https://github.com/mitchellh/vagrant/issues/351
-if [ -d /etc/apache2/conf.d ]; then
-    echo "EnableSendfile Off" > /etc/apache2/conf-d/sendfileoff.conf
-else
-    echo "EnableSendfile Off" > /etc/apache2/conf-available/sendfileoff.conf
-    if [ ! -f "/etc/apache2/conf-enabled/sendfileoff.conf" ]; then
-        ln -s /etc/apache2/conf-available/sendfileoff.conf /etc/apache2/conf-enabled/sendfileoff.conf
-    fi
-fi
-
-# restart apache
-service apache2 reload
+service nginx reload
 
 echo "Install composer.."
 if [ ! -f /usr/local/bin/composer ]; then
@@ -110,7 +84,7 @@ fi
 echo "Install testapp configuration file"
 # create  profiles.ini.php
 if [ ! -f $TESTAPPDIR/testapp/var/config/profiles.ini.php ]; then
-    cp -a $TESTAPPDIR/testapp/var/config/profiles.ini.php.dist $TESTAPPDIR/testapp/var/config/profiles.ini.php
+    cp -a $TESTAPPDIR/testapp/var/config/profiles.ini.php7.dist $TESTAPPDIR/testapp/var/config/profiles.ini.php
 fi
 
 # touch localconfig.ini.php
@@ -128,7 +102,8 @@ fi
 
 # install phpunit
 cd $TESTAPPDIR/testapp/
-composer install
+su -c "composer install" vagrant
+
 if [ ! -f /usr/bin/phpunit ]; then
     ln -s $TESTAPPDIR/testapp/vendor/bin/phpunit  /usr/bin/phpunit
 fi

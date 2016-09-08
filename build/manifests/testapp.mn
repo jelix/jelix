@@ -430,6 +430,7 @@ cd testapp/var/config
   mainconfig.ini.php
   localconfig.ini.php.dist
   profiles.ini.php.dist
+  profiles.ini.php7.dist
   urls.xml
   urls_rest.xml
   urls_old.xml

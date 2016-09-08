@@ -3,8 +3,10 @@
 CURRENTDIR=$(dirname $0)
 BASEDIR=$CURRENTDIR/..
 cd $BASEDIR
-php build/buildjelix.php dev/jelix.ini
-php build/buildapp.php dev/testapp.ini
+php build/buildjelix.php -D MAIN_TARGET_PATH=dev/php56/_build dev/jelix.ini
+php build/buildapp.php -D MAIN_TARGET_PATH=dev/php56/_build dev/testapp.ini
+php build/buildjelix.php -D MAIN_TARGET_PATH=dev/php7/_build dev/jelix.ini
+php build/buildapp.php -D MAIN_TARGET_PATH=dev/php7/_build dev/testapp.ini
 
 cd dev/
 
