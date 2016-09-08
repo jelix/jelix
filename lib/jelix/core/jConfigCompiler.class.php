@@ -238,7 +238,7 @@ class jConfigCompiler {
         if (!isset($installation[$section])) {
             $installation[$section] = array();
         }
-        $modulesPaths = self::_getModulesPaths($config);
+        $modulesPaths = self::getModulesPaths($config, true);
         $pluginsPath =  preg_split('/ *, */',$config->pluginsPath);
 
         foreach ($modulesPaths as $f=>$p) {
@@ -328,16 +328,20 @@ class jConfigCompiler {
         }
     }
 
-    static protected function _getModulesPaths($config)
+    static public function getModulesPaths($config, $toCompileConfig = false)
     {
         // --- read from modulesPath configuration
-        $list = preg_split('/ *, */', $config->modulesPath);
-        if (isset(self::$commonConfig->modulesPath)) {
-            $list = array_merge($list, preg_split('/ *, */', self::$commonConfig->modulesPath));
-        }
-        array_unshift($list, JELIX_LIB_PATH . 'core-modules/');
+        $list = array();
         $pathChecked = array();
         $modulesPaths = array();
+
+        if (property_exists($config, 'modulesPath')) {
+            $list = preg_split('/ *, */', $config->modulesPath);
+            if ($toCompileConfig && isset(self::$commonConfig->modulesPath)) {
+                $list = array_merge($list, preg_split('/ *, */', self::$commonConfig->modulesPath));
+            }
+        }
+
         foreach ($list as $k => $path) {
             if (trim($path) == '') continue;
             $p = jFile::parseJelixPath($path);
@@ -352,9 +356,7 @@ class jConfigCompiler {
             }
             $pathChecked[] = $p;
 
-            // don't include the core-modules into the list of base path. this list is to verify
-            // if modules have been modified into repositories
-            if ($k != 0 && $config->compilation['checkCacheFiletime']) {
+            if ($toCompileConfig && $config->compilation['checkCacheFiletime']) {
                 $config->_allBasePath[] = $p;
             }
 
@@ -368,6 +370,23 @@ class jConfigCompiler {
             }
         }
 
+        // -- read all *.path into [modules]
+        if (property_exists($config, 'modules')) {
+            foreach ($config->modules as $key => $path) {
+                if (!preg_match('/^([a-zA-Z_0-9]+)\\.path$/', $key, $m)) {
+                    continue;
+                }
+                $p = jFile::parseJelixPath($path);
+                if (!file_exists($p)) {
+                    throw new Exception('Error in the configuration file -- The path, ' . $path . ' given in the jelix config, doesn\'t exist', 10);
+                }
+                if (!is_dir($p)) {
+                    throw new Exception('Error in the configuration file -- The path, ' . $path . ' given in the jelix config, is not a directory', 10);
+                }
+                $p = rtrim($p, '/');
+                $modulesPaths[$m[1]] = $p . '/';
+            }
+        }
         return $modulesPaths;
     }
 
