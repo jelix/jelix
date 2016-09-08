@@ -22,8 +22,9 @@ class jDb_profilesTest  extends jUnitTestCase
 
     function testProfile() {
         $p = jProfiles::get('jdb', 'jelix_tests_mysql');
+        $driver = (version_compare(PHP_VERSION, '7.0.0', '>=')?'mysqli':'mysql');
         $expected = array(
-            'driver'=>"mysql",
+            'driver'=>$driver,
             'database'=>"testapp_mysql",
             'host'=> "localhost_mysql",
             'user'=> "plop_mysql",
@@ -37,7 +38,7 @@ class jDb_profilesTest  extends jUnitTestCase
 
         $p = jProfiles::get('jdb', 'forward');
         $expected= array(
-            'driver'=>"mysql",
+            'driver'=>$driver,
             'database'=>"jelix_tests_forward",
             'host'=> "localhost_forward",
             'user'=> "plop_forward",
@@ -59,8 +60,9 @@ class jDb_profilesTest  extends jUnitTestCase
     }
 
     function testVirtualProfile() {
+        $driver = (version_compare(PHP_VERSION, '7.0.0', '>=')?'mysqli':'mysql');
         $profile = array(
-            'driver'=>"mysql",
+            'driver'=>$driver,
             'database'=>"virtual_mysql",
             'host'=> "localhostv_mysql",
             'user'=> "v_mysql",
