@@ -56,8 +56,6 @@ error_reporting (E_ALL | E_STRICT);
 #includephp core/jIUrlEngine.iface.php
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
-#includephp core/jConfig.class.php
-#includephp core/jConfigAutoloader.class.php
 #includephp core/jSelector.class.php
 #includephp core/jServer.class.php
 #includephp core/selector/jSelectorModule.class.php
@@ -94,8 +92,6 @@ require (JELIX_LIB_CORE_PATH . 'jISelector.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jIUrlEngine.iface.php');
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
-require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
-require (JELIX_LIB_CORE_PATH . 'jConfigAutoloader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require (JELIX_LIB_CORE_PATH . 'jServer.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
@@ -131,7 +127,8 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
  * @name $gLibPath
  * @see __autoload()
  */
-$GLOBALS['gLibPath']=array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
+$GLOBALS['gLibPath']=array('Config'=>JELIX_LIB_PATH.'core/',
+ 'Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
  'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
  'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
@@ -144,7 +141,7 @@ function jelix_autoload($class) {
     if (strpos($class, 'jelix\\') === 0) {
         $f = LIB_PATH.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
     }
-    else if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)){
+    else if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Config|Installer|KV).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }
     elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){
