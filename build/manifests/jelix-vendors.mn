@@ -243,6 +243,13 @@ cd lib/wikirenderer
   LICENCE
   VERSION
 ! WikiRenderer.lib.php
+! WikiInlineParser.class.php
+! WikiRenderer.class.php
+! WikiRendererBloc.class.php
+! WikiRendererConfig.class.php
+! WikiTag.class.php
+! WikiTagXhtml.class.php
+! WikiTextLine.lib.php
 
 cd lib/wikirenderer/rules
 ! classicwr_to_text.php
