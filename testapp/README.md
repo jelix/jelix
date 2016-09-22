@@ -20,7 +20,7 @@ Testapp with Vagrant
 =================
 
 - install [Virtual box](https://www.virtualbox.org/) and [Vagrant](http://www.vagrantup.com/downloads.html)
-- go into the testapp/vagrant/php7 or  testapp/vagrant/php56 directory and 
+- go into the testapp/vagrant/php7 directory and 
   launch the vagrant virtual machine
 
 ```
@@ -58,8 +58,7 @@ Running tests in Vagrant
 
 After installing Testapp, you can run tests on Jelix with Testapp.
 
-- go into the testapp/vagrant/php7 or testapp/vagrant/php56 directory and 
-  launch the vagrant virtual machine
+- go into the testapp/vagrant/php7 and  launch the vagrant virtual machine
 
 ```
   vagrant up
