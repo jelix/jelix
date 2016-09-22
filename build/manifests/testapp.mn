@@ -488,7 +488,6 @@ cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   localconfig.ini.php.dist
   profiles.ini.php.dist
-  profiles.ini.php7.dist
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/
