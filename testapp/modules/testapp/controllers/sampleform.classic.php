@@ -20,7 +20,7 @@ class sampleFormCtrl extends jController {
 
   function newform(){
       jForms::destroy('sample');
-      // création d'un formulaire vierge
+      // create a new form
       $form = jForms::create('sample');
       $this->prepareForm($form);
       $rep= $this->getResponse("redirect");
@@ -31,7 +31,7 @@ class sampleFormCtrl extends jController {
   }
 
   function show(){
-      // recupère les données du formulaire
+      // retrieve form data
       $form = jForms::get('sample');
       if($form == null){
           $form = jForms::create('sample');
@@ -99,7 +99,7 @@ class sampleFormCtrl extends jController {
 
    function status(){
       $rep = $this->getResponse('html');
-      $rep->title = 'Etat des données formulaire';
+      $rep->title = 'Form data';
 
       $rep->body->assign('page_title','formulaires');
 
@@ -112,5 +112,34 @@ class sampleFormCtrl extends jController {
       $rep->body->assign('MAIN',$content);
       return $rep;
    }
+
+  function newajaxform(){
+      jForms::destroy('sample');
+      // création d'un formulaire vierge
+      $form = jForms::create('sample');
+      $this->prepareForm($form);
+      $rep= $this->getResponse("html");
+      $rep->title = 'show ajax form';
+      $form->getBuilder('html')->outputMetaContent(null);
+      $tpl = new jTpl();
+      $rep->body->assign('MAIN', $tpl->fetch('sampleformcontainer'));
+      $rep->body->assign('page_title','ajax forms');
+      return $rep;
+  }
+
+  function showajaxform() {
+      // retrieve form data
+      $form = jForms::get('sample');
+      if($form == null){
+          $form = jForms::create('sample');
+          $form->deactivate('unwanted');
+      }
+      $this->prepareForm($form);
+
+      $rep = $this->getResponse('htmlfragment');
+      $rep->tpl->assign('form', $form);
+      $rep->tplname = 'sampleajaxform';
+      return $rep;
+  }
 
 }

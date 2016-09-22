@@ -16,6 +16,7 @@ require "installer/jIInstallReporter.iface.php";
 require "installer/jInstallReporterTrait.trait.php";
 require "installer/jInstallerMessageProvider.class.php";
 require "installer/jInstallChecker.class.php";
+require "db/jDbParameters.class.php";
 
 /**
  * an HTML reporter for jInstallChecker
@@ -76,7 +77,10 @@ class jHtmlInstallChecker implements jIInstallReporter {
 $messages = new jInstallerMessageProvider();
 $reporter = new jHtmlInstallChecker($messages);
 $check = new jInstallCheck($reporter, $messages);
-$check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
+if (isset($_GET['verbose'])) {
+    $check->verbose = true;
+}
+$check->addDatabaseCheck(array('mysqli', 'sqlite3', 'pgsql', 'oci', 'mssql'), false);
 
 header("Content-type:text/html;charset=UTF-8");
 
@@ -91,6 +95,11 @@ header("Content-type:text/html;charset=UTF-8");
 </head><body >
     <h1 class="apptitle"><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
 
-<?php $check->run(); ?>
+<?php $check->run();
+
+if (!$check->verbose) {
+?>
+<p><a href="?verbose"><?php echo htmlspecialchars($check->messages->get('more.details')); ?></a></p>
+<?php } ?>
 </body>
 </html>

@@ -121,7 +121,7 @@ class jPrefManager
 
             //current user doesnt have rights to read this pref
             if (!$p->isReadable()) {
-                break;
+                return null;
             }
 
             if ($get_pref_value) {

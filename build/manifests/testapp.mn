@@ -139,6 +139,8 @@ cd testapp/modules/testapp/templates
   sampleform.tpl
   sampleformfull.tpl
   sampleformresult.tpl
+  sampleformcontainer.tpl
+  sampleajaxform.tpl
   forms_edit.tpl
   forms_liste.tpl
   forms_view.tpl
@@ -486,8 +488,7 @@ cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   localconfig.ini.php.dist
   profiles.ini.php.dist
-
-
+  profiles.ini.php7.dist
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales
 cd testapp/var/overloads/jelix_tests/locales/fr_FR/

@@ -74,7 +74,7 @@ class jDb_profilesTest  extends jUnitTestCase
 
     function testVirtualProfile() {
         $profile = array(
-            'driver'=>"mysql",
+            'driver'=>'mysql',
             'database'=>"virtual_mysql",
             'host'=> "localhostv_mysql",
             'user'=> "v_mysql",

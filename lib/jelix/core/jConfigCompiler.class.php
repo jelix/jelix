@@ -56,9 +56,11 @@ class jConfigCompiler {
         if(!is_writable(jApp::logPath())) {
             throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
         }
+
+        self::$commonConfig = jelix_read_ini(jApp::mainConfigFile());
+
         // this is the defaultconfig file of JELIX itself
         $config = jelix_read_ini(__DIR__.'/defaultconfig.ini.php');
-        self::$commonConfig = clone $config;
 
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
