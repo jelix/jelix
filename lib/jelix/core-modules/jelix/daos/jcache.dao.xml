@@ -46,8 +46,9 @@
             </conditions>
         </method>
         <method name="garbage" type="delete">
+            <parameter name="date" />
             <conditions>
-                <lt property="date" expr="NOW()" />
+                <lt property="date" expr="$date" />
             </conditions>
         </method>
         <method name="flush" type="delete">
