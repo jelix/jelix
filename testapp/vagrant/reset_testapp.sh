@@ -4,7 +4,7 @@ APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="$APPDIR/vagrant"
 
-source $VAGRANTDIR/jelixapp/system.sh
+source $VAGRANTDIR/system.sh
 
 
 # --- testapp

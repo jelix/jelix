@@ -2,8 +2,6 @@
 ;for security reasons , don't remove or modify the first line
 
 ;============= Main parameters
-
-; driver name : "Db", "Class" , "LDS" , "ldap"(respect the case of characters)
 driver = ldap
 
 ;============ Parameters for the plugin
@@ -71,41 +69,9 @@ persistant_duration = 1
 ; base path for the cookie. If empty, it uses the basePath value from the main configuration.
 persistant_cookie_path =
 
-;=========== Parameters for drivers
-
-;------- parameters for the "Db" driver
-[Db]
-; name of the dao to get user data
-dao = "jauthdb~jelixuser"
-
-; profil to use for jDb 
-profil = ""
-
-; name of the php function to crypt the password in the database
-;password_crypt_function = md5
-
-;------- parameters for the "Class" driver
-[Class]
-; selector of the class
-class = ""
-
-; name of the php function to crypt the password in the database
-password_crypt_function = md5
-
-;------- parameters for the "LDS" driver
-[LDS]
-
 ;------- parameters for the "ldap" driver
 [ldap]
-; default "localhost"
-hostname=
-; default 389
-port=
-
-; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser=
-; password used to connect with LDAP
-ldapPassword=
+profile=test
 
 ; LDAP search params 
 ; search base

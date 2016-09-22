@@ -20,10 +20,11 @@ Testapp with Vagrant
 =================
 
 - install [Virtual box](https://www.virtualbox.org/) and [Vagrant](http://www.vagrantup.com/downloads.html)
-- go into the testapp directory and launch the vagrant virtual machine
+- go into the testapp/vagrant/php7 or  testapp/vagrant/php56 directory and 
+  launch the vagrant virtual machine
 
 ```
-cd testapp
+cd testapp/vagrant/php7
 vagrant up
 ```
 
@@ -57,7 +58,8 @@ Running tests in Vagrant
 
 After installing Testapp, you can run tests on Jelix with Testapp.
 
-- go into the testapp directory and launch the vagrant virtual machine
+- go into the testapp/vagrant/php7 or testapp/vagrant/php56 directory and 
+  launch the vagrant virtual machine
 
 ```
   vagrant up
@@ -72,7 +74,7 @@ After installing Testapp, you can run tests on Jelix with Testapp.
 If you wrote new install or migration scripts, you can run the installer/updater
 
 ```
-cd /jelixapp/_build/testapp/install
+cd /jelixapp/testapp/install
 php installer.php
 ```
 
@@ -105,7 +107,7 @@ Full Reinstall
 You should destroy the vm:
 
 ```
-cd testapp
+cd testapp/vagrant/php7
 vagrant destroy
 ```
 

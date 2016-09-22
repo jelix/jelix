@@ -32,6 +32,7 @@
 <p>Simple form (singleton)</p>
 <ul>
    <li><a href="{jurl 'sampleform:newform'}">New form</a></li>
+   <li><a href="{jurl 'sampleform:newajaxform'}">New ajax form</a></li>
    <li><a href="{jurl 'sampleform:show'}">See the form</a> (<a href="{jurl 'sampleform:show', array('full'=>1)}">full</a>)</li>
    <li><a href="{jurl 'sampleform:ok'}">Results</a></li>
    <li><a href="{jurl 'sampleform:destroy'}">Destroy the form</a></li>

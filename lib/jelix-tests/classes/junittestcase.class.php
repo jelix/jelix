@@ -69,6 +69,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
         self::$fakeServer = new Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
+
         $config = jConfigCompiler::read($config, true, false, '/'.$entryPoint);
         $coord = new jCoordinatorForTest($config, false);
         jApp::setCoord($coord);

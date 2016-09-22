@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `product_test` (
 `name` VARCHAR( 150 ) NOT NULL ,
 `price` FLOAT NOT NULL,
 `create_date` datetime default NULL,
-`promo` BOOL NOT NULL,
+`promo` BOOL NOT NULL default 0,
 `dummy` set('created','started','stopped') DEFAULT NULL
 ) ENGINE = MYISAM ;
 

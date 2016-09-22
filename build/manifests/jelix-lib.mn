@@ -295,6 +295,7 @@ cd lib/jelix-legacy/db
   jDbTable.class.php
   jDbTools.class.php
   jDbWidget.class.php
+  jDbParameters.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
 * jDbConnection.class.php
   jDbResultSet.class.php
@@ -410,8 +411,6 @@ cd lib/jelix-legacy/plugins/auth/db
   db.auth.php
 cd lib/jelix-legacy/plugins/auth/class
 * class.auth.php
-cd lib/jelix-legacy/plugins/auth/lds
-  lds.auth.php
 
 cd lib/jelix-legacy/plugins/cache/db
   db.cache.php

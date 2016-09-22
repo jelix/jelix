@@ -19,8 +19,10 @@ class CheckerPage {
         $reporter =new \Jelix\Installer\Reporter\Html($messages);
 
         $check = new Checker($reporter, $messages);
-        $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
-
+        if (isset($_GET['verbose'])) {
+            $check->verbose = true;
+        }
+        $check->addDatabaseCheck(array('mysqli', 'sqlite3', 'pgsql', 'oci', 'mssql'), false);
         header("Content-type:text/html;charset=UTF-8");
 ?>
 
@@ -34,7 +36,12 @@ class CheckerPage {
 </head><body >
     <h1 class="apptitle"><?php echo htmlspecialchars($check->messages->get('checker.title')); ?></h1>
 
-<?php $check->run(); ?>
+<?php $check->run();
+
+if (!$check->verbose) {
+    ?>
+    <p><a href="?verbose"><?php echo htmlspecialchars($check->messages->get('more.details')); ?></a></p>
+<?php } ?>
 </body>
 </html>
 <?php

@@ -4,5 +4,6 @@ _dist/
 *.komodoproject
 .komodotools
 *.kdev4
+.idea
 vendor/
 composer.lock

@@ -3,7 +3,7 @@
 
 ;============= Main parameters
 
-; driver name : "ldap", "Db", "Class" or "LDS" (respect the case of characters)
+; driver name : "ldap", "Db", "Class" (respect the case of characters)
 driver=Class
 
 ;============ Parameters for the plugin

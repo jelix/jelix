@@ -5,7 +5,7 @@
 * @author     Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Thibaud Fabre, Laurent Jouanneau
-* @copyright  2009 Neov, 2010 Thibaud Fabre, 2011 Laurent Jouanneau
+* @copyright  2009 Neov, 2010 Thibaud Fabre, 2011-2016 Laurent Jouanneau
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
@@ -31,6 +31,13 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
         }
 
         parent::__construct($params);
+
+        if (!isset($this->_params['profile']) || $this->_params['profile'] == '') {
+            throw new jException('jelix~auth.ldap.profile.missing');
+        }
+
+        $profile = jProfile::get('authldap', $this->_params['profile']);
+        $this->_params = array_merge($this->_params, $profile);
 
         // default ldap parameters
         $_default_params = array(
