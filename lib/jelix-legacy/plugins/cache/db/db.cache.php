@@ -262,7 +262,7 @@ class dbCacheDriver implements jICacheDriver {
     * @return boolean false if failure
     */
     public function garbage (){
-        jDao::get($this->_dao,$this->_dbprofile)->garbage();
+        jDao::get($this->_dao,$this->_dbprofile)->garbage(date("Y-m-d H:i:s"));
         return true;
     }
 
