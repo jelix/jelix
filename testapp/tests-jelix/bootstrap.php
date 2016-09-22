@@ -5,6 +5,8 @@ require_once(LIB_PATH.'jelix-tests/classes/junittestcase.class.php');
 require_once(LIB_PATH.'jelix-tests/classes/junittestcasedb.class.php');
 
 ini_set('date.timezone', 'Europe/Paris');
+date_default_timezone_set('Europe/Paris');
+
 jApp::setEnv('jelixtests');
 if (file_exists(jApp::tempPath())) {
     jAppManager::clearTemp(jApp::tempPath());
