@@ -177,14 +177,14 @@ class jAppInstance
                 if ($p == '') {
                     throw new Exception('Given modules dir '.$path.'does not exists');
                 }
-                $this->_modulesDirPath[$p] = null;
+                $this->_modulesDirPath[rtrim($p, '/')] = null;
             }
         } else {
             $p = realpath($basePath);
             if ($p == '') {
                 throw new Exception('Given modules dir '.$basePath.'does not exists');
             }
-            $this->_modulesDirPath[$p] = $modules;
+            $this->_modulesDirPath[rtrim($p, '/')] = $modules;
         }
     }
 
@@ -210,7 +210,7 @@ class jAppInstance
             if ($p == '') {
                 throw new Exception('Given module dir '.$path.'does not exists');
             }
-            $this->_modulesPath[] = $p;
+            $this->_modulesPath[] = rtrim($p, '/');
         }
     }
 

@@ -20,8 +20,8 @@ function initsystem () {
     apt-get -y upgrade
     apt-get -y install debconf-utils
     export DEBIAN_FRONTEND=noninteractive
-    echo "mysql-server-5.5 mysql-server/root_password password jelix" | debconf-set-selections
-    echo "mysql-server-5.5 mysql-server/root_password_again password jelix" | debconf-set-selections
+    echo "mysql-server-$MYSQL_VERSION mysql-server/root_password password jelix" | debconf-set-selections
+    echo "mysql-server-$MYSQL_VERSION mysql-server/root_password_again password jelix" | debconf-set-selections
     echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
     echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
     echo "phpmyadmin phpmyadmin/mysql/admin-pass password jelix" | debconf-set-selections
@@ -31,9 +31,13 @@ function initsystem () {
     echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selections
     
     apt-get -y install nginx
-    apt-get -y install php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
+    if [ "$PHP_VERSION" == "5" ]; then
+        apt-get -y install php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
+    else
+        apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba
+    fi
     apt-get -y install mysql-server mysql-client
-    apt-get -y install git phpmyadmin vim
+    apt-get -y install git phpmyadmin vim unzip
 
     # create a database into mysql + users
     if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
@@ -42,14 +46,14 @@ function initsystem () {
     fi
     
     # install default vhost for apache
-    cp $VAGRANTDIR/jelixapp/vhost /etc/nginx/sites-available/$APPNAME.conf
-    
+    cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME2__/$APPHOSTNAME2/g /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- "s!__APPDIR__!$APPDIR!g" /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- "s!__ROOTDIR__!$ROOTDIR!g" /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPNAME__/$APPNAME/g /etc/nginx/sites-available/$APPNAME.conf
-    
+    sed -i -- s/__FPM_SOCK__/$FPM_SOCK/g /etc/nginx/sites-available/$APPNAME.conf
+
     if [ ! -f /etc/nginx/sites-enabled/010-$APPNAME.conf ]; then
         ln -s /etc/nginx/sites-available/$APPNAME.conf /etc/nginx/sites-enabled/010-$APPNAME.conf
     fi
@@ -57,12 +61,23 @@ function initsystem () {
         rm -f "/etc/nginx/sites-enabled/default"
     fi
 
-    sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
-    sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
-    sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
-    sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/cli/php.ini
+    if [ "$PHP_VERSION" == "5" ]; then
+        sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
+        sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
+        sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
+        sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/cli/php.ini
+    else
+        sed -i "/^user = www-data/c\user = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
+        sed -i "/^group = www-data/c\group = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
+        sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/fpm/php.ini
+        sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/cli/php.ini
+    fi
 
-    service php5-fpm restart
+    if [ "$PHP_VERSION" == "5" ]; then
+        service php5-fpm restart
+    else
+        service php7.0-fpm restart
+    fi
 
     # restart nginx
     service nginx reload
