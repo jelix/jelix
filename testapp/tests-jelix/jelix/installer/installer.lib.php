@@ -32,14 +32,18 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
         
         if (is_object($configFile)) {
             $this->epConfigIni = $configFile;
+            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile->getFileName());
             $this->configFile = $configFile->getFileName();
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, $configFile);
         }
         else {
             $this->epConfigIni = new testInstallerIniFileModifier($configFile);
+            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile);
             $this->configFile = $configFile;
-            $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni, $this->epConfigIni);
         }
+
+        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni,
+            new \Jelix\IniFile\MultiIniModifier($this->epConfigIni, $this->localEpConfigIni));
+
         $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;
