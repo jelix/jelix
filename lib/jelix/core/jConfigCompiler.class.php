@@ -65,20 +65,31 @@ class jConfigCompiler {
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
+        if(!file_exists($appConfigPath.$configFile) && !file_exists($configPath.$configFile)) {
+            throw new Exception("Configuration file of the entrypoint is missing -- $configFile", 5);
+        }
+
+        // read the static configuration specific to the entry point
+        if ($configFile == 'mainconfig.ini.php') {
+            throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
+        }
+
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
             @jelix_read_ini($configPath.'localconfig.ini.php', $config);
         }
 
-        // read the configuration specific to the entry point
-        if ($configFile == 'mainconfig.ini.php') {
-            throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
+        if (file_exists($appConfigPath.$configFile)) {
+            if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+            }
         }
-        if(!file_exists($appConfigPath.$configFile)) {
-            throw new Exception("Configuration file is missing -- $configFile", 5);
-        }
-        if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
-            throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+
+        // read the local configuration of the entry point
+        if (file_exists($configPath.$configFile)) {
+            if( false === @jelix_read_ini($configPath.$configFile, $config)) {
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+            }
         }
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);

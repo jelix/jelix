@@ -40,16 +40,22 @@ class jInstallerEntryPoint {
     protected $localConfigIni;
 
     /**
-     * the entry point config combined with $localConfigIni
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $configIni;
-
-    /**
-      * entrypoint config
+      * entrypoint config of app/config/
       * @var \Jelix\IniFile\IniModifier
       */
     protected $epConfigIni;
+
+    /**
+     * entrypoint config of var/config/
+     * @var \Jelix\IniFile\IniModifier
+     */
+    protected $localEpConfigIni;
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @var \Jelix\IniFile\MultiIniModifier
+     */
+    protected $fullConfigIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -95,8 +101,24 @@ class jInstallerEntryPoint {
         $this->file = $file;
         $this->mainConfigIni = $mainConfig;
         $this->localConfigIni = $localConfig;
-        $this->epConfigIni = new \Jelix\IniFile\IniModifier(jApp::appConfigPath($configFile));
-        $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
+
+        $appConfigPath = jApp::appConfigPath($configFile);
+        if (!file_exists($appConfigPath)) {
+            jFile::createDir(dirname($appConfigPath));
+            file_put_contents($appConfigPath, ';<'.'?php die(\'\');?'.'>');
+        }
+        $this->epConfigIni = new \Jelix\IniFile\IniModifier($appConfigPath);
+
+        $varConfigPath = jApp::configPath($configFile);
+        if (!file_exists($varConfigPath)) {
+            jFile::createDir(dirname($varConfigPath));
+            file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');
+        }
+        $this->localEpConfigIni = new \Jelix\IniFile\IniModifier($varConfigPath);
+
+        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
+        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($this->fullConfigIni, $this->localEpConfigIni);
+
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->isCliScript,
                                               $this->scriptName);
@@ -152,21 +174,30 @@ class jInstallerEntryPoint {
     }
 
     /**
-     * the entry point config combined with $localConfigIni
+     * the entry point config (static and local) combined with $localConfigIni
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
     function getConfigIni() {
-        return $this->configIni;
+        return $this->fullConfigIni;
     }
 
     /*
-     * the entry point config alone
+     * the static entry point config alone (in app/config)
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */
     function getEpConfigIni() {
         return $this->epConfigIni;
+    }
+
+    /*
+     * the local entry point config alone (in var/config)
+     * @return \Jelix\IniFile\IniModifier
+     * @since 1.7
+     */
+    function getLocalEpConfigIni() {
+        return $this->localEpConfigIni;
     }
 
     /**
