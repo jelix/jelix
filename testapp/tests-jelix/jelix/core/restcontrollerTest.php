@@ -32,11 +32,20 @@ class restcontrollerTest extends jUnitTestCase {
 
     function testRestPUT() {
         $http = new jHttp($this->getServerUri());
-        $http->put(jApp::urlBasePath().'rest.php/test/rest', array('foo'=>'bar'));
+        $http->put(jApp::urlBasePath().'rest.php/test/rest?machin=bidule', array('foo'=>'bar'));
         $this->assertEquals(200, $http->getStatus());
 
-        $this->assertEquals('this is a PUT response. module=jelix_tests action=myrest: foo=bar', $http->getContent());
+        $this->assertEquals('this is a PUT response. machin=bidule module=jelix_tests action=myrest: foo=bar', $http->getContent());
     }
+
+    function testRestPUTJSON() {
+        $http = new jHttp($this->getServerUri());
+        $http->put(jApp::urlBasePath().'rest.php/test/rest?machin=bidule', '["foo", "bar"]', null, "application/json");
+        $this->assertEquals(200, $http->getStatus());
+
+        $this->assertEquals('this is a PUT response. machin=bidule module=jelix_tests action=myrest: __httpbody=["foo", "bar"]', $http->getContent());
+    }
+
 
     function testRestPOST() {
         $http = new jHttp($this->getServerUri());
