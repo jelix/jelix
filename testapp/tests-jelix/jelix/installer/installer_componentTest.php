@@ -30,7 +30,7 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
     
-    function getInstaller($ep, $installWholeApp) {
+    function getInstaller(jInstallerEntryPoint $ep, $installWholeApp) {
         return null;
     }
 
