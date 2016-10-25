@@ -96,7 +96,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
-                ''
+                'version' => '>=1.0,<=1.1'
             )
             ), $comp->dependencies);
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
@@ -120,7 +120,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
-                ''
+                'version' => '>=1.0,<=1.1'
             ),
             array(
                 'type'=> 'module',
@@ -128,7 +128,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jauthdb',
                 'minversion' => '0',
                 'maxversion' => '*',
-                ''
+                'version' => '*'
             ),
             array(
                 'type'=> 'module',
@@ -136,7 +136,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jacl2db',
                 'minversion' => '0',
                 'maxversion' => '*',
-                ''
+                'version' => '*'
             ),
             array(
                 'type'=> 'module',
@@ -144,7 +144,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jacldb',
                 'minversion' => '1.0',
                 'maxversion' => '*',
-                ''
+                'version' => '>=1.0'
             ),
             ), $comp->dependencies);
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());

@@ -9,6 +9,8 @@
 */
 
 use Jelix\Version\VersionComparator;
+use \Jelix\Dependencies\Item;
+use \Jelix\Dependencies\Resolver;
 
 /**
 * a class to install a component (module or plugin) 
@@ -121,6 +123,11 @@ abstract class jInstallerComponentBase {
         return ($this->isInstalled($epId) &&
                 (VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
     }
+
+    public function isActivated($epId) {
+        $access = $this->moduleInfos[$epId]->access;
+        return ($access == 1 || $access ==2);
+    }
     
     public function getInstalledVersion($epId) {
         return $this->moduleInfos[$epId]->version;
@@ -167,6 +174,8 @@ abstract class jInstallerComponentBase {
 
     public function upgradeFinished($ep, $upgrader) { }
 
+    public function uninstallFinished($ep) { }
+
     /**
      * @var boolean  indicate if the identify file has already been readed
      */
@@ -181,7 +190,39 @@ abstract class jInstallerComponentBase {
         $this->identityReaded = true;
         $this->readIdentity();
     }
-    
+
+    /**
+     * @param string $epId
+     * @param bool $installedByDefault
+     * @return Item
+     */
+    public function getResolverItem($epId, $installedByDefault = false) {
+        if ($this->isInstalled($epId)) {
+            if (!$this->isActivated($epId)) {
+                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_REMOVE);
+            }
+            elseif ($this->isUpgraded($epId)) {
+                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_NONE);
+            }
+            else {
+                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos[$epId]->version);
+            }
+        }
+        elseif ($this->isActivated($epId) || $installedByDefault) {
+            $item = new Item($this->name, false, $this->sourceVersion, Resolver::ACTION_INSTALL);
+        }
+        else {
+            $item = new Item($this->name, false, $this->sourceVersion, Resolver::ACTION_NONE);
+        }
+        foreach($this->dependencies as $dep) {
+            if ($dep['type'] == 'module') {
+                $item->addDependency($dep['name'], $dep['version']);
+            }
+        }
+        $item->setProperty('component', $this);
+        return $item;
+    }
+
     /**
      * read the identity file
      */
@@ -232,17 +273,33 @@ abstract class jInstallerComponentBase {
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
+                $versionRange = '';
                 $minversion = isset($dependency['minversion'])?
                                 $this->fixVersion((string)$dependency['minversion']):
                                 '0';
-                if (trim($minversion) == '')
+                if (trim($minversion) == '') {
                     $minversion = '0';
+                }
+                if ($minversion != '0') {
+                    $versionRange = '>='.$minversion;
+                }
                 $maxversion = isset($dependency['maxversion'])?
                                 $this->fixVersion((string)$dependency['maxversion']):
                                 '*';
-                if (trim($maxversion) == '')
+                if (trim($maxversion) == '') {
                     $maxversion = '*';
+                }
+                if ($maxversion != '*') {
+                    $v = '<='.$maxversion;
+                    if ($versionRange != '') {
+                        $v = ','.$v;
+                    }
+                    $versionRange .= $v;
+                }
 
+                if ($versionRange == '') {
+                    $versionRange = '*';
+                }
                 $name = (string)$dependency['name'];
                 if (trim($name) == '' && $type != 'jelix')
                     throw new Exception('Name is missing in a dependency declaration in module '.$this->name);
@@ -258,7 +315,7 @@ abstract class jInstallerComponentBase {
                             'name' => 'jelix',
                             'minversion' => $this->jelixMinVersion,
                             'maxversion' => $this->jelixMaxVersion,
-                            ''
+                            'version' => $versionRange
                         );
                     }
                 }
@@ -269,7 +326,7 @@ abstract class jInstallerComponentBase {
                             'name' => $name,
                             'minversion' => $minversion,
                             'maxversion' => $maxversion,
-                            ''
+                            'version' => $versionRange
                             );
                 }
                 else if ($type == 'plugin') {
@@ -279,7 +336,7 @@ abstract class jInstallerComponentBase {
                             'name' => $name,
                             'minversion' => $minversion,
                             'maxversion' => $maxversion,
-                            ''
+                            'version' => $versionRange
                             );
                 }
             }

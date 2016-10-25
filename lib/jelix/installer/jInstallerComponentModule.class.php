@@ -267,6 +267,10 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
 
+    public function uninstallFinished($ep) {
+        if ($this->mainInstaller)
+            $this->mainInstaller->installerIni->removeValue($this->name.'.contexts', '__modules_data');
+    }
 
     protected function _formatDate($date) {
         if ($date !== null) {

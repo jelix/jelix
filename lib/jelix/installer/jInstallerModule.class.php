@@ -57,7 +57,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     }
 
     /**
-     * should configure the module, install table into the database etc.. 
+     * should remove static files. Probably remove some data if the user is agree etc...
      * @throw Exception  if an error occurs during the install.
      * @notimplemented not used for the current version of the installer
      */

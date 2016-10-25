@@ -98,7 +98,7 @@ class Resolver
             }
 
             if ($depItem->getAction() == self::ACTION_REMOVE) {
-                throw new ItemException('Item '.$depItemName.', needed by item '.$item->getName().', should be removed at the same time', $item, 3);
+                throw new ItemException('Item '.$depItemName.', needed by item '.$item->getName().', should be removed at the same time', $item, 3, $depItem);
             }
 
             if (isset($this->checkedItems[$depItemName])) {
@@ -108,7 +108,7 @@ class Resolver
             if ($depItem->getAction() == self::ACTION_NONE) {
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
                 }
                 if (!$depItem->isInstalled()) {
                     $depItem->setAction(self::ACTION_INSTALL);
@@ -118,14 +118,14 @@ class Resolver
             } elseif ($depItem->getAction() == self::ACTION_INSTALL) {
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
                 }
                 $this->_checkDependencies($depItem);
                 $this->chain[] = $depItem;
             } elseif ($depItem->getAction() == self::ACTION_UPGRADE) {
                 $version = $depItem->getNextVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
                 }
                 $this->_checkDependencies($depItem);
                 $this->chain[] = $depItem;
@@ -136,7 +136,7 @@ class Resolver
         unset($this->circularDependencyTracker[$item->getName()]);
 
         if ($missingItems) {
-            throw new ItemException('For item '.$item->getName().', some items are missing :'.implode(',', $missingItems), $item);
+            throw new ItemException('For item '.$item->getName().', some items are missing :'.implode(',', $missingItems), $item, 6, $missingItems);
         }
     }
 
@@ -162,7 +162,7 @@ class Resolver
             }
 
             if ($revdepItem->getAction() == self::ACTION_INSTALL || $revdepItem->getAction() == self::ACTION_UPGRADE) {
-                throw new ItemException('Item '.$revdepItemName.' should be removed because of the removal of one of its dependencies, '.$item->getName().', but it asked to be install/upgrade at the same time', $item, 5);
+                throw new ItemException('Item '.$revdepItemName.' should be removed because of the removal of one of its dependencies, '.$item->getName().', but it asked to be install/upgrade at the same time', $item, 5, $revdepItem);
             }
 
             if (isset($this->checkedItems[$revdepItemName])) {

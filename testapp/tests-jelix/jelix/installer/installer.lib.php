@@ -205,21 +205,4 @@ class testInstallerMain extends jInstaller {
         }
     }
     
-    public function doCheckDependencies ($list, $entrypoint = 'index.php') {
-
-        $epId = $this->epId[$entrypoint];
-        $allModules = &$this->modules[$epId];        
-        $modules = array();
-        // always install jelix
-        array_unshift($list, 'jelix');
-        foreach($list as $name) {
-            $modules[] = $allModules[$name];
-        }
-        return $this->checkDependencies($modules, $epId);
-    }
-
-    function getComponentsToInstall() {
-        return $this->_componentsToInstall;
-    }
-    
 }
