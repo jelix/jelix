@@ -470,6 +470,35 @@ class jInstaller {
             $this->notice('install.entrypoint.installers.disabled');
         }
 
+        $moduleschain = $this->resolveDependencies($resolver, $epId);
+        if ($moduleschain === false) {
+            return false;
+        }
+
+        $componentsToInstall = $this->runPreInstall($moduleschain, $ep, $installWholeApp, $flags);
+        if ($componentsToInstall === false) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+            return false;
+        }
+
+        $installedModules = $this->runInstall($componentsToInstall, $ep, $epId, $flags);
+        if ($installedModules === false) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+            return false;
+        }
+
+        $result = $this->runPostInstall($installedModules, $ep, $flags);
+        if (!$result) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+        }
+        else {
+            $this->ok('install.entrypoint.end', $epId);
+        }
+        return $result;
+    }
+
+    protected function resolveDependencies(Resolver $resolver, $epId) {
+
         try {
             $moduleschain = $resolver->getDependenciesChainForInstallation();
         } catch(ItemException $e) {
@@ -512,6 +541,11 @@ class jInstaller {
         }
 
         $this->ok('install.dependencies.ok');
+        return $moduleschain;
+    }
+
+
+    protected function runPreInstall($moduleschain, $ep, $installWholeApp, $flags) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -567,14 +601,16 @@ class jInstaller {
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
-
         if (!$result) {
-            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
+        return $componentsToInstall;
+    }
+
+    protected function runInstall($componentsToInstall, $ep, $epId, $flags) {
 
         $installedModules = array();
-
+        $result = true;
         // -----  installation process
         try {
             foreach($componentsToInstall as $item) {
@@ -584,15 +620,15 @@ class jInstaller {
                         $installer->install();
                     }
                     $this->installerIni->setValue($component->getName().'.installed',
-                                                   1, $epId);
+                        1, $epId);
                     $this->installerIni->setValue($component->getName().'.version',
-                                                   $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), $epId);
                     $this->installerIni->setValue($component->getName().'.version.date',
-                                                   $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), $epId);
                     $this->installerIni->setValue($component->getName().'.firstversion',
-                                                   $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), $epId);
                     $this->installerIni->setValue($component->getName().'.firstversion.date',
-                                                   $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
@@ -606,22 +642,22 @@ class jInstaller {
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
                         $this->installerIni->setValue($component->getName().'.version',
-                                                      $upgrader->version, $epId);
+                            $upgrader->version, $epId);
                         $this->installerIni->setValue($component->getName().'.version.date',
-                                                      $upgrader->date, $epId);
+                            $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
-                                  array($component->getName(), $upgrader->version));
+                            array($component->getName(), $upgrader->version));
                         $lastversion = $upgrader->version;
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
                         $this->installerIni->setValue($component->getName().'.version',
-                                                      $component->getSourceVersion(), $epId);
+                            $component->getSourceVersion(), $epId);
                         $this->installerIni->setValue($component->getName().'.version.date',
-                                                      $component->getSourceDate(), $epId);
+                            $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
-                                  array($component->getName(), $component->getSourceVersion()));
+                            array($component->getName(), $component->getSourceVersion()));
                     }
                     $installedModules[] = array($installer, $component, $action);
                 }
@@ -645,8 +681,8 @@ class jInstaller {
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
                     jConfigCompiler::read($ep->getConfigFile(), true,
-                                          $ep->isCliScript,
-                                          $ep->scriptName));
+                        $ep->isCliScript,
+                        $ep->scriptName));
                 jApp::setConfig($ep->getConfigObj());
             }
         } catch (jInstallerException $e) {
@@ -656,12 +692,14 @@ class jInstaller {
             $result = false;
             $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
         }
-
         if (!$result) {
-            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
+        return $installedModules;
+    }
 
+    protected function runPostInstall($installedModules, $ep, $flags) {
+        $result = true;
         // post install
         foreach($installedModules as $item) {
             try {
@@ -696,8 +734,8 @@ class jInstaller {
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
                     jConfigCompiler::read($ep->getConfigFile(), true,
-                                          $ep->isCliScript,
-                                          $ep->scriptName));
+                        $ep->isCliScript,
+                        $ep->scriptName));
                 jApp::setConfig($ep->getConfigObj());
             } catch (jInstallerException $e) {
                 $result = false;
@@ -707,9 +745,6 @@ class jInstaller {
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
-
-        $this->ok('install.entrypoint.end', $epId);
-
         return $result;
     }
 
