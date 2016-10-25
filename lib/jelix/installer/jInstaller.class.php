@@ -415,8 +415,23 @@ class jInstaller {
      *               or null if modules should be installed for all entry points
      * @return boolean true if the installation is ok
      */
-    public function installModules($modulesList, $entrypoint = null) {
+    public function installModules($modulesList, $entrypoint = null)
+    {
+        return $this->_singleModules(Resolver::ACTION_INSTALL, $modulesList, $entrypoint);
+    }
 
+    /**
+     * uninstall given modules
+     * @param array $modulesList array of module names
+     * @param string $entrypoint  the entrypoint name as it appears in project.xml
+     *               or null if modules should be uninstalled for all entry points
+     * @return boolean true if the uninstallation is ok
+     */
+    public function uninstallModules($modulesList, $entrypoint = null) {
+        return $this->_singleModules(Resolver::ACTION_REMOVE, $modulesList, $entrypoint );
+    }
+
+    protected function _singleModules($action, $modulesList, $entrypoint ) {
         $this->startMessage();
 
         if ($entrypoint == null) {
@@ -448,12 +463,12 @@ class jInstaller {
             foreach($this->modules[$epId] as $name => $module) {
                 $resolverItem = $module->getResolverItem($epId);
                 if (in_array($name, $modulesList)) {
-                    $resolverItem->setAction(Resolve::ACTION_INSTALL);
+                    $resolverItem->setAction($action);
                 }
                 $resolver->addItem($resolverItem);
             }
             // install modules
-            $result = $result & $this->_installModules($resolver, $epId, true, $flags);
+            $result = $result & $this->_installModules($resolver, $epId, false);
             if (!$result)
                 break;
             $this->installerIni->save();

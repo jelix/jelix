@@ -307,6 +307,13 @@ cd testapp/modules/testinstall2/install
 cd testapp/modules/testinstall3
 *  module.xml
 
+cd testapp/modules/articles
+*  module.xml
+cd testapp/modules/articles/install
+  install.php
+cd testapp/modules/news
+*  module.xml
+
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml

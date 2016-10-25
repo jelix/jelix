@@ -27,6 +27,7 @@ cd lib/jelix-scripts/DevHelper/Command/
   InstallModule.php
   InstallApp.php
   OpenApp.php
+  UninstallModule.php
 cd lib/jelix-scripts/DevHelper/Command/Acl2
   AbstractAcl2Cmd.php
   AddRight.php
