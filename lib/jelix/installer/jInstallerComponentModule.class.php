@@ -9,6 +9,7 @@
 */
 
 use Jelix\Version\VersionComparator;
+use \Jelix\Dependencies\Resolver;
 
 /**
 * a class to install a module.
@@ -55,14 +56,23 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
     }
 
-    protected function _setAccess($config) {
-        $access = $config->getValue($this->name.'.access', 'modules');
-        if ($access == 0 || $access == null) {
-            $config->setValue($this->name.'.access', 2, 'modules');
-            $config->save();
+    protected function _setAccess(jInstallerEntryPoint $ep)
+    {
+        $config = $ep->getConfigIni();
+        $access = $config->getValue($this->name . '.access', 'modules');
+
+        $action = $this->getInstallAction($ep->getEpId());
+        if ($action == Resolver::ACTION_INSTALL) {
+            if ($access == 0 || $access == null) {
+                $config->setValue($this->name . '.access', 2, 'modules');
+                $config->save();
+            } else if ($access == 3) {
+                $config->setValue($this->name . '.access', 1, 'modules');
+                $config->save();
+            }
         }
-        else if ($access == 3) {
-            $config->setValue($this->name.'.access', 1, 'modules');
+        else if ($action == Resolver::ACTION_REMOVE) {
+            $config->setValue($this->name . '.access', 0, 'modules');
             $config->save();
         }
     }
@@ -76,9 +86,9 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    function getInstaller($ep, $installWholeApp) {
+    function getInstaller(jInstallerEntryPoint $ep, $installWholeApp) {
 
-        $this->_setAccess($ep->getConfigIni());
+        $this->_setAccess($ep);
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {

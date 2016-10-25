@@ -154,7 +154,7 @@ abstract class jInstallerComponentBase {
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    abstract function getInstaller($ep, $installWholeApp);
+    abstract function getInstaller(jInstallerEntryPoint $ep, $installWholeApp);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -196,29 +196,36 @@ abstract class jInstallerComponentBase {
      * @param bool $installedByDefault
      * @return Item
      */
-    public function getResolverItem($epId, $installedByDefault = false) {
-        if ($this->isInstalled($epId)) {
-            if (!$this->isActivated($epId)) {
-                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_REMOVE);
-            }
-            elseif ($this->isUpgraded($epId)) {
-                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_NONE);
-            }
-            else {
-                $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos[$epId]->version);
-            }
-        }
-        elseif ($this->isActivated($epId) || $installedByDefault) {
-            $item = new Item($this->name, false, $this->sourceVersion, Resolver::ACTION_INSTALL);
+    public function getResolverItem($epId) {
+        $action = $this->getInstallAction($epId);
+        if ($action == Resolver::ACTION_UPGRADE) {
+            $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos[$epId]->version);
         }
         else {
-            $item = new Item($this->name, false, $this->sourceVersion, Resolver::ACTION_NONE);
+            $item = new Item($this->name, $this->isInstalled($epId), $this->sourceVersion, $action);
         }
+
         foreach($this->dependencies as $dep) {
             $item->addDependency($dep['name'], $dep['version']);
         }
         $item->setProperty('component', $this);
         return $item;
+    }
+
+    protected function getInstallAction($epId) {
+        if ($this->isInstalled($epId)) {
+            if (!$this->isActivated($epId)) {
+                return Resolver::ACTION_REMOVE;
+            }
+            elseif ($this->isUpgraded($epId)) {
+                return Resolver::ACTION_NONE;
+            }
+            return Resolver::ACTION_UPGRADE;
+        }
+        elseif ($this->isActivated($epId)) {
+            return Resolver::ACTION_INSTALL;
+        }
+        return Resolver::ACTION_NONE;
     }
 
     /**
