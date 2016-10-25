@@ -234,16 +234,17 @@ class jConfigCompiler {
         if ($config->disableInstallers) {
             $installation = array ();
         }
-        else if (!file_exists($installerFile)) {
-            if ($allModuleInfo) {
+        else if (file_exists($installerFile)) {
+            $installation = parse_ini_file($installerFile, true);
+        }
+        else {
+            if ($allModuleInfo)
                 $installation = array ();
-            } else {
+            else {
                 throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
             }
         }
-        else {
-            $installation = parse_ini_file($installerFile,true);
-        }
+
         $section = $config->urlengine['urlScriptId'];
 
         if (!isset($installation[$section])) {
