@@ -364,14 +364,12 @@ cd lib/jelix/installer
   jInstallChecker.class.php
   jInstallerComponentBase.class.php
   jInstallerComponentModule.class.php
-  jInstallerComponentPlugin.class.php
   jInstallerEntryPoint.class.php
   jInstallerException.class.php
   jInstallerMessageProvider.class.php
   jInstallerMigration.class.php
   jInstallerModule.class.php
   jInstallerModuleInfos.class.php
-  jInstallerPlugin.class.php
   jInstallReporterTrait.trait.php
   messageProvider.en.inc.php
   messageProvider.fr.inc.php

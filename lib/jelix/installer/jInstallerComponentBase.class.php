@@ -215,9 +215,7 @@ abstract class jInstallerComponentBase {
             $item = new Item($this->name, false, $this->sourceVersion, Resolver::ACTION_NONE);
         }
         foreach($this->dependencies as $dep) {
-            if ($dep['type'] == 'module') {
-                $item->addDependency($dep['name'], $dep['version']);
-            }
+            $item->addDependency($dep['name'], $dep['version']);
         }
         $item->setProperty('component', $this);
         return $item;
@@ -256,15 +254,14 @@ abstract class jInstallerComponentBase {
         <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" nickname="" email="" active="true"/>
-        <contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>
+        <creator name="Laurent Jouanneau" nickname="" email=""/>
+        <contributor name="hisname" email="hisemail@yoursite.undefined" since="" role=""/>
         <homepageURL>http://jelix.org</homepageURL>
         <updateURL>http://jelix.org</updateURL>
     </info>
     <dependencies>
         <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
         <module id="" name="" minversion="" maxversion="" />
-        <plugin id="" name="" minversion="" maxversion="" />
     </dependencies>
 </module>
       */
@@ -273,6 +270,9 @@ abstract class jInstallerComponentBase {
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
+                if ($type != 'jelix' && $type != 'module') {
+                    continue;
+                }
                 $versionRange = '';
                 $minversion = isset($dependency['minversion'])?
                                 $this->fixVersion((string)$dependency['minversion']):
@@ -322,16 +322,6 @@ abstract class jInstallerComponentBase {
                 else if ($type == 'module') {
                     $this->dependencies[] = array(
                             'type'=> 'module',
-                            'id' => $id,
-                            'name' => $name,
-                            'minversion' => $minversion,
-                            'maxversion' => $maxversion,
-                            'version' => $versionRange
-                            );
-                }
-                else if ($type == 'plugin') {
-                    $this->dependencies[] = array(
-                            'type'=> 'plugin',
                             'id' => $id,
                             'name' => $name,
                             'minversion' => $minversion,

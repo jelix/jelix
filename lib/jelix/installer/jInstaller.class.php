@@ -37,10 +37,10 @@ use \Jelix\Dependencies\ItemException;
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
  * @internal The object which drives the installation of a component
- * (module, plugin...) is an object which inherits from jInstallerComponentBase.
+ * (module...) is an object which inherits from jInstallerComponentBase.
  * This object calls load a file from the directory of the component. this
- * file should contain a class which should inherits from jInstallerModule
- * or jInstallerPlugin. this class should implements processes to install
+ * file should contain a class which should inherits from jInstallerModule.
+ *  this class should implements processes to install
  * the component.
  */
 class jInstaller {
@@ -89,8 +89,6 @@ class jInstaller {
     const FLAG_REMOVE_MODULE = 4;
 
     const FLAG_ALL = 7;
-
-    const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
 
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.

@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2009 Laurent Jouanneau
+* @copyright   2008-2016 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -50,7 +50,6 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
      * (dependents modules or the whole application).
      * Here, you should check if the module can be uninstalled or not
      * @throw Exception if the module cannot be uninstalled
-     * @notimplemented not used for the current version of the installer
      */
     function preUninstall() {
         
@@ -59,7 +58,6 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     /**
      * should remove static files. Probably remove some data if the user is agree etc...
      * @throw Exception  if an error occurs during the install.
-     * @notimplemented not used for the current version of the installer
      */
     function uninstall() {
         
@@ -68,7 +66,6 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     /**
      * 
      * @throw Exception  if an error occurs during the install.
-     * @notimplemented not used for the current version of the installer
      */
     function postUninstall() {
     
