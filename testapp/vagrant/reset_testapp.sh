@@ -25,6 +25,3 @@ resetJelixInstall $APPDIR/adminapp
 resetJelixMysql testapp root jelix admin_
 initapp $APPDIR/adminapp
 
-
-# reset common temp
-resetJelixTemp $APPDIR/adminapp

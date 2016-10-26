@@ -128,6 +128,7 @@ function resetJelixInstall() {
     if [ -f $appdir/var/config/installer.ini.php ]; then
         rm -f $appdir/var/config/installer.ini.php
     fi
+    resetJelixTemp $appdir
 }
 
 function runComposer() {
