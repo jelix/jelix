@@ -23,8 +23,8 @@ use \Jelix\Dependencies\ItemException;
  * @internal The object which drives the installation of a component
  * (module...) is an object which inherits from AbstractInstallLauncher.
  * This object calls load a file from the directory of the component. this
- * file should contain a class which should inherits from ModuleInstallLauncher
- * or PluginInstallLauncher. this class should implements processes to install
+ * file should contain a class which should inherits from ModuleInstallLauncher.
+ * This class should implements processes to install
  * the component.
  */
 class Installer {

@@ -55,6 +55,13 @@ cd lib/Jelix/Core/Selector
   InterfaceSelector.php
   SimpleFileSelector.php
 
+cd lib/Jelix/Dependencies
+  Exception.php
+  Item.php
+  ItemException.php
+  LICENCE
+  Resolver.php
+
 cd lib/Jelix/Legacy/
   composer.json
   init.php
@@ -301,12 +308,7 @@ cd lib/jelix-legacy/db
   jDbResultSet.class.php
 #endif
 
-cd lib/jelix/Dependencies
-  Exception.php
-  Item.php
-  ItemException.php
-  LICENCE
-  Resolver.php
+
 
 #if ENABLE_DEVELOPER
 cd lib/jelix-legacy/docs
@@ -817,14 +819,12 @@ cd lib/Jelix/Installer
   ModuleStatus.php
   Exception.php
   AbstractInstaller.php
-  PluginInstaller.php
   ModuleInstaller.php
   InstallerInterface.php
   ReporterInterface.php
   ReporterTrait.php
   AbstractInstallLauncher.php
   ModuleInstallLauncher.php
-  PluginInstallLauncher.php
   Installer.php
   EntryPoint.php
   Migration.php
@@ -845,13 +845,11 @@ cd lib/Jelix/Legacy/installer
   jInstallerModuleInfos.php
   jInstallerException.php
   jInstallerBase.php
-  jInstallerPlugin.php
   jInstallerModule.php
   jIInstallerComponent.php
   jIInstallReporter.php
   jInstallerComponentBase.php
   jInstallerComponentModule.php
-  jInstallerComponentPlugin.php
   jInstaller.php
   jInstallerEntryPoint.php
   jInstallerMessageProvider.php
