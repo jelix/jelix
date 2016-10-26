@@ -301,6 +301,13 @@ cd lib/jelix-legacy/db
   jDbResultSet.class.php
 #endif
 
+cd lib/jelix/Dependencies
+  Exception.php
+  Item.php
+  ItemException.php
+  LICENCE
+  Resolver.php
+
 #if ENABLE_DEVELOPER
 cd lib/jelix-legacy/docs
   workflow_action.sxd

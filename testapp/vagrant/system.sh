@@ -37,7 +37,7 @@ function initsystem () {
         apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba
     fi
     apt-get -y install mysql-server mysql-client
-    apt-get -y install git phpmyadmin vim unzip
+    apt-get -y install git phpmyadmin vim unzip curl
 
     # create a database into mysql + users
     if [ ! -d /var/lib/mysql/$APPNAME/ ]; then

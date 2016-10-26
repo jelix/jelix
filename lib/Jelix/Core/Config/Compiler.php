@@ -64,26 +64,41 @@ class Compiler {
         }
         $this->commonConfig = clone $config;
 
+        if(!file_exists($appConfigPath.$configFile) && !file_exists($configPath.$configFile)) {
+            if ($additionalOptions) {
+                IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
+                return $config;
+            }
+            throw new Exception("Configuration file of the entrypoint is missing -- $configFile", 5);
+        }
+
+        // read the static configuration specific to the entry point
+        if ($configFile == 'mainconfig.ini.php') {
+            throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
+        }
+
         // read the local configuration of the app
         if (file_exists($configPath.'localconfig.ini.php')) {
             IniFileMgr::readAndMergeObject($configPath.'localconfig.ini.php', $config);
         }
 
-        // read the configuration specific to the entry point
-        if ($configFile == 'mainconfig.ini.php') {
-            throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
-        }
-
         if (file_exists($appConfigPath.$configFile)) {
-            if (false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
+            if( false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
-        } else if (!$additionalOptions) {
-            throw new Exception("Configuration file is missing -- $configFile", 5);
         }
+
+        // read the local configuration of the entry point
+        if (file_exists($configPath.$configFile)) {
+            if( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config)) {
+                throw new Exception("Syntax error in the configuration file -- $configFile", 6);
+            }
+        }
+
         if ($additionalOptions) {
             IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
         }
+
         return $config;
     }
 
@@ -261,16 +276,17 @@ class Compiler {
         if ($config->disableInstallers) {
             $installation = array ();
         }
-        else if (!file_exists($installerFile)) {
-            if ($allModuleInfo) {
+        else if (file_exists($installerFile)) {
+            $installation = parse_ini_file($installerFile, true);
+        }
+        else {
+            if ($allModuleInfo)
                 $installation = array ();
-            } else {
+            else {
                 throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
             }
         }
-        else {
-            $installation = parse_ini_file($installerFile,true);
-        }
+
         $section = $config->urlengine['urlScriptId'];
 
         if (!isset($installation[$section])) {

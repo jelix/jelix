@@ -43,8 +43,11 @@
     <testsuite name="Jelix soap">
       <directory>jelix/soap/</directory>
     </testsuite>
-    <testsuite name="routing">
+    <testsuite name="Routing">
       <directory>jelix/routing/</directory>
+    </testsuite>
+    <testsuite name="Dependencies Resolver">
+      <directory>jelix/Dependencies/</directory>
     </testsuite>
   </testsuites>
 </phpunit>

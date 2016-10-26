@@ -7,6 +7,9 @@
 */
 namespace Jelix\Installer;
 use Jelix\Core\App as App;
+use \Jelix\Dependencies\Item;
+use \Jelix\Dependencies\Resolver;
+use \Jelix\Dependencies\ItemException;
 
 /**
  * main class for the installation
@@ -18,7 +21,7 @@ use Jelix\Core\App as App;
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
  * @internal The object which drives the installation of a component
- * (module, plugin...) is an object which inherits from AbstractInstallLauncher.
+ * (module...) is an object which inherits from AbstractInstallLauncher.
  * This object calls load a file from the directory of the component. this
  * file should contain a class which should inherits from ModuleInstallLauncher
  * or PluginInstallLauncher. this class should implements processes to install
@@ -55,9 +58,9 @@ class Installer {
 
     const FLAG_UPGRADE_MODULE = 2;
 
-    const FLAG_ALL = 3;
+    const FLAG_REMOVE_MODULE = 4;
 
-    const FLAG_MIGRATION_11X = 66; // 64 (migration) + 2 (FLAG_UPGRADE_MODULE)
+    const FLAG_ALL = 7;
 
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
@@ -207,25 +210,36 @@ class Installer {
 
             // ignore entry point which have the same config file of an other one
             if (isset($configFileList[$configFile])) {
-               $ep->sameConfigAs = $configFileList[$configFile];
-               continue;
+                $ep->sameConfigAs = $configFileList[$configFile];
+                continue;
             }
 
             $configFileList[$configFile] = $epId;
 
             $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos)
                                         use($that, $epId){
-               $name = $moduleInfos->name;
-               $path = $moduleInfos->getPath();
-               $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
-               $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
-
-               if (!isset($that->allModules[$path])) {
-                   $that->allModules[$path] = new ModuleInstallLauncher($moduleInfos, $that);
-               }
-
-               return $that->allModules[$path];
+                $name = $moduleInfos->name;
+                $path = $moduleInfos->getPath();
+                $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
+                $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
+                if (!isset($that->allModules[$path])) {
+                    $that->allModules[$path] = new ModuleInstallLauncher($moduleInfos, $that);
+                }
+                return $that->allModules[$path];
             });
+
+            // remove informations about modules that don't exist anymore
+            $modulesList = $ep->getModulesList();
+            $modules = $this->installerIni->getValues($epId);
+            foreach($modules as $key=>$value) {
+                $l = explode('.', $key);
+                if (count($l)<=1) {
+                    continue;
+                }
+                if (!isset($modulesList[$l[0]])) {
+                    $this->installerIni->removeValue($key, $epId);
+                }
+            }
         }
     }
 
@@ -305,8 +319,9 @@ class Installer {
      */
     public function installApplication($flags = false) {
 
-        if ($flags === false)
+        if ($flags === false) {
             $flags = self::FLAG_ALL;
+        }
 
         $this->startMessage();
         $result = true;
@@ -315,16 +330,15 @@ class Installer {
             if ($ep->sameConfigAs) {
                continue;
             }
-            $modules = array();
+            $resolver = new Resolver();
             foreach($ep->getLaunchers() as $name => $module) {
-                $access = $module->getAccessLevel($epId);
-                if ($access != 1 && $access != 2)
-                    continue;
-                $modules[$name] = $module;
+                $resolverItem = $module->getResolverItem($epId);
+                $resolver->addItem($resolverItem);
             }
-            $result = $result & $this->_installModules($modules, $ep, true, $flags);
-            if (!$result)
+            $result = $result & $this->_installModules($resolver, $ep, true, $flags);
+            if (!$result) {
                 break;
+            }
         }
 
         if ($result) {
@@ -371,15 +385,14 @@ class Installer {
            $this->ok('install.entrypoint.installed', $epId);
         }
         else {
-            $modules = array();
+            $resolver = new Resolver();
             foreach($ep->getLaunchers() as $name => $module) {
-                $access = $module->getAccessLevel($epId);
-                if ($access != 1 && $access != 2)
-                    continue;
-                $modules[$name] = $module;
+                $resolverItem = $module->getResolverItem($epId);
+                $resolver->addItem($resolverItem);
             }
-            $result = $this->_installModules($modules, $ep, true);
+            $result = $this->_installModules($resolver, $ep, true);
         }
+
         $this->installerIni->save();
         $this->endMessage();
         return $result;
@@ -392,10 +405,25 @@ class Installer {
      *               or null if modules should be installed for all entry points
      * @return boolean true if the installation is ok
      */
-    public function installModules($modulesList, $entrypoint = null) {
+    public function installModules($modulesList, $entrypoint = null)
+    {
+        return $this->_singleModules(Resolver::ACTION_INSTALL, $modulesList, $entrypoint);
+    }
 
+    /**
+     * uninstall given modules
+     * @param array $modulesList array of module names
+     * @param string $entrypoint  the entrypoint name as it appears in project.xml
+     *               or null if modules should be uninstalled for all entry points
+     * @return boolean true if the uninstallation is ok
+     */
+    public function uninstallModules($modulesList, $entrypoint = null) {
+        return $this->_singleModules(Resolver::ACTION_REMOVE, $modulesList, $entrypoint );
+    }
+
+    protected function _singleModules($action, $modulesList, $entrypoint ) {
         $this->startMessage();
-        $entryPointList = array();
+
         if ($entrypoint == null) {
             $entryPointList = $this->entryPoints;
         }
@@ -408,22 +436,33 @@ class Installer {
 
         foreach ($entryPointList as $epId=>$ep) {
             if ($ep->sameConfigAs) {
-               continue;
+                continue;
             }
             $allModules = &$ep->getLaunchers();
-
             $modules = array();
-            // always install jelix
-            array_unshift($modulesList, 'jelix');
+            // check that all given modules are existing
+            $hasError = false;
             foreach ($modulesList as $name) {
                 if (!isset($allModules[$name])) {
                     $this->error('module.unknown', $name);
+                    $hasError = true;
                 }
-                else
-                    $modules[] = $allModules[$name];
+            }
+            if ($hasError) {
+                continue;
             }
 
-            $result = $this->_installModules($modules, $ep, false);
+            // get all modules
+            $resolver = new Resolver();
+            foreach($ep->getLaunchers() as $name => $module) {
+                $resolverItem = $module->getResolverItem($epId);
+                if (in_array($name, $modulesList)) {
+                    $resolverItem->setAction($action);
+                }
+                $resolver->addItem($resolverItem);
+            }
+            // install modules
+            $result = $result & $this->_installModules($resolver, $ep, false);
             if (!$result)
                 break;
             $this->installerIni->save();
@@ -443,8 +482,7 @@ class Installer {
      * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$modules, EntryPoint $ep, $installWholeApp, $flags=3) {
-
+    protected function _installModules(Resolver $resolver, EntryPoint $ep, $installWholeApp, $flags=7) {
         $epId = $ep->getEpId();
         $this->notice('install.entrypoint.start', $epId);
         $ep = $this->entryPoints[$epId];
@@ -454,54 +492,104 @@ class Installer {
             $this->notice('install.entrypoint.installers.disabled');
         }
 
-        // first, check dependencies of the component, to have the list of component
-        // we should really install.
-        $orderedModules = $ep->getOrderedDependencies($modules, $this);
+        $moduleschain = $this->resolveDependencies($resolver, $epId);
+        if ($moduleschain === false) {
+            return false;
+        }
 
-        if ($orderedModules === false) {
+        $componentsToInstall = $this->runPreInstall($moduleschain, $ep, $installWholeApp, $flags);
+        if ($componentsToInstall === false) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+            return false;
+        }
+
+        $installedModules = $this->runInstall($componentsToInstall, $ep, $epId, $flags);
+        if ($installedModules === false) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+            return false;
+        }
+
+        $result = $this->runPostInstall($installedModules, $ep, $flags);
+        if (!$result) {
+            $this->warning('install.entrypoint.bad.end', $epId);
+        }
+        else {
+            $this->ok('install.entrypoint.end', $epId);
+        }
+        return $result;
+    }
+
+    protected function resolveDependencies(Resolver $resolver, $epId) {
+
+        try {
+            $moduleschain = $resolver->getDependenciesChainForInstallation();
+        } catch(ItemException $e) {
+            $item = $e->getItem();
+            $component = $item->getProperty('component');
+
+            if ($e->getCode() == 1 || $e->getCode() == 4) {
+                $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
+                $this->error('module.circular.dependency',$component->getName());
+            }
+            else if ($e->getCode() == 2) {
+                $depName = $e->getRelatedData()->getName();
+                $maxVersion = $minVersion = 0;
+                foreach($component->dependencies as $compInfo) {
+                    if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
+                        $maxVersion = $depInfo['maxversion'];
+                        $minVersion = $depInfo['minversion'];
+                    }
+                }
+                $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
+            }
+            else if ($e->getCode() == 3) {
+                $depName = $e->getRelatedData()->getName();
+                $this->error('install.error.delete.dependency',array($depName, $component->getName()));
+            }
+            else if ($e->getCode() == 6) {
+                $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
+            }
+            else if ($e->getCode() == 5) {
+                $depName = $e->getRelatedData()->getName();
+                $this->error('install.error.install.dependency',array($depName, $component->getName()));
+            }
+            $this->ok('install.entrypoint.bad.end', $epId);
+            return false;
+        } catch(\Exception $e) {
             $this->error('install.bad.dependencies');
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         }
 
         $this->ok('install.dependencies.ok');
+        return $moduleschain;
+    }
 
+
+    protected function runPreInstall($moduleschain, $ep, $installWholeApp, $flags) {
+        $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-        $result = true;
-        foreach($orderedModules as $item) {
-            list($component, $toInstall) = $item;
+
+        foreach($moduleschain as $resolverItem) {
+            $component = $resolverItem->getProperty('component');
+
             try {
-                if ($flags == self::FLAG_MIGRATION_11X) {
-                    $this->installerIni->setValue($component->getName().'.installed',
-                                                   1, $epId);
-                    $this->installerIni->setValue($component->getName().'.version',
-                                                   $component->getSourceVersion(), $epId);
-
+                if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
                     if ($ep->getConfigObj()->disableInstallers) {
-                        $upgraders = array();
-                    }
-                    else {
-                        $upgraders = $component->getUpgraders($ep);
-                        foreach($upgraders as $upgrader) {
-                            $upgrader->preInstall();
-                        }
-                    }
-
-                    $componentsToInstall[] = array($upgraders, $component, false);
-                }
-                else if ($toInstall) {
-                    if ($ep->getConfigObj()->disableInstallers)
                         $installer = null;
-                    else
+                    } else {
                         $installer = $component->getInstaller($ep, $installWholeApp);
-                    $componentsToInstall[] = array($installer, $component, $toInstall);
-                    if ($flags & self::FLAG_INSTALL_MODULE && $installer)
+                    }
+                    $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
+                    if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
                         $installer->preInstall();
+                    }
                 }
-                else {
+                elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
                     if ($ep->getConfigObj()->disableInstallers) {
                         $upgraders = array();
                     }
@@ -514,7 +602,18 @@ class Installer {
                             $upgrader->preInstall();
                         }
                     }
-                    $componentsToInstall[] = array($upgraders, $component, $toInstall);
+                    $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
+                }
+                else if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
+                    if ($ep->getConfigObj()->disableInstallers) {
+                        $installer = null;
+                    } else {
+                        $installer = $component->getInstaller($ep, $installWholeApp);
+                    }
+                    $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
+                    if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
+                        $installer->preUninstall();
+                    }
                 }
             } catch (Exception $e) {
                 $result = false;
@@ -524,61 +623,77 @@ class Installer {
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
-
         if (!$result) {
-            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
+        return $componentsToInstall;
+    }
+
+    protected function runInstall($componentsToInstall, $ep, $epId, $flags) {
 
         $installedModules = array();
-
+        $result = true;
         // -----  installation process
         try {
             foreach($componentsToInstall as $item) {
-                list($installer, $component, $toInstall) = $item;
-                if ($toInstall) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE))
+                list($installer, $component, $action) = $item;
+                if ($action == Resolver::ACTION_INSTALL) {
+                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $installer->install();
+                    }
                     $this->installerIni->setValue($component->getName().'.installed',
-                                                   1, $epId);
+                        1, $epId);
                     $this->installerIni->setValue($component->getName().'.version',
-                                                   $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), $epId);
                     $this->installerIni->setValue($component->getName().'.version.date',
-                                                   $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), $epId);
                     $this->installerIni->setValue($component->getName().'.firstversion',
-                                                   $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), $epId);
                     $this->installerIni->setValue($component->getName().'.firstversion.date',
-                                                   $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
-                    $installedModules[] = array($installer, $component, true);
+                    $installedModules[] = array($installer, $component, $action);
                 }
-                else {
+                elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
-                        if ($flags & self::FLAG_UPGRADE_MODULE)
+                        if ($flags & self::FLAG_UPGRADE_MODULE) {
                             $upgrader->install();
+                        }
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
                         $this->installerIni->setValue($component->getName().'.version',
-                                                      $upgrader->version, $epId);
+                            $upgrader->version, $epId);
                         $this->installerIni->setValue($component->getName().'.version.date',
-                                                      $upgrader->date, $epId);
+                            $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
-                                  array($component->getName(), $upgrader->version));
+                            array($component->getName(), $upgrader->version));
                         $lastversion = $upgrader->version;
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
                         $this->installerIni->setValue($component->getName().'.version',
-                                                      $component->getSourceVersion(), $epId);
+                            $component->getSourceVersion(), $epId);
                         $this->installerIni->setValue($component->getName().'.version.date',
-                                                      $component->getSourceDate(), $epId);
+                            $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
-                                  array($component->getName(), $component->getSourceVersion()));
+                            array($component->getName(), $component->getSourceVersion()));
                     }
-                    $installedModules[] = array($installer, $component, false);
+                    $installedModules[] = array($installer, $component, $action);
+                }
+                else if ($action == Resolver::ACTION_REMOVE) {
+                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                        $installer->uninstall();
+                    }
+                    $this->installerIni->removeValue($component->getName().'.installed', $epId);
+                    $this->installerIni->removeValue($component->getName().'.version', $epId);
+                    $this->installerIni->removeValue($component->getName().'.version.date', $epId);
+                    $this->installerIni->removeValue($component->getName().'.firstversion', $epId);
+                    $this->installerIni->removeValue($component->getName().'.firstversion.date', $epId);
+                    $this->ok('install.module.uninstalled', $component->getName());
+                    $installedModules[] = array($installer, $component, $action);
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
@@ -600,27 +715,37 @@ class Installer {
             $result = false;
             $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
         }
-
         if (!$result) {
-            $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
+        return $installedModules;
+    }
 
+    protected function runPostInstall($installedModules, $ep, $flags) {
+        $result = true;
         // post install
         foreach($installedModules as $item) {
             try {
-                list($installer, $component, $toInstall) = $item;
+                list($installer, $component, $action) = $item;
 
-                if ($toInstall) {
+                if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $installer->postInstall();
                         $component->installFinished($ep);
                     }
                 }
-                else if ($flags & self::FLAG_UPGRADE_MODULE){
-                    foreach($installer as $upgrader) {
-                        $upgrader->postInstall();
-                        $component->upgradeFinished($ep, $upgrader);
+                else if ($action == Resolver::ACTION_UPGRADE) {
+                    if ($flags & self::FLAG_UPGRADE_MODULE) {
+                        foreach ($installer as $upgrader) {
+                            $upgrader->postInstall();
+                            $component->upgradeFinished($ep, $upgrader);
+                        }
+                    }
+                }
+                elseif ($action == Resolver::ACTION_REMOVE) {
+                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                        $installer->postUninstall();
+                        $component->uninstallFinished($ep);
                     }
                 }
 
@@ -643,9 +768,6 @@ class Installer {
                 $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
-
-        $this->ok('install.entrypoint.end', $epId);
-
         return $result;
     }
 

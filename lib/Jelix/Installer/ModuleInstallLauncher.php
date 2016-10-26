@@ -9,6 +9,7 @@ namespace Jelix\Installer;
 
 
 use Jelix\Version\VersionComparator;
+use \Jelix\Dependencies\Resolver;
 
 /**
 * a class to install a module.
@@ -43,14 +44,23 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
         }
     }
 
-    protected function _setAccess($config) {
-        $access = $config->getValue($this->moduleInfos->name.'.access', 'modules');
-        if ($access == 0 || $access == null) {
-            $config->setValue($this->moduleInfos->name.'.access', 2, 'modules');
-            $config->save();
+    protected function _setAccess(EntryPoint $ep)
+    {
+        $config = $ep->getConfigIni();
+        $access = $config->getValue($this->moduleInfos->name . '.access', 'modules');
+
+        $action = $this->getInstallAction($ep->getEpId());
+        if ($action == Resolver::ACTION_INSTALL) {
+            if ($access == 0 || $access == null) {
+                $config->setValue($this->moduleInfos->name . '.access', 2, 'modules');
+                $config->save();
+            } else if ($access == 3) {
+                $config->setValue($this->moduleInfos->name . '.access', 1, 'modules');
+                $config->save();
+            }
         }
-        else if ($access == 3) {
-            $config->setValue($this->moduleInfos->name.'.access', 1, 'modules');
+        else if ($action == Resolver::ACTION_REMOVE) {
+            $config->setValue($this->moduleInfos->name . '.access', 0, 'modules');
             $config->save();
         }
     }
@@ -66,7 +76,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
      */
     function getInstaller(EntryPoint $ep, $installWholeApp) {
 
-        $this->_setAccess($ep->getConfigIni());
+        $this->_setAccess($ep);
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
@@ -258,6 +268,10 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
 
+    public function uninstallFinished($ep) {
+        if ($this->mainInstaller)
+            $this->mainInstaller->installerIni->removeValue($this->moduleInfos->name.'.contexts', '__modules_data');
+    }
 
     protected function _formatDate($date) {
         if ($date !== null) {

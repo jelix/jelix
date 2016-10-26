@@ -52,16 +52,22 @@ class EntryPoint {
     protected $localConfigIni;
 
     /**
-     * the entry point config combined with $localConfigIni
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $configIni;
-
-    /**
-      * entrypoint config
+      * entrypoint config of app/config/
       * @var \Jelix\IniFile\IniModifier
       */
     protected $epConfigIni;
+
+    /**
+    +     * entrypoint config of var/config/
+    +     * @var \Jelix\IniFile\IniModifier
+    +     */
+    protected $localEpConfigIni;
+
+    /**
+     * the entry point config combined with $localConfigIni
+     * @var \Jelix\IniFile\MultiIniModifier
+     */
+    protected $fullConfigIni;
 
     /** @var string entrypoint id of the entrypoint that have the same config */
     public $sameConfigAs = null;
@@ -104,7 +110,7 @@ class EntryPoint {
     protected $moduleLaunchers = array();
 
     /**
-     * @var Jelix\Core\Infos\AppInfos
+     * @var \Jelix\Core\Infos\AppInfos
      */
     protected $appInfos;
 
@@ -126,8 +132,23 @@ class EntryPoint {
         $this->file = $file;
         $this->mainConfigIni = $mainConfig;
         $this->localConfigIni = $localConfig;
-        $this->epConfigIni = new \Jelix\IniFile\IniModifier(\Jelix\Core\App::appConfigPath($configFile));
-        $this->configIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
+
+        $appConfigPath = \Jelix\Core\App::appConfigPath($configFile);
+        if (!file_exists($appConfigPath)) {
+            \jFile::createDir(dirname($appConfigPath));
+            file_put_contents($appConfigPath, ';<'.'?php die(\'\');?'.'>');
+        }
+        $this->epConfigIni = new \Jelix\IniFile\IniModifier($appConfigPath);
+
+        $varConfigPath = \Jelix\Core\App::configPath($configFile);
+        if (!file_exists($varConfigPath)) {
+            \jFile::createDir(dirname($varConfigPath));
+            file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');
+        }
+        $this->localEpConfigIni = new \Jelix\IniFile\IniModifier($varConfigPath);
+
+        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
+        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($this->fullConfigIni, $this->localEpConfigIni);
 
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
@@ -145,14 +166,14 @@ class EntryPoint {
     }
 
     /**
-     * @param Jelix\Core\Infos\AppInfos $app
+     * @param \Jelix\Core\Infos\AppInfos $app
      */
     public function setAppInfos(\Jelix\Core\Infos\AppInfos $app) {
         $this->appInfos = $app;
     }
 
     /**
-     * @return Jelix\Core\Infos\AppInfos
+     * @return \Jelix\Core\Infos\AppInfos
      */
     public function getAppInfos() {
         return $this->appInfos;
@@ -201,21 +222,30 @@ class EntryPoint {
     }
 
     /**
-     * the entry point config combined with $localConfigIni
+     * the entry point config (static and local) combined with $localConfigIni
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
     function getConfigIni() {
-        return $this->configIni;
+        return $this->fullConfigIni;
     }
 
     /*
-     * the entry point config alone
+     * he static entry point config alone (in app/config)
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */
     function getEpConfigIni() {
         return $this->epConfigIni;
+    }
+
+    /*
+     * the local entry point config alone (in var/config)
+     * @return \Jelix\IniFile\IniModifier
+     * @since 1.7
+     */
+    function getLocalEpConfigIni() {
+        return $this->localEpConfigIni;
     }
 
     /**
@@ -238,10 +268,10 @@ class EntryPoint {
     }
 
     /**
-     * @param function $launcherGetter
+     * @param callable $launcherGetter
      * @internal
      */
-    function createInstallLaunchers($launcherGetter) {
+    function createInstallLaunchers(callable $launcherGetter) {
         $this->moduleLaunchers = array();
         $epId = $this->getEpId();
 
@@ -255,6 +285,9 @@ class EntryPoint {
         }
     }
 
+    /**
+     * @return AbstractInstallLauncher[]
+     */
     function getLaunchers() {
         return $this->moduleLaunchers;
     }
@@ -267,116 +300,5 @@ class EntryPoint {
             return null;
         }
         return $this->moduleLaunchers[$moduleName];
-    }
-
-
-    protected $_checkedComponents = array();
-    protected $_checkedCircularDependency = array();
-    protected $_componentsToInstall = array();
-
-    /**
-     * check dependencies of given modules and plugins
-     *
-     * @param AbstractInstallLauncher[] $list
-     * @param Installer $installer to report error
-     * @return false|array  list of arrays: 0:ModuleInstallLauncher 1: true to install, false to update
-     */
-    public function getOrderedDependencies ($list, $installer = null) {
-
-        $this->_checkedComponents = array();
-        $this->_componentsToInstall = array();
-        $result = true;
-        $epId = $this->getEpId();
-        foreach($list as $component) {
-
-            $this->_checkedCircularDependency = array();
-            if (!isset($this->_checkedComponents[$component->getName()])) {
-                try {
-                    $this->_checkDependencies($component);
-
-                    if ($this->config->disableInstallers
-                        || !$component->isInstalled($epId)) {
-                        $this->_componentsToInstall[] = array($component, true);
-                    }
-                    else if (!$component->isUpgraded($epId)) {
-                        $this->_componentsToInstall[] = array($component, false);
-                    }
-                } catch (\Jelix\Installer\Exception $e) {
-                    $result = false;
-                    if ($installer) {
-                        $installer->error ($e->getLocaleKey(), $e->getLocaleParameters());
-                    }
-                    else {
-                        throw $e;
-                    }
-                } catch (\Exception $e) {
-                    $result = false;
-                    if ($installer) {
-                        $installer->error ($e->getMessage(). " comp=".$component->getName(), null, true);
-                    }
-                    else {
-                        throw $e;
-                    }
-                }
-            }
-        }
-        if ($result) {
-            return $this->_componentsToInstall;
-        }
-        return false;
-    }
-
-    /**
-     * check dependencies of a module
-     * @param \Jelix\Installer\AbstractModuleLauncher $component
-     * @throw \Jelix\Installer\Exception  when there is an error in the dependency tree
-     */
-    protected function _checkDependencies($component) {
-
-        if (isset($this->_checkedCircularDependency[$component->getName()])) {
-            $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
-            throw new \Jelix\Installer\Exception ('module.circular.dependency',$component->getName());
-        }
-
-        $this->_checkedCircularDependency[$component->getName()] = true;
-        $epId = $this->getEpId();
-        $compNeeded = '';
-        foreach ($component->getDependencies() as $compInfo) {
-
-            if ($compInfo['type'] != 'module')
-                continue;
-            $name = $compInfo['name'];
-            $comp = $this->getLauncher($name);
-
-            if (!$comp)
-                $compNeeded .= $name.', ';
-            else {
-
-                if (!$comp->checkVersion($compInfo['version'])) {
-                    throw new \Jelix\Installer\Exception ('module.bad.dependency.version',
-                                                   array($component->getName(), $comp->getName(), $compInfo['version']));
-                }
-
-                if (!isset($this->_checkedComponents[$comp->getName()])) {
-
-                    $this->_checkDependencies($comp);
-                    if ($this->config->disableInstallers
-                        || !$comp->isInstalled($epId)) {
-                        $this->_componentsToInstall[] = array($comp, true);
-                    }
-                    else if(!$comp->isUpgraded($epId)) {
-                        $this->_componentsToInstall[] = array($comp, false);
-                    }
-                }
-            }
-        }
-
-        $this->_checkedComponents[$component->getName()] = true;
-        unset($this->_checkedCircularDependency[$component->getName()]);
-
-        if ($compNeeded) {
-            $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-            throw new \Jelix\Installer\Exception ('module.needed', array($component->getName(), $compNeeded));
-        }
     }
 }

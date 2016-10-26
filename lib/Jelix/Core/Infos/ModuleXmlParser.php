@@ -23,7 +23,9 @@ class ModuleXmlParser extends XmlParserAbstract {
             }
 
             if ($xml->nodeType == \XMLReader::ELEMENT) {
-
+                if ($xml->name != 'jelix' && $xml->name != 'module') {
+                    continue;
+                }
                 $dependency = array('type'=>$xml->name, 'name'=>'', 'version'=>'');
                 $dependency['type'] = $xml->name;
                 if ($xml->name == 'jelix') {

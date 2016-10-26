@@ -119,11 +119,6 @@ abstract class AbstractInstaller {
     }
 
     /**
-     * @var jDbTools
-     */
-    private $_dbTool = null;
-
-    /**
      * @var jDbConnection
      */
     private $_dbConn = null;

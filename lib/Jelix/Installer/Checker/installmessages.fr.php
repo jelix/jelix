@@ -64,6 +64,8 @@ return array(
         'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s)',
         'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
         'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
+        'module.error.delete.dependency' => 'Le module %s, qui est doit être désinstallé, est nécessaire au module %s',
+        'module.error.install.dependency' => 'Le module %s, que vous demandez d\'installer, doit être désinstallé à cause de la désinstallation du module %s',
 
         'install.entrypoint.start'  =>'Installation pour le point d\'entrée %s',
         'install.entrypoint.end'    =>'Tous les modules sont installés ou mis à jour pour le point d\'entrée %s',
@@ -80,5 +82,6 @@ return array(
         'install.module.error'              =>'Une erreur est survenue durant l\'installation du module %s: %s',
         'install.module.check.dependency'   =>'Vérifie les dépendances du module %s',
         'install.module.upgraded'           =>'Le module %s est mis à jour à la version %s',
+        'install.module.uninstalled'        =>'Le module %s a été désinstallé',
         'more.details'                      =>'Plus de details',
 );

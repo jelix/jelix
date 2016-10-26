@@ -8,3 +8,10 @@ jacl=1
 [responses]
 html=myHtmlResponse
 soap="jsoap~jResponseSoap"
+
+[jResponseHtml]
+minifyCSS=off
+minifyJS=on
+minifyExcludeCSS=
+minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyEntryPoint=minify.php

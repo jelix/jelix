@@ -77,6 +77,11 @@ abstract class AbstractInstallLauncher {
                 (\Jelix\Version\VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
     }
 
+    public function isActivated($epId) {
+        $access = $this->moduleStatuses[$epId]->access;
+        return ($access == 1 || $access ==2);
+    }
+
     public function getInstalledVersion($epId) {
         return $this->moduleStatuses[$epId]->version;
     }
@@ -122,8 +127,48 @@ abstract class AbstractInstallLauncher {
 
     public function upgradeFinished($ep, $upgrader) { }
 
+    public function uninstallFinished($ep) { }
+
     public function checkVersion($versionExpression) {
         return \Jelix\Version\VersionComparator::compareVersionRange($this->moduleInfos->version, $versionExpression);
     }
+
+    /**
+     * @param string $epId
+     * @param bool $installedByDefault
+     * @return Item
+     */
+    public function getResolverItem($epId) {
+        $action = $this->getInstallAction($epId);
+        if ($action == Resolver::ACTION_UPGRADE) {
+            $item = new Item($this->name, true, $this->moduleInfos->version, Resolver::ACTION_UPGRADE, $this->moduleStatuses[$epId]->version);
+        }
+        else {
+            $item = new Item($this->name, $this->isInstalled($epId), $this->moduleInfos->version, $action);
+        }
+
+        foreach($this->dependencies as $dep) {
+            $item->addDependency($dep['name'], $dep['version']);
+        }
+        $item->setProperty('component', $this);
+        return $item;
+    }
+
+    protected function getInstallAction($epId) {
+        if ($this->isInstalled($epId)) {
+            if (!$this->isActivated($epId)) {
+                return Resolver::ACTION_REMOVE;
+            }
+            elseif ($this->isUpgraded($epId)) {
+                return Resolver::ACTION_NONE;
+            }
+            return Resolver::ACTION_UPGRADE;
+        }
+        elseif ($this->isActivated($epId)) {
+            return Resolver::ACTION_INSTALL;
+        }
+        return Resolver::ACTION_NONE;
+    }
+
 }
 

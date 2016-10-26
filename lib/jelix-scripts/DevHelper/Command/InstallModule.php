@@ -6,7 +6,6 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -84,7 +83,7 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         try {
             \Jelix\Core\AppManager::clearTemp(\jApp::tempBasePath());
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             if ($e->getCode() == 2) {
                 $output->writeln("Error: bad path in \\Jelix\\Core\\App::tempBasePath(), it is equals to '".App::tempBasePath()."' !!");
                 $output->writeln("       Jelix cannot clear the content of the temp directory.");

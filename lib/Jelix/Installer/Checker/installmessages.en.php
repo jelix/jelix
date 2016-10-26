@@ -64,6 +64,8 @@ return array(
         'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s)',
         'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
         'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
+        'module.error.delete.dependency' => 'Module %s, , needed by module %s, should be removed at the same time',
+        'module.error.install.dependency' => 'Module %s,  should be removed because of the removal of one of its dependencies, module %s, but it asked to be install/upgrade at the same time',
 
         'install.entrypoint.start'  =>'Installation starts for the entry point %s',
         'install.entrypoint.end'    =>'All modules are installed or upgraded for the entry point %s',
@@ -80,5 +82,6 @@ return array(
         'install.module.error'          =>'An error occured during the installation of the module %s: %s',
         'install.module.check.dependency'=>'Check dependencies of the module %s',
         'install.module.upgraded'       =>'Module %s upgraded to the version %s',
+        'install.module.uninstalled'       =>'Module %s has been uninstalled',
         'more.details'                  =>'More details',
 );

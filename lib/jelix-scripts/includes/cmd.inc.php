@@ -38,6 +38,7 @@ $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 $application = new Application("Jelix helpers");
 $application->add(new InstallApp($jelixScriptConfig));
 $application->add(new InstallModule($jelixScriptConfig));
+$application->add(new UninstallModule($jelixScriptConfig));
 $application->add(new InitAdmin($jelixScriptConfig));
 $application->add(new CreateCtrl($jelixScriptConfig));
 $application->add(new CreateDao($jelixScriptConfig));
