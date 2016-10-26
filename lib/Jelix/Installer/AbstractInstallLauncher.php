@@ -7,6 +7,9 @@
 */
 namespace Jelix\Installer;
 
+use \Jelix\Dependencies\Item;
+use \Jelix\Dependencies\Resolver;
+
 /**
 * a class to install a component (module or plugin)
 * @since 1.2
@@ -141,13 +144,13 @@ abstract class AbstractInstallLauncher {
     public function getResolverItem($epId) {
         $action = $this->getInstallAction($epId);
         if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, true, $this->moduleInfos->version, Resolver::ACTION_UPGRADE, $this->moduleStatuses[$epId]->version);
+            $item = new Item($this->moduleInfos->name, true, $this->moduleInfos->version, Resolver::ACTION_UPGRADE, $this->moduleStatuses[$epId]->version);
         }
         else {
-            $item = new Item($this->name, $this->isInstalled($epId), $this->moduleInfos->version, $action);
+            $item = new Item($this->moduleInfos->name, $this->isInstalled($epId), $this->moduleInfos->version, $action);
         }
 
-        foreach($this->dependencies as $dep) {
+        foreach($this->moduleInfos->dependencies as $dep) {
             $item->addDependency($dep['name'], $dep['version']);
         }
         $item->setProperty('component', $this);
