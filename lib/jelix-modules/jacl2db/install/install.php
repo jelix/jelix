@@ -20,7 +20,7 @@ class jacl2dbModuleInstaller extends jInstallerModule {
     protected $defaultDbProfile = 'jacl2_profile';
 
     function install() {
-        if ($this->entryPoint->type == 'cmdline')
+        if ($this->entryPoint->isCliScript())
             return;
 
         if (!$this->firstDbExec())

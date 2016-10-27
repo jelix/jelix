@@ -15,7 +15,7 @@ class jauthdb_adminModuleInstaller extends jInstallerModule {
     function install() {
         $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
 
-        if ($authconfig && $this->entryPoint->type != 'cmdline' && $this->firstExec($authconfig)) {
+        if ($authconfig && !$this->entryPoint->isCliScript() && $this->firstExec($authconfig)) {
 
             $conf = new \Jelix\IniFile\IniModifier(jApp::configPath($authconfig));
             $driver = $conf->getValue('driver');

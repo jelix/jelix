@@ -70,28 +70,28 @@ class EntryPoint {
     protected $fullConfigIni;
 
     /** @var string entrypoint id of the entrypoint that have the same config */
-    public $sameConfigAs = null;
+    protected $sameConfigAs = null;
 
     /**
      * @var boolean true if the script corresponding to the configuration
      *                is a script for CLI
      */
-    public $isCliScript;
+    protected $isCliScript;
 
     /**
      * @var string the url path of the entry point
      */
-    public $scriptName;
+    protected $scriptName;
 
     /**
      * @var string the filename of the entry point
      */
-    public $file;
+    protected $file;
 
     /**
      * @var string the type of entry point
      */
-    public $type;
+    protected $type;
 
     /**
      * @var XmlEntryPoint
@@ -124,14 +124,14 @@ class EntryPoint {
      */
     function __construct(\Jelix\IniFile\MultiIniModifier $mainConfig,
                          \Jelix\IniFile\MultiIniModifier $localConfig,
-                         $configFile, $file, $type) {
+                         $configFile, $file, $type, $sameConfigAs = null) {
         $this->type = $type;
-        $this->isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
-        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
+        $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
         $this->mainConfigIni = $mainConfig;
         $this->localConfigIni = $localConfig;
+        $this->sameConfigAs = $sameConfigAs;
 
         $appConfigPath = \Jelix\Core\App::appConfigPath($configFile);
         if (!file_exists($appConfigPath)) {
@@ -152,7 +152,7 @@ class EntryPoint {
 
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
-                                                    $this->isCliScript);
+                                                    $this->isCliScript());
         $this->config = $compiler->read(true);
         $this->modulesInfos = $compiler->getModulesInfos();
     }
@@ -163,6 +163,26 @@ class EntryPoint {
 
     public function getUrlMap() {
         return $this->urlMap;
+    }
+
+    public function isCliScript() {
+        return ($this->type == 'cmdline');
+    }
+
+    public function getScriptName() {
+        return $this->scriptName;
+    }
+
+    public function getFile() {
+        return $this->file;
+    }
+
+    public function getType() {
+        return $this->type;
+    }
+
+    public function usesSameConfigOfOtherEntryPoint() {
+        return $this->sameConfigAs;
     }
 
     /**

@@ -36,7 +36,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
                          Installer $mainInstaller = null) {
         parent::__construct($moduleInfos, $mainInstaller);
         if ($mainInstaller) {
-            $ini = $mainInstaller->installerIni;
+            $ini = $mainInstaller->getInstallerIni();
             $contexts = $ini->getValue($moduleInfos->name.'.contexts','__modules_data');
             if ($contexts !== null && $contexts !== "") {
                 $this->installerContexts = explode(',', $contexts);
@@ -191,12 +191,12 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
         }
 
         $list = array();
-
         foreach($this->moduleUpgraders as $upgrader) {
 
             $foundVersion = '';
             // check the version
             foreach($upgrader->targetVersions as $version) {
+
                 if (VersionComparator::compareVersion($this->moduleStatuses[$epId]->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
@@ -222,16 +222,19 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
             // made into the 1.4. The only way to now that, is to compare date of versions
             if ($upgrader->date != '' && $this->mainInstaller) {
                 $upgraderDate = $this->_formatDate($upgrader->date);
+                $installerIni = $this->mainInstaller->getInstallerIni();
 
                 // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->moduleInfos->name.'.firstversion.date', $epId));
+                $dt = $installerIni->getValue($this->moduleInfos->name.'.firstversion.date', $epId);
+                $firstVersionDate = $this->_formatDate($dt);
                 if ($firstVersionDate !== null) {
                     if ($firstVersionDate >= $upgraderDate)
                         continue;
                 }
 
                 // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->moduleInfos->name.'.version.date', $epId));
+                $dt = $installerIni->getValue($this->moduleInfos->name.'.version.date', $epId);
+                $currentVersionDate = $this->_formatDate($dt);
                 if ($currentVersionDate !== null) {
                     if ($currentVersionDate >= $upgraderDate)
                         continue;
@@ -260,7 +263,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
     public function installFinished($ep) {
         $this->installerContexts = $this->moduleInstaller->getContexts();
         if ($this->mainInstaller)
-            $this->mainInstaller->installerIni->setValue($this->moduleInfos->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
+            $this->mainInstaller->getInstallerIni()->setValue($this->moduleInfos->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
     public function upgradeFinished($ep, $upgrader) {
@@ -270,7 +273,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
 
     public function uninstallFinished($ep) {
         if ($this->mainInstaller)
-            $this->mainInstaller->installerIni->removeValue($this->moduleInfos->name.'.contexts', '__modules_data');
+            $this->mainInstaller->getInstallerIni()->removeValue($this->moduleInfos->name.'.contexts', '__modules_data');
     }
 
     protected function _formatDate($date) {

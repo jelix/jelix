@@ -65,7 +65,7 @@ class Installer {
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
      */
-    public $installerIni = null;
+    protected $installerIni = null;
 
     /**
      * list of entry point and their properties
@@ -85,18 +85,18 @@ class Installer {
      * list of all modules of the application
      * @var \Jelix\Installer\ModuleInstallLauncher[]   key=path of the module
      */
-    protected $allModules = array();
+    protected $allModuleLaunchers = array();
 
     /**
      * the object responsible of the results output
-     * @var jIInstallReporter
+     * @var \Jelix\Installer\ReporterInterface
      */
-    public $reporter;
+    protected $reporter;
 
     /**
-     * @var JInstallerMessageProvider
+     * @var \Jelix\Installer\Checker\Messages
      */
-    public $messages;
+    protected $messages;
 
     /**
      * the mainconfig.ini.php combined with the defaultconfig.ini.php
@@ -142,7 +142,7 @@ class Installer {
                                                                 App::mainConfigFile());
         $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
                                                                  $localConfig);
-        $this->installerIni = $this->getInstallerIni();
+        $this->installerIni = $this->createInstallerIni();
 
         $urlfile = App::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
         $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
@@ -155,11 +155,12 @@ class Installer {
         $chmod = $this->mainConfig->getValue('chmodDir');
         \jFile::createDir(App::tempPath(), intval($chmod, 8));
     }
+
+
     /**
-     * @internal mainly for tests
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
-    protected function getInstallerIni() {
+    protected function createInstallerIni() {
         if (!file_exists(App::configPath('installer.ini.php'))) {
             if (false === @file_put_contents(App::configPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
@@ -183,8 +184,6 @@ class Installer {
     protected function readEntryPointsData(\Jelix\Core\Infos\AppInfos $appInfos) {
 
         $configFileList = array();
-        $installerIni = $this->installerIni;
-        $allModules = &$this->allModules;
         $that = $this;
 
         // read all entry points data
@@ -199,7 +198,9 @@ class Installer {
             }
 
             // we create an object corresponding to the entry point
-            $ep = $this->getEntryPointObject($configFile, $file, $type);
+            $reuseSameConfig = isset($configFileList[$configFile])? $configFileList[$configFile]:null;
+            //$reuseSameConfig = $configFileList[$configFile]?? null;
+            $ep = $this->getEntryPointObject($configFile, $file, $type, $reuseSameConfig);
 
             $epId = $ep->getEpId();
             $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
@@ -209,8 +210,7 @@ class Installer {
             $this->entryPoints[$epId] = $ep;
 
             // ignore entry point which have the same config file of an other one
-            if (isset($configFileList[$configFile])) {
-                $ep->sameConfigAs = $configFileList[$configFile];
+            if ($reuseSameConfig) {
                 continue;
             }
 
@@ -222,10 +222,10 @@ class Installer {
                 $path = $moduleInfos->getPath();
                 $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
                 $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
-                if (!isset($that->allModules[$path])) {
-                    $that->allModules[$path] = new ModuleInstallLauncher($moduleInfos, $that);
+                if (!isset($that->allModuleLaunchers[$path])) {
+                    $that->allModuleLaunchers[$path] = new ModuleInstallLauncher($moduleInfos, $that);
                 }
-                return $that->allModules[$path];
+                return $that->allModuleLaunchers[$path];
             });
 
             // remove informations about modules that don't exist anymore
@@ -247,8 +247,8 @@ class Installer {
      * @internal for tests
      * @return EntryPoint
      */
-    protected function getEntryPointObject($configFile, $file, $type) {
-        return new EntryPoint($this->mainConfig, $this->localConfig, $configFile, $file, $type);
+    protected function getEntryPointObject($configFile, $file, $type, $reuseSameConfig) {
+        return new EntryPoint($this->mainConfig, $this->localConfig, $configFile, $file, $type, $reuseSameConfig);
     }
 
     /**
@@ -257,6 +257,20 @@ class Installer {
      */
     public function getEntryPoint($epId) {
         return $this->entryPoints[$epId];
+    }
+
+    /**
+     * @return ReporterInterface
+     */
+    function getReporter() {
+        return $this->reporter;
+    }
+
+    /**
+     * @return \Jelix\IniFile\IniModifier
+     */
+    function getInstallerIni() {
+        return $this->installerIni;
     }
 
     /**
@@ -327,7 +341,7 @@ class Installer {
         $result = true;
 
         foreach($this->entryPoints as $epId=>$ep) {
-            if ($ep->sameConfigAs) {
+            if ($ep->usesSameConfigOfOtherEntryPoint()) {
                continue;
             }
             $resolver = new Resolver();
@@ -351,9 +365,9 @@ class Installer {
 
     protected function completeInstallStatus() {
       foreach($this->entryPoints as $epId=>$ep) {
-         if ($ep->sameConfigAs) {
+         if ($ep->usesSameConfigOfOtherEntryPoint()) {
             // let's copy the installation information of the other entry point
-            $values = $this->installerIni->getValues($ep->sameConfigAs);
+            $values = $this->installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
             $this->installerIni->setValues($values, $epId);
             $this->ok('install.entrypoint.installed', $epId);
          }
@@ -378,9 +392,9 @@ class Installer {
 
         $epId = $this->epId[$entrypoint];
         $ep = $this->entrypoints[$epId];
-        if ($ep->sameConfigAs) {
+        if ($ep->usesSameConfigOfOtherEntryPoint()) {
            // let's copy the installation information of the other entry point
-           $values = $this->installerIni->getValues($ep->sameConfigAs);
+           $values = $this->installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
            $this->installerIni->setValues($values, $epId);
            $this->ok('install.entrypoint.installed', $epId);
         }
@@ -435,7 +449,7 @@ class Installer {
         }
 
         foreach ($entryPointList as $epId=>$ep) {
-            if ($ep->sameConfigAs) {
+            if ($ep->usesSameConfigOfOtherEntryPoint()) {
                 continue;
             }
             $allModules = &$ep->getLaunchers();
@@ -702,8 +716,8 @@ class Installer {
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
                 $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                                                             $ep->scriptName,
-                                                             $ep->isCliScript);
+                                                             $ep->getScriptName(),
+                                                             $ep->isCliScript());
                 $ep->setConfigObj($compiler->read(true));
 
                 App::setConfig($ep->getConfigObj());
@@ -756,8 +770,8 @@ class Installer {
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
                 $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                                                             $ep->scriptName,
-                                                             $ep->isCliScript);
+                                                             $ep->getScriptName(),
+                                                             $ep->isCliScript());
                 $ep->setConfigObj($compiler->read(true));
                 App::setConfig($ep->getConfigObj());
             } catch (Exception $e) {

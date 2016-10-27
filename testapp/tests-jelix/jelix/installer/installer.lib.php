@@ -16,7 +16,10 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
                          $localConfigIni,
                          $configFile, $file, $type, $configContent) {
         $this->type = $type;
-        $this->isCliScript = ($type == 'cmdline');
+        $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
+        $this->file = $file;
+        $this->mainConfigIni = $mainConfigIni;
+        $this->localConfigIni = $localConfigIni;
 
         if (is_object($configFile)) {
             $this->epConfigIni = $configFile;
@@ -32,13 +35,9 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
         $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni,
             new \Jelix\IniFile\MultiIniModifier($this->epConfigIni, $this->localEpConfigIni));
 
-        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
-        $this->file = $file;
-        $this->mainConfigIni = $mainConfigIni;
-        $this->localConfigIni = $localConfigIni;
         $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
                                                     $this->scriptName,
-                                                    $this->isCliScript);
+                                                    $this->isCliScript());
         $this->config = $compiler->read(true, $configContent);
         $this->modulesInfos = $compiler->getModulesInfos();
     }
@@ -132,4 +131,16 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
     }
 
     public function saveAs($filename) {}
+}
+
+
+class testInstaller extends \Jelix\Installer\Installer {
+
+
+    protected function createInstallerIni()
+    {
+        file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
+        return new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
+    }
+
 }

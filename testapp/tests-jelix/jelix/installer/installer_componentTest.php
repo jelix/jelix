@@ -301,19 +301,18 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
-            $installer = $this->getMock('jInstaller', null, array(new testInstallReporter()) );
+            $installer = new testInstaller(new testInstallReporter());
+            $installerIni = $installer->getInstallerIni();
 
-            $installer->installerIni = new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
             $moduleInfo = new \Jelix\Core\Infos\ModuleInfos(jApp::appPath().'modules/testinstall2/');
             $component = new testInstallerComponentModule2($moduleInfo, $installer);
 
             // 1.1  1.1.2* 1.1.3** 1.1.5 1.2.2** 1.2.4*
 
-            $installer->installerIni->setValue('testinstall2.firstversion', '1.1' , 'index');
-            $installer->installerIni->setValue('testinstall2.firstversion.date', '2011-01-10' , 'index');
-            $installer->installerIni->setValue('testinstall2.version', '1.1.2' , 'index');
-            $installer->installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'index');
+            $installerIni->setValue('testinstall2.firstversion', '1.1' , 'index');
+            $installerIni->setValue('testinstall2.firstversion.date', '2011-01-10' , 'index');
+            $installerIni->setValue('testinstall2.version', '1.1.2' , 'index');
+            $installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'index');
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
@@ -332,10 +331,21 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
 
-            $installer->installerIni->setValue('testinstall2.firstversion', '1.1.3' , 'index');
-            $installer->installerIni->setValue('testinstall2.firstversion.date', '2011-01-13' , 'index');
-            $installer->installerIni->setValue('testinstall2.version', '1.1.5' , 'index');
-            $installer->installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'index');
+            /*
+            testinstall2ModuleUpgrader_newupgraderfilename : B
+            testinstall2ModuleUpgrader_newupgraderfilenamedate: C 2011-01-13
+            testinstall2ModuleUpgrader_second : D
+            testinstall2ModuleUpgrader_first : A
+                                       01-13     01-15             01-25
+                        /- B:1.1.2 - C:1.1.3 - D:1.1.5
+              A:1.1 ---/-            C:1.2.2 -         B:1.2.4     1.2.5
+
+             */
+            $installerIni->setValue('testinstall2.firstversion', '1.1.3' , 'index');
+            $installerIni->setValue('testinstall2.firstversion.date', '2011-01-13' , 'index');
+            $installerIni->setValue('testinstall2.version', '1.1.5' , 'index');
+            $installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'index');
+
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
