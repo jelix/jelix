@@ -24,23 +24,17 @@ class jClassicRequest extends jRequest {
 
     protected function _initParams(){
 
-        $url  = jUrl::getEngine()->parseFromRequest($this, $_GET);
-        $this->params = $url->params;
+        $this->params = jUrl::getEngine()->parseFromRequest($this, $_GET)->params;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-            $_PUT = $this->readHttpBody();
-            if (is_string($_PUT)) {
-                $this->params['__httpbody'] = $_PUT;
-            } else {
-                $this->params = array_merge($this->params, $_PUT);
-            }
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded' || $_SERVER['CONTENT_TYPE'] == 'multipart/form-data')){
+            $this->params = array_merge($this->params, $_POST);
         }
-        elseif($_SERVER['REQUEST_METHOD'] == 'POST') {
+        elseif ($_SERVER['REQUEST_METHOD'] != 'GET') {
             $data = $this->readHttpBody();
             if (is_string($data)) {
                 $this->params['__httpbody'] = $data;
             } else {
-                $this->params = array_merge($this->params, $_POST);
+                $this->params = array_merge($this->params, $data);
             }
         }
     }
