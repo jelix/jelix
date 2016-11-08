@@ -7,3 +7,4 @@ _dist/
 .idea
 vendor/
 composer.lock
+.idea

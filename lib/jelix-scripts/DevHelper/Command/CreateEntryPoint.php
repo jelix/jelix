@@ -120,8 +120,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             }
         }
 
-        $inifile = new \Jelix\IniFile\MultiIniModifier(\jApp::mainConfigFile(), $configFilePath);
-        $urlsFile = jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
+        $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile, $configFilePath);
+        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
         $param = array();

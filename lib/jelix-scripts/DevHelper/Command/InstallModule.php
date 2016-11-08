@@ -84,7 +84,7 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
         catch(\Exception $e) {
             if ($e->getCode() == 2) {
-                $output->writeln("Error: bad path in jApp::tempBasePath(), it is equals to '".jApp::tempBasePath()."' !!");
+                $output->writeln("Error: bad path in jApp::tempBasePath(), it is equals to '".\jApp::tempBasePath()."' !!");
                 $output->writeln("       Jelix cannot clear the content of the temp directory.");
                 $output->writeln("       you must clear it your self.");
                 $output->writeln("       Correct the path in application.init.php or create the directory");

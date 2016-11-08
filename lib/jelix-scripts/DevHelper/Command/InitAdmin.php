@@ -83,7 +83,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $installConfig = new \Jelix\IniFile\IniModifier(\jApp::configPath('installer.ini.php'));
 
-        $inifile = new \Jelix\IniFile\MultiIniModifier(\jApp::mainConfigFile(),
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
+        $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
                                               \jApp::appConfigPath($ep['config']));
 
         $params = array();
@@ -108,7 +109,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $inifile->setValue('jacldb.access', '0', 'modules');
         $inifile->save();
 
-        $urlsFile = jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));
