@@ -50,6 +50,7 @@ class installappWizPage extends installWizardPage {
  * 
  */
 class wizInstallReporter implements jIInstallReporter {
+    use jInstallerReporterTrait;
     /**
      * @var string error, notice or warning
      */
@@ -84,7 +85,7 @@ class wizInstallReporter implements jIInstallReporter {
      * @param array $results an array which contains, for each type of message,
      * the number of messages
      */
-    function end($results) {
+    function end() {
         $this->messages[] = array('',  $this->page->getLocale('install.end'));
     }
 }

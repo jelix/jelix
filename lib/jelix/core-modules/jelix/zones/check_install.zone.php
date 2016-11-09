@@ -29,7 +29,7 @@ class checkZoneInstallReporter implements jIInstallReporter {
         $this->messageProvider = $messageProvider;
     }
     
-    function start($message){
+    function start(){
     }
     function message($message, $type=''){
         $this->addMessageType($type);
@@ -38,7 +38,7 @@ class checkZoneInstallReporter implements jIInstallReporter {
         }
     }
 
-    function end($message){
+    function end(){
         if($this->list !='') {
             $this->trace = '<ul class="checkresults">'.$this->list.'</ul>';
         }
