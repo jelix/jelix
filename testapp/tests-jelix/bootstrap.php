@@ -14,5 +14,5 @@ if (file_exists(jApp::tempPath())) {
     jFile::createDir(jApp::tempPath(), intval("775",8));
 }
 
-define('TESTAPP_URL', 'http://testapp.local/');
-define('TESTAPP_HOST', 'testapp.local');
+define('TESTAPP_URL', 'http://testapp17.local/');
+define('TESTAPP_HOST', 'testapp17.local');

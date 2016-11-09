@@ -485,7 +485,7 @@ class UTCreateUrls extends jUnitTestCase {
         //   given domainName or not
         //   jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
 
-        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
         $_SERVER['SERVER_PORT'] = '80';
 
         // ================= HTTP URL
@@ -495,10 +495,10 @@ class UTCreateUrls extends jUnitTestCase {
         $conf->domainName = '';
         jUrl::getEngine(true);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('http://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url8', $url);
 
         // with given domain name, without domain name in config, without https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
@@ -533,10 +533,10 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
-        $this->assertEquals('https://testapp.local/index.php/jelix_tests/urlsig/url8', $url);
+        $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url8', $url);
 
         // with given domain name, without domain name in config, with https
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,'football.local');
@@ -565,13 +565,13 @@ class UTCreateUrls extends jUnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://testapp.local/index.php', $url);
+        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
-        $_SERVER['SERVER_NAME'] = 'testapp.local';
+        $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
         $_SERVER['SERVER_PORT'] = '80';
         $conf = jApp::config();
-        $conf->domainName = 'testapp.local';
+        $conf->domainName = TESTAPP_HOST;
         $conf->urlengine = array(
           'enableParser'=>true,
           'multiview'=>false,
@@ -603,10 +603,10 @@ class UTCreateUrls extends jUnitTestCase {
         $this->assertEquals('/zip/yo/', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://testapp.local/zip/yo/', $url);
+        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/', $url);
 
         $conf = jApp::config();
-        $conf->domainName = 'testapp.local';
+        $conf->domainName = TESTAPP_HOST;
         $conf->urlengine = array(
           'enableParser'=>true,
           'multiview'=>true,
@@ -637,7 +637,7 @@ class UTCreateUrls extends jUnitTestCase {
         $this->assertEquals('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://testapp.local/zip/yo/?foo=bar', $url);
+        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/?foo=bar', $url);
 
     }
 }

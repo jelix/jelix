@@ -13,7 +13,6 @@ branches:
 
 addons:
     hosts:
-        - testapp.local
         - testapp17.local
 
 cache:
