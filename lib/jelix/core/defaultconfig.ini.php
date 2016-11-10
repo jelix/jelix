@@ -7,6 +7,9 @@ locale = "en_US"
 ; the locales available in the application
 availableLocales = "en_US"
 
+; the locale to fallback when the asked string doesn't exist in the current locale
+fallbackLocale="en_US"
+
 ; the charset used in the application
 charset = "UTF-8"
 
@@ -24,9 +27,6 @@ timeZone =
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 ; For cli script, fill it.
 domainName =
-
-; the locale to fallback when the asked string doesn't exist in the current locale
-fallbackLocale = 
 
 ; indicate HTTP(s) port if it should be forced to a specific value that PHP cannot
 ; guess (if the application is behind a proxy on a specific port for example)

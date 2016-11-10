@@ -102,6 +102,7 @@ class jLocaleTest extends jUnitTestCase {
      *
      */
     function testException() {
+        jApp::config()->fallbackLocale = '';
         jApp::config()->locale = 'de_DE';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
@@ -111,9 +112,11 @@ class jLocaleTest extends jUnitTestCase {
         }catch(Exception $e) {
             $this->assertEquals('(212)No locale file found for the given locale key "tests1.first.locale" in any other default languages (charset UTF-8)', $e->getMessage());
         }
+        jApp::config()->fallbackLocale = 'en_US';
     }
 
     function testWithNoAskedLocale(){
+        jApp::config()->fallbackLocale = '';
         // all this tests are made on an existing locale file
         jApp::config()->locale = 'fr_FR';
         $this->assertEquals('ceci est une phrase 2 fr_FR',jLocale::get('tests1.second.locale'));
@@ -170,7 +173,7 @@ class jLocaleTest extends jUnitTestCase {
     }
 
     function testWithBadCharset() {
-
+        jApp::config()->fallbackLocale = '';
         try {
             // this locale exists, but only in UTF-8, not in ISO-8859-1
             jLocale::get('tests1.second.locale', null,'fr_FR','ISO-8859-1');
