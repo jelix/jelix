@@ -15,8 +15,6 @@
         "jelix/composer-module-setup": "0.2"
     },
     "autoload": {
-        "psr-0": { },
-        "classmap": [ ],
         "files": [ "%%rp_jelix%%init.php"  ]
     },
     "minimum-stability": "stable",

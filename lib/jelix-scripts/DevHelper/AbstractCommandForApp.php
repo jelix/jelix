@@ -91,7 +91,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         }
 
         if ($configFile == '') {
-            throw new \Exception($this->name.': Entry point is unknown');
+            throw new \Exception($this->getName().': Entry point is unknown');
         }
 
         \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $this->entryPointName));
@@ -255,18 +255,19 @@ abstract class AbstractCommandForApp extends AbstractCommand
             $this->createDir($repositoryPath);
             if (file_exists(\jApp::appPath('composer.json')) && file_exists(\jApp::appPath('vendor'))) {
                 // we update composer.json
-                $json = json_decode(file_get_contents(\jApp::appPath('composer.json')), true);
+                $json = json_decode(file_get_contents(\jApp::appPath('composer.json')), false);
                 if (!$json) {
                     throw new \Exception('composer.json has bad json format');
                 }
-                if (!isset($json['extra'])) {
-                    $json['extra'] = array('jelix' => array('modules-dir' => array()));
-                } elseif (!isset($json['extra']['jelix'])) {
-                    $json['extra']['jelix'] = array('modules-dir' => array());
-                } elseif (!isset($json['extra']['jelix']['modules-dir'])) {
-                    $json['extra']['jelix']['modules-dir'] = array();
+                if (!property_exists($json, 'extra')) {
+                    $json->extra = (object) array( );
                 }
-                $json['extra']['jelix']['modules-dir'][] = $path;
+                if (!property_exists($json->extra, 'jelix')) {
+                    $json->extra->jelix = (object) array('modules-dir' => array());
+                } elseif (!property_exists($json->extra->jelix, 'modules-dir')) {
+                    $json->extra->jelix->{'modules-dir'} = array();
+                }
+                $json->extra->jelix->{'modules-dir'}[] = $path;
                 file_put_contents(\jApp::appPath('composer.json'), json_encode($json, JSON_PRETTY_PRINT));
                 if ($this->verbose()) {
                     $this->output->writeln('<notice>The given modules dir has been added into your composer.json.</notice>');
