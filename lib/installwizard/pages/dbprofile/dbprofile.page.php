@@ -82,7 +82,7 @@ class dbprofileWizPage extends installWizardPage {
 
     function process() {
 
-        $ini = new \Jelix\IniFile\IniModifier(jApp::configPath('profiles.ini.php'));
+        $ini = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
         $hasErrors = false;
         $_SESSION['dbprofiles']['data'] = $_POST;
 
@@ -208,13 +208,13 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function loadProfiles () {
-        $file = jApp::configPath('profiles.ini.php');
+        $file = jApp::varConfigPath('profiles.ini.php');
 
         if (file_exists($file)) {
 
         }
-        elseif (file_exists(jApp::configPath('profiles.ini.php.dist'))) {
-             copy(jApp::configPath('profiles.ini.php.dist'), $file);
+        elseif (file_exists(jApp::varConfigPath('profiles.ini.php.dist'))) {
+             copy(jApp::varConfigPath('profiles.ini.php.dist'), $file);
         }
         else {
             file_put_contents($file, ";<?php die(''); ?>

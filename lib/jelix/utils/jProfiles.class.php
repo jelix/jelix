@@ -30,7 +30,7 @@ class jProfiles {
 
 
     protected static function loadProfiles() {
-        $file = jApp::configPath('profiles.ini.php');
+        $file = jApp::varConfigPath('profiles.ini.php');
         $tempFile = jApp::tempPath('profiles.cache.php');
         if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
             $compiler = new jProfilesCompiler($file);

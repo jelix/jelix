@@ -216,8 +216,8 @@ function checkAppOpened() {
         echo "checkAppOpened: jApp is not initialized!";
         exit(1);
     }
-    if (file_exists(jApp::configPath('CLOSED'))) {
-        $message = file_get_contents(jApp::configPath('CLOSED'));
+    if (file_exists(jApp::varConfigPath('CLOSED'))) {
+        $message = file_get_contents(jApp::varConfigPath('CLOSED'));
 
         if (jServer::isCLI()) {
             echo "Application closed.". ($message?"\n$message\n":"\n");
@@ -262,5 +262,5 @@ function checkAppNotInstalled() {
  * @todo migrate the code to jAppManager or jApp
  */
 function isAppInstalled() {
-    return file_exists(jApp::configPath('installer.ini.php'));
+    return file_exists(jApp::varConfigPath('installer.ini.php'));
 }

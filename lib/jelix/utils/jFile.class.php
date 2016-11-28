@@ -115,8 +115,9 @@ class jFile {
      */
     public static function parseJelixPath($path){
         return str_replace(
-            array('lib:', 'app:', 'var:', 'temp:', 'www:'),
-            array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(), jApp::wwwPath()),
+            array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:', 'appconfig:'),
+            array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
+                jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(), jApp::appConfigPath()),
             $path );
     }
 

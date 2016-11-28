@@ -25,7 +25,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
             // a config file for the auth plugin exists, so we can install
             // the module, else we ignore it
 
-            $conf = new \Jelix\IniFile\IniModifier(jApp::configPath($authconfig));
+            $conf = new \Jelix\IniFile\IniModifier(jApp::varConfigPath($authconfig));
             $driver = $conf->getValue('driver');
 
             if ($driver == '') {
@@ -49,7 +49,7 @@ class jauthdbModuleInstaller extends jInstallerModule {
                     require_once(JELIX_LIB_PATH.'auth/jAuth.class.php');
                     require_once(JELIX_LIB_PATH.'plugins/auth/db/db.auth.php');
 
-                    $confIni = parse_ini_file(jApp::configPath($authconfig), true);
+                    $confIni = parse_ini_file(jApp::varConfigPath($authconfig), true);
                     $authConfig = jAuth::loadConfig($confIni);
                     $driver = new dbAuthDriver($authConfig['Db']);
                     $passwordHash = $driver->cryptPassword('admin');

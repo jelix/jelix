@@ -228,8 +228,8 @@ abstract class jInstallerBase {
         $this->dbProfile = $dbProfile;
 
         // we check if it is an alias
-        if (file_exists(jApp::configPath('profiles.ini.php'))) {
-            $dbprofiles = parse_ini_file(jApp::configPath('profiles.ini.php'));
+        if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
+            $dbprofiles = parse_ini_file(jApp::varConfigPath('profiles.ini.php'));
             if (isset($dbprofiles['jdb'][$dbProfile]))
                 $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
         }
@@ -406,13 +406,14 @@ abstract class jInstallerBase {
          if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->config->getValue('jelixWWWPath','urlengine');
-            if (substr($p, -1) != '/')
-                $p.='/';
+            $p = $this->entryPoint->getEpConfigIni()->getValue('jelixWWWPath','urlengine');
+            if (substr($p, -1) != '/') {
+                $p .= '/';
+            }
             $path = str_replace('jelixwww:', jApp::wwwPath($p), $path);
         }
-        elseif (strpos($path, 'config:') === 0) {
-            $path = str_replace('config:', jApp::configPath(), $path);
+        elseif (strpos($path, 'varconfig:') === 0) {
+            $path = str_replace('varconfig:', jApp::varConfigPath(), $path);
         }
         elseif (strpos($path, 'appconfig:') === 0) {
             $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
@@ -421,6 +422,9 @@ abstract class jInstallerBase {
             $p = dirname(jApp::appConfigPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
+         elseif (strpos($path, 'config:') === 0) {
+             $path = str_replace('config:', jApp::varConfigPath(), $path);
+         }
         return $path;
     }
 
@@ -434,7 +438,7 @@ abstract class jInstallerBase {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new \Jelix\IniFile\IniModifier(jApp::configPath('profiles.ini.php'));
+        $profiles = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section

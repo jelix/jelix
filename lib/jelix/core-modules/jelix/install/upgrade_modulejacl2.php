@@ -42,7 +42,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule {
         if ($jacl2File == '' || $jacl2File == '1')
             return;
 
-        $jacl2File = jApp::configPath($jacl2File);
+        $jacl2File = jApp::varConfigPath($jacl2File);
         if (!file_exists($jacl2File)) {
             $jacl2File = '';
             $message = $module."~errors.action.right.needed";

@@ -34,7 +34,7 @@ class jSelectorVar extends jSelectorSimpleFile {
 class jSelectorCfg extends jSelectorSimpleFile {
     protected $type = 'cfg';
     function __construct($sel){
-        $this->_basePath = jApp::configPath();
+        $this->_basePath = jApp::varConfigPath();
         parent::__construct($sel);
     }
 }

@@ -312,22 +312,22 @@ class jInstallCheck extends jInstallCheckerBase {
             $this->error('path.config');
             $ok=false;
         }
-        if(!file_exists(jApp::configPath())){
+        if(!file_exists(jApp::varConfigPath())){
             $this->error('path.config');
             $ok=false;
         }
         elseif ($this->checkForInstallation) {
-            if (!is_writable(jApp::configPath())) {
+            if (!is_writable(jApp::varConfigPath())) {
                 $this->error('path.config.writable');
                 $ok = false;
             }
-            if (file_exists(jApp::configPath('profiles.ini.php'))
-                && !is_writable(jApp::configPath('profiles.ini.php'))) {
+            if (file_exists(jApp::varConfigPath('profiles.ini.php'))
+                && !is_writable(jApp::varConfigPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(jApp::configPath('installer.ini.php'))
-                && !is_writable(jApp::configPath('installer.ini.php'))) {
+            if (file_exists(jApp::varConfigPath('installer.ini.php'))
+                && !is_writable(jApp::varConfigPath('installer.ini.php'))) {
                 $this->error('path.installer.writable');
                 $ok = false;
             }

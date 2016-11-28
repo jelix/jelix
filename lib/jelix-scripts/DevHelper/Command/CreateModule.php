@@ -192,7 +192,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         $iniDefault->save();
 
         $list = $this->getEntryPointsList();
-        $install = new \Jelix\IniFile\IniModifier(\jApp::configPath('installer.ini.php'));
+        $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
 
         // install the module for all needed entry points
         foreach ($list as $k => $entryPoint) {

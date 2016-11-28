@@ -161,9 +161,9 @@ class jInstaller {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
 
-        $localConfig = jApp::configPath('localconfig.ini.php');
+        $localConfig = jApp::varConfigPath('localconfig.ini.php');
         if (!file_exists($localConfig)) {
-           $localConfigDist = jApp::configPath('localconfig.ini.php.dist');
+           $localConfigDist = jApp::varConfigPath('localconfig.ini.php.dist');
            if (file_exists($localConfigDist)) {
               copy($localConfigDist, $localConfig);
            }
@@ -193,8 +193,8 @@ class jInstaller {
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function getInstallerIni() {
-        if (!file_exists(jApp::configPath('installer.ini.php'))) {
-            if (false === @file_put_contents(jApp::configPath('installer.ini.php'), ";<?php die(''); ?>
+        if (!file_exists(jApp::varConfigPath('installer.ini.php'))) {
+            if (false === @file_put_contents(jApp::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
@@ -203,9 +203,9 @@ class jInstaller {
             }
         }
         else {
-            copy(jApp::configPath('installer.ini.php'), jApp::configPath('installer.bak.ini.php'));
+            copy(jApp::varConfigPath('installer.ini.php'), jApp::varConfigPath('installer.bak.ini.php'));
         }
-        return new \Jelix\IniFile\IniModifier(jApp::configPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(jApp::varConfigPath('installer.ini.php'));
     }
 
     /**

@@ -223,7 +223,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($wwwpath);
 
         $varPath = \jApp::varPath();
-        $configPath = \jApp::configPath();
+        $configPath = \jApp::varConfigPath();
         $this->createDir($varPath);
         $this->createDir(\jApp::logPath());
         $this->createDir(\jApp::appConfigPath());

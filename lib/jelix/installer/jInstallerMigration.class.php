@@ -47,16 +47,16 @@ class jInstallerMigration {
 
         // move mainconfig.php to app/config/
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
-            if (!file_exists(jApp::configPath('mainconfig.ini.php'))) {
-                if (!file_exists(jApp::configPath('defaultconfig.ini.php'))) {
+            if (!file_exists(jApp::varConfigPath('mainconfig.ini.php'))) {
+                if (!file_exists(jApp::varConfigPath('defaultconfig.ini.php'))) {
                     throw new \Exception("Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?");
                 }
                 $this->reporter->message('Move var/config/defaultconfig.ini.php to app/config/mainconfig.ini.php', 'notice');
-                rename(jApp::configPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(jApp::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
             else {
                 $this->reporter->message('Move var/config/mainconfig.ini.php to app/config/', 'notice');
-                rename(jApp::configPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(jApp::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
 
@@ -67,22 +67,22 @@ class jInstallerMigration {
             $configFile = (string)$entrypoint['config'];
             $dest = jApp::appConfigPath($configFile);
             if (!file_exists($dest)) {
-                if (!file_exists(jApp::configPath($configFile))) {
+                if (!file_exists(jApp::varConfigPath($configFile))) {
                     $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
                     continue;
                 }
 
                 $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
                 jFile::createDir(dirname($dest));
-                rename(jApp::configPath($configFile), $dest);
+                rename(jApp::varConfigPath($configFile), $dest);
             }
 
             $config = parse_ini_file(jApp::appConfigPath($configFile), true);
             if (isset($config['urlengine']['significantFile'])) {
                 $urlFile = $config['urlengine']['significantFile'];
-                if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::configPath($urlFile))) {
+                if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::varConfigPath($urlFile))) {
                     $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
-                    rename(jApp::configPath($urlFile), jApp::appConfigPath($urlFile));
+                    rename(jApp::varConfigPath($urlFile), jApp::appConfigPath($urlFile));
                 }
             }
         }
@@ -95,9 +95,9 @@ class jInstallerMigration {
         else {
             $urlFile = 'urls.xml';
         }
-        if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::configPath($urlFile))) {
+        if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::varConfigPath($urlFile))) {
             $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
-            rename(jApp::configPath($urlFile), jApp::appConfigPath($urlFile));
+            rename(jApp::varConfigPath($urlFile), jApp::appConfigPath($urlFile));
         }
 
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');

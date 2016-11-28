@@ -20,7 +20,7 @@ $
             return;
         }
 
-        $conff = jApp::configPath($conf);
+        $conff = jApp::varConfigPath($conf);
         if (!file_exists($conff)) {
             return;
         }
@@ -35,7 +35,7 @@ $
             return;
         }
 
-        $profileIni = jApp::configPath('profiles.ini.php');
+        $profileIni = jApp::varConfigPath('profiles.ini.php');
         $suffix = '';
         while ($profileIni->isSection('authldap:'.$conf.$suffix)) {
             if ($suffix) {

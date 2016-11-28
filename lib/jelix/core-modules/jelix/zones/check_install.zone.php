@@ -94,7 +94,7 @@ class check_installZone extends jZone {
         $check->run();
 
         $this->_tpl->assign('wwwpath', jApp::wwwPath());
-        $this->_tpl->assign('configpath', jApp::configPath());
+        $this->_tpl->assign('configpath', jApp::varConfigPath());
         $this->_tpl->assign('check',$reporter->trace);
    }
 }

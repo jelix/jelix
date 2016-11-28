@@ -23,7 +23,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
     function setUp(){
         parent::setUp();
-        if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
+        if(!file_exists(jApp::varConfigPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             $this->markTestSkipped('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
                                ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
@@ -32,7 +32,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         
-        $conf = parse_ini_file(jApp::configPath('auth_ldap.coord.ini.php'),true);
+        $conf = parse_ini_file(jApp::varConfigPath('auth_ldap.coord.ini.php'),true);
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 

@@ -41,7 +41,7 @@ class jConfigCompiler {
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
         $appConfigPath = jApp::appConfigPath();
-        $configPath = jApp::configPath();
+        $configPath = jApp::varConfigPath();
 
         if($tempPath=='/'){
             // if it equals to '/', this is because realpath has returned false in the application.init.php
@@ -170,7 +170,7 @@ class jConfigCompiler {
                 throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin $name is unknown.", 7);
             }
             if ($conf) {
-                if ($conf != '1' && !file_exists(jApp::configPath($conf))) {
+                if ($conf != '1' && !file_exists(jApp::varConfigPath($conf))) {
                     throw new Exception("Error in the main configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$conf'", 8);
                 }
                 $coordplugins[$name] = $conf;
@@ -229,7 +229,7 @@ class jConfigCompiler {
      */
     static protected function _loadModuleInfo($config, $allModuleInfo) {
 
-        $installerFile = jApp::configPath('installer.ini.php');
+        $installerFile = jApp::varConfigPath('installer.ini.php');
 
         if ($config->disableInstallers) {
             $installation = array ();

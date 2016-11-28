@@ -160,12 +160,12 @@ class jSoapClient {
         $classMap = array();
         if (isset($profile['classmap_file']) && ($f = trim($profile['classmap_file'])) != '') {
             if (!isset(self::$classmap[$f])) {
-                if (!file_exists(jApp::configPath($f))) {
+                if (!file_exists(jApp::varConfigPath($f))) {
                     trigger_error("jSoapClient: classmap file ".$f." does not exists.", E_USER_WARNING);
                     self::$classmap[$f] = array();
                 }
                 else {
-                    self::$classmap[$f] = parse_ini_file(jApp::configPath($f), true);
+                    self::$classmap[$f] = parse_ini_file(jApp::varConfigPath($f), true);
                 }
             }
             if (isset(self::$classmap[$f]['__common__'])) {

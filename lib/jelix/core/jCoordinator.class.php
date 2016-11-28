@@ -118,7 +118,7 @@ class jCoordinator {
                     $conf = array();
             }
             else {
-                $conff = jApp::configPath($conf);
+                $conff = jApp::varConfigPath($conf);
                 if (false === ($conf = parse_ini_file($conff,true)))
                     throw new Exception("Error in a plugin configuration file -- plugin: $name  file: $conff", 13);
             }

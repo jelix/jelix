@@ -109,7 +109,7 @@ class jInstallerEntryPoint {
         }
         $this->epConfigIni = new \Jelix\IniFile\IniModifier($appConfigPath);
 
-        $varConfigPath = jApp::configPath($configFile);
+        $varConfigPath = jApp::varConfigPath($configFile);
         if (!file_exists($varConfigPath)) {
             jFile::createDir(dirname($varConfigPath));
             file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');

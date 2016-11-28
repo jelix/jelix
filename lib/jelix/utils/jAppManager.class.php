@@ -26,7 +26,7 @@ class jAppManager {
      * @since 1.2
      */
     public static function close($message='') {
-        $file = jApp::configPath('CLOSED');
+        $file = jApp::varConfigPath('CLOSED');
         file_put_contents($file, $message);
         if (jApp::config()) {
             chmod($file, jApp::config()->chmodFile);
@@ -38,8 +38,8 @@ class jAppManager {
      * @since 1.2
      */
     public static function open() {
-        if (file_exists(jApp::configPath('CLOSED')))
-            unlink(jApp::configPath('CLOSED'));
+        if (file_exists(jApp::varConfigPath('CLOSED')))
+            unlink(jApp::varConfigPath('CLOSED'));
     }
 
     /**
@@ -48,7 +48,7 @@ class jAppManager {
      * @since 1.2
      */
     public static function isOpened() {
-        return !file_exists(jApp::configPath('CLOSED'));
+        return !file_exists(jApp::varConfigPath('CLOSED'));
     }
 
     public static function clearTemp($path='') {

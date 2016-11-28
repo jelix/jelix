@@ -9,7 +9,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $varPath = jApp::varPath();
         $logPath = jApp::logPath();
         $appConfigPath = jApp::appConfigPath();
-        $configPath = jApp::configPath();
+        $configPath = jApp::varConfigPath();
         $wwwPath = jApp::wwwPath();
         $scriptsPath = jApp::scriptsPath();
         $tempPath = jApp::tempPath();
@@ -22,7 +22,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($varPath, jApp::varPath());
         $this->assertEquals($logPath, jApp::logPath());
         $this->assertEquals($appConfigPath, jApp::appConfigPath());
-        $this->assertEquals($configPath, jApp::configPath());
+        $this->assertEquals($configPath, jApp::varConfigPath());
         $this->assertEquals($wwwPath, jApp::wwwPath());
         $this->assertEquals($scriptsPath, jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
@@ -33,7 +33,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('/myapp/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp/var/', jApp::varPath());
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
-        $this->assertEquals('/myapp/var/config/', jApp::configPath());
+        $this->assertEquals('/myapp/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp/www/', jApp::wwwPath());
         $this->assertEquals('/myapp/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
@@ -45,7 +45,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('/myapp2/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp2/var/', jApp::varPath());
         $this->assertEquals('/myapp2/var/log/', jApp::logPath());
-        $this->assertEquals('/myapp2/var/config/', jApp::configPath());
+        $this->assertEquals('/myapp2/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp2/www/', jApp::wwwPath());
         $this->assertEquals('/myapp2/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
@@ -56,7 +56,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals('/myapp/app/config/', jApp::appConfigPath());
         $this->assertEquals('/myapp/var/', jApp::varPath());
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
-        $this->assertEquals('/myapp/var/config/', jApp::configPath());
+        $this->assertEquals('/myapp/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp/www/', jApp::wwwPath());
         $this->assertEquals('/myapp/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
@@ -67,7 +67,7 @@ class jAppContextTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($appConfigPath, jApp::appConfigPath());
         $this->assertEquals($varPath, jApp::varPath());
         $this->assertEquals($logPath, jApp::logPath());
-        $this->assertEquals($configPath, jApp::configPath());
+        $this->assertEquals($configPath, jApp::varConfigPath());
         $this->assertEquals($wwwPath, jApp::wwwPath());
         $this->assertEquals($scriptsPath, jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());

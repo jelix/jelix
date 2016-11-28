@@ -90,9 +90,9 @@ class jInstallerApplication {
             return $this->entryPointList;
         }
 
-        $localConfig = jApp::configPath('localconfig.ini.php');
+        $localConfig = jApp::varConfigPath('localconfig.ini.php');
         if (!file_exists($localConfig)) {
-           $localConfigDist = jApp::configPath('localconfig.ini.php.dist');
+           $localConfigDist = jApp::varConfigPath('localconfig.ini.php.dist');
            if (file_exists($localConfigDist)) {
               copy($localConfigDist, $localConfig);
            }

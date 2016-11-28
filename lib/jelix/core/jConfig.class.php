@@ -54,7 +54,7 @@ class jConfig {
         else {
             $t = filemtime($file);
             $dc = jApp::mainConfigFile();
-            $lc = jApp::configPath('localconfig.ini.php');
+            $lc = jApp::varConfigPath('localconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(jApp::appConfigPath($configFile))>$t
