@@ -445,11 +445,6 @@ cd lib/jelix/plugins/coord/auth
   plugin.xml
   auth.coord.ini.php.dist
 
-cd lib/jelix/plugins/coord/zendframework
-  zendframework.coord.php
-  plugin.xml
-  zendframework.coord.ini.php.dist
-
 cd lib/jelix/plugins/coord/history
 ! history.coord.php
   plugin.xml
