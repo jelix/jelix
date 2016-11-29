@@ -106,6 +106,21 @@ class jInstallerMigration {
             $this->reporter->message("Move responses/ to app/responses/", 'notice');
             rename(jApp::appPath('responses'), jApp::appPath('app/responses'));
         }
+
+        // move jSoapClient classmap files
+        if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
+            $profilesini = parse_ini_file(jApp::varConfigPath('profiles.ini.php'), true);
+            foreach ($profilesini as $name => $profile) {
+                if (strpos($name, 'jsoapclient:') === 0 &&
+                    isset($profile['classmap_file']) &&
+                    trim($profile['classmap_file']) != '' &&
+                    file_exists(jApp::varConfigPath($profile['classmap_file']))
+                ) {
+                    rename(jApp::varConfigPath($profile['classmap_file']), jApp::appConfigPath($profile['classmap_file']));
+                }
+            }
+        }
+
     }
 
     protected function error($msg){
