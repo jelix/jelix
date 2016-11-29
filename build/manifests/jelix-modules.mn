@@ -170,6 +170,9 @@ cd lib/jelix-modules/jpref/classes/
   jPrefItem.php
   jPrefItemGroup.php
   jPrefManager.php
+cd lib/jelix-modules/jpref/install/
+  install.php
+  upgrade_moveini.php
 cd lib/jelix-modules/jpref/locales/en_US
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix-modules/jpref/locales/en_GB

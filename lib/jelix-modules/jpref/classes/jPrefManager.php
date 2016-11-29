@@ -2,13 +2,14 @@
 
 /**
  * @author    Florian Lonqueu-Brochard
- * @copyright 2012 Florian Lonqueu-Brochard
+ * @contributor Laurent Jouanneau
+ * @copyright 2012 Florian Lonqueu-Brochard, 2016 Laurent Jouanneau
+ *
  *
  * @link      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once __DIR__.'/jPrefItem.php';
-require_once __DIR__.'/jPrefItemGroup.php';
+
 
 class jPrefManager
 {
@@ -18,6 +19,9 @@ class jPrefManager
 
     /**
      * Add a preference into the preference config.
+     *
+     * Should be used only during installation, as the configuration file
+     * is in the app/config/ directory (readonly for the web server in theory).
      *
      * @param jPrefItem $preference the preference to add
      */
@@ -158,13 +162,13 @@ class jPrefManager
 
     protected static function _getPrefFile()
     {
-        return \Jelix\IniFile\Util::read(jApp::varConfigPath(self::$_pref_config_file));
+        return \Jelix\IniFile\Util::read(jApp::appConfigPath(self::$_pref_config_file));
     }
 
     protected function _loadIniModifier()
     {
         if (!self::$_ini) {
-            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::varConfigPath(self::$_pref_config_file));
+            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::appConfigPath(self::$_pref_config_file));
         }
 
         return self::$_ini;

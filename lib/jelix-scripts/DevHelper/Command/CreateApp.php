@@ -303,7 +303,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
-        $this->createFile($configPath.'preferences.ini.php', 'var/config/preferences.ini.php.tpl', $param, "Preferences file");
+        $this->createFile(\jApp::appConfigPath('preferences.ini.php'), 'app/config/preferences.ini.php.tpl', $param, "Preferences file");
         $this->createFile(\jApp::appConfigPath('urls.xml'), 'app/config/urls.xml.tpl', $param, "URLs mapping file");
 
         $this->createFile(\jApp::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
