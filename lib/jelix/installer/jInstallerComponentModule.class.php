@@ -34,8 +34,14 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      */
     protected $identityFile = 'module.xml';
 
+    /**
+     * @var jInstallerModule
+     */
     protected $moduleInstaller = null;
 
+    /**
+     * @var jInstallerModule[]
+     */
     protected $moduleUpgraders = null;
 
     /**
@@ -85,6 +91,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
+     * @throws jInstallerException when install class not found
      */
     function getInstaller(jInstallerEntryPoint $ep, $installWholeApp) {
 
@@ -144,7 +151,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * installed/upgraded before calling this method
      *
      * @param jInstallerEntryPoint $ep the entry point
-     * @throw jInstallerException  if an error occurs during the install.
+     * @throws jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
     function getUpgraders($ep) {
@@ -272,7 +279,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
-    public function upgradeFinished($ep, $upgrader) {
+    public function upgradeFinished($ep, jInstallerModule $upgrader) {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }

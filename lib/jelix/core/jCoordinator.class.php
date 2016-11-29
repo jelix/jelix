@@ -149,7 +149,7 @@ class jCoordinator {
     * process() instead (that will call setRequest). 
     * setRequest is mostly used for tests or specific contexts.
     * @param  jRequest  $request the request object
-    * @throw jException if the module is unknown or the action name format is not valid
+    * @throws jException if the module is unknown or the action name format is not valid
     * @see jCoordinator::process()
     */
     protected function setRequest ($request) {

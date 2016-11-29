@@ -20,7 +20,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
      * Called before the installation of all other modules
      * (dependents modules or the whole application).
      * Here, you should check if the module can be installed or not
-     * @throw Exception if the module cannot be installed
+     * @throws Exception if the module cannot be installed
      */
     function preInstall() {
 
@@ -30,7 +30,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
      * should configure the module, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throw Exception  if an error occurs during the installation.
+     * @throws Exception  if an error occurs during the installation.
      */
     function install() {
         
@@ -39,7 +39,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
     /**
      * Redefine this method if you do some additionnal process after the installation of
      * all other modules (dependents modules or the whole application)
-     * @throw Exception  if an error occurs during the post installation.
+     * @throws Exception  if an error occurs during the post installation.
      */
     function postInstall() {
         
@@ -49,7 +49,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
      * Called before the uninstallation of all other modules
      * (dependents modules or the whole application).
      * Here, you should check if the module can be uninstalled or not
-     * @throw Exception if the module cannot be uninstalled
+     * @throws Exception if the module cannot be uninstalled
      */
     function preUninstall() {
         
@@ -57,7 +57,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
 
     /**
      * should remove static files. Probably remove some data if the user is agree etc...
-     * @throw Exception  if an error occurs during the install.
+     * @throws Exception  if an error occurs during the install.
      */
     function uninstall() {
         
@@ -65,7 +65,7 @@ class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
 
     /**
      * 
-     * @throw Exception  if an error occurs during the install.
+     * @throws Exception  if an error occurs during the install.
      */
     function postUninstall() {
     
