@@ -106,24 +106,14 @@ class jCoordinator {
 
         $config = jApp::config();
         foreach ($config->coordplugins as $name=>$conf) {
-            if (strpos($name, '.') !== false)
+            if (strpos($name, '.') !== false) {
                 continue;
-            // the config compiler has removed all deactivated plugins
-            // so we don't have to check if the value $conf is empty or not
-            if ($conf == '1') {
-                $confname = 'coordplugin_'.$name;
-                if (isset($config->$confname))
-                    $conf = $config->$confname;
-                else
-                    $conf = array();
             }
-            else {
-                $conff = jApp::varConfigPath($conf);
-                if (false === ($conf = parse_ini_file($conff,true)))
-                    throw new Exception("Error in a plugin configuration file -- plugin: $name  file: $conff", 13);
-            }
+            $conf = $this->getPluginConf($name);
             include_once($config->_pluginsPathList_coord[$name].$name.'.coord.php');
             $class= $name.'CoordPlugin';
+            // if the plugin is registered as a replacement of an other plugin
+            // we can set the name of the other plugin in a '*.name' option
             if (isset($config->coordplugins[$name.'.name']))
                 $name = $config->coordplugins[$name.'.name'];
             $this->plugins[strtolower($name)] = new $class($conf);
@@ -417,5 +407,44 @@ class jCoordinator {
     */
     public function isPluginEnabled ($pluginName){
         return isset ($this->plugins[strtolower ($pluginName)]);
+    }
+
+    /**
+     * return the configuration of a plugin for the coordinator
+     * @param string $pluginName
+     * @return array the configuration. May be empty if the plugin is unknown
+     * @throws Exception when the configuration filename is not found
+     */
+    protected function getPluginConf($pluginName) {
+        $config = jApp::config();
+        if (!isset($config->coordplugins[$pluginName])) {
+            return array();
+        }
+        $conf = $config->coordplugins[$pluginName];
+        // the config compiler has removed all deactivated plugins
+        // so we don't have to check if the value $conf is empty or not
+        if ($conf == '1') {
+            if (isset($config->$pluginName) && is_array($config->$pluginName)) {
+                $conf = $config->$pluginName;
+            }
+            else {
+                // old section naming. deprecated
+                $confname = 'coordplugin_'.$pluginName;
+                if (isset($config->$confname) && is_array($config->$confname)) {
+                    $conf = $config->$confname;
+                } else {
+                    $conf = array();
+                }
+            }
+        }
+        else {
+            // the path to the coordplugin conf has already been processed
+            // by the config compiler, and is now a relative path to the app
+            $conff = jApp::appPath($conf);
+            if (false === ($conf = parse_ini_file($conff, true))) {
+                throw new Exception("Error in a plugin configuration file -- plugin: $pluginName  file: $conff", 13);
+            }
+        }
+        return $conf;
     }
 }

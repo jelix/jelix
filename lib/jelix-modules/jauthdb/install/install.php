@@ -18,30 +18,41 @@ class jauthdbModuleInstaller extends jInstallerModule {
     function install() {
         //if ($this->entryPoint->type == 'cmdline')
         //    return;
+        $config = $this->getConfigIni();
+        $authConfig = $this->getCoordPluginConf($config, 'auth');
+        if (!$authConfig) {
+            return;
+        }
+        list($conf, $section) = $authConfig;
+        if ($section === 0) {
+            $section_db = 'Db';
+        }
+        else {
+            $section_db = 'auth_db';
+        }
 
-        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
+        $tag = 'authdb-'.\Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $conf->getFileName());
 
-        if ($authconfig && $this->firstExec($authconfig)) {
-            // a config file for the auth plugin exists, so we can install
+        if ($this->firstExec($tag)) {
+            // a config for the auth plugin exists, so we can install
             // the module, else we ignore it
 
-            $conf = new \Jelix\IniFile\IniModifier(jApp::varConfigPath($authconfig));
-            $driver = $conf->getValue('driver');
+            $driver = $conf->getValue('driver', $section);
 
             if ($driver == '') {
                 $driver = 'Db';
-                $conf->setValue('driver','Db');
-                $conf->setValue('dao','jauthdb~jelixuser', 'Db');
+                $conf->setValue('driver', $section_db);
+                $conf->setValue('dao','jauthdb~jelixuser', $section_db);
                 $conf->save();
             }
             else if ($driver != 'Db') {
                 return;
             }
 
-            $this->useDbProfile($conf->getValue('profile', 'Db'));
+            $this->useDbProfile($conf->getValue('profile', $section_db));
 
             // FIXME: should use the given dao to create the table
-            $daoName = $conf->getValue('dao', 'Db');
+            $daoName = $conf->getValue('dao', $section_db);
             if ($daoName == 'jauthdb~jelixuser' && $this->firstDbExec()) {
 
                 $this->execSQLScript('install_jauth.schema');
@@ -49,8 +60,9 @@ class jauthdbModuleInstaller extends jInstallerModule {
                     require_once(JELIX_LIB_PATH.'auth/jAuth.class.php');
                     require_once(JELIX_LIB_PATH.'plugins/auth/db/db.auth.php');
 
-                    $confIni = parse_ini_file(jApp::varConfigPath($authconfig), true);
-                    $authConfig = jAuth::loadConfig($confIni);
+                    $arConfig = $conf->getValues();
+                    $arConfig['Db'] = $conf->getValues($section_db);
+                    $authConfig = jAuth::loadConfig($arConfig);
                     $driver = new dbAuthDriver($authConfig['Db']);
                     $passwordHash = $driver->cryptPassword('admin');
                     $cn = $this->dbConnection();

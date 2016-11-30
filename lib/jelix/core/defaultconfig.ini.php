@@ -2,38 +2,38 @@
 ;for security reasons , don't remove or modify the first line
 
 ; the default locale used in the application
-locale = "en_US"
+locale=en_US
 
 ; the locales available in the application
-availableLocales = "en_US"
+availableLocales=en_US
 
 ; the locale to fallback when the asked string doesn't exist in the current locale
-fallbackLocale="en_US"
+fallbackLocale=en_US
 
 ; the charset used in the application
-charset = "UTF-8"
+charset=UTF-8
 
 ; the default theme
-theme = default
+theme=default
 
 ; set "1.0" or "1.1" if you want to force an HTTP version
-httpVersion=""
+httpVersion=
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
-timeZone =
+timeZone=
 
 ; Default domain name to use with jfullurl for example.
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 ; For cli script, fill it.
-domainName =
+domainName=
 
 ; indicate HTTP(s) port if it should be forced to a specific value that PHP cannot
 ; guess (if the application is behind a proxy on a specific port for example)
 ; true for default port, or a number for a specific port. leave empty to use the
 ; current server port.
-forceHTTPPort =
-forceHTTPSPort =
+forceHTTPPort=
+forceHTTPSPort=
 
 ; chmod for files created by Jelix
 chmodFile=0664
@@ -43,91 +43,96 @@ chmodDir=0775
 
 ; disable all installers and the installer.ini.php
 ; useful only if you manage the installation of modules by hands (not recommanded)
-disableInstallers = off
+disableInstallers=off
 ; if set to on, all modules have an access=2, and access values in [modules] are not readed (not recommanded)
-enableAllModules = off
+enableAllModules=off
 
 [modules]
 ; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
 
-jelix.access = 2
-jelix.path = lib:jelix/core-modules/jelix
+jelix.access=2
+jelix.path="lib:jelix/core-modules/jelix"
 
 ; jacldb is deprecated. keep it uninstall if possible
-jacldb.access = 0
+jacldb.access=0
 
 
 [coordplugins]
 
 [tplplugins]
-defaultJformsBuilder = html
+defaultJformsBuilder=html
 
 [responses]
-html = jResponseHtml
-basichtml = jResponseBasicHtml
-redirect = jResponseRedirect
-redirectUrl = jResponseRedirectUrl
-binary = jResponseBinary
-text = jResponseText
-cmdline = jResponseCmdline
-jsonrpc = jResponseJsonrpc
-json = jResponseJson
-xmlrpc = jResponseXmlrpc
-xml = jResponseXml
-zip = jResponseZip
-css= jResponseCss
-htmlfragment = jResponseHtmlFragment
-htmlauth = jResponseHtml
+html=jResponseHtml
+basichtml=jResponseBasicHtml
+redirect=jResponseRedirect
+redirectUrl=jResponseRedirectUrl
+binary=jResponseBinary
+text=jResponseText
+cmdline=jResponseCmdline
+jsonrpc=jResponseJsonrpc
+json=jResponseJson
+xmlrpc=jResponseXmlrpc
+xml=jResponseXml
+zip=jResponseZip
+css=jResponseCss
+htmlfragment=jResponseHtmlFragment
+htmlauth=jResponseHtml
 
 [_coreResponses]
-html = jResponseHtml
-basichtml = jResponseBasicHtml
-redirect = jResponseRedirect
-redirectUrl = jResponseRedirectUrl
-binary = jResponseBinary
-text = jResponseText
-cmdline = jResponseCmdline
-jsonrpc = jResponseJsonrpc
-json = jResponseJson
-xmlrpc = jResponseXmlrpc
-xml = jResponseXml
-zip = jResponseZip
-css= jResponseCss
-htmlfragment = jResponseHtmlFragment
-htmlauth = jResponseHtml
+html=jResponseHtml
+basichtml=jResponseBasicHtml
+redirect=jResponseRedirect
+redirectUrl=jResponseRedirectUrl
+binary=jResponseBinary
+text=jResponseText
+cmdline=jResponseCmdline
+jsonrpc=jResponseJsonrpc
+json=jResponseJson
+xmlrpc=jResponseXmlrpc
+xml=jResponseXml
+zip=jResponseZip
+css=jResponseCss
+htmlfragment=jResponseHtmlFragment
+htmlauth=jResponseHtml
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
-plugins =
+plugins=
 
+minifyCSS=off
+minifyJS=on
+minifyExcludeCSS=
+minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyEntryPoint=minify.php
 [debugbar]
-plugins = sqllog,sessiondata,defaultlog
+plugins="sqllog,sessiondata,defaultlog"
 defaultPosition=right
 errors_openon=error
 
 [error_handling]
-messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
+messageLogFormat="%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
 errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 
 [compilation]
-checkCacheFiletime  = on
-force  = off
+checkCacheFiletime=on
+force=off
 
 [urlengine]
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache)
-enableParser = on
+enableParser=on
 
 ; if multiview is activated in apache, eg, you don't have to indicate the ".php" suffix
 ; then set this parameter to on
-multiview = off
+multiview=off
 
 ; the name of the variable in $_SERVER which contains the name of the script
 ; example : if the you call http://mysite.com/foo/index.php, this is the variable
 ; which contains "/foo/index.php"
 ; This name can be SCRIPT_NAME, ORIG_SCRIPT_NAME, PHP_SELF or REDIRECT_SCRIPT_URL
 ; it is detected automatically by jelix but it can fail sometime, so you could have to setup it
-scriptNameServerVariable =
+scriptNameServerVariable=
 
 
 ; If you have a rewrite rules which move the pathinfo into a queryparameter
@@ -136,7 +141,7 @@ scriptNameServerVariable =
 ; then you should set pathInfoInQueryParameter to the name of the parameter
 ; which contains the pathinfo value ("jpathinfo" for example)
 ; leave empty if you don't have to create such rewrite rules.
-pathInfoInQueryParameter =
+pathInfoInQueryParameter=
 
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
@@ -146,17 +151,17 @@ pathInfoInQueryParameter =
 ; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php
 ; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
 ; : basePath="/aaa/" )
-basePath = ""
+basePath=
 
 
 ; backendBasePath is used when the application is behind a proxy, and when the base path on the frontend
 ; server doesn't correspond to the base path on the backend server.
 ; you MUST define basePath when you define backendBasePath
-backendBasePath =
+backendBasePath=
 
 ; for an app on a simple http server behind an https proxy, the https verification
 ; should be disabled
-checkHttpsOnParsing = on
+checkHttpsOnParsing=on
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
@@ -164,13 +169,13 @@ checkHttpsOnParsing = on
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
 ; if you change it, change also all pathes in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
-jelixWWWPath = "jelix/"
+jelixWWWPath="jelix/"
 jqueryPath="jelix/jquery/"
 
 ; action to show the 'page not found' error
-notfoundAct = "jelix~error:notfound"
+notfoundAct="jelix~error:notfound"
 
-significantFile = "urls.xml"
+significantFile=urls.xml
 
 ; filled automatically by jelix
 urlScript=
@@ -185,11 +190,11 @@ documentRoot=
 ; available loggers : file, syslog, firebug, mail, memory. see plugins for others
 
 ; _all category is the category containing loggers executed for any categories
-_all =
+_all=
 
 ; default category is the category used when a given category is not declared here
 default=file
-error= file
+error=file
 warning=file
 notice=file
 deprecated=
@@ -211,7 +216,7 @@ debug=debug.log
 [memorylogger]
 ; number of messages to store in memory for each categories, to avoid memory issues
 default=20
-error= 10
+error=10
 warning=10
 notice=10
 deprecated=10
@@ -221,8 +226,8 @@ sql=20
 soap=20
 
 [mailLogger]
-email = root@localhost
-emailHeaders = "Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
+email="root@localhost"
+emailHeaders="Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.com\nX-Mailer: Jelix\nX-Priority: 1 (Highest)\n"
 
 [syslogLogger]
 facility=LOG_LOCAL7
@@ -230,59 +235,59 @@ ident="php-%sapi%-%domain%[%pid%]"
 
 
 [mailer]
-webmasterEmail = root@localhost
-webmasterName =
+webmasterEmail="root@localhost"
+webmasterName=
 
 ; How to send mail : "mail" (mail()), "sendmail" (call sendmail), "smtp" (send directly to a smtp)
 ;                   or "file" (store the mail into a file, in filesDir directory)
-mailerType = mail
+mailerType=mail
 ; Sets the hostname to use in Message-Id and Received headers
 ; and as default HELO string. If empty, the value returned
 ; by SERVER_NAME is used or 'localhost.localdomain'.
-hostname =
-sendmailPath = "/usr/sbin/sendmail"
+hostname=
+sendmailPath="/usr/sbin/sendmail"
 
 ; if mailer = file, fill the following parameters
 ; this should be the directory in the var/ directory, where to store mail as files
-filesDir = "mails/"
+filesDir="mails/"
 
 ; if mailer = smtp , fill the following parameters
 
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
-smtpHost = "localhost"
+smtpHost=localhost
 ; default SMTP server port
-smtpPort = 25
+smtpPort=25
 ; secured connection or not. possible values: "", "ssl", "tls"
-smtpSecure =
+smtpSecure=
 ; SMTP HELO of the message (Default is hostname)
-smtpHelo =
+smtpHelo=
 ; SMTP authentication
-smtpAuth = off
-smtpUsername =
-smtpPassword =
+smtpAuth=off
+smtpUsername=
+smtpPassword=
 ; SMTP server timeout in seconds
-smtpTimeout = 10
+smtpTimeout=10
 
-copyToFiles = off
+copyToFiles=off
 
 [acl]
 ; exemple of driver: "db".
-driver =
+driver=
 
 [acl2]
 ; exemple of driver: "db"
-driver =
+driver=
 
 
 
 [sessions]
 ; to disable sessions, set the following parameter to 0
-start = 1
+start=1
 
 ; If several applications are installed in the same documentRoot but with
 ; a different basePath, shared_session indicates if these application
 ; share the same php session
-shared_session = off
+shared_session=off
 
 ; indicate a session name for each applications installed with the same
 ; domain and basePath, if their respective sessions shouldn't be shared
@@ -310,61 +315,61 @@ loadClasses=
 
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
-controls.datetime.input = "menulists"
+controls.datetime.input=menulists
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
-controls.datetime.months.labels = "names"
+controls.datetime.months.labels=names
 ; define the default config for datepickers in jforms
-datepicker = default
+datepicker=default
 
 [jforms_builder_html]
 ;control type = plugin name
 
 
 [datepickers]
-default = jelix/js/jforms/datepickers/default/init.js
+default="jelix/js/jforms/datepickers/default/init.js"
 
 [htmleditors]
-default.engine.name = wymeditor
-default.engine.file[] = jelix/jquery/jquery.js
-default.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
-default.config = jelix/js/jforms/htmleditors/wymeditor_default.js
-default.skin.default = jelix/wymeditor/skins/default/skin.css
+default.engine.name=wymeditor
+default.engine.file[]="jelix/jquery/jquery.js"
+default.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
+default.config="jelix/js/jforms/htmleditors/wymeditor_default.js"
+default.skin.default="jelix/wymeditor/skins/default/skin.css"
 
-wymbasic.engine.name = wymeditor
-wymbasic.engine.file[] = jelix/jquery/jquery.js
-wymbasic.engine.file[] = jelix/wymeditor/jquery.wymeditor.js
-wymbasic.config = jelix/js/jforms/htmleditors/wymeditor_basic.js
-wymbasic.skin.default = jelix/wymeditor/skins/default/skin.css
+wymbasic.engine.name=wymeditor
+wymbasic.engine.file[]="jelix/jquery/jquery.js"
+wymbasic.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
+wymbasic.config="jelix/js/jforms/htmleditors/wymeditor_basic.js"
+wymbasic.skin.default="jelix/wymeditor/skins/default/skin.css"
 
-ckdefault.engine.name = ckeditor
-ckdefault.engine.file[] = jelix/ckeditor/ckeditor.js
-ckdefault.config = jelix/js/jforms/htmleditors/ckeditor_default.js
+ckdefault.engine.name=ckeditor
+ckdefault.engine.file[]="jelix/ckeditor/ckeditor.js"
+ckdefault.config="jelix/js/jforms/htmleditors/ckeditor_default.js"
 
-ckfull.engine.name = ckeditor
-ckfull.engine.file[] = jelix/ckeditor/ckeditor.js
-ckfull.config = jelix/js/jforms/htmleditors/ckeditor_full.js
+ckfull.engine.name=ckeditor
+ckfull.engine.file[]="jelix/ckeditor/ckeditor.js"
+ckfull.config="jelix/js/jforms/htmleditors/ckeditor_full.js"
 
-ckbasic.engine.name = ckeditor
-ckbasic.engine.file[] = jelix/ckeditor/ckeditor.js
-ckbasic.config = jelix/js/jforms/htmleditors/ckeditor_basic.js
+ckbasic.engine.name=ckeditor
+ckbasic.engine.file[]="jelix/ckeditor/ckeditor.js"
+ckbasic.config="jelix/js/jforms/htmleditors/ckeditor_basic.js"
 
 
 [wikieditors]
-default.engine.name = wr3
-default.wiki.rules = wr3_to_xhtml
+default.engine.name=wr3
+default.wiki.rules=wr3_to_xhtml
 ; path to the engine file
-default.engine.file = jelix/markitup/jquery.markitup.js
+default.engine.file="jelix/markitup/jquery.markitup.js"
 ; define the path to the "internationalized" file to translate the label of each button
-default.config.path = jelix/markitup/sets/wr3/
+default.config.path="jelix/markitup/sets/wr3/"
 ; define the path to the image of buttons of the toolbar
-default.image.path = jelix/markitup/sets/wr3/images/
-default.skin = jelix/markitup/skins/simple/style.css
+default.image.path="jelix/markitup/sets/wr3/images/"
+default.skin="jelix/markitup/skins/simple/style.css"
 
 
 
 [zones]
 ; disable zone caching
-disableCache = off
+disableCache=off
 
 [classbindings]
 ; bindings for class and interfaces : selector_of_class/iface = selector_of_implementation
@@ -388,7 +393,7 @@ cache_path=
 ; A root url starting with "http://" or "https://" or "/" is supposed to be absolute
 ; Other values will be prefixed by application's basePath
 ; This will be used by jUrl::getRootUrl() and jTpl's {jrooturl}
-jelix.cache=cache/
+jelix.cache="cache/"
 
 [langToLocale]
 ; overrides of lang_to_locale.ini.php

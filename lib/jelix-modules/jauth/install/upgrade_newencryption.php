@@ -21,17 +21,14 @@ class jauthModuleUpgrader_newencryption extends jInstallerModule {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
             self::$key = $cryptokey->saveToAsciiSafeString();
         }
-        $conf = $this->getConfigIni()->getValue('auth', 'coordplugins');
-        if ($conf == '1') {
-            $this->getConfigIni()->removeValue('persistant_crypt_key', 'coordplugin_auth');
+        $authConfig = $this->getCoordPluginConf($this->getConfigIni(), 'auth');
+        if (!$authConfig) {
+            return;
         }
-        else if ($conf) {
-            $conff = jApp::varConfigPath($conf);
-            if (file_exists($conff)) {
-                $ini = new \Jelix\IniFile\IniModifier($conff);
-                $ini->removeValue('persistant_crypt_key');
-            }
-        }
+        list($conf, $section) = $authconfig;
+        $conf->removeValue('persistant_crypt_key', $section);
+        $conf->save();
+
         $this->getLocalConfigIni()->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
     }
 }

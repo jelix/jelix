@@ -172,7 +172,7 @@ abstract class jInstallerComponentBase {
 
     public function installFinished($ep) { }
 
-    public function upgradeFinished($ep, $upgrader) { }
+    public function upgradeFinished($ep, jIInstallerComponent $upgrader) { }
 
     public function uninstallFinished($ep) { }
 

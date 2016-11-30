@@ -279,7 +279,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
-    public function upgradeFinished($ep, jInstallerModule $upgrader) {
+    public function upgradeFinished($ep, jIInstallerComponent $upgrader) {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }

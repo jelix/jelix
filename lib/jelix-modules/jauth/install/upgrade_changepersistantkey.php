@@ -21,14 +21,12 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
             self::$key = jAuth::getRandomPassword(30, true);
         }
 
-        $conf = $this->getConfigIni()->getValue('auth', 'coordplugins');
-        if ($conf != '1') {
-            $conff = jApp::varConfigPath($conf);
-            if (file_exists($conff)) {
-                $ini = new \Jelix\IniFile\IniModifier($conff);
-                $ini->removeValue('persistant_crypt_key');
-                $ini->save();
-            }
+        $config = $this->getConfigIni();
+        $authconfig = $this->getCoordPluginConf($config, 'auth');
+        if ($authconfig) {
+            list($conf, $section) = $authconfig;
+            $conf->removeValue('persistant_crypt_key', $section);
+            $conf->save();
         }
 
         $localConfigIni = $this->getLocalConfigIni();

@@ -100,8 +100,6 @@ class jInstallerMigration {
             rename(jApp::varConfigPath($urlFile), jApp::appConfigPath($urlFile));
         }
 
-        $this->reporter->message('Migration to 1.7.0 is done', 'notice');
-
         if (!file_exists(jApp::appPath('app/responses'))) {
             $this->reporter->message("Move responses/ to app/responses/", 'notice');
             rename(jApp::appPath('responses'), jApp::appPath('app/responses'));
@@ -116,11 +114,68 @@ class jInstallerMigration {
                     trim($profile['classmap_file']) != '' &&
                     file_exists(jApp::varConfigPath($profile['classmap_file']))
                 ) {
+                    $this->reporter->message("Move ".$profile['classmap_file']." to app/config/", 'notice');
                     rename(jApp::varConfigPath($profile['classmap_file']), jApp::appConfigPath($profile['classmap_file']));
                 }
             }
         }
 
+        // move plugin configuration file to global config
+        $this->migrateCoordPluginsConf(jApp::appConfigPath('mainconfig.ini.php'));
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $configFile = (string)$entrypoint['config'];
+            $this->migrateCoordPluginsConf(jApp::appConfigPath($configFile));
+        }
+        $this->migrateCoordPluginsConf(jApp::varConfigPath('localconfig.ini.php'));
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $configFile = (string)$entrypoint['config'];
+            $this->migrateCoordPluginsConf(jApp::varConfigPath($configFile));
+        }
+
+        $this->reporter->message('Migration to 1.7.0 is done', 'notice');
+
+    }
+
+    protected $allPluginConfigs = array();
+
+    private function migrateCoordPluginsConf($configFileName) {
+        $config = new \Jelix\IniFile\IniModifier($configFileName);
+        $pluginsConf = $config->getValues('coordplugins');
+        foreach($pluginsConf as $name => $conf) {
+            if (strpos($name, '.') !== false) {
+                continue;
+            }
+            if ($conf == '1' || $conf == '') {
+                continue;
+            }
+            // the configuration value is a filename
+            if (!isset($this->allPluginConfigs[$conf])) {
+                $confPath = jApp::varConfigPath($conf);
+                if (!file_exists($confPath)) {
+                    continue;
+                }
+                $ini = new \Jelix\IniFile\IniModifier($confPath);
+                $this->allPluginConfigs[$conf] = $ini;
+            }
+            else {
+                $ini = $this->allPluginConfigs[$conf];
+            }
+            $sections = $ini->getSectionList();
+            if (count($sections)) {
+                // the file has some section, we cannot merge it into $config as
+                // is, so just move it to app/config
+                if (file_exists($ini->getFileName())) {
+                    $rpath = \Jelix\FileUtilities\Path::shortestPath(jApp::varConfigPath(), $ini->getFileName());
+                    $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
+                    rename ($ini->getFileName(),jApp::appConfigPath($rpath));
+                }
+                continue;
+            }
+            $this->reporter->message("Import plugin conf file ".$rpath." into global configuration", 'notice');
+            $config->import($ini, $name);
+            $config->setValue($name, '1', 'coordplugins');
+            unlink($ini->getFileName());
+        }
     }
 
     protected function error($msg){

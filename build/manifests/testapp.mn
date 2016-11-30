@@ -10,9 +10,17 @@ cd testapp
 cd testapp/app/
   .htaccess
 cd testapp/app/config
+  auth.coord.ini.php
+  auth_class.coord.ini.php
+  auth_ldap.coord.ini.php.dist
+  auth_ws.coord.ini.php
   mainconfig.ini.php
+  minifyConfig.php
+  minifyGroupsConfig.php
+  preferences.ini.php
   urls.xml
   urls_rest.xml
+
 cd testapp/app/config/index
   config.ini.php
 cd testapp/app/config/rest
@@ -489,10 +497,6 @@ cd testapp/var/log-cli
 cd testapp/var/uploads
 cd testapp/var/mails
 cd testapp/var/config
-  auth.coord.ini.php
-  auth_class.coord.ini.php
-  auth_ws.coord.ini.php
-  auth_ldap.coord.ini.php.dist
   localconfig.ini.php.dist
   profiles.ini.php.dist
 cd testapp/var/overloads/testapp/daos

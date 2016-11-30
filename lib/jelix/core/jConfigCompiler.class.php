@@ -41,7 +41,7 @@ class jConfigCompiler {
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
         $appConfigPath = jApp::appConfigPath();
-        $configPath = jApp::varConfigPath();
+        $varConfigPath = jApp::varConfigPath();
 
         if($tempPath=='/'){
             // if it equals to '/', this is because realpath has returned false in the application.init.php
@@ -65,7 +65,7 @@ class jConfigCompiler {
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
-        if(!file_exists($appConfigPath.$configFile) && !file_exists($configPath.$configFile)) {
+        if(!file_exists($appConfigPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             throw new Exception("Configuration file of the entrypoint is missing -- $configFile", 5);
         }
 
@@ -75,10 +75,11 @@ class jConfigCompiler {
         }
 
         // read the local configuration of the app
-        if (file_exists($configPath.'localconfig.ini.php')) {
-            @jelix_read_ini($configPath.'localconfig.ini.php', $config);
+        if (file_exists($varConfigPath.'localconfig.ini.php')) {
+            @jelix_read_ini($varConfigPath.'localconfig.ini.php', $config);
         }
 
+        // read the configuration of the entry point
         if (file_exists($appConfigPath.$configFile)) {
             if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
@@ -86,8 +87,8 @@ class jConfigCompiler {
         }
 
         // read the local configuration of the entry point
-        if (file_exists($configPath.$configFile)) {
-            if( false === @jelix_read_ini($configPath.$configFile, $config)) {
+        if (file_exists($varConfigPath.$configFile)) {
+            if( false === @jelix_read_ini($varConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -163,6 +164,7 @@ class jConfigCompiler {
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (strpos($name, '.') !== false)  {
+                // this is an option for a plugin for the router
                 $coordplugins[$name] = $conf;
                 continue;
             }
@@ -170,13 +172,26 @@ class jConfigCompiler {
                 throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin $name is unknown.", 7);
             }
             if ($conf) {
-                if ($conf != '1' && !file_exists(jApp::varConfigPath($conf))) {
-                    throw new Exception("Error in the main configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$conf'", 8);
-                }
-                $coordplugins[$name] = $conf;
+                $coordplugins[$name] = self::getCoordPluginConfValue($name, $conf);
             }
         }
         $config->coordplugins = $coordplugins;
+    }
+
+    static protected function getCoordPluginConfValue($name, $conf) {
+        if ($conf != '1' && strlen($conf) > 1) {
+            // the configuration value is a filename
+            $confFile = jApp::appConfigPath($conf);
+            if (!file_exists($confFile)) {
+                $confFile = jApp::varConfigPath($conf);
+                if (!file_exists($confFile)) {
+                    throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$confFile'", 8);
+                }
+            }
+            // let's get relative path to the app
+            $conf = \Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $confFile);
+        }
+        return $conf;
     }
 
     static protected function runConfigCompilerPlugins($config) {

@@ -40,6 +40,7 @@ class jAuth {
     protected static $driver = null;
     /**
      * Load the configuration of authentification, stored in the auth plugin config
+     * @param array $newconfig the configuration of jAuth
      * @return array
      * @since 1.2.10
      */
