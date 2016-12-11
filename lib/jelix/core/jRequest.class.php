@@ -425,8 +425,8 @@ abstract class jRequest {
             return $values;
         }
 
-        if (strpos($_SERVER['CONTENT_TYPE'], 'application/json') === 0) {
-            return (array) json_decode($input);
+        if (jApp::config()->enableRequestBodyJSONParsing && strpos($_SERVER['CONTENT_TYPE'], 'application/json') === 0) {
+            return json_decode($input, true);
         }
 
         return $input;
