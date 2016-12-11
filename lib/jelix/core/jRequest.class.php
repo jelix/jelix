@@ -400,12 +400,12 @@ abstract class jRequest {
 
         $values = array();
 
-        if ($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded') {
+        if (strpos($_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded') === 0) {
             parse_str($input, $values);
             return $values;
         }
 
-        if ($_SERVER['CONTENT_TYPE'] == 'multipart/form-data') {
+        if (strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0) {
 
             if (!preg_match('/boundary=([a-zA-Z0-9]+)/', $_SERVER['CONTENT_TYPE'], $m))
                 return $values;
