@@ -352,6 +352,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_redis2Test.php
   httpcacheTest.php
   jzone_cacheTest.php
+  jcacheTest.php
 cd testapp/tests-jelix/jelix/core/
   jAppTest.php
   autoloaderTest.php
