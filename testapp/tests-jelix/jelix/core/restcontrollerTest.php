@@ -44,7 +44,7 @@ class restcontrollerTest extends jUnitTestCase {
             array('headers'=>array('Content-type'=>"application/json"),
                 'body'=>'["foo", "bar"]'));
         $this->assertEquals(200, $res->getStatusCode());
-        $this->assertEquals('this is a PUT response. machin=bidule module=jelix_tests action=myrest: __httpbody=["foo", "bar"]', (string)$res->getBody());
+        $this->assertEquals('this is a PUT response. machin=bidule module=jelix_tests action=myrest: 0=foo 1=bar', (string)$res->getBody());
     }
 
 
