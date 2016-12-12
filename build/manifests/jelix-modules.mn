@@ -17,7 +17,6 @@ cd lib/jelix-modules/jacl/locales/fr_FR/
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cd lib/jelix-modules/jacl/plugins/coord/jacl
 ! jacl.coord.php
-  plugin.xml
 cd lib/jelix-modules/jacl/plugins/tpl/common/
   block.ifacl.php
   block.ifnotacl.php
@@ -73,7 +72,6 @@ cd lib/jelix-modules/jacl2/install
   install.php
 cd lib/jelix-modules/jacl2/plugins/coord/jacl2
 ! jacl2.coord.php
-  plugin.xml
 cd lib/jelix-modules/jacl2/plugins/tpl/common/
   block.ifacl2.php
   block.ifnotacl2.php
@@ -170,6 +168,9 @@ cd lib/jelix-modules/jpref/classes/
   jPrefItem.php
   jPrefItemGroup.php
   jPrefManager.php
+cd lib/jelix-modules/jpref/install/
+  install.php
+  upgrade_moveini.php
 cd lib/jelix-modules/jpref/locales/en_US
 cch prefs.UTF-8.properties(prefs.%charset%.properties)
 cd lib/jelix-modules/jpref/locales/en_GB

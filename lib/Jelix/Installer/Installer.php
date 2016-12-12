@@ -127,9 +127,9 @@ class Installer {
         $this->reporter = $reporter;
         $this->messages = new Checker\Messages($lang);
 
-        $localConfig = App::configPath('localconfig.ini.php');
+        $localConfig = App::varConfigPath('localconfig.ini.php');
         if (!file_exists($localConfig)) {
-           $localConfigDist = App::configPath('localconfig.ini.php.dist');
+           $localConfigDist = App::varConfigPath('localconfig.ini.php.dist');
            if (file_exists($localConfigDist)) {
               copy($localConfigDist, $localConfig);
            }
@@ -161,8 +161,8 @@ class Installer {
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
      */
     protected function createInstallerIni() {
-        if (!file_exists(App::configPath('installer.ini.php'))) {
-            if (false === @file_put_contents(App::configPath('installer.ini.php'), ";<?php die(''); ?>
+        if (!file_exists(App::varConfigPath('installer.ini.php'))) {
+            if (false === @file_put_contents(App::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
@@ -171,9 +171,9 @@ class Installer {
             }
         }
         else {
-            copy(App::configPath('installer.ini.php'), App::configPath('installer.bak.ini.php'));
+            copy(App::varConfigPath('installer.ini.php'), App::varConfigPath('installer.bak.ini.php'));
         }
-        return new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
     }
 
     /**
@@ -448,6 +448,8 @@ class Installer {
             throw new \Exception("unknown entry point");
         }
 
+        $result = true;
+
         foreach ($entryPointList as $epId=>$ep) {
             if ($ep->usesSameConfigOfOtherEntryPoint()) {
                 continue;
@@ -550,8 +552,8 @@ class Installer {
                 $maxVersion = $minVersion = 0;
                 foreach($component->dependencies as $compInfo) {
                     if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
-                        $maxVersion = $depInfo['maxversion'];
-                        $minVersion = $depInfo['minversion'];
+                        $maxVersion = $compInfo['maxversion'];
+                        $minVersion = $compInfo['minversion'];
                     }
                 }
                 $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));

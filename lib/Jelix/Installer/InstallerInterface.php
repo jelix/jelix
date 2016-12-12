@@ -17,7 +17,7 @@ interface InstallerInterface {
      * Called before the installation of all other components
      * (dependents modules or the whole application).
      * Here, you should check if the component can be installed or not
-     * @throw jException if an error occurs during the check of the installation
+     * @throws jException if an error occurs during the check of the installation
      */
     function preInstall();
 
@@ -25,14 +25,14 @@ interface InstallerInterface {
      * should configure the component, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throw jException  if an error occurs during the install.
+     * @throws jException  if an error occurs during the install.
      */
     function install();
 
     /**
      * Redefine this method if you do some additionnal process after the installation of
      * all other modules (dependents modules or the whole application)
-     * @throw jException  if an error occurs during the post installation.
+     * @throws jException  if an error occurs during the post installation.
      */
     function postInstall();
 
@@ -40,19 +40,19 @@ interface InstallerInterface {
      * Called before the uninstallation of all other modules
      * (dependents modules or the whole application).
      * Here, you should check if the component can be uninstalled or not
-     * @throw jException if an error occurs during the check of the installation
+     * @throws jException if an error occurs during the check of the installation
      */
     function preUninstall();
 
     /**
      * should configure the component, install table into the database etc.. 
-     * @throw jException  if an error occurs during the install.
+     * @throws jException  if an error occurs during the install.
      */
     function uninstall();
 
     /**
      * 
-     * @throw jException  if an error occurs during the install.
+     * @throws jException  if an error occurs during the install.
      */
     function postUninstall();
 

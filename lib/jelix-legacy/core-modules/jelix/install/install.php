@@ -27,7 +27,7 @@ class jelixModuleInstaller extends jInstallerModule {
         }
 
         // --- install table for jCache if needed
-        $cachefile = jApp::configPath('profiles.ini.php');
+        $cachefile = jApp::varConfigPath('profiles.ini.php');
 
         if (file_exists($cachefile)) {
             $ini = new \Jelix\IniFile\IniModifier($cachefile);

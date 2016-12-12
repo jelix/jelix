@@ -52,7 +52,7 @@ class Compiler {
     protected function readConfigFiles($configFile, $additionalOptions) {
 
         $appConfigPath = App::appConfigPath();
-        $configPath = App::configPath();
+        $varConfigPath = App::varConfigPath();
 
         // this is the defaultconfig file of JELIX itself
         $config = IniFileMgr::read(__DIR__.'/defaultconfig.ini.php', true);
@@ -64,7 +64,7 @@ class Compiler {
         }
         $this->commonConfig = clone $config;
 
-        if(!file_exists($appConfigPath.$configFile) && !file_exists($configPath.$configFile)) {
+        if(!file_exists($appConfigPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             if ($additionalOptions) {
                 IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
                 return $config;
@@ -78,10 +78,11 @@ class Compiler {
         }
 
         // read the local configuration of the app
-        if (file_exists($configPath.'localconfig.ini.php')) {
-            IniFileMgr::readAndMergeObject($configPath.'localconfig.ini.php', $config);
+        if (file_exists($varConfigPath.'localconfig.ini.php')) {
+            IniFileMgr::readAndMergeObject($varConfigPath.'localconfig.ini.php', $config);
         }
 
+        // read the configuration of the entry point
         if (file_exists($appConfigPath.$configFile)) {
             if( false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
@@ -89,8 +90,8 @@ class Compiler {
         }
 
         // read the local configuration of the entry point
-        if (file_exists($configPath.$configFile)) {
-            if( false === IniFileMgr::readAndMergeObject($configPath.$configFile, $config)) {
+        if (file_exists($varConfigPath.$configFile)) {
+            if( false === IniFileMgr::readAndMergeObject($varConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -199,6 +200,7 @@ class Compiler {
         $coordplugins = array();
         foreach ($config->coordplugins as $name=>$conf) {
             if (strpos($name, '.') !== false) {
+                // this is an option for a plugin for the router
                 $coordplugins[$name] = $conf;
                 continue;
             }
@@ -206,13 +208,26 @@ class Compiler {
                 throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin $name is unknown.", 7);
             }
             if ($conf) {
-                if ($conf != '1' && !file_exists(App::configPath($conf))) {
-                    throw new Exception("Error in the main configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$conf'", 8);
-                }
-                $coordplugins[$name] = $conf;
+                $coordplugins[$name] = $this->getCoordPluginConfValue($name, $conf);
             }
         }
         $config->coordplugins = $coordplugins;
+    }
+
+    protected function getCoordPluginConfValue($name, $conf) {
+        if ($conf != '1' && strlen($conf) > 1) {
+            // the configuration value is a filename
+            $confFile = App::appConfigPath($conf);
+            if (!file_exists($confFile)) {
+                $confFile = App::varConfigPath($conf);
+                if (!file_exists($confFile)) {
+                    throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin $name doesn't exist: '$confFile'", 8);
+                }
+            }
+            // let's get relative path to the app
+            $conf = \Jelix\FileUtilities\Path::shortestPath(App::appPath(), $confFile);
+        }
+        return $conf;
     }
 
     /**
@@ -271,7 +286,7 @@ class Compiler {
      */
     protected function _loadModulesInfo($config, $allModuleInfo) {
 
-        $installerFile = App::configPath('installer.ini.php');
+        $installerFile = App::varConfigPath('installer.ini.php');
 
         if ($config->disableInstallers) {
             $installation = array ();

@@ -20,52 +20,41 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule {
     }
     
     protected function _upgradeconf($module) {
+        // move options from jacl2 configuration file to global configuration
+
         $conf = null;
         // get from entrypoint config
-        $jacl2File = $this->getConfigIni()->getOverrider()->getValue($module, 'coordplugins');
-        if ($jacl2File == '') {
-            // get from localConfig.ini.php
-            $jacl2File = $this->getLocalConfigIni()->getOverrider()->getValue($module, 'coordplugins');
-            if ($jacl2File == '') {
-                // get from mainConfig.ini.php
-                $jacl2File = $this->getMainConfigIni()->getOverrider()->getValue($module, 'coordplugins');
-                $conf = $this->getMainConfigIni()->getOverrider();
+        $globalConf = $this->getConfigIni()->getOverrider();
+        $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+        if (!$aclConfig) {
+            $globalConf = $this->getLocalConfigIni()->getOverrider();
+            $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+            if (!$aclConfig) {
+                $globalConf = $this->getMainConfigIni()->getOverrider();
+                $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+                if (!$aclConfig) {
+                    return;
+                }
             }
-            else {
-                $conf = $this->getLocalConfigIni()->getOverrider();
-            }
-        }
-        else {
-            $conf = $this->getConfigIni()->getOverrider();
         }
 
-        if ($jacl2File == '' || $jacl2File == '1')
+        list($conf, $section) = $aclConfig;
+        if ($section !== 0) {
+            // $conf is the global conf file
             return;
+        }
 
-        $jacl2File = jApp::configPath($jacl2File);
-        if (!file_exists($jacl2File)) {
-            $jacl2File = '';
+        $message = $conf->getValue('error_message');
+        if ($message == "jelix~errors.acl.action.right.needed") {
             $message = $module."~errors.action.right.needed";
-            if ($this->entryPoint->type != 'classic')
-                $onerror = 1;
-            else
-                $onerror = 2;
-            $on_error_action = "jelix~error:badright";
         }
-        else {
-            $ini = new \Jelix\IniFile\IniModifier($jacl2File);
-            $message = $ini->getValue('error_message'); // = ');
-            if ($message == "jelix~errors.acl.action.right.needed") {
-                $message = $module."~errors.action.right.needed";
-            }
-            $onerror = $ini->getValue('on_error');
-            $on_error_action = $ini->getValue('on_error_action');
-        }
+        $onerror = $conf->getValue('on_error');
+        $on_error_action = $conf->getValue('on_error_action');
 
-        $conf->setValue($module, '1', 'coordplugins');
-        $conf->setValue('on_error', $onerror, 'coordplugin_'.$module);
-        $conf->setValue('error_message', $message, 'coordplugin_'.$module);
-        $conf->setValue('on_error_action', $on_error_action, 'coordplugin_'.$module);
-        $conf->save();
+        $globalConf->setValue($module, '1', 'coordplugins');
+        $globalConf->setValue('on_error', $onerror, 'coordplugin_'.$module);
+        $globalConf->setValue('error_message', $message, 'coordplugin_'.$module);
+        $globalConf->setValue('on_error_action', $on_error_action, 'coordplugin_'.$module);
+        $globalConf->save();
     }
 }

@@ -6,7 +6,7 @@ charset=UTF-8
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
-timeZone=Europe/Paris
+timeZone="Europe/Paris"
 
 theme=default
 

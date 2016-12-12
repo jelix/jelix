@@ -8,7 +8,7 @@ class feedReaderTest extends jUnitTestCase
 
     function testRSSCall() {
 
-        $reader = new jRSS20Reader('http://testapp.local/index.php/testapp/syndication/rss');
+        $reader = new jRSS20Reader(TESTAPP_URL.'index.php/testapp/syndication/rss');
         $infos = $reader->getInfos();
 
         $this->assertEquals('Test syndication testapp jelix', $infos->title);
@@ -34,7 +34,7 @@ class feedReaderTest extends jUnitTestCase
 
     function testAtomCall() {
 
-        $reader = new jAtom10Reader('http://testapp.local/index.php/testapp/syndication/atom');
+        $reader = new jAtom10Reader(TESTAPP_URL.'index.php/testapp/syndication/atom');
         $infos = $reader->getInfos();
 
         $this->assertEquals('Test syndication testapp jelix', $infos->title);

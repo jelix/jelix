@@ -18,7 +18,7 @@ class jSelectorCfg extends \Jelix\Core\Selector\SimpleFileSelector {
     protected $type = 'cfg';
 
     function __construct($sel) {
-        $this->_basePath = \Jelix\Core\App::configPath();
+        $this->_basePath = \Jelix\Core\App::varConfigPath();
         parent::__construct($sel);
     }
 }

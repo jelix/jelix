@@ -13,16 +13,23 @@
 class jauthdb_adminModuleInstaller extends jInstallerModule {
 
     function install() {
-        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
+        $config = $this->getConfigIni();
+        $authconfig = $this->getCoordPluginConf($config, 'auth');
 
-        if ($authconfig && !$this->entryPoint->isCliScript() && $this->firstExec($authconfig)) {
+        if ($authconfig &&  $this->entryPoint->getType() != 'cmdline' && $this->firstExec('authdbadmin')) {
+            list($conf, $section) = $authconfig;
+            if ($section === 0) {
+                $section_db = 'Db';
+            }
+            else {
+                $section_db = 'auth_db';
+            }
+            $driver = $conf->getValue('driver', $section);
+            $daoName = $conf->getValue('dao', $section_db);
+            $formName = $conf->getValue('form', $section_db);
 
-            $conf = new \Jelix\IniFile\IniModifier(jApp::configPath($authconfig));
-            $driver = $conf->getValue('driver');
-            $daoName = $conf->getValue('dao', 'Db');
-            $formName = $conf->getValue('form', 'Db');
             if ($driver == 'Db' && $daoName == 'jauthdb~jelixuser' && $formName == '') {
-                $conf->setValue('form','jauthdb_admin~jelixuser', 'Db');
+                $conf->setValue('form','jauthdb_admin~jelixuser', $section_db);
                 $conf->save();
             }
         }

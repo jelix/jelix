@@ -32,7 +32,7 @@ jauth.access = 0
 jauthdb.access = 0
 
 [coordplugins]
-;name = file_ini_name or 1
+;name = file_ini_name or var:file_ini_name or 1
 
 [tplplugins]
 defaultJformsBuilder = html

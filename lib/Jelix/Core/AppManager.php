@@ -23,7 +23,7 @@ class AppManager {
      * @since 1.2
      */
     public static function close($message='') {
-        $file = App::configPath('CLOSED');
+        $file = App::varConfigPath('CLOSED');
         file_put_contents($file, $message);
         if (App::config()) {
             chmod($file, App::config()->chmodFile);
@@ -35,8 +35,8 @@ class AppManager {
      * @since 1.2
      */
     public static function open() {
-        if (file_exists(App::configPath('CLOSED')))
-            unlink(App::configPath('CLOSED'));
+        if (file_exists(App::varConfigPath('CLOSED')))
+            unlink(App::varConfigPath('CLOSED'));
     }
 
     /**
@@ -45,7 +45,7 @@ class AppManager {
      * @since 1.2
      */
     public static function isOpened() {
-        return !file_exists(App::configPath('CLOSED'));
+        return !file_exists(App::varConfigPath('CLOSED'));
     }
 
     public static function clearTemp($path='') {
@@ -84,7 +84,7 @@ class AppManager {
             exit(1);
         }
         if (!self::isOpened()) {
-            $message = file_get_contents(App::configPath('CLOSED'));
+            $message = file_get_contents(App::varConfigPath('CLOSED'));
     
             if (\jServer::isCLI()) {
                 echo "Application closed.". ($message?"\n$message\n":"\n");
@@ -129,6 +129,6 @@ class AppManager {
      * @return boolean true if the application is installed.
      */
     public static function isAppInstalled() {
-        return file_exists(App::configPath('installer.ini.php'));
+        return file_exists(App::varConfigPath('installer.ini.php'));
     }
 }

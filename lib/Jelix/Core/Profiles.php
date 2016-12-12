@@ -28,7 +28,7 @@ class Profiles {
 
 
     protected static function loadProfiles() {
-        $file = App::configPath('profiles.ini.php');
+        $file = App::varConfigPath('profiles.ini.php');
         $tempFile = App::tempPath('profiles.cache.php');
         if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
             $compiler = new \jProfilesCompiler($file);

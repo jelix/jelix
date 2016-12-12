@@ -83,9 +83,10 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             }
         }
 
-        $installConfig = new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
+        $installConfig = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
 
-        $inifile = new \Jelix\IniFile\MultiIniModifier(App::mainConfigFile(),
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(), App::mainConfigFile());
+        $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
                                               App::appConfigPath($ep['config']));
 
         $params = array();
@@ -111,7 +112,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $inifile->setValue('jacldb.access', '0', 'modules');
         $inifile->save();
 
-        $urlsFile = jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));
@@ -126,7 +127,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $installer = new \Jelix\Installer\Installer($reporter);
         $installer->installModules(array('jauth','master_admin'), $entrypoint.'.php');
 
-        $authini = new \Jelix\IniFile\IniModifier(App::configPath($entrypoint.'/auth.coord.ini.php'));
+        $authini = new \Jelix\IniFile\IniModifier(App::varConfigPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
         $authini->setValue('timeout','30');
         $authini->save();
@@ -150,7 +151,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         if (!$input->getOption('noacl2db')) {
             if ($profile != '') {
-                $dbini = new \Jelix\IniFile\IniModifier(App::configPath('profiles.ini.php'));
+                $dbini = new \Jelix\IniFile\IniModifier(App::varConfigPath('profiles.ini.php'));
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }

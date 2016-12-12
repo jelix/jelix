@@ -12,8 +12,9 @@ su postgres -c $VAGRANTDIR/create_pgsql_db.sh
 echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/$POSTGRESQL_VERSION/main/pg_hba.conf
 service postgresql restart
 
-#cp $VAGRANTDIR/otherport.conf /etc/apache2/conf-available/
-#a2enconf otherport
+apt-get -y install php7.0-xdebug
+cp $VAGRANTDIR/xdebug.ini /etc/php5/mods-available/
+service php7.0-fpm restart
 
 resetComposer $ROOTDIR
 

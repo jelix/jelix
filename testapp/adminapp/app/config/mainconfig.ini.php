@@ -40,7 +40,7 @@ jpref_admin.access=2
 
 
 [coordplugins]
-;name = file_ini_name or 1
+;name = file_ini_name or var:file_ini_name or 1
 
 [tplplugins]
 defaultJformsBuilder=html

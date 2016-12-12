@@ -165,7 +165,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
-        $iniDefault = new \Jelix\IniFile\IniModifier(App::mainConfigFile());
+        $iniDefault = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(), App::mainConfigFile());
         $urlsFile = App::appConfigPath($iniDefault->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
@@ -193,7 +193,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         $iniDefault->save();
 
         $list = $this->getEntryPointsList();
-        $install = new \Jelix\IniFile\IniModifier(App::configPath('installer.ini.php'));
+        $install = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
 
         // install the module for all needed entry points
         foreach ($list as $entryPoint) {

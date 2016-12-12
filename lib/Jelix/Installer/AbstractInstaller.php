@@ -163,7 +163,7 @@ abstract class AbstractInstaller {
     }
 
     /**
-     * the localconfig.ini.php file combined with $mainConfigIni
+     * the localconfig.ini.php file combined with getMainConfigIni()
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
@@ -172,7 +172,7 @@ abstract class AbstractInstaller {
     }
 
     /**
-     * the entry point config combined with $localConfigIni
+     * the entry point config combined with getLocalConfigIni()
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
@@ -193,8 +193,8 @@ abstract class AbstractInstaller {
         $this->dbProfile = $dbProfile;
 
         // we check if it is an alias
-        if (file_exists(App::configPath('profiles.ini.php'))) {
-            $dbprofiles = parse_ini_file(App::configPath('profiles.ini.php'));
+        if (file_exists(App::varConfigPath('profiles.ini.php'))) {
+            $dbprofiles = parse_ini_file(App::varConfigPath('profiles.ini.php'));
             if (isset($dbprofiles['jdb'][$dbProfile]))
                 $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
         }
@@ -371,13 +371,14 @@ abstract class AbstractInstaller {
          if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', App::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->config->getValue('jelixWWWPath','urlengine');
-            if (substr($p, -1) != '/')
-                $p.='/';
+            $p = $this->entryPoint->getEpConfigIni()->getValue('jelixWWWPath','urlengine');
+            if (substr($p, -1) != '/') {
+                $p .= '/';
+            }
             $path = str_replace('jelixwww:', App::wwwPath($p), $path);
         }
-        elseif (strpos($path, 'config:') === 0) {
-            $path = str_replace('config:', App::configPath(), $path);
+        elseif (strpos($path, 'varconfig:') === 0) {
+            $path = str_replace('varconfig:', App::varConfigPath(), $path);
         }
         elseif (strpos($path, 'appconfig:') === 0) {
             $path = str_replace('appconfig:', App::appConfigPath(), $path);
@@ -386,6 +387,9 @@ abstract class AbstractInstaller {
             $p = dirname(App::appConfigPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
+         elseif (strpos($path, 'config:') === 0) {
+             $path = str_replace('config:', App::varConfigPath(), $path);
+         }
         return $path;
     }
 
@@ -399,7 +403,7 @@ abstract class AbstractInstaller {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new \Jelix\IniFile\IniModifier(App::configPath('profiles.ini.php'));
+        $profiles = new \Jelix\IniFile\IniModifier(App::varConfigPath('profiles.ini.php'));
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section
@@ -446,5 +450,44 @@ abstract class AbstractInstaller {
         $profiles->save();
         \Jelix\Core\Profiles::clear();
         return true;
+    }
+
+
+    /**
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
+     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws Exception when the configuration filename is not found
+     */
+    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName) {
+        $conf = $config->getValue($pluginName, 'coordplugins');
+        if (!$conf) {
+            return null;
+        }
+        if ($conf == '1') {
+            $pluginConf = $config->getValues($pluginName);
+            if ($pluginConf) {
+                return array($config, $pluginName);
+            }
+            else {
+                // old section naming. deprecated
+                $pluginConf = $config->getValues('coordplugin_' . $pluginName);
+                if ($pluginConf) {
+                    return array($config, 'coordplugin_' . $pluginName);
+                }
+            }
+            return null;
+        }
+        // the configuration value is a filename
+        $confpath = App::appConfigPath($conf);
+        if (!file_exists($confpath)) {
+            $confpath = App::varConfigPath($conf);
+            if (!file_exists($confpath)) {
+                return null;
+            }
+        }
+        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
     }
 }

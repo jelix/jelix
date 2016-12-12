@@ -440,26 +440,17 @@ cd lib/jelix-legacy/plugins/configcompiler/session
 cd lib/jelix-legacy/plugins/coord/autolocale
   autolocale.coord.ini.php.dist
 ! autolocale.coord.php
-  plugin.xml
 
 cd lib/jelix-legacy/plugins/coord/auth
 ! auth.coord.php
-  plugin.xml
   auth.coord.ini.php.dist
-
-cd lib/jelix-legacy/plugins/coord/zendframework
-  zendframework.coord.php
-  plugin.xml
-  zendframework.coord.ini.php.dist
 
 cd lib/jelix-legacy/plugins/coord/history
 ! history.coord.php
-  plugin.xml
   history.coord.ini.php.dist
 
 cd lib/jelix-legacy/plugins/coord/traceexec
 ! traceexec.coord.php
-  plugin.xml
   traceexec.coord.ini.php.dist
 
 cd lib/jelix-legacy/plugins/daobuilder/mssql

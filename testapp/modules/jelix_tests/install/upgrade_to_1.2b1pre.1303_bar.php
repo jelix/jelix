@@ -12,7 +12,7 @@ class jelix_testsModuleUpgrader_bar extends jInstallerModule {
      * should configure the module, install table into the database etc..
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throw jException  if an error occurs during the install.
+     * @throws jException  if an error occurs during the install.
      */
     function install() {
        echo  "upgrader jelix_tests 1303 install\n"; 
@@ -21,7 +21,7 @@ class jelix_testsModuleUpgrader_bar extends jInstallerModule {
     /**
      * Redefine this method if you do some additionnal process after the installation of
      * all other modules (dependents modules or the whole application)
-     * @throw jException  if an error occurs during the post installation.
+     * @throws jException  if an error occurs during the post installation.
      */
     function postInstall() {
        echo  "upgrader jelix_tests 1303  post install\n"; 

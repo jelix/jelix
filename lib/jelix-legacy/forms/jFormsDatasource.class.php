@@ -83,7 +83,7 @@ interface jIFormsDynamicDatasource extends jIFormsDatasource2 {
     public function getCriteriaControls();
 
     /**
-     * set the list of controls name that provide critrion values
+     * set the list of controls name that provide criterion values
      * @param string[] $criteriaFrom
      */
     public function setCriteriaControls($criteriaFrom = null);

@@ -37,9 +37,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
     
     public function __construct()
     {
-        parent::__construct();
-        
-        
+        parent::__construct(new \Jelix\DevHelper\CommandConfig());
     }
 
     protected function configure()
@@ -224,7 +222,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($wwwpath);
 
         $varPath = App::varPath();
-        $configPath = App::configPath();
+        $configPath = App::varConfigPath();
         $this->createDir($varPath);
         $this->createDir(App::logPath());
         $this->createDir(App::appConfigPath());
@@ -304,7 +302,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
-        $this->createFile($configPath.'preferences.ini.php', 'var/config/preferences.ini.php.tpl', $param, "Preferences file");
+        $this->createFile(App::appConfigPath('preferences.ini.php'), 'app/config/preferences.ini.php.tpl', $param, "Preferences file");
         $this->createFile(App::appConfigPath('urls.xml'), 'app/config/urls.xml.tpl', $param, "URLs mapping file");
 
         $this->createFile(App::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");

@@ -140,7 +140,7 @@ class EntryPoint {
         }
         $this->epConfigIni = new \Jelix\IniFile\IniModifier($appConfigPath);
 
-        $varConfigPath = \Jelix\Core\App::configPath($configFile);
+        $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
         if (!file_exists($varConfigPath)) {
             \jFile::createDir(dirname($varConfigPath));
             file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');

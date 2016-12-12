@@ -10,6 +10,6 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix version="&gt;=1.3,&lt;=__LIB_VERSION_MAX__"/>
+#expand        <jelix version="&gt;=1.7.0-beta.1,&lt;=__LIB_VERSION_MAX__"/>
     </dependencies>
 </module>

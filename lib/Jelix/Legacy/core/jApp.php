@@ -49,8 +49,8 @@ class jApp {
         return \Jelix\Core\App::appConfigPath($file);
     }
 
-    public static function configPath($file='') {
-        return \Jelix\Core\App::configPath($file);
+    public static function varConfigPath($file='') {
+        return \Jelix\Core\App::varConfigPath($file);
     }
 
     public static function wwwPath($file='') {

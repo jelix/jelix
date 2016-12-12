@@ -3,15 +3,15 @@
 
 {if count($liste)}
 <table border="1">
-{foreach $liste as $id=>$form}
+{foreach $liste as $form}
     <tr>
-    <td>{$id}</td>
+    <td>{$form->formId}</td>
     <td>{$form->data['nom']}</td>
     <td>{$form->data['prenom']}</td>
     <td>
-        <a href="{jurl 'forms:view',array('id'=>$id)}">see</a>
-        <a href="{jurl 'forms:showform',array('id'=>$id)}">edit</a>
-        <a href="{jurl 'forms:destroy',array('id'=>$id)}">destroy</a>
+        <a href="{jurl 'forms:view',array('id'=>$form->formId)}">see</a>
+        <a href="{jurl 'forms:showform',array('id'=>$form->formId)}">edit</a>
+        <a href="{jurl 'forms:destroy',array('id'=>$form->formId)}">destroy</a>
     </tr>
 {/foreach}
 </table>

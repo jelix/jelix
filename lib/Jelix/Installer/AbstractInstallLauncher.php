@@ -128,7 +128,7 @@ abstract class AbstractInstallLauncher {
 
     public function installFinished($ep) { }
 
-    public function upgradeFinished($ep, $upgrader) { }
+    public function upgradeFinished($ep, InstallerInterface $upgrader) { }
 
     public function uninstallFinished($ep) { }
 

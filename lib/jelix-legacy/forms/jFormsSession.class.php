@@ -10,8 +10,18 @@
 
 
 /**
- * used to store some jForms information in session, and to serialize jForms
- * instances into an external storage when session ends during a request processing.
+ * This class acts as a cache proxy during a request processing, for jForms
+ * containers. It allows to get and store jForms containers data into an
+ * external storage using jCache.
+ *
+ * jFormsSession instances can be stored temporarly in session, in order to have
+ * the opportunity, at the end of the request processing, so when the session is
+ * saved, to store automatically jForms containers data that have been readed,
+ * created or modified.
+ *
+ * A profile for jCache, named 'jforms', may be declared in profiles.ini.php,
+ * so you can choose where jforms data are stored. A virtual profile is used
+ * if no one is defined, and use files for the cache.
  */
 class jFormsSession {
 
@@ -22,6 +32,7 @@ class jFormsSession {
     }
 
     protected function loadProfile() {
+        // be sure we have a profile for jCache.
         try {
             jProfiles::get('jcache', 'jforms', true);
         }

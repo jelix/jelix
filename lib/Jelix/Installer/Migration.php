@@ -46,16 +46,16 @@ class Migration {
 
         // move mainconfig.php to app/config/
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
-            if (!file_exists(App::configPath('mainconfig.ini.php'))) {
-                if (!file_exists(App::configPath('defaultconfig.ini.php'))) {
+            if (!file_exists(App::varConfigPath('mainconfig.ini.php'))) {
+                if (!file_exists(App::varConfigPath('defaultconfig.ini.php'))) {
                     throw new \Exception("Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?");
                 }
                 $this->reporter->message('Move var/config/defaultconfig.ini.php to app/config/mainconfig.ini.php', 'notice');
-                rename(App::configPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(App::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
             else {
                 $this->reporter->message('Move var/config/mainconfig.ini.php to app/config/', 'notice');
-                rename(App::configPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(App::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
 
@@ -66,22 +66,22 @@ class Migration {
             $configFile = (string)$entrypoint['config'];
             $dest = App::appConfigPath($configFile);
             if (!file_exists($dest)) {
-                if (!file_exists(App::configPath($configFile))) {
+                if (!file_exists(App::varConfigPath($configFile))) {
                     $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
                     continue;
                 }
 
                 $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
                 \jFile::createDir(dirname($dest));
-                rename(App::configPath($configFile), $dest);
+                rename(App::varConfigPath($configFile), $dest);
             }
 
             $config = parse_ini_file(App::appConfigPath($configFile), true);
             if (isset($config['urlengine']['significantFile'])) {
                 $urlFile = $config['urlengine']['significantFile'];
-                if (!file_exists(App::appConfigPath($urlFile)) && file_exists(App::configPath($urlFile))) {
+                if (!file_exists(App::appConfigPath($urlFile)) && file_exists(App::varConfigPath($urlFile))) {
                     $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
-                    rename(App::configPath($urlFile), App::appConfigPath($urlFile));
+                    rename(App::varConfigPath($urlFile), App::appConfigPath($urlFile));
                 }
             }
         }
@@ -94,9 +94,9 @@ class Migration {
         else {
             $urlFile = 'urls.xml';
         }
-        if (!file_exists(App::appConfigPath($urlFile)) && file_exists(App::configPath($urlFile))) {
+        if (!file_exists(App::appConfigPath($urlFile)) && file_exists(App::varConfigPath($urlFile))) {
             $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
-            rename(App::configPath($urlFile), App::appConfigPath($urlFile));
+            rename(App::varConfigPath($urlFile), App::appConfigPath($urlFile));
         }
 
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');
@@ -104,6 +104,78 @@ class Migration {
         if (!file_exists(App::appPath('app/responses'))) {
             $this->reporter->message("Move responses/ to app/responses/", 'notice');
             rename(App::appPath('responses'), App::appPath('app/responses'));
+        }
+
+        // move jSoapClient classmap files
+        if (file_exists(App::varConfigPath('profiles.ini.php'))) {
+            $profilesini = parse_ini_file(App::varConfigPath('profiles.ini.php'), true);
+            foreach ($profilesini as $name => $profile) {
+                if (strpos($name, 'jsoapclient:') === 0 &&
+                    isset($profile['classmap_file']) &&
+                    trim($profile['classmap_file']) != '' &&
+                    file_exists(App::varConfigPath($profile['classmap_file']))
+                ) {
+                    $this->reporter->message("Move ".$profile['classmap_file']." to app/config/", 'notice');
+                    rename(App::varConfigPath($profile['classmap_file']), App::appConfigPath($profile['classmap_file']));
+                }
+            }
+        }
+
+        // move plugin configuration file to global config
+        $this->migrateCoordPluginsConf(App::appConfigPath('mainconfig.ini.php'));
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $configFile = (string)$entrypoint['config'];
+            $this->migrateCoordPluginsConf(App::appConfigPath($configFile));
+        }
+        $this->migrateCoordPluginsConf(App::varConfigPath('localconfig.ini.php'));
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $configFile = (string)$entrypoint['config'];
+            $this->migrateCoordPluginsConf(App::varConfigPath($configFile));
+        }
+
+        $this->reporter->message('Migration to 1.7.0 is done', 'notice');
+
+    }
+
+    protected $allPluginConfigs = array();
+
+    private function migrateCoordPluginsConf($configFileName) {
+        $config = new \Jelix\IniFile\IniModifier($configFileName);
+        $pluginsConf = $config->getValues('coordplugins');
+        foreach($pluginsConf as $name => $conf) {
+            if (strpos($name, '.') !== false) {
+                continue;
+            }
+            if ($conf == '1' || $conf == '') {
+                continue;
+            }
+            // the configuration value is a filename
+            if (!isset($this->allPluginConfigs[$conf])) {
+                $confPath = App::varConfigPath($conf);
+                if (!file_exists($confPath)) {
+                    continue;
+                }
+                $ini = new \Jelix\IniFile\IniModifier($confPath);
+                $this->allPluginConfigs[$conf] = $ini;
+            }
+            else {
+                $ini = $this->allPluginConfigs[$conf];
+            }
+            $sections = $ini->getSectionList();
+            if (count($sections)) {
+                // the file has some section, we cannot merge it into $config as
+                // is, so just move it to app/config
+                if (file_exists($ini->getFileName())) {
+                    $rpath = \Jelix\FileUtilities\Path::shortestPath(App::varConfigPath(), $ini->getFileName());
+                    $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
+                    rename ($ini->getFileName(), App::appConfigPath($rpath));
+                }
+                continue;
+            }
+            $this->reporter->message("Import plugin conf file ".$rpath." into global configuration", 'notice');
+            $config->import($ini, $name);
+            $config->setValue($name, '1', 'coordplugins');
+            unlink($ini->getFileName());
         }
     }
 

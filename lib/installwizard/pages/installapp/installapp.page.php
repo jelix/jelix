@@ -49,6 +49,7 @@ class installappWizPage extends installWizardPage {
  * 
  */
 class wizInstallReporter implements \Jelix\Installer\ReporterInterface {
+    use \Jelix\Installer\ReporterTrait;
     /**
      * @var string error, notice or warning
      */
@@ -83,7 +84,7 @@ class wizInstallReporter implements \Jelix\Installer\ReporterInterface {
      * @param array $results an array which contains, for each type of message,
      * the number of messages
      */
-    function end($results) {
+    function end() {
         $this->messages[] = array('',  $this->page->getLocale('install.end'));
     }
 }

@@ -46,22 +46,22 @@ class Checker extends CheckerBase {
             $this->error('path.config');
             $ok=false;
         }
-        if(!file_exists(App::configPath())){
+        if(!file_exists(App::varConfigPath())){
             $this->error('path.config');
             $ok=false;
         }
         elseif ($this->checkForInstallation) {
-            if (!is_writable(App::configPath())) {
+            if (!is_writable(App::varConfigPath())) {
                 $this->error('path.config.writable');
                 $ok = false;
             }
-            if (file_exists(App::configPath('profiles.ini.php'))
-                && !is_writable(App::configPath('profiles.ini.php'))) {
+            if (file_exists(App::varConfigPath('profiles.ini.php'))
+                && !is_writable(App::varConfigPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(App::configPath('installer.ini.php'))
-                && !is_writable(App::configPath('installer.ini.php'))) {
+            if (file_exists(App::varConfigPath('installer.ini.php'))
+                && !is_writable(App::varConfigPath('installer.ini.php'))) {
                 $this->error('path.installer.writable');
                 $ok = false;
             }

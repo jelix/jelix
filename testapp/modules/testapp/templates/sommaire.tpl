@@ -26,7 +26,6 @@
 
 <h3>Forms</h3>
 <ul>
-   <li><a href="{jurl 'sampleform:status'}">Session data</a></li>
    <li><a href="{jurl 'samplecrud:index'}">Crud form</a></li>
 </ul>
 <p>Simple form (singleton)</p>

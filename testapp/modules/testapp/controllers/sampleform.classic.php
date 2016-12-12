@@ -97,22 +97,6 @@ class sampleFormCtrl extends jController {
       return $rep;
    }
 
-   function status(){
-      $rep = $this->getResponse('html');
-      $rep->title = 'Form data';
-
-      $rep->body->assign('page_title','formulaires');
-
-      $content='<h1>Session data of forms</h1>';
-      if(isset($_SESSION['JFORMS'])){
-          $content.='<pre>'.htmlspecialchars(var_export($_SESSION['JFORMS'],true)).'</pre>';
-      }else{
-          $content.='<p>There isn\'t any forms...</p>';
-      }
-      $rep->body->assign('MAIN',$content);
-      return $rep;
-   }
-
   function newajaxform(){
       jForms::destroy('sample');
       // création d'un formulaire vierge

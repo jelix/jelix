@@ -15,7 +15,7 @@
  * page for a wizard, to check a jelix installation
  */
 class checkjelixWizPage extends installWizardPage  implements jIInstallReporter {
-    
+    use jInstallerReporterTrait;
     protected $tpl;
     protected $messages;
 
@@ -54,13 +54,17 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
     function start() {}
 
     function message($message, $type=''){
+        $this->addMessageType($type);
         $this->messages[] = array($type, $message);
     }
     
     function end($results){
+        $nbError = $this->getMessageCounter('error');
+        $nbWarning = $this->getMessageCounter('warning');
+        $nbNotice = $this->getMessageCounter('notice');
         $this->tpl->assign('messages', $this->messages);
-        $this->tpl->assign('nbError', $results['error']);
-        $this->tpl->assign('nbWarning', $results['warning']);
-        $this->tpl->assign('nbNotice', $results['notice']);
+        $this->tpl->assign('nbError', $nbError);
+        $this->tpl->assign('nbWarning', $nbWarning);
+        $this->tpl->assign('nbNotice', $nbNotice);
     }
 }
