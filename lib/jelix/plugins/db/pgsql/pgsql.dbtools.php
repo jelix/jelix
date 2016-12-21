@@ -18,7 +18,7 @@
 class pgsqlDbTools extends jDbTools {
 
     public $trueValue = 'TRUE';
-    
+
     public $falseValue = 'FALSE';
 
     protected $typesInfo = array(
@@ -45,7 +45,7 @@ class pgsqlDbTools extends jDbTools {
       'number'          =>array('double',           'decimal',  null,       null,       null,     null), //8bytes
       'binary_float'    =>array('real',             'float',    null,       null,       null,     null), //4bytes
       'binary_double'   =>array('double',           'decimal',  null,       null,       null,     null), //8bytes
-      
+
       'numeric'         =>array('numeric',          'numeric',  null,       null,       null,     null),
       'decimal'         =>array('decimal',          'decimal',  null,       null,       null,     null),
       'dec'             =>array('decimal',          'decimal',  null,       null,       null,     null),
@@ -83,7 +83,7 @@ class pgsqlDbTools extends jDbTools {
       'mediumblob'      =>array('bytea',   'blob',       null,       null,       0,     16777215),
       'longblob'        =>array('bytea',   'blob',       null,       null,       0,     0),
       'bfile'           =>array('bytea',   'blob',       null,       null,       0,     0),
-      
+
       'bytea'           =>array('bytea',  'varbinary',   null,       null,       0,     0),
       'binary'          =>array('bytea',  'binary',      null,       null,       0,     255),
       'varbinary'       =>array('bytea',  'varbinary',   null,       null,       0,     255),
@@ -114,7 +114,7 @@ class pgsqlDbTools extends jDbTools {
     }
 
    /*
-    * returns the list of tables 
+    * returns the list of tables
     * @return   array    list of table names
    */
    public function getTableList () {
@@ -136,7 +136,7 @@ class pgsqlDbTools extends jDbTools {
     public function getFieldList ($tableName, $sequence='') {
         $tableName = $this->_conn->prefixTable($tableName);
         $results = array ();
-        
+
         // get table informations
         $sql ='SELECT oid, relhaspkey, relhasindex FROM pg_class WHERE relname = \''.$tableName.'\'';
         $rs = $this->_conn->query ($sql);
@@ -180,6 +180,11 @@ class pgsqlDbTools extends jDbTools {
             if(preg_match('/^nextval\(.*\)$/', $line->adsrc) || $typeinfo[6]){
                 $field->autoIncrement=true;
                 $field->default = '';
+            } else if( $line->adsrc != '' ){
+                $ds = $this->_conn->query ('SELECT '.$line->adsrc.' AS v;');
+                $d = $ds->fetch();
+                if( $d )
+                    $field->default = $d->v;
             }
 
             if(in_array($line->attnum, $pkeys))
