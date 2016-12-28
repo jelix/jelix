@@ -540,8 +540,8 @@ class jInstaller {
                 $maxVersion = $minVersion = 0;
                 foreach($component->dependencies as $compInfo) {
                     if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
-                        $maxVersion = $depInfo['maxversion'];
-                        $minVersion = $depInfo['minversion'];
+                        $maxVersion = $compInfo['maxversion'];
+                        $minVersion = $compInfo['minversion'];
                     }
                 }
                 $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
