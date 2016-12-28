@@ -26,6 +26,9 @@ class jMailerTest extends PHPUnit_Framework_TestCase {
 
     public function testFileMail() {
 
+        if (file_exists(jApp::varPath().'mails/mail.txt')) {
+            unlink(jApp::varPath() . 'mails/mail.txt');
+        }
         $mail = new testJMailer();
    
         $mail->From = 'toto@truc.local';
@@ -48,7 +51,6 @@ class jMailerTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(strpos($content, 'To: titi@machin.local, toto@machin.local') !== false);
         $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);
         $this->assertTrue(strpos($content, 'Subject: Email test') !== false);
-        $this->assertTrue(strpos($content, 'Content-Transfer-Encoding: 8bit') !== false);
         $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=UTF-8') !== false);
         $this->assertTrue(strpos($content, 'This is a test mail') !== false);
     }
