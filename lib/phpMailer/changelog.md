@@ -1,5 +1,11 @@
 # ChangeLog
 
+## Version 5.2.21 (January 4th 2017)
+* Fix missed number update in version file - no functional changes
+
+## Version 5.2.20 (January 4th 2017)
+* Important security update!
+
 ## Version 5.2.19 (December 26th 2016)
 * Minor cleanup
 
