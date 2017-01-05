@@ -4,7 +4,7 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Yoan Blanc, Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau, 2008 Yoan Blanc, 2016 Julien Issler
+* @copyright   2005-2011 Laurent Jouanneau, 2008 Yoan Blanc, 2016-2017 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,7 +26,7 @@ class jClassicRequest extends jRequest {
 
         $this->params = jUrl::getEngine()->parseFromRequest($this, $_GET)->params;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded' || $_SERVER['CONTENT_TYPE'] == 'multipart/form-data')){
+        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SERVER['CONTENT_TYPE']) && (strpos($_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded') === 0 || strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0)){
             $this->params = array_merge($this->params, $_POST);
         }
         elseif ($_SERVER['REQUEST_METHOD'] != 'GET') {
