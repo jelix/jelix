@@ -12,6 +12,8 @@
 
 namespace jelix\forms\Builder;
 
+use \jelix\forms\HtmlWidget\ParentWidgetInterface;
+
 /**
  * Main HTML form builder
  */
@@ -207,13 +209,13 @@ class HtmlBuilder extends BuilderBase {
     }
 
     public function outputFooter(){
-        $this->rootWidget->outputFooter($this);
+        $this->rootWidget->outputFooter();
         echo '</form>';
     }
 
     protected $widgets = array();
 
-    public function getWidget($ctrl, \jelix\forms\HtmlWidget\ParentWidgetInterface $parentWidget = null) {
+    public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null) {
         if (isset($this->widgets[$ctrl->ref]))
             return $this->widgets[$ctrl->ref];
         $config = \jApp::config()->{$this->formConfig};
