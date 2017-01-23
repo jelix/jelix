@@ -121,7 +121,7 @@ class ldsAuthDriver implements jIAuthDriver {
     * @param string $text the content in which the entities should be decoded
     * @return string the decoded string
     */
-    protected function decodeEntities($text) {
+    protected function decodeEntities($text, $charset='UTF-8') {
         $text = html_entity_decode($text,ENT_QUOTES,"ISO-8859-1"); /* NOTE: UTF-8 does not work! */
         $text= preg_replace('/&#(\d+);/me',"chr(\\1)",$text); /* decimal notation */
         $text= preg_replace('/&#x([a-f0-9]+);/mei',"chr(0x\\1)",$text);  /* hex notation */
@@ -146,7 +146,7 @@ class ldsAuthDriver implements jIAuthDriver {
             $request = xmlrpc_encode_request($method,null,$output_options);
         }else {
             $request = xmlrpc_encode_request($method,$params,$output_options);
-            $request = $this->decodeEntities($request,ENT_QUOTES,"UTF-8");
+            $request = $this->decodeEntities($request, "UTF-8");
         }
 
 
