@@ -157,6 +157,7 @@ class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
                 $this->_connection->rpush('jkvdbredisdelkeys', $this->key_prefix);
                 return true;
         }
+        return false;
     }
 
     public function append($key, $value) {
@@ -258,8 +259,8 @@ class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
             foreach($val as $k=>$v) {
                 $val[$k] = $this->unesc($v);
             }
-            return $val;
         }
+        return $val;
     }
 
     // jIKVSet -------------------------------------------------------------
@@ -269,7 +270,7 @@ class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function sRemove($skey, $value) {
-        return $this->_connection->srem($this->getUsedKey($skey), $decvalue);
+        return $this->_connection->srem($this->getUsedKey($skey), $value);
     }
 
     public function sCount($skey) {
