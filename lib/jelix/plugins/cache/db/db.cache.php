@@ -157,7 +157,6 @@ class dbCacheDriver implements jICacheDriver {
         }
 
         $dao = jDao::get($this->_dao, $this->_dbprofile);
-        $n = 0;
         switch($ttl){
             case -1:
                 $date=-1;

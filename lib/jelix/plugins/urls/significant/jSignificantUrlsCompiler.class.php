@@ -73,7 +73,6 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     public function compile($aSelector) {
 
         $sourceFile = $aSelector->getPath();
-        $cachefile = $aSelector->getCompiledFilePath();
 
         $xml = simplexml_load_file ($sourceFile);
         if (!$xml) {

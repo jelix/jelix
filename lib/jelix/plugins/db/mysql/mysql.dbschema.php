@@ -286,7 +286,6 @@ class mysqlDbSchema extends jDbSchema {
 
     protected function _getTables() {
         $results = array ();
-        $conn = $this->conn;
         if (isset($this->conn->profile['database'])) {
             $db = $this->conn->profile['database'];
         }

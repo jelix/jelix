@@ -39,7 +39,6 @@ class jSoapObject {
      * @param array $data
      */
     public function _initFromArray(&$data) {
-        $ar = get_object_vars($this);
         foreach($data as $key=>$value) {
             $this->_setData($key, $value);
         }

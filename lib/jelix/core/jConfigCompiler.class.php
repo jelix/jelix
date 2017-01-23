@@ -572,7 +572,6 @@ class jConfigCompiler {
     }
 
     static public function findServerName($ext = '.php', $isCli = false) {
-        $varname = '';
         $extlen = strlen($ext);
 
         if(strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)

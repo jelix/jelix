@@ -48,7 +48,7 @@ class ldsAuthDriver implements jIAuthDriver {
         // NULL homedir = /tmp ...
         $homedir = "/tmp";
         $param = array($login, $pass, $firstname, $name, $homedir);
-        $ret = $this->xmlCall("base.createUser",$param);
+        $this->xmlCall("base.createUser",$param);
         return true;
     }
 

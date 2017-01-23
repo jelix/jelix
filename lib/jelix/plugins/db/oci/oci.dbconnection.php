@@ -62,17 +62,10 @@ class ociDbConnection extends jDbConnection {
             $rs->_connector = $this;
             if($res = $rs->execute()) {
                 return $rs;
-            } else {
-                $rs = false;
-                $err = oci_error();
-                throw new jException('jelix~db.error.query.bad', $err['message'].'('.$queryString.')');
             }
-        } else {
-            $rs = false;
-            $err = oci_error();
-            throw new jException('jelix~db.error.query.bad', $err['message'].'('.$queryString.')');
         }
-        return $rs;
+        $err = oci_error();
+        throw new jException('jelix~db.error.query.bad', $err['message'].'('.$queryString.')');
     }
 
     protected function _doLimitQuery($queryString, $offset, $number) {

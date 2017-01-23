@@ -210,11 +210,10 @@ class mysqlDbTools extends jDbTools {
      */
     protected function parseSQLScript($script) {
 
-        $delimiters = array();
         $distinctDelimiters = array(';');
         if(preg_match_all("/DELIMITER ([^\n]*)/i", $script, $d, PREG_SET_ORDER)) {
             $delimiters = $d[1];
-            $distinctDelimiters = array_unique(array_merge($distinctDelimiters,$delimiters));
+            $distinctDelimiters = array_unique(array_merge($distinctDelimiters, $delimiters));
         }
         $preg= '';
         foreach($distinctDelimiters as $dd) {

@@ -394,7 +394,6 @@ class jDaoGenerator {
 
             $limit='';
 
-            $glueCondition =' WHERE ';
             switch($method->type){
                 case 'delete':
                     $this->buildDeleteUserQuery($method, $src, $primaryFields);
@@ -694,7 +693,7 @@ class jDaoGenerator {
             $result[] = $start . $field->$info . $end;
         }
 
-        return implode ($beetween,$result);
+        return implode ($beetween, $result);
     }
 
     /**
@@ -779,9 +778,6 @@ class jDaoGenerator {
         if ($using === null){
             $using = $this->_dataParser->getProperties ();
         }
-
-        $tb = $this->_dataParser->getTables();
-        $tb = $tb[$this->_dataParser->getPrimaryTable()]['realname'];
 
         foreach ($using as $id=>$field) {
             if(!$field->isPK)
@@ -890,7 +886,6 @@ class jDaoGenerator {
 
         $order = array ();
         foreach ($cond->order as $name => $way){
-            $ord='';
             if (isset($fields[$name])){
                 if ($withPrefix)
                     $ord = $this->_encloseName($fields[$name]->table).'.'.$this->_encloseName($fields[$name]->fieldName);

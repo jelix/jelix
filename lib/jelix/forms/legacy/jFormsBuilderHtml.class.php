@@ -172,7 +172,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if(count($errors)){
             $ctrls = $this->_form->getControls();
             echo '<ul id="'.$this->_name.'_errors" class="jforms-error-list">';
-            $errRequired='';
             foreach($errors as $cname => $err){
                 if(!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
                 if ($err === jForms::ERRDATA_REQUIRED) {
@@ -1149,11 +1148,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
 
     protected function outputHelp($ctrl) {
         if ($ctrl->help) {
-            if($ctrl->type == 'checkboxes' || ($ctrl->type == 'listbox' && $ctrl->multiple)){
-                $name=$ctrl->ref.'[]';
-            }else{
-                $name=$ctrl->ref;
-            }
             // additionnal &nbsp, else background icon is not shown in webkit
             echo '<span class="jforms-help" id="'. $this->_name.'_'.$ctrl->ref.'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
         }

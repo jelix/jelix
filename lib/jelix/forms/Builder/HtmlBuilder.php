@@ -178,7 +178,6 @@ class HtmlBuilder extends BuilderBase {
         if(count($errors)) {
             $ctrls = $this->_form->getControls();
             echo '<ul id="' . $this->_name . '_errors" class="jforms-error-list">';
-            $errRequired = '';
             foreach ($errors as $cname => $err) {
                 if (!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
                 if ($err === \jForms::ERRDATA_REQUIRED) {

@@ -218,8 +218,7 @@ class jFile {
      * @return string the path with Jelix shortcuts parts
      */
     public static function unparseJelixPath($path, $beforeShortcut='', $afterShortcut=''){
-        $shortcutPath = '';
-        $shortcut = '';
+
         if (strpos($path, LIB_PATH) === 0) {
             $shortcutPath = LIB_PATH;
             $shortcut = 'lib:';

@@ -366,7 +366,6 @@ class jInstaller {
      */
     public function forceModuleVersion($moduleName, $version) {
         foreach(array_keys($this->entryPoints) as $epId) {
-            $modules = array();
             if (isset($this->modules[$epId][$moduleName])) {
                 $this->modules[$epId][$moduleName]->setInstalledVersion($epId, $version);
             }
@@ -391,7 +390,6 @@ class jInstaller {
         }
         else {
             foreach(array_keys($this->entryPoints) as $epId) {
-                $modules = array();
                 if (isset($this->modules[$epId][$moduleName])) {
                     $this->modules[$epId][$moduleName]->setInstallParameters($epId, $parameters);
                 }

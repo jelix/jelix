@@ -136,8 +136,7 @@ class pgsqlDbTools extends jDbTools {
      */
     public function getFieldList ($tableName, $sequence='') {
         $tableName = $this->_conn->prefixTable($tableName);
-        $results = array ();
-        
+
         // get table informations
         $sql ='SELECT oid, relhaspkey, relhasindex FROM pg_class WHERE relname = \''.$tableName.'\'';
         $rs = $this->_conn->query ($sql);

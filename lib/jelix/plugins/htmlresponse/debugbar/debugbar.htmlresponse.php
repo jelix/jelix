@@ -247,7 +247,6 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
         foreach($trace as $k=>$t) {
             if (isset($t['file'])) {
                 $file = $t['file'];
-                $path = jFile::unparseJelixPath( $file ,'<i>' , '</i>' );
             }
             else {
                 $file = '[php]';

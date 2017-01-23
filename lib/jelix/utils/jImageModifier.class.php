@@ -252,8 +252,6 @@ class jImageModifier {
             $ancienimage = $image;
             $resampleheight = imagesy($ancienimage);
             $resamplewidth = imagesx($ancienimage);
-            $posx = 0;
-            $posy = 0;
 
             if(empty($params['width'])) {
                 $finalheight = $params['height'];

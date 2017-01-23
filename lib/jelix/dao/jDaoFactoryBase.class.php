@@ -308,7 +308,7 @@ abstract class jDaoFactoryBase  {
     final public function countBy($searchcond, $distinct=null) {
         $count = '*';
         $sqlite = false;
-        $oracle = false;
+
         if ($distinct !== null) {
             $props = static::$_properties;
             if (isset($props[$distinct]))

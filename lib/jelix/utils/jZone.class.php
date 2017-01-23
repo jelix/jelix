@@ -102,7 +102,7 @@ class jZone {
     * @since 1.0b1
     */
     public static function clear ($name, $params=array ()){
-        return self::_callZone($name, 'clearCache', $params);
+        self::_callZone($name, 'clearCache', $params);
     }
 
     /**
