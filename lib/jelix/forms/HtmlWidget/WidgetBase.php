@@ -29,7 +29,7 @@ abstract class WidgetBase implements WidgetInterface {
 
     /**
      * The control
-     * @var jControl
+     * @var \jFormsControl
      */
     protected $ctrl;
 

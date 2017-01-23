@@ -486,7 +486,8 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
     /**
      * @param simpleXmlElement $url
      * @param significantUrlInfoParsing $uInfo
-    */
+     * @throws Exception
+     */
     protected function readInclude($url, $uInfo) {
 
         $file = (string)$url['include'];

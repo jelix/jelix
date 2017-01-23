@@ -69,6 +69,7 @@ class jIniFileModifier {
     /**
      * load the given ini file
      * @param string $filename the file to load
+     * @throws Exception
      */
     function __construct($filename) {
         if(!file_exists($filename) || !is_file($filename))

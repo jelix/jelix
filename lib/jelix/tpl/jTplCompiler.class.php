@@ -321,6 +321,8 @@ class jTplCompiler
      * It is called on each template tag {xxxx }
      * @param array $matches a matched item
      * @return string the corresponding php code of the tag (with php tag).
+     * @throws Exception
+     * @throws jException
      */
     public function _callback ($matches) {
         list(,$tag, $firstcar) = $matches;

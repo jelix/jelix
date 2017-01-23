@@ -334,7 +334,7 @@ class jImageModifier {
      * create a shadow
      * @param string $src the url of image (myapp/www/):string.[gif|jpeg|jpg|jpe|xpm|xbm|wbmp|png]
      * @param array $params parameters for the url
-     * @return the image with shadow
+     * @return resource the image with shadow
      **/
     static protected function createShadow($image, $params) {
 

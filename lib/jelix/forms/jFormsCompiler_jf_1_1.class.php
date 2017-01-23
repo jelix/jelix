@@ -339,7 +339,15 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         return false;
     }
 
-
+    /**
+     * @param array $source
+     * @param string $controltype
+     * @param SimpleXMLElement $xml
+     * @param array $ignore
+     * @param string $itemname
+     * @return int
+     * @throws jException
+     */
     protected function readChildControls(&$source, $controltype, $xml, $ignore, $itemname='') {
         if($itemname != '')
             $itemname = ",'$itemname'";

@@ -74,6 +74,9 @@ require(JELIX_LIB_CORE_PATH.'log/jFileLogger.class.php');
  */
 class jLog {
 
+    /**
+     * @var jILogger[]
+     */
     protected static $loggers = array();
 
     /**
@@ -129,6 +132,9 @@ class jLog {
         self::_dispatchLog($message);
     }
 
+    /**
+     * @param jILogMessage $message
+     */
     protected static function _dispatchLog($message) {
         $confLoggers = &jApp::config()->logger;
         $category = $message->getCategory();
@@ -149,6 +155,10 @@ class jLog {
         self::_log($message, $loggers);
     }
 
+    /**
+     * @param jILogMessage $message
+     * @param array $loggers
+     */
     protected static function _log($message, $loggers) {
 
         // let's inject the message in all loggers

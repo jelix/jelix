@@ -337,16 +337,18 @@ class significantUrlEngine implements jIUrlEngine {
     }
 
     /**
-    * Create a jurl object with the given action data
-    * @param jUrlAction $url  information about the action
-    * @return jUrl the url correspondant to the action
-    * @author      Laurent Jouanneau
-    * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
-    *   very few lines of code are copyrighted by CopixTeam, written by Laurent Jouanneau
-    *   and released under GNU Lesser General Public Licence,
-    *   in an experimental version of Copix Framework v2.3dev20050901,
-    *   http://www.copix.org.
-    */
+     * Create a jurl object with the given action data
+     * @param $urlact
+     * @return jUrl the url correspondant to the action
+     * @throws Exception
+     * @internal param jUrlAction $url information about the action
+     * @author      Laurent Jouanneau
+     * @copyright   2005 CopixTeam, 2005-2006 Laurent Jouanneau
+     *   very few lines of code are copyrighted by CopixTeam, written by Laurent Jouanneau
+     *   and released under GNU Lesser General Public Licence,
+     *   in an experimental version of Copix Framework v2.3dev20050901,
+     *   http://www.copix.org.
+     */
     public function create($urlact) {
 
         if ($this->dataCreateUrl == null) {

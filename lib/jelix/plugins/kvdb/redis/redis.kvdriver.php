@@ -32,8 +32,8 @@ class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     /**
      * Connects to the redis server
-     *
      * @return Redis object
+     * @throws jException
      */
     protected function _connect() {
 

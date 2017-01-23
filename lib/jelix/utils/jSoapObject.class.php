@@ -51,7 +51,7 @@ class jSoapObject {
      * of object properties, are set.
      * You can override this methods to do specific
      * settings.
-     * @param jFormsBase
+     * @param jFormsBase $form
      */
     public function _fillForm($form) {
         $ar = get_object_vars($this);
@@ -75,6 +75,7 @@ class jSoapObject {
      * getter used by _fillForm and _initFromArray.
      * Override it to do specific processing before returning the value.
      * @param string $key the name of the property to get
+     * @return mixed the value
      */
     function _getData($key) {
         return $this->$key;

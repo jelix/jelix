@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau
-* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
 * This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
 * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -114,9 +114,10 @@ class mysqlDbTools extends jDbTools {
     }
 
     /**
-    * returns the list of tables
-    * @return   array    list of table names
-    */
+     * returns the list of tables
+     * @return array list of table names
+     * @throws jException
+     */
     public function getTableList () {
         $results = array ();
         if (isset($this->_conn->profile['database'])) {
