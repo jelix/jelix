@@ -117,7 +117,7 @@ abstract class jDbTable {
         if ($pk == $key)
             return;
         if ($pk !== false)
-            $this->_removeIndex($pk);
+            $this->_dropIndex($pk);
         $this->_createIndex($key);
         $this->primaryKey = $key;
     }
@@ -125,7 +125,7 @@ abstract class jDbTable {
     public function dropPrimaryKey() {
         $pk = $this->getPrimaryKey();
         if ($pk !== false) {
-            $this->_removeIndex($pk);
+            $this->_dropIndex($pk);
             $this->primaryKey = false;
         }
     }
@@ -188,7 +188,7 @@ abstract class jDbTable {
         $this->alterUniqueKey($key);
     }
 
-    public function alterUniqueKey(jDbUniqueKey $key) {
+    public function alterUniqueKey(jDbUniqueKey $index) {
         $idx = $this->getUniqueKey($index->name);
         if ($idx) {
             $this->_dropIndex($idx);

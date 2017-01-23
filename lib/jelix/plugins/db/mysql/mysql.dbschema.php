@@ -77,7 +77,7 @@ class mysqlDbTable extends jDbTable {
 		$sql = 'ALTER TABLE '.$conn->encloseName($this->name)
                 .' CHANGE COLUMN '.$conn->encloseName($old->name)
                 .' '.$this->schema->_prepareSqlColumn($new);
-        if ($isPk && $col->autoIncrement)
+        if ($isPk && $old->autoIncrement)
             $sql .= ' AUTO_INCREMENT';
 		$conn->exec($sql);
     }
@@ -88,7 +88,7 @@ class mysqlDbTable extends jDbTable {
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
                 .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new);
-        if ($isPk && $col->autoIncrement)
+        if ($isPk && $new->autoIncrement)
             $sql .= ' AUTO_INCREMENT';
 
 		$conn->exec($sql);

@@ -316,6 +316,8 @@ class jDbParameters
                 $dsn .= ';Database='.$profile['database'];
                 break;
             case 'odbc':
+            default:
+                throw new Exception('PDO: cannot construct the DSN string');
                 break;
         }
 

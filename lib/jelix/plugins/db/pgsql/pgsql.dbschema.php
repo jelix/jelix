@@ -80,7 +80,7 @@ class pgsqlDbSchema extends jDbSchema {
         $sql = "SELECT tablename FROM pg_tables
                   WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
                   ORDER BY tablename";
-        $rs = $this->schema->getConn()->query ($sql);
+        $rs = $this->getConn()->query ($sql);
         while ($line = $rs->fetch()){
             $results[] = new pgsqlDbTable($line->tablename, $this);
         }
