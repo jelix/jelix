@@ -300,6 +300,7 @@ cd testapp/tests-jelix/jelix/cache/
   jcacheTest.php
 cd testapp/tests-jelix/jelix/core/
   autoloaderTest.php
+  cliControllerTest.php
   configautoloaderTest.php
   configTest.php
   jAppContextTest.php
