@@ -507,6 +507,7 @@ class jInstaller {
             throw new Exception("unknown entry point");
         }
 
+        $result = true;
         foreach ($entryPointList as $epId) {
 
             $allModules = &$this->modules[$epId];

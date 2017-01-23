@@ -181,9 +181,9 @@ class significantUrlEngine implements jIUrlEngine {
         $isDefault = false;
         $url = new jUrl($scriptNamePath, $params, $pathinfo);
 
-        foreach ($this->dataParseUrl as $k=>$infoparsing) {
+        foreach ($this->dataParseUrl as $ninf=>$infoparsing) {
             // the first element indicates if the entry point is a default entry point or not
-            if ($k==0) {
+            if ($ninf==0) {
                 $isDefault = $infoparsing;
                 continue;
             }
@@ -294,7 +294,7 @@ class significantUrlEngine implements jIUrlEngine {
                                         jApp::config()->locale = jLocale::langToLocale($v);
                                     else {
                                         jApp::config()->locale = $v;
-                                        $params[$name] = substr($v, 0, strpos('_'));
+                                        $params[$name] = substr($v, 0, strpos($v, '_'));
                                     }
                                 }
                                 else if ($escapes[$k] & 8) {

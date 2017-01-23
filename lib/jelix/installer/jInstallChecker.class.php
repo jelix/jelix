@@ -136,7 +136,7 @@ class jInstallCheck {
             $this->error('php.bad.version');
             $notice = $this->messages->get('php.version.required', $this->buildProperties['PHP_VERSION_TARGET']);
             $notice.= '. '.$this->messages->get('php.version.current',phpversion());
-            $this->reporter->showNotice($notice);
+            $this->reporter->message($notice, 'notice');
             $ok=false;
         }
         else if ($this->verbose) {

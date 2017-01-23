@@ -708,7 +708,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
     }
 
     protected function outputRadiobuttons($ctrl, &$attr) {
-        $id = $this->_name.'_'.$ctrl->ref.'_';
+        $id = $this->_name.'_'.$ctrl->ref.'_'; // FIXME should be used?
         $attr['name'] = $ctrl->ref;
         unset($attr['title']);
         $value = $this->_form->getData($ctrl->ref);
@@ -1087,7 +1087,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         $id = $this->_name.'_'.$ctrl->ref.'_';
         $attr['type']='radio';
         unset($attr['class']);
-        $readonly = (isset($attr['readonly']) && $attr['readonly']!='');
+        $readonly = (isset($attr['readonly']) && $attr['readonly']!=''); // FIXME should be used?
 
         $this->jsChoiceInternal($ctrl);
         $this->jsContent .="c2 = c;\n";

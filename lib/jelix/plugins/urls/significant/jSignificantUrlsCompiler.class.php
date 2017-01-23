@@ -191,7 +191,7 @@ class jSignificantUrlsCompiler implements jISimpleCompiler{
             $createUrlInfosDedicatedModules = array();
             $parseContent = "<?php \n";
 
-            foreach ($tag->children() as $tagname => $url) {
+            foreach ($tag->children() as $tagnameChild => $url) {
                 $u = clone $this->defaultUrl;
                 $u->module = (string)$url['module'];
 

@@ -99,8 +99,12 @@ class jImageModifier {
         // extension
         if(empty($params['ext'])) {
             $path_parts = pathinfo($src);
-            if ( isset($path_parts['extension']))
+            if ( isset($path_parts['extension'])) {
                 $ext = strtolower($path_parts['extension']);
+            }
+            else {
+                $ext = '';
+            }
         } else {
             $ext = strtolower($params['ext']);
         }
