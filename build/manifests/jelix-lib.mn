@@ -434,6 +434,8 @@ cd lib/jelix/plugins/configcompiler/responses
   responses.configcompiler.php
 cd lib/jelix/plugins/configcompiler/session
   session.configcompiler.php
+cd lib/jelix/plugins/configcompiler/webassets
+  webassets.configcompiler.php
 
 cd lib/jelix/plugins/coord/autolocale
   autolocale.coord.ini.php.dist

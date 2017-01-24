@@ -368,6 +368,7 @@ cd testapp/tests-jelix/jelix/core/
   selectors_moduleTest.php
   urlsGenerationTest.php
   urlsParsingTest.php
+  webassetsTest.php
 cd testapp/tests-jelix/jelix/daos
   jDaoImportTest.php
   jdao_conditionsTest.php

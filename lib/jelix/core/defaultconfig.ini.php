@@ -105,6 +105,7 @@ minifyJS=on
 minifyExcludeCSS=
 minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
 minifyEntryPoint=minify.php
+
 [debugbar]
 plugins="sqllog,sessiondata,defaultlog"
 defaultPosition=right
@@ -365,7 +366,10 @@ default.config.path="jelix/markitup/sets/wr3/"
 default.image.path="jelix/markitup/sets/wr3/images/"
 default.skin="jelix/markitup/skins/simple/style.css"
 
+[webassets]
+useSet=common
 
+[webassets_common]
 
 [zones]
 ; disable zone caching
