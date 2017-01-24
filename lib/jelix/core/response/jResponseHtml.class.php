@@ -80,6 +80,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * list of css stylesheet for IE
      * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     protected $_CSSIELink = array ();
 
@@ -97,6 +98,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * list of js script for IE
      * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     protected $_JSIELink  = array ();
 
@@ -243,7 +245,7 @@ class jResponseHtml extends jResponseBasicHtml {
      *
      * @param string $src the link
      * @param array $params additionnals attributes for the script tag
-     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
     public function addJSLink ($src, $params=array(), $forIE=false){
         if($forIE){
@@ -265,7 +267,7 @@ class jResponseHtml extends jResponseBasicHtml {
     * @param string $module  the module where file is stored
     * @param mixed $src the relative path inside the {module}/www/ directory
     * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
     */
     public function addJSLinkModule ($module, $src, $params=array(), $forIE=false){ 
         $src = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
@@ -297,12 +299,14 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * returns all JS links for IE
      * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     public function getJSIELinks() { return $this->_JSIELink; }
 
     /**
      * set all JS links for IE
      * @param array  $list key = url, value=link attributes
+     * @deprecated since 1.7.0
      */
     public function setJSIELinks($list) { $this->_JSIELink = $list; }
 
@@ -321,12 +325,14 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * returns all CSS links for IE
      * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
      public function getCSSIELinks() { return $this->_CSSIELink; }
 
     /**
      * set all CSS links for IE
      * @param array  $list key = url, value=link attributes
+     * @deprecated since 1.7.0
      */
     public function setCSSIELinks($list) { $this->_CSSIELink = $list; }
 

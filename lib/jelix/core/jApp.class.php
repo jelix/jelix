@@ -30,6 +30,9 @@
  */
 class jApp
 {
+    /**
+     * @var jAppInstance
+     */
     protected static $_currentApp = null;
 
     /**
@@ -156,7 +159,7 @@ class jApp
     public static function urlBasePath()
     {
         if (!self::$_currentApp->config || !isset(self::$_currentApp->config->urlengine['basePath'])) {
-            return;
+            return "";
         }
 
         return self::$_currentApp->config->urlengine['basePath'];
