@@ -63,10 +63,18 @@ class jResponseBasicHtml extends jResponse {
     protected $_charset;
 
     /**
-     * the lang of the document
+     * the lang of the document (xx from locale xx_YY)
      * @var string
+     * @since 1.7.0
      */
     protected $_lang;
+
+    /**
+     * the locale of the document (xx_YY)
+     * @var string
+     * @since 1.7.0
+     */
+    protected $_locale;
 
     /**
      * says if the document is in xhtml or html
@@ -124,7 +132,8 @@ class jResponseBasicHtml extends jResponse {
     function __construct (){
 
         $this->_charset = jApp::config()->charset;
-        $this->_lang = jApp::config()->locale;
+        $this->_locale = jLocale::getCurrentLocale();
+        $this->_lang = jLocale::getCurrentLang();
 
         // load plugins
         $plugins = jApp::config()->jResponseHtml['plugins'];

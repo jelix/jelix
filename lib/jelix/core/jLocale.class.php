@@ -30,7 +30,17 @@ class jLocale {
     private function __construct(){}
 
     /**
-     * gets the current lang
+     * gets the current locale (xx_YY)
+     * @return string
+     * @since 1.7.0
+     */
+    static function getCurrentLocale(){
+        return jApp::config()->locale;
+    }
+
+
+    /**
+     * gets the current lang (xx from xx_YY)
      * @return string
      */
     static function getCurrentLang(){
@@ -38,7 +48,7 @@ class jLocale {
         return substr($s,0, strpos($s,'_'));
     }
     /**
-     * gets the current country.
+     * gets the current country (YY from xx_YY)
      * @return string
      */
     static function getCurrentCountry (){

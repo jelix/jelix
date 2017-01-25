@@ -493,12 +493,12 @@ class jResponseHtml extends jResponseBasicHtml {
      */
     protected function outputDoctype (){
         echo '<!DOCTYPE HTML>', "\n";
-        $lang = str_replace('_', '-', $this->_lang);
+        $locale = str_replace('_', '-', $this->_locale);
         if($this->_isXhtml){
-            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$lang,'" lang="',$lang,'">
+            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" lang="',$locale,'">
 ';
         }else{
-            echo '<html lang="',$lang,'">';
+            echo '<html lang="',$locale,'">';
         }
     }
 
