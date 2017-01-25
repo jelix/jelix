@@ -76,11 +76,11 @@ basePath=
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
-plugins="debugbar,minify"
+plugins="debugbar"
 
 
 minifyCSS=off
-minifyJS=on
+minifyJS=off
 minifyExcludeCSS=
 minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
 minifyEntryPoint=minify.php
