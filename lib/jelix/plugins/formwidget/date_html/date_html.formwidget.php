@@ -18,13 +18,14 @@
  */
 
 class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+    /**
+     * @param \jResponseHtml $resp
+     */
     public function outputMetaContent($resp) {
-        $bp = jApp::urlBasePath();
-        $confDate = &jApp::config()->datepickers;
-        $datepicker_default_config = jApp::config()->forms['datepicker'];
-
-        $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$datepicker_default_config;
-        $resp->addJSLink($bp.$confDate[$config]);
+         $config = isset($this->ctrl->datepickerConfig) ?
+                        $this->ctrl->datepickerConfig :
+                        jApp::config()->forms['datepicker'];
+         $resp->addAssetsGroup('jforms_datepicker_'.$config);
     }
 
     protected function outputJs() {
@@ -43,8 +44,13 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $this->parentWidget->addJs($js);
         $this->commonJs();
 
-        if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
+        if ($ctrl instanceof jFormsControlDate ||
+            get_class($ctrl->datatype) == 'jDatatypeDate' ||
+            get_class($ctrl->datatype) == 'jDatatypeLocaleDate')
+        {
+            $config = isset($ctrl->datepickerConfig) ?
+                            $ctrl->datepickerConfig :
+                            jApp::config()->forms['datepicker'];
             $this->parentWidget->addJs('jelix_datepicker_'.$config."(c, jFormsJQ.config);\n");
         }
     }

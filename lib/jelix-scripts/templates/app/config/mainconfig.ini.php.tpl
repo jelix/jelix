@@ -53,7 +53,7 @@ html=myHtmlResponse
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
-; if you change it, you probably want to change path in datepickers, wikieditors and htmleditors sections
+; if you change it, you probably want to change path in wikieditors and htmleditors sections
 jelixWWWPath = "jelix/"
 jqueryPath="jelix/jquery/"
 
@@ -175,8 +175,8 @@ name=
 ;controls.datetime.input = "menulists"
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 ;controls.datetime.months.labels = "names"
-; define the default config for datepickers in jforms
+; define the configuration name to use for datepickers in jforms
+; the name is the suffix of the jforms_datepicker_<config> web assets group
+; and the suffix of a jelix_datepicker_<config> function from one of the web
+; assets js file that initialise the datepicker
 ;datepicker = default
-
-[datepickers]
-;default = jelix/js/jforms/datepickers/default/init.js

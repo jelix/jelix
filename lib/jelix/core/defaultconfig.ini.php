@@ -319,15 +319,14 @@ loadClasses=
 controls.datetime.input=menulists
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels=names
-; define the default config for datepickers in jforms
+; define the configuration name to use for datepickers in jforms
+; the name is the suffix of the jforms_datepicker_* web assets group
+; and the suffix of a jelix_datepicker_<config> function from one of the web
+; assets js file that initialise the datepicker
 datepicker=default
 
 [jforms_builder_html]
 ;control type = plugin name
-
-
-[datepickers]
-default="jelix/js/jforms/datepickers/default/init.js"
 
 [htmleditors]
 default.engine.name=wymeditor
@@ -370,6 +369,25 @@ default.skin="jelix/markitup/skins/simple/style.css"
 useSet=common
 
 [webassets_common]
+jquery.js = "$jelix/jquery/jquery.js"
+
+jquery_ui.js = "$jelix/jquery/ui/jquery-ui-core-widg-mous-posi.custom.min.js"
+jquery_ui.css = "$jelix/jquery/themes/base/jquery.ui.all.css"
+jquery_ui.require = jquery
+
+jforms_html.js[]= "$jelix/jquery/include/jquery.include.js"
+jforms_html.js[]= "$jelix/js/jforms_jquery.js"
+jforms_html.css= "$jelix/design/jform.css"
+jforms_html.require = jquery
+
+jforms_html_light.js= "$jelix/js/jforms_light.js"
+jforms_html_light.css= "$jelix/design/jform.css"
+
+jforms_datepicker_default.css=
+jforms_datepicker_default.js[]="$jelix/jquery/ui/jquery.ui.datepicker.min.js"
+jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/jquery.ui.datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
+jforms_datepicker_default.require=jquery_ui
 
 [zones]
 ; disable zone caching

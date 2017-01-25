@@ -32,7 +32,6 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
         }
         $confUrlEngine = &jApp::config()->urlengine;
         $confHtmlEditor = &jApp::config()->htmleditors;
-        $confDate = &jApp::config()->datepickers;
         $confWikiEditor = &jApp::config()->wikieditors;
         $www = $confUrlEngine['jelixWWWPath'];
         $jq = $confUrlEngine['jqueryPath'];
@@ -67,8 +66,10 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
 
             foreach($v->getControls() as $ctrl){
                 if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-                    $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$datepicker_default_config;
-                    $resp->addJSLink($bp.$confDate[$config]);
+                    $config = isset($ctrl->datepickerConfig) ?
+                                $ctrl->datepickerConfig :
+                                $datepicker_default_config;
+                    $resp->addAssetsGroup('jforms_datepicker_'.$config);
                 }
             }
 
