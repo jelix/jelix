@@ -171,6 +171,9 @@ checkHttpsOnParsing=on
 ; if you change it, change also all pathes in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
+
+; DEPRECATED. if you modify it, modify also its path into webassets
+; see below in webassets sections
 jqueryPath="jelix/jquery/"
 
 ; action to show the 'page not found' error
@@ -388,6 +391,9 @@ jforms_datepicker_default.js[]="$jelix/jquery/ui/jquery.ui.datepicker.min.js"
 jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/jquery.ui.datepicker-$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
+
+swjs.js = "$jelix/jquery/flash/jquery.flash.js"
+swjs.require = jquery
 
 [zones]
 ; disable zone caching

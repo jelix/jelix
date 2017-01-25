@@ -105,19 +105,18 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $resp->addMetaGenerator($param);
             break;
         case 'jquery':
-            $resp->addJSLink(jApp::config()->urlengine['jqueryPath'].'jquery.js');
+            $resp->addAssetsGroup('jquery');
             break;
         case 'jquery_ui':
+            $resp->addAssetsGroup('jquery');
             $base = jApp::config()->urlengine['jqueryPath'];
             switch($param){
                 case 'components':
-                    $resp->addJSLink($base.'jquery.js');
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     foreach($params as $f)
                         $resp->addJSLink($base.'ui/jquery.ui.'.$f.'.min.js');
                     break;
                 case 'effects':
-                    $resp->addJSLink($base.'jquery.js');
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     $resp->addJSLink($base.'ui/jquery.ui.effect.min.js');
                     foreach($params as $f)

@@ -33,13 +33,9 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
         $confUrlEngine = &jApp::config()->urlengine;
         $confHtmlEditor = &jApp::config()->htmleditors;
         $confWikiEditor = &jApp::config()->wikieditors;
-        $www = $confUrlEngine['jelixWWWPath'];
-        $jq = $confUrlEngine['jqueryPath'];
         $bp = $confUrlEngine['basePath'];
-        $resp->addJSLink($jq.'jquery.js');
-        $resp->addJSLink($jq.'include/jquery.include.js');
-        $resp->addJSLink($www.'js/jforms_jquery.js');
-        $resp->addCSSLink($www.'design/jform.css');
+        $resp->addAssetsGroup('jforms_html');
+
         foreach($t->_vars as $k=>$v){
             if(!$v instanceof jFormsBase)
                 continue;

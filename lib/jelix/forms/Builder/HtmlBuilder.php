@@ -108,9 +108,7 @@ class HtmlBuilder extends BuilderBase {
             return;
         }
 
-        $www = \jApp::config()->urlengine['jelixWWWPath'];
-        $resp->addJSLink($www.'js/jforms_light.js');
-        $resp->addCSSLink($www.'design/jform.css');
+        $resp->addAssetsGroup('jforms_html_light');
 
         //we loop on root control has they fill call the outputMetaContent recursively
         foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl) {
