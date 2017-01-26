@@ -78,32 +78,17 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if($resp === null || $resp->getType() !='html'){
             return;
         }
+        $resp->addAssetsGroup('jforms_html_light');
+
         $config = jApp::config();
-        $www = $config->urlengine['jelixWWWPath'];
-        $bp = jApp::urlBasePath();
-        $resp->addJSLink($www.'js/jforms_light.js');
-        $resp->addCSSLink($www.'design/jform.css');
         $heConf = &$config->htmleditors;
         foreach($t->_vars as $k=>$v){
-            if($v instanceof jFormsBase && count($edlist = $v->getHtmlEditors())) {
+            if ($v instanceof jFormsBase &&
+                count($edlist = $v->getHtmlEditors()))
+            {
                 foreach($edlist as $ed) {
-
-                    if(isset($heConf[$ed->config.'.engine.file'])){
-                        $file = $heConf[$ed->config.'.engine.file'];
-                        if(is_array($file)){
-                            foreach($file as $url) {
-                                $resp->addJSLink($bp.$url);
-                            }
-                        }else
-                            $resp->addJSLink($bp.$file);
-                    }
-
-                    if(isset($heConf[$ed->config.'.config']))
-                        $resp->addJSLink($bp.$heConf[$ed->config.'.config']);
-
-                    $skin = $ed->config.'.skin.'.$ed->skin;
-                    if(isset($heConf[$skin]) && $heConf[$skin] != '')
-                        $resp->addCSSLink($bp.$heConf[$skin]);
+                    $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config);
+                    $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
                 }
             }
         }

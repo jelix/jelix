@@ -338,29 +338,10 @@ datetimepicker=default
 
 [htmleditors]
 default.engine.name=wymeditor
-default.engine.file[]="jelix/jquery/jquery.js"
-default.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
-default.config="jelix/js/jforms/htmleditors/wymeditor_default.js"
-default.skin.default="jelix/wymeditor/skins/default/skin.css"
-
 wymbasic.engine.name=wymeditor
-wymbasic.engine.file[]="jelix/jquery/jquery.js"
-wymbasic.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
-wymbasic.config="jelix/js/jforms/htmleditors/wymeditor_basic.js"
-wymbasic.skin.default="jelix/wymeditor/skins/default/skin.css"
-
 ckdefault.engine.name=ckeditor
-ckdefault.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckdefault.config="jelix/js/jforms/htmleditors/ckeditor_default.js"
-
 ckfull.engine.name=ckeditor
-ckfull.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckfull.config="jelix/js/jforms/htmleditors/ckeditor_full.js"
-
 ckbasic.engine.name=ckeditor
-ckbasic.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckbasic.config="jelix/js/jforms/htmleditors/ckeditor_basic.js"
-
 
 [wikieditors]
 default.engine.name=wr3
@@ -400,6 +381,31 @@ jforms_datepicker_default.require=jquery_ui
 ; we don't have yet a real datetime picker
 jforms_datetimepicker_default.require=jforms_datepicker_default
 jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
+
+jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
+jforms_htmleditor_default.require=jquery
+
+jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+
+jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
+jforms_htmleditor_wymbasic.require=jquery
+
+jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+
+
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
+
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
+
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
+
+
+
 
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery

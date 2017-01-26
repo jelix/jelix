@@ -44,7 +44,7 @@ class webassetsConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginI
         // read all assets groups
         $assetsGroups = array();
         foreach($config->$sectionName as $prop => $val) {
-            if (!preg_match('/^([^\\.]+)\\.([a-z]+)$/', $prop, $m)) {
+            if (!preg_match('/^(.+)\\.([a-z]+)$/', $prop, $m)) {
                 continue;
             }
             $groupName = $m[1];

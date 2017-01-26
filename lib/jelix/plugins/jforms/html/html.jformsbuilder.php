@@ -31,31 +31,17 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
             return;
         }
         $confUrlEngine = &jApp::config()->urlengine;
-        $confHtmlEditor = &jApp::config()->htmleditors;
         $confWikiEditor = &jApp::config()->wikieditors;
         $bp = $confUrlEngine['basePath'];
+
         $resp->addAssetsGroup('jforms_html');
 
         foreach($t->_vars as $k=>$v){
             if(!$v instanceof jFormsBase)
                 continue;
             foreach($v->getHtmlEditors() as $ed) {
-                if(isset($confHtmlEditor[$ed->config.'.engine.file'])){
-                    if(is_array($confHtmlEditor[$ed->config.'.engine.file'])){
-                        foreach($confHtmlEditor[$ed->config.'.engine.file'] as $url) {
-                            $resp->addJSLink($bp.$url);
-                        }
-                    }else
-                        $resp->addJSLink($bp.$confHtmlEditor[$ed->config.'.engine.file']);
-                }
-
-                if(isset($confHtmlEditor[$ed->config.'.config']))
-                    $resp->addJSLink($bp.$confHtmlEditor[$ed->config.'.config']);
-
-                $skin = $ed->config.'.skin.'.$ed->skin;
-
-                if(isset($confHtmlEditor[$skin]) && $confHtmlEditor[$skin] != '')
-                    $resp->addCSSLink($bp.$confHtmlEditor[$skin]);
+                $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config);
+                $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
             }
 
             $datepicker_default_config = jApp::config()->forms['datepicker'];
