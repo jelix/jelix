@@ -26,7 +26,7 @@ class htmlFormBuilder extends \jelix\forms\Builder\HtmlBuilder {
             return;
         }
 
-        $resp->addAssetsGroup('jforms_html');
+        $resp->addAssets('jforms_html');
 
         //we loop on root control has they fill call the outputMetaContent recursively
         foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl) {

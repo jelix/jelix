@@ -22,7 +22,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $config = isset($this->ctrl->datepickerConfig) ?
                     $this->ctrl->datepickerConfig :
                     jApp::config()->forms['datepicker'];
-        $resp->addAssetsGroup('jforms_datetimepicker_'.$config);
+        $resp->addAssets('jforms_datetimepicker_'.$config);
     }
 
     protected function outputJs() {

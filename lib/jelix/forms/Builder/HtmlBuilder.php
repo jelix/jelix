@@ -108,7 +108,7 @@ class HtmlBuilder extends BuilderBase {
             return;
         }
 
-        $resp->addAssetsGroup('jforms_html_light');
+        $resp->addAssets('jforms_html_light');
 
         //we loop on root control has they fill call the outputMetaContent recursively
         foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl) {

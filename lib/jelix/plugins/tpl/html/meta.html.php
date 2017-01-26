@@ -105,10 +105,10 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $resp->addMetaGenerator($param);
             break;
         case 'jquery':
-            $resp->addAssetsGroup('jquery');
+            $resp->addAssets('jquery');
             break;
         case 'jquery_ui':
-            $resp->addAssetsGroup('jquery');
+            $resp->addAssets('jquery');
             $base = jApp::config()->urlengine['jqueryPath'];
             switch($param){
                 case 'components':

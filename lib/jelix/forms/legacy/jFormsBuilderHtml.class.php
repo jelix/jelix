@@ -78,7 +78,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $resp->addAssetsGroup('jforms_html_light');
+        $resp->addAssets('jforms_html_light');
 
         $config = jApp::config();
         $heConf = &$config->htmleditors;
@@ -87,8 +87,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 count($edlist = $v->getHtmlEditors()))
             {
                 foreach($edlist as $ed) {
-                    $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config);
-                    $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
+                    $resp->addAssets('jforms_htmleditor_'.$ed->config);
+                    $resp->addAssets('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
                 }
             }
         }

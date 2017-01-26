@@ -25,7 +25,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
          $config = isset($this->ctrl->datepickerConfig) ?
                         $this->ctrl->datepickerConfig :
                         jApp::config()->forms['datepicker'];
-         $resp->addAssetsGroup('jforms_datepicker_'.$config);
+         $resp->addAssets('jforms_datepicker_'.$config);
     }
 
     protected function outputJs() {

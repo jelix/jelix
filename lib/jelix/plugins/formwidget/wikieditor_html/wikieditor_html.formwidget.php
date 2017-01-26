@@ -19,7 +19,7 @@
 
 class wikieditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     public function outputMetaContent($resp) {
-        $resp->addAssetsGroup('jforms_wikieditor_'.$this->ctrl->config);
+        $resp->addAssets('jforms_wikieditor_'.$this->ctrl->config);
     }
 
     protected function outputJs() {

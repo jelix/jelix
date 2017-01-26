@@ -36,7 +36,7 @@ function jtpl_function_html_link_to_remote($tpl, $label, $element_id, $action_se
     static $id_link_to_remote = 0;
 
     if($resp && $resp->getFormatType() == 'html'){
-        $resp->addAssetsGroup('jquery');
+        $resp->addAssets('jquery');
     }
 
     $id_link_to_remote++;

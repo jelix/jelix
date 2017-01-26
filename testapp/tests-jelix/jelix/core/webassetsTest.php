@@ -198,7 +198,7 @@ jforms_datepicker.require=jquery_ui
         );
 
         $resp = new htmlRespAssetsTest();
-        $resp->addAssetsGroup('example');
+        $resp->addAssets('example');
         ob_start();
         $resp->output();
         $output = ob_get_clean();
@@ -254,7 +254,7 @@ jforms_datepicker.require=jquery_ui
         );
 
         $resp = new htmlRespAssetsTest();
-        $resp->addAssetsGroup('example');
+        $resp->addAssets('example');
         ob_start();
         $resp->output();
         $output = ob_get_clean();

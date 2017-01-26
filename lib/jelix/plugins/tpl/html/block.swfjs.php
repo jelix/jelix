@@ -81,7 +81,7 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
             $script .= "            ".\'$(this).prepend($.fn.flash.transform(htmlOptions));\'."\n";
             $script .= "        ".\'});\'."\n";
             $script .= "    ".\'});\'."\n";
-            $resp->addAssetsGroup(\'swjs\');
+            $resp->addAssets(\'swjs\');
             $resp->addJSCode($script);
         }
         ';

@@ -31,14 +31,14 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
             return;
         }
 
-        $resp->addAssetsGroup('jforms_html');
+        $resp->addAssets('jforms_html');
 
         foreach($t->_vars as $k=>$v){
             if(!$v instanceof jFormsBase)
                 continue;
             foreach($v->getHtmlEditors() as $ed) {
-                $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config);
-                $resp->addAssetsGroup('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
+                $resp->addAssets('jforms_htmleditor_'.$ed->config);
+                $resp->addAssets('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
             }
 
             $datepicker_default_config = jApp::config()->forms['datepicker'];
@@ -48,12 +48,12 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
                     $config = isset($ctrl->datepickerConfig) ?
                                 $ctrl->datepickerConfig :
                                 $datepicker_default_config;
-                    $resp->addAssetsGroup('jforms_datepicker_'.$config);
+                    $resp->addAssets('jforms_datepicker_'.$config);
                 }
             }
 
             foreach($v->getWikiEditors() as $ed) {
-                $resp->addAssetsGroup('jforms_wikieditor_'.$ed->config);
+                $resp->addAssets('jforms_wikieditor_'.$ed->config);
             }
         }
     }

@@ -19,8 +19,8 @@
 
 class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     public function outputMetaContent($resp) {
-        $resp->addAssetsGroup('jforms_htmleditor_'.$this->ctrl->config);
-        $resp->addAssetsGroup('jforms_htmleditor_'.$this->ctrl->config.'.skin.'.$this->ctrl->skin);
+        $resp->addAssets('jforms_htmleditor_'.$this->ctrl->config);
+        $resp->addAssets('jforms_htmleditor_'.$this->ctrl->config.'.skin.'.$this->ctrl->skin);
     }
 
     protected function outputJs() {

@@ -446,7 +446,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * adds a web assets group
      * @param string $assetGroup
      */
-    public function addAssetsGroup($assetGroup) {
+    public function addAssets($assetGroup) {
         $this->_assetsGroups[] = $assetGroup;
     }
 
