@@ -171,12 +171,13 @@ class jCoordinator {
     }
 
     /**
-    * main method : launch the execution of the action.
-    *
-    * This method should be called in a entry point.
-    *
-    * @param  jRequest  $request the request object. It is required if a descendant of jCoordinator did not called setRequest before
-    */
+     * main method : launch the execution of the action.
+     *
+     * This method should be called in a entry point.
+     *
+     * @param  jRequest $request the request object. It is required if a descendant of jCoordinator did not called setRequest before
+     * @throws jException
+     */
     public function process ($request=null) {
 
         try {
@@ -252,6 +253,8 @@ class jCoordinator {
     /**
      * get the controller corresponding to the selector
      * @param jSelectorAct $selector
+     * @return jController the controller corresponding to the selector
+     * @throws jException
      */
     protected function getController($selector){
 
@@ -388,11 +391,12 @@ class jCoordinator {
     }
 
     /**
-    * gets a given coordinator plugin if registered
-    * @param string   $pluginName   the name of the plugin
-    * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
-    * @return jICoordPlugin
-    */
+     * gets a given coordinator plugin if registered
+     * @param string $pluginName the name of the plugin
+     * @param boolean $required says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
+     * @return jICoordPlugin
+     * @throws jException
+     */
     public function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);
         if (isset ($this->plugins[$pluginName])){

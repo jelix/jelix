@@ -6,13 +6,13 @@ CREATE TABLE IF NOT EXISTS `product_test` (
 `create_date` datetime default NULL,
 `promo` BOOL NOT NULL default 0,
 `dummy` set('created','started','stopped') DEFAULT NULL
-) ENGINE = MYISAM ;
+) ENGINE = InnoDB ;
 
 CREATE TABLE IF NOT EXISTS `product_tags_test` (
 `product_id` INT NOT NULL ,
 `tag` VARCHAR( 50 ) NOT NULL ,
 PRIMARY KEY ( `product_id` , `tag` )
-) ENGINE = MYISAM ;
+) ENGINE = InnoDb ;
 
 CREATE TABLE IF NOT EXISTS `labels_test` (
 `key` INT NOT NULL ,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `products` (
 `price` FLOAT   default '0',
 `promo` BOOL NOT NULL,
 `publish_date` DATE NOT NULL
-) ENGINE = MYISAM ;
+) ENGINE = InnoDb ;
 
 
 CREATE TABLE IF NOT EXISTS `testkvdb` (
@@ -47,4 +47,4 @@ CREATE TABLE IF NOT EXISTS `testkvdb` (
 `k_value` longblob NOT NULL ,
 `k_expire` DATETIME NOT NULL ,
 PRIMARY KEY ( `k_key` )
-) ENGINE = MYISAM;
+) ENGINE = InnoDb;

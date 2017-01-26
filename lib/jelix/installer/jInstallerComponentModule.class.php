@@ -151,8 +151,8 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * installed/upgraded before calling this method
      *
      * @param jInstallerEntryPoint $ep the entry point
+     * @return jIInstallerComponent[]
      * @throws jInstallerException  if an error occurs during the install.
-     * @return array   array of jIInstallerComponent
      */
     function getUpgraders($ep) {
 

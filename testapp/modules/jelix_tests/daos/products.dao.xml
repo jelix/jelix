@@ -29,6 +29,7 @@
        <method name="findOrderPrice" type="select">
            <order>
                 <orderitem property="price" way="asc" />
+                <orderitem property="name" way="asc" />
            </order>
        </method>
        <method name="findFourchette" type="select">

@@ -102,7 +102,7 @@ class jZone {
     * @since 1.0b1
     */
     public static function clear ($name, $params=array ()){
-        return self::_callZone($name, 'clearCache', $params);
+        self::_callZone($name, 'clearCache', $params);
     }
 
     /**
@@ -240,8 +240,8 @@ class jZone {
     }
 
     /**
-    * create the cache filename
-    * @return string the filename
+    * Get the list of cache filenames
+    * @return array list of filenames
     */
     private function _getCacheFiles($forCurrentResponse=true){
         $module = jApp::getCurrentModule ();

@@ -219,11 +219,17 @@ class jApp
         return $configFileName;
     }
 
+    /**
+     * @return jCoordinator
+     */
     public static function coord()
     {
         return self::$_currentApp->coord;
     }
 
+    /**
+     * @param jCoordinator $coord
+     */
     public static function setCoord($coord)
     {
         self::$_currentApp->coord = $coord;

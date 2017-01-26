@@ -643,7 +643,7 @@ class UrlActionMapper
                                 \jApp::config()->locale = \jLocale::langToLocale($v);
                             } else {
                                 \jApp::config()->locale = $v;
-                                $params[$name] = substr($v, 0, strpos('_'));
+                                $params[$name] = substr($v, 0, strpos($v, '_'));
                             }
                         } elseif ($escapes[$k] & self::ESCAPE_LOCALE) {
                             $v = $matches[$k];

@@ -58,7 +58,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     function outputControl() {
         $formName = $this->builder->getName();
         $attr = $this->getControlAttributes();
-        $value = $this->getValue($this->ctrl);
+        $value = $this->getValue();
 
 
         $attr['id'] = $formName.'_'.$this->ctrl->ref.'_';

@@ -111,7 +111,7 @@ class jInstaller {
 
     /**
      * list of modules for each entry point
-     * @var array first key: entry point id, second key: module name, value = jInstallerComponentModule
+     * @var jInstallerComponentModule[][] first key: entry point id, second key: module name, value = jInstallerComponentModule
      */
     protected $modules = array();
     
@@ -191,6 +191,7 @@ class jInstaller {
     /**
      * @internal mainly for tests
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
+     * @throws Exception
      */
     protected function getInstallerIni() {
         if (!file_exists(jApp::varConfigPath('installer.ini.php'))) {
@@ -287,6 +288,7 @@ class jInstaller {
 
     /**
      * @internal for tests
+     * @return jInstallerComponentModule
      */
     protected function getComponentModule($name, $path, $installer) {
         return new jInstallerComponentModule($name, $path, $installer);
@@ -309,7 +311,6 @@ class jInstaller {
      */
     public function forceModuleVersion($moduleName, $version) {
         foreach(array_keys($this->entryPoints) as $epId) {
-            $modules = array();
             if (isset($this->modules[$epId][$moduleName])) {
                 $this->modules[$epId][$moduleName]->setInstalledVersion($epId, $version);
             }
@@ -334,7 +335,6 @@ class jInstaller {
         }
         else {
             foreach(array_keys($this->entryPoints) as $epId) {
-                $modules = array();
                 if (isset($this->modules[$epId][$moduleName])) {
                     $this->modules[$epId][$moduleName]->setInstallParameters($epId, $parameters);
                 }
@@ -383,8 +383,9 @@ class jInstaller {
      * entry point. Only modules which have an access property > 0
      * are installed. Errors appeared during the installation are passed
      * to the reporter.
-     * @param string $entrypoint  the entrypoint name as it appears in project.xml
-     * @return boolean true if succeed, false if there are some errors
+     * @param string $entrypoint the entrypoint name as it appears in project.xml
+     * @return bool true if succeed, false if there are some errors
+     * @throws Exception
      */
     public function installEntryPoint($entrypoint) {
 
@@ -426,6 +427,7 @@ class jInstaller {
      * @param string $entrypoint  the entrypoint name as it appears in project.xml
      *               or null if modules should be uninstalled for all entry points
      * @return boolean true if the uninstallation is ok
+     * @throws Exception
      */
     public function uninstallModules($modulesList, $entrypoint = null) {
         return $this->_singleModules(Resolver::ACTION_REMOVE, $modulesList, $entrypoint );

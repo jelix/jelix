@@ -356,6 +356,7 @@ cd testapp/tests-jelix/jelix/cache/
 cd testapp/tests-jelix/jelix/core/
   jAppTest.php
   autoloaderTest.php
+  cliControllerTest.php
   configautoloaderTest.php
   configTest.php
   jAppContextTest.php
@@ -364,6 +365,7 @@ cd testapp/tests-jelix/jelix/core/
   jLocaleLangCodeTest.php
   jLogTest.php
   restcontrollerTest.php
+  requestTest.php
   selectors_actionTest.php
   selectors_moduleTest.php
   urlsGenerationTest.php

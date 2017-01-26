@@ -20,7 +20,7 @@
 interface jISimpleCompiler {
     /**
      * parse the given file, and store the result in a cache file
-     * @param jSelector $aSelector the file selector
+     * @param jISelector $aSelector the file selector
      * @return boolean true : process ok
      */
     public function compile($aSelector);
@@ -81,6 +81,7 @@ class jIncluder {
      * includes cache of the correspondant file selector
      * check the cache, compile if needed, and include the cache
      * @param    jISelector   $aSelectorId    the selector corresponding to the file
+     * @throws jException
     */
     public static function inc($aSelector, $forceReloadCache = false){
 
