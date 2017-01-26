@@ -30,9 +30,6 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
         if($resp === null || $resp->getType() !='html'){
             return;
         }
-        $confUrlEngine = &jApp::config()->urlengine;
-        $confWikiEditor = &jApp::config()->wikieditors;
-        $bp = $confUrlEngine['basePath'];
 
         $resp->addAssetsGroup('jforms_html');
 
@@ -56,15 +53,7 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
             }
 
             foreach($v->getWikiEditors() as $ed) {
-                if(isset($confWikiEditor[$ed->config.'.engine.file']))
-                    $resp->addJSLink($bp.$confWikiEditor[$ed->config.'.engine.file']);
-                if(isset($confWikiEditor[$ed->config.'.config.path'])) {
-                    $p = $bp.$confWikiEditor[$ed->config.'.config.path'];
-                    $resp->addJSLink($p.jApp::config()->locale.'.js');
-                    $resp->addCSSLink($p.'style.css');
-                }
-                if(isset($confWikiEditor[$ed->config.'.skin']))
-                    $resp->addCSSLink($bp.$confWikiEditor[$ed->config.'.skin']);
+                $resp->addAssetsGroup('jforms_wikieditor_'.$ed->config);
             }
         }
     }

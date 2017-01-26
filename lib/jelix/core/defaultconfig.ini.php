@@ -346,13 +346,6 @@ ckbasic.engine.name=ckeditor
 [wikieditors]
 default.engine.name=wr3
 default.wiki.rules=wr3_to_xhtml
-; path to the engine file
-default.engine.file="jelix/markitup/jquery.markitup.js"
-; define the path to the "internationalized" file to translate the label of each button
-default.config.path="jelix/markitup/sets/wr3/"
-; define the path to the image of buttons of the toolbar
-default.image.path="jelix/markitup/sets/wr3/images/"
-default.skin="jelix/markitup/skins/simple/style.css"
 
 [webassets]
 useSet=common
@@ -404,8 +397,11 @@ jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
 jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor/ckeditor.js"
 jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
 
-
-
+jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
+jforms_wikieditor_default.js[]="$jelix/markitup/sets/wr3/$locale.js"
+jforms_wikieditor_default.css[]="$jelix/markitup/skins/simple/style.css"
+jforms_wikieditor_default.css[]="$jelix/markitup/sets/wr3/style.css"
+jforms_wikieditor_default.require=jquery
 
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery
