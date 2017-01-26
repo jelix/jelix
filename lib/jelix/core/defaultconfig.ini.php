@@ -323,10 +323,15 @@ controls.datetime.input=menulists
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels=names
 ; define the configuration name to use for datepickers in jforms
-; the name is the suffix of the jforms_datepicker_* web assets group
+; the name is the suffix of the jforms_datepicker_<config> web assets group
 ; and the suffix of a jelix_datepicker_<config> function from one of the web
 ; assets js file that initialise the datepicker
 datepicker=default
+
+; same as datepicker but for date/time pickers.
+; value is suffix for jforms_datetimepicker_<config> web assets group and
+; a jelix_datetimepicker_<config> function
+datetimepicker=default
 
 [jforms_builder_html]
 ;control type = plugin name
@@ -391,6 +396,10 @@ jforms_datepicker_default.js[]="$jelix/jquery/ui/jquery.ui.datepicker.min.js"
 jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/jquery.ui.datepicker-$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
+
+; we don't have yet a real datetime picker
+jforms_datetimepicker_default.require=jforms_datepicker_default
+jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
 
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery

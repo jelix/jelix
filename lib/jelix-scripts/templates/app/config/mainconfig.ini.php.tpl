@@ -55,6 +55,9 @@ html=myHtmlResponse
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
 ; if you change it, you probably want to change path in wikieditors and htmleditors sections
 jelixWWWPath = "jelix/"
+
+; DEPRECATED. if you modify it, you should modify also its path into webassets
+; see below in webassets sections
 jqueryPath="jelix/jquery/"
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
@@ -179,4 +182,9 @@ name=
 ; the name is the suffix of the jforms_datepicker_<config> web assets group
 ; and the suffix of a jelix_datepicker_<config> function from one of the web
 ; assets js file that initialise the datepicker
-;datepicker = default
+;datepicker=default
+
+; same as datepicker but for date/time pickers.
+; value is suffix for jforms_datetimepicker_<config> web assets group and
+; a jelix_datetimepicker_<config> function
+;datetimepicker=default

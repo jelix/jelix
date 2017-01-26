@@ -5,7 +5,7 @@
 * @author      Claudio Bernardes
 * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2006-2017 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -22,7 +22,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $config = isset($this->ctrl->datepickerConfig) ?
                     $this->ctrl->datepickerConfig :
                     jApp::config()->forms['datepicker'];
-        $resp->addAssetsGroup('jforms_datepicker_'.$config);
+        $resp->addAssetsGroup('jforms_datetimepicker_'.$config);
     }
 
     protected function outputJs() {
@@ -48,7 +48,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
             $config = isset($ctrl->datepickerConfig) ?
                         $ctrl->datepickerConfig :
                         jApp::config()->forms['datepicker'];
-            $this->parentWidget->addJs('jelix_datepicker_'.$config."(c, jFormsJQ.config);\n");
+            $this->parentWidget->addJs('jelix_datetimepicker_'.$config."(c, jFormsJQ.config);\n");
         }
     }
 
