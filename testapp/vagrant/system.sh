@@ -17,7 +17,7 @@ function initsystem () {
 
     # install all packages
     apt-get update
-    apt-get -y upgrade
+    #apt-get -y upgrade
     apt-get -y install debconf-utils
     export DEBIAN_FRONTEND=noninteractive
     echo "mysql-server-$MYSQL_VERSION mysql-server/root_password password jelix" | debconf-set-selections
