@@ -19,25 +19,8 @@
 
 class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     public function outputMetaContent($resp) {
-        $bp = jApp::urlBasePath();
-        $confHtmlEditor = &jApp::config()->htmleditors;
-
-        if(isset($confHtmlEditor[$this->ctrl->config.'.engine.file'])){
-            if(is_array($confHtmlEditor[$this->ctrl->config.'.engine.file'])){
-                foreach($confHtmlEditor[$this->ctrl->config.'.engine.file'] as $url) {
-                    $resp->addJSLink($bp.$url);
-                }
-            }else
-                $resp->addJSLink($bp.$confHtmlEditor[$this->ctrl->config.'.engine.file']);
-        }
-        
-        if(isset($confHtmlEditor[$this->ctrl->config.'.config']))
-            $resp->addJSLink($bp.$confHtmlEditor[$this->ctrl->config.'.config']);
-
-        $skin = $this->ctrl->config.'.skin.'.$this->ctrl->skin;
-
-        if(isset($confHtmlEditor[$skin]) && $confHtmlEditor[$skin] != '')
-            $resp->addCSSLink($bp.$confHtmlEditor[$skin]);
+        $resp->addAssets('jforms_htmleditor_'.$this->ctrl->config);
+        $resp->addAssets('jforms_htmleditor_'.$this->ctrl->config.'.skin.'.$this->ctrl->skin);
     }
 
     protected function outputJs() {

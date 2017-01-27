@@ -6,6 +6,7 @@
  * @link       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Core;
 
 /**
@@ -35,6 +36,7 @@ class Includer {
      * includes cache of the correspondant file selector
      * check the cache, compile if needed, and include the cache
      * @param    Selector\SelectorInterface   $aSelectorId    the selector corresponding to the file
+     * @throws \jException
     */
     public static function inc($aSelector, $forceReloadCache = false){
 

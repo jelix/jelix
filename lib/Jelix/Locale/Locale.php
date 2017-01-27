@@ -18,7 +18,7 @@ use Jelix\Core\App;
  */
 class Locale {
     /**
-     *
+     * @var jBundle[][]
      */
     static $bundles = array();
 
@@ -28,7 +28,17 @@ class Locale {
     private function __construct(){}
 
     /**
-     * gets the current lang
+     * gets the current locale (xx_YY)
+     * @return string
+     * @since 1.7.0
+     */
+    static function getCurrentLocale(){
+        return App::config()->locale;
+    }
+
+
+    /**
+     * gets the current lang (xx from xx_YY)
      * @return string
      */
     static function getCurrentLang(){
@@ -36,7 +46,7 @@ class Locale {
         return substr($s,0, strpos($s,'_'));
     }
     /**
-     * gets the current country.
+     * gets the current country (YY from xx_YY)
      * @return string
      */
     static function getCurrentCountry (){
@@ -45,19 +55,21 @@ class Locale {
     }
 
     /**
-    * gets the correct string, for a given language.
-    *   if it can't get the correct language, it will try to gets the string
-    *   from the default language.
-    *   if both fails, it will raise an exception.
-    * @param string $key the key of the localized string
-    * @param array $args arguments to apply to the localized string with sprintf
-    * @param string $locale  the lang code. if null, use the default language
-    * @param string $charset the charset code. if null, use the default charset
-    * @param boolean $tryOtherLocales if true and if the method does not find
-    *                   the locale file or the key, it will try with the default
-    *                   locale, the fallback local or similar locale
-    * @return string the localized string
-    */
+     * gets the correct string, for a given language.
+     *   if it can't get the correct language, it will try to gets the string
+     *   from the default language.
+     *   if both fails, it will raise an exception.
+     * @param string $key the key of the localized string
+     * @param array $args arguments to apply to the localized string with sprintf
+     * @param string $locale  the lang code. if null, use the default language
+     * @param string $charset the charset code. if null, use the default charset
+     * @param boolean $tryOtherLocales if true and if the method does not find
+     *                   the locale file or the key, it will try with the default
+     *                   locale, the fallback local or similar locale
+     * @return string the localized string
+     * @throws Exception
+     * @throws \Jelix\Core\Selector\Exception
+     */
     static function get ($key, $args=null, $locale=null, $charset=null, $tryOtherLocales=true) {
 
         $config = App::config();

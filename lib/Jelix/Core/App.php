@@ -28,8 +28,12 @@ namespace Jelix\Core;
  * @method public static function popCurrentModule()
  * @method public static function getCurrentModule()
  */
+
 class App {
 
+    /**
+     * @var AppInstance
+     */
     protected static $_currentApp = null;
 
     /**
@@ -156,7 +160,7 @@ class App {
     public static function urlBasePath()
     {
         if (!self::$_currentApp->config || !isset(self::$_currentApp->config->urlengine['basePath'])) {
-            return;
+            return "";
         }
         return self::$_currentApp->config->urlengine['basePath'];
     }

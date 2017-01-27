@@ -135,7 +135,6 @@ class CheckerBase {
 
         if (count($this->databases)) {
             $driversInfos = jDbParameters::getDriversInfosList();
-            $req = ($this->dbRequired?'required':'optional');
             $okdb = false;
 
             array_combine($this->databases, array_fill(0, count($this->databases), false));

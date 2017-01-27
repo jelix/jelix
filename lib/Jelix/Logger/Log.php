@@ -15,11 +15,14 @@ namespace Jelix\Logger;
  */
 class Log {
 
+    /**
+     * @var OutputInterface[]
+     */
     protected static $loggers = array();
 
     /**
      * all messages, when the memory logger is used
-     * @var array  array of MessageInterface
+     * @var MessageInterface[]
      */
     protected static $allMessages = array();
 
@@ -59,7 +62,7 @@ class Log {
 
     /**
     * log an exception into the given category.
-    * @param Exception $exception
+    * @param \Exception $exception
     * @param string $category the log type
     */
     public static function logEx ($exception, $category='default') {
@@ -70,6 +73,9 @@ class Log {
         self::_dispatchLog($message);
     }
 
+    /**
+     * @param MessageInterface $message
+     */
     protected static function _dispatchLog($message) {
         $confLoggers = &\Jelix\Core\App::config()->logger;
         $category = $message->getCategory();
@@ -90,6 +96,10 @@ class Log {
         self::_log($message, $loggers);
     }
 
+    /**
+     * @param MessageInterface $message
+     * @param OutputInterface[] $loggers
+     */
     protected static function _log($message, $loggers) {
 
         // let's inject the message in all loggers

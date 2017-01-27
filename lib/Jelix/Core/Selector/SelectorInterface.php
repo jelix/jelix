@@ -30,7 +30,7 @@ interface SelectorInterface {
     public function getCompiledFilePath ();
 
     /**
-     * @return jICompiler the compiler used to compile file
+     * @return object|null the compiler used to compile file
      */
     public function getCompiler();
 

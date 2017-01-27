@@ -24,6 +24,7 @@ class ModuleClassBinding {
 
     /**
      * selector to the binded class (string form)
+     * @var Selector\ClassSelector
      */
     protected $toSelector = null;
 
@@ -114,8 +115,8 @@ class ModuleClassBinding {
     /**
      * Get the selector to the binded class
      * Protected because this does not work if called after a simple __construct() and a toInstance()
-     *
-     * @return string
+     * @return Selector\ClassSelector
+     * @throws \jException
      */
     protected function _getClassSelector() {
         $class_selector = null;

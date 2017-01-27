@@ -159,6 +159,7 @@ class Installer {
 
     /**
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
+     * @throws Exception
      */
     protected function createInstallerIni() {
         if (!file_exists(App::varConfigPath('installer.ini.php'))) {
@@ -379,8 +380,9 @@ class Installer {
      * entry point. Only modules which have an access property > 0
      * are installed. Errors appeared during the installation are passed
      * to the reporter.
-     * @param string $entrypoint  the entrypoint name as it appears in project.xml
-     * @return boolean true if succeed, false if there are some errors
+     * @param string $entrypoint the entrypoint name as it appears in project.xml
+     * @return bool true if succeed, false if there are some errors
+     * @throws Exception
      */
     public function installEntryPoint($entrypoint) {
 
@@ -430,6 +432,7 @@ class Installer {
      * @param string $entrypoint  the entrypoint name as it appears in project.xml
      *               or null if modules should be uninstalled for all entry points
      * @return boolean true if the uninstallation is ok
+     * @throws Exception
      */
     public function uninstallModules($modulesList, $entrypoint = null) {
         return $this->_singleModules(Resolver::ACTION_REMOVE, $modulesList, $entrypoint );

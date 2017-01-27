@@ -260,6 +260,7 @@ class jDbPDOConnection extends PDO {
 
     /**
      * @return jDbTools
+     * @throws jException
      */
     public function tools () {
         if (!$this->_tools) {

@@ -5,7 +5,7 @@
 * @author      Claudio Bernardes
 * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2006-2017 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -19,12 +19,10 @@
 
 class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
     public function outputMetaContent($resp) {
-        $bp = jApp::urlBasePath();
-        $confDate = &jApp::config()->datepickers;
-        $datepicker_default_config = jApp::config()->forms['datepicker'];
-
-        $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:$datepicker_default_config;
-        $resp->addJSLink($bp.$confDate[$config]);
+        $config = isset($this->ctrl->datepickerConfig) ?
+                    $this->ctrl->datepickerConfig :
+                    jApp::config()->forms['datepicker'];
+        $resp->addAssets('jforms_datetimepicker_'.$config);
     }
 
     protected function outputJs() {
@@ -43,15 +41,20 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $this->parentWidget->addJs($js);
         $this->commonJs();
 
-        if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
-            $this->parentWidget->addJs('jelix_datepicker_'.$config."(c, jFormsJQ.config);\n");
+        if ($ctrl instanceof jFormsControlDate ||
+            get_class($ctrl->datatype) == 'jDatatypeDate' ||
+            get_class($ctrl->datatype) == 'jDatatypeLocaleDate')
+        {
+            $config = isset($ctrl->datepickerConfig) ?
+                        $ctrl->datepickerConfig :
+                        jApp::config()->forms['datepicker'];
+            $this->parentWidget->addJs('jelix_datetimepicker_'.$config."(c, jFormsJQ.config);\n");
         }
     }
 
     function outputControl() {
         $attr = $this->getControlAttributes();
-        $value = $this->getValue($this->ctrl);
+        $value = $this->getValue();
 
         $attr['id'] = $this->builder->getName().'_'.$this->ctrl->ref.'_';
         $v = array('year'=>'','month'=>'','day'=>'','hour'=>'','minutes'=>'','seconds'=>'');

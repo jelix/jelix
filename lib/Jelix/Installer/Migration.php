@@ -106,40 +106,61 @@ class Migration {
             rename(App::appPath('responses'), App::appPath('app/responses'));
         }
 
-        // move jSoapClient classmap files
         if (file_exists(App::varConfigPath('profiles.ini.php'))) {
-            $profilesini = parse_ini_file(App::varConfigPath('profiles.ini.php'), true);
-            foreach ($profilesini as $name => $profile) {
-                if (strpos($name, 'jsoapclient:') === 0 &&
-                    isset($profile['classmap_file']) &&
-                    trim($profile['classmap_file']) != '' &&
-                    file_exists(App::varConfigPath($profile['classmap_file']))
-                ) {
-                    $this->reporter->message("Move ".$profile['classmap_file']." to app/config/", 'notice');
-                    rename(App::varConfigPath($profile['classmap_file']), App::appConfigPath($profile['classmap_file']));
-                }
-            }
+            $profilesini = new \Jelix\IniFile\IniModifier(App::varConfigPath('profiles.ini.php'));
+            $this->migrateProfilesIni_1_7_0($profilesini);
+        }
+        if (file_exists(App::varConfigPath('profiles.ini.php.dist'))) {
+            $profilesini = new \Jelix\IniFile\IniModifier(App::varConfigPath('profiles.ini.php.dist'));
+            $this->migrateProfilesIni_1_7_0($profilesini);
         }
 
         // move plugin configuration file to global config
-        $this->migrateCoordPluginsConf(App::appConfigPath('mainconfig.ini.php'));
+        $this->migrateCoordPluginsConf_1_7_0(App::appConfigPath('mainconfig.ini.php'));
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
             $configFile = (string)$entrypoint['config'];
-            $this->migrateCoordPluginsConf(App::appConfigPath($configFile));
+            $this->migrateCoordPluginsConf_1_7_0(App::appConfigPath($configFile));
         }
-        $this->migrateCoordPluginsConf(App::varConfigPath('localconfig.ini.php'));
+        $this->migrateCoordPluginsConf_1_7_0(App::varConfigPath('localconfig.ini.php'));
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
             $configFile = (string)$entrypoint['config'];
-            $this->migrateCoordPluginsConf(App::varConfigPath($configFile));
+            $this->migrateCoordPluginsConf_1_7_0(App::varConfigPath($configFile));
         }
 
         $this->reporter->message('Migration to 1.7.0 is done', 'notice');
+    }
 
+    private function migrateProfilesIni_1_7_0(\Jelix\IniFile\IniModifier $profilesini) {
+        foreach ($profilesini->getSectionList() as $name) {
+            // move jSoapClient classmap files
+            if (strpos($name, 'jsoapclient:') === 0) {
+                $classmapFile = $profilesini->getValue('classmap_file', $name);
+                if ($classmapFile != '' &&
+                    file_exists(App::varConfigPath($classmapFile))
+                ) {
+                    $this->reporter->message("Move " . $classmapFile . " to app/config/", 'notice');
+                    rename(App::varConfigPath($classmapFile), App::appConfigPath($classmapFile));
+                }
+            }
+            // profiles.ini.php change mysql driver from "mysql" to "mysqli"
+            else if (strpos($name, 'jdb:') === 0) {
+                $driver = $profilesini->getValue('driver', $name);
+                if ($driver == 'mysql') {
+                    $this->reporter->message("Profiles.ini: change db driver from mysql to mysqli for ".$name." profile", 'notice');
+                    $profilesini->setValue('driver', 'mysqli', $name);
+                }
+                else if ($driver == 'sqlite') {
+                    $this->reporter->message("Profiles.ini: you still use the sqlite driver in the profile ".$name, 'warning');
+                    $this->reporter->message("You must convert your databases to sqlite3 and use the sqlite3 driver for jdb", 'warning');
+                }
+            }
+        }
+        $profilesini->save();
     }
 
     protected $allPluginConfigs = array();
 
-    private function migrateCoordPluginsConf($configFileName) {
+    private function migrateCoordPluginsConf_1_7_0($configFileName) {
         $config = new \Jelix\IniFile\IniModifier($configFileName);
         $pluginsConf = $config->getValues('coordplugins');
         foreach($pluginsConf as $name => $conf) {

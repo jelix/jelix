@@ -644,7 +644,7 @@ class UrlActionMapper
                                 App::config()->locale = Locale::langToLocale($v);
                             } else {
                                 App::config()->locale = $v;
-                                $params[$name] = substr($v, 0, strpos('_'));
+                                $params[$name] = substr($v, 0, strpos($v, '_'));
                             }
                         } elseif ($escapes[$k] & self::ESCAPE_LOCALE) {
                             $v = $matches[$k];

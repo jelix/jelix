@@ -113,9 +113,10 @@ class mysqliDbTools extends jDbTools {
     }
 
     /**
-    * returns the list of tables
-    * @return   array    list of table names
-    */
+     * returns the list of tables
+     * @return array list of table names
+     * @throws jException
+     */
     public function getTableList () {
         $results = array ();
         if (isset($this->_conn->profile['database'])) {
@@ -205,11 +206,10 @@ class mysqliDbTools extends jDbTools {
      */
     protected function parseSQLScript($script) {
 
-        $delimiters = array();
         $distinctDelimiters = array(';');
         if(preg_match_all("/DELIMITER ([^\n]*)/i", $script, $d, PREG_SET_ORDER)) {
             $delimiters = $d[1];
-            $distinctDelimiters = array_unique(array_merge($distinctDelimiters,$delimiters));
+            $distinctDelimiters = array_unique(array_merge($distinctDelimiters, $delimiters));
         }
         $preg= '';
         foreach($distinctDelimiters as $dd) {

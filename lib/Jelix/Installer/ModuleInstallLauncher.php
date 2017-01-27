@@ -18,12 +18,12 @@ use \Jelix\Dependencies\Resolver;
 class ModuleInstallLauncher extends AbstractInstallLauncher {
 
     /**
-     * @var jInstallerModule
+     * @var ModuleInstaller
      */
     protected $moduleInstaller = null;
 
     /**
-     * @var jInstallerModule[]
+     * @var ModuleInstaller[]
      */
     protected $moduleUpgraders = null;
 
@@ -79,7 +79,7 @@ class ModuleInstallLauncher extends AbstractInstallLauncher {
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return ModuleInstaller the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
-     * @throws jInstallerException when install class not found
+     * @throws Exception when install class not found
      */
     function getInstaller(EntryPoint $ep, $installWholeApp) {
 

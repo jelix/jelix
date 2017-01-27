@@ -155,8 +155,9 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         $columns[] = new jDbColumn('name','string',50);
         $columns[] = new jDbColumn('price','double');
         $columns[] = new jDbColumn('promo','boolean');
+        $columns[] = new jDbColumn('product_id','int');
 
-        $table = $schema->createTable('test_prod', $columns, 'id');
+        $table = $schema->createTable('test_prod', $columns, 'id', array('engine'=>'InnoDB'));
 
         $rs = $db->query('SHOW COLUMNS from test_prod');
         while($l = $rs->fetch()) {
@@ -202,6 +203,41 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         </object>';
 
         $this->assertComplexIdenticalStr($list['promo'], $obj);
+
+        $obj = '<object>
+        <string property="Type" value="int(11)" />
+        <string property="Field" value="product_id" />
+        <string property="Null" value="YES" />
+        <string property="Extra"  value="" />
+        <null property="Default" />
+        </object>';
+
+        $this->assertComplexIdenticalStr($list['product_id'], $obj);
+    }
+
+    function testReferences() {
+        $db = jDb::getConnection();
+        $schema = $db->schema();
+
+        $table = $schema->getTable('test_prod');
+
+        $reference = new jDbReference();
+        $reference->name = "product_id_fkey";
+        $reference->columns = array('product_id');
+        $reference->fTable = 'product_test';
+        $reference->fColumns = array('id');
+        $table->addReference($reference);
+
+        $table = new mysqliDbTable('test_prod', $schema);
+        $references = $table->getReferences();
+        $this->assertTrue(isset($references["product_id_fkey"]));
+        $ref = $references["product_id_fkey"];
+        $this->assertEquals("product_id_fkey", $ref->name);
+        $this->assertEquals(array('product_id'), $ref->columns);
+        $this->assertEquals('product_test', $ref->fTable);
+        $this->assertEquals(array('id'), $ref->fColumns);
+        $this->assertEquals('', $ref->onUpdate);
+        $this->assertEquals('', $ref->onDelete);
     }
 
     function testDropTable() {
@@ -222,7 +258,6 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
                 $found=true;
         }
         $this->assertFalse($found);
-
     }
 }
 

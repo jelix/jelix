@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Laurent Jouanneau
 * @contributor     Loic Mathaud
-* @copyright  2006 Loic Mathaud, 2007-2014 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2007-2017 Laurent Jouanneau
 *
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -21,13 +21,15 @@ class sqlite3DbTable extends jDbTable {
         $conn = $this->schema->getConn();
         $this->columns = array();
         $this->primaryKey = null;
-        $sql = "PRAGMA table_info(". $this->conn->quote($this->name) .")";
+        $sql = "PRAGMA table_info(". $conn->quote($this->name) .")";
         $rs = $conn->query($sql);
 
         while ($c = $rs->fetch()) {
             $hasDefault = false;
             $default = null;
             $isPrimary  = ($c->pk == 1);
+            $notNull   = ($c->notnull == '99' || $c->pk == 1);
+
             if (!$isPrimary) {
                 if ($c->dflt_value !== null || ($c->dflt_value === null && !$notNull)) {
                     $hasDefault = true;
@@ -45,11 +47,10 @@ class sqlite3DbTable extends jDbTable {
             else {
                 $type = $c->type;
             }
-            $notNull   = ($c->notnull == '99' || $c->pk == 1);
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
 
-            $typeinfo = $this->getTypeInfo($type);
+            $typeinfo = $conn->tools()->getTypeInfo($type);
             $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];
@@ -85,7 +86,7 @@ class sqlite3DbTable extends jDbTable {
         $isPk = ($pk && in_array($new->name, $pk->columns));
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
                 .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new);
-        if ($isPk && $col->autoIncrement)
+        if ($isPk && $new->autoIncrement)
             $sql .= ' AUTOINCREMENT';
 
         $conn->exec($sql);
@@ -184,7 +185,7 @@ class sqlite3DbSchema extends jDbSchema {
     protected function _getTables() {
         $results = array ();
 
-        $rs = $this->schema->getConn()->query('SELECT name FROM sqlite_master WHERE type="table"');
+        $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
 
         while ($line = $rs->fetch ()){
             $results[$line->name] = new sqlite3DbTable($line->name, $this);

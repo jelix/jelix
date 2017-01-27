@@ -77,7 +77,6 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
      *                      and the name of the plugin function, or false if not found
      */
     protected function _getPlugin ($type, $name) {
-        $foundPath = '';
 
         $config = jApp::config();
 

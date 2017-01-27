@@ -41,14 +41,14 @@ class Router {
 
     /**
      * the selector of the current action
-     * @var jSelectorActFast
+     * @var \jSelectorActFast
      */
     public $action = null;
 
     /**
      * the original action when there is an internal redirection to an action
      * different from the one corresponding to the request
-     * @var jSelectorAct
+     * @var \jSelectorAct
      */
     public $originalAction = null;
 
@@ -175,6 +175,7 @@ class Router {
     * This method should be called in a entry point.
     *
     * @param  ClientRequest  $request the request object. It is required if a descendant of Router did not called setRequest before
+    * @throws \jException
     */
     public function process ($request=null) {
 
@@ -251,7 +252,9 @@ class Router {
 
     /**
      * get the controller corresponding to the selector
-     * @param jSelectorActFast $selector
+     * @param \jSelectorActFast $selector
+     * @return \jController the controller corresponding to the selector
+     * @throws \jException
      */
     protected function getController(\jSelectorActFast $selector){
 
@@ -391,6 +394,7 @@ class Router {
     * @param string   $pluginName   the name of the plugin
     * @param boolean  $required  says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
     * @return \Jelix\Routing\RouterPlugin
+    * @throws \jException
     */
     public function getPlugin ($pluginName, $required = true){
         $pluginName = strtolower ($pluginName);

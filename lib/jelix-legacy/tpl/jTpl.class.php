@@ -71,6 +71,7 @@ class jTpl extends \Jelix\Castor\CastorCore {
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
      * @param boolean $trusted  says if the template file is trusted or not
+     * @return array
      */
     public function meta ($tpl, $outputtype = '', $trusted = true) {
 
@@ -121,8 +122,9 @@ class jTpl extends \Jelix\Castor\CastorCore {
      * include the compiled template file and call one of the generated function
      * @param string|jSelectorTpl $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
-     * @param boolean $trusted  says if the template file is trusted or not
+     * @param boolean $trusted says if the template file is trusted or not
      * @return string the suffix name of the function to call
+     * @throws Exception
      */
     protected function getTemplate ($tpl, $outputtype = '', $trusted = true) {
 
@@ -136,9 +138,10 @@ class jTpl extends \Jelix\Castor\CastorCore {
      * return the generated content from the given template
      * @param string $tpl template selector
      * @param string $outputtype the type of output (html, text etc..)
-     * @param boolean $trusted  says if the template file is trusted or not
+     * @param boolean $trusted says if the template file is trusted or not
      * @param boolean $callMeta false if meta should not be called
      * @return string the generated content
+     * @throws Exception
      */
     public function fetch ($tpl, $outputtype='', $trusted = true, $callMeta=true) {
         $sel = new jSelectorTpl($tpl, $outputtype, $trusted);

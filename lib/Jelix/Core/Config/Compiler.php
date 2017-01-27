@@ -49,6 +49,13 @@ class Compiler {
         $this->configFileName = $configFile;
     }
 
+    /**
+     * Read and merge all configuration files
+     * @param string $configFile
+     * @param array  $additionalOptions  some options to add to the configuration
+     * @return object the object containing content of all configuration files
+     * @throws Exception
+     */
     protected function readConfigFiles($configFile, $additionalOptions) {
 
         $appConfigPath = App::appConfigPath();
@@ -115,6 +122,7 @@ class Compiler {
      * @param array  $additionalOptions  some options to add to the configuration
      *
      * @return StdClass an object which contains configuration values
+     * @throws Exception
      */
     public function read($allModuleInfo = false, $additionalOptions= null){
 
@@ -141,6 +149,7 @@ class Compiler {
     /**
      * Identical to read(), but also stores the result in a temporary file
      * @return object an object which contains configuration values
+     * @throws Exception
      */
     public function readAndCache() {
 
@@ -161,7 +170,7 @@ class Compiler {
             }
         }
         else {
-            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n", '', $config->chmodFile);
+            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n", $config->chmodFile);
         }
         return $config;
     }
@@ -283,6 +292,7 @@ class Compiler {
      *                               else should be false, these extra informations are
      *                               not needed to run the application
      * @return \Jelix\Core\Infos\ModuleInfos[]
+     * @throws Exception
      */
     protected function _loadModulesInfo($config, $allModuleInfo) {
 
@@ -459,8 +469,11 @@ class Compiler {
     /**
      * calculate miscelaneous path, depending of the server configuration and other informations
      * in the given array : script path, script name, documentRoot ..
-     * @param array $urlconf  urlengine configuration. scriptNameServerVariable, basePath,
+     * @param array $urlconf urlengine configuration. scriptNameServerVariable, basePath,
      * jelixWWWPath and jqueryPath should be present
+     * @param string $pseudoScriptName
+     * @param bool $isCli
+     * @throws Exception
      */
     protected function getPaths(&$urlconf, $pseudoScriptName ='', $isCli = false) {
         // retrieve the script path+name.
@@ -567,7 +580,6 @@ class Compiler {
     }
 
     static public function findServerName($ext = '.php', $isCli = false) {
-        $varname = '';
         $extlen = strlen($ext);
 
         if (strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)

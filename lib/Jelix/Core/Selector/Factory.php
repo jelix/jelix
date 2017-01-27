@@ -28,7 +28,9 @@ class Factory {
     /**
      * Create an instance of a selector object corresponding to the given selector
      * @param string $selstr  the selector. It should be a full selector : "type:module~resource" (not "module~resource")
+     * @param bool $defaulttype
      * @return SelectorInterface the corresponding selector
+     * @throws Exception
      */
     static public function create ($selstr, $defaulttype=false) {
         if (is_string($defaulttype) && strpos($selstr, ':') === false) {

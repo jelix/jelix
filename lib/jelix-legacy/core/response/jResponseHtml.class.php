@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Yann, Dominique Papin
 * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
-* @copyright   2005-2012 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2005-2017 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 * @copyright   2009 Julien Issler, Olivier Demah
 * @copyright   2010 Brice Tence
@@ -80,6 +80,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * list of css stylesheet for IE
      * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     protected $_CSSIELink = array ();
 
@@ -97,6 +98,7 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * list of js script for IE
      * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     protected $_JSIELink  = array ();
 
@@ -111,6 +113,8 @@ class jResponseHtml extends jResponseBasicHtml {
      * @var array list of js source code
      */
     protected $_JSCode  = array ();
+
+    protected $_assetsGroups = array();
 
     /**
      * list of keywords to add into a meta keyword tag
@@ -191,6 +195,8 @@ class jResponseHtml extends jResponseBasicHtml {
         foreach($this->plugins as $name=>$plugin)
             $plugin->beforeOutput();
 
+        $this->retrieveAssets();
+
         // now let's output the html content
         $this->sendHttpHeaders();
         $this->outputDoctype();
@@ -239,7 +245,7 @@ class jResponseHtml extends jResponseBasicHtml {
      *
      * @param string $src the link
      * @param array $params additionnals attributes for the script tag
-     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
     public function addJSLink ($src, $params=array(), $forIE=false){
         if($forIE){
@@ -260,8 +266,8 @@ class jResponseHtml extends jResponseBasicHtml {
     *
     * @param string $module  the module where file is stored
     * @param mixed $src the relative path inside the {module}/www/ directory
-    * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+    * @param array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
+    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
     */
     public function addJSLinkModule ($module, $src, $params=array(), $forIE=false){ 
         $src = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
@@ -293,18 +299,20 @@ class jResponseHtml extends jResponseBasicHtml {
     /**
      * returns all JS links for IE
      * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
     public function getJSIELinks() { return $this->_JSIELink; }
 
     /**
      * set all JS links for IE
      * @param array  $list key = url, value=link attributes
+     * @deprecated since 1.7.0
      */
     public function setJSIELinks($list) { $this->_JSIELink = $list; }
 
      /**
      * returns all CSS links
-     * @var array  key = url, value=link attributes
+     * @return array  key = url, value=link attributes
      */
     public function getCSSLinks() { return $this->_CSSLink; }
 
@@ -316,13 +324,15 @@ class jResponseHtml extends jResponseBasicHtml {
 
     /**
      * returns all CSS links for IE
-     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * @deprecated since 1.7.0
      */
      public function getCSSIELinks() { return $this->_CSSIELink; }
 
     /**
      * set all CSS links for IE
      * @param array  $list key = url, value=link attributes
+     * @deprecated since 1.7.0
      */
     public function setCSSIELinks($list) { $this->_CSSIELink = $list; }
 
@@ -433,6 +443,15 @@ class jResponseHtml extends jResponseBasicHtml {
     }
 
     /**
+     * adds a web assets group
+     * @param string $assetGroup
+     */
+    public function addAssets($assetGroup) {
+        $this->_assetsGroups[] = $assetGroup;
+    }
+
+
+    /**
      * add some keywords in a keywords meta tag
      * @author Yann
      * @param string $content keywords
@@ -474,12 +493,12 @@ class jResponseHtml extends jResponseBasicHtml {
      */
     protected function outputDoctype (){
         echo '<!DOCTYPE HTML>', "\n";
-        $lang = str_replace('_', '-', $this->_lang);
+        $locale = str_replace('_', '-', $this->_locale);
         if($this->_isXhtml){
-            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$lang,'" lang="',$lang,'">
+            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" lang="',$locale,'">
 ';
         }else{
-            echo '<html lang="',$lang,'">';
+            echo '<html lang="',$locale,'">';
         }
     }
 
@@ -506,6 +525,100 @@ class jResponseHtml extends jResponseBasicHtml {
         if(!isset($cssParams['rel']))
             $params .='rel="stylesheet" ';
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
+    }
+
+    protected function retrieveAssets()
+    {
+        if (!count($this->_assetsGroups)) {
+            return;
+        }
+        $conf = jApp::config();
+        $assetsSet = 'webassets_' . $conf->webassets['useSet'];
+
+        if (!isset($conf->$assetsSet)) {
+            return;
+        }
+        $assets = $conf->$assetsSet;
+        foreach($this->_assetsGroups as $group) {
+            $this->includeAssetsGroup($assets, $group);
+        }
+    }
+
+    protected $includedAssetsGroups = array();
+    protected $cssAssets = array();
+    protected $jsAssets = array();
+    protected function includeAssetsGroup(&$assets, $group) {
+        if (isset($this->includedAssetsGroups[$group])) {
+            // avoid circular dependencies
+            return;
+        }
+
+        $this->includedAssetsGroups[$group] = true;
+        $missing = true;
+        if (isset($assets[$group.'.require'])) {
+            $missing = false;
+            foreach($assets[$group.'.require'] as $assetGroup) {
+                $this->includeAssetsGroup($assets, $assetGroup);
+            }
+        }
+
+        if (isset($assets[$group.'.js'])) {
+            $missing = false;
+            foreach($assets[$group.'.js'] as $jsAsset) {
+                $assetUrl = $this->parseAsset($jsAsset);
+                if (!isset($this->jsAssets[$assetUrl])) {
+                    $this->jsAssets[$assetUrl] = true;
+                }
+                if (isset($this->_JSLink[$assetUrl])) {
+                    unset($this->_JSLink[$assetUrl]);
+                }
+            }
+        }
+        if (isset($assets[$group.'.css'])) {
+            $missing = false;
+            foreach($assets[$group.'.css'] as $cssAsset) {
+                $assetUrl = $this->parseAsset($cssAsset);
+                if (!isset($this->cssAssets[$assetUrl])) {
+                    $this->cssAssets[$assetUrl] = true;
+                }
+                if (isset($this->_CSSLink[$assetUrl])) {
+                    unset($this->_CSSLink[$assetUrl]);
+                }
+            }
+        }
+        if (isset($assets[$group.'.include'])) {
+            $missing = false;
+            foreach($assets[$group.'.include'] as $assetGroup) {
+                $this->includeAssetsGroup($assets, $assetGroup);
+            }
+        }
+        if ($missing) {
+            jLog::log('Assets group '.$group.' is missing from the configuration', 'warning');
+        }
+    }
+
+    protected function parseAsset($asset) {
+        list($assetURLType , $resource) = explode('>', $asset, 2);
+        switch($assetURLType) {
+            case 'k': // relative path to base path
+                return jApp::urlBasePath().$resource;
+            case 'b': // relative path to base path with lang/locale
+                return jApp::urlBasePath().str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
+            case 'a': // action
+                return jUrl::get($resource);
+            case 'm': // resource file stored in a module
+                list($module, $src) = explode(':', $resource, 2);
+                return jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
+            case 's': // theme path  with lang/locale
+                $resource = str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
+            case 't': // theme path
+                return jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$resource;
+            case 'l': // absolute url with lang/locale
+                return str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
+            case 'u': // absolute url
+            default:
+                return $resource;
+        }
     }
 
     /**
@@ -540,7 +653,12 @@ class jResponseHtml extends jResponseBasicHtml {
             echo '<meta name="author" content="'.htmlspecialchars($this->_MetaAuthor).'" '.$this->_endTag;
         }
 
+
+
         // css link
+        foreach ($this->cssAssets as $src=>$v){
+            $this->outputCssLinkTag($src, array());
+        }
         foreach ($this->_CSSLink as $src=>$params){
             $this->outputCssLinkTag($src, $params);
         }
@@ -580,6 +698,9 @@ class jResponseHtml extends jResponseBasicHtml {
         }
 
         // js link
+        foreach ($this->jsAssets as $src=>$v){
+            $this->outputJsScriptTag($src, array());
+        }
         foreach ($this->_JSLink as $src=>$params){
             $this->outputJsScriptTag($src, $params);
         }

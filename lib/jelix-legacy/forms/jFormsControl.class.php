@@ -83,6 +83,9 @@ abstract class jFormsControl {
         $this->datatype = new jDatatypeString();
     }
 
+    /**
+     * @param jFormsBase $form
+     */
     function setForm($form) {
         $this->form = $form;
         $this->container = $form->getContainer();
@@ -123,6 +126,9 @@ abstract class jFormsControl {
         $this->container->setReadOnly($this->ref, $r);
     }
 
+    /**
+     * @param jRequest $request
+     */
     function setValueFromRequest($request) {
         $this->setData($request->getParam($this->ref,''));
     }

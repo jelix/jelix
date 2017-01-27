@@ -76,6 +76,7 @@ class Event {
     /**
     * gets the given param
     * @param string $name the param name
+    * @return string|null the value or null if the parameter does not exist
     * @deprecated since Jelix 1.6
     */
     public function getParam ($name){
@@ -100,8 +101,8 @@ class Event {
     * eg, we want to know if we have failed = true, we do
     * @param string $responseName the param we're looking for
     * @param mixed $value the value we're looking for
-    * @param ref $response the response that have this value
-    * @return boolean wether or not we have founded the response value
+    * @param mixed[] $response the response that have this value
+    * @return boolean whether or not we have founded the response value
     */
     public function inResponse ($responseName, $value, & $response){
         $founded  = false;
@@ -132,7 +133,7 @@ class Event {
     /**
     * send a notification to all modules
     * @param string $event the event name
-    * @return Jelix\Event\Event
+    * @return Event
     */
     public static function notify ($eventname, $params=array()) {
 
@@ -160,14 +161,14 @@ class Event {
     * because a listener can listen several events, we should
     * create only one instancy of a listener for performance, and
     * $hashListened will contains only reference to this listener.
-    * @var array of Jelix\Event\Listener
+    * @var Listener[]
     */
     protected static $listenersSingleton = array ();
 
     /**
     * hash table for event listened.
     * $_hash['eventName'] = array of events (by reference)
-    * @var associative array of object
+    * @var object[]
     */
     protected static $hashListened = array ();
 
@@ -177,9 +178,8 @@ class Event {
     protected static $listenersConfig = null;
 
     /**
-    * return the list of all listener corresponding to an event
+    * construct the list of all listener corresponding to an event
     * @param string $eventName the event name we wants the listeners for.
-    * @return array of objects
     */
     protected static function loadListenersFor ($eventName) {
 

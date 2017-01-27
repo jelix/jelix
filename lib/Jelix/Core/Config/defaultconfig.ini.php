@@ -105,6 +105,7 @@ minifyJS=on
 minifyExcludeCSS=
 minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
 minifyEntryPoint=minify.php
+
 [debugbar]
 plugins="sqllog,sessiondata,defaultlog"
 defaultPosition=right
@@ -170,6 +171,9 @@ checkHttpsOnParsing=on
 ; if you change it, change also all pathes in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
+
+; DEPRECATED. if you modify it, modify also its path into webassets
+; see below in webassets sections
 jqueryPath="jelix/jquery/"
 
 ; action to show the 'page not found' error
@@ -318,54 +322,89 @@ loadClasses=
 controls.datetime.input=menulists
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels=names
-; define the default config for datepickers in jforms
+; define the configuration name to use for datepickers in jforms
+; the name is the suffix of the jforms_datepicker_<config> web assets group
+; and the suffix of a jelix_datepicker_<config> function from one of the web
+; assets js file that initialise the datepicker
 datepicker=default
+
+; same as datepicker but for date/time pickers.
+; value is suffix for jforms_datetimepicker_<config> web assets group and
+; a jelix_datetimepicker_<config> function
+datetimepicker=default
 
 [jforms_builder_html]
 ;control type = plugin name
 
-
-[datepickers]
-default="jelix/js/jforms/datepickers/default/init.js"
-
 [htmleditors]
 default.engine.name=wymeditor
-default.engine.file[]="jelix/jquery/jquery.js"
-default.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
-default.config="jelix/js/jforms/htmleditors/wymeditor_default.js"
-default.skin.default="jelix/wymeditor/skins/default/skin.css"
-
 wymbasic.engine.name=wymeditor
-wymbasic.engine.file[]="jelix/jquery/jquery.js"
-wymbasic.engine.file[]="jelix/wymeditor/jquery.wymeditor.js"
-wymbasic.config="jelix/js/jforms/htmleditors/wymeditor_basic.js"
-wymbasic.skin.default="jelix/wymeditor/skins/default/skin.css"
-
 ckdefault.engine.name=ckeditor
-ckdefault.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckdefault.config="jelix/js/jforms/htmleditors/ckeditor_default.js"
-
 ckfull.engine.name=ckeditor
-ckfull.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckfull.config="jelix/js/jforms/htmleditors/ckeditor_full.js"
-
 ckbasic.engine.name=ckeditor
-ckbasic.engine.file[]="jelix/ckeditor/ckeditor.js"
-ckbasic.config="jelix/js/jforms/htmleditors/ckeditor_basic.js"
-
 
 [wikieditors]
 default.engine.name=wr3
 default.wiki.rules=wr3_to_xhtml
-; path to the engine file
-default.engine.file="jelix/markitup/jquery.markitup.js"
-; define the path to the "internationalized" file to translate the label of each button
-default.config.path="jelix/markitup/sets/wr3/"
-; define the path to the image of buttons of the toolbar
-default.image.path="jelix/markitup/sets/wr3/images/"
-default.skin="jelix/markitup/skins/simple/style.css"
+
+[webassets]
+useSet=common
+
+[webassets_common]
+jquery.js = "$jelix/jquery/jquery.js"
+
+jquery_ui.js = "$jelix/jquery/ui/jquery-ui-core-widg-mous-posi.custom.min.js"
+jquery_ui.css = "$jelix/jquery/themes/base/jquery.ui.all.css"
+jquery_ui.require = jquery
+
+jforms_html.js[]= "$jelix/jquery/include/jquery.include.js"
+jforms_html.js[]= "$jelix/js/jforms_jquery.js"
+jforms_html.css= "$jelix/design/jform.css"
+jforms_html.require = jquery
+
+jforms_html_light.js= "$jelix/js/jforms_light.js"
+jforms_html_light.css= "$jelix/design/jform.css"
+
+jforms_datepicker_default.css=
+jforms_datepicker_default.js[]="$jelix/jquery/ui/jquery.ui.datepicker.min.js"
+jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/jquery.ui.datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
+jforms_datepicker_default.require=jquery_ui
+
+; we don't have yet a real datetime picker
+jforms_datetimepicker_default.require=jforms_datepicker_default
+jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
+
+jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
+jforms_htmleditor_default.require=jquery
+
+jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+
+jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
+jforms_htmleditor_wymbasic.require=jquery
+
+jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
 
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
+
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
+
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
+
+jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
+jforms_wikieditor_default.js[]="$jelix/markitup/sets/wr3/$locale.js"
+jforms_wikieditor_default.css[]="$jelix/markitup/skins/simple/style.css"
+jforms_wikieditor_default.css[]="$jelix/markitup/sets/wr3/style.css"
+jforms_wikieditor_default.require=jquery
+
+swjs.js = "$jelix/jquery/flash/jquery.flash.js"
+swjs.require = jquery
 
 [zones]
 ; disable zone caching

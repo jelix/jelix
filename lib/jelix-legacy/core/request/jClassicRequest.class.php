@@ -4,7 +4,7 @@
 * @subpackage  core_request
 * @author      Laurent Jouanneau
 * @contributor Yoan Blanc, Julien Issler
-* @copyright   2005-2011 Laurent Jouanneau, 2008 Yoan Blanc, 2016 Julien Issler
+* @copyright   2005-2017 Laurent Jouanneau, 2008 Yoan Blanc, 2016-2017 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -27,16 +27,28 @@ class jClassicRequest extends jRequest {
         $url  = $this->urlMapper->parseFromRequest($this, $_GET);
         $this->params = $url->params;
 
-        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_SERVER['CONTENT_TYPE']) && ($_SERVER['CONTENT_TYPE'] == 'application/x-www-form-urlencoded' || $_SERVER['CONTENT_TYPE'] == 'multipart/form-data')){
-            $this->params = array_merge($this->params, $_POST);
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            return;
         }
-        elseif ($_SERVER['REQUEST_METHOD'] != 'GET') {
-            $data = $this->readHttpBody();
-            if (is_string($data)) {
-                $this->params['__httpbody'] = $data;
-            } else {
-                $this->params = array_merge($this->params, $data);
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // when no content type or for known content-type,
+            // let's get parameters from $_POST
+            if (!isset($_SERVER['CONTENT_TYPE']) ||
+                strpos($_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded') === 0 ||
+                strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0
+            ) {
+                $this->params = array_merge($this->params, $_POST);
+                return;
             }
+        }
+
+        // for any REQUEST method other than GET (PUT, unknown content type for POST, etc...)
+        $data = $this->readHttpBody();
+        if (is_string($data)) {
+            $this->params['__httpbody'] = $data;
+        } else {
+            $this->params = array_merge($this->params, $data);
         }
     }
 
