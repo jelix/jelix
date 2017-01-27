@@ -9,7 +9,7 @@
  */
 
 
-class webassetsConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class webassetsConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface {
 
     function getPriority() {
         return 18;
@@ -29,7 +29,7 @@ class webassetsConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginI
         }
     }
 
-    function onModule($config, $moduleName, $modulePath, $xml) {
+    function onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
 
     }
 
