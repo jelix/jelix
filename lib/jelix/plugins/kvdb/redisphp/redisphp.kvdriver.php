@@ -12,7 +12,7 @@
 
 require_once(LIB_PATH . 'php5redis/Redis.php');
 
-class redisKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
+class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     protected $key_prefix = '';
 

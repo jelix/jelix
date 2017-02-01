@@ -12,7 +12,7 @@
 
 require_once(LIB_PATH . 'php5redis/Redis.php');
 
-class redisCacheDriver implements jICacheDriver {
+class redisphpCacheDriver implements jICacheDriver {
 
     /**
     * profil name used in the ini file

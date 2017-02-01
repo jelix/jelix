@@ -27,7 +27,7 @@ class redisworkerCtrl extends jControllerCmdLine {
 
         $redisPlugin = jCache::getDriver($this->param('profile'));
         
-        if (get_class($redisPlugin) != 'redisCacheDriver') {
+        if (get_class($redisPlugin) != 'redisphpCacheDriver') {
             $rep->addContent("Error, wrong profile. Not a redis cache.\n");
             $rep->setExitCode(1);
             return $rep;
@@ -51,7 +51,7 @@ class redisworkerCtrl extends jControllerCmdLine {
 
         $redisDriver = jKvDb::getConnection($this->param('profile'));
         
-        if (get_class($redisDriver) != 'redisKVDriver') {
+        if (get_class($redisDriver) != 'redisphpKVDriver') {
             $rep->addContent("Error, wrong profile. Not a redis jKvDb driver.\n");
             $rep->setExitCode(1);
             return $rep;

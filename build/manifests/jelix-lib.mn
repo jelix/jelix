@@ -141,6 +141,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_to_1.3pre.1919_cmd.php
   upgrade_availablelocales.php
   upgrade_modulejacl2.php
+  upgrade_redisprofile.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -443,8 +444,8 @@ cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
 cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
-cd lib/jelix/plugins/cache/redis
-  redis.cache.php
+cd lib/jelix/plugins/cache/redisphp
+  redisphp.cache.php
 
 cd lib/jelix/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
@@ -631,8 +632,8 @@ cd lib/jelix/plugins/kvdb/file2/
 cd lib/jelix/plugins/kvdb/memcache/
   memcache.kvdriver.php
 
-cd lib/jelix/plugins/kvdb/redis/
-  redis.kvdriver.php
+cd lib/jelix/plugins/kvdb/redisphp/
+  redisphp.kvdriver.php
 
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php
