@@ -1,13 +1,12 @@
 <?php
-class RedisException extends Exception {}
+namespace PhpRedis;
+
 /**
  * Redis database connection class
  * 
  * @author sash
  * @license LGPL
- * @version 1.3.0
- *
- * @deprecated use the class from the __DIR__.'/lib/Redis.php'
+ * @version 2.0.0
  */
 class Redis {
 	private $port;

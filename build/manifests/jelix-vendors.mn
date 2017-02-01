@@ -73,6 +73,11 @@ cd lib/minify/min/lib/Solar
 cd lib/php5redis/
   Redis.php
   README.md
+  README_JELIX.md
+
+cd lib/php5redis/lib
+  Redis.php
+  RedisException.php
 
 cd lib/phpMailer
 ! class.phpmailer.php

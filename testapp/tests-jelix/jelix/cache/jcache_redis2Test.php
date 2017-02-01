@@ -11,7 +11,7 @@
 */
 
 require_once(__DIR__.'/jcache.lib.php');
-require_once(LIB_PATH . 'php5redis/Redis.php');
+
 /**
 * Tests API jCache
 * @package     testapp
@@ -25,7 +25,7 @@ class jCache_Redis2Test extends jCacheAPITest {
     function setUp () {
         $this->profile = 'usingredis2';
         parent::setUp();
-        $this->redis = new Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis('localhost',6379);
         $this->redis->select_db(1);
         $this->redis->flushall();
     }

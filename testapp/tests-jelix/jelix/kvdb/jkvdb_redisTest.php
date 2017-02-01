@@ -9,7 +9,7 @@
 */
 
 require_once(__DIR__.'/jkvdb.lib.php');
-require_once(LIB_PATH . 'php5redis/Redis.php');
+
 /**
 * Tests API jKVDb
 * @package     testapp
@@ -28,7 +28,7 @@ class jkvdb_redisTest extends jKVDbTest {
         if (!$this->_kvdbSetUp())
             return;
 
-        $this->redis = new Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis('localhost',6379);
         $this->redis->flushall();
     }
 

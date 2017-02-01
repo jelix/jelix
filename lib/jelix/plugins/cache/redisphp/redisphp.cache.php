@@ -10,8 +10,6 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-require_once(LIB_PATH . 'php5redis/Redis.php');
-
 class redisphpCacheDriver implements jICacheDriver {
 
     /**
@@ -109,7 +107,7 @@ class redisphpCacheDriver implements jICacheDriver {
         }
 
         // OK, let's connect now
-        $this->redis = new Redis($params['host'], $params['port']);
+        $this->redis = new \PhpRedis\Redis($params['host'], $params['port']);
 
         if (isset($params['db']) && intval($params['db']) != 0) {
             $this->redis->select_db($params['db']);
@@ -118,7 +116,7 @@ class redisphpCacheDriver implements jICacheDriver {
 
     /**
      * Returns the redis api
-     * @return Redis
+     * @return \PhpRedis\Redis
      */
     public function getRedis() {
         return $this->redis;

@@ -10,8 +10,6 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-require_once(LIB_PATH . 'php5redis/Redis.php');
-
 class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     protected $key_prefix = '';
@@ -32,7 +30,7 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     /**
      * Connects to the redis server
-     * @return Redis object
+     * @return \PhpRedis\Redis object
      * @throws jException
      */
     protected function _connect() {
@@ -61,7 +59,7 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
         }
 
         // OK, let's connect now
-        $cnx = new Redis($this->_profile['host'], $this->_profile['port']);
+        $cnx = new \PhpRedis\Redis($this->_profile['host'], $this->_profile['port']);
 
         if (isset($this->_profile['db']) && intval($this->_profile['db']) != 0) {
             $cnx->select_db($this->_profile['db']);
@@ -92,7 +90,7 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     /**
-     * @return Redis
+     * @return \PhpRedis\Redis
      */
     public function getRedis() {
         return $this->_connection;
