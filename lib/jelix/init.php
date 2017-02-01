@@ -124,10 +124,10 @@ require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 #endif
 
 /**
- * contains path for __autoload function
+ * contains path for the jelix_autoload function
  * @global array $gLibPath
  * @name $gLibPath
- * @see __autoload()
+ * @see jelix_autoload()
  */
 $GLOBALS['gLibPath']=array('Config'=>JELIX_LIB_PATH.'core/',
  'Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
