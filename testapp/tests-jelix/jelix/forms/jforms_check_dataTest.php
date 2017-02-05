@@ -277,11 +277,11 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->form->setData('captcha','    ');
         $this->assertFalse($this->form->check());
 
-        $ctrl->initExpectedValue();
+        $ctrl->initCaptcha();
 
         $this->assertTrue(isset($this->form->getContainer()->privateData['captcha']));
 
-        $expectedResponse = $this->form->getContainer()->privateData['captcha'];
+        $expectedResponse = $this->form->getContainer()->privateData['captcha']['expectedresponse'];
         $this->assertFalse($this->form->check());
 
         if( $expectedResponse == '1234')

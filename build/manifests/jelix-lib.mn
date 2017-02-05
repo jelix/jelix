@@ -321,6 +321,10 @@ cd lib/jelix/forms/Builder
   BuilderBase.php
   HtmlBuilder.php
 
+cd lib/jelix/forms/Captcha
+  CaptchaValidatorInterface.php
+  SimpleCaptchaValidator.php
+
 cd lib/jelix/forms/HtmlWidget
   ParentWidgetInterface.php
   RootWidget.php

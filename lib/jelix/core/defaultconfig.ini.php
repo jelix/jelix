@@ -378,6 +378,12 @@ controls.datetime.months.labels = "names"
 ; define the default config for datepickers in jforms
 datepicker = default
 
+; default captcha type
+captcha = simple
+
+captcha.simple.validator=\jelix\forms\Captcha\SimpleCaptchaValidator
+captcha.simple.widgettype=captcha
+
 [jforms_builder_html]
 ;control type = plugin name
 
