@@ -281,3 +281,26 @@ cd lib/wikirenderer/rules
 ! wr3_to_docbook.php
 ! wr3_to_text.php
 ! wr3_to_xhtml.php
+
+cd lib/recaptcha/
+  LICENSE
+  README.md
+
+cd lib/recaptcha/src/
+  autoload.php
+
+cd lib/recaptcha/src/ReCaptcha
+! ReCaptcha.php
+! RequestMethod.php
+! RequestParameters.php
+! Response.php
+
+cd lib/recaptcha/src/ReCaptcha/RequestMethod
+! Curl.php
+! CurlPost.php
+! Post.php
+! Socket.php
+! SocketPost.php
+
+
+

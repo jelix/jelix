@@ -323,6 +323,7 @@ cd lib/jelix/forms/Builder
 
 cd lib/jelix/forms/Captcha
   CaptchaValidatorInterface.php
+  ReCaptchaValidator.php
   SimpleCaptchaValidator.php
 
 cd lib/jelix/forms/HtmlWidget
@@ -557,6 +558,9 @@ cd lib/jelix/plugins/formwidget/button_html
   
 cd lib/jelix/plugins/formwidget/captcha_html
   captcha_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/recaptcha_html
+  recaptcha_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/checkbox_html
   checkbox_html.formwidget.php
