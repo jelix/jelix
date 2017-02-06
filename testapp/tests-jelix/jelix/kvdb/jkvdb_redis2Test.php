@@ -11,7 +11,7 @@
 require_once(__DIR__.'/jkvdb.lib.php');
 
 /**
-* Tests API jKVDb
+* Tests API jKVDb with the redis_php driver, and configuration with prefixed keys
 * @package     testapp
 * @subpackage  jelix_tests module
 */
@@ -76,4 +76,3 @@ class jkvdb_redis2Test extends jKVDbTest {
     }
 }
 
-?>

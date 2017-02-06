@@ -419,6 +419,7 @@ cd lib/jelix/utils/
   jMessage.class.php
   jMethodSniffer.class.php
   jProfiles.class.php
+  jRedis.class.php
   jRSS20Reader.class.php
   jRSS20Info.class.php
   jRSS20Item.class.php
@@ -451,6 +452,8 @@ cd lib/jelix/plugins/cache/memcache22
   memcache22.cache.php
 cd lib/jelix/plugins/cache/redisphp
   redisphp.cache.php
+cd lib/jelix/plugins/cache/redis_ext
+  redis_ext.cache.php
 
 cd lib/jelix/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
@@ -642,6 +645,9 @@ cd lib/jelix/plugins/kvdb/memcache/
 
 cd lib/jelix/plugins/kvdb/redisphp/
   redisphp.kvdriver.php
+
+cd lib/jelix/plugins/kvdb/redis_ext/
+  redis_ext.kvdriver.php
 
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php

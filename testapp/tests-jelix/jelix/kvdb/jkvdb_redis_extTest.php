@@ -3,7 +3,7 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2017 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -11,49 +11,46 @@
 require_once(__DIR__.'/jkvdb.lib.php');
 
 /**
-* Tests API jKVDb with the redis_php driver
+* Tests API jKVDb with the redis_ext driver
 * @package     testapp
 * @subpackage  jelix_tests module
 */
 
-class jkvdb_redisTest extends jKVDbTest {
+class jkvdb_redis_extTest extends jKVDbTest {
 
     protected $redis;
 
     function setUp () {
-        $this->profile = 'usingredis';
+        $this->profile = 'usingredis_ext';
         self::initJelixConfig();
 
         parent::setUp();
         if (!$this->_kvdbSetUp())
             return;
 
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
-        $this->redis->flushall();
+        $this->redis = new jRedis();
+        $this->redis->connect('localhost',6379);
+        $this->redis->flushAll();
     }
 
     public function tearDown() {
         if ($this->redis) {
-            //$this->redis->quit();
-            $this->redis->disconnect();
+            $this->redis->close();
         }
     }
 
     public function testGarbage (){
-
         $kv = jKVDb::getConnection($this->profile);
 
         $kv->set('remainingDataKey','remaining data');
         $kv->setWithTtl('garbage1DataKey','data send to the garbage',1);
         $kv->setWithTtl('garbage2DataKey','other data send to the garbage',strtotime("-1 day"));
-
         sleep(2);
 
         $this->assertTrue($kv->garbage());
-
         $this->assertEquals(serialize('remaining data'), $this->redis->get('remainingDataKey'));
-        $this->assertNull($this->redis->get('garbage1DataKey'));
-        $this->assertNull($this->redis->get('garbage2DataKey'));
+        $this->assertFalse($this->redis->get('garbage1DataKey'));
+        $this->assertFalse($this->redis->get('garbage2DataKey'));
     }
 
     public function testFlush (){
@@ -68,11 +65,32 @@ class jkvdb_redisTest extends jKVDbTest {
         $this->assertEquals(serialize('data to remove'), $this->redis->get('flush2DataKey'));
         $this->assertEquals(serialize('other data to remove'), $this->redis->get('flush3DataKey'));
         $this->assertTrue($kv->flush());
-        $this->assertNull($this->redis->get('flush1DataKey'));
-        $this->assertNull($this->redis->get('flush2DataKey'));
-        $this->assertNull($this->redis->get('flush3DataKey'));
+        $this->assertFalse($this->redis->get('flush1DataKey'));
+        $this->assertFalse($this->redis->get('flush2DataKey'));
+        $this->assertFalse($this->redis->get('flush3DataKey'));
 
     }
-}
 
-?>
+    function testDeletePrefix() {
+        // let's fill the database values
+        $this->redis->set('foo:bar', "yes");
+        $this->redis->set('hello', "world");
+
+        for($i=0; $i < 5500; $i++) {
+            $this->redis->set('user:lorem:ipsum:machin:bidule:'.$i.'aaaaaa/bbbbbbb/ccccccc/dddddd', "name".$i);
+        }
+
+        $keys = $this->redis->keys('*');
+        $this->assertEquals(5502, count($keys));
+        sleep(1);
+
+        // now let's delete them
+        $this->redis->flushByPrefix("user:lorem:ipsum:machin:bidule:", 500);
+
+        // let's verify that there is only two keys
+        $keys = $this->redis->keys('*');
+        $this->assertEquals(2, count($keys));
+        sort($keys);
+        $this->assertEquals(array('foo:bar', 'hello'), $keys);
+    }
+}
