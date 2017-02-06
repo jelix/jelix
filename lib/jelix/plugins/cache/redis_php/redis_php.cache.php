@@ -10,7 +10,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-class redisphpCacheDriver implements jICacheDriver {
+class redis_phpCacheDriver implements jICacheDriver {
 
     /**
     * profil name used in the ini file

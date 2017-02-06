@@ -20,17 +20,17 @@ class jelixModuleUpgrader_redisprofile extends jInstallerModule {
             if (strpos($section, 'jkvdb:') === 0) {
                 $driver = $ini->getValue('driver', $section);
                 if ($driver == 'redis' &&
-                    isset ($this->entryPoint->config->_pluginsPathList_kvdb['redisphp'])
+                    isset ($this->entryPoint->config->_pluginsPathList_kvdb['redis_php'])
                 ) {
-                    $ini->setValue('driver', 'redisphp', $section);
+                    $ini->setValue('driver', 'redis_php', $section);
                 }
             }
             else if (strpos($section, 'jcache:') === 0) {
                 $driver = $ini->getValue('driver', $section);
                 if ($driver == 'redis' &&
-                    isset ($this->entryPoint->config->_pluginsPathList_cache['redisphp'])
+                    isset ($this->entryPoint->config->_pluginsPathList_cache['redis_php'])
                 ) {
-                    $ini->setValue('driver', 'redisphp', $section);
+                    $ini->setValue('driver', 'redis_php', $section);
                 }
             }
         }

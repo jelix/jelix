@@ -27,7 +27,7 @@ class redisworkerCtrl extends jControllerCmdLine {
 
         $redisPlugin = jCache::getDriver($this->param('profile'));
         
-        if (get_class($redisPlugin) != 'redisphpCacheDriver' && get_class($redisPlugin) != 'redis_extCacheDriver') {
+        if (get_class($redisPlugin) != 'redis_phpCacheDriver' && get_class($redisPlugin) != 'redis_extCacheDriver') {
             $rep->addContent("Error, wrong profile. Not a redis cache.\n");
             $rep->setExitCode(1);
             return $rep;
@@ -35,7 +35,7 @@ class redisworkerCtrl extends jControllerCmdLine {
         $rep->addContent("--- Starting worker...\n");
         $redis = $redisPlugin->getRedis();
 
-        if (get_class($redisPlugin) == 'redisphpCacheDriver') {
+        if (get_class($redisPlugin) == 'redis_phpCacheDriver') {
             $this->deletionLoop('jcacheredisdelkeys', $rep, $redis, false);
         }
         else if (get_class($redisPlugin) == 'redis_extCacheDriver') {
@@ -67,14 +67,14 @@ class redisworkerCtrl extends jControllerCmdLine {
 
         $redisDriver = jKvDb::getConnection($this->param('profile'));
         
-        if (get_class($redisDriver) != 'redisphpKVDriver' && get_class($redisDriver) != 'redis_extKVDriver') {
+        if (get_class($redisDriver) != 'redis_phpKVDriver' && get_class($redisDriver) != 'redis_extKVDriver') {
             $rep->addContent("Error, wrong profile. Not a redis jKvDb driver.\n");
             $rep->setExitCode(1);
             return $rep;
         }
         $rep->addContent("--- Starting worker...\n");
         $redis = $redisDriver->getRedis();
-        if (get_class($redisDriver) == 'redisphpKVDriver') {
+        if (get_class($redisDriver) == 'redis_phpKVDriver') {
             $this->deletionLoop('jkvdbredisdelkeys', $rep, $redis, false);
         }
         else if (get_class($redisDriver) == 'redis_extKVDriver') {
