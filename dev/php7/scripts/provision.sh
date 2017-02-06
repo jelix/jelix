@@ -25,13 +25,13 @@ update-locale LC_ALL=fr_FR.UTF-8
 
 # install all packages
 apt-get update
-apt-get -y upgrade
+#apt-get -y upgrade
 apt-get -y install debconf-utils
 export DEBIAN_FRONTEND=noninteractive
 echo "mysql-server-5.7 mysql-server/root_password password jelix" | debconf-set-selections
 echo "mysql-server-5.7 mysql-server/root_password_again password jelix" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
-echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
+echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect nginx" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/mysql/admin-pass password jelix" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/app-password-confirm password jelix" | debconf-set-selections
 echo "phpmyadmin phpmyadmin/mysql/app-pass password jelix" | debconf-set-selections
@@ -56,7 +56,7 @@ su postgres -c $VAGRANTDIR/create_pgsql_db.sh
 echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/9.5/main/pg_hba.conf
 service postgresql restart
 
-# install default vhost for apache
+# install default vhost for nginx
 cp $VAGRANTDIR/testapp.conf /etc/nginx/sites-available/
 
 if [ ! -f "/etc/nginx/sites-enabled/010-testapp.conf" ]; then
@@ -71,7 +71,7 @@ sed -i "/^group = www-data/c\group = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/fpm/php.ini
 sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/cli/php.ini
 
-service php5-fpm restart
+service php7.0-fpm restart
 
 service nginx reload
 
