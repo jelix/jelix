@@ -141,7 +141,7 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     public function flush() {
         if (!$this->key_prefix) {
-            return ($this->_connection->flushall()  == 'OK');
+            return ($this->_connection->flushdb()  == 'OK');
         }
         switch($this->key_prefix_flush_method) {
             case 'direct':
@@ -187,10 +187,10 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function increment($key, $incvalue = 1) {
-        $usedkey = $this->getUsedKey($key);
         $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($incvalue))
             return false;
+        $usedkey = $this->getUsedKey($key);
         if (intval($val) == $val)
             return $this->_connection->incr($usedkey, intval($incvalue));
         else { // float values
@@ -202,10 +202,10 @@ class redisphpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function decrement($key, $decvalue = 1) {
-        $usedkey = $this->getUsedKey($key);
         $val = $this->get($key);
         if ($val === null || !is_numeric($val) || !is_numeric($decvalue))
             return false;
+        $usedkey = $this->getUsedKey($key);
         if (intval($val) == $val)
             return $this->_connection->decr($usedkey, intval($decvalue));
         else { // float values

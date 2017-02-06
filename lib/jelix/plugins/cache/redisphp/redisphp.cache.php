@@ -63,7 +63,7 @@ class redisphpCacheDriver implements jICacheDriver {
     protected $key_prefix_flush_method = 'direct';
 
     /**
-     * @param Redis the redis connection
+     * @param \PhpRedis\Redis the redis connection
      */
     protected $redis;
 
@@ -265,7 +265,7 @@ class redisphpCacheDriver implements jICacheDriver {
     */
     public function flush() {
         if (!$this->key_prefix) {
-            return ($this->redis->flushall()  == 'OK');
+            return ($this->redis->flushdb()  == 'OK');
         }
         switch($this->key_prefix_flush_method) {
             case 'direct':
