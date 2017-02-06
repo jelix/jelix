@@ -135,12 +135,12 @@ automatic_cleaning_factor = 0
 ;file_umask =
 
 [jkvdb:usingredis]
-driver=redis
+driver=redisphp
 host=localhost
 port=6379
 
 [jkvdb:usingredis2]
-driver=redis
+driver=redisphp
 host=localhost
 port=6379
 db=1
@@ -228,13 +228,13 @@ directory_level = 2
 
 [jcache:usingredis]
 enabled = 1
-driver=redis
+driver=redisphp
 host=localhost
 port=6379
 
 [jcache:usingredis2]
 enabled = 1
-driver=redis
+driver=redisphp
 host=localhost
 port=6379
 key_prefix=abc:
