@@ -541,6 +541,13 @@ cd lib/jelix/plugins/db/oci
   oci.dbschema.php
   oci.dbtools.php
 
+cd lib/jelix/plugins/db/sqlsrv
+  sqlsrv.dbconnection.php
+  sqlsrv.dbresultset.php
+  sqlsrv.daobuilder.php
+  sqlsrv.dbschema.php
+  sqlsrv.dbtools.php
+
 cd lib/jelix/plugins/debugbar/sqllog
 * sqllog.debugbar.php
 
