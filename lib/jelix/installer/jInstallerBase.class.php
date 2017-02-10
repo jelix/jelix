@@ -528,4 +528,68 @@ abstract class jInstallerBase {
         }
         return array(new \Jelix\IniFile\IniModifier($confpath), 0);
     }
+
+    /**
+     * Declare web assets into the entry point config
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $set the name of the webassets section
+     * @param bool $force
+     */
+    public function declareWebAssets($name, array $values, $set, $force)
+    {
+        $config = $this->entryPoint->getEpConfigIni();
+        $this->_declareWebAssets($config, $name, $values, $set, $force);
+    }
+
+    /**
+     * declare web assets into the main configuration
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $set the name of the webassets section
+     * @param bool $force
+     */
+    public function declareGlobalWebAssets($name, array $values, $set, $force)
+    {
+        $config = $this->entryPoint->getMainConfigIni()->getOverrider();
+        $this->_declareWebAssets($config, $name, $values, $set, $force);
+    }
+
+    /**
+     * @param \Jelix\IniFile\IniModifier $config
+     * @param string $name the name of webassets
+     * @param array $values
+     * @param string $set the name of the webassets section
+     * @param book $force
+     */
+    protected function _declareWebAssets ($config, $name, array $values, $set, $force) {
+
+        $section = 'webassets_'.$set;
+        if (!$force && (
+            $config->getValue($name.'.css', $section) ||
+            $config->getValue($name.'.js', $section) ||
+            $config->getValue($name.'.require', $section)
+            )) {
+            return;
+        }
+
+        if (isset($values['css'])) {
+            $config->setValue($name.'.css', $values['css'], $section);
+        }
+        else {
+            $config->removeValue($name.'.css', $section);
+        }
+        if (isset($values['js'])) {
+            $config->setValue($name.'.js', $values['js'], $section);
+        }
+        else {
+            $config->removeValue($name.'.js', $section);
+        }
+        if (isset($values['require'])) {
+            $config->setValue($name.'.require', $values['require'], $section);
+        }
+        else {
+            $config->removeValue($name.'.require', $section);
+        }
+    }
 }
