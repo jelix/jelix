@@ -9,6 +9,7 @@ cd lib/jelix-admin-modules/master_admin/controllers
    default.classic.php
 cd lib/jelix-admin-modules/master_admin/install
    install.php
+   upgrade_webassets.php
 cd lib/jelix-admin-modules/master_admin/locales/en_GB
 cch    gui.UTF-8.properties(gui.%charset%.properties)
 cd lib/jelix-admin-modules/master_admin/locales/en_US
@@ -41,6 +42,9 @@ cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/controllers
   groups.classic.php
   users.classic.php
+cd lib/jelix-admin-modules/jacl2db_admin/install
+   install.php
+   upgrade_webassets.php
 cd lib/jelix-admin-modules/jacl2db_admin/templates
   groups_right.tpl
   group_rights_res.tpl

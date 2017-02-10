@@ -151,6 +151,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_modulejacl2.php
   upgrade_newurlengine.php
   UrlEngineUpgrader.php
+  upgrade_webassets.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
