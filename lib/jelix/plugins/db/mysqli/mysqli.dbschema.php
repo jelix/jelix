@@ -243,7 +243,7 @@ class mysqliDbSchema extends jDbSchema {
     /**
      * @param string $name
      * @param array[jDbColumn] $columns
-     * @return mysqlDbTable
+     * @return mysqliDbTable
      */
     function _createTable($name, $columns, $primaryKey, $attributes=array()) {
 
