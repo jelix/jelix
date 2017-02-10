@@ -125,7 +125,7 @@ password_crypt_function = sha1
 ;------- parameters for the "ldap" driver
 [ldap]
 ; profile in profiles.ini.php containing ldap connection informations
-profile=jauth
+profile=""
 
 ; following parameters can be stored in the profile too.
 

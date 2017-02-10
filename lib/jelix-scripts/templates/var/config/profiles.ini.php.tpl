@@ -131,3 +131,17 @@ cache_file_umask =
 ; Can be a list e.g
 ;servers = memcache_host1:11211,memcache_host2:11211,memcache_host3:11211 i.e HOST_NAME:PORT
 ;servers =
+
+[authldap:default]
+
+; default "localhost"
+hostname=
+; default 389
+port=
+
+; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
+ldapUser=
+; password used to connect with LDAP
+ldapPassword=
+
+
