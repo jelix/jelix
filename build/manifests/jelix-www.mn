@@ -79,6 +79,19 @@ cd lib/jelix-www/jquery
 ! jquery.min.js
   VERSION
 
+cd lib/jelix-www/jquery/flash
+c jquery.flash.js
+
+cd lib/jelix-www/jquery/include
+c jquery.include.js
+
+cd lib/jelix-www/jquery/ui-datepicker
+! __ALL__
+cd lib/jelix-www/jquery/ui-datepicker/i18n
+! __ALL__
+cd lib/jelix-www/jquery/ui-datepicker/images
+! __ALL__
+
 cd lib/jelix-www/markitup
   __ALL__
 cd lib/jelix-www/markitup/templates
@@ -108,20 +121,4 @@ cd lib/jelix-www/markitup/skins/markitup
   __ALL__
 cd lib/jelix-www/markitup/skins/markitup/images
   __ALL__
-cd lib/jelix-www/jquery/flash
-c jquery.flash.js
-cd lib/jelix-www/jquery/include
-c jquery.include.js
-cd lib/jelix-www/jquery/ui
-! __ALL__
-cd lib/jelix-www/jquery/ui/i18n
-! __ALL__
 
-cd lib/jelix-www/jquery/themes/base
-  __ALL__
-cd lib/jelix-www/jquery/themes/base/images
-  __ALL__
-cd lib/jelix-www/jquery/themes/smoothness
-  __ALL__
-cd lib/jelix-www/jquery/themes/smoothness/images
-  __ALL__
