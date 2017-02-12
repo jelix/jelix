@@ -15,7 +15,8 @@
         "symfony/console":"2.8.*",
         "jelix/file-utilities": "1.8.*",
         "jelix/version": "1.0.*",
-        "defuse/php-encryption": "^2.0"
+        "defuse/php-encryption": "^2.0",
+        "google/recaptcha": "^1.1.2"
     },
     "autoload": {
         "psr-0": { "jelix\\": "."

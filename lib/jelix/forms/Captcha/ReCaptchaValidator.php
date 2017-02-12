@@ -2,8 +2,6 @@
 
 namespace jelix\forms\Captcha;
 
-require(LIB_PATH.'recaptcha/src/autoload.php');
-
 class ReCaptchaValidator implements CaptchaValidatorInterface {
 
     /**
