@@ -19,6 +19,7 @@ cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
 
 cd lib/jelix-www/wymeditor
 !  jquery.wymeditor.js
+!  jquery.wymeditor.min.js
   GPL-license.txt
   MIT-license.txt
 cd lib/jelix-www/wymeditor/iframe/default
@@ -34,21 +35,19 @@ cd lib/jelix-www/wymeditor/plugins/fullscreen
 c jquery.wymeditor.fullscreen.js
 cd lib/jelix-www/wymeditor/plugins/hovertools
 c jquery.wymeditor.hovertools.js
+cd lib/jelix-www/wymeditor/plugins/list
+c jquery.wymeditor.list.js
+cd lib/jelix-www/wymeditor/plugins/rdfa
+c jquery.wymeditor.rdfa.js
 cd lib/jelix-www/wymeditor/plugins/resizable
 c jquery.wymeditor.resizable.js
-cd lib/jelix-www/wymeditor/plugins/tidy
-c jquery.wymeditor.tidy.js
-  wand.png
-cd lib/jelix-www/wymeditor/plugins/list/
-c  __ALL__
-cd lib/jelix-www/wymeditor/plugins/rdfa/
-c  __ALL__
 cd lib/jelix-www/wymeditor/plugins/structured_headings/
 c jquery.wymeditor.structured_headings.js
   structured_headings.css
-  structured_headings_ie7_user.css
   ruler_arrow.png
-  structured_headings_ie7_editor.css
+cd lib/jelix-www/wymeditor/plugins/tidy
+c jquery.wymeditor.tidy.js
+  wand.png
 cd lib/jelix-www/wymeditor/plugins/table/
 c  __ALL__
 cd lib/jelix-www/wymeditor/skins
@@ -57,9 +56,13 @@ cd lib/jelix-www/wymeditor/skins/compact
   __ALL__
 cd lib/jelix-www/wymeditor/skins/default
   __ALL__
+cd lib/jelix-www/wymeditor/skins/legacy/
+  __ALL__
 cd lib/jelix-www/wymeditor/skins/minimal
   __ALL__
 cd lib/jelix-www/wymeditor/skins/minimal/images
+  __ALL__
+cd lib/jelix-www/wymeditor/skins/seamless/
   __ALL__
 cd lib/jelix-www/wymeditor/skins/silver
   __ALL__
@@ -67,11 +70,6 @@ cd lib/jelix-www/wymeditor/skins/silver/images
   __ALL__
 cd lib/jelix-www/wymeditor/skins/twopanels
   __ALL__
-cd lib/jelix-www/wymeditor/skins/legacy/
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/seamless/
-  __ALL__
-
 
 cd lib/jelix-www/jquery
   MIT-LICENSE.txt

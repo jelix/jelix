@@ -386,7 +386,7 @@ jforms_htmleditor_default.require=jquery
 
 jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
-jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
 jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
 jforms_htmleditor_wymbasic.require=jquery
 
