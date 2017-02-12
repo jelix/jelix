@@ -70,6 +70,7 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
         if ($this->supportTTL)
             $kv->setWithTtl('expiredKey','data expired',strtotime("-1 day"));
         $data = $kv->get(array('getKey','expiredKey','inexistentKey'));
+
         $this->assertTrue(isset($data['getKey']));
         $this->assertEquals('string for data', $data['getKey']);
         $this->assertFalse(isset($data['expiredKey']));

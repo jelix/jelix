@@ -5,13 +5,12 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009, 2012 Laurent Jouanneau
+* @copyright   NEOV 2009, 2012-2017 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 require_once(__DIR__.'/jcache.lib.php');
-require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 
 /**
 * Tests API jCache
@@ -19,22 +18,22 @@ require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_Redis2Test extends jCacheAPITest {
+class jCache_Redis_ext2Test extends jCacheAPITest {
 
     protected $redis;
 
     function setUp () {
-        $this->profile = 'usingredis2';
+        $this->profile = 'usingredis_ext2';
         parent::setUp();
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
-        $this->redis->select_db(1);
-        $this->redis->flushall();
+        $this->redis = new jRedis();
+        $this->redis->connect('localhost',6379);
+        $this->redis->select(1);
+        $this->redis->flushAll();
     }
 
     public function tearDown() {
         if ($this->redis) {
-            //$this->redis->quit();
-            $this->redis->disconnect();
+            $this->redis->close();
         }
     }
 

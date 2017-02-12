@@ -79,6 +79,7 @@ abstract class jDbConnection {
 
     /**
     * the internal connection.
+     * @var mixed
     */
     protected $_connection = null;
 
@@ -469,7 +470,7 @@ abstract class jDbConnection {
 
         return array($finalQuery, $this->foundParameters);
     }
-    
+
     protected function _replaceParam($matches) {
         if ($this->numericalMarker) {
             $index = array_search($matches[2], $this->foundParameters);

@@ -11,7 +11,6 @@
 */
 
 require_once(__DIR__.'/jcache.lib.php');
-require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 
 /**
 * Tests API jCache
@@ -19,22 +18,21 @@ require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_Redis2Test extends jCacheAPITest {
+class jCache_Redis_extTest extends jCacheAPITest {
 
     protected $redis;
 
     function setUp () {
-        $this->profile = 'usingredis2';
+        $this->profile = 'usingredis_ext';
         parent::setUp();
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
-        $this->redis->select_db(1);
-        $this->redis->flushall();
+        $this->redis = new jRedis();
+        $this->redis->connect('localhost',6379);
+        $this->redis->flushAll();
     }
 
     public function tearDown() {
         if ($this->redis) {
-            //$this->redis->quit();
-            $this->redis->disconnect();
+            $this->redis->close();
         }
     }
 

@@ -32,9 +32,9 @@ function initsystem () {
     
     apt-get -y install nginx
     if [ "$PHP_VERSION" == "5" ]; then
-        apt-get -y install php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite
+        apt-get -y install php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite php5-redis
     else
-        apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba
+        apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba php-redis
     fi
     apt-get -y install mysql-server mysql-client
     apt-get -y install git phpmyadmin vim unzip curl

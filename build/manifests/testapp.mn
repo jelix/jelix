@@ -350,6 +350,8 @@ cd testapp/tests-jelix/jelix/cache/
   jcache_memcacheTest.php
   jcache_redisTest.php
   jcache_redis2Test.php
+  jcache_redis_extTest.php
+  jcache_redis_ext2Test.php
   httpcacheTest.php
   jzone_cacheTest.php
   jcacheTest.php
@@ -400,6 +402,7 @@ cd testapp/tests-jelix/jelix/db/
   jdbtools_mysqlTest.php
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
+
 cd testapp/tests-jelix/jelix/forms/
   jforms_check_dataTest.php
   jforms_compilerTest.php
@@ -440,7 +443,10 @@ cd testapp/tests-jelix/jelix/kvdb/
   jkvdb_memcacheTest.php
   jkvdb_redisTest.php
   jkvdb_redis2Test.php
+  jkvdb_redis_extTest.php
+  jkvdb_redis_ext2Test.php
   jkvdb.lib.php
+
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/routing/

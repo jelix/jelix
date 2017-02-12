@@ -152,6 +152,7 @@ cd lib/jelix/core-modules/jelix/install
   upgrade_newurlengine.php
   UrlEngineUpgrader.php
   upgrade_webassets.php
+  upgrade_redisprofile.php
 cd lib/jelix/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -312,6 +313,11 @@ cd lib/jelix/forms/Builder
   BuilderBase.php
   HtmlBuilder.php
 
+cd lib/jelix/forms/Captcha
+  CaptchaValidatorInterface.php
+  ReCaptchaValidator.php
+  SimpleCaptchaValidator.php
+
 cd lib/jelix/forms/HtmlWidget
   ParentWidgetInterface.php
   RootWidget.php
@@ -406,6 +412,7 @@ cd lib/jelix/utils/
   jProfiles.class.php
   jProfilesCompiler.class.php
   jProfilesCompilerPlugin.class.php
+  jRedis.class.php
   jSmtp.class.php
   jSoapClient.class.php
   jSoapObject.class.php
@@ -424,6 +431,8 @@ cd lib/jelix/plugins/cache/db
   db.cache.php
 cd lib/jelix/plugins/cache/memcache
   memcache.cache.php
+cd lib/jelix/plugins/cache/redis_ext
+  redis_ext.cache.php
 
 cd lib/jelix/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
@@ -495,6 +504,13 @@ cd lib/jelix/plugins/db/oci
   oci.dbschema.php
   oci.dbtools.php
 
+cd lib/jelix/plugins/db/sqlsrv
+  sqlsrv.dbconnection.php
+  sqlsrv.dbresultset.php
+  sqlsrv.daobuilder.php
+  sqlsrv.dbschema.php
+  sqlsrv.dbtools.php
+
 cd lib/jelix/plugins/debugbar/sqllog
   sqllog.debugbar.php
 
@@ -515,6 +531,9 @@ cd lib/jelix/plugins/formwidget/button_html
   
 cd lib/jelix/plugins/formwidget/captcha_html
   captcha_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/recaptcha_html
+  recaptcha_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/checkbox_html
   checkbox_html.formwidget.php
@@ -593,6 +612,9 @@ cd lib/jelix/plugins/kvdb/file2/
 
 cd lib/jelix/plugins/kvdb/memcache/
   memcache.kvdriver.php
+
+cd lib/jelix/plugins/kvdb/redis_ext/
+  redis_ext.kvdriver.php
 
 cd lib/jelix/plugins/logger/firebug
   firebug.logger.php

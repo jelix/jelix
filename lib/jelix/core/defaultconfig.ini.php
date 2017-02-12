@@ -333,6 +333,15 @@ datepicker=default
 ; a jelix_datetimepicker_<config> function
 datetimepicker=default
 
+; default captcha type
+captcha = simple
+
+captcha.simple.validator=\jelix\forms\Captcha\SimpleCaptchaValidator
+captcha.simple.widgettype=captcha
+
+captcha.recaptcha.validator=\jelix\forms\Captcha\ReCaptchaValidator
+captcha.recaptcha.widgettype=recaptcha
+
 [jforms_builder_html]
 ;control type = plugin name
 
@@ -453,3 +462,14 @@ jelix.cache="cache/"
 ; Warning: the value of this parameter should be stored into localconfig.ini.php
 persistant_encryption_key=
 
+[recaptcha]
+; sitekey and secret should be set only into localconfig.ini.php!
+sitekey=
+secret=
+
+; see https://developers.google.com/recaptcha/docs/display to know the meaning
+; of these configuration parameters.
+theme=
+type=
+size=
+tabindex=
