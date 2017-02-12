@@ -76,6 +76,7 @@ cd lib/jelix-www/wymeditor/skins/seamless/
 cd lib/jelix-www/jquery
   MIT-LICENSE.txt
 ! jquery.js
+! jquery.min.js
   VERSION
 
 cd lib/jelix-www/markitup

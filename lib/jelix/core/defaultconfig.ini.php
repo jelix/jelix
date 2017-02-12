@@ -351,7 +351,7 @@ default.wiki.rules=wr3_to_xhtml
 useSet=common
 
 [webassets_common]
-jquery.js = "$jelix/jquery/jquery.js"
+jquery.js = "$jelix/jquery/jquery.min.js"
 
 jquery_ui.js = "$jelix/jquery/ui/jquery-ui-core-widg-mous-posi.custom.min.js"
 jquery_ui.css = "$jelix/jquery/themes/base/jquery.ui.all.css"
