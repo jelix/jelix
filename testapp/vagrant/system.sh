@@ -16,6 +16,9 @@ function initsystem () {
     update-locale LC_ALL=fr_FR.UTF-8
 
     # install all packages
+    apt-get install -y software-properties-common apt-transport-https
+    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AC0E47584A7A714D
+    echo "deb https://packages.sury.org/php jessie main" > /etc/apt/sources.list.d/sury_php.list
     apt-get update
     apt-get -y upgrade
     apt-get -y install debconf-utils
@@ -31,11 +34,21 @@ function initsystem () {
     echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selections
     
     apt-get -y install nginx
-    if [ "$PHP_VERSION" == "5" ]; then
-        apt-get -y install php5-fpm php5-cli php5-curl php5-gd php5-intl php5-mcrypt php5-memcache php5-memcached php5-mysql php5-pgsql php5-sqlite php5-redis
-    else
-        apt-get -y install php7.0-fpm php7.0-cli php7.0-curl php7.0-gd php7.0-intl php7.0-mcrypt php-memcached php7.0-mysql php7.0-pgsql php7.0-sqlite3 php7.0-soap php7.0-dba php-redis
-    fi
+    apt-get -y install  php${PHP_VERSION}-fpm \
+                        php${PHP_VERSION}-cli \
+                        php${PHP_VERSION}-curl \
+                        php${PHP_VERSION}-gd \
+                        php${PHP_VERSION}-intl \
+                        php${PHP_VERSION}-mysql \
+                        php${PHP_VERSION}-pgsql \
+                        php${PHP_VERSION}-sqlite3 \
+                        php${PHP_VERSION}-soap \
+                        php${PHP_VERSION}-dba \
+                        php${PHP_VERSION}-xml \
+                        php${PHP_VERSION}-mbstring \
+                        php-memcache \
+                        php-memcached \
+                        php-redis
     apt-get -y install mysql-server mysql-client
     apt-get -y install git phpmyadmin vim unzip curl
 
@@ -61,23 +74,12 @@ function initsystem () {
         rm -f "/etc/nginx/sites-enabled/default"
     fi
 
-    if [ "$PHP_VERSION" == "5" ]; then
-        sed -i "/^user = www-data/c\user = vagrant" /etc/php5/fpm/pool.d/www.conf
-        sed -i "/^group = www-data/c\group = vagrant" /etc/php5/fpm/pool.d/www.conf
-        sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/fpm/php.ini
-        sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/cli/php.ini
-    else
-        sed -i "/^user = www-data/c\user = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
-        sed -i "/^group = www-data/c\group = vagrant" /etc/php/7.0/fpm/pool.d/www.conf
-        sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/fpm/php.ini
-        sed -i "/display_errors = Off/c\display_errors = On" /etc/php/7.0/cli/php.ini
-    fi
+    sed -i "/^user = www-data/c\user = vagrant" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+    sed -i "/^group = www-data/c\group = vagrant" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
+    sed -i "/display_errors = Off/c\display_errors = On" /etc/php/$PHP_VERSION/fpm/php.ini
+    sed -i "/display_errors = Off/c\display_errors = On" /etc/php/$PHP_VERSION/cli/php.ini
 
-    if [ "$PHP_VERSION" == "5" ]; then
-        service php5-fpm restart
-    else
-        service php7.0-fpm restart
-    fi
+    service php${PHP_VERSION}-fpm restart
 
     # restart nginx
     service nginx reload

@@ -5,7 +5,6 @@ cd testapp
   cmd.php
   composer.json
   README.md
-  Vagrantfile
 
 cd testapp/app/
   .htaccess
@@ -58,13 +57,22 @@ cd testapp/plugins/formwidget/textarea_as_input_html
 cd testapp/app/responses
   myHtmlResponse.class.php
 cd testapp/vagrant
-  create_pgsql_db.sh 
-  provision.sh
+  common_provision.sh
+  create_pgsql_db.sh
   reset_testapp.sh
-cd testapp/vagrant/jelixapp
-  app.conf
-  php5_fpm.conf
   system.sh
+  vhost
+  xdebug.ini
+cd testapp/vagrant/php5.6
+  provision.sh
+  Vagrantfile
+cd testapp/vagrant/php7.0
+  provision.sh
+  Vagrantfile
+cd testapp/vagrant/php7.1
+  provision.sh
+  Vagrantfile
+
 cd testapp/www
   unittest.css
   jsonrpc.php

@@ -6,7 +6,7 @@ A Vagrant configuration is given to execute testapp in an preconfigured environm
 all needed tools. You just have to install VirtualBox or Vagrant on your computer.
 
 Sources of testapp
-================
+==================
 
 It's better to clone the git repository from https://github.com/jelix/jelix.git to retrieve
 testapp source files.
@@ -20,11 +20,12 @@ Testapp with Vagrant
 ====================
 
 - install [Virtual box](https://www.virtualbox.org/) and [Vagrant](http://www.vagrantup.com/downloads.html)
-- go into the testapp/vagrant/php7 or  testapp/vagrant/php56 directory and 
-  launch the vagrant virtual machine
+- go into the testapp/vagrant/ directory, then in one of its sub-directory, 
+  depending on which PHP version you want to launch tests : php7.0, php7.1 or php5.6.
+  Then you can launch the vagrant virtual machine
 
 ```
-cd testapp/vagrant/php7
+cd testapp/vagrant/php7.0
 vagrant up
 ```
 
@@ -58,8 +59,8 @@ Running tests in Vagrant
 
 After installing Testapp, you can run tests on Jelix with Testapp.
 
-- go into the testapp/vagrant/php7 or testapp/vagrant/php56 directory and 
-  launch the vagrant virtual machine
+- go into the testapp/vagrant/php7.0, testapp/vagrant/php7.1 or testapp/vagrant/php5.6
+ directory and launch the vagrant virtual machine
 
 ```
   vagrant up
@@ -104,10 +105,10 @@ cd /jelixapp/testapp/vagrant/
 Full Reinstall
 --------------
 
-You should destroy the vm:
+You should destroy the vm. Example:
 
 ```
-cd testapp/vagrant/php7
+cd testapp/vagrant/php7.0
 vagrant destroy
 ```
 
