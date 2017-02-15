@@ -23,7 +23,7 @@ class sqlsrvDbConnection extends jDbConnection {
      */
     function __construct($profile){
         if(!function_exists('sqlsrv_connect')){
-            throw new jException('jelix~db.error.nofunction','mssql');
+            throw new jException('jelix~db.error.nofunction','sqlsrv');
         }
         parent::__construct($profile);
     }
