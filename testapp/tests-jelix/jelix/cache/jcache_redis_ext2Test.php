@@ -22,9 +22,15 @@ class jCache_Redis_ext2Test extends jCacheAPITest {
 
     protected $redis;
 
-    function setUp () {
+    function setUp ()
+    {
+        if (!extension_loaded('redis')) {
+            $this->markTestSkipped('jCache_Redis_ext2Test cannot be run because redis extension is not installed');
+            return;
+        }
         $this->profile = 'usingredis_ext2';
         parent::setUp();
+
         $this->redis = new jRedis();
         $this->redis->connect('localhost',6379);
         $this->redis->select(1);

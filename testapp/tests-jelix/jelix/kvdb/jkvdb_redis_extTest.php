@@ -21,6 +21,9 @@ class jkvdb_redis_extTest extends jKVDbTest {
     protected $redis;
 
     function setUp () {
+        if (!extension_loaded('redis'))
+            $this->markTestSkipped('jkvdb_redis_extTest cannot be run because redis extension is not installed');
+
         $this->profile = 'usingredis_ext';
         self::initJelixConfig();
 
