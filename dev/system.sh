@@ -16,6 +16,7 @@ function initsystem () {
     update-locale LC_ALL=fr_FR.UTF-8
 
     # install all packages
+    apt-get update
     apt-get install -y software-properties-common apt-transport-https
     if [ "$PHP53" != "yes" ]; then
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AC0E47584A7A714D
