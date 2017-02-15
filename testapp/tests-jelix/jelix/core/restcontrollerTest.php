@@ -31,9 +31,9 @@ class restcontrollerTest extends jUnitTestCase {
 
     function testRestPUT() {
         $client = new \GuzzleHttp\Client();
-        $res = $client->put($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest?machin=bidule',
+        $res = $client->put($this->getServerUri().jApp::urlBasePath().'rest.php/test/rest',
             array('headers'=>array('Content-type'=>'application/x-www-form-urlencoded'),
-                 'query'=>array('foo'=>'bar')));
+                 'query'=>array('machin'=>'bidule','foo'=>'bar')));
         $this->assertEquals(200, $res->getStatusCode());
         $this->assertEquals('this is a PUT response. machin=bidule foo=bar module=jelix_tests action=myrest:', (string)$res->getBody());
     }

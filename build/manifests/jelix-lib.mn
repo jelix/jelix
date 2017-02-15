@@ -195,6 +195,8 @@ cd lib/jelix-legacy/core-modules/jelix/install
   upgrade_modulejacl2.php
   upgrade_newurlengine.php
   UrlEngineUpgrader.php
+  upgrade_webassets.php
+  upgrade_redisprofile.php
 cd lib/jelix-legacy/core-modules/jelix/install/sql
   install_jsession.schema.mysql.sql
   install_jsession.schema.pgsql.sql
@@ -347,6 +349,11 @@ cd lib/jelix-legacy/forms/Builder
   BuilderBase.php
   HtmlBuilder.php
 
+cd lib/jelix-legacy/forms/Captcha
+  CaptchaValidatorInterface.php
+  ReCaptchaValidator.php
+  SimpleCaptchaValidator.php
+
 cd lib/jelix-legacy/forms/HtmlWidget
   ParentWidgetInterface.php
   RootWidget.php
@@ -408,6 +415,7 @@ cd lib/jelix-legacy/utils/
   jMethodSniffer.class.php
   jProfilesCompiler.class.php
   jProfilesCompilerPlugin.class.php
+  jRedis.class.php
   jSoapClient.class.php
   jSoapObject.class.php
   jXmlRpc.class.php
@@ -425,6 +433,8 @@ cd lib/jelix-legacy/plugins/cache/db
   db.cache.php
 cd lib/jelix-legacy/plugins/cache/memcache
   memcache.cache.php
+cd lib/jelix-legacy/plugins/cache/redis_ext
+  redis_ext.cache.php
 
 cd lib/jelix-legacy/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
@@ -496,6 +506,13 @@ cd lib/jelix-legacy/plugins/db/oci
   oci.dbschema.php
   oci.dbtools.php
 
+cd lib/jelix-legacy/plugins/db/sqlsrv
+  sqlsrv.dbconnection.php
+  sqlsrv.dbresultset.php
+  sqlsrv.daobuilder.php
+  sqlsrv.dbschema.php
+  sqlsrv.dbtools.php
+
 cd lib/jelix-legacy/plugins/debugbar/sqllog
   sqllog.debugbar.php
 
@@ -516,6 +533,9 @@ cd lib/jelix-legacy/plugins/formwidget/button_html
   
 cd lib/jelix-legacy/plugins/formwidget/captcha_html
   captcha_html.formwidget.php
+
+cd lib/jelix-legacy/plugins/formwidget/recaptcha_html
+  recaptcha_html.formwidget.php
 
 cd lib/jelix-legacy/plugins/formwidget/checkbox_html
   checkbox_html.formwidget.php
@@ -594,6 +614,9 @@ cd lib/jelix-legacy/plugins/kvdb/file2/
 
 cd lib/jelix-legacy/plugins/kvdb/memcache/
   memcache.kvdriver.php
+
+cd lib/jelix-legacy/plugins/kvdb/redis_ext/
+  redis_ext.kvdriver.php
 
 cd lib/jelix-legacy/plugins/logger/firebug
   firebug.logger.php

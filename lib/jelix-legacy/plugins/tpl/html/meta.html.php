@@ -30,6 +30,9 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
         return;
     }
     switch($method){
+        case 'assets':
+            $resp->addAssets($param);
+            break;
         case 'title':
             $resp->setTitle($param);
             break;

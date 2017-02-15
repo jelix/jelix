@@ -1,4 +1,4 @@
-{meta_html css  $j_jelixwww.'design/jacl2.css'}
+{meta_html assets 'jacl2_admin'}
 
 <h1>{@jacl2db_admin~acl2.groups.rights.title@}</h1>
 

@@ -165,6 +165,16 @@ class App {
         return self::$_currentApp->config->urlengine['basePath'];
     }
 
+    public static function urlJelixWWWPath()
+    {
+        if (!self::$_currentApp->config || !isset(self::$_currentApp->config->urlengine['jelixWWWPath'])) {
+            return "";
+        }
+
+        return self::$_currentApp->config->urlengine['jelixWWWPath'];
+    }
+
+
     /**
      * @return object object containing all configuration options of the application
      */

@@ -7,3 +7,11 @@
 [compilation]
 checkCacheFiletime  = on
 force  = on
+
+[forms]
+;captcha=recaptcha
+
+[recaptcha]
+sitekey=
+secret=
+

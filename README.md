@@ -17,7 +17,7 @@ Jelix is an open-source framework for PHP.
 It has a modular and extensible architecture. Applications based on Jelix are made
 with modules, which allow to reuse features in several projects.
 
-For more informations, read http://jelix.org/articles/en/features
+For more informations, read [details about its features](http://jelix.org/articles/en/features).
 
 About stable versions and branches
 ==================================
@@ -72,7 +72,7 @@ release of Jelix 1.7.x. But it should be ok for most of things.
 You can ask your questions [on the forum](http://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.
 
-Contribution & develppement
+Contribution & development
 ===========================
 
 see CONTRIBUTING.md.

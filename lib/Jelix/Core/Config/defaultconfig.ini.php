@@ -333,6 +333,15 @@ datepicker=default
 ; a jelix_datetimepicker_<config> function
 datetimepicker=default
 
+; default captcha type
+captcha = simple
+
+captcha.simple.validator=\jelix\forms\Captcha\SimpleCaptchaValidator
+captcha.simple.widgettype=captcha
+
+captcha.recaptcha.validator=\jelix\forms\Captcha\ReCaptchaValidator
+captcha.recaptcha.widgettype=recaptcha
+
 [jforms_builder_html]
 ;control type = plugin name
 
@@ -351,13 +360,19 @@ default.wiki.rules=wr3_to_xhtml
 useSet=common
 
 [webassets_common]
-jquery.js = "$jelix/jquery/jquery.js"
+jquery.js = "$jelix/jquery/jquery.min.js"
 
-jquery_ui.js = "$jelix/jquery/ui/jquery-ui-core-widg-mous-posi.custom.min.js"
-jquery_ui.css = "$jelix/jquery/themes/base/jquery.ui.all.css"
+; In Jelix we need only the datepicker from jQueryUI.
+; So JQuery UI bundled into Jelix has been built with only the datepicker widget
+; To have more jQueryUI features, download your own version from http://jqueryui.com/download/,
+; put files into you www/ of your app, and list them here.
+; Do not overwrite files into lib/jelix-www/ !
+jquery_ui.js = "$jelix/jquery/ui-datepicker/jquery-ui.min.js"
+jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.min.css"
+jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.structure.min.css"
+jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.theme.min.css"
 jquery_ui.require = jquery
 
-jforms_html.js[]= "$jelix/jquery/include/jquery.include.js"
 jforms_html.js[]= "$jelix/js/jforms_jquery.js"
 jforms_html.css= "$jelix/design/jform.css"
 jforms_html.require = jquery
@@ -366,8 +381,7 @@ jforms_html_light.js= "$jelix/js/jforms_light.js"
 jforms_html_light.css= "$jelix/design/jform.css"
 
 jforms_datepicker_default.css=
-jforms_datepicker_default.js[]="$jelix/jquery/ui/jquery.ui.datepicker.min.js"
-jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/jquery.ui.datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/jquery/ui-datepicker/i18n/datepicker-$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
@@ -381,12 +395,11 @@ jforms_htmleditor_default.require=jquery
 
 jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
-jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.js"
+jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
 jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
 jforms_htmleditor_wymbasic.require=jquery
 
 jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
-
 
 jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor/ckeditor.js"
 jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
@@ -449,3 +462,14 @@ jelix.cache="cache/"
 ; Warning: the value of this parameter should be stored into localconfig.ini.php
 persistant_encryption_key=
 
+[recaptcha]
+; sitekey and secret should be set only into localconfig.ini.php!
+sitekey=
+secret=
+
+; see https://developers.google.com/recaptcha/docs/display to know the meaning
+; of these configuration parameters.
+theme=
+type=
+size=
+tabindex=

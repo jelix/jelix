@@ -20,7 +20,7 @@ class admin_menuZone extends jZone {
         if (!isset(jApp::config()->master_admin['disable_dashboard_menu']) ||
             !jApp::config()->master_admin['disable_dashboard_menu']) {
             $dashboard = new masterAdminMenuItem('dashboard', jLocale::get('gui.menu.item.dashboard'), jUrl::get('default:index'));
-            $dashboard->icon = jApp::config()->urlengine['jelixWWWPath'] . 'design/images/dashboard.png';
+            $dashboard->icon = jApp::urlJelixWWWPath() . 'design/images/dashboard.png';
             $menu['toplinks']->childItems[] = $dashboard;
         }
 

@@ -9,10 +9,10 @@
 */
 
 require_once(__DIR__.'/jkvdb.lib.php');
-require_once(__DIR__.'/../../../vendor/jelix/php-redis-plugin/lib/Redis.php');
+require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 
 /**
-* Tests API jKVDb
+* Tests API jKVDb with the redis_php driver
 * @package     testapp
 * @subpackage  jelix_tests module
 */
@@ -29,7 +29,7 @@ class jkvdb_redisTest extends jKVDbTest {
         if (!$this->_kvdbSetUp())
             return;
 
-        $this->redis = new Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis('localhost',6379);
         $this->redis->flushall();
     }
 
