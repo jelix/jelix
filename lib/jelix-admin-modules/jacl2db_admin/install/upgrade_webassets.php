@@ -11,7 +11,7 @@
 use \Jelix\IniFile\MultiIniModifier;
 use \Jelix\IniFile\IniModifier;
 
-class jacl2db_adminModuleUpgrader_webassets extends jInstallerModule {
+class jacl2db_adminModuleUpgrader_webassets extends jInstallerModule2 {
 
     public $targetVersions = array('1.7.0-beta.2');
 

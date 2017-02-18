@@ -13,13 +13,17 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
+require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerBase2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
@@ -97,7 +101,7 @@ class jInstaller {
     
     /**
      * list of entry point and their properties
-     * @var array of jInstallerEntryPoint. keys are entry point id.
+     * @var array of jInstallerEntryPoint2. keys are entry point id.
      */
     protected $entryPoints = array();
 
@@ -282,7 +286,7 @@ class jInstaller {
      * @internal for tests
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint($this->mainConfig, $this->localConfig,
+        return new jInstallerEntryPoint2($this->mainConfig, $this->localConfig,
                                         $configFile, $file, $type);
     }
 
@@ -296,7 +300,7 @@ class jInstaller {
 
     /**
      * @param string $epId an entry point id
-     * @return jInstallerEntryPoint the corresponding entry point object
+     * @return jInstallerEntryPoint2 the corresponding entry point object
      */
     public function getEntryPoint($epId) {
         return $this->entryPoints[$epId];
@@ -573,7 +577,7 @@ class jInstaller {
     }
 
 
-    protected function runPreInstall($moduleschain, $ep, $installWholeApp, $flags) {
+    protected function runPreInstall($moduleschain, jInstallerEntryPoint2 $ep, $installWholeApp, $flags) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -635,7 +639,7 @@ class jInstaller {
         return $componentsToInstall;
     }
 
-    protected function runInstall($componentsToInstall, $ep, $epId, $flags) {
+    protected function runInstall($componentsToInstall, jInstallerEntryPoint2 $ep, $epId, $flags) {
 
         $installedModules = array();
         $result = true;
@@ -709,8 +713,8 @@ class jInstaller {
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
                     jConfigCompiler::read($ep->getConfigFile(), true,
-                        $ep->isCliScript,
-                        $ep->scriptName));
+                        $ep->isCliScript(),
+                        $ep->getScriptName()));
                 jApp::setConfig($ep->getConfigObj());
             }
         } catch (jInstallerException $e) {
@@ -726,7 +730,7 @@ class jInstaller {
         return $installedModules;
     }
 
-    protected function runPostInstall($installedModules, $ep, $flags) {
+    protected function runPostInstall($installedModules, jInstallerEntryPoint2 $ep, $flags) {
         $result = true;
         // post install
         foreach($installedModules as $item) {
@@ -762,8 +766,8 @@ class jInstaller {
                 // previous module installer could have modify it.
                 $ep->setConfigObj(
                     jConfigCompiler::read($ep->getConfigFile(), true,
-                        $ep->isCliScript,
-                        $ep->scriptName));
+                        $ep->isCliScript(),
+                        $ep->getScriptName()));
                 jApp::setConfig($ep->getConfigObj());
             } catch (jInstallerException $e) {
                 $result = false;

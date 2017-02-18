@@ -35,12 +35,12 @@ class jInstallerComponentModule extends jInstallerComponentBase {
     protected $identityFile = 'module.xml';
 
     /**
-     * @var jInstallerModule
+     * @var jInstallerModule2
      */
     protected $moduleInstaller = null;
 
     /**
-     * @var jInstallerModule[]
+     * @var jInstallerModule2[]
      */
     protected $moduleUpgraders = null;
 
@@ -62,7 +62,7 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         }
     }
 
-    protected function _setAccess(jInstallerEntryPoint $ep)
+    protected function _setAccess(jInstallerEntryPoint2 $ep)
     {
         $config = $ep->getConfigIni();
         $access = $config->getValue($this->name . '.access', 'modules');
@@ -87,13 +87,14 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param jInstallerEntryPoint2 $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
-     * @return jIInstallerComponent the installer, or null if there isn't any installer
+     * @return jIInstallerComponent|jIInstallerComponent2|null|false the installer, or null
+     *          if there isn't any installer
      *         or false if the installer is useless for the given parameter
      * @throws jInstallerException when install class not found
      */
-    function getInstaller(jInstallerEntryPoint $ep, $installWholeApp) {
+    function getInstaller(jInstallerEntryPoint2 $ep, $installWholeApp) {
 
         $this->_setAccess($ep);
 
@@ -111,8 +112,9 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             }
             require_once($this->path.'install/install.php');
             $cname = $this->name.'ModuleInstaller';
-            if (!class_exists($cname))
-                throw new jInstallerException("module.installer.class.not.found",array($cname,$this->name));
+            if (!class_exists($cname)) {
+                throw new jInstallerException("module.installer.class.not.found", array($cname, $this->name));
+            }
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
                                                 $this->path,
@@ -135,9 +137,16 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             $ep->getConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
         }
 
-        $this->moduleInstaller->setEntryPoint($ep,
-                                              $this->moduleInfos[$epId]->dbProfile,
-                                              $this->installerContexts);
+        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+            $this->moduleInstaller->setEntryPoint($ep->getLegacyInstallerEntryPoint(),
+                $this->moduleInfos[$epId]->dbProfile,
+                $this->installerContexts);
+        }
+        else {
+            $this->moduleInstaller->setEntryPoint($ep,
+                $this->moduleInfos[$epId]->dbProfile,
+                $this->installerContexts);
+        }
 
         return $this->moduleInstaller;
     }
@@ -150,11 +159,11 @@ class jInstallerComponentModule extends jInstallerComponentBase {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      *
-     * @param jInstallerEntryPoint $ep the entry point
-     * @return jIInstallerComponent[]
+     * @param jInstallerEntryPoint2 $ep the entry point
+     * @return jIInstallerComponent[]|jIInstallerComponent2[]
      * @throws jInstallerException  if an error occurs during the install.
      */
-    function getUpgraders($ep) {
+    function getUpgraders(jInstallerEntryPoint2 $ep) {
 
         $epId = $ep->getEpId();
 
@@ -260,10 +269,16 @@ class jInstallerComponentModule extends jInstallerComponentBase {
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-
-            $upgrader->setEntryPoint($ep,
-                                    $this->moduleInfos[$epId]->dbProfile,
-                                    $this->upgradersContexts[$class]);
+            if ($upgrader instanceof jIInstallerComponent) {
+                $upgrader->setEntryPoint($ep->getLegacyInstallerEntryPoint(),
+                    $this->moduleInfos[$epId]->dbProfile,
+                    $this->upgradersContexts[$class]);
+            }
+            else {
+                $upgrader->setEntryPoint($ep,
+                    $this->moduleInfos[$epId]->dbProfile,
+                    $this->upgradersContexts[$class]);
+            }
             $list[] = $upgrader;
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
@@ -273,18 +288,18 @@ class jInstallerComponentModule extends jInstallerComponentBase {
         return $list;
     }
 
-    public function installFinished($ep) {
+    public function installFinished(jInstallerEntryPoint2 $ep) {
         $this->installerContexts = $this->moduleInstaller->getContexts();
         if ($this->mainInstaller)
             $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
-    public function upgradeFinished($ep, jIInstallerComponent $upgrader) {
+    public function upgradeFinished(jInstallerEntryPoint2 $ep, $upgrader) {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
 
-    public function uninstallFinished($ep) {
+    public function uninstallFinished(jInstallerEntryPoint2 $ep) {
         if ($this->mainInstaller)
             $this->mainInstaller->installerIni->removeValue($this->name.'.contexts', '__modules_data');
     }

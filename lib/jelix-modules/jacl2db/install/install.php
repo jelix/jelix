@@ -14,13 +14,13 @@
  *    - defaultgroups    add default groups admin, users, anonymous
  *    - defaultuser      add a default user, admin and add default groups
  */
-class jacl2dbModuleInstaller extends jInstallerModule {
+class jacl2dbModuleInstaller extends jInstallerModule2 {
 
 
     protected $defaultDbProfile = 'jacl2_profile';
 
     function install() {
-        if ($this->entryPoint->type == 'cmdline')
+        if ($this->entryPoint->getType() == 'cmdline')
             return;
 
         if (!$this->firstDbExec())

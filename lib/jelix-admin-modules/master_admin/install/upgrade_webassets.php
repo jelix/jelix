@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class master_adminModuleUpgrader_webassets extends jInstallerModule {
+class master_adminModuleUpgrader_webassets extends jInstallerModule2 {
 
     public $targetVersions = array('1.7.0-beta.2');
 

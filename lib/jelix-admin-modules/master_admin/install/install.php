@@ -10,7 +10,7 @@
 */
 
 
-class master_adminModuleInstaller extends jInstallerModule {
+class master_adminModuleInstaller extends jInstallerModule2 {
 
     function install() {
         $this->declareGlobalWebAssets('master_admin', array('css'=>array('design/master_admin.css')), 'common', false);

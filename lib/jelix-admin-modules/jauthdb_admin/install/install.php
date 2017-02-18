@@ -10,13 +10,13 @@
 */
 
 
-class jauthdb_adminModuleInstaller extends jInstallerModule {
+class jauthdb_adminModuleInstaller extends jInstallerModule2 {
 
     function install() {
         $config = $this->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
 
-        if ($authconfig &&  $this->entryPoint->type != 'cmdline' && $this->firstExec('authdbadmin')) {
+        if ($authconfig &&  $this->entryPoint->getType() != 'cmdline' && $this->firstExec('authdbadmin')) {
             list($conf, $section) = $authconfig;
             if ($section === 0) {
                 $section_db = 'Db';

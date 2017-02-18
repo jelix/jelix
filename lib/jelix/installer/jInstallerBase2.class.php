@@ -9,24 +9,22 @@
 */
 
 /**
- * base class for installers
- * @package     jelix
- * @subpackage  installer
- * @since 1.2
- * @deprecated
- */
-abstract class jInstallerBase {
+* base class for installers
+* @package     jelix
+* @subpackage  installer
+* @since 1.7
+*/
+abstract class jInstallerBase2 {
 
     /**
      * @var string name of the component
      */
-    public $componentName;
+    protected $componentName;
 
     /**
      * @var string name of the installer
      */
     public $name;
-
 
     /**
      * the versions for which the installer should be called.
@@ -52,18 +50,11 @@ abstract class jInstallerBase {
     public $version = '0';
 
     /**
-     * combination between mainconfig.ini.php (master) and entrypoint config (overrider)
-     * @var \Jelix\IniFile\MultiIniModifier
-     * @deprecated use entryPoint methods to access to different configuration files.
-     */
-    protected $config = null;
-
-    /**
      * the entry point property on which the installer is called
-     * @var jInstallerEntryPoint
+     * @var jInstallerEntryPoint2
      */
     protected $entryPoint;
-
+    
     /**
      * The path of the module
      * @var string
@@ -133,9 +124,8 @@ abstract class jInstallerBase {
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint(jInstallerEntryPoint $ep, $dbProfile, $contexts) {
+    public function setEntryPoint($ep, $dbProfile, $contexts) {
         $this->entryPoint = $ep;
-        $this->config = $ep->configIni;
         $this->contextId = $contexts;
         $this->newContextId = array();
 
@@ -144,6 +134,76 @@ abstract class jInstallerBase {
         }
         else
             $this->useDbProfile($dbProfile);
+    }
+
+    protected function declareNewEntryPoint($epId, $epType, $configFileName) {
+        if (!$this->firstExec('EP_'.$epId)) {
+            return;
+        }
+        $mapModifier = $this->entryPoint->getUrlMap()->getMapModifier();
+        $mapModifier->addEntryPoint($epId, $epType);
+
+        $doc = $this->loadProjectXml();
+        $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
+        if (!$eplist->length) {
+            $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+            $doc->documentElement->appendChild($ep);
+        }
+        else {
+            $ep = $eplist->item(0);
+            foreach($ep->getElementsByTagName("entry") as $entry){
+                if ($entry->getAttribute("file") == $epId.'.php'){
+                    $entryType = $entry->getAttribute("type") ?: 'classic';
+                    if ($entryType != $epType) {
+                        throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
+                    }
+                    return;
+                }
+            }
+        }
+
+        $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
+        $elem->setAttribute("file", $epId.'.php');
+        $elem->setAttribute("config", $configFileName);
+        $elem->setAttribute("type", $epType);
+        $ep->appendChild($elem);
+        $ep->appendChild(new \DOMText("\n    "));
+        $doc->save(jApp::appPath('project.xml'));
+    }
+
+    private function loadProjectXml() {
+        $doc = new \DOMDocument();
+        if (!$doc->load(jApp::appPath('project.xml'))) {
+            throw new \Exception("declareNewEntryPoint: cannot load project.xml");
+        }
+        return $doc;
+    }
+
+    /**
+     * the mainconfig.ini.php file combined with defaultconfig.ini.php
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getMainConfigIni() {
+        return $this->entryPoint->getMainConfigIni();
+    }
+
+    /**
+     * the localconfig.ini.php file combined with getMainConfigIni()
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getLocalConfigIni() {
+        return $this->entryPoint->getLocalConfigIni();
+    }
+
+    /**
+     * the entry point config combined with getLocalConfigIni()
+     * @return \Jelix\IniFile\MultiIniModifier
+     * @since 1.7
+     */
+    public function getConfigIni() {
+        return $this->entryPoint->getConfigIni();
     }
 
     /**
@@ -299,7 +359,7 @@ abstract class jInstallerBase {
     /**
      * private function which copy the content of a directory to an other
      *
-     * @param string $sourcePath
+     * @param string $sourcePath 
      * @param string $targetPath
      */
     private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite) {
@@ -421,18 +481,106 @@ abstract class jInstallerBase {
         return true;
     }
 
+
     /**
-     * Before Jelix 1.7, it allowed to declare a plugins directory
-     *
-     * Starting from 1.7, it does nothing as plugins path are declared
-     * at runtime.
-     * This method is still here to avoid PHP errors
-     *
-     * @param string $path a path. it could contains aliases like 'app:', 'lib:' or 'module:'
-     * @deprecated
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
+     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws Exception when the configuration filename is not found
      */
-    function declarePluginsPath($path)
+    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName) {
+        $conf = $config->getValue($pluginName, 'coordplugins');
+        if (!$conf) {
+            return null;
+        }
+        if ($conf == '1') {
+            $pluginConf = $config->getValues($pluginName);
+            if ($pluginConf) {
+                return array($config, $pluginName);
+            }
+            else {
+                // old section naming. deprecated
+                $pluginConf = $config->getValues('coordplugin_' . $pluginName);
+                if ($pluginConf) {
+                    return array($config, 'coordplugin_' . $pluginName);
+                }
+            }
+            return null;
+        }
+        // the configuration value is a filename
+        $confpath = jApp::appConfigPath($conf);
+        if (!file_exists($confpath)) {
+            $confpath = jApp::varConfigPath($conf);
+            if (!file_exists($confpath)) {
+                return null;
+            }
+        }
+        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
+    }
+
+    /**
+     * Declare web assets into the entry point config
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $set the name of the webassets section
+     * @param bool $force
+     */
+    public function declareWebAssets($name, array $values, $set, $force)
     {
-        // it does nothing
+        $config = $this->entryPoint->getEpConfigIni();
+        $this->_declareWebAssets($config, $name, $values, $set, $force);
+    }
+
+    /**
+     * declare web assets into the main configuration
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $set the name of the webassets section
+     * @param bool $force
+     */
+    public function declareGlobalWebAssets($name, array $values, $set, $force)
+    {
+        $config = $this->entryPoint->getMainConfigIni()->getOverrider();
+        $this->_declareWebAssets($config, $name, $values, $set, $force);
+    }
+
+    /**
+     * @param \Jelix\IniFile\IniModifier $config
+     * @param string $name the name of webassets
+     * @param array $values
+     * @param string $set the name of the webassets section
+     * @param book $force
+     */
+    protected function _declareWebAssets ($config, $name, array $values, $set, $force) {
+
+        $section = 'webassets_'.$set;
+        if (!$force && (
+            $config->getValue($name.'.css', $section) ||
+            $config->getValue($name.'.js', $section) ||
+            $config->getValue($name.'.require', $section)
+            )) {
+            return;
+        }
+
+        if (isset($values['css'])) {
+            $config->setValue($name.'.css', $values['css'], $section);
+        }
+        else {
+            $config->removeValue($name.'.css', $section);
+        }
+        if (isset($values['js'])) {
+            $config->setValue($name.'.js', $values['js'], $section);
+        }
+        else {
+            $config->removeValue($name.'.js', $section);
+        }
+        if (isset($values['require'])) {
+            $config->setValue($name.'.require', $values['require'], $section);
+        }
+        else {
+            $config->removeValue($name.'.require', $section);
+        }
     }
 }

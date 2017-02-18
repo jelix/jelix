@@ -149,12 +149,12 @@ abstract class jInstallerComponentBase {
      * get the object which is responsible to install the component. this
      * object should implement jIInstallerComponent.
      *
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param jInstallerEntryPoint2 $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent the installer, or null if there isn't any installer
      *         or false if the installer is useless for the given parameter
      */
-    abstract function getInstaller(jInstallerEntryPoint $ep, $installWholeApp);
+    abstract function getInstaller(jInstallerEntryPoint2 $ep, $installWholeApp);
 
     /**
      * return the list of objects which are responsible to upgrade the component
@@ -164,17 +164,17 @@ abstract class jInstallerComponentBase {
      * dependencies. Needed components (modules or plugins) should be
      * installed/upgraded before calling this method
      * 
-     * @param jInstallerEntryPoint $ep the entry point
+     * @param jInstallerEntryPoint2 $ep the entry point
      * @throws jInstallerException  if an error occurs during the install.
      * @return array   array of jIInstallerComponent
      */
-    abstract function getUpgraders($ep);
+    abstract function getUpgraders(jInstallerEntryPoint2 $ep);
 
-    public function installFinished($ep) { }
+    public function installFinished(jInstallerEntryPoint2 $ep) { }
 
-    public function upgradeFinished($ep, jIInstallerComponent $upgrader) { }
+    public function upgradeFinished(jInstallerEntryPoint2 $ep, $upgrader) { }
 
-    public function uninstallFinished($ep) { }
+    public function uninstallFinished(jInstallerEntryPoint2 $ep) { }
 
     /**
      * @var boolean  indicate if the identify file has already been readed

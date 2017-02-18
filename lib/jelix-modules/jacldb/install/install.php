@@ -10,12 +10,12 @@
 */
 
 
-class jacldbModuleInstaller extends jInstallerModule {
+class jacldbModuleInstaller extends jInstallerModule2 {
 
     protected $defaultDbProfile = 'jacl_profile';
 
     function install() {
-        if ($this->entryPoint->type != 'cmdline')
+        if ($this->entryPoint->getType() != 'cmdline')
             return;
 
         if (!$this->firstDbExec())

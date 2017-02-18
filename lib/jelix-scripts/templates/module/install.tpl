@@ -9,7 +9,7 @@
 */
 
 
-class %%module%%ModuleInstaller extends jInstallerModule {
+class %%module%%ModuleInstaller extends jInstallerModule2 {
 
     function install() {
         //if ($this->firstDbExec())

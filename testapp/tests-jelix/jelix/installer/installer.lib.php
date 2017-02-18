@@ -22,13 +22,13 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 }
 
-class testInstallerEntryPoint extends jInstallerEntryPoint {
+class testInstallerEntryPoint extends jInstallerEntryPoint2 {
 
     function __construct($mainConfigIni,
                          $localConfigIni,
                          $configFile, $file, $type, $configContent) {
         $this->type = $type;
-        $this->isCliScript = ($type == 'cmdline');
+        $this->_isCliScript = ($type == 'cmdline');
         
         if (is_object($configFile)) {
             $this->epConfigIni = $configFile;
@@ -44,7 +44,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint {
         $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni,
             new \Jelix\IniFile\MultiIniModifier($this->epConfigIni, $this->localEpConfigIni));
 
-        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
+        $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
         $this->config = $configContent;
         $this->mainConfigIni = $mainConfigIni;

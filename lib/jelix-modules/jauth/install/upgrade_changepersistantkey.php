@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleUpgrader_changepersistantkey extends jInstallerModule {
+class jauthModuleUpgrader_changepersistantkey extends jInstallerModule2 {
 
     public $targetVersions = array('1.3.0', '1.7.0-beta.1');
     public $date = '2016-05-21 23:55';

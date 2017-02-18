@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelixModuleInstaller extends jInstallerModule {
+class jelixModuleInstaller extends jInstallerModule2 {
 
     function install() {
 

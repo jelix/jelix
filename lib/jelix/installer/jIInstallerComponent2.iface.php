@@ -3,18 +3,17 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009 Laurent Jouanneau
+* @copyright   2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
- * @package     jelix
- * @subpackage  installer
- * @since 1.2
- * @deprecated
- */
-interface jIInstallerComponent {
+* @package     jelix
+* @subpackage  installer
+* @since 1.7
+*/
+interface jIInstallerComponent2 {
 
     /**
      * Called before the installation of all other components

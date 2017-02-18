@@ -109,7 +109,7 @@ class jInstallerApplication {
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {
             $epElt = $listEp->item($i);
-            $ep = new jInstallerEntryPoint($mainConfig,
+            $ep = new jInstallerEntryPoint2($mainConfig,
                                            $localConfig,
                                            $epElt->getAttribute("config"),
                                            $epElt->getAttribute("file"),

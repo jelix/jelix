@@ -8,13 +8,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacl2ModuleInstaller extends jInstallerModule {
+class jacl2ModuleInstaller extends jInstallerModule2 {
     function install() {
         if ($this->firstConfExec()) {
             $conf = $this->getConfigIni();
             if (null == $conf->getValue('jacl2', 'coordplugins')) {
                 $conf->setValue('jacl2', '1', 'coordplugins');
-                if ($this->entryPoint->type != 'classic')
+                if ($this->entryPoint->getType() != 'classic')
                     $onerror = 1;
                 else
                     $onerror = 2;

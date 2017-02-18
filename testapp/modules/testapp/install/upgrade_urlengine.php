@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testappModuleUpgrader_urlengine extends jInstallerModule {
+class testappModuleUpgrader_urlengine extends jInstallerModule2 {
 
     public $targetVersions = array('1.4b2.2406');
     public $date = '2012-07-20';

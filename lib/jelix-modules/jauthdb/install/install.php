@@ -13,10 +13,10 @@
  * parameters for this installer
  *    - defaultuser      add a default user, admin
  */
-class jauthdbModuleInstaller extends jInstallerModule {
+class jauthdbModuleInstaller extends jInstallerModule2 {
 
     function install() {
-        //if ($this->entryPoint->type == 'cmdline')
+        //if ($this->entryPoint->getType() == 'cmdline')
         //    return;
         $config = $this->getConfigIni();
         $authConfig = $this->getCoordPluginConf($config, 'auth');

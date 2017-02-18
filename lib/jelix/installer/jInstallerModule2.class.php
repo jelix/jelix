@@ -3,19 +3,18 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2017 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
- * a class to install a module.
- * @package     jelix
- * @subpackage  installer
- * @since 1.2
- * @deprecated
- */
-class jInstallerModule  extends jInstallerBase implements jIInstallerComponent {
+* a class to install a module. 
+* @package     jelix
+* @subpackage  installer
+* @since 1.7
+*/
+class jInstallerModule2  extends jInstallerBase2 implements jIInstallerComponent2 {
 
     /**
      * Called before the installation of all other modules
