@@ -369,7 +369,6 @@ cd lib/jelix/installer
   jInstaller.class.php
   jInstallerApplication.class.php
   jInstallerBase.class.php
-  jInstallerBase2.class.php
   jInstallChecker.class.php
   jInstallerComponentModule.class.php
   jInstallerEntryPoint.class.php
