@@ -15,7 +15,6 @@ require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerBase.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');

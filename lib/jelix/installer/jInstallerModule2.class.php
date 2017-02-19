@@ -9,11 +9,14 @@
 */
 
 /**
-* a class to install a module. 
-* @package     jelix
-* @subpackage  installer
-* @since 1.7
-*/
+ * A class that does processing to configure and install a module into
+ * an application. A module should have a class that inherits from it
+ * in order to configure itself into the application.
+ *
+ * @package     jelix
+ * @subpackage  installer
+ * @since 1.7
+ */
 class jInstallerModule2 implements jIInstallerComponent2 {
 
     /**
