@@ -20,7 +20,6 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerBase2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerComponentBase.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
@@ -40,12 +39,12 @@ use \Jelix\Dependencies\ItemException;
  * of their dependencies.
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
- * @internal The object which drives the installation of a component
- * (module...) is an object which inherits from jInstallerComponentBase.
- * This object calls load a file from the directory of the component. this
- * file should contain a class which should inherits from jInstallerModule.
+ * @internal The object which drives the installation of a module
+ * is an object jInstallerComponentModule.
+ * This object calls load a file from the directory of the module. this
+ * file should contain a class which should inherits from jInstallerModule2.
  *  this class should implements processes to install
- * the component.
+ * the module.
  */
 class jInstaller {
 
