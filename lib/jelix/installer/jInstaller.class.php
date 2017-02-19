@@ -363,7 +363,8 @@ class jInstaller {
         }
 
         $this->startMessage();
-        $result = true;
+
+        $modulesChainsEp = array();
 
         foreach(array_keys($this->entryPoints) as $epId) {
             $resolver = new Resolver();
@@ -371,13 +372,9 @@ class jInstaller {
                 $resolverItem = $module->getResolverItem($epId);
                 $resolver->addItem($resolverItem);
             }
-            $result = $result & $this->_installModules($resolver, $epId, true, $flags);
-            if (!$result) {
-                break;
-            }
+            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
         }
-
-        $this->installerIni->save();
+        $result = $this->_installModules($modulesChainsEp, true, $flags);
         $this->endMessage();
         return $result;
     }
@@ -406,9 +403,9 @@ class jInstaller {
             $resolver->addItem($resolverItem);
         }
 
-        $result = $this->_installModules($resolver, $epId, true);
+        $modulesChainsEp = array($epId => $this->resolveDependencies($resolver, $epId));
+        $result =  $this->_installModules($modulesChainsEp, true);
 
-        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
@@ -450,7 +447,7 @@ class jInstaller {
             throw new Exception("unknown entry point");
         }
 
-        $result = true;
+        $modulesChainsEp = array();
 
         foreach ($entryPointList as $epId) {
             // check that all given modules are existing
@@ -474,11 +471,9 @@ class jInstaller {
                 $resolver->addItem($resolverItem);
             }
             // install modules
-            $result = $result & $this->_installModules($resolver, $epId, false);
-            if (!$result)
-                break;
-            $this->installerIni->save();
+            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
         }
+        $result = $this->_installModules($modulesChainsEp, false);
 
         $this->endMessage();
         return $result;
@@ -486,13 +481,37 @@ class jInstaller {
 
     /**
      * core of the installation
-     * @param array $modules list of jInstallerComponentModule
+     * @param Item[][] $entryPointModulesChains
+     * @param boolean $installWholeApp true if the installation is done during app installation
+     * @param integer $flags to know what to do
+     * @return boolean true if the installation is ok
+     */
+    protected function _installModules(&$entryPointModulesChains, $installWholeApp, $flags=7 ) {
+        $result = true;
+        foreach($entryPointModulesChains as $epId => $modulesChain) {
+            if ($modulesChain) {
+                $result = $result & $this->_installEntryPointModules($modulesChain, $epId, $installWholeApp, $flags);
+                $this->installerIni->save();
+                if (!$result) {
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * installation for a specific entry point
+     * @param Item[] $moduleschain
      * @param string $epId  the entrypoint id
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(Resolver $resolver, $epId, $installWholeApp, $flags=7) {
+    protected function _installEntryPointModules(&$moduleschain, $epId, $installWholeApp, $flags=7) {
 
         $this->notice('install.entrypoint.start', $epId);
         $ep = $this->entryPoints[$epId];
@@ -500,11 +519,6 @@ class jInstaller {
 
         if ($ep->getConfigObj()->disableInstallers) {
             $this->notice('install.entrypoint.installers.disabled');
-        }
-
-        $moduleschain = $this->resolveDependencies($resolver, $epId);
-        if ($moduleschain === false) {
-            return false;
         }
 
         $componentsToInstall = $this->runPreInstall($moduleschain, $ep, $installWholeApp, $flags);
@@ -577,7 +591,7 @@ class jInstaller {
     }
 
 
-    protected function runPreInstall($moduleschain, jInstallerEntryPoint2 $ep, $installWholeApp, $flags) {
+    protected function runPreInstall(&$moduleschain, jInstallerEntryPoint2 $ep, $installWholeApp, $flags) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
