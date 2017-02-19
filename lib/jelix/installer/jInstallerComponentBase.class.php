@@ -243,10 +243,14 @@ abstract class jInstallerComponentBase {
         if ($root->namespaceURI == $this->identityNamespace) {
             $xml = simplexml_import_dom($xmlDescriptor);
             $this->sourceVersion = $this->fixVersion((string) $xml->info[0]->version[0]);
-            if (isset($xml->info[0]->version['date']))
-                $this->sourceDate = (string) $xml->info[0]->version['date'];
-            else
+            if (isset($xml->info[0]->version['date'])) {
+                $this->sourceDate = (string)$xml->info[0]->version['date'];
+                if ($this->sourceDate == '__TODAY__') { // for non-packages modules
+                    $this->sourceDate = date('Y-m-d');
+                }
+            } else {
                 $this->sourceDate = '';
+            }
             $this->readDependencies($xml);
         }
     }
