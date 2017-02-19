@@ -12,7 +12,7 @@
 
 class jauthdb_adminModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $config = $this->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
 

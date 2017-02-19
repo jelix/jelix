@@ -15,7 +15,7 @@ class jauthModuleInstaller extends jInstallerModule2 {
 
     protected static $key = null;
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         if (self::$key === null) {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();

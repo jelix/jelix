@@ -14,7 +14,7 @@ class jacldbModuleInstaller extends jInstallerModule2 {
 
     protected $defaultDbProfile = 'jacl_profile';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         if ($this->entryPoint->getType() != 'cmdline')
             return;
 

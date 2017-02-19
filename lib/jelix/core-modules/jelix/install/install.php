@@ -10,7 +10,7 @@
 
 class jelixModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         if (!$this->firstDbExec())
             return;

@@ -15,7 +15,7 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule2 {
 
     protected static $key = null;
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         if (self::$key === null) {
             self::$key = jAuth::getRandomPassword(30, true);

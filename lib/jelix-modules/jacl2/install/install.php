@@ -9,7 +9,7 @@
 */
 
 class jacl2ModuleInstaller extends jInstallerModule2 {
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         if ($this->firstConfExec()) {
             $conf = $this->getConfigIni();
             if (null == $conf->getValue('jacl2', 'coordplugins')) {

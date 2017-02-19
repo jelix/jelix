@@ -17,13 +17,13 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
 
     public $date = '2017-02-07 08:58';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $config = $this->entryPoint->getConfigIni();
         $mainConfig = $config->getMaster()->getMaster();
         $this->changeConfig($mainConfig, $config);
     }
 
-    function postInstall() {
+    function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $config = $this->entryPoint->getMainConfigIni();
         $origConfig = $config->getMaster();
         $this->changeConfig($origConfig, $config);

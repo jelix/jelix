@@ -15,7 +15,7 @@
  */
 class jauthdbModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         //if ($this->entryPoint->getType() == 'cmdline')
         //    return;
         $config = $this->getConfigIni();

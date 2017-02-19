@@ -15,48 +15,52 @@
 */
 interface jIInstallerComponent2 {
 
-    /**
-     * Called before the installation of all other components
-     * (dependents modules or the whole application).
-     * Here, you should check if the component can be installed or not
-     * @throws jException if an error occurs during the check of the installation
-     */
-    function preInstall();
 
     /**
-     * should configure the component, install table into the database etc..
+     * Called before the installation of any modules,
+     * for each entrypoints, and after preInstallGlobal()
+     *
+     * Here, you should check if the module can be installed or not
+     * for the given entry point.
+     * @throws Exception if the module cannot be installed
+     */
+    function preInstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
+
+    /**
+     * Should configure the module for the given entrypoint
+     *
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throws jException  if an error occurs during the install.
+     * @throws Exception  if an error occurs during the installation.
+     * @param jInstallerEntryPoint2 $entryPoint
      */
-    function install();
+    function installEntryPoint(jInstallerEntryPoint2 $entryPoint);
 
     /**
-     * Redefine this method if you do some additionnal process after the installation of
-     * all other modules (dependents modules or the whole application)
-     * @throws jException  if an error occurs during the post installation.
+     * Redefine this method if you do some additional process after
+     * the installation of all modules for the given entrypoint for
+     *
+     * @throws Exception  if an error occurs during the post installation.
      */
-    function postInstall();
+    function postInstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
 
     /**
-     * Called before the uninstallation of all other modules
-     * (dependents modules or the whole application).
-     * Here, you should check if the component can be uninstalled or not
-     * @throws jException if an error occurs during the check of the installation
+     * Called before the uninstallation of all other modules for the given entry point
+     *
+     * Here, you should check if the module can be uninstalled or not
+     * @throws Exception if the module cannot be uninstalled
      */
-    function preUninstall();
+    function preUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
 
     /**
-     * should configure the component, install table into the database etc.. 
-     * @throws jException  if an error occurs during the install.
+     * should unconfigure the module for the given entry point
+     *
+     * called for each entry point
+     *
+     * @throws Exception  if an error occurs during the uninstall.
+     * @param jInstallerEntryPoint2 $entryPoint
      */
-    function uninstall();
-
-    /**
-     * 
-     * @throws jException  if an error occurs during the install.
-     */
-    function postUninstall();
+    function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint);
 
 }
 

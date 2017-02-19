@@ -14,7 +14,7 @@ class jacldbModuleUpgrader_localesmoved extends jInstallerModule2 {
     public $targetVersions = array('1.5');
     public $date = '2012-09-21 09:37';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         if (!$this->firstDbExec())
             return;
         $db = $this->dbConnection();

@@ -15,7 +15,7 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
     public $targetVersions = array('1.7.0-beta.1');
     public $date = '2016-06-19 11:05';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         $upgraderUrl = new UrlEngineUpgrader($this->config,
                                              $this->entryPoint->getEpId(),
@@ -23,7 +23,7 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
         $upgraderUrl->upgrade();
     }
 
-    function postInstall() {
+    function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $upgraderUrl = new UrlEngineUpgrader($this->config,
                                              $this->entryPoint->getEpId(),
                                              $this->entryPoint->getUrlMap());

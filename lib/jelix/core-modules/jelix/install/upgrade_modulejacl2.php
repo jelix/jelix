@@ -14,7 +14,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
     public $targetVersions = array('1.5a1.2504');
     public $date = '2012-09-19 11:05';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $this->_upgradeconf('jacl2');
         $this->_upgradeconf('jacl');
     }

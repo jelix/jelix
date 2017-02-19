@@ -488,6 +488,7 @@ class jInstaller {
      */
     protected function _installModules(&$entryPointModulesChains, $installWholeApp, $flags=7 ) {
         $result = true;
+
         foreach($entryPointModulesChains as $epId => $modulesChain) {
             if ($modulesChain) {
                 $result = $result & $this->_installEntryPointModules($modulesChain, $epId, $installWholeApp, $flags);
@@ -521,19 +522,19 @@ class jInstaller {
             $this->notice('install.entrypoint.installers.disabled');
         }
 
-        $componentsToInstall = $this->runPreInstall($moduleschain, $ep, $installWholeApp, $flags);
+        $componentsToInstall = $this->runPreInstallEntryPoint($moduleschain, $ep, $installWholeApp, $flags);
         if ($componentsToInstall === false) {
             $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 
-        $installedModules = $this->runInstall($componentsToInstall, $ep, $epId, $flags);
+        $installedModules = $this->runInstallEntryPoint($componentsToInstall, $ep, $epId, $flags);
         if ($installedModules === false) {
             $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 
-        $result = $this->runPostInstall($installedModules, $ep, $flags);
+        $result = $this->runPostInstallEntryPoint($installedModules, $ep, $flags);
         if (!$result) {
             $this->warning('install.entrypoint.bad.end', $epId);
         }
@@ -591,7 +592,7 @@ class jInstaller {
     }
 
 
-    protected function runPreInstall(&$moduleschain, jInstallerEntryPoint2 $ep, $installWholeApp, $flags) {
+    protected function runPreInstallEntryPoint(&$moduleschain, jInstallerEntryPoint2 $ep, $installWholeApp, $flags) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -610,7 +611,13 @@ class jInstaller {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
-                        $installer->preInstall();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->preInstall();
+                        }
+                        else {
+                            $installer->preInstallEntryPoint($ep);
+                        }
                     }
                 }
                 elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
@@ -623,7 +630,13 @@ class jInstaller {
 
                     if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
                         foreach($upgraders as $upgrader) {
-                            $upgrader->preInstall();
+                            if ($upgrader instanceof jIInstallerComponent) {
+                                // legacy
+                                $upgrader->preInstall();
+                            }
+                            else {
+                                $upgrader->preInstallEntryPoint($ep);
+                            }
                         }
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
@@ -636,7 +649,13 @@ class jInstaller {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
-                        $installer->preUninstall();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->preUninstall();
+                        }
+                        else {
+                            $installer->preUninstallEntryPoint($ep);
+                        }
                     }
                 }
             } catch (jInstallerException $e) {
@@ -653,7 +672,7 @@ class jInstaller {
         return $componentsToInstall;
     }
 
-    protected function runInstall($componentsToInstall, jInstallerEntryPoint2 $ep, $epId, $flags) {
+    protected function runInstallEntryPoint($componentsToInstall, jInstallerEntryPoint2 $ep, $epId, $flags) {
 
         $installedModules = array();
         $result = true;
@@ -663,7 +682,13 @@ class jInstaller {
                 list($installer, $component, $action) = $item;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $installer->install();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->install();
+                        }
+                        else {
+                            $installer->installEntryPoint($ep);
+                        }
                     }
                     $this->installerIni->setValue($component->getName().'.installed',
                         1, $epId);
@@ -682,7 +707,13 @@ class jInstaller {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
                         if ($flags & self::FLAG_UPGRADE_MODULE) {
-                            $upgrader->install();
+                            if ($upgrader instanceof jIInstallerComponent) {
+                                // legacy
+                                $upgrader->install();
+                            }
+                            else {
+                                $upgrader->installEntryPoint($ep);
+                            }
                         }
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
@@ -709,7 +740,13 @@ class jInstaller {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $installer->uninstall();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->uninstall();
+                        }
+                        else {
+                            $installer->uninstallEntryPoint($ep);
+                        }
                     }
                     $this->installerIni->removeValue($component->getName().'.installed', $epId);
                     $this->installerIni->removeValue($component->getName().'.version', $epId);
@@ -744,7 +781,7 @@ class jInstaller {
         return $installedModules;
     }
 
-    protected function runPostInstall($installedModules, jInstallerEntryPoint2 $ep, $flags) {
+    protected function runPostInstallEntryPoint($installedModules, jInstallerEntryPoint2 $ep, $flags) {
         $result = true;
         // post install
         foreach($installedModules as $item) {
@@ -753,21 +790,39 @@ class jInstaller {
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $installer->postInstall();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->postInstall();
+                        }
+                        else {
+                            $installer->postInstallEntryPoint($ep);
+                        }
                         $component->installFinished($ep);
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     if ($flags & self::FLAG_UPGRADE_MODULE) {
                         foreach ($installer as $upgrader) {
-                            $upgrader->postInstall();
+                            if ($upgrader instanceof jIInstallerComponent) {
+                                // legacy
+                                $upgrader->postInstall();
+                            }
+                            else {
+                                $upgrader->postInstallEntryPoint($ep);
+                            }
                             $component->upgradeFinished($ep, $upgrader);
                         }
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $installer->postUninstall();
+                        if ($installer instanceof jIInstallerComponent) {
+                            // legacy
+                            $installer->postUninstall();
+                        }
+                        else {
+                            $installer->postUninstallEntryPoint($ep);
+                        }
                         $component->uninstallFinished($ep);
                     }
                 }

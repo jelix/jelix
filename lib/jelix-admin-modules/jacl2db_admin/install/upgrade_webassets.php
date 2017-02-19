@@ -17,7 +17,7 @@ class jacl2db_adminModuleUpgrader_webassets extends jInstallerModule2 {
 
     public $date = '2017-02-07 19:18';
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $this->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
     }
 }
