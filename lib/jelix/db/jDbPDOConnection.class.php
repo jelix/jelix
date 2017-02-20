@@ -235,9 +235,6 @@ class jDbPDOConnection extends PDO {
 
         $queryString .= ($limitCount+$limitOffset) . ' '.$firstField.','.implode(',', $fields).' FROM '.$from;
 
-        // we must remove the "tableName." from the ORDER BY clause (otherwise it will cause an error "out of bound"
-        $orderby = ' ORDER BY '.preg_replace('/^[^.]*.\s*/', '', $orderby);
-
         // then we select the last $number records, by retrieving the first $number record in the reverse order
         $queryString = 'SELECT TOP ' . $limitCount . ' * FROM (' . $queryString . ') AS inner_tbl ';
         $order_inner = preg_replace(array('/\bASC\b/i', '/\bDESC\b/i'), array('_DESC', '_ASC'), $orderby);
