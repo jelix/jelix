@@ -183,7 +183,8 @@ class jDbPDOConnection extends PDO {
                     rownum<'.(intval($limitOffset)+intval($limitCount)).'  ) WHERE rnum >='.intval($limitOffset);
             }
             elseif ($this->dbms == 'sqlsrv') {
-				$queryString = $this->limitQuerySqlsrv($queryString, $limitOffset, $limitCount);
+		$queryString = $this->limitQuerySqlsrv($queryString, $limitOffset, $limitCount);
+	    }
         }
         return $this->query ($queryString);
     }
