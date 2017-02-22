@@ -237,7 +237,9 @@ class jInstallerComponentModule {
         }
 
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
-            $this->moduleInstaller->setEntryPoint($ep->getLegacyInstallerEntryPoint(),
+            $legacyEp = $ep->getLegacyInstallerEntryPoint();
+            $legacyEp->localConfigIni = $this->globalSetup->getLocalConfigIni();
+            $this->moduleInstaller->setEntryPoint($legacyEp,
                 $this->moduleInfos[$epId]->dbProfile,
                 $this->globalSetup->getInstallerContexts($this->name));
         }
@@ -369,7 +371,9 @@ class jInstallerComponentModule {
                 $this->upgradersContexts[$class] = array();
             }
             if ($upgrader instanceof jIInstallerComponent) {
-                $upgrader->setEntryPoint($ep->getLegacyInstallerEntryPoint(),
+                $legacyEp = $ep->getLegacyInstallerEntryPoint();
+                $legacyEp->localConfigIni = $this->globalSetup->getLocalConfigIni();
+                $upgrader->setEntryPoint($legacyEp),
                     $this->moduleInfos[$epId]->dbProfile,
                     $this->upgradersContexts[$class]);
             }

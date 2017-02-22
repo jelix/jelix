@@ -8,6 +8,9 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 use Jelix\Routing\UrlMapping\XmlEntryPoint;
+use Jelix\IniFile\MultiIniModifier;
+use Jelix\IniFile\IniModifier;
+
 
 /**
  * container for entry points properties
@@ -27,20 +30,6 @@ class jInstallerEntryPoint2 {
      */
     protected $configFile;
 
-
-    /**
-     * the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @var \Jelix\IniFile\MultiIniModifier
-     * @since 1.7.0
-     */
-    protected $mainConfigIni;
-
-    /**
-     * the localconfig.ini.php file combined with $mainConfigIni
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $localConfigIni;
-
     /**
      * entrypoint config of app/config/
      * @var \Jelix\IniFile\IniModifier
@@ -54,7 +43,7 @@ class jInstallerEntryPoint2 {
     protected $localEpConfigIni;
 
     /**
-     * the entry point config combined with $localConfigIni
+     * all configuration files combined
      * @var \Jelix\IniFile\MultiIniModifier
      */
     protected $fullConfigIni;
@@ -94,33 +83,30 @@ class jInstallerEntryPoint2 {
      */
     function __construct(jInstallerGlobalSetup $globalSetup,
                          $configFile, $file, $type) {
-        $mainConfig = $globalSetup->getMainConfigIni();
-        $localConfig = $globalSetup->getLocalConfigIni();
+
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
         $this->scriptName =  ($this->_isCliScript?$file:'/'.$file);
         $this->file = $file;
-        $this->mainConfigIni = $mainConfig;
-        $this->localConfigIni = $localConfig;
 
         $appConfigPath = jApp::appConfigPath($configFile);
         if (!file_exists($appConfigPath)) {
             jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<'.'?php die(\'\');?'.'>');
         }
-        $this->epConfigIni = new \Jelix\IniFile\IniModifier($appConfigPath);
+        $this->epConfigIni = new IniModifier($appConfigPath);
 
         $varConfigPath = jApp::varConfigPath($configFile);
         if (!file_exists($varConfigPath)) {
             jFile::createDir(dirname($varConfigPath));
             file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');
         }
-        $this->localEpConfigIni = new \Jelix\IniFile\IniModifier($varConfigPath);
+        $this->localEpConfigIni = new IniModifier($varConfigPath);
 
-
-        $fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfig, $this->epConfigIni);
-        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($fullConfigIni, $this->localEpConfigIni);
+        $fullConfigIni = new MultiIniModifier($globalSetup->getLocalConfigIni(),
+                                              $this->epConfigIni);
+        $this->fullConfigIni = new MultiIniModifier($fullConfigIni, $this->localEpConfigIni);
 
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->_isCliScript,
@@ -183,25 +169,7 @@ class jInstallerEntryPoint2 {
     }
 
     /**
-     * the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    function getMainConfigIni() {
-        return $this->mainConfigIni;
-    }
-
-    /**
-     * the localconfig.ini.php file combined with $mainConfigIni
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    function getLocalConfigIni() {
-        return $this->localConfigIni;
-    }
-
-    /**
-     * the entry point config (static and local) combined with $localConfigIni
+     * the entry point full configuration (static and local)
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
