@@ -63,7 +63,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
 
     }
 
-
     /**
      * should unconfigure the module for the given entry point
      *
@@ -75,7 +74,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
     }
-
 
     /**
      * @var string name of the component
@@ -146,6 +144,17 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      */
     protected $parameters = array();
 
+
+    /**
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    protected $urlMapModifier;
+
+    /**
+     * @var jDbConnection
+     */
+    private $_dbConn = null;
+
     /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
@@ -174,35 +183,24 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
-     * @var jDbConnection
-     */
-    private $_dbConn = null;
-
-    /**
      * is called to indicate that the installer will be called for the given
-     * configuration, entry point and db profile.
+     * entry point.
      * @param jInstallerEntryPoint $ep the entry point
-     * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
-     * @param array $contexts  list of contexts already executed
+     * @deprecated 
      */
-    public function setEntryPoint($ep, $dbProfile, $contexts) {
+    public function setEntryPoint($ep) {
         $this->entryPoint = $ep;
-        $this->contextId = $contexts;
-        $this->newContextId = array();
+    }
 
-        if ($this->defaultDbProfile != '') {
-            $this->useDbProfile($this->defaultDbProfile);
-        }
-        else
-            $this->useDbProfile($dbProfile);
+    function setUrlMapModifier(\Jelix\Routing\UrlMapping\XmlMapModifier $mapModifier) {
+        $this->urlMapModifier = $mapModifier;
     }
 
     protected function declareNewEntryPoint($epId, $epType, $configFileName) {
         if (!$this->firstExec('EP_'.$epId)) {
             return;
         }
-        $mapModifier = $this->entryPoint->getUrlMap()->getMapModifier();
-        $mapModifier->addEntryPoint($epId, $epType);
+        $this->urlMapModifier->addEntryPoint($epId, $epType);
 
         $doc = $this->loadProjectXml();
         $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
@@ -268,6 +266,18 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
+     * internal use
+     * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
+     */
+    public function initDbProfileForEntrypoint($dbProfile) {
+        if ($this->defaultDbProfile != '') {
+            $this->useDbProfile($this->defaultDbProfile);
+        }
+        else
+            $this->useDbProfile($dbProfile);
+    }
+
+    /**
      * use the given database profile. check if this is an alias and use the
      * real db profiel if this is the case.
      * @param string $dbProfile the profile name
@@ -292,6 +302,14 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     protected $contextId = array();
 
     protected $newContextId = array();
+
+    /**
+     * @param array $contexts  list of contexts already executed
+     */
+    public function setContext($contexts) {
+        $this->contextId = $contexts;
+        $this->newContextId = array();
+    }
 
     /**
      *

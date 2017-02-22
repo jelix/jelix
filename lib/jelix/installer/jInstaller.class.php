@@ -251,7 +251,7 @@ class jInstaller {
             // now let's read all modules properties
             $modulesList = $ep->getModulesList();
             foreach ($modulesList as $name=>$path) {
-                $module = $ep->getModule($name);
+                $module = $ep->getModuleInfos($name);
 
                 $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
                 $this->installerIni->setValue($name.'.version', $module->version, $epId);
@@ -301,6 +301,13 @@ class jInstaller {
      */
     public function getEntryPoint($epId) {
         return $this->entryPoints[$epId];
+    }
+
+    /**
+     * @return \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    public function getUrlModifier() {
+        return $this->xmlMapFile;
     }
 
     /**
@@ -556,7 +563,7 @@ class jInstaller {
             else if ($e->getCode() == 2) {
                 $depName = $e->getRelatedData()->getName();
                 $maxVersion = $minVersion = 0;
-                foreach($component->dependencies as $compInfo) {
+                foreach($component->getDependencies() as $compInfo) {
                     if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
                         $maxVersion = $compInfo['maxversion'];
                         $minVersion = $compInfo['minversion'];
@@ -794,7 +801,7 @@ class jInstaller {
                         else {
                             $installer->postInstallEntryPoint($ep);
                         }
-                        $component->installFinished($ep);
+                        $component->installEntryPointFinished($ep);
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
@@ -807,7 +814,7 @@ class jInstaller {
                             else {
                                 $upgrader->postInstallEntryPoint($ep);
                             }
-                            $component->upgradeFinished($ep, $upgrader);
+                            $component->upgradeEntryPointFinished($ep, $upgrader);
                         }
                     }
                 }
@@ -820,7 +827,7 @@ class jInstaller {
                         else {
                             $installer->postUninstallEntryPoint($ep);
                         }
-                        $component->uninstallFinished($ep);
+                        $component->uninstallEntryPointFinished($ep);
                     }
                 }
 

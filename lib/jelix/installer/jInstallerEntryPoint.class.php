@@ -111,7 +111,7 @@ class jInstallerEntryPoint {
      * @return jInstallerModuleInfos informations about a specific module used
      * by the entry point
      */
-    function getModule($moduleName) {
+    function getModuleInfos($moduleName) {
         return new jInstallerModuleInfos($moduleName, $this->config->modules);
     }
 

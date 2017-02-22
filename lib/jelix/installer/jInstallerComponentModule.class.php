@@ -13,20 +13,21 @@ use \Jelix\Dependencies\Resolver;
 use \Jelix\Dependencies\Item;
 
 /**
-* a class to install a module.
-* @package     jelix
-* @subpackage  installer
-* @since 1.2
-*/
+ * Manage status of a module and its installer/updaters
+ *
+ * @package     jelix
+ * @subpackage  installer
+ * @since 1.2
+ */
 class jInstallerComponentModule {
 
     /**
-     *  @var string  name of the component
+     *  @var string  name of the module
      */
     protected $name = '';
 
     /**
-     * @var string the path of the directory of the component
+     * @var string the path of the directory of the module
      * it should be set by the constructor
      */
     protected $path = '';
@@ -64,7 +65,7 @@ class jInstallerComponentModule {
     /**
      * list of dependencies of the module
      */
-    public $dependencies = array();
+    protected $dependencies = array();
 
     /**
      * @var string the minimum version of jelix for which the component is compatible
@@ -127,6 +128,10 @@ class jInstallerComponentModule {
     public function getSourceVersion() { return $this->sourceVersion; }
     public function getSourceDate() { return $this->sourceDate; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
+
+    public function getDependencies() {
+        return $this->dependencies;
+    }
 
     /**
      * @param jInstallerModuleInfos $module module infos
@@ -249,9 +254,10 @@ class jInstallerComponentModule {
                 $this->installerContexts);
         }
         else {
-            $this->moduleInstaller->setEntryPoint($ep,
-                $this->moduleInfos[$epId]->dbProfile,
-                $this->installerContexts);
+            $this->moduleInstaller->setEntryPoint($ep);
+            $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+            $this->moduleInstaller->setContext($this->installerContexts);
+            $this->moduleInstaller->setUrlMapModifier($this->mainInstaller->getUrlModifier());
         }
 
         return $this->moduleInstaller;
@@ -394,18 +400,18 @@ class jInstallerComponentModule {
         return $list;
     }
 
-    public function installFinished(jInstallerEntryPoint2 $ep) {
+    public function installEntryPointFinished(jInstallerEntryPoint2 $ep) {
         $this->installerContexts = $this->moduleInstaller->getContexts();
         if ($this->mainInstaller)
             $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
     }
 
-    public function upgradeFinished(jInstallerEntryPoint2 $ep, $upgrader) {
+    public function upgradeEntryPointFinished(jInstallerEntryPoint2 $ep, $upgrader) {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
 
-    public function uninstallFinished(jInstallerEntryPoint2 $ep) {
+    public function uninstallEntryPointFinished(jInstallerEntryPoint2 $ep) {
         if ($this->mainInstaller)
             $this->mainInstaller->installerIni->removeValue($this->name.'.contexts', '__modules_data');
     }

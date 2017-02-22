@@ -69,7 +69,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 <module xmlns="http://jelix.org/ns/module/1.0">
 </module>';
         $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(), $comp->dependencies);
+        $this->assertEquals(array(), $comp->getDependencies());
         $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
@@ -78,7 +78,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     </dependencies>
 </module>';
         $comp->readDependenciesFromString($str);
-        $this->assertEquals(array(), $comp->dependencies);
+        $this->assertEquals(array(), $comp->getDependencies());
         $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
         $str = '<?xml version="1.0" encoding="UTF-8"?>
@@ -98,7 +98,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'maxversion' => '1.1',
                 'version' => '>=1.0,<=1.1'
             )
-            ), $comp->dependencies);
+            ), $comp->getDependencies());
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
 
 
@@ -146,7 +146,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'maxversion' => '*',
                 'version' => '>=1.0'
             ),
-            ), $comp->dependencies);
+            ), $comp->getDependencies());
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
     }
 
