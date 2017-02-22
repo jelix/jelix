@@ -86,16 +86,16 @@ class jInstallerEntryPoint2 {
     protected $urlMap;
 
     /**
-     * @param \Jelix\IniFile\MultiIniModifier $mainConfig   the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @param \Jelix\IniFile\MultiIniModifier $localConfig   the localconfig.ini.php file combined with $mainConfig
+     * @param jInstallerGlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct(\Jelix\IniFile\MultiIniModifier $mainConfig,
-                         \Jelix\IniFile\MultiIniModifier $localConfig,
+    function __construct(jInstallerGlobalSetup $globalSetup,
                          $configFile, $file, $type) {
+        $mainConfig = $globalSetup->getMainConfigIni();
+        $localConfig = $globalSetup->getLocalConfigIni();
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;

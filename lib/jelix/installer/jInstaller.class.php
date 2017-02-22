@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2017 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,6 +15,7 @@ require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerGlobalSetup.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
@@ -90,11 +91,6 @@ class jInstaller {
     const FLAG_REMOVE_MODULE = 4;
 
     const FLAG_ALL = 7;
-
-    /**
-     *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
-     */
-    public $installerIni = null;
     
     /**
      * list of entry point and their properties
@@ -134,21 +130,10 @@ class jInstaller {
     public $messages;
 
     /**
-     * the mainconfig.ini.php combined with the defaultconfig.ini.php
-     * @var \Jelix\IniFile\MultiIniModifier
+     * the global app setup
+     * @var jInstallerGlobalSetup
      */
-    protected $mainConfig;
-
-    /**
-     * the localconfig.ini.php content combined with $mainConfig
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $localConfig;
-
-    /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
-     */
-    protected $xmlMapFile;
+    protected $globalSetup;
 
     /**
      * initialize the installation
@@ -158,56 +143,17 @@ class jInstaller {
      * @param jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct (jIInstallReporter $reporter, $lang='') {
+    function __construct (jIInstallReporter $reporter, jInstallerGlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new jInstallerMessageProvider($lang);
 
-        $localConfig = jApp::varConfigPath('localconfig.ini.php');
-        if (!file_exists($localConfig)) {
-           $localConfigDist = jApp::varConfigPath('localconfig.ini.php.dist');
-           if (file_exists($localConfigDist)) {
-              copy($localConfigDist, $localConfig);
-           }
-           else {
-              file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
-           }
+        if (!$globalSetup) {
+            $globalSetup = new jInstallerGlobalSetup();
         }
-
-        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(),
-                                                                jApp::mainConfigFile());
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
-                                                                 $localConfig);
-        $this->installerIni = $this->getInstallerIni();
-
-        $urlfile = jApp::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
-        $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
-
-        // be sure temp path is ready
-        $chmod = $this->mainConfig->getValue('chmodDir');
-        jFile::createDir(jApp::tempPath(), intval($chmod, 8));
+        $this->globalSetup = $globalSetup;
 
         $this->readEntryPointData(simplexml_load_file(jApp::appPath('project.xml')));
-        $this->installerIni->save();
-    }
-    /**
-     * @internal mainly for tests
-     * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
-     * @throws Exception
-     */
-    protected function getInstallerIni() {
-        if (!file_exists(jApp::varConfigPath('installer.ini.php'))) {
-            if (false === @file_put_contents(jApp::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
-; for security reasons , don't remove or modify the first line
-; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
-
-")) {
-                throw new Exception('impossible to create var/config/installer.ini.php');
-            }
-        }
-        else {
-            copy(jApp::varConfigPath('installer.ini.php'), jApp::varConfigPath('installer.bak.ini.php'));
-        }
-        return new \Jelix\IniFile\IniModifier(jApp::varConfigPath('installer.ini.php'));
+        $this->globalSetup->getInstallerIni()->save();
     }
 
     /**
@@ -242,7 +188,7 @@ class jInstaller {
             $ep = $this->getEntryPointObject($configFile, $file, $type);
 
             $epId = $ep->getEpId();
-            $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
+            $ep->setUrlMap($this->globalSetup->getUrlModifier()->addEntryPoint($epId, $type));
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
@@ -250,11 +196,12 @@ class jInstaller {
 
             // now let's read all modules properties
             $modulesList = $ep->getModulesList();
+            $installerIni = $this->globalSetup->getInstallerIni();
             foreach ($modulesList as $name=>$path) {
                 $module = $ep->getModuleInfos($name);
 
-                $this->installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
-                $this->installerIni->setValue($name.'.version', $module->version, $epId);
+                $installerIni->setValue($name.'.installed', $module->isInstalled, $epId);
+                $installerIni->setValue($name.'.version', $module->version, $epId);
 
                 if (!isset($this->allModules[$path])) {
                     $this->allModules[$path] = $this->getComponentModule($name, $path, $this);
@@ -266,14 +213,14 @@ class jInstaller {
                 $this->modules[$epId][$name] = $m;
             }
             // remove informations about modules that don't exist anymore
-            $modules = $this->installerIni->getValues($epId);
+            $modules = $installerIni->getValues($epId);
             foreach($modules as $key=>$value) {
                 $l = explode('.', $key);
                 if (count($l)<=1) {
                     continue;
                 }
                 if (!isset($modulesList[$l[0]])) {
-                    $this->installerIni->removeValue($key, $epId);
+                    $installerIni->removeValue($key, $epId);
                 }
             }
         }
@@ -283,7 +230,7 @@ class jInstaller {
      * @internal for tests
      */
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint2($this->mainConfig, $this->localConfig,
+        return new jInstallerEntryPoint2($this->globalSetup,
                                         $configFile, $file, $type);
     }
 
@@ -301,13 +248,6 @@ class jInstaller {
      */
     public function getEntryPoint($epId) {
         return $this->entryPoints[$epId];
-    }
-
-    /**
-     * @return \Jelix\Routing\UrlMapping\XmlMapModifier
-     */
-    public function getUrlModifier() {
-        return $this->xmlMapFile;
     }
 
     /**
@@ -496,7 +436,7 @@ class jInstaller {
         foreach($entryPointModulesChains as $epId => $modulesChain) {
             if ($modulesChain) {
                 $result = $result & $this->_installEntryPointModules($modulesChain, $epId, $installWholeApp, $flags);
-                $this->installerIni->save();
+                $this->globalSetup->getInstallerIni()->save();
                 if (!$result) {
                     break;
                 }
@@ -680,6 +620,7 @@ class jInstaller {
 
         $installedModules = array();
         $result = true;
+        $installerIni = $this->globalSetup->getInstallerIni();
         // -----  installation process
         try {
             foreach($componentsToInstall as $item) {
@@ -694,15 +635,16 @@ class jInstaller {
                             $installer->installEntryPoint($ep);
                         }
                     }
-                    $this->installerIni->setValue($component->getName().'.installed',
+
+                    $installerIni->setValue($component->getName().'.installed',
                         1, $epId);
-                    $this->installerIni->setValue($component->getName().'.version',
+                    $installerIni->setValue($component->getName().'.version',
                         $component->getSourceVersion(), $epId);
-                    $this->installerIni->setValue($component->getName().'.version.date',
+                    $installerIni->setValue($component->getName().'.version.date',
                         $component->getSourceDate(), $epId);
-                    $this->installerIni->setValue($component->getName().'.firstversion',
+                    $installerIni->setValue($component->getName().'.firstversion',
                         $component->getSourceVersion(), $epId);
-                    $this->installerIni->setValue($component->getName().'.firstversion.date',
+                    $installerIni->setValue($component->getName().'.firstversion.date',
                         $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
@@ -722,9 +664,9 @@ class jInstaller {
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        $this->installerIni->setValue($component->getName().'.version',
+                        $installerIni->setValue($component->getName().'.version',
                             $upgrader->version, $epId);
-                        $this->installerIni->setValue($component->getName().'.version.date',
+                        $installerIni->setValue($component->getName().'.version.date',
                             $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
                             array($component->getName(), $upgrader->version));
@@ -733,9 +675,9 @@ class jInstaller {
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
-                        $this->installerIni->setValue($component->getName().'.version',
+                        $installerIni->setValue($component->getName().'.version',
                             $component->getSourceVersion(), $epId);
-                        $this->installerIni->setValue($component->getName().'.version.date',
+                        $installerIni->setValue($component->getName().'.version.date',
                             $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
                             array($component->getName(), $component->getSourceVersion()));
@@ -752,17 +694,17 @@ class jInstaller {
                             $installer->uninstallEntryPoint($ep);
                         }
                     }
-                    $this->installerIni->removeValue($component->getName().'.installed', $epId);
-                    $this->installerIni->removeValue($component->getName().'.version', $epId);
-                    $this->installerIni->removeValue($component->getName().'.version.date', $epId);
-                    $this->installerIni->removeValue($component->getName().'.firstversion', $epId);
-                    $this->installerIni->removeValue($component->getName().'.firstversion.date', $epId);
+                    $installerIni->removeValue($component->getName().'.installed', $epId);
+                    $installerIni->removeValue($component->getName().'.version', $epId);
+                    $installerIni->removeValue($component->getName().'.version.date', $epId);
+                    $installerIni->removeValue($component->getName().'.firstversion', $epId);
+                    $installerIni->removeValue($component->getName().'.firstversion.date', $epId);
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
-                $this->xmlMapFile->save();
+                $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
@@ -833,7 +775,7 @@ class jInstaller {
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->getConfigIni()->save();
-                $this->xmlMapFile->save();
+                $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.

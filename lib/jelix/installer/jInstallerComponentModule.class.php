@@ -58,9 +58,9 @@ class jInstallerComponentModule {
     protected $identityFile = 'module.xml';
 
     /**
-     * @var jInstaller the main installer controller
+     * @var jInstallerGlobalSetup
      */
-    protected $mainInstaller = null;
+    protected $globalSetup = null;
 
     /**
      * list of dependencies of the module
@@ -98,29 +98,17 @@ class jInstallerComponentModule {
      */
     protected $moduleUpgraders = null;
 
-    /**
-     * list of sessions Id of the component
-     */
-    protected $installerContexts = array();
-
     protected $upgradersContexts = array();
 
     /**
      * @param string $name the name of the component
      * @param string $path the path of the component
-     * @param jInstaller $mainInstaller
+     * @param jInstallerGlobalSetup $globalSetup
      */
-    function __construct($name, $path, $mainInstaller) {
+    function __construct($name, $path, jInstallerGlobalSetup $globalSetup = null) {
         $this->path = $path;
         $this->name = $name;
-        $this->mainInstaller = $mainInstaller;
-        if ($mainInstaller) {
-            $ini = $mainInstaller->installerIni;
-            $contexts = $ini->getValue($this->name.'.contexts','__modules_data');
-            if ($contexts !== null && $contexts !== "") {
-                $this->installerContexts = explode(',', $contexts);
-            }
-        }
+        $this->globalSetup = $globalSetup;
     }
 
     public function getName() { return $this->name; }
@@ -251,13 +239,12 @@ class jInstallerComponentModule {
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
             $this->moduleInstaller->setEntryPoint($ep->getLegacyInstallerEntryPoint(),
                 $this->moduleInfos[$epId]->dbProfile,
-                $this->installerContexts);
+                $this->globalSetup->getInstallerContexts($this->name));
         }
         else {
             $this->moduleInstaller->setEntryPoint($ep);
             $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
-            $this->moduleInstaller->setContext($this->installerContexts);
-            $this->moduleInstaller->setUrlMapModifier($this->mainInstaller->getUrlModifier());
+            $this->moduleInstaller->setUrlMapModifier($this->globalSetup->getUrlModifier());
         }
 
         return $this->moduleInstaller;
@@ -357,18 +344,18 @@ class jInstallerComponentModule {
             // we have the 1.4 installed, and want to upgrade to the 2.5 version
             // we should not execute the update for 2.3 since modifications have already been
             // made into the 1.4. The only way to now that, is to compare date of versions
-            if ($upgrader->date != '' && $this->mainInstaller) {
+            if ($upgrader->date != '' && $this->globalSetup) {
                 $upgraderDate = $this->_formatDate($upgrader->date);
 
                 // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.firstversion.date', $epId));
+                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.firstversion.date', $epId));
                 if ($firstVersionDate !== null) {
                     if ($firstVersionDate >= $upgraderDate)
                         continue;
                 }
 
                 // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->mainInstaller->installerIni->getValue($this->name.'.version.date', $epId));
+                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.version.date', $epId));
                 if ($currentVersionDate !== null) {
                     if ($currentVersionDate >= $upgraderDate)
                         continue;
@@ -401,9 +388,8 @@ class jInstallerComponentModule {
     }
 
     public function installEntryPointFinished(jInstallerEntryPoint2 $ep) {
-        $this->installerContexts = $this->moduleInstaller->getContexts();
-        if ($this->mainInstaller)
-            $this->mainInstaller->installerIni->setValue($this->name.'.contexts', implode(',',$this->installerContexts), '__modules_data');
+        if ($this->globalSetup)
+            $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
     }
 
     public function upgradeEntryPointFinished(jInstallerEntryPoint2 $ep, $upgrader) {
@@ -412,8 +398,8 @@ class jInstallerComponentModule {
     }
 
     public function uninstallEntryPointFinished(jInstallerEntryPoint2 $ep) {
-        if ($this->mainInstaller)
-            $this->mainInstaller->installerIni->removeValue($this->name.'.contexts', '__modules_data');
+        if ($this->globalSetup)
+            $this->globalSetup->removeInstallerContexts($this->name);
     }
 
     protected function _formatDate($date) {

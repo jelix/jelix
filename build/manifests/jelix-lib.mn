@@ -373,6 +373,7 @@ cd lib/jelix/installer
   jInstallerEntryPoint.class.php
   jInstallerEntryPoint2.class.php
   jInstallerException.class.php
+  jInstallerGLobalSetup.class.php
   jInstallerMessageProvider.class.php
   jInstallerMigration.class.php
   jInstallerModule.class.php
