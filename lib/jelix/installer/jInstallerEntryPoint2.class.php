@@ -75,6 +75,11 @@ class jInstallerEntryPoint2 {
     protected $urlMap;
 
     /**
+     * @var jInstallerGlobalSetup
+     */
+    protected $globalSetup;
+
+    /**
      * @param jInstallerGlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
@@ -89,6 +94,7 @@ class jInstallerEntryPoint2 {
         $this->configFile = $configFile;
         $this->scriptName =  ($this->_isCliScript?$file:'/'.$file);
         $this->file = $file;
+        $this->globalSetup = $globalSetup;
 
         $appConfigPath = jApp::appConfigPath($configFile);
         if (!file_exists($appConfigPath)) {
@@ -111,12 +117,15 @@ class jInstallerEntryPoint2 {
         $this->config = jConfigCompiler::read($configFile, true,
                                               $this->_isCliScript,
                                               $this->scriptName);
+
+        $this->urlMap = $globalSetup->getUrlModifier()
+                                    ->addEntryPoint($this->getEpId(), $type);
     }
 
     protected $legacyInstallerEntryPoint = null;
     public function getLegacyInstallerEntryPoint() {
         if ($this->legacyInstallerEntryPoint === null) {
-            $this->legacyInstallerEntryPoint = new jInstallerEntryPoint($this);
+            $this->legacyInstallerEntryPoint = new jInstallerEntryPoint($this, $this->globalSetup);
         }
         return $this->legacyInstallerEntryPoint;
     }
@@ -135,10 +144,6 @@ class jInstallerEntryPoint2 {
 
     public function isCliScript() {
         return $this->_isCliScript;
-    }
-
-    public function setUrlMap(XmlEntryPoint $urlEp) {
-        $this->urlMap = $urlEp;
     }
 
     public function getUrlMap() {

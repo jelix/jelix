@@ -36,7 +36,7 @@ class testInstallerEntryPoint extends jInstallerEntryPoint2 {
     function __construct($globalSetup,
                          $configFile, $file, $type, $configContent) {
         $this->type = $type;
-
+        $this->globalSetup = $globalSetup;
         $this->_isCliScript = ($type == 'cmdline');
         
         if (is_object($configFile)) {

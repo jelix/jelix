@@ -29,12 +29,12 @@ class jInstallerGlobalSetup {
     /**
      * @var \Jelix\Routing\UrlMapping\XmlMapModifier
      */
-    protected $xmlMapModifier;
+    protected $urlMapModifier;
 
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
      */
-    public $installerIni = null;
+    protected $installerIni = null;
 
     /**
      * jInstallerGlobalSetup constructor.
@@ -73,7 +73,7 @@ class jInstallerGlobalSetup {
         if (!$urlXmlFileName) {
             $urlXmlFileName = jApp::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
         }
-        $this->xmlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
+        $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
         // be sure temp path is ready
         $chmod = $this->mainConfig->getValue('chmodDir');
@@ -130,7 +130,55 @@ class jInstallerGlobalSetup {
      * @return \Jelix\Routing\UrlMapping\XmlMapModifier
      */
     public function getUrlModifier() {
-        return $this->xmlMapModifier;
+        return $this->urlMapModifier;
+    }
+
+    /**
+     * Declare a new entry point
+     *
+     * @param string $epId
+     * @param string $epType
+     * @param string $configFileName
+     * @throws Exception
+     */
+    public function declareNewEntryPoint($epId, $epType, $configFileName) {
+
+        $this->urlMapModifier->addEntryPoint($epId, $epType);
+
+        $doc = $this->loadProjectXml();
+        $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
+        if (!$eplist->length) {
+            $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
+            $doc->documentElement->appendChild($ep);
+        }
+        else {
+            $ep = $eplist->item(0);
+            foreach($ep->getElementsByTagName("entry") as $entry){
+                if ($entry->getAttribute("file") == $epId.'.php'){
+                    $entryType = $entry->getAttribute("type") ?: 'classic';
+                    if ($entryType != $epType) {
+                        throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
+                    }
+                    return;
+                }
+            }
+        }
+
+        $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
+        $elem->setAttribute("file", $epId.'.php');
+        $elem->setAttribute("config", $configFileName);
+        $elem->setAttribute("type", $epType);
+        $ep->appendChild($elem);
+        $ep->appendChild(new \DOMText("\n    "));
+        $doc->save(jApp::appPath('project.xml'));
+    }
+
+    protected function loadProjectXml() {
+        $doc = new \DOMDocument();
+        if (!$doc->load(jApp::appPath('project.xml'))) {
+            throw new \Exception("declareNewEntryPoint: cannot load project.xml");
+        }
+        return $doc;
     }
 
     /**
@@ -156,6 +204,5 @@ class jInstallerGlobalSetup {
     public function removeInstallerContexts($moduleName) {
         $this->installerIni->removeValue($moduleName.'.contexts', '__modules_data');
     }
-
 
 }

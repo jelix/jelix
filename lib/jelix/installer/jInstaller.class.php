@@ -188,7 +188,6 @@ class jInstaller {
             $ep = $this->getEntryPointObject($configFile, $file, $type);
 
             $epId = $ep->getEpId();
-            $ep->setUrlMap($this->globalSetup->getUrlModifier()->addEntryPoint($epId, $type));
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;

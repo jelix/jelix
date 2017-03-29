@@ -89,12 +89,12 @@ class jInstallerComponentModule {
     protected $moduleInfos = array();
 
     /**
-     * @var jInstallerModule2
+     * @var jInstallerModule2|jInstallerModule
      */
     protected $moduleInstaller = null;
 
     /**
-     * @var jInstallerModule2[]
+     * @var jInstallerModule2[]|jInstallerModule[]
      */
     protected $moduleUpgraders = null;
 
@@ -223,14 +223,11 @@ class jInstallerComponentModule {
         }
 
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
-        if ($ep->getLocalConfigIni()) {
-            $sparam = $ep->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
-        }
-        else {
-            $sparam = $ep->getConfigIni()->getValue($this->name.'.installparam','modules');
-        }
-        if ($sparam === null)
+        $sparam = $ep->getConfigIni()->getValue($this->name.'.installparam','modules');
+        if ($sparam === null) {
             $sparam = '';
+        }
+
         $sp = $this->moduleInfos[$epId]->serializeParameters();
         if ($sparam != $sp) {
             $ep->getConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
@@ -246,7 +243,6 @@ class jInstallerComponentModule {
         else {
             $this->moduleInstaller->setEntryPoint($ep);
             $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
-            $this->moduleInstaller->setUrlMapModifier($this->globalSetup->getUrlModifier());
         }
 
         return $this->moduleInstaller;
@@ -373,14 +369,14 @@ class jInstallerComponentModule {
             if ($upgrader instanceof jIInstallerComponent) {
                 $legacyEp = $ep->getLegacyInstallerEntryPoint();
                 $legacyEp->localConfigIni = $this->globalSetup->getLocalConfigIni();
-                $upgrader->setEntryPoint($legacyEp),
+                $upgrader->setEntryPoint($legacyEp,
                     $this->moduleInfos[$epId]->dbProfile,
                     $this->upgradersContexts[$class]);
             }
             else {
-                $upgrader->setEntryPoint($ep,
-                    $this->moduleInfos[$epId]->dbProfile,
-                    $this->upgradersContexts[$class]);
+                $upgrader->setEntryPoint($ep);
+                $upgrader->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+                $upgrader->setContext($this->upgradersContexts[$class]);
             }
             $list[] = $upgrader;
         }

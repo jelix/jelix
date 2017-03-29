@@ -52,7 +52,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     function setUp() {
         self::initJelixConfig();
-        $this->globalSetup = new jInstallerGlobalSetup();
+        $this->globalSetup = new testInstallerGlobalSetup();
         jApp::saveContext();
     }
 
@@ -184,7 +184,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier('foo/config.ini.php');
 
             // testinstall2 has an install.php file
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -220,7 +220,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             // testinstall1 has no upgrade scripts
-            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
+            $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', $this->globalSetup);
             $component->init();
             $conf =(object) array( 'modules'=>array(
                'testinstall1.access'=>2, 
@@ -247,7 +247,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $ini = new testInstallerIniFileModifier("index/config.ini.php");
 
             //------------ testinstall2 has some upgraders file
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             // the current version is the latest one : no updaters
@@ -277,7 +277,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -317,7 +317,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -359,7 +359,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
@@ -405,19 +405,18 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             
 
             file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
-            $installer = $this->getMock('jInstaller', null, array(new testInstallReporter()) );
+            $installerIni = new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
+            $this->globalSetup->setInstallerIni($installerIni);
 
-            $installer->installerIni = new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
-
-            $component = new testInstallerComponentModule2('testinstall2', jApp::appPath('modules/testinstall2/'), $installer);
+            $component = new testInstallerComponentModule2('testinstall2', jApp::appPath('modules/testinstall2/'), $this->globalSetup);
             $component->init();
 
             // 1.1  1.1.2* 1.1.3** 1.1.5 1.2.2** 1.2.4*
 
-            $installer->installerIni->setValue('testinstall2.firstversion', '1.1' , 'index');
-            $installer->installerIni->setValue('testinstall2.firstversion.date', '2011-01-10' , 'index');
-            $installer->installerIni->setValue('testinstall2.version', '1.1.2' , 'index');
-            $installer->installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'index');
+            $installerIni->setValue('testinstall2.firstversion', '1.1' , 'index');
+            $installerIni->setValue('testinstall2.firstversion.date', '2011-01-10' , 'index');
+            $installerIni->setValue('testinstall2.version', '1.1.2' , 'index');
+            $installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'index');
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2, 
@@ -436,10 +435,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
 
-            $installer->installerIni->setValue('testinstall2.firstversion', '1.1.3' , 'index');
-            $installer->installerIni->setValue('testinstall2.firstversion.date', '2011-01-13' , 'index');
-            $installer->installerIni->setValue('testinstall2.version', '1.1.5' , 'index');
-            $installer->installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'index');
+            $installerIni->setValue('testinstall2.firstversion', '1.1.3' , 'index');
+            $installerIni->setValue('testinstall2.firstversion.date', '2011-01-13' , 'index');
+            $installerIni->setValue('testinstall2.version', '1.1.5' , 'index');
+            $installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'index');
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
@@ -468,7 +467,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
             // the current version is a very old one : all updaters
-            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', null);
+            $component = new jInstallerComponentModule('testinstall2', jApp::appPath().'modules/testinstall2/', $this->globalSetup);
             $component->init();
 
             $conf =(object) array( 'modules'=>array(

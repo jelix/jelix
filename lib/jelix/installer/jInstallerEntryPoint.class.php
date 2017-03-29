@@ -41,6 +41,7 @@ class jInstallerEntryPoint {
      * and entrypoint config (overrider)
      *
      * @var \Jelix\IniFile\MultiIniModifier
+     * @deprecated
      */
     public $localConfigIni;
 
@@ -75,8 +76,10 @@ class jInstallerEntryPoint {
      * Creates a jInstallerEntryPoint object from a new
      * jInstallerEntryPoint2 object
      * @param jInstallerEntryPoint2 $entryPoint
+     * @param jInstallerGlobalSetup $globalSetup
      */
-    function __construct(jInstallerEntryPoint2 $entryPoint) {
+    function __construct(jInstallerEntryPoint2 $entryPoint,
+                         jInstallerGlobalSetup $globalSetup) {
         $this->type = $entryPoint->getType();
         $this->isCliScript = $entryPoint->isCliScript();
         $this->configFile = $entryPoint->getConfigFile();
@@ -86,7 +89,7 @@ class jInstallerEntryPoint {
         $this->epConfigIni = $entryPoint->getEpConfigIni();
 
         $this->configIni = new \Jelix\IniFile\MultiIniModifier(
-                                $entryPoint->getMainConfigIni()->getOverrider(),
+                                $globalSetup->getMainConfigIni()->getOverrider(),
                                 $this->epConfigIni);
 
         $this->config = $entryPoint->getConfigObj();
