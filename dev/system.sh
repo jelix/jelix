@@ -44,6 +44,7 @@ function initsystem () {
                             php${PHP_VERSION}-curl \
                             php${PHP_VERSION}-gd \
                             php${PHP_VERSION}-intl \
+                            php${PHP_VERSION}-ldap \
                             php${PHP_VERSION}-mysql \
                             php${PHP_VERSION}-pgsql \
                             php${PHP_VERSION}-sqlite3 \

@@ -9,6 +9,7 @@ APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="/vagrantscripts"
 APPHOSTNAME="testapp16.local"
 APPHOSTNAME2=""
+LDAPCN="testapp16"
 FPM_SOCK="php5-fpm.sock"
 POSTGRESQL_VERSION=9.1
 

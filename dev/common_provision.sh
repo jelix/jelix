@@ -19,6 +19,9 @@ su postgres -c $VAGRANTDIR/create_pgsql_db.sh
 echo "host    testapp,postgres         +test_group         0.0.0.0           0.0.0.0           md5" >> /etc/postgresql/$POSTGRESQL_VERSION/main/pg_hba.conf
 service postgresql restart
 
+source $VAGRANTDIR/setup_ldap.sh
+
+
 if [ "$PHP53" != "yes" ]; then
     apt-get -y install php5-xdebug
     cp $VAGRANTDIR/xdebug.ini /etc/php/$PHP_VERSION/mods-available/

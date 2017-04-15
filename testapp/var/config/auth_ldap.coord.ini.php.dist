@@ -77,47 +77,26 @@ persistant_cookie_path =
 
 ;=========== Parameters for drivers
 
-;------- parameters for the "Db" driver
-[Db]
-; name of the dao to get user data
-dao = "jauthdb~jelixuser"
-
-; profil to use for jDb 
-profil = ""
-
-; name of the php function to crypt the password in the database
-;password_crypt_function = md5
-
-;------- parameters for the "Class" driver
-[Class]
-; selector of the class
-class = ""
-
-; name of the php function to crypt the password in the database
-password_crypt_function = md5
-
-;------- parameters for the "LDS" driver
-[LDS]
-
 ;------- parameters for the "ldap" driver
 [ldap]
 ; default "localhost"
-hostname=
+hostname=localhost
 ; default 389
-port=
+port=389
 
 ; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser=
+ldapUser="cn=admin,dc=testapp16,dc=local"
 ; password used to connect with LDAP
-ldapPassword=
+ldapPassword="passjelix"
 
-; LDAP search params 
+; LDAP search params
+
+uidProperty=uid
 ; search base
-searchBaseDN="OU=ADAM users,O=Microsoft,C=US"
+searchBaseDN="ou=people,dc=testapp16,dc=local"
 ; search filter
-searchFilter="(objectClass=user)"
+searchFilter="(objectClass=inetOrgPerson)"
 ; attributes to retrieve for the search (default "cn,distinguishedName,name")
-searchAttributes="cn,distinguishedName,name,mail"
+searchAttributes="uid,mail,displayName,givenName,sn,cn"
 
-; name of the php function to crypt the password in the database
-password_crypt_function = md5
+ldapUserObjectClass=inetOrgPerson
