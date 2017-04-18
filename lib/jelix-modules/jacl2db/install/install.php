@@ -20,16 +20,16 @@ class jacl2dbModuleInstaller extends jInstallerModule2 {
     protected $defaultDbProfile = 'jacl2_profile';
 
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        if ($this->entryPoint->getType() == 'cmdline')
+        if ($entryPoint->getType() == 'cmdline')
             return;
 
         if (!$this->firstDbExec())
             return;
 
         $this->declareDbProfile('jacl2_profile', null, false);
-        $driver = $this->getConfigIni()->getValue('driver','acl2');
+        $driver = $entryPoint->getConfigIni()->getValue('driver','acl2');
         if ($driver != 'db') {
-            $this->getConfigIni()->setValue('driver','db','acl2');
+            $entryPoint->getConfigIni()->setValue('driver','db','acl2');
         }
         $this->execSQLScript('install_jacl2.schema');
 

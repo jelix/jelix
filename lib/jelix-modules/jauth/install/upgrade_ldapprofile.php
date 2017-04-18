@@ -15,7 +15,7 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
 
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
-        $authConfig = $this->getCoordPluginConf($this->getConfigIni(), 'auth');
+        $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
         if (!$authConfig) {
             return;
         }

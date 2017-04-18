@@ -10,11 +10,11 @@
 
 class jaclModuleInstaller extends jInstallerModule2 {
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        if ($this->firstConfExec()) {
-            $conf = $this->getConfigIni();
+        if ($entryPoint->firstConfExec()) {
+            $conf = $entryPoint->getConfigIni();
             if (null == $conf->getValue('jacl', 'coordplugins')) {
                 $conf->setValue('jacl', '1', 'coordplugins');
-                if ($this->entryPoint->getType() != 'classic')
+                if ($entryPoint->getType() != 'classic')
                     $onerror = 1;
                 else
                     $onerror = 2;

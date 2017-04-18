@@ -16,9 +16,9 @@ class jelixModuleInstaller extends jInstallerModule2 {
             return;
 
         // ---  install table for session storage if needed
-        $sessionStorage = $this->getConfigIni()->getValue("storage", "sessions");
-        $sessionDao = $this->getConfigIni()->getValue("dao_selector", "sessions");
-        //$sessionProfile = $this->getConfigIni()->getValue("dao_db_profile", "sessions");
+        $sessionStorage = $entryPoint->getConfigIni()->getValue("storage", "sessions");
+        $sessionDao = $entryPoint->getConfigIni()->getValue("dao_selector", "sessions");
+        //$sessionProfile = $entryPoint->getConfigIni()->getValue("dao_db_profile", "sessions");
 
         if ($sessionStorage == "dao" &&
             $sessionDao == "jelix~jsession" /*&&

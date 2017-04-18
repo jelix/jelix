@@ -21,11 +21,11 @@ class jauthModuleUpgrader_newencryption extends jInstallerModule2 {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
             self::$key = $cryptokey->saveToAsciiSafeString();
         }
-        $authConfig = $this->getCoordPluginConf($this->getConfigIni(), 'auth');
+        $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
         if (!$authConfig) {
             return;
         }
-        list($conf, $section) = $authconfig;
+        list($conf, $section) = $authConfig;
         $conf->removeValue('persistant_crypt_key', $section);
         $conf->save();
 

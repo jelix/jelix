@@ -9,7 +9,7 @@
 */
 
 use \Jelix\IniFile\MultiIniModifier;
-use \Jelix\IniFile\IniModifier;
+use \Jelix\IniFile\IniModifierInterface;
 
 class jelixModuleUpgrader_webassets extends jInstallerModule2 {
 
@@ -18,21 +18,21 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
     public $date = '2017-02-07 08:58';
 
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $config = $this->entryPoint->getConfigIni();
-        $mainConfig = $config->getMaster()->getMaster();
+        $config = $entryPoint->getConfigIni();
+        $mainConfig = $this->getMainConfigIni();
         $this->changeConfig($mainConfig, $config);
     }
 
     function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $config = $this->entryPoint->getMainConfigIni();
+        $config = $this->getMainConfigIni();
         $origConfig = $config->getMaster();
         $this->changeConfig($origConfig, $config);
     }
 
-    protected function changeConfig(MultiIniModifier $refConfig,
+    protected function changeConfig(IniModifierInterface $refConfig,
                                     MultiIniModifier $config) {
         $targetConfig = $config->getOverrider();
-        $origConfig = $this->entryPoint->getMainConfigIni()->getMaster();
+        $origConfig = $this->getMainConfigIni()->getMaster();
 
         // move jqueryPath to webassets
         $jqueryPath = $config->getValue('jqueryPath', 'urlengine');

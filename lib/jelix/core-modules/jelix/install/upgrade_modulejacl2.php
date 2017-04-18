@@ -15,16 +15,16 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
     public $date = '2012-09-19 11:05';
 
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $this->_upgradeconf('jacl2');
-        $this->_upgradeconf('jacl');
+        $this->_upgradeconf('jacl2', $entryPoint);
+        $this->_upgradeconf('jacl', $entryPoint);
     }
     
-    protected function _upgradeconf($module) {
+    protected function _upgradeconf($module, jInstallerEntryPoint2 $entryPoint) {
         // move options from jacl2 configuration file to global configuration
 
         $conf = null;
         // get from entrypoint config
-        $globalConf = $this->getConfigIni()->getOverrider();
+        $globalConf = $entryPoint->getEpConfigIni();
         $aclConfig = $this->getCoordPluginConf($globalConf, $module);
         if (!$aclConfig) {
             $globalConf = $this->getLocalConfigIni()->getOverrider();
