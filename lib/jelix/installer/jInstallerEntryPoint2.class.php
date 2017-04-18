@@ -15,7 +15,8 @@ use Jelix\IniFile\IniModifier;
 /**
  * container for entry points properties
  */
-class jInstallerEntryPoint2 {
+class jInstallerEntryPoint2
+{
 
     /**
      * @var StdObj   configuration parameters. compiled content of config files
@@ -80,6 +81,11 @@ class jInstallerEntryPoint2 {
     protected $globalSetup;
 
     /**
+     * @var jInstallerModule2
+     */
+    protected $moduleInstaller;
+
+    /**
      * @param jInstallerGlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
@@ -87,73 +93,91 @@ class jInstallerEntryPoint2 {
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
     function __construct(jInstallerGlobalSetup $globalSetup,
-                         $configFile, $file, $type) {
+                         $configFile, $file, $type)
+    {
 
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
-        $this->scriptName =  ($this->_isCliScript?$file:'/'.$file);
+        $this->scriptName = ($this->_isCliScript ? $file : '/' . $file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
         $appConfigPath = jApp::appConfigPath($configFile);
         if (!file_exists($appConfigPath)) {
             jFile::createDir(dirname($appConfigPath));
-            file_put_contents($appConfigPath, ';<'.'?php die(\'\');?'.'>');
+            file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
         $this->epConfigIni = new IniModifier($appConfigPath);
 
         $varConfigPath = jApp::varConfigPath($configFile);
         if (!file_exists($varConfigPath)) {
             jFile::createDir(dirname($varConfigPath));
-            file_put_contents($varConfigPath, ';<'.'?php die(\'\');?'.'>');
+            file_put_contents($varConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
         $this->localEpConfigIni = new IniModifier($varConfigPath);
 
         $fullConfigIni = new MultiIniModifier($globalSetup->getLocalConfigIni(),
-                                              $this->epConfigIni);
+            $this->epConfigIni);
         $this->fullConfigIni = new MultiIniModifier($fullConfigIni, $this->localEpConfigIni);
 
         $this->config = jConfigCompiler::read($configFile, true,
-                                              $this->_isCliScript,
-                                              $this->scriptName);
+            $this->_isCliScript,
+            $this->scriptName);
 
         $this->urlMap = $globalSetup->getUrlModifier()
-                                    ->addEntryPoint($this->getEpId(), $type);
+            ->addEntryPoint($this->getEpId(), $type);
+    }
+
+    /**
+     * @param jIInstallerComponent2 $installer
+     * @access private
+     */
+    public function _setCurrentModuleInstaller(jIInstallerComponent2 $installer)
+    {
+        $this->moduleInstaller = $installer;
     }
 
     protected $legacyInstallerEntryPoint = null;
-    public function getLegacyInstallerEntryPoint() {
+
+    public function getLegacyInstallerEntryPoint()
+    {
         if ($this->legacyInstallerEntryPoint === null) {
             $this->legacyInstallerEntryPoint = new jInstallerEntryPoint($this, $this->globalSetup);
         }
         return $this->legacyInstallerEntryPoint;
     }
 
-    public function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    public function getScriptName() {
+    public function getScriptName()
+    {
         return $this->scriptName;
     }
 
-    public function getFileName() {
+    public function getFileName()
+    {
         return $this->file;
     }
 
-    public function isCliScript() {
+    public function isCliScript()
+    {
         return $this->_isCliScript;
     }
 
-    public function getUrlMap() {
+    public function getUrlMap()
+    {
         return $this->urlMap;
     }
 
     /**
      * @return string the entry point id
      */
-    function getEpId() {
+    function getEpId()
+    {
         return $this->config->urlengine['urlScriptId'];
     }
 
@@ -161,7 +185,8 @@ class jInstallerEntryPoint2 {
      * @return array the list of modules and their path, as stored in the
      * compiled configuration file
      */
-    function getModulesList() {
+    function getModulesList()
+    {
         return $this->config->_allModulesPathList;
     }
 
@@ -169,7 +194,8 @@ class jInstallerEntryPoint2 {
      * @return jInstallerModuleInfos informations about a specific module used
      * by the entry point
      */
-    function getModuleInfos($moduleName) {
+    function getModuleInfos($moduleName)
+    {
         return new jInstallerModuleInfos($moduleName, $this->config->modules);
     }
 
@@ -178,7 +204,8 @@ class jInstallerEntryPoint2 {
      * @return \Jelix\IniFile\MultiIniModifier
      * @since 1.7
      */
-    function getConfigIni() {
+    function getConfigIni()
+    {
         return $this->fullConfigIni;
     }
 
@@ -187,7 +214,8 @@ class jInstallerEntryPoint2 {
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */
-    function getEpConfigIni() {
+    function getEpConfigIni()
+    {
         return $this->epConfigIni;
     }
 
@@ -196,14 +224,16 @@ class jInstallerEntryPoint2 {
      * @return \Jelix\IniFile\IniModifier
      * @since 1.7
      */
-    function getLocalEpConfigIni() {
+    function getLocalEpConfigIni()
+    {
         return $this->localEpConfigIni;
     }
 
     /**
      * @return string the config file name of the entry point
      */
-    function getConfigFile() {
+    function getConfigFile()
+    {
         return $this->configFile;
     }
 
@@ -211,11 +241,57 @@ class jInstallerEntryPoint2 {
      * @return stdObj the config content of the entry point, as seen when
      * calling jApp::config()
      */
-    function getConfigObj() {
+    function getConfigObj()
+    {
         return $this->config;
     }
 
-    function setConfigObj($config) {
+    function setConfigObj($config)
+    {
         $this->config = $config;
+    }
+
+    /**
+     * Declare web assets into the entry point config
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $set the name of the webassets section
+     * @param bool $force
+     */
+    public function declareWebAssets($name, array $values, $set, $force)
+    {
+        $this->globalSetup->declareWebAssetsInConfig($this->epConfigIni, $name, $values, $set, $force);
+    }
+
+    /**
+     *
+     */
+    public function firstConfExec()
+    {
+        $config = $this->getConfigFile();
+        return $this->moduleInstaller->firstExec('cf:' . $config);
+    }
+
+    /**
+     * import a sql script into the current profile.
+     *
+     * The name of the script should be store in install/$name.databasetype.sql
+     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * You can however provide a script compatible with all databases, but then
+     * you should indicate the full name of the script, with a .sql extension.
+     *
+     * @param string $name the name of the script
+     * @param string $module the module from which we should take the sql file.
+     * @param boolean $inTransaction indicate if queries should be executed inside a transaction
+     * @throws Exception
+     */
+    public function execSQLScript($name, $module, $inTransaction = true)
+    {
+        $conf = $this->getConfigObj()->_modulesPathList;
+        if (!isset($conf[$module])) {
+            throw new Exception('execSQLScript : invalid module name');
+        }
+        $path = $conf[$module];
+        $this->moduleInstaller->_execSQLScript($name, $path, $inTransaction);
     }
 }

@@ -220,6 +220,9 @@ class jInstallerComponentModule {
                                                 $this->sourceVersion,
                                                 $installWholeApp
                                                 );
+            if ($this->moduleInstaller instanceof jIInstallerComponent2) {
+                $this->moduleInstaller->setGlobalSetup($this->globalSetup);
+            }
         }
 
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
@@ -241,7 +244,7 @@ class jInstallerComponentModule {
                 $this->globalSetup->getInstallerContexts($this->name));
         }
         else {
-            $this->moduleInstaller->setEntryPoint($ep);
+            $ep->_setCurrentModuleInstaller($this->moduleInstaller);
             $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
         }
 
@@ -309,6 +312,9 @@ class jInstallerComponentModule {
                     $upgrader->targetVersions = array($fileInfo[1]);
                 }
                 $this->moduleUpgraders[] = $upgrader;
+                if ($upgrader instanceof jIInstallerComponent2) {
+                    $upgrader->setGlobalSetup($this->globalSetup);
+                }
             }
         }
 
@@ -374,7 +380,7 @@ class jInstallerComponentModule {
                     $this->upgradersContexts[$class]);
             }
             else {
-                $upgrader->setEntryPoint($ep);
+                $ep->_setCurrentModuleInstaller($upgrader);
                 $upgrader->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
                 $upgrader->setContext($this->upgradersContexts[$class]);
             }

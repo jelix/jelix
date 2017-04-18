@@ -109,10 +109,10 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     public $version = '0';
 
     /**
-     * the entry point property on which the installer is called
-     * @var jInstallerEntryPoint2
+     * global setup
+     * @var jInstallerGlobalSetup
      */
-    protected $entryPoint;
+    protected $globalSetup;
 
     /**
      * The path of the module
@@ -176,14 +176,8 @@ class jInstallerModule2 implements jIInstallerComponent2 {
             return null;
     }
 
-    /**
-     * is called to indicate that the installer will be called for the given
-     * entry point.
-     * @param jInstallerEntryPoint $ep the entry point
-     * @deprecated 
-     */
-    public function setEntryPoint($ep) {
-        $this->entryPoint = $ep;
+    function setGlobalSetup(jInstallerGlobalSetup $setup) {
+        $this->globalSetup = $setup;
     }
 
     /**
@@ -192,7 +186,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @since 1.7
      */
     public function getMainConfigIni() {
-        return $this->entryPoint->getMainConfigIni();
+        return $this->globalSetup->getMainConfigIni();
     }
 
     /**
@@ -201,16 +195,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @since 1.7
      */
     public function getLocalConfigIni() {
-        return $this->entryPoint->getLocalConfigIni();
-    }
-
-    /**
-     * the entry point config combined with getLocalConfigIni()
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    public function getConfigIni() {
-        return $this->entryPoint->getConfigIni();
+        return $this->globalSetup->getLocalConfigIni();
     }
 
     /**
@@ -227,7 +212,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
 
     /**
      * use the given database profile. check if this is an alias and use the
-     * real db profiel if this is the case.
+     * real db profile if this is the case.
      * @param string $dbProfile the profile name
      */
     protected function useDbProfile($dbProfile) {
@@ -262,7 +247,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     /**
      *
      */
-    protected function firstExec($contextId) {
+    public function firstExec($contextId) {
         if (in_array($contextId, $this->contextId)) {
             return false;
         }
@@ -285,9 +270,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     /**
      *
      */
-    protected function firstConfExec($config = '') {
-        if ($config == '')
-            $config = $this->entryPoint->getConfigFile();
+    protected function firstConfExec($config) {
         return $this->firstExec('cf:'.$config);
     }
 
@@ -338,22 +321,23 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @param boolean $inTransaction indicate if queries should be executed inside a transaction
      * @throws Exception
      */
-    final protected function execSQLScript ($name, $module = null, $inTransaction = true) {
+    final protected function execSQLScript ($name, $inTransaction = true)
+    {
+        $this->_execSQLScript($name, $this->path, $inTransaction);
+    }
+
+    /**
+     * @param string $name
+     * @param string $modulePath
+     * @param bool $inTransaction
+     * @throws Exception
+     * @internal
+     */
+    public function _execSQLScript ($name, $modulePath, $inTransaction = true) {
 
         $conn = $this->dbConnection();
         $tools = $this->dbTool();
-
-        if ($module) {
-            $conf = $this->entryPoint->getConfigObj()->_modulesPathList;
-            if (!isset($conf[$module])) {
-                throw new Exception('execSQLScript : invalid module name');
-            }
-            $path = $conf[$module];
-        }
-        else {
-            $path = $this->path;
-        }
-        $file = $path.'install/'.$name;
+        $file = $modulePath.'install/'.$name;
         if (substr($name, -4) != '.sql')
             $file .= '.'.$conn->dbms.'.sql';
 
@@ -425,7 +409,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->entryPoint->getEpConfigIni()->getValue('jelixWWWPath','urlengine');
+            $p = $this->getLocalConfigIni()->getValue('jelixWWWPath','urlengine');
             if (substr($p, -1) != '/') {
                 $p .= '/';
             }
@@ -438,11 +422,10 @@ class jInstallerModule2 implements jIInstallerComponent2 {
             $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::appConfigPath($this->entryPoint->getConfigFile()));
-            $path = str_replace('epconfig:', $p.'/', $path);
+            throw new \Exception("'epconfig:' alias is no more supported in path");
         }
         elseif (strpos($path, 'config:') === 0) {
-            $path = str_replace('config:', jApp::varConfigPath(), $path);
+            throw new \Exception("'config:' alias is no more supported in path");
         }
         return $path;
     }
@@ -548,19 +531,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
-     * Declare web assets into the entry point config
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $set the name of the webassets section
-     * @param bool $force
-     */
-    public function declareWebAssets($name, array $values, $set, $force)
-    {
-        $config = $this->entryPoint->getEpConfigIni();
-        $this->_declareWebAssets($config, $name, $values, $set, $force);
-    }
-
-    /**
      * declare web assets into the main configuration
      * @param string $name the name of webassets
      * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
@@ -569,47 +539,8 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      */
     public function declareGlobalWebAssets($name, array $values, $set, $force)
     {
-        $config = $this->entryPoint->getMainConfigIni()->getOverrider();
-        $this->_declareWebAssets($config, $name, $values, $set, $force);
+        $config = $this->globalSetup->getMainConfigIni()->getOverrider();
+        $this->globalSetup->declareWebAssetsInConfig($config, $name, $values, $set, $force);
     }
-
-    /**
-     * @param \Jelix\IniFile\IniModifier $config
-     * @param string $name the name of webassets
-     * @param array $values
-     * @param string $set the name of the webassets section
-     * @param book $force
-     */
-    protected function _declareWebAssets ($config, $name, array $values, $set, $force) {
-
-        $section = 'webassets_'.$set;
-        if (!$force && (
-                $config->getValue($name.'.css', $section) ||
-                $config->getValue($name.'.js', $section) ||
-                $config->getValue($name.'.require', $section)
-            )) {
-            return;
-        }
-
-        if (isset($values['css'])) {
-            $config->setValue($name.'.css', $values['css'], $section);
-        }
-        else {
-            $config->removeValue($name.'.css', $section);
-        }
-        if (isset($values['js'])) {
-            $config->setValue($name.'.js', $values['js'], $section);
-        }
-        else {
-            $config->removeValue($name.'.js', $section);
-        }
-        if (isset($values['require'])) {
-            $config->setValue($name.'.require', $values['require'], $section);
-        }
-        else {
-            $config->removeValue($name.'.require', $section);
-        }
-    }
-
 }
 

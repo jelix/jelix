@@ -205,4 +205,42 @@ class jInstallerGlobalSetup {
         $this->installerIni->removeValue($moduleName.'.contexts', '__modules_data');
     }
 
+    /**
+     * @param \Jelix\IniFile\IniModifier $config
+     * @param string $name the name of webassets
+     * @param array $values
+     * @param string $set the name of the webassets section
+     * @param book $force
+     */
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $set, $force) {
+
+        $section = 'webassets_'.$set;
+        if (!$force && (
+                $config->getValue($name.'.css', $section) ||
+                $config->getValue($name.'.js', $section) ||
+                $config->getValue($name.'.require', $section)
+            )) {
+            return;
+        }
+
+        if (isset($values['css'])) {
+            $config->setValue($name.'.css', $values['css'], $section);
+        }
+        else {
+            $config->removeValue($name.'.css', $section);
+        }
+        if (isset($values['js'])) {
+            $config->setValue($name.'.js', $values['js'], $section);
+        }
+        else {
+            $config->removeValue($name.'.js', $section);
+        }
+        if (isset($values['require'])) {
+            $config->setValue($name.'.require', $values['require'], $section);
+        }
+        else {
+            $config->removeValue($name.'.require', $section);
+        }
+    }
+
 }
