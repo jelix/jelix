@@ -246,6 +246,7 @@ class jInstallerComponentModule {
         else {
             $ep->_setCurrentModuleInstaller($this->moduleInstaller);
             $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+            $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
         }
 
         return $this->moduleInstaller;

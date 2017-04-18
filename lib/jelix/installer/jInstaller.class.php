@@ -203,7 +203,7 @@ class jInstaller {
                 $installerIni->setValue($name.'.version', $module->version, $epId);
 
                 if (!isset($this->allModules[$path])) {
-                    $this->allModules[$path] = $this->getComponentModule($name, $path, $this);
+                    $this->allModules[$path] = $this->getComponentModule($name, $path, $this->globalSetup);
                     $this->allModules[$path]->init();
                 }
 
@@ -237,8 +237,8 @@ class jInstaller {
      * @internal for tests
      * @return jInstallerComponentModule
      */
-    protected function getComponentModule($name, $path, $installer) {
-        return new jInstallerComponentModule($name, $path, $installer);
+    protected function getComponentModule($name, $path, jInstallerGlobalSetup $setup) {
+        return new jInstallerComponentModule($name, $path, $setup);
     }
 
     /**

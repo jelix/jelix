@@ -204,12 +204,12 @@ class testInstallerMain extends jInstaller {
                                            (object) $this->configContent[$configFile]);
     }
     
-    protected function getComponentModule($name, $path, $installer) {
+    protected function getComponentModule($name, $path, jInstallerGlobalSetup $setup) {
         if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
-            return new jInstallerComponentModule($name, $path, $installer);
+            return new jInstallerComponentModule($name, $path, $setup);
         }
         else {
-            return new testInstallerComponentModule($name, $path, $installer);
+            return new testInstallerComponentModule($name, $path, $setup);
         }
     }
     
