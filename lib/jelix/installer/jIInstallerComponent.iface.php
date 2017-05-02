@@ -9,10 +9,11 @@
 */
 
 /**
-* @package     jelix
-* @subpackage  installer
-* @since 1.2
-*/
+ * @package     jelix
+ * @subpackage  installer
+ * @since 1.2
+ * @deprecated
+ */
 interface jIInstallerComponent {
 
     /**

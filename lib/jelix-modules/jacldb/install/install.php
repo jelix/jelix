@@ -10,12 +10,12 @@
 */
 
 
-class jacldbModuleInstaller extends jInstallerModule {
+class jacldbModuleInstaller extends jInstallerModule2 {
 
     protected $defaultDbProfile = 'jacl_profile';
 
-    function install() {
-        if ($this->entryPoint->type != 'cmdline')
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+        if ($entryPoint->getType() != 'cmdline')
             return;
 
         if (!$this->firstDbExec())
@@ -23,9 +23,11 @@ class jacldbModuleInstaller extends jInstallerModule {
 
 
         $this->declareDbProfile('jacl_profile', null, false);
-        $driver = $this->getConfigIni()->getValue('driver','acl');
-        if ($driver != 'db')
-            $this->getConfigIni()->setValue('driver','db','acl');
+        $config = $entryPoint->getConfigIni();
+        $driver = $config->getValue('driver','acl');
+        if ($driver != 'db') {
+            $config->setValue('driver', 'db', 'acl');
+        }
         $this->execSQLScript('install_jacl.schema');
         try {
             $this->execSQLScript('install_jacl.data');

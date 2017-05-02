@@ -10,22 +10,41 @@
 
 class UrlEngineUpgrader {
 
-    protected $config;
+    /**
+     * @var \Jelix\IniFile\IniModifierArray
+     */
+    protected $fullConfig;
+
+    /**
+     * @var \Jelix\IniFile\IniModifier
+     */
+    protected $mainConfig;
+
+    /**
+     * @var \Jelix\IniFile\IniModifier
+     */
+    protected $epConfig;
 
     protected $epId;
 
+    /**
+     * @var \Jelix\Routing\UrlMapping\XmlEntryPoint
+     */
     protected $xmlMapEntryPoint;
 
-    function __construct(\Jelix\IniFile\MultiIniModifier $config, $epId,
+    function __construct(\Jelix\IniFile\IniModifierArray $fullConfig,
+                         $epId,
                          \Jelix\Routing\UrlMapping\XmlEntryPoint $xml) {
-        $this->config = $config;
+        $this->fullConfig = $fullConfig;
+        $this->mainConfig = $fullConfig['main'];
+        $this->epConfig = $fullConfig['entrypoint'];
         $this->xmlMapEntryPoint = $xml;
         $this->epId = $epId;
     }
 
     function upgrade() {
 
-        $engine = $this->config->getValue('engine', 'urlengine');
+        $engine = $this->fullConfig->getValue('engine', 'urlengine');
         switch($engine) {
             case 'simple':
                 $this->migrateSimple();
@@ -38,18 +57,17 @@ class UrlEngineUpgrader {
                 $this->migrateBasicSignificant();
         }
 
-        $defaultEntryPoint =  $this->config->getValue('defaultEntrypoint', 'urlengine');
+        $defaultEntryPoint =  $this->fullConfig->getValue('defaultEntrypoint', 'urlengine');
         if ($defaultEntryPoint == $this->epId) {
             $this->xmlMapEntryPoint->setOptions(array('default'=>true));
         }
 
         $this->migrateStartModuleAction();
         
-        $epConfig = $this->config->getOverrider();
-        $this->cleanConfig($epConfig);
+        $this->cleanConfig($this->epConfig);
     }
 
-    public function cleanConfig($ini) {
+    public function cleanConfig(\Jelix\IniFile\IniModifier $ini) {
         $ini->removeValue('startModule');
         $ini->removeValue('startAction');
         $ini->removeValue('defaultEntrypoint', 'urlengine');
@@ -62,14 +80,14 @@ class UrlEngineUpgrader {
     protected $httpsSelectors;
 
     protected function migrateSimple() {
-        $https = preg_split("/[\s,]+/", $this->config->getValue('simple_urlengine_https', 'urlengine'));
+        $https = preg_split("/[\\s,]+/", $this->fullConfig->getValue('simple_urlengine_https', 'urlengine'));
         $this->httpsSelectors = array_combine($https, array_fill(0, count($https), true));
 
-        $entrypoints = $this->config->getValues('simple_urlengine_entrypoints');
+        $entrypoints = $this->fullConfig->getValues('simple_urlengine_entrypoints');
         foreach($entrypoints as $entrypoint=>$selectors) {
             $entrypoint = str_replace('.php', '', $entrypoint);
             if ($entrypoint == $this->epId) {
-                $selectors = preg_split("/[\s,]+/", $selectors);
+                $selectors = preg_split("/[\\s,]+/", $selectors);
                 foreach($selectors as $sel2){
                     $this->storeUrl($sel2);
                 }
@@ -83,7 +101,7 @@ class UrlEngineUpgrader {
         // read basic_significant_urlengine_entrypoints
         // if the entry point is not in this section, or value is off
         // add an attribute noentrypoint=true
-        $addEntryPoints = $this->config->getValues('basic_significant_urlengine_entrypoints');
+        $addEntryPoints = $this->fullConfig->getValues('basic_significant_urlengine_entrypoints');
         if (!isset($addEntryPoints[$this->epId]) ||
             !$addEntryPoints[$this->epId]) {
             $this->xmlMapEntryPoint->setOptions(array('noentrypoint'=>true));
@@ -96,10 +114,10 @@ class UrlEngineUpgrader {
     }
 
     protected function migrateStartModuleAction() {
-        $startModule = $this->config->getValue('startModule');
-        $startAction = $this->config->getValue('startAction');
-        if ($startModule != $this->config->getMaster()->getValue('startModule') ||
-            $startAction != $this->config->getMaster()->getValue('startAction')) {
+        $startModule = $this->fullConfig->getValue('startModule');
+        $startAction = $this->fullConfig->getValue('startAction');
+        if ($startModule != $this->mainConfig->getValue('startModule') ||
+            $startAction != $this->mainConfig->getValue('startAction')) {
             $this->xmlMapEntryPoint->addUrlAction("/", $startModule, $startAction, null, null, array('default'=>true));
             $this->xmlMapEntryPoint->addUrlModule('', $startModule);
         }
@@ -114,7 +132,7 @@ class UrlEngineUpgrader {
             $https = isset($this->httpsSelectors[$selStr]);
             $this->xmlMapEntryPoint->setOptions(array('https'=>$https, 'default'=>true));
         }
-        else if (preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_:]+)@([a-zA-Z0-9_]+)$/", $selStr, $m)) {
+        else if (preg_match("/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_:]+)@([a-zA-Z0-9_]+)$/", $selStr, $m)) {
             // --> <url pathinfo="/$module/$controller/$method" module="$module" action="$action"/>
             $module = $m[1];
             $action = $m[2];
@@ -182,7 +200,6 @@ class UrlEngineUpgrader {
             $this->xmlMapEntryPoint->addUrlModule("", $module, $options);
         }
     }
-
 }
 
 

@@ -8,46 +8,53 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-use \Jelix\IniFile\MultiIniModifier;
 use \Jelix\IniFile\IniModifier;
+use \Jelix\IniFile\IniModifierArray;
+use \Jelix\IniFile\IniModifierInterface;
 
-class jelixModuleUpgrader_webassets extends jInstallerModule {
+class jelixModuleUpgrader_webassets extends jInstallerModule2 {
 
     public $targetVersions = array('1.7.0-beta.2');
 
     public $date = '2017-02-07 08:58';
 
-    function install() {
-        $config = $this->entryPoint->getConfigIni();
-        $mainConfig = $config->getMaster()->getMaster();
-        $this->changeConfig($mainConfig, $config);
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+        $epConfig = $entryPoint->getConfigIni();
+        $mainConfig = $this->getConfigIni();
+
+        $this->changeConfig($mainConfig, $epConfig, $epConfig['entrypoint']);
     }
 
-    function postInstall() {
-        $config = $this->entryPoint->getMainConfigIni();
-        $origConfig = $config->getMaster();
-        $this->changeConfig($origConfig, $config);
+    function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+        $mainConfig = $this->getConfigIni();
+        $this->changeConfig($mainConfig['default'], $mainConfig,
+            $mainConfig['main']);
     }
 
-    protected function changeConfig(MultiIniModifier $refConfig,
-                                    MultiIniModifier $config) {
-        $targetConfig = $config->getOverrider();
-        $origConfig = $this->entryPoint->getMainConfigIni()->getMaster();
+    /**
+     * @param IniModifierInterface $refConfig the config containing default values beside $config
+     * @param IniModifierArray $config The configuration in which we found actual values
+     * @param IniModifier $targetConfig the file to modify
+     */
+    protected function changeConfig(IniModifierInterface $refConfig,
+                                    IniModifierArray $config,
+                                    IniModifier $targetConfig) {
+        $defaultConfig = $this->getConfigIni()['default'];
 
         // move jqueryPath to webassets
         $jqueryPath = $config->getValue('jqueryPath', 'urlengine');
         $jqueryPathOrig = $refConfig->getValue('jqueryPath', 'urlengine');
         if ($jqueryPathOrig != $jqueryPath &&
             $targetConfig->getValue('jquery.js', 'webassets_common') === null) {
-            $config->setValue('useSet', 'main', 'webassets');
-            $config->setValue('jquery.js', $jqueryPath, 'webassets_main');
+            $targetConfig->setValue('useSet', 'main', 'webassets');
+            $targetConfig->setValue('jquery.js', $jqueryPath, 'webassets_main');
         }
 
         // move datepickers scripts to webassets
 
-        $defaultDatepickerCss = $origConfig->getValue('jforms_datepicker_default.css', 'webassets_common');
-        $defaultDatepickerJs = $origConfig->getValue('jforms_datepicker_default.js', 'webassets_common');
-        $defaultDatepickerRequire = $origConfig->getValue('jforms_datepicker_default.require', 'webassets_common');
+        $defaultDatepickerCss = $defaultConfig->getValue('jforms_datepicker_default.css', 'webassets_common');
+        $defaultDatepickerJs = $defaultConfig->getValue('jforms_datepicker_default.js', 'webassets_common');
+        $defaultDatepickerRequire = $defaultConfig->getValue('jforms_datepicker_default.require', 'webassets_common');
         $datapickers = $targetConfig->getValues('datepickers');
         if ($datapickers) {
             foreach($datapickers as $configName => $script) {

@@ -3,18 +3,77 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2012 Laurent Jouanneau
-* @link        http://jelix.org
+* @copyright   2008-2017 Laurent Jouanneau
+* @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 /**
-* base class for installers
-* @package     jelix
-* @subpackage  installer
-* @since 1.2
-*/
-abstract class jInstallerBase {
+ * A class that does processing to configure and install a module into
+ * an application. A module should have a class that inherits from it
+ * in order to configure itself into the application.
+ *
+ * @package     jelix
+ * @subpackage  installer
+ * @since 1.7
+ */
+class jInstallerModule2 implements jIInstallerComponent2 {
+
+    /**
+     * Called before the installation of any modules,
+     * for each entrypoints, and after preInstallGlobal()
+     *
+     * Here, you should check if the module can be installed or not
+     * for the given entry point.
+     * @throws Exception if the module cannot be installed
+     */
+    function preInstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
+
+    /**
+     * Should configure the module for the given entrypoint
+     *
+     * If an error occurs during the installation, you are responsible
+     * to cancel/revert all things the method did before the error
+     * @throws Exception  if an error occurs during the installation.
+     * @param jInstallerEntryPoint2 $entryPoint
+     */
+    function installEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
+
+    /**
+     * Redefine this method if you do some additional process after
+     * the installation of all modules for the given entrypoint for
+     *
+     * @throws Exception  if an error occurs during the post installation.
+     */
+    function postInstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
+
+    /**
+     * Called before the uninstallation of all other modules for the given entry point
+     *
+     * Here, you should check if the module can be uninstalled or not
+     * @throws Exception if the module cannot be uninstalled
+     */
+    function preUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
+
+    /**
+     * should unconfigure the module for the given entry point
+     *
+     * called for each entry point
+     *
+     * @throws Exception  if an error occurs during the uninstall.
+     * @param jInstallerEntryPoint2 $entryPoint
+     */
+    function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
 
     /**
      * @var string name of the component
@@ -25,7 +84,6 @@ abstract class jInstallerBase {
      * @var string name of the installer
      */
     public $name;
-
 
     /**
      * the versions for which the installer should be called.
@@ -51,18 +109,11 @@ abstract class jInstallerBase {
     public $version = '0';
 
     /**
-     * combination between mainconfig.ini.php (master) and entrypoint config (overrider)
-     * @var \Jelix\IniFile\MultiIniModifier
-     * @deprecated use entryPoint methods to access to different configuration files.
+     * global setup
+     * @var jInstallerGlobalSetup
      */
-    protected $config = null;
-    
-    /**
-     * the entry point property on which the installer is called
-     * @var jInstallerEntryPoint
-     */
-    protected $entryPoint;
-    
+    protected $globalSetup;
+
     /**
      * The path of the module
      * @var string
@@ -94,6 +145,11 @@ abstract class jInstallerBase {
     protected $parameters = array();
 
     /**
+     * @var jDbConnection
+     */
+    private $_dbConn = null;
+
+    /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
      * @param string $path the component path
@@ -120,24 +176,33 @@ abstract class jInstallerBase {
             return null;
     }
 
-    /**
-     * @var jDbConnection
-     */
-    private $_dbConn = null;
+    function setGlobalSetup(jInstallerGlobalSetup $setup) {
+        $this->globalSetup = $setup;
+    }
 
     /**
-     * is called to indicate that the installer will be called for the given
-     * configuration, entry point and db profile.
-     * @param jInstallerEntryPoint $ep the entry point
+     * default config and main config combined
+     * @return \Jelix\IniFile\IniModifierArray
+     * @since 1.7
+     */
+    public function getConfigIni() {
+        return $this->globalSetup->getConfigIni();
+    }
+
+    /**
+     * the localconfig.ini.php file combined with main and default config
+     * @return \Jelix\IniFile\IniModifierArray
+     * @since 1.7
+     */
+    public function getLocalConfigIni() {
+        return $this->globalSetup->getLocalConfigIni();
+    }
+
+    /**
+     * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
-     * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint($ep, $dbProfile, $contexts) {
-        $this->entryPoint = $ep;
-        $this->config = $ep->getConfigIni();
-        $this->contextId = $contexts;
-        $this->newContextId = array();
-
+    public function initDbProfileForEntrypoint($dbProfile) {
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
         }
@@ -145,79 +210,9 @@ abstract class jInstallerBase {
             $this->useDbProfile($dbProfile);
     }
 
-    protected function declareNewEntryPoint($epId, $epType, $configFileName) {
-        if (!$this->firstExec('EP_'.$epId)) {
-            return;
-        }
-        $mapModifier = $this->entryPoint->getUrlMap()->getMapModifier();
-        $mapModifier->addEntryPoint($epId, $epType);
-
-        $doc = $this->loadProjectXml();
-        $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
-        if (!$eplist->length) {
-            $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
-        }
-        else {
-            $ep = $eplist->item(0);
-            foreach($ep->getElementsByTagName("entry") as $entry){
-                if ($entry->getAttribute("file") == $epId.'.php'){
-                    $entryType = $entry->getAttribute("type") ?: 'classic';
-                    if ($entryType != $epType) {
-                        throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
-                    }
-                    return;
-                }
-            }
-        }
-
-        $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $epId.'.php');
-        $elem->setAttribute("config", $configFileName);
-        $elem->setAttribute("type", $epType);
-        $ep->appendChild($elem);
-        $ep->appendChild(new \DOMText("\n    "));
-        $doc->save(jApp::appPath('project.xml'));
-    }
-
-    private function loadProjectXml() {
-        $doc = new \DOMDocument();
-        if (!$doc->load(jApp::appPath('project.xml'))) {
-            throw new \Exception("addEntryPointInfo: cannot load project.xml");
-        }
-        return $doc;
-    }
-
-    /**
-     * the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    public function getMainConfigIni() {
-        return $this->entryPoint->getMainConfigIni();
-    }
-
-    /**
-     * the localconfig.ini.php file combined with getMainConfigIni()
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    public function getLocalConfigIni() {
-        return $this->entryPoint->getLocalConfigIni();
-    }
-
-    /**
-     * the entry point config combined with getLocalConfigIni()
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
-     */
-    public function getConfigIni() {
-        return $this->entryPoint->getConfigIni();
-    }
-
     /**
      * use the given database profile. check if this is an alias and use the
-     * real db profiel if this is the case.
+     * real db profile if this is the case.
      * @param string $dbProfile the profile name
      */
     protected function useDbProfile($dbProfile) {
@@ -242,9 +237,17 @@ abstract class jInstallerBase {
     protected $newContextId = array();
 
     /**
+     * @param array $contexts  list of contexts already executed
+     */
+    public function setContext($contexts) {
+        $this->contextId = $contexts;
+        $this->newContextId = array();
+    }
+
+    /**
      *
      */
-    protected function firstExec($contextId) {
+    public function firstExec($contextId) {
         if (in_array($contextId, $this->contextId)) {
             return false;
         }
@@ -267,9 +270,7 @@ abstract class jInstallerBase {
     /**
      *
      */
-    protected function firstConfExec($config = '') {
-        if ($config == '')
-            $config = $this->entryPoint->getConfigFile();
+    protected function firstConfExec($config) {
         return $this->firstExec('cf:'.$config);
     }
 
@@ -320,22 +321,23 @@ abstract class jInstallerBase {
      * @param boolean $inTransaction indicate if queries should be executed inside a transaction
      * @throws Exception
      */
-    final protected function execSQLScript ($name, $module = null, $inTransaction = true) {
+    final protected function execSQLScript ($name, $inTransaction = true)
+    {
+        $this->_execSQLScript($name, $this->path, $inTransaction);
+    }
+
+    /**
+     * @param string $name
+     * @param string $modulePath
+     * @param bool $inTransaction
+     * @throws Exception
+     * @internal
+     */
+    public function _execSQLScript ($name, $modulePath, $inTransaction = true) {
 
         $conn = $this->dbConnection();
         $tools = $this->dbTool();
-
-        if ($module) {
-            $conf = $this->entryPoint->getConfigObj()->_modulesPathList;
-            if (!isset($conf[$module])) {
-                throw new Exception('execSQLScript : invalid module name');
-            }
-            $path = $conf[$module];
-        }
-        else {
-            $path = $this->path;
-        }
-        $file = $path.'install/'.$name;
+        $file = $modulePath.'install/'.$name;
         if (substr($name, -4) != '.sql')
             $file .= '.'.$conn->dbms.'.sql';
 
@@ -368,7 +370,7 @@ abstract class jInstallerBase {
     /**
      * private function which copy the content of a directory to an other
      *
-     * @param string $sourcePath 
+     * @param string $sourcePath
      * @param string $targetPath
      */
     private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite) {
@@ -404,10 +406,10 @@ abstract class jInstallerBase {
     }
 
     protected function expandPath($path) {
-         if (strpos($path, 'www:') === 0)
+        if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->entryPoint->getEpConfigIni()->getValue('jelixWWWPath','urlengine');
+            $p = $this->globalSetup->getConfigIni()->getValue('jelixWWWPath','urlengine');
             if (substr($p, -1) != '/') {
                 $p .= '/';
             }
@@ -420,12 +422,11 @@ abstract class jInstallerBase {
             $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::appConfigPath($this->entryPoint->getConfigFile()));
-            $path = str_replace('epconfig:', $p.'/', $path);
+            throw new \Exception("'epconfig:' alias is no more supported in path");
         }
-         elseif (strpos($path, 'config:') === 0) {
-             $path = str_replace('config:', jApp::varConfigPath(), $path);
-         }
+        elseif (strpos($path, 'config:') === 0) {
+            throw new \Exception("'config:' alias is no more supported in path");
+        }
         return $path;
     }
 
@@ -530,19 +531,6 @@ abstract class jInstallerBase {
     }
 
     /**
-     * Declare web assets into the entry point config
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $set the name of the webassets section
-     * @param bool $force
-     */
-    public function declareWebAssets($name, array $values, $set, $force)
-    {
-        $config = $this->entryPoint->getEpConfigIni();
-        $this->_declareWebAssets($config, $name, $values, $set, $force);
-    }
-
-    /**
      * declare web assets into the main configuration
      * @param string $name the name of webassets
      * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
@@ -551,45 +539,8 @@ abstract class jInstallerBase {
      */
     public function declareGlobalWebAssets($name, array $values, $set, $force)
     {
-        $config = $this->entryPoint->getMainConfigIni()->getOverrider();
-        $this->_declareWebAssets($config, $name, $values, $set, $force);
-    }
-
-    /**
-     * @param \Jelix\IniFile\IniModifier $config
-     * @param string $name the name of webassets
-     * @param array $values
-     * @param string $set the name of the webassets section
-     * @param book $force
-     */
-    protected function _declareWebAssets ($config, $name, array $values, $set, $force) {
-
-        $section = 'webassets_'.$set;
-        if (!$force && (
-            $config->getValue($name.'.css', $section) ||
-            $config->getValue($name.'.js', $section) ||
-            $config->getValue($name.'.require', $section)
-            )) {
-            return;
-        }
-
-        if (isset($values['css'])) {
-            $config->setValue($name.'.css', $values['css'], $section);
-        }
-        else {
-            $config->removeValue($name.'.css', $section);
-        }
-        if (isset($values['js'])) {
-            $config->setValue($name.'.js', $values['js'], $section);
-        }
-        else {
-            $config->removeValue($name.'.js', $section);
-        }
-        if (isset($values['require'])) {
-            $config->setValue($name.'.require', $values['require'], $section);
-        }
-        else {
-            $config->removeValue($name.'.require', $section);
-        }
+        $config = $this->globalSetup->getConfigIni();
+        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $set, $force);
     }
 }
+

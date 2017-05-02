@@ -37,12 +37,24 @@ class jInstallerApplication {
     protected $appName = '';
 
     /**
+     * the global app setup
+     * @var jInstallerGlobalSetup
+     */
+    protected $globalSetup;
+
+    /**
      * @param string $projectFile the filename of the XML project file
      */
-    function __construct($projectFile='') {
+    function __construct($projectFile='', jInstallerGlobalSetup $globalSetup = null) {
 
-        if ($projectFile != '')
+        if ($projectFile != '') {
             $this->projectXmlFilename = $projectFile;
+        }
+
+        if (!$globalSetup) {
+            $globalSetup = new jInstallerGlobalSetup();
+        }
+        $this->globalSetup = $globalSetup;
 
         $this->loadProjectXml();
     }
@@ -90,27 +102,10 @@ class jInstallerApplication {
             return $this->entryPointList;
         }
 
-        $localConfig = jApp::varConfigPath('localconfig.ini.php');
-        if (!file_exists($localConfig)) {
-           $localConfigDist = jApp::varConfigPath('localconfig.ini.php.dist');
-           if (file_exists($localConfigDist)) {
-              copy($localConfigDist, $localConfig);
-           }
-           else {
-              file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
-           }
-        }
-
-        $mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(),
-                                                                jApp::mainConfigFile());
-        $localConfig = new \Jelix\IniFile\MultiIniModifier($mainConfig,
-                                                                 $localConfig);
-
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {
             $epElt = $listEp->item($i);
-            $ep = new jInstallerEntryPoint($mainConfig,
-                                           $localConfig,
+            $ep = new jInstallerEntryPoint2($this->globalSetup,
                                            $epElt->getAttribute("config"),
                                            $epElt->getAttribute("file"),
                                            $epElt->getAttribute("type"));

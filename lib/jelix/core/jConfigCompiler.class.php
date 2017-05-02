@@ -75,16 +75,16 @@ class jConfigCompiler {
             throw new Exception("Entry point configuration file cannot be mainconfig.ini.php", 5);
         }
 
-        // read the local configuration of the app
-        if (file_exists($varConfigPath.'localconfig.ini.php')) {
-            @jelix_read_ini($varConfigPath.'localconfig.ini.php', $config);
-        }
-
         // read the configuration of the entry point
         if (file_exists($appConfigPath.$configFile)) {
             if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
+        }
+
+        // read the local configuration of the app
+        if (file_exists($varConfigPath.'localconfig.ini.php')) {
+            @jelix_read_ini($varConfigPath.'localconfig.ini.php', $config);
         }
 
         // read the local configuration of the entry point

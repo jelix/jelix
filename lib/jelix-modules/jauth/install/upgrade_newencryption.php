@@ -8,24 +8,24 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleUpgrader_newencryption extends jInstallerModule {
+class jauthModuleUpgrader_newencryption extends jInstallerModule2 {
 
     public $targetVersions = array('1.7.0-beta.1');
     public $date = '2016-05-22 14:34';
 
     protected static $key = null;
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         if (self::$key === null) {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
             self::$key = $cryptokey->saveToAsciiSafeString();
         }
-        $authConfig = $this->getCoordPluginConf($this->getConfigIni(), 'auth');
+        $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
         if (!$authConfig) {
             return;
         }
-        list($conf, $section) = $authconfig;
+        list($conf, $section) = $authConfig;
         $conf->removeValue('persistant_crypt_key', $section);
         $conf->save();
 

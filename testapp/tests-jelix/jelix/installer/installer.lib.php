@@ -4,13 +4,22 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2012 Laurent Jouanneau
+* @copyright   2009-2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.2
 */
 
 require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
+
+class testInstallerGlobalSetup extends jInstallerGlobalSetup {
+
+    function setInstallerIni($installerIni) {
+        $this->installerIni = $installerIni;
+    }
+
+}
+
 
 class testInstallerComponentModule extends jInstallerComponentModule {
 
@@ -22,33 +31,31 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 }
 
-class testInstallerEntryPoint extends jInstallerEntryPoint {
+class testInstallerEntryPoint extends jInstallerEntryPoint2 {
 
-    function __construct($mainConfigIni,
-                         $localConfigIni,
-                         $configFile, $file, $type, $configContent) {
+    function __construct($globalSetup,
+                         $epConfigFile, $file, $type, $configContent) {
         $this->type = $type;
-        $this->isCliScript = ($type == 'cmdline');
-        
-        if (is_object($configFile)) {
-            $this->epConfigIni = $configFile;
-            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile->getFileName());
-            $this->configFile = $configFile->getFileName();
-        }
-        else {
-            $this->epConfigIni = new testInstallerIniFileModifier($configFile);
-            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile);
-            $this->configFile = $configFile;
-        }
-
-        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier($localConfigIni,
-            new \Jelix\IniFile\MultiIniModifier($this->epConfigIni, $this->localEpConfigIni));
-
-        $this->scriptName =  ($this->isCliScript?$file:'/'.$file);
+        $this->_isCliScript = ($type == 'cmdline');
+        $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
+        $this->globalSetup = $globalSetup;
+
+        if (!is_object($epConfigFile)) {
+            $epConfigFile = new testInstallerIniFileModifier($epConfigFile);
+        }
+        $localEpConfigIni = new testInstallerIniFileModifier($epConfigFile->getFileName());
+
+
+        $this->configFile = $epConfigFile->getFileName();
+        $this->configIni = clone $globalSetup->getConfigIni();
+        $this->configIni['entrypoint'] = $epConfigFile;
+
+        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
+        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
+
         $this->config = $configContent;
-        $this->mainConfigIni = $mainConfigIni;
-        $this->localConfigIni = $localConfigIni;
     }
     
     function getEpId() {
@@ -132,11 +139,9 @@ class testInstallerMain extends jInstaller {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
-        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(), jApp::mainConfigFile());
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig, jApp::varConfigPath('localconfig.ini.php'));
 
         copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
-        $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('installer_urls.xml'), true);
+        $this->globalSetup = new testInstallerGlobalSetup(null, null, jApp::tempPath('installer_urls.xml'));
 
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
@@ -185,23 +190,23 @@ class testInstallerMain extends jInstaller {
     </entrypoints>
 </project>';
 
-        $this->installerIni =  new testInstallerIniFileModifier('');
+        $this->globalSetup->setInstallerIni(new testInstallerIniFileModifier(''));
         $this->readEntryPointData(simplexml_load_string($projectXml));
-        $this->installerIni->save();
+        $this->globalSetup->getInstallerIni()->save();
     }
 
     protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($this->mainConfig, $this->localConfig,
+        return new testInstallerEntryPoint($this->globalSetup,
                                            $configFile, $file, $type,
                                            (object) $this->configContent[$configFile]);
     }
     
-    protected function getComponentModule($name, $path, $installer) {
+    protected function getComponentModule($name, $path, jInstallerGlobalSetup $setup) {
         if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
-            return new jInstallerComponentModule($name, $path, $installer);
+            return new jInstallerComponentModule($name, $path, $setup);
         }
         else {
-            return new testInstallerComponentModule($name, $path, $installer);
+            return new testInstallerComponentModule($name, $path, $setup);
         }
     }
     

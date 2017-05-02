@@ -9,9 +9,9 @@
 */
 
 
-class %%module%%ModuleInstaller extends jInstallerModule {
+class %%module%%ModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         //if ($this->firstDbExec())
         //    $this->execSQLScript('sql/install');
 

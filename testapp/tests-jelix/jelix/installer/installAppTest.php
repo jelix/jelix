@@ -1,6 +1,6 @@
 <?php
 require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
-require_once (JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
+require_once (JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
 require_once (JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once (JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 
@@ -33,17 +33,17 @@ class installAppTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(2, count($list));
         
         $ep = $app->getEntryPointInfo('index');
-        $this->assertFalse($ep->isCliScript);
-        $this->assertEquals('/index.php', $ep->scriptName);
-        $this->assertEquals('index.php', $ep->file);
-        $this->assertEquals('', $ep->type);
+        $this->assertFalse($ep->isCliScript());
+        $this->assertEquals('/index.php', $ep->getScriptName());
+        $this->assertEquals('index.php', $ep->getFileName());
+        $this->assertEquals('', $ep->getType());
         $this->assertEquals('aaa', $ep->getConfigObj()->isitme);
 
         $ep = $app->getEntryPointInfo('foo');
-        $this->assertFalse($ep->isCliScript);
-        $this->assertEquals('/foo.php', $ep->scriptName);
-        $this->assertEquals('foo.php', $ep->file);
-        $this->assertEquals('', $ep->type);
+        $this->assertFalse($ep->isCliScript());
+        $this->assertEquals('/foo.php', $ep->getScriptName());
+        $this->assertEquals('foo.php', $ep->getFileName());
+        $this->assertEquals('', $ep->getType());
         $this->assertEquals('foo', $ep->getConfigObj()->isitme);
     }
 }

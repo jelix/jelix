@@ -364,18 +364,20 @@ cd lib/jelix/installer
   ghostInstallReporter.class.php
   jHtmlInstallChecker.class.php
   jIInstallerComponent.iface.php
+  jIInstallerComponent2.iface.php
   jIInstallReporter.iface.php
   jInstaller.class.php
   jInstallerApplication.class.php
-  jInstallerBase.class.php
   jInstallChecker.class.php
-  jInstallerComponentBase.class.php
   jInstallerComponentModule.class.php
   jInstallerEntryPoint.class.php
+  jInstallerEntryPoint2.class.php
   jInstallerException.class.php
+  jInstallerGLobalSetup.class.php
   jInstallerMessageProvider.class.php
   jInstallerMigration.class.php
   jInstallerModule.class.php
+  jInstallerModule2.class.php
   jInstallerModuleInfos.class.php
   jInstallReporterTrait.trait.php
   messageProvider.en.inc.php
