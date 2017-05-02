@@ -24,9 +24,9 @@
     "require": {
         "phpunit/phpunit": "4.8.*",
         "jelix/for-classic-package" : "@dev",
-        "jelix/minify-module": "1.7.x-dev",
+        "jelix/minify-module": "^1.7.1",
         "jelix/php-redis-plugin": "^1.7.5",
-        "jelix/sitemap-module": "^1.7.1",
+        "jelix/sitemap-module": "^1.7.2",
         "guzzlehttp/guzzle": "^6.2.0"
     },
     "autoload": {
