@@ -22,12 +22,18 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testSimpleUpgrade() {
+        $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
         $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
-        $config = new \Jelix\IniFile\MultiIniModifier($mainConfig, $epConfig);
+        $config = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=>$defaultConfig,
+            'main'=>$mainConfig,
+            'entrypoint'=>$epConfig));
+
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
         $xmlEp = $modifier->addEntryPoint('index', 'classic', null);
-        $upgraderUrl = new UrlEngineUpgrader($config, $mainConfig, $epConfig, 'index', $xmlEp);
+
+        $upgraderUrl = new UrlEngineUpgrader($config, 'index', $xmlEp);
         $upgraderUrl->upgrade();
         $modifier->save();
         $config->save();
@@ -38,9 +44,14 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testSimple2Upgrade() {
+        $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
         $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
-        $config = new \Jelix\IniFile\MultiIniModifier($mainConfig, $epConfig);
+        $config = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=>$defaultConfig,
+            'main'=>$mainConfig,
+            'entrypoint'=>$epConfig));
+
 
         $config->setValue('index','jauth~*@classic', 'simple_urlengine_entrypoints');
         $config->setValue('admin',"jacl2db~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, admin~*@classic, jauth~*@classic", 'simple_urlengine_entrypoints');
@@ -51,7 +62,7 @@ class urlUpgradeTest extends jUnitTestCase {
  
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
         $xmlEp = $modifier->addEntryPoint('index', 'classic', null);
-        $upgraderUrl = new UrlEngineUpgrader($config, $mainConfig, $epConfig, 'index', $xmlEp);
+        $upgraderUrl = new UrlEngineUpgrader($config, 'index', $xmlEp);
         $upgraderUrl->upgrade();
         $config->save();
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
@@ -59,11 +70,15 @@ class urlUpgradeTest extends jUnitTestCase {
 
         $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config2.ini'));
-        $config = new \Jelix\IniFile\MultiIniModifier($mainConfig, $epConfig);
+        $config = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=>$defaultConfig,
+            'main'=>$mainConfig,
+            'entrypoint'=>$epConfig));
+
         $config->setValue('startModule', 'master_admin');
         $config->setValue('startAction', 'default:index');
         $xmlEp = $modifier->addEntryPoint('admin', 'classic', null);
-        $upgraderUrl = new UrlEngineUpgrader($config, $mainConfig, $epConfig, 'admin', $xmlEp);
+        $upgraderUrl = new UrlEngineUpgrader($config, 'admin', $xmlEp);
         $upgraderUrl->upgrade();
 
         $config->save();
@@ -76,9 +91,14 @@ class urlUpgradeTest extends jUnitTestCase {
     }
 
     function testBasicSignificantUpgrade() {
+        $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
         $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
-        $config = new \Jelix\IniFile\MultiIniModifier($mainConfig, $epConfig);
+        $config = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=>$defaultConfig,
+            'main'=>$mainConfig,
+            'entrypoint'=>$epConfig));
+
         $config->setValue('engine','basic_significant', 'urlengine');
         $config->setValue('index','jauth~*@classic', 'simple_urlengine_entrypoints');
         $config->setValue('admin',"jacl2db~*@classic, jacl2db_admin~*@classic, jauthdb_admin~*@classic, master_admin~*@classic, admin~*@classic, jauth~*@classic", 'simple_urlengine_entrypoints');
@@ -92,7 +112,7 @@ class urlUpgradeTest extends jUnitTestCase {
  
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
         $xmlEp = $modifier->addEntryPoint('index', 'classic', null);
-        $upgraderUrl = new UrlEngineUpgrader($config, $mainConfig, $epConfig, 'index', $xmlEp);
+        $upgraderUrl = new UrlEngineUpgrader($config, 'index', $xmlEp);
         $upgraderUrl->upgrade();
         $config->save();
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
@@ -100,11 +120,15 @@ class urlUpgradeTest extends jUnitTestCase {
 
         $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config2.ini'));
-        $config = new \Jelix\IniFile\MultiIniModifier($mainConfig, $epConfig);
+        $config = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=>$defaultConfig,
+            'main'=>$mainConfig,
+            'entrypoint'=>$epConfig));
+
         $config->setValue('startModule', 'master_admin');
         $config->setValue('startAction', 'default:index');
         $xmlEp = $modifier->addEntryPoint('admin', 'classic', null);
-        $upgraderUrl = new UrlEngineUpgrader($config, $mainConfig, $epConfig, 'admin', $xmlEp);
+        $upgraderUrl = new UrlEngineUpgrader($config, 'admin', $xmlEp);
         $upgraderUrl->upgrade();
 
         $config->save();

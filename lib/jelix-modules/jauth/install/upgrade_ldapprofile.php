@@ -47,7 +47,7 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
             $section_ldap = 'auth_ldap';
         }
 
-        $profileIni = jApp::varConfigPath('profiles.ini.php');
+        $profileIni = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
         $suffix = '';
         while ($profileIni->isSection('authldap:ldap'.$suffix)) {
             if ($suffix) {

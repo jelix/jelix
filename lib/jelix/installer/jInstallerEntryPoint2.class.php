@@ -8,7 +8,6 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 use Jelix\Routing\UrlMapping\XmlEntryPoint;
-use Jelix\IniFile\MultiIniModifier;
 use Jelix\IniFile\IniModifier;
 
 
@@ -32,22 +31,16 @@ class jInstallerEntryPoint2
     protected $configFile;
 
     /**
-     * entrypoint config of app/config/
-     * @var \Jelix\IniFile\IniModifier
+     * all original configuration files combined
+     * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $epConfigIni;
+    protected $configIni;
 
     /**
-     * entrypoint config of var/config/
-     * @var \Jelix\IniFile\IniModifier
+     * all local configuration files combined with original configuration file
+     * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $localEpConfigIni;
-
-    /**
-     * all configuration files combined
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $fullConfigIni;
+    protected $localConfigIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -95,7 +88,6 @@ class jInstallerEntryPoint2
     function __construct(jInstallerGlobalSetup $globalSetup,
                          $configFile, $file, $type)
     {
-
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
         $this->configFile = $configFile;
@@ -108,18 +100,15 @@ class jInstallerEntryPoint2
             jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
-        $this->epConfigIni = new IniModifier($appConfigPath);
+
+        $this->configIni = clone $globalSetup->getConfigIni();
+        $this->configIni['entrypoint'] = new IniModifier($appConfigPath);
 
         $varConfigPath = jApp::varConfigPath($configFile);
-        if (!file_exists($varConfigPath)) {
-            jFile::createDir(dirname($varConfigPath));
-            file_put_contents($varConfigPath, ';<' . '?php die(\'\');?' . '>');
-        }
-        $this->localEpConfigIni = new IniModifier($varConfigPath);
-
-        $fullConfigIni = new MultiIniModifier($globalSetup->getLocalConfigIni(),
-            $this->epConfigIni);
-        $this->fullConfigIni = new MultiIniModifier($fullConfigIni, $this->localEpConfigIni);
+        $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
+        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
+        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->config = jConfigCompiler::read($configFile, true,
             $this->_isCliScript,
@@ -200,33 +189,21 @@ class jInstallerEntryPoint2
     }
 
     /**
-     * the entry point full configuration (static and local)
-     * @return \Jelix\IniFile\MultiIniModifier
-     * @since 1.7
+     * the full original configuration of the entry point
+     * @return \Jelix\IniFile\IniModifierArray
      */
     function getConfigIni()
     {
-        return $this->fullConfigIni;
+        return $this->configIni;
     }
 
     /*
-     * the static entry point config alone (in app/config)
-     * @return \Jelix\IniFile\IniModifier
-     * @since 1.6.8
+     * the local entry point config (in var/config) combined with the original configuration
+     * @return \Jelix\IniFile\IniModifierArray
      */
-    function getEpConfigIni()
+    function getLocalConfigIni()
     {
-        return $this->epConfigIni;
-    }
-
-    /*
-     * the local entry point config alone (in var/config)
-     * @return \Jelix\IniFile\IniModifier
-     * @since 1.7
-     */
-    function getLocalEpConfigIni()
-    {
-        return $this->localEpConfigIni;
+        return $this->localConfigIni;
     }
 
     /**
@@ -260,7 +237,7 @@ class jInstallerEntryPoint2
      */
     public function declareWebAssets($name, array $values, $set, $force)
     {
-        $this->globalSetup->declareWebAssetsInConfig($this->epConfigIni, $name, $values, $set, $force);
+        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $set, $force);
     }
 
     /**

@@ -15,6 +15,6 @@ class testappModuleUpgrader_urlengine extends jInstallerModule2 {
     public $date = '2012-07-20';
 
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $this->getMainConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
+        $this->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
     }
 }

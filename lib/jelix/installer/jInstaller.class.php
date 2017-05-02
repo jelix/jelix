@@ -702,7 +702,7 @@ class jInstaller {
                     $installedModules[] = array($installer, $component, $action);
                 }
                 // we always save the configuration, so it invalidates the cache
-                $ep->getConfigIni()->save();
+                $ep->getLocalConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
@@ -773,7 +773,7 @@ class jInstaller {
                 }
 
                 // we always save the configuration, so it invalidates the cache
-                $ep->getConfigIni()->save();
+                $ep->getLocalConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because

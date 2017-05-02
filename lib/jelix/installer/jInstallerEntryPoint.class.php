@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  installer
  * @author      Laurent Jouanneau
- * @copyright   2009-2010 Laurent Jouanneau
+ * @copyright   2009-2017 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -86,11 +86,24 @@ class jInstallerEntryPoint {
         $this->scriptName =  $entryPoint->getScriptName();
         $this->file = $entryPoint->getFileName();
 
-        $this->epConfigIni = $entryPoint->getEpConfigIni();
+        $this->epConfigIni = $entryPoint->getConfigIni()['entrypoint'];
+
+        $mainConfig = new \Jelix\IniFile\MultiIniModifier(
+            $globalSetup->getConfigIni()['default'],
+            $globalSetup->getConfigIni()['main']
+        );
 
         $this->configIni = new \Jelix\IniFile\MultiIniModifier(
-                                $globalSetup->getMainConfigIni()->getOverrider(),
+                                $mainConfig,
                                 $this->epConfigIni);
+
+        $localConfig = new \Jelix\IniFile\MultiIniModifier(
+            $mainConfig,
+            $globalSetup->getLocalConfigIni()['local']);
+
+        $this->localConfigIni = new \Jelix\IniFile\MultiIniModifier(
+            $localConfig,
+            $this->epConfigIni);
 
         $this->config = $entryPoint->getConfigObj();
     }

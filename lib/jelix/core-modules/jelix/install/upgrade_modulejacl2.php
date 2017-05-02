@@ -24,14 +24,14 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
 
         $conf = null;
         // get from entrypoint config
-        $globalConf = $entryPoint->getEpConfigIni();
-        $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+        $globalConf = $entryPoint->getConfigIni();
+        $aclConfig = $this->getCoordPluginConf($globalConf['entrypoint'], $module);
         if (!$aclConfig) {
-            $globalConf = $this->getLocalConfigIni()->getOverrider();
-            $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+            $globalConf = $this->getLocalConfigIni();
+            $aclConfig = $this->getCoordPluginConf($globalConf['local'], $module);
             if (!$aclConfig) {
-                $globalConf = $this->getMainConfigIni()->getOverrider();
-                $aclConfig = $this->getCoordPluginConf($globalConf, $module);
+                $globalConf = $this->getConfigIni();
+                $aclConfig = $this->getCoordPluginConf($globalConf['main'], $module);
                 if (!$aclConfig) {
                     return;
                 }

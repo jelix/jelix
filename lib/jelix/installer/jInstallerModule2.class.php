@@ -181,17 +181,17 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
-     * the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @return \Jelix\IniFile\MultiIniModifier
+     * default config and main config combined
+     * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    public function getMainConfigIni() {
-        return $this->globalSetup->getMainConfigIni();
+    public function getConfigIni() {
+        return $this->globalSetup->getConfigIni();
     }
 
     /**
-     * the localconfig.ini.php file combined with getMainConfigIni()
-     * @return \Jelix\IniFile\MultiIniModifier
+     * the localconfig.ini.php file combined with main and default config
+     * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
     public function getLocalConfigIni() {
@@ -409,7 +409,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->getLocalConfigIni()->getValue('jelixWWWPath','urlengine');
+            $p = $this->globalSetup->getConfigIni()->getValue('jelixWWWPath','urlengine');
             if (substr($p, -1) != '/') {
                 $p .= '/';
             }
@@ -539,8 +539,8 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      */
     public function declareGlobalWebAssets($name, array $values, $set, $force)
     {
-        $config = $this->globalSetup->getMainConfigIni()->getOverrider();
-        $this->globalSetup->declareWebAssetsInConfig($config, $name, $values, $set, $force);
+        $config = $this->globalSetup->getConfigIni();
+        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $set, $force);
     }
 }
 

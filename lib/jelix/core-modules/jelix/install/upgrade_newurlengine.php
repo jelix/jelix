@@ -18,8 +18,6 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
     function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
 
         $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                                             $this->getMainConfigIni()->getOverrider(),
-                                             $entryPoint->getEpConfigIni(),
                                              $entryPoint->getEpId(),
                                              $entryPoint->getUrlMap());
         $upgraderUrl->upgrade();
@@ -27,13 +25,10 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
 
     function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
         $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                                             $this->getMainConfigIni()->getOverrider(),
-                                             $entryPoint->getEpConfigIni(),
                                              $entryPoint->getEpId(),
                                              $entryPoint->getUrlMap());
-        
-        $mainconfig = $this->getMainConfigIni()->getOverrider();
-        $upgraderUrl->cleanConfig($mainconfig);
+
+        $upgraderUrl->cleanConfig($this->getConfigIni()['main']);
     }
 }
 

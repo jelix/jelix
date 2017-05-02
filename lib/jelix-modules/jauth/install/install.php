@@ -23,7 +23,7 @@ class jauthModuleInstaller extends jInstallerModule2 {
         }
 
         $authconfig = $entryPoint->getConfigIni()->getValue('auth','coordplugins');
-        $authconfigMaster = $this->getLocalConfigIni()->getValue('auth','coordplugins');
+        $authconfigMaster = $this->getConfigIni()->getValue('auth','coordplugins');
 
         $forWS = (in_array($entryPoint->getType(), array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
@@ -40,7 +40,7 @@ class jauthModuleInstaller extends jInstallerModule2 {
 
             if ($this->firstExec('auth:'.$authconfig)) {
                 // no configuration, let's install the plugin for the entry point
-                $entryPoint->getEpConfigIni()->setValue('auth', $authconfig, 'coordplugins');
+                $entryPoint->getConfigIni()->setValue('auth', $authconfig, 'coordplugins');
                 if (!file_exists(jApp::appConfigPath($authconfig))) {
                     $this->copyFile('var/config/'.$pluginIni, jApp::appConfigPath($authconfig));
                 }

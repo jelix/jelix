@@ -8,6 +8,8 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+use \Jelix\IniFile\IniReader;
+
 /**
  * Class jInstallerGlobalSetup
  * @since 1.7.0
@@ -15,16 +17,14 @@
 class jInstallerGlobalSetup {
 
     /**
-     * the mainconfig.ini.php combined with the defaultconfig.ini.php
-     * @var \Jelix\IniFile\MultiIniModifier
+     * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $mainConfig;
+    protected $configIni;
 
     /**
-     * the localconfig.ini.php content combined with $mainConfig
-     * @var \Jelix\IniFile\MultiIniModifier
+     * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $localConfig;
+    protected $localConfigIni;
 
     /**
      * @var \Jelix\Routing\UrlMapping\XmlMapModifier
@@ -47,11 +47,10 @@ class jInstallerGlobalSetup {
                          $urlXmlFileName = null)
     {
 
+
         if (!$mainConfigFileName) {
             $mainConfigFileName = jApp::mainConfigFile();
         }
-        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(jConfig::getDefaultConfigFile(),
-                                                                $mainConfigFileName);
 
         if (!$localConfigFileName) {
             $localConfigFileName = jApp::varConfigPath('localconfig.ini.php');
@@ -65,38 +64,44 @@ class jInstallerGlobalSetup {
                 }
             }
         }
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
-                                                                 $localConfigFileName);
+
+        $defaultConfig = new IniReader(jConfig::getDefaultConfigFile());
+
+        $this->configIni = new \Jelix\IniFile\IniModifierArray(array(
+            'default'=> $defaultConfig,
+            'main' => $mainConfigFileName,
+        ));
+        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni['local'] = $localConfigFileName;
+
 
         $this->installerIni = $this->loadInstallerIni();
 
         if (!$urlXmlFileName) {
-            $urlXmlFileName = jApp::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
+            $urlXmlFileName = jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
         // be sure temp path is ready
-        $chmod = $this->mainConfig->getValue('chmodDir');
+        $chmod = $this->configIni->getValue('chmodDir');
         jFile::createDir(jApp::tempPath(), intval($chmod, 8));
     }
 
-
     /**
-     * the mainconfig.ini.php file combined with defaultconfig.ini.php
-     * @return \Jelix\IniFile\MultiIniModifier
+     * the combined global config files
+     * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getMainConfigIni() {
-        return $this->mainConfig;
+    public function getConfigIni() {
+        return $this->configIni;
     }
 
     /**
-     * the localconfig.ini.php file combined with getMainConfigIni()
-     * @return \Jelix\IniFile\MultiIniModifier
+     * the combined global config files with localconfig.ini.php
+     * @return \Jelix\IniFile\IniModifierArray
      */
     public function getLocalConfigIni() {
-        return $this->localConfig;
+        return $this->localConfigIni;
     }
-
 
     /**
      * the installer.ini.php

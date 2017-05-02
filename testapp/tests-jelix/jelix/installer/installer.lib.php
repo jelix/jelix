@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2012 Laurent Jouanneau
+* @copyright   2009-2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.2
@@ -34,31 +34,28 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 class testInstallerEntryPoint extends jInstallerEntryPoint2 {
 
     function __construct($globalSetup,
-                         $configFile, $file, $type, $configContent) {
+                         $epConfigFile, $file, $type, $configContent) {
         $this->type = $type;
-        $this->globalSetup = $globalSetup;
         $this->_isCliScript = ($type == 'cmdline');
-        
-        if (is_object($configFile)) {
-            $this->epConfigIni = $configFile;
-            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile->getFileName());
-            $this->configFile = $configFile->getFileName();
-        }
-        else {
-            $this->epConfigIni = new testInstallerIniFileModifier($configFile);
-            $this->localEpConfigIni = new testInstallerIniFileModifier($configFile);
-            $this->configFile = $configFile;
-        }
-
-        $this->fullConfigIni = new \Jelix\IniFile\MultiIniModifier(
-            $globalSetup->getLocalConfigIni(),
-            new \Jelix\IniFile\MultiIniModifier($this->epConfigIni, $this->localEpConfigIni));
-
         $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
+        $this->globalSetup = $globalSetup;
+
+        if (!is_object($epConfigFile)) {
+            $epConfigFile = new testInstallerIniFileModifier($epConfigFile);
+        }
+        $localEpConfigIni = new testInstallerIniFileModifier($epConfigFile->getFileName());
+
+
+        $this->configFile = $epConfigFile->getFileName();
+        $this->configIni = clone $globalSetup->getConfigIni();
+        $this->configIni['entrypoint'] = $epConfigFile;
+
+        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
+        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
+
         $this->config = $configContent;
-        $this->mainConfigIni = $globalSetup->getMainConfigIni();
-        $this->localConfigIni = $globalSetup->getLocalConfigIni();
     }
     
     function getEpId() {

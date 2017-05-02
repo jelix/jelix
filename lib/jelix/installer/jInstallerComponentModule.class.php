@@ -226,19 +226,18 @@ class jInstallerComponentModule {
         }
 
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
-        $sparam = $ep->getConfigIni()->getValue($this->name.'.installparam','modules');
+        $sparam = $ep->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         if ($sparam === null) {
             $sparam = '';
         }
 
         $sp = $this->moduleInfos[$epId]->serializeParameters();
         if ($sparam != $sp) {
-            $ep->getConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
+            $ep->getLocalConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
         }
 
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
             $legacyEp = $ep->getLegacyInstallerEntryPoint();
-            $legacyEp->localConfigIni = $this->globalSetup->getLocalConfigIni();
             $this->moduleInstaller->setEntryPoint($legacyEp,
                 $this->moduleInfos[$epId]->dbProfile,
                 $this->globalSetup->getInstallerContexts($this->name));
@@ -375,7 +374,6 @@ class jInstallerComponentModule {
             }
             if ($upgrader instanceof jIInstallerComponent) {
                 $legacyEp = $ep->getLegacyInstallerEntryPoint();
-                $legacyEp->localConfigIni = $this->globalSetup->getLocalConfigIni();
                 $upgrader->setEntryPoint($legacyEp,
                     $this->moduleInfos[$epId]->dbProfile,
                     $this->upgradersContexts[$class]);

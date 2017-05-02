@@ -11,7 +11,7 @@
 class UrlEngineUpgrader {
 
     /**
-     * @var \Jelix\IniFile\MultiIniModifier
+     * @var \Jelix\IniFile\IniModifierArray
      */
     protected $fullConfig;
 
@@ -32,14 +32,12 @@ class UrlEngineUpgrader {
      */
     protected $xmlMapEntryPoint;
 
-    function __construct(\Jelix\IniFile\MultiIniModifier $fullConfig,
-                         \Jelix\IniFile\IniModifier $mainConfig,
-                         \Jelix\IniFile\IniModifier $epConfig,
+    function __construct(\Jelix\IniFile\IniModifierArray $fullConfig,
                          $epId,
                          \Jelix\Routing\UrlMapping\XmlEntryPoint $xml) {
         $this->fullConfig = $fullConfig;
-        $this->mainConfig = $mainConfig;
-        $this->epConfig = $epConfig;
+        $this->mainConfig = $fullConfig['main'];
+        $this->epConfig = $fullConfig['entrypoint'];
         $this->xmlMapEntryPoint = $xml;
         $this->epId = $epId;
     }

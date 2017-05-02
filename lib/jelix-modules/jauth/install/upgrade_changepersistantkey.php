@@ -21,7 +21,7 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule2 {
             self::$key = jAuth::getRandomPassword(30, true);
         }
 
-        $config = $entryPoint->getEpConfigIni();
+        $config = $entryPoint->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
         if ($authconfig) {
             list($conf, $section) = $authconfig;
@@ -30,6 +30,6 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule2 {
         }
 
         $localConfigIni = $this->getLocalConfigIni();
-        $localConfigIni->getMaster()->setValue('persistant_crypt_key', self::$key, 'coordplugin_auth');
+        $localConfigIni->setValue('persistant_crypt_key', self::$key, 'coordplugin_auth');
     }
 }
