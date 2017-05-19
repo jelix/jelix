@@ -18,7 +18,7 @@ interface jIInstallerComponent2 {
 
     /**
      * Called before the installation of any modules,
-     * for each entrypoints, and after preInstallGlobal()
+     * for each entrypoints
      *
      * Here, you should check if the module can be installed or not
      * for the given entry point.
@@ -38,7 +38,7 @@ interface jIInstallerComponent2 {
 
     /**
      * Redefine this method if you do some additional process after
-     * the installation of all modules for the given entrypoint for
+     * the installation of all modules for the given entrypoint
      *
      * @throws Exception  if an error occurs during the post installation.
      */
@@ -61,6 +61,14 @@ interface jIInstallerComponent2 {
      * @param jInstallerEntryPoint2 $entryPoint
      */
     function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint);
+
+    /**
+     * Redefine this method if you do some additional process after
+     * the uninstallation of all modules for the given entrypoint
+     *
+     * @throws Exception  if an error occurs during the post installation.
+     */
+    function postUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
 
 }
 

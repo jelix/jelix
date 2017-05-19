@@ -76,6 +76,13 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
+     * @param jInstallerEntryPoint2 $entryPoint
+     */
+    function postUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+
+    }
+
+    /**
      * @var string name of the component
      */
     protected $componentName;
@@ -317,7 +324,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * you should indicate the full name of the script, with a .sql extension.
      *
      * @param string $name the name of the script
-     * @param string $module the module from which we should take the sql file. null for the current module
      * @param boolean $inTransaction indicate if queries should be executed inside a transaction
      * @throws Exception
      */
