@@ -393,7 +393,7 @@ abstract class jDaoFactoryBase  {
         $order = array ();
         foreach ($daocond->order as $name => $way){
             if (isset(static::$_properties[$name])) {
-                $order[] = $this->_conn->encloseName(static::$_properties[$name]['table']).'.'.$this->_conn->encloseName(static::$_properties[$name]['fieldName']).' '.$way;
+                $order[] = $this->_conn->encloseName(static::$_properties[$name]['name']).' '.$way;
             }
         }
 
