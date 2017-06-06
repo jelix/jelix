@@ -3,6 +3,7 @@ ROOTDIR="/jelixapp"
 APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="/vagrantscripts"
+LDAPCN="testapp16"
 
 source $VAGRANTDIR/system.sh
 
@@ -22,5 +23,8 @@ sudo -u postgres -- psql -d testapp -c "drop table if exists jacl2_subject_group
 if [ -f $APPDIR/var/db/sqlite3/tests.sqlite3.bak ]; then
     cp -a $APPDIR/var/db/sqlite3/tests.sqlite3.bak $APPDIR/var/db/sqlite3/tests.sqlite3
 fi
+
+ldapdelete -x -c -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap_delete.ldif
+ldapadd -x -c -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap_conf.ldif
 
 initapp $APPDIR
