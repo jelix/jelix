@@ -31,8 +31,9 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         }
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        
+
         $conf = parse_ini_file(jApp::configPath().'auth_ldap.coord.ini.php',true);
+        jAuth::loadConfig($conf);
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 
@@ -45,9 +46,11 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
+        jAcl2DbUserGroup::removeUser('testldap');
     }
 
     public function testUsersList() {
+
         $myUsersLDAP = jAuth::getUserList('j*');
 
         $this->assertEquals(2, count($myUsersLDAP));
