@@ -52,6 +52,7 @@ SIMPLETEST_OUTPUT=
 BUILDTESTLOG=
 endif
 
+.PHONY: default
 default:
 	@echo "target:"
 	@echo " nightlies : "
@@ -62,6 +63,7 @@ default:
 	@echo "   DISTPATH : repertoire cible pour les distributions (" $(DISTPATH) ")"
 	@echo "   TESTPATH : repertoire cible pour developper (" $(TESTPATH) ")"
 
+.PHONY: nightlies
 nightlies:
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
@@ -70,6 +72,7 @@ nightlies:
 	$(PHP) build/buildapp.php -D $(DISTPATHSWITCH) ./build/config/testapp-dist.ini
 	$(PHP) build/buildmodules.php -D $(DISTPATHSWITCH) ./build/config/modules-dist.ini
 
+.PHONY: preparetestapp
 preparetestapp:
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	$(PHP) build/buildapp.php -D $(TESTPATHSWITCH) ./build/config/testapp-test.ini
@@ -77,19 +80,24 @@ preparetestapp:
 	&& cp $(TESTS_PROFILES) testapp/var/config/profiles.ini.php
 	cd $(TESTPATH)/testapp/install && $(PHP) installer.php
 
+.PHONY: phpunit
 phpunit:
 	mkdir -p ${PHPUNITCOVERAGE} ${PHPUNITDOXDIR}
 	cd $(TESTPATH)/testapp/tests-jelix/ && $(PHPUNIT) --testdox --log-junit ${PHPUNITLOG} --testdox-html ${PHPUNITDOX} --coverage-clover ${PHPUNITCLOVER} --coverage-html ${PHPUNITCOVERAGE}
 
+.PHONY: simpletest
 simpletest:
 	cd $(TESTPATH)/testapp/scripts/ && $(PHP) tests.php default:index ${SIMPLETEST_OUTPUT} ${BUILDTESTLOG}
 
+.PHONY: runtests
 runtests: phpunit simpletest
 	echo "phpunit and simpletest run"
 
+.PHONY: tests
 tests: preparetestapp runtests
 	echo "Tests complete"
 
+.PHONY: docs
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 #	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
