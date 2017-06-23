@@ -138,10 +138,12 @@ errors_openon=error
 [error_handling]
 messageLogFormat = "%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
 errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
+; HTTP parameters that should not appears in logs. See also jController::$sensitiveParameters
+sensitiveParameters = "password,passwd,pwd"
 
 [compilation]
 checkCacheFiletime  = on
-force  = off
+force = off
 
 [urlengine]
 ; name of url engine :  "basic_significant" or "significant"
