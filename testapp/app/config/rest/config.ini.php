@@ -12,3 +12,7 @@ soap="jsoap~jResponseSoap"
 
 [urlengine]
 significantFile=urls_rest.xml
+
+[jResponseHtml]
+minifyCSS=off
+minifyExcludeCSS=
