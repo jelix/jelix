@@ -13,4 +13,4 @@
  * @see \Jelix\Installer\ModuleInstaller
  * @deprecated
  */
-class jInstallerModule extends \Jelix\Installer\ModuleInstaller { }
+class jInstallerModule2 extends \Jelix\Installer\ModuleInstaller { }

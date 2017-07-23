@@ -10,12 +10,12 @@
 */
 
 
-class testappModuleUpgrader_createtowns extends jInstallerModule {
+class testappModuleUpgrader_createtowns extends jInstallerModule2 {
 
     public $targetVersions = array('1.2.10pre.1912', '1.3.4pre.2262', '1.4.1pre.2451', '1.5a1.2538');
     public $date = '2012-09-26 09:02';
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         if ($this->firstDbExec()) {
             $this->execSQLScript('towns');
         }

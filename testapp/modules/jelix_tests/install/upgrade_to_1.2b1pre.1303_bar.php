@@ -2,9 +2,9 @@
 
 //upgrade_to_1.2b1pre.1303_bar.php
 
-class jelix_testsModuleUpgrader_bar extends jInstallerModule {
+class jelix_testsModuleUpgrader_bar extends jInstallerModule2 {
 
-    function preInstall() {
+    function preInstallEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
        echo  "upgrader jelix_tests  1303 pre install\n"; 
     }
 
@@ -14,7 +14,7 @@ class jelix_testsModuleUpgrader_bar extends jInstallerModule {
      * to cancel/revert all things the method did before the error
      * @throws jException  if an error occurs during the install.
      */
-    function install() {
+    function installEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
        echo  "upgrader jelix_tests 1303 install\n"; 
     }
 
@@ -23,7 +23,7 @@ class jelix_testsModuleUpgrader_bar extends jInstallerModule {
      * all other modules (dependents modules or the whole application)
      * @throws jException  if an error occurs during the post installation.
      */
-    function postInstall() {
+    function postInstallEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
        echo  "upgrader jelix_tests 1303  post install\n"; 
     }
 

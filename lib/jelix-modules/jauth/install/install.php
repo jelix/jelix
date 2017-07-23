@@ -10,22 +10,22 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleInstaller extends jInstallerModule {
+class jauthModuleInstaller extends jInstallerModule2 {
 
 
     protected static $key = null;
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
 
         if (self::$key === null) {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
             self::$key = $cryptokey->saveToAsciiSafeString();
         }
 
-        $authconfig = $this->getConfigIni()->getValue('auth','coordplugins');
-        $authconfigMaster = $this->getLocalConfigIni()->getValue('auth','coordplugins');
+        $authconfig = $entryPoint->getConfigIni()->getValue('auth','coordplugins');
+        $authconfigMaster = $this->getConfigIni()->getValue('auth','coordplugins');
 
-        $forWS = (in_array($this->entryPoint->getType(), array('json', 'jsonrpc', 'soap', 'xmlrpc')));
+        $forWS = (in_array($entryPoint->getType(), array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
         if (!$authconfig || ($forWS && $authconfig == $authconfigMaster)) {
 
@@ -36,11 +36,11 @@ class jauthModuleInstaller extends jInstallerModule {
                 $pluginIni = 'auth.coord.ini.php';
             }
 
-            $authconfig = dirname($this->entryPoint->getConfigFile()).'/'.$pluginIni;
+            $authconfig = dirname($entryPoint->getConfigFile()).'/'.$pluginIni;
 
             if ($this->firstExec('auth:'.$authconfig)) {
                 // no configuration, let's install the plugin for the entry point
-                $this->config->setValue('auth', $authconfig, 'coordplugins');
+                $entryPoint->getConfigIni()->setValue('auth', $authconfig, 'coordplugins');
                 if (!file_exists(jApp::appConfigPath($authconfig))) {
                     $this->copyFile('var/config/'.$pluginIni, jApp::appConfigPath($authconfig));
                 }

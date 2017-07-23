@@ -9,12 +9,12 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacl2dbModuleUpgrader_localesmoved extends jInstallerModule {
+class jacl2dbModuleUpgrader_localesmoved extends jInstallerModule2 {
 
     public $targetVersions = array('1.5.1');
     public $date = '2012-09-21 09:37';
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         if (!$this->firstDbExec())
             return;
         $db = $this->dbConnection();

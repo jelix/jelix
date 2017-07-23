@@ -10,9 +10,9 @@
 */
 
 
-class testappModuleInstaller extends jInstallerModule {
+class testappModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         if ($this->firstDbExec()) {
             $this->execSQLScript('base');
             $this->execSQLScript('towns');

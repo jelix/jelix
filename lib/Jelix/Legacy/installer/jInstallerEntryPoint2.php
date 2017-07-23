@@ -3,7 +3,7 @@
 * @package  Jelix\Legacy
 * @author   Laurent Jouanneau
 * @contributor
-* @copyright 2014 Laurent Jouanneau
+* @copyright 2014-2017 Laurent Jouanneau
 * @link     http://www.jelix.org
 * @licence  MIT
 */
@@ -13,4 +13,4 @@
  * @see \Jelix\Installer\EntryPoint
  * @deprecated
  */
-class jInstallerEntryPoint extends \Jelix\Installer\EntryPoint { }
+class jInstallerEntryPoint2 extends \Jelix\Installer\EntryPoint { }

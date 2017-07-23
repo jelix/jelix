@@ -13,12 +13,12 @@
  * parameters for this installer
  *    - defaultuser      add a default user, admin
  */
-class jauthdbModuleInstaller extends jInstallerModule {
+class jauthdbModuleInstaller extends jInstallerModule2 {
 
-    function install() {
-        //if ($this->entryPoint->type == 'cmdline')
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+        //if ($this->entryPoint->getType() == 'cmdline')
         //    return;
-        $config = $this->getConfigIni();
+        $config = $entryPoint->getConfigIni();
         $authConfig = $this->getCoordPluginConf($config, 'auth');
         if (!$authConfig) {
             return;

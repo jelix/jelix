@@ -844,6 +844,8 @@ cd lib/Jelix/Installer
   Installer.php
   EntryPoint.php
   Migration.php
+  GLobalSetup.php
+
 cd lib/Jelix/Installer/Reporter
   Console.php
   Html.php
@@ -858,19 +860,22 @@ cd lib/Jelix/Installer/Checker
   CheckerPage.php
 
 cd lib/Jelix/Legacy/installer
+  ghostInstallReporter.php
   jInstallerModuleInfos.php
   jInstallerException.php
   jInstallerBase.php
-  jInstallerModule.php
+  jInstallerModule2.php
   jIInstallerComponent.php
+  jIInstallerComponent2.php
   jIInstallReporter.php
   jInstallerComponentBase.php
   jInstallerComponentModule.php
   jInstaller.php
-  jInstallerEntryPoint.php
+  jInstallerEntryPoint2.php
   jInstallerMessageProvider.php
   jInstallerMigration.php
   jInstallChecker.php
+
 cd lib/Jelix/Mailer
   composer.json
   Mailer.php

@@ -9,9 +9,9 @@
 */
 
 
-class %%module%%ModuleInstaller extends jInstallerModule {
+class %%module%%ModuleInstaller extends \Jelix\Installer\ModuleInstaller {
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         //if ($this->firstDbExec())
         //    $this->execSQLScript('sql/install');
 

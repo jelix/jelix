@@ -10,26 +10,25 @@
 
 require(__DIR__.'/UrlEngineUpgrader.php');
 
-class jelixModuleUpgrader_newurlengine extends jInstallerModule {
+class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
 
     public $targetVersions = array('1.7.0-beta.1');
     public $date = '2016-06-19 11:05';
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
 
-        $upgraderUrl = new UrlEngineUpgrader($this->config,
-                                             $this->entryPoint->getEpId(),
-                                             $this->getUrlMap());
+        $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
+                                             $entryPoint->getEpId(),
+                                             $entryPoint->getUrlMap());
         $upgraderUrl->upgrade();
     }
 
-    function postInstall() {
-        $upgraderUrl = new UrlEngineUpgrader($this->config,
-                                             $this->entryPoint->getEpId(),
-                                             $this->getUrlMap());
-        
-        $mainconfig = $this->entryPoint->getMainConfigIni()->getOverrider();
-        $upgraderUrl->cleanConfig($mainconfig);
+    function postInstallEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+        $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
+                                             $entryPoint->getEpId(),
+                                             $entryPoint->getUrlMap());
+
+        $upgraderUrl->cleanConfig($this->getConfigIni()['main']);
     }
 }
 

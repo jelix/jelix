@@ -1,12 +1,13 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2017 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer;
 use Jelix\Core\App as App;
+
 use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
 use \Jelix\Dependencies\ItemException;
@@ -20,12 +21,12 @@ use \Jelix\Dependencies\ItemException;
  * of their dependencies.
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
- * @internal The object which drives the installation of a component
- * (module...) is an object which inherits from AbstractInstallLauncher.
- * This object calls load a file from the directory of the component. this
+ * @internal The object which drives the installation of a module
+ * is an object which inherits from AbstractInstallLauncher.
+ * This object calls load a file from the directory of the module. this
  * file should contain a class which should inherits from ModuleInstallLauncher.
  * This class should implements processes to install
- * the component.
+ * the module.
  */
 class Installer {
 
@@ -54,6 +55,18 @@ class Installer {
      */
     const ACCESS_PUBLIC = 2;
 
+    /**
+     * error code stored in a component: impossible to install
+     * the module because dependencies are missing
+     */
+    const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
+
+    /**
+     * error code stored in a component: impossible to install
+     * the module because of circular dependencies
+     */
+    const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
+
     const FLAG_INSTALL_MODULE = 1;
 
     const FLAG_UPGRADE_MODULE = 2;
@@ -61,11 +74,6 @@ class Installer {
     const FLAG_REMOVE_MODULE = 4;
 
     const FLAG_ALL = 7;
-
-    /**
-     *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
-     */
-    protected $installerIni = null;
 
     /**
      * list of entry point and their properties
@@ -99,21 +107,10 @@ class Installer {
     protected $messages;
 
     /**
-     * the mainconfig.ini.php combined with the defaultconfig.ini.php
-     * @var \Jelix\IniFile\MultiIniModifier
+     * the global app setup
+     * @var GlobalSetup
      */
-    protected $mainConfig;
-
-    /**
-     * the localconfig.ini.php content combined with $mainConfig
-     * @var \Jelix\IniFile\MultiIniModifier
-     */
-    protected $localConfig;
-
-    /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
-     */
-    protected $xmlMapFile;
+    protected $globalSetup;
 
     /**
      * initialize the installation
@@ -123,58 +120,19 @@ class Installer {
      * @param ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct (ReporterInterface $reporter, $lang='') {
+    function __construct (ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new Checker\Messages($lang);
 
-        $localConfig = App::varConfigPath('localconfig.ini.php');
-        if (!file_exists($localConfig)) {
-           $localConfigDist = App::varConfigPath('localconfig.ini.php.dist');
-           if (file_exists($localConfigDist)) {
-              copy($localConfigDist, $localConfig);
-           }
-           else {
-              file_put_contents($localConfig, ';<'.'?php die(\'\');?'.'>');
-           }
+        if (!$globalSetup) {
+            $globalSetup = new GlobalSetup();
         }
-
-        $this->mainConfig = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(),
-                                                                App::mainConfigFile());
-        $this->localConfig = new \Jelix\IniFile\MultiIniModifier($this->mainConfig,
-                                                                 $localConfig);
-        $this->installerIni = $this->createInstallerIni();
-
-        $urlfile = App::appConfigPath($this->localConfig->getValue('significantFile', 'urlengine'));
-        $this->xmlMapFile = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlfile, true);
+        $this->globalSetup = $globalSetup;
 
         $appInfos = new \Jelix\Core\Infos\AppInfos();
         $this->readEntryPointsData($appInfos);
-        $this->installerIni->save();
+        $this->globalSetup->getInstallerIni()->save();
 
-        // be sure temp path is ready
-        $chmod = $this->mainConfig->getValue('chmodDir');
-        \jFile::createDir(App::tempPath(), intval($chmod, 8));
-    }
-
-
-    /**
-     * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
-     * @throws Exception
-     */
-    protected function createInstallerIni() {
-        if (!file_exists(App::varConfigPath('installer.ini.php'))) {
-            if (false === @file_put_contents(App::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
-; for security reasons , don't remove or modify the first line
-; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
-
-")) {
-                throw new \Exception('impossible to create var/config/installer.ini.php');
-            }
-        }
-        else {
-            copy(App::varConfigPath('installer.ini.php'), App::varConfigPath('installer.bak.ini.php'));
-        }
-        return new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
     }
 
     /**
@@ -186,6 +144,7 @@ class Installer {
 
         $configFileList = array();
         $that = $this;
+        $installerIni = $this->globalSetup->getInstallerIni();
 
         // read all entry points data
         foreach ($appInfos->entrypoints as $file => $entrypoint) {
@@ -202,10 +161,9 @@ class Installer {
             $reuseSameConfig = isset($configFileList[$configFile])? $configFileList[$configFile]:null;
             //$reuseSameConfig = $configFileList[$configFile]?? null;
             $ep = $this->getEntryPointObject($configFile, $file, $type, $reuseSameConfig);
+            $ep->setAppInfos($appInfos);
 
             $epId = $ep->getEpId();
-            $ep->setUrlMap($this->xmlMapFile->addEntryPoint($epId, $type));
-            $ep->setAppInfos($appInfos);
 
             $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
@@ -218,27 +176,28 @@ class Installer {
             $configFileList[$configFile] = $epId;
 
             $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos)
-                                        use($that, $epId){
+                                        use($that, $epId, $installerIni) {
                 $name = $moduleInfos->name;
                 $path = $moduleInfos->getPath();
-                $that->installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
-                $that->installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
+                $installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
+                $installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
                 if (!isset($that->allModuleLaunchers[$path])) {
-                    $that->allModuleLaunchers[$path] = new ModuleInstallLauncher($moduleInfos, $that);
+                    $that->allModuleLaunchers[$path] = new ModuleInstallLauncher($moduleInfos, $that->globalSetup);
                 }
                 return $that->allModuleLaunchers[$path];
             });
 
+
             // remove informations about modules that don't exist anymore
             $modulesList = $ep->getModulesList();
-            $modules = $this->installerIni->getValues($epId);
+            $modules = $installerIni->getValues($epId);
             foreach($modules as $key=>$value) {
                 $l = explode('.', $key);
                 if (count($l)<=1) {
                     continue;
                 }
                 if (!isset($modulesList[$l[0]])) {
-                    $this->installerIni->removeValue($key, $epId);
+                    $installerIni->removeValue($key, $epId);
                 }
             }
         }
@@ -249,7 +208,7 @@ class Installer {
      * @return EntryPoint
      */
     protected function getEntryPointObject($configFile, $file, $type, $reuseSameConfig) {
-        return new EntryPoint($this->mainConfig, $this->localConfig, $configFile, $file, $type, $reuseSameConfig);
+        return new EntryPoint($this->globalSetup, $configFile, $file, $type, $reuseSameConfig);
     }
 
     /**
@@ -271,7 +230,7 @@ class Installer {
      * @return \Jelix\IniFile\IniModifier
      */
     function getInstallerIni() {
-        return $this->installerIni;
+        return $this->globalSetup->getInstallerIni();
     }
 
     /**
@@ -339,7 +298,8 @@ class Installer {
         }
 
         $this->startMessage();
-        $result = true;
+
+        $modulesChainsEp = array();
 
         foreach($this->entryPoints as $epId=>$ep) {
             if ($ep->usesSameConfigOfOtherEntryPoint()) {
@@ -350,29 +310,27 @@ class Installer {
                 $resolverItem = $module->getResolverItem($epId);
                 $resolver->addItem($resolverItem);
             }
-            $result = $result & $this->_installModules($resolver, $ep, true, $flags);
-            if (!$result) {
-                break;
-            }
+            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
         }
 
+        $result = $this->_installModules($modulesChainsEp, true, $flags);
         if ($result) {
             $this->completeInstallStatus();
         }
-        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
 
     protected function completeInstallStatus() {
-      foreach($this->entryPoints as $epId=>$ep) {
-         if ($ep->usesSameConfigOfOtherEntryPoint()) {
-            // let's copy the installation information of the other entry point
-            $values = $this->installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
-            $this->installerIni->setValues($values, $epId);
-            $this->ok('install.entrypoint.installed', $epId);
-         }
-      }
+        $installerIni = $this->getInstallerIni();
+        foreach($this->entryPoints as $epId=>$ep) {
+            if ($ep->usesSameConfigOfOtherEntryPoint()) {
+                // let's copy the installation information of the other entry point
+                $values = $installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
+                $installerIni->setValues($values, $epId);
+                $this->ok('install.entrypoint.installed', $epId);
+            }
+        }
     }
     
     /**
@@ -395,21 +353,23 @@ class Installer {
         $epId = $this->epId[$entrypoint];
         $ep = $this->entrypoints[$epId];
         if ($ep->usesSameConfigOfOtherEntryPoint()) {
-           // let's copy the installation information of the other entry point
-           $values = $this->installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
-           $this->installerIni->setValues($values, $epId);
-           $this->ok('install.entrypoint.installed', $epId);
-        }
-        else {
-            $resolver = new Resolver();
-            foreach($ep->getLaunchers() as $name => $module) {
-                $resolverItem = $module->getResolverItem($epId);
-                $resolver->addItem($resolverItem);
-            }
-            $result = $this->_installModules($resolver, $ep, true);
+            $installerIni = $this->getInstallerIni();
+            // let's copy the installation information of the other entry point
+            $values = $installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
+            $installerIni->setValues($values, $epId);
+            $installerIni->save();
+            $this->ok('install.entrypoint.installed', $epId);
+            $this->endMessage();
+            return true;
         }
 
-        $this->installerIni->save();
+        $resolver = new Resolver();
+        foreach($ep->getLaunchers() as $name => $module) {
+            $resolverItem = $module->getResolverItem($epId);
+            $resolver->addItem($resolverItem);
+        }
+        $modulesChainsEp = array($epId => $this->resolveDependencies($resolver, $epId));
+        $result =  $this->_installModules($modulesChainsEp, true);
         $this->endMessage();
         return $result;
     }
@@ -451,7 +411,7 @@ class Installer {
             throw new \Exception("unknown entry point");
         }
 
-        $result = true;
+        $modulesChainsEp = array();
 
         foreach ($entryPointList as $epId=>$ep) {
             if ($ep->usesSameConfigOfOtherEntryPoint()) {
@@ -481,28 +441,50 @@ class Installer {
                 $resolver->addItem($resolverItem);
             }
             // install modules
-            $result = $result & $this->_installModules($resolver, $ep, false);
-            if (!$result)
-                break;
-            $this->installerIni->save();
+            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
         }
+        $result = $this->_installModules($modulesChainsEp, false);
 
         $this->completeInstallStatus();
-        $this->installerIni->save();
         $this->endMessage();
         return $result;
     }
 
     /**
      * core of the installation
-     * @param ModuleInstallLauncher[] $modules
-     * @param EntryPoint $ep  the entrypoint
+     * @param Item[][] $entryPointModulesChains
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(Resolver $resolver, EntryPoint $ep, $installWholeApp, $flags=7) {
-        $epId = $ep->getEpId();
+    protected function _installModules(&$entryPointModulesChains, $installWholeApp, $flags=7 ) {
+        $result = true;
+
+        foreach($entryPointModulesChains as $epId => $modulesChain) {
+            if ($modulesChain) {
+                $result = $result & $this->_installEntryPointModules($modulesChain, $epId, $installWholeApp, $flags);
+                $this->globalSetup->getInstallerIni()->save();
+                if (!$result) {
+                    break;
+                }
+            }
+            else {
+                break;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * installation for a specific entry point
+     * @param Item[] $moduleschain
+     * @param string $epId  the entrypoint id
+     * @param boolean $installWholeApp true if the installation is done during app installation
+     * @param integer $flags to know what to do
+     * @return boolean true if the installation is ok
+     */
+    protected function _installEntryPointModules(&$moduleschain, $epId, $installWholeApp, $flags=7) {
+
         $this->notice('install.entrypoint.start', $epId);
         $ep = $this->entryPoints[$epId];
         App::setConfig($ep->getConfigObj());
@@ -511,24 +493,19 @@ class Installer {
             $this->notice('install.entrypoint.installers.disabled');
         }
 
-        $moduleschain = $this->resolveDependencies($resolver, $epId);
-        if ($moduleschain === false) {
-            return false;
-        }
-
-        $componentsToInstall = $this->runPreInstall($moduleschain, $ep, $installWholeApp, $flags);
+        $componentsToInstall = $this->runPreInstallEntryPoint($moduleschain, $ep, $installWholeApp, $flags);
         if ($componentsToInstall === false) {
             $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 
-        $installedModules = $this->runInstall($componentsToInstall, $ep, $epId, $flags);
+        $installedModules = $this->runInstallEntryPoint($componentsToInstall, $ep, $epId, $flags);
         if ($installedModules === false) {
             $this->warning('install.entrypoint.bad.end', $epId);
             return false;
         }
 
-        $result = $this->runPostInstall($installedModules, $ep, $flags);
+        $result = $this->runPostInstallEntryPoint($installedModules, $ep, $flags);
         if (!$result) {
             $this->warning('install.entrypoint.bad.end', $epId);
         }
@@ -553,7 +530,7 @@ class Installer {
             else if ($e->getCode() == 2) {
                 $depName = $e->getRelatedData()->getName();
                 $maxVersion = $minVersion = 0;
-                foreach($component->dependencies as $compInfo) {
+                foreach($component->getDependencies() as $compInfo) {
                     if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
                         $maxVersion = $compInfo['maxversion'];
                         $minVersion = $compInfo['minversion'];
@@ -586,7 +563,7 @@ class Installer {
     }
 
 
-    protected function runPreInstall($moduleschain, $ep, $installWholeApp, $flags) {
+    protected function runPreInstallEntryPoint(&$moduleschain, EntryPoint $ep, $installWholeApp, $flags) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -605,7 +582,13 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
-                        $installer->preInstall();
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->preInstall();
+                        }
+                        else {
+                            $installer->preInstallEntryPoint($ep);
+                        }
                     }
                 }
                 elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
@@ -618,7 +601,13 @@ class Installer {
 
                     if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
                         foreach($upgraders as $upgrader) {
-                            $upgrader->preInstall();
+                            if ($upgrader instanceof \jIInstallerComponent) {
+                                // legacy
+                                $upgrader->preInstall();
+                            }
+                            else {
+                                $upgrader->preInstallEntryPoint($ep);
+                            }
                         }
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
@@ -631,7 +620,13 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
-                        $installer->preUninstall();
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->preUninstall();
+                        }
+                        else {
+                            $installer->preUninstallEntryPoint($ep);
+                        }
                     }
                 }
             } catch (Exception $e) {
@@ -648,27 +643,35 @@ class Installer {
         return $componentsToInstall;
     }
 
-    protected function runInstall($componentsToInstall, $ep, $epId, $flags) {
+    protected function runInstallEntryPoint($componentsToInstall, EntryPoint $ep, $epId, $flags) {
 
         $installedModules = array();
         $result = true;
+        $installerIni = $this->globalSetup->getInstallerIni();
         // -----  installation process
         try {
             foreach($componentsToInstall as $item) {
                 list($installer, $component, $action) = $item;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $installer->install();
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->install();
+                        }
+                        else {
+                            $installer->installEntryPoint($ep);
+                        }
                     }
-                    $this->installerIni->setValue($component->getName().'.installed',
+
+                    $installerIni->setValue($component->getName().'.installed',
                         1, $epId);
-                    $this->installerIni->setValue($component->getName().'.version',
+                    $installerIni->setValue($component->getName().'.version',
                         $component->getSourceVersion(), $epId);
-                    $this->installerIni->setValue($component->getName().'.version.date',
+                    $installerIni->setValue($component->getName().'.version.date',
                         $component->getSourceDate(), $epId);
-                    $this->installerIni->setValue($component->getName().'.firstversion',
+                    $installerIni->setValue($component->getName().'.firstversion',
                         $component->getSourceVersion(), $epId);
-                    $this->installerIni->setValue($component->getName().'.firstversion.date',
+                    $installerIni->setValue($component->getName().'.firstversion.date',
                         $component->getSourceDate(), $epId);
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
@@ -677,14 +680,20 @@ class Installer {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
                         if ($flags & self::FLAG_UPGRADE_MODULE) {
-                            $upgrader->install();
+                            if ($upgrader instanceof \jIInstallerComponent) {
+                                // legacy
+                                $upgrader->install();
+                            }
+                            else {
+                                $upgrader->installEntryPoint($ep);
+                            }
                         }
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        $this->installerIni->setValue($component->getName().'.version',
+                        $installerIni->setValue($component->getName().'.version',
                             $upgrader->version, $epId);
-                        $this->installerIni->setValue($component->getName().'.version.date',
+                        $installerIni->setValue($component->getName().'.version.date',
                             $upgrader->date, $epId);
                         $this->ok('install.module.upgraded',
                             array($component->getName(), $upgrader->version));
@@ -693,9 +702,9 @@ class Installer {
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
-                        $this->installerIni->setValue($component->getName().'.version',
+                        $installerIni->setValue($component->getName().'.version',
                             $component->getSourceVersion(), $epId);
-                        $this->installerIni->setValue($component->getName().'.version.date',
+                        $installerIni->setValue($component->getName().'.version.date',
                             $component->getSourceDate(), $epId);
                         $this->ok('install.module.upgraded',
                             array($component->getName(), $component->getSourceVersion()));
@@ -704,19 +713,25 @@ class Installer {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $installer->uninstall();
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->uninstall();
+                        }
+                        else {
+                            $installer->uninstallEntryPoint($ep);
+                        }
                     }
-                    $this->installerIni->removeValue($component->getName().'.installed', $epId);
-                    $this->installerIni->removeValue($component->getName().'.version', $epId);
-                    $this->installerIni->removeValue($component->getName().'.version.date', $epId);
-                    $this->installerIni->removeValue($component->getName().'.firstversion', $epId);
-                    $this->installerIni->removeValue($component->getName().'.firstversion.date', $epId);
+                    $installerIni->removeValue($component->getName().'.installed', $epId);
+                    $installerIni->removeValue($component->getName().'.version', $epId);
+                    $installerIni->removeValue($component->getName().'.version.date', $epId);
+                    $installerIni->removeValue($component->getName().'.firstversion', $epId);
+                    $installerIni->removeValue($component->getName().'.firstversion.date', $epId);
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
                 // we always save the configuration, so it invalidates the cache
-                $ep->getConfigIni()->save();
-                $this->xmlMapFile->save();
+                $ep->getLocalConfigIni()->save();
+                $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.
@@ -740,7 +755,7 @@ class Installer {
         return $installedModules;
     }
 
-    protected function runPostInstall($installedModules, $ep, $flags) {
+    protected function runPostInstallEntryPoint($installedModules, EntryPoint $ep, $flags) {
         $result = true;
         // post install
         foreach($installedModules as $item) {
@@ -749,28 +764,46 @@ class Installer {
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $installer->postInstall();
-                        $component->installFinished($ep);
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->postInstall();
+                        }
+                        else {
+                            $installer->postInstallEntryPoint($ep);
+                        }
+                        $component->installEntryPointFinished($ep);
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     if ($flags & self::FLAG_UPGRADE_MODULE) {
                         foreach ($installer as $upgrader) {
-                            $upgrader->postInstall();
-                            $component->upgradeFinished($ep, $upgrader);
+                            if ($upgrader instanceof \jIInstallerComponent) {
+                                // legacy
+                                $upgrader->postInstall();
+                            }
+                            else {
+                                $upgrader->postInstallEntryPoint($ep);
+                            }
+                            $component->upgradeEntryPointFinished($ep, $upgrader);
                         }
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $installer->postUninstall();
-                        $component->uninstallFinished($ep);
+                        if ($installer instanceof \jIInstallerComponent) {
+                            // legacy
+                            $installer->postUninstall();
+                        }
+                        else {
+                            $installer->postUninstallEntryPoint($ep);
+                        }
+                        $component->uninstallEntryPointFinished($ep);
                     }
                 }
 
                 // we always save the configuration, so it invalidates the cache
-                $ep->getConfigIni()->save();
-                $this->xmlMapFile->save();
+                $ep->getLocalConfigIni()->save();
+                $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
                 // previous module installer could have modify it.

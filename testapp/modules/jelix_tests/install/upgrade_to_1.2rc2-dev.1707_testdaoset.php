@@ -1,9 +1,9 @@
 <?php
 
 
-class jelix_testsModuleUpgrader_testdaoset extends jInstallerModule {
+class jelix_testsModuleUpgrader_testdaoset extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         if (!$this->firstDbExec()) {
             return;
         }

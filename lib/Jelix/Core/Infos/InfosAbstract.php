@@ -9,20 +9,20 @@ namespace Jelix\Core\Infos;
 
 abstract class InfosAbstract {
 
-    /** @var the path to the module/app */
+    /** @var string the path to the module/app */
     protected $path = '';
     protected $isXml = false;
     protected $_exists = false;
 
-    /** @var the name of the module, used as identifier in jelix selectors or other part of the code */
+    /** @var string the name of the module, used as identifier in jelix selectors or other part of the code */
     public $name = '';
 
-    /** @var the birth date of the module/app. optional */
+    /** @var string the birth date of the module/app. optional */
     public $createDate = '';
 
-    /** @var version of the module/app. required for modules */
+    /** @var string version of the module/app. required for modules */
     public $version = '';
-    /** @var the release date of the module/app. required for modules */
+    /** @var string the release date of the module/app. required for modules */
     public $versionDate = '';
     
     public $versionStability = '';
@@ -49,14 +49,23 @@ abstract class InfosAbstract {
     public function getPath() {
         return $this->path;
     }
-    
+
+    /**
+     * @return bool
+     */
     public function isXmlFile() {
         return $this->isXml;
     }
 
+    /**
+     * @return bool
+     */
     public function exists() {
         return $this->_exists;
     }
 
+    /**
+     * @return string the file name
+     */
     public abstract function getFile();
 }

@@ -1,7 +1,7 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2009-2014 Laurent Jouanneau
+* @copyright   2009-2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -14,47 +14,59 @@ namespace Jelix\Installer;
 interface InstallerInterface {
 
     /**
-     * Called before the installation of all other components
-     * (dependents modules or the whole application).
-     * Here, you should check if the component can be installed or not
-     * @throws jException if an error occurs during the check of the installation
+     * Called before the installation of any modules,
+     * for each entrypoints
+     *
+     * Here, you should check if the module can be installed or not
+     * for the given entry point.
+     * @throws Exception if the module cannot be installed
      */
-    function preInstall();
+    function preInstallEntryPoint(EntryPoint $entryPoint);
 
     /**
-     * should configure the component, install table into the database etc..
+     * Should configure the module for the given entrypoint
+     *
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
-     * @throws jException  if an error occurs during the install.
+     * @throws Exception  if an error occurs during the installation.
+     * @param EntryPoint $entryPoint
      */
-    function install();
+    function installEntryPoint(EntryPoint $entryPoint);
 
     /**
-     * Redefine this method if you do some additionnal process after the installation of
-     * all other modules (dependents modules or the whole application)
-     * @throws jException  if an error occurs during the post installation.
+     * Redefine this method if you do some additional process after
+     * the installation of all modules for the given entrypoint for
+     *
+     * @throws Exception  if an error occurs during the post installation.
      */
-    function postInstall();
+    function postInstallEntryPoint(EntryPoint $entryPoint);
 
     /**
-     * Called before the uninstallation of all other modules
-     * (dependents modules or the whole application).
-     * Here, you should check if the component can be uninstalled or not
-     * @throws jException if an error occurs during the check of the installation
+     * Called before the uninstallation of all other modules for the given entry point
+     *
+     * Here, you should check if the module can be uninstalled or not
+     * @throws Exception if the module cannot be uninstalled
      */
-    function preUninstall();
+    function preUninstallEntryPoint(EntryPoint $entryPoint);
 
     /**
-     * should configure the component, install table into the database etc.. 
-     * @throws jException  if an error occurs during the install.
+     * should unconfigure the module for the given entry point
+     *
+     * called for each entry point
+     *
+     * @throws Exception  if an error occurs during the uninstall.
+     * @param EntryPoint $entryPoint
      */
-    function uninstall();
+    function uninstallEntrypoint(EntryPoint $entryPoint);
 
     /**
-     * 
-     * @throws jException  if an error occurs during the install.
+     * Redefine this method if you do some additional process after
+     * the uninstallation of all modules for the given entrypoint
+     *
+     * @throws Exception  if an error occurs during the post installation.
      */
-    function postUninstall();
+    function postUninstallEntryPoint(EntryPoint $entryPoint);
+
 
 }
 

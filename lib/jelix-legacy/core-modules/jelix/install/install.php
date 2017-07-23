@@ -8,17 +8,17 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelixModuleInstaller extends jInstallerModule {
+class jelixModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
 
         if (!$this->firstDbExec())
             return;
 
         // ---  install table for session storage if needed
-        $sessionStorage = $this->getConfigIni()->getValue("storage", "sessions");
-        $sessionDao = $this->getConfigIni()->getValue("dao_selector", "sessions");
-        //$sessionProfile = $this->getConfigIni()->getValue("dao_db_profile", "sessions");
+        $sessionStorage = $entryPoint->getConfigIni()->getValue("storage", "sessions");
+        $sessionDao = $entryPoint->getConfigIni()->getValue("dao_selector", "sessions");
+        //$sessionProfile = $entryPoint->getConfigIni()->getValue("dao_db_profile", "sessions");
 
         if ($sessionStorage == "dao" &&
             $sessionDao == "jelix~jsession" /*&&

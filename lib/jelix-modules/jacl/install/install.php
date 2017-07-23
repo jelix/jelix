@@ -8,13 +8,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jaclModuleInstaller extends jInstallerModule {
-    function install() {
-        if ($this->firstConfExec()) {
-            $conf = $this->getConfigIni();
+class jaclModuleInstaller extends jInstallerModule2 {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+        if ($entryPoint->firstConfExec()) {
+            $conf = $entryPoint->getConfigIni();
             if (null == $conf->getValue('jacl', 'coordplugins')) {
                 $conf->setValue('jacl', '1', 'coordplugins');
-                if ($this->entryPoint->type != 'classic')
+                if ($entryPoint->getType() != 'classic')
                     $onerror = 1;
                 else
                     $onerror = 2;

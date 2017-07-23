@@ -9,9 +9,9 @@
 */
 
 
-class jpref_adminModuleInstaller extends jInstallerModule {
+class jpref_adminModuleInstaller extends jInstallerModule2 {
 
-    function install() {
+    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
         if ($this->firstExec('acl2')) {
             jAcl2DbManager::addSubjectGroup('jprefs.prefs.management', 'jpref_admin~admin.acl.grp.prefs.management');
             jAcl2DbManager::addSubject('jprefs.prefs.list', 'jpref_admin~admin.acl.prefs.list', 'jprefs.prefs.management');
