@@ -3,8 +3,8 @@
 * @package    jelix
 * @subpackage utils
 * @author     Loic Mathaud
-* @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2008-2012 Laurent Jouanneau
+* @contributor Laurent Jouanneau, Erika31, Julien Issler
+* @copyright  2006 Loic Mathaud, 2008-2012 Laurent Jouanneau, 2017 Erika31, 2017 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */

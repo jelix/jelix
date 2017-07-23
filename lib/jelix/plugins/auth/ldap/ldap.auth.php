@@ -46,7 +46,8 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
             'ldapUser'      =>  null,
             'ldapPassword'      =>  null,
             'protocolVersion'   =>  3,
-            'uidProperty'       =>  'cn'
+            'uidProperty'       =>  'cn',
+            'ldapUserObjectClass' => 'user'
         );
 
         // iterate each default parameter and apply it to actual params if missing in $params.
@@ -196,7 +197,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
     public function changePassword($login, $newpassword) {
 
         $entries = array();
-        $entries["userpassword"][0] = $this->cryptPassword($newpassword);
+        $entries["userPassword"] = $this->cryptPassword($newpassword);
 
         $connect = $this->_bindLdapUser();
         if ($connect === false) {
@@ -247,32 +248,26 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
     protected function getAttributesLDAP($user, $update=false) {
 
         $entries = array();
-        $entries["objectclass"][0] = "user";
-        $properties = get_object_vars($user);
-        foreach ($properties as $property=>$value) {
-            switch(strtolower($property)) {
-                case 'login':
+        $entries["objectclass"] = $this->_params['ldapUserObjectClass'];
+        foreach($this->_params['searchAttributes'] as $attribute) {
+            switch(strtolower($attribute)) {
+                case 'mail':
+                    $entries["mail"] = $user->email;
+                    break;
+                case $this->_params['uidProperty']:
                     if (!$update) {
-                        $entries[$this->_params['uidProperty']][0] = $value;
-                        $entries["name"][0] = $value;
-                    }
-                    break;
-                case 'password':
-                    if ($value != '') {
-                        $entries["userpassword"][0] = $value;
-                    }
-                    break;
-                case 'email':
-                    if ($value != '') {
-                        $entries["mail"][0] = $value;
+                        $entries[$this->_params['uidProperty']] = $user->login;
                     }
                     break;
                 default:
-                    if ($value != '') {
-                        $entries[$property][0] = $value;
+                    if (isset($user->$attribute) && $user->$attribute != '') {
+                        $entries[$attribute] = $user->$attribute;
                     }
                     break;
             }
+        }
+        if (!$update && $user->password) {
+            $entries["userPassword"] = $user->password;
         }
         return $entries;
     }
@@ -281,21 +276,28 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
 
         foreach($this->_params['searchAttributes'] as $attribute) {
             if (isset($attributes[$attribute])) {
-                array_shift($attributes[$attribute]);
+                $attr = $attributes[$attribute];
+                if ($attr['count'] > 1) {
+                    $val = array_shift($attr);
+                }
+                else {
+                    $val = $attr[0];
+                }
                 switch(strtolower($attribute)) {
                     case 'mail':
-                        $user->email = $attributes[$attribute];
+                        $user->email = $val;
                         break;
                     case $this->_params['uidProperty']:
-                        $user->login = $attributes[$attribute];
+                        $user->login = $val;
                         break;
                     default:
-                        $user->$attribute = $attributes[$attribute];
+                        $user->$attribute = $val;
                         break;
                 }
             }
         }
     }
+
 
     protected function _buildUserDn($login) {
         if ($login) {

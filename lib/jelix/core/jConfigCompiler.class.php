@@ -160,6 +160,7 @@ class jConfigCompiler {
 
         $config->chmodFile = octdec($config->chmodFile);
         $config->chmodDir = octdec($config->chmodDir);
+        $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);
     }
 
     static protected function checkCoordPluginsPath($config) {

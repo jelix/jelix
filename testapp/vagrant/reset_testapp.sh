@@ -11,6 +11,10 @@ source $VAGRANTDIR/system.sh
 resetJelixMysql testapp root jelix
 resetJelixInstall $APPDIR
 
+if [ -f $APPDIR/var/config/auth_ldap.coord.ini.php.dist ]; then
+    cp -a $APPDIR/var/config/auth_ldap.coord.ini.php.dist $APPDIR/var/config/auth_ldap.coord.ini.php
+fi
+
 MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
 for TABLE in $MYSQLTABLES
 do

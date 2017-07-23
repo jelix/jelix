@@ -41,7 +41,7 @@ class jInstallerEntryPoint {
      * and entrypoint config (overrider)
      *
      * @var \Jelix\IniFile\MultiIniModifier
-     * @deprecated
+     * @deprecated as public property
      */
     public $localConfigIni;
 

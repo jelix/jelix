@@ -69,17 +69,28 @@ persistant_duration = 1
 ; base path for the cookie. If empty, it uses the basePath value from the main configuration.
 persistant_cookie_path =
 
+;=========== Parameters for drivers
+
 ;------- parameters for the "ldap" driver
 [ldap]
-profile=test
+; default "localhost"
+hostname=localhost
+; default 389
+port=389
 
-; LDAP search params 
+; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
+ldapUser="cn=admin,dc=testapp17,dc=local"
+; password used to connect with LDAP
+ldapPassword="passjelix"
+
+; LDAP search params
+
+uidProperty=uid
 ; search base
-searchBaseDN="OU=ADAM users,O=Microsoft,C=US"
+searchBaseDN="ou=people,dc=testapp17,dc=local"
 ; search filter
-searchFilter="(objectClass=user)"
+searchFilter="(objectClass=inetOrgPerson)"
 ; attributes to retrieve for the search (default "cn,distinguishedName,name")
-searchAttributes="cn,distinguishedName,name,mail"
+searchAttributes="uid,mail,displayName,givenName,sn,cn"
 
-; name of the php function to crypt the password in the database
-password_crypt_function = md5
+ldapUserObjectClass=inetOrgPerson
