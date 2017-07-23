@@ -354,7 +354,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall2.version'=>"1.1.5", 
             ));
 
-            $EPindex = new testInstallerEntryPoint($this->globalSetup, $this->localIni, $iniIndex, 'index.php', 'classic', $conf);
+            $EPindex = new testInstallerEntryPoint($this->globalSetup, $iniIndex, 'index.php', 'classic', $conf);
             $component->addModuleStatus($EPindex->getEpId(), new jInstallerModuleInfos('testinstall2', $conf->modules) );
 
             $upgraders = $component->getUpgraders($EPindex);

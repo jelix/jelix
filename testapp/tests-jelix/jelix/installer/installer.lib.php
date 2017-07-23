@@ -44,13 +44,6 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         }
         $localEpConfigIni = new testInstallerIniFileModifier($epConfigFile->getFileName());
 
-
-        $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
-                                                    $this->scriptName,
-                                                    $this->isCliScript());
-        $this->config = $compiler->read(true, $configContent);
-        $this->modulesInfos = $compiler->getModulesInfos();
-
         $this->configFile = $epConfigFile->getFileName();
         $this->configIni = clone $globalSetup->getConfigIni();
         $this->configIni['entrypoint'] = $epConfigFile;
@@ -59,7 +52,11 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
-        $this->config = $configContent;
+        $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
+            $this->scriptName,
+            $this->isCliScript());
+        $this->config = $compiler->read(true, $configContent);
+        $this->modulesInfos = $compiler->getModulesInfos();
     }
 
     function getEpId() {
