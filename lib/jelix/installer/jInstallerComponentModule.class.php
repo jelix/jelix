@@ -225,6 +225,16 @@ class jInstallerComponentModule {
             }
         }
 
+        $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
+        return $this->moduleInstaller;
+    }
+
+    public function setAsCurrentModuleInstaller(jInstallerEntryPoint2 $ep)
+    {
+        if (!$this->moduleInstaller) {
+            return;
+        }
+        $epId = $ep->getEpId();
         $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
         $sparam = $ep->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         if ($sparam === null) {
@@ -239,17 +249,15 @@ class jInstallerComponentModule {
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
             $legacyEp = $ep->getLegacyInstallerEntryPoint();
             $this->moduleInstaller->setEntryPoint($legacyEp,
-                $this->moduleInfos[$epId]->dbProfile,
-                $this->globalSetup->getInstallerContexts($this->name));
+                $this->moduleInfos[$epId]->dbProfile);
         }
         else {
             $ep->_setCurrentModuleInstaller($this->moduleInstaller);
             $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
-            $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
         }
 
-        return $this->moduleInstaller;
     }
+
 
     /**
      * return the list of objects which are responsible to upgrade the module
@@ -365,24 +373,11 @@ class jInstallerComponentModule {
                         continue;
                 }
             }
-
-            $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
             $class = get_class($upgrader);
-
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-            if ($upgrader instanceof jIInstallerComponent) {
-                $legacyEp = $ep->getLegacyInstallerEntryPoint();
-                $upgrader->setEntryPoint($legacyEp,
-                    $this->moduleInfos[$epId]->dbProfile,
-                    $this->upgradersContexts[$class]);
-            }
-            else {
-                $ep->_setCurrentModuleInstaller($upgrader);
-                $upgrader->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
-                $upgrader->setContext($this->upgradersContexts[$class]);
-            }
+            $upgrader->setContext($this->upgradersContexts[$class]);
             $list[] = $upgrader;
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
@@ -391,6 +386,22 @@ class jInstallerComponentModule {
         });
         return $list;
     }
+
+    public function setAsCurrentModuleUpgraders($upgrader, jInstallerEntryPoint2 $ep) {
+        $epId = $ep->getEpId();
+        $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
+
+        if ($upgrader instanceof jIInstallerComponent) {
+            $legacyEp = $ep->getLegacyInstallerEntryPoint();
+            $upgrader->setEntryPoint($legacyEp,
+                $this->moduleInfos[$epId]->dbProfile);
+        }
+        else {
+            $ep->_setCurrentModuleInstaller($upgrader);
+            $upgrader->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+        }
+    }
+
 
     public function installEntryPointFinished(jInstallerEntryPoint2 $ep) {
         if ($this->globalSetup)

@@ -191,11 +191,9 @@ class jInstallerModule implements jIInstallerComponent {
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      * @param array $contexts  list of contexts already executed
      */
-    public function setEntryPoint(jInstallerEntryPoint $ep, $dbProfile, $contexts) {
+    public function setEntryPoint(jInstallerEntryPoint $ep, $dbProfile) {
         $this->entryPoint = $ep;
         $this->config = $ep->configIni;
-        $this->contextId = $contexts;
-        $this->newContextId = array();
 
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
@@ -229,6 +227,14 @@ class jInstallerModule implements jIInstallerComponent {
     protected $contextId = array();
 
     protected $newContextId = array();
+
+    /**
+     * @param array $contexts  list of contexts already executed
+     */
+    public function setContext($contexts) {
+        $this->contextId = $contexts;
+        $this->newContextId = array();
+    }
 
     /**
      *
