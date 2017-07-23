@@ -172,6 +172,15 @@ class ModuleInstallLauncher {
             $this->moduleInstaller->setGlobalSetup($this->globalSetup);
         }
 
+        $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->moduleInfos->name));
+        return $this->moduleInstaller;
+    }
+
+    public function setAsCurrentModuleInstaller(EntryPoint $ep) {
+        if (!$this->moduleInstaller) {
+            return;
+        }
+        $epId = $ep->getEpId();
         $this->moduleInstaller->setParameters($this->moduleStatuses[$epId]->parameters);
         $sparam = $ep->getLocalConfigIni()->getValue($this->moduleInfos->name.'.installparam','modules');
         if ($sparam === null) {
@@ -185,10 +194,8 @@ class ModuleInstallLauncher {
 
         $ep->_setCurrentModuleInstaller($this->moduleInstaller);
         $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleStatuses[$epId]->dbProfile);
-        $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->moduleInfos->name));
-
-        return $this->moduleInstaller;
     }
+
 
     /**
      * return the list of objects which are responsible to upgrade the module
@@ -303,15 +310,12 @@ class ModuleInstallLauncher {
                 }
             }
 
-            $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
             $class = get_class($upgrader);
-
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-            $ep->_setCurrentModuleInstaller($upgrader);
-            $upgrader->initDbProfileForEntrypoint($this->moduleStatuses[$epId]->dbProfile);
             $upgrader->setContext($this->upgradersContexts[$class]);
+
             $list[] = $upgrader;
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
@@ -319,6 +323,13 @@ class ModuleInstallLauncher {
                 return VersionComparator::compareVersion($upgA->version, $upgB->version);
         });
         return $list;
+    }
+
+    public function setAsCurrentModuleUpgraders(ModuleInstaller $upgrader, EntryPoint $ep) {
+        $epId = $ep->getEpId();
+        $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
+        $ep->_setCurrentModuleInstaller($upgrader);
+        $upgrader->initDbProfileForEntrypoint($this->moduleStatuses[$epId]->dbProfile);
     }
 
     public function installEntryPointFinished(EntryPoint $ep) {

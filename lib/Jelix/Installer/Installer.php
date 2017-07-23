@@ -582,6 +582,7 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->preInstall();
@@ -601,6 +602,7 @@ class Installer {
 
                     if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
                         foreach($upgraders as $upgrader) {
+                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
                             if ($upgrader instanceof \jIInstallerComponent) {
                                 // legacy
                                 $upgrader->preInstall();
@@ -620,6 +622,7 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->preUninstall();
@@ -654,6 +657,7 @@ class Installer {
                 list($installer, $component, $action) = $item;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->install();
@@ -680,6 +684,7 @@ class Installer {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
                         if ($flags & self::FLAG_UPGRADE_MODULE) {
+                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
                             if ($upgrader instanceof \jIInstallerComponent) {
                                 // legacy
                                 $upgrader->install();
@@ -713,6 +718,7 @@ class Installer {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->uninstall();
@@ -764,6 +770,7 @@ class Installer {
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->postInstall();
@@ -777,6 +784,7 @@ class Installer {
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     if ($flags & self::FLAG_UPGRADE_MODULE) {
                         foreach ($installer as $upgrader) {
+                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
                             if ($upgrader instanceof \jIInstallerComponent) {
                                 // legacy
                                 $upgrader->postInstall();
@@ -790,6 +798,7 @@ class Installer {
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                        $component->setAsCurrentModuleInstaller($ep);
                         if ($installer instanceof \jIInstallerComponent) {
                             // legacy
                             $installer->postUninstall();
