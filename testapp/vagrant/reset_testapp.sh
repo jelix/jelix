@@ -3,6 +3,7 @@ ROOTDIR="/jelixapp"
 APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="$APPDIR/vagrant"
+POSTGRESQL_VERSION=9.4
 
 source $VAGRANTDIR/system.sh
 
@@ -11,8 +12,17 @@ source $VAGRANTDIR/system.sh
 resetJelixMysql testapp root jelix
 resetJelixInstall $APPDIR
 
-mysql -u root -pjelix -e "drop table if exists labels1_test;drop table if exists labels_test;drop table if exists myconfig;drop table if exists product_tags_test;drop table if exists product_test;drop table if exists products;drop table if exists towns;drop table if exists testkvdb;" testapp;
-sudo -u postgres -- psql -d testapp -c "drop table if exists jacl2_subject_group cascade;drop table if exists jacl2_user_group cascade;drop table if exists jacl2_group cascade;drop table if exists jacl2_rights cascade;drop table if exists jacl2_subject;drop table if exists jsessions;drop table if exists labels1_tests;drop table if exists labels_tests;drop table if exists product_tags_test;drop table if exists product_test;drop table if exists products;drop table if exists testkvdb;"
+MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
+for TABLE in $MYSQLTABLES
+do
+    mysql -u root -pjelix -e "drop table if exists $TABLE;" testapp;
+done
+
+PGTABLES="jacl2_group jacl2_rights jacl2_subject jacl2_subject_group jacl2_user_group jsessions labels1_tests labels_tests product_tags_test product_test products testkvdb"
+for TABLE in $PGTABLES
+do
+    sudo -u postgres -- psql -d testapp -c "drop table if exists $TABLE cascade;"
+done
 
 if [ -f $APPDIR/var/db/sqlite3/tests.sqlite3.bak ]; then
     cp -a $APPDIR/var/db/sqlite3/tests.sqlite3.bak $APPDIR/var/db/sqlite3/tests.sqlite3
