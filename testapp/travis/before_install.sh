@@ -22,6 +22,7 @@ if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
 fi
 echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$VERSION_NAME/etc/php.ini
 cp ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf.default ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
+cat  ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
 ~/.phpenv/versions/$VERSION_NAME/sbin/php-fpm
 
 # PHP 7+ needs to have the LDAP extension manually enabled
@@ -35,13 +36,11 @@ fi
 # configure apache virtual hosts
 ls -al /home
 ls -al /home/travis
-ls -al /home/travis/build
-ls -al /home/travis/build/jelix
-ls -al /home/travis/build/jelix/jelix
-ls -al /home/travis/build/jelix/jelix/testapp
-ls -al /home/travis/build/jelix/jelix/testapp/www
+
 tree /etc/apache2/sites-available/
 tree /etc/apache2/conf-enabled/
+cat /etc/apache2/conf-enabled/serve-cgi-bin.conf
+cat /etc/apache2/conf-enabled/other-vhosts-access-log.conf
 cat /etc/apache2/sites-enabled/000-default.conf
 echo "--"
 rm -f /etc/apache2/sites-enabled/000-default.conf
@@ -52,11 +51,11 @@ ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/defau
 cat /etc/apache2/sites-enabled/default.conf
 
 chmod +x /home/travis
-chmod +x /home/travis/build
-chmod +x /home/travis/build/jelix
-chmod +x /home/travis/build/jelix/jelix
-chmod +x /home/travis/build/jelix/jelix/testapp
-chmod +x /home/travis/build/jelix/jelix/testapp/www
+#chmod +x /home/travis/build
+#chmod +x /home/travis/build/jelix
+#chmod +x /home/travis/build/jelix/jelix
+#chmod +x /home/travis/build/jelix/jelix/testapp
+#chmod +x /home/travis/build/jelix/jelix/testapp/www
 
 service apache2 restart
 

@@ -5,6 +5,7 @@ echo "----------------------- home "
 wget -O - http://testapp17.local
 
 echo "-----------------------"
+cat /var/log/apache2/error.log
 echo "-----------------------"
 
 wget -O - "http://testapp17.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
