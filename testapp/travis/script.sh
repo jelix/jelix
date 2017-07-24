@@ -2,12 +2,12 @@
 
 echo "----------------------- home "
 
-wget -q -O - http://testapp17.local
+wget -O - http://testapp17.local
 
 echo "-----------------------"
 echo "-----------------------"
 
-wget -q -O - http://testapp17.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap
+wget -O - "http://testapp17.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
 
 echo "-----------------------"
 

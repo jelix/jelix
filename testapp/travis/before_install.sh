@@ -15,7 +15,8 @@ apt-get install apache2-mpm-prefork libapache2-mod-fastcgi
 a2enmod rewrite actions fastcgi alias
 
 # php-fpm
-ls -al ~/.phpenv/versions/
+tree ~/.phpenv/versions/$VERSION_NAME/
+
 if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
     cp testapp/travis/www.conf ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.d/www.conf;
 fi
@@ -32,15 +33,16 @@ if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
 fi
 
 # configure apache virtual hosts
+tree /etc/apache2/sites-available/
+cat /etc/apache2/sites-enabled/000-default.conf
+echo "--"
 rm -f /etc/apache2/sites-enabled/000-default.conf
 rm -f /etc/apache2/sites-available/000-default.conf
 cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/default.conf
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default.conf
 ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/default.conf
+cat /etc/apache2/sites-enabled/default.conf
 service apache2 restart
-
-ps -ax
-
 
 # ldap server
 echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections
