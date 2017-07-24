@@ -7,9 +7,22 @@ locale-gen fr_FR.UTF-8
 update-locale LC_ALL=fr_FR.UTF-8
 
 #package
-apt-get update
+apt-get -y upgrade
+apt-get -y install debconf-utils
 apt-get install apache2 libapache2-mod-fastcgi
 a2enmod rewrite actions fastcgi alias
+
+
+echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections
+echo "slapd slapd/password1 password passjelix" | debconf-set-selections
+echo "slapd slapd/password2 password passjelix" | debconf-set-selections
+echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
+echo "slapd shared/organization string orgjelix" | debconf-set-selections
+echo "slapd slapd/domain string testapp17.local" | debconf-set-selections
+
+apt-get -y install slapd ldap-utils
+
+ldapadd -x -D cn=admin,dc=testapp17,dc=local -w passjelix -f testapp/vagrant/ldap_conf.ldif
 
 # php-fpm
 
