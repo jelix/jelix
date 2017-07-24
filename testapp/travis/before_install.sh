@@ -11,7 +11,7 @@ VERSION_NAME=$1
 #package
 apt-get -y update
 apt-get -y install debconf-utils
-apt-get install apache2-mpm-prefork libapache2-mod-fastcgi
+apt-get install apache2-mpm-prefork libapache2-mod-fastcgi tree
 a2enmod rewrite actions fastcgi alias
 
 # php-fpm
@@ -33,7 +33,15 @@ if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
 fi
 
 # configure apache virtual hosts
+ls -al /home
+ls -al /home/travis
+ls -al /home/travis/build
+ls -al /home/travis/build/jelix
+ls -al /home/travis/build/jelix/jelix
+ls -al /home/travis/build/jelix/jelix/testapp
+ls -al /home/travis/build/jelix/jelix/testapp/www
 tree /etc/apache2/sites-available/
+tree /etc/apache2/conf-enabled/
 cat /etc/apache2/sites-enabled/000-default.conf
 echo "--"
 rm -f /etc/apache2/sites-enabled/000-default.conf
@@ -42,6 +50,14 @@ cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/default.conf
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default.conf
 ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/default.conf
 cat /etc/apache2/sites-enabled/default.conf
+
+chmod +x /home/travis
+chmod +x /home/travis/build
+chmod +x /home/travis/build/jelix
+chmod +x /home/travis/build/jelix/jelix
+chmod +x /home/travis/build/jelix/jelix/testapp
+chmod +x /home/travis/build/jelix/jelix/testapp/www
+
 service apache2 restart
 
 # ldap server
