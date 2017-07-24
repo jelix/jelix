@@ -14,15 +14,16 @@ apt-get -y install debconf-utils
 apt-get install apache2-mpm-prefork libapache2-mod-fastcgi tree
 a2enmod rewrite actions fastcgi alias
 
+ll ~/../
 # php-fpm
-tree ~/.phpenv/versions/$VERSION_NAME/
-
+cp ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf.default ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
 if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
     cp testapp/travis/www.conf ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.d/www.conf;
+else
+    sed -i "/^user = nobody/c\user = travis" ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
+    sed -i "/^group = nobody/c\group = travis" ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
 fi
 echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$VERSION_NAME/etc/php.ini
-cp ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf.default ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
-cat  ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
 ~/.phpenv/versions/$VERSION_NAME/sbin/php-fpm
 
 # PHP 7+ needs to have the LDAP extension manually enabled
@@ -34,14 +35,7 @@ if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
 fi
 
 # configure apache virtual hosts
-ls -al /home
-ls -al /home/travis
 
-tree /etc/apache2/sites-available/
-tree /etc/apache2/conf-enabled/
-cat /etc/apache2/conf-enabled/serve-cgi-bin.conf
-cat /etc/apache2/conf-enabled/other-vhosts-access-log.conf
-cat /etc/apache2/sites-enabled/000-default.conf
 echo "--"
 rm -f /etc/apache2/sites-enabled/000-default.conf
 rm -f /etc/apache2/sites-available/000-default.conf
@@ -51,11 +45,10 @@ ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/defau
 cat /etc/apache2/sites-enabled/default.conf
 
 chmod +x /home/travis
-#chmod +x /home/travis/build
-#chmod +x /home/travis/build/jelix
-#chmod +x /home/travis/build/jelix/jelix
-#chmod +x /home/travis/build/jelix/jelix/testapp
-#chmod +x /home/travis/build/jelix/jelix/testapp/www
+#chmod 777 /home/travis/build/jelix/jelix/testapp/temp
+#chmod 777 /home/travis/build/jelix/jelix/testapp/var/log
+#chmod 777 /home/travis/build/jelix/jelix/testapp/var/mails
+#chmod -R go+w /home/travis/build/jelix/jelix/testapp/var/db
 
 service apache2 restart
 

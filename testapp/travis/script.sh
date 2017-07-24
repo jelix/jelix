@@ -5,12 +5,13 @@ echo "----------------------- home "
 wget -O - http://testapp17.local
 
 echo "-----------------------"
-cat /var/log/apache2/error.log
+sudo cat /var/log/apache2/error.log
 echo "-----------------------"
 
 wget -O - "http://testapp17.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
 
 echo "-----------------------"
+
 
 cd testapp/tests-jelix/
 ../vendor/bin/phpunit -v -d xdebug.overload_var_dump=0
