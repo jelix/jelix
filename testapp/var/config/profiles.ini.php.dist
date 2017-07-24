@@ -271,11 +271,11 @@ file_name_prefix=acl2dbcache
 
 [authldap:test]
 ; default "localhost"
-hostname=
+hostname=localhost
 ; default 389
-port=
+port=389
 
 ; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser=
+ldapUser="cn=admin,dc=testapp17,dc=local"
 ; password used to connect with LDAP
-ldapPassword=
+ldapPassword="passjelix"

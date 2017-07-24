@@ -4,6 +4,7 @@ cp -a testapp/var/config/profiles.ini.php.dist testapp/var/config/profiles.ini.p
 cp -a testapp/var/config/localconfig.ini.php.dist testapp/var/config/localconfig.ini.php
 cp -a testapp/adminapp/var/config/profiles.ini.php.dist testapp/adminapp/var/config/profiles.ini.php
 cp -a testapp/adminapp/var/config/localconfig.ini.php.dist testapp/adminapp/var/config/localconfig.ini.php
+cp -a testapp/app/config/auth_ldap.coord.ini.php.dist testapp/app/config/auth_ldap.coord.ini.php
 
 if [ ! -d testapp/temp ]; then
     mkdir testapp/temp

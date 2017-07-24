@@ -36,7 +36,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
             throw new jException('jelix~auth.ldap.profile.missing');
         }
 
-        $profile = jProfile::get('authldap', $this->_params['profile']);
+        $profile = jProfiles::get('authldap', $this->_params['profile']);
         $this->_params = array_merge($this->_params, $profile);
 
         // default ldap parameters
@@ -88,6 +88,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver {
         if ($connect === false) {
             return false;
         }
+
         $result = ldap_add($connect, $this->_buildUserDn($user->login), $entries);
         ldap_close($connect);
         return $result;

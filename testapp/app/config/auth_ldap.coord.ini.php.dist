@@ -73,15 +73,7 @@ persistant_cookie_path =
 
 ;------- parameters for the "ldap" driver
 [ldap]
-; default "localhost"
-hostname=localhost
-; default 389
-port=389
-
-; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser="cn=admin,dc=testapp17,dc=local"
-; password used to connect with LDAP
-ldapPassword="passjelix"
+profile = test
 
 ; LDAP search params
 
