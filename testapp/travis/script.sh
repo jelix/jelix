@@ -1,5 +1,16 @@
 #!/bin/bash
 
+echo "----------------------- home "
+
+wget -q -O - http://testapp17.local
+
+echo "-----------------------"
+echo "-----------------------"
+
+wget -q -O - http://testapp17.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap
+
+echo "-----------------------"
+
 cd testapp/tests-jelix/
 ../vendor/bin/phpunit -v -d xdebug.overload_var_dump=0
 EXITCODE=$?

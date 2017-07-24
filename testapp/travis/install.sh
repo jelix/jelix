@@ -13,9 +13,8 @@ if [ ! -d testapp/adminapp/temp ]; then
     mkdir testapp/adminapp/temp
 fi
 
-composer install --prefer-dist
 cd testapp
-composer install --prefer-dist
+composer install --prefer-dist --no-suggest --no-interaction
 
 php install/installer.php
 
