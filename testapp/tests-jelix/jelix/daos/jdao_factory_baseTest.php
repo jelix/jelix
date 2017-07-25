@@ -196,7 +196,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $this->conn->expects($this->once())
                     ->method('query')
-                    ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `products` AS `products` ORDER BY `products`.`price` asc'));
+                    ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `products` AS `products` ORDER BY `price` asc'));
         $dao->findBy($cond);
     }
 
@@ -208,7 +208,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $this->conn->expects($this->once())
                     ->method('query')
-                    ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `foo_products` AS `products` ORDER BY `products`.`price` asc'));
+                    ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `foo_products` AS `products` ORDER BY `price` asc'));
         $dao->findBy($cond);
     }
 
@@ -219,7 +219,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $this->conn->expects($this->once())
                     ->method('query')
-                    ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `products` AS `p` ORDER BY `p`.`price` asc'));
+                    ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `products` AS `p` ORDER BY `price` asc'));
         $dao->findBy($cond);
     }
 
@@ -231,7 +231,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $this->conn->expects($this->once())
                     ->method('query')
-                    ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `foo_products` AS `p` ORDER BY `p`.`price` asc'));
+                    ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `foo_products` AS `p` ORDER BY `price` asc'));
         $dao->findBy($cond);
     }
 }

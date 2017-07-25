@@ -45,7 +45,7 @@ To shutdown the virtual machine, type
 vagrant halt
 ```
 
-You can also add in your hosts file a declaration of the testapp17.local domain
+You can also add in your hosts file a declaration of the testapp20.local domain
 
 ```
 10.205.2.100  testapp20.local

@@ -275,10 +275,15 @@ class Router {
         }
         $ctrl = new $class($this->request);
         if($ctrl instanceof \jIRestController){
-            $selector->method = $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
+            $selector->method = strtolower($_SERVER['REQUEST_METHOD']);
         }elseif(!is_callable(array($ctrl, $selector->method))){
             throw new \jException('jelix~errors.ad.controller.method.unknown',array($this->actionName, $selector->method, $class, $ctrlpath.$referer));
         }
+        if (property_exists ($ctrl , 'sensitiveParameters')) {
+            $config = App::config();
+            $config->error_handling['sensitiveParameters'] = array_merge($config->error_handling['sensitiveParameters'], $ctrl->sensitiveParameters);
+        }
+
         return $ctrl;
     }
 
@@ -329,10 +334,10 @@ class Router {
     /**
      * Exception handler using a response object to return the error
      * Replace the default PHP Exception handler
-     * @param   Exception   $e  the exception object
+     * @param   Throwable   $e  the exception object
      * @since 1.4
      */
-    function exceptionHandler(\Exception $e) {
+    function exceptionHandler(\Throwable $e) {
         $this->handleError('error', $e->getCode(), $e->getMessage(), $e->getFile(),
                           $e->getLine(), $e->getTrace());
     }

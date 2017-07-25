@@ -27,7 +27,8 @@
         "jelix/minify-module": "^1.7.1",
         "jelix/php-redis-plugin": "^1.7.5",
         "jelix/sitemap-module": "^1.7.2",
-        "guzzlehttp/guzzle": "^6.2.0"
+        "guzzlehttp/guzzle": "^6.2.0",
+        "jelix/ldapdao-module": "2.0.x-dev"
     },
     "autoload": {
     },

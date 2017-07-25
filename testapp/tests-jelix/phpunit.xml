@@ -49,5 +49,8 @@
     <testsuite name="Dependencies Resolver">
       <directory>jelix/Dependencies/</directory>
     </testsuite>
+    <testsuite name="Ldap/dao driver">
+      <directory>../vendor/jelix/ldapdao-module/tests/</directory>
+    </testsuite>
   </testsuites>
 </phpunit>

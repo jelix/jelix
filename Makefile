@@ -14,6 +14,7 @@ else
 DISTPATH=_dist
 DISTPATHSWITCH="MAIN_TARGET_PATH=_dist"
 endif
+
 ifndef DOCSPATH
 DOCSPATH=_docs
 endif
@@ -22,6 +23,7 @@ ifndef PHPDOC
 PHPDOC=../../phpdoc/
 endif
 
+.PHONY: default
 default:
 	@echo "target:"
 	@echo " nightlies : "
@@ -29,13 +31,15 @@ default:
 	@echo " docs : "
 	@echo "     Génération de la doc"
 
+.PHONY: nightlies
 nightlies:
-	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs
+	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
 	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
 
+.PHONY: docs
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 #	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/

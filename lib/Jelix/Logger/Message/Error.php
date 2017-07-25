@@ -7,7 +7,7 @@
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Logger\Message;
-
+use Jelix\Core\App;
 /**
  * this class is formatting an error message for a logger
  */
@@ -101,11 +101,11 @@ class Error implements \Jelix\Logger\MessageInterface {
 
         // url params including module and action
         if (\Jelix\Core\App::router() && ($req = \Jelix\Core\App::router()->request)) {
-            $params = str_replace("\n", ' ', var_export($req->params, true));
+            $params = $this->sanitizeParams($req->params);
             $remoteAddr = $req->getIP();
         }
         else {
-            $params = isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';
+            $params = $this->sanitizeParams(isset($_GET)?$_GET:array());
             // When we are in cmdline we need to fix the remoteAddr
             $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         }
@@ -136,5 +136,14 @@ class Error implements \Jelix\Logger\MessageInterface {
         ));
 
         return $messageLog;
+    }
+
+    protected function sanitizeParams($params) {
+        foreach(App::config()->error_handling['sensitiveParameters'] as $param) {
+            if ($param != '' && isset($params[$param])) {
+                $params[$param] = '***';
+            }
+        }
+        return str_replace("\n", ' ', var_export($params, true));
     }
 }

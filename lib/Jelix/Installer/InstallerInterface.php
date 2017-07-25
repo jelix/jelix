@@ -35,7 +35,7 @@ interface InstallerInterface {
 
     /**
      * Redefine this method if you do some additional process after
-     * the installation of all modules for the given entrypoint for
+     * the installation of all modules for the given entrypoint
      *
      * @throws Exception  if an error occurs during the post installation.
      */
@@ -66,7 +66,6 @@ interface InstallerInterface {
      * @throws Exception  if an error occurs during the post installation.
      */
     function postUninstallEntryPoint(EntryPoint $entryPoint);
-
 
 }
 

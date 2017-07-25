@@ -23,7 +23,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
     function setUp(){
         parent::setUp();
-        if(!file_exists(jApp::varConfigPath().'auth_ldap.coord.ini.php')) {
+        if(!file_exists(jApp::appConfigPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             $this->markTestSkipped('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
                                ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
@@ -31,8 +31,10 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         }
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        
-        $conf = parse_ini_file(jApp::varConfigPath('auth_ldap.coord.ini.php'),true);
+
+        $conf = parse_ini_file(jApp::appConfigPath().'auth_ldap.coord.ini.php',true);
+        jAuth::loadConfig($conf);
+
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
         jApp::coord()->plugins['auth'] = new AuthCoordPlugin($conf);
 
@@ -45,81 +47,131 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
+        jAcl2DbUserGroup::removeUser('testldap');
     }
 
-    public function testAll (){
-        for($i=1;$i<=NB_USERS_LDAP;$i++){
+    public function testUsersList() {
 
-            $myUser=jAuth::createUserObject("testldap usr {$i}","pass{$i}");
-            $this->assertTrue($myUser instanceof jAuthUserLDAP);
+        $myUsersLDAP = jAuth::getUserList('j*');
 
-            jAuth::saveNewUser($myUser);
-            $myUserLDAP=jAuth::getUser("testldap usr {$i}");
+        $this->assertEquals(2, count($myUsersLDAP));
+        $users="<array>
+            <object>
+                <string property=\"login\">john</string>
+                <string property=\"email\">john@jelix.org</string>
+                <string property=\"displayName\">John Doe</string>
+                <string property=\"givenName\">John</string>
+                <string property=\"password\" value=\"\" />
+            </object>
+            <object>
+                <string property=\"login\">jane</string>
+                <string property=\"email\">jane@jelix.org</string>
+                <string property=\"displayName\">Jane Doe</string>
+                <string property=\"givenName\">Jane</string>
+                <string property=\"password\" value=\"\" />
+            </object>
+        </array>";
 
-            $user="
+        $this->assertComplexIdenticalStr($myUsersLDAP, $users);
+    }
+
+    public function testLogin() {
+        $this->assertFalse(jAuth::verifyPassword('john', 'wrongpass'));
+        $user1 = jAuth::verifyPassword('john', 'passjohn');
+        $this->assertNotFalse($user1);
+        $userCheck="<object>
+                <string property=\"login\">john</string>
+                <string property=\"email\">john@jelix.org</string>
+                <string property=\"displayName\">John Doe</string>
+                <string property=\"givenName\">John</string>
+                <string property=\"password\" value=\"\" />
+            </object>";
+        $this->assertComplexIdenticalStr($user1, $userCheck);
+
+        $user1 = jAuth::verifyPassword('jane', 'passjane');
+        $this->assertNotFalse($user1);
+        $userCheck="<object>
+                <string property=\"login\">jane</string>
+                <string property=\"email\">jane@jelix.org</string>
+                <string property=\"displayName\">Jane Doe</string>
+                <string property=\"givenName\">Jane</string>
+                <string property=\"password\" value=\"\" />
+            </object>";
+        $this->assertComplexIdenticalStr($user1, $userCheck);
+    }
+
+    public function testGetUser() {
+        $user1 = jAuth::getUser('john');
+        $this->assertNotFalse($user1);
+        $userCheck="<object>
+                <string property=\"login\">john</string>
+                <string property=\"email\">john@jelix.org</string>
+                <string property=\"displayName\">John Doe</string>
+                <string property=\"givenName\">John</string>
+                <string property=\"password\" value=\"\" />
+            </object>";
+        $this->assertComplexIdenticalStr($user1, $userCheck);
+    }
+
+    public function testCreateUpdateUser() {
+        $myUser = jAuth::createUserObject("testldap", "passtest");
+        $this->assertTrue($myUser instanceof jAuthUserLDAP);
+        $myUser->displayName = 'test ldap';
+        $myUser->email = 'test@jelix.org';
+        $myUser->givenName = 'test';
+        $myUser->cn = 'Test Ldap';
+        $myUser->sn = 'testou';
+
+        jAuth::saveNewUser($myUser);
+
+        $myUserLDAP = jAuth::getUser("testldap");
+        $user="
             <object class=\"jAuthUserLDAP\">
-                <string property=\"login\" value=\"testldap usr {$i}\" />
-                <string property=\"email\" value=\"\" />
-                <array property=\"cn\">['testldap usr {$i}']</array>
-                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
-                <array property=\"name\">['testldap usr {$i}']</array>
+                <string property=\"login\">testldap</string>
+                <string property=\"email\">test@jelix.org</string>
+                <string property=\"displayName\">test ldap</string>
+                <string property=\"givenName\">test</string>
+                <string property=\"cn\">Test Ldap</string>
+                <string property=\"sn\">testou</string>
                 <string property=\"password\" value=\"\" />
             </object>
             ";
+        $this->assertComplexIdenticalStr($myUserLDAP,$user);
 
-            $this->assertComplexIdenticalStr($myUserLDAP,$user);
+        $myUserLDAP->email = "test2@jelix.org";
+        jAuth::updateUser($myUserLDAP);
 
-            $myUser->email="usr{$i}.testldap@domain.com";
-            jAuth::updateUser($myUser);
-            $myUserLDAP=jAuth::getUser("testldap usr {$i}");
-
-            $user="
-            <object>
-                <string property=\"login\" value=\"testldap usr {$i}\" />
-                <array property=\"email\">['usr{$i}.testldap@domain.com']</array>
-                <array property=\"cn\">['testldap usr {$i}']</array>
-                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
-                <array property=\"name\">['testldap usr {$i}']</array>
+        $myUserLDAP = jAuth::getUser("testldap");
+        $user="
+            <object class=\"jAuthUserLDAP\">
+                <string property=\"login\">testldap</string>
+                <string property=\"email\">test2@jelix.org</string>
+                <string property=\"displayName\">test ldap</string>
+                <string property=\"givenName\">test</string>
                 <string property=\"password\" value=\"\" />
+                <string property=\"cn\">Test Ldap</string>
+                <string property=\"sn\">testou</string>
             </object>
             ";
-
-            $this->assertComplexIdenticalStr($myUserLDAP,$user);
-
-            $this->assertTrue(jAuth::verifyPassword("testldap usr {$i}","pass{$i}"));
-            $this->assertTrue(jAuth::changePassword("testldap usr {$i}","newpass{$i}"));
-
-        }
-
-        $myUsersLDAP=jAuth::getUserList('testldap usr*');
-
-        $users="<array>";
-        for($i=1;$i<=NB_USERS_LDAP;$i++){
-            $users.="
-            <object>
-                <array property=\"login\">['testldap usr {$i}']</array>
-                <array property=\"email\">['usr{$i}.testldap@domain.com']</array>
-                <array property=\"cn\">['testldap usr {$i}']</array>
-                <array property=\"distinguishedName\">['CN=testldap usr {$i},{$this->config['ldap']['searchBaseDN']}']</array>
-                <array property=\"name\">['testldap usr {$i}']</array>
-                <string property=\"password\" value=\"\" />
-            </object>
-            ";
-        }
-        $users.="</array>";
-
-        $this->assertComplexIdenticalStr($myUsersLDAP,$users);
-
-        for($i=1;$i<=NB_USERS_LDAP;$i++){
-
-            $this->assertTrue(jAuth::removeUser("testldap usr {$i}"));
-        }
-
-        $myUsersLDAP=jAuth::getUserList('testldap usr*');
-
-        $this->assertFalse(count($myUsersLDAP)>0);
-
+        $this->assertComplexIdenticalStr($myUserLDAP,$user);
     }
 
+    /**
+     * @depends testCreateUpdateUser
+     */
+    public function testChangePassword() {
+        $this->assertNotFalse(jAuth::verifyPassword("testldap","passtest"));
+        $this->assertTrue(jAuth::changePassword("testldap","newpass"));
+        $this->assertNotFalse(jAuth::verifyPassword("testldap","newpass"));
+    }
+
+    /**
+     * @depends testChangePassword
+     */
+    public function testDeleteUser() {
+        $this->assertTrue(jAuth::removeUser("testldap"));
+        $this->assertFalse(jAuth::verifyPassword("testldap","newpass"));
+        $this->assertFalse(jAuth::getUser("testldap"));
+    }
 
 }
