@@ -14,7 +14,23 @@ apt-get -y install debconf-utils
 apt-get install apache2-mpm-prefork libapache2-mod-fastcgi tree
 a2enmod rewrite actions fastcgi alias
 
-ll ~/../
+
+
+
+ls -al ~/../
+
+if [ -d "/root/.phpenv" ]; then
+    echo "/root/.phpenv existe"
+else
+    echo "pas de /root/.phpenv"
+fi
+
+if [ -d "/home/travis/.phpenv" ]; then
+    echo "/home/travis existe"
+else
+    echo "pas de /home/travis"
+fi
+
 # php-fpm
 cp ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf.default ~/.phpenv/versions/$VERSION_NAME/etc/php-fpm.conf
 if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
