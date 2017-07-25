@@ -30,10 +30,10 @@ cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
 
 # set PHP user
 if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
-    cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf;
+    cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
     cat $PHP_ROOT/etc/php-fpm.d/www.conf
-    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/php-fpm.d/www.conf
-    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/php-fpm.d/www.conf
+    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
 else
     sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.conf
     sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.conf
