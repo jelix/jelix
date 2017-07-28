@@ -6,7 +6,7 @@
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
 * @copyright   2007-2009 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2008 Dominique Papin
-* @copyright   2008 Julien Issler
+* @copyright   2008-2015 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -810,31 +810,31 @@ $ctrl = $topctrl;
 $this->addControl($ctrl);',
 77=>'$ctrl= new jFormsControlchoice(\'achoice\');
 $ctrl->label=\'the choice\';
-$topctrl = $ctrl;
-$topctrl->createItem(\'choix1\', \'Choix 1\');
-$topctrl->createItem(\'choix2\', \'Choix 2\');
-$topctrl->defaultValue=\'\';
-$ctrl = $topctrl;
+$choicectrl = $ctrl;
+$choicectrl->createItem(\'choix1\', \'Choix 1\');
+$choicectrl->createItem(\'choix2\', \'Choix 2\');
+$choicectrl->defaultValue=\'\';
+$ctrl = $choicectrl;
 $this->addControl($ctrl);',
 78=>'$ctrl= new jFormsControlchoice(\'achoice\');
 $ctrl->label=\'the choice\';
-$topctrl = $ctrl;
-$topctrl->createItem(\'choix1\', \'Choix 1\');
+$choicectrl = $ctrl;
+$choicectrl->createItem(\'choix1\', \'Choix 1\');
 $ctrl= new jFormsControlinput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
-$topctrl->addChildControl($ctrl,\'choix1\');
-$topctrl->createItem(\'choix2\', \'Choix 2\');
+$choicectrl->addChildControl($ctrl,\'choix1\');
+$choicectrl->createItem(\'choix2\', \'Choix 2\');
 $ctrl= new jFormsControllistbox(\'list\');
 $ctrl->label=\'a list\';
 $ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
-$topctrl->addChildControl($ctrl,\'choix2\');
+$choicectrl->addChildControl($ctrl,\'choix2\');
 $ctrl= new jFormsControlsecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
 $ctrl->size=10;
-$topctrl->addChildControl($ctrl,\'choix2\');
-$topctrl->defaultValue=\'\';
-$ctrl = $topctrl;
+$choicectrl->addChildControl($ctrl,\'choix2\');
+$choicectrl->defaultValue=\'\';
+$ctrl = $choicectrl;
 $this->addControl($ctrl);',
 79=>'$ctrl= new jFormsControlmenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
