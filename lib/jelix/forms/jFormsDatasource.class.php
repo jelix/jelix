@@ -244,6 +244,10 @@ class jFormsDaoDatasource extends jFormsDynamicDatasource {
     }
 
     public function getLabel2($key, $form){
+        
+        if ($key === null || $key == "")
+            return null;
+        
         if($this->dao === null)
             $this->dao = jDao::get($this->selector, $this->profile);
 
