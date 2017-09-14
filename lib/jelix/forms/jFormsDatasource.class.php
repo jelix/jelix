@@ -177,6 +177,9 @@ abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource {
  */
 class jFormsDaoDatasource extends jFormsDynamicDatasource {
 
+    if ($key === null || $key == "")
+        return null;
+    
     protected $selector;
     protected $method;
     protected $labelProperty = array();
