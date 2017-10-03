@@ -101,10 +101,19 @@ class jFile {
      * @param string $fileName the file name
      * @return string the MIME type of the file
      * @since 1.1.10
-     * @deprecated use \Jelix\FileUtilities\File::getMimeTypeFromFilename() instead
      */
     public static function getMimeTypeFromFilename($fileName){
-        trigger_error("jFile::getMimeTypeFromFilename is deprecated. Use \\Jelix\\FileUtilities\\File::getMimeTypeFromFilename() instead.", E_USER_DEPRECATED);
+        if (jApp::config() &&
+            ! property_exists(jApp::config(), 'FileMimeTypeRegistered')
+        ) {
+            jApp::config()->FileMimeTypeRegistered = true;
+            if (property_exists(jApp::config(), 'mimeTypes') &&
+                is_array(jApp::config()->mimeTypes)
+            ) {
+                File::registerMimeTypes(jApp::config()->mimeTypes);
+            }
+        }
+
         return File::getMimeTypeFromFilename($fileName);
     }
 

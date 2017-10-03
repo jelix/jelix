@@ -13,7 +13,7 @@
         "jelix/inifile": "^2.4.0",
         "jelix/wikirenderer-plugin": "^1.7.1",
         "symfony/console":"^3.2.0",
-        "jelix/file-utilities": "1.8.*",
+        "jelix/file-utilities": "^1.8.3",
         "jelix/version": "1.0.*",
         "defuse/php-encryption": "^2.0",
         "google/recaptcha": "^1.1.2"
