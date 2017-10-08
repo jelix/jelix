@@ -189,4 +189,59 @@ c2.showActivate();
 
     }
 
+
+    public function testFormWithExternalUrlAsAction(){
+        $this->builder->setAction('http://www.jelix.org/dummy.php',array());
+        ob_start();
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
+        $out = ob_get_clean();
+
+        $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEquals($result, $out);
+        $this->assertEquals('jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\',\'formtesthtmlbuilder\',\'0\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+', $this->builder->getJsContent());
+
+        $this->builder->setAction('http://www.jelix.org/dummy.php',array('foo'=>'bar'));
+        ob_start();
+        $this->builder->setOptions(array('method'=>'post'));
+        $this->builder->outputHeader();
+        $out = ob_get_clean();
+
+        $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><div class="jforms-hiddens"><input type="hidden" name="foo" value="bar"/>
+<input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEquals($result, $out);
+        $this->assertEquals('jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\',\'formtesthtmlbuilder\',\'0\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+', $this->builder->getJsContent());
+
+        $this->builder->setAction('https://www.jelix.org/dummy.php',array());
+        ob_start();
+        $this->builder->setOptions(array('method'=>'get'));
+        $this->builder->outputHeader();
+        $out = ob_get_clean();
+
+        $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><div class="jforms-hiddens"><input type="hidden" name="__JFORMS_TOKEN__" value="'.$this->container->token.'"/>
+</div>';
+
+        $this->assertEquals($result, $out);
+        $this->assertEquals('jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\',\'formtesthtmlbuilder\',\'0\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+', $this->builder->getJsContent());
+
+    }
 }

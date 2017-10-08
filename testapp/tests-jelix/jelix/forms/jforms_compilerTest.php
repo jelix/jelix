@@ -646,14 +646,13 @@ $this->addControl($ctrl);',
         $jfc = new testJFormsCompiler10();
 
         foreach($this->_XmlControls as $k=>$control){
-            $dom = new DOMDocument;
-            if(!$dom->loadXML($control)){
+            $sxml = simplexml_load_string("<?xml version='1.0'?>\n".$control);
+            if(!$sxml){
                 $this->fail("Can't load xml test content ($k)");
-            }else{
-                // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
-                $ct = $jfc->testPhpControl($dom->documentElement->localName, simplexml_import_dom($dom));
-
-                $this->assertEquals($this->_PhpControls[$k],$ct, "test $k failed" );
+            }
+            else{
+                $ct = $jfc->testPhpControl($sxml->getName(), $sxml);
+                $this->assertEquals($this->_PhpControls[$k],$ct, "test $k failed");
             }
         }
     }

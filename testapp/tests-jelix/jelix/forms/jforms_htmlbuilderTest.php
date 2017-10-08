@@ -34,6 +34,13 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
     protected static $builder;
     protected static $formname = 'jforms_formtest1';
 
+    protected static $jsHeader0 = '';
+    protected static $jsHeader = '';
+    protected static $jsFooter = '';
+    protected static $htmlJsHeader0 = '';
+    protected static $htmlJsHeader = '';
+    protected static $htmlJsFooter = '';
+
     function setUp() {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
@@ -42,6 +49,37 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
             self::$form = new testHMLForm('formtest', self::$container, true );
             self::$form->securityLevel = 0;
             self::$builder = new testJFormsHtmlBuilder(self::$form);
+            $js0 = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+';
+            self::$jsHeader0 = '';
+            self::$htmlJsHeader0 = '<script type="text/javascript">
+//<![CDATA[
+'.$js0.'//]]>
+</script>';
+            $js = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
+jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
+jFormsJQ.declareForm(jFormsJQ.tForm);
+';
+            self::$jsHeader = '';
+            self::$htmlJsHeader = '<script type="text/javascript">
+//<![CDATA[
+'.$js.'//]]>
+</script>';
+            self::$htmlJsFooter = '<script type="text/javascript">
+//<![CDATA[
+(function(){var c, c2;
+
+})();
+//]]>
+</script></form>';
+            self::$jsFooter = '';
+
         }
     }
 
@@ -52,8 +90,13 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
     static function tearDownAfterClass() {
         self::$container = null;
         self::$form = null;
-        self::$form = null;
         self::$builder = null;
+        self::$jsHeader0 = '';
+        self::$jsHeader = '';
+        self::$jsFooter = '';
+        self::$htmlJsHeader0 = '';
+        self::$htmlJsHeader = '';
+        self::$htmlJsFooter = '';
     }
 
     function testOutputHeader(){
@@ -62,17 +105,10 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
         self::$builder->setOptions(array('method'=>'post', 'attributes'=>array('class'=>'foo')));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form class="foo" action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$builder->getName().'"><script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script>';
+        $result ='<form class="foo" action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$builder->getName().'">'.
+            static::$htmlJsHeader0;
         $this->assertEquals($result, $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals(static::$jsHeader0, self::$builder->getJsContent());
 
         self::$form->securityLevel = 1;
         self::$builder->setAction('jelix_tests~urlsig:url1',array('foo'=>'b>ar'));
@@ -80,34 +116,30 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         self::$builder->setOptions(array('method'=>'get'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="get" id="'.self::$builder->getName().'"><script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="get" id="'.self::$builder->getName().'">'.
+            static::$htmlJsHeader
+            .'<div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="__JFORMS_TOKEN__" value="'.self::$container->token.'"/>
 </div>';
         $this->assertEquals($result, $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals(static::$jsHeader, self::$builder->getJsContent());
         self::$form->securityLevel = 0;
 
     }
+
+    /**
+     * @depends testOutputHeader
+     */
     function testOutputFooter(){
         ob_start();
         self::$builder->outputFooter();
         $out = ob_get_clean();
-        $this->assertEquals('<script type="text/javascript">
-//<![CDATA[
-(function(){var c, c2;
-
-})();
-//]]>
-</script></form>', $out);
+        $this->assertEquals(static::$htmlJsFooter, $out);
+        $this->assertEquals(static::$jsFooter, self::$builder->getJsContent());
     }
+    /**
+     * @depends testOutputFooter
+     */
     function testOutputInput(){
         $ctrl= new jFormsControlinput('input1');
         $ctrl->datatype= new jDatatypeString();
@@ -234,6 +266,9 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
     }
+    /**
+     * @depends testOutputInput
+     */
     function testOutputCheckbox(){
         $ctrl= new jFormsControlCheckbox('chk1');
         $ctrl->datatype= new jDatatypeString();
@@ -327,6 +362,9 @@ jFormsJQ.tForm.addControl(c);
 
     }
 
+    /**
+     * @depends testOutputCheckbox
+     */
     function testOutputCheckboxes(){
         $ctrl= new jFormsControlcheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
@@ -453,6 +491,9 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
     }
 
+    /**
+     * @depends testOutputCheckboxes
+     */
     function testOutputRadiobuttons(){
         $ctrl= new jFormsControlradiobuttons('rbchoixsimple');
         $ctrl->datatype= new jDatatypeString();
@@ -552,6 +593,9 @@ jFormsJQ.tForm.addControl(c);
         self::$builder->clearJs();
     }
 
+    /**
+     * @depends testOutputRadiobuttons
+     */
     function testOutputMenulist(){
         $ctrl= new jFormsControlmenulist('menulist1');
         $ctrl->datatype= new jDatatypeString();
@@ -920,6 +964,9 @@ jFormsJQ.tForm.addControl(c);
         self::$builder->clearJs();
     }
 
+    /**
+     * @depends testOutputMenulist
+     */
     function testOutputListbox(){
         $ctrl= new jFormsControllistbox('listbox1');
         $ctrl->datatype= new jDatatypeString();
@@ -1100,6 +1147,9 @@ jFormsJQ.tForm.addControl(c);
 
     }
 
+    /**
+     * @depends testOutputListbox
+     */
     function testOutputListboxClassDatasource(){
         $ctrl= new jFormsControllistbox('listboxclass');
         $ctrl->datatype= new jDatatypeString();
@@ -1124,6 +1174,9 @@ jFormsJQ.tForm.addControl(c);
     }
 
 
+    /**
+     * @depends testOutputListboxClassDatasource
+     */
     function testOutputTextarea(){
         $ctrl= new jFormsControltextarea('textarea1');
         $ctrl->datatype= new jDatatypeString();
@@ -1194,6 +1247,9 @@ jFormsJQ.tForm.addControl(c);
 
 
     }
+    /**
+     * @depends testOutputTextarea
+     */
     function testOutputSecret(){
         $ctrl= new jFormsControlSecret('passwd');
         $ctrl->datatype= new jDatatypeString();
@@ -1252,6 +1308,9 @@ jFormsJQ.tForm.addControl(c);
 
 
     }
+    /**
+     * @depends testOutputSecret
+     */
     function testOutputSecretConfirm(){
         $ctrl= new jFormsControlSecretConfirm('passwd_confirm');
         $ctrl->label='confirmation mot de passe';
@@ -1302,6 +1361,9 @@ jFormsJQ.tForm.addControl(c);
 
     }
 
+    /**
+     * @depends testOutputSecretConfirm
+     */
     function testOutputOutput(){
         $ctrl= new jFormsControlOutput('output1');
         $ctrl->datatype= new jDatatypeString();
@@ -1338,6 +1400,9 @@ jFormsJQ.tForm.addControl(c);
 
     }
 
+    /**
+     * @depends testOutputOutput
+     */
     function testOutputUpload(){
         $ctrl= new jFormsControlUpload('upload1');
         $ctrl->datatype= new jDatatypeString();
@@ -1379,22 +1444,19 @@ jFormsJQ.tForm.addControl(c);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'" enctype="multipart/form-data"><script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'" enctype="multipart/form-data">'.
+            static::$htmlJsHeader.'<div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="hidden1" id="'.self::$formname.'_hidden1" value="11"/>
 </div>';
         $this->assertEquals($result, $out);
+        $this->assertEquals(self::$jsHeader, self::$builder->getJsContent());
 
         self::$form->removeControl('upload1');
-
     }
+
+    /**
+     * @depends testOutputUpload
+     */
     function testOutputSubmit(){
         $ctrl= new jFormsControlSubmit('submit1');
         $ctrl->datatype= new jDatatypeString();
@@ -1432,6 +1494,9 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->assertEquals('', self::$builder->getJsContent());
 
     }
+    /**
+     * @depends testOutputSubmit
+     */
     function testOutputReset(){
         $ctrl= new jFormsControlReset('reset1');
         $ctrl->datatype= new jDatatypeString();
@@ -1456,6 +1521,9 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" title="ceci est un tooltip" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
     }
+    /**
+     * @depends testOutputReset
+     */
     function testOutputHidden(){
         $ctrl= new jFormsControlHidden('hidden2');
         self::$form->addControl($ctrl);
@@ -1472,19 +1540,13 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'">'.
+            static::$htmlJsHeader.'<div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="hidden1" id="'.self::$formname.'_hidden1" value="11"/>
 <input type="hidden" name="hidden2" id="'.self::$formname.'_hidden2" value=""/>
 </div>';
         $this->assertEquals($result, $out);
+        $this->assertEquals(static::$jsHeader, self::$builder->getJsContent());
 
         $ctrl->defaultValue='toto';
         self::$form->removeControl($ctrl->ref);
@@ -1493,21 +1555,18 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         self::$builder->setOptions(array('method'=>'post'));
         self::$builder->outputHeader();
         $out = ob_get_clean();
-        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
-//<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
-jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
-jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
-//]]>
-</script><div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
+        $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'">'.
+            static::$htmlJsHeader.'<div class="jforms-hiddens"><input type="hidden" name="foo" value="b&gt;ar"/>
 <input type="hidden" name="hidden1" id="'.self::$formname.'_hidden1" value="11"/>
 <input type="hidden" name="hidden2" id="'.self::$formname.'_hidden2" value="toto"/>
 </div>';
         $this->assertEquals($result, $out);
+        $this->assertEquals(static::$jsHeader, self::$builder->getJsContent());
     }
 
+    /**
+     * @depends testOutputHidden
+     */
     function testOutputCaptcha(){
         $ctrl= new jFormsControlcaptcha('cap');
         $ctrl->label='captcha for security';
@@ -1572,6 +1631,9 @@ jFormsJQ.tForm.addControl(c);
 
     }
 
+    /**
+     * @depends testOutputCaptcha
+     */
     function testOutputHtmleditor(){
         $ctrl= new jFormsControlhtmleditor('contenu');
         $ctrl->label='Texte';

@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2017 Laurent Jouanneau
 * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -13,6 +13,7 @@
 namespace jelix\forms\Builder;
 
 use \jelix\forms\HtmlWidget\ParentWidgetInterface;
+use \jelix\forms\HtmlWidget\WidgetInterface;
 
 /**
  * Main HTML form builder
@@ -34,6 +35,11 @@ class HtmlBuilder extends BuilderBase {
      */
     protected $rootWidget;
 
+    /**
+     * HtmlBuilder constructor.
+     * @param \jFormsBase $form
+     * @throws \Exception
+     */
     public function __construct($form){
         parent::__construct($form);
         $config = \jApp::config()->{$this->formConfig};
@@ -67,6 +73,9 @@ class HtmlBuilder extends BuilderBase {
         }
     }
 
+    /**
+     * @return string
+     */
     public function getjFormsJsVarName() {
         return $this->jFormsJsVarName;
     }
@@ -213,6 +222,12 @@ class HtmlBuilder extends BuilderBase {
 
     protected $widgets = array();
 
+    /**
+     * @param \jFormsControl $ctrl
+     * @param ParentWidgetInterface|null $parentWidget
+     * @return WidgetInterface
+     * @throws \Exception
+     */
     public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null) {
         if (isset($this->widgets[$ctrl->ref])) {
             return $this->widgets[$ctrl->ref];

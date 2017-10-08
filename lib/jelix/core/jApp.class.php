@@ -12,21 +12,21 @@
 
 /**
  *
- * @method public static function setConfig($config)
- * @method public static function declareModulesDir($basePath, $modules = null)
- * @method public static function getDeclaredModulesDir()
- * @method public static function declareModule($modulePath)
- * @method public static function clearModulesPluginsPath()
- * @method public static function declarePluginsDir($basePath)
- * @method public static function getAllModulesPath()
- * @method public static function getAllPluginsPath()
- * @method public static function loadPlugin($name, $type, $suffix, $classname, $args = null)
- * @method public static function includePlugin($name, $type, $suffix, $classname)
- * @method public static function isModuleEnabled($moduleName, $includingExternal = false)
- * @method public static function getModulePath($module, $includingExternal = false)
- * @method public static function pushCurrentModule($module)
- * @method public static function popCurrentModule()
- * @method public static function getCurrentModule()
+ * @method static setConfig($config)
+ * @method static declareModulesDir($basePath, $modules = null)
+ * @method static getDeclaredModulesDir()
+ * @method static declareModule($modulePath)
+ * @method static clearModulesPluginsPath()
+ * @method static declarePluginsDir($basePath)
+ * @method static getAllModulesPath()
+ * @method static getAllPluginsPath()
+ * @method static loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method static includePlugin($name, $type, $suffix, $classname)
+ * @method static isModuleEnabled($moduleName, $includingExternal = false)
+ * @method static getModulePath($module, $includingExternal = false)
+ * @method static pushCurrentModule($module)
+ * @method static popCurrentModule()
+ * @method static getCurrentModule()
  */
 class jApp
 {

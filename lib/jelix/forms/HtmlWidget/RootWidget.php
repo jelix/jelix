@@ -30,27 +30,31 @@ class RootWidget implements ParentWidgetInterface {
     //------ Other methods
 
     /**
+     * @var \jelix\forms\Builder\HtmlBuilder
+     */
+    protected $builder;
+
+    /**
      * @param \jelix\forms\Builder\HtmlBuilder $builder
      */
     public function outputHeader($builder) {
         $jsVarName = $builder->getjFormsJsVarName();
-        echo '<script type="text/javascript">
-//<![CDATA[
-'.$jsVarName.'.tForm = new jFormsForm(\''.$builder->getName().'\');
-'.$jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator').'());
-'.$jsVarName.'.declareForm(jForms.tForm);
-//]]>
-</script>';
+
+        $js = $jsVarName.'.tForm = new jFormsForm(\''.$builder->getName()."');\n";
+        $js .= $jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator')."())\n";
+        $js .= $jsVarName.".declareForm(jForms.tForm);\n";
+        $this->addJs($js);
+        $this->builder = $builder;
     }
 
     public function outputFooter() {
-        echo '<script type="text/javascript">
-//<![CDATA[
-(function(){var c, c2;
-'.$this->js.$this->finalJs.'
-})();
-//]]>
-</script>';
+        $js = "(function(){var c, c2;\n".$this->js.$this->finalJs."})();";
+        $container = $this->builder->getForm()->getContainer();
+        $container->privateData['__jforms_js'] = $js;
+        $formId = $container->formId;
+        $formName = $this->builder->getForm()->getSelector();
+        echo '<script type="text/javascript" src="'.\jUrl::get("jelix~jforms:js",
+                array('__form'=>$formName, '__fid' =>$formId)).'"></script>';
     }
 }
 

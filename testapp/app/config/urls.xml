@@ -5,6 +5,7 @@
         <url module="testapp"/>
         <url pathinfo="/jelix_tests/urlsig/url8" module="jelix_tests" action="urlsig:url8" https="true"/>
         <url module="jelix_tests"/>
+        <url module="jelix" include="urls.xml" pathinfo="/jelix/"/>
     </entrypoint>
     <xmlrpcentrypoint name="xmlrpc" default="true"/>
     <entrypoint name="jsonrpc" type="jsonrpc" default="true">
