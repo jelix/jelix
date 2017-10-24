@@ -226,7 +226,11 @@ class jDbPDOConnection extends PDO {
 
             $orderby = ' ORDER BY '.strstr(strstr($key, '.'),'[').' ASC';
             $from .= $orderby;
-        }
+        } else {
+	    if(strpos($orderby, '.', 8)){
+		$orderby = ' ORDER BY ' . substr($orderby, strpos($orderby, '.') + 1);
+	    }
+	}
 
         // first we select all records from the begining to the last record of the selection
         if(!$distinct)
