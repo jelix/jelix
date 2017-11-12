@@ -42,8 +42,8 @@ class testMysqlDaoGenerator extends mysqlDaoBuilder {
         return $this->buildSimpleConditions ($fields, $fieldPrefix, $forSelect);
     }
 
-    function BuildConditions2($cond, $fields, $params=array(), $withPrefix=true, $groupby='') {
-        return $this->buildConditions ($cond, $fields, $params, $withPrefix, $groupby);
+    function BuildConditions2($cond, $fields, $params=array(), $withPrefix=true) {
+        return $this->buildConditions ($cond, $fields, $params, $withPrefix);
     }
 
     function BuildSQLCondition ($condition, $fields, $params, $withPrefix){

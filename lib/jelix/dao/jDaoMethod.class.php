@@ -35,7 +35,6 @@ class jDaoMethod {
     private $_parser = null;
     private $_procstock=null;
     private $_body=null;
-    private $_groupBy=null;
 
     /**
      * @param simpleXmlElement $method the xml element describing the method to generate
@@ -138,17 +137,7 @@ class jDaoMethod {
         }
 
         if(strlen($params['groupby'])){
-            if($this->type == 'select' || $this->type == 'selectfirst'){
-                $this->_groupBy = preg_split("/[\s,]+/", $params['groupby']);
-                $props = $this->_parser->getProperties();
-                foreach($this->_groupBy as $p){
-                    if (!isset ($props[$p])) {
-                        throw new jDaoXmlException ($this->_parser->selector, 'method.property.unknown', array($this->name, $p));
-                    }
-                }
-            }else{
-                throw new jDaoXmlException ($this->_parser->selector, 'forbidden.attr.context', array('groupby', '<method name="'.$this->name.'"'));
-            }
+            throw new jDaoXmlException ($this->_parser->selector, 'forbidden.attr', array('groupby', '<method name="'.$this->name.'"'));
         }
 
         if (isset($method->limit)){
@@ -170,7 +159,6 @@ class jDaoMethod {
     public function getValues (){ return $this->_values;}
     public function getProcStock (){ return $this->_procstock;}
     public function getBody (){ return $this->_body;}
-    public function getGroupBy() { return $this->_groupBy;}
 
     /**
      * @param simpleXmlElement $conditions
