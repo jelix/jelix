@@ -138,6 +138,7 @@ class jDaoMethod {
         }
 
         if(strlen($params['groupby'])){
+            trigger_error("jdao: groupby attribute on method element is deprecated because its behavior is not predictable", E_USER_DEPRECATED);
             if($this->type == 'select' || $this->type == 'selectfirst'){
                 $this->_groupBy = preg_split("/[\s,]+/", $params['groupby']);
                 $props = $this->_parser->getProperties();
