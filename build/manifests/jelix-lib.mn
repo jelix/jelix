@@ -2,7 +2,7 @@ cd .
   README.md
 
 cd bin
-  createapp.php
+  create-jelix-app.php
 
 cd lib
   .htaccess

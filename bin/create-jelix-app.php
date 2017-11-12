@@ -6,4 +6,4 @@
 * @link        http://jelix.org
 * @licence     MIT
 */
-require(__DIR__.'/../lib/jelix-scripts/createapp.php');
+require(__DIR__.'/../lib/jelix-scripts/create-jelix-app.php');

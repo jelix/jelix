@@ -1,5 +1,5 @@
 cd lib/jelix-scripts
-  createapp.php
+  create-jelix-app.php
   LICENCE
   INSTALL
   CREDITS
