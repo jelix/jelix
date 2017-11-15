@@ -15,7 +15,7 @@ class usersCtrl extends jController {
     public $pluginParams=array(
         'index'=>array('jacl2.rights.and'=>array('acl.user.view')),
         'rights'=>array('jacl2.rights.and'=>array('acl.user.view')),
-        'saverights'=>array('jacl2.rights.and'=>array('acl.user.view')),
+        'saverights'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
         'removegroup'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
         'addgroup'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
     );
@@ -220,6 +220,8 @@ class usersCtrl extends jController {
 
         $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
         $grp = $dao->getPrivateGroup($login);
+
+        // FIXME verifier qu'il ne s'enleve pas de droits d'admin
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
