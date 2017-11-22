@@ -36,8 +36,14 @@ class AclAdminUIManager {
         $gid = array('__anonymous');
         $o = new StdClass;
         $o->id_aclgrp = '__anonymous';
-        $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
+        try {
+            $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
+        }
+        catch(Exception $e) {
+            $o->name = 'Anonymous';
+        }
         $o->grouptype = jAcl2DbUserGroup::GROUPTYPE_NORMAL;
+        $o->ownerlogin = NULL;
 
         $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
         $rightsWithResources = array();
@@ -80,7 +86,10 @@ class AclAdminUIManager {
         $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
         foreach($rs as $rec){
             $rights[$rec->id_aclsbj] = $grouprights;
-            $subjects[$rec->id_aclsbj] = array('grp'=>$rec->id_aclsbjgrp, 'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key));
+            $subjects[$rec->id_aclsbj] = array(
+                'grp'=>$rec->id_aclsbjgrp,
+                'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key)
+            );
             if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
                 $sbjgroups_localized[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
             }
@@ -121,7 +130,7 @@ class AclAdminUIManager {
             $conditions = jDao::createConditions();
             $conditions->addCondition('id_aclsbj', 'in', array_keys($rightsWithResources));
             foreach(jDao::get('jacl2db~jacl2subject','jacl2_profile')->findBy($conditions) as $rec)
-                $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
+                $subjects_localized[$rec->id_aclsbj] = $this->getLabel($rec->id_aclsbj, $rec->label_key);
         }
         return compact('subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
