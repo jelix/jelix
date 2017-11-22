@@ -37,7 +37,7 @@ class AclAdminUIManager {
         $o = new StdClass;
         $o->id_aclgrp = '__anonymous';
         $o->name = jLocale::get('jacl2db_admin~acl2.anonymous.group.name');
-        $o->grouptype = 0;
+        $o->grouptype = jAcl2DbUserGroup::GROUPTYPE_NORMAL;
 
         $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
         $rightsWithResources = array();
@@ -157,5 +157,4 @@ class AclAdminUIManager {
         jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
             ->deleteRightsOnResource($groupid, $subjectsToRemove);
     }
-
 }

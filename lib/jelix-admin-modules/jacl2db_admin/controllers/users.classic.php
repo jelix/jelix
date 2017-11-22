@@ -31,13 +31,13 @@ class usersCtrl extends jController {
         $o = new StdClass;
         $o->id_aclgrp ='-2';
         $o->name=jLocale::get('jacl2db_admin~acl2.all.users.option');
-        $o->grouptype=0;
+        $o->grouptype = jAcl2DbUserGroup::GROUPTYPE_NORMAL;
         $groups[]=$o;
 
         $o = new StdClass;
         $o->id_aclgrp ='-1';
         $o->name=jLocale::get('jacl2db_admin~acl2.without.groups.option');
-        $o->grouptype=0;
+        $o->grouptype = jAcl2DbUserGroup::GROUPTYPE_NORMAL;
         $groups[]=$o;
 
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
@@ -54,7 +54,7 @@ class usersCtrl extends jController {
             //all users
             $dao = jDao::get('jacl2db~jacl2groupsofuser',$p);
             $cond = jDao::createConditions();
-            $cond->addCondition('grouptype', '=', 2);
+            $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
             if ($filter) {
                 $cond->addCondition('login', 'LIKE', '%'.$filter.'%');
             }
@@ -97,7 +97,7 @@ class usersCtrl extends jController {
             $u->groups = array();
             $gl = $dao2->getGroupsUser($u->login);
             foreach($gl as $g) {
-                if($g->grouptype != 2)
+                if($g->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE)
                     $u->groups[]=$g;
             }
             $users[] = $u;
@@ -135,7 +135,7 @@ class usersCtrl extends jController {
         $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
         $cond = jDao::createConditions();
         $cond->addCondition('login', '=', $user);
-        $cond->addCondition('grouptype', '=', 2);
+        $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
         if ($dao->countBy($cond)==0) {
             $rep->body->assign('MAIN', '<p>invalid user</p>');
             return $rep;
@@ -145,7 +145,7 @@ class usersCtrl extends jController {
         $hisgroup = null;
         $groupsuser = array();
         foreach(jAcl2DbUserGroup::getGroupList($user) as $grp) {
-            if($grp->grouptype == 2)
+            if($grp->grouptype == jAcl2DbUserGroup::GROUPTYPE_PRIVATE)
                 $hisgroup = $grp;
             else
                 $groupsuser[$grp->id_aclgrp]=$grp;
