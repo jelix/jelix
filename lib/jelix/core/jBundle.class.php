@@ -97,7 +97,7 @@ class jBundle {
         $reader = new jPropertiesFileReader($source, $charset);
         $reader->parse();
         $this->_strings[$charset] = $reader->getProperties();
-        $content = '<?php return '.var_export($this->_strings[$charset], true)."\n";
+        $content = '<?php return '.var_export($this->_strings[$charset], true).";\n";
         jFile::write($cache, $content);
     }
 }
