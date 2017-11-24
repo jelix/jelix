@@ -21,7 +21,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
 
-        if (!self::$coordAuthPlugin) {
+        //if (!self::$coordAuthPlugin) {
             jApp::config()->acl2['driver'] = self::$driver;
             jAcl2::unloadDriver();
             jAcl2::clearCache();
@@ -93,7 +93,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
                 array('id_aclsbj','id_aclgrp', 'id_aclres', 'canceled'),
                 $rights, true
             );
-        }
+        //}
 
         $coord = jApp::coord();
         if (isset($coord->plugins['auth']))
@@ -297,26 +297,232 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         $this->assertFalse($rights['hasRightsOnResources']);
     }
 
-/*
-    public function testSaveNormalGroupRights() {
 
+    public function testSaveNormalGroupRights() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'admins' => array(
+                'acl.user.modify' =>'y',
+                'acl.group.modify' =>'y',
+                'super.cms.list' =>'y',
+                'super.cms.update' =>'n', // change
+            ),
+            'users' => array(
+                'super.cms.list' => 'y',
+                'super.cms.update' => false, // change
+                'super.cms.delete' => 'y', // change
+            )
+        );
+        $mgr->saveGroupRights($rights);
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => ''
+                ),
+                'acl.group.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+                'acl.user.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+                'acl.users.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => ''
+                ),
+                'super.cms.delete' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => 'y'
+                ),
+                'super.cms.list' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => 'y'
+                ),
+                'super.cms.update' => array (
+                    '__anonymous' => false,
+                    'admins' => 'n',
+                    'users' => ''
+                ),
+            ),
+            $newRights['rights']
+        );
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array (),
+                'acl.group.modify' => array (),
+                'acl.user.modify' => array (),
+                'acl.users.modify' => array (),
+                'super.cms.delete' => array (),
+                'super.cms.list' => array (),
+                'super.cms.update' => array (),
+            ),
+            $newRights['rightsWithResources']
+        );
     }
 
+
     public function testSaveEmptyGroupRights() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'admins' => array(
+                'acl.user.modify' =>'y',
+                'acl.group.modify' =>'y',
+                'super.cms.list' =>'y',
+                'super.cms.update' =>'y',
+            ),
+            'users' => array()
+        );
+        $mgr->saveGroupRights($rights);
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => ''
+                ),
+                'acl.group.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+                'acl.user.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+                'acl.users.modify' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => ''
+                ),
+                'super.cms.delete' => array (
+                    '__anonymous' => false,
+                    'admins' => '',
+                    'users' => ''
+                ),
+                'super.cms.list' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+                'super.cms.update' => array (
+                    '__anonymous' => false,
+                    'admins' => 'y',
+                    'users' => ''
+                ),
+            ),
+            $newRights['rights']
+        );
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array (),
+                'acl.group.modify' => array (),
+                'acl.user.modify' => array (),
+                'acl.users.modify' => array (),
+                'super.cms.delete' => array (),
+                'super.cms.list' => array (),
+                'super.cms.update' => array (),
+            ),
+            $newRights['rightsWithResources']
+        );
 
     }
 
     public function testRemoveGroupRightsWithResources() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+
+        $rights = array( // <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+                'super.cms.delete' =>'', // no change
+        );
+        $mgr->removeGroupRightsWithResources('__priv_oneuser', $rights);
+
+        $rights = $mgr->getGroupRightsWithResources('__priv_oneuser');
+        $verif='<array>
+            <array key="super.cms.delete">
+                <object >
+                    <string property="id_aclsbj" value="super.cms.delete" />
+                    <string property="id_aclgrp" value="__priv_oneuser" />
+                    <string property="id_aclres" value="123" />
+                    <string property="canceled" value="0"/>
+                </object>
+                <object >
+                    <string property="id_aclsbj" value="super.cms.delete" />
+                    <string property="id_aclgrp" value="__priv_oneuser" />
+                    <string property="id_aclres" value="456" />
+                    <string property="canceled" value="1"/>
+                </object>
+            </array>
+        </array>';
+        $this->assertComplexIdenticalStr($rights['rightsWithResources'], $verif);
+        $this->assertEquals( array(
+            'super.cms.delete' => 'super.cms.delete'
+        ),
+            $rights['subjects_localized']
+        );
+        $this->assertTrue($rights['hasRightsOnResources']);
+
+
+        $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+            'super.cms.delete' =>'on', // change
+        );
+        $mgr->removeGroupRightsWithResources('__priv_oneuser', $rights);
+
+        $rights = $mgr->getGroupRightsWithResources('__priv_oneuser');
+        $this->assertEquals( array(), $rights['rightsWithResources']);
+        $this->assertEquals( array(), $rights['subjects_localized']);
+        $this->assertFalse($rights['hasRightsOnResources']);
+
 
     }
 
-    public function testRemoveAllRights() {
+
+    /**
+     * @expectedException AclAdminUIException
+     */
+    /*public function testRemoveAllRights() {
         // it should fail because of some admin rights set on admins
-    }
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'admins' => array(),
+            'users' => array()
+        );
+        $mgr->saveGroupRights($rights);
+    }*/
 
-
-    public function testNonAdminTryingToRemoveRightAdminOfAnAloneAdmin() {
-        // it should fail
+    /**
+     * it should fail
+     * @expectedException AclAdminUIException
+     */
+    /*public function testNonAdminTryingToRemoveRightAdminOfAnAloneAdmin() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'admins' => array(
+                'acl.user.modify' =>'y',
+                'acl.group.modify' =>'', // change
+                'super.cms.list' =>'y',
+                'super.cms.update' =>'y',
+            ),
+            'users' => array(
+                'super.cms.list' => 'y',
+                'super.cms.update' => 'y',
+            )
+        );
+        $mgr->saveGroupRights($rights);
     }
 
     public function testNonAdminTryingToRemovePrivateRightAdminOfAnAloneAdmin() {
@@ -349,8 +555,407 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
     public function testNonAdminTryingToRemoveRightAdminAndToAddRightAdmin() {
         // it should be ok
-    }
-*/
+    }*/
 
+    /**
+     *
+     */
+    public function testGetUsersList() {
+        jAuth::login('theadmin','foo', false);
+        $mgr = new AclAdminUIManager();
+        $list = $mgr->getUsersList(AclAdminUIManager::FILTER_GROUP_ALL_USERS);
+
+        $this->assertEquals(3, $list['usersCount']);
+        $verif='<array>
+                <object >
+                    <string property="login" value="theadmin" />
+                    <string property="id_aclgrp" value="__priv_theadmin" />
+                    <array property="groups">
+                        <object>
+                            <string property="login" value="theadmin" />
+                            <string property="id_aclgrp" value="admins" />
+                            <string property="name" value="Admins" />
+                            <string property="grouptype" value="0" />
+                        </object>
+                    </array>
+                </object>
+                <object >
+                    <string property="login" value="oneuser" />
+                    <string property="id_aclgrp" value="__priv_oneuser" />
+                    <array property="groups">
+                        <object>
+                            <string property="login" value="oneuser" />
+                            <string property="id_aclgrp" value="users" />
+                            <string property="name" value="Users" />
+                            <string property="grouptype" value="0" />
+                        </object>
+                    </array>
+                </object>
+                <object >
+                    <string property="login" value="specificadmin" />
+                    <string property="id_aclgrp" value="__priv_specificadmin" />
+                    <array property="groups">
+                        <object>
+                            <string property="login" value="specificadmin" />
+                            <string property="id_aclgrp" value="users" />
+                            <string property="name" value="Users" />
+                            <string property="grouptype" value="0" />
+                        </object>
+                    </array>
+                </object>
+        </array>';
+        $this->assertComplexIdenticalStr($list['users'], $verif);
+    }
+
+
+    public function testGetUserRights() {
+        jAuth::login('theadmin','foo', false);
+        $mgr = new AclAdminUIManager();
+        $rightsResult = $mgr->getUserRights('theadmin');
+
+        $hisGroup = '<object>
+                            <string property="login" value="theadmin" />
+                            <string property="id_aclgrp" value="__priv_theadmin" />
+                            <string property="name" value="theadmin" />
+                            <string property="grouptype" value="2" />
+                        </object>';
+        $this->assertComplexIdenticalStr($rightsResult['hisgroup'], $hisGroup);
+
+        $usergroups = '<array>
+                        <object key="admins">
+                            <string property="login" value="theadmin" />
+                            <string property="id_aclgrp" value="admins" />
+                            <string property="name" value="Admins" />
+                            <string property="grouptype" value="0" />
+                        </object>
+                    </array>
+        ';
+        $this->assertComplexIdenticalStr($rightsResult['groupsuser'], $usergroups);
+
+        $groups = '<array>
+            <object>
+                <string property="id_aclgrp" value="admins" />
+                <string property="name" value="Admins" />
+                <string property="grouptype" value="0" />
+            </object>
+            <object>
+                <string property="id_aclgrp" value="users" />
+                <string property="name" value="Users" />
+                <string property="grouptype" value="0" />
+            </object>
+        </array>';
+        $this->assertComplexIdenticalStr($rightsResult['groups'], $groups);
+
+        $rights =  array(
+            'acl.group.delete' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => '',
+                'users' => ''
+            ),
+            'acl.group.modify' => array (
+                '__priv_theadmin' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.user.modify' => array (
+                '__priv_theadmin' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.users.modify' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.delete' => array (
+                '__priv_theadmin' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.list' => array (
+                '__priv_theadmin' => false,
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+            'super.cms.update' => array (
+                '__priv_theadmin' => false,
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+        );
+        $this->assertEquals($rights, $rightsResult['rights']);
+
+        $this->assertEquals('theadmin', $rightsResult['user']);
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array (
+                    'grp' => null,
+                    'label' => 'acl.group.delete'
+                ),
+                'acl.group.modify' => array (
+                    'grp' => null,
+                    'label' => 'acl.group.modify'
+                ),
+                'acl.user.modify' => array (
+                    'grp' => null,
+                    'label' => 'acl.user.modify'
+                ),
+                'acl.users.modify' => array (
+                    'grp' => null,
+                    'label' => 'acl.users.modify'
+                ),
+                'super.cms.delete' => array (
+                    'grp' => null,
+                    'label' => 'super.cms.delete'
+                ),
+                'super.cms.list' => array (
+                    'grp' => null,
+                    'label' => 'super.cms.list'
+                ),
+                'super.cms.update' => array (
+                    'grp' => null,
+                    'label' => 'super.cms.update'
+                ),
+            ),
+            $rightsResult['subjects']
+        );
+
+        $this->assertEquals(array(), $rightsResult['sbjgroups_localized']);
+        $this->assertEquals(
+            array (
+                'acl.group.delete' => 0,
+                'acl.group.modify' => 0,
+                'acl.user.modify' => 0,
+                'acl.users.modify' => 0,
+                'super.cms.delete' => 0,
+                'super.cms.list' => 0,
+                'super.cms.update' => 0,
+            ),
+            $rightsResult['rightsWithResources']
+        );
+
+        $this->assertFalse($rightsResult['hasRightsOnResources']);
+    }
+
+    public function testGetUserRightsWithResources() {
+        jAuth::login('theadmin','foo', false);
+        $mgr = new AclAdminUIManager();
+        $rightsResult = $mgr->getUserRessourceRights('oneuser');
+
+        $this->assertEquals('oneuser', $rightsResult['user']);
+        $this->assertEquals(array(
+            'super.cms.delete' => 'super.cms.delete',
+        ), $rightsResult['subjects_localized']);
+        $verif='<array>
+            <array key="super.cms.delete">
+                <object >
+                    <string property="id_aclsbj" value="super.cms.delete" />
+                    <string property="id_aclgrp" value="__priv_oneuser" />
+                    <string property="id_aclres" value="123" />
+                    <string property="canceled" value="0"/>
+                </object>
+                <object >
+                    <string property="id_aclsbj" value="super.cms.delete" />
+                    <string property="id_aclgrp" value="__priv_oneuser" />
+                    <string property="id_aclres" value="456" />
+                    <string property="canceled" value="1"/>
+                </object>
+            </array>
+        </array>';
+        $this->assertComplexIdenticalStr($rightsResult['rightsWithResources'], $verif);
+        $this->assertTrue($rightsResult['hasRightsOnResources']);
+
+        $rightsResult = $mgr->getUserRessourceRights('theadmin');
+        $this->assertEquals('theadmin', $rightsResult['user']);
+        $this->assertEquals(array(), $rightsResult['subjects_localized']);
+        $this->assertEquals(array(), $rightsResult['rightsWithResources']);
+        $this->assertFalse($rightsResult['hasRightsOnResources']);
+    }
+
+    public function testSaveNormalUserRights() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+            'super.cms.list' => 'y',
+            'super.cms.update' => false, // change
+            'super.cms.delete' => 'y', // change
+        );
+        $mgr->saveUserRights('oneuser', $rights);
+
+        $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+            'acl.user.modify' =>'y',
+            'acl.group.modify' =>'y',
+            'acl.group.delete' =>'y',
+            'super.cms.list' =>'y',
+            'super.cms.update' =>'n', // change
+        );
+        $mgr->saveUserRights('theadmin', $rights);
+
+
+        $newRights = $mgr->getUserRights('theadmin');
+        $rights =  array(
+            'acl.group.delete' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => '',
+                'users' => ''
+            ),
+            'acl.group.modify' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.user.modify' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.users.modify' => array (
+                '__priv_theadmin' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.delete' => array (
+                '__priv_theadmin' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.list' => array (
+                '__priv_theadmin' => 'y',
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+            'super.cms.update' => array (
+                '__priv_theadmin' => 'n',
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+        );
+        $this->assertEquals($rights, $newRights['rights']);
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => 0,
+                'acl.group.modify' => 0,
+                'acl.user.modify' => 0,
+                'acl.users.modify' => 0,
+                'super.cms.delete' => 0,
+                'super.cms.list' => 0,
+                'super.cms.update' => 0
+            ),
+            $newRights['rightsWithResources']
+        );
+
+
+        $newRights = $mgr->getUserRights('oneuser');
+        $rights =  array(
+            'acl.group.delete' => array (
+                '__priv_oneuser' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'acl.group.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.user.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.users.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.delete' => array (
+                '__priv_oneuser' => 'y',
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.list' => array (
+                '__priv_oneuser' => 'y',
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+            'super.cms.update' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+        );
+        $this->assertEquals($rights, $newRights['rights']);
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => 0,
+                'acl.group.modify' => 0,
+                'acl.user.modify' => 0,
+                'acl.users.modify' => 0,
+                'super.cms.delete' => 2,
+                'super.cms.list' => 0,
+                'super.cms.update' => 0
+            ),
+            $newRights['rightsWithResources']
+        );
+    }
+
+    public function testRemoveUserRightsWithResources() {
+        jAuth::login('oneuser','pwd', false);
+        $mgr = new AclAdminUIManager();
+        $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'super.cms.delete' => 'on', // change
+        );
+        $mgr->removeUserRessourceRights('oneuser', $rights);
+        $newRights = $mgr->getUserRights('oneuser');
+        $rights =  array(
+            'acl.group.delete' => array (
+                '__priv_oneuser' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'acl.group.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.user.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => ''
+            ),
+            'acl.users.modify' => array (
+                '__priv_oneuser' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.delete' => array (
+                '__priv_oneuser' => false,
+                'admins' => '',
+                'users' => ''
+            ),
+            'super.cms.list' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+            'super.cms.update' => array (
+                '__priv_oneuser' => false,
+                'admins' => 'y',
+                'users' => 'y'
+            ),
+        );
+        $this->assertEquals($rights, $newRights['rights']);
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => 0,
+                'acl.group.modify' => 0,
+                'acl.user.modify' => 0,
+                'acl.users.modify' => 0,
+                'super.cms.delete' => 0,
+                'super.cms.list' => 0,
+                'super.cms.update' => 0
+            ),
+            $newRights['rightsWithResources']
+        );
+    }
 }
 

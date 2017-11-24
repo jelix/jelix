@@ -44,68 +44,21 @@ class usersCtrl extends jController {
             $groups[]=$grp;
         }
 
+        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
         $listPageSize = 15;
-        $offset = $this->param('idx',0,true);
-        $grpid = $this->param('grpid',-2,true);
+        $offset = $this->param('idx', 0, true);
+        $grpid = $this->param('grpid', AclAdminUIManager::FILTER_GROUP_ALL_USERS, true);
         $filter = trim($this->param('filter'));
-        $p = 'jacl2_profile';
-
-        if($grpid == -2) {
-            //all users
-            $dao = jDao::get('jacl2db~jacl2groupsofuser',$p);
-            $cond = jDao::createConditions();
-            $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
-            if ($filter) {
-                $cond->addCondition('login', 'LIKE', '%'.$filter.'%');
-            }
-            $rs = $dao->findBy($cond,$offset,$listPageSize);
-            $usersCount = $dao->countBy($cond);
-
-        } elseif($grpid == -1) {
-            //only those who have no groups
-            $cnx = jDb::getConnection($p);
-            $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group');
-            if ($filter) {
-                $sql .= " WHERE login LIKE ".$db->quote('%'.$filter.'%');
-            }
-
-            if($cnx->dbms != 'pgsql') {
-                // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
-                $sql .= ' GROUP BY login HAVING nbgrp < 2 ORDER BY login';
-            } else {
-                // But PgSQL doesn't support the HAVING structure with an alias.
-                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
-            }
-
-            $rs = $cnx->query($sql);
-            $usersCount = $rs->rowCount();
-        } else {
-            //in a specific group
-            $dao = jDao::get('jacl2db~jacl2usergroup',$p);
-            if ($filter) {
-                $rs = $dao->getUsersGroupLimitAndFilter($grpid, '%'.$filter.'%', $offset, $listPageSize);
-                $usersCount = $dao->getUsersGroupCountAndFilter($grpid, '%'.$filter.'%');
-            }
-            else {
-                $rs = $dao->getUsersGroupLimit($grpid, $offset, $listPageSize);
-                $usersCount = $dao->getUsersGroupCount($grpid);
-            }
-        }
-        $users=array();
-        $dao2 = jDao::get('jacl2db~jacl2groupsofuser',$p);
-        foreach($rs as $u){
-            $u->groups = array();
-            $gl = $dao2->getGroupsUser($u->login);
-            foreach($gl as $g) {
-                if($g->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE)
-                    $u->groups[]=$g;
-            }
-            $users[] = $u;
-        }
-
         $tpl = new jTpl();
-        $tpl->assign(compact('offset','grpid','listPageSize','groups',
-                             'users','usersCount', 'filter'));
+
+        if (is_numeric($grpid) && intval($grpid) < 0 ) {
+            $tpl->assign($manager->getUsersList($grpid, null, $filter, $offset, $listPageSize));
+        }
+        else {
+            $tpl->assign($manager->getUsersList(AclAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
+        }
+
+        $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter'));
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
         $rep->body->assign('selectedMenuItem','usersrights');
 
@@ -131,77 +84,26 @@ class usersCtrl extends jController {
             return $rep;
         }
 
-        // retrieve user
-        $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
-        $cond = jDao::createConditions();
-        $cond->addCondition('login', '=', $user);
-        $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
-        if ($dao->countBy($cond)==0) {
-            $rep->body->assign('MAIN', '<p>invalid user</p>');
+        try {
+            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $data = $manager->getUserRights();
+        }
+        catch (AclAdminUIException $e) {
+            $rep->body->assign('MAIN', '<p>'.$e->getMessage().'</p>');
             return $rep;
         }
 
-        // retrieve groups of the user
-        $hisgroup = null;
-        $groupsuser = array();
-        foreach(jAcl2DbUserGroup::getGroupList($user) as $grp) {
-            if($grp->grouptype == jAcl2DbUserGroup::GROUPTYPE_PRIVATE)
-                $hisgroup = $grp;
-            else
-                $groupsuser[$grp->id_aclgrp]=$grp;
-        }
-
-        // retrieve all groups
-        $gid=array($hisgroup->id_aclgrp);
-        $groups=array();
-        $grouprights=array($hisgroup->id_aclgrp=>false);
-        foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
-            $gid[]=$grp->id_aclgrp;
-            $groups[]=$grp;
-            $grouprights[$grp->id_aclgrp]='';
-        }
-
-        // create the list of subjects and their labels
-        $rights=array();
-        $subjects = array();
-        $sbjgroups_localized = array();
-        $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
-        foreach($rs as $rec){
-            $rights[$rec->id_aclsbj] = $grouprights;
-            $subjects[$rec->id_aclsbj] = array('grp'=>$rec->id_aclsbjgrp,
-                                               'label'=>$this->getLabel($rec->id_aclsbj, $rec->label_key));
-            if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
-                $sbjgroups_localized[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
-            }
-        }
-
-        $rightsWithResources = array_fill_keys(array_keys($rights),0);
-        $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
-
-        $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
-        $hasRightsOnResources = false;
-        foreach($rs as $rec){
-            $rightsWithResources[$rec->id_aclsbj]++;
-            $hasRightsOnResources = true;
-        }
-
-        $rs = $daorights->getRightsByGroups($gid);
-        foreach($rs as $rec){
-            $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled?'n':'y');
-        }
-
         $tpl = new jTpl();
-        $tpl->assign(compact('hisgroup', 'groupsuser', 'groups', 'rights','user',
-                             'subjects', 'sbjgroups_localized',
-                             'rightsWithResources', 'hasRightsOnResources'));
-        $tpl->assign('nbgrp', count($groups));
+        $tpl->assign($data);
+        $tpl->assign('nbgrp', count($data['groups']));
 
-        if(jAcl2::check('acl.user.modify')) {
+        if (jAcl2::check('acl.user.modify')) {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights'));
-        }else{
+        }
+        else {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
-        $rep->body->assign('selectedMenuItem','usersrights');
+        $rep->body->assign('selectedMenuItem', 'usersrights');
         return $rep;
     }
 
@@ -216,14 +118,11 @@ class usersCtrl extends jController {
         }
 
         $rep->action = 'jacl2db_admin~users:rights';
-        $rep->params=array('user'=>$login);
+        $rep->params = array('user'=>$login);
 
-        $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
-        $grp = $dao->getPrivateGroup($login);
+        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $manager->saveUserRights($login, $rights);
 
-        // FIXME verifier qu'il ne s'enleve pas de droits d'admin
-
-        jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         return $rep;
     }
@@ -237,34 +136,16 @@ class usersCtrl extends jController {
             return $rep;
         }
 
-        $daogroup = jDao::get('jacl2db~jacl2group','jacl2_profile');
+        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $data = $manager->saveUserRights($user);
 
-        $group = $daogroup->getPrivateGroup($user);
-
-        $rightsWithResources = array();
-        $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
-
-        $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
-        $hasRightsOnResources = false;
-        foreach($rs as $rec){
-            if (!isset($rightsWithResources[$rec->id_aclsbj]))
-                $rightsWithResources[$rec->id_aclsbj] = array();
-            $rightsWithResources[$rec->id_aclsbj][] = $rec;
-            $hasRightsOnResources = true;
-        }
-        $subjects_localized = array();
-        if(!empty($rightsWithResources)){
-            $conditions = jDao::createConditions();
-            $conditions->addCondition('id_aclsbj', 'in', array_keys($rightsWithResources));
-            foreach(jDao::get('jacl2db~jacl2subject','jacl2_profile')->findBy($conditions) as $rec)
-                $subjects_localized[$rec->id_aclsbj] = jLocale::get($rec->label_key);
-        }
         $tpl = new jTpl();
-        $tpl->assign(compact('user', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources'));
+        $tpl->assign($data);
 
-        if(jAcl2::check('acl.user.modify')) {
+        if (jAcl2::check('acl.user.modify')) {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_res'));
-        }else{
+        }
+        else {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_res_view'));
         }
         $rep->body->assign('selectedMenuItem','usersrights');
@@ -276,27 +157,17 @@ class usersCtrl extends jController {
         $login = $this->param('user');
         $subjects = $this->param('subjects',array());
 
-        if($login == '') {
+        if ($login == '') {
             $rep->action = 'jacl2db_admin~users:index';
             return $rep;
         }
 
         $rep->action = 'jacl2db_admin~users:rightres';
-        $rep->params=array('user'=>$login);
+        $rep->params = array('user'=>$login);
 
-        $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
-        $grp = $daogroup->getPrivateGroup($login);
+        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $manager->removeUserRessourceRights($login, $subjects);
 
-        $subjectsToRemove = array();
-
-        foreach($subjects as $sbj=>$val) {
-            if ($val != '' || $val == true) {
-                $subjectsToRemove[] = $sbj;
-            }
-        }
-
-        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-            ->deleteRightsOnResource($grp->id_aclgrp, $subjectsToRemove);
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         return $rep;
     }
@@ -305,26 +176,28 @@ class usersCtrl extends jController {
         $rep = $this->getResponse('redirect');
 
         $login = $this->param('user');
-        if($login != '') {
+        if ($login != '') {
             $rep->action = 'jacl2db_admin~users:rights';
-            $rep->params=array('user'=>$login);
+            $rep->params = array('user'=>$login);
             jAcl2DbUserGroup::removeUserFromGroup($login, $this->param('grpid') );
-        }else{
+        }
+        else {
             $rep->action = 'jacl2db_admin~users:index';
         }
 
         return $rep;
     }
 
-    function addgroup(){
+    function addgroup() {
         $rep = $this->getResponse('redirect');
 
         $login = $this->param('user');
-        if($login != '') {
+        if ($login != '') {
             $rep->action = 'jacl2db_admin~users:rights';
             $rep->params=array('user'=>$login);
             jAcl2DbUserGroup::addUserToGroup($login, $this->param('grpid') );
-        }else{
+        }
+        else {
             $rep->action = 'jacl2db_admin~users:index';
         }
         return $rep;

@@ -35,6 +35,7 @@ cd lib/jelix-admin-modules/jacl2db_admin
 cd lib/jelix-admin-modules/jacl2db_admin/classes/
   jacl2db_admin.listener.php
   AclAdminUIManager.class.php
+  AclAdminUIException.php
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_EN
 cch   acl2.UTF-8.properties(acl2.%charset%.properties)
 cd lib/jelix-admin-modules/jacl2db_admin/locales/en_GB

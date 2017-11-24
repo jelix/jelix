@@ -11,8 +11,14 @@
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
 
+require_once(__DIR__."/AclAdminUIException.php");
 
 class AclAdminUIManager {
+
+    const FILTER_GROUP_ALL_USERS = -2;
+    const FILTER_USERS_NO_IN_GROUP = -1;
+    const FILTER_BY_GROUP = 0;
+
 
     protected function getLabel($id, $labelKey) {
         if ($labelKey) {
@@ -152,7 +158,8 @@ class AclAdminUIManager {
 
     /**
      * @param string $groupid
-     * @param array $subjects array( <id_aclsbj> => (bool, 'y', 'n' or ''))
+     * @param array $subjects array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
+     *                          true or 'on' means 'to remove'
      */
     public function removeGroupRightsWithResources($groupid, $subjects) {
         $subjectsToRemove = array();
@@ -162,8 +169,215 @@ class AclAdminUIManager {
                 $subjectsToRemove[] = $sbj;
             }
         }
+        if (count($subjectsToRemove)) {
+            jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
+                ->deleteRightsOnResource($groupid, $subjectsToRemove);
+        }
+    }
 
-        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-            ->deleteRightsOnResource($groupid, $subjectsToRemove);
+    /**
+     * @param integer $groupFilter one of FILTER_* const
+     * @param null|integer $groupId
+     * @param string $userFilter
+     * @param integer $offset
+     * @param integer $listPageSize
+     * @return array 'users': list of objects representing users ( login, and his groups in groups)
+     *               'usersCount': total number of users
+     */
+    public function getUsersList($groupFilter, $groupId = null, $userFilter = '', $offset=0, $listPageSize=15) {
+        $p = 'jacl2_profile';
+
+        // get the number of users and the recordset to retrieve users
+        if ($groupFilter == self::FILTER_GROUP_ALL_USERS) {
+            //all users
+            $dao = jDao::get('jacl2db~jacl2groupsofuser', $p);
+            $cond = jDao::createConditions();
+            $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
+            if ($userFilter) {
+                $cond->addCondition('login', 'LIKE', '%'.$userFilter.'%');
+            }
+            $rs = $dao->findBy($cond, $offset, $listPageSize);
+            $usersCount = $dao->countBy($cond);
+
+        } elseif ($groupFilter == self::FILTER_USERS_NO_IN_GROUP) {
+            //only those who have no groups
+            $cnx = jDb::getConnection($p);
+            $sql = 'SELECT login, count(id_aclgrp) as nbgrp FROM '.$cnx->prefixTable('jacl2_user_group');
+            if ($userFilter) {
+                $sql .= " WHERE login LIKE ".$cnx->quote('%'.$userFilter.'%');
+            }
+
+            if ($cnx->dbms != 'pgsql') {
+                // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
+                $sql .= ' GROUP BY login HAVING nbgrp < 2 ORDER BY login';
+            } else {
+                // But PgSQL doesn't support the HAVING structure with an alias.
+                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
+            }
+
+            $rs = $cnx->query($sql);
+            $usersCount = $rs->rowCount();
+
+        } else {
+            //in a specific group
+            $dao = jDao::get('jacl2db~jacl2usergroup', $p);
+            if ($userFilter) {
+                $rs = $dao->getUsersGroupLimitAndFilter($groupId, '%'.$userFilter.'%', $offset, $listPageSize);
+                $usersCount = $dao->getUsersGroupCountAndFilter($groupId, '%'.$userFilter.'%');
+            }
+            else {
+                $rs = $dao->getUsersGroupLimit($groupId, $offset, $listPageSize);
+                $usersCount = $dao->getUsersGroupCount($groupId);
+            }
+        }
+
+        $users = array();
+        $dao2 = jDao::get('jacl2db~jacl2groupsofuser', $p);
+        foreach($rs as $u){
+            $u->groups = array();
+            $gl = $dao2->getGroupsUser($u->login);
+            foreach($gl as $g) {
+                if ($g->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE) {
+                    $u->groups[] = $g;
+                }
+            }
+            $users[] = $u;
+        }
+
+        return compact('users','usersCount');
+    }
+
+
+
+    public function getUserRights($user) {
+
+        // retrieve user
+        $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
+        $cond = jDao::createConditions();
+        $cond->addCondition('login', '=', $user);
+        $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
+        if ($dao->countBy($cond)==0) {
+            throw new AclAdminUIException('Invalid user');
+        }
+
+        // retrieve groups of the user
+        $hisgroup = null;
+        $groupsuser = array();
+        foreach(jAcl2DbUserGroup::getGroupList($user) as $grp) {
+            if ($grp->grouptype == jAcl2DbUserGroup::GROUPTYPE_PRIVATE) {
+                $hisgroup = $grp;
+            }
+            else {
+                $groupsuser[$grp->id_aclgrp] = $grp;
+            }
+        }
+
+        // retrieve all groups
+        $gid = array($hisgroup->id_aclgrp);
+        $groups = array();
+        $grouprights = array($hisgroup->id_aclgrp => false);
+        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
+            $gid[] = $grp->id_aclgrp;
+            $groups[] = $grp;
+            $grouprights[$grp->id_aclgrp] = '';
+        }
+
+        // create the list of subjects and their labels
+        $rights = array();
+        $subjects = array();
+        $sbjgroups_localized = array();
+        $rs = jDao::get('jacl2db~jacl2subject','jacl2_profile')->findAllSubject();
+        foreach ($rs as $rec) {
+            $rights[$rec->id_aclsbj] = $grouprights;
+            $subjects[$rec->id_aclsbj] = array(
+                'grp'=> $rec->id_aclsbjgrp,
+                'label'=> $this->getLabel($rec->id_aclsbj, $rec->label_key));
+            if ($rec->id_aclsbjgrp && !isset($sbjgroups_localized[$rec->id_aclsbjgrp])) {
+                $sbjgroups_localized[$rec->id_aclsbjgrp] =
+                    $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+            }
+        }
+
+        $rightsWithResources = array_fill_keys(array_keys($rights),0);
+        $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
+
+        $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
+        $hasRightsOnResources = false;
+        foreach ($rs as $rec) {
+            $rightsWithResources[$rec->id_aclsbj]++;
+            $hasRightsOnResources = true;
+        }
+
+        $rs = $daorights->getRightsByGroups($gid);
+        foreach ($rs as $rec) {
+            $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled?'n':'y');
+        }
+
+        return compact('hisgroup', 'groupsuser', 'groups', 'rights','user',
+            'subjects', 'sbjgroups_localized',
+            'rightsWithResources', 'hasRightsOnResources');
+    }
+
+
+    public function saveUserRights($login, $rights) {
+        $dao = jDao::get('jacl2db~jacl2groupsofuser','jacl2_profile');
+        $grp = $dao->getPrivateGroup($login);
+
+        // FIXME verifier qu'il ne s'enleve pas de droits d'admin
+
+        jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $rights);
+
+    }
+
+    public function getUserRessourceRights($user) {
+        $daogroup = jDao::get('jacl2db~jacl2group','jacl2_profile');
+
+        $group = $daogroup->getPrivateGroup($user);
+
+        $rightsWithResources = array();
+        $daorights = jDao::get('jacl2db~jacl2rights','jacl2_profile');
+
+        $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
+        $hasRightsOnResources = false;
+        foreach($rs as $rec){
+            if (!isset($rightsWithResources[$rec->id_aclsbj])) {
+                $rightsWithResources[$rec->id_aclsbj] = array();
+            }
+            $rightsWithResources[$rec->id_aclsbj][] = $rec;
+            $hasRightsOnResources = true;
+        }
+        $subjects_localized = array();
+        if (!empty($rightsWithResources)) {
+            $conditions = jDao::createConditions();
+            $conditions->addCondition('id_aclsbj', 'in', array_keys($rightsWithResources));
+            foreach(jDao::get('jacl2db~jacl2subject','jacl2_profile')->findBy($conditions) as $rec) {
+                $subjects_localized[$rec->id_aclsbj] = $this->getLabel($rec->id_aclsbj, $rec->label_key);
+            }
+        }
+        return compact('user', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
+    }
+
+
+    /**
+     * @param $user
+     * @param array $subjects <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+     */
+    public function removeUserRessourceRights($user, $subjects) {
+
+        $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        $grp = $daogroup->getPrivateGroup($user);
+
+        $subjectsToRemove = array();
+
+        foreach($subjects as $sbj=>$val) {
+            if ($val != '' || $val == true) {
+                $subjectsToRemove[] = $sbj;
+            }
+        }
+
+        if (count($subjectsToRemove)) {
+            jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
+                ->deleteRightsOnResource($grp->id_aclgrp, $subjectsToRemove);
+        }
     }
 }

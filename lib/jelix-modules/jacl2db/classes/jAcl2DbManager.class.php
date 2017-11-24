@@ -91,10 +91,14 @@ class jAcl2DbManager {
     }
 
     /**
-     * set rights on the given group. Only rights on given subjects are changed.
+     * Set all rights on the given group.
+     *
+     * Only rights on given subjects are changed.
+     * Existing rights not given in parameters are deleted.
+     *
      * Rights with resources are not changed.
      * @param string    $group the group id.
-     * @param array  $rights list of rights key=subject, value=true or non empty string
+     * @param array  $rights list of rights key=subject, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
      */
     public static function setRightsOnGroup($group, $rights){
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
