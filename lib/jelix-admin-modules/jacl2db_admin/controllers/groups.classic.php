@@ -4,13 +4,14 @@
 * @subpackage  jacl2db_admin
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Olivier Demah
-* @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2008-2017 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @copyright   2010 Olivier Demah
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
+require_once(__DIR__."/../classes/AclAdminUIException.php");
 
 class groupsCtrl extends jController {
 
@@ -33,6 +34,18 @@ class groupsCtrl extends jController {
         $data = $manager->getGroupRights();
         $tpl->assign('nbgrp', count($data['groups']));
         $tpl->assign($data);
+    }
+
+    protected function checkException(AclAdminUIException $e, $category) {
+        if ($e->getCode() == 1) {
+            jMessage::add(jLocale::get('acl2.error.invalid.user'), 'error');
+        }
+        else if ($e->getCode() == 2) {
+            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.anybody'), 'error');
+        }
+        else if ($e->getCode() == 3) {
+            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.yourself'), 'error');
+        }
     }
 
     /**
@@ -71,9 +84,14 @@ class groupsCtrl extends jController {
     function saverights(){
         $rep = $this->getResponse('redirect');
         $rights = $this->param('rights',array());
-        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
-        $manager->saveGroupRights($rights);
-        jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
+        try {
+            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $manager->saveGroupRights($rights, jAuth::getUserSession()->login);
+            jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
+        }
+        catch (AclAdminUIException $e) {
+            $this->checkException($e, 'savegrouprights');
+        }
         $rep->action = 'jacl2db_admin~groups:rights';
         return $rep;
     }
@@ -192,8 +210,14 @@ class groupsCtrl extends jController {
         $rep = $this->getResponse('redirect');
         $rep->action = 'jacl2db_admin~groups:index';
 
-        jAcl2DbUserGroup::removeGroup($this->param('group_id'));
-        jMessage::add(jLocale::get('acl2.message.group.delete.ok'), 'ok');
+        try {
+            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $manager->removeGroup($this->param('group_id'));
+            jMessage::add(jLocale::get('acl2.message.group.delete.ok'), 'ok');
+        }
+        catch (AclAdminUIException $e) {
+            $this->checkException($e, 'group.delete');
+        }
 
         return $rep;
     }

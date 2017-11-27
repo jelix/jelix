@@ -4,11 +4,13 @@
 * @subpackage  jacl2db_admin
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2008-2017 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
+
+require_once(__DIR__."/../classes/AclAdminUIException.php");
 
 class usersCtrl extends jController {
 
@@ -19,6 +21,18 @@ class usersCtrl extends jController {
         'removegroup'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
         'addgroup'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
     );
+
+    protected function checkException(AclAdminUIException $e, $category) {
+        if ($e->getCode() == 1) {
+            jMessage::add(jLocale::get('acl2.error.invalid.user'), 'error');
+        }
+        else if ($e->getCode() == 2) {
+            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.anybody'), 'error');
+        }
+        else if ($e->getCode() == 3) {
+            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.yourself'), 'error');
+        }
+    }
 
     /**
     *
@@ -86,7 +100,7 @@ class usersCtrl extends jController {
 
         try {
             $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
-            $data = $manager->getUserRights();
+            $data = $manager->getUserRights($user);
         }
         catch (AclAdminUIException $e) {
             $rep->body->assign('MAIN', '<p>'.$e->getMessage().'</p>');
@@ -119,11 +133,15 @@ class usersCtrl extends jController {
 
         $rep->action = 'jacl2db_admin~users:rights';
         $rep->params = array('user'=>$login);
+        try {
+            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $manager->saveUserRights($login, $rights, jAuth::getUserSession()->login);
+            jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
+        }
+        catch (AclAdminUIException $e) {
+            $this->checkException($e, 'saveuserrights');
+        }
 
-        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
-        $manager->saveUserRights($login, $rights);
-
-        jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         return $rep;
     }
 
@@ -137,7 +155,7 @@ class usersCtrl extends jController {
         }
 
         $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
-        $data = $manager->saveUserRights($user);
+        $data = $manager->getUserRessourceRights($user);
 
         $tpl = new jTpl();
         $tpl->assign($data);
@@ -179,7 +197,13 @@ class usersCtrl extends jController {
         if ($login != '') {
             $rep->action = 'jacl2db_admin~users:rights';
             $rep->params = array('user'=>$login);
-            jAcl2DbUserGroup::removeUserFromGroup($login, $this->param('grpid') );
+            try {
+                $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+                $manager->removeUserFromGroup($login, $this->param('grpid'));
+            }
+            catch (AclAdminUIException $e) {
+                $this->checkException($e, 'removeuserfromgroup');
+            }
         }
         else {
             $rep->action = 'jacl2db_admin~users:index';
