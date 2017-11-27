@@ -206,14 +206,14 @@ class jSoapClient {
         //$profile['stream_context'] = $context;
         if (isset($profile['ssl_self_signed'])) {
             if ($profile['ssl_self_signed']) {
-                $context = stream_context_create([
-                    'ssl' => [
+                $context = stream_context_create(array(
+                    'ssl' => array(
                         // set some SSL/TLS specific options
                         'verify_peer' => false,
                         'verify_peer_name' => false,
                         'allow_self_signed' => true
-                    ]
-                ]);
+                    )
+                ));
                 $profile['stream_context'] = $context;
 
             }
