@@ -18,7 +18,7 @@
  */
 class jAcl2DbManager {
 
-    const ACL_ADMIN_RIGHTS = array(
+    static $ACL_ADMIN_RIGHTS = array(
         'acl.group.view',
         'acl.group.modify',
         'acl.group.delete',
@@ -248,7 +248,7 @@ class jAcl2DbManager {
             ON (r.id_aclgrp = g.id_aclgrp)
             WHERE id_aclsbj IN (".implode(',', array_map(function($role) use ($db) {
                 return $db->quote($role);
-            }, self::ACL_ADMIN_RIGHTS)).") ";
+            }, self::$ACL_ADMIN_RIGHTS)).") ";
         $rs = $db->query($sql);
         foreach($rs as $rec) {
             if ($sessionUser && isset($sessionUserGroups[$rec->id_aclgrp])) {
@@ -271,7 +271,7 @@ class jAcl2DbManager {
             }
         }
 
-        $rolesStats = array_combine(self::ACL_ADMIN_RIGHTS, array_fill(0, count(self::ACL_ADMIN_RIGHTS), 0));
+        $rolesStats = array_combine(self::$ACL_ADMIN_RIGHTS, array_fill(0, count(self::$ACL_ADMIN_RIGHTS), 0));
 
         // now apply changes
         foreach($rightsChanges as $groupId => $changes) {
@@ -281,7 +281,7 @@ class jAcl2DbManager {
             if (!isset($canceledRoles[$groupId])) {
                 $canceledRoles[$groupId] = array();
             }
-            $unassignedRoles = array_combine(self::ACL_ADMIN_RIGHTS, array_fill(0, count(self::ACL_ADMIN_RIGHTS), true));
+            $unassignedRoles = array_combine(self::$ACL_ADMIN_RIGHTS, array_fill(0, count(self::$ACL_ADMIN_RIGHTS), true));
             foreach ($changes as $role => $roleAssignation) {
                 if (!isset($rolesStats[$role])) {
                     continue;

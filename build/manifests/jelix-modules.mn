@@ -90,7 +90,7 @@ cd lib/jelix-modules/jacl2db
   events.xml
 cd lib/jelix-modules/jacl2db/classes
   jAcl2DbAdminUIManager.class.php
-  jAcl2DbAdminUIException.php
+  jAcl2DbAdminUIException.class.php
 !  jacl2db.listener.php
   jAcl2DbUserGroup.class.php
   jAcl2DbManager.class.php
