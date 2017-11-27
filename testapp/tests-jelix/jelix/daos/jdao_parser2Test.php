@@ -299,6 +299,7 @@ class jdao_parser2Test extends jUnitTestCase {
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
+
     );
 
     function testMethods() {

@@ -649,6 +649,7 @@ class jdao_generatorTest extends jUnitTestCase {
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
                                                 $methods['method3']->getParameters(), true);
         $this->assertEquals(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
+
     }
 
 
