@@ -2,7 +2,7 @@
 /**
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart, Julien Issler
-* @copyright  2005-2014 Laurent Jouanneau, 2010 Yannick Le Guédart, 2016 Julien Issler
+* @copyright  2005-2017 Laurent Jouanneau, 2010 Yannick Le Guédart, 2016 Julien Issler
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -384,6 +384,20 @@ abstract class ClientRequest {
       return ':'.$port;
    }
 
+   protected $_rawBody = null;
+
+    /**
+     * Get the raw content of the request body (from php://input)
+     * @return string
+     * @since 1.7
+     */
+   public function getBody() {
+       if ($this->_rawBody === null) {
+           $this->_rawBody = file_get_contents('php://input');
+       }
+       return $this->_rawBody;
+   }
+
    /**
      * call it when you want to read the content of the body of a request
      * when the method is not GET or POST
@@ -391,7 +405,7 @@ abstract class ClientRequest {
      * @since 1.2
      */
     public function readHttpBody() {
-        $input = file_get_contents('php://input');
+        $input = $this->getBody();
 
         if (!isset($_SERVER['CONTENT_TYPE'])) {
             return $input;

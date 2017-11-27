@@ -1078,7 +1078,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
         foreach( $ctrl->items as $itemName=>$listctrl){
             if (!$ctrl->isItemActivated($itemName))
                 continue;
-            echo '<li id="'.$id.$itemName.'_item"><label><input';
+            echo '<li id="'.$id.$itemName.'_item"><input';
             $attr['id'] = $id.$i;
             $attr['value'] = $itemName;
             if ($itemName==$value)
@@ -1087,7 +1087,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 unset($attr['checked']);
             $this->_outputAttr($attr);
             echo ' onclick="'.$this->jFormsJsVarName.'.getForm(\'',$this->_name,'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
-            echo htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
+            echo '<label for="'.$attr['id'].'">'.htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
 
             $displayedControls = false;
             foreach($listctrl as $ref=>$c) {

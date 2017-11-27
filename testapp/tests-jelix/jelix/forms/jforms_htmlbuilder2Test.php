@@ -219,12 +219,12 @@ jFormsJQ.tForm.addControl(c);
 
         // ouput of the whole <choice>, with original values
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><label><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/><label for="_status_1">Assigned</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Name<span class="jforms-required-star">*</span></label>'."\n".' <input name="nom" id="'.$this->formname.'_nom" class="jforms-ctrl-input jforms-required" value="" type="text"/>'."\n".'</span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom" id="'.$this->formname.'_prenom_label">Firstname</label>'."\n".' <input name="prenom" id="'.$this->formname.'_prenom" class="jforms-ctrl-input" value="robert" type="text"/>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_2">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason <span class="jforms-required-star">*</span></label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-required" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -256,12 +256,12 @@ c2.activate(\'\');
         $this->form->getContainer()->data['status']='assigned';
 
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><label><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/><label for="_status_1">Assigned</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Name<span class="jforms-required-star">*</span></label>'."\n".' <input name="nom" id="'.$this->formname.'_nom" class="jforms-ctrl-input jforms-required" value="" type="text"/>'."\n".'</span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom" id="'.$this->formname.'_prenom_label">Firstname</label>'."\n".' <input name="prenom" id="'.$this->formname.'_prenom" class="jforms-ctrl-input" value="robert" type="text"/>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_2">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason <span class="jforms-required-star">*</span></label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-required" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -292,12 +292,12 @@ c2.activate(\'assigned\');
         // ouput of the whole <choice>, with the second item selected
         $this->form->getContainer()->data['status']='new';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><label><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/><label for="_status_1">Assigned</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Name<span class="jforms-required-star">*</span></label>'."\n".' <input name="nom" id="'.$this->formname.'_nom" class="jforms-ctrl-input jforms-required" value="" type="text"/>'."\n".'</span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom" id="'.$this->formname.'_prenom_label">Firstname</label>'."\n".' <input name="prenom" id="'.$this->formname.'_prenom" class="jforms-ctrl-input" value="robert" type="text"/>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_2">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason <span class="jforms-required-star">*</span></label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-required" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -328,12 +328,12 @@ c2.activate(\'new\');
         // ouput of the whole <choice>, with the third item selected
         $this->form->getContainer()->data['status']='closed';
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><label><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><input name="status" id="'.$this->formname.'_status_1" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/><label for="_status_1">Assigned</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Name<span class="jforms-required-star">*</span></label>'."\n".' <input name="nom" id="'.$this->formname.'_nom" class="jforms-ctrl-input jforms-required" value="" type="text"/>'."\n".'</span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom" id="'.$this->formname.'_prenom_label">Firstname</label>'."\n".' <input name="prenom" id="'.$this->formname.'_prenom" class="jforms-ctrl-input" value="robert" type="text"/>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_2" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_2">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label jforms-required" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason <span class="jforms-required-star">*</span></label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-required" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -366,12 +366,12 @@ c2.activate(\'closed\');
         $choice->setReadOnly(true);
 
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" readonly="readonly" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><label><input name="status" id="'.$this->formname.'_status_1" readonly="readonly" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/>Assigned</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" readonly="readonly" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_assigned_item"><input name="status" id="'.$this->formname.'_status_1" readonly="readonly" type="radio" value="assigned" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'assigned\')"/><label for="_status_1">Assigned</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_nom" id="'.$this->formname.'_nom_label">Name</label>'."\n".' <input name="nom" id="'.$this->formname.'_nom" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="" type="text"/>'."\n".'</span>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_prenom" id="'.$this->formname.'_prenom_label">Firstname</label>'."\n".' <input name="prenom" id="'.$this->formname.'_prenom" readonly="readonly" class="jforms-ctrl-input jforms-readonly" value="robert" type="text"/>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_2" readonly="readonly" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_2" readonly="readonly" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_2">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason </label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-readonly" disabled="disabled" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -407,8 +407,8 @@ c2.activate(\'closed\');
         $this->form->getContainer()->data['status']='closed';
         $choice->deactivateItem('assigned');
         $expected = '<ul class="jforms-choice jforms-ctl-status" >'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_new_item"><label><input name="status" id="'.$this->formname.'_status_0" readonly="readonly" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/>New</label>'."\n".'</li>'."\n";
-        $expected .= '<li id="'.$this->formname.'_status_closed_item"><label><input name="status" id="'.$this->formname.'_status_1" readonly="readonly" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/>Closed</label>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_new_item"><input name="status" id="'.$this->formname.'_status_0" readonly="readonly" type="radio" value="new" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'new\')"/><label for="_status_0">New</label>'."\n".'</li>'."\n";
+        $expected .= '<li id="'.$this->formname.'_status_closed_item"><input name="status" id="'.$this->formname.'_status_1" readonly="readonly" type="radio" value="closed" checked="checked" onclick="jFormsJQ.getForm(\'\').getControl(\'status\').activate(\'closed\')"/><label for="_status_1">Closed</label>'."\n";
         $expected .= ' <span class="jforms-item-controls"><label class="jforms-label" for="'.$this->formname.'_reason" id="'.$this->formname.'_reason_label">Reason </label>'."\n";
         $expected .= ' <select name="reason" id="'.$this->formname.'_reason" class="jforms-ctrl-menulist jforms-readonly" disabled="disabled" size="1">'."\n".'<option value="aa">fixed</option>'."\n".'<option value="bb">won t fixed</option>'."\n".'<option value="cc">later</option>'."\n".'</select>'."\n".'</span>'."\n";
         $expected .= '</li>'."\n";
@@ -441,7 +441,7 @@ c2.activate(\'closed\');
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
@@ -461,7 +461,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="http://www.jelix.org/dummy.php" method="post" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
@@ -482,7 +482,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 
         $result ='<form action="https://www.jelix.org/dummy.php" method="get" id="'.$this->builder->getName().'"><script type="text/javascript">
 //<![CDATA[
-jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
+jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());

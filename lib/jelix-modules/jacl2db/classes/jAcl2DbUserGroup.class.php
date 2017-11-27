@@ -4,7 +4,7 @@
 * @subpackage  acl
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Vincent Viaud
-* @copyright   2006-2010 Laurent Jouanneau
+* @copyright   2006-2017 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @copyright   2011 Vincent Viaud
 * @link        http://www.jelix.org
@@ -22,6 +22,23 @@
 class jAcl2DbUserGroup {
 
     /**
+     * Group type in the grouptype field.
+     */
+    const GROUPTYPE_NORMAL = 0;
+
+    /**
+     * Group type in the grouptype field.
+     * Indicates that the group is the default one for new users
+     */
+    const GROUPTYPE_DEFAULT = 1;
+
+    /**
+     * Group type in the grouptype field.
+     * Indicates that the group belongs to a unique User
+     */
+    const GROUPTYPE_PRIVATE = 2;
+
+    /**
      * @internal The constructor is private, because all methods are static
      */
     private function __construct (){ }
@@ -35,6 +52,9 @@ class jAcl2DbUserGroup {
         return in_array($groupid, self::getGroups());
     }
 
+    /**
+     * @var string[]|null list of groups of the current user
+     */
     protected static $groups = null;
 
     /**
@@ -42,7 +62,7 @@ class jAcl2DbUserGroup {
      * @return array list of group id
      */
     public static function getGroups(){
-        if(!jAuth::isConnected()) {
+        if(!jAuth::isConnected()){
             self::$groups = null;
             return array();
         }
@@ -55,7 +75,6 @@ class jAcl2DbUserGroup {
             foreach($gp as $g){
                 self::$groups[] = $g->id_aclgrp;
             }
-
         }
         return self::$groups;
     }
@@ -122,7 +141,7 @@ class jAcl2DbUserGroup {
         $persgrp = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
         $persgrp->id_aclgrp = '__priv_'.$login;
         $persgrp->name = $login;
-        $persgrp->grouptype = 2;
+        $persgrp->grouptype = self::GROUPTYPE_PRIVATE;
         $persgrp->ownerlogin = $login;
 
         $daogroup->insert($persgrp);
@@ -188,7 +207,7 @@ class jAcl2DbUserGroup {
         $group = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
         $group->id_aclgrp = $id_aclgrp;
         $group->name = $name;
-        $group->grouptype = 0;
+        $group->grouptype = self::GROUPTYPE_NORMAL;
         jDao::get('jacl2db~jacl2group','jacl2_profile')->insert($group);
         return $group->id_aclgrp;
     }
@@ -244,7 +263,7 @@ class jAcl2DbUserGroup {
      * if a login is given, it returns only the groups of the user.
      * Else it returns all groups (except private groups)
      * @param string $login an optional login
-     * @return array a list of groups object (dao records)
+     * @return jDbResultSet a list of groups object (dao records)
      */
     public static function getGroupList($login=''){
         if ($login === '') {

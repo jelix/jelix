@@ -2,7 +2,7 @@
 /**
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
 * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
 * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
 * initial authors : Gerald Croes, Laurent Jouanneau.
@@ -91,8 +91,7 @@ class Bundle {
             }
 
             if ($okcompile) {
-                include ($cache);
-                $this->_strings[$charset] = $_loaded;
+                $this->_strings[$charset] = include ($cache);
                 return;
             }
         }
@@ -100,7 +99,7 @@ class Bundle {
         $reader = new \jPropertiesFileReader($source, $charset);
         $reader->parse();
         $this->_strings[$charset] = $reader->getProperties();
-        $content = '<?php $_loaded= '.var_export($this->_strings[$charset], true).' ?>';
+        $content = '<?php return '.var_export($this->_strings[$charset], true).";\n";
         \jFile::write($cache, $content);
     }
 }

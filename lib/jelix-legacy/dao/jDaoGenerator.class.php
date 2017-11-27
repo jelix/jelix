@@ -561,7 +561,7 @@ class jDaoGenerator {
             $limit =', '.$lim['offset'].', '.$lim['count'];
         }
 
-        $sqlCond = $this->buildConditions($method->getConditions(), $allField, $method->getParameters(), true, $method->getGroupBy());
+        $sqlCond = $this->buildConditions($method->getConditions(), $allField, $method->getParameters(), true);
 
         if(trim($sqlCond) != '')
             $src[] = '$__query .=\''.$glueCondition.$sqlCond."';";
@@ -861,27 +861,15 @@ class jDaoGenerator {
      * @param array $fields  array of jDaoProperty
      * @param array $params  list of parameters name of the method
      * @param boolean $withPrefix true if the field name should be preceded by the table name/table alias
-     * @param array $groupby  list of properties to use in a groupby
      * @return string a WHERE clause (without the WHERE keyword) with eventually an ORDER clause
      * @internal
      */
-    protected function buildConditions ($cond, $fields, $params=array(), $withPrefix=true, $groupby=null){
-        if($cond)
-            $sql = $this->buildOneSQLCondition ($cond->condition, $fields, $params, $withPrefix, true);
-        else
+    protected function buildConditions ($cond, $fields, $params=array(), $withPrefix=true){
+        if ($cond) {
+            $sql = $this->buildOneSQLCondition($cond->condition, $fields, $params, $withPrefix, true);
+        }
+        else {
             $sql = '';
-
-        if($groupby && count($groupby)) {
-            if(trim($sql) =='') {
-                $sql = ' 1=1 ';
-            }
-            foreach($groupby as $k=>$f) {
-                if ($withPrefix)
-                    $groupby[$k]= $this->_encloseName($fields[$f]->table).'.'.$this->_encloseName($fields[$f]->fieldName);
-                else
-                    $groupby[$k]= $this->_encloseName($fields[$f]->fieldName);
-            }
-            $sql .= ' GROUP BY '.implode (', ', $groupby);
         }
 
         $order = array ();

@@ -26,7 +26,7 @@
         "jelix/inifile": "^2.4.0",
         "jelix/wikirenderer-plugin": "^1.7.1",
         "symfony/console":"^3.2.0",
-        "jelix/file-utilities": "1.8.*",
+        "jelix/file-utilities": "^1.8.3",
         "jelix/simplelocalization": "1.7.1",
         "jelix/version": "1.0.*",
         "defuse/php-encryption": "^2.0",
@@ -60,7 +60,7 @@
             "lib/jelix-legacy/init.php"
         ]
     },
-    "bin": ["bin/createapp.php"],
+    "bin": ["bin/create-jelix-app.php"],
     "minimum-stability": "stable",
     "extra" : {
         "branch-alias": {

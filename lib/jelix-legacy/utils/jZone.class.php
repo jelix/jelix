@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Laurent Raufaste, Pulsation
-* @copyright  2001-2005 CopixTeam, 2005-2015 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
+* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
 *
 * This class was get originally from the Copix project (CopixZone, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -149,14 +149,10 @@ class jZone {
                         // timeout : regenerate the cache
                         unlink($f);
                         $this->_cancelCache=false;
-                        $response = jApp::coord()->response;
-                        $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
-                        jApp::coord()->response = $sniffer;
-                        $content=$this->_createContent();
-                        jApp::coord()->response = $response;
-                        if(!$this->_cancelCache){
-                            jFile::write($f,$content);
-                            jFile::write($cacheFiles['meta'], (string)$sniffer);
+                        list($content, $metaContent) = $this->_generateContentAndCatchMetaCalls();
+                        if (!$this->_cancelCache) {
+                            jFile::write($f, $content);
+                            jFile::write($cacheFiles['meta'], $metaContent);
                         }
                         return $content;
                     }
@@ -173,33 +169,52 @@ class jZone {
                     }
                 } else {
                     //the cache does not exist yet for this response type. We have to generate it !
-                    $response = jApp::coord()->response;
-                    $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
-                    jApp::coord()->response = $sniffer;
-                    $this->_createContent();
-                    jApp::coord()->response = $response;
-                    if(!$this->_cancelCache){
-                        jFile::write($cacheFiles['meta'], (string)$sniffer);
+                    list(, $metaContent) = $this->_generateContentAndCatchMetaCalls();
+                    if (!$this->_cancelCache) {
+                        jFile::write($cacheFiles['meta'], $metaContent);
                     }
                 }
                 //and now fetch content from cache :
                 $content = file_get_contents($f);
             }else{
                 $this->_cancelCache=false;
-                $response = jApp::coord()->response;
-                $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'), true );
-                jApp::coord()->response = $sniffer;
-                $content=$this->_createContent();
-                jApp::coord()->response = $response;
+                list($content, $metaContent) = $this->_generateContentAndCatchMetaCalls();
                 if(!$this->_cancelCache){
-                    jFile::write($f,$content);
-                    jFile::write($cacheFiles['meta'], (string)$sniffer);
+                    jFile::write($f, $content);
+                    jFile::write($cacheFiles['meta'], $metaContent);
                 }
             }
         }else{
             $content=$this->_createContent();
         }
         return $content;
+    }
+
+    /**
+     *
+     * When the zone generated content is in cache, the template content is not
+     * executed, so zones called in the template (via the `{zone}` plugin) are
+     * not called. In this case, meta plugin of their templates are not processed.
+     *
+     * In order to process meta of children zone, we catch all calls of methods
+     * of the global response object (did by the meta plugins), to generate a
+     * function that will do same calls when getting the cache content of the
+     * zone.
+     *
+     * FIXME: see if a better solution could be the creating of a jZone::meta()
+     * that will do a jTpl::meta() of its template, and jZone::meta() would be
+     * added into the meta content function of the generated template by the
+     * '{zone}' plugin.
+     *
+     * @return array
+     */
+    protected function _generateContentAndCatchMetaCalls() {
+        $response = jApp::coord()->response;
+        $sniffer = new jMethodSniffer( $response, '$resp', array('getType', 'getFormatType'));
+        jApp::coord()->response = $sniffer;
+        $content = $this->_createContent();
+        jApp::coord()->response = $response;
+        return array($content, (string)$sniffer);
     }
 
     /**
@@ -218,7 +233,7 @@ class jZone {
 
     /**
     * create the content of the zone
-    * by default, it uses a template, and so prepare a jtpl object to use in _prepareTpl.
+    * by default, it uses a template, and so prepare a jTpl object to use in _prepareTpl.
     * zone parameters are automatically assigned in the template
     * If you don't want a template, override it in your class
     * @return string generated content
@@ -227,7 +242,9 @@ class jZone {
         $this->_tpl = new jTpl();
         $this->_tpl->assign($this->_params);
         $this->_prepareTpl();
-        if($this->_tplname == '') return '';
+        if ($this->_tplname == '') {
+            return '';
+        }
         return $this->_tpl->fetch($this->_tplname, $this->_tplOutputType);
     }
 

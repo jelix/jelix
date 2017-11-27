@@ -103,13 +103,18 @@ class jFile {
      * @since 1.1.10
      */
     public static function getMimeTypeFromFilename($fileName){
-        $mimetype = File::getMimeTypeFromFilename($fileName);
-        if ($mimetype == 'application/octet-stream' &&
-            jApp::config() &&
-            isset(jApp::config()->mimeTypes[$ext])) {
-            return jApp::config()->mimeTypes[$ext];
+        if (jApp::config() &&
+            ! property_exists(jApp::config(), 'FileMimeTypeRegistered')
+        ) {
+            jApp::config()->FileMimeTypeRegistered = true;
+            if (property_exists(jApp::config(), 'mimeTypes') &&
+                is_array(jApp::config()->mimeTypes)
+            ) {
+                File::registerMimeTypes(jApp::config()->mimeTypes);
+            }
         }
-        return $mimetype;
+
+        return File::getMimeTypeFromFilename($fileName);
     }
 
     /**

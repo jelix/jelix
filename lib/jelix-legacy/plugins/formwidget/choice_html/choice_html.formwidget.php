@@ -6,7 +6,7 @@
 * @author      Claudio Bernardes
 * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
 * @copyright   2012 Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
+* @copyright   2006-2012 Laurent Jouanneau, 2008-2015 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -29,9 +29,9 @@
  * c2.addControl(c, 'choice3');
  * c2.addControl(c, 'choice4');
  * c2.addControl(c, 'choice4');
- * c2.activate(''); 
+ * c2.activate('');
  */
- 
+
 class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                             implements \jelix\forms\HtmlWidget\ParentWidgetInterface {
 
@@ -80,6 +80,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             else
                 $value='';
         }
+        $value = (string) $value;
 
         $i=0;
         $attr['name'] = $ctrl->ref;
@@ -93,16 +94,16 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         foreach( $ctrl->items as $itemName=>$listctrl){
             if (!$ctrl->isItemActivated($itemName))
                 continue;
-            echo '<li id="'.$id.$itemName.'_item"><label><input';
+            echo '<li id="'.$id.$itemName.'_item"><input';
             $attr['id'] = $id.$i;
             $attr['value'] = $itemName;
-            if ($itemName==$value)
+            if ((string) $itemName===$value)
                 $attr['checked'] = 'checked';
             else
                 unset($attr['checked']);
             $this->_outputAttr($attr);
-            echo ' onclick="'.$jFormsJsVarName.'.getForm(\'',$this->builder->getName(),'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', '/>';
-            echo htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
+            echo ' onclick="'.$jFormsJsVarName.'.getForm(\'',$this->builder->getName(),'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
+            echo '<label for="',$attr['id'],'">',htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
 
             $displayedControls = false;
             foreach($listctrl as $ref=>$c) {

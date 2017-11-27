@@ -4,7 +4,7 @@
 * @subpackage jelix
 * @author     Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright  2010-2015 Laurent Jouanneau
+* @copyright  2010-2017 Laurent Jouanneau
 * @copyright  2015 Julien Issler
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
@@ -25,7 +25,7 @@ class jformsCtrl extends jController {
         try {
             $form = jForms::get($this->param('__form'), $this->param('__formid'));
             if (!$form) {
-                throw new Exception ('dummy');
+                throw new Exception ('Unknown form');
             }
         }
         catch(Exception $e) {
@@ -76,5 +76,27 @@ class jformsCtrl extends jController {
         return $rep;
     }
 
+    /**
+     * generates the javascript that verifies the form
+     * @return jResponse
+     * @throws Exception
+     */
+    public function js() {
+        $rep = $this->getResponse('text', true);
+
+        try {
+            $form = jForms::get($this->param('__form'), $this->param('__fid'));
+            if (!$form) {
+                throw new Exception ('Unknown form');
+            }
+        }
+        catch(Exception $e) {
+            throw new Exception ('invalid form selector');
+        }
+
+        $rep->content = $form->getContainer()->privateData['__jforms_js'];
+        $rep->mimeType = 'application/javascript';
+        return $rep;
+    }
 }
 
