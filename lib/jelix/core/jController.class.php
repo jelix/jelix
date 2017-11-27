@@ -136,7 +136,7 @@ abstract class jController{
      * get a response object.
      * @param string $name the name of the response type (ex: "html")
      * @param boolean $useOriginal true:don't use the response object redefined by the application
-     * @return jResponse the response object
+     * @return jResponse|jResponseHtml|jResponseRedirect|jResponseJson the response object
      */
     protected function getResponse($name='', $useOriginal=false){
         return $this->request->getResponse($name, $useOriginal);
