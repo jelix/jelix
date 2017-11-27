@@ -10,7 +10,6 @@
 * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
 */
 
-require_once(__DIR__."/../classes/AclAdminUIException.php");
 
 class usersCtrl extends jController {
 
@@ -22,7 +21,7 @@ class usersCtrl extends jController {
         'addgroup'=>array('jacl2.rights.and'=>array('acl.user.view','acl.user.modify')),
     );
 
-    protected function checkException(AclAdminUIException $e, $category) {
+    protected function checkException(jAcl2DbAdminUIException $e, $category) {
         if ($e->getCode() == 1) {
             jMessage::add(jLocale::get('acl2.error.invalid.user'), 'error');
         }
@@ -58,10 +57,10 @@ class usersCtrl extends jController {
             $groups[]=$grp;
         }
 
-        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $manager = new jAcl2DbAdminUIManager();
         $listPageSize = 15;
         $offset = $this->param('idx', 0, true);
-        $grpid = $this->param('grpid', AclAdminUIManager::FILTER_GROUP_ALL_USERS, true);
+        $grpid = $this->param('grpid', jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, true);
         $filter = trim($this->param('filter'));
         $tpl = new jTpl();
 
@@ -69,7 +68,7 @@ class usersCtrl extends jController {
             $tpl->assign($manager->getUsersList($grpid, null, $filter, $offset, $listPageSize));
         }
         else {
-            $tpl->assign($manager->getUsersList(AclAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
+            $tpl->assign($manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
         }
 
         $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter'));
@@ -99,10 +98,10 @@ class usersCtrl extends jController {
         }
 
         try {
-            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $manager = new jAcl2DbAdminUIManager();
             $data = $manager->getUserRights($user);
         }
-        catch (AclAdminUIException $e) {
+        catch (jAcl2DbAdminUIException $e) {
             $rep->body->assign('MAIN', '<p>'.$e->getMessage().'</p>');
             return $rep;
         }
@@ -134,11 +133,11 @@ class usersCtrl extends jController {
         $rep->action = 'jacl2db_admin~users:rights';
         $rep->params = array('user'=>$login);
         try {
-            $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+            $manager = new jAcl2DbAdminUIManager();
             $manager->saveUserRights($login, $rights, jAuth::getUserSession()->login);
             jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         }
-        catch (AclAdminUIException $e) {
+        catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'saveuserrights');
         }
 
@@ -154,7 +153,7 @@ class usersCtrl extends jController {
             return $rep;
         }
 
-        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $manager = new jAcl2DbAdminUIManager();
         $data = $manager->getUserRessourceRights($user);
 
         $tpl = new jTpl();
@@ -183,7 +182,7 @@ class usersCtrl extends jController {
         $rep->action = 'jacl2db_admin~users:rightres';
         $rep->params = array('user'=>$login);
 
-        $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+        $manager = new jAcl2DbAdminUIManager();
         $manager->removeUserRessourceRights($login, $subjects);
 
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
@@ -198,10 +197,10 @@ class usersCtrl extends jController {
             $rep->action = 'jacl2db_admin~users:rights';
             $rep->params = array('user'=>$login);
             try {
-                $manager = jClasses::create("jacl2db_admin~AclAdminUIManager");
+                $manager = new jAcl2DbAdminUIManager();
                 $manager->removeUserFromGroup($login, $this->param('grpid'));
             }
-            catch (AclAdminUIException $e) {
+            catch (jAcl2DbAdminUIException $e) {
                 $this->checkException($e, 'removeuserfromgroup');
             }
         }

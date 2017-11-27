@@ -89,6 +89,8 @@ cd lib/jelix-modules/jacl2db
 * module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
+  jAcl2DbAdminUIManager.class.php
+  jAcl2DbAdminUIException.php
 !  jacl2db.listener.php
   jAcl2DbUserGroup.class.php
   jAcl2DbManager.class.php

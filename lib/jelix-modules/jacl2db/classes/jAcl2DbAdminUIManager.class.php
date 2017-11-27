@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
+ * @package     jelix_modules
+ * @subpackage  jacl2db
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah
  * @copyright   2008-2017 Laurent Jouanneau
@@ -11,9 +11,7 @@
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
 
-require_once(__DIR__."/AclAdminUIException.php");
-
-class AclAdminUIManager {
+class jAcl2DbAdminUIManager {
 
     const FILTER_GROUP_ALL_USERS = -2;
     const FILTER_USERS_NO_IN_GROUP = -1;
@@ -149,10 +147,10 @@ class AclAdminUIManager {
 
         $checking = jAcl2DbManager::checkAclAdminRightsChanges($rights, $sessionUser);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
-            throw new AclAdminUIException("Changes cannot be applied: You won't be able to change some rights", 3);
+            throw new jAcl2DbAdminUIException("Changes cannot be applied: You won't be able to change some rights", 3);
         }
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
-            throw new AclAdminUIException("Changes cannot be applied: nobody will be able to change some rights", 2);
+            throw new jAcl2DbAdminUIException("Changes cannot be applied: nobody will be able to change some rights", 2);
         }
 
         foreach(jAcl2DbUserGroup::getGroupList() as $grp) {
@@ -258,7 +256,7 @@ class AclAdminUIManager {
     /**
      * @param string $user
      * @return array
-     * @throws AclAdminUIException
+     * @throws jAcl2DbAdminUIException
      */
     public function getUserRights($user) {
 
@@ -268,7 +266,7 @@ class AclAdminUIManager {
         $cond->addCondition('login', '=', $user);
         $cond->addCondition('grouptype', '=', jAcl2DbUserGroup::GROUPTYPE_PRIVATE);
         if ($dao->countBy($cond)==0) {
-            throw new AclAdminUIException('Invalid user', 1);
+            throw new jAcl2DbAdminUIException('Invalid user', 1);
         }
 
         // retrieve groups of the user
@@ -338,10 +336,10 @@ class AclAdminUIManager {
 
         $checking = jAcl2DbManager::checkAclAdminRightsChanges($rights, $sessionUser, false, true);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
-            throw new AclAdminUIException("Changes cannot be applied: You won't be able to change some rights", 3);
+            throw new jAcl2DbAdminUIException("Changes cannot be applied: You won't be able to change some rights", 3);
         }
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
-            throw new AclAdminUIException("Changes cannot be applied: nobody will be able to change some rights", 2);
+            throw new jAcl2DbAdminUIException("Changes cannot be applied: nobody will be able to change some rights", 2);
         }
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $userRights);
@@ -405,10 +403,10 @@ class AclAdminUIManager {
         $checking = jAcl2DbManager::checkAclAdminRightsChanges($rights, $sessionUser, false, true);
 
         if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
-            throw new AclAdminUIException("Group cannot be removed, else you wouldn't manage acl anymore", 3);
+            throw new jAcl2DbAdminUIException("Group cannot be removed, else you wouldn't manage acl anymore", 3);
         }
         if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
-            throw new AclAdminUIException("Group cannot be removed, else acl management is not possible anymore", 2);
+            throw new jAcl2DbAdminUIException("Group cannot be removed, else acl management is not possible anymore", 2);
         }
         jAcl2DbUserGroup::removeGroup($groupId);
     }
@@ -417,10 +415,10 @@ class AclAdminUIManager {
         $checking = jAcl2DbManager::checkAclAdminRightsChanges(array(), $sessionUser, false, true, $login, $groupId);
 
         if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
-            throw new AclAdminUIException("User cannot be removed from group, else you wouldn't manage acl anymore", 3);
+            throw new jAcl2DbAdminUIException("User cannot be removed from group, else you wouldn't manage acl anymore", 3);
         }
         if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
-            throw new AclAdminUIException("User cannot be removed from group, else acl management is not possible anymore", 2);
+            throw new jAcl2DbAdminUIException("User cannot be removed from group, else acl management is not possible anymore", 2);
         }
         jAcl2DbUserGroup::removeUserFromGroup($login, $groupId);
     }

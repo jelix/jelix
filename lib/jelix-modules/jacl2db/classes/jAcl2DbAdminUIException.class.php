@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
+ * @package     jelix_modules
+ * @subpackage  jacl2db
  * @author      Laurent Jouanneau
  * @copyright   2017 Laurent Jouanneau
  * @link        http://jelix.org
@@ -9,6 +9,6 @@
  */
 
 
-class AclAdminUIException extends Exception {
+class jAcl2DbAdminUIException extends Exception {
 
 }
