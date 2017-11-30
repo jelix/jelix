@@ -147,8 +147,8 @@ class sqlsrvDbTools extends jDbTools {
             if ($line->IS_NULLABLE == 'No'){
                 $field->notNull = false;
             }
-            $field->hasDefault = false;
-            $field->default = '';
+            $field->hasDefault = ($line->COLUMN_DEF !== '');
+            $field->default = $line->COLUMN_DEF;
             if(in_array($field->name, $pkeys)){
                 $field->primary = true;
             }

@@ -17,6 +17,13 @@
  */
 class sqliteDbTable extends jDbTable {
 
+    public function getPrimaryKey() {
+        if ($this->primaryKey === null) {
+            $this->_loadColumns();
+        }
+        return $this->primaryKey;
+    }
+
     protected function _loadColumns() {
         $conn = $this->schema->getConn();
         $this->columns = array();
@@ -56,7 +63,16 @@ class sqliteDbTable extends jDbTable {
             if ($col->type == 'integer' && $isPrimary) {
                 $col->autoIncrement = true;
             }
+            if ($isPrimary) {
+                if (!$this->primaryKey)
+                    $this->primaryKey = new jDbPrimaryKey($c->name);
+                else
+                    $this->primaryKey->columns[] = $c->name;
+            }
             $this->columns[$col->name] = $col;
+        }
+        if ($this->primaryKey === null) {
+            $this->primaryKey = false;
         }
     }
 

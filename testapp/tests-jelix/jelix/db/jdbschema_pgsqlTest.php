@@ -48,5 +48,113 @@ class jDbSchema_pgsqlTest extends jUnitTestCase {
         $this->assertEquals($goodList, $tables);
     }
 
+    function testTable() {
+        $db = jDb::getConnection('testapp_pgsql');
+        $schema = $db->schema();
+
+        $table = $schema->getTable('product_test');
+
+        $this->assertNotNull($table);
+
+        $this->assertEquals('product_test', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
+        $verif='<array>
+    <object class="jDbColumn" key="id">
+        <string property="type" value="integer" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="true"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <string property="sequence" value="product_test_id_seq" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="jDbColumn" key="name">
+        <string property="type" value="character" />
+        <string property="name" value="name" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="150"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="150"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="jDbColumn" key="price">
+        <string property="type" value="real" />
+        <string property="name" value="price" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="jDbColumn" key="create_date">
+        <string property="type" value="time" />
+        <string property="name" value="create_date" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="8"/>
+        <integer property="maxLength" value="8"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="jDbColumn" key="promo">
+        <string property="type" value="boolean" />
+        <string property="name" value="promo" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="false"/>
+        <string property="default" value=""/>
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="minValue" value="0"/>
+        <integer property="maxValue" value="1"/>
+    </object>
+</array>';
+
+        $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+    }
+
 }
 
