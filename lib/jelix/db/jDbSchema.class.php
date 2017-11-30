@@ -126,7 +126,14 @@ abstract class jDbSchema {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
 
-        if ($col->length) {
+        if ($col->precision) {
+            $colstr .= '('.$col->precision;
+            if($col->scale) {
+                $colstr .= ','.$col->scale;
+            }
+            $colstr .= ')';
+        }
+        else if ($col->length) {
             $colstr .= '('.$col->length.')';
         }
 

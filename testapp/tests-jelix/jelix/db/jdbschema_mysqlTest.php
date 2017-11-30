@@ -46,8 +46,7 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
 
         $table = $schema->getTable('product_test');
 
-        if (!$this->assertNotNull($table))
-            return;
+        $this->assertNotNull($table);
 
         $this->assertEquals('product_test', $table->getName());
 
@@ -65,6 +64,8 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="false"/>
         <integer property="length" value="0"/>
+        <integer property="precision" value="11"/>
+        <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <null property="minLength"/>
@@ -82,6 +83,8 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="false"/>
         <integer property="length" value="150"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <integer property="minLength" value="0"/>
@@ -97,6 +100,8 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="false"/>
         <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <null property="minLength"/>
@@ -112,6 +117,8 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         <null property="default" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <integer property="minLength" value="19"/>
@@ -124,9 +131,11 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         <string property="name" value="promo" />
         <boolean property="notNull" value="true"/>
         <boolean property="autoIncrement" value="false"/>
-        <string property="default" value=""/>
-        <boolean property="hasDefault" value="false"/>
+        <string property="default" value="0"/>
+        <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
+        <integer property="precision" value="1"/>
+        <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
         <null property="minLength"/>

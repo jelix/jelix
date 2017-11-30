@@ -260,6 +260,37 @@ abstract class jDbTable {
 
     abstract protected function _dropReference(jDbReference $ref);
 
+
+    protected function parseType($type) {
+        $length = 0;
+        $scale = 0;
+        $precision = 0;
+        $tail = '';
+        if (preg_match('/^(\w+)\s*(\(\s*(\d+)(,(\d+))?\s*\))?(.*)$/',$type, $m)) {
+            $type = strtolower($m[1]);
+            if (isset($m[3])) {
+                $tools = $this->schema->getConn()->tools();
+                $phpType =  $tools->unifiedToPHPType($tools->getTypeInfo($type)[1]);
+                if ($phpType == 'string') {
+                    $length = intval($m[3]);
+                }
+                else {
+                    $precision = intval($m[3]);
+                }
+            }
+            if (isset($m[4]) && $m[5]) {
+                $precision = $length;
+                $length = 0;
+                $scale = intval($m[5]);
+            }
+            if (isset($m[6])) {
+                $tail = $m[6];
+            }
+
+        }
+        return array($type, $length, $precision, $scale, $tail);
+    }
+
 }
 
 

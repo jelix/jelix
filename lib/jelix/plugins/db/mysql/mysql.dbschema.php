@@ -23,19 +23,12 @@ class mysqlDbTable extends jDbTable {
         $this->primaryKey = false;
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
-        $rs = $conn->query ('SHOW FIELDS FROM '.$conn->encloseName($this->name));
+        $rs = $conn->query ('SHOW FULL FIELDS FROM '.$conn->encloseName($this->name));
 
         while ($line = $rs->fetch ()) {
 
-            $length = 0;
-            if (preg_match('/^(\w+)\s*(\((\d+)\))?.*$/',$line->Type,$m)) {
-                $type = strtolower($m[1]);
-                if ($type == 'varchar' && isset($m[3])) {
-                    $length = intval($m[3]);
-                }
-            } else {
-                $type = $line->Type;
-            }
+            list($type, $length, $precision, $scale) = $this->parseType($line->Type);
+
             $notNull = ($line->Null == 'NO');
             $autoIncrement  = ($line->Extra == 'auto_increment');
             $hasDefault = ($line->Default != '' || !($line->Default == null && $notNull));
@@ -54,8 +47,11 @@ class mysqlDbTable extends jDbTable {
             $col->minValue = $typeinfo[2];
             $col->maxLength = $typeinfo[5];
             $col->minLength = $typeinfo[4];
-            if ($col->length !=0)
+            $col->precision = $precision;
+            $col->scale = $scale;
+            if ($col->length !=0) {
                 $col->maxLength = $col->length;
+            }
 
             if ($line->Key == 'PRI') {
                 if (!$this->primaryKey)

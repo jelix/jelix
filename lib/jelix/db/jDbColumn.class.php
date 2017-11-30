@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @copyright  2010 Laurent Jouanneau
+* @copyright  2010-2017 Laurent Jouanneau
 *
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -120,10 +120,23 @@ class jDbColumn {
     public $hasDefault = false;
 
     /**
-     *
+     * The length for a string
+     * @var int
      */
     public $length = 0;
-    
+
+    /**
+     * The precision for a number
+     * @var int
+     */
+    public $precision = 0;
+
+    /**
+     * The scale for a number (value after the coma, in the precision)
+     * @var int
+     */
+    public $scale = 0;
+
      /**
      * if there is a sequence
      * @var string

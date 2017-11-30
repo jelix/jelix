@@ -27,24 +27,19 @@ class sqlite3DbTable extends jDbTable {
             $hasDefault = false;
             $default = null;
             $isPrimary  = ($c->pk == 1);
-            $notNull   = ($c->notnull == '99' || $c->pk == 1);
+            $notNull   = ($c->notnull != 0 || $c->pk == 1);
+
+            list($type, $length, $precision, $scale, $tail) = $this->parseType($c->type);
+            $autoIncrement = false;
+            if (strtolower($tail) == 'auto_increment') {
+                $autoIncrement = true;
+            }
 
             if (!$isPrimary) {
                 if ($c->dflt_value !== null || ($c->dflt_value === null && !$notNull)) {
                     $hasDefault = true;
-                    $default =  $c->dflt_value;
+                    $default = ($c->dflt_value === 'NULL'?null:$c->dflt_value);
                 }
-            }
-
-            $length = 0;
-            if (preg_match('/^(\w+)\s*(\((\d+)\))?.*$/',$c->type,$m)) {
-                $type = strtolower($m[1]);
-                if (isset($m[3])) {
-                    $length = intval($m[3]);
-                }
-            }
-            else {
-                $type = $c->type;
             }
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
@@ -55,12 +50,13 @@ class sqlite3DbTable extends jDbTable {
             $col->minValue = $typeinfo[2];
             $col->maxLength = $typeinfo[5];
             $col->minLength = $typeinfo[4];
-
-            if ($col->length !=0)
+            $col->precision = $precision;
+            $col->scale = $scale;
+            if ($col->length !=0) {
                 $col->maxLength = $col->length;
+            }
+            $col->autoIncrement = $autoIncrement || $typeinfo[6];
 
-            if ($col->type == 'integer' && $isPrimary) {
-                $col->autoIncrement = true;
             }
             $this->columns[$col->name] = $col;
         }
@@ -75,27 +71,27 @@ class sqlite3DbTable extends jDbTable {
     }
 
     protected function _loadIndexesAndKeys() {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_loadIndexesAndKeys Not Implemented');
     }
 
     protected function _createIndex(jDbIndex $index) {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_createIndex Not Implemented');
     }
 
     protected function _dropIndex(jDbIndex $index) {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_dropIndex Not Implemented');
     }
 
     protected function _loadReferences() {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_loadReferences Not Implemented');
     }
 
     protected function _createReference(jDbReference $ref) {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_createReference Not Implemented');
     }
 
     protected function _dropReference(jDbReference $ref) {
-        throw new Exception ('Not Implemented');
+        throw new Exception ('_dropReference Not Implemented');
     }
 
 }

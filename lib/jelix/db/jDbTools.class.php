@@ -155,8 +155,9 @@ abstract class jDbTools {
         if(isset($this->typesInfo[$nativeType])) {
             $r = $this->typesInfo[$nativeType];
         }
-        else 
+        else {
             $r = $this->typesInfo['varchar'];
+        }
         $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' || $nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
         return $r;
     }

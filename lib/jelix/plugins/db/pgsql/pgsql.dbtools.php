@@ -132,7 +132,7 @@ class pgsqlDbTools extends jDbTools {
         $tableName = $this->_conn->prefixTable($tableName);
 
         // get table informations
-        $sql =' SELECT pg_class.oid, pg_class.relhaspkey, pg_class.relhasindex';
+        $sql ='SELECT pg_class.oid, pg_class.relhaspkey, pg_class.relhasindex';
         $sql.=' FROM pg_class';
         if(!empty($schemaName)){
             $sql.= ' JOIN pg_catalog.pg_namespace n ON n.oid = pg_class.relnamespace';

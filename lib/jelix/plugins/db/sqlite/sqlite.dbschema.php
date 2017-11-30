@@ -36,16 +36,7 @@ class sqliteDbTable extends jDbTable {
                 }
             }
 
-            $length = 0;
-            if (preg_match('/^(\w+)\s*(\((\d+)\))?.*$/',$c->type,$m)) {
-                $type = strtolower($m[1]);
-                if (isset($m[3])) {
-                    $length = intval($m[3]);
-                }
-            }
-            else {
-                $type = $c->type;
-            }
+            list($type, $length, $precision, $scale) = $this->parseType($c->type);
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
 
@@ -55,6 +46,8 @@ class sqliteDbTable extends jDbTable {
             $col->minValue = $typeinfo[2];
             $col->maxLength = $typeinfo[5];
             $col->minLength = $typeinfo[4];
+            $col->precision = $precision;
+            $col->scale = $scale;
 
             if ($col->length !=0)
                 $col->maxLength = $col->length;
