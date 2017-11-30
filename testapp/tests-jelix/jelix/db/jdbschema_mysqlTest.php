@@ -20,6 +20,7 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
 
     function testTableList() {
         $db = jDb::getConnection();
+        $db->exec('DROP TABLE IF EXISTS test_prod');
         $schema = $db->schema();
 
         $goodList = array('jacl_group', 'jacl_right_values', 'jacl_right_values_group',
@@ -153,7 +154,7 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
     function testCreateTable() {
         $db = jDb::getConnection();
         $schema = $db->schema();
-
+        $db->exec('DROP TABLE IF EXISTS test_prod');
 
         $columns = array();
         $col = new jDbColumn('id', 'int', 0, false, null, true);
@@ -222,6 +223,9 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         $this->assertComplexIdenticalStr($list['product_id'], $obj);
     }
 
+    /**
+     * @depends testCreateTable
+     */
     function testReferences() {
         $db = jDb::getConnection();
         $schema = $db->schema();
@@ -247,6 +251,9 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
         $this->assertEquals('', $ref->onDelete);
     }
 
+    /**
+     * @depends testReferences
+     */
     function testDropTable() {
 
         $db = jDb::getConnection();

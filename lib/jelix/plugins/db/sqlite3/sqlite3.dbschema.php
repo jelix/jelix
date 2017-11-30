@@ -91,6 +91,12 @@ class sqlite3DbTable extends jDbTable {
     }
 
     protected function _createIndex(jDbIndex $index) {
+        /*
+        [ CONSTRAINT constraint_name ] {
+            UNIQUE ( column_name [, ... ] ) |
+            PRIMARY KEY ( column_name [, ... ] )
+        }
+        */
         throw new Exception ('_createIndex Not Implemented');
     }
 
@@ -103,6 +109,12 @@ class sqlite3DbTable extends jDbTable {
     }
 
     protected function _createReference(jDbReference $ref) {
+        /* [ CONSTRAINT constraint_name ]
+            {
+              FOREIGN KEY ( column_name [, ... ] )
+                    REFERENCES reftable [ ( refcolumn [, ... ] ) ]
+            }
+        */
         throw new Exception ('_createReference Not Implemented');
     }
 
@@ -121,24 +133,13 @@ class sqlite3DbSchema extends jDbSchema {
 
     protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
 
-        $cols = array();
-
-        if (is_string($primaryKey))
-            $primaryKey = array($primaryKey);
-
-        foreach ($columns as $col) {
-            $cols[] = $this->_prepareSqlColumn($col);
-        }
-
-        $sql = 'CREATE TABLE '.$name.' ('.implode(", ",$cols);
-        if (count($primaryKey))
-            $sql .= ', CONSTRAINT '.$name.'_pkey PRIMARY KEY ('.implode(',',$primaryKey).') ';
-        $sql .= ')';
-
+        $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
         $this->conn->exec($sql);
         $table = new sqlite3DbTable($name, $this);
         return $table;
     }
+
+    protected $supportAutoIncrement = true;
 
     protected function _getTables() {
         $results = array ();

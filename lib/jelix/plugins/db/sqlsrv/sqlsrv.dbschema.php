@@ -129,8 +129,15 @@ class sqlsrvDbTable extends jDbTable {
  * @subpackage db_driver
  */
 class sqlsrvDbSchema extends jDbSchema {
-    protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
-        throw new Exception ('Not Implemented');
+
+    protected function _createTable($name, $columns, $primaryKeys, $attributes = array()) {
+        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+
+        $this->conn->exec($sql);
+
+        $table = new sqlsrvDbTable($name, $this);
+        $table->attributes = $attributes;
+        return $table;
     }
 
     protected function _getTables() {

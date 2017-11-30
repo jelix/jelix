@@ -35,11 +35,12 @@ abstract class jDbSchema {
     }
 
     /**
-     * create the given table
+     * create the given table if it does not exist
+     *
      * @param string $name
-     * @param array $columns list of jDbColumn
-     * @param string|array $primaryKey the name of the column which contains the primary key
-     * @param array $attributes
+     * @param jDbColumn[] $columns list of columns
+     * @param string|string[] $primaryKey the name of the column which contains the primary key
+     * @param array $attributes  some table attributes specific to the database
      * @return jDbTable the object corresponding to the created table
      */
     function createTable($name, $columns, $primaryKey, $attributes = array()) {
@@ -127,6 +128,41 @@ abstract class jDbSchema {
      */
     abstract protected function _createTable($name, $columns, $primaryKey, $attributes = array());
 
+
+    protected function _createTableQuery($name, $columns, $primaryKey, $attributes = array()) {
+        $cols = array();
+
+        if (is_string($primaryKey)) {
+            $primaryKey = array($primaryKey);
+        }
+
+        foreach ($columns as $col) {
+            $isPk = (in_array($col->name, $primaryKey) && count($primaryKey) == 1);
+            $cols[] = $this->_prepareSqlColumn($col, $isPk);
+        }
+
+        if (isset($attributes['temporary']) && $attributes['temporary']) {
+            $sql = 'CREATE TEMPORARY TABLE ';
+        }
+        else {
+            $sql = 'CREATE TABLE ';
+        }
+
+        $sql .= $this->conn->encloseName($name).' ('.implode(", ",$cols);
+        if (count($primaryKey) > 1) {
+            $pkName = $this->conn->encloseName($name.'_pkey');
+            $pkEsc = array();
+            foreach($primaryKey as $k) {
+                $pkEsc[] = $this->conn->encloseName($k);
+            }
+            $sql .= ', CONSTRAINT '.$pkName.' PRIMARY KEY ('.implode(',', $pkEsc).')';
+        }
+
+        $sql .= ')';
+        return $sql;
+    }
+
+
     abstract protected function _getTables();
 
     protected function _dropTable($name) {
@@ -140,6 +176,8 @@ abstract class jDbSchema {
 
     abstract protected function _getTableInstance($name);
 
+    protected $supportAutoIncrement = false;
+
     /**
      * return the SQL string corresponding to the given column.
      * private method, should be used only by a jDbTable object
@@ -147,7 +185,7 @@ abstract class jDbSchema {
      * @return string the sql string
      * @access private
      */
-    function _prepareSqlColumn($col) {
+    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
 
@@ -162,15 +200,24 @@ abstract class jDbSchema {
             $colstr .= '('.$col->length.')';
         }
 
-        $colstr.= ($col->notNull?' NOT NULL':' NULL');
+        if ($isSinglePrimaryKey && $this->supportAutoIncrement && $col->autoIncrement) {
+            $colstr.= ' AUTO_INCREMENT ';
+        }
 
-        if ($col->hasDefault && !$col->autoIncrement) {
+        $colstr.= ($col->notNull?' NOT NULL':'');
+
+        if ($col->hasDefault && !$col->autoIncrement && !$isSinglePrimaryKey) {
             if (!($col->notNull && $col->default === null)) {
-                if ($col->default === null)
+                if ($col->default === null) {
                     $colstr .= ' DEFAULT NULL';
-                else
-                    $colstr .= ' DEFAULT '.$this->conn->quote($col->default);
+                }
+                else {
+                    $colstr .= ' DEFAULT ' . $this->conn->quote($col->default);
+                }
             }
+        }
+        if ($isSinglePrimaryKey) {
+            $colstr .= ' PRIMARY KEY ';
         }
         return $colstr;
     }

@@ -20,6 +20,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
 
     function testTableList() {
         $db = jDb::getConnection('testapp_sqlite3');
+        $db->exec('DROP TABLE IF EXISTS test_prod');
         $schema = $db->schema();
 
         $goodList = array('products', 'product_test');
@@ -141,6 +142,130 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
 
         $this->assertComplexIdenticalStr($table->getColumns(), $verif);
     }
+
+
+    function testCreateTable()
+    {
+        $db = jDb::getConnection('testapp_sqlite3');
+        $db->exec('DROP TABLE IF EXISTS test_prod');
+        $schema = $db->schema();
+
+
+        $columns = array();
+        $col = new jDbColumn('id', 'integer', 0, false, null, true);
+        $col->autoIncrement = true;
+        $columns[] = $col;
+        $columns[] = new jDbColumn('name', 'string', 50);
+        $columns[] = new jDbColumn('price', 'double');
+        $columns[] = new jDbColumn('promo', 'boolean');
+        $columns[] = new jDbColumn('product_id', 'int');
+
+        $schema->createTable('test_prod', $columns, 'id');
+
+        $table = new sqlite3DbTable('test_prod', $schema);
+
+        $this->assertEquals('test_prod', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+
+        $is64bits = ( PHP_INT_SIZE*8 == 64 );
+
+        $verif='<array>
+    <object class="jDbColumn" key="id">
+        <string property="type" value="integer" />
+        <string property="name" value="id" />
+        <boolean property="notNull" value="true"/>
+        <boolean property="autoIncrement" value="true"/>
+        <string property="default" value="" />
+        <boolean property="hasDefault" value="false"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="jDbColumn" key="name">
+        <string property="type" value="varchar" />
+        <string property="name" value="name" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <null property="default" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="50"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <integer property="minLength" value="0"/>
+        <integer property="maxLength" value="50"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="jDbColumn" key="price">
+        <string property="type" value="double" />
+        <string property="name" value="price" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <null property="default" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <null property="minValue"/>
+        <null property="maxValue"/>
+    </object>
+    <object class="jDbColumn" key="product_id">
+        <string property="type" value="integer" />
+        <string property="name" value="product_id" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <null property="default" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>'.
+            ($is64bits ?
+                '<integer property="minValue" value="-2147483648"/>' :
+                '<double property="minValue" value="-2147483648"/>').
+            '<integer property="maxValue" value="2147483647"/>
+    </object>
+    <object class="jDbColumn" key="promo">
+        <string property="type" value="bool" />
+        <string property="name" value="promo" />
+        <boolean property="notNull" value="false"/>
+        <boolean property="autoIncrement" value="false"/>
+        <null property="default" />
+        <boolean property="hasDefault" value="true"/>
+        <integer property="length" value="0"/>
+        <integer property="precision" value="0"/>
+        <integer property="scale" value="0"/>
+        <boolean property="sequence" value="false" />
+        <boolean property="unsigned" value="false" />
+        <null property="minLength"/>
+        <null property="maxLength"/>
+        <integer property="minValue" value="0"/>
+        <integer property="maxValue" value="1"/>
+    </object>
+</array>';
+
+        $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+    }
+
 }
 
 

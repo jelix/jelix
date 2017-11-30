@@ -71,26 +71,21 @@ class mysqlDbTable extends jDbTable {
         $conn = $this->schema->getConn();
 
         $pk = $this->getPrimaryKey();
-        $isPk = ($pk && in_array($new->name, $pk->columns));
+        $isPk = ($pk && in_array($new->name, $pk->columns) && count($pk->columns) == 1);
 
 		$sql = 'ALTER TABLE '.$conn->encloseName($this->name)
                 .' CHANGE COLUMN '.$conn->encloseName($old->name)
-                .' '.$this->schema->_prepareSqlColumn($new);
-        if ($isPk && $old->autoIncrement)
-            $sql .= ' AUTO_INCREMENT';
+                .' '.$this->schema->_prepareSqlColumn($new, $isPk);
 		$conn->exec($sql);
     }
 
     protected function _addColumn(jDbColumn $new) {
         $conn = $this->schema->getConn();
         $pk = $this->getPrimaryKey();
-        $isPk = ($pk && in_array($new->name, $pk->columns));
+        $isPk = ($pk && in_array($new->name, $pk->columns) && count($pk->columns) == 1);
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-                .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new);
-        if ($isPk && $new->autoIncrement)
-            $sql .= ' AUTO_INCREMENT';
-
-		$conn->exec($sql);
+                .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk);
+        $conn->exec($sql);
     }
 
 
@@ -241,30 +236,12 @@ class mysqlDbSchema extends jDbSchema {
 
     /**
      * @param string $name
-     * @param array[jDbColumn] $columns
+     * @param jDbColumn[] $columns
+     * @param string[]|string $primaryKey names of columns that represents primary keys
      * @return mysqlDbTable
      */
-    function _createTable($name, $columns, $primaryKey, $attributes=array()) {
-
-        $cols = array();
-
-        if (is_string($primaryKey))
-            $primaryKey = array($primaryKey);
-
-        foreach ($columns as $col) {
-            $colstr = $this->_prepareSqlColumn($col);
-
-            if (in_array($col->name, $primaryKey) && $col->autoIncrement) {
-                $colstr .= '  AUTO_INCREMENT';
-            }
-
-            $cols[] = $colstr;
-        }
-
-        $sql = 'CREATE TABLE '.$this->conn->encloseName($name).' ('.implode(", ",$cols);
-        if (count($primaryKey))
-            $sql .= ', PRIMARY KEY ('.implode(',', $primaryKey).')';
-        $sql .= ')';
+    function _createTable($name, $columns, $primaryKeys, $attributes=array()) {
+        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
 
         if (isset($attributes['engine'])) {
             $sql.= ' ENGINE='.$attributes['engine'];
@@ -281,6 +258,16 @@ class mysqlDbSchema extends jDbSchema {
         $table = new mysqlDbTable($name, $this);
         $table->attributes = $attributes;
         return $table;
+    }
+
+    protected $supportAutoIncrement = true;
+
+    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
+        $colStr = parent::_prepareSqlColumn($col, $isSinglePrimaryKey);
+        if ($col->comment) {
+            $colStr .= ' COMMENT '.$this->conn->quote($col->comment);
+        }
+        return $colStr;
     }
 
     protected function _getTables() {

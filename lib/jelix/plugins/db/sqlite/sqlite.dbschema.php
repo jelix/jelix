@@ -119,24 +119,13 @@ class sqliteDbSchema extends jDbSchema {
 
     protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
 
-        $cols = array();
-
-        if (is_string($primaryKey))
-            $primaryKey = array($primaryKey);
-
-        foreach ($columns as $col) {
-            $cols[] = $this->_prepareSqlColumn($col);
-        }
-
-        $sql = 'CREATE TABLE '.$name.' ('.implode(", ",$cols);
-        if (count($primaryKey))
-            $sql .= ', CONSTRAINT '.$name.'_pkey PRIMARY KEY ('.implode(',',$primaryKey).') ';
-        $sql .= ')';
-
+        $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
         $this->conn->exec($sql);
         $table = new sqliteDbTable($name, $this);
         return $table;
     }
+
+    protected $supportAutoIncrement = true;
 
     protected function _getTables() {
         $results = array ();

@@ -111,6 +111,13 @@ class pgsqlDbTable extends jDbTable {
     }
 
     protected function _createIndex(jDbIndex $index){
+        /*
+        [ CONSTRAINT constraint_name ]
+        {
+          UNIQUE ( column_name [, ... ] ) |
+          PRIMARY KEY ( column_name [, ... ] )
+        }
+        */
         throw new Exception("_createIndex Not Implemented");
     }
 
@@ -123,6 +130,11 @@ class pgsqlDbTable extends jDbTable {
     }
 
     protected function _createReference(jDbReference $ref){
+        /*[ CONSTRAINT constraint_name ]
+        {
+          FOREIGN KEY ( column_name [, ... ] )
+            REFERENCES reftable [ ( refcolumn [, ... ] ) ]
+        }*/
         throw new Exception("_createReference Not Implemented");
     }
 
@@ -142,7 +154,21 @@ class pgsqlDbSchema extends jDbSchema {
      *
      */
     function _createTable($name, $columns, $primaryKeys, $attributes=array()) {
-        throw new Exception("_createTable Not Implemented");
+        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+
+        $this->conn->exec($sql);
+
+        $table = new pgsqlDbTable($name, $this);
+        $table->attributes = $attributes;
+        return $table;
+    }
+
+    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
+        if ($isSinglePrimaryKey && $col->autoIncrement) {
+            $col->type = 'serial';
+        }
+        $colStr = parent::_prepareSqlColumn($col, $isSinglePrimaryKey);
+        return $colStr;
     }
 
     protected function _getTables () {

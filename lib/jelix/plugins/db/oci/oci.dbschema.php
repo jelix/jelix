@@ -154,9 +154,14 @@ class ociDbTable extends jDbTable {
  */
 class ociDbSchema extends jDbSchema {
 
-    protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
-        throw new Exception ('Not Implemented');
-        //return  new ociDbTable($this->schema->getConn()->prefixTable($name), $this);
+    protected function _createTable($name, $columns, $primaryKeys, $attributes = array()) {
+        $sql = $this->_createTableQuery($name, $columns, $primaryKeys, $attributes);
+
+        $this->conn->exec($sql);
+
+        $table = new ociDbTable($name, $this);
+        $table->attributes = $attributes;
+        return $table;
     }
 
     protected function _getTables() {

@@ -152,7 +152,9 @@ class jDbColumn {
     public $minValue = null;
     
     public $maxValue = null;
-    
+
+    public $comment = '';
+
     function __construct ($name, $type, $length=0, $hasDefault = false, $default = null, $notNull = false) {
         $this->type = $type;
         $this->name = $name;

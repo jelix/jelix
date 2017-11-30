@@ -18,8 +18,8 @@ class sqlite3DbTools extends jDbTools {
 
     protected $typesInfo = array(
       // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength
-      'bool'            =>array('integer',          'boolean',  0,           1,          null,     null),
-      'boolean'         =>array('integer',          'boolean',  0,           1,          null,     null),
+      'bool'            =>array('bool',          'boolean',  0,           1,          null,     null),
+      'boolean'         =>array('bool',          'boolean',  0,           1,          null,     null),
       'bit'             =>array('integer',          'integer',  0,           1,          null,     null),
       'tinyint'         =>array('integer',          'integer',  -128,        127,        null,     null),
       'smallint'        =>array('integer',          'integer',  -32768,      32767,      null,     null),
