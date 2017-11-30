@@ -151,6 +151,10 @@ class sqlite3DbSchema extends jDbSchema {
 
         return $results;
     }
+
+    protected function _getTableInstance($name) {
+        return new sqlite3DbTable($name, $this);
+    }
 }
 
 

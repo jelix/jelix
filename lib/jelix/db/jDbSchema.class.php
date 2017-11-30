@@ -99,6 +99,24 @@ abstract class jDbSchema {
         }
     }
 
+    public function renameTable($oldName, $newName) {
+        if ($this->tables === null) {
+            $this->tables = $this->_getTables();
+        }
+
+        if (isset($this->tables[$newName])) {
+            return $this->tables[$newName];
+        }
+
+        if (isset($this->tables[$oldName])) {
+            $this->_renameTable($oldName, $newName);
+            unset($this->tables[$oldName]);
+            $this->tables[$newName] = $this->_getTableInstance($newName);
+            return $this->tables[$newName];
+        }
+        return null;
+    }
+
     /**
      * create the given table into the database
      * @param string $name
@@ -114,6 +132,13 @@ abstract class jDbSchema {
     protected function _dropTable($name) {
         $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));
     }
+
+    protected function _renameTable($oldName, $newName) {
+        $this->conn->exec('ALTER TABLE '.$this->conn->encloseName($oldName).
+        ' RENAME TO '.$this->conn->encloseName($newName));
+    }
+
+    abstract protected function _getTableInstance($name);
 
     /**
      * return the SQL string corresponding to the given column.

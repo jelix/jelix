@@ -142,14 +142,7 @@ class pgsqlDbSchema extends jDbSchema {
      *
      */
     function _createTable($name, $columns, $primaryKeys, $attributes=array()) {
-        throw new Exception("Not Implemented");
-    }
-
-    /**
-     * @return jDbTable
-     */
-    function getTable($name) {
-        return  new pgsqlDbTable($this->getConn()->prefixTable($name), $this);
+        throw new Exception("_createTable Not Implemented");
     }
 
     protected function _getTables () {
@@ -162,5 +155,9 @@ class pgsqlDbSchema extends jDbSchema {
             $results[$line->tablename] = new pgsqlDbTable($line->tablename, $this);
         }
         return $results;
+    }
+
+    protected function _getTableInstance($name) {
+        return new pgsqlDbTable($name, $this);
     }
 }

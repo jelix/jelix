@@ -76,4 +76,8 @@ class mssqlDbSchema extends jDbSchema {
         }
         return $results;
     }
+
+    protected function _getTableInstance($name) {
+        return new mssqlDbTable($name, $this);
+    }
 }

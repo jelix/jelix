@@ -146,4 +146,13 @@ class sqlsrvDbSchema extends jDbSchema {
         }
         return $results;
     }
+
+    protected function _getTableInstance($name) {
+        return new sqlsrvDbTable($name, $this);
+    }
+
+    protected function _renameTable($oldName, $newName) {
+        $this->conn->exec("EXEC sp_rename '".$oldName.
+            "', '".$newName."'");
+    }
 }

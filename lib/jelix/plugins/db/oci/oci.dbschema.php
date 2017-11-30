@@ -171,4 +171,12 @@ class ociDbSchema extends jDbSchema {
         return $results;
     }
 
+    protected function _getTableInstance($name) {
+        return new ociDbTable($name, $this);
+    }
+
+    protected function _renameTable($oldName, $newName) {
+        $this->conn->exec('RENAME TABLE '.$this->conn->encloseName($oldName).
+            ' TO '.$this->conn->encloseName($newName));
+    }
 }

@@ -62,6 +62,9 @@ class mysqlDbTable extends jDbTable {
             
             $this->columns[$line->Field] = $col;
         }
+        if ($this->primaryKey === null) {
+            $this->primaryKey = false;
+        }
     }
 
     protected function _alterColumn(jDbColumn $old, jDbColumn $new) {
@@ -299,5 +302,9 @@ class mysqlDbSchema extends jDbSchema {
             $results[$line->$col_name] = new mysqlDbTable($line->$col_name, $this);
         }
         return $results;
+    }
+
+    protected function _getTableInstance($name) {
+        return new mysqlDbTable($name, $this);
     }
 }
