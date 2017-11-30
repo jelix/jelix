@@ -204,6 +204,43 @@ abstract class jDbTools {
     }
 
     /**
+     * Parse a SQL type and gives type, length...
+     *
+     * @param string $type
+     * @return array  [$realtype, $length, $precision, $scale, $otherTypeDef]
+     */
+    public function parseSQLType($type) {
+        $length = 0;
+        $scale = 0;
+        $precision = 0;
+        $tail = '';
+        if (preg_match('/^(\w+)\s*(\(\s*(\d+)(,(\d+))?\s*\))?(.*)$/',$type, $m)) {
+            $type = strtolower($m[1]);
+            if (isset($m[3])) {
+                $typeInfo = $this->getTypeInfo($type);
+                $phpType =  $this->unifiedToPHPType($typeInfo[1]);
+                if ($phpType == 'string') {
+                    $length = intval($m[3]);
+                }
+                else {
+                    $precision = intval($m[3]);
+                }
+            }
+            if (isset($m[4]) && $m[5]) {
+                $precision = $length;
+                $length = 0;
+                $scale = intval($m[5]);
+            }
+            if (isset($m[6])) {
+                $tail = $m[6];
+            }
+
+        }
+        return array($type, $length, $precision, $scale, $tail);
+    }
+
+
+    /**
      * @param string $unifiedType  the unified type name
      * @param mixed $value        the value
      * @return string  the value which is ready to include a SQL query string

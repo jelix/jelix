@@ -22,6 +22,7 @@ class sqlite3DbTable extends jDbTable {
         $this->columns = array();
         $sql = "PRAGMA table_info(". $conn->quote($this->name) .")";
         $rs = $conn->query($sql);
+        $tools = $conn->tools();
 
         while ($c = $rs->fetch()) {
             $hasDefault = false;
@@ -29,7 +30,7 @@ class sqlite3DbTable extends jDbTable {
             $isPrimary  = ($c->pk == 1);
             $notNull   = ($c->notnull != 0 || $c->pk == 1);
 
-            list($type, $length, $precision, $scale, $tail) = $this->parseType($c->type);
+            list($type, $length, $precision, $scale, $tail) = $tools->parseSQLType($c->type);
             $autoIncrement = false;
             if (strtolower($tail) == 'auto_increment') {
                 $autoIncrement = true;
@@ -44,7 +45,7 @@ class sqlite3DbTable extends jDbTable {
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
 
-            $typeinfo = $conn->tools()->getTypeInfo($type);
+            $typeinfo = $tools->getTypeInfo($type);
             $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];

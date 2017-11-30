@@ -22,6 +22,7 @@ class sqliteDbTable extends jDbTable {
         $this->columns = array();
         $sql = "PRAGMA table_info(". $conn->quote($this->name) .")";
         $rs = $conn->query($sql);
+        $tools = $conn->tools();
 
         while ($c = $rs->fetch()) {
             $hasDefault = false;
@@ -36,11 +37,11 @@ class sqliteDbTable extends jDbTable {
                 }
             }
 
-            list($type, $length, $precision, $scale) = $this->parseType($c->type);
+            list($type, $length, $precision, $scale) = $tools->parseSQLType($c->type);
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
 
-            $typeinfo = $conn->tools()->getTypeInfo($type);
+            $typeinfo = $tools->getTypeInfo($type);
             $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];

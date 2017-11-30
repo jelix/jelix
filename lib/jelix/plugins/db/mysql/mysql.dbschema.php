@@ -27,7 +27,7 @@ class mysqlDbTable extends jDbTable {
 
         while ($line = $rs->fetch ()) {
 
-            list($type, $length, $precision, $scale) = $this->parseType($line->Type);
+            list($type, $length, $precision, $scale) = $tools->parseSQLType($line->Type);
 
             $notNull = ($line->Null == 'NO');
             $autoIncrement  = ($line->Extra == 'auto_increment');
