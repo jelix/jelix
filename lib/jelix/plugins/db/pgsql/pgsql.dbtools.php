@@ -120,20 +120,6 @@ class pgsqlDbTools extends jDbTools {
         return '"'.$name.'"';
     }
 
-   /*
-    * returns the list of tables 
-    * @return   array    list of table names
-   */
-   public function getTableList () {
-      $results = array ();
-      $sql = "SELECT tablename FROM pg_tables WHERE schemaname NOT IN ('pg_catalog', 'information_schema') ORDER BY tablename";
-      $rs = $this->_conn->query ($sql);
-      while ($line = $rs->fetch()){
-         $results[] = $line->tablename;
-      }
-      return $results;
-   }
-
     /**
      * retrieve the list of fields of a table
      * @param string $tableName the name of the table

@@ -3,7 +3,7 @@
 * @package    jelix
 * @subpackage db
 * @author     Laurent Jouanneau
-* @copyright  2010 Laurent Jouanneau
+* @copyright  2010-2017 Laurent Jouanneau
 *
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -82,11 +82,8 @@ class pgsqlDbSchema extends jDbSchema {
                   ORDER BY tablename";
         $rs = $this->getConn()->query ($sql);
         while ($line = $rs->fetch()){
-            $results[] = new pgsqlDbTable($line->tablename, $this);
+            $results[$line->tablename] = new pgsqlDbTable($line->tablename, $this);
         }
         return $results;
     }
-
-
-
 }

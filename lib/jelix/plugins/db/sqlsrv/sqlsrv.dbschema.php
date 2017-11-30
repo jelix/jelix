@@ -64,6 +64,16 @@ class sqlsrvDbSchema extends jDbSchema {
     }
 
     protected function _getTables() {
-        throw new Exception ('Not Implemented');
+        $results = array ();
+        $sql = "SELECT TABLE_NAME FROM " .
+            $this->conn->profile['database']. ".INFORMATION_SCHEMA.TABLES
+                WHERE TABLE_TYPE = 'BASE TABLE' AND
+                TABLE_NAME NOT LIKE ('sys%') AND
+                TABLE_NAME NOT LIKE ('dt%')";
+        $rs = $this->conn->query ($sql);
+        while ($line = $rs->fetch()){
+            $results[$line->TABLE_NAME] = new sqlsrvDbTable($line->TABLE_NAME, $this);
+        }
+        return $results;
     }
 }

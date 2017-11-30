@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
 * @copyright  2008 Julien Issler
 *
@@ -264,9 +264,14 @@ abstract class jDbTools {
     }
 
     /**
-    * returns the table list
-    */
-    abstract public function getTableList ();
+     * returns the list of tables
+     * @return array list of table names
+     * @throws jException
+     */
+    public function getTableList () {
+        $list = $this->_conn->schema()->getTables();
+        return array_keys($list);
+    }
 
     /**
     * Retrieve the list of fields of a table
