@@ -11,44 +11,98 @@
 
 
 /**
- *
+ * Represents an index on some columns
  */
 class jDbIndex {
-    public $name , $type;
+    /**
+     * @var string the index name
+     */
+    public $name;
+
+    /**
+     *  the type of index : 'btree', 'hash'...
+     * @var string
+     */
+    public $type;
+
+    /**
+     * @var string[]  list of indexed columns
+     */
     public $columns = array();
 
-    function __construct($name, $type='') {
+    /**
+     * @var string   SQL where clause for the index
+     */
+    public $predicat = '';
+
+    /**
+     * jDbIndex constructor.
+     * @param string $name  the index name
+     * @param string $type  the type of index : 'btree', 'hash'...
+     */
+    function __construct($name, $type='', $columns = array(), $predicat='') {
         $this->name = $name;
         $this->type = $type;
+        $this->columns = $columns;
+        $this->predicat = $predicat;
     }
 }
 
+abstract class jDbConstraint {
+    public $name;
+    public $columns = array();
 
-/**
- *
- */
-class jDbUniqueKey extends jDbIndex {
-
-}
-
-/**
- *
- */
-class jDbPrimaryKey extends jDbIndex {
-    function __construct($columns) {
-        if (is_string($columns))
+    /**
+     * jDbConstraint constructor.
+     * @param string $name
+     * @param string[]|string $columns
+     */
+    function __construct($name, $columns) {
+        $this->name = $name;
+        if (is_string($columns)) {
             $this->columns = array($columns);
-        else
+        }
+        else {
             $this->columns = $columns;
+        }
+    }
+}
+
+/**
+ * represents a unique key
+ */
+class jDbUniqueKey extends jDbConstraint {
+
+    function __construct($name, $columns = null) {
+        // for previous version <1.6.16, where $columns was $type
+        if ($columns === null) {
+            parent::__construct($name, array());
+        }
+        else {
+            parent::__construct($name, $columns);
+        }
+
+
+    }
+}
+
+/**
+ * used to declare a primary key
+ */
+class jDbPrimaryKey extends jDbConstraint {
+
+    function __construct($columns, $name = '') {
+        // for previous version <1.6.16, where there was only one argument, $columns
+        parent::__construct($name, $columns);
     }
 }
 
 
 
 /**
- *
+ * used to declare a foreign key
  */
-class jDbReference {
+class jDbReference  extends jDbConstraint {
     public $name;
     /**
      * list of columns on which there is the constraint
@@ -69,6 +123,20 @@ class jDbReference {
     
     public $onUpdate = '';
     public $onDelete = '';
+
+    /**
+     * jDbReference constructor.
+     *
+     * Note: all parameters are optional, to be compatible with Jelix < 1.6.16
+     * where parameters didn't exist
+     * @param string $name
+     * @param array $columns
+     */
+    function __construct($name = '', $columns = array(), $foreignTable='', $foreignColumns=array()) {
+        parent::__construct($name, $columns);
+        $this->fTable = $foreignTable;
+        $this->fColumns = $foreignColumns;
+    }
 }
 
 
@@ -168,5 +236,20 @@ class jDbColumn {
         }
         
         $this->notNull = $notNull;
+    }
+
+    function isEqualTo($column) {
+        return (
+          $this->name == $column->name &&
+          $this->type == $column->type &&
+          $this->notNull == $column->notNull &&
+          $this->autoIncrement == $column->autoIncrement &&
+          $this->default == $column->default &&
+          $this->hasDefault == $column->hasDefault &&
+          $this->length == $column->length &&
+          $this->scale == $column->scale &&
+          $this->sequence == $column->sequence &&
+          $this->unsigned == $column->unsigned
+        );
     }
 }

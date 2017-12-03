@@ -124,17 +124,9 @@ class mysqlDbTable extends jDbTable {
         $conn = $this->schema->getConn();
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' ADD ';
 
-        if ($index instanceof jDbPrimaryKey) {
-            $sql .= 'PRIMARY KEY';
-        }
-        else if ($index instanceof jDbUniqueKey) {
-            $sql .= 'CONSTRAINT UNIQUE KEY '.$conn->encloseName($index->name);
-        }
-        else {
-            $sql .= 'INDEX '.$conn->encloseName($index->name);
-            if ($index->type != '')
-                $sql.= ' USING '.$index->type;
-        }
+        $sql .= 'INDEX '.$conn->encloseName($index->name);
+        if ($index->type != '')
+            $sql.= ' USING '.$index->type;
 
         $f = '';
         foreach ($index->columns as $col) {
@@ -148,13 +140,7 @@ class mysqlDbTable extends jDbTable {
 
         $conn = $this->schema->getConn();
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP ';
-
-        if ($index instanceof jDbPrimaryKey) {
-            $sql .= 'PRIMARY KEY';
-        }
-        else {
-            $sql .= 'INDEX '.$conn->encloseName($index->name);
-        }
+        $sql .= 'INDEX '.$conn->encloseName($index->name);
 
         $conn->exec($sql);
     }
@@ -222,6 +208,47 @@ class mysqlDbTable extends jDbTable {
     protected function _dropReference(jDbReference $ref) {
         $conn = $this->schema->getConn();
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP FOREIGN KEY '.$conn->encloseName($ref->name);
+        $conn->exec($sql);
+    }
+
+    protected function _createConstraint(jDbConstraint $constraint) {
+        if ($constraint instanceof jDbReference) {
+            return $this->_createReference($constraint);
+        }
+
+        $conn = $this->schema->getConn();
+        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' ADD ';
+
+        if ($constraint instanceof jDbPrimaryKey) {
+            $sql .= 'PRIMARY KEY';
+        }
+        else if ($constraint instanceof jDbUniqueKey) {
+            $sql .= 'CONSTRAINT UNIQUE KEY '.$conn->encloseName($constraint->name);
+        }
+
+        $f = '';
+        foreach ($constraint->columns as $col) {
+            $f .= ','.$conn->encloseName($col);
+        }
+
+        $conn->exec($sql.'('.substr($f,1).')');
+    }
+
+    protected function _dropConstraint(jDbConstraint $constraint) {
+        if ($constraint instanceof jDbReference) {
+            $this->_dropReference($constraint);
+            return;
+        }
+        $conn = $this->schema->getConn();
+        $sql = 'ALTER TABLE '.$conn->encloseName($this->name).' DROP ';
+
+        if ($constraint instanceof jDbPrimaryKey) {
+            $sql .= 'PRIMARY KEY';
+        }
+        else {
+            $sql .= 'KEY';
+        }
+
         $conn->exec($sql);
     }
 

@@ -112,6 +112,7 @@ class pgsqlDbTable extends jDbTable {
 
     protected function _createIndex(jDbIndex $index){
         /*
+         ALTER TABLE  name ADD
         [ CONSTRAINT constraint_name ]
         {
           UNIQUE ( column_name [, ... ] ) |
@@ -129,18 +130,22 @@ class pgsqlDbTable extends jDbTable {
         throw new Exception("_loadReferences Not Implemented");
     }
 
-    protected function _createReference(jDbReference $ref){
-        /*[ CONSTRAINT constraint_name ]
-        {
-          FOREIGN KEY ( column_name [, ... ] )
-            REFERENCES reftable [ ( refcolumn [, ... ] ) ]
-        }*/
-        throw new Exception("_createReference Not Implemented");
+    protected function _createConstraint(jDbConstraint $constraint) {
+        /*
+ALTER TABLE  name ADD
+[ CONSTRAINT constraint_name ]
+{
+  FOREIGN KEY ( column_name [, ... ] )
+    REFERENCES reftable [ ( refcolumn [, ... ] ) ]
+}*/
+        throw new Exception ('Not Implemented');
     }
 
-    protected function _dropReference(jDbReference $ref){
-        throw new Exception("_dropReference Not Implemented");
+    protected function _dropConstraint(jDbConstraint $constraint) {
+        throw new Exception ('Not Implemented');
+        // ALTER TABLE  name DROP CONSTRAINT [ IF EXISTS ]  constraint_name
     }
+
 }
 
 /**

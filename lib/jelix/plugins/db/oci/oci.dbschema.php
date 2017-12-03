@@ -138,11 +138,11 @@ class ociDbTable extends jDbTable {
         throw new Exception ('Not Implemented');
     }
 
-    protected function _createReference(jDbReference $ref) {
+    protected function _createConstraint(jDbConstraint $constraint) {
         throw new Exception ('Not Implemented');
     }
 
-    protected function _dropReference(jDbReference $ref) {
+    protected function _dropConstraint(jDbConstraint $constraint) {
         throw new Exception ('Not Implemented');
     }
 }

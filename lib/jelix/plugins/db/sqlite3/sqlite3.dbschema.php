@@ -108,18 +108,23 @@ class sqlite3DbTable extends jDbTable {
         throw new Exception ('_loadReferences Not Implemented');
     }
 
-    protected function _createReference(jDbReference $ref) {
-        /* [ CONSTRAINT constraint_name ]
-            {
-              FOREIGN KEY ( column_name [, ... ] )
-                    REFERENCES reftable [ ( refcolumn [, ... ] ) ]
-            }
-        */
-        throw new Exception ('_createReference Not Implemented');
+    protected function _createConstraint(jDbConstraint $constraint) {
+        /*
+[ CONSTRAINT constraint_name ]
+    {
+      FOREIGN KEY ( column_name [, ... ] )
+            REFERENCES reftable [ ( refcolumn [, ... ] ) ]
+    }
+*/
+        throw new Exception ('Not Implemented');
     }
 
-    protected function _dropReference(jDbReference $ref) {
-        throw new Exception ('_dropReference Not Implemented');
+    protected function _dropConstraint(jDbConstraint $constraint) {
+        throw new Exception ('Not Implemented');
+    }
+
+    protected function _replaceConstraint(jDbConstraint $oldConstraint, jDbConstraint $newConstraint) {
+        throw new Exception ('Not Implemented');
     }
 
 }
