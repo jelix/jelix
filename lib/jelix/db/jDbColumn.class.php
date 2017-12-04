@@ -33,18 +33,20 @@ class jDbIndex {
     /**
      * @var string   SQL where clause for the index
      */
-    public $predicat = '';
+    //public $predicat = '';
+
+    public $isUnique = false;
 
     /**
      * jDbIndex constructor.
      * @param string $name  the index name
-     * @param string $type  the type of index : 'btree', 'hash'...
+     * @param string[] $columns  the list of column names
      */
-    function __construct($name, $type='', $columns = array(), $predicat='') {
+    function __construct($name, $type='', $columns = array()) { //, $predicat='', ) {
         $this->name = $name;
-        $this->type = $type;
         $this->columns = $columns;
-        $this->predicat = $predicat;
+        $this->type = $type;
+        //$this->predicat = $predicat;
     }
 }
 
@@ -130,12 +132,19 @@ class jDbReference  extends jDbConstraint {
      * Note: all parameters are optional, to be compatible with Jelix < 1.6.16
      * where parameters didn't exist
      * @param string $name
-     * @param array $columns
+     * @param string[]|string $columns
+     * @param string $foreignTable
+     * @param string[]|string $foreignColumns
      */
     function __construct($name = '', $columns = array(), $foreignTable='', $foreignColumns=array()) {
         parent::__construct($name, $columns);
         $this->fTable = $foreignTable;
-        $this->fColumns = $foreignColumns;
+        if (is_string($foreignColumns)) {
+            $this->fColumns = array($foreignColumns);
+        }
+        else {
+            $this->fColumns = $foreignColumns;
+        }
     }
 }
 
@@ -167,7 +176,7 @@ class jDbColumn {
      * says if the field can be null or not
      * @var boolean
      */
-    public $notNull = true;
+    public $notNull = false;
 
     /**
      * says if the field is auto incremented
@@ -179,7 +188,7 @@ class jDbColumn {
      * default value
      * @var string
      */
-    public $default = '';
+    public $default = null;
 
     /**
      * says if there is a default value
@@ -223,18 +232,18 @@ class jDbColumn {
 
     public $comment = '';
 
-    function __construct ($name, $type, $length=0, $hasDefault = false, $default = null, $notNull = false) {
+    function __construct ($name, $type, $length=0, $hasDefault = false,
+                          $default = null, $notNull = false) {
         $this->type = $type;
         $this->name = $name;
         $this->length = $length;
         $this->hasDefault = $hasDefault;
         if ($hasDefault) {
-            $this->default = $default;
+            $this->default = ($notNull&&$default === null?'':$default);
         }
         else {
-            $this->default = '';
+            $this->default = ($notNull?'':null);
         }
-        
         $this->notNull = $notNull;
     }
 
@@ -250,6 +259,21 @@ class jDbColumn {
           $this->scale == $column->scale &&
           $this->sequence == $column->sequence &&
           $this->unsigned == $column->unsigned
+        );
+    }
+
+    function hasOnlyDifferentName($otherColumn) {
+        return (
+            $this->name != $otherColumn->name &&
+            $this->type == $otherColumn->type &&
+            $this->notNull == $otherColumn->notNull &&
+            $this->autoIncrement == $otherColumn->autoIncrement &&
+            $this->default == $otherColumn->default &&
+            $this->hasDefault == $otherColumn->hasDefault &&
+            $this->length == $otherColumn->length &&
+            $this->scale == $otherColumn->scale &&
+            $this->sequence == $otherColumn->sequence &&
+            $this->unsigned == $otherColumn->unsigned
         );
     }
 }

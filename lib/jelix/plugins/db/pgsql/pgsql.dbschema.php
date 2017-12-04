@@ -13,7 +13,6 @@
  * 
  * @package    jelix
  * @subpackage db_driver
- * @notimplemented
  */
 class pgsqlDbTable extends jDbTable {
 
@@ -30,7 +29,7 @@ class pgsqlDbTable extends jDbTable {
 
         $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod,
                 FORMAT_TYPE(a.atttypid, a.atttypmod) AS type,
-                d.adsrc, co.contype AS primary
+                d.adsrc, co.contype AS primary, co.conname
             FROM pg_attribute AS a
             JOIN pg_class AS c ON a.attrelid = c.oid
             LEFT OUTER JOIN pg_constraint AS co
@@ -42,17 +41,16 @@ class pgsqlDbTable extends jDbTable {
 
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
-            //var_export($line);
             $name = $line->attname;
             list($type, $length, $precision, $scale) = $tools->parseSQLType($line->type);
-            $notNull = (bool) ($line->attnotnull);
+            $notNull = ($line->attnotnull == 't');
             $default = $line->adsrc;
             $hasDefault = ($line->atthasdef == 't');
 
             $col = new jDbColumn($name, $type, $length, $hasDefault, $default, $notNull);
 
             $typeinfo = $tools->getTypeInfo($type);
-            if (preg_match('/^nextval\(([^\)]*)\)$/', $line->adsrc, $m)) {
+            if (preg_match('/^nextval\(([^\)]*)\)$/', $default, $m)) {
                 $col->autoIncrement = true;
                 $col->default = '';
                 if ($m[1]) {
@@ -68,6 +66,9 @@ class pgsqlDbTable extends jDbTable {
             else if ($typeinfo[6]) {
                 $col->autoIncrement = true;
                 $col->default = '';
+            }
+            else if (preg_match('/^NULL::/', $default) && $hasDefault) {
+                $col->default = null;
             }
 
             //$col->unifiedType = $typeinfo[1];
@@ -86,7 +87,7 @@ class pgsqlDbTable extends jDbTable {
 
             if ($line->primary) {
                 if (!$this->primaryKey)
-                    $this->primaryKey = new jDbPrimaryKey($name);
+                    $this->primaryKey = new jDbPrimaryKey($name, $line->conname);
                 else
                     $this->primaryKey->columns[] = $name;
             }
@@ -99,51 +100,232 @@ class pgsqlDbTable extends jDbTable {
     }
 
     protected function _alterColumn(jDbColumn $old, jDbColumn $new){
-        throw new Exception("_alterColumn Not Implemented");
+        $conn = $this->schema->getConn();
+        $tools = $conn->tools();
+        if ($new->name != $old->name) {
+            $conn->exec("ALTER TABLE ".$conn->encloseName($this->name).
+                " RENAME COLUMN ".$conn->encloseName($old->name).
+                " TO ".$conn->encloseName($new->name));
+        }
+
+        if ($new->type != $old->type ||
+            $new->precision != $old->precision ||
+            $new->scale != $old->scale ||
+            $new->length != $old->length
+        ) {
+            $typeInfo = $tools->getTypeInfo($new->type);
+
+            $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                " ALTER COLUMN ".$conn->encloseName($new->name).
+                " TYPE ".$typeInfo[0];
+            if ($new->precision) {
+                $sql .= '('.$new->precision;
+                if($new->scale) {
+                    $sql .= ','.$new->scale;
+                }
+                $sql .= ')';
+            }
+            else if ($new->length) {
+                $sql .= '('.$new->length.')';
+            }
+            $conn->exec($sql);
+        }
+
+        if ($new->hasDefault !== $old->hasDefault) {
+            if ($new->hasDefault) {
+                $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                    " ALTER COLUMN ".$conn->encloseName($new->name).
+                    " SET DEFAULT ".$new->default;
+                $conn->exec($sql);
+            }
+            else {
+                $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                    " ALTER COLUMN ".$conn->encloseName($new->name).
+                    " DROP DEFAULT";
+                $conn->exec($sql);
+            }
+        }
+        else if ($new->hasDefault && $new->default != $old->default) {
+            $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                " ALTER COLUMN ".$conn->encloseName($new->name).
+                " SET DEFAULT ".$new->default;
+            $conn->exec($sql);
+        }
+
+        if ($new->notNull != $old->notNull) {
+            if ($new->notNull) {
+                $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                    " ALTER COLUMN ".$conn->encloseName($new->name).
+                    " SET NOT NULL ";
+                $conn->exec($sql);
+            }
+            else {
+                $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+                    " ALTER COLUMN ".$conn->encloseName($new->name).
+                    " DROP NOT NULL ";
+                $conn->exec($sql);
+            }
+        }
     }
 
     protected function _addColumn(jDbColumn $new){
-        throw new Exception("_addColumn Not Implemented");
+        $conn = $this->schema->getConn();
+        $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+            " ADD COLUMN ".$this->schema->_prepareSqlColumn($new);
+        $conn->exec($sql);
     }
 
     protected function _loadIndexesAndKeys(){
-        throw new Exception("_loadIndexesAndKeys Not Implemented");
+        $this->indexes = array();
+        $conn = $this->schema->getConn();
+        $sql = "SELECT n.nspname  as schemaname,  t.relname  as tablename,
+                c.relname  as indexname, a.attname, i.indisunique, a.attnum
+        FROM pg_class c
+        JOIN pg_index i     on i.indexrelid = c.oid
+        JOIN pg_namespace n  on n.oid        = c.relnamespace
+        JOIN pg_class t      on i.indrelid   = t.oid
+        JOIN pg_attribute a ON (a.attrelid = t.oid and a.attnum = ANY(i.indkey))
+        LEFT JOIN pg_constraint co on (t.oid = co.conrelid and co.conindid = c.oid)
+        WHERE c.relkind = 'i'
+          and n.nspname not in ('pg_catalog', 'pg_toast')
+          and pg_catalog.pg_table_is_visible(c.oid)
+          and co.conindid is null
+          AND t.relname = ".$conn->quote($this->getName());
+        $rs = $conn->query($sql);
+        while ($indexRec = $rs->fetch()){
+            if (isset($this->indexes[$indexRec->indexname])) {
+                $index = $this->indexes[$indexRec->indexname];
+            }
+            else {
+                $index = new jDbIndex($indexRec->indexname);
+                $this->indexes[$indexRec->indexname] = $index;
+                $index->isUnique =  ($indexRec->indisunique == 't');
+            }
+            $index->columns[] = $indexRec->attname;
+        }
     }
 
     protected function _createIndex(jDbIndex $index){
-        /*
-         ALTER TABLE  name ADD
-        [ CONSTRAINT constraint_name ]
-        {
-          UNIQUE ( column_name [, ... ] ) |
-          PRIMARY KEY ( column_name [, ... ] )
+        $conn = $this->schema->getConn();
+        $sql = 'CREATE ';
+        if ($index->isUnique) {
+            $sql .= 'UNIQUE ';
         }
-        */
-        throw new Exception("_createIndex Not Implemented");
+        $sql .= 'INDEX '.$conn->encloseName($index->name).' ON '.$conn->encloseName($this->getName());
+        $sql .= ' ('. $conn->tools()->getSQLColumnsList($index->columns) .')';
+        $conn->exec($sql);
     }
 
     protected function _dropIndex(jDbIndex $index){
-        throw new Exception("_dropIndex Not Implemented");
+        $conn = $this->schema->getConn();
+        $sql = "DROP INDEX IF EXISTS ".$conn->encloseName($index->name);
+        $conn->exec($sql);
     }
 
     protected function _loadReferences(){
-        throw new Exception("_loadReferences Not Implemented");
+        $this->primaryKey = false;
+        $this->uniqueKeys = array();
+        $this->references = array();
+
+        $conn = $this->schema->getConn();
+        $sql = "SELECT
+          tc.constraint_name,
+          tc.constraint_type,
+          tc.table_name,
+          kcu.column_name,
+          rc.update_rule AS on_update,
+          rc.delete_rule AS on_delete,
+          ccu.table_name AS references_table,
+          ccu.column_name AS references_field
+        
+        FROM information_schema.table_constraints tc
+        
+        LEFT JOIN information_schema.key_column_usage kcu
+          ON tc.constraint_catalog = kcu.constraint_catalog
+          AND tc.constraint_schema = kcu.constraint_schema
+          AND tc.constraint_name = kcu.constraint_name
+        
+        LEFT JOIN information_schema.referential_constraints rc
+          ON tc.constraint_catalog = rc.constraint_catalog
+          AND tc.constraint_schema = rc.constraint_schema
+          AND tc.constraint_name = rc.constraint_name
+        
+        LEFT JOIN information_schema.constraint_column_usage ccu
+          ON rc.unique_constraint_catalog = ccu.constraint_catalog
+          AND rc.unique_constraint_schema = ccu.constraint_schema
+          AND rc.unique_constraint_name = ccu.constraint_name
+        
+        WHERE tc.table_schema NOT IN ('pg_catalog', 'information_schema')
+          AND constraint_type IN ('PRIMARY KEY', 'UNIQUE', 'FOREIGN KEY')
+          AND tc.table_name = ".$conn->quote($this->getName());
+
+        $rs = $conn->query($sql);
+        while ($constraint = $rs->fetch()){
+            switch($constraint->constraint_type) {
+                case 'PRIMARY KEY':
+                    if (! $this->primaryKey) {
+                        $this->primaryKey = new jDbPrimaryKey(
+                            $constraint->column_name,
+                            $constraint->constraint_name);
+                    }
+                    else {
+                        $this->primaryKey->columns[] = $constraint->column_name;
+                    }
+                    break;
+                case 'UNIQUE':
+                    if (!isset($this->uniqueKeys[$constraint->constraint_name])) {
+                        $unique = new jDbUniqueKey($constraint->constraint_name,
+                            $constraint->column_name);
+                        $this->uniqueKeys[$constraint->constraint_name] = $unique;
+                    }
+                    else {
+                        $this->uniqueKeys[$constraint->constraint_name]->columns[] = $constraint->column_name;
+                    }
+                    break;
+                case 'FOREIGN KEY':
+                    if (!isset($this->references[$constraint->constraint_name])) {
+                        $fk = new jDbReference(
+                            $constraint->constraint_name,
+                            $constraint->column_name,
+                            $constraint->references_table,
+                            array($constraint->references_field)
+                        );
+                        $this->references[$constraint->constraint_name] = $fk;
+                    }
+                    else {
+                        $fk = $this->references[$constraint->constraint_name];
+                        $fk->columns[] = $constraint->column_name;
+                        $fk->fColumns[] = $constraint->references_field;
+                    }
+                    break;
+            }
+        }
     }
 
     protected function _createConstraint(jDbConstraint $constraint) {
-        /*
-ALTER TABLE  name ADD
-[ CONSTRAINT constraint_name ]
-{
-  FOREIGN KEY ( column_name [, ... ] )
-    REFERENCES reftable [ ( refcolumn [, ... ] ) ]
-}*/
-        throw new Exception ('Not Implemented');
+        $conn = $this->schema->getConn();
+        $tools = $conn->tools();
+        $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+            " ADD CONSTRAINT ".$conn->encloseName($constraint->name);
+        if ($constraint instanceof jDbPrimaryKey) {
+            $sql .= " PRIMARY KEY (".$tools->getSQLColumnsList($constraint->columns).")";
+        }
+        else if ($constraint instanceof jDbUniqueKey) {
+            $sql .= " UNIQUE (".$tools->getSQLColumnsList($constraint->columns).")";
+        }
+        else if ($constraint instanceof jDbReference) {
+            $sql .= " FOREIGN KEY (".$tools->getSQLColumnsList($constraint->columns).")";
+            $sql .= " REFERENCES ".$conn->encloseName($constraint->fTable).
+                "  (".$tools->getSQLColumnsList($constraint->fColumns).")";
+        }
+        $conn->exec($sql);
     }
 
     protected function _dropConstraint(jDbConstraint $constraint) {
-        throw new Exception ('Not Implemented');
-        // ALTER TABLE  name DROP CONSTRAINT [ IF EXISTS ]  constraint_name
+        $conn = $this->schema->getConn();
+        $sql = "ALTER TABLE ".$conn->encloseName($this->name).
+            " DROP CONSTRAINT IF EXISTS ".$conn->encloseName($constraint->name);
+        $conn->exec($sql);
     }
 
 }

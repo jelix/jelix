@@ -357,4 +357,17 @@ abstract class jDbTools {
         }
         return $nbCmd;
    }
+
+    /**
+     * @param string[] $columns list of column names
+     * @return string the list in SQL
+     * @since 1.6.16
+     */
+    public function getSQLColumnsList($columns) {
+        $cols = array();
+        foreach($columns as $col) {
+            $cols [] = $this->_conn->encloseName($col);
+        }
+        return implode(',', $cols);
+    }
 }

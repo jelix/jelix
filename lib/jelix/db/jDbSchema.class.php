@@ -89,11 +89,19 @@ abstract class jDbSchema {
     }
 
 
-    public function dropTable(jDbTable $table) {
+    /**
+     * @param string|jDbTable $table
+     */
+    public function dropTable($table) {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
-        $name = $table->getName();
+        if (is_string($table)) {
+            $name = $table;
+        }
+        else {
+            $name = $table->getName();
+        }
         if (isset($this->tables[$name])) {
             $this->_dropTable($name);
             unset($this->tables[$name]);
@@ -206,13 +214,22 @@ abstract class jDbSchema {
 
         $colstr.= ($col->notNull?' NOT NULL':'');
 
-        if ($col->hasDefault && !$col->autoIncrement && !$isSinglePrimaryKey) {
-            if (!($col->notNull && $col->default === null)) {
-                if ($col->default === null) {
-                    $colstr .= ' DEFAULT NULL';
+        if (!$col->autoIncrement && !$isSinglePrimaryKey) {
+            if ($col->hasDefault) {
+                if ($col->default === null || strtoupper($col->default) == 'NULL') {
+                    if (!$col->notNull) {
+                        $colstr .= ' DEFAULT NULL';
+                    }
                 }
                 else {
-                    $colstr .= ' DEFAULT ' . $this->conn->quote($col->default);
+                    $colstr .= ' DEFAULT ';
+                    $ti = $this->conn->tools()->getTypeInfo($col->type);
+                    $phpType = $this->conn->tools()->unifiedToPHPType($ti[1]);
+                    if ($phpType == 'string') {
+                        $colstr .= $this->conn->quote($col->default);
+                    } else {
+                        $colstr .= $col->default;
+                    }
                 }
             }
         }
@@ -240,4 +257,6 @@ abstract class jDbSchema {
             $col->notNull = true;
         }
     }
+
+
 }

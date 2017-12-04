@@ -74,11 +74,14 @@ abstract class jDbTable {
         return $this->columns;
     }
 
-    public function getColumn($name) {
+    public function getColumn($name, $forChange = false) {
         if ($this->columns === null) {
             $this->_loadTableDefinition();
         }
         if (isset($this->columns[$name])) {
+            if ($forChange) {
+                return clone $this->columns[$name];
+            }
             return $this->columns[$name];
         }
         return null;
@@ -183,6 +186,9 @@ abstract class jDbTable {
     }
 
     public function alterIndex(jDbIndex $index) {
+        if (trim($index->name) == '') {
+            throw new Exception("Index should have name");
+        }
         $idx = $this->getIndex($index->name);
         if ($idx) {
             $this->_dropIndex($idx);
@@ -195,6 +201,7 @@ abstract class jDbTable {
         $idx = $this->getIndex($indexName);
         if ($idx) {
             $this->_dropIndex($idx);
+            unset($this->indexes[$indexName]);
         }
     }
 
@@ -214,8 +221,9 @@ abstract class jDbTable {
         if ($this->uniqueKeys === null) {
             $this->_loadTableDefinition();
         }
-        if (isset($this->uniqueKeys[$name]))
+        if (isset($this->uniqueKeys[$name])) {
             return $this->uniqueKeys[$name];
+        }
         return null;
     }
 
@@ -224,6 +232,9 @@ abstract class jDbTable {
     }
 
     public function alterUniqueKey(jDbUniqueKey $key) {
+        if (trim($key->name) == '') {
+            throw new Exception("Unique key should have name");
+        }
         $idx = $this->getUniqueKey($key->name);
         if ($idx) {
             $this->_replaceConstraint($idx, $key);
@@ -269,6 +280,9 @@ abstract class jDbTable {
     }
 
     public function alterReference(jDbReference $reference) {
+        if (trim($reference->name) == '') {
+            throw new Exception("Reference constraint should have name");
+        }
         $ref = $this->getReference($reference->name);
         if ($ref) {
             $this->_replaceConstraint($ref, $reference);
