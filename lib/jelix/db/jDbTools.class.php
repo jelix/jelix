@@ -370,4 +370,97 @@ abstract class jDbTools {
         }
         return implode(',', $cols);
     }
+
+    /**
+     * Parse a SQL CREATE TABLE statement and returns all of its components
+     * separately.
+     *
+     * @param $createTableStatement
+     * @return array|bool false if parsing has failed. Else an array :
+     *          'name' => the schema/table name,
+     *          'temporary'=> true if there is the temporary keywork ,
+     *          'ifnotexists' => true if there is the IF NOT EXISTS statement,
+     *          'columns' => list of columns definitions,
+     *          'constraints' => list of table constraints definitions,
+     *          'options' => all options at the end of the CREATE TABLE statement.
+     * @since 1.6.16
+     */
+    public function parseCREATETABLE($createTableStatement) {
+        $result = array(
+            'name' => '',
+            'temporary'=>false,
+            'ifnotexists' => false,
+            'columns' => array(),
+            'constraints' => array(),
+            'options' => ''
+        );
+
+        if (!preg_match("/^\s*CREATE\s+(TEMP(?:ORARY)?\s+)?TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([^(]+)/msi", $createTableStatement, $m)) {
+            return false;
+        }
+        $result['temporary'] = !!($m[1]);
+        $result['ifnotexists'] = !!($m[2]);
+        $result['name'] = trim($m[3]);
+
+        $posStart = strlen($m[0]);
+        $posEnd = strrpos($createTableStatement, ')');
+        $result['options'] = trim(substr($createTableStatement, $posEnd+1));
+
+        $def = substr($createTableStatement, $posStart+1, $posEnd-$posStart-1);
+
+        $tokens = preg_split("/([,()])/msi", $def, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $regexpConstraint = "/^\s*(CONSTRAINT|CHECK|UNIQUE|PRIMARY|EXCLUDE|FOREIGN|FULLTEXT|SPATIAL|INDEX|KEY)/msi";
+        $columns = array();
+        $constraints = array();
+        $level = 0;
+        $currentDef = '';
+        foreach($tokens as $token) {
+            if ($token == '(') {
+                $level ++;
+                $currentDef .= $token;
+            }
+            else if ($token == ')') {
+                $level --;
+                if ($level < 0) {
+                    $level = 0;
+                }
+                $currentDef .= $token;
+            }
+            else if ($token == ',') {
+                if ($level > 0) {
+                    $currentDef .= $token;
+                }
+                else {
+                    // new current definition
+                    $currentDef = trim(preg_replace("/\s+/", ' ', $currentDef));
+                    if (preg_match($regexpConstraint, $currentDef)) {
+                        $constraints[] = $currentDef;
+                    }
+                    else {
+                        $columns[] = $currentDef;
+                    }
+                    $currentDef = '';
+                }
+            }
+            else {
+                $currentDef .= $token;
+            }
+        }
+        if ($currentDef) {
+            $currentDef = trim(preg_replace("/\s+/", ' ', $currentDef));
+            if (preg_match($regexpConstraint, $currentDef)) {
+                $constraints[] = $currentDef;
+            }
+            else {
+                $columns[] = $currentDef;
+            }
+        }
+
+        $result['columns'] = $columns;
+        $result['constraints'] = $constraints;
+
+        return $result;
+    }
+
 }
