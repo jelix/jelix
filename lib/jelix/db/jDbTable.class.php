@@ -228,13 +228,13 @@ abstract class jDbTable {
     }
 
     public function addUniqueKey(jDbUniqueKey $key) {
+        if (trim($key->name) == '') {
+            $key->name = $this->name.'_'.implode('_', $key->columns).'_unique';
+        }
         $this->alterUniqueKey($key);
     }
 
     public function alterUniqueKey(jDbUniqueKey $key) {
-        if (trim($key->name) == '') {
-            throw new Exception("Unique key should have name");
-        }
         $idx = $this->getUniqueKey($key->name);
         if ($idx) {
             $this->_replaceConstraint($idx, $key);
@@ -276,13 +276,13 @@ abstract class jDbTable {
     }
 
     public function addReference(jDbReference $reference) {
+        if (trim($reference->name) == '') {
+            $reference->name = $this->name.'_'.implode('_', $reference->columns).'_fkey';
+        }
         $this->alterReference($reference);
     }
 
     public function alterReference(jDbReference $reference) {
-        if (trim($reference->name) == '') {
-            throw new Exception("Reference constraint should have name");
-        }
         $ref = $this->getReference($reference->name);
         if ($ref) {
             $this->_replaceConstraint($ref, $reference);

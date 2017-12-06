@@ -27,7 +27,7 @@ class sqlite3DbTools extends jDbTools {
       'integer'         =>array('integer',          'integer',  -2147483648, 2147483647, null,     null),
       'int'             =>array('integer',          'integer',  -2147483648, 2147483647, null,     null),
       'bigint'          =>array('numeric',          'numeric',  '-9223372036854775808', '9223372036854775807', null, null),
-      'serial'          =>array('numeric',          'numeric',  '-9223372036854775808', '9223372036854775807', null, null),
+      'serial'          =>array('integer',          'integer',  '-9223372036854775808', '9223372036854775807', null, null),
       'bigserial'       =>array('numeric',          'numeric',  '-9223372036854775808', '9223372036854775807', null, null),
       'autoincrement'   =>array('integer',          'integer',  -2147483648, 2147483647, null,     null), // for old dao files
       'bigautoincrement'=>array('numeric',           'numeric',  '-9223372036854775808', '9223372036854775807', null, null),// for old dao files
@@ -57,30 +57,30 @@ class sqlite3DbTools extends jDbTools {
       'year'            =>array('integer',    'year',       null,       null,       2,     4),
       'interval'        =>array('datetime',   'datetime',   null,       null,       19,    19),
 
-      'char'            =>array('char',       'char',       null,       null,       0,     255),
-      'nchar'           =>array('char',       'char',       null,       null,       0,     255),
-      'varchar'         =>array('varchar',    'varchar',    null,       null,       0,     65535),
-      'varchar2'        =>array('varchar',    'varchar',    null,       null,       0,     4000),
-      'nvarchar2'       =>array('varchar',    'varchar',    null,       null,       0,     4000),
-      'character'       =>array('varchar',    'varchar',    null,       null,       0,     65535),
-      'character varying'=>array('varchar',   'varchar',    null,       null,       0,     65535),
-      'name'            =>array('varchar',    'varchar',    null,       null,       0,     64),
-      'longvarchar'     =>array('varchar',    'varchar',    null,       null,       0,     65535),
-      'string'          =>array('varchar',    'varchar',    null,       null,       0,     65535),// for old dao files
+      'char'            =>array('char',       'char',       null,       null,       0,     0),
+      'nchar'           =>array('char',       'char',       null,       null,       0,     0),
+      'varchar'         =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'varchar2'        =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'nvarchar2'       =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'character'       =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'character varying'=>array('varchar',   'varchar',    null,       null,       0,     0),
+      'name'            =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'longvarchar'     =>array('varchar',    'varchar',    null,       null,       0,     0),
+      'string'          =>array('varchar',    'varchar',    null,       null,       0,     0),// for old dao files
 
-      'tinytext'        =>array('text',   'text',      null,       null,       0,     255),
-      'text'            =>array('text',   'text',      null,       null,       0,     65535),
+      'tinytext'        =>array('text',   'text',      null,       null,       0,     0),
+      'text'            =>array('text',   'text',      null,       null,       0,     0),
       'ntext'           =>array('text',   'text',      null,       null,       0,     0),
-      'mediumtext'      =>array('text',   'text',      null,       null,       0,     16777215),
+      'mediumtext'      =>array('text',   'text',      null,       null,       0,     0),
       'longtext'        =>array('text',   'text',      null,       null,       0,     0),
       'long'            =>array('text',   'text',      null,       null,       0,     0),
       'clob'            =>array('text',   'text',      null,       null,       0,     0),
       'nclob'           =>array('text',   'text',      null,       null,       0,     0),
 
 
-      'tinyblob'        =>array('blob',  'blob',       null,       null,       0,     255),
-      'blob'            =>array('blob',  'blob',       null,       null,       0,     65535),
-      'mediumblob'      =>array('blob',  'blob',       null,       null,       0,     16777215),
+      'tinyblob'        =>array('blob',  'blob',       null,       null,       0,     null),
+      'blob'            =>array('blob',  'blob',       null,       null,       0,     null),
+      'mediumblob'      =>array('blob',  'blob',       null,       null,       0,     null),
       'longblob'        =>array('blob',  'blob',       null,       null,       0,     0),
       'bfile'           =>array('blob',  'blob',       null,       null,       0,     0),
       
