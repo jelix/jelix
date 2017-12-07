@@ -121,33 +121,6 @@ class mysqlDbTools extends jDbTools {
     }
 
     /**
-     * returns the list of tables
-     * @return array list of table names
-     * @throws jException
-     */
-    public function getTableList () {
-        $results = array ();
-        if (isset($this->_conn->profile['database'])) {
-            $db = $this->_conn->profile['database'];
-        }
-        else if (isset($this->_conn->profile['dsn'])
-                 && preg_match('/dbname=([a-z0-9_ ]*)/', $this->_conn->profile['dsn'], $m)){
-            $db = $m[1];
-        }
-        else {
-            throw new jException("jelix~error.no.database.name", $this->_conn->profile['name']);
-        }
-        $rs = $this->_conn->query ('SHOW TABLES FROM '.$this->encloseName($db));
-        $col_name = 'Tables_in_'.$db;
-
-        while ($line = $rs->fetch ()){
-            $results[] = $line->$col_name;
-        }
-
-        return $results;
-    }
-
-    /**
     * retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key (not supported here)
