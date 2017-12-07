@@ -38,7 +38,6 @@ class pgsqlDbTable extends jDbTable {
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
             WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name) .
             " ORDER BY a.attnum";
-
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             $name = $line->attname;
@@ -46,6 +45,9 @@ class pgsqlDbTable extends jDbTable {
             $notNull = ($line->attnotnull == 't');
             $default = $line->adsrc;
             $hasDefault = ($line->atthasdef == 't');
+            if ($type == 'boolean' && $hasDefault) {
+                $default = (strtolower($default) === 'true');
+            }
 
             $col = new jDbColumn($name, $type, $length, $hasDefault, $default, $notNull);
 

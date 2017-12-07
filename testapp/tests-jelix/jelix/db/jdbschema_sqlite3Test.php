@@ -383,7 +383,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         <string property="name" value="promo" />
         <boolean property="notNull" value="true"/>
         <boolean property="autoIncrement" value="false"/>
-        <string property="default" value="0"/>
+        <boolean property="default" value="false"/>
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
         <integer property="precision" value="0"/>
@@ -416,8 +416,8 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         $col->autoIncrement = true;
         $columns[] = $col;
         $columns[] = new jDbColumn('name', 'string', 50);
-        $columns[] = new jDbColumn('price', 'double');
-        $columns[] = new jDbColumn('promo', 'boolean');
+        $columns[] = new jDbColumn('price', 'double', 0, true, null, false);
+        $columns[] = new jDbColumn('promo', 'boolean', 0, true, true);
         $columns[] = new jDbColumn('product_id', 'int', 0, false, null, true);
 
         $schema->createTable('test_prod', $columns, 'id');
@@ -474,7 +474,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         <boolean property="notNull" value="false"/>
         <boolean property="autoIncrement" value="false"/>
         <null property="default" />
-        <boolean property="hasDefault" value="false"/>
+        <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
         <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
@@ -509,8 +509,8 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         <string property="name" value="promo" />
         <boolean property="notNull" value="false"/>
         <boolean property="autoIncrement" value="false"/>
-        <null property="default" />
-        <boolean property="hasDefault" value="false"/>
+        <boolean property="default" value="true"/>
+        <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
         <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>

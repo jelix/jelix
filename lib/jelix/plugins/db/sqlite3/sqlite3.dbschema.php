@@ -31,10 +31,9 @@ class sqlite3DbTable extends jDbTable {
         $rs = $conn->query($sql);
         $tools = $conn->tools();
         $this->primaryKey = false;
-
         while ($c = $rs->fetch()) {
             $hasDefault = false;
-            $default = '';
+            $default = null;
             $isPrimary  = ($c->pk == 1);
             $notNull   = ($c->notnull != 0 || $c->pk == 1);
 
@@ -48,6 +47,7 @@ class sqlite3DbTable extends jDbTable {
                 // see http://sqlite.org/autoinc.html
                 $autoIncrement = true;
                 $hasDefault = true;
+                $default = '';
             }
 
             if (!$isPrimary && $c->dflt_value !== null) {
@@ -58,6 +58,11 @@ class sqlite3DbTable extends jDbTable {
             if ($typeinfo[6]) {
                 $autoIncrement = true;
                 $hasDefault = true;
+                $default = '';
+            }
+
+            if ($typeinfo[1] == 'boolean' && $hasDefault) {
+                $default = ($default == '1' || $default === true || strtolower($default) == 'true');
             }
 
             $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
