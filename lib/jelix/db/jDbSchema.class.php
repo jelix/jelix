@@ -196,7 +196,7 @@ abstract class jDbSchema {
     function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
-
+        $ti = $this->conn->tools()->getTypeInfo($col->type);
         if ($col->precision) {
             $colstr .= '('.$col->precision;
             if($col->scale) {
@@ -204,7 +204,7 @@ abstract class jDbSchema {
             }
             $colstr .= ')';
         }
-        else if ($col->length) {
+        else if ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
             $colstr .= '('.$col->length.')';
         }
 
@@ -220,16 +220,8 @@ abstract class jDbSchema {
                     if (!$col->notNull) {
                         $colstr .= ' DEFAULT NULL';
                     }
-                }
-                else {
-                    $colstr .= ' DEFAULT ';
-                    $ti = $this->conn->tools()->getTypeInfo($col->type);
-                    $phpType = $this->conn->tools()->unifiedToPHPType($ti[1]);
-                    if ($phpType == 'string') {
-                        $colstr .= $this->conn->quote($col->default);
-                    } else {
-                        $colstr .= $col->default;
-                    }
+                } else {
+                    $colstr .= ' DEFAULT ' . $this->conn->tools()->escapeValue($ti[1], $col->default, true);
                 }
             }
         }

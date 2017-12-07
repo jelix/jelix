@@ -152,6 +152,7 @@ abstract class jDbTools {
      * @since 1.2
     */
     public function getTypeInfo($nativeType) {
+        $nativeType = strtolower($nativeType);
         if(isset($this->typesInfo[$nativeType])) {
             $r = $this->typesInfo[$nativeType];
         }
