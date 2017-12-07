@@ -23,7 +23,7 @@ source $VAGRANTDIR/setup_ldap.sh
 
 
 if [ "$PHP53" != "yes" ]; then
-    apt-get -y install php5-xdebug
+    apt-get -y install php${PHP_VERSION}-xdebug
     cp $VAGRANTDIR/xdebug.ini /etc/php/$PHP_VERSION/mods-available/
     service php${PHP_VERSION}-fpm restart
 fi

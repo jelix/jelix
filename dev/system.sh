@@ -1,5 +1,17 @@
 #!/bin/bash
 
+DISTRO=""
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    if [ "$VERSION_ID" = "8" ]; then
+        DISTRO="jessie"
+    else
+        if [ "$VERSION_ID" = "9" ]; then
+            DISTRO="stretch"
+        fi
+    fi
+fi
+
 function initsystem () {
     # create hostname
     HOST=`grep $APPHOSTNAME /etc/hosts`
@@ -18,9 +30,20 @@ function initsystem () {
     # install all packages
     apt-get update
     apt-get install -y software-properties-common apt-transport-https
+    if [ "$DISTRO" == "stretch" ]; then
+        apt-get install -y dirmngr
+    fi
     if [ "$PHP53" != "yes" ]; then
         apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AC0E47584A7A714D
-        echo "deb https://packages.sury.org/php jessie main" > /etc/apt/sources.list.d/sury_php.list
+        echo "deb https://packages.sury.org/php $DISTRO main" > /etc/apt/sources.list.d/sury_php.list
+    fi
+
+    if [ "$DISTRO" == "stretch" ]; then
+        if [ ! -f "/etc/apt/sources.list.d/mysql.list" ]; then
+            echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list
+            wget -O /tmp/RPM-GPG-KEY-mysql https://repo.mysql.com/RPM-GPG-KEY-mysql
+            apt-key add /tmp/RPM-GPG-KEY-mysql
+        fi
     fi
 
     apt-get update
