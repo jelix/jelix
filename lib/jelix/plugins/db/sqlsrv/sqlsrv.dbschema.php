@@ -148,7 +148,8 @@ class sqlsrvDbSchema extends jDbSchema {
                 TABLE_NAME NOT LIKE ('dt%')";
         $rs = $this->conn->query ($sql);
         while ($line = $rs->fetch()){
-            $results[$line->TABLE_NAME] = new sqlsrvDbTable($line->TABLE_NAME, $this);
+            $unpName = $this->conn->unprefixTable($line->TABLE_NAME);
+            $results[$unpName] = new sqlsrvDbTable($line->TABLE_NAME, $this);
         }
         return $results;
     }

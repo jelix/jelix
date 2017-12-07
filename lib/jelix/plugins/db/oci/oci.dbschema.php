@@ -170,7 +170,8 @@ class ociDbSchema extends jDbSchema {
         $rs = $this->conn->query ('SELECT TABLE_NAME FROM USER_TABLES');
 
         while ($line = $rs->fetch ()){
-            $results[$line->table_name] = new ociDbTable($line->table_name, $this);
+            $unpName = $this->conn->unprefixTable($line->table_name);
+            $results[$unpName] = new ociDbTable($line->table_name, $this);
         }
 
         return $results;

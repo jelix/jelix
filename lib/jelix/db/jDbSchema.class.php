@@ -37,14 +37,14 @@ abstract class jDbSchema {
     /**
      * create the given table if it does not exist
      *
-     * @param string $name
+     * @param string $name the unprefixed table name
      * @param jDbColumn[] $columns list of columns
      * @param string|string[] $primaryKey the name of the column which contains the primary key
      * @param array $attributes  some table attributes specific to the database
      * @return jDbTable the object corresponding to the created table
      */
     function createTable($name, $columns, $primaryKey, $attributes = array()) {
-        $name = $this->conn->prefixTable($name);
+        $prefixedName = $this->conn->prefixTable($name);
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
@@ -53,13 +53,15 @@ abstract class jDbSchema {
             return null;
         }
 
-        $this->tables[$name] = $this->_createTable($name, $columns, $primaryKey, $attributes);
+        $this->tables[$name] = $this->_createTable($prefixedName, $columns, $primaryKey, $attributes);
 
         return $this->tables[$name];
     }
 
     /**
-     * load informations of the given table
+     * load informations of the given
+     *
+     * @param string $name the unprefixed table name
      * @return jDbTable ready to make change
      */
     function getTable($name) {
@@ -75,7 +77,9 @@ abstract class jDbSchema {
         return null;
     }
 
-
+    /**
+     * @var null|jDbTable[]  key of the array are unprefixed name of tables
+     */
     protected $tables = null;
 
     /**
@@ -90,24 +94,31 @@ abstract class jDbSchema {
 
 
     /**
-     * @param string|jDbTable $table
+     * @param string|jDbTable $table the table object or the unprefixed table name
      */
     public function dropTable($table) {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
         if (is_string($table)) {
-            $name = $table;
+            $prefixedName = $this->conn->prefixTable($table);
+            $name = $prefixedName;
         }
         else {
             $name = $table->getName();
+            $prefixedName = $this->conn->unprefixTable($name);
         }
-        if (isset($this->tables[$name])) {
+        if (isset($this->tables[$prefixedName])) {
             $this->_dropTable($name);
-            unset($this->tables[$name]);
+            unset($this->tables[$prefixedName]);
         }
     }
 
+    /**
+     * @param string $oldName Unprefixed name of the table to rename
+     * @param string $newName The new unprefixed name of the table
+     * @return jDbTable|null
+     */
     public function renameTable($oldName, $newName) {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
@@ -118,9 +129,12 @@ abstract class jDbSchema {
         }
 
         if (isset($this->tables[$oldName])) {
-            $this->_renameTable($oldName, $newName);
+            $newPrefixedName = $this->conn->prefixTable($newName);
+            $this->_renameTable(
+                $this->conn->prefixTable($oldName),
+                $newPrefixedName);
             unset($this->tables[$oldName]);
-            $this->tables[$newName] = $this->_getTableInstance($newName);
+            $this->tables[$newName] = $this->_getTableInstance($newPrefixedName);
             return $this->tables[$newName];
         }
         return null;
@@ -128,7 +142,7 @@ abstract class jDbSchema {
 
     /**
      * create the given table into the database
-     * @param string $name
+     * @param string $name the table name
      * @param array $columns list of jDbColumn
      * @param string|array $primaryKey the name of the column which contains the primary key
      * @param array $attributes

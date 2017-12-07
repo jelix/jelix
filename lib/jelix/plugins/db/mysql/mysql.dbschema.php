@@ -484,7 +484,8 @@ class mysqlDbSchema extends jDbSchema {
         $col_name = 'Tables_in_'.$db;
 
         while ($line = $rs->fetch ()){
-            $results[$line->$col_name] = new mysqlDbTable($line->$col_name, $this);
+            $unpName = $this->conn->unprefixTable($line->$col_name);
+            $results[$unpName] = new mysqlDbTable($line->$col_name, $this);
         }
         return $results;
     }

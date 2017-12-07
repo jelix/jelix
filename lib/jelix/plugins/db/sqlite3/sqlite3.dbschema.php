@@ -561,7 +561,8 @@ class sqlite3DbSchema extends jDbSchema {
         $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
 
         while ($line = $rs->fetch ()){
-            $results[$line->name] = new sqlite3DbTable($line->name, $this);
+            $unpName = $this->conn->unprefixTable($line->name);
+            $results[$unpName] = new sqlite3DbTable($line->name, $this);
         }
 
         return $results;
@@ -594,15 +595,16 @@ class sqlite3DbSchema extends jDbSchema {
                                   $newIndexes = null,
                                   $newReferences = null,
                                   $newUniqueKeys = null) {
+        $conn = $this->getConn();
 
-        $tmpName = $table->getName().'_tmp';
+        $tmpName = $conn->unprefixTable($table->getName()).'_tmp';
         $count = 0;
         while($this->getTable($tmpName.$count) !== null) {
             $count++;
         }
         $tmpName .= $count;
+        $tmpName = $this->conn->prefixTable($tmpName);
 
-        $conn = $this->getConn();
         $conn->beginTransaction();
         try {
             $sql = $this->_createTableFromObject(

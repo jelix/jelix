@@ -137,7 +137,8 @@ class sqliteDbSchema extends jDbSchema {
         $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
 
         while ($line = $rs->fetch ()){
-            $results[$line->name] = new sqliteDbTable($line->name, $this);
+            $unpName = $this->conn->unprefixTable($line->name);
+            $results[$unpName] = new sqliteDbTable($line->name, $this);
         }
 
         return $results;

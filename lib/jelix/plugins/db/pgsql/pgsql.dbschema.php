@@ -367,7 +367,8 @@ class pgsqlDbSchema extends jDbSchema {
                   ORDER BY tablename";
         $rs = $this->getConn()->query ($sql);
         while ($line = $rs->fetch()){
-            $results[$line->tablename] = new pgsqlDbTable($line->tablename, $this);
+            $unpName = $this->conn->unprefixTable($line->tablename);
+            $results[$unpName] = new pgsqlDbTable($line->tablename, $this);
         }
         return $results;
     }
