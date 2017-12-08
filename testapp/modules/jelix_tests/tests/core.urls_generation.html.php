@@ -590,6 +590,81 @@ class UTCreateUrls extends UnitTestCase {
       $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
     }
 
+    function testBasicSignificantEngineWithAliases() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = '';
+        $conf->forceHTTPSPort = '';
+        $conf->urlengine = array(
+            'engine'=>'basic_significant',
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'defaultEntrypoint'=>'index',
+            'notfoundAct'=>'jelix~error:notfound',
+            'simple_urlengine_https'=>'jelix_tests~urlsig:url8@classic @xmlrpc',
+            'significantFile'=>'urls.xml',
+        );
+        $conf->basic_significant_urlengine_aliases = array(
+            'supertests' => 'jelix_tests'
+        );
+
+        jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+
+        $urlList=array();
+        $urlList[]= array('testapp~main:hello', array('person'=>'Bob'));
+        $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'35', 'p'=>null));
+        $urlList[]= array('urlsig:url2', array('mois'=>'05',  'annee'=>'2004'));
+        $urlList[]= array('jelix_tests~urlsig:url3', array('rubrique'=>'actualite',  'id_art'=>'65', 'article'=>'c\'est la fête au village'));
+        $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'%@deuxieme')); // with special char
+        // celle ci n'a pas de définition dans urls.xml *exprés*
+        $urlList[]= array('urlsig:url5', array('foo'=>'oof',  'bar'=>'rab'));
+        $urlList[]= array('jelix~bar@xmlrpc', array('aaa'=>'bbb'));
+        $urlList[]= array('jelix_tests~urlsig:url8', array('rubrique'=>'vetements',  'id_article'=>'98'));
+        $urlList[]= array('jelix_tests~default:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
+        $urlList[]= array('jelix_tests~urlsig:index', array('rubrique'=>'vetements',  'id_article'=>'98'));
+
+        $trueResult=array(
+            "/index.php/testapp/main/hello?person=Bob",
+            "/index.php/supertests/urlsig/url1?mois=10&annee=2005&id=35",
+            "/supertests/urlsig/url2?mois=05&annee=2004",
+            "/supertests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
+            "/foo/bar.php/supertests/urlsig/url4?first=premier&second=%25%40deuxieme",
+            "/index.php/supertests/urlsig/url5?foo=oof&bar=rab",
+            "/xmlrpc.php",
+            "/index.php/supertests/urlsig/url8?rubrique=vetements&id_article=98",
+            "/index.php/supertests/?rubrique=vetements&id_article=98",
+            "/index.php/supertests/urlsig/?rubrique=vetements&id_article=98",
+        );
+
+
+        $trueResult[6]='https://testapp.local'.$trueResult[6];
+        $trueResult[7]='https://testapp.local'.$trueResult[7];
+        $this->_doCompareUrl("simple, multiview = false", $urlList,$trueResult);
+
+        $conf->urlengine['multiview']=true;
+        jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+        $trueResult=array(
+            "/index/testapp/main/hello?person=Bob",
+            "/index/supertests/urlsig/url1?mois=10&annee=2005&id=35",
+            "/supertests/urlsig/url2?mois=05&annee=2004",
+            "/supertests/urlsig/url3?rubrique=actualite&id_art=65&article=c%27est+la+f%C3%AAte+au+village",
+            "/foo/bar/supertests/urlsig/url4?first=premier&second=%25%40deuxieme",
+            "/index/supertests/urlsig/url5?foo=oof&bar=rab",
+            "/xmlrpc",
+            "/index/supertests/urlsig/url8?rubrique=vetements&id_article=98",
+            "/index/supertests/?rubrique=vetements&id_article=98",
+            "/index/supertests/urlsig/?rubrique=vetements&id_article=98",
+        );
+        $trueResult[6]='https://testapp.local'.$trueResult[6];
+        $trueResult[7]='https://testapp.local'.$trueResult[7];
+        $this->_doCompareUrl("simple, multiview = true", $urlList,$trueResult);
+    }
 
 
     function testBasicSignificantEngineError(){

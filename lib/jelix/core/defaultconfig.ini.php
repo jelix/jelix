@@ -244,6 +244,10 @@ index = on
 xmlrpc = on
 jsonrpc = on
 
+[basic_significant_urlengine_aliases]
+; list of names to use for module name in url
+; urlname = modulename
+
 [logger]
 ; list of loggers for each categories of log messages
 ; available loggers : file, syslog, firebug, mail, memory. see plugins for others
