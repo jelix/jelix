@@ -731,6 +731,7 @@ class UTCreateUrls extends UnitTestCase {
             jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
         */
 
+        $_SERVER['HTTP_HOST'] = 'testapp.local';
         $_SERVER['SERVER_NAME'] = 'testapp.local';
         $_SERVER['SERVER_PORT'] = '80';
 
