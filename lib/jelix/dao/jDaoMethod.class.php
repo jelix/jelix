@@ -355,6 +355,10 @@ class jDaoMethod {
     private function _addLimit($limit){
         $attr = $this->_parser->getAttr($limit, array('offset','count'));
 
+        /**
+         * @var $offset
+         * @var $count
+         */
         extract($attr);
 
         if( $offset === null){
