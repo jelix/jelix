@@ -1,3 +1,4 @@
+uid=testldap,ou=people,dc=testapp16,dc=local
 uid=john,ou=people,dc=testapp16,dc=local
 uid=jane,ou=people,dc=testapp16,dc=local
 cn=group1,ou=groups,dc=testapp16,dc=local

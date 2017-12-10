@@ -21,6 +21,8 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
     protected $config;
 
+    protected $listenersBackup;
+
     function setUp(){
         parent::setUp();
         if(!file_exists(jApp::configPath().'auth_ldap.coord.ini.php')) {
@@ -39,6 +41,16 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
         $this->config = & jApp::coord()->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
+
+        // disable listener of jacl2db so testldap could be remove without
+        // verifying if there is still an admin
+        $this->listenersBackup = jApp::config()->disabledListeners;
+        jApp::config()->disabledListeners['AuthCanRemoveUser'] = 'jacl2db~jacl2db';
+        jEvent::clearCache();
+        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
     }
 
     function tearDown(){
@@ -47,6 +59,12 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
         jAcl2DbUserGroup::removeUser('testldap');
+        jApp::config()->disabledListeners = $this->listenersBackup;
+        jEvent::clearCache();
+        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
     }
 
     public function testUsersList() {

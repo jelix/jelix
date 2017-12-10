@@ -10,4 +10,4 @@ if (file_exists(jApp::tempPath()))
     jAppManager::clearTemp(jApp::tempPath());
 
 define('TESTAPP_URL', 'http://testapp.local/');
-define('TESTAPP_HOST', 'testapp.local');
+define('TESTAPP_HOST', 'testapp16.local');
