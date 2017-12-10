@@ -406,6 +406,8 @@ cd testapp/tests-jelix/jelix/db/
   jdb_parametersTest.php
   jdb_pgsqlTest.php
   jdbschema_mysqlTest.php
+  jdbschema_pgsqlTest.php
+  jdbschema_sqlite3Test.php
   jdbtoolsTest.php
   jdbtools_mysqlTest.php
 cd testapp/tests-jelix/jelix/events/

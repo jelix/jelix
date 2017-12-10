@@ -108,22 +108,6 @@ class ociDbTools extends jDbTools {
     );
 
     /**
-    * returns the list of tables 
-    * @return   array    list of table names
-    */
-    public function getTableList () {
-        $results = array ();
-
-        $rs = $this->_conn->query ('SELECT TABLE_NAME FROM USER_TABLES');
-
-        while ($line = $rs->fetch ()){
-            $results[] = $line->table_name;
-        }
-
-        return $results;
-    }
-
-    /**
     * retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key

@@ -109,8 +109,10 @@ class jDaoParser {
     public $selector;
 
     /**
-    * Constructor
-    */
+     * Constructor
+     *
+     * @param jSelectorDao $selector the selector of the DAO file
+     */
     function __construct(jSelectorDao $selector) {
         $this->selector = $selector;
     }

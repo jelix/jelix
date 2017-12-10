@@ -194,6 +194,71 @@ class jDbToolsTest extends jUnitTestCase {
         $this->assertEquals('NULL',$result);
     }
 
+    function testParseCreateTable() {
+        $tools = new mysqliDbTools(null);
+        $sql = "CREATE TABLE city (
+                city_id INTEGER  PRIMARY KEY AUTOINCREMENT,
+                country_id integer NOT NULL,
+                name  varchar(50) not null,
+                postcode integer DEFAULT 0,
+                latitude varchar(20), longitude varchar(20),
+                CONSTRAINT coordinates
+                 UNIQUE(latitude, longitude),
+                FOREIGN KEY (country_id) REFERENCES country (country_id))
+                ";
+        $result = $tools->parseCREATETABLE($sql);
+        $this->assertTrue($result !== false);
+        $this->assertEquals('city', $result['name']);
+        $this->assertEquals('', $result['options']);
+        $this->assertFalse($result['temporary']);
+        $this->assertFalse($result['ifnotexists']);
+        $this->assertEquals(array(
+            'city_id INTEGER PRIMARY KEY AUTOINCREMENT',
+            'country_id integer NOT NULL',
+            'name varchar(50) not null',
+            'postcode integer DEFAULT 0',
+            'latitude varchar(20)',
+            'longitude varchar(20)',
+        ), $result['columns']);
+        $this->assertEquals(array(
+            'CONSTRAINT coordinates UNIQUE(latitude, longitude)',
+            'FOREIGN KEY (country_id) REFERENCES country (country_id)',
+        ), $result['constraints']);
 
+    }
+
+    function testParseCreateTemporaryTable() {
+        $tools = new mysqliDbTools(null);
+        $sql = "CREATE TEMPORARY 
+                TABLE IF NOT
+                EXISTS city (
+                city_id INTEGER  PRIMARY KEY AUTOINCREMENT,
+                country_id integer NOT NULL,
+                name  varchar(50) not null,
+                postcode integer DEFAULT 0,
+                latitude varchar(20), longitude varchar(20),
+                CONSTRAINT coordinates
+                 UNIQUE(latitude, longitude),
+                FOREIGN KEY (country_id) REFERENCES country (country_id)
+                ) BIDULE ";
+        $result = $tools->parseCREATETABLE($sql);
+        $this->assertTrue($result !== false);
+        $this->assertEquals('city', $result['name']);
+        $this->assertEquals('BIDULE', $result['options']);
+        $this->assertTrue($result['temporary']);
+        $this->assertTrue($result['ifnotexists']);
+        $this->assertEquals(array(
+            'city_id INTEGER PRIMARY KEY AUTOINCREMENT',
+            'country_id integer NOT NULL',
+            'name varchar(50) not null',
+            'postcode integer DEFAULT 0',
+            'latitude varchar(20)',
+            'longitude varchar(20)',
+        ), $result['columns']);
+        $this->assertEquals(array(
+            'CONSTRAINT coordinates UNIQUE(latitude, longitude)',
+            'FOREIGN KEY (country_id) REFERENCES country (country_id)',
+        ), $result['constraints']);
+    }
 }
 

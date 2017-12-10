@@ -113,21 +113,6 @@ class sqlsrvDbTools extends jDbTools {
     );
 
     /**
-     * 	List of tables
-     * @return   array    $tab[] = $nomDeTable
-     */
-    function getTableList (){
-        $results = array ();
-        $sql = "SELECT TABLE_NAME FROM " .$this->_conn->profile['database']. ".INFORMATION_SCHEMA.TABLES
-                WHERE TABLE_NAME NOT LIKE ('sys%') AND TABLE_NAME NOT LIKE ('dt%')";
-        $rs = $this->_conn->query ($sql);
-        while ($line = $rs->fetch ()){
-            $results[] = $line->TABLE_NAME;
-        }
-        return $results;
-    }
-
-    /**
     * retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key (not supported here)
@@ -162,8 +147,8 @@ class sqlsrvDbTools extends jDbTools {
             if ($line->IS_NULLABLE == 'No'){
                 $field->notNull = false;
             }
-            $field->hasDefault = false;
-            $field->default = '';
+            $field->hasDefault = ($line->COLUMN_DEF !== '');
+            $field->default = $line->COLUMN_DEF;
             if(in_array($field->name, $pkeys)){
                 $field->primary = true;
             }
