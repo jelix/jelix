@@ -32,8 +32,6 @@ It can take time the first time. It depends of your internet connection.
 When the "Done" message appears, and if there are no errors, Testapp is
 ready. Go on http://10.205.1.16/ to see the app and launch Simpletests unit tests.
 
-You have also phpmyadmin : http://10.205.1.16/phpmyadmin/ (login:root, password: jelix)
-
 To shutdown the virtual machine, type
 
 ```

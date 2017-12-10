@@ -52,14 +52,7 @@ function initsystem () {
     export DEBIAN_FRONTEND=noninteractive
     echo "mysql-server-$MYSQL_VERSION mysql-server/root_password password jelix" | debconf-set-selections
     echo "mysql-server-$MYSQL_VERSION mysql-server/root_password_again password jelix" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/dbconfig-install boolean true" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/reconfigure-webserver multiselect apache2" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/mysql/admin-pass password jelix" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/app-password-confirm password jelix" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/mysql/app-pass password jelix" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/password-confirm password jelix" | debconf-set-selections
-    echo "phpmyadmin phpmyadmin/setup-password password jelix" | debconf-set-selections
-    
+
     apt-get -y install nginx
     if [ "$PHP53" != "yes" ]; then
         apt-get -y install  php${PHP_VERSION}-fpm \
@@ -106,7 +99,7 @@ function initsystem () {
         service php5-fpm restart
     fi
     apt-get -y install mysql-server mysql-client
-    apt-get -y install git phpmyadmin vim unzip curl
+    apt-get -y install git vim unzip curl
 
     # create a database into mysql + users
     if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
