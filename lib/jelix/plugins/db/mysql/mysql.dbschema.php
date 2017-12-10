@@ -387,7 +387,8 @@ class mysqlDbTable extends jDbTable {
 
     protected function _createConstraint(jDbConstraint $constraint) {
         if ($constraint instanceof jDbReference) {
-            return $this->_createReference($constraint);
+            $this->_createReference($constraint);
+            return;
         }
 
         $conn = $this->schema->getConn();

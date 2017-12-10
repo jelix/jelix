@@ -237,7 +237,7 @@ abstract class jDbConnection {
      * @since 1.6.16
      */
     public function unprefixTable($tableName) {
-        if (!isset($this->profile['table_prefix'])) {
+        if (!isset($this->profile['table_prefix']) || $this->profile['table_prefix'] == '') {
             return $tableName;
         }
         $prefix = $this->profile['table_prefix'];
