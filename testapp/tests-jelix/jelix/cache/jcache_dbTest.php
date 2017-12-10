@@ -30,11 +30,12 @@ class jCache_DbTest extends jCacheAPITest {
         parent::testGet();
 
         $this->insertRecordsIntoTable('jlx_cache', array('cache_key','cache_data','cache_date'),array(array('cache_key'=>'phpIncompleteClassKey','cache_data'=>'O:9:"dummyData":2:{s:5:"label";s:23:"test unserializing data";s:11:"description";s:26:"for expecting an exception";}','cache_date'=>null)));
-        $data=jCache::get('phpIncompleteClassKey',$this->profile);
-        if(!is_object($data)){
-            $this->assertTrue(true);
-        }else{
-            $this->fail();
+        $data = jCache::get('phpIncompleteClassKey',$this->profile);
+        if (version_compare(PHP_VERSION, '7.2.0') >= 0) {
+            $this->assertTrue(is_object($data));
+        }
+        else {
+            $this->assertFalse(is_object($data));
         }
     }
 
