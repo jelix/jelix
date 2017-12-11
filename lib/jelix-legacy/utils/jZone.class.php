@@ -162,10 +162,7 @@ class jZone {
                     if( filesize($cacheFiles['meta']) > 0 ) {
                         //create an anonymous function and then unset it. if jZone cache is cleared within 2 calls in a single
                         //request, this should still work fine
-                        // @deprecated PHP_7_2 create_function
-                        $metaFunct = create_function('$resp', file_get_contents($cacheFiles['meta']));
-                        $metaFunct( jApp::coord()->response );
-                        unset( $metaFunct );
+                        $this->_execMetaFunc(jApp::coord()->response, $cacheFiles['meta']);
                     }
                 } else {
                     //the cache does not exist yet for this response type. We have to generate it !
@@ -188,6 +185,10 @@ class jZone {
             $content=$this->_createContent();
         }
         return $content;
+    }
+
+    protected function _execMetaFunc($resp, $_file) {
+        include($_file);
     }
 
     /**
@@ -214,7 +215,8 @@ class jZone {
         jApp::coord()->response = $sniffer;
         $content = $this->_createContent();
         jApp::coord()->response = $response;
-        return array($content, (string)$sniffer);
+
+        return array($content, '<?'."php\n".(string)$sniffer);
     }
 
     /**

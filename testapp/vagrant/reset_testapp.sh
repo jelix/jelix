@@ -9,7 +9,7 @@ source $VAGRANTDIR/system.sh
 
 
 # --- testapp
-resetJelixMysql testapp root jelix
+resetJelixMysql testapp test_user jelix
 resetJelixInstall $APPDIR
 
 if [ -f $APPDIR/app/config/auth_ldap.coord.ini.php.dist ]; then
@@ -19,7 +19,7 @@ fi
 MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
 for TABLE in $MYSQLTABLES
 do
-    mysql -u root -pjelix -e "drop table if exists $TABLE;" testapp;
+    mysql -u test_user -pjelix -e "drop table if exists $TABLE;" testapp;
 done
 
 PGTABLES="jacl2_group jacl2_rights jacl2_subject jacl2_subject_group jacl2_user_group jsessions labels1_tests labels_tests product_tags_test product_test products testkvdb"
@@ -36,6 +36,6 @@ initapp $APPDIR
 
 # --- adminapp
 resetJelixInstall $APPDIR/adminapp
-resetJelixMysql testapp root jelix admin_
+resetJelixMysql testapp test_user jelix admin_
 initapp $APPDIR/adminapp
 
