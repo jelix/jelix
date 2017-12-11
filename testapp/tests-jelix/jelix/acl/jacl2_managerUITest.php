@@ -1367,18 +1367,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         $this->assertEquals(3, $list['usersCount']);
         $verif='<array>
                 <object >
-                    <string property="login" value="theadmin" />
-                    <string property="id_aclgrp" value="__priv_theadmin" />
-                    <array property="groups">
-                        <object>
-                            <string property="login" value="theadmin" />
-                            <string property="id_aclgrp" value="admins" />
-                            <string property="name" value="Admins" />
-                            <string property="grouptype" value="0" />
-                        </object>
-                    </array>
-                </object>
-                <object >
                     <string property="login" value="oneuser" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <array property="groups">
@@ -1398,6 +1386,18 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
                             <string property="login" value="specificadmin" />
                             <string property="id_aclgrp" value="users" />
                             <string property="name" value="Users" />
+                            <string property="grouptype" value="0" />
+                        </object>
+                    </array>
+                </object>
+                <object >
+                    <string property="login" value="theadmin" />
+                    <string property="id_aclgrp" value="__priv_theadmin" />
+                    <array property="groups">
+                        <object>
+                            <string property="login" value="theadmin" />
+                            <string property="id_aclgrp" value="admins" />
+                            <string property="name" value="Admins" />
                             <string property="grouptype" value="0" />
                         </object>
                     </array>

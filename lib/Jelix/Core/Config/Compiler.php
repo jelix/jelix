@@ -203,7 +203,10 @@ class Compiler {
 
         $config->chmodFile = octdec($config->chmodFile);
         $config->chmodDir = octdec($config->chmodDir);
-        $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);
+        if (!is_array($config->error_handling['sensitiveParameters'])) {
+            $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);
+        }
+
     }
 
     protected function checkCoordPluginsPath($config) {

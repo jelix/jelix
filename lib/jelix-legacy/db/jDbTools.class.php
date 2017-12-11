@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
-* @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
 * @copyright  2008 Gwendal Jouannic
 * @copyright  2008 Julien Issler
 *
@@ -152,11 +152,13 @@ abstract class jDbTools {
      * @since 1.2
     */
     public function getTypeInfo($nativeType) {
+        $nativeType = strtolower($nativeType);
         if(isset($this->typesInfo[$nativeType])) {
             $r = $this->typesInfo[$nativeType];
         }
-        else 
+        else {
             $r = $this->typesInfo['varchar'];
+        }
         $r[] = ($nativeType == 'serial' || $nativeType == 'bigserial' || $nativeType == 'autoincrement' || $nativeType == 'bigautoincrement');
         return $r;
     }
@@ -201,6 +203,43 @@ abstract class jDbTools {
                 return $value;
         }
     }
+
+    /**
+     * Parse a SQL type and gives type, length...
+     *
+     * @param string $type
+     * @return array  [$realtype, $length, $precision, $scale, $otherTypeDef]
+     */
+    public function parseSQLType($type) {
+        $length = 0;
+        $scale = 0;
+        $precision = 0;
+        $tail = '';
+        if (preg_match('/^(\w+)\s*(\(\s*(\d+)(,(\d+))?\s*\))?(.*)$/',$type, $m)) {
+            $type = strtolower($m[1]);
+            if (isset($m[3])) {
+                $typeInfo = $this->getTypeInfo($type);
+                $phpType =  $this->unifiedToPHPType($typeInfo[1]);
+                if ($phpType == 'string') {
+                    $length = intval($m[3]);
+                }
+                else {
+                    $precision = intval($m[3]);
+                }
+            }
+            if (isset($m[4]) && $m[5]) {
+                $precision = $length;
+                $length = 0;
+                $scale = intval($m[5]);
+            }
+            if (isset($m[6])) {
+                $tail = $m[6];
+            }
+
+        }
+        return array($type, $length, $precision, $scale, $tail);
+    }
+
 
     /**
      * @param string $unifiedType  the unified type name
@@ -264,16 +303,21 @@ abstract class jDbTools {
     }
 
     /**
-    * returns the table list
-    */
-    abstract public function getTableList ();
+     * returns the list of tables
+     * @return array list of table names
+     * @throws jException
+     */
+    public function getTableList () {
+        $list = $this->_conn->schema()->getTables();
+        return array_keys($list);
+    }
 
     /**
     * Retrieve the list of fields of a table
     * @param string $tableName the name of the table
     * @param string $sequence  the sequence used to auto increment the primary key
     * @param string $schemaName the name of the schema (only for PostgreSQL)
-    * @return   array    keys are field names and values are jDbFieldProperties objects
+    * @return jDbFieldProperties[]  keys are field names
     */
     abstract public function getFieldList ($tableName, $sequence='', $schemaName='');
 
@@ -318,4 +362,110 @@ abstract class jDbTools {
         }
         return $nbCmd;
    }
+
+    /**
+     * @param string[] $columns list of column names
+     * @return string the list in SQL
+     * @since 1.6.16
+     */
+    public function getSQLColumnsList($columns) {
+        $cols = array();
+        foreach($columns as $col) {
+            $cols [] = $this->_conn->encloseName($col);
+        }
+        return implode(',', $cols);
+    }
+
+    /**
+     * Parse a SQL CREATE TABLE statement and returns all of its components
+     * separately.
+     *
+     * @param $createTableStatement
+     * @return array|bool false if parsing has failed. Else an array :
+     *          'name' => the schema/table name,
+     *          'temporary'=> true if there is the temporary keywork ,
+     *          'ifnotexists' => true if there is the IF NOT EXISTS statement,
+     *          'columns' => list of columns definitions,
+     *          'constraints' => list of table constraints definitions,
+     *          'options' => all options at the end of the CREATE TABLE statement.
+     * @since 1.6.16
+     */
+    public function parseCREATETABLE($createTableStatement) {
+        $result = array(
+            'name' => '',
+            'temporary'=>false,
+            'ifnotexists' => false,
+            'columns' => array(),
+            'constraints' => array(),
+            'options' => ''
+        );
+
+        if (!preg_match("/^\s*CREATE\s+(TEMP(?:ORARY)?\s+)?TABLE\s+(IF\s+NOT\s+EXISTS\s+)?([^(]+)/msi", $createTableStatement, $m)) {
+            return false;
+        }
+        $result['temporary'] = !!($m[1]);
+        $result['ifnotexists'] = !!($m[2]);
+        $result['name'] = trim($m[3]);
+
+        $posStart = strlen($m[0]);
+        $posEnd = strrpos($createTableStatement, ')');
+        $result['options'] = trim(substr($createTableStatement, $posEnd+1));
+
+        $def = substr($createTableStatement, $posStart+1, $posEnd-$posStart-1);
+
+        $tokens = preg_split("/([,()])/msi", $def, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        $regexpConstraint = "/^\s*(CONSTRAINT|CHECK|UNIQUE|PRIMARY|EXCLUDE|FOREIGN|FULLTEXT|SPATIAL|INDEX|KEY)/msi";
+        $columns = array();
+        $constraints = array();
+        $level = 0;
+        $currentDef = '';
+        foreach($tokens as $token) {
+            if ($token == '(') {
+                $level ++;
+                $currentDef .= $token;
+            }
+            else if ($token == ')') {
+                $level --;
+                if ($level < 0) {
+                    $level = 0;
+                }
+                $currentDef .= $token;
+            }
+            else if ($token == ',') {
+                if ($level > 0) {
+                    $currentDef .= $token;
+                }
+                else {
+                    // new current definition
+                    $currentDef = trim(preg_replace("/\s+/", ' ', $currentDef));
+                    if (preg_match($regexpConstraint, $currentDef)) {
+                        $constraints[] = $currentDef;
+                    }
+                    else {
+                        $columns[] = $currentDef;
+                    }
+                    $currentDef = '';
+                }
+            }
+            else {
+                $currentDef .= $token;
+            }
+        }
+        if ($currentDef) {
+            $currentDef = trim(preg_replace("/\s+/", ' ', $currentDef));
+            if (preg_match($regexpConstraint, $currentDef)) {
+                $constraints[] = $currentDef;
+            }
+            else {
+                $columns[] = $currentDef;
+            }
+        }
+
+        $result['columns'] = $columns;
+        $result['constraints'] = $constraints;
+
+        return $result;
+    }
+
 }

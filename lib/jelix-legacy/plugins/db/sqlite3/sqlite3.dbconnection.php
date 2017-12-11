@@ -58,8 +58,6 @@ class sqlite3DbConnection extends jDbConnection {
             throw new jException('jelix~db.error.query.bad',  $this->_connection->error.'('.$query.')');
         }
         return $rs;
-
-        throw new jException('jelix~db.error.feature.unsupported', array('sqlite','prepare'));
     }
 
     public function errorInfo(){

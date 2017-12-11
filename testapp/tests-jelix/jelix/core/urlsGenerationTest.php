@@ -442,7 +442,6 @@ class UTCreateUrls extends jUnitTestCase {
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
 
-
       $urlList=array();
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
 
@@ -484,6 +483,7 @@ class UTCreateUrls extends jUnitTestCase {
         //   given domainName or not
         //   jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
 
+        $_SERVER['HTTP_HOST'] = TESTAPP_HOST;
         $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
         $_SERVER['SERVER_PORT'] = '80';
 

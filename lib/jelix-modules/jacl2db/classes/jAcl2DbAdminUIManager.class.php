@@ -201,6 +201,7 @@ class jAcl2DbAdminUIManager {
             if ($userFilter) {
                 $cond->addCondition('login', 'LIKE', '%'.$userFilter.'%');
             }
+            $cond->addItemOrder('login','asc');
             $rs = $dao->findBy($cond, $offset, $listPageSize);
             $usersCount = $dao->countBy($cond);
 
