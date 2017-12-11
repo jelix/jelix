@@ -24,11 +24,13 @@
     "require": {
         "phpunit/phpunit": "5.7.*",
         "jelix/for-classic-package" : "@dev",
-        "jelix/minify-module": "^1.7.1",
+        "jelix/minify-module": "2.0.x-dev",
         "jelix/php-redis-plugin": "^1.7.5",
-        "jelix/sitemap-module": "^1.7.2",
+        "jelix/sitemap-module": "2.0.x-dev",
         "guzzlehttp/guzzle": "^6.2.0",
-        "jelix/ldapdao-module": "2.0.x-dev"
+        "jelix/ldapdao-module": "2.0.x-dev@dev",
+        "jelix/feeds-module": "2.0.x-dev",
+        "jelix/soap-server-module": "2.0.x-dev"
     },
     "autoload": {
     },
