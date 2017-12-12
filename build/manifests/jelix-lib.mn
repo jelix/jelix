@@ -662,6 +662,9 @@ cd lib/jelix/plugins/logger/firebug
 cd lib/jelix/plugins/logger/legacysyslog
   legacysyslog.logger.php
 
+cd lib/jelix/plugins/logger/soapfile
+  soapfile.logger.php
+
 cd lib/jelix/plugins/htmlresponse/minify
   minify.htmlresponse.php
 
