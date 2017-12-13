@@ -2,9 +2,6 @@
 
 [![Build Status](https://travis-ci.org/jelix/jelix.svg?branch=jelix-1.7.x)](https://travis-ci.org/jelix/jelix)
 [![License](https://poser.pugx.org/jelix/jelix/license)](https://packagist.org/packages/jelix/jelix)
-
-Since Jelix is available as a Composer Package on packagist.org:
-
 [![Latest Stable Version](https://poser.pugx.org/jelix/jelix/v/stable)](https://packagist.org/packages/jelix/jelix)
 [![Total Downloads](https://poser.pugx.org/jelix/jelix/downloads)](https://packagist.org/packages/jelix/jelix)
 [![Latest Unstable Version](https://poser.pugx.org/jelix/jelix/v/unstable)](https://packagist.org/packages/jelix/jelix)
@@ -12,7 +9,7 @@ Since Jelix is available as a Composer Package on packagist.org:
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 5.6 to PHP 7.1. 
+Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 5.6 to PHP 7.2. 
 
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
