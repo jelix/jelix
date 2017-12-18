@@ -30,6 +30,16 @@ class jacl2dbModuleInstaller extends jInstallerModule {
         $driver = $this->config->getValue('driver','acl2');
         if ($driver != 'db')
             $this->config->setValue('driver','db','acl2');
+
+        /*
+        $mapper = new jDaoDbMapper('jacl2_profile');
+        $mapper->createTableFromDao("jacl2db~jacl2group");
+        $mapper->createTableFromDao("jacl2db~jacl2usergroup");
+        $mapper->createTableFromDao("jacl2db~jacl2subjectgroup");
+        $mapper->createTableFromDao("jacl2db~jacl2subject");
+        $mapper->createTableFromDao("jacl2db~jacl2rights");
+        */
+
         $this->execSQLScript('install_jacl2.schema');
 
         $this->execSQLScript('data.sql');

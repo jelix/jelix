@@ -252,6 +252,7 @@ cd lib/jelix/dao
   jDao.class.php
   jDaoCompiler.class.php
 * jDaoParser.class.php
+  jDaoDbMapper.class.php
   jDaoConditions.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jDaoGenerator.class.php
