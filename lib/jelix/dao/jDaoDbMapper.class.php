@@ -12,6 +12,7 @@ require(__DIR__.'/jDaoParser.class.php');
 
 /**
  * It allows to create tables corresponding to a dao file.
+ * @since 1.6.16
  */
 class jDaoDbMapper
 {
@@ -71,6 +72,41 @@ class jDaoDbMapper
         }
     }
 
+    /**
+     * @param string $selectorStr the dao for which we want to insert data
+     * @param string[]  $properties list of properties for which data are given
+     * @param mixed[][] $data the data. each row is an array of values.
+     *                  Values are in the same order as $properties
+     * @param integer $option one of jDbTools::IBD_* const
+     * @return integer number of records inserted/updated
+     */
+    public function insertDaoData($selectorStr, $properties, $data, $option) {
+        $selector = new jSelectorDao($selectorStr, $this->profile);
+        $parser = $this->getParser($selector);
+        $tools = $this->connection->tools();
+        $allProperties = $parser->getProperties();
+        $tables = $parser->getTables();
+        $columns = array();
+        $primaryKey = array();
+        foreach($properties as $name) {
+            if (!isset($allProperties[$name])) {
+                throw new Exception("insertDaoData: Unknown property $name");
+            }
+            $columns[] = $allProperties[$name]->fieldName;
+            if ($allProperties[$name]->isPK) {
+                $primaryKey[] = $allProperties[$name]->fieldName;
+            }
+        }
+        if (count($primaryKey) == 0) {
+            $primaryKey = null;
+        }
+
+        return $tools->insertBulkData(
+            $tables[$parser->getPrimaryTable()]['realname'],
+            $columns, $data, $primaryKey, $option
+        );
+    }
+
     protected function getParser(jSelectorDao $selector) {
         $parser = new jDaoParser($selector);
         $daoPath = $selector->getPath();
@@ -117,4 +153,6 @@ class jDaoDbMapper
         }
         return $column;
     }
+
+
 }

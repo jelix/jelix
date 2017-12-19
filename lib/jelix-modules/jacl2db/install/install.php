@@ -42,15 +42,15 @@ class jacl2dbModuleInstaller extends jInstallerModule {
 
         $this->execSQLScript('install_jacl2.schema');
 
-        $this->execSQLScript('data.sql');
+        $this->insertDaoData('data.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
 
         if ($this->getParameter('defaultuser') || $this->getParameter('defaultgroups')) {
             // declare some groups
-            $this->execSQLScript('groups.sql');
+            $this->insertDaoData('groups.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
         }
 
         if ($this->getParameter('defaultuser')) {
-            $this->execSQLScript('user.sql');
+            $this->insertDaoData('users.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
         }
     }
 }

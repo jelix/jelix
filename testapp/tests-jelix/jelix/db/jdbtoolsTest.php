@@ -15,7 +15,7 @@ include_once (JELIX_LIB_PATH.'plugins/db/oci/oci.dbtools.php');
 include_once (JELIX_LIB_PATH.'plugins/db/sqlite/sqlite.dbtools.php');
 
 
-class jDbToolsTest extends jUnitTestCase {
+class jDbToolsTest extends jUnitTestCaseDb {
 
     public static function setUpBeforeClass() {
         self::initJelixConfig();
@@ -259,6 +259,263 @@ class jDbToolsTest extends jUnitTestCase {
             'CONSTRAINT coordinates UNIQUE(latitude, longitude)',
             'FOREIGN KEY (country_id) REFERENCES country (country_id)',
         ), $result['constraints']);
+    }
+
+    function testInsertDataEmptyTableBefore() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        // insert a record
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        // now insert new data, dummy record should not exist
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(8, 'foo.label1', 'fr', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_EMPTY_TABLE_BEFORE
+        );
+        $this->assertEquals(3, $count);
+
+        $records = array(
+            array('key' => 8, 'keyalias'=>'foo.label1', 'lang'=>'fr', 'label'=>'un label1'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 3);
+
+
+        $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+            ),
+            array('key', 'lang'),
+            $tools::IBD_EMPTY_TABLE_BEFORE
+        );
+        $this->assertTableIsEmpty('labels_test');
+    }
+
+    function testInsertDataOnlyEmptyTableWhereTableIsNotEmpty() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        // insert a record
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        // now insert new data, given records should not exist
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(8, 'foo.label1', 'fr', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY
+        );
+        $this->assertEquals(0, $count);
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 1);
+    }
+
+    function testInsertDataOnlyEmptyTableWhereTableIsEmpty() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $this->emptyTable('labels_test');
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(8, 'foo.label1', 'fr', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY
+        );
+        $this->assertEquals(3, $count);
+
+        $records = array(
+            array('key' => 8, 'keyalias'=>'foo.label1', 'lang'=>'fr', 'label'=>'un label1'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 3);
+    }
+
+    function testInsertDataIgnoreIfExistNoExistingRecords() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(5, 'foo.label1', 'fr', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_IGNORE_IF_EXIST
+        );
+        $this->assertEquals(3, $count);
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+            array('key' => 5, 'keyalias'=>'foo.label1', 'lang'=>'fr', 'label'=>'un label1'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 4);
+    }
+
+    function testInsertDataIgnoreIfExistExistingRecords() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(5, 'foo.label1', 'en', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_IGNORE_IF_EXIST
+        );
+        $this->assertEquals(2, $count);
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 3);
+    }
+
+
+    function testInsertDataUpdateIfExistNoExistingRecords() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(5, 'foo.label1', 'fr', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_UPDATE_IF_EXIST
+        );
+        $this->assertEquals(3, $count);
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+            array('key' => 5, 'keyalias'=>'foo.label1', 'lang'=>'fr', 'label'=>'un label1'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 4);
+    }
+
+    function testInsertDataUpdateIfExistExistingRecords() {
+        $this->dbProfile = 'mysqli_profile';
+        $cnt = jDb::getConnection('mysqli_profile');
+        $tools = $cnt->tools();
+
+        $columns = array('key', 'keyalias', 'lang', 'label');
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'dummy', 'lang'=>'en', 'label'=>'this is dummy'),
+        );
+        $this->insertRecordsIntoTable('labels_test',
+            $columns,
+            $records,
+            true);
+
+        $count = $tools->insertBulkData('labels_test',
+            $columns,
+            array(
+                array(5, 'foo.label1', 'en', 'un label1'),
+                array(8, 'foo.label2', 'en', 'a label1'),
+                array(10, 'foo.label3', 'fr', 'super label')
+            ),
+            array('key', 'lang'),
+            $tools::IBD_UPDATE_IF_EXIST
+        );
+        $this->assertEquals(3, $count);
+
+        $records = array(
+            array('key'=>5, 'keyalias'=>'foo.label1', 'lang'=>'en', 'label'=>'un label1'),
+            array('key' => 8, 'keyalias'=>'foo.label2', 'lang'=>'en', 'label'=>'a label1'),
+            array('key' => 10, 'keyalias'=>'foo.label3', 'lang'=>'fr', 'label'=>'super label')
+        );
+        $this->assertTableContainsRecords('labels_test', $records, true);
+        $this->assertTableHasNRecords('labels_test', 3);
     }
 }
 
