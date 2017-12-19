@@ -468,4 +468,140 @@ abstract class jDbTools {
         return $result;
     }
 
+    const IBD_NO_CHECK = 0;
+    const IBD_EMPTY_TABLE_BEFORE = 1;
+    const IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY = 2;
+    const IBD_IGNORE_IF_EXIST = 3;
+    const IBD_UPDATE_IF_EXIST = 4;
+
+    /**
+     * Insert several records into a table
+     *
+     * @param string $tableName
+     * @param string[] $columns  the column names in which data will be inserted
+     * @param mixed[][] $data the data. each row is an array of values. Values are
+     *              in the same order as $columns
+     * @param string|string[]|null $primaryKey the column names that are
+     *                          the primary key. Don't give the primary key if it
+     *                          is an autoincrement field, or if option is not
+     *                          IBD_*_IF_EXIST
+     *
+     * @param int $options one of IDB_* const
+     * @return integer number of records inserted/updated
+     * @since 1.6.16
+     */
+    public function insertBulkData($tableName, $columns, $data, $primaryKey = null, $options = 0) {
+        $tableName = $this->_conn->prefixTable($tableName);
+
+        if ($options == self::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY) {
+            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM $tableName");
+            if ($rs) {
+                $rec = $rs->fetch();
+                if (intval($rec->_cnt_) > 0) {
+                    return 0;
+                }
+            }
+        }
+        if ($primaryKey && !is_array($primaryKey)) {
+            $primaryKey = array($primaryKey);
+        }
+
+        $checkExist = ($primaryKey &&
+            ($options == self::IBD_IGNORE_IF_EXIST ||
+                $options == self::IBD_UPDATE_IF_EXIST));
+
+        $sqlColumns = array();
+        $pki = 0;
+        $pkIndexes = array();
+        $sqlPk = array();
+        foreach($columns as $k=>$col) {
+            if ($checkExist &&
+                count($primaryKey) > $pki &&
+                $primaryKey[$pki] == $col
+            ) {
+                $pkIndexes[$k] = $this->_conn->encloseName($col);
+                $sqlPk[] = $pkIndexes[$k];
+                $pki++;
+            }
+            else {
+                $pkIndexes[$k] = false;
+            }
+            $sqlColumns[] = $this->_conn->encloseName($col);
+        }
+
+        $sqlInsert = "INSERT INTO ".$this->_conn->encloseName($tableName).' ('.
+            implode(',', $sqlColumns).') VALUES (';
+        if ($checkExist) {
+            $sqlCheck = "SELECT " . implode(',', $sqlPk) . ' FROM ' . $tableName . ' WHERE ';
+        }
+
+        $this->_conn->beginTransaction();
+
+        if ($options == self::IBD_EMPTY_TABLE_BEFORE) {
+            $this->_conn->exec("DELETE FROM $tableName");
+        }
+        $recCount = 0;
+        foreach ($data as $rk => $row) {
+            $values = array();
+            if (count($row) != count($columns)) {
+                $this->_conn->rollback();
+                throw new Exception("insertBulkData: row $rk does not content right values count");
+            }
+            $sqlPk = array();
+            $sqlUpdateValue = array();
+            foreach($row as $vk => $value) {
+                $op = '=';
+                switch(gettype($value)) {
+                    case "boolean":
+                        $val = $this->getBooleanValue($value);
+                        break;
+                    case "integer":
+                        $val = (string) $value;
+                        break;
+                    case "double":
+                        $val = jDb::floatToStr($value);
+                        break;
+                    case "string":
+                        $val = $this->_conn->quote($value);
+                        break;
+                    case "NULL":
+                        $val = "NULL";
+                        $op ='IS';
+                        break;
+                    default:
+                        $this->_conn->rollback();
+                        throw new Exception('insertBulkData: Unexpected value type to insert into the database, '.$rk.':'.$vk);
+                        break;
+                }
+                $values[] = $val;
+                if ($pkIndexes[$vk] !== false) {
+                    $sqlPk[] = $pkIndexes[$vk]." $op $val";
+                }
+                else if ($options == self::IBD_UPDATE_IF_EXIST) {
+                    $sqlUpdateValue[] = $sqlColumns[$vk]." = $val";
+                }
+            }
+
+            if ($checkExist) {
+                $rs = $this->_conn->query($sqlCheck.implode(' AND ', $sqlPk));
+                if ($rs && $rs->fetch()) {
+                    if ($options == self::IBD_IGNORE_IF_EXIST) {
+                        continue;
+                    }
+                    else if ($options == self::IBD_UPDATE_IF_EXIST) {
+                        $sqlUpdate = 'UPDATE '.$tableName.' SET ';
+                        $sqlUpdate .= implode(',', $sqlUpdateValue);
+                        $sqlUpdate .= ' WHERE '.implode(' AND ', $sqlPk);
+                        $this->_conn->exec($sqlUpdate);
+                        $recCount++;
+                        continue;
+                    }
+                }
+            }
+            $this->_conn->exec($sqlInsert.implode(',',$values).')');
+            $recCount++;
+        }
+        $this->_conn->commit();
+        return $recCount;
+    }
 }

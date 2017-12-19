@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  utils
 * @author      Laurent Jouanneau
-* @copyright   2011-2014 Laurent Jouanneau
+* @copyright   2011-2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -26,7 +26,7 @@ class  jLogSoapMessage extends jLogMessage {
      */
     protected $response;
     /**
-     * @var string
+     * @var integer
      */
     protected $duration;
     /**
@@ -51,20 +51,39 @@ class  jLogSoapMessage extends jLogMessage {
         $this->message = 'Soap call: '.$function_name.'()';
     }
 
+    /**
+     * @return string  http header of the request
+     */
     public function getHeaders() {
         return $this->headers;
     }
 
+    /**
+     * @return string  xml content of the response
+     */
     public function getResponse() {
         return $this->response;
     }
 
+    /**
+     * @return string  xml content of the request
+     */
     public function getRequest() {
         return $this->request;
     }
 
+    /**
+     * @return int the duration of the soap call
+     */
     public function getDuration() {
         return $this->duration;
+    }
+
+    /**
+     * @return string soap fonction name
+     */
+    public function getFunctionName() {
+        return $this->functionName;
     }
 
     public function getFormatedMessage() {

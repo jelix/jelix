@@ -20,6 +20,7 @@ jacl.access=1
 jacldb.access=1
 jacl2.access=1
 jacl2db.access=1
+jacl2db.installparam=defaultuser
 jauthdb.access=1
 jauth.access=1
 jpref.access=1

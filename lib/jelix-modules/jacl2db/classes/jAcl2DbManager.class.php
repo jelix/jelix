@@ -40,15 +40,18 @@ class jAcl2DbManager {
      */
     public static function addRight($group, $subject, $resource='-'){
         $sbj = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->get($subject);
-        if(!$sbj) return false;
+        if (!$sbj) {
+            return false;
+        }
 
-        if(empty($resource))
+        if(empty($resource)) {
             $resource = '-';
+        }
 
         //  add the new value
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         $right = $daoright->get($subject,$group,$resource);
-        if(!$right){
+        if (!$right) {
             $right = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
             $right->id_aclsbj = $subject;
             $right->id_aclgrp = $group;
@@ -163,11 +166,15 @@ class jAcl2DbManager {
      * @param string $subjectGroup the id of the group where the subject is attached to
      */
     public static function addSubject($subject, $label_key, $subjectGroup=null){
+        $dao = jDao::get('jacl2db~jacl2subject','jacl2_profile');
+        if ($dao->get($subject)) {
+            return;
+        }
         $subj = jDao::createRecord('jacl2db~jacl2subject','jacl2_profile');
-        $subj->id_aclsbj=$subject;
-        $subj->label_key =$label_key;
+        $subj->id_aclsbj = $subject;
+        $subj->label_key = $label_key;
         $subj->id_aclsbjgrp = $subjectGroup;
-        jDao::get('jacl2db~jacl2subject','jacl2_profile')->insert($subj);
+        $dao->insert($subj);
         jAcl2::clearCache();
     }
 
@@ -188,10 +195,14 @@ class jAcl2DbManager {
      * @since 1.3
      */
     public static function addSubjectGroup($subjectGroup, $label_key){
+        $dao = jDao::get('jacl2db~jacl2subjectgroup','jacl2_profile');
+        if ($dao->get($subjectGroup)) {
+            return;
+        }
         $subj = jDao::createRecord('jacl2db~jacl2subjectgroup','jacl2_profile');
-        $subj->id_aclsbjgrp=$subjectGroup;
-        $subj->label_key =$label_key;
-        jDao::get('jacl2db~jacl2subjectgroup','jacl2_profile')->insert($subj);
+        $subj->id_aclsbjgrp = $subjectGroup;
+        $subj->label_key = $label_key;
+        $dao->insert($subj);
         jAcl2::clearCache();
     }
 
