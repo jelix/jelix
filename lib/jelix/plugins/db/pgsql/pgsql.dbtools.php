@@ -5,7 +5,7 @@
 * @author     Laurent Jouanneau
 * @contributor Laurent Jouanneau
 * @contributor Nicolas Jeudy (patch ticket #99)
-* @copyright  2005-2011 Laurent Jouanneau
+* @copyright  2005-2017 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -53,11 +53,11 @@ class pgsqlDbTools extends jDbTools {
 
       'date'            =>array('date',       'date',       null,       null,       10,    10),
       'time'            =>array('time',       'time',       null,       null,       8,     8),
-      'datetime'        =>array('datetime',   'datetime',   null,       null,       19,    19),
-      'datetime2'       =>array('datetime',   'datetime',   null,       null,       19,    27), // sqlsrv / 9999-12-31 23:59:59.9999999
-      'datetimeoffset'  =>array('datetime',   'datetime',   null,       null,       19,    34), // sqlsrv / 9999-12-31 23:59:59.9999999 +14:00
-      'smalldatetime'   =>array('datetime',   'datetime',   null,       null,       19,    19), // sqlsrv / 2079-06-06 23:59
-      'timestamp'       =>array('datetime',   'datetime',   null,       null,       19,    19), // oracle/pgsql timestamp
+      'datetime'        =>array('timestamp',   'datetime',   null,       null,       19,    19),
+      'datetime2'       =>array('timestamp',   'datetime',   null,       null,       19,    27), // sqlsrv / 9999-12-31 23:59:59.9999999
+      'datetimeoffset'  =>array('timestamp with timezone',   'datetime',   null,       null,       19,    34), // sqlsrv / 9999-12-31 23:59:59.9999999 +14:00
+      'smalldatetime'   =>array('timestamp',   'datetime',   null,       null,       19,    19), // sqlsrv / 2079-06-06 23:59
+      'timestamp'       =>array('timestamp',   'datetime',   null,       null,       19,    19), // oracle/pgsql timestamp
       'utimestamp'      =>array('timestamp',  'integer',    0,          2147483647, null,  null), // mysql timestamp
       'year'            =>array('year',       'year',       null,       null,       2,     4),
       'interval'        =>array('interval',   'integer',    null,       null,       19,    19),
