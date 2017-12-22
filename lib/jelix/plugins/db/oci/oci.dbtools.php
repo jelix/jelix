@@ -4,7 +4,7 @@
 * @subpackage db_driver
 * @author     Gwendal Jouannic
 * @contributor Laurent Jouanneau
-* @copyright  2008 Gwendal Jouannic, 2009-2011 Laurent Jouanneau
+* @copyright  2008 Gwendal Jouannic, 2009-2017 Laurent Jouanneau
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -105,6 +105,87 @@ class ociDbTools extends jDbTools {
       'bit varying'     =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'arrays'          =>array('varchar',    'varchar',    null,       null,       0,     65535),
       'complex types'   =>array('varchar',    'varchar',    null,       null,       0,     65535),
+    );
+
+
+    protected $keywordNameCorrespondence = array(
+        // sqlsrv,mysql,oci,pgsql -> date+time
+        //'current_timestamp' => '',
+        // mysql,oci,pgsql -> date
+        //'current_date' => '',
+        // mysql -> time, pgsql -> time+timezone
+        'current_time' => 'CURRENT_TIMESTAMP',
+        // oci -> date+fractional secon + timezone
+        //'systimestamp' => '',
+        // oci -> date+time+tz
+        //'sysdate' => '',
+        // pgsql -> time
+        'localtime' => 'CURRENT_TIMESTAMP',
+        // pgsql -> date+time
+        'localtimestamp' => 'CURRENT_TIMESTAMP',
+    );
+
+    protected $functionNameCorrespondence = array(
+
+        // sqlsrv, -> date+time
+        'sysdatetime' => 'SYSTIMESTAMP',
+        // sqlsrv, -> date+time+offset
+        'sysdatetimeoffset' => 'SYSTIMESTAMP',
+        // sqlsrv, -> date+time at utc
+        'sysutcdatetime' => 'SYSTIMESTAMP',
+        // sqlsrv -> date+time
+        'getdate' => 'CURRENT_TIMESTAMP',
+        // sqlsrv -> date+time at utc
+        'getutcdate' => 'CURRENT_TIMESTAMP',
+        // sqlsrv,mysql (datetime)-> integer
+        'day' => 'EXTRACT(DAY FROM %!p)',
+        // sqlsrv,mysql (datetime)-> integer
+        'month' => 'EXTRACT(MONTH FROM %!p)',
+        // sqlsrv, mysql (datetime)-> integer
+        'year' => 'EXTRACT(YEAR FROM %!p)',
+        // mysql -> date
+        'curdate' => 'CURRENT_DATE',
+        // mysql -> date
+        'current_date' => 'CURRENT_DATE',
+        // mysql -> time
+        'curtime' => 'CURRENT_TIMESTAMP',
+        // mysql -> time
+        'current_time' => 'CURRENT_TIMESTAMP',
+        // mysql,pgsql -> date+time
+        'now' => 'CURRENT_TIMESTAMP',
+        // mysql date+time
+        'current_timestamp' => 'CURRENT_TIMESTAMP',
+        // mysql (datetime)->date, sqlite (timestring, modifier)->date
+        'date' => 'TO_DATE(%!p)',
+        // mysql = day()
+        'dayofmonth' => 'EXTRACT(DAY FROM %!p)',
+        // mysql -> date+time
+        'localtime' => 'CURRENT_TIMESTAMP',
+        // mysql -> date+time
+        'localtimestamp' => 'CURRENT_TIMESTAMP',
+        // mysql utc current date
+        'utc_date' => 'CURRENT_DATE',
+        // mysql utc current time
+        'utc_time' => 'CURRENT_TIMESTAMP',
+        // mysql utc current date+time
+        'utc_timestamp' => 'CURRENT_TIMESTAMP',
+        // mysql (datetime)->time, , sqlite (timestring, modifier)->time
+        'time' => 'TO_DATE(%!p)',
+        // mysql (datetime/time)-> hour
+        'hour'=> 'EXTRACT(HOUR FROM %!p)',
+        // mysql (datetime/time)-> minute
+        'minute'=> 'EXTRACT(MINUTE FROM %!p)',
+        // mysql (datetime/time)-> second
+        'second'=> 'EXTRACT(SECOND FROM %!p)',
+        // sqlite (timestring, modifier)->datetime
+        'datetime' => 'TO_DATE(%!p)',
+        // oci, mysql (year|month|day|hour|minute|second FROM <datetime>)->value ,
+        // pgsql (year|month|day|hour|minute|second <datetime>)->value
+        'extract' => '!extractDateConverter',
+        // pgsql ('year'|'month'|'day'|'hour'|'minute'|'second', <datetime>)->value
+        'date_part' => '!extractDateConverter',
+        // sqlsrv (year||month|day|hour|minute|second, <datetime>)->value
+        'datepart' => '!extractDateConverter',
     );
 
     /**
