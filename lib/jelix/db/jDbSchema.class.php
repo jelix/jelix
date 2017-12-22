@@ -209,7 +209,7 @@ abstract class jDbSchema {
      * @return string the sql string
      * @access private
      */
-    function _prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey=false) {
+    function _prepareSqlColumn($col, $isPrimaryKey=false, $isSinglePrimaryKey=false) {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
         $ti = $this->conn->tools()->getTypeInfo($col->type);

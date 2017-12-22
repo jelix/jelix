@@ -86,20 +86,23 @@ class mysqliDbTable extends jDbTable {
         $conn = $this->schema->getConn();
 
         $pk = $this->getPrimaryKey();
-        $isPk = ($pk && in_array($new->name, $pk->columns) && count($pk->columns) == 1);
+        $isPk = ($pk && in_array($new->name, $pk->columns));
+        $isSinglePk = $isPk && count($pk->columns) == 1;
 
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
             .' CHANGE COLUMN '.$conn->encloseName($old->name)
-            .' '.$this->schema->_prepareSqlColumn($new, $isPk);
+            .' '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 
     protected function _addColumn(jDbColumn $new) {
         $conn = $this->schema->getConn();
         $pk = $this->getPrimaryKey();
-        $isPk = ($pk && in_array($new->name, $pk->columns) && count($pk->columns) == 1);
+        $isPk = ($pk && in_array($new->name, $pk->columns));
+        $isSinglePk = $isPk && count($pk->columns) == 1;
+
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk);
+            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 
@@ -461,8 +464,8 @@ class mysqliDbSchema extends jDbSchema {
 
     protected $supportAutoIncrement = true;
 
-    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
-        $colStr = parent::_prepareSqlColumn($col, $isSinglePrimaryKey);
+    function _prepareSqlColumn($col, $isPrimaryKey=false, $isSinglePrimaryKey=false) {
+        $colStr = parent::_prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
         if ($col->comment) {
             $colStr .= ' COMMENT '.$this->conn->quote($col->comment);
         }
