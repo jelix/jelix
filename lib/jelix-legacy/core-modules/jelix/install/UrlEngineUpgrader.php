@@ -79,7 +79,7 @@ class UrlEngineUpgrader {
 
     protected $httpsSelectors;
 
-    protected function migrateSimple() {
+    protected function migrateSimple($isBasicSignificantUrl = false) {
         $https = preg_split("/[\\s,]+/", $this->fullConfig->getValue('simple_urlengine_https', 'urlengine'));
         $this->httpsSelectors = array_combine($https, array_fill(0, count($https), true));
 
@@ -89,7 +89,7 @@ class UrlEngineUpgrader {
             if ($entrypoint == $this->epId) {
                 $selectors = preg_split("/[\\s,]+/", $selectors);
                 foreach($selectors as $sel2){
-                    $this->storeUrl($sel2);
+                    $this->storeUrl($sel2, $isBasicSignificantUrl);
                 }
                 break;
             }
@@ -97,7 +97,7 @@ class UrlEngineUpgrader {
     }
 
     protected function migrateBasicSignificant() {
-        $this->migrateSimple();
+        $this->migrateSimple(true);
         // read basic_significant_urlengine_entrypoints
         // if the entry point is not in this section, or value is off
         // add an attribute noentrypoint=true
@@ -123,9 +123,19 @@ class UrlEngineUpgrader {
         }
     }
     
-    protected function storeUrl($selStr) {
+    protected function storeUrl($selStr, $isBasicSignificantUrl) {
         $https = false;
         $options = null;
+
+        if ($isBasicSignificantUrl) {
+            $aliases = $this->fullConfig->getValues('basic_significant_urlengine_aliases');
+            if ($aliases) {
+                $moduleAliases = array_flip($aliases);
+            }
+            else {
+                $moduleAliases = array();
+            }
+        }
 
         if (preg_match("/^@([a-zA-Z0-9_]+)$/", $selStr, $m)) {
             $requestType = $m[1];
@@ -159,7 +169,13 @@ class UrlEngineUpgrader {
                 $options = array('https'=>true);
             }
 
-            $pathinfo = '/'.$module.'/'.$ctrl.'/'.$method;
+            if ($isBasicSignificantUrl && isset($moduleAliases[$module])) {
+                $pathinfo = '/'.$moduleAliases[$module].'/'.$ctrl.'/'.$method;
+            }
+            else {
+                $pathinfo = '/'.$module.'/'.$ctrl.'/'.$method;
+            }
+
             $this->xmlMapEntryPoint->addUrlAction($pathinfo, $module, $action, null, null, $options);
         }
         else if (preg_match("/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+):\\*@([a-zA-Z0-9_]+)$/", $selStr, $m)) {
@@ -167,7 +183,6 @@ class UrlEngineUpgrader {
             $module = $m[1];
             $ctrl = $m[2];
             $requestType = $m[3];
-            $pathinfo = '/'.$module.'/'.$ctrl;
 
             if (isset($this->httpsSelectors[$module.'~'.$ctrl.':*@'.$requestType])){
                 $https = true;
@@ -181,7 +196,14 @@ class UrlEngineUpgrader {
                 $options = array('https'=>true);
             }
 
-            $this->xmlMapEntryPoint->addUrlController($pathinfo, $module, $controller, $options);
+            if ($isBasicSignificantUrl && isset($moduleAliases[$module])) {
+                $pathinfo = '/'.$moduleAliases[$module].'/'.$ctrl;
+            }
+            else {
+                $pathinfo = '/'.$module.'/'.$ctrl;
+            }
+
+            $this->xmlMapEntryPoint->addUrlController($pathinfo, $module, $ctrl, $options);
         }
         else if (preg_match("/^([a-zA-Z0-9_\\.]+)~\\*@([a-zA-Z0-9_]+)$/", $selStr, $m)) {
             // --> <url module=""/>
@@ -196,8 +218,14 @@ class UrlEngineUpgrader {
             if ($https) {
                 $options = array('https'=>true);
             }
+            if ($isBasicSignificantUrl && isset($moduleAliases[$module])) {
+                $pathinfo = '/'.$moduleAliases[$module];
+            }
+            else {
+                $pathinfo = '';
+            }
 
-            $this->xmlMapEntryPoint->addUrlModule("", $module, $options);
+            $this->xmlMapEntryPoint->addUrlModule($pathinfo, $module, $options);
         }
     }
 }

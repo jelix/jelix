@@ -162,8 +162,17 @@ basePath=
 ; you MUST define basePath when you define backendBasePath
 backendBasePath=
 
+; Reverse proxies often communicate with web servers with the HTTP protocol,
+; even if requests are made with HTTPS. And it may add a 'Fowarded' or a
+; 'X-Forwarded-proto' headers so the web server know what is the protocol of
+; the original request. However Jelix <=1.6 does not support these headers, so
+; you must indicate the protocol of the original requests here, if you know
+; that the web site can be reach entirely with HTTPS.
+; Possible value is 'https' or nothing (no proxy).
+forceProxyProtocol=
+
 ; for an app on a simple http server behind an https proxy, the https verification
-; should be disabled
+; should be disabled (see forceProxyProtocol).
 checkHttpsOnParsing=on
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)

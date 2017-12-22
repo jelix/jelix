@@ -302,6 +302,142 @@ abstract class jDbTools {
         return $fieldName;
     }
 
+    protected $keywordNameCorrespondence = array(
+        // sqlsrv,mysql,oci,pgsql -> date+time
+        //'current_timestamp' => '',
+        // mysql,oci,pgsql -> date
+        //'current_date' => '',
+        // mysql -> time, pgsql -> time+timezone
+        //'current_time' => '',
+        // oci -> date+fractional secon + timezone
+        //'systimestamp' => '',
+        // oci -> date+time+tz
+        //'sysdate' => '',
+        // pgsql -> time
+        //'localtime' => '',
+        // pgsql -> date+time
+        //'localtimestamp' => '',
+    );
+
+    protected $functionNameCorrespondence = array(
+
+        // sqlsrv, -> date+time
+        //'sysdatetime' => '',
+        // sqlsrv, -> date+time+offset
+        //'sysdatetimeoffset' => '',
+        // sqlsrv, -> date+time at utc
+        //'sysutcdatetime' => '',
+        // sqlsrv -> date+time
+        //'getdate' => '',
+        // sqlsrv -> date+time at utc
+        //'getutcdate' => '',
+        // sqlsrv,mysql (datetime)-> integer
+        //'day' => '',
+        // sqlsrv,mysql (datetime)-> integer
+        //'month' => '',
+        // sqlsrv, mysql (datetime)-> integer
+        //'year' => '',
+        // mysql -> date
+        //'curdate' => '',
+        // mysql -> date
+        //'current_date' => '',
+        // mysql -> time
+        //'curtime' => '',
+        // mysql -> time
+        //'current_time' => '',
+        // mysql,pgsql -> date+time
+        //'now' => '',
+        // mysql date+time
+        //'current_timestamp' => '',
+        // mysql (datetime)->date, sqlite (timestring, modifier)->date
+        //'date' => '!dateConverter',
+        // mysql = day()
+        //'dayofmonth' => '',
+        // mysql -> date+time
+        //'localtime' => '',
+        // mysql -> date+time
+        //'localtimestamp' => '',
+        // mysql utc current date
+        //'utc_date' => '',
+        // mysql utc current time
+        //'utc_time' => '',
+        // mysql utc current date+time
+        //'utc_timestamp' => '',
+        // mysql (datetime)->time, , sqlite (timestring, modifier)->time
+        //'time' => '!timeConverter',
+        // mysql (datetime/time)-> hour
+        //'hour'=> '',
+        // mysql (datetime/time)-> minute
+        //'minute'=> '',
+        // mysql (datetime/time)-> second
+        //'second'=> '',
+        // sqlite (timestring, modifier)->datetime
+        //'datetime' => '',
+        // oci, mysql (year|month|day|hour|minute|second FROM <datetime>)->value ,
+        // pgsql (year|month|day|hour|minute|second <datetime>)->value
+        //'extract' => '!extractDateConverter',
+        // pgsql ('year'|'month'|'day'|'hour'|'minute'|'second', <datetime>)->value
+        //'date_part' => '!extractDateConverter',
+        // sqlsrv (year||month|day|hour|minute|second, <datetime>)->value
+        //'datepart' => '!extractDateConverter',
+    );
+
+    protected function extractDateConverter($parametersString) {
+        if (preg_match("/^'?([a-z]+)'?(?:\s*,\s*|\s+FROM(?:\s+TIMESTAMP)?\s+|\s+)(.*)$/i", trim($parametersString), $p)) {
+            $param2 = $this->parseSQLFunctionAndConvert(strtolower($p[2]));
+            return 'extract('.$p[1].' FROM '.$param2.')';
+        }
+        else {
+            // strange format
+            return 'extract('.$parametersString.')';
+        }
+    }
+
+    function parseSQLFunctionAndConvert($expression) {
+        if (preg_match("/^([a-z0-9_]+)(\\((.*)\\))?$/i", trim($expression), $func)) {
+            if (isset($func[2]) && $func[2] != '') {
+                $params = $func[3];
+            }
+            else {
+                $params = null;
+            }
+            return $this->getNativeSQLFunction($func[1], $params);
+        }
+        else {
+            return $expression;
+        }
+    }
+
+    /**
+     * Give the expression that works with the target database, corresponding
+     * to the given function name
+     *
+     * @param string $name a SQL function, maybe a SQL function of another database type
+     * @param string|null $parametersString parameters given to the function. Null if no parenthesis
+     * @return string the SQL expression, possibly with a native SQL function corresponding
+     *  to the given foreign SQL function
+     */
+    public function getNativeSQLFunction($name, $parametersString = null) {
+        $index = strtolower($name);
+        if ($parametersString === null) {
+            if (isset($this->keywordNameCorrespondence[$index])) {
+                return str_replace('%!p', $parametersString, $this->keywordNameCorrespondence[$index]);
+            }
+            return $name;
+        }
+        else if (isset($this->functionNameCorrespondence[$index])) {
+            $func = $this->functionNameCorrespondence[$index];
+            if ($func[0] == '!') {
+                $func = substr($func, 1);
+                return $this->$func($parametersString);
+            }
+            return str_replace('%!p', $parametersString, $this->functionNameCorrespondence[$index]);
+        }
+        return $name.'('.$parametersString.')';
+    }
+
+
+
     /**
      * returns the list of tables
      * @return array list of table names
@@ -468,4 +604,140 @@ abstract class jDbTools {
         return $result;
     }
 
+    const IBD_NO_CHECK = 0;
+    const IBD_EMPTY_TABLE_BEFORE = 1;
+    const IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY = 2;
+    const IBD_IGNORE_IF_EXIST = 3;
+    const IBD_UPDATE_IF_EXIST = 4;
+
+    /**
+     * Insert several records into a table
+     *
+     * @param string $tableName
+     * @param string[] $columns  the column names in which data will be inserted
+     * @param mixed[][] $data the data. each row is an array of values. Values are
+     *              in the same order as $columns
+     * @param string|string[]|null $primaryKey the column names that are
+     *                          the primary key. Don't give the primary key if it
+     *                          is an autoincrement field, or if option is not
+     *                          IBD_*_IF_EXIST
+     *
+     * @param int $options one of IDB_* const
+     * @return integer number of records inserted/updated
+     * @since 1.6.16
+     */
+    public function insertBulkData($tableName, $columns, $data, $primaryKey = null, $options = 0) {
+        $tableName = $this->_conn->prefixTable($tableName);
+
+        if ($options == self::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY) {
+            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM $tableName");
+            if ($rs) {
+                $rec = $rs->fetch();
+                if (intval($rec->_cnt_) > 0) {
+                    return 0;
+                }
+            }
+        }
+        if ($primaryKey && !is_array($primaryKey)) {
+            $primaryKey = array($primaryKey);
+        }
+
+        $checkExist = ($primaryKey &&
+            ($options == self::IBD_IGNORE_IF_EXIST ||
+                $options == self::IBD_UPDATE_IF_EXIST));
+
+        $sqlColumns = array();
+        $pki = 0;
+        $pkIndexes = array();
+        $sqlPk = array();
+        foreach($columns as $k=>$col) {
+            if ($checkExist &&
+                count($primaryKey) > $pki &&
+                $primaryKey[$pki] == $col
+            ) {
+                $pkIndexes[$k] = $this->_conn->encloseName($col);
+                $sqlPk[] = $pkIndexes[$k];
+                $pki++;
+            }
+            else {
+                $pkIndexes[$k] = false;
+            }
+            $sqlColumns[] = $this->_conn->encloseName($col);
+        }
+
+        $sqlInsert = "INSERT INTO ".$this->_conn->encloseName($tableName).' ('.
+            implode(',', $sqlColumns).') VALUES (';
+        if ($checkExist) {
+            $sqlCheck = "SELECT " . implode(',', $sqlPk) . ' FROM ' . $tableName . ' WHERE ';
+        }
+
+        $this->_conn->beginTransaction();
+
+        if ($options == self::IBD_EMPTY_TABLE_BEFORE) {
+            $this->_conn->exec("DELETE FROM $tableName");
+        }
+        $recCount = 0;
+        foreach ($data as $rk => $row) {
+            $values = array();
+            if (count($row) != count($columns)) {
+                $this->_conn->rollback();
+                throw new Exception("insertBulkData: row $rk does not content right values count");
+            }
+            $sqlPk = array();
+            $sqlUpdateValue = array();
+            foreach($row as $vk => $value) {
+                $op = '=';
+                switch(gettype($value)) {
+                    case "boolean":
+                        $val = $this->getBooleanValue($value);
+                        break;
+                    case "integer":
+                        $val = (string) $value;
+                        break;
+                    case "double":
+                        $val = jDb::floatToStr($value);
+                        break;
+                    case "string":
+                        $val = $this->_conn->quote($value);
+                        break;
+                    case "NULL":
+                        $val = "NULL";
+                        $op ='IS';
+                        break;
+                    default:
+                        $this->_conn->rollback();
+                        throw new Exception('insertBulkData: Unexpected value type to insert into the database, '.$rk.':'.$vk);
+                        break;
+                }
+                $values[] = $val;
+                if ($pkIndexes[$vk] !== false) {
+                    $sqlPk[] = $pkIndexes[$vk]." $op $val";
+                }
+                else if ($options == self::IBD_UPDATE_IF_EXIST) {
+                    $sqlUpdateValue[] = $sqlColumns[$vk]." = $val";
+                }
+            }
+
+            if ($checkExist) {
+                $rs = $this->_conn->query($sqlCheck.implode(' AND ', $sqlPk));
+                if ($rs && $rs->fetch()) {
+                    if ($options == self::IBD_IGNORE_IF_EXIST) {
+                        continue;
+                    }
+                    else if ($options == self::IBD_UPDATE_IF_EXIST) {
+                        $sqlUpdate = 'UPDATE '.$tableName.' SET ';
+                        $sqlUpdate .= implode(',', $sqlUpdateValue);
+                        $sqlUpdate .= ' WHERE '.implode(' AND ', $sqlPk);
+                        $this->_conn->exec($sqlUpdate);
+                        $recCount++;
+                        continue;
+                    }
+                }
+            }
+            $this->_conn->exec($sqlInsert.implode(',',$values).')');
+            $recCount++;
+        }
+        $this->_conn->commit();
+        return $recCount;
+    }
 }

@@ -297,7 +297,21 @@ abstract class ClientRequest {
      * @since 1.2
      */
    function getProtocol() {
-      return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off' ? 'https://':'http://');
+      return ($this->isHttps() ? 'https://':'http://');
+   }
+
+
+    /**
+     *
+     * @return bool true if the request is made with HTTPS
+     * @todo support Forwarded and X-Forwared-Proto headers
+     */
+   function isHttps() {
+       if (App::config()->urlengine['forceProxyProtocol'] == 'https') {
+           return true;
+       }
+
+       return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
    }
 
    /**
@@ -338,9 +352,8 @@ abstract class ClientRequest {
     * @since 1.2.4
     */
    function getServerURI($forceHttps = null) {
-      $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
 
-      if ( ($forceHttps === null && $isHttps) || $forceHttps) {
+      if ( ($forceHttps === null && $this->isHttps()) || $forceHttps) {
          $uri = 'https://';
       }
       else {
@@ -358,7 +371,7 @@ abstract class ClientRequest {
     * @since 1.2.4
     */
    function getPort($forceHttps = null) {
-      $isHttps = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
+      $isHttps = $this->isHttps();
 
       if ($forceHttps === null)
          $https = $isHttps;

@@ -129,15 +129,21 @@ class jAcl2DbUserGroup {
         $usergrp->login = $login;
 
         // if $defaultGroup -> assign the user to default groups
-        if($defaultGroup){
+        if ($defaultGroup) {
             $defgrp = $daogroup->getDefaultGroups();
             foreach($defgrp as $group){
+                if ($daousergroup->get($login, $group->id_aclgrp)) {
+                    continue;
+                }
                 $usergrp->id_aclgrp = $group->id_aclgrp;
                 $daousergroup->insert($usergrp);
             }
         }
 
         // create a private group
+        if ($daogroup->get('__priv_'.$login)) {
+            return;
+        }
         $persgrp = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
         $persgrp->id_aclgrp = '__priv_'.$login;
         $persgrp->name = $login;
@@ -157,12 +163,17 @@ class jAcl2DbUserGroup {
      * @param string $groupid the group id
      */
     public static function addUserToGroup($login, $groupid){
-        if( $groupid == '__anonymous')
+        if( $groupid == '__anonymous') {
             throw new Exception ('jAcl2DbUserGroup::addUserToGroup : invalid group id');
+        }
+        $dao = jDao::get('jacl2db~jacl2usergroup','jacl2_profile');
+        if ($dao->get($login, $groupid)) {
+            return;
+        }
         $usergrp = jDao::createRecord('jacl2db~jacl2usergroup','jacl2_profile');
         $usergrp->login = $login;
         $usergrp->id_aclgrp = $groupid;
-        jDao::get('jacl2db~jacl2usergroup','jacl2_profile')->insert($usergrp);
+        $dao->insert($usergrp);
     }
 
     /**
@@ -202,13 +213,18 @@ class jAcl2DbUserGroup {
      * @return string the id of the new group
      */
     public static function createGroup($name, $id_aclgrp = null){
-        if ($id_aclgrp === null)
-            $id_aclgrp = strtolower(str_replace(' ', '_',$name));
-        $group = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
-        $group->id_aclgrp = $id_aclgrp;
-        $group->name = $name;
-        $group->grouptype = self::GROUPTYPE_NORMAL;
-        jDao::get('jacl2db~jacl2group','jacl2_profile')->insert($group);
+        if ($id_aclgrp === null) {
+            $id_aclgrp = strtolower(str_replace(' ', '_', $name));
+        }
+        $dao = jDao::get('jacl2db~jacl2group','jacl2_profile');
+        $group = $dao->get($id_aclgrp);
+        if (!$group) {
+            $group = jDao::createRecord('jacl2db~jacl2group','jacl2_profile');
+            $group->id_aclgrp = $id_aclgrp;
+            $group->name = $name;
+            $group->grouptype = self::GROUPTYPE_NORMAL;
+            $dao->insert($group);
+        }
         return $group->id_aclgrp;
     }
 

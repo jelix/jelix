@@ -83,7 +83,8 @@ class UTCreateUrls extends jUnitTestCase {
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
-         'urlScriptIdenc'=>'index'
+         'urlScriptIdenc'=>'index',
+         'forceProxyProtocol' =>''
        );
 
       $conf->_modulesPathList['news']='/';
@@ -257,7 +258,8 @@ class UTCreateUrls extends jUnitTestCase {
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_maintests.xml',
             'checkHttpsOnParsing'=>true,
-            'urlScriptIdenc'=>'index'
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
         );
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
@@ -383,7 +385,8 @@ class UTCreateUrls extends jUnitTestCase {
             'notfoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
             'checkHttpsOnParsing'=>true,
-            'urlScriptIdenc'=>'index'
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
         );
 
         $conf->_modulesPathList['news']='/';
@@ -435,7 +438,8 @@ class UTCreateUrls extends jUnitTestCase {
          'notfoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
-         'urlScriptIdenc'=>'index'
+         'urlScriptIdenc'=>'index',
+         'forceProxyProtocol' =>''
        );
 
       $conf->_modulesPathList['news']='/';
@@ -474,7 +478,8 @@ class UTCreateUrls extends jUnitTestCase {
           'basePath'=>'/',
           'notfoundAct'=>'jelix~error:notfound',
           'significantFile'=>'urls.xml',
-          'urlScriptIdenc'=>'index'
+          'urlScriptIdenc'=>'index',
+          'forceProxyProtocol' =>''
         );
 
         // parameters
@@ -589,6 +594,7 @@ class UTCreateUrls extends jUnitTestCase {
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
           'jqueryPath' =>$conf->urlengine['jqueryPath'],
+          'forceProxyProtocol' =>''
         );
 
         jUrl::getEngine(true);
@@ -624,6 +630,7 @@ class UTCreateUrls extends jUnitTestCase {
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
           'jqueryPath' =>$conf->urlengine['jqueryPath'],
+          'forceProxyProtocol' =>''
         );
         jUrl::getEngine(true);
 

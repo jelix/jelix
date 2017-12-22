@@ -285,6 +285,7 @@ cd lib/jelix-legacy/dao
   jDao.class.php
   jDaoCompiler.class.php
 * jDaoParser.class.php
+  jDaoDbMapper.class.php
   jDaoConditions.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jDaoGenerator.class.php
@@ -620,6 +621,9 @@ cd lib/jelix-legacy/plugins/kvdb/redis_ext/
 
 cd lib/jelix-legacy/plugins/logger/firebug
   firebug.logger.php
+
+cd lib/jelix-legacy/plugins/logger/soapfile
+  soapfile.logger.php
 
 cd lib/jelix-legacy/plugins/htmlresponse/debugbar
   debugbar.htmlresponse.php
