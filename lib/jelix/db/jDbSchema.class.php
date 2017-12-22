@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Laurent Jouanneau
 * @contributor Aurélien Marcel
-* @copyright  2010 Laurent Jouanneau, 2011 Aurélien Marcel
+* @copyright  2017 Laurent Jouanneau, 2011 Aurélien Marcel
 *
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -159,8 +159,9 @@ abstract class jDbSchema {
         }
 
         foreach ($columns as $col) {
-            $isPk = (in_array($col->name, $primaryKey) && count($primaryKey) == 1);
-            $cols[] = $this->_prepareSqlColumn($col, $isPk);
+            $isPk = (in_array($col->name, $primaryKey));
+            $isSinglePk = $isPk && (count($primaryKey) == 1);
+            $cols[] = $this->_prepareSqlColumn($col, $isPk, $isSinglePk);
         }
 
         if (isset($attributes['temporary']) && $attributes['temporary']) {
@@ -207,7 +208,7 @@ abstract class jDbSchema {
      * @return string the sql string
      * @access private
      */
-    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
+    function _prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey=false) {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
         $ti = $this->conn->tools()->getTypeInfo($col->type);
@@ -222,13 +223,13 @@ abstract class jDbSchema {
             $colstr .= '('.$col->length.')';
         }
 
-        if ($isSinglePrimaryKey && $this->supportAutoIncrement && $col->autoIncrement) {
+        if ($this->supportAutoIncrement && $col->autoIncrement) {
             $colstr.= ' AUTO_INCREMENT ';
         }
 
         $colstr.= ($col->notNull?' NOT NULL':'');
 
-        if (!$col->autoIncrement && !$isSinglePrimaryKey) {
+        if (!$col->autoIncrement && !$isPrimaryKey) {
             if ($col->hasDefault) {
                 if ($col->default === null || strtoupper($col->default) == 'NULL') {
                     if (!$col->notNull) {
@@ -254,9 +255,6 @@ abstract class jDbSchema {
         $type = $this->conn->tools()->getTypeInfo($col->type);
 
         $col->nativeType = $type[0];
-        if (!$col->length && $type[5]) {
-            $col->length = $type[5];
-        }
 
         if ($type[6]) {
             $col->autoIncrement = true;
