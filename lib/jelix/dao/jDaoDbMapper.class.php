@@ -35,6 +35,7 @@ class jDaoDbMapper
     /**
      *
      * @param string $selector the selector of the DAO file
+     * @return jDbTable
      */
     public function createTableFromDao($selectorStr) {
         $selector = new jSelectorDao($selectorStr, $this->profile);
@@ -70,6 +71,7 @@ class jDaoDbMapper
                 $table->addReference($ref);
             }
         }
+        return $table;
     }
 
     /**

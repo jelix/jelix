@@ -395,6 +395,7 @@ class jdao_generatorTest extends jUnitTestCase {
       <property name="name" fieldname="name" datatype="string" required="yes" selectpattern="TOUPPER(%s)"/>
       <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
       <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+      <property name="datecreate" fieldname="datecreate" datatype="datetime" insertpattern="NOW()" />
     </record>
     <factory>
         <method name="method1" type="select">
@@ -424,16 +425,18 @@ class jdao_generatorTest extends jUnitTestCase {
            <parameter name="login" />
            <conditions>
               <eq property="grouptype" value="2" />
-              <eq property="name" expr="TOUPPER($login)" />
+              <eq property="name" expr="TOUPPER($login)" />               
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
 
         <method name="method15" type="select">
            <parameter name="login" />
+           <parameter name="adate"/>
            <conditions>
               <eq property="grouptype" value="2" />
               <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+              <eq property="datecreate" pattern="day(%s)" expr="date_part( \'day\' , $adate)" />
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
@@ -476,10 +479,63 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method15']->getParameters(), false);
-        $this->assertEquals(' `grouptype` = 2 AND TOUPPER(`name`) = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grouptype` = 2 AND TOUPPER(`name`) = TOUPPER(\'.$this->_conn->quote($login).\') AND day(`datecreate`) = extract(day FROM \'.($adate === null ? \'NULL\' : $this->_conn->quote2($adate,false)).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
     }
 
+    function testBuildSQLConditionWithDatePatternPgsql(){
+        $doc ='<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="grp" realname="jacl_group" primarykey="id_aclgrp" />
+    </datasources>
+    <record>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
+      <property name="parent_id" required="false" datatype="int" />
+      <property name="name" fieldname="name" datatype="string" required="yes" selectpattern="TOUPPER(%s)"/>
+      <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
+      <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+      <property name="datecreate" fieldname="datecreate" datatype="datetime" insertpattern="NOW()" />
+    </record>
+    <factory>
+         <method name="method9" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" expr="TOUPPER($login)" />               
+              <like property="grouptype" expr="$login" />
+           </conditions>
+        </method>
+
+        <method name="method15" type="select">
+           <parameter name="login" />
+           <parameter name="adate"/>
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+              <eq property="datecreate" pattern="day(%s)" expr="day($adate)" />
+              <like property="grouptype" expr="$login" />
+           </conditions>
+        </method>
+    </factory>
+</dao>';
+        $tools = new pgsqlDbTools(null);
+        $parser = new jDaoParser ($this->_selector);
+
+        $parser->parse(simplexml_load_string($doc), $tools);
+        $generator = new testMysqlDaoGenerator($this->_selector, $tools, $parser);
+
+        $methods=$parser->getMethods();
+
+        $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
+            $methods['method9']->getParameters(), false);
+        $this->assertEquals(' "grouptype" = 2 AND "name" = TOUPPER(\'.$this->_conn->quote($login).\') AND "grouptype" \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
+            $methods['method15']->getParameters(), false);
+        $this->assertEquals(' "grouptype" = 2 AND TOUPPER("name") = TOUPPER(\'.$this->_conn->quote($login).\') AND extract(day FROM TIMESTAMP "datecreate") = extract(day FROM TIMESTAMP \'.($adate === null ? \'NULL\' : $this->_conn->quote2($adate,false)).\') AND "grouptype" \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+    }
 
 
     function testBuildSimpleCondition(){

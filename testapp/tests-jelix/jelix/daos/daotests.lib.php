@@ -12,6 +12,7 @@
 require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 require_once(JELIX_LIB_PATH.'plugins/db/mysql/mysql.daobuilder.php');
 include_once (JELIX_LIB_PATH.'plugins/db/mysql/mysql.dbtools.php');
+include_once (JELIX_LIB_PATH.'plugins/db/pgsql/pgsql.dbtools.php');
 
 
 class fakejSelectorDao extends jSelectorDao {

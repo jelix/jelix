@@ -302,6 +302,142 @@ abstract class jDbTools {
         return $fieldName;
     }
 
+    protected $keywordNameCorrespondence = array(
+        // sqlsrv,mysql,oci,pgsql -> date+time
+        //'current_timestamp' => '',
+        // mysql,oci,pgsql -> date
+        //'current_date' => '',
+        // mysql -> time, pgsql -> time+timezone
+        //'current_time' => '',
+        // oci -> date+fractional secon + timezone
+        //'systimestamp' => '',
+        // oci -> date+time+tz
+        //'sysdate' => '',
+        // pgsql -> time
+        //'localtime' => '',
+        // pgsql -> date+time
+        //'localtimestamp' => '',
+    );
+
+    protected $functionNameCorrespondence = array(
+
+        // sqlsrv, -> date+time
+        //'sysdatetime' => '',
+        // sqlsrv, -> date+time+offset
+        //'sysdatetimeoffset' => '',
+        // sqlsrv, -> date+time at utc
+        //'sysutcdatetime' => '',
+        // sqlsrv -> date+time
+        //'getdate' => '',
+        // sqlsrv -> date+time at utc
+        //'getutcdate' => '',
+        // sqlsrv,mysql (datetime)-> integer
+        //'day' => '',
+        // sqlsrv,mysql (datetime)-> integer
+        //'month' => '',
+        // sqlsrv, mysql (datetime)-> integer
+        //'year' => '',
+        // mysql -> date
+        //'curdate' => '',
+        // mysql -> date
+        //'current_date' => '',
+        // mysql -> time
+        //'curtime' => '',
+        // mysql -> time
+        //'current_time' => '',
+        // mysql,pgsql -> date+time
+        //'now' => '',
+        // mysql date+time
+        //'current_timestamp' => '',
+        // mysql (datetime)->date, sqlite (timestring, modifier)->date
+        //'date' => '!dateConverter',
+        // mysql = day()
+        //'dayofmonth' => '',
+        // mysql -> date+time
+        //'localtime' => '',
+        // mysql -> date+time
+        //'localtimestamp' => '',
+        // mysql utc current date
+        //'utc_date' => '',
+        // mysql utc current time
+        //'utc_time' => '',
+        // mysql utc current date+time
+        //'utc_timestamp' => '',
+        // mysql (datetime)->time, , sqlite (timestring, modifier)->time
+        //'time' => '!timeConverter',
+        // mysql (datetime/time)-> hour
+        //'hour'=> '',
+        // mysql (datetime/time)-> minute
+        //'minute'=> '',
+        // mysql (datetime/time)-> second
+        //'second'=> '',
+        // sqlite (timestring, modifier)->datetime
+        //'datetime' => '',
+        // oci, mysql (year|month|day|hour|minute|second FROM <datetime>)->value ,
+        // pgsql (year|month|day|hour|minute|second <datetime>)->value
+        //'extract' => '!extractDateConverter',
+        // pgsql ('year'|'month'|'day'|'hour'|'minute'|'second', <datetime>)->value
+        //'date_part' => '!extractDateConverter',
+        // sqlsrv (year||month|day|hour|minute|second, <datetime>)->value
+        //'datepart' => '!extractDateConverter',
+    );
+
+    protected function extractDateConverter($parametersString) {
+        if (preg_match("/^'?([a-z]+)'?(?:\s*,\s*|\s+FROM(?:\s+TIMESTAMP)?\s+|\s+)(.*)$/i", trim($parametersString), $p)) {
+            $param2 = $this->parseSQLFunctionAndConvert(strtolower($p[2]));
+            return 'extract('.$p[1].' FROM '.$param2.')';
+        }
+        else {
+            // strange format
+            return 'extract('.$parametersString.')';
+        }
+    }
+
+    function parseSQLFunctionAndConvert($expression) {
+        if (preg_match("/^([a-z0-9_]+)(\\((.*)\\))?$/i", trim($expression), $func)) {
+            if (isset($func[2]) && $func[2] != '') {
+                $params = $func[3];
+            }
+            else {
+                $params = null;
+            }
+            return $this->getNativeSQLFunction($func[1], $params);
+        }
+        else {
+            return $expression;
+        }
+    }
+
+    /**
+     * Give the expression that works with the target database, corresponding
+     * to the given function name
+     *
+     * @param string $name a SQL function, maybe a SQL function of another database type
+     * @param string|null $parametersString parameters given to the function. Null if no parenthesis
+     * @return string the SQL expression, possibly with a native SQL function corresponding
+     *  to the given foreign SQL function
+     */
+    public function getNativeSQLFunction($name, $parametersString = null) {
+        $index = strtolower($name);
+        if ($parametersString === null) {
+            if (isset($this->keywordNameCorrespondence[$index])) {
+                return str_replace('%!p', $parametersString, $this->keywordNameCorrespondence[$index]);
+            }
+            return $name;
+        }
+        else if (isset($this->functionNameCorrespondence[$index])) {
+            $func = $this->functionNameCorrespondence[$index];
+            if ($func[0] == '!') {
+                $func = substr($func, 1);
+                return $this->$func($parametersString);
+            }
+            return str_replace('%!p', $parametersString, $this->functionNameCorrespondence[$index]);
+        }
+        return $name.'('.$parametersString.')';
+    }
+
+
+
     /**
      * returns the list of tables
      * @return array list of table names
