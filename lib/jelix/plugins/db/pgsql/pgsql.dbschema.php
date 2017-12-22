@@ -352,11 +352,11 @@ class pgsqlDbSchema extends jDbSchema {
         return $table;
     }
 
-    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
+    function _prepareSqlColumn($col, $isPrimaryKey=false, $isSinglePrimaryKey=false) {
         if ($isSinglePrimaryKey && $col->autoIncrement) {
             $col->type = 'serial';
         }
-        $colStr = parent::_prepareSqlColumn($col, $isSinglePrimaryKey);
+        $colStr = parent::_prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
         return $colStr;
     }
 

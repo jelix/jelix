@@ -256,9 +256,10 @@ class sqlite3DbTable extends jDbTable {
     protected function _addColumn(jDbColumn $new) {
         $conn = $this->schema->getConn();
         $pk = $this->getPrimaryKey();
-        $isPk = ($pk && in_array($new->name, $pk->columns) && count($pk->columns) == 1);
+        $isPk = ($pk && in_array($new->name, $pk->columns));
+        $isSinglePk = $isPk && count($pk->columns) == 1;
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name)
-            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk);
+            .' ADD COLUMN '.$this->schema->_prepareSqlColumn($new, $isPk, $isSinglePk);
         $conn->exec($sql);
     }
 
@@ -671,8 +672,9 @@ class sqlite3DbSchema extends jDbSchema {
         }
 
         foreach ($newColumns as $col) {
-            $isPk = (in_array($col->name, $primaryKeys) && count($primaryKeys) == 1);
-            $cols[] = $this->_prepareSqlColumn($col, $isPk);
+            $isPk = in_array($col->name, $primaryKeys);
+            $isSinglePk = $isPk && count($primaryKeys) == 1;
+            $cols[] = $this->_prepareSqlColumn($col, $isPk, $isSinglePk);
         }
 
         $sql = 'CREATE TABLE '.$this->conn->encloseName($tmpName);
