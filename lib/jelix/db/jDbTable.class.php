@@ -114,7 +114,9 @@ abstract class jDbTable {
         }
         // FIXME : if rename, modify indexes and table constraints that have this column
         $this->_alterColumn($oldColumn, $column);
-        unset($this->columns[$oldName]);
+        if ($oldName) {
+            unset($this->columns[$oldName]);
+        }
         $this->columns[$column->name] = $column;
     }
 
