@@ -2,7 +2,7 @@
     "name": "jelix/for-classic-package",
     "type": "library",
     "description": "used to declare jelix dependencies for testapp or other packages",
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "require": {
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "0.*",
