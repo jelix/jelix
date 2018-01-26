@@ -8,7 +8,7 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-require(__DIR__.'/jDaoParser.class.php');
+require_once(__DIR__.'/jDaoParser.class.php');
 
 /**
  * It allows to create tables corresponding to a dao file.

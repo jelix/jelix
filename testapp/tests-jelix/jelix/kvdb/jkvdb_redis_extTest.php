@@ -96,4 +96,31 @@ class jkvdb_redis_extTest extends jKVDbTest {
         sort($keys);
         $this->assertEquals(array('foo:bar', 'hello'), $keys);
     }
+
+
+    function testHashes() {
+        /** @var redis_extKVDriver $kv */
+        $kv = jKVDb::getConnection($this->profile);
+        $key = 'redis_extTest';
+        $kv->delete($key);
+
+        $this->assertFalse($kv->hExists($key, 'foo'));
+        $this->assertFalse($kv->hExists($key, 'bar'));
+
+        $this->assertEquals(1, $kv->hSet($key, 'foo', 'first'));
+        $this->assertEquals(1, $kv->hSet($key, 'bar', 'second'));
+        $this->assertFalse($kv->hSetNx($key, 'bar', 'second2'));
+
+        $this->assertEquals('first', $kv->hGet($key, 'foo'));
+        $this->assertEquals('second', $kv->hGet($key, 'bar'));
+
+        $this->assertEquals(array('foo'=>'first', 'bar'=>'second'), $kv->hGetAll($key));
+        $this->assertEquals(array('foo'=>'first', 'bar'=>'second'), $kv->hMGet($key, array('foo', 'bar')));
+        $this->assertEquals(2, $kv->hLen($key));
+        $this->assertEquals(array('foo', 'bar'), $kv->hKeys($key));
+        $this->assertEquals(array('first', 'second'), $kv->hVals($key));
+
+        $this->assertTrue($kv->hMSet($key, array('foo'=>'first2', 'bar'=>'second2')));
+        $this->assertEquals(array('foo'=>'first2', 'bar'=>'second2'), $kv->hMGet($key, array('foo', 'bar')));
+    }
 }
