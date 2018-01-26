@@ -4,7 +4,7 @@
     "description": "Jelix PHP framework",
     "keywords": ["framework"],
     "homepage": "http://jelix.org",
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "authors": [
         {
             "name": "Laurent Jouanneau",
