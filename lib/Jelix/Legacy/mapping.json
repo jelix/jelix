@@ -41,6 +41,7 @@
     "jInstallerMigration": "installer/jInstallerMigration.php",
     "jInstallerModule2": "installer/jInstallerModule2.php",
     "jInstallerModuleInfos": "installer/jInstallerModuleInfos.php",
+    "jInstallerReporterTrait": "installer/jInstallerReporterTrait.php",
     "jLocale": "core/jLocale.php",
     "jLog": "core/jLog.php",
     "jLogDumpMessage": "core/log/jLogDumpMessage.php",
