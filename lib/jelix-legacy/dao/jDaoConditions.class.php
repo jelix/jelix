@@ -4,7 +4,7 @@
 * @subpackage dao
 * @author     Gérald Croes, Laurent Jouanneau
 * @contributor Laurent Jouanneau, Julien Issler, Yannick Le Guédart, Philippe Villiers
-* @copyright  2001-2005 CopixTeam, 2005-2009 Laurent Jouanneau
+* @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
 * @copyright  2008 Thomas
 * @copyright  2008 Julien Issler, 2009 Yannick Le Guédart
 * @copyright  2013 Philippe Villiers
@@ -71,11 +71,6 @@ class jDaoConditions {
     public $order = array ();
 
     /**
-    * the groups we wants the list to be
-    */
-    public $group = array ();
-
-    /**
     * the condition we actually are browsing
     */
     private $_currentCondition;
@@ -104,21 +99,11 @@ class jDaoConditions {
     }
 
     /**
-     * add a group clause
-     *
-     * @param string $field_id	the property name used to group results
-     */
-    function addItemGroup($field_id) {
-        $this->group[] = $field_id;
-    }
-
-    /**
     * says if there are no conditions nor order
     * @return boolean  false if there isn't condition
     */
     function isEmpty (){
-        return (count ($this->condition->group) == 0) &&
-        (count ($this->condition->conditions) == 0) &&
+        return (count ($this->condition->conditions) == 0) &&
         (count ($this->order) == 0) ;
     }
 
@@ -128,7 +113,7 @@ class jDaoConditions {
     * @since 1.0
     */
     function hasConditions (){
-        return (count ($this->condition->group) || count ($this->condition->conditions));
+        return count ($this->condition->conditions) > 0;
     }
 
     /**

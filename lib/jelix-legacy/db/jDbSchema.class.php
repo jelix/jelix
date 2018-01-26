@@ -4,7 +4,7 @@
 * @subpackage db
 * @author     Laurent Jouanneau
 * @contributor Aurélien Marcel
-* @copyright  2010 Laurent Jouanneau, 2011 Aurélien Marcel
+* @copyright  2017 Laurent Jouanneau, 2011 Aurélien Marcel
 *
 * @link        http://jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -65,8 +65,6 @@ abstract class jDbSchema {
      * @return jDbTable ready to make change
      */
     function getTable($name) {
-        $name = $this->conn->prefixTable($name);
-
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
@@ -101,16 +99,16 @@ abstract class jDbSchema {
             $this->tables = $this->_getTables();
         }
         if (is_string($table)) {
-            $prefixedName = $this->conn->prefixTable($table);
-            $name = $prefixedName;
+            $name = $this->conn->prefixTable($table);
+            $unprefixedName = $table;
         }
         else {
             $name = $table->getName();
-            $prefixedName = $this->conn->unprefixTable($name);
+            $unprefixedName = $this->conn->unprefixTable($name);
         }
-        if (isset($this->tables[$prefixedName])) {
+        if (isset($this->tables[$unprefixedName])) {
             $this->_dropTable($name);
-            unset($this->tables[$prefixedName]);
+            unset($this->tables[$unprefixedName]);
         }
     }
 
@@ -159,8 +157,9 @@ abstract class jDbSchema {
         }
 
         foreach ($columns as $col) {
-            $isPk = (in_array($col->name, $primaryKey) && count($primaryKey) == 1);
-            $cols[] = $this->_prepareSqlColumn($col, $isPk);
+            $isPk = (in_array($col->name, $primaryKey));
+            $isSinglePk = $isPk && (count($primaryKey) == 1);
+            $cols[] = $this->_prepareSqlColumn($col, $isPk, $isSinglePk);
         }
 
         if (isset($attributes['temporary']) && $attributes['temporary']) {
@@ -208,7 +207,7 @@ abstract class jDbSchema {
      * @return string the sql string
      * @access private
      */
-    function _prepareSqlColumn($col, $isSinglePrimaryKey=false) {
+    function _prepareSqlColumn($col, $isPrimaryKey=false, $isSinglePrimaryKey=false) {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
         $ti = $this->conn->tools()->getTypeInfo($col->type);
@@ -223,13 +222,13 @@ abstract class jDbSchema {
             $colstr .= '('.$col->length.')';
         }
 
-        if ($isSinglePrimaryKey && $this->supportAutoIncrement && $col->autoIncrement) {
+        if ($this->supportAutoIncrement && $col->autoIncrement) {
             $colstr.= ' AUTO_INCREMENT ';
         }
 
         $colstr.= ($col->notNull?' NOT NULL':'');
 
-        if (!$col->autoIncrement && !$isSinglePrimaryKey) {
+        if (!$col->autoIncrement && !$isPrimaryKey) {
             if ($col->hasDefault) {
                 if ($col->default === null || strtoupper($col->default) == 'NULL') {
                     if (!$col->notNull) {
@@ -255,9 +254,6 @@ abstract class jDbSchema {
         $type = $this->conn->tools()->getTypeInfo($col->type);
 
         $col->nativeType = $type[0];
-        if (!$col->length && $type[5]) {
-            $col->length = $type[5];
-        }
 
         if ($type[6]) {
             $col->autoIncrement = true;

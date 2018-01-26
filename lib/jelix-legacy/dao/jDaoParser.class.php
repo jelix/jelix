@@ -31,10 +31,10 @@
 #includephp jDaoMethod.class.php
 #includephp jDaoGenerator.class.php
 #else
-require(JELIX_LIB_PATH.'dao/jDaoXmlException.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
-require(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoXmlException.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoProperty.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoMethod.class.php');
+require_once(JELIX_LIB_PATH.'dao/jDaoGenerator.class.php');
 #endif
 
 /**

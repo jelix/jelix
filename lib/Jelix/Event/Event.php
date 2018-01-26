@@ -90,7 +90,7 @@ class Event {
 
     /**
     * adds data in the responses list
-    * @param array $response a single response
+    * @param mixed $response a single response
     */
     public function add ($response) {
         $this->_responses[] = & $response;
@@ -109,7 +109,10 @@ class Event {
         $response = array ();
 
         foreach ($this->_responses as $key=>$listenerResponse){
-            if (isset ($listenerResponse[$responseName]) && $listenerResponse[$responseName] == $value){
+            if (is_array($listenerResponse[$responseName]) &&
+                isset ($listenerResponse[$responseName]) &&
+                $listenerResponse[$responseName] == $value
+            ) {
                 $founded = true;
                 $response[] = & $this->_responses[$key];
             }
