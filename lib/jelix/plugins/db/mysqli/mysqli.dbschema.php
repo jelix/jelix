@@ -68,7 +68,7 @@ class mysqliDbTable extends jDbTable {
             $col = new jDbColumn($line->Field, $type, $length, $hasDefault, $default, $notNull);
             $col->autoIncrement = $autoIncrement;
 
-            //$col->unifiedType = $typeinfo[1];
+            $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];
             $col->maxLength = $typeinfo[5];
