@@ -389,7 +389,7 @@ class jInstallerComponentModule {
 
     public function setAsCurrentModuleUpgrader($upgrader, jInstallerEntryPoint2 $ep) {
         $epId = $ep->getEpId();
-        $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
+        $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
 
         if ($upgrader instanceof jIInstallerComponent) {
             $legacyEp = $ep->getLegacyInstallerEntryPoint();
