@@ -387,7 +387,7 @@ class jInstallerComponentModule {
         return $list;
     }
 
-    public function setAsCurrentModuleUpgraders($upgrader, jInstallerEntryPoint2 $ep) {
+    public function setAsCurrentModuleUpgrader($upgrader, jInstallerEntryPoint2 $ep) {
         $epId = $ep->getEpId();
         $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
 
