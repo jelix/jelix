@@ -448,6 +448,7 @@ afloatnumber=   5.098
 truc= true
 laurent=toto
 isvalid = on
+isnotvalid = off
 
 [othersection]
 truc=machin2
@@ -470,6 +471,7 @@ afloatnumber=5.098
 truc=true
 laurent=toto
 isvalid=on
+isnotvalid=off
 
 [othersection]
 truc=machin2
@@ -482,6 +484,7 @@ foo[]=ccc
 
 ';
         $parser->testParse($content);
+        $parser->setValue('isnotvalid', false, 'aSection');
         $this->assertEquals($result, $parser->generate() );
 
         file_put_contents(jApp::tempPath().'test_jinifilemodifier.html_cli.php', $content);
@@ -1154,7 +1157,7 @@ foo[]=aaa
 
 truc=machin
 bidule=1
-truck=1
+truck=on
 foo[]=bbb
 foo[]=ccc
 ';

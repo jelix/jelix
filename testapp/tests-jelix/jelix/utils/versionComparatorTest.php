@@ -49,7 +49,11 @@ class versionComparatorTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b2pre','1.2b2-dev.9'));
         $this->assertEquals(-1, jVersionComparator::compareVersion('1.2RC1','1.2RC2'));
         $this->assertEquals(0, jVersionComparator::compareVersion('1.2.3a1pre','1.2.3a1-dev'));
-        
+        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre171102','3.2pre.180212'));
+        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2pre.180212'));
+        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2rc1'));
+        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2.0'));
+
         $this->assertEquals(-1, jVersionComparator::compareVersion('1.2RC-dev','1.2RC'));
         $this->assertEquals(1, jVersionComparator::compareVersion('1.2RC','1.2RC-dev'));
 
