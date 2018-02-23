@@ -215,8 +215,8 @@ abstract class jInstallerComponentBase {
         <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" nickname="" email="" active="true"/>
-        <contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>
+        <creator name="Laurent Jouanneau" nickname="" email="" />
+        <contributor name="hisname" email="hisemail@yoursite.undefined"  since="" role=""/>
         <homepageURL>http://jelix.org</homepageURL>
         <updateURL>http://jelix.org</updateURL>
     </info>
