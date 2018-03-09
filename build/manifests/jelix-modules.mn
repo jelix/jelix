@@ -113,6 +113,7 @@ cd lib/jelix-modules/jacl2db/install
   data.json
   groups.json
   users.json
+  users_groups.json
   install.php
   upgrade_to_1.2b1pre.1422_namedgroup.php
   upgrade_to_1.3a1_codegroup.php
