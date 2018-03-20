@@ -370,8 +370,20 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @throws Exception
      * @since 1.6.16
      */
-    final protected function insertDaoData($relativeSourcePath, $option) {
-        $file = $this->path.'install/'.$relativeSourcePath;
+    final protected function insertDaoData($relativeSourcePath, $option, $module = null) {
+
+        if ($module) {
+            $conf = $this->entryPoint->config->_modulesPathList;
+            if (!isset($conf[$module])) {
+                throw new Exception('insertDaoData : invalid module name');
+            }
+            $path = $conf[$module];
+        }
+        else {
+            $path = $this->path;
+        }
+
+        $file = $path.'install/'.$relativeSourcePath;
         $dataToInsert = json_decode(file_get_contents($file), true);
         if (!$dataToInsert) {
             throw new Exception("Bad format for dao data file.");

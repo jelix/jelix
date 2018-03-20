@@ -85,7 +85,7 @@ class jImageModifier {
      * @param array $config the paths configuration. should contain same parameters
      *                      as you find in the imagemodifier section of the configuration.
      *                      give these array if you want to override the configuration.
-     * @return array of attributes
+     * @return array  list of attributes
      **/
     static function get($src, $params = array(), $sendCachePath = true, $config = null) {
 
@@ -152,8 +152,9 @@ class jImageModifier {
             $att['src'] = $cacheUri.$cacheName;
         }
 
-        if ($sendCachePath)
-            $att['cache_path'] = $cachePath.$cacheName;
+        if ($sendCachePath) {
+            $att['cache_path'] = $cachePath . $cacheName;
+        }
 
         return $att;
     }
@@ -223,7 +224,11 @@ class jImageModifier {
             case 'image/vnd.wap.wbmp'    : $image = imagecreatefromwbmp($srcFs); break;
             case 'image/image/x-xbitmap' : $image = imagecreatefromxbm($srcFs); break;
             case 'image/x-xpixmap'       : $image = imagecreatefromxpm($srcFs); break;
-            default                      : return ;
+            default                      : return false;
+        }
+
+        if ($image === false) {
+            return false;
         }
 
         if(!empty($params['maxwidth']) && !empty($params['maxheight'])) {

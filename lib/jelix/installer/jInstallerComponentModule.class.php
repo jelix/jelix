@@ -137,8 +137,13 @@ class jInstallerComponentModule {
     }
 
     public function isUpgraded($epId) {
-        return ($this->isInstalled($epId) &&
-            (VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0));
+        if (!$this->isInstalled($epId)) {
+            return false;
+        }
+        if ($this->moduleInfos[$epId]->version == '') {
+            throw new jInstallerException("installer.ini.missing.version", array($this->name));
+        }
+        return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0;
     }
 
     public function isActivated($epId) {
@@ -280,8 +285,9 @@ class jInstallerComponentModule {
             $this->moduleUpgraders = array();
 
             $p = $this->path.'install/';
-            if (!file_exists($p)  || $this->moduleInfos[$epId]->skipInstaller)
+            if (!file_exists($p)  || $this->moduleInfos[$epId]->skipInstaller) {
                 return array();
+            }
 
             // we get the list of files for the upgrade
             $fileList = array();
@@ -319,11 +325,18 @@ class jInstallerComponentModule {
                 if ($fileInfo[1] && count($upgrader->targetVersions) == 0) {
                     $upgrader->targetVersions = array($fileInfo[1]);
                 }
+                if (count($upgrader->targetVersions) == 0) {
+                    throw new jInstallerException("module.upgrader.missing.version",array($fileInfo[0], $this->name));
+                }
                 $this->moduleUpgraders[] = $upgrader;
                 if ($upgrader instanceof jIInstallerComponent2) {
                     $upgrader->setGlobalSetup($this->globalSetup);
                 }
             }
+        }
+
+        if (count($this->moduleUpgraders) && $this->moduleInfos[$epId]->version == '') {
+            throw new jInstallerException("installer.ini.missing.version", array($this->name));
         }
 
         $list = array();
@@ -483,6 +496,7 @@ class jInstallerComponentModule {
 
     /**
      * read the identity file
+     * @throws \Exception
      */
     protected function readIdentity() {
         $xmlDescriptor = new DOMDocument();
@@ -495,7 +509,13 @@ class jInstallerComponentModule {
 
         if ($root->namespaceURI == $this->identityNamespace) {
             $xml = simplexml_import_dom($xmlDescriptor);
+            if (!isset($xml->info[0]->version[0])) {
+                throw new jInstallerException('module.missing.version', array($this->name));
+            }
             $this->sourceVersion = $this->fixVersion((string) $xml->info[0]->version[0]);
+            if (trim($this->sourceVersion) == '') {
+                throw new jInstallerException('module.missing.version', array($this->name));
+            }
             if (isset($xml->info[0]->version['date'])) {
                 $this->sourceDate = (string)$xml->info[0]->version['date'];
                 if ($this->sourceDate == '__TODAY__') { // for non-packages modules
