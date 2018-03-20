@@ -11,7 +11,7 @@
 */
 namespace Jelix\Routing;
 use Jelix\Core\App;
-use Jelix\Logger\Log:
+use Jelix\Logger\Log;
 
 /**
  * the main class of the jelix core, in debug mode

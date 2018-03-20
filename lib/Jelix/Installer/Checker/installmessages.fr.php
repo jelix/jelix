@@ -66,6 +66,10 @@ return array(
         'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
         'module.error.delete.dependency' => 'Le module %s, qui est doit être désinstallé, est nécessaire au module %s',
         'module.error.install.dependency' => 'Le module %s, que vous demandez d\'installer, doit être désinstallé à cause de la désinstallation du module %s',
+        'module.upgrader.missing.version'=>'La version cible est manquante pour le script de mise à jour %s du module %s',
+        'module.missing.version'=>'La version est manquante dans le fichier module.xml du module %s',
+
+        'installer.ini.missing.version'=>'La version précédente du module %s n\'est pas indiquée dans le fichier installer.ini.php',
 
         'install.entrypoint.start'  =>'Installation pour le point d\'entrée %s',
         'install.entrypoint.end'    =>'Tous les modules sont installés ou mis à jour pour le point d\'entrée %s',

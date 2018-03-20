@@ -293,6 +293,7 @@ class jAuth {
         $dr = self::getDriver();
         if($dr->changePassword($login, $newpassword)===false)
             return false;
+        jEvent::notify ('AuthChangePassword', array('login'=>$login, 'password'=>$newpassword));
         if(self::isConnected() && self::getUserSession()->login === $login){
             $config = self::loadConfig();
             $_SESSION[$config['session_name']] = self::getUser($login);
@@ -317,6 +318,20 @@ class jAuth {
      * @param string $password the password to test (not encrypted)
      * @param boolean $persistant (optional) the session must be persistant
      * @return boolean true if authentification is ok
+     * @jelixevent AuthBeforeLogin  listeners should return processlogin=false to 
+     *                          refuse authentication and to avoid a password check
+     *                          (when a user is blacklisted for exemple)
+     *                          you can also respond to this event to do record
+     *                          in a log file or else.
+     *                          parameters: login
+     * @jelixevent AuthCanLogin  sent when password is ok. 
+     *                          parameters: login, user=user object
+     *                          listeners can respond with canlogin=false to refuse the authentication.
+     * @jelixevent AuthLogin     sent when the login process is finished and the user
+     *                           is authenticated. listeners receive the login
+     *                           and a boolean indicating the persistence
+     * @jelixevent AuthErrorLogin sent when the password is bad. Listeners receive
+     *                           the login.
      */
     public static function login($login, $password, $persistant=false){
 
@@ -368,6 +383,8 @@ class jAuth {
 
     /**
      * logout a user and delete the user in the php session
+     * 
+     * @jelixevent AuthLogout listeners received the login
      */
     public static function logout(){
 

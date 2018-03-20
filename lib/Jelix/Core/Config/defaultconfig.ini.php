@@ -412,13 +412,13 @@ jforms_htmleditor_wymbasic.require=jquery
 
 jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
-jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="ckeditor/ckeditor.js"
 jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
-jforms_htmleditor_ckfull.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="ckeditor/ckeditor.js"
 jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
 
-jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="ckeditor/ckeditor.js"
 jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"

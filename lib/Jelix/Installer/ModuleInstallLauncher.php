@@ -87,8 +87,13 @@ class ModuleInstallLauncher {
     }
 
     public function isUpgraded($epId) {
-        return ($this->isInstalled($epId) &&
-            (VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0));
+        if (!$this->isInstalled($epId)) {
+            return false;
+        }
+        if ($this->moduleStatuses[$epId]->version == '') {
+            throw new Exception("installer.ini.missing.version", array($this->name));
+        }
+        return VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatuses[$epId]->version) == 0;
     }
 
     public function isActivated($epId) {
@@ -257,9 +262,16 @@ class ModuleInstallLauncher {
                 if ($fileInfo[1] && count($upgrader->targetVersions) == 0) {
                     $upgrader->targetVersions = array($fileInfo[1]);
                 }
+                if (count($upgrader->targetVersions) == 0) {
+                    throw new Exception("module.upgrader.missing.version",array($fileInfo[0], $this->moduleInfos->name));
+                }
                 $this->moduleUpgraders[] = $upgrader;
                 $upgrader->setGlobalSetup($this->globalSetup);
             }
+        }
+
+        if (count($this->moduleUpgraders) && $this->moduleStatuses[$epId]->version == '') {
+            throw new Exception("installer.ini.missing.version", array($this->moduleInfos->name));
         }
 
         $list = array();
@@ -325,9 +337,9 @@ class ModuleInstallLauncher {
         return $list;
     }
 
-    public function setAsCurrentModuleUpgraders(ModuleInstaller $upgrader, EntryPoint $ep) {
+    public function setAsCurrentModuleUpgrader(ModuleInstaller $upgrader, EntryPoint $ep) {
         $epId = $ep->getEpId();
-        $upgrader->setParameters($this->moduleStatuses[$epId]->parameters);
+        $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
         $ep->_setCurrentModuleInstaller($upgrader);
         $upgrader->initDbProfileForEntrypoint($this->moduleStatuses[$epId]->dbProfile);
     }

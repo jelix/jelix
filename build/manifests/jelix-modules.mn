@@ -105,6 +105,7 @@ cd lib/jelix-modules/jacl2db/install
   data.json
   groups.json
   users.json
+  users.groups.json
   install.php
   upgrade_localesmoved.php
   

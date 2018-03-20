@@ -46,6 +46,10 @@ class Mailer extends \PHPMailer {
      */
     protected $copyToFiles = false;
 
+    protected $htmlImageBaseDir = '';
+
+    protected $html2textConverter = false;
+
     /**
      * initialize some member
      */
@@ -117,12 +121,17 @@ class Mailer extends \PHPMailer {
      * @param string $selector
      * @param boolean $isHtml  true if the content of the template is html.
      *                 IsHTML() is called.
+     * @param false|callable  an html2text converter when the content is html.
+     * By default, it uses the converter of jMailer, html2textKeepLinkSafe(). (since 1.6.17)
+     * @param string $basedir Absolute path to a base directory to prepend to relative paths to images (since 1.6.17)
      * @return jTpl the template object.
      */
-    public function Tpl( $selector, $isHtml = false ) {
+    public function Tpl( $selector, $isHtml = false, $html2textConverter = false, $htmlImageBaseDir='') {
         $this->bodyTpl = $selector;
         $this->tpl = new \jTpl();
         $this->isHTML($isHtml);
+        $this->html2textConverter = $html2textConverter;
+        $this->htmlImageBaseDir = $htmlImageBaseDir;
         return $this->tpl;
     }
 
@@ -140,47 +149,36 @@ class Mailer extends \PHPMailer {
             $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
-            if (isset($metas['Subject'])) {
+            if (isset($metas['Subject']) && is_string($metas['Subject'])) {
                 $this->Subject = $metas['Subject'];
             }
 
-            if (isset($metas['Priority'])) {
+            if (isset($metas['Priority']) && is_numeric($metas['Priority'])) {
                 $this->Priority = $metas['Priority'];
             }
             $mailtpl->assign('Priority', $this->Priority );
 
-            if (isset($metas['Sender'])) {
+            if (isset($metas['Sender']) && is_string($metas['Sender'])) {
                 $this->Sender = $metas['Sender'];
             }
             $mailtpl->assign('Sender', $this->Sender );
 
-            if (isset($metas['to'])) {
-                foreach ($metas['to'] as $val) {
-                    $this->getAddrName($val, 'to');
+            foreach (array('to'=>'to',
+                         'cc'=>'cc',
+                         'bcc'=>'bcc',
+                         'ReplyTo'=>'Reply-To') as $prop=>$propName) {
+                if (isset($metas[$prop])) {
+                    if (is_array($metas[$prop])) {
+                        foreach ($metas[$prop] as $val) {
+                            $this->getAddrName($val, $propName);
+                        }
+                    }
+                    else if (is_string($metas[$prop])) {
+                        $this->getAddrName($metas[$prop], $propName);
+                    }
                 }
+                $mailtpl->assign($prop, $this->$prop );
             }
-            $mailtpl->assign('to', $this->to );
-
-            if (isset($metas['cc'])) {
-                foreach ($metas['cc'] as $val) {
-                    $this->getAddrName($val, 'cc');
-                }
-            }
-            $mailtpl->assign('cc', $this->cc );
-
-            if (isset($metas['bcc'])) {
-                foreach ($metas['bcc'] as $val) {
-                    $this->getAddrName($val, 'bcc');
-                }
-            }
-            $mailtpl->assign('bcc', $this->bcc);
-
-            if (isset($metas['ReplyTo'])) {
-                foreach ($metas['ReplyTo'] as $val) {
-                    $this->getAddrName($val, 'Reply-To');
-                }
-            }
-            $mailtpl->assign('ReplyTo', $this->ReplyTo );
 
             if (isset($metas['From'])) {
                 $adr = $this->getAddrName($metas['From']);
@@ -191,7 +189,8 @@ class Mailer extends \PHPMailer {
             $mailtpl->assign('FromName', $this->FromName );
 
             if ($this->ContentType == 'text/html') {
-                $this->msgHTML($mailtpl->fetch( $this->bodyTpl, 'html'));
+                $converter = $this->html2textConverter ? $this->html2textConverter: array($this, 'html2textKeepLinkSafe');
+                $this->msgHTML($mailtpl->fetch( $this->bodyTpl, 'html'), $this->htmlImageBaseDir, $converter);
             }
             else
                 $this->Body = $mailtpl->fetch( $this->bodyTpl, 'text');
@@ -263,5 +262,37 @@ class Mailer extends \PHPMailer {
         else $ip = "no-ip";
         $filename = $dir.'mail-'.$ip.'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
         \jFile::write ($filename, $header.$body);
+    }
+
+
+    /**
+     * Convert HTML content to Text.
+     *
+     * Basically, it removes all tags (strip_tags). For <a> tags, it puts the
+     * link in parenthesis, except <a> elements having the "notexpandlink".
+     * class.
+     * @param string $html
+     * @return string
+     * @since 1.6.17
+     */
+    public function html2textKeepLinkSafe($html) {
+        $regexp = "/<a\\s[^>]*href\\s*=\\s*([\"\']??)([^\" >]*?)\\1([^>]*)>(.*)<\/a>/siU";
+        if(preg_match_all($regexp, $html, $matches, PREG_SET_ORDER)) {
+            foreach($matches as $match) {
+                if (strpos($match[3], "notexpandlink") !== false) {
+                    continue;
+                }
+                // keep space inside parenthesis, because some email client my
+                // take parenthesis as part of the link
+                $html = str_replace($match[0], $match[4].' ( '.$match[2].' )', $html);
+            }
+        }
+        $html = preg_replace('/<(head|title|style|script)[^>]*>.*?<\/\\1>/si', '', $html);
+
+        return html_entity_decode(
+            trim(strip_tags($html)),
+            ENT_QUOTES,
+            $this->CharSet
+        );
     }
 }
