@@ -38,7 +38,7 @@ class jInstallerMigration {
     }
 
     protected function migrate_1_7_0() {
-        $this->reporter->message('Start migration to 1.7.0', 'notice');
+        $this->reporter->message('Start migration to Jelix 1.7.0', 'notice');
         $newConfigPath = jApp::appConfigPath();
         if (!file_exists($newConfigPath)) {
             $this->reporter->message('Create app/config/', 'notice');
@@ -126,7 +126,7 @@ class jInstallerMigration {
             $this->migrateCoordPluginsConf_1_7_0(jApp::varConfigPath($configFile));
         }
 
-        $this->reporter->message('Migration to 1.7.0 is done', 'notice');
+        $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
     private function migrateProfilesIni_1_7_0(\Jelix\IniFile\IniModifier $profilesini) {
