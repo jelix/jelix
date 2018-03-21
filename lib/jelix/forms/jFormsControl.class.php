@@ -135,6 +135,7 @@ abstract class jFormsControl {
     }
 
     function setData($value) {
+        if (!is_array($value)) $value = trim($value);
         $this->container->data[$this->ref] = $value;
     }
 
