@@ -13,7 +13,13 @@
 class jtcpdfModuleInstaller extends jInstallerModule {
 
     function install() {
-        $this->config->setValue('tcpdf', "jtcpdf~jResponseTcpdf", "responses");
-        $this->config->setValue('tcpdf', "jtcpdf~jResponseTcpdf", "_coreResponses");
+        $master = $this->config->getMaster();
+        // setup the tcpdf response if not already done
+        if (!$master->getValue('tcpdf', 'responses')) {
+            $master->setValue('tcpdf', "jtcpdf~jResponseTcpdf", "responses");
+        }
+        if (!$master->getValue('tcpdf', '_coreResponses')) {
+            $master->setValue('tcpdf', "jtcpdf~jResponseTcpdf", "_coreResponses");
+        }
     }
 }
