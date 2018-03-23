@@ -198,7 +198,7 @@ class jImageModifier {
             $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
         }
 
-        if ($src && (!isset($config['old_cache_path']) || !$config['old_cache_path'])) {
+        if ($src && (!isset($config['use_old_cache_path']) || !$config['use_old_cache_path'])) {
             // new cache path. Only generate if there is no old_cache_path config parameter of if it's old
             $cachePath .= $src.'.cache/';
             $cacheUri .= $src.'.cache/';
