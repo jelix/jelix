@@ -50,13 +50,30 @@ class jMailer extends PHPMailer {
     public $filePath = '';
 
     /**
-     * indicates if mails should be copied into files, so the developer can verify that all mails are sent.
+     * indicates if mails should be copied into files, so the developer can
+     * verify that all mails are sent.
      */
     protected $copyToFiles = false;
 
     protected $htmlImageBaseDir = '';
 
     protected $html2textConverter = false;
+
+    /**
+     * Debug mode. If activated, debugReceivers should be filled
+     * @var bool
+     */
+    protected $debugModeEnabled = false;
+
+    /**
+     * List of addresses to send all emails. Addresses in "To"
+     * @var array
+     */
+    protected $debugReceivers = array();
+
+    protected $debugSubjectPrefix = '[DEBUG MODE]';
+
+    protected $debugBodyIntroduction = 'This is an example of a message that could be send with following parameters, in the normal mode:';
 
     /**
      * initialize some member
@@ -87,6 +104,25 @@ class jMailer extends PHPMailer {
         $this->filePath = jApp::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
+
+        $this->debugModeEnabled = $config->mailer['debugModeEnabled'];
+        if ($this->debugModeEnabled) {
+            $this->debugReceivers = $config->mailer['debugReceivers'];
+            if ($this->debugReceivers) {
+                if (!is_array($this->debugReceivers)) {
+                    $this->debugReceivers = array($this->debugReceivers);
+                }
+                if ($config->mailer['debugSubjectPrefix']) {
+                    $this->debugSubjectPrefix = $config->mailer['debugSubjectPrefix'];
+                }
+                if ($config->mailer['debugBodyIntroduction']) {
+                    $this->debugBodyIntroduction = $config->mailer['debugBodyIntroduction'];
+                }
+            }
+            else {
+                $this->debugModeEnabled = false;
+            }
+        }
 
         parent::__construct(true);
 
@@ -153,8 +189,9 @@ class jMailer extends PHPMailer {
     function Send() {
 
         if (isset($this->bodyTpl) && $this->bodyTpl != "") {
-            if ($this->tpl == null)
+            if ($this->tpl == null) {
                 $this->tpl = new jTpl();
+            }
             $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
@@ -205,7 +242,64 @@ class jMailer extends PHPMailer {
                 $this->Body = $mailtpl->fetch( $this->bodyTpl, 'text');
         }
 
-        return parent::Send();
+        if ($this->debugModeEnabled) {
+            $this->debugOverrideReceivers();
+        }
+
+        $result = parent::Send();
+
+        if ($this->debugModeEnabled) {
+            foreach($this->debugOriginalValues as $f => $val) {
+                $this->$f = $val;
+            }
+        }
+        return $result;
+    }
+
+    protected $debugOriginalValues = array();
+
+    protected function debugOverrideReceivers() {
+        $this->debugOriginalValues = array();
+        foreach(array('to','cc','bcc','all_recipients','RecipientsQueue',
+                    'ReplyTo','ReplyToQueue', 'Subject', 'Body', 'AltBody') as $f) {
+            $this->debugOriginalValues[$f] = $this->$f;
+        }
+        $this->clearAllRecipients();
+        $this->clearReplyTos();
+
+        foreach($this->debugReceivers as $email) {
+            $this->getAddrName($email, 'to');
+        }
+        $this->Subject = $this->debugSubjectPrefix . $this->Subject;
+
+        $intro = $this->debugBodyIntroduction."\r\n\r\n";;
+        $introHtml = '<p>'. $this->debugBodyIntroduction."</p>\r\n<ul>\r\n";
+        foreach(array('to', 'cc', 'bcc', 'ReplyTo') as $f) {
+            $val = $this->debugOriginalValues[$f];
+            if (!is_array($val)) {
+                $val = array($val);
+            }
+            foreach($val as $v) {
+                if ($v[1]) {
+                    $email = $v[1].' <'.$v[0].'>';
+                }
+                else {
+                    $email = $v[0];
+                }
+                $intro .= ' - '.$f.': '.$email."\r\n";
+                $introHtml .= '<li>'.$f.': '.$email."</li>\r\n";
+            }
+        }
+        $intro .= "\r\n-----------------------------------------------------------\r\n";
+        $introHtml .= "</ul>\r\n<hr />\r\n";
+
+        if ($this->ContentType == 'text/html') {
+            $this->Body = $introHtml. $this->Body ;
+            $this->AltBody = $intro . $this->AltBody;
+        }
+        else {
+            $this->Body = $intro . $this->Body;
+        }
     }
 
     public function CreateHeader() {

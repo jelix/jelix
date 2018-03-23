@@ -340,7 +340,20 @@ smtpPassword =
 ; SMTP server timeout in seconds
 smtpTimeout = 10
 
+; Copy all emails into files
 copyToFiles = off
+
+; enable the debug mode. debugReceivers should be filled.
+debugModeEnabled = off
+
+; force to send all email to specified adresses here. debugModeEnabled should be on.
+debugReceivers =
+
+; Prefix to add to subject of mails, in debug mode.
+debugSubjectPrefix =
+
+; Introduction inserted at the beginning of the messages in debug mode
+debugBodyIntroduction =
 
 [acl]
 ; exemple of driver: "db".
