@@ -34,6 +34,10 @@ require(LIB_PATH.'phpMailer/class.pop3.php');
  */
 class jMailer extends PHPMailer {
 
+    const DEBUG_RECEIVER_CONFIG = 1;
+    const DEBUG_RECEIVER_USER = 2;
+
+
     /**
      * the selector of the template used for the mail.
      * Use the Tpl() method to change this property
@@ -66,10 +70,24 @@ class jMailer extends PHPMailer {
     protected $debugModeEnabled = false;
 
     /**
+     * @var int combination of DEBUG_RECEIVER_*
+     */
+    protected $debugReceiversType = 1;
+
+    /**
      * List of addresses to send all emails. Addresses in "To"
      * @var array
      */
     protected $debugReceivers = array();
+
+    /**
+     * List of valid addresses
+     *
+     * Receivers for 'To' having these emails will not be replaced by debugReceivers
+     * Receivers for 'Cc' and 'Bcc' having these emails will not be removed
+     * @var array
+     */
+    protected $debugReceiversWhiteList = array();
 
     protected $debugSubjectPrefix = '[DEBUG MODE]';
 
@@ -117,6 +135,11 @@ class jMailer extends PHPMailer {
                 }
                 if ($config->mailer['debugBodyIntroduction']) {
                     $this->debugBodyIntroduction = $config->mailer['debugBodyIntroduction'];
+                }
+                $this->debugReceiversType = $config->mailer['debugReceiversType'];
+                $this->debugReceiversWhiteList = $config->mailer['debugReceiversWhiteList'];
+                if (!is_array($this->debugReceiversWhiteList)) {
+                    $this->debugReceiversWhiteList = array($this->debugReceiversWhiteList);
                 }
             }
             else {
@@ -267,9 +290,45 @@ class jMailer extends PHPMailer {
         $this->clearAllRecipients();
         $this->clearReplyTos();
 
-        foreach($this->debugReceivers as $email) {
-            $this->getAddrName($email, 'to');
+        if (count($this->debugReceiversWhiteList)) {
+            // if some to/cc/bcc are in the white list, keep them
+            foreach(array('to','cc','bcc') as $recipientType) {
+                foreach($this->debugOriginalValues[$recipientType] as $email) {
+                    if (in_array($email[0], $this->debugReceiversWhiteList)) {
+                        if (empty($email[1])) {
+                            $this->addAnAddress($recipientType, $email[0]);
+                        }
+                        else {
+                            $this->addAnAddress($recipientType, $email[0], $email[1]);
+                        }
+                    }
+                }
+            }
         }
+
+        if (!count($this->to)) {
+            // we replace the "to" field only if it is empty (original not in white list)
+            $who = $this->debugReceiversType;
+            if ($who & self::DEBUG_RECEIVER_USER) {
+                if (class_exists('jAuth', false) &&
+                    jAuth::isConnected() &&
+                    jAuth::getUserSession() &&
+                    !empty(jAuth::getUserSession()->login)
+                ) {
+                    $this->getAddrName(jAuth::getUserSession()->login, 'to');
+                }
+                else {
+                    $who = self::DEBUG_RECEIVER_CONFIG;
+                }
+            }
+
+            if ($who & self::DEBUG_RECEIVER_CONFIG) {
+                foreach($this->debugReceivers as $email) {
+                    $this->getAddrName($email, 'to');
+                }
+            }
+        }
+
         $this->Subject = $this->debugSubjectPrefix . $this->Subject;
 
         $intro = $this->debugBodyIntroduction."\r\n\r\n";;
