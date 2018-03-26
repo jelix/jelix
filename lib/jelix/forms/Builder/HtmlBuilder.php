@@ -4,7 +4,7 @@
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau
+* @copyright   2006-2018 Laurent Jouanneau
 * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -264,6 +264,20 @@ class HtmlBuilder extends BuilderBase {
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->setAttributes($attributes);
         $widget->outputControlValue();
+    }
+
+    /**
+     * @param \jFormsControl $ctrl
+     * @throws \Exception
+     * @since 1.6.17
+     */
+    public function outputControlHelp($ctrl) {
+        if (!$ctrl->help) {
+            return;
+        }
+        $widget = $this->getWidget($ctrl, $this->rootWidget);
+        // additionnal &nbsp, else background icon is not shown in webkit
+        echo '<span class="jforms-help" id="'.$widget->getId().'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
     }
 
     protected function _outputAttr(&$attributes) {
