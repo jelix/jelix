@@ -346,8 +346,21 @@ copyToFiles = off
 ; enable the debug mode. debugReceivers should be filled.
 debugModeEnabled = off
 
-; force to send all email to specified adresses here. debugModeEnabled should be on.
+; type of receivers set into the email
+; 1: only addresses from  debugReceivers
+; 2: only email address of the authenticated user, or addresses from  debugReceivers
+;    if the user isn't authenticated
+; 3: both, addresses from debugReceivers and address of the authenticated user
+debugReceiversType = 1
+
+; email addresses that will replace receivers in all emails. debugModeEnabled should be on.
 debugReceivers =
+;debugReceivers[] =
+
+; Receivers for 'To' having these emails will not be replaced by debugReceivers
+; Receivers for 'Cc' and 'Bcc' having these emails will not be removed
+debugReceiversWhiteList =
+;debugReceiversWhiteList[] =
 
 ; Prefix to add to subject of mails, in debug mode.
 debugSubjectPrefix =
