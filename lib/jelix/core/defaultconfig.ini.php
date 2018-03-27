@@ -76,6 +76,7 @@ jacldb.access = 0
 
 [tplplugins]
 defaultJformsBuilder = html
+defaultJformsErrorDecorator =
 
 [responses]
 html = jResponseHtml

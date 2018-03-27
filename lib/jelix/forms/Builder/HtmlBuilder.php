@@ -59,8 +59,18 @@ class HtmlBuilder extends BuilderBase {
      *      </ul>
      */
     public function setOptions($options) {
-        $this->options = array_merge(array('errorDecorator'=>$this->jFormsJsVarName.'ErrorDecoratorHtml',
-            'method'=>'post'), $options);
+        if (\jApp::config()->tplplugins['defaultJformsErrorDecorator']) {
+            $errorDecorator = \jApp::config()->tplplugins['defaultJformsErrorDecorator'];
+        }
+        else {
+            $errorDecorator = $this->jFormsJsVarName.'ErrorDecoratorHtml';
+        }
+        $this->options = array_merge(
+            array(
+                'errorDecorator'=>$errorDecorator,
+                'method'=>'post'
+            ),
+            $options);
          if (isset($this->options['plugins'])) {
             $this->pluginsConf = $this->options['plugins'];
             unset($this->options['plugins']);
