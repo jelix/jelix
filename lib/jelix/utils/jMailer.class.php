@@ -106,14 +106,43 @@ class jMailer extends PHPMailer {
         }
         $this->Hostname = $config->mailer['hostname'];
         $this->Sendmail = $config->mailer['sendmailPath'];
-        $this->Host = $config->mailer['smtpHost'];
-        $this->Port = $config->mailer['smtpPort'];
-        $this->Helo = $config->mailer['smtpHelo'];
-        $this->SMTPAuth = $config->mailer['smtpAuth'];
-        $this->SMTPSecure = $config->mailer['smtpSecure'];
-        $this->Username = $config->mailer['smtpUsername'];
-        $this->Password = $config->mailer['smtpPassword'];
-        $this->Timeout = $config->mailer['smtpTimeout'];
+
+        if (strtolower($this->Mailer) == 'smtp') {
+            if (isset($config->mailer['smtpProfile']) &&
+                $config->mailer['smtpProfile'] != ''
+            ) {
+                $smtp = jProfiles::get('smtp', $config->mailer['smtpProfile']);
+                $smtp = array_merge(array(
+                    'host' => 'localhost',
+                    'port' => 25,
+                    'secure_protocol' => '', // or "ssl", "tls"
+                    'helo' => '',
+                    'auth_enabled' => false,
+                    'username' => '',
+                    'password' => '',
+                    'timeout' => 10
+                ), $smtp);
+                $this->Host = $smtp['host'];
+                $this->Port = $smtp['port'];
+                $this->Helo = $smtp['helo'];
+                $this->SMTPAuth = $smtp['auth_enabled'];
+                $this->SMTPSecure = $smtp['secure_protocol'];
+                $this->Username = $smtp['username'];
+                $this->Password = $smtp['password'];
+                $this->Timeout = $smtp['timeout'];
+            }
+            else {
+                $this->Host = $config->mailer['smtpHost'];
+                $this->Port = $config->mailer['smtpPort'];
+                $this->Helo = $config->mailer['smtpHelo'];
+                $this->SMTPAuth = $config->mailer['smtpAuth'];
+                $this->SMTPSecure = $config->mailer['smtpSecure'];
+                $this->Username = $config->mailer['smtpUsername'];
+                $this->Password = $config->mailer['smtpPassword'];
+                $this->Timeout = $config->mailer['smtpTimeout'];
+            }
+        }
+
         if ($config->mailer['webmasterEmail'] != '') {
             $this->From = $config->mailer['webmasterEmail'];
         }
