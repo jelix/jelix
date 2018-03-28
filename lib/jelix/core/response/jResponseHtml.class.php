@@ -507,6 +507,7 @@ class jResponseHtml extends jResponseBasicHtml {
     public function addMetaAuthor($content){
         $this->_MetaAuthor = $content;
     }
+
     /**
      * add generator a generator meta tag
      * @author Olivier Demah
@@ -516,6 +517,15 @@ class jResponseHtml extends jResponseBasicHtml {
     public function addMetaGenerator($content){
         $this->_MetaGenerator = $content;
     }
+
+    /**
+     * add a meta element
+     * @param array  list of attribute and their values to set on a new meta element
+     */
+    public function addMeta($params) {
+        $this->_Meta[] = $params;
+    }
+
     /**
      * generate the doctype. You can override it if you want to have your own doctype, like XHTML+MATHML.
      * @since 1.1
@@ -801,7 +811,8 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param array $what list of one or many of this strings : 'CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription'. If null, it cleans all values.
      */
     public function clearHtmlHeader ($what=null){
-        $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
+        $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode',
+            'Others','MetaKeywords','MetaDescription', 'Meta', 'MetaAuthor', 'MetaGenerator');
         if($what==null)
             $what= $cleanable;
         foreach ($what as $elem){
