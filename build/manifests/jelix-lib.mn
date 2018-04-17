@@ -836,19 +836,18 @@ cd lib/Jelix/External
   ClassMapGenerator.php
 
 cd lib/Jelix/Installer
-  ModuleStatus.php
+  AbstractInstallLauncher.php
+  EntryPoint.php
   Exception.php
-  AbstractInstaller.php
-  ModuleInstaller.php
+  GlobalSetup.php
+  Installer.php
   InstallerInterface.php
+  Migration.php
+  ModuleInstaller.php
+  ModuleInstallLauncher.php
+  ModuleStatus.php
   ReporterInterface.php
   ReporterTrait.php
-  AbstractInstallLauncher.php
-  ModuleInstallLauncher.php
-  Installer.php
-  EntryPoint.php
-  Migration.php
-  GLobalSetup.php
 
 cd lib/Jelix/Installer/Reporter
   Console.php
