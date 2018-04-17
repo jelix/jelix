@@ -97,6 +97,7 @@ class jMailerTest extends jUnitTestCase {
         $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=UTF-8') !== false);
         $this->assertTrue(strpos($content, "Hello this is debug
 
+ - From: Super Me <toto@truc.local>
  - to: titi@machin.local
  - to: toto@machin1.local
  - cc: robert@machin2.local
@@ -146,6 +147,7 @@ This is a test mail") !== false);
         $this->assertTrue(strpos($content, 'Content-Type: multipart/alternative;') !== false);
         $this->assertTrue(strpos($content, "This is an example of a message that could be send with following parameters, in the normal mode:
 
+ - From: Super Me <toto@truc.local>
  - to: titi@machin.local
  - to: toto@machin1.local
  - cc: robert@machin2.local
@@ -154,8 +156,10 @@ This is a test mail") !== false);
 Yeaar!
 
 This is a test mail") !== false);
+
         $this->assertTrue(strpos($content, "<p>This is an example of a message that could be send with following parameters, in the normal mode:</p>
 <ul>
+<li>From: Super Me &lt;toto@truc.local&gt;</li>
 <li>to: titi@machin.local</li>
 <li>to: toto@machin1.local</li>
 <li>cc: robert@machin2.local</li>
@@ -208,6 +212,7 @@ This is a test mail") !== false);
         $this->assertTrue(strpos($content, 'Content-Type: multipart/alternative;') !== false);
         $this->assertTrue(strpos($content, "This is an example of a message that could be send with following parameters, in the normal mode:
 
+ - From: Super Me <toto@truc.local>
  - to: titi@machin.local
  - to: toto@machin1.local
  - cc: robert@machin2.local
@@ -218,6 +223,7 @@ Yeaar!
 This is a test mail") !== false);
         $this->assertTrue(strpos($content, "<p>This is an example of a message that could be send with following parameters, in the normal mode:</p>
 <ul>
+<li>From: Super Me &lt;toto@truc.local&gt;</li>
 <li>to: titi@machin.local</li>
 <li>to: toto@machin1.local</li>
 <li>cc: robert@machin2.local</li>
@@ -272,6 +278,7 @@ This is a test mail") !== false);
         $this->assertTrue(strpos($content, 'Content-Type: multipart/alternative;') !== false);
         $this->assertTrue(strpos($content, "This is an example of a message that could be send with following parameters, in the normal mode:
 
+ - From: Super Me <toto@truc.local>
  - to: titi@machin.local
  - to: toto@machin1.local
  - cc: robert@machin2.local
@@ -282,6 +289,7 @@ Yeaar!
 This is a test mail") !== false);
         $this->assertTrue(strpos($content, "<p>This is an example of a message that could be send with following parameters, in the normal mode:</p>
 <ul>
+<li>From: Super Me &lt;toto@truc.local&gt;</li>
 <li>to: titi@machin.local</li>
 <li>to: toto@machin1.local</li>
 <li>cc: robert@machin2.local</li>
