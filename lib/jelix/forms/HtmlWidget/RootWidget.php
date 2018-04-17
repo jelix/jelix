@@ -11,7 +11,7 @@ namespace jelix\forms\HtmlWidget;
 
 class RootWidget implements ParentWidgetInterface {
 
-    //------ ParentBuilderInterface
+    //------ ParentWidgetInterface
 
     protected $js = '';
     function addJs($js) {

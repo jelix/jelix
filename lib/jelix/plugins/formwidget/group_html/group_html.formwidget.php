@@ -19,7 +19,7 @@
 class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                             implements \jelix\forms\HtmlWidget\ParentWidgetInterface {
 
-    //------ ParentBuilderInterface
+    //------ ParentWidgetInterface
 
     function addJs($js) {
         $this->parentWidget->addJs($js);
