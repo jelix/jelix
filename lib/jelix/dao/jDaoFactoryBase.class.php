@@ -277,13 +277,12 @@ abstract class jDaoFactoryBase  {
      * @param int $limitCount
      * @return jDbResultSet
      */
-    final public function findBy ($searchcond, $limitOffset=0, $limitCount=null){
+    final public function findBy (jDaoConditions $searchcond, $limitOffset=0, $limitCount=null){
         $query = $this->_selectClause.$this->_fromClause.$this->_whereClause;
         if ($searchcond->hasConditions ()){
             $query .= ($this->_whereClause !='' ? ' AND ' : ' WHERE ');
             $query .= $this->_createConditionsClause($searchcond);
         }
-        $query.= $this->_createGroupClause($searchcond);
         $query.= $this->_createOrderClause($searchcond);
 
         if($limitCount !== null){
@@ -411,26 +410,10 @@ abstract class jDaoFactoryBase  {
     }
 
     /**
-     * @internal
-     */
-    final protected function _createGroupClause($daocond) {
-        $group = array ();
-        foreach ($daocond->group as $name) {
-            if (isset(static::$_properties[$name]))
-                $group[] = $this->_conn->encloseName($name);
-        }
-
-        if (count ($group)) {
-            return ' GROUP BY '.implode(', ', $group);
-        }
-        return '';
-    }
-
-    /**
      * @internal it don't support isExpr property of a condition because of security issue (SQL injection)
      * because the value could be provided by a form, it is escaped in any case
      */
-    final protected function _generateCondition($condition, &$fields, $forSelect, $principal=true){
+    final protected function _generateCondition(jDaoCondition $condition, &$fields, $forSelect, $principal=true){
         $r = ' ';
         $notfirst = false;
         foreach ($condition->conditions as $cond){

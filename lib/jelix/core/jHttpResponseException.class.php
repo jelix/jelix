@@ -72,11 +72,12 @@ class jHttpResponseException extends Exception {
         if ($httpCode === 0) {
             $httpCode = 500;
         }
-        if (isset(self::HTTP_CODE[$httpCode])) {
-            $message = self::HTTP_CODE[$httpCode];
+        $codes = self::HTTP_CODE;
+        if (isset($codes[$httpCode])) {
+            $message = $codes[$httpCode];
         }
         else {
-            $message = "Unknow code";
+            $message = "Unknown code";
         }
 
         $this->reason = $reason;
