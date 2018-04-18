@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix-modules
-* @subpackage jelix
+* @subpackage jelix-module
 * @author     Bastien Jaillot
 * @contributor Laurent Jouanneau, Julien Issler
 * @copyright  2008 Bastien Jaillot

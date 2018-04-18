@@ -117,6 +117,7 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp core/jBasicErrorHandler.class.php
 #includephp core/jException.class.php
+#includephp core/jHttpResponseException.class.php
 #includephp core/jServer.class.php
 #includephp core/selector/jSelectorActFast.class.php
 #includephp core/selector/jSelectorAct.class.php
@@ -136,6 +137,7 @@ spl_autoload_register("LegacyJelixAutoloader::loadClass");
 #else
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
+require (JELIX_LIB_CORE_PATH . 'jHttpResponseException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jServer.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
 require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');

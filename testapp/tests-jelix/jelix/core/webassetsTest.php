@@ -203,7 +203,8 @@ jforms_datepicker.require=jquery_ui
         $resp->output();
         $output = ob_get_clean();
         $this->assertEquals('<!DOCTYPE HTML>
-<html lang=""><head>
+<html lang="">
+<head>
 <meta content="text/html; charset=" http-equiv="content-type"/>
 <title></title>
 <link type="text/css" href="/absolute/path.css" rel="stylesheet" />
@@ -259,7 +260,8 @@ jforms_datepicker.require=jquery_ui
         $resp->output();
         $output = ob_get_clean();
         $this->assertEquals('<!DOCTYPE HTML>
-<html lang=""><head>
+<html lang="">
+<head>
 <meta content="text/html; charset=" http-equiv="content-type"/>
 <title></title>
 <link type="text/css" href="/absolute/path.css" rel="stylesheet" />

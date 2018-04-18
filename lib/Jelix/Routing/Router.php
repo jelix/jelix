@@ -231,7 +231,13 @@ class Router {
             }
         }
 
-        $this->response = $ctrl->{$this->action->method}();
+        try {
+            $this->response = $ctrl->{$this->action->method}();
+        }
+        catch (\jHttpResponseException $httpError) {
+            $this->response = $this->getHttpErrorResponse($httpError->getCode(), $httpError->getMessage(), $httpError->getReason());
+        }
+
         if($this->response == null){
             throw new \jException('jelix~errors.response.missing',$this->action->toString());
         }
@@ -296,6 +302,25 @@ class Router {
             return false;
         }
         return $this->originalAction->isEqualTo($this->action);
+    }
+
+
+    function getHttpErrorResponse($httpCode, $httpMessage, $reason) {
+        $response = new \jResponseHtml();
+        if ($httpCode == 404) {
+            $response->bodyTpl = 'jelix~404.html';
+        }
+        elseif ($httpCode == 403) {
+            $response->bodyTpl = 'jelix~403.html';
+        }
+        else {
+            $response->bodyTpl = 'jelix~http_error.html';
+        }
+        $response->body->assign('httpCode', $httpCode);
+        $response->body->assign('httpMessage', $httpMessage);
+        $response->body->assign('reason', $reason);
+        $response->setHttpStatus($httpCode, $httpMessage);
+        return $response;
     }
 
     /**

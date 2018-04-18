@@ -5,9 +5,11 @@
 * sendmail, PHP mail(), SMTP, or files for tests.  Methods are
 * based upon the standard AspEmail(tm) classes.
 *
+* @package     jelix
+* @subpackage  utils
 * @author      Laurent Jouanneau
 * @contributor Kévin Lepeltier, GeekBay, Julien Issler
-* @copyright   2006-2016 Laurent Jouanneau
+* @copyright   2006-2018 Laurent Jouanneau
 * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
 * @copyright   2010-2015 Julien Issler
 * @link        http://jelix.org
@@ -26,6 +28,10 @@ namespace Jelix\Mailer;
  */
 class Mailer extends \PHPMailer {
 
+    const DEBUG_RECEIVER_CONFIG = 1;
+    const DEBUG_RECEIVER_USER = 2;
+
+
     /**
      * the selector of the template used for the mail.
      * Use the Tpl() method to change this property
@@ -38,17 +44,58 @@ class Mailer extends \PHPMailer {
     /**
      * the path of the directory where to store mails
      * if mailer is file.
-    */
+     */
     public $filePath = '';
 
     /**
-     * indicates if mails should be copied into files, so the developer can verify that all mails are sent.
+     * indicates if mails should be copied into files, so the developer can
+     * verify that all mails are sent.
      */
     protected $copyToFiles = false;
 
     protected $htmlImageBaseDir = '';
 
     protected $html2textConverter = false;
+
+    /**
+     * Debug mode. If activated, debugReceivers should be filled
+     * @var bool
+     */
+    protected $debugModeEnabled = false;
+
+    /**
+     * @var string  replacement for the From header
+     */
+    protected $debugFrom = '';
+
+    /**
+     * @var string  replacement for the From header
+     */
+    protected $debugFromName = '';
+
+    /**
+     * @var int combination of DEBUG_RECEIVER_*
+     */
+    protected $debugReceiversType = 1;
+
+    /**
+     * List of addresses to send all emails. Addresses in "To"
+     * @var array
+     */
+    protected $debugReceivers = array();
+
+    /**
+     * List of valid addresses
+     *
+     * Receivers for 'To' having these emails will not be replaced by debugReceivers
+     * Receivers for 'Cc' and 'Bcc' having these emails will not be removed
+     * @var array
+     */
+    protected $debugReceiversWhiteList = array();
+
+    protected $debugSubjectPrefix = '[DEBUG MODE]';
+
+    protected $debugBodyIntroduction = 'This is an example of a message that could be send with following parameters, in the normal mode:';
 
     /**
      * initialize some member
@@ -63,14 +110,43 @@ class Mailer extends \PHPMailer {
         }
         $this->Hostname = $config->mailer['hostname'];
         $this->Sendmail = $config->mailer['sendmailPath'];
-        $this->Host = $config->mailer['smtpHost'];
-        $this->Port = $config->mailer['smtpPort'];
-        $this->Helo = $config->mailer['smtpHelo'];
-        $this->SMTPAuth = $config->mailer['smtpAuth'];
-        $this->SMTPSecure = $config->mailer['smtpSecure'];
-        $this->Username = $config->mailer['smtpUsername'];
-        $this->Password = $config->mailer['smtpPassword'];
-        $this->Timeout = $config->mailer['smtpTimeout'];
+
+        if (strtolower($this->Mailer) == 'smtp') {
+            if (isset($config->mailer['smtpProfile']) &&
+                $config->mailer['smtpProfile'] != ''
+            ) {
+                $smtp = jProfiles::get('smtp', $config->mailer['smtpProfile']);
+                $smtp = array_merge(array(
+                    'host' => 'localhost',
+                    'port' => 25,
+                    'secure_protocol' => '', // or "ssl", "tls"
+                    'helo' => '',
+                    'auth_enabled' => false,
+                    'username' => '',
+                    'password' => '',
+                    'timeout' => 10
+                ), $smtp);
+                $this->Host = $smtp['host'];
+                $this->Port = $smtp['port'];
+                $this->Helo = $smtp['helo'];
+                $this->SMTPAuth = $smtp['auth_enabled'];
+                $this->SMTPSecure = $smtp['secure_protocol'];
+                $this->Username = $smtp['username'];
+                $this->Password = $smtp['password'];
+                $this->Timeout = $smtp['timeout'];
+            }
+            else {
+                $this->Host = $config->mailer['smtpHost'];
+                $this->Port = $config->mailer['smtpPort'];
+                $this->Helo = $config->mailer['smtpHelo'];
+                $this->SMTPAuth = $config->mailer['smtpAuth'];
+                $this->SMTPSecure = $config->mailer['smtpSecure'];
+                $this->Username = $config->mailer['smtpUsername'];
+                $this->Password = $config->mailer['smtpPassword'];
+                $this->Timeout = $config->mailer['smtpTimeout'];
+            }
+        }
+
         if ($config->mailer['webmasterEmail'] != '') {
             $this->From = $config->mailer['webmasterEmail'];
         }
@@ -79,6 +155,36 @@ class Mailer extends \PHPMailer {
         $this->filePath = \Jelix\Core\App::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
+
+        $this->debugModeEnabled = $config->mailer['debugModeEnabled'];
+        if ($this->debugModeEnabled) {
+            $this->debugReceivers = $config->mailer['debugReceivers'];
+            if ($this->debugReceivers) {
+                if (!is_array($this->debugReceivers)) {
+                    $this->debugReceivers = array($this->debugReceivers);
+                }
+                if ($config->mailer['debugFrom']) {
+                    $this->debugFrom = $config->mailer['debugFrom'];
+                }
+                if ($config->mailer['debugFromName']) {
+                    $this->debugFromName = $config->mailer['debugFromName'];
+                }
+                if ($config->mailer['debugSubjectPrefix']) {
+                    $this->debugSubjectPrefix = $config->mailer['debugSubjectPrefix'];
+                }
+                if ($config->mailer['debugBodyIntroduction']) {
+                    $this->debugBodyIntroduction = $config->mailer['debugBodyIntroduction'];
+                }
+                $this->debugReceiversType = $config->mailer['debugReceiversType'];
+                $this->debugReceiversWhiteList = $config->mailer['debugReceiversWhiteList'];
+                if (!is_array($this->debugReceiversWhiteList)) {
+                    $this->debugReceiversWhiteList = array($this->debugReceiversWhiteList);
+                }
+            }
+            else {
+                $this->debugModeEnabled = false;
+            }
+        }
 
         parent::__construct(true);
     }
@@ -144,8 +250,10 @@ class Mailer extends \PHPMailer {
     public function send() {
 
         if (isset($this->bodyTpl) && $this->bodyTpl != "") {
-            if ($this->tpl == null)
+            if ($this->tpl == null) {
                 $this->tpl = new \jTpl();
+            }
+
             $mailtpl = $this->tpl;
             $metas = $mailtpl->meta( $this->bodyTpl , ($this->ContentType == 'text/html'?'html':'text') );
 
@@ -196,7 +304,110 @@ class Mailer extends \PHPMailer {
                 $this->Body = $mailtpl->fetch( $this->bodyTpl, 'text');
         }
 
-        return parent::Send();
+        if ($this->debugModeEnabled) {
+            $this->debugOverrideReceivers();
+        }
+
+        $result = parent::Send();
+
+        if ($this->debugModeEnabled) {
+            foreach($this->debugOriginalValues as $f => $val) {
+                $this->$f = $val;
+            }
+        }
+        return $result;
+    }
+
+    protected $debugOriginalValues = array();
+
+    protected function debugOverrideReceivers() {
+        $this->debugOriginalValues = array();
+        foreach(array('to','cc','bcc','all_recipients','RecipientsQueue',
+                    'ReplyTo','ReplyToQueue', 'Subject', 'Body', 'AltBody',
+                    'From', 'Sender', 'FromName') as $f) {
+            $this->debugOriginalValues[$f] = $this->$f;
+        }
+
+        if ($this->debugFrom) {
+            $this->From = $this->debugFrom;
+            $this->FromName = $this->debugFromName;
+            $this->Sender = $this->debugFrom;
+        }
+
+        $this->clearAllRecipients();
+        $this->clearReplyTos();
+
+        if (count($this->debugReceiversWhiteList)) {
+            // if some to/cc/bcc are in the white list, keep them
+            foreach(array('to','cc','bcc') as $recipientType) {
+                foreach($this->debugOriginalValues[$recipientType] as $email) {
+                    if (in_array($email[0], $this->debugReceiversWhiteList)) {
+                        if (empty($email[1])) {
+                            $this->addAnAddress($recipientType, $email[0]);
+                        }
+                        else {
+                            $this->addAnAddress($recipientType, $email[0], $email[1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (!count($this->to)) {
+            // we replace the "to" field only if it is empty (original not in white list)
+            $who = $this->debugReceiversType;
+            if ($who & self::DEBUG_RECEIVER_USER) {
+                if (class_exists('jAuth', false) &&
+                    jAuth::isConnected() &&
+                    jAuth::getUserSession() &&
+                    !empty(jAuth::getUserSession()->login)
+                ) {
+                    $this->getAddrName(jAuth::getUserSession()->login, 'to');
+                }
+                else {
+                    $who = self::DEBUG_RECEIVER_CONFIG;
+                }
+            }
+
+            if ($who & self::DEBUG_RECEIVER_CONFIG) {
+                foreach($this->debugReceivers as $email) {
+                    $this->getAddrName($email, 'to');
+                }
+            }
+        }
+
+        $this->Subject = $this->debugSubjectPrefix . $this->Subject;
+
+        $intro = $this->debugBodyIntroduction."\r\n\r\n";;
+        $introHtml = '<p>'. $this->debugBodyIntroduction."</p>\r\n<ul>\r\n";
+        $intro .= ' - From: '.$this->debugOriginalValues['FromName']." <".$this->debugOriginalValues['From'].">\r\n";
+        $introHtml .= '<li>From: '.$this->debugOriginalValues['FromName']." &lt;".$this->debugOriginalValues['From']."&gt;</li>\r\n";
+        foreach(array('to', 'cc', 'bcc', 'ReplyTo') as $f) {
+            $val = $this->debugOriginalValues[$f];
+            if (!is_array($val)) {
+                $val = array($val);
+            }
+            foreach($val as $v) {
+                if ($v[1]) {
+                    $intro .= ' - '.$f.': '. $v[1].' <'.$v[0].">\r\n";
+                    $introHtml .= '<li>'.$f.': '.$v[1].' &lt;'.$v[0]."&gt;</li>\r\n";
+                }
+                else {
+                    $intro .= ' - '.$f.': '.$v[0]."\r\n";
+                    $introHtml .= '<li>'.$f.': '.$v[0]."</li>\r\n";
+                }
+            }
+        }
+        $intro .= "\r\n-----------------------------------------------------------\r\n";
+        $introHtml .= "</ul>\r\n<hr />\r\n";
+
+        if ($this->ContentType == 'text/html') {
+            $this->Body = $introHtml. $this->Body ;
+            $this->AltBody = $intro . $this->AltBody;
+        }
+        else {
+            $this->Body = $intro . $this->Body;
+        }
     }
 
     public function createHeader() {
@@ -231,10 +442,10 @@ class Mailer extends \PHPMailer {
     }
 
     protected function lang($key) {
-      if(count($this->language) < 1) {
-        $this->SetLanguage($this->defaultLang); // set the default language
-      }
-      return parent::lang($key);
+        if(count($this->language) < 1) {
+            $this->SetLanguage($this->defaultLang); // set the default language
+        }
+        return parent::lang($key);
     }
 
     protected function sendmailSend($header, $body) {

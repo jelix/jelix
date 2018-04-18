@@ -27,7 +27,7 @@ class jImageModifierTest extends jUnitTestCase {
 
     function testGet() {
 
-        $cacheName = 'cache/images/'.md5('imagemodifier/logo_test.pngwidth50height30').'.png';
+        $cacheName = 'cache/images/imagemodifier/logo_test.png.cache/'.md5('imagemodifier/logo_test.pngwidth50height30').'.png';
         $cacheFile = jApp::wwwPath($cacheName);
         if (file_exists($cacheFile))
             unlink($cacheFile);
@@ -45,7 +45,7 @@ class jImageModifierTest extends jUnitTestCase {
     }
 
     function testGetOmo() {
-        $cacheName = 'cache/images/'.md5('imagemodifier/logo_test.pngmaxwidth50maxheight30omo1').'.png';
+        $cacheName = 'cache/images/imagemodifier/logo_test.png.cache/'.md5('imagemodifier/logo_test.pngmaxwidth50maxheight30omo1').'.png';
         $cacheFile = jApp::wwwPath($cacheName);
         if (file_exists($cacheFile))
             unlink($cacheFile);
@@ -65,7 +65,7 @@ class jImageModifierTest extends jUnitTestCase {
     }
 
     function testGetOmo2() {
-        $cacheName = 'cache/images/'.md5('imagemodifier/logo_test.pngwidth50height30omo1').'.png';
+        $cacheName = 'cache/images/imagemodifier/logo_test.png.cache/'.md5('imagemodifier/logo_test.pngwidth50height30omo1').'.png';
         $cacheFile = jApp::wwwPath($cacheName);
         if (file_exists($cacheFile))
             unlink($cacheFile);

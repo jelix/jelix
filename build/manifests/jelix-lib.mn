@@ -129,6 +129,7 @@ cd lib/jelix-legacy/core
   jBasicErrorHandler.class.php
 * jController.class.php
   jException.class.php
+  jHttpResponseException.class.php
   jPropertiesFileReader.class.php
   jUrlBase.class.php
   jUrlAction.class.php
@@ -270,7 +271,12 @@ cd lib/jelix-legacy/core-modules/jelix/templates
   cruddfk_view.tpl
   defaultmain.tpl
   check_install.tpl
+<<<<<<< HEAD
 cd lib/jelix-legacy/core-modules/jelix/templates/en_GB
+=======
+  http_error.html.tpl
+cd lib/jelix/core-modules/jelix/templates/en_GB
+>>>>>>> origin/jelix-1.7.x
   check_install.tpl
 cd lib/jelix-legacy/core-modules/jelix/templates/en_US
   check_install.tpl

@@ -51,12 +51,11 @@ class jAuth {
      * @since 1.2.10
      */
     public static function loadConfig($newconfig = null){
-
         if (self::$config === null || $newconfig) {
             if (!$newconfig) {
                 $plugin = jApp::coord()->getPlugin('auth');
                 if($plugin === null)
-                    throw new jException('jelix~auth.error.plugin.missing');
+                throw new jException('jelix~auth.error.plugin.missing');
                 $config = & $plugin->config;
             }
             else {
@@ -75,7 +74,8 @@ class jAuth {
                     $config['persistant_cookie_path'] = '/';
             }
 
-            if (!isset($config['persistant_encryption_key'])) {
+            if (!isset($config['persistant_encryption_key']) || $config['persistant_encryption_key'] == '') {
+                // in the case of the use of a separate file, persistant_crypt_key may be into the localconfig.ini.php
                 if (isset(jApp::config()->coordplugin_auth) && isset(jApp::config()->coordplugin_auth['persistant_encryption_key'])) {
                     $config['persistant_encryption_key'] = trim(jApp::config()->coordplugin_auth['persistant_encryption_key']);
                 }
@@ -318,13 +318,13 @@ class jAuth {
      * @param string $password the password to test (not encrypted)
      * @param boolean $persistant (optional) the session must be persistant
      * @return boolean true if authentification is ok
-     * @jelixevent AuthBeforeLogin  listeners should return processlogin=false to 
+     * @jelixevent AuthBeforeLogin  listeners should return processlogin=false to
      *                          refuse authentication and to avoid a password check
      *                          (when a user is blacklisted for exemple)
      *                          you can also respond to this event to do record
      *                          in a log file or else.
      *                          parameters: login
-     * @jelixevent AuthCanLogin  sent when password is ok. 
+     * @jelixevent AuthCanLogin  sent when password is ok.
      *                          parameters: login, user=user object
      *                          listeners can respond with canlogin=false to refuse the authentication.
      * @jelixevent AuthLogin     sent when the login process is finished and the user
@@ -383,7 +383,7 @@ class jAuth {
 
     /**
      * logout a user and delete the user in the php session
-     * 
+     *
      * @jelixevent AuthLogout listeners received the login
      */
     public static function logout(){
@@ -526,3 +526,4 @@ class jAuth {
         return $persistence;
     }
 }
+

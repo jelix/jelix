@@ -15,12 +15,23 @@ DISTPATH=_dist
 DISTPATHSWITCH="MAIN_TARGET_PATH=_dist"
 endif
 
-ifndef DOCSPATH
-DOCSPATH=_docs
+ifndef DOCSTARGETPATH
+DOCSTARGETPATH=$(CURRENT_PATH)/_docs
+endif
+
+ifndef DOCSCACHEPATH
+DOCSCACHEPATH=$(CURRENT_PATH)/_docs.cache
+endif
+
+ifdef TESTPATH
+TESTPATHSWITCH="MAIN_TARGET_PATH=$(TESTPATH)"
+else
+TESTPATH=_dev
+TESTPATHSWITCH="MAIN_TARGET_PATH=_dev"
 endif
 
 ifndef PHPDOC
-PHPDOC=../../phpdoc/
+PHPDOC=phpdoc
 endif
 
 .PHONY: default
@@ -42,10 +53,8 @@ nightlies:
 .PHONY: docs
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
-#	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
-	$(PHPDOC)phpdoc \
-	-d $(TESTPATH)/lib/jelix-legacy/ \
-	-t $(DOCSPATH) \
-	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
-	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION,BUILD"
-	# -tb $(CURRENT_PATH)/build/phpdoc/
+	cp build/phpdoc/phpdoc.xml $(TESTPATH)
+	sed -i -- s!__PARSER_CACHE__!$(DOCSCACHEPATH)!g $(TESTPATH)/phpdoc.xml
+	sed -i -- s!__TARGET_PATH__!$(DOCSTARGETPATH)!g $(TESTPATH)/phpdoc.xml
+	(cd $(TESTPATH) && $(PHPDOC) project:run)
+	cp build/phpdoc/template.css $(DOCSTARGETPATH)/css/

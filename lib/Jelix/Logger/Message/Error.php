@@ -1,5 +1,7 @@
 <?php
 /**
+* @package    jelix
+* @subpackage core_log
 * @author     Laurent Jouanneau
 * @contributor Brice Tence
 * @copyright  2006-2014 Laurent Jouanneau, 2011 Brice Tence

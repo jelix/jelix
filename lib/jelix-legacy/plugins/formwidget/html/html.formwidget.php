@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     jelix
-* @subpackage  formwidgets
+* @subpackage  forms_widget_plugin
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
 * @copyright   2006-2017 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
@@ -27,5 +27,15 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget {
         $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
         $this->addJs($js);
         $this->builder = $builder;
+    }
+
+    public function outputFooter() {
+        $js = "jQuery(document).ready(function() { var c, c2;\n".$this->js.$this->finalJs."});";
+        $container = $this->builder->getForm()->getContainer();
+        $container->privateData['__jforms_js'] = $js;
+        $formId = $container->formId;
+        $formName = $this->builder->getForm()->getSelector();
+        echo '<script type="text/javascript" src="'.\jUrl::get("jelix~jforms:js",
+                array('__form'=>$formName, '__fid' =>$formId)).'"></script>';
     }
 }

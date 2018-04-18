@@ -1,5 +1,7 @@
 <?php
 /**
+* @package    jelix
+* @subpackage core_log
 * @author     Laurent Jouanneau
 * @contributor F. Fernandez, Hadrien Lanneau
 * @copyright  2006-2014 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
@@ -11,6 +13,8 @@ namespace Jelix\Logger;
 
 /**
  * utility class to log some message into a file into yourapp/var/log
+ * @package    jelix
+ * @subpackage core_log
  * @static
  */
 class Log {

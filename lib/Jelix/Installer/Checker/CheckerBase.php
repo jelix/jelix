@@ -2,6 +2,8 @@
 /**
 * check a jelix installation
 *
+* @package  jelix
+* @subpackage installer
 * @author   Laurent Jouanneau
 * @contributor Bastien Jaillot
 * @contributor Olivier Demah, Brice Tence, Julien Issler
@@ -14,8 +16,10 @@ namespace Jelix\Installer\Checker {
 // enclose namespace here because this file is inserted into jelix_check_server.php by a build tool
 
 /**
- * check an installation of a jelix application
- * @since 1.0b2
+ * base class for a jelix installation checker
+ * @package  jelix
+ * @subpackage installer
+ * @since 1.7
  */
 class CheckerBase {
 

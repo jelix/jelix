@@ -25,26 +25,34 @@
 class jDaoCondition {
 
     /**
-    * the parent group if any
-    */
+     * the parent group if any
+     * @var jDaoCondition
+     */
     public $parent = null;
 
     /**
-    * the conditions in this group
-    */
+     * the conditions in this group
+     * @var array  contains these items:
+     *              - field_id
+     *              - field_pattern
+     *              - value
+     *              - operator
+     */
     public $conditions = array ();
 
     /**
-    * the sub groups
-    */
+     * the sub groups
+     * @var jDaoCondition[]
+     */
     public $group = array ();
 
     /**
     * the kind of group (AND/OR)
+     * @var string
     */
     public $glueOp;
 
-    function __construct ($glueOp='AND', $parent =null ){
+    function __construct ($glueOp='AND', jDaoCondition $parent =null ){
         $this->parent = $parent;
         $this->glueOp = $glueOp;
     }
@@ -103,8 +111,8 @@ class jDaoConditions {
     * @return boolean  false if there isn't condition
     */
     function isEmpty (){
-        return (count ($this->condition->conditions) == 0) &&
-        (count ($this->order) == 0) ;
+        return ($this->condition->isEmpty() &&
+        (count ($this->order) == 0));
     }
 
     /**
@@ -113,7 +121,7 @@ class jDaoConditions {
     * @since 1.0
     */
     function hasConditions (){
-        return count ($this->condition->conditions) > 0;
+        return !$this->condition->isEmpty();
     }
 
     /**
