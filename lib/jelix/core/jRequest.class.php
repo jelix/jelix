@@ -1,7 +1,7 @@
 <?php
 /**
 * @package    jelix
-* @subpackage core
+* @subpackage core_request
 * @author     Laurent Jouanneau
 * @contributor Yannick Le Guédart, Julien Issler
 * @copyright  2005-2017 Laurent Jouanneau, 2010 Yannick Le Guédart, 2016 Julien Issler
@@ -15,7 +15,7 @@
  * process depends on the type of request (ex: xmlrpc..)
  *
  * @package  jelix
- * @subpackage core
+ * @subpackage core_request
  */
 abstract class jRequest {
 
@@ -330,6 +330,19 @@ abstract class jRequest {
       else
          return false;
    }
+
+    /**
+     * Says if the request method is POST
+     * @return bool
+     * @since 1.6.17
+     */
+    function isPostMethod() {
+        if (isset($_SERVER['REQUEST_METHOD'])) {
+            return ($_SERVER['REQUEST_METHOD'] === "POST");
+        } else {
+            return false;
+        }
+    }
 
    /**
     * return the application domain name
