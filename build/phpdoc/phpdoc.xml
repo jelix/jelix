@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdoc>
-    <title>Jelix 1.6</title>
+    <title>Jelix 1.7</title>
     <parser>
         <target>__PARSER_CACHE__</target>
         <encoding>utf8</encoding>
@@ -22,8 +22,6 @@
         <directory>lib/jelix/</directory>
         <ignore>*.ini.php</ignore>
         <ignore>lib/jelix/checker.php</ignore>
-        <ignore>lib/jelix/tpl/jtpl_standalone_prepend.php</ignore>
-        <ignore>lib/jelix/tpl/tests/</ignore>
         <ignore>lib/jelix/docs/</ignore>
         <ignore>lib/jelix/core-modules/jelix/install/*</ignore>
     </files>
