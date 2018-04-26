@@ -20,9 +20,21 @@
     </transformations>
     <files>
         <directory>lib/jelix/</directory>
+        <directory>lib/jelix-modules/jacl2/classes/</directory>
+        <directory>lib/jelix-modules/jacl2db/classes/</directory>
+        <directory>lib/jelix-modules/jpref/classes/</directory>
+        <directory>vendor/jelix/castor/lib/</directory>
+        <directory>vendor/jelix/feeds-module/jfeeds/</directory>
+        <directory>vendor/jelix/file-utilities/lib/</directory>
+        <directory>vendor/jelix/inifile/lib/</directory>
+        <directory>vendor/jelix/simplelocalization/lib/</directory>
+        <directory>vendor/jelix/soap-server-module/jsoap/</directory>
+        <directory>vendor/jelix/version/</directory>
+        <directory>vendor/jelix/webservice-helper/</directory>
+        <file>vendor/phpmailer/phpmailer/class.*</file>
         <ignore>*.ini.php</ignore>
         <ignore>lib/jelix/checker.php</ignore>
         <ignore>lib/jelix/docs/</ignore>
-        <ignore>lib/jelix/core-modules/jelix/install/*</ignore>
+        <ignore>install/*</ignore>
     </files>
 </phpdoc>

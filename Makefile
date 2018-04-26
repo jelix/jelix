@@ -53,6 +53,7 @@ nightlies:
 .PHONY: docs
 docs: 
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
+	composer install --working-dir $(TESTPATH) --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	cp build/phpdoc/phpdoc.xml $(TESTPATH)
 	sed -i -- s!__PARSER_CACHE__!$(DOCSCACHEPATH)!g $(TESTPATH)/phpdoc.xml
 	sed -i -- s!__TARGET_PATH__!$(DOCSTARGETPATH)!g $(TESTPATH)/phpdoc.xml
