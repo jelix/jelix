@@ -214,12 +214,12 @@ class jInstallerGlobalSetup {
      * @param \Jelix\IniFile\IniModifier $config
      * @param string $name the name of webassets
      * @param array $values
-     * @param string $set the name of the webassets section
-     * @param book $force
+     * @param string $collection the name of the webassets collection
+     * @param boolean $force
      */
-    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $set, $force) {
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $collection, $force) {
 
-        $section = 'webassets_'.$set;
+        $section = 'webassets_'.$collection;
         if (!$force && (
                 $config->getValue($name.'.css', $section) ||
                 $config->getValue($name.'.js', $section) ||

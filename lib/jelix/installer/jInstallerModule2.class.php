@@ -585,13 +585,13 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * declare web assets into the main configuration
      * @param string $name the name of webassets
      * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $set the name of the webassets section
+     * @param string $collection the name of the webassets collection
      * @param bool $force
      */
-    public function declareGlobalWebAssets($name, array $values, $set, $force)
+    public function declareGlobalWebAssets($name, array $values, $collection, $force)
     {
         $config = $this->globalSetup->getConfigIni();
-        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $set, $force);
+        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $collection, $force);
     }
 }
 

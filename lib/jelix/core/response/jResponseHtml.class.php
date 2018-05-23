@@ -572,12 +572,12 @@ class jResponseHtml extends jResponseBasicHtml {
             return;
         }
         $conf = jApp::config();
-        $assetsSet = 'webassets_' . $conf->webassets['useSet'];
+        $assetsCollection = 'webassets_' . $conf->webassets['useCollection'];
 
-        if (!isset($conf->$assetsSet)) {
+        if (!isset($conf->$assetsCollection)) {
             return;
         }
-        $assets = $conf->$assetsSet;
+        $assets = $conf->$assetsCollection;
         foreach($this->_assetsGroups as $group) {
             $this->includeAssetsGroup($assets, $group);
         }

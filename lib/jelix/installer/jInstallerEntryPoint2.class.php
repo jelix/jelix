@@ -232,12 +232,12 @@ class jInstallerEntryPoint2
      * Declare web assets into the entry point config
      * @param string $name the name of webassets
      * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $set the name of the webassets section
+     * @param string $collection the name of the webassets collection
      * @param bool $force
      */
-    public function declareWebAssets($name, array $values, $set, $force)
+    public function declareWebAssets($name, array $values, $collection, $force)
     {
-        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $set, $force);
+        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
     }
 
     /**

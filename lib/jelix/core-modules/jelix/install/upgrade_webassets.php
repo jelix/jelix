@@ -46,7 +46,7 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
         $jqueryPathOrig = $refConfig->getValue('jqueryPath', 'urlengine');
         if ($jqueryPathOrig != $jqueryPath &&
             $targetConfig->getValue('jquery.js', 'webassets_common') === null) {
-            $targetConfig->setValue('useSet', 'main', 'webassets');
+            $targetConfig->setValue('useCollection', 'main', 'webassets');
             $targetConfig->setValue('jquery.js', $jqueryPath, 'webassets_main');
         }
 
@@ -63,7 +63,7 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
                     $targetConfig->removeValue($configName, 'datepickers');
                     continue;
                 }
-                $config->setValue('useSet', 'main', 'webassets');
+                $config->setValue('useCollection', 'main', 'webassets');
                 if ($script == 'jelix/js/jforms/datepickers/default/init.js') {
                     $targetConfig->setValue('jforms_datepicker_'.$configName.'.css', $defaultDatepickerCss, 'webassets_main');
                     $targetConfig->setValue('jforms_datepicker_'.$configName.'.js', $defaultDatepickerJs, 'webassets_main');
@@ -129,7 +129,7 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
             }
 
             if (count($newWebAssets)) {
-                $config->setValue('useSet', 'main', 'webassets');
+                $config->setValue('useCollection', 'main', 'webassets');
                 foreach($newWebAssets as $configName=>$assets) {
 
                     $targetConfig->setValue('jforms_htmleditor_'.$configName.'.js', $assets['js'], 'webassets_main');
@@ -187,7 +187,7 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
             }
 
             if (count($newWebAssets)) {
-                $config->setValue('useSet', 'main', 'webassets');
+                $config->setValue('useCollection', 'main', 'webassets');
                 foreach ($newWebAssets as $configName => $assets) {
                     $targetConfig->setValue('jforms_wikieditor_' . $configName . '.js', $assets['js'], 'webassets_main');
                     $targetConfig->setValue('jforms_wikieditor_' . $configName . '.css', $assets['css'], 'webassets_main');

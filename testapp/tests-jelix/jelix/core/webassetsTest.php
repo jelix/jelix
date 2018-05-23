@@ -20,7 +20,7 @@ class webassetsTest extends jUnitTestCase
         $compiler = new webassetsConfigCompilerPlugin();
         $config = (object)parse_ini_string('
 [webassets]
-useSet=foo
+useCollection=foo
 
 [webassets_foo]
 ',      true);
@@ -32,7 +32,7 @@ useSet=foo
         $compiler = new webassetsConfigCompilerPlugin();
         $config = (object)parse_ini_string('
 [webassets]
-useSet=dev
+useCollection=dev
 
 [webassets_foo]
 example.css= "/absolute/path.css, related/to/basepath, module~ctrl:meth, module:path/to/file.css"
@@ -70,7 +70,7 @@ example.js[]= "$theme/path/to/file.js, path/$lang/machin.js, /$locale/truc.js"
         $compiler = new webassetsConfigCompilerPlugin();
         $config = (object)parse_ini_string('
 [webassets]
-useSet=foo
+useCollection=foo
 
 [webassets_common]
 example2.css = my.css
@@ -139,7 +139,7 @@ example3.css = hello.css
 jelixWWWPath=/mypath/jelix/
 
 [webassets]
-useSet=common
+useCollection=common
 
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.js"

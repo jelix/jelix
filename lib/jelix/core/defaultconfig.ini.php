@@ -401,7 +401,7 @@ default.engine.name=wr3
 default.wiki.rules=wr3_to_xhtml
 
 [webassets]
-useSet=common
+useCollection=common
 
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.min.js"
