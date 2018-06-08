@@ -461,31 +461,46 @@ class jCoordinator {
         if (!isset($config->coordplugins[$pluginName])) {
             return array();
         }
-        $conf = $config->coordplugins[$pluginName];
-        // the config compiler has removed all deactivated plugins
-        // so we don't have to check if the value $conf is empty or not
-        if ($conf == '1') {
-            if (isset($config->$pluginName) && is_array($config->$pluginName)) {
-                $conf = $config->$pluginName;
-            }
-            else {
-                // old section naming. deprecated
-                $confname = 'coordplugin_'.$pluginName;
-                if (isset($config->$confname) && is_array($config->$confname)) {
-                    $conf = $config->$confname;
-                } else {
-                    $conf = array();
-                }
-            }
+
+        if (isset($config->$pluginName) && is_array($config->$pluginName)) {
+            $pluginConf = $config->$pluginName;
         }
         else {
-            // the path to the coordplugin conf has already been processed
-            // by the config compiler, and is now a relative path to the app
-            $conff = jApp::appPath($conf);
-            if (false === ($conf = parse_ini_file($conff, true))) {
-                throw new Exception("Error in a plugin configuration file -- plugin: $pluginName  file: $conff", 13);
+            // old section naming. deprecated
+            $confname = 'coordplugin_'.$pluginName;
+            if (isset($config->$confname) && is_array($config->$confname)) {
+                $pluginConf = $config->$confname;
+            } else {
+                $pluginConf = array();
             }
         }
-        return $conf;
+
+        // the config compiler has removed all deactivated plugins
+        // so we don't have to check if the value $conf is empty or not
+        $conf = $config->coordplugins[$pluginName];
+        if ($conf !== '1') {
+            // the path to the coordplugin conf has already been processed
+            // by the config compiler, and is now a relative path to the app
+            $pluginConfFile = jApp::appPath($conf);
+            if (false === ($pluginConf2 = parse_ini_file($pluginConfFile, true))) {
+                throw new Exception("Error in a plugin configuration file -- plugin: $pluginName  file: $pluginConfFile", 13);
+            }
+
+            if (isset($config->coordplugins[$pluginName.'.mergeconfig']) &&
+                $config->coordplugins[$pluginName.'.mergeconfig'] &&
+                count($pluginConf)
+            ) {
+                // we merge config content from the dedicated file with
+                // the content of the coordplugin_ section from the application
+                // configuration. coordplugin_ section has priority to allow
+                // to setup some configuration parameter in localconfig.ini
+                // or liveconfig.ini.
+                $pluginConf = array_merge($pluginConf, $pluginConf2);
+            }
+            else {
+                $pluginConf = $pluginConf2;
+            }
+        }
+        return $pluginConf;
     }
 }
