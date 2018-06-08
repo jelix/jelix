@@ -135,6 +135,8 @@ function initsystem () {
         curl -sS https://getcomposer.org/installer | php
         mv composer.phar /usr/local/bin/composer
     fi
+
+    echo 'alias ll="ls -al"' > /home/vagrant/.bash_aliases
 }
 
 
