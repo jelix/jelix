@@ -87,6 +87,6 @@ class JelixScript {
                                 "       Correct the path for the temp directory or create the directory you\n".
                                 "       indicated with jApp in your application.init.php.\n");
         }
-        \jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy'));
+        \jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
 }

@@ -55,10 +55,13 @@ class jConfig {
             $t = filemtime($file);
             $dc = jApp::mainConfigFile();
             $lc = jApp::varConfigPath('localconfig.ini.php');
+            $lvc = jApp::varConfigPath('liveconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(jApp::appConfigPath($configFile))>$t
-                || (file_exists($lc) && filemtime($lc)>$t)){
+                || (file_exists($lc) && filemtime($lc)>$t)
+                || (file_exists($lvc) && filemtime($lvc)>$t)
+            ){
                 // one of the config files have been modified: let's compile
                 self::$fromCache = false;
             }

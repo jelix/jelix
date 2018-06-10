@@ -136,6 +136,12 @@ class jInstaller {
     protected $globalSetup;
 
     /**
+     * liveconfig.ini.php
+     * @var jIniFileModifier
+     */
+    public $liveConfig;
+
+    /**
      * initialize the installation
      *
      * it reads configurations files of all entry points, and prepare object for
@@ -186,7 +192,6 @@ class jInstaller {
 
             // we create an object corresponding to the entry point
             $ep = $this->getEntryPointObject($configFile, $file, $type);
-
             $epId = $ep->getEpId();
 
             $this->epId[$file] = $epId;
@@ -709,6 +714,7 @@ class jInstaller {
                 }
                 // we always save the configuration, so it invalidates the cache
                 $ep->getLocalConfigIni()->save();
+                $ep->getLiveConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because
@@ -783,6 +789,7 @@ class jInstaller {
 
                 // we always save the configuration, so it invalidates the cache
                 $ep->getLocalConfigIni()->save();
+                $ep->getLiveConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 
                 // we re-load configuration file for each module because

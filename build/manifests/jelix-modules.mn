@@ -148,6 +148,7 @@ cd lib/jelix-modules/jauth/install/
   upgrade_changepersistantkey.php
   upgrade_newencryption.php
   upgrade_ldapprofile.php
+  upgrade_movepersistantkey.php
 
 cd lib/jelix-modules/jauth/install/var/config
   auth.coord.ini.php

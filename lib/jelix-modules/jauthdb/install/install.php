@@ -37,7 +37,12 @@ class jauthdbModuleInstaller extends jInstallerModule2 {
             // a config for the auth plugin exists, so we can install
             // the module, else we ignore it
 
-            $driver = $conf->getValue('driver', $section);
+            if (isset($this->entryPoint->getConfigObj()->coordplugin_auth['driver'])) {
+                $driver = $this->entryPoint->getConfigObj()->coordplugin_auth['driver'];
+            }
+            else {
+                $driver = $conf->getValue('driver');
+            }
 
             if ($driver == '') {
                 $driver = 'Db';

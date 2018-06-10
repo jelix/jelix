@@ -503,7 +503,7 @@ jelix.cache="cache/"
 
 [coordplugin_auth]
 ; key to use to crypt the password in the cookie
-; Warning: the value of this parameter should be stored into localconfig.ini.php
+; Warning: the value of this parameter should be stored into liveconfig.ini.php
 persistant_encryption_key=
 
 [recaptcha]

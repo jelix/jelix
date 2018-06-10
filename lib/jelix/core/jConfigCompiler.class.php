@@ -94,6 +94,10 @@ class jConfigCompiler {
             }
         }
 
+        if (file_exists($configPath.'liveconfig.ini.php')) {
+            @jelix_read_ini($configPath.'liveconfig.ini.php', $config);
+        }
+
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
         self::$commonConfig = null;
         return $config;

@@ -18,7 +18,7 @@ class jInstallerEntryPoint {
 
     /**
      * @var StdObj   configuration parameters. compiled content of config files
-     *  result of the merge of entry point config, localconfig.ini.php,
+     *  result of the merge of entry point config, liveconfig.ini.php, localconfig.ini.php,
      *  mainconfig.ini.php and defaultconfig.ini.php
      */
     public $config;
@@ -44,6 +44,13 @@ class jInstallerEntryPoint {
      * @deprecated as public property
      */
     public $localConfigIni;
+
+    /**
+     * liveconfig.ini.php
+     *
+     * @var \Jelix\IniFile\IniModifier
+     */
+    public $liveConfigIni;
 
     /**
      * entrypoint config of app/config/
