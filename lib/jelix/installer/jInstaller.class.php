@@ -136,12 +136,6 @@ class jInstaller {
     protected $globalSetup;
 
     /**
-     * liveconfig.ini.php
-     * @var jIniFileModifier
-     */
-    public $liveConfig;
-
-    /**
      * initialize the installation
      *
      * it reads configurations files of all entry points, and prepare object for
@@ -713,7 +707,7 @@ class jInstaller {
                     $installedModules[] = array($installer, $component, $action);
                 }
                 // we always save the configuration, so it invalidates the cache
-                $ep->getLocalConfigIni()->save();
+                //$ep->getLocalConfigIni()->save();
                 $ep->getLiveConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 
@@ -788,7 +782,7 @@ class jInstaller {
                 }
 
                 // we always save the configuration, so it invalidates the cache
-                $ep->getLocalConfigIni()->save();
+                //$ep->getLocalConfigIni()->save();
                 $ep->getLiveConfigIni()->save();
                 $this->globalSetup->getUrlModifier()->save();
 

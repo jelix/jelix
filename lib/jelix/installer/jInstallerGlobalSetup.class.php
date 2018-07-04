@@ -27,6 +27,11 @@ class jInstallerGlobalSetup {
     protected $localConfigIni;
 
     /**
+     * @var \Jelix\IniFile\IniModifierArray
+     */
+    protected $liveConfigIni;
+
+    /**
      * @var \Jelix\Routing\UrlMapping\XmlMapModifier
      */
     protected $urlMapModifier;
@@ -60,9 +65,14 @@ class jInstallerGlobalSetup {
                     copy($localConfigDist, $localConfigFileName);
                 }
                 else {
-                    file_put_contents($localConfigFileName, ';<'.'?php die(\'\');?'.'>');
+                    file_put_contents($localConfigFileName, ';<'.'?php die(\'\');?'.'> static local configuration');
                 }
             }
+        }
+
+        $liveConfigFileName = jApp::varConfigPath('liveconfig.ini.php');
+        if (!file_exists($liveConfigFileName)) {
+            file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
 
         $defaultConfig = new IniReader(jConfig::getDefaultConfigFile());
@@ -74,6 +84,8 @@ class jInstallerGlobalSetup {
         $this->localConfigIni = clone $this->configIni;
         $this->localConfigIni['local'] = $localConfigFileName;
 
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = $liveConfigFileName;
 
         $this->installerIni = $this->loadInstallerIni();
 
@@ -88,7 +100,7 @@ class jInstallerGlobalSetup {
     }
 
     /**
-     * the combined global config files
+     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getConfigIni() {
@@ -96,11 +108,21 @@ class jInstallerGlobalSetup {
     }
 
     /**
-     * the combined global config files with localconfig.ini.php
+     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php,
+     * with localconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getLocalConfigIni() {
         return $this->localConfigIni;
+    }
+
+    /**
+     * the combined config files defaultconfig.ini.php and mainconfig.ini.php
+     * with localconfig.ini.php and liveconfig.ini.php
+     * @return \Jelix\IniFile\IniModifierArray
+     */
+    public function getLiveConfigIni() {
+        return $this->liveConfigIni;
     }
 
     /**

@@ -206,6 +206,15 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
+     * the liveconfig.ini.php file combined with localconfig, main and default config
+     * @return \Jelix\IniFile\IniModifierArray
+     * @since 1.7
+     */
+    public function getLiveConfigIni() {
+        return $this->globalSetup->getLiveConfigIni();
+    }
+
+    /**
      * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      */

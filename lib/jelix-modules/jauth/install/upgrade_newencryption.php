@@ -29,6 +29,8 @@ class jauthModuleUpgrader_newencryption extends jInstallerModule2 {
         $conf->removeValue('persistant_crypt_key', $section);
         $conf->save();
 
-        $this->getLocalConfigIni()->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
+        $localConfigIni = $this->getLocalConfigIni();
+        $localConfigIni->removeValue('persistant_crypt_key', 'coordplugin_auth');
+        $localConfigIni->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
     }
 }

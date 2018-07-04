@@ -25,10 +25,19 @@ class jConfigCompiler {
 
     /**
      * read the given ini file, for the current entry point, or for the entrypoint given
-     * in $pseudoScriptName. Merge it with the content of mainconfig.ini.php
+     * in $pseudoScriptName. Merge it with the content of other config files
      * It also calculates some options.
      * If you are in a CLI script but you want to load a configuration file for a web entry point
      * or vice-versa, you need to indicate the $pseudoScriptName parameter with the name of the entry point
+     *
+     * Merge of configuration files are made in this order:
+     * - core/defaultconfig.ini.php
+     * - app/config/mainconfig.ini.php
+     * - app/config/$configFile
+     * - var/config/localconfig.ini.php
+     * - var/config/$configFile
+     * - var/config/liveconfig.ini.php
+     *
      * @param string $configFile the config file name
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
@@ -94,8 +103,8 @@ class jConfigCompiler {
             }
         }
 
-        if (file_exists($configPath.'liveconfig.ini.php')) {
-            @jelix_read_ini($configPath.'liveconfig.ini.php', $config);
+        if (file_exists($varConfigPath.'liveconfig.ini.php')) {
+            @jelix_read_ini($varConfigPath.'liveconfig.ini.php', $config);
         }
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);

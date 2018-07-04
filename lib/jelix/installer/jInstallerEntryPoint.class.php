@@ -113,6 +113,8 @@ class jInstallerEntryPoint {
             $this->epConfigIni);
 
         $this->config = $entryPoint->getConfigObj();
+
+        $this->liveConfigIni = $globalSetup->getLiveConfigIni()['live'];
     }
 
     /**

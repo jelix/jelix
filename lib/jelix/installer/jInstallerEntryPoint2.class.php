@@ -43,6 +43,13 @@ class jInstallerEntryPoint2
     protected $localConfigIni;
 
     /**
+     * the live configuration file combined with all other configuration files
+     * @var \Jelix\IniFile\IniModifierArray
+     */
+    protected $liveConfigIni;
+
+
+    /**
      * @var boolean true if the script corresponding to the configuration
      *                is a script for CLI
      */
@@ -109,6 +116,9 @@ class jInstallerEntryPoint2
         $this->localConfigIni = clone $this->configIni;
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
+
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = new IniModifier(jApp::varConfigPath('localconfig.ini.php'), ';<' . '?php die(\'\');?' . '>');
 
         $this->config = jConfigCompiler::read($configFile, true,
             $this->_isCliScript,
@@ -190,6 +200,12 @@ class jInstallerEntryPoint2
 
     /**
      * the full original configuration of the entry point
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *
      * @return \Jelix\IniFile\IniModifierArray
      */
     function getConfigIni()
@@ -199,11 +215,36 @@ class jInstallerEntryPoint2
 
     /*
      * the local entry point config (in var/config) combined with the original configuration
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *  - "local" => localconfig.ini.php
+     *  - "localentrypoint" => var/config/$entrypointConfigFile
+     *
      * @return \Jelix\IniFile\IniModifierArray
      */
     function getLocalConfigIni()
     {
         return $this->localConfigIni;
+    }
+
+    /*
+     * the live config combined with other configuration files
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *  - "local" => localconfig.ini.php
+     *  - "localentrypoint" => var/config/$entrypointConfigFile
+     *  - "live" => var/config/liveconfig.ini.php
+     * @return \Jelix\IniFile\IniModifierArray
+     */
+    function getLiveConfigIni()
+    {
+        return $this->liveConfigIni;
     }
 
     /**
