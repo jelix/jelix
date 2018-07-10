@@ -11,12 +11,19 @@ class Resolver
     const ACTION_UPGRADE = 2;
     const ACTION_REMOVE = 3;
 
+    /**
+     * @var Item[]
+     */
     protected $items = array();
 
     public function __construct()
     {
     }
 
+    /**
+     * @param Item $item
+     * @throws Exception
+     */
     public function addItem(Item $item)
     {
         if (isset($this->item[$item->getName()])) {
@@ -25,7 +32,11 @@ class Resolver
         $this->items[$item->getName()] = $item;
     }
 
+    /**
+     * @var Item[]
+     */
     protected $chain = array();
+
     protected $checkedItems = array();
     protected $circularDependencyTracker = array();
     protected $circularReverseDependencyTracker = array();
@@ -43,6 +54,7 @@ class Resolver
     {
         $this->checkedItems = array();
         $this->chain = array();
+
         foreach ($this->items as $itemName => $item) {
             $this->circularDependencyTracker = array();
             $this->circularReverseDependencyTracker = array();
@@ -68,6 +80,39 @@ class Resolver
                 $this->_checkDependencies($item);
             }
             $this->chain[] = $item;
+        }
+
+        $incompatibilities = array();
+
+        // get conflict constraint from installed components
+        foreach($this->items as $itemName => $item) {
+            if (($item->getAction() == self::ACTION_NONE && $item->isInstalled()) ||
+                $item->getAction() == self::ACTION_INSTALL
+            ) {
+                foreach ($item->getIncompatibilities() as $forbiddenComponent => $version) {
+                    $incompatibilities[] = array(
+                        'name'=>$forbiddenComponent,
+                        'version' => $version,
+                        'forbiddenby'=>$itemName);
+                }
+            }
+        }
+
+        // verify that forbidden modules are not installed or will not be installed
+        foreach ($incompatibilities as $forbiddenComponent) {
+            $name = $forbiddenComponent['name'];
+            if (isset($this->items[$name])) {
+                if ($this->items[$name]->isInstalled()) {
+                    throw new ItemException('Item '.$name.' is in conflicts with item '.$forbiddenComponent['forbiddenby'],
+                        $this->items[$name], 7, $this->items[$forbiddenComponent['forbiddenby']]);
+                }
+            }
+            foreach ($this->chain as $item) {
+                if ($item->getName() == $name && $item->getAction() == self::ACTION_INSTALL) {
+                    throw new ItemException('Item '.$name.' is in conflicts with item '.$forbiddenComponent['forbiddenby'],
+                        $item, 8, $this->items[$forbiddenComponent['forbiddenby']]);
+                }
+            }
         }
 
         return $this->chain;

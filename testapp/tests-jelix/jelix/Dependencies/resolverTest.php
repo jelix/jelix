@@ -220,4 +220,60 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(Resolver::ACTION_REMOVE, $chain[3]->getAction());
     }
 
+
+    /**
+     *
+     */
+    public function testNoConflictItems() {
+        $packA = new Item('testA', false, "1.0", Resolver::ACTION_INSTALL);
+        $packB = new Item('testB', false, "1.0", Resolver::ACTION_NONE);
+        $packA->addIncompatibility('testB', '*');
+        $packC = new Item('testC', false, "1.0", Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+        $this->assertEquals(array($packA), $chain);
+    }
+
+    /**
+     *
+     * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 8
+     * @expectedExceptionMessage Item testB is in conflicts with item testA
+     */
+    public function testConflictItems() {
+        $packA = new Item('testA', false, "1.0", Resolver::ACTION_INSTALL);
+        $packB = new Item('testB', false, "1.0", Resolver::ACTION_INSTALL);
+        $packA->addIncompatibility('testB', '*');
+        $packC = new Item('testC', false, "1.0", Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
+
+    /**
+     *
+     * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 7
+     * @expectedExceptionMessage Item testB is in conflicts with item testA
+     */
+    public function testConflictItemAlreadyInstalled() {
+        $packA = new Item('testA', false, "1.0", Resolver::ACTION_INSTALL);
+        $packA->addIncompatibility('testB', '*');
+        $packB = new Item('testB', true, "1.0", Resolver::ACTION_NONE);
+        $packC = new Item('testC', false, "1.0", Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
+
 }

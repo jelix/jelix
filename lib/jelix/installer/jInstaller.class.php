@@ -84,6 +84,11 @@ class jInstaller {
      */
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
 
+    /**
+     * error code stored in a component: 
+     */
+    const INSTALL_ERROR_CONFLICT = 3;
+
     const FLAG_INSTALL_MODULE = 1;
 
     const FLAG_UPGRADE_MODULE = 2;
@@ -521,6 +526,15 @@ class jInstaller {
                 $depName = $e->getRelatedData()->getName();
                 $this->error('install.error.install.dependency',array($depName, $component->getName()));
             }
+            else if ($e->getCode() == 7) {
+                $component->inError = self::INSTALL_ERROR_CONFLICT;
+                $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+            }
+            else if ($e->getCode() == 8) {
+                $component->inError = self::INSTALL_ERROR_CONFLICT;
+                $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+            }
+
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         } catch(\Exception $e) {

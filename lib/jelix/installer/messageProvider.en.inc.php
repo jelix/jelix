@@ -58,6 +58,7 @@ return array(
         'module.unknown'        =>'Unknown module %s',
         'module.circular.dependency'=>"Circular dependency ! Cannot install the component %s",
         'module.needed'         =>'To install %s these modules are needed: %s',
+        'module.forbidden'         =>'The module %s is in conflict with %s. Only one of them can be installed.',
         'module.bad.jelix.version'=>'The module %s needs another jelix version (%s - %s)',
         'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
         'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',

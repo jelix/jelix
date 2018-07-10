@@ -13,6 +13,9 @@ class Item
     protected $properties = array();
 
     protected $dependencies = array();
+
+    protected $incompatibilities = array();
+
     /**
      * Item constructor.
      *
@@ -78,8 +81,7 @@ class Item
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
-
-        return;
+        return null;
     }
 
     public function addDependency($name, $version = '*')
@@ -90,5 +92,13 @@ class Item
     public function getDependencies()
     {
         return $this->dependencies;
+    }
+
+    public function addIncompatibility($name, $version = '*') {
+        $this->incompatibilities[$name] = $version;
+    }
+
+    public function getIncompatibilities() {
+        return $this->incompatibilities;
     }
 }

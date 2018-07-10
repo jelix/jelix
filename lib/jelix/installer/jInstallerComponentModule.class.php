@@ -68,6 +68,11 @@ class jInstallerComponentModule {
     protected $dependencies = array();
 
     /**
+     * list of incompatibilities of the module
+     */
+    protected $incompatibilities = array();
+
+    /**
      * @var string the minimum version of jelix for which the component is compatible
      */
     protected $jelixMinVersion = '*';
@@ -119,6 +124,10 @@ class jInstallerComponentModule {
 
     public function getDependencies() {
         return $this->dependencies;
+    }
+
+    public function getIncompatibilities() {
+        return $this->incompatibilities;
     }
 
     /**
@@ -474,6 +483,10 @@ class jInstallerComponentModule {
         foreach($this->dependencies as $dep) {
             $item->addDependency($dep['name'], $dep['version']);
         }
+
+        foreach($this->incompatibilities as $dep) {
+            $item->addIncompatibility($dep['name'], $dep['version']);
+        }
         $item->setProperty('component', $this);
         return $item;
     }
@@ -546,52 +559,38 @@ class jInstallerComponentModule {
       <dependencies>
           <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
           <module id="" name="" minversion="" maxversion="" />
+          <conflict>
+                <module id="" name="" minversion="" maxversion="" />
+          </conflict>
       </dependencies>
   </module>
         */
 
         $this->dependencies = array();
+        $this->incompatibilities = array();
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
+                if ($type == 'conflict') {
+                    foreach ($dependency->children() as $type2=>$component) {
+                        if ($type2 == 'module') {
+                            $info2 = $this->readComponentDependencyInfo($type2, $component);
+                            $info2['forbiddenby'] = $this->name;
+                            $this->incompatibilities[] = $info2;
+                        }
+                    }
+                    continue;
+                }
+
                 if ($type != 'jelix' && $type != 'module') {
                     continue;
                 }
-                $versionRange = '';
-                $minversion = isset($dependency['minversion'])?
-                    $this->fixVersion((string)$dependency['minversion']):
-                    '0';
-                if (trim($minversion) == '') {
-                    $minversion = '0';
-                }
-                if ($minversion != '0') {
-                    $versionRange = '>='.$minversion;
-                }
-                $maxversion = isset($dependency['maxversion'])?
-                    $this->fixVersion((string)$dependency['maxversion']):
-                    '*';
-                if (trim($maxversion) == '') {
-                    $maxversion = '*';
-                }
-                if ($maxversion != '*') {
-                    $v = '<='.$maxversion;
-                    if ($versionRange != '') {
-                        $v = ','.$v;
-                    }
-                    $versionRange .= $v;
-                }
 
-                if ($versionRange == '') {
-                    $versionRange = '*';
-                }
-                $name = (string)$dependency['name'];
-                if (trim($name) == '' && $type != 'jelix')
-                    throw new Exception('Name is missing in a dependency declaration in module '.$this->name);
-                $id = (string)$dependency['id'];
+                $info = $this->readComponentDependencyInfo($type, $dependency);
 
-                if ($type == 'jelix') {
-                    $this->jelixMinVersion = $minversion;
-                    $this->jelixMaxVersion = $maxversion;
+                if ($type == 'jelix' || ($type == 'module' && $info['name'] == 'jelix')) {
+                    $this->jelixMinVersion = $info['minversion'];
+                    $this->jelixMaxVersion = $info['maxversion'];
                     if ($this->name != 'jelix') {
                         $this->dependencies[] = array(
                             'type'=> 'module',
@@ -599,22 +598,68 @@ class jInstallerComponentModule {
                             'name' => 'jelix',
                             'minversion' => $this->jelixMinVersion,
                             'maxversion' => $this->jelixMaxVersion,
-                            'version' => $versionRange
+                            'version' => $info['version']
                         );
                     }
                 }
                 else if ($type == 'module') {
-                    $this->dependencies[] = array(
-                        'type'=> 'module',
-                        'id' => $id,
-                        'name' => $name,
-                        'minversion' => $minversion,
-                        'maxversion' => $maxversion,
-                        'version' => $versionRange
-                    );
+                    $this->dependencies[] = $info;
                 }
             }
         }
+    }
+
+    /**
+     * @param string $type
+     * @param SimpleXMLElement $comp
+     * @return array
+     * @throws Exception
+     */
+    protected function readComponentDependencyInfo($type, $comp)
+    {
+        $versionRange = '';
+        $minversion = isset($comp['minversion'])?
+            $this->fixVersion((string)$comp['minversion']):
+            '0';
+        if (trim($minversion) == '') {
+            $minversion = '0';
+        }
+        if ($minversion != '0') {
+            $versionRange = '>='.$minversion;
+        }
+        $maxversion = isset($comp['maxversion'])?
+            $this->fixVersion((string)$comp['maxversion']):
+            '*';
+        if (trim($maxversion) == '') {
+            $maxversion = '*';
+        }
+        if ($maxversion != '*') {
+            $v = '<='.$maxversion;
+            if ($versionRange != '') {
+                $v = ','.$v;
+            }
+            $versionRange .= $v;
+        }
+
+        if ($versionRange == '') {
+            $versionRange = '*';
+        }
+
+
+        $name = (string)$comp['name'];
+        if (trim($name) == '' && $type != 'jelix') {
+            throw new Exception('Name is missing for "'.$type.'" in a dependency declaration in module '.$this->name);
+        }
+        $id = isset($comp['id'])?(string)$comp['id']: '';
+
+        return array(
+            'type'=> $type,
+            'id' => $id,
+            'name' => $name,
+            'minversion' => $minversion,
+            'maxversion' => $maxversion,
+            'version' => $versionRange
+        );
     }
 
 
