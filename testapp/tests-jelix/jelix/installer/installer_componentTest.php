@@ -402,8 +402,6 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $iniIndex = new testInstallerIniFileModifier("index/config.ini.php");
             $iniFoo = new testInstallerIniFileModifier("foo/config.ini.php");
 
-            
-
             file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
             $installerIni = new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
             $this->globalSetup->setInstallerIni($installerIni);

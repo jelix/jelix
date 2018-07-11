@@ -55,6 +55,9 @@ class testInstallerEntryPoint extends jInstallerEntryPoint2 {
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = new testInstallerIniFileModifier(jApp::varConfigPath('localconfig.ini.php'));
+
         $this->config = $configContent;
     }
     

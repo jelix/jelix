@@ -732,18 +732,21 @@ class jInstaller {
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
-                // we always save the configuration, so it invalidates the cache
-                //$ep->getLocalConfigIni()->save();
-                $ep->getLiveConfigIni()->save();
-                $this->globalSetup->getUrlModifier()->save();
 
-                // we re-load configuration file for each module because
-                // previous module installer could have modify it.
-                $ep->setConfigObj(
-                    jConfigCompiler::read($ep->getConfigFile(), true,
-                        $ep->isCliScript(),
-                        $ep->getScriptName()));
-                jApp::setConfig($ep->getConfigObj());
+                if ($ep->getLiveConfigIni()->isModified()) {
+                    // we always save the configuration, so it invalidates the cache
+                    //$ep->getLocalConfigIni()->save();
+                    $ep->getLiveConfigIni()->save();
+                    $this->globalSetup->getUrlModifier()->save();
+
+                    // we re-load configuration file for each module because
+                    // previous module installer could have modify it.
+                    $ep->setConfigObj(
+                        jConfigCompiler::read($ep->getConfigFile(), true,
+                            $ep->isCliScript(),
+                            $ep->getScriptName()));
+                    jApp::setConfig($ep->getConfigObj());
+                }
             }
         } catch (jInstallerException $e) {
             $result = false;
@@ -807,18 +810,21 @@ class jInstaller {
                     }
                 }
 
-                // we always save the configuration, so it invalidates the cache
-                //$ep->getLocalConfigIni()->save();
-                $ep->getLiveConfigIni()->save();
-                $this->globalSetup->getUrlModifier()->save();
+                if ($ep->getLiveConfigIni()->isModified()) {
+                    // we always save the configuration, so it invalidates the cache
+                    //$ep->getLocalConfigIni()->save();
+                    $ep->getLiveConfigIni()->save();
+                    $this->globalSetup->getUrlModifier()->save();
 
-                // we re-load configuration file for each module because
-                // previous module installer could have modify it.
-                $ep->setConfigObj(
-                    jConfigCompiler::read($ep->getConfigFile(), true,
-                        $ep->isCliScript(),
-                        $ep->getScriptName()));
-                jApp::setConfig($ep->getConfigObj());
+                    // we re-load configuration file for each module because
+                    // previous module installer could have modify it.
+                    $ep->setConfigObj(
+                        jConfigCompiler::read($ep->getConfigFile(), true,
+                            $ep->isCliScript(),
+                            $ep->getScriptName()));
+                    jApp::setConfig($ep->getConfigObj());
+                }
+
             } catch (jInstallerException $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());

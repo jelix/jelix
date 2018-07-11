@@ -146,7 +146,7 @@ else {
     $PACKAGE_NAME='jelix-'.$LIB_VERSION;
 }
 
-if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
+if (preg_match('/^[0-9]+\.[0-9]+\.([a-z0-9\-\.]+)$/i', $LIB_VERSION, $m))
     $LIB_VERSION_MAX =  substr($LIB_VERSION, 0, - strlen($m[1]))."*";
 else
     $LIB_VERSION_MAX = $LIB_VERSION;
