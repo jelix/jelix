@@ -566,7 +566,6 @@ class jInstaller {
         // put also available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-
         foreach($moduleschain as $resolverItem) {
             $component = $resolverItem->getProperty('component');
 
@@ -652,6 +651,7 @@ class jInstaller {
         try {
             foreach($componentsToInstall as $item) {
                 list($installer, $component, $action) = $item;
+                $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $component->setAsCurrentModuleInstaller($ep);
@@ -662,6 +662,7 @@ class jInstaller {
                         else {
                             $installer->installEntryPoint($ep);
                         }
+                        $saveConfigIni = true;
                     }
 
                     $installerIni->setValue($component->getName().'.installed',
@@ -689,6 +690,7 @@ class jInstaller {
                             else {
                                 $upgrader->installEntryPoint($ep);
                             }
+                            $saveConfigIni = true;
                         }
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
@@ -712,6 +714,7 @@ class jInstaller {
                             array($component->getName(), $component->getSourceVersion()));
                     }
                     $installedModules[] = array($installer, $component, $action);
+
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
@@ -723,6 +726,7 @@ class jInstaller {
                         else {
                             $installer->uninstallEntryPoint($ep);
                         }
+                        $saveConfigIni = true;
                     }
                     $installerIni->removeValue($component->getName().'.installed', $epId);
                     $installerIni->removeValue($component->getName().'.version', $epId);
@@ -733,19 +737,23 @@ class jInstaller {
                     $installedModules[] = array($installer, $component, $action);
                 }
 
-                if ($ep->getLiveConfigIni()->isModified()) {
-                    // we always save the configuration, so it invalidates the cache
-                    //$ep->getLocalConfigIni()->save();
-                    $ep->getLiveConfigIni()->save();
-                    $this->globalSetup->getUrlModifier()->save();
+                if ($saveConfigIni) {
+                    // we save the configuration at each module because its
+                    // installer may have modified it, and we want to save it
+                    // in case the next module installer fails.
+                    if ($ep->getLiveConfigIni()->isModified()) {
+                        //$ep->getLocalConfigIni()->save();
+                        $ep->getLiveConfigIni()->save();
 
-                    // we re-load configuration file for each module because
-                    // previous module installer could have modify it.
-                    $ep->setConfigObj(
-                        jConfigCompiler::read($ep->getConfigFile(), true,
-                            $ep->isCliScript(),
-                            $ep->getScriptName()));
-                    jApp::setConfig($ep->getConfigObj());
+                        // we re-load configuration file for each module because
+                        // previous module installer could have modify it.
+                        $ep->setConfigObj(
+                            jConfigCompiler::read($ep->getConfigFile(), true,
+                                $ep->isCliScript(),
+                                $ep->getScriptName()));
+                        jApp::setConfig($ep->getConfigObj());
+                    }
+                    $this->globalSetup->getUrlModifier()->save();
                 }
             }
         } catch (jInstallerException $e) {
@@ -762,12 +770,13 @@ class jInstaller {
     }
 
     protected function runPostInstallEntryPoint($installedModules, jInstallerEntryPoint2 $ep, $flags) {
+
         $result = true;
         // post install
         foreach($installedModules as $item) {
             try {
                 list($installer, $component, $action) = $item;
-
+                $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $component->setAsCurrentModuleInstaller($ep);
@@ -779,6 +788,7 @@ class jInstaller {
                             $installer->postInstallEntryPoint($ep);
                         }
                         $component->installEntryPointFinished($ep);
+                        $saveConfigIni = true;
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
@@ -793,6 +803,7 @@ class jInstaller {
                                 $upgrader->postInstallEntryPoint($ep);
                             }
                             $component->upgradeEntryPointFinished($ep, $upgrader);
+                            $saveConfigIni = true;
                         }
                     }
                 }
@@ -807,24 +818,28 @@ class jInstaller {
                             $installer->postUninstallEntryPoint($ep);
                         }
                         $component->uninstallEntryPointFinished($ep);
+                        $saveConfigIni = true;
                     }
                 }
 
-                if ($ep->getLiveConfigIni()->isModified()) {
-                    // we always save the configuration, so it invalidates the cache
-                    //$ep->getLocalConfigIni()->save();
-                    $ep->getLiveConfigIni()->save();
+                if ($saveConfigIni) {
+                    // we save the configuration at each module because its
+                    // installer may have modified it, and we want to save it
+                    // in case the next module installer fails.
+                    if ($ep->getLiveConfigIni()->isModified()) {
+                        //$ep->getLocalConfigIni()->save();
+                        $ep->getLiveConfigIni()->save();
+
+                        // we re-load configuration file for each module because
+                        // previous module installer could have modify it.
+                        $ep->setConfigObj(
+                            jConfigCompiler::read($ep->getConfigFile(), true,
+                                $ep->isCliScript(),
+                                $ep->getScriptName()));
+                        jApp::setConfig($ep->getConfigObj());
+                    }
                     $this->globalSetup->getUrlModifier()->save();
-
-                    // we re-load configuration file for each module because
-                    // previous module installer could have modify it.
-                    $ep->setConfigObj(
-                        jConfigCompiler::read($ep->getConfigFile(), true,
-                            $ep->isCliScript(),
-                            $ep->getScriptName()));
-                    jApp::setConfig($ep->getConfigObj());
                 }
-
             } catch (jInstallerException $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
