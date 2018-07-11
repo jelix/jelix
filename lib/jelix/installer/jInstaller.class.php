@@ -499,40 +499,52 @@ class jInstaller {
             $item = $e->getItem();
             $component = $item->getProperty('component');
 
-            if ($e->getCode() == 1 || $e->getCode() == 4) {
-                $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
-                $this->error('module.circular.dependency',$component->getName());
-            }
-            else if ($e->getCode() == 2) {
-                $depName = $e->getRelatedData()->getName();
-                $maxVersion = $minVersion = 0;
-                foreach($component->getDependencies() as $compInfo) {
-                    if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
-                        $maxVersion = $compInfo['maxversion'];
-                        $minVersion = $compInfo['minversion'];
+            switch($e->getCode()) {
+                case 1:
+                case 4:
+                    $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
+                    $this->error('module.circular.dependency',$component->getName());
+                    break;
+                case 2:
+                    $depName = $e->getRelatedData()->getName();
+                    $maxVersion = $minVersion = 0;
+                    foreach($component->getDependencies() as $compInfo) {
+                        if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
+                            $maxVersion = $compInfo['maxversion'];
+                            $minVersion = $compInfo['minversion'];
+                        }
                     }
-                }
-                $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
-            }
-            else if ($e->getCode() == 3) {
-                $depName = $e->getRelatedData()->getName();
-                $this->error('install.error.delete.dependency',array($depName, $component->getName()));
-            }
-            else if ($e->getCode() == 6) {
-                $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
-            }
-            else if ($e->getCode() == 5) {
-                $depName = $e->getRelatedData()->getName();
-                $this->error('install.error.install.dependency',array($depName, $component->getName()));
-            }
-            else if ($e->getCode() == 7) {
-                $component->inError = self::INSTALL_ERROR_CONFLICT;
-                $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
-            }
-            else if ($e->getCode() == 8) {
-                $component->inError = self::INSTALL_ERROR_CONFLICT;
-                $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
+                    break;
+                case 3:
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('install.error.delete.dependency',array($depName, $component->getName()));
+                    break;
+                case 5:
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('install.error.install.dependency',array($depName, $component->getName()));
+                    break;
+                case 6:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 7:
+                    $component->inError = self::INSTALL_ERROR_CONFLICT;
+                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 8:
+                    $component->inError = self::INSTALL_ERROR_CONFLICT;
+                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 9:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.choice.unknown', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 10:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.choice.ambigus', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+
             }
 
             $this->ok('install.entrypoint.bad.end', $epId);

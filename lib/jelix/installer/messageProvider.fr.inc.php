@@ -59,6 +59,8 @@ return array(
         'module.circular.dependency'=>"Dépendance circulaire ! le composant %s ne peut être installé",
         'module.needed'         =>'Pour installer le module %s, ces modules doivent être présent : %s',
         'module.forbidden'         =>'Le module %s est en conflit avec le module %s. Seul l\'un d\'eux peut être installé',
+        'module.choice.ambigus'   =>"Le module %s nécessite l'un de ces modules, %s. Mais il est nécessaire de choisir d'installer d'abord l'un d'entre eux",
+        'module.choice.unknown'     =>"Le module %s nécessite l'un de ces modules, %s. Mais ils sont inexistants ou n'ont pas la version requise",
         'module.bad.jelix.version'=>'Le module %s necessite une autre version de jelix (%s - %s)',
         'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
         'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',

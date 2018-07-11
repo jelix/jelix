@@ -145,8 +145,15 @@
                   <optional><attribute name="maxversion" /></optional>
                   <optional><attribute name="minversion" /></optional>
                </element>
+               <element name="choice">
+                  <oneOrMore>
+                     <ref name="moduleDependency"/>
+                  </oneOrMore>
+               </element>
                <element name="conflict">
-                  <ref name="moduleDependency"/>
+                  <oneOrMore>
+                     <ref name="moduleDependency"/>
+                  </oneOrMore>
                </element>
             </choice>
          </zeroOrMore>

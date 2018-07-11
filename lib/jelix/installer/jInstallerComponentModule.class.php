@@ -481,7 +481,16 @@ class jInstallerComponentModule {
         }
 
         foreach($this->dependencies as $dep) {
-            $item->addDependency($dep['name'], $dep['version']);
+            if ($dep['type'] == 'choice') {
+                $list = array();
+                foreach($dep['choice'] as $choice) {
+                    $list[$choice['name']] = $choice['version'];
+                }
+                $item->addAlternativeDependencies($list);
+            }
+            else {
+                $item->addDependency($dep['name'], $dep['version']);
+            }
         }
 
         foreach($this->incompatibilities as $dep) {
@@ -559,6 +568,13 @@ class jInstallerComponentModule {
       <dependencies>
           <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
           <module id="" name="" minversion="" maxversion="" />
+          <choice>
+             <modules>
+                <module id="" name="" minversion="" maxversion="" />
+                <module id="" name="" minversion="" maxversion="" />
+             </modules>
+             <module id="" name="" minversion="" maxversion="" />
+          </choice>
           <conflict>
                 <module id="" name="" minversion="" maxversion="" />
           </conflict>
@@ -578,6 +594,25 @@ class jInstallerComponentModule {
                             $info2['forbiddenby'] = $this->name;
                             $this->incompatibilities[] = $info2;
                         }
+                    }
+                    continue;
+                }
+
+                if ($type == 'choice') {
+                    $choice = array();
+                    foreach ($dependency->children() as $type2=>$component) {
+                        if ($type2 == 'module') {
+                            $choice[] = $this->readComponentDependencyInfo($type2, $component);
+                        }
+                    }
+                    if (count($choice) > 1) {
+                        $this->dependencies[] = array(
+                            'type'=> 'choice',
+                            'choice' => $choice
+                        );
+                    }
+                    else if (count($choice) == 1) {
+                        $this->dependencies[] = $choice[0];
                     }
                     continue;
                 }

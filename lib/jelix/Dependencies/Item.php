@@ -14,6 +14,8 @@ class Item
 
     protected $dependencies = array();
 
+    protected $alternativeDependencies = array();
+
     protected $incompatibilities = array();
 
     /**
@@ -92,6 +94,27 @@ class Item
     public function getDependencies()
     {
         return $this->dependencies;
+    }
+
+    /**
+     * @param array $choice  list of dependencies where one of them should be installed, not all
+     *   ex:
+     *   ```
+     *     [
+     *       // this dependency
+     *       '$name'=> '$version',
+     *       // or this dependency
+     *       '$name'=> '$version',
+     *       // or ...
+     *     ]
+     *   ```
+     */
+    public function addAlternativeDependencies(array $choice) {
+        $this->alternativeDependencies[] = $choice;
+    }
+
+    public function getAlternativeDependencies() {
+        return $this->alternativeDependencies;
     }
 
     public function addIncompatibility($name, $version = '*') {
