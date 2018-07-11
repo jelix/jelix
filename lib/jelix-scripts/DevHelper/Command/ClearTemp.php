@@ -36,7 +36,7 @@ class ClearTemp extends \Jelix\DevHelper\AbstractCommand {
                 $output->writeln("       Correct the path in your application.init.php or create the corresponding directory");
                 return 1;
             }
-            if (!\jFile::removeDir($tempPath, false, array('.svn', '.git', '.dummy'))) {
+            if (!\jFile::removeDir($tempPath, false, array('.svn', '.git', '.dummy', '.empty'))) {
                  $output->writeln("Some temp files were not removed");
             }
             else if ($output->isVerbose()) {

@@ -47,6 +47,6 @@ class jauthModuleInstaller extends jInstallerModule2 {
             }
         }
 
-        $this->getLocalConfigIni()->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
+        $this->getLiveConfigIni()->setValue('persistant_encryption_key', self::$key, 'coordplugin_auth');
     }
 }

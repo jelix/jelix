@@ -51,6 +51,15 @@ class Compiler {
 
     /**
      * Read and merge all configuration files
+     *
+     * Merge of configuration files are made in this order:
+     * - core/defaultconfig.ini.php
+     * - app/config/mainconfig.ini.php
+     * - app/config/$configFile
+     * - var/config/localconfig.ini.php
+     * - var/config/$configFile
+     * - var/config/liveconfig.ini.php
+     *
      * @param string $configFile
      * @param array  $additionalOptions  some options to add to the configuration
      * @return object the object containing content of all configuration files
@@ -103,6 +112,10 @@ class Compiler {
             }
         }
 
+        if (file_exists($varConfigPath.'liveconfig.ini.php')) {
+            IniFileMgr::readAndMergeObject($varConfigPath.'liveconfig.ini.php', $config);
+        }
+
         if ($additionalOptions) {
             IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
         }
@@ -113,9 +126,11 @@ class Compiler {
     /**
      * read the ini file given to the constructor. It Merges it with the content of
      * mainconfig.ini.php. It also calculates some options.
+     *
      * If you are in a CLI script but you want to load a configuration file for a web
      * entry point or vice-versa, you need to indicate the $pseudoScriptName parameter
      * with the name of the entry point
+     *
      * @param boolean $allModuleInfo may be true for the installer, which needs all informations
      *                               else should be false, these extra informations are
      *                               not needed to run the application

@@ -47,6 +47,13 @@ class EntryPoint {
     protected $sameConfigAs = null;
 
     /**
+     * the live configuration file combined with all other configuration files
+     * @var \Jelix\IniFile\IniModifierArray
+     */
+    protected $liveConfigIni;
+
+
+    /**
      * @var boolean true if the script corresponding to the configuration
      *                is a script for CLI
      */
@@ -131,12 +138,15 @@ class EntryPoint {
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];
 
         $compiler = new \Jelix\Core\Config\Compiler($configFile,
                                                     $this->scriptName,
                                                     $this->_isCliScript);
         $this->config = $compiler->read(true);
         $this->modulesInfos = $compiler->getModulesInfos();
+
 
         $this->urlMap = $globalSetup->getUrlModifier()
             ->addEntryPoint($this->getEpId(), $type);
@@ -215,6 +225,12 @@ class EntryPoint {
 
     /**
      * the full original configuration of the entry point
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *
      * @return \Jelix\IniFile\IniModifierArray
      */
     function getConfigIni()
@@ -224,11 +240,36 @@ class EntryPoint {
 
     /*
      * the local entry point config (in var/config) combined with the original configuration
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *  - "local" => localconfig.ini.php
+     *  - "localentrypoint" => var/config/$entrypointConfigFile
+     *
      * @return \Jelix\IniFile\IniModifierArray
      */
     function getLocalConfigIni()
     {
         return $this->localConfigIni;
+    }
+
+    /*
+     * the live config combined with other configuration files
+     *
+     * combination of
+     *  - "default" => defaultconfig.ini.php
+     *  - "main" => mainconfig.ini.php
+     *  - "entrypoint" => app/config/$entrypointConfigFile
+     *  - "local" => localconfig.ini.php
+     *  - "localentrypoint" => var/config/$entrypointConfigFile
+     *  - "live" => var/config/liveconfig.ini.php
+     * @return \Jelix\IniFile\IniModifierArray
+     */
+    function getLiveConfigIni()
+    {
+        return $this->liveConfigIni;
     }
 
     /**
@@ -290,12 +331,12 @@ class EntryPoint {
      * Declare web assets into the entry point config
      * @param string $name the name of webassets
      * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $set the name of the webassets section
+     * @param string $collection the name of the webassets collection
      * @param bool $force
      */
-    public function declareWebAssets($name, array $values, $set, $force)
+    public function declareWebAssets($name, array $values, $collection, $force)
     {
-        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $set, $force);
+        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
     }
 
     /**

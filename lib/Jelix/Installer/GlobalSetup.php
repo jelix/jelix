@@ -27,6 +27,11 @@ class GlobalSetup {
     protected $localConfigIni;
 
     /**
+     * @var \Jelix\IniFile\IniModifierArray
+     */
+    protected $liveConfigIni;
+
+    /**
      * @var \Jelix\Routing\UrlMapping\XmlMapModifier
      */
     protected $urlMapModifier;
@@ -40,10 +45,12 @@ class GlobalSetup {
      * GlobalSetup constructor.
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
+     * @param string|null $liveConfigFileName
      * @param string|null $urlXmlFileName
      */
     function __construct($mainConfigFileName = null,
                          $localConfigFileName = null,
+                         $liveConfigFileName = null,
                          $urlXmlFileName = null)
     {
 
@@ -60,8 +67,14 @@ class GlobalSetup {
                     copy($localConfigDist, $localConfigFileName);
                 }
                 else {
-                    file_put_contents($localConfigFileName, ';<'.'?php die(\'\');?'.'>');
+                    file_put_contents($localConfigFileName, ';<'.'?php die(\'\');?'.'> static local configuration');
                 }
+            }
+        }
+        if (!$liveConfigFileName) {
+            $liveConfigFileName = App::varConfigPath('liveconfig.ini.php');
+            if (!file_exists($liveConfigFileName)) {
+                file_put_contents($liveConfigFileName, ';<' . '?php die(\'\');?' . '> live local configuration');
             }
         }
 
@@ -74,6 +87,8 @@ class GlobalSetup {
         $this->localConfigIni = clone $this->configIni;
         $this->localConfigIni['local'] = $localConfigFileName;
 
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = $liveConfigFileName;
 
         $this->installerIni = $this->loadInstallerIni();
 
@@ -88,7 +103,7 @@ class GlobalSetup {
     }
 
     /**
-     * the combined global config files
+     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getConfigIni() {
@@ -96,11 +111,21 @@ class GlobalSetup {
     }
 
     /**
-     * the combined global config files with localconfig.ini.php
+     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php,
+     * with localconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getLocalConfigIni() {
         return $this->localConfigIni;
+    }
+
+    /**
+     * the combined config files defaultconfig.ini.php and mainconfig.ini.php
+     * with localconfig.ini.php and liveconfig.ini.php
+     * @return \Jelix\IniFile\IniModifierArray
+     */
+    public function getLiveConfigIni() {
+        return $this->liveConfigIni;
     }
 
     /**
@@ -214,12 +239,12 @@ class GlobalSetup {
      * @param \Jelix\IniFile\IniModifier $config
      * @param string $name the name of webassets
      * @param array $values
-     * @param string $set the name of the webassets section
-     * @param book $force
+     * @param string $collection the name of the webassets collection
+     * @param boolean $force
      */
-    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $set, $force) {
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $collection, $force) {
 
-        $section = 'webassets_'.$set;
+        $section = 'webassets_'.$collection;
         if (!$force && (
                 $config->getValue($name.'.css', $section) ||
                 $config->getValue($name.'.js', $section) ||

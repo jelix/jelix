@@ -109,7 +109,7 @@ class Event {
         $response = array ();
 
         foreach ($this->_responses as $key=>$listenerResponse){
-            if (is_array($listenerResponse[$responseName]) &&
+            if (is_array($listenerResponse) &&
                 isset ($listenerResponse[$responseName]) &&
                 $listenerResponse[$responseName] == $value
             ) {

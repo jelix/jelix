@@ -5,7 +5,7 @@
 * @package     jelix
 * @subpackage  core_selector
 * @author      Laurent Jouanneau
-* @copyright   2005-2012 Laurent Jouanneau
+* @copyright   2005-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -23,7 +23,7 @@ class jSelectorTpl extends jSelectorModule {
     protected $type = 'tpl';
     protected $_dirname = 'templates/';
     protected $_suffix = '.tpl';
-    protected $_where;
+    protected $_cachePrefix;
     public $outputType='';
     public $trusted=true;
     public $userModifiers = array();
@@ -48,89 +48,119 @@ class jSelectorTpl extends jSelectorModule {
         parent::__construct($sel);
     }
 
+    /**
+     * @throws jExceptionSelector
+     */
     protected function _createPath(){
 
         if(!isset(jApp::config()->_modulesPathList[$this->module])){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
-        $path = $this->module.'/'.$this->resource;
-        $lpath = $this->module.'/'.jApp::config()->locale.'/'.$this->resource;
+        $locale = jApp::config()->locale;
+        $fallbackLocale = jApp::config()->fallbackLocale;
+        $path = $this->resource;
+        $lpath = $locale.'/'.$this->resource;
+        $flpath = '';
 
-        if(($theme = jApp::config()->theme) != 'default'){
-            // check if there is a redefined template for the current theme in var/theme
-            $this->_where = 'var/themes/'.$theme.'/'.$lpath;
-            $this->_path = jApp::varPath('themes/'.$theme.'/'.$lpath.'.tpl');
-            if (is_readable ($this->_path)){
-                return;
-            }
-            // check if there is a redefined template for the current localized theme in var/theme
-            $this->_where = 'var/themes/'.$theme.'/'.$path;
-            $this->_path = jApp::varPath('themes/'.$theme.'/'.$path.'.tpl');
-            if (is_readable ($this->_path)){
-                return;
-            }
+        if ($locale != $fallbackLocale && $fallbackLocale) {
+            $flpath = $fallbackLocale.'/'.$this->resource;
+        }
 
-            // check if there is a redefined template for the current theme in app/theme
-            $this->_where = 'app/themes/'.$theme.'/'.$lpath;
-            $this->_path = jApp::appPath($this->_where.'.tpl');
-            if (is_readable ($this->_path)){
-                return;
-            }
-            // check if there is a redefined template for the current localized theme in app/theme
-            $this->_where = 'app/themes/'.$theme.'/'.$path;
-            $this->_path = jApp::appPath($this->_where.'.tpl');
-            if (is_readable ($this->_path)){
+        if (($theme = jApp::config()->theme) != 'default') {
+            if ($this->checkThemePath($theme.'/'.$this->module, $lpath, $flpath, $path)) {
                 return;
             }
         }
 
-        // check if there is a redefined template for the default theme in var/themes
-        $this->_where = 'var/themes/default/'.$lpath;
-        $this->_path = jApp::varPath('themes/default/'.$lpath.'.tpl');
-        if (is_readable ($this->_path)){
+        if ($this->checkThemePath('default/'.$this->module, $lpath, $flpath, $path)) {
             return;
         }
 
-        $this->_where = 'var/themes/default/'.$path;
-        $this->_path = jApp::varPath('themes/default/'.$path.'.tpl');
+        // check if the template exists in the current module
+        $mpath = jApp::config()->_modulesPathList[$this->module].$this->_dirname;
+        $this->_path = $mpath.$locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
+            $this->_cachePrefix = 'modules/'.$this->module.'/'.$lpath;
             return;
         }
 
-        // check if there is a redefined template for the default theme in app/themes
-        $this->_where = 'app/themes/default/'.$lpath;
-        $this->_path = jApp::appPath($this->_where.'.tpl');
-        if (is_readable ($this->_path)){
-            return;
+        if ($flpath) {
+            $this->_path = $mpath.$fallbackLocale.'/'.$this->resource.'.tpl';
+            if (is_readable ($this->_path)){
+                $this->_cachePrefix = 'modules/'.$this->module.'/'.$flpath;
+                return;
+            }
         }
 
-        $this->_where = 'app/themes/default/'.$path;
-        $this->_path = jApp::appPath($this->_where.'.tpl');
+        $this->_path = $mpath.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
-            return;
-        }
-
-        // else check if the template exists in the current module
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.jApp::config()->locale.'/'.$this->resource.'.tpl';
-        if (is_readable ($this->_path)){
-            $this->_where = 'modules/'.$lpath;
-            return;
-        }
-
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.'.tpl';
-        if (is_readable ($this->_path)){
-            $this->_where = 'modules/'.$path;
+            $this->_cachePrefix = 'modules/'.$this->module.'/'.$path;
             return;
         }
 
         throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "template"));
-
     }
 
+    protected function checkThemePath($subDir, $lpath, $flpath, $path) {
+
+        if (file_exists(jApp::varPath('themes/'.$subDir))) {
+            // check if there is a redefined template for the current theme & locale in var/theme
+            $this->_path = jApp::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
+            if (is_readable ($this->_path)){
+                $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$lpath;
+                return true;
+            }
+
+            if ($flpath) {
+                // check if there is a redefined template for the current theme & fallback locale in var/theme
+                $this->_path = jApp::varPath('themes/'.$subDir.'/'.$flpath.'.tpl');
+                if (is_readable ($this->_path)){
+                    $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$flpath;
+                    return true;
+                }
+            }
+
+            // check if there is a redefined template for the current theme in var/theme
+            $this->_path = jApp::varPath('themes/'.$subDir.'/'.$path.'.tpl');
+            if (is_readable ($this->_path)){
+                $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$path;
+                return true;
+            }
+        }
+
+        if (file_exists(jApp::appPath('themes/'.$subDir))) {
+            // check if there is a redefined template for the current theme & locale in app/theme
+            $this->_path = jApp::appPath('themes/' . $subDir . '/' . $lpath . '.tpl');
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $lpath;
+                return true;
+            }
+
+            if ($flpath) {
+                // check if there is a redefined template for the current theme & fallback locale in app/theme
+                $this->_path = jApp::appPath('themes/' . $subDir . '/' . $flpath . '.tpl');
+                if (is_readable($this->_path)) {
+                    $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $flpath;
+                    return true;
+                }
+            }
+
+            // check if there is a redefined template for the current theme in app/theme
+            $this->_path = jApp::appPath('themes/' . $subDir . '/' . $path . '.tpl');
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $path;
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
     protected function _createCachePath(){
-       // don't share the same cache for all the possible dirs
-       // in case of overload removal
-       $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_where.'_'.$this->outputType.($this->trusted?'_t':'').'_15'.$this->_cacheSuffix);
+        // don't share the same cache for all the possible dirs
+        // in case of overload removal
+        $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_cachePrefix.'_'.$this->outputType.($this->trusted?'_t':'').'_15'.$this->_cacheSuffix);
     }
 }

@@ -18,6 +18,17 @@ class ModuleInfos extends InfosAbstract {
     public $dependencies = array();
 
     /**
+     * @var array of array of array('name'=>'', 'version'=>'')
+     */
+    public $alternativeDependencies = array();
+
+    /**
+     * list of incompatibilities of the module
+     * @var array of array('name'=>'', 'version'=>'')
+     */
+    public $incompatibilities = array();
+
+    /**
      * @var array of path
      */
     public $autoloaders = array();

@@ -70,6 +70,10 @@ class ModuleInstallLauncher {
         return $this->moduleInfos->dependencies;
     }
 
+    public function getIncompatibilities() {
+        return $this->moduleInfos->incompatibilities;
+    }
+
     /**
      * @param string $epId the id of the entrypoint
      * @param ModuleStatus $moduleStatus module status
@@ -402,6 +406,19 @@ class ModuleInstallLauncher {
         foreach($this->moduleInfos->dependencies as $dep) {
             $item->addDependency($dep['name'], $dep['version']);
         }
+
+        foreach($this->moduleInfos->alternativeDependencies as $choice) {
+            $list = array();
+            foreach($choice as $choiceItem) {
+                $list[$choiceItem['name']] = $choiceItem['version'];
+            }
+            $item->addAlternativeDependencies($list);
+        }
+
+        foreach($this->moduleInfos->incompatibilities as $dep) {
+            $item->addIncompatibility($dep['name'], $dep['version']);
+        }
+
         $item->setProperty('component', $this);
         return $item;
     }

@@ -33,7 +33,7 @@ class Config {
      * class if needed
      * @param string $configFile the config file name
      * @return object it contains all configuration options
-     * @see Jelix\Core\Config\Compiler
+     * @see \Jelix\Core\Config\Compiler
      */
     static public function load($configFile){
         $config = array();
@@ -53,10 +53,13 @@ class Config {
             $t = filemtime($file);
             $dc = App::mainConfigFile();
             $lc = App::varConfigPath('localconfig.ini.php');
+            $lvc = App::varConfigPath('liveconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
                 || filemtime(App::appConfigPath($configFile))>$t
-                || (file_exists($lc) && filemtime($lc)>$t)){
+                || (file_exists($lc) && filemtime($lc)>$t)
+                || (file_exists($lvc) && filemtime($lvc)>$t)
+            ){
                 // one of the config files have been modified: let's compile
                 self::$fromCache = false;
             }

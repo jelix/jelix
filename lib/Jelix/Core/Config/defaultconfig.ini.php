@@ -401,7 +401,7 @@ default.engine.name=wr3
 default.wiki.rules=wr3_to_xhtml
 
 [webassets]
-useSet=common
+useCollection=common
 
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.min.js"
@@ -503,7 +503,7 @@ jelix.cache="cache/"
 
 [coordplugin_auth]
 ; key to use to crypt the password in the cookie
-; Warning: the value of this parameter should be stored into localconfig.ini.php
+; Warning: the value of this parameter should be stored into liveconfig.ini.php
 persistant_encryption_key=
 
 [recaptcha]

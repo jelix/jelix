@@ -12,9 +12,7 @@ namespace Jelix\Core\Infos;
  */
 class ModuleXmlParser extends XmlParserAbstract {
 
-    protected function parseDependencies (\XMLReader $xml, InfosAbstract $object) {
-
-        $property = $xml->name;
+    protected function parseDependencies (\XMLReader $xml, ModuleInfos $object) {
 
         while ($xml->read()) {
 
@@ -23,49 +21,97 @@ class ModuleXmlParser extends XmlParserAbstract {
             }
 
             if ($xml->nodeType == \XMLReader::ELEMENT) {
+                if ($xml->name == 'conflict') {
+                    while ($xml->read()) {
+                        if ($xml->nodeType == \XMLReader::END_ELEMENT && 'conflict' == $xml->name) {
+                            break;
+                        }
+                        if ($xml->nodeType == \XMLReader::ELEMENT && 'module' == $xml->name) {
+                            $info2 = $this->readComponentDependencyInfo($xml);
+                            $info2['forbiddenby'] = $object->name;
+                            $object->incompatibilities[] = $info2;
+                        }
+                    }
+                    continue;
+                }
+
+                if ($xml->name == 'choice') {
+                    $choice = array();
+                    while ($xml->read()) {
+                        if ($xml->nodeType == \XMLReader::END_ELEMENT && 'choice' == $xml->name) {
+                            break;
+                        }
+                        if ($xml->nodeType == \XMLReader::ELEMENT && 'module' == $xml->name) {
+                            $choice[] = $this->readComponentDependencyInfo($xml);
+                        }
+                    }
+
+                    if (count($choice) > 1) {
+                        $object->alternativeDependencies[] = $choice;
+                    }
+                    else if (count($choice) == 1) {
+                        $object->dependencies[] = $choice[0];
+                    }
+                    continue;
+                }
+
                 if ($xml->name != 'jelix' && $xml->name != 'module') {
                     continue;
                 }
-                $dependency = array('type'=>$xml->name, 'name'=>'', 'version'=>'');
-                $dependency['type'] = $xml->name;
-                if ($xml->name == 'jelix') {
-                    $dependency['type'] = 'module';
-                    $dependency['name'] = 'jelix';
-                }
 
-                while ($xml->moveToNextAttribute()) {
-                    $attrName = $xml->name;
-                    if ($attrName == 'minversion' && $xml->value != '') { // old attribute
-                        $v = '>='.$this->fixVersion($xml->value);
-                        if ($dependency['version'] != '') {
-                            $v = ','.$v;
-                        }
-                        $dependency['version'] .= $v;
-                    }
-                    else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
-                        $v = '<='.$this->fixVersion($xml->value);
-                        if ($dependency['version'] != '') {
-                            $v = ','.$v;
-                        }
-                        $dependency['version'] .= $v;
-                    }
-                    else if ($attrName == 'version' && $xml->value != '') {
-                        $dependency['version'] = $this->fixVersion($xml->value);
-                    }
-                    else if ($attrName != 'minversion' &&
-                             $attrName != 'maxversion' &&
-                             $attrName != 'version') {
-                        $dependency[$attrName] = $xml->value;
-                    }
-                }
-                array_push($object->$property, $dependency);
+                $object->dependencies [] = $this->readComponentDependencyInfo($xml);
             }
         }
         return $object;
     }
 
+    /**
+     * @param string $type
+     * @param \XMLReader $xml
+     * @return array
+     */
+    protected function readComponentDependencyInfo(\XMLReader $xml)
+    {
+        $dependency = array(
+            'type'=>$xml->name,
+            'name'=>'',
+            'version'=>''
+        );
+        $dependency['type'] = $xml->name;
+        if ($xml->name == 'jelix') {
+            $dependency['type'] = 'module';
+            $dependency['name'] = 'jelix';
+        }
+
+        while ($xml->moveToNextAttribute()) {
+            $attrName = $xml->name;
+            if ($attrName == 'minversion' && $xml->value != '') { // old attribute
+                $v = '>='.$this->fixVersion($xml->value);
+                if ($dependency['version'] != '') {
+                    $v = ','.$v;
+                }
+                $dependency['version'] .= $v;
+            }
+            else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
+                $v = '<='.$this->fixVersion($xml->value);
+                if ($dependency['version'] != '') {
+                    $v = ','.$v;
+                }
+                $dependency['version'] .= $v;
+            }
+            else if ($attrName == 'version' && $xml->value != '') {
+                $dependency['version'] = $this->fixVersion($xml->value);
+            }
+            else if ($attrName != 'minversion' &&
+                $attrName != 'maxversion' &&
+                $attrName != 'version') {
+                $dependency[$attrName] = $xml->value;
+            }
+        }
+        return $dependency;
+    }
+
     protected function parseAutoload (\XMLReader $xml, ModuleInfos $object) {
-        $property = $xml->name;
 
         while ($xml->read()) {
 

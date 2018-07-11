@@ -65,14 +65,16 @@ class AppManager {
         if (!is_writeable($path))
             throw new \Exception('given temp path does not exists', 4);
 
-        \jFile::removeDir($path, false);
+        // do not erase .empty or .dummy files that are into the temp directory
+        // for source code repositories
+        \jFile::removeDir($path, false, array('.dummy', '.empty', '.svn'));
     }
 
     /**
      * check if the application is opened. If not, it displays the yourapp/install/closed.html
      * file with an http error (or Jelix/Core/closed.html), and exit.
      * This function should be called in all entry point, before the creation of the coordinator.
-     * @see Jelix\Core\AppManager
+     * @see \Jelix\Core\AppManager
      */
     public static function errorIfAppClosed() {
         if (!App::isInit()) {

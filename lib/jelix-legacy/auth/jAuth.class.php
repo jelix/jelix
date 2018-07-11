@@ -4,7 +4,7 @@
 * @subpackage auth
 * @author     Laurent Jouanneau
 * @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire, Vincent Viaud
-* @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV, 2010 BP2I
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
@@ -62,6 +62,11 @@ class jAuth {
                 $config = $newconfig;
             }
 
+            // we allow to indicate the driver into the localconfig.ini or mainconfig.ini
+            if (isset(jApp::config()->coordplugin_auth) && isset(jApp::config()->coordplugin_auth['driver'])) {
+                $config['driver'] = trim(jApp::config()->coordplugin_auth['driver']);
+            }
+
             if (!isset($config['session_name'])
                 || $config['session_name'] == '')
                 $config['session_name'] = 'JELIX_USER';
@@ -75,7 +80,7 @@ class jAuth {
             }
 
             if (!isset($config['persistant_encryption_key']) || $config['persistant_encryption_key'] == '') {
-                // in the case of the use of a separate file, persistant_crypt_key may be into the localconfig.ini.php
+                // in the case of the use of a separate file, persistant_encryption_key may be into the liveconfig.ini.php
                 if (isset(jApp::config()->coordplugin_auth) && isset(jApp::config()->coordplugin_auth['persistant_encryption_key'])) {
                     $config['persistant_encryption_key'] = trim(jApp::config()->coordplugin_auth['persistant_encryption_key']);
                 }
@@ -212,8 +217,13 @@ class jAuth {
      */
     public static function saveNewUser($user){
         $dr = self::getDriver();
-        if($dr->saveNewUser($user))
-            jEvent::notify ('AuthNewUser', array('user'=>$user));
+        if ($dr->saveNewUser($user)) {
+            $eventResp = jEvent::notify('AuthNewUser', array('user' => $user));
+            $allResponses = array();
+            if ($eventResp->inResponse('doUpdate', true, $allResponses)) {
+                $dr->updateUser($user);
+            }
+        }
         return $user;
     }
 

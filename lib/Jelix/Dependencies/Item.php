@@ -13,6 +13,11 @@ class Item
     protected $properties = array();
 
     protected $dependencies = array();
+
+    protected $alternativeDependencies = array();
+
+    protected $incompatibilities = array();
+
     /**
      * Item constructor.
      *
@@ -78,8 +83,7 @@ class Item
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
-
-        return;
+        return null;
     }
 
     public function addDependency($name, $version = '*')
@@ -90,5 +94,34 @@ class Item
     public function getDependencies()
     {
         return $this->dependencies;
+    }
+
+    /**
+     * @param array $choice  list of dependencies where one of them should be installed, not all
+     *   ex:
+     *   ```
+     *     [
+     *       // this dependency
+     *       '$name'=> '$version',
+     *       // or this dependency
+     *       '$name'=> '$version',
+     *       // or ...
+     *     ]
+     *   ```
+     */
+    public function addAlternativeDependencies(array $choice) {
+        $this->alternativeDependencies[] = $choice;
+    }
+
+    public function getAlternativeDependencies() {
+        return $this->alternativeDependencies;
+    }
+
+    public function addIncompatibility($name, $version = '*') {
+        $this->incompatibilities[$name] = $version;
+    }
+
+    public function getIncompatibilities() {
+        return $this->incompatibilities;
     }
 }

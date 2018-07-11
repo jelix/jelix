@@ -280,6 +280,9 @@ class jDbParameters
                         $dsn .= ';port='.$profile['port'];
                     }
                     $dsn .= ';dbname='.$profile['database'];
+                    if (isset($profile['pg_options']) && $profile['pg_options']) {
+                        $dsn .= ';options='.$profile['pg_options'];
+                    }
                 }
                 break;
             case 'sqlite':

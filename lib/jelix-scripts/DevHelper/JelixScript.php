@@ -15,7 +15,7 @@ class JelixScript {
     /**
      * load the configuration of jelix-scripts
      * @param string $appname the application name
-     * @return Jelix\DevHelper\CommandConfig
+     * @return \Jelix\DevHelper\CommandConfig
      */
     static function loadConfig($appname='') {
         $config = new CommandConfig();
@@ -87,6 +87,7 @@ class JelixScript {
                                 "       Correct the path for the temp directory or create the directory you\n".
                                 "       indicated with \\Jelix\\Core\\App in your application.init.php.\n");
         }
-        \jFile::removeDir(\Jelix\Core\App::tempPath(), false, array('.svn', '.dummy'));
+
+        \jFile::removeDir(\Jelix\Core\App::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
 }

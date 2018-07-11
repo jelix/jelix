@@ -52,11 +52,15 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
+        $this->liveConfigIni = clone $this->localConfigIni;
+        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];;
+
         $compiler = new \Jelix\Core\Config\Compiler($this->configFile,
             $this->scriptName,
             $this->isCliScript());
         $this->config = $compiler->read(true, $configContent);
         $this->modulesInfos = $compiler->getModulesInfos();
+
     }
 
     function getEpId() {
@@ -197,7 +201,7 @@ class testInstallerMain extends jInstaller {
         $this->reporter = $reporter;
 
         copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
-        $this->globalSetup = new testInstallerGlobalSetup(null, null, jApp::tempPath('installer_urls.xml'));
+        $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');

@@ -1,5 +1,7 @@
 cd .
   README.md
+  composer.lock
+  composer.json
 
 cd bin
   create-jelix-app.php

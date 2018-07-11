@@ -20,12 +20,19 @@ $migrator->migrate();
 
 // we can now launch the installer/updater
 $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console());
-$installer->installApplication();
+if (!$installer->installApplication()) {
+    exit(1);
+}
 
 try {
     \Jelix\Core\AppManager::clearTemp();
 }
 catch(Exception $e) {
     echo "WARNING: temporary files cannot be deleted because of this error: ".$e->getMessage().".\nWARNING: Delete temp files by hand immediately!\n";
+    exit(1);
 }
+
 \Jelix\Core\AppManager::open();
+
+exit(0);
+

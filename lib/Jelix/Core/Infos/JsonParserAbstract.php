@@ -23,7 +23,7 @@ abstract class JsonParserAbstract {
     protected $json;
 
     /**
-     * @param string $path the path of the xml file to read, with trailing slash
+     * @param string $path the path of the json file to read, with trailing slash
      */
     public function __construct($path, $locale) {
         if (!file_exists($path)) {

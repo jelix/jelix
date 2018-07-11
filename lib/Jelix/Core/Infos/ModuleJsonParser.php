@@ -22,6 +22,8 @@ class ModuleJsonParser extends JsonParserAbstract {
 
         $json = array_merge(array(
             "required-modules" => array(),
+            "required-modules-choice" => array(),
+            "conflict" => array(),
             "autoload" => array(),
         ), $this->json);
 
@@ -33,11 +35,34 @@ class ModuleJsonParser extends JsonParserAbstract {
         ), $json['autoload']);
 
         /**
-        * @var array of array('type'=>'module/plugin','version'=>'','id'=>'','name'=>'')
+        * @var array of array('type'=>'module','version'=>'','id'=>'','name'=>'')
         */
 
         foreach($json['required-modules'] as $name=>$version) {
             $object->dependencies[] = array(
+                'version'=> $version,
+                'name' => $name
+            );
+        }
+
+        foreach($json['required-modules-choice'] as $choicesList) {
+            $choice = array();
+            foreach ($choicesList as $name=>$version) {
+                $choice[] = array(
+                    'version'=> $version,
+                    'name' => $name
+                );
+            }
+            if (count($choice) > 1) {
+                $object->alternativeDependencies[] = $choice;
+            }
+            else if (count($choice) == 1) {
+                $object->dependencies[] = $choice[0];
+            }
+        }
+
+        foreach($json['conflict'] as $name=>$version) {
+            $object->incompatibilities[] = array(
                 'version'=> $version,
                 'name' => $name
             );

@@ -67,6 +67,11 @@ class Installer {
      */
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
 
+    /**
+     * error code stored in a component: 
+     */
+    const INSTALL_ERROR_CONFLICT = 3;
+
     const FLAG_INSTALL_MODULE = 1;
 
     const FLAG_UPGRADE_MODULE = 2;
@@ -523,33 +528,54 @@ class Installer {
             $item = $e->getItem();
             $component = $item->getProperty('component');
 
-            if ($e->getCode() == 1 || $e->getCode() == 4) {
-                $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
-                $this->error('module.circular.dependency',$component->getName());
-            }
-            else if ($e->getCode() == 2) {
-                $depName = $e->getRelatedData()->getName();
-                $maxVersion = $minVersion = 0;
-                foreach($component->getDependencies() as $compInfo) {
-                    if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
-                        $maxVersion = $compInfo['maxversion'];
-                        $minVersion = $compInfo['minversion'];
+            switch($e->getCode()) {
+                case 1:
+                case 4:
+                    $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
+                    $this->error('module.circular.dependency',$component->getName());
+                    break;
+                case 2:
+                    $depName = $e->getRelatedData()->getName();
+                    $maxVersion = $minVersion = 0;
+                    foreach($component->getDependencies() as $compInfo) {
+                        if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
+                            $maxVersion = $compInfo['maxversion'];
+                            $minVersion = $compInfo['minversion'];
+                        }
                     }
-                }
-                $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
+                    $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
+                    break;
+                case 3:
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('install.error.delete.dependency',array($depName, $component->getName()));
+                    break;
+                case 5:
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('install.error.install.dependency',array($depName, $component->getName()));
+                    break;
+                case 6:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 7:
+                    $component->inError = self::INSTALL_ERROR_CONFLICT;
+                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 8:
+                    $component->inError = self::INSTALL_ERROR_CONFLICT;
+                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 9:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.choice.unknown', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+                case 10:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $this->error('module.choice.ambigus', array($component->getName(), implode(',',$e->getRelatedData())));
+                    break;
+
             }
-            else if ($e->getCode() == 3) {
-                $depName = $e->getRelatedData()->getName();
-                $this->error('install.error.delete.dependency',array($depName, $component->getName()));
-            }
-            else if ($e->getCode() == 6) {
-                $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
-            }
-            else if ($e->getCode() == 5) {
-                $depName = $e->getRelatedData()->getName();
-                $this->error('install.error.install.dependency',array($depName, $component->getName()));
-            }
+
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         } catch(\Exception $e) {
@@ -569,7 +595,6 @@ class Installer {
         // put also available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-
         foreach($moduleschain as $resolverItem) {
             $component = $resolverItem->getProperty('component');
 
@@ -655,6 +680,7 @@ class Installer {
         try {
             foreach($componentsToInstall as $item) {
                 list($installer, $component, $action) = $item;
+                $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $component->setAsCurrentModuleInstaller($ep);
@@ -665,6 +691,7 @@ class Installer {
                         else {
                             $installer->installEntryPoint($ep);
                         }
+                        $saveConfigIni = true;
                     }
 
                     $installerIni->setValue($component->getName().'.installed',
@@ -692,6 +719,7 @@ class Installer {
                             else {
                                 $upgrader->installEntryPoint($ep);
                             }
+                            $saveConfigIni = true;
                         }
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
@@ -715,6 +743,7 @@ class Installer {
                             array($component->getName(), $component->getSourceVersion()));
                     }
                     $installedModules[] = array($installer, $component, $action);
+
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
@@ -726,6 +755,7 @@ class Installer {
                         else {
                             $installer->uninstallEntryPoint($ep);
                         }
+                        $saveConfigIni = true;
                     }
                     $installerIni->removeValue($component->getName().'.installed', $epId);
                     $installerIni->removeValue($component->getName().'.version', $epId);
@@ -735,18 +765,26 @@ class Installer {
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
-                // we always save the configuration, so it invalidates the cache
-                $ep->getLocalConfigIni()->save();
-                $this->globalSetup->getUrlModifier()->save();
 
-                // we re-load configuration file for each module because
-                // previous module installer could have modify it.
-                $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                                                             $ep->getScriptName(),
-                                                             $ep->isCliScript());
-                $ep->setConfigObj($compiler->read(true));
+                if ($saveConfigIni) {
+                    // we save the configuration at each module because its
+                    // installer may have modified it, and we want to save it
+                    // in case the next module installer fails.
+                    if ($ep->getLiveConfigIni()->isModified()) {
+                        //$ep->getLocalConfigIni()->save();
+                        $ep->getLiveConfigIni()->save();
 
-                App::setConfig($ep->getConfigObj());
+                        // we re-load configuration file for each module because
+                        // previous module installer could have modify it.
+                        $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
+                            $ep->getScriptName(),
+                            $ep->isCliScript());
+                        $ep->setConfigObj($compiler->read(true));
+
+                        App::setConfig($ep->getConfigObj());
+                    }
+                    $this->globalSetup->getUrlModifier()->save();
+                }
             }
         } catch (Exception $e) {
             $result = false;
@@ -762,12 +800,13 @@ class Installer {
     }
 
     protected function runPostInstallEntryPoint($installedModules, EntryPoint $ep, $flags) {
+
         $result = true;
         // post install
         foreach($installedModules as $item) {
             try {
                 list($installer, $component, $action) = $item;
-
+                $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
                         $component->setAsCurrentModuleInstaller($ep);
@@ -779,6 +818,7 @@ class Installer {
                             $installer->postInstallEntryPoint($ep);
                         }
                         $component->installEntryPointFinished($ep);
+                        $saveConfigIni = true;
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
@@ -793,6 +833,7 @@ class Installer {
                                 $upgrader->postInstallEntryPoint($ep);
                             }
                             $component->upgradeEntryPointFinished($ep, $upgrader);
+                            $saveConfigIni = true;
                         }
                     }
                 }
@@ -807,20 +848,28 @@ class Installer {
                             $installer->postUninstallEntryPoint($ep);
                         }
                         $component->uninstallEntryPointFinished($ep);
+                        $saveConfigIni = true;
                     }
                 }
 
-                // we always save the configuration, so it invalidates the cache
-                $ep->getLocalConfigIni()->save();
-                $this->globalSetup->getUrlModifier()->save();
+                if ($saveConfigIni) {
+                    // we save the configuration at each module because its
+                    // installer may have modified it, and we want to save it
+                    // in case the next module installer fails.
+                    if ($ep->getLiveConfigIni()->isModified()) {
+                        //$ep->getLocalConfigIni()->save();
+                        $ep->getLiveConfigIni()->save();
 
-                // we re-load configuration file for each module because
-                // previous module installer could have modify it.
-                $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                                                             $ep->getScriptName(),
-                                                             $ep->isCliScript());
-                $ep->setConfigObj($compiler->read(true));
-                App::setConfig($ep->getConfigObj());
+                        // we re-load configuration file for each module because
+                        // previous module installer could have modify it.
+                        $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
+                            $ep->getScriptName(),
+                            $ep->isCliScript());
+                        $ep->setConfigObj($compiler->read(true));
+                        App::setConfig($ep->getConfigObj());
+                    }
+                    $this->globalSetup->getUrlModifier()->save();
+                }
             } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
