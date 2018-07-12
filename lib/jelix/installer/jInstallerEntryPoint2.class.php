@@ -118,7 +118,7 @@ class jInstallerEntryPoint2
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = new IniModifier(jApp::varConfigPath('localconfig.ini.php'), ';<' . '?php die(\'\');?' . '>');
+        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];
 
         $this->config = jConfigCompiler::read($configFile, true,
             $this->_isCliScript,
