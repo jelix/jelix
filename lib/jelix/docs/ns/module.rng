@@ -42,7 +42,21 @@
                             <attribute name="suffix" />
                         </optional>
                     </element>
+                    <element name="psr0">
+                        <attribute name="name" />
+                        <attribute name="dir" />
+                        <optional>
+                            <attribute name="suffix" />
+                        </optional>
+                    </element>
                     <element name="namespacePathMap">
+                        <attribute name="name" />
+                        <attribute name="dir" />
+                        <optional>
+                            <attribute name="suffix" />
+                        </optional>
+                    </element>
+                    <element name="psr4">
                         <attribute name="name" />
                         <attribute name="dir" />
                         <optional>

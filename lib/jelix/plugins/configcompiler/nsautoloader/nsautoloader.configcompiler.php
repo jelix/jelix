@@ -52,12 +52,14 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_classpattern['path'][] =  $p.$suffix;
                     break;
                 case 'namespace':
+                case 'psr0':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
                         throw new Exception ('Error in the autoload configuration -- In '.$path.'/module.xml, this directory for namespace doesn\'t exists: '.$p);
                     $config->_autoload_namespace[trim((string)$element['name'],'\\')] = $p.$suffix;
                     break;
                 case 'namespacePathMap':
+                case 'psr4':
                     $p = $path.((string)$element['dir']);
                     if (!file_exists($p))
                         throw new Exception ('Error in autoload configuration -- In '.$path.'/module.xml, this directory for namespacePathMap doesn\'t exists: '.$p);
