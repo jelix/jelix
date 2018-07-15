@@ -1,5 +1,5 @@
 cd testapp
-* project.xml
+  project.xml
   .htaccess
   application.init.php
   cmd.php
@@ -119,7 +119,7 @@ cd testapp/scripts
     cmdline.php
 
 cd testapp/modules/testapp
-*  module.xml
+   module.xml
    urls.xml
    urls2.xml
 cd testapp/modules/testapp/classes/geo
@@ -182,7 +182,7 @@ cd testapp/modules/testapp/tests/
 
 cd testapp/modules/jelix_tests
   events.xml
-*  module.xml
+  module.xml
 cd testapp/modules/jelix_tests/autoloadtest
   autoloadtestclass.php
   myautoloader.php
@@ -303,17 +303,17 @@ cd testapp/modules/jelix_tests/zones/
   test_cache_meta_deep2.zone.php
 
 cd testapp/modules/testurls/
-*  module.xml
+   module.xml
 cd testapp/modules/testurls/classes/
   urlhandlermodule.urlhandler.php
 cd testapp/modules/testurls/controllers/
   urlsig.classic.php
 
 cd testapp/modules/testinstall1
-*  module.xml
+   module.xml
 
 cd testapp/modules/testinstall2
-*  module.xml
+   module.xml
 cd testapp/modules/testinstall2/install
   install.php
   upgrade_to_1.1.5_second.php
@@ -321,14 +321,14 @@ cd testapp/modules/testinstall2/install
   upgrade_newupgraderfilename.php
   upgrade_newupgraderfilenamedate.php
 cd testapp/modules/testinstall3
-*  module.xml
+   module.xml
 
 cd testapp/modules/articles
-*  module.xml
+   module.xml
 cd testapp/modules/articles/install
   install.php
 cd testapp/modules/news
-*  module.xml
+   module.xml
 
 cd testapp/tests-jelix/
   bootstrap.php

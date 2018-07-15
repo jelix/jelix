@@ -14,7 +14,7 @@ cd lib
 cd lib/jelix
   CHANGELOG
   CREDITS
-* init.php
+  init.php
   checker.php
   INSTALL
   LICENCE
@@ -30,24 +30,24 @@ cd lib/jelix/auth
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
-*  jControllerDaoCrud.class.php
-*  jControllerDaoCrudDfk.class.php
+  jControllerDaoCrud.class.php
+  jControllerDaoCrudDfk.class.php
 
 cd lib/jelix/core
   ConfigCompilerPluginInterface.php
 ! defaultconfig.ini.php
   jAutoloader.class.php
   jConfigAutoloader.class.php
-* jConfigCompiler.class.php
+  jConfigCompiler.class.php
   jCmdlineCoordinator.class.php
   jCoordinatorDebug.class.php
-* jApp.class.php
+  jApp.class.php
   jAppInstance.php
   jBasicErrorHandler.class.php
   jBundle.class.php
-* jConfig.class.php
-* jController.class.php
-* jCoordinator.class.php
+  jConfig.class.php
+  jController.class.php
+  jCoordinator.class.php
   jException.class.php
   jHttpResponseException.class.php
   jFramework.class.php
@@ -56,12 +56,12 @@ cd lib/jelix/core
   jLog.class.php
   jPropertiesFileReader.class.php
   jRequest.class.php
-* jResponse.class.php
-* jSelector.class.php
+  jResponse.class.php
+  jSelector.class.php
   jUrlBase.class.php
   jUrlAction.class.php
-* jUrl.class.php
-* jSession.class.php
+  jUrl.class.php
+  jSession.class.php
   jServer.class.php
   jelix_api.php
   jICoordPlugin.iface.php
@@ -77,7 +77,7 @@ cd lib/jelix/core/log/
 
 cd lib/jelix/core/request
   jClassicRequest.class.php
-* jCmdLineRequest.class.php
+  jCmdLineRequest.class.php
   jJsonRpcRequest.class.php
   jXmlRpcRequest.class.php
   jCssRequest.class.php
@@ -101,19 +101,19 @@ cd lib/jelix/core/response
   jResponseHtmlFragment.class.php
 
 cd lib/jelix/core/selector
-* jSelectorAct.class.php
-* jSelectorActFast.class.php
+  jSelectorAct.class.php
+  jSelectorActFast.class.php
   jSelectorAppCfg.class.php
   jSelectorCfg.class.php
-* jSelectorClass.class.php
+  jSelectorClass.class.php
   jSelectorDao.class.php
   jSelectorDaoRecord.class.php
   jSelectorForm.class.php
   jSelectorIface.class.php
   jSelectorLib.class.php
-* jSelectorLoc.class.php
+  jSelectorLoc.class.php
   jSelectorLog.class.php
-* jSelectorModule.class.php
+  jSelectorModule.class.php
   jSelectorSimpleFile.class.php
   jSelectorTmp.class.php
   jSelectorTpl.class.php
@@ -133,7 +133,7 @@ cd lib/jelix/core/UrlMapping
   XmlMapParser.php
 
 cd lib/jelix/core-modules/jelix
-*  module.xml
+   module.xml
    urls.xml
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
@@ -274,6 +274,7 @@ cd lib/jelix/Dependencies
 #if ENABLE_DEVELOPER
 cd lib/jelix/docs
   workflow_action.sxd
+#endif
 
 cd lib/jelix/docs/ns
   dao.rng
@@ -287,7 +288,7 @@ cd lib/jelix/docs/ns
   suburls.rng
   update.rng
   urls.rng
-#endif
+
 
 cd lib/jelix/events
   jEvent.class.php
@@ -302,7 +303,7 @@ cd lib/jelix/forms
   jFormsCompiler_jf_1_1.class.php
   jFormsControl.class.php
   jFormsDataContainer.class.php
-* jFormsDatasource.class.php
+  jFormsDatasource.class.php
   jFormsSession.class.php
 
 cd lib/jelix/forms/Builder
@@ -379,7 +380,7 @@ cd lib/jelix/installer
   textInstallReporter.class.php
 
 cd lib/jelix/kvdb
-* jKVDriver.class.php
+  jKVDriver.class.php
   jKVDb.class.php
 
 cd lib/jelix/tpl/
@@ -392,11 +393,11 @@ cd lib/jelix/utils/
   jClasses.class.php
   jClassBinding.class.php
   jCmdUtils.class.php
-* jDatatype.class.php
+  jDatatype.class.php
   jDateTime.class.php
   jDuration.class.php
-* jFile.class.php
-* jFilter.class.php
+  jFile.class.php
+  jFilter.class.php
   jImageModifier.class.php
   jIniFile.class.php
   jIniFileModifier.class.php
@@ -414,14 +415,14 @@ cd lib/jelix/utils/
   jSoapObject.class.php
   jXmlRpc.class.php
   jZipCreator.class.php
-* jZone.class.php
+  jZone.class.php
 
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
 cd lib/jelix/plugins/auth/db
   db.auth.php
 cd lib/jelix/plugins/auth/class
-* class.auth.php
+  class.auth.php
 
 cd lib/jelix/plugins/cache/db
   db.cache.php
@@ -691,11 +692,11 @@ cd lib/jelix/plugins/tpl/xml
   meta.xml.php
 
 cd lib/jelix-plugins/cache/file
-* file.cache.php
+  file.cache.php
   LICENCE
 
 cd lib/jelix-plugins/kvdb/file
-* file.kvdriver.php
+  file.kvdriver.php
   LICENCE
 
 
@@ -717,7 +718,7 @@ cd lib/installwizard/
   install.php.dist
   wiz_layout.en.php
   wiz_layout.fr.php
-* wiz_layout.tpl
+  wiz_layout.tpl
   wizard.ini.php.dist
   README.txt
 cd lib/installwizard/pages/end/
