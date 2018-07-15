@@ -155,7 +155,7 @@ class testInstallerMain extends jInstaller {
                 $this->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
                 $this->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
                 $this->configContent[$ep]['modules'][$module.'.installed'] = 0;
-                $this->configContent[$ep]['modules'][$module.'.version'] = JELIX_VERSION;
+                $this->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
                 $this->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
                 $this->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
             }
@@ -187,7 +187,7 @@ class testInstallerMain extends jInstaller {
         <creator name="Me" email="me@jelix.org" active="true" />
     </info>
     <dependencies>
-        <jelix minversion="'.JELIX_VERSION.'" maxversion="'.JELIX_VERSION.'" />
+        <jelix minversion="'.jFramework::version().'" maxversion="'.jFramework::version().'" />
     </dependencies>
     <entrypoints>'.$projectXml.'
     </entrypoints>

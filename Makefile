@@ -45,10 +45,8 @@ default:
 .PHONY: nightlies
 nightlies:
 	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist.ini
+	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME
 
 .PHONY: docs
 docs: 

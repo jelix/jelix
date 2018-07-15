@@ -56,8 +56,19 @@ class jFormsCompiler_jf_1_0  {
         return implode("\n", $source);
     }
 
+    static protected $controlClasses = array(
+        'htmleditor' => 'jFormsControlHtmlEditor',
+        'wikieditor' => 'jFormsControlWikiEditor',
+        'secretconfirm' => 'jFormsControlSecretConfirm',
+    );
+
     protected function _generatePHPControl(&$source, $controltype, $control){
-        $class = 'jFormsControl'.$controltype;
+        if (isset(self::$controlClasses[$controltype])) {
+            $class = self::$controlClasses[$controltype];
+        }
+        else {
+            $class = 'jFormsControl'.ucfirst($controltype);
+        }
 
         $attributes = array();
         foreach ($control->attributes() as $name=>$value){
@@ -65,7 +76,7 @@ class jFormsCompiler_jf_1_0  {
         }
 
         $method = 'generate'.$controltype;
-        if(!class_exists($class,false) || !method_exists($this, $method)){
+        if(!class_exists($class) || !method_exists($this, $method)){
             throw new jException('jelix~formserr.unknown.tag',array($controltype,$this->sourceFile));
         }
 

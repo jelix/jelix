@@ -131,6 +131,7 @@ class jFormsSession {
             if (!$container) {
                 return;
             }
+            $container = unserialize($container);
             $this->containers[$key] = $container;
         }
         if (is_numeric($formId) && $formId == self::DEFAULT_ID) {

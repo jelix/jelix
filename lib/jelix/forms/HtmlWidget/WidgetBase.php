@@ -237,12 +237,8 @@ abstract class WidgetBase implements WidgetInterface {
         echo htmlspecialchars($label), $attr['reqHtml'];
         echo "</span>\n";
     }
-    
-    
-    // if this method is abstract, fatal error with PHP 5.3.3 (debian squeeze)
-    // FIXME PHP54 : this function can be abstracted
-    public function outputControl(){}
 
+    abstract public function outputControl();
 
     public function outputControlValue(){
         $attr = $this->getValueAttributes();

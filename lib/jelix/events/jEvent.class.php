@@ -15,14 +15,10 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp jEventListener.class.php
-#else
 /**
  *
  */
 require(JELIX_LIB_PATH.'events/jEventListener.class.php');
-#endif
 
 
 /**

@@ -33,23 +33,15 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.3)",
-    '5.3'
-    ),
-'EDITION_NAME'=> array(
-    "The edition name of the version (optional)",
-    'dev',
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.6)",
+    '5.6'
     ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution",
     true,
     ),
-'ENABLE_OPTIMIZED_SOURCE'=>array(
-    "true if you want on optimized version of source code, for production server",
-    false,
-    ),
 'STRIP_COMMENT'=>array(
-    "true if you want sources with PHP comments deleted (valid only if ENABLE_OPTIMIZED_SOURCE is true)",
+    "true if you want sources with PHP comments deleted",
     false,
     ),
 'PACKAGE_TAR_GZ'=>array(
@@ -69,18 +61,6 @@ $BUILD_OPTIONS = array(
     "The default charset of file. useful when convertir some files (cch command)",
     'UTF-8',
     '',
-    ),
-'PHP53'=> array(
-    false,
-    false,
-    ),
-'PHP54'=> array(
-    false,
-    false,
-    ),
-'PHP54ORMORE'=> array(
-    false,
-    false,
     ),
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), git, hg or svn",
@@ -103,10 +83,6 @@ $BUILD_OPTIONS = array(
     false,
     ),
 'BUILD_FLAGS'=> array(
-    false,
-    '',
-    ),
-'EDITION_NAME_x'=> array(
     false,
     '',
     ),
@@ -152,42 +128,14 @@ else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
 if ($PHP_VERSION_TARGET) {
-    if (version_compare($PHP_VERSION_TARGET, '5.4') > -1) {
-        $PHP54 = 1;
-        $PHP54ORMORE = 1;
-    }
-    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
-        $PHP53 = 1;
-    }
-    else {
+    if (version_compare($PHP_VERSION_TARGET, '5.6') == -1) {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
-}else{
-    // no defined target, so php 5.3
-    $PHP53 = 1;
 }
 
 $BUILD_FLAGS = 0;
 
-if($EDITION_NAME ==''){
-    $EDITION_NAME_x='userbuild';
-    $EDITION_NAME_x.='-f'.$BUILD_FLAGS;
-    if($PHP_VERSION_TARGET){
-        $EDITION_NAME_x.='-p'.$PHP_VERSION_TARGET;
-    }
-}else{
-    $EDITION_NAME_x = $EDITION_NAME;
-}
-
-
-if( ! $ENABLE_OPTIMIZED_SOURCE)
-    $STRIP_COMMENT='';
-
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
-
-    if($EDITION_NAME_x != '')
-        $PACKAGE_NAME.='-'.$EDITION_NAME_x;
-
     $BUILD_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }
 else {
@@ -224,9 +172,8 @@ $var = Environment::getAll();
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
-$view = array('EDITION_NAME', 'PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_DEVELOPER',
-    'ENABLE_OPTIMIZED_SOURCE', 'STRIP_COMMENT' );
+$view = array('PHP_VERSION_TARGET', 'SOURCE_REVISION',
+    'ENABLE_DEVELOPER', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".Environment::getIniContent($view);
 

@@ -161,7 +161,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'default', 
                'testinstall1.installed'=>false, 
-               'testinstall1.version'=>JELIX_VERSION,
+               'testinstall1.version'=>jFramework::version(),
             ));
 
             $EPindex = new testInstallerEntryPoint($this->globalSetup,
@@ -191,7 +191,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall2.access'=>2,
                'testinstall2.dbprofile'=>'default',
                'testinstall2.installed'=>false,
-               'testinstall2.version'=>JELIX_VERSION,
+               'testinstall2.version'=>jFramework::version(),
             ));
 
             $EPindex = new testInstallerEntryPoint($this->globalSetup, $iniIndex, 'index.php', 'classic', $conf);
@@ -226,7 +226,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall1.access'=>2, 
                'testinstall1.dbprofile'=>'default', 
                'testinstall1.installed'=>false, 
-               'testinstall1.version'=>JELIX_VERSION,
+               'testinstall1.version'=>jFramework::version(),
             ));
             $EPindex = new testInstallerEntryPoint($this->globalSetup, $ini, 'index.php', 'classic', $conf);
             $component->addModuleInfos($EPindex->getEpId(), new jInstallerModuleInfos('testinstall1', $conf->modules) );
@@ -255,7 +255,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                'testinstall2.access'=>2, 
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
-               'testinstall2.version'=>JELIX_VERSION, 
+               'testinstall2.version'=>jFramework::version(),
             ));
 
             $EPindex = new testInstallerEntryPoint($this->globalSetup, $ini, 'index.php', 'classic', $conf);

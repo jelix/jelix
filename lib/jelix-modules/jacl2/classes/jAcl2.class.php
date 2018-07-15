@@ -3,17 +3,13 @@
 * @package     jelix
 * @subpackage  acl2
 * @author      Laurent Jouanneau
-* @copyright   2006-2014 Laurent Jouanneau
+* @copyright   2006-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 * @since 1.1
 */
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp jIAcl2Driver.iface.php
-#else
 require(__DIR__.'/jIAcl2Driver.iface.php');
-#endif
 
 /**
  * Main class to query the acl system, and to know value of a right

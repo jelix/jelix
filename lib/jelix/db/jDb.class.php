@@ -5,29 +5,17 @@
 * @author      Laurent Jouanneau
 * @contributor Yannick Le Guédart, Laurent Raufaste, Julien Issler
 * @contributor Christophe Thiriot
-* @copyright   2005-2015 Laurent Jouanneau, 2008 Laurent Raufaste
+* @copyright   2005-2018 Laurent Jouanneau, 2008 Laurent Raufaste
 * @copyright   2011 Julien Issler
-#if ENABLE_OPTIMIZED_SOURCE
-* @copyright   2001-2005 CopixTeam
-* 
-* Some of these classes were get originally from the Copix project
-* (CopixDbFactory, CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
-* Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
-* Initial authors of this Copix classes are Gerald Croes and Laurent Jouanneau,
-#else
 *
 * API ideas of this class were get originally from the Copix project (CopixDbFactory, Copix 2.3dev20050901, http://www.copix.org)
 * No lines of code are copyrighted by CopixTeam
-#endif
 *
 * @link      http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp jDbConnection.class.php
-#includephp jDbResultSet.class.php
-#else
+
 /**
  *
  */
@@ -115,7 +103,6 @@ class jSQLLogMessage extends jLogMessage {
     }
 }
 
-#endif
 
 /**
  * factory for database connector and other db utilities
@@ -169,15 +156,12 @@ class jDb {
      */
     public static function _createConnector ($profile) {
         if ($profile['driver'] == 'pdo' || $profile['usepdo']) {
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            /*
-#else
-            $dbh = new jDbPDOConnection($profile);
-#endif
-#ifnot ENABLE_OPTIMIZED_SOURCE
-            */
-            $dbh = new jDbPDOConnectionDebug($profile);
-#endif
+            if (isset($profile['debug']) && $profile['debug']) {
+                $dbh = new jDbPDOConnectionDebug($profile);
+            }
+            else {
+                $dbh = new jDbPDOConnection($profile);
+            }
             return $dbh;
         }
         else {

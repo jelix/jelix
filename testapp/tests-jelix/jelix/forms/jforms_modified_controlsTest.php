@@ -41,12 +41,12 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
         $ctrl->datatype=new jDatatypeBoolean();
         $this->form->addCtrl($ctrl, false);
         $this->form->setData('chckbxctrl', '1');
-        $ctrl= new jFormsControlcheckbox('chckbxctrl1');
+        $ctrl= new jFormsControlCheckbox('chckbxctrl1');
         $ctrl->defaultValue='0';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-        $ctrl= new jFormsControlcheckbox('chckbxctrl2');
+        $ctrl= new jFormsControlCheckbox('chckbxctrl2');
         $ctrl->defaultValue='1';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
