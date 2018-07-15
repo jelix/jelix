@@ -32,7 +32,6 @@ class checker extends jInstallCheckerBase {
     }
 }
 
-
 $en = array_merge(checker::getEnMessages(),
                   array(
 #expand             'checker.title'   =>'Check your configuration server for Jelix __LIB_VERSION__',

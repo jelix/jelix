@@ -24,6 +24,6 @@ class jFramework {
 
     static public function versionMax() {
         $v =  self::version();
-        return preg_replace('/\.([a-z0-9\-]+)$/i', '.*', $v);
+        return preg_replace('/^[0-9]+\.[0-9]+\.([a-z0-9\-\.]+)$/i', '.*', $v);
     }
 }
