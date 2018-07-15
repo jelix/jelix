@@ -77,6 +77,8 @@ fi
 
 echo "$VERSION" > $SCRIPTDIR/../lib/jelix/VERSION
 echo "$VERSION" > $SCRIPTDIR/../testapp/VERSION
+sed -i -e "s/.*'JELIX_VERSION.*/define \('JELIX_VERSION', '$VERSION');/" $SCRIPTDIR/../lib/jelix/init.php
+
 
 git add $SCRIPTDIR/../lib/jelix/VERSION
 git add $SCRIPTDIR/../testapp/VERSION
@@ -85,6 +87,8 @@ git tag "$TAG_NAME"
 
 echo "$NEXTVERSION" > $SCRIPTDIR/../lib/jelix/VERSION
 echo "$NEXTVERSION" > $SCRIPTDIR/../testapp/VERSION
+sed -i -e "s/.*'JELIX_VERSION.*/define \('JELIX_VERSION', '$NEXTVERSION');/" $SCRIPTDIR/../lib/jelix/init.php
+
 
 git add $SCRIPTDIR/../lib/jelix/VERSION
 git add $SCRIPTDIR/../testapp/VERSION

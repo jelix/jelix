@@ -15,15 +15,10 @@
 /**
  * Version number of Jelix
  * @name  JELIX_VERSION
+ * @deprecated
+ * @see jFramework::version()
  */
-#ifdef LIB_VERSION
-#expand define ('JELIX_VERSION', '__LIB_VERSION__');
-#else
-define ('JELIX_VERSION',
-        trim(str_replace(array('SERIAL', "\n"),
-                         array('0', ''),
-                         file_get_contents(__DIR__.'/VERSION'))));
-#endif
+define ('JELIX_VERSION', '1.7.0-beta.2');
 
 
 /**
@@ -103,6 +98,9 @@ $GLOBALS['gLibPath']=array(
  * function used by php to try to load an unknown class
  */
 function jelix_autoload($class) {
+
+
+
     if (strpos($class, 'jelix\\') === 0) {
         $f = LIB_PATH.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
     }
