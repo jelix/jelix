@@ -33,8 +33,8 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.3)",
-    '5.3'
+    "PHP5 version for which jelix will be generated (by default, the target is php 5.6)",
+    '5.6'
     ),
 'EDITION_NAME'=> array(
     "The edition name of the version (optional)",
@@ -69,18 +69,6 @@ $BUILD_OPTIONS = array(
     "The default charset of file. useful when convertir some files (cch command)",
     'UTF-8',
     '',
-    ),
-'PHP53'=> array(
-    false,
-    false,
-    ),
-'PHP54'=> array(
-    false,
-    false,
-    ),
-'PHP54ORMORE'=> array(
-    false,
-    false,
     ),
 'TARGET_REPOSITORY'=> array(
     "The type of the version control system you use on the target directory : none (default), git, hg or svn",
@@ -152,19 +140,9 @@ else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
 if ($PHP_VERSION_TARGET) {
-    if (version_compare($PHP_VERSION_TARGET, '5.4') > -1) {
-        $PHP54 = 1;
-        $PHP54ORMORE = 1;
-    }
-    elseif (version_compare($PHP_VERSION_TARGET, '5.3') > -1) {
-        $PHP53 = 1;
-    }
-    else {
+    if (version_compare($PHP_VERSION_TARGET, '5.6') == -1) {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
-}else{
-    // no defined target, so php 5.3
-    $PHP53 = 1;
 }
 
 $BUILD_FLAGS = 0;

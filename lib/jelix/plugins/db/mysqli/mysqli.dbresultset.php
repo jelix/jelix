@@ -20,29 +20,16 @@ class mysqliDbResultSet extends jDbResultSet {
 
     protected $_stmt = null;
 
-    private $_usesMysqlnd = true;
-
     protected $parameterNames = array();
 
     function __construct ($resultSet, $stmt = null, $parameterNames = array()) {
         parent::__construct($resultSet);
 
         $this->_stmt = $stmt;
-        if ($stmt) {
-            $this->_usesMysqlnd = is_callable (array($stmt, 'get_result'));
-        }
         $this->parameterNames = $parameterNames;
     }
 
     protected function _fetch () {
-        if ($this->_stmt && !$this->_usesMysqlnd) {
-            if (!$this->_idResult->fetch()) {
-                return false;
-            }
-            $result = clone $this->resultObject;
-            return $result;
-        }
-
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs) {
                 $ret =  $this->_idResult->fetch_object($this->_fetchModeParam, $this->_fetchModeCtoArgs);
@@ -176,14 +163,7 @@ class mysqliDbResultSet extends jDbResultSet {
         if ($this->_stmt->result_metadata()) {
             //the query prodeces a result
             try {
-                if ($this->_usesMysqlnd) {
-                    //with the MySQL native driver - mysqlnd (by default in php 5.3.0)
-                    $this->_idResult = $this->_stmt->get_result();
-                }
-                else {
-                    $this->_idResult = $this->_stmt;
-                    $this->deprecatedBindResults($this->_stmt);
-                }
+                $this->_idResult = $this->_stmt->get_result();
             }
             catch(Exception $e) {
                 throw new jException('jelix~db.error.query.bad', $this->_stmt->errno);
@@ -201,34 +181,6 @@ class mysqliDbResultSet extends jDbResultSet {
             }
         }
         return true;
-    }
-
-    /**
-     * @deprecated it should be removed for PHP54+ support only (no PHP53)
-     */
-    protected $resultObject = null;
-
-    /**
-     * @deprecated it should be removed for PHP54+ support only (no PHP53)
-     */
-    protected function deprecatedBindResults($stmt) {
-        //this call to store_result() will buffer all results but is necessary for num_rows to have
-        //its real value and thus for dbresultset's ->rowCount() to work fine :
-        $stmt->store_result();
-
-        // we have a statement, so no fetch_object method
-        // so we will create results object. We need to bind result.
-        $meta = $stmt->result_metadata();
-
-        $this->resultObject = new stdClass();
-
-        $variables = array();
-        while($field = $meta->fetch_field()) {
-            $this->resultObject->{$field->name} = null;
-            $variables[] = & $this->resultObject->{$field->name}; // pass by reference
-        }
-        call_user_func_array(array($stmt, 'bind_result'), $variables);
-        $meta->close();
     }
 
     public function getAttribute($attr){
