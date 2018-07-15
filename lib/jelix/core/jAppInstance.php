@@ -374,14 +374,14 @@ class jAppInstance
      */
     public function isModuleEnabled($moduleName, $includingExternal = false)
     {
-        if (!$this->_config) {
+        if (!$this->config) {
             throw new Exception('Configuration is not loaded');
         }
-        if ($includingExternal && isset($this->_config->_externalModulesPathList[$moduleName])) {
+        if ($includingExternal && isset($this->config->_externalModulesPathList[$moduleName])) {
             return true;
         }
 
-        return isset($this->_config->_modulesPathList[$moduleName]);
+        return isset($this->config->_modulesPathList[$moduleName]);
     }
 
     /**
@@ -395,18 +395,18 @@ class jAppInstance
      */
     public function getModulePath($module, $includingExternal = false)
     {
-        if (!$this->_config) {
+        if (!$this->config) {
             throw new Exception('Configuration is not loaded');
         }
 
-        if (!isset($this->_config->_modulesPathList[$module])) {
-            if ($includingExternal && isset($this->_config->_externalModulesPathList[$module])) {
-                return $this->_config->_externalModulesPathList[$module];
+        if (!isset($this->config->_modulesPathList[$module])) {
+            if ($includingExternal && isset($this->config->_externalModulesPathList[$module])) {
+                return $this->config->_externalModulesPathList[$module];
             }
             throw new Exception('getModulePath : invalid module name');
         }
 
-        return $this->_config->_modulesPathList[$module];
+        return $this->config->_modulesPathList[$module];
     }
 
     /**
