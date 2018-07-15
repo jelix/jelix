@@ -1,29 +1,15 @@
 <?php
-#if ENABLE_OPTIMIZED_SOURCE
-/**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin, Julien Issler, Olivier Demah
-* @copyright   2006-2008 Laurent Jouanneau, 2007-2008 Dominique Papin
-* @copyright   2007 Loic Mathaud
-* @copyright   2008 Julien Issler
-* @copyright   2009 Olivier Demah
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-#else
 /**
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2006-2008 Laurent Jouanneau, 2008 Dominique Papin
+* @copyright   2006-2018 Laurent Jouanneau, 2008 Dominique Papin
 * @copyright   2009 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
-#endif
+
 /**
  * base class for all jforms control
  * @package     jelix
@@ -189,62 +175,3 @@ abstract class jFormsControl {
     }
 }
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp controls/jFormsControlDatasource.class.php
-#includephp controls/jFormsControlGroups.class.php
-
-#includephp controls/jFormsControlButton.class.php
-#includephp controls/jFormsControlCaptcha.class.php
-#includephp controls/jFormsControlCheckbox.class.php
-#includephp controls/jFormsControlCheckboxes.class.php
-#includephp controls/jFormsControlChoice.class.php
-#includephp controls/jFormsControlGroup.class.php
-#includephp controls/jFormsControlReset.class.php
-#includephp controls/jFormsControlHidden.class.php
-#includephp controls/jFormsControlHtmlEditor.class.php
-#includephp controls/jFormsControlInput.class.php
-#includephp controls/jFormsControlListbox.class.php
-#includephp controls/jFormsControlRadiobuttons.class.php
-#includephp controls/jFormsControlMenulist.class.php
-#includephp controls/jFormsControlOutput.class.php
-#includephp controls/jFormsControlRepeat.class.php
-#includephp controls/jFormsControlSecret.class.php
-#includephp controls/jFormsControlSecretConfirm.class.php
-#includephp controls/jFormsControlSubmit.class.php
-#includephp controls/jFormsControlSwitch.class.php
-#includephp controls/jFormsControlTextarea.class.php
-#includephp controls/jFormsControlUpload.class.php
-#includephp controls/jFormsControlDate.class.php
-#includephp controls/jFormsControlDatetime.class.php
-#includephp controls/jFormsControlWikiEditor.class.php
-
-#else
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlDatasource.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlGroups.class.php');
-
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlButton.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlCaptcha.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlCheckbox.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlCheckboxes.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlChoice.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlGroup.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlReset.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlHidden.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlHtmlEditor.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlInput.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlListbox.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlRadiobuttons.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlMenulist.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlOutput.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlRepeat.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlSecret.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlSecretConfirm.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlSubmit.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlSwitch.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlTextarea.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlUpload.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlDate.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlDatetime.class.php');
-require(JELIX_LIB_PATH.'forms/controls/jFormsControlWikiEditor.class.php');
-
-#endif

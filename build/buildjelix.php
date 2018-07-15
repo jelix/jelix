@@ -45,7 +45,7 @@ $BUILD_OPTIONS = array(
     true,
     ),
 'ENABLE_OPTIMIZED_SOURCE'=>array(
-    "true if you want on optimized version of source code, for production server",
+    "true if you want on optimized version of source code, for production server. Deprecated.",
     false,
     ),
 'STRIP_COMMENT'=>array(

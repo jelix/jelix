@@ -65,12 +65,10 @@ class jSession {
         }
 
         if($params['name'] !=''){
-#ifnot ENABLE_OPTIMIZED_SOURCE
             if(!preg_match('#^[a-zA-Z0-9]+$#',$params['name'])){
                 // regexp check because session name can only be alpha numeric according to the php documentation
                 throw new jException('jelix~errors.jsession.name.invalid');
             }
-#endif
             session_name($params['name']);
         }
 

@@ -4,7 +4,7 @@
 * @subpackage core_log
 * @author     Laurent Jouanneau
 * @contributor F. Fernandez, Hadrien Lanneau
-* @copyright  2006-2012 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
+* @copyright  2006-2018 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -35,13 +35,8 @@ interface jILogMessage {
     public function getFormatedMessage();
 }
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp log/jLogMessage.class.php
-#includephp log/jLogErrorMessage.class.php
-#else
 require(JELIX_LIB_CORE_PATH.'log/jLogMessage.class.php');
 require(JELIX_LIB_CORE_PATH.'log/jLogErrorMessage.class.php');
-#endif
 
 
 /**
@@ -60,11 +55,7 @@ interface jILogger {
     function output($response);
 }
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp log/jFileLogger.class.php
-#else
 require(JELIX_LIB_CORE_PATH.'log/jFileLogger.class.php');
-#endif
 
 /**
  * utility class to log some message into a file into yourapp/var/log

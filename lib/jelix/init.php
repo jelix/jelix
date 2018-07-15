@@ -2,27 +2,12 @@
 /**
 * Initialize all defines and includes necessary files
 *
-#if ENABLE_OPTIMIZED_SOURCE
-* Original code of some classes come from an experimental branch of the Copix
-* Framework (Copix 2.3dev20050901, http://www.copix.org),
-* Initial authors of the Original code are Gerald Croes and Laurent Jouanneau
-#endif
 * @package  jelix
 * @subpackage core
 * @author   Laurent Jouanneau
-#if ENABLE_OPTIMIZED_SOURCE
-* @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2014 Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam
-* @copyright 2006 Loic Mathaud
-* @copyright 2007-2009 Julien Issler
-* @link http://www.copix.org
-#else
-* @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2012 Laurent Jouanneau
+* @copyright 2005-2018 Laurent Jouanneau
 * @copyright 2007 Julien Issler
-#endif
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -57,47 +42,6 @@ define ('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') || func
 
 error_reporting (E_ALL | E_STRICT);
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jApp.class.php
-#includephp core/jAppInstance.php
-#includephp core/jFramework.class.php
-#includephp core/jelix_api.php
-#includephp core/jICoordPlugin.iface.php
-#includephp core/jISelector.iface.php
-#includephp core/jBasicErrorHandler.class.php
-#includephp core/jException.class.php
-#includephp core/jHttpResponseException.class.php
-#includephp core/jConfig.class.php
-#includephp core/jSelector.class.php
-#includephp core/jServer.class.php
-#includephp core/selector/jSelectorModule.class.php
-#includephp core/selector/jSelectorActFast.class.php
-#includephp core/selector/jSelectorAct.class.php
-#includephp core/selector/jSelectorClass.class.php
-#includephp core/selector/jSelectorDao.class.php
-#includephp core/selector/jSelectorDaoRecord.class.php
-#includephp core/selector/jSelectorForm.class.php
-#includephp core/selector/jSelectorIface.class.php
-#includephp core/selector/jSelectorLoc.class.php
-#includephp core/selector/jSelectorTpl.class.php
-#includephp core/selector/jSelectorZone.class.php
-#includephp core/selector/jSelectorSimpleFile.class.php
-#includephp core/selector/jSelectorFile.lib.php
-#includephp core/jUrlBase.class.php
-#includephp core/jUrlAction.class.php
-#includephp core/jUrl.class.php
-#includephp core/jCoordinator.class.php
-#includephp core/jController.class.php
-#includephp core/jRequest.class.php
-#includephp core/jResponse.class.php
-#includephp core/jBundle.class.php
-#includephp core/jPropertiesFileReader.class.php
-#includephp core/jLocale.class.php
-#includephp core/jLog.class.php
-#includephp core/jIncluder.class.php
-#includephp core/jSession.class.php
-
-#else
 require (JELIX_LIB_CORE_PATH . 'jApp.class.php');
 require (JELIX_LIB_CORE_PATH . 'jAppInstance.php');
 require (JELIX_LIB_CORE_PATH . 'jFramework.class.php');
@@ -110,19 +54,6 @@ require (JELIX_LIB_CORE_PATH . 'jHttpResponseException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jConfig.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSelector.class.php');
 require (JELIX_LIB_CORE_PATH . 'jServer.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorModule.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorActFast.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorAct.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorClass.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDao.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorDaoRecord.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorForm.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorIface.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorLoc.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorTpl.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorZone.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorSimpleFile.class.php');
-require (JELIX_LIB_CORE_PATH . 'selector/jSelectorFile.lib.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlBase.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
@@ -136,7 +67,6 @@ require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLog.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
-#endif
 
 /**
  * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead
@@ -154,12 +84,20 @@ interface jIUrlSignificantHandler
  * @name $gLibPath
  * @see jelix_autoload()
  */
-$GLOBALS['gLibPath']=array('Config'=>JELIX_LIB_PATH.'core/',
- 'Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
- 'Forms'=>JELIX_LIB_PATH.'forms/', 'Event'=>JELIX_LIB_PATH.'events/',
- 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
- 'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
- 'KV'=>JELIX_LIB_PATH.'kvdb/');
+$GLOBALS['gLibPath']=array(
+    'Config'=>JELIX_LIB_PATH.'core/',
+    'Selector'=>JELIX_LIB_PATH.'core/selector/',
+    'Db'=>JELIX_LIB_PATH.'db/',
+    'Dao'=>JELIX_LIB_PATH.'dao/',
+    'FormsControl'=>JELIX_LIB_PATH.'forms/controls/',
+    'Forms'=>JELIX_LIB_PATH.'forms/',
+    'Event'=>JELIX_LIB_PATH.'events/',
+    'Tpl'=>JELIX_LIB_PATH.'tpl/',
+    'Controller'=>JELIX_LIB_PATH.'controllers/',
+    'Auth'=>JELIX_LIB_PATH.'auth/',
+    'Installer'=>JELIX_LIB_PATH.'installer/',
+    'KV'=>JELIX_LIB_PATH.'kvdb/'
+);
 
 /**
  * function used by php to try to load an unknown class
@@ -168,7 +106,7 @@ function jelix_autoload($class) {
     if (strpos($class, 'jelix\\') === 0) {
         $f = LIB_PATH.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
     }
-    else if(preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Config|Installer|KV).*/i', $class, $m)){
+    else if(preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Config|Installer|KV).*/i', $class, $m)){
         $f=$GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     }
     elseif(preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)){

@@ -21,14 +21,12 @@ cd lib/jelix
   VERSION
 
 cd lib/jelix/auth
-* jAuth.class.php
+  jAuth.class.php
   jAuthUser.class.php
   jAuthDummyUser.class.php
   jAuthUserLDAP.class.php
   jIAuthDriver.iface.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
   jAuthDriverBase.class.php
-#endif
 
 cd lib/jelix/controllers
   jControllerCmdLine.class.php
@@ -43,7 +41,6 @@ cd lib/jelix/core
 * jConfigCompiler.class.php
   jCmdlineCoordinator.class.php
   jCoordinatorDebug.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
 * jApp.class.php
   jAppInstance.php
   jBasicErrorHandler.class.php
@@ -54,9 +51,9 @@ cd lib/jelix/core
   jException.class.php
   jHttpResponseException.class.php
   jFramework.class.php
-* jIncluder.class.php
+  jIncluder.class.php
   jLocale.class.php
-* jLog.class.php
+  jLog.class.php
   jPropertiesFileReader.class.php
   jRequest.class.php
 * jResponse.class.php
@@ -69,17 +66,14 @@ cd lib/jelix/core
   jelix_api.php
   jICoordPlugin.iface.php
   jISelector.iface.php
-#endif
 ! lang_to_locale.ini.php
 
 cd lib/jelix/core/log/
   jFileLogger.class.php
   jSyslogLogger.class.php
   jMailLogger.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
   jLogErrorMessage.class.php
   jLogMessage.class.php
-#endif
 
 cd lib/jelix/core/request
   jClassicRequest.class.php
@@ -106,22 +100,25 @@ cd lib/jelix/core/response
   jResponseCss.class.php
   jResponseHtmlFragment.class.php
 
-#ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/core/selector
 * jSelectorAct.class.php
 * jSelectorActFast.class.php
+  jSelectorAppCfg.class.php
+  jSelectorCfg.class.php
 * jSelectorClass.class.php
   jSelectorDao.class.php
   jSelectorDaoRecord.class.php
-  jSelectorFile.lib.php
   jSelectorForm.class.php
   jSelectorIface.class.php
+  jSelectorLib.class.php
 * jSelectorLoc.class.php
+  jSelectorLog.class.php
 * jSelectorModule.class.php
   jSelectorSimpleFile.class.php
+  jSelectorTmp.class.php
   jSelectorTpl.class.php
+  jSelectorVar.class.php
   jSelectorZone.class.php
-#endif
 
 cd lib/jelix/core/UrlMapping
   CustomUrlHandlerInterface.php
@@ -244,18 +241,16 @@ cd lib/jelix/dao
   jDaoFactoryBase.class.php
   jDao.class.php
   jDaoCompiler.class.php
-* jDaoParser.class.php
+  jDaoParser.class.php
   jDaoDbMapper.class.php
   jDaoConditions.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
   jDaoGenerator.class.php
   jDaoProperty.class.php
   jDaoMethod.class.php
   jDaoXmlException.class.php
-#endif
 
 cd lib/jelix/db
-* jDb.class.php
+  jDb.class.php
   jDbColumn.class.php
   jDbParameters.class.php
   jDbPDOConnection.class.php
@@ -266,10 +261,8 @@ cd lib/jelix/db
   jDbTools.class.php
   jDbWidget.class.php
   jDbParameters.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-* jDbConnection.class.php
+  jDbConnection.class.php
   jDbResultSet.class.php
-#endif
 
 cd lib/jelix/Dependencies
   Exception.php
@@ -297,11 +290,9 @@ cd lib/jelix/docs/ns
 #endif
 
 cd lib/jelix/events
-* jEvent.class.php
+  jEvent.class.php
   jEventCompiler.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
   jEventListener.class.php
-#endif
 
 cd lib/jelix/forms
   jForms.class.php
@@ -309,7 +300,7 @@ cd lib/jelix/forms
   jFormsCompiler.class.php
   jFormsCompiler_jf_1_0.class.php
   jFormsCompiler_jf_1_1.class.php
-* jFormsControl.class.php
+  jFormsControl.class.php
   jFormsDataContainer.class.php
 * jFormsDatasource.class.php
   jFormsSession.class.php
@@ -333,7 +324,6 @@ cd lib/jelix/forms/legacy
   jFormsBuilderBase.class.php
   jFormsBuilderHtml.class.php
 
-#ifnot ENABLE_OPTIMIZED_SOURCE
 cd lib/jelix/forms/controls
   jFormsControlDatasource.class.php
   jFormsControlGroups.class.php
@@ -361,7 +351,6 @@ cd lib/jelix/forms/controls
   jFormsControlDate.class.php
   jFormsControlDatetime.class.php
   jFormsControlWikiEditor.class.php
-#endif
 
 
 cd lib/jelix/installer

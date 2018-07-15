@@ -141,7 +141,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
      * @depends testOutputFooter
      */
     function testOutputInput(){
-        $ctrl= new jFormsControlinput('input1');
+        $ctrl= new jFormsControlInput('input1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -385,7 +385,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputCheckbox
      */
     function testOutputCheckboxes(){
-        $ctrl= new jFormsControlcheckboxes('choixsimple');
+        $ctrl= new jFormsControlCheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -447,7 +447,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControlcheckboxes('choixmultiple');
+        $ctrl= new jFormsControlCheckboxes('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource= new jFormsStaticDatasource();
@@ -521,7 +521,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputCheckboxes
      */
     function testOutputRadiobuttons(){
-        $ctrl= new jFormsControlradiobuttons('rbchoixsimple');
+        $ctrl= new jFormsControlRadiobuttons('rbchoixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -628,7 +628,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputRadiobuttons
      */
     function testOutputMenulist(){
-        $ctrl= new jFormsControlmenulist('menulist1');
+        $ctrl= new jFormsControlMenulist('menulist1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -1011,7 +1011,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputMenulist
      */
     function testOutputListbox(){
-        $ctrl= new jFormsControllistbox('listbox1');
+        $ctrl= new jFormsControlListbox('listbox1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -1105,7 +1105,7 @@ jFormsJQ.tForm.addControl(c);
 
 
 
-        $ctrl= new jFormsControllistbox('lbchoixmultiple');
+        $ctrl= new jFormsControlListbox('lbchoixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -1147,7 +1147,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControllistbox('listbox2');
+        $ctrl= new jFormsControlListbox('listbox2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -1171,7 +1171,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControllistbox('lbchoixmultiple2');
+        $ctrl= new jFormsControlListbox('lbchoixmultiple2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products','findAll','name','id');
@@ -1203,7 +1203,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputListbox
      */
     function testOutputListboxClassDatasource(){
-        $ctrl= new jFormsControllistbox('listboxclass');
+        $ctrl= new jFormsControlListbox('listboxclass');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         jClasses::inc('mydatasource');
@@ -1231,7 +1231,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputListboxClassDatasource
      */
     function testOutputTextarea(){
-        $ctrl= new jFormsControltextarea('textarea1');
+        $ctrl= new jFormsControlTextarea('textarea1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -1638,7 +1638,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputHidden
      */
     function testOutputCaptcha(){
-        $ctrl= new jFormsControlcaptcha('cap');
+        $ctrl= new jFormsControlCaptcha('cap');
         $ctrl->label='captcha for security';
         self::$form->addControl($ctrl);
 
@@ -1705,7 +1705,7 @@ jFormsJQ.tForm.addControl(c);
      * @depends testOutputCaptcha
      */
     function testOutputHtmleditor(){
-        $ctrl= new jFormsControlhtmleditor('contenu');
+        $ctrl= new jFormsControlHtmlEditor('contenu');
         $ctrl->label='Texte';
         self::$form->addControl($ctrl);
 
