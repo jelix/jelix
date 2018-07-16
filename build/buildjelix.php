@@ -79,7 +79,7 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'IS_NIGHTLY'=> array(
-    false,
+    'says if it is a nightly or not',
     false,
     ),
 'BUILD_FLAGS'=> array(
@@ -109,17 +109,11 @@ bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 Environment::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $SOURCE_REVISION = bt\FileSystem\Git::revision(__DIR__.'/../');
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
-$IS_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 $TODAY = date('Y-m-d H:i');
+$PACKAGE_NAME='jelix-'.$LIB_VERSION;
 
-if($IS_NIGHTLY){
-    $PACKAGE_NAME='jelix-'.str_replace('SERIAL', '', $LIB_VERSION);
-    if(substr($PACKAGE_NAME,-1,1) == '.')
-      $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $LIB_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $LIB_VERSION);
-}
-else {
-    $PACKAGE_NAME='jelix-'.$LIB_VERSION;
+if ($IS_NIGHTLY) {
+    $LIB_VERSION .= '.'. $SOURCE_REVISION;
 }
 
 if (preg_match('/^[0-9]+\.[0-9]+\.([a-z0-9\-\.]+)$/i', $LIB_VERSION, $m))
@@ -135,15 +129,16 @@ if ($PHP_VERSION_TARGET) {
 
 $BUILD_FLAGS = 0;
 
-if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
+if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP ) {
     $BUILD_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH).$PACKAGE_NAME.'/';
 }
 else {
     $BUILD_TARGET_PATH = DirUtils::normalizeDir($MAIN_TARGET_PATH);
 }
 
-if ($TARGET_REPOSITORY == 'none')
-  $TARGET_REPOSITORY = '';
+if ($TARGET_REPOSITORY == 'none') {
+    $TARGET_REPOSITORY = '';
+}
 
 //----------------- Package building
 
@@ -172,12 +167,18 @@ $var = Environment::getAll();
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/VERSION', $LIB_VERSION);
 
 // create the build info file
-$view = array('PHP_VERSION_TARGET', 'SOURCE_REVISION',
-    'ENABLE_DEVELOPER', 'STRIP_COMMENT' );
+$view = array('PHP_VERSION_TARGET', 'SOURCE_REVISION', 'ENABLE_DEVELOPER', 'STRIP_COMMENT' );
 
 $infos = '; --- build date:  '.$TODAY."\n; --- lib version: $LIB_VERSION\n".Environment::getIniContent($view);
 
 file_put_contents($BUILD_TARGET_PATH.'lib/jelix/BUILD', $infos);
+
+
+if ($IS_NIGHTLY) {
+    require(__DIR__.'/changeVersion.lib.php');
+    $modifier = new ChangeVersion($BUILD_TARGET_PATH);
+    $modifier->changeVersionInJelix($LIB_VERSION);
+}
 
 //... packages
 $oldpath = getcwd();

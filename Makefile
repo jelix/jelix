@@ -8,12 +8,10 @@ endif
 
 CURRENT_PATH = $(shell pwd)
 
-ifdef DISTPATH
-DISTPATHSWITCH="MAIN_TARGET_PATH=$(DISTPATH)"
-else
-DISTPATH=_dist
-DISTPATHSWITCH="MAIN_TARGET_PATH=_dist"
+ifndef DISTPATH
+DISTPATH=$(CURRENT_PATH)/_dist
 endif
+DISTPATHSWITCH="MAIN_TARGET_PATH=$(DISTPATH)"
 
 ifndef DOCSTARGETPATH
 DOCSTARGETPATH=$(CURRENT_PATH)/_docs
@@ -45,8 +43,7 @@ default:
 .PHONY: nightlies
 nightlies:
 	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D IS_NIGHTLY=1 -D ENABLE_DEVELOPER=1 ./build/config/jelix-dist.ini
 
 .PHONY: docs
 docs: 
