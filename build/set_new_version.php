@@ -14,7 +14,6 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Jelix\Version\Version;
 
 require(__DIR__.'/changeVersion.lib.php');
 
@@ -77,8 +76,8 @@ class BumpVersion  extends Command {
             $modifier->changeVersionInTestapp($strVersion);
         }
 
-        if (!$input->getOption('no-commit')) {
-            $this->commitChange("Release Jelix $strVersion");
+        if (!$input->getOption('no-commit') && !$input->getOption('path')) {
+            $this->commitChange("Release Jelix $strVersion", 'v'.$strVersion);
         }
 
         if ($strNextVersion) {
@@ -88,18 +87,23 @@ class BumpVersion  extends Command {
                 $modifier->changeVersionInTestapp($strNextVersion);
             }
 
-            if (!$input->getOption('no-commit')) {
+            if (!$input->getOption('no-commit') && !$input->getOption('path')) {
                 $this->commitChange("Bumped version to  $strNextVersion");
             }
         }
     }
 
-    protected function commitChange($message) {
-        return;
-        foreach (self::FILES as $file => $process) {
+    protected function commitChange($message, $tag ='') {
+        foreach (ChangeVersion::FILES as $file => $process) {
+            passthru('git add "'.$file.'"');
+        }
+        foreach (ChangeVersion::TESTAPP_FILES as $file => $process) {
             passthru('git add "'.$file.'"');
         }
         passthru('git commit -m "'.$message.'"');
+        if ($tag) {
+            passthru('git tag '.$tag);
+        }
     }
 }
 
