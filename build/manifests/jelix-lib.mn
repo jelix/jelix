@@ -88,7 +88,6 @@ cd lib/jelix-legacy/auth
 cd lib/jelix-legacy/controllers
   __ALL__
 
-
 cd lib/jelix-legacy/core
   __ALL__
 
@@ -268,12 +267,7 @@ cd lib/jelix-plugins/kvdb/
 
 #if ENABLE_DEVELOPER
 cd lib/jelix-tests/
-! phpunit.inc.php
-cd lib/jelix-tests/classes
-! command.php
-! JelixTestSuite.class.php
-! junittestcase.class.php
-! junittestcasedb.class.php
+  __ALL_RECURSIVELY__
 #endif
 
 cd lib/installwizard/
