@@ -4,7 +4,7 @@
 * @subpackage core_log
 * @author     Laurent Jouanneau
 * @contributor F. Fernandez, Hadrien Lanneau
-* @copyright  2006-2014 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
+* @copyright  2006-2018 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
 * @link       http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */

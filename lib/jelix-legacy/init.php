@@ -2,27 +2,12 @@
 /**
 * Initialize all defines and includes necessary files
 *
-#if ENABLE_OPTIMIZED_SOURCE
-* Original code of some classes come from an experimental branch of the Copix
-* Framework (Copix 2.3dev20050901, http://www.copix.org),
-* Initial authors of the Original code are Gerald Croes and Laurent Jouanneau
-#endif
 * @package  jelix
 * @subpackage core
 * @author   Laurent Jouanneau
-#if ENABLE_OPTIMIZED_SOURCE
-* @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2014 Laurent Jouanneau
-* @copyright 2001-2005 CopixTeam
-* @copyright 2006 Loic Mathaud
-* @copyright 2007-2009 Julien Issler
-* @link http://www.copix.org
-#else
-* @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2012 Laurent Jouanneau
+* @copyright 2005-2018 Laurent Jouanneau
 * @copyright 2007 Julien Issler
-#endif
 * @link     http://www.jelix.org
 * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -30,15 +15,10 @@
 /**
  * Version number of Jelix
  * @name  JELIX_VERSION
+ * @deprecated
+ * @see jFramework::version()
  */
-#ifdef LIB_VERSION
-#expand define ('JELIX_VERSION', '__LIB_VERSION__');
-#else
-define ('JELIX_VERSION',
-        trim(str_replace(array('SERIAL', "\n"),
-                         array('0', ''),
-                         file_get_contents(__DIR__.'/VERSION'))));
-#endif
+define ('JELIX_VERSION', '2.0.0-alpha.1');
 
 /**
  * base of namespace path used in xml files of jelix
@@ -67,7 +47,7 @@ class LegacyJelixAutoloader {
         if (strpos($class, 'jelix\\') === 0) {
             $f = LIB_PATH.'jelix-legacy/'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class,6)).'.php';
         }
-        elseif (preg_match('/^j(Dao|Tpl|Event|Db|Controller|Forms|Auth|Installer|KV).*/i', $class, $m)) {
+        elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Installer|KV).*/i', $class, $m)) {
             $f = self::$libPath[$m[1]].$class.'.class.php';
         }
         elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
@@ -105,36 +85,25 @@ class LegacyJelixAutoloader {
     }
 }
 
-LegacyJelixAutoloader::$libPath =array('Db'=>JELIX_LIB_PATH.'db/', 'Dao'=>JELIX_LIB_PATH.'dao/',
- 'Forms'=>JELIX_LIB_PATH.'forms/',
- 'Tpl'=>JELIX_LIB_PATH.'tpl/', 'Controller'=>JELIX_LIB_PATH.'controllers/',
- 'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
- 'KV'=>JELIX_LIB_PATH.'kvdb/');
+LegacyJelixAutoloader::$libPath = array(
+    'Config'=>JELIX_LIB_PATH.'core/',
+    'Selector'=>JELIX_LIB_PATH.'core/selector/',
+    'Db'=>JELIX_LIB_PATH.'db/',
+    'Dao'=>JELIX_LIB_PATH.'dao/',
+    'FormsControl'=>JELIX_LIB_PATH.'forms/controls/',
+    'Forms'=>JELIX_LIB_PATH.'forms/',
+    'Event'=>JELIX_LIB_PATH.'events/',
+    'Tpl'=>JELIX_LIB_PATH.'tpl/',
+    'Controller'=>JELIX_LIB_PATH.'controllers/',
+    'Auth'=>JELIX_LIB_PATH.'auth/',
+    'Installer'=>JELIX_LIB_PATH.'installer/',
+    'KV'=>JELIX_LIB_PATH.'kvdb/'
+);
+
 
 spl_autoload_register("LegacyJelixAutoloader::loadClass");
 
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp core/jBasicErrorHandler.class.php
-#includephp core/jException.class.php
-#includephp core/jHttpResponseException.class.php
-#includephp core/jServer.class.php
-#includephp core/selector/jSelectorActFast.class.php
-#includephp core/selector/jSelectorAct.class.php
-#includephp core/selector/jSelectorDao.class.php
-#includephp core/selector/jSelectorDaoRecord.class.php
-#includephp core/selector/jSelectorForm.class.php
-#includephp core/selector/jSelectorTpl.class.php
-#includephp core/selector/jSelectorZone.class.php
-#includephp core/selector/jSelectorAppCfg.class.php
-#includephp core/jUrlBase.class.php
-#includephp core/jUrlAction.class.php
-#includephp core/jUrl.class.php
-#includephp core/jController.class.php
-#includephp core/jSession.class.php
-#includephp core/jPropertiesFileReader.class.php
-
-#else
 require (JELIX_LIB_CORE_PATH . 'jBasicErrorHandler.class.php');
 require (JELIX_LIB_CORE_PATH . 'jException.class.php');
 require (JELIX_LIB_CORE_PATH . 'jHttpResponseException.class.php');
@@ -153,7 +122,6 @@ require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
 require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
-#endif
 
 /**
 * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead

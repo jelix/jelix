@@ -50,20 +50,20 @@ class jforms_HTMLLightBuilder2Test extends jUnitTestCaseDb {
     }
     function testOutputGroup(){
 
-        $group= new jFormsControlgroup('identity');
+        $group= new jFormsControlGroup('identity');
         $group->label='Your identity';
 
-        $ctrl= new jFormsControlinput('nom');
+        $ctrl= new jFormsControlInput('nom');
         $ctrl->required=true;
         $ctrl->label='Your name';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlinput('prenom');
+        $ctrl= new jFormsControlInput('prenom');
         $ctrl->defaultValue='robert';
         $ctrl->label='Your firstname';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlradiobuttons('sexe');
+        $ctrl= new jFormsControlRadiobuttons('sexe');
         $ctrl->required=true;
         $ctrl->label='Vous êtes ';
         $ctrl->alertRequired='Vous devez indiquer le sexe, même si vous ne savez pas :-)';
@@ -75,7 +75,7 @@ class jforms_HTMLLightBuilder2Test extends jUnitTestCaseDb {
         );
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlinput('mail');
+        $ctrl= new jFormsControlInput('mail');
         $ctrl->datatype= new jDatatypeemail();
         $ctrl->label='Votre mail';
         $group->addChildControl($ctrl);
@@ -173,13 +173,13 @@ jForms.tForm.addControl(c);
         $choice->createItem('assigned','Assigned');
         $choice->createItem('closed','Closed');
 
-        $ctrl= new jFormsControlinput('nom');
+        $ctrl= new jFormsControlInput('nom');
         $ctrl->required=true;
         $ctrl->label='Name';
         $choice->addChildControl($ctrl,'assigned');
 
 
-        $ctrl= new jFormsControlinput('prenom');
+        $ctrl= new jFormsControlInput('prenom');
         $ctrl->defaultValue='robert';
         $ctrl->label='Firstname';
         $choice->addChildControl($ctrl,'assigned');

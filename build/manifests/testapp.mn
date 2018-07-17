@@ -1,13 +1,11 @@
 cd testapp
-* project.xml
+  project.xml
   .htaccess
   application.init.php
   cmd.php
   composer.json
   README.md
 
-cd testapp/app/
-  .htaccess
 cd testapp/app/config
   auth.coord.ini.php
   auth_class.coord.ini.php
@@ -116,7 +114,7 @@ cd testapp/scripts
     cmdline.php
 
 cd testapp/modules/testapp
-*  module.xml
+   module.xml
    urls.xml
    urls2.xml
 cd testapp/modules/testapp/classes/geo
@@ -179,7 +177,7 @@ cd testapp/modules/testapp/tests/
 
 cd testapp/modules/jelix_tests
   events.xml
-*  module.xml
+  module.xml
 cd testapp/modules/jelix_tests/autoloadtest
   autoloadtestclass.php
   myautoloader.php
@@ -300,17 +298,17 @@ cd testapp/modules/jelix_tests/zones/
   test_cache_meta_deep2.zone.php
 
 cd testapp/modules/testurls/
-*  module.xml
+   module.xml
 cd testapp/modules/testurls/classes/
   urlhandlermodule.urlhandler.php
 cd testapp/modules/testurls/controllers/
   urlsig.classic.php
 
 cd testapp/modules/testinstall1
-*  module.xml
+   module.xml
 
 cd testapp/modules/testinstall2
-*  module.xml
+   module.xml
 cd testapp/modules/testinstall2/install
   install.php
   upgrade_to_1.1.5_second.php
@@ -318,14 +316,14 @@ cd testapp/modules/testinstall2/install
   upgrade_newupgraderfilename.php
   upgrade_newupgraderfilenamedate.php
 cd testapp/modules/testinstall3
-*  module.xml
+   module.xml
 
 cd testapp/modules/articles
-*  module.xml
+   module.xml
 cd testapp/modules/articles/install
   install.php
 cd testapp/modules/news
-*  module.xml
+   module.xml
 
 cd testapp/tests-jelix/
   bootstrap.php
@@ -506,8 +504,6 @@ cd testapp/tests-jelix/jelix/routing/app1/temp
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/www
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/var/config
-  __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/app/config/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
@@ -536,8 +532,6 @@ cd testapp/tests-jelix/jelix/utils/
   jRootUrlTest.php
   minifyHTMLResponsePluginTest.php
   profilesTest.php
-cd testapp/tests-jelix/jelix-scripts/
-  commandTest.php
 
 cd testapp/tests/
   runtests.php
@@ -592,10 +586,8 @@ cd testapp/adminapp/temp
   .dummy
 
 cd testapp/adminapp/var/config/
-  localconfig.ini.dist
+  localconfig.ini.php.dist
   profiles.ini.php.dist
-cd testapp/adminapp/var/config/index
-  auth.coord.ini.php
 
 cd testapp/adminapp/var/log/
   .dummy

@@ -4,9 +4,9 @@ cd lib/jelix-modules
   CREDITS
 
 cd lib/jelix-modules/jacl
-* module.xml
+  module.xml
 cd lib/jelix-modules/jacl/classes
-* jAcl.class.php
+  jAcl.class.php
 cd lib/jelix-modules/jacl/install
   install.php
 cd lib/jelix-modules/jacl/locales/en_GB/
@@ -22,7 +22,7 @@ cd lib/jelix-modules/jacl/plugins/tpl/common/
   block.ifnotacl.php
 
 cd lib/jelix-modules/jacldb
-* module.xml
+  module.xml
   events.xml
 cd lib/jelix-modules/jacldb/classes
 !  jacldb.listener.php
@@ -58,9 +58,9 @@ cd lib/jelix-modules/jacldb/plugins/acl/db/
 
 
 cd lib/jelix-modules/jacl2
-* module.xml
+  module.xml
 cd lib/jelix-modules/jacl2/classes
-* jAcl2.class.php
+  jAcl2.class.php
   jIAcl2Driver.iface.php
 cd lib/jelix-modules/jacl2/locales/en_GB/
 cch errors.UTF-8.properties(errors.%charset%.properties)
@@ -77,7 +77,7 @@ cd lib/jelix-modules/jacl2/plugins/tpl/common/
   block.ifnotacl2.php
 
 cd lib/jelix-modules/jacl2db
-* module.xml
+  module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
   jAcl2DbAdminUIManager.class.php
@@ -123,7 +123,7 @@ cd lib/jelix-modules/jacl2db/plugins/acl2/dbcache/
   dbcache.acl2.php
 
 cd lib/jelix-modules/jauthdb
-* module.xml
+  module.xml
 cd lib/jelix-modules/jauthdb/daos
   jelixuser.dao.xml
 cd lib/jelix-modules/jauthdb/install/
@@ -134,7 +134,7 @@ cd lib/jelix-modules/jauthdb/install/
   install.php
 
 cd lib/jelix-modules/jauth
-* module.xml
+  module.xml
   events.xml
   urls.xml
   urls_ws.xml
@@ -169,7 +169,7 @@ cd lib/jelix-modules/jauth/zones
 ! loginform.zone.php
 
 cd lib/jelix-modules/jpref
-* module.xml
+  module.xml
 cd lib/jelix-modules/jpref/classes/
   jPref.php
   jPrefItem.php

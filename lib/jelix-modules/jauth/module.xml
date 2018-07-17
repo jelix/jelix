@@ -7,10 +7,10 @@
         a basic dao.</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2008-2018 Laurent Jouanneau and other contributors</copyright>
-        <author name="Laurent Jouanneau" email="laurent@jelix.org" />
+        <author name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix version="&gt;=1.7.0-beta.1,&lt;=__LIB_VERSION_MAX__"/>
+        <jelix version="&gt;=1.7.0-beta.1,&lt;=2.0.0-alpha.1"/>
     </dependencies>
 </module>

@@ -147,6 +147,7 @@ class ModuleXmlParser extends XmlParserAbstract {
                         $object->autoloadClassPatterns[$attr['pattern']] = $dir;
                         break;
                     case 'namespace':
+                    case 'psr0':
                         if ($dir == '') {
                             break;
                         }
@@ -159,6 +160,7 @@ class ModuleXmlParser extends XmlParserAbstract {
                         }
                         break;
                     case 'namespacePathMap':
+                    case 'psr4':
                         if ($dir == '') {
                             break;
                         }

@@ -257,7 +257,7 @@ class jforms_check_data extends jUnitTestCaseDb {
     }
 
     function testDate(){
-        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $ctrl->hasHelp=true;
         $this->form->addCtrl($ctrl);
@@ -349,7 +349,7 @@ class jforms_check_data extends jUnitTestCaseDb {
         $ctrl->required = true;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $choice->addChildControl($ctrl, 'item2');
 

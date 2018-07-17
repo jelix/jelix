@@ -185,7 +185,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin {
     <div id="jxdb-tabpanels">
         <div id="jxdb-panel-jelix" class="jxdb-tabpanel" style="display:none">
             <ul>
-                <li>Jelix version: <?php echo JELIX_VERSION?></li>
+                <li>Jelix version: <?php echo jFramework::version()?></li>
                 <li>Move the debug bar <a id="jxdb-pjlx-a-right" href="javascript:jxdb.moveTo('r')">to right</a>
                 <a href="javascript:jxdb.moveTo('l')" id="jxdb-pjlx-a-left">to left</a></li>
                 <li>To remove it definitively, deactivate the plugin "debugbar"<br/> into the configuration</li>

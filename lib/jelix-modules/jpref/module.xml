@@ -6,17 +6,17 @@
         <description lang="en_US">Module to manage preferences</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
         <copyright>2012-2018 Laurent Jouanneau and 2012 Florian Lonqueu-Brochard</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org"/>
-        <contributor name=" Florian Lonqueu-Brochard" />
+        <author name="Laurent Jouanneau" email="laurent@jelix.org"/>
+        <contributor name=" Florian Lonqueu-Brochard"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix version="&gt;=1.7.0-beta.1,&lt;=__LIB_VERSION_MAX__"/>
+        <jelix version="&gt;=1.7.0-beta.1,&lt;=2.0.0-alpha.1"/>
     </dependencies>
     <autoload>
-        <class name="jPref" file="classes/jPref.php" />
-        <class name="jPrefItem" file="classes/jPrefItem.php" />
-        <class name="jPrefItemGroup" file="classes/jPrefItemGroup.php" />
-        <class name="jPrefManager" file="classes/jPrefManager.php" />
+        <class name="jPref" file="classes/jPref.php"/>
+        <class name="jPrefItem" file="classes/jPrefItem.php"/>
+        <class name="jPrefItemGroup" file="classes/jPrefItemGroup.php"/>
+        <class name="jPrefManager" file="classes/jPrefManager.php"/>
     </autoload>
 </module>

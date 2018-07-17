@@ -147,7 +147,6 @@ class EntryPoint {
         $this->config = $compiler->read(true);
         $this->modulesInfos = $compiler->getModulesInfos();
 
-
         $this->urlMap = $globalSetup->getUrlModifier()
             ->addEntryPoint($this->getEpId(), $type);
     }

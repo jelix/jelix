@@ -13,13 +13,8 @@
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
 
-#if ENABLE_OPTIMIZED_SOURCE
-#includephp jIAuthDriver.iface.php
-#includephp jAuthDriverBase.class.php
-#else
 require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
-#endif
 
 /**
  * This is the main class for authentification process

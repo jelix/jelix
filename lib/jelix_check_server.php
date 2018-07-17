@@ -41,6 +41,7 @@ namespace {
 
     $en = array_merge(checker::getEnMessages(),
                       array(
+
 #expand             'checker.title'   =>'Check your configuration server for Jelix __LIB_VERSION__',
 #expand             'conclusion.error'    =>'You must fix the error in order to run an application correctly with Jelix __LIB_VERSION__.',
 #expand             'conclusion.errors'   =>'You must fix errors in order to run an application correctly with Jelix __LIB_VERSION__.',

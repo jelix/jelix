@@ -579,7 +579,7 @@ class jforms_sessionTest extends jUnitTestCase {
      */
     function testPrepareObjectFromControls() {
         $f = jForms::create('product');
-        $ctrl= new jFormsControlcheckbox('instock');
+        $ctrl= new jFormsControlCheckbox('instock');
         $ctrl->label='En stock?';
         $f->addControl($ctrl);
         

@@ -4,7 +4,7 @@
 * @subpackage  db
 * @author      Laurent Jouanneau, Gerald Croes
 * @contributor Julien Issler
-* @copyright   2005-2015 Laurent Jouanneau
+* @copyright   2005-2018 Laurent Jouanneau
 * @copyright   2007-2009 Julien Issler
 * @copyright 2001-2005 CopixTeam
 * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -93,9 +93,7 @@ abstract class jDbConnection {
         $this->driverName = $profile['driver'];
         $this->dbms = $profile['dbtype'];
         $this->_connection = $this->_connect();
-#ifnot ENABLE_OPTIMIZED_SOURCE
-        $this->_debugMode = true;
-#endif
+        $this->_debugMode = (isset($profile['debug']) && $profile['debug']);
     }
 
     function __destruct() {
