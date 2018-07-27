@@ -174,6 +174,17 @@ abstract class jDaoFactoryBase  {
     public function getPrimaryKeyNames() { return static::$_pkFields; }
 
     /**
+     * creates a record object for the dao
+     *
+     * @return jDaoRecordBase
+     */
+    public function createRecord() {
+        $c = $this->_DaoRecordClassName;
+        $obj = new $c();
+        return $obj;
+    }
+
+    /**
      * return all records
      * @return jDbResultSet
      */

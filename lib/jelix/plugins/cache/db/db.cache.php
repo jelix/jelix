@@ -175,7 +175,7 @@ class dbCacheDriver implements jICacheDriver {
                 break;
         }
         if ($n==0) {
-            $cache = jDao::createRecord($this->_dao, $this->_dbprofile);
+            $cache = $dao->createRecord();
             $cache->key = $key;
             $cache->data = $var;
             $cache->date = $date;

@@ -295,7 +295,7 @@ abstract class jFormsBase {
         if($key != null && ($daorec = $dao->get($key))) {
             $toInsert= false;
         }else{
-            $daorec = jDao::createRecord($daoSelector, $dbProfile);
+            $daorec = $dao->createRecord();
             if($key != null)
                 $daorec->setPk($key);
             $toInsert= true;
@@ -435,7 +435,7 @@ abstract class jFormsBase {
             $primaryKey =array($primaryKey);
 
         $dao = jDao::create($daoSelector, $dbProfile);
-        $daorec = jDao::createRecord($daoSelector, $dbProfile);
+        $daorec = $dao->createRecord();
 
         $conditions = jDao::createConditions();
         if($primaryKeyNames)

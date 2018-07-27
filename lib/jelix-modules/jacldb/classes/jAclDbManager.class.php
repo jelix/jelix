@@ -57,7 +57,7 @@ class jAclDbManager {
         $daoright = jDao::get('jacldb~jaclrights', 'jacl_profile');
         $right = $daoright->get($subject,$group,$resource,$value);
         if(!$right){
-            $right = jDao::createRecord('jacldb~jaclrights', 'jacl_profile');
+            $right = $daoright->createRecord();
             $right->id_aclsbj = $subject;
             $right->id_aclgrp = $group;
             $right->id_aclres = $resource;
@@ -104,7 +104,7 @@ class jAclDbManager {
     public static function addSubject($subject, $id_aclvalgrp, $label_key){
         // adds a subject in the jacl_subject table
         $daosbj = jDao::get('jacldb~jaclsubject','jacl_profile');
-        $subj = jDao::createRecord('jacldb~jaclsubject','jacl_profile');
+        $subj = $daosbj->createRecord();
         $subj->id_aclsbj=$subject;
         $subj->id_aclvalgrp=$id_aclvalgrp;
         $subj->label_key =$label_key;

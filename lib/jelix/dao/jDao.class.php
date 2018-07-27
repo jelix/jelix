@@ -74,12 +74,15 @@ class jDao {
     }
 
     /**
-    * creates a record object for the given dao
-    * @param string $Daoid the dao selector
-    * @param string $profile the db profile name to use for the connection. 
-    *   If empty, use the default profile
-    * @return jDaoRecordBase  a dao record object
-    */
+     * creates a record object for the given dao
+     *
+     * See also jDaoFactoryBase::createRecord()
+     *
+     * @param string $Daoid the dao selector
+     * @param string $profile the db profile name to use for the connection.
+     *   If empty, use the default profile
+     * @return jDaoRecordBase  a dao record object
+     */
     public static function createRecord ($DaoId, $profile=''){
         $sel = new jSelectorDao($DaoId, $profile);
         $c = $sel->getDaoClass();

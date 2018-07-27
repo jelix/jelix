@@ -142,7 +142,7 @@ class jSession {
 
         $session = $dao->get($id);
         if(!$session){
-            $session = jDao::createRecord(self::$_params['dao_selector']);
+            $session = $dao->createRecord();
             $session->id = $id;
             $session->data = $data;
             $now = date('Y-m-d H:i:s');

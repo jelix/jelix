@@ -80,7 +80,7 @@ class jAclDbUserGroup {
     public static function createUser($login, $defaultGroup=true){
         $daousergroup = jDao::get('jacldb~jaclusergroup','jacl_profile');
         $daogroup = jDao::get('jacldb~jaclgroup','jacl_profile');
-        $usergrp = jDao::createRecord('jacldb~jaclusergroup','jacl_profile');
+        $usergrp = $daousergroup->createRecord();
         $usergrp->login =$login;
 
         // if $defaultGroup -> assign the user to the default group(s)
@@ -93,7 +93,7 @@ class jAclDbUserGroup {
         }
 
         // create a personal group
-        $persgrp = jDao::createRecord('jacldb~jaclgroup','jacl_profile');
+        $persgrp = $daogroup->createRecord();
         $persgrp->name = $login;
         $persgrp->grouptype = 2;
         $persgrp->ownerlogin = $login;
@@ -112,7 +112,7 @@ class jAclDbUserGroup {
      */
     public static function addUserToGroup($login, $groupid){
         $daousergroup = jDao::get('jacldb~jaclusergroup','jacl_profile');
-        $usergrp = jDao::createRecord('jacldb~jaclusergroup','jacl_profile');
+        $usergrp = $daousergroup->createRecord();
         $usergrp->login =$login;
         $usergrp->id_aclgrp = $groupid;
         $daousergroup->insert($usergrp);
@@ -157,10 +157,10 @@ class jAclDbUserGroup {
      * @return int the id of the new group
      */
     public static function createGroup($name){
-        $group = jDao::createRecord('jacldb~jaclgroup','jacl_profile');
+        $daogroup = jDao::get('jacldb~jaclgroup','jacl_profile');
+        $group = $daogroup->createRecord();
         $group->name=$name;
         $group->grouptype=0;
-        $daogroup = jDao::get('jacldb~jaclgroup','jacl_profile');
         $daogroup->insert($group);
         return $group->id_aclgrp;
     }
