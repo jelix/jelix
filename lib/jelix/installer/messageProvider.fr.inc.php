@@ -77,9 +77,11 @@ return array(
         'install.entrypoint.bad.end'=>'Installation interrompue pour cause d\'erreurs pour le point d\'entrée %s',
         'install.entrypoint.installers.disabled'=>'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.',
 
-        'install.dependencies.ok'   =>'Toutes les dépendances des modules sont valides',
-        'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances. Installation annulée.',
+        'install.dependencies.ok'   =>'Toutes les dépendances des modules sont valides pour le point d\'entrée %s',
+        'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances pour le point d\'entrée %s. Installation annulée.',
         'install.invalid.xml.file'  =>'Le fichier identité %s est invalide ou inexistant',
+
+        'install.entrypoint.wrong.config' => 'Le point d\'entrée %s devrait avoir son propre fichier de configuration',
 
         'install.module.already.installed'  =>'Le module %s déjà installé',
         'install.module.installed'          =>'Le module %s est installé',

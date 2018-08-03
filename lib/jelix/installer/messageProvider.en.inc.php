@@ -77,8 +77,10 @@ return array(
         'install.entrypoint.bad.end'=>'Installation/upgrade is aborted for the entry point %s',
         'install.entrypoint.installers.disabled'=>'Installation scripts and update scripts will not be executed: it is disabled in the configuration.',
 
-        'install.dependencies.ok'   =>'All modules dependencies are ok',
-        'install.bad.dependencies'  =>'Error in dependencies. Installation cancelled.',
+        'install.entrypoint.wrong.config' => 'The entry point %s should have its own configuration file',
+
+        'install.dependencies.ok'   =>'All modules dependencies are ok for the entry point %s',
+        'install.bad.dependencies'  =>'Error in dependencies for the entry point %s. Installation cancelled.',
         'install.invalid.xml.file'  =>'The identity file  %s is invalid or not found',
 
         'install.module.already.installed'=>'Module %s is already installed',

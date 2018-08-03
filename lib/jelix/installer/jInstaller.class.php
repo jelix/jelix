@@ -547,12 +547,12 @@ class jInstaller {
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         } catch(\Exception $e) {
-            $this->error('install.bad.dependencies');
+            $this->error('install.bad.dependencies', $epId);
             $this->ok('install.entrypoint.bad.end', $epId);
             return false;
         }
 
-        $this->ok('install.dependencies.ok');
+        $this->ok('install.dependencies.ok', $epId);
         return $moduleschain;
     }
 

@@ -176,24 +176,98 @@ class jInstallerComponentModule {
         return $this->moduleInfos[$epId]->parameters;
     }
 
+    /**
+     * Sets the access parameter in the right configuration file
+     *
+     * @param jInstallerEntryPoint2 $ep
+     */
     protected function _setAccess(jInstallerEntryPoint2 $ep)
     {
-        $config = $ep->getConfigIni();
-        $access = $config->getValue($this->name . '.access', 'modules');
+        $config = $ep->getLiveConfigIni();
+        $accessEpLocal = $config['localentrypoint']->getValue($this->name . '.access', 'modules');
+        $accessLocal =   $config['local']->getValue($this->name . '.access', 'modules');
+        $accessEp =      $config['entrypoint']->getValue($this->name . '.access', 'modules');
+        $accessMain =    $config['main']->getValue($this->name . '.access', 'modules');
+
 
         $action = $this->getInstallAction($ep->getEpId());
+
         if ($action == Resolver::ACTION_INSTALL) {
-            if ($access == 0 || $access == null) {
-                $config->setValue($this->name . '.access', 2, 'modules');
+            if ($accessEpLocal == 1 ||
+                $accessEpLocal == 2 ||
+                $accessLocal == 1 ||
+                $accessLocal == 2
+            ) {
+                return;
+            }
+            if ($accessEpLocal == 3 || $accessEpLocal === 0) {
+                $config['localentrypoint']->setValue($this->name.'.access', ($accessEpLocal == 3?1:2), 'modules');
                 $config->save();
-            } else if ($access == 3) {
-                $config->setValue($this->name . '.access', 1, 'modules');
+                return;
+            }
+
+            if ($accessLocal == 3) {
+                $config['local']->setValue($this->name.'.access', 1, 'modules');
                 $config->save();
+                return;
+            }
+            if ($accessLocal === 0) {
+                $config['localentrypoint']->setValue($this->name.'.access', 2, 'modules');
+                $config->save();
+                return;
+            }
+
+            if ($accessEp == 1 ||
+                $accessEp == 2 ||
+                $accessMain == 1 ||
+                $accessMain == 2
+            ) {
+                return;
+            }
+            if ($accessEp == 3 || $accessEp === 0) {
+                $config['entrypoint']->setValue($this->name.'.access', ($accessEp == 3?1:2), 'modules');
+                $config->save();
+                return;
+            }
+
+            if ($accessMain == 3) {
+                $config['main']->setValue($this->name.'.access', 1, 'modules');
+                $config->save();
+                return;
+            }
+            if ($accessMain === 0) {
+                $config['entrypoint']->setValue($this->name.'.access', 2, 'modules');
+                $config->save();
+                return;
             }
         }
         else if ($action == Resolver::ACTION_REMOVE) {
-            $config->setValue($this->name . '.access', 0, 'modules');
-            $config->save();
+
+            if ($accessEpLocal !== null) {
+                $config['localentrypoint']->setValue($this->name.'.access', 0, 'modules');
+                $config->save();
+                return;
+            }
+            if ($accessLocal !== null) {
+                if ($accessLocal !== 0) {
+                    $config['localentrypoint']->setValue($this->name.'.access', 0, 'modules');
+                    $config->save();
+                }
+                return;
+            }
+
+            if ($accessEp !== null) {
+                $config['entrypoint']->setValue($this->name.'.access', 0, 'modules');
+                $config->save();
+                return;
+            }
+            if ($accessMain !== null) {
+                if ($accessMain !== 0) {
+                    $config['entrypoint']->setValue($this->name.'.access', 0, 'modules');
+                    $config->save();
+                }
+                return;
+            }
         }
     }
 
