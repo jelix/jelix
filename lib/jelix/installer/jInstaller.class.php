@@ -444,9 +444,6 @@ class jInstaller {
                     break;
                 }
             }
-            else {
-                break;
-            }
         }
         return $result;
     }
