@@ -19,8 +19,6 @@
  */
 class jConfigCompiler {
 
-    static protected $commonConfig;
-
     private function __construct (){ }
 
     /**
@@ -67,8 +65,6 @@ class jConfigCompiler {
             throw new Exception('Application log directory is not writable -- ('.jApp::logPath().')', 4);
         }
 
-        self::$commonConfig = jelix_read_ini(jApp::mainConfigFile());
-
         // this is the defaultconfig file of JELIX itself
         $config = jelix_read_ini(__DIR__.'/defaultconfig.ini.php');
 
@@ -86,7 +82,7 @@ class jConfigCompiler {
 
         // read the configuration of the entry point
         if (file_exists($appConfigPath.$configFile)) {
-            if( false === @jelix_read_ini($appConfigPath.$configFile, $config)) {
+            if( false === @jelix_read_ini($appConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -98,7 +94,7 @@ class jConfigCompiler {
 
         // read the local configuration of the entry point
         if (file_exists($varConfigPath.$configFile)) {
-            if( false === @jelix_read_ini($varConfigPath.$configFile, $config)) {
+            if( false === @jelix_read_ini($varConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -108,7 +104,6 @@ class jConfigCompiler {
         }
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);
-        self::$commonConfig = null;
         return $config;
     }
 
@@ -319,18 +314,6 @@ class jConfigCompiler {
                     // no given access in defaultconfig and ep config
                     $config->modules[$f.'.access'] = 0;
                 }
-                else if($config->modules[$f.'.access'] == 0) {
-                    // we want to activate the module if it is not activated
-                    // for the entry point, but is declared activated
-                    // in the default config file. In this case, it means
-                    // that it is activated for an other entry point,
-                    // and then we want the possibility to retrieve its
-                    // urls, at least
-                    if (isset(self::$commonConfig->modules[$f.'.access'])
-                        && self::$commonConfig->modules[$f.'.access'] > 0) {
-                        $config->modules[$f.'.access'] = 3;
-                    }
-                }
                 else if (!$installation[$section][$f.'.installed']) {
                     // module is not installed.
                     // outside installation mode, we force the access to 0
@@ -367,9 +350,7 @@ class jConfigCompiler {
                 $config->_allModulesPathList[$f] = $path;
             }
 
-            if ($config->modules[$f.'.access'] == 3) {
-                $config->_externalModulesPathList[$f] = $path;
-            } elseif ($config->modules[$f.'.access']) {
+            if ($config->modules[$f.'.access']) {
                 $config->_modulesPathList[$f] = $path;
             }
         }

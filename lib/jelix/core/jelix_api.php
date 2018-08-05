@@ -15,7 +15,7 @@ if (function_exists('jelix_version')) {
 }
 else {
 
-function jelix_read_ini($fileName, $config = null) {
+function jelix_read_ini($fileName, $config = null, $ignoredSection = array()) {
     $conf = \Jelix\IniFile\Util::read($fileName);
     if ($config !== null) {
         foreach ($conf as $k=>$v) {
@@ -24,8 +24,9 @@ function jelix_read_ini($fileName, $config = null) {
                 continue;
             }
     
-            if ($k[1] == '_')
+            if ($k[1] == '_' || in_array($k, $ignoredSection))
                 continue;
+
             if (is_array($v)) {
                 $config->$k = array_merge($config->$k, $v);
             }

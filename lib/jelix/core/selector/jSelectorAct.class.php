@@ -63,8 +63,6 @@ class jSelectorAct extends jSelectorActFast {
         $conf = jApp::config();
         if (isset($conf->_modulesPathList[$this->module])) {
             $p = $conf->_modulesPathList[$this->module];
-        } else if ($this->forUrl && isset($conf->_externalModulesPathList[$this->module])) {
-            $p = $conf->_externalModulesPathList[$this->module];
         }
         else
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());

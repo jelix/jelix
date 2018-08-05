@@ -367,18 +367,13 @@ class jAppInstance
      * Says if the given module $name is enabled.
      *
      * @param string $moduleName
-     * @param bool   $includingExternal true if we want to know if the module
-     *                                  is also an external module, e.g. in an other entry point
-     *
+     * @param bool   $includingExternal  deprecated
      * @return bool true : module is ok
      */
     public function isModuleEnabled($moduleName, $includingExternal = false)
     {
         if (!$this->config) {
             throw new Exception('Configuration is not loaded');
-        }
-        if ($includingExternal && isset($this->config->_externalModulesPathList[$moduleName])) {
-            return true;
         }
 
         return isset($this->config->_modulesPathList[$moduleName]);
@@ -388,8 +383,7 @@ class jAppInstance
      * return the real path of an enabled module.
      *
      * @param string $module            a module name
-     * @param bool   $includingExternal true if we want the path of a module
-     *                                  enabled in an other entry point.
+     * @param bool   $includingExternal deprecated
      *
      * @return string the corresponding path
      */
@@ -400,9 +394,6 @@ class jAppInstance
         }
 
         if (!isset($this->config->_modulesPathList[$module])) {
-            if ($includingExternal && isset($this->config->_externalModulesPathList[$module])) {
-                return $this->config->_externalModulesPathList[$module];
-            }
             throw new Exception('getModulePath : invalid module name');
         }
 
