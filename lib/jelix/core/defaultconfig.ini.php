@@ -270,6 +270,9 @@ filesDir="mails/"
 
 ; if mailer = smtp , fill the following parameters
 
+; the profile in profiles.ini.php where all smtp* parameters are stored
+smtpProfile=
+
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
 smtpHost=localhost
 ; default SMTP server port
