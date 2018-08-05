@@ -7,6 +7,9 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+use \Jelix\IniFile\IniModifier;
+
 require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
@@ -60,6 +63,8 @@ class jInstallerMigration {
             }
         }
 
+        $mainConfigIni = new IniModifier(jApp::appConfigPath('mainconfig.ini.php'));
+        $entrypointsConfigIni = array();
         // move entrypoint configs to app/config
         $projectxml = simplexml_load_file(jApp::appPath('project.xml'));
         // read all entry points data
@@ -77,22 +82,24 @@ class jInstallerMigration {
                 rename(jApp::varConfigPath($configFile), $dest);
             }
 
-            $config = parse_ini_file(jApp::appConfigPath($configFile), true);
-            if (isset($config['urlengine']['significantFile'])) {
-                $urlFile = $config['urlengine']['significantFile'];
+            $epConfigIni = new IniModifier(jApp::appConfigPath($configFile));
+            $entrypointsConfigIni[] = $epConfigIni;
+            $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
+            if ($urlFile != '') {
                 if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::varConfigPath($urlFile))) {
                     $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
                     rename(jApp::varConfigPath($urlFile), jApp::appConfigPath($urlFile));
                 }
             }
+            if ($epConfigIni->getValues('modules')) {
+                $this->reporter->message('Migrate modules section from app/config/'.$configFile.' content to mainconfig.ini.php', 'notice');
+                $this->migrateModulesSection_1_7_0($mainConfigIni, $epConfigIni);
+            }
         }
 
         // move urls.xml to app/config
-        $mainconfig = parse_ini_file(jApp::appConfigPath('mainconfig.ini.php'), true);
-        if (isset($mainconfig['urlengine']['significantFile'])) {
-            $urlFile = $mainconfig['urlengine']['significantFile'];
-        }
-        else {
+        $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
+        if ($urlFile == null) {
             $urlFile = 'urls.xml';
         }
         if (!file_exists(jApp::appConfigPath($urlFile)) && file_exists(jApp::varConfigPath($urlFile))) {
@@ -106,30 +113,42 @@ class jInstallerMigration {
         }
 
         if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
-            $profilesini = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
+            $profilesini = new IniModifier(jApp::varConfigPath('profiles.ini.php'));
             $this->migrateProfilesIni_1_7_0($profilesini);
         }
         if (file_exists(jApp::varConfigPath('profiles.ini.php.dist'))) {
-            $profilesini = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php.dist'));
+            $profilesini = new IniModifier(jApp::varConfigPath('profiles.ini.php.dist'));
             $this->migrateProfilesIni_1_7_0($profilesini);
         }
 
         // move plugin configuration file to global config
-        $this->migrateCoordPluginsConf_1_7_0(jApp::appConfigPath('mainconfig.ini.php'));
-        foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $configFile = (string)$entrypoint['config'];
-            $this->migrateCoordPluginsConf_1_7_0(jApp::appConfigPath($configFile));
+        $this->migrateCoordPluginsConf_1_7_0($mainConfigIni);
+        foreach ($entrypointsConfigIni as $epConfig) {
+            $this->migrateCoordPluginsConf_1_7_0($epConfig);
         }
-        $this->migrateCoordPluginsConf_1_7_0(jApp::varConfigPath('localconfig.ini.php'));
+
+        $localConfigPath = jApp::varConfigPath('localconfig.ini.php');
+        $localConfigIni = null;
+        if (file_exists($localConfigPath)) {
+            $localConfigIni = new IniModifier($localConfigPath);
+            $this->migrateCoordPluginsConf_1_7_0($localConfigIni);
+        }
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $configFile = (string)$entrypoint['config'];
-            $this->migrateCoordPluginsConf_1_7_0(jApp::varConfigPath($configFile));
+            $configFile = jApp::varConfigPath((string)$entrypoint['config']);
+            if (file_exists($configFile)) {
+                $localEpConfigIni = new IniModifier($configFile);
+                $this->migrateCoordPluginsConf_1_7_0($localEpConfigIni);
+                if ($localConfigIni && $localEpConfigIni->getValues('modules')) {
+                    $this->reporter->message('Migrate modules section from var/config/'.(string)$entrypoint['config'].' content to localconfig.ini.php', 'notice');
+                    $this->migrateModulesSection_1_7_0($localConfigIni, $localEpConfigIni);
+                }
+            }
         }
 
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
-    private function migrateProfilesIni_1_7_0(\Jelix\IniFile\IniModifier $profilesini) {
+    private function migrateProfilesIni_1_7_0(IniModifier $profilesini) {
         foreach ($profilesini->getSectionList() as $name) {
             // move jSoapClient classmap files
             if (strpos($name, 'jsoapclient:') === 0) {
@@ -159,8 +178,7 @@ class jInstallerMigration {
 
     protected $allPluginConfigs = array();
 
-    private function migrateCoordPluginsConf_1_7_0($configFileName) {
-        $config = new \Jelix\IniFile\IniModifier($configFileName);
+    private function migrateCoordPluginsConf_1_7_0(IniModifier $config) {
         $pluginsConf = $config->getValues('coordplugins');
         foreach($pluginsConf as $name => $conf) {
             if (strpos($name, '.') !== false) {
@@ -175,7 +193,7 @@ class jInstallerMigration {
                 if (!file_exists($confPath)) {
                     continue;
                 }
-                $ini = new \Jelix\IniFile\IniModifier($confPath);
+                $ini = new IniModifier($confPath);
                 $this->allPluginConfigs[$conf] = $ini;
             }
             else {
@@ -196,6 +214,39 @@ class jInstallerMigration {
             $config->import($ini, $name);
             $config->setValue($name, '1', 'coordplugins');
             unlink($ini->getFileName());
+        }
+    }
+
+    protected function migrateModulesSection_1_7_0(IniModifier $masterConfigIni, IniModifier $epConfigIni) {
+        $modulesParameters = $epConfigIni->getValues('modules');
+        if ($modulesParameters) {
+            $modules = array();
+            foreach($modulesParameters as $name => $value) {
+                list($module, $param) = explode('.', $name, 2);
+                if (!isset($modules[$module])) {
+                    $modules[$module] = array();
+                }
+                $modules[$module][$param] = $value;
+            }
+
+            foreach($modules as $name => $parameters) {
+                if (!isset($parameters['access']) || $parameters['access'] == 0) {
+                    continue;
+                }
+                $mainAccess = $masterConfigIni->getValue($name.'.access', 'modules');
+                if ($mainAccess === null || $mainAccess === 0) {
+                    foreach($parameters as $paramName => $paramValue) {
+                        $masterConfigIni->setValue($name.'.'.$paramName, $paramValue, 'modules');
+                    }
+                }
+                else if ($mainAccess < $parameters['access'] ) {
+                    $masterConfigIni->setValue($name.'.access', $parameters['access'], 'modules');
+                }
+            }
+
+            $epConfigIni->removeValue('', 'modules');
+            $epConfigIni->save();
+            $masterConfigIni->save();
         }
     }
 
