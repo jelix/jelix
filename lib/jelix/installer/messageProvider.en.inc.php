@@ -72,15 +72,15 @@ return array(
 
         'installer.ini.missing.version'=>'The previous version of the module %s is missing from the installer.ini.php file',
 
-        'install.entrypoint.start'  =>'Installation starts for the entry point %s',
-        'install.entrypoint.end'    =>'All modules are installed or upgraded for the entry point %s',
-        'install.entrypoint.bad.end'=>'Installation/upgrade is aborted for the entry point %s',
-        'install.entrypoint.installers.disabled'=>'Installation scripts and update scripts will not be executed: it is disabled in the configuration.',
+        'install.start'  =>'Installation starts',
+        'install.end'    =>'All modules are installed or upgraded',
+        'install.bad.end'=>'Installation/upgrade is aborted',
+        'install.installers.disabled'=>'Installation scripts and update scripts will not be executed: it is disabled in the configuration.',
 
         'install.entrypoint.wrong.config' => 'The entry point %s should have its own configuration file',
 
-        'install.dependencies.ok'   =>'All modules dependencies are ok for the entry point %s',
-        'install.bad.dependencies'  =>'Error in dependencies for the entry point %s. Installation cancelled.',
+        'install.dependencies.ok'   =>'All modules dependencies are ok',
+        'install.bad.dependencies'  =>'Error in dependencies. Installation cancelled.',
         'install.invalid.xml.file'  =>'The identity file  %s is invalid or not found',
 
         'install.module.already.installed'=>'Module %s is already installed',

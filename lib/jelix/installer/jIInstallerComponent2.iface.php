@@ -17,58 +17,52 @@ interface jIInstallerComponent2 {
 
 
     /**
-     * Called before the installation of any modules,
-     * for each entrypoints
+     * Called before the installation of any modules
      *
      * Here, you should check if the module can be installed or not
-     * for the given entry point.
      * @throws Exception if the module cannot be installed
      */
-    function preInstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
+    function preInstall();
 
     /**
-     * Should configure the module for the given entrypoint
+     * Should configure the module
      *
      * If an error occurs during the installation, you are responsible
      * to cancel/revert all things the method did before the error
      * @throws Exception  if an error occurs during the installation.
-     * @param jInstallerEntryPoint2 $entryPoint
      */
-    function installEntryPoint(jInstallerEntryPoint2 $entryPoint);
+    function install();
 
     /**
      * Redefine this method if you do some additional process after
-     * the installation of all modules for the given entrypoint
+     * the installation of all modules
      *
      * @throws Exception  if an error occurs during the post installation.
      */
-    function postInstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
+    function postInstall();
 
     /**
-     * Called before the uninstallation of all other modules for the given entry point
+     * Called before the uninstallation of all other modules
      *
      * Here, you should check if the module can be uninstalled or not
      * @throws Exception if the module cannot be uninstalled
      */
-    function preUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
+    function preUninstall();
 
     /**
-     * should unconfigure the module for the given entry point
-     *
-     * called for each entry point
+     * should unconfigure the module
      *
      * @throws Exception  if an error occurs during the uninstall.
-     * @param jInstallerEntryPoint2 $entryPoint
      */
-    function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint);
+    function uninstall();
 
     /**
      * Redefine this method if you do some additional process after
-     * the uninstallation of all modules for the given entrypoint
+     * the uninstallation of all modules
      *
      * @throws Exception  if an error occurs during the post installation.
      */
-    function postUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint);
+    function postUninstall();
 
 }
 

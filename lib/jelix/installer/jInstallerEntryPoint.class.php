@@ -132,14 +132,6 @@ class jInstallerEntryPoint {
         return $this->config->_allModulesPathList;
     }
 
-    /**
-     * @return jInstallerModuleInfos informations about a specific module used
-     * by the entry point
-     */
-    function getModuleInfos($moduleName) {
-        return new jInstallerModuleInfos($moduleName, $this->config->modules);
-    }
-
     /*
      * the static entry point config alone (in app/config)
      * @return \Jelix\IniFile\IniModifier

@@ -27,12 +27,6 @@ class jInstallerComponentModule {
     protected $name = '';
 
     /**
-     * @var string the path of the directory of the module
-     * it should be set by the constructor
-     */
-    protected $path = '';
-
-    /**
      * @var string version of the current sources of the module
      */
     protected $sourceVersion = '';
@@ -88,10 +82,10 @@ class jInstallerComponentModule {
     public $inError = 0;
 
     /**
-     * list of information about the module for each entry points
-     * @var array  key = epid,  value = jInstallerModuleInfos
+     *
+     * @var jInstallerModuleInfos
      */
-    protected $moduleInfos = array();
+    protected $moduleInfos = null;
 
     /**
      * @var jInstallerModule2|jInstallerModule
@@ -106,18 +100,17 @@ class jInstallerComponentModule {
     protected $upgradersContexts = array();
 
     /**
-     * @param string $name the name of the component
-     * @param string $path the path of the component
+     * @param jInstallerModuleInfos $moduleInfos
      * @param jInstallerGlobalSetup $globalSetup
      */
-    function __construct($name, $path, jInstallerGlobalSetup $globalSetup = null) {
-        $this->path = $path;
-        $this->name = $name;
+    function __construct(jInstallerModuleInfos $moduleInfos, jInstallerGlobalSetup $globalSetup) {
         $this->globalSetup = $globalSetup;
+        $this->moduleInfos = $moduleInfos;
+        $this->name = $moduleInfos->getName();
     }
 
     public function getName() { return $this->name; }
-    public function getPath() { return $this->path; }
+    public function getPath() { return $this->moduleInfos->getPath(); }
     public function getSourceVersion() { return $this->sourceVersion; }
     public function getSourceDate() { return $this->sourceDate; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
@@ -130,64 +123,55 @@ class jInstallerComponentModule {
         return $this->incompatibilities;
     }
 
-    /**
-     * @param jInstallerModuleInfos $module module infos
-     */
-    public function addModuleInfos ($epId, $module) {
-        $this->moduleInfos[$epId] = $module;
+    public function getAccessLevel() {
+        return $this->moduleInfos->access;
     }
 
-    public function getAccessLevel($epId) {
-        return $this->moduleInfos[$epId]->access;
+    public function isInstalled() {
+        return $this->moduleInfos->isInstalled;
     }
 
-    public function isInstalled($epId) {
-        return $this->moduleInfos[$epId]->isInstalled;
-    }
-
-    public function isUpgraded($epId) {
-        if (!$this->isInstalled($epId)) {
+    public function isUpgraded() {
+        if (!$this->isInstalled()) {
             return false;
         }
-        if ($this->moduleInfos[$epId]->version == '') {
+        if ($this->moduleInfos->version == '') {
             throw new jInstallerException("installer.ini.missing.version", array($this->name));
         }
-        return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos[$epId]->version) == 0;
+        return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos->version) == 0;
     }
 
-    public function isActivated($epId) {
-        $access = $this->moduleInfos[$epId]->access;
+    public function isActivated() {
+        $access = $this->moduleInfos->access;
         return ($access == 1 || $access ==2);
     }
 
-    public function getInstalledVersion($epId) {
-        return $this->moduleInfos[$epId]->version;
+    public function getInstalledVersion() {
+        return $this->moduleInfos->version;
     }
 
-    public function setInstalledVersion($epId, $version) {
-        $this->moduleInfos[$epId]->version = $version;
+    public function setInstalledVersion($version) {
+        $this->moduleInfos->version = $version;
     }
 
-    public function setInstallParameters($epId, $parameters) {
-        $this->moduleInfos[$epId]->parameters = $parameters;
+    public function setInstallParameters($parameters) {
+        $this->moduleInfos->parameters = $parameters;
     }
 
-    public function getInstallParameters($epId) {
-        return $this->moduleInfos[$epId]->parameters;
+    public function getInstallParameters() {
+        return $this->moduleInfos->parameters;
     }
 
     /**
      * Sets the access parameter in the right configuration file
-     *
-     * @param jInstallerEntryPoint2 $ep
      */
-    protected function _setAccess(jInstallerEntryPoint2 $ep)
+    protected function _setAccess()
     {
-        $config = $ep->getLiveConfigIni();
+        $config = $this->globalSetup->getLiveConfigIni();
         $accessLocal =   $config['local']->getValue($this->name . '.access', 'modules');
         $accessMain =    $config['main']->getValue($this->name . '.access', 'modules');
 
-        $action = $this->getInstallAction($ep->getEpId());
+        $action = $this->getInstallAction();
 
         if ($action == Resolver::ACTION_INSTALL) {
             if ($accessLocal == 1 ||
@@ -224,37 +208,34 @@ class jInstallerComponentModule {
     /**
      * instancies the object which is responsible to install the module
      *
-     * @param jInstallerEntryPoint2 $ep the entry point
      * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent|jIInstallerComponent2|null|false the installer, or null
      *          if there isn't any installer
      *         or false if the installer is useless for the given parameter
      * @throws jInstallerException when install class not found
      */
-    function getInstaller(jInstallerEntryPoint2 $ep, $installWholeApp) {
+    function getInstaller($installWholeApp) {
 
-        $this->_setAccess($ep);
+        $this->_setAccess();
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
             return null;
         }
 
-        $epId = $ep->getEpId();
-
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->path.'install/install.php') || $this->moduleInfos[$epId]->skipInstaller) {
+            if (!file_exists($this->moduleInfos->getPath().'install/install.php') || $this->moduleInfos->skipInstaller) {
                 $this->moduleInstaller = false;
                 return null;
             }
-            require_once($this->path.'install/install.php');
+            require_once($this->moduleInfos->getPath().'install/install.php');
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname)) {
                 throw new jInstallerException("module.installer.class.not.found", array($cname, $this->name));
             }
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
-                                                $this->path,
+                                                $this->moduleInfos->getPath(),
                                                 $this->sourceVersion,
                                                 $installWholeApp
                                                 );
@@ -267,33 +248,29 @@ class jInstallerComponentModule {
         return $this->moduleInstaller;
     }
 
-    public function setAsCurrentModuleInstaller(jInstallerEntryPoint2 $ep)
+    public function setAsCurrentModuleInstaller(jInstallerEntryPoint2 $mainEntryPoint)
     {
         if (!$this->moduleInstaller) {
             return;
         }
-        $epId = $ep->getEpId();
-        $this->moduleInstaller->setParameters($this->moduleInfos[$epId]->parameters);
-        $sparam = $ep->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
+        $this->moduleInstaller->setParameters($this->moduleInfos->parameters);
+        $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         if ($sparam === null) {
             $sparam = '';
         }
 
-        $sp = $this->moduleInfos[$epId]->serializeParameters();
+        $sp = $this->moduleInfos->serializeParameters();
         if ($sparam != $sp) {
-            $ep->getLocalConfigIni()->setValue($this->name.'.installparam', $sp, 'modules');
+            $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
         }
-
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
-            $legacyEp = $ep->getLegacyInstallerEntryPoint();
+            $legacyEp = $mainEntryPoint->getLegacyInstallerEntryPoint();
             $this->moduleInstaller->setEntryPoint($legacyEp,
-                $this->moduleInfos[$epId]->dbProfile);
+                $this->moduleInfos->dbProfile);
         }
         else {
-            $ep->_setCurrentModuleInstaller($this->moduleInstaller);
-            $this->moduleInstaller->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+            $this->moduleInstaller->initDbProfile($this->moduleInfos->dbProfile);
         }
-
     }
 
 
@@ -305,20 +282,17 @@ class jInstallerComponentModule {
      * dependencies. Needed modules should be
      * installed/upgraded before calling this method
      *
-     * @param jInstallerEntryPoint2 $ep the entry point
      * @return jIInstallerComponent[]|jIInstallerComponent2[]
      * @throws jInstallerException  if an error occurs during the install.
      */
-    function getUpgraders(jInstallerEntryPoint2 $ep) {
-
-        $epId = $ep->getEpId();
+    function getUpgraders() {
 
         if ($this->moduleUpgraders === null) {
 
             $this->moduleUpgraders = array();
 
-            $p = $this->path.'install/';
-            if (!file_exists($p)  || $this->moduleInfos[$epId]->skipInstaller) {
+            $p = $this->moduleInfos->getPath().'install/';
+            if (!file_exists($p)  || $this->moduleInfos->skipInstaller) {
                 return array();
             }
 
@@ -351,7 +325,7 @@ class jInstallerComponentModule {
 
                 $upgrader = new $cname($this->name,
                                         $fileInfo[2],
-                                        $this->path,
+                                        $this->moduleInfos->getPath(),
                                         $fileInfo[1],
                                         false);
 
@@ -368,7 +342,7 @@ class jInstallerComponentModule {
             }
         }
 
-        if (count($this->moduleUpgraders) && $this->moduleInfos[$epId]->version == '') {
+        if (count($this->moduleUpgraders) && $this->moduleInfos->version == '') {
             throw new jInstallerException("installer.ini.missing.version", array($this->name));
         }
 
@@ -379,7 +353,7 @@ class jInstallerComponentModule {
             $foundVersion = '';
             // check the version
             foreach($upgrader->targetVersions as $version) {
-                if (VersionComparator::compareVersion($this->moduleInfos[$epId]->version, $version) >= 0 ) {
+                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
@@ -396,24 +370,24 @@ class jInstallerComponentModule {
 
             $upgrader->version = $foundVersion;
 
-            // we have to check now the date of versions
+            // we have to check the date of versions
             // we should not execute the updater in some case.
             // for example, we have an updater for the 1.2 and 2.3 version
             // we have the 1.4 installed, and want to upgrade to the 2.5 version
             // we should not execute the update for 2.3 since modifications have already been
             // made into the 1.4. The only way to now that, is to compare date of versions
-            if ($upgrader->date != '' && $this->globalSetup) {
+            if ($upgrader->date != '') {
                 $upgraderDate = $this->_formatDate($upgrader->date);
 
                 // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.firstversion.date', $epId));
+                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.firstversion.date', 'modules'));
                 if ($firstVersionDate !== null) {
                     if ($firstVersionDate >= $upgraderDate)
                         continue;
                 }
 
                 // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.version.date', $epId));
+                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.version.date', 'modules'));
                 if ($currentVersionDate !== null) {
                     if ($currentVersionDate >= $upgraderDate)
                         continue;
@@ -433,35 +407,30 @@ class jInstallerComponentModule {
         return $list;
     }
 
-    public function setAsCurrentModuleUpgrader($upgrader, jInstallerEntryPoint2 $ep) {
-        $epId = $ep->getEpId();
-        $upgrader->setParameters($this->moduleInfos[$epId]->parameters);
+    public function setAsCurrentModuleUpgrader($upgrader, jInstallerEntryPoint2 $mainEntryPoint) {
+        $upgrader->setParameters($this->moduleInfos->parameters);
 
         if ($upgrader instanceof jIInstallerComponent) {
-            $legacyEp = $ep->getLegacyInstallerEntryPoint();
+            $legacyEp = $mainEntryPoint->getLegacyInstallerEntryPoint();
             $upgrader->setEntryPoint($legacyEp,
-                $this->moduleInfos[$epId]->dbProfile);
+                $this->moduleInfos->dbProfile);
         }
         else {
-            $ep->_setCurrentModuleInstaller($upgrader);
-            $upgrader->initDbProfileForEntrypoint($this->moduleInfos[$epId]->dbProfile);
+            $upgrader->initDbProfile($this->moduleInfos->dbProfile);
         }
     }
 
-
-    public function installEntryPointFinished(jInstallerEntryPoint2 $ep) {
-        if ($this->globalSetup)
-            $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
+    public function installFinished() {
+        $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
     }
 
-    public function upgradeEntryPointFinished(jInstallerEntryPoint2 $ep, $upgrader) {
+    public function upgradeFinished($upgrader) {
         $class = get_class($upgrader);
         $this->upgradersContexts[$class] = $upgrader->getContexts();
     }
 
-    public function uninstallEntryPointFinished(jInstallerEntryPoint2 $ep) {
-        if ($this->globalSetup)
-            $this->globalSetup->removeInstallerContexts($this->name);
+    public function uninstallFinished() {
+        $this->globalSetup->removeInstallerContexts($this->name);
     }
 
     protected function _formatDate($date) {
@@ -495,13 +464,13 @@ class jInstallerComponentModule {
      * @param bool $installedByDefault
      * @return Item
      */
-    public function getResolverItem($epId) {
-        $action = $this->getInstallAction($epId);
+    public function getResolverItem() {
+        $action = $this->getInstallAction();
         if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos[$epId]->version);
+            $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
         }
         else {
-            $item = new Item($this->name, $this->isInstalled($epId), $this->sourceVersion, $action);
+            $item = new Item($this->name, $this->isInstalled(), $this->sourceVersion, $action);
         }
 
         foreach($this->dependencies as $dep) {
@@ -524,17 +493,17 @@ class jInstallerComponentModule {
         return $item;
     }
 
-    protected function getInstallAction($epId) {
-        if ($this->isInstalled($epId)) {
-            if (!$this->isActivated($epId)) {
+    protected function getInstallAction() {
+        if ($this->isInstalled()) {
+            if (!$this->isActivated()) {
                 return Resolver::ACTION_REMOVE;
             }
-            elseif ($this->isUpgraded($epId)) {
+            elseif ($this->isUpgraded()) {
                 return Resolver::ACTION_NONE;
             }
             return Resolver::ACTION_UPGRADE;
         }
-        elseif ($this->isActivated($epId)) {
+        elseif ($this->isActivated()) {
             return Resolver::ACTION_INSTALL;
         }
         return Resolver::ACTION_NONE;
@@ -547,8 +516,8 @@ class jInstallerComponentModule {
     protected function readIdentity() {
         $xmlDescriptor = new DOMDocument();
 
-        if(!$xmlDescriptor->load($this->path.$this->identityFile)){
-            throw new jInstallerException('install.invalid.xml.file',array($this->path.$this->identityFile));
+        if(!$xmlDescriptor->load($this->moduleInfos->getPath().$this->identityFile)){
+            throw new jInstallerException('install.invalid.xml.file',array($this->moduleInfos->getPath().$this->identityFile));
         }
 
         $root = $xmlDescriptor->documentElement;

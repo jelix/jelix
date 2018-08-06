@@ -20,65 +20,44 @@
 class jInstallerModule2 implements jIInstallerComponent2 {
 
     /**
-     * Called before the installation of any modules,
-     * for each entrypoints, and after preInstallGlobal()
-     *
-     * Here, you should check if the module can be installed or not
-     * for the given entry point.
-     * @throws Exception if the module cannot be installed
+     * @inheritdoc
      */
-    function preInstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+    function preInstall() {
 
     }
 
     /**
-     * Should configure the module for the given entrypoint
-     *
-     * If an error occurs during the installation, you are responsible
-     * to cancel/revert all things the method did before the error
-     * @throws Exception  if an error occurs during the installation.
-     * @param jInstallerEntryPoint2 $entryPoint
+     * @inheritdoc
      */
-    function installEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+    function install() {
 
     }
 
     /**
-     * Redefine this method if you do some additional process after
-     * the installation of all modules for the given entrypoint for
-     *
-     * @throws Exception  if an error occurs during the post installation.
+     * @inheritdoc
      */
-    function postInstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+    function postInstall() {
 
     }
 
     /**
-     * Called before the uninstallation of all other modules for the given entry point
-     *
-     * Here, you should check if the module can be uninstalled or not
-     * @throws Exception if the module cannot be uninstalled
+     * @inheritdoc
      */
-    function preUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+    function preUninstall() {
 
     }
 
     /**
-     * should unconfigure the module for the given entry point
-     *
-     * called for each entry point
-     *
-     * @throws Exception  if an error occurs during the uninstall.
-     * @param jInstallerEntryPoint2 $entryPoint
+     * @inheritdoc
      */
-    function uninstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function uninstall() {
 
     }
 
     /**
-     * @param jInstallerEntryPoint2 $entryPoint
+     * @inheritdoc
      */
-    function postUninstallEntryPoint(jInstallerEntryPoint2 $entryPoint) {
+    function postUninstall() {
 
     }
 
@@ -218,7 +197,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      */
-    public function initDbProfileForEntrypoint($dbProfile) {
+    public function initDbProfile($dbProfile) {
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
         }
@@ -241,8 +220,9 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         // we check if it is an alias
         if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
             $dbprofiles = parse_ini_file(jApp::varConfigPath('profiles.ini.php'));
-            if (isset($dbprofiles['jdb'][$dbProfile]))
+            if (isset($dbprofiles['jdb'][$dbProfile])) {
                 $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
+            }
         }
 
         $this->_dbConn = null; // we force to retrieve a db connection
@@ -338,21 +318,9 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      */
     final protected function execSQLScript ($name, $inTransaction = true)
     {
-        $this->_execSQLScript($name, $this->path, $inTransaction);
-    }
-
-    /**
-     * @param string $name
-     * @param string $modulePath
-     * @param bool $inTransaction
-     * @throws Exception
-     * @internal
-     */
-    public function _execSQLScript ($name, $modulePath, $inTransaction = true) {
-
         $conn = $this->dbConnection();
         $tools = $this->dbTool();
-        $file = $modulePath.'install/'.$name;
+        $file = $this->path.'install/'.$name;
         if (substr($name, -4) != '.sql')
             $file .= '.'.$conn->dbms.'.sql';
 
@@ -382,7 +350,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     final protected function insertDaoData($relativeSourcePath, $option, $module = null) {
 
         if ($module) {
-            $conf = $this->entryPoint->config->_modulesPathList;
+            $conf = $this->globalSetup->getMainEntryPoint()->getModulesList();
             if (!isset($conf[$module])) {
                 throw new Exception('insertDaoData : invalid module name');
             }

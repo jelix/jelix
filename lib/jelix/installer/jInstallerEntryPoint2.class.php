@@ -3,7 +3,7 @@
  * @package     jelix
  * @subpackage  installer
  * @author      Laurent Jouanneau
- * @copyright   2009-2017 Laurent Jouanneau
+ * @copyright   2009-2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -81,11 +81,6 @@ class jInstallerEntryPoint2
     protected $globalSetup;
 
     /**
-     * @var jInstallerModule2
-     */
-    protected $moduleInstaller;
-
-    /**
      * @param jInstallerGlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
@@ -126,15 +121,6 @@ class jInstallerEntryPoint2
 
         $this->urlMap = $globalSetup->getUrlModifier()
             ->addEntryPoint($this->getEpId(), $type);
-    }
-
-    /**
-     * @param jIInstallerComponent2 $installer
-     * @access private
-     */
-    public function _setCurrentModuleInstaller(jIInstallerComponent2 $installer)
-    {
-        $this->moduleInstaller = $installer;
     }
 
     protected $legacyInstallerEntryPoint = null;
@@ -189,14 +175,6 @@ class jInstallerEntryPoint2
         return $this->config->_allModulesPathList;
     }
 
-    /**
-     * @return jInstallerModuleInfos informations about a specific module used
-     * by the entry point
-     */
-    function getModuleInfos($moduleName)
-    {
-        return new jInstallerModuleInfos($moduleName, $this->config->modules);
-    }
 
     /**
      * the full original configuration of the entry point
@@ -279,37 +257,5 @@ class jInstallerEntryPoint2
     public function declareWebAssets($name, array $values, $collection, $force)
     {
         $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
-    }
-
-    /**
-     *
-     */
-    public function firstConfExec()
-    {
-        $config = $this->getConfigFile();
-        return $this->moduleInstaller->firstExec('cf:' . $config);
-    }
-
-    /**
-     * import a sql script into the current profile.
-     *
-     * The name of the script should be store in install/$name.databasetype.sql
-     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
-     * You can however provide a script compatible with all databases, but then
-     * you should indicate the full name of the script, with a .sql extension.
-     *
-     * @param string $name the name of the script
-     * @param string $module the module from which we should take the sql file.
-     * @param boolean $inTransaction indicate if queries should be executed inside a transaction
-     * @throws Exception
-     */
-    public function execSQLScript($name, $module, $inTransaction = true)
-    {
-        $conf = $this->getConfigObj()->_modulesPathList;
-        if (!isset($conf[$module])) {
-            throw new Exception('execSQLScript : invalid module name');
-        }
-        $path = $conf[$module];
-        $this->moduleInstaller->_execSQLScript($name, $path, $inTransaction);
     }
 }

@@ -52,7 +52,7 @@ class jInstallerApplication {
         }
 
         if (!$globalSetup) {
-            $globalSetup = new jInstallerGlobalSetup();
+            $globalSetup = new jInstallerGlobalSetup($this->projectXmlFilename);
         }
         $this->globalSetup = $globalSetup;
 

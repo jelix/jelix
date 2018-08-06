@@ -194,12 +194,20 @@ class jInstallerModule implements jIInstallerComponent {
     public function setEntryPoint(jInstallerEntryPoint $ep, $dbProfile) {
         $this->entryPoint = $ep;
         $this->config = $ep->configIni;
+        $this->initDbProfile($dbProfile);
+    }
 
+    /**
+     * internal use
+     * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
+     */
+    public function initDbProfile($dbProfile) {
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
         }
-        else
+        else {
             $this->useDbProfile($dbProfile);
+        }
     }
 
     /**

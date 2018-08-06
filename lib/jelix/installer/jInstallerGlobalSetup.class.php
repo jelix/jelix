@@ -41,17 +41,50 @@ class jInstallerGlobalSetup {
      */
     protected $installerIni = null;
 
+
+    /**
+     * list of entry point and their properties
+     * @var jInstallerEntryPoint2[]  keys are entry point id.
+     */
+    protected $entryPoints = array();
+
+    /**
+     * @var jInstallerEntryPoint2
+     */
+    protected $mainEntryPoint = null;
+
+    /**
+     * list of entry point identifiant (provided by the configuration compiler).
+     * identifiant of the entry point is the path+filename of the entry point
+     * without the php extension
+     * @var array   key=entry point name, value=url id
+     */
+    protected $epId = array();
+
+    /**
+     * list of modules for each entry point
+     * @var jInstallerComponentModule[] key: module name
+     */
+    protected $modules = array();
+
+
     /**
      * jInstallerGlobalSetup constructor.
+     * @param string|null $projectXmlFileName
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
      * @param string|null $urlXmlFileName
      */
-    function __construct($mainConfigFileName = null,
-                         $localConfigFileName = null,
-                         $urlXmlFileName = null)
+    function __construct(
+        $projectXmlFileName = null,
+        $mainConfigFileName = null,
+        $localConfigFileName = null,
+        $urlXmlFileName = null)
     {
 
+        if (!$projectXmlFileName) {
+            $projectXmlFileName = jApp::appPath('project.xml');
+        }
 
         if (!$mainConfigFileName) {
             $mainConfigFileName = jApp::mainConfigFile();
@@ -94,9 +127,129 @@ class jInstallerGlobalSetup {
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
+        $this->readEntryPointData(simplexml_load_file($projectXmlFileName));
+        $this->readModuleInfos();
+
         // be sure temp path is ready
         $chmod = $this->configIni->getValue('chmodDir');
         jFile::createDir(jApp::tempPath(), intval($chmod, 8));
+    }
+
+    /**
+     * read the list of entrypoint from the project.xml file
+     * and read all modules data used by each entry point
+     * @param SimpleXmlElement $xml
+     */
+    protected function readEntryPointData($xml) {
+
+        $configFileList = array();
+
+        // read all entry points data
+        foreach ($xml->entrypoints->entry as $entrypoint) {
+
+            $file = (string)$entrypoint['file'];
+            $configFile = (string)$entrypoint['config'];
+            if (isset($entrypoint['type'])) {
+                $type = (string)$entrypoint['type'];
+            }
+            else {
+                $type = "classic";
+            }
+
+            // ignore entry point which have the same config file of an other one
+            // FIXME: what about installer.ini ?
+            if (isset($configFileList[$configFile]))
+                continue;
+
+            $configFileList[$configFile] = true;
+
+            // we create an object corresponding to the entry point
+            $ep = $this->createEntryPointObject($configFile, $file, $type);
+            $epId = $ep->getEpId();
+
+            if (!$this->mainEntryPoint || $epId == 'index') {
+                $this->mainEntryPoint = $ep;
+            }
+
+            $this->epId[$file] = $epId;
+            $this->entryPoints[$epId] = $ep;
+        }
+    }
+
+    /**
+     * @internal for tests
+     */
+    protected function createEntryPointObject($configFile, $file, $type) {
+        return new jInstallerEntryPoint2($this, $configFile, $file, $type);
+    }
+
+    protected function readModuleInfos() {
+        // now let's read all modules properties
+        $modulesList = $this->mainEntryPoint->getModulesList();
+
+        foreach ($modulesList as $name=>$path) {
+
+            $compModule = $this->createComponentModule($name, $path);
+            $this->modules[$name] = $compModule;
+
+            $compModule->init();
+
+            $this->installerIni->setValue($name.'.installed', $compModule->isInstalled(), 'modules');
+            $this->installerIni->setValue($name.'.version', $compModule->getInstalledVersion(), 'modules');
+        }
+
+        // remove informations about modules that don't exist anymore
+        $modules = $this->installerIni->getValues('modules');
+        foreach($modules as $key=>$value) {
+            $l = explode('.', $key);
+            if (count($l)<=1) {
+                continue;
+            }
+            if (!isset($modulesList[$l[0]])) {
+                $this->installerIni->removeValue($key, 'modules');
+            }
+        }
+        $this->installerIni->save();
+    }
+
+
+    /**
+     * @internal for tests
+     * @return jInstallerComponentModule
+     */
+    protected function createComponentModule($name, $path) {
+        $moduleSetupList = $this->localConfigIni->getValues('modules');
+        $moduleInfos = new jInstallerModuleInfos($name, $path, $moduleSetupList);
+        return new jInstallerComponentModule($moduleInfos, $this);
+    }
+
+    /**
+     * @param string $name
+     * @return jInstallerComponentModule|null
+     */
+    public function getModuleComponent($name) {
+        if (isset($this->modules[$name])) {
+            return $this->modules[$name];
+        }
+        return null;
+    }
+
+    public function getModuleComponentsList() {
+        return $this->modules;
+    }
+
+    /**
+     * @return jInstallerEntryPoint2
+     */
+    public function getMainEntryPoint() {
+        return $this->mainEntryPoint;
+    }
+
+    /**
+     * @return jInstallerEntryPoint2[]
+     */
+    public function getEntryPointList() {
+        return $this->entryPoints;
     }
 
     /**
@@ -200,6 +353,10 @@ class jInstallerGlobalSetup {
         $doc->save(jApp::appPath('project.xml'));
     }
 
+    /**
+     * @return DOMDocument
+     * @throws Exception
+     */
     protected function loadProjectXml() {
         $doc = new \DOMDocument();
         if (!$doc->load(jApp::appPath('project.xml'))) {
