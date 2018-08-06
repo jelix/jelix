@@ -472,12 +472,12 @@ class jInstaller {
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
                         $installerIni->setValue($component->getName().'.version',
-                            $upgrader->version, 'modules');
+                            $upgrader->getVersion(), 'modules');
                         $installerIni->setValue($component->getName().'.version.date',
-                            $upgrader->date, 'modules');
+                            $upgrader->getDate(), 'modules');
                         $this->ok('install.module.upgraded',
-                            array($component->getName(), $upgrader->version));
-                        $lastversion = $upgrader->version;
+                            array($component->getName(), $upgrader->getVersion()));
+                        $lastversion = $upgrader->getVersion();
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.

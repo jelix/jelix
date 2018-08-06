@@ -224,15 +224,20 @@ class jInstallerComponentModule {
         }
 
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->moduleInfos->getPath().'install/install.php') || $this->moduleInfos->skipInstaller) {
+            if (!file_exists($this->moduleInfos->getPath().'install/install.php') ||
+                $this->moduleInfos->skipInstaller
+            ) {
                 $this->moduleInstaller = false;
                 return null;
             }
+
             require_once($this->moduleInfos->getPath().'install/install.php');
+
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname)) {
                 throw new jInstallerException("module.installer.class.not.found", array($cname, $this->name));
             }
+
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
                                                 $this->moduleInfos->getPath(),
@@ -331,10 +336,10 @@ class jInstallerComponentModule {
                                         $fileInfo[1],
                                         false);
 
-                if ($fileInfo[1] && count($upgrader->targetVersions) == 0) {
-                    $upgrader->targetVersions = array($fileInfo[1]);
+                if ($fileInfo[1] && count($upgrader->getTargetVersions()) == 0) {
+                    $upgrader->setTargetVersions(array($fileInfo[1]));
                 }
-                if (count($upgrader->targetVersions) == 0) {
+                if (count($upgrader->getTargetVersions()) == 0) {
                     throw new jInstallerException("module.upgrader.missing.version",array($fileInfo[0], $this->name));
                 }
                 $this->moduleUpgraders[] = $upgrader;
@@ -354,7 +359,7 @@ class jInstallerComponentModule {
 
             $foundVersion = '';
             // check the version
-            foreach($upgrader->targetVersions as $version) {
+            foreach($upgrader->getTargetVersions() as $version) {
                 if (VersionComparator::compareVersion($this->moduleInfos->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
@@ -370,7 +375,7 @@ class jInstallerComponentModule {
             if (!$foundVersion)
                 continue;
 
-            $upgrader->version = $foundVersion;
+            $upgrader->setVersion($foundVersion);
 
             // we have to check the date of versions
             // we should not execute the updater in some case.
@@ -378,8 +383,8 @@ class jInstallerComponentModule {
             // we have the 1.4 installed, and want to upgrade to the 2.5 version
             // we should not execute the update for 2.3 since modifications have already been
             // made into the 1.4. The only way to now that, is to compare date of versions
-            if ($upgrader->date != '') {
-                $upgraderDate = $this->_formatDate($upgrader->date);
+            if ($upgrader->getDate() != '') {
+                $upgraderDate = $this->_formatDate($upgrader->getDate());
 
                 // the date of the first version installed into the application
                 $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.firstversion.date', 'modules'));
@@ -406,7 +411,7 @@ class jInstallerComponentModule {
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
         usort($list, function ($upgA, $upgB) {
-                return VersionComparator::compareVersion($upgA->version, $upgB->version);
+                return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
         });
         return $list;
     }

@@ -69,7 +69,7 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     /**
      * @var string name of the installer
      */
-    public $name;
+    protected $name;
 
     /**
      * the versions for which the installer should be called.
@@ -81,18 +81,18 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @var array $targetVersions list of version by asc order
      * @since 1.2.6
      */
-    public $targetVersions = array();
+    protected $targetVersions = array();
 
     /**
      * @var string the date of the release of the update. format: yyyy-mm-dd hh:ii
      * @since 1.2.6
      */
-    public $date = '';
+    protected $date = '';
 
     /**
      * @var string the version for which the installer is called
      */
-    public $version = '0';
+    protected $version = '0';
 
     /**
      * global setup
@@ -149,6 +149,31 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         $this->name = $name;
         $this->componentName = $componentName;
         $this->installWholeApp = $installWholeApp;
+    }
+
+    function getName() {
+        return $this->name;
+    }
+
+
+    function getTargetVersions() {
+        return $this->targetVersions;
+    }
+
+    function setTargetVersions($versions) {
+        $this->targetVersions = $versions;
+    }
+
+    function getDate() {
+        return $this->date;
+    }
+
+    function getVersion() {
+        return $this->version;
+    }
+
+    function setVersion($version) {
+        $this->version = $version;
     }
 
     function setParameters($parameters) {

@@ -179,6 +179,31 @@ class jInstallerModule implements jIInstallerComponent {
             return null;
     }
 
+    function getName() {
+        return $this->name;
+    }
+
+
+    function getTargetVersions() {
+        return $this->targetVersions;
+    }
+
+    function setTargetVersions($versions) {
+        $this->targetVersions = $versions;
+    }
+
+    function getDate() {
+        return $this->date;
+    }
+
+    function getVersion() {
+        return $this->version;
+    }
+
+    function setVersion($version) {
+        $this->version = $version;
+    }
+
     /**
      * @var jDbConnection
      */
