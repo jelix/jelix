@@ -145,6 +145,50 @@ class jInstallerMigration {
             }
         }
 
+        // migrate installer.ini
+        $installerIni = new IniModifier(jApp::varConfigPath('installer.ini.php'));
+        if (!$installerIni->isSection('modules')) {
+            $this->reporter->message('Migrate var/config/installer.ini.php content', 'notice');
+            $allModules = array();
+            foreach ($installerIni->getSectionList() as $section) {
+                if ($section == '__modules_data') {
+                    continue;
+                }
+                $modules = array();
+                foreach ($installerIni->getValues($section) as $name => $value) {
+                    list($module, $param) = explode('.', $name, 2);
+                    if (!isset($modules[$module])) {
+                        $modules[$module] = array();
+                    }
+                    $modules[$module][$param] = $value;
+                }
+
+                foreach ($modules as $module => $params) {
+                    if (
+                        isset($allModules[$module]) ||
+                        !isset($params['installed']) ||
+                        $params['installed'] == 0
+                    ) {
+                        continue;
+                    }
+                    $allModules[$module] = $params;
+                }
+            }
+
+            foreach ($allModules as $module => $params) {
+                foreach ($params as $name => $value) {
+                    $installerIni->setValue($module . '.' . $name, $value, 'modules');
+                }
+            }
+            foreach ($installerIni->getSectionList() as $section) {
+                if ($section == '__modules_data' || $section == 'modules') {
+                    continue;
+                }
+                $installerIni->removeValue('', $section);
+            }
+            $installerIni->save();
+        }
+
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
