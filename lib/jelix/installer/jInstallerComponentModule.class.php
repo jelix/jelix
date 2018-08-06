@@ -244,7 +244,9 @@ class jInstallerComponentModule {
             }
         }
 
-        $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
+        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+            $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
+        }
         return $this->moduleInstaller;
     }
 
@@ -397,7 +399,9 @@ class jInstallerComponentModule {
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-            $upgrader->setContext($this->upgradersContexts[$class]);
+            if ($this->moduleInstaller instanceof jIInstallerComponent) {
+                $upgrader->setContext($this->upgradersContexts[$class]);
+            }
             $list[] = $upgrader;
         }
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
@@ -421,12 +425,20 @@ class jInstallerComponentModule {
     }
 
     public function installFinished() {
-        $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
+        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+            $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
+        }
+        else {
+            // remove legacy contexts
+            $this->globalSetup->removeInstallerContexts($this->name);
+        }
     }
 
     public function upgradeFinished($upgrader) {
-        $class = get_class($upgrader);
-        $this->upgradersContexts[$class] = $upgrader->getContexts();
+        if ($upgrader instanceof jIInstallerComponent) {
+            $class = get_class($upgrader);
+            $this->upgradersContexts[$class] = $upgrader->getContexts();
+        }
     }
 
     public function uninstallFinished() {

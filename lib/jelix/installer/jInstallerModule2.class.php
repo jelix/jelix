@@ -228,55 +228,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         $this->_dbConn = null; // we force to retrieve a db connection
     }
 
-    protected $contextId = array();
-
-    protected $newContextId = array();
-
-    /**
-     * @param array $contexts  list of contexts already executed
-     */
-    public function setContext($contexts) {
-        $this->contextId = $contexts;
-        $this->newContextId = array();
-    }
-
-    /**
-     *
-     */
-    public function firstExec($contextId) {
-        if (in_array($contextId, $this->contextId)) {
-            return false;
-        }
-
-        if (!in_array($contextId, $this->newContextId)) {
-            $this->newContextId[] = $contextId;
-        }
-        return true;
-    }
-
-    /**
-     *
-     */
-    protected function firstDbExec($profile = '') {
-        if ($profile == '')
-            $profile = $this->dbProfile;
-        return $this->firstExec('db:'.$profile);
-    }
-
-    /**
-     *
-     */
-    protected function firstConfExec($config) {
-        return $this->firstExec('cf:'.$config);
-    }
-
-    /**
-     *
-     */
-    public function getContexts() {
-        return array_unique(array_merge($this->contextId, $this->newContextId));
-    }
-
     /**
      * @return jDbTools  the tool class of jDb
      */
