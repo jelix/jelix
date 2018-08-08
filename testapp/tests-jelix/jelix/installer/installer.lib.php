@@ -14,10 +14,76 @@ require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
 class testInstallerGlobalSetup extends jInstallerGlobalSetup {
 
+    public $configContent = array();
+
+    function __construct ($projectXmlFileName = null,
+                          $mainConfigFileName = null,
+                          $localConfigFileName = null,
+                          $urlXmlFileName = null
+    ) {
+        foreach(array(
+            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline'
+                ) as $epName
+        ) {
+            $this->configContent[$epName.'/config.ini.php'] = array(
+                'dbProfils'=>"default",
+                "disableInstallers"=>false,
+                "enableAllModules"=>false,
+                'modules'=>array(
+                ),
+                'urlengine'=>array('urlScriptId'=>$epName,
+                    'urlScript'=>"/$epName.php",
+                    'urlScriptPath'=>"/",
+                    'urlScriptName'=>"$epName.php",
+                    'urlScriptId'=>"$epName",
+                    'urlScriptIdenc'=>"$epName"
+                ),
+                '_allModulesPathList'=>array(
+                ),
+                '_allBasePath'=>array(
+                    0=>"/app/lib/jelix-modules/",
+                    1=>"/app/testapp/modules/",
+                    2=>"/app/lib/jelix-plugins/cache/",
+                ),
+                '_modulesPathList'=>array(
+                ),
+            );
+        }
+        parent::__construct($projectXmlFileName,
+            $mainConfigFileName,
+            $localConfigFileName,
+            $urlXmlFileName
+        );
+
+    }
+
+
     function setInstallerIni($installerIni) {
         $this->installerIni = $installerIni;
     }
 
+    function setProjectXml($projectXml) {
+        $this->readEntryPointData(simplexml_load_string($projectXml));
+        $this->readModuleInfos();
+    }
+
+    protected function createEntryPointObject($configFile, $file, $type) {
+        return new testInstallerEntryPoint($this,
+            $configFile, $file, $type,
+            (object) $this->configContent[$configFile]);
+    }
+
+    protected function createComponentModule($name, $path) {
+        $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
+        $moduleInfos = new jInstallerModuleInfos($name, $path, $moduleSetupList);
+
+        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
+            return new jInstallerComponentModule($moduleInfos, $this);
+        }
+        else {
+            return new testInstallerComponentModule($moduleInfos, $this);
+        }
+    }
 }
 
 
@@ -114,50 +180,24 @@ class testInstallerMain extends jInstaller {
 
     public $moduleXMLDesc = array();
 
-    public $configContent = array(
-        'index/config.ini.php'=> array(
-            'dbProfils'=>"default",
-            "disableInstallers"=>false,
-            "enableAllModules"=>false,
-            'modules'=>array(
-            ),
-            'urlengine'=>array('urlScriptId'=>'index',
-                'urlScript'=>"/index.php",
-                'urlScriptPath'=>"/",
-                'urlScriptName'=>"index.php",
-                'urlScriptId'=>"index",
-                'urlScriptIdenc'=>"index"
-            ),
-            '_allModulesPathList'=>array(
-            ),
-            '_allBasePath'=>array(
-                0=>"/app/lib/jelix-modules/",
-                1=>"/app/testapp/modules/",
-                2=>"/app/lib/jelix-plugins/cache/",
-            ),
-            '_modulesPathList'=>array(
-            ),
-        ),
-    );
-
     function __construct ($reporter) {
         $this->reporter = $reporter;
 
         copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
-        $this->globalSetup = new testInstallerGlobalSetup(null, null, jApp::tempPath('installer_urls.xml'));
+        $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
         $config = jApp::config();
-        foreach ($this->configContent as $ep=>$conf) {
+        foreach ($this->globalSetup->configContent as $ep=>$conf) {
             
             foreach($nativeModules as $module) {
-                $this->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
-                $this->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
-                $this->configContent[$ep]['modules'][$module.'.installed'] = 0;
-                $this->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
-                $this->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
-                $this->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.installed'] = 0;
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
+                $this->globalSetup->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
+                $this->globalSetup->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
             }
         }
 
@@ -165,13 +205,13 @@ class testInstallerMain extends jInstaller {
 
     function testAddModule($name, $moduleXML, $access = 2, $installed = 0, $version = '1.0', $dbprofile='default') {
         $this->moduleXMLDesc[$name] = $moduleXML;
-        foreach($this->configContent as $ep=>$conf) {
-            $this->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->configContent[$ep]['modules'][$name.'.access'] = $access;
-            $this->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
-            $this->configContent[$ep]['modules'][$name.'.installed'] = $installed;
-            $this->configContent[$ep]['modules'][$name.'.version'] = $version;
+        foreach($this->globalSetup->configContent as $ep=>$conf) {
+            $this->globalSetup->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
+            $this->globalSetup->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.access'] = $access;
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;
         }   
     }
 
@@ -194,23 +234,7 @@ class testInstallerMain extends jInstaller {
 </project>';
 
         $this->globalSetup->setInstallerIni(new testInstallerIniFileModifier(''));
-        $this->readEntryPointData(simplexml_load_string($projectXml));
+        $this->globalSetup->setProjectXml($projectXml);
         $this->globalSetup->getInstallerIni()->save();
     }
-
-    protected function getEntryPointObject($configFile, $file, $type) {
-        return new testInstallerEntryPoint($this->globalSetup,
-                                           $configFile, $file, $type,
-                                           (object) $this->configContent[$configFile]);
-    }
-    
-    protected function getComponentModule($name, $path, jInstallerGlobalSetup $setup) {
-        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
-            return new jInstallerComponentModule($name, $path, $setup);
-        }
-        else {
-            return new testInstallerComponentModule($name, $path, $setup);
-        }
-    }
-    
 }

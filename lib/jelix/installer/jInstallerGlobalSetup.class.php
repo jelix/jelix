@@ -67,6 +67,7 @@ class jInstallerGlobalSetup {
      */
     protected $modules = array();
 
+    protected $projectXmlPath;
 
     /**
      * jInstallerGlobalSetup constructor.
@@ -85,6 +86,7 @@ class jInstallerGlobalSetup {
         if (!$projectXmlFileName) {
             $projectXmlFileName = jApp::appPath('project.xml');
         }
+        $this->projectXmlPath = $projectXmlFileName;
 
         if (!$mainConfigFileName) {
             $mainConfigFileName = jApp::mainConfigFile();
@@ -139,10 +141,15 @@ class jInstallerGlobalSetup {
      * read the list of entrypoint from the project.xml file
      * and read all modules data used by each entry point
      * @param SimpleXmlElement $xml
+     * @throws Exception
      */
     protected function readEntryPointData($xml) {
 
         $configFileList = array();
+
+        if (!isset($xml->entrypoints->entry)) {
+            throw new Exception("Entrypoint declaration is missing into project.xml");
+        }
 
         // read all entry points data
         foreach ($xml->entrypoints->entry as $entrypoint) {
@@ -188,14 +195,8 @@ class jInstallerGlobalSetup {
         $modulesList = $this->mainEntryPoint->getModulesList();
 
         foreach ($modulesList as $name=>$path) {
-
             $compModule = $this->createComponentModule($name, $path);
-            $this->modules[$name] = $compModule;
-
-            $compModule->init();
-
-            $this->installerIni->setValue($name.'.installed', $compModule->isInstalled(), 'modules');
-            $this->installerIni->setValue($name.'.version', $compModule->getInstalledVersion(), 'modules');
+            $this->addModuleComponent($compModule);
         }
 
         // remove informations about modules that don't exist anymore
@@ -209,16 +210,22 @@ class jInstallerGlobalSetup {
                 $this->installerIni->removeValue($key, 'modules');
             }
         }
-        $this->installerIni->save();
     }
 
+    public function addModuleComponent(jInstallerComponentModule $compModule) {
+        $name = $compModule->getName();
+        $this->modules[$name] = $compModule;
+        $compModule->init();
+        $this->installerIni->setValue($name.'.installed', $compModule->isInstalled(), 'modules');
+        $this->installerIni->setValue($name.'.version', $compModule->getInstalledVersion(), 'modules');
+    }
 
     /**
      * @internal for tests
      * @return jInstallerComponentModule
      */
     protected function createComponentModule($name, $path) {
-        $moduleSetupList = $this->localConfigIni->getValues('modules');
+        $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
         $moduleInfos = new jInstallerModuleInfos($name, $path, $moduleSetupList);
         return new jInstallerComponentModule($moduleInfos, $this);
     }
@@ -350,7 +357,7 @@ class jInstallerGlobalSetup {
         $elem->setAttribute("type", $epType);
         $ep->appendChild($elem);
         $ep->appendChild(new \DOMText("\n    "));
-        $doc->save(jApp::appPath('project.xml'));
+        $doc->save($this->projectXmlPath);
     }
 
     /**
@@ -359,7 +366,7 @@ class jInstallerGlobalSetup {
      */
     protected function loadProjectXml() {
         $doc = new \DOMDocument();
-        if (!$doc->load(jApp::appPath('project.xml'))) {
+        if (!$doc->load($this->projectXmlPath)) {
             throw new \Exception("declareNewEntryPoint: cannot load project.xml");
         }
         return $doc;

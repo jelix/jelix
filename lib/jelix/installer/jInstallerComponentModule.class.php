@@ -183,14 +183,12 @@ class jInstallerComponentModule {
             }
 
             $config['main']->setValue($this->name.'.access', 2, 'modules');
-            $config->save();
         }
         else if ($action == Resolver::ACTION_REMOVE) {
 
             if ($accessLocal !== null) {
                 if ($accessLocal !== 0) {
                     $config['local']->setValue($this->name.'.access', 0, 'modules');
-                    $config->save();
                 }
                 return;
             }
@@ -198,7 +196,6 @@ class jInstallerComponentModule {
             if ($accessMain !== null) {
                 if ($accessMain !== 0) {
                     $config['main']->setValue($this->name.'.access', 0, 'modules');
-                    $config->save();
                 }
                 return;
             }
@@ -382,19 +379,21 @@ class jInstallerComponentModule {
             // for example, we have an updater for the 1.2 and 2.3 version
             // we have the 1.4 installed, and want to upgrade to the 2.5 version
             // we should not execute the update for 2.3 since modifications have already been
-            // made into the 1.4. The only way to now that, is to compare date of versions
+            // made into the 1.4. The only way to know that, is to compare date of versions
             if ($upgrader->getDate() != '') {
                 $upgraderDate = $this->_formatDate($upgrader->getDate());
-
                 // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.firstversion.date', 'modules'));
+                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()
+                    ->getValue($this->name.'.firstversion.date', 'modules'));
+
                 if ($firstVersionDate !== null) {
                     if ($firstVersionDate >= $upgraderDate)
                         continue;
                 }
 
                 // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()->getValue($this->name.'.version.date', 'modules'));
+                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()
+                    ->getValue($this->name.'.version.date', 'modules'));
                 if ($currentVersionDate !== null) {
                     if ($currentVersionDate >= $upgraderDate)
                         continue;
