@@ -155,7 +155,7 @@ smtpTimeout=10
 
 [acl2]
 ; example of driver: "db"
-driver=
+driver=db
 
 [sessions]
 ; If several applications are installed in the same documentRoot but with

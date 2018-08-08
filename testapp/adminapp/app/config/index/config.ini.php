@@ -10,5 +10,3 @@ on_error=2
 error_message="jacl2~errors.action.right.needed"
 on_error_action="jelix~error:badright"
 
-[acl2]
-driver=db

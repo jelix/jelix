@@ -289,14 +289,27 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * you should indicate the full name of the script, with a .sql extension.
      *
      * @param string $name the name of the script
+     * @param string $module the module from which we should take the sql file. null for the current module
      * @param boolean $inTransaction indicate if queries should be executed inside a transaction
      * @throws Exception
      */
-    final protected function execSQLScript ($name, $inTransaction = true)
+    final protected function execSQLScript ($name, $module = null, $inTransaction = true)
     {
         $conn = $this->dbConnection();
         $tools = $this->dbTool();
-        $file = $this->path.'install/'.$name;
+
+        if ($module) {
+            $conf = $this->globalSetup->getMainEntryPoint()->getConfigObj()->_modulesPathList;
+            if (!isset($conf[$module])) {
+                throw new Exception('execSQLScript : invalid module name');
+            }
+            $path = $conf[$module];
+        }
+        else {
+            $path = $this->path;
+        }
+
+        $file = $path.'install/'.$name;
         if (substr($name, -4) != '.sql')
             $file .= '.'.$conn->dbms.'.sql';
 

@@ -11,12 +11,20 @@
 
 
 class jauthdb_adminModuleInstaller extends jInstallerModule2 {
+    function install()
+    {
+        foreach($this->globalSetup->getEntryPointList() as $entrypoint) {
+            if ($this->setEpConf($entrypoint)) {
+                break;
+            }
+        }
+    }
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function setEpConf(jInstallerEntryPoint2 $entryPoint) {
         $config = $entryPoint->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
 
-        if ($authconfig &&  $entryPoint->getType() != 'cmdline' && $this->firstExec('authdbadmin')) {
+        if ($authconfig &&  $entryPoint->getType() != 'cmdline') {
             list($conf, $section) = $authconfig;
             if ($section === 0) {
                 $section_db = 'Db';
@@ -30,6 +38,8 @@ class jauthdb_adminModuleInstaller extends jInstallerModule2 {
                 $conf->setValue('form','jauthdb_admin~jelixuser', $section_db);
                 $conf->save();
             }
+            return true;
         }
+        return false;
     }
 }

@@ -275,10 +275,8 @@ class jConfigCompiler {
             }
         }
 
-        $section = $config->urlengine['urlScriptId'];
-
-        if (!isset($installation[$section])) {
-            $installation[$section] = array();
+        if (!isset($installation['modules'])) {
+            $installation['modules'] = array();
         }
 
         if ($config->compilation['checkCacheFiletime']) {
@@ -292,9 +290,9 @@ class jConfigCompiler {
         foreach($list as $f => $path) {
 
             if ($config->disableInstallers) {
-                $installation[$section][$f.'.installed'] = 1;
-            } else if (!isset($installation[$section][$f.'.installed'])) {
-                $installation[$section][$f.'.installed'] = 0;
+                $installation['modules'][$f.'.installed'] = 1;
+            } else if (!isset($installation['modules'][$f.'.installed'])) {
+                $installation['modules'][$f.'.installed'] = 0;
             }
 
             if ($f == 'jelix') {
@@ -303,7 +301,7 @@ class jConfigCompiler {
             else {
                 if ($config->enableAllModules) {
                     if ($config->disableInstallers
-                        || $installation[$section][$f.'.installed']
+                        || $installation['modules'][$f.'.installed']
                         || $allModuleInfo) {
                         $config->modules[$f.'.access'] = 2;
                     } else {
@@ -314,7 +312,7 @@ class jConfigCompiler {
                     // no given access in defaultconfig and ep config
                     $config->modules[$f.'.access'] = 0;
                 }
-                else if (!$installation[$section][$f.'.installed']) {
+                else if (!$installation['modules'][$f.'.installed']) {
                     // module is not installed.
                     // outside installation mode, we force the access to 0
                     // so the module is unusable until it is installed
@@ -324,28 +322,28 @@ class jConfigCompiler {
                 }
             }
 
-            if (!isset($installation[$section][$f.'.dbprofile'])) {
+            if (!isset($installation['modules'][$f.'.dbprofile'])) {
                 $config->modules[$f.'.dbprofile'] = 'default';
             } else {
-                $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
+                $config->modules[$f.'.dbprofile'] = $installation['modules'][$f.'.dbprofile'];
             }
 
             if ($allModuleInfo) {
-                if (!isset($installation[$section][$f.'.version'])) {
-                    $installation[$section][$f.'.version'] = '';
+                if (!isset($installation['modules'][$f.'.version'])) {
+                    $installation['modules'][$f.'.version'] = '';
                 }
 
-                if (!isset($installation[$section][$f.'.dataversion'])) {
-                    $installation[$section][$f.'.dataversion'] = '';
+                if (!isset($installation['modules'][$f.'.dataversion'])) {
+                    $installation['modules'][$f.'.dataversion'] = '';
                 }
 
                 if (!isset($installation['__modules_data'][$f.'.contexts'])) {
                     $installation['__modules_data'][$f.'.contexts'] = '';
                 }
 
-                $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
-                $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
-                $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
+                $config->modules[$f.'.version'] = $installation['modules'][$f.'.version'];
+                $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
+                $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
 
                 $config->_allModulesPathList[$f] = $path;
             }

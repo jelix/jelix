@@ -4,7 +4,7 @@
 * @subpackage  jacl2db module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2012 Laurent Jouanneau
+* @copyright   2009-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -19,18 +19,13 @@ class jacl2dbModuleInstaller extends jInstallerModule2 {
 
     protected $defaultDbProfile = 'jacl2_profile';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        if ($entryPoint->getType() == 'cmdline')
-            return;
-
-        if (!$this->firstDbExec())
-            return;
+    function install() {
 
         $this->declareDbProfile('jacl2_profile', null, false);
-        $config = $entryPoint->getConfigIni();
+        $config = $this->getLocalConfigIni();
         $driver = $config->getValue('driver','acl2');
         if ($driver != 'db') {
-            $config->setValue('driver','db','acl2');
+            $config['main']->setValue('driver','db','acl2');
         }
 
         /*

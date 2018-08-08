@@ -10,10 +10,10 @@
 
 class jauthModuleUpgrader_movepersistantkey extends jInstallerModule2 {
 
-    public $targetVersions = array('1.3.1', '1.7.0-beta.2');
-    public $date = '2018-05-28 22:20';
+    protected $targetVersions = array('1.3.1', '1.7.0-beta.2');
+    protected $date = '2018-05-28 22:20';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function install() {
         $liveConfigIni = $this->getLiveConfigIni();
         $localConfigIni = $this->getLocalConfigIni();
         $key = $localConfigIni->getValue('persistant_encryption_key', 'coordplugin_auth');

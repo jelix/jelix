@@ -10,10 +10,17 @@
 
 class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
 
-    public $targetVersions = array('1.7.0-beta.2');
-    public $date = '2016-06-22 09:14';
+    protected $targetVersions = array('1.7.0-beta.2');
+    protected $date = '2016-06-22 09:14';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function install()
+    {
+        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+            $this->updateLdapEpConf($entryPoint);
+        }
+    }
+
+    function updateLdapEpConf(jInstallerEntryPoint2 $entryPoint) {
 
         $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
         if (!$authConfig) {

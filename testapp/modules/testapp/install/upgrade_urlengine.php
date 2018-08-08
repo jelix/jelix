@@ -11,10 +11,10 @@
 
 class testappModuleUpgrader_urlengine extends jInstallerModule2 {
 
-    public $targetVersions = array('1.4b2.2406');
-    public $date = '2012-07-20';
+    protected $targetVersions = array('1.4b2.2406');
+    protected $date = '2012-07-20';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function install() {
         $this->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
     }
 }
