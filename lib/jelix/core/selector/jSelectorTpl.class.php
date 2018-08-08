@@ -103,7 +103,6 @@ class jSelectorTpl extends jSelectorModule {
     }
 
     protected function checkThemePath($subDir, $lpath, $flpath, $path) {
-
         if (file_exists(jApp::varPath('themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in var/theme
             $this->_path = jApp::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
@@ -129,9 +128,9 @@ class jSelectorTpl extends jSelectorModule {
             }
         }
 
-        if (file_exists(jApp::appPath('themes/'.$subDir))) {
+        if (file_exists(jApp::appPath('app/themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in app/theme
-            $this->_path = jApp::appPath('themes/' . $subDir . '/' . $lpath . '.tpl');
+            $this->_path = jApp::appPath('app/themes/' . $subDir . '/' . $lpath . '.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $lpath;
                 return true;
@@ -139,7 +138,7 @@ class jSelectorTpl extends jSelectorModule {
 
             if ($flpath) {
                 // check if there is a redefined template for the current theme & fallback locale in app/theme
-                $this->_path = jApp::appPath('themes/' . $subDir . '/' . $flpath . '.tpl');
+                $this->_path = jApp::appPath('app/themes/' . $subDir . '/' . $flpath . '.tpl');
                 if (is_readable($this->_path)) {
                     $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $flpath;
                     return true;
@@ -147,7 +146,7 @@ class jSelectorTpl extends jSelectorModule {
             }
 
             // check if there is a redefined template for the current theme in app/theme
-            $this->_path = jApp::appPath('themes/' . $subDir . '/' . $path . '.tpl');
+            $this->_path = jApp::appPath('app/themes/' . $subDir . '/' . $path . '.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/' . $subDir . '/' . $path;
                 return true;
