@@ -165,7 +165,7 @@ shared_session=off
 
 ; indicate a session name for each applications installed with the same
 ; domain and basePath, if their respective sessions shouldn't be shared
-name=
+name=admin
 
 ; Use alternative storage engines for sessions
 ;storage = "files"
