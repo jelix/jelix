@@ -98,14 +98,14 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                           "Response for login page");
         $inifile->setValue('html', 'adminHtmlResponse', 'responses');
         $inifile->setValue('htmlauth', 'adminLoginHtmlResponse', 'responses');
-        
+
         $repositoryPath = \jFile::parseJelixPath( 'lib:jelix-admin-modules' );
         $this->registerModulesDir('lib:jelix-admin-modules', $repositoryPath);
 
 
-        $installConfig->setValue('jacl.installed', '0', $entrypoint);
+        $installConfig->setValue('jacl.installed', '0', 'modules');
         $inifile->setValue('jacl.access', '0', 'modules');
-        $installConfig->setValue('jacldb.installed', '0', $entrypoint);
+        $installConfig->setValue('jacldb.installed', '0', 'modules');
         $inifile->setValue('jacldb.access', '0', 'modules');
         $inifile->save();
 
@@ -124,7 +124,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $reporter = new \textInstallReporter(($output->isVerbose()? 'notice':'warning'));
         $installer = new \jInstaller($reporter);
-        $installer->installModules(array('jauth','master_admin'), $entrypoint.'.php');
+        $installer->installModules(array('jauth','master_admin'));
 
         $authini = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
@@ -139,10 +139,10 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             }
             $authini->save();
             $installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
-            $installer->installModules(array('jauthdb', 'jauthdb_admin'), $entrypoint.'.php');
+            $installer->installModules(array('jauthdb', 'jauthdb_admin'));
         }
         else {
-            $installConfig->setValue('jauthdb_admin.installed', '0', $entrypoint);
+            $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
             $installConfig->save();
             $inifile->setValue('jauthdb_admin.access', '0', 'modules');
             $inifile->save();
@@ -156,15 +156,15 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             }
             $installer = new \jInstaller($reporter);
             $installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
-            $installer->installModules(array('jacl2db', 'jacl2db_admin'), $entrypoint.'.php');
+            $installer->installModules(array('jacl2db', 'jacl2db_admin'));
         }
         else {
-            $installConfig->setValue('jacl2db_admin.installed', '0', $entrypoint);
+            $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
             $installConfig->save();
             $inifile->setValue('jacl2db_admin.access', '0', 'modules');
             $inifile->save();
         }
 
-        $installer->installModules(array('jpref_admin'), $entrypoint.'.php');
+        $installer->installModules(array('jpref_admin'));
     }
 }

@@ -82,7 +82,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp {
         
         $parser = new \jDaoParser($selector);
         $parser->parse(simplexml_import_dom($doc), $tools);
-        $properties = $parser->GetProperties();
+        $properties = $parser->getProperties();
         
         /*
          * Generating the class

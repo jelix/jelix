@@ -52,13 +52,7 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
             $reporter = new \textInstallReporter('error');
         }
         $installer = new \jInstaller($reporter);
-
-        if ($input->getOption('entry-point')) {
-            $installer->installEntryPoint($this->entryPointId);
-        }
-        else {
-            $installer->installApplication();
-        }
+        $installer->installApplication();
 
         try {
             \jAppManager::clearTemp(\jApp::tempBasePath());

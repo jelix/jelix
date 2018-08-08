@@ -43,13 +43,7 @@ class UninstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $installer = new \jInstaller($reporter);
-
-        if ($this->allEntryPoint) {
-            $installer->uninstallModules(array($module));
-        }
-        else {
-            $installer->uninstallModules(array($module), $this->entryPointName);
-        }
+        $installer->uninstallModules(array($module));
 
         try {
             \jAppManager::clearTemp(\jApp::tempBasePath());

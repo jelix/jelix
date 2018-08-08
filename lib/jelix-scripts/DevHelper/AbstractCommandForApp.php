@@ -110,9 +110,6 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
         $config = \jApp::config();
         if (!isset($config->_modulesPathList[$module])) {
-            if (isset($config->_externalModulesPathList[$module])) {
-                return $config->_externalModulesPathList[$module];
-            }
             throw new \Exception($this->getName().": The module $module doesn't exist");
         }
 

@@ -148,7 +148,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $installer = new \jInstaller(new \textInstallReporter('warning'));
-        $installer->installEntryPoint($name.".php");
+        $installer->installApplication();
         if ($this->verbose()) {
             $output->writeln("All modules have been initialized for the new entry point.");
         }

@@ -65,19 +65,10 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $installer = new \jInstaller($reporter);
-
-        if ($this->allEntryPoint) {
-            if ($parameters) {
-                $installer->setModuleParameters($module, $parameters);
-            }
-            $installer->installModules(array($module));
+        if ($parameters) {
+            $installer->setModuleParameters($module, $parameters);
         }
-        else {
-            if ($parameters) {
-                $installer->setModuleParameters($module, $parameters, $this->entryPointName);
-            }
-            $installer->installModules(array($module), $this->entryPointName);
-        }
+        $installer->installModules(array($module));
 
         try {
             \jAppManager::clearTemp(\jApp::tempBasePath());

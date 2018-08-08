@@ -171,7 +171,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         // activate the module in the application
         if ($isdefault) {
             if ($this->allEntryPoint) {
-                $xmlEp = $xmlMap->getDefaultEntryPoint($type);
+                $xmlEp = $xmlMap->getDefaultEntryPoint('classic');
             }
             else {
                 $xmlEp = $xmlMap->getEntryPoint($this->entryPointId);
@@ -188,38 +188,14 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             }
         }
         $xmlMap->save();
-        $iniDefault->setValue($module.'.access', ($this->allEntryPoint?2:1) , 'modules');
+        $iniDefault->setValue($module.'.access', 2 , 'modules');
         $iniDefault->save();
 
-        $list = $this->getEntryPointsList();
         $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
-
-        // install the module for all needed entry points
-        foreach ($list as $k => $entryPoint) {
-
-            $configFile = \jApp::appConfigPath($entryPoint['config']);
-            $epconfig = new \Jelix\IniFile\IniModifier($configFile);
-
-            if ($this->allEntryPoint) {
-                $access = 2;
-            }
-            else {
-                $access = ($entryPoint['file'] == $this->entryPointName?2:0);
-            }
-
-            $epconfig->setValue($module.'.access', $access, 'modules');
-            $epconfig->save();
-
-            if ($this->allEntryPoint || $entryPoint['file'] == $this->entryPointName) {
-                $install->setValue($module.'.installed', 1, $entryPoint['id']);
-                $install->setValue($module.'.version', $initialVersion, $entryPoint['id']);
-            }
-            if ($this->verbose()) {
-                $output->writeln("The module is initialized for the entry point ".$entryPoint['file']);
-            }
-        }
-
+        $install->setValue($module.'.installed', 1, 'modules');
+        $install->setValue($module.'.version', $initialVersion, 'modules');
         $install->save();
+
         \jApp::declareModule($path);
 
         // create a default controller
