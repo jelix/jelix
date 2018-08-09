@@ -32,18 +32,18 @@ use \Jelix\Dependencies\ItemException;
 /**
  * main class for the installation
  *
- * It load all entry points configurations. Each configurations has its own
- * activated modules. jInstaller then construct a tree dependencies for these
+ * It loads all entry points configurations and all informations about activated
+ * modules. jInstaller then constructs a tree dependencies for these
  * activated modules, and launch their installation and the installation
  * of their dependencies.
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
+ *
  * @internal The object which drives the installation of a module
  * is an object jInstallerComponentModule.
  * This object calls load a file from the directory of the module. this
  * file should contain a class which should inherits from jInstallerModule2.
- *  this class should implements processes to install
- * the module.
+ * this class should implements processes to install the module.
  */
 class jInstaller {
 
@@ -89,15 +89,8 @@ class jInstaller {
      */
     const INSTALL_ERROR_CONFLICT = 3;
 
-    const FLAG_INSTALL_MODULE = 1;
-
-    const FLAG_UPGRADE_MODULE = 2;
-
-    const FLAG_REMOVE_MODULE = 4;
-
-    const FLAG_ALL = 7;
-
     /**
+     * the main entrypoint of the application
      * @var jInstallerEntryPoint2
      */
     protected $mainEntryPoint = null;
@@ -122,7 +115,7 @@ class jInstaller {
     /**
      * initialize the installation
      *
-     * it reads configurations files of all entry points, and prepare object for
+     * jInstallerGlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to install/upgrade modules.
      *
      * @param jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
@@ -138,20 +131,6 @@ class jInstaller {
         $this->globalSetup = $globalSetup;
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
-    }
-
-    /**
-     * change the module version in readed informations, to simulate an update
-     * when we call installApplication or an other method.
-     * internal use !!
-     * @param string $moduleName the name of the module
-     * @param string $version the new version
-     */
-    public function forceModuleVersion($moduleName, $version) {
-        $module = $this->globalSetup->getModuleComponent($moduleName);
-        if ($module) {
-            $module->setInstalledVersion($version);
-        }
     }
 
     /**
@@ -173,16 +152,9 @@ class jInstaller {
      * are installed. Errors appeared during the installation are passed
      * to the reporter.
      *
-     * @param int $flags flags indicating if we should install, and/or upgrade
-     *                   modules or only modify config files. internal use.
-     *                   see FLAG_* constants
      * @return boolean true if succeed, false if there are some errors
      */
-    public function installApplication($flags = false) {
-
-        if ($flags === false) {
-            $flags = self::FLAG_ALL;
-        }
+    public function installApplication() {
 
         $this->startMessage();
 
@@ -193,7 +165,7 @@ class jInstaller {
         }
         $modulesChains = $this->resolveDependencies($resolver);
 
-        $result = $this->_installModules($modulesChains, true, $flags);
+        $result = $this->_installModules($modulesChains, true);
         $this->globalSetup->getInstallerIni()->save();
         $this->endMessage();
         return $result;
@@ -254,10 +226,9 @@ class jInstaller {
      * core of the installation
      * @param Item[] $modulesChain
      * @param boolean $installWholeApp true if the installation is done during app installation
-     * @param integer $flags to know what to do
      * @return boolean true if the installation is ok
      */
-    protected function _installModules($modulesChain, $installWholeApp, $flags=7 ) {
+    protected function _installModules($modulesChain, $installWholeApp) {
 
         $this->notice('install.start');
         jApp::setConfig($this->mainEntryPoint->getConfigObj());
@@ -266,19 +237,19 @@ class jInstaller {
             $this->notice('install.installers.disabled');
         }
 
-        $componentsToInstall = $this->runPreInstall($modulesChain, $installWholeApp, $flags);
+        $componentsToInstall = $this->runPreInstall($modulesChain, $installWholeApp);
         if ($componentsToInstall === false) {
             $this->warning('install.bad.end');
             return false;
         }
 
-        $installedModules = $this->runInstall($componentsToInstall, $flags);
+        $installedModules = $this->runInstall($componentsToInstall);
         if ($installedModules === false) {
             $this->warning('install.bad.end');
             return false;
         }
 
-        $result = $this->runPostInstall($installedModules, $flags);
+        $result = $this->runPostInstall($installedModules);
         if (!$result) {
             $this->warning('install.bad.end');
         }
@@ -359,10 +330,9 @@ class jInstaller {
     /**
      * @param \Jelix\Dependencies\Item[] $moduleschain
      * @param $installWholeApp
-     * @param $flags
      * @return array|bool
      */
-    protected function runPreInstall(&$moduleschain, $installWholeApp, $flags) {
+    protected function runPreInstall(&$moduleschain, $installWholeApp) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -381,7 +351,7 @@ class jInstaller {
                         $installer = $component->getInstaller($installWholeApp);
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
-                    if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->preInstall();
                     }
@@ -394,7 +364,7 @@ class jInstaller {
                         $upgraders = $component->getUpgraders();
                     }
 
-                    if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
+                    if (count($upgraders)) {
                         foreach($upgraders as $upgrader) {
                             $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
                             $upgrader->preInstall();
@@ -409,7 +379,7 @@ class jInstaller {
                         $installer = $component->getInstaller($installWholeApp);
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
-                    if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->preUninstall();
                     }
@@ -428,7 +398,7 @@ class jInstaller {
         return $componentsToInstall;
     }
 
-    protected function runInstall($componentsToInstall, $flags) {
+    protected function runInstall($componentsToInstall) {
 
         $installedModules = array();
         $result = true;
@@ -441,7 +411,7 @@ class jInstaller {
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->install();
                         $saveConfigIni = true;
@@ -463,11 +433,10 @@ class jInstaller {
                 elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
                     foreach($installer as $upgrader) {
-                        if ($flags & self::FLAG_UPGRADE_MODULE) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
-                            $upgrader->install();
-                            $saveConfigIni = true;
-                        }
+                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
+                        $upgrader->install();
+                        $saveConfigIni = true;
+
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
@@ -493,7 +462,7 @@ class jInstaller {
 
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
-                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->uninstall();
                         $saveConfigIni = true;
@@ -539,7 +508,7 @@ class jInstaller {
         return $installedModules;
     }
 
-    protected function runPostInstall($installedModules, $flags) {
+    protected function runPostInstall($installedModules) {
 
         $result = true;
         // post install
@@ -551,7 +520,7 @@ class jInstaller {
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->postInstall();
                         $component->installFinished();
@@ -559,17 +528,15 @@ class jInstaller {
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
-                    if ($flags & self::FLAG_UPGRADE_MODULE) {
-                        foreach ($installer as $upgrader) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
-                            $upgrader->postInstall();
-                            $component->upgradeFinished($upgrader);
-                            $saveConfigIni = true;
-                        }
+                    foreach ($installer as $upgrader) {
+                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
+                        $upgrader->postInstall();
+                        $component->upgradeFinished($upgrader);
+                        $saveConfigIni = true;
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
-                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
+                    if ($installer) {
                         $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->postUninstall();
                         $component->uninstallFinished();
