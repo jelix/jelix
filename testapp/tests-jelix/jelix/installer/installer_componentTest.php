@@ -435,5 +435,83 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
+
+    function testGetUpgradersWithMainUpgrader() {
+        try {
+            $conf =(object) array( 'modules'=>array(
+                'testinstall3.access'=>2,
+                'testinstall3.dbprofile'=>'default',
+                'testinstall3.installed'=>false,
+                'testinstall3.version'=>"1.5.0",
+            ));
+            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+                jApp::appPath().'modules/testinstall3/', $conf->modules);
+
+            // the current version is the previous one : one updater
+            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $this->globalSetup->addModuleComponent($component);
+
+            $upgraders = $component->getUpgraders();
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(2, count($upgraders));
+            $this->assertEquals('testinstall3ModuleUpgrader_newcomp', get_class($upgraders[0]));
+            $this->assertEquals('testinstall3ModuleUpgrader', get_class($upgraders[1]));
+
+        }
+        catch(jInstallerException $e) {
+            $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
+        }
+    }
+
+    function testGetUpgradersWithMainUpgraderAlreadyUpgraded() {
+        try {
+            $conf =(object) array( 'modules'=>array(
+                'testinstall3.access'=>2,
+                'testinstall3.dbprofile'=>'default',
+                'testinstall3.installed'=>false,
+                'testinstall3.version'=>"1.7.0-beta.3",
+            ));
+            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+                jApp::appPath().'modules/testinstall3/', $conf->modules);
+
+            // the current version is the previous one : one updater
+            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $this->globalSetup->addModuleComponent($component);
+
+            $upgraders = $component->getUpgraders();
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(0, count($upgraders));
+
+        }
+        catch(jInstallerException $e) {
+            $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
+        }
+    }
+
+    function testGetUpgradersWithMainUpgraderNoUpgrader() {
+        try {
+            $conf =(object) array( 'modules'=>array(
+                'testinstall3.access'=>2,
+                'testinstall3.dbprofile'=>'default',
+                'testinstall3.installed'=>false,
+                'testinstall3.version'=>"1.6.3",
+            ));
+            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+                jApp::appPath().'modules/testinstall3/', $conf->modules);
+
+            // the current version is the previous one : one updater
+            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $this->globalSetup->addModuleComponent($component);
+
+            $upgraders = $component->getUpgraders();
+            $this->assertTrue (is_array($upgraders));
+            $this->assertEquals(1, count($upgraders));
+            $this->assertEquals('testinstall3ModuleUpgrader', get_class($upgraders[0]));
+
+        }
+        catch(jInstallerException $e) {
+            $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
+        }
+    }
 }
 

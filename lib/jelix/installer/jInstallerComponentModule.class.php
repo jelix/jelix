@@ -97,6 +97,11 @@ class jInstallerComponentModule {
      */
     protected $moduleUpgraders = null;
 
+    /**
+     * @var jInstallerModule2|jInstallerModule
+     */
+    protected $moduleMainUpgrader = null;
+
     protected $upgradersContexts = array();
 
     /**
@@ -291,6 +296,35 @@ class jInstallerComponentModule {
      */
     function getUpgraders() {
 
+        if ($this->moduleMainUpgrader === null) {
+            if (!file_exists($this->moduleInfos->getPath() . 'install/upgrade.php') ||
+                $this->moduleInfos->skipInstaller
+            ) {
+                $this->moduleMainUpgrader = false;
+            }
+            else {
+                require_once($this->moduleInfos->getPath().'install/upgrade.php');
+
+                $cname = $this->name.'ModuleUpgrader';
+                if (!class_exists($cname)) {
+                    throw new jInstallerException("module.upgrader.class.not.found", array($cname, $this->name));
+                }
+
+                $this->moduleMainUpgrader = new $cname($this->name,
+                    $this->name,
+                    $this->moduleInfos->getPath(),
+                    $this->sourceVersion,
+                    false
+                );
+
+                $this->moduleMainUpgrader->setTargetVersions(array($this->sourceVersion));
+
+                if ($this->moduleMainUpgrader instanceof jIInstallerComponent2) {
+                    $this->moduleMainUpgrader->setGlobalSetup($this->globalSetup);
+                }
+            }
+        }
+
         if ($this->moduleUpgraders === null) {
 
             $this->moduleUpgraders = array();
@@ -314,10 +348,6 @@ class jInstallerComponentModule {
                     }
                 }
                 closedir($handle);
-            }
-
-            if (!count($fileList)) {
-                return array();
             }
 
             // now we order the list of file
@@ -346,7 +376,7 @@ class jInstallerComponentModule {
             }
         }
 
-        if (count($this->moduleUpgraders) && $this->moduleInfos->version == '') {
+        if ((count($this->moduleUpgraders) || $this->moduleMainUpgrader) && $this->moduleInfos->version == '') {
             throw new jInstallerException("installer.ini.missing.version", array($this->name));
         }
 
@@ -412,6 +442,10 @@ class jInstallerComponentModule {
         usort($list, function ($upgA, $upgB) {
                 return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
         });
+
+        if ($this->moduleMainUpgrader && VersionComparator::compareVersion($this->moduleInfos->version, $this->sourceVersion) < 0 ) {
+            $list[] = $this->moduleMainUpgrader;
+        }
         return $list;
     }
 

@@ -364,11 +364,9 @@ class jInstaller {
                         $upgraders = $component->getUpgraders();
                     }
 
-                    if (count($upgraders)) {
-                        foreach($upgraders as $upgrader) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
-                            $upgrader->preInstall();
-                        }
+                    foreach($upgraders as $upgrader) {
+                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
+                        $upgrader->preInstall();
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
                 }
@@ -407,7 +405,7 @@ class jInstaller {
         try {
             foreach($componentsToInstall as $item) {
                 /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModule $installer */
+                /** @var jInstallerModule2 $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
@@ -432,6 +430,7 @@ class jInstaller {
                 }
                 elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
+                    /** @var jInstallerModule2 $upgrader */
                     foreach($installer as $upgrader) {
                         $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
                         $upgrader->install();

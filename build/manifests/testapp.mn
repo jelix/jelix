@@ -82,7 +82,7 @@ cd testapp/modules/testinstall1
 cd testapp/modules/testinstall2
   __ALL_RECURSIVELY__
 cd testapp/modules/testinstall3
-   module.xml
+   __ALL_RECURSIVELY__
 
 cd testapp/modules/articles
   __ALL_RECURSIVELY__
