@@ -268,12 +268,12 @@ class jInstaller {
             $component = $item->getProperty('component');
 
             switch($e->getCode()) {
-                case 1:
-                case 4:
+                case ItemException::ERROR_CIRCULAR_DEPENDENCY:
+                case ItemException::ERROR_REVERSE_CIRCULAR_DEPENDENCY:
                     $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
                     $this->error('module.circular.dependency',$component->getName());
                     break;
-                case 2:
+                case ItemException::ERROR_BAD_ITEM_VERSION:
                     $depName = $e->getRelatedData()->getName();
                     $maxVersion = $minVersion = 0;
                     foreach($component->getDependencies() as $compInfo) {
@@ -284,33 +284,33 @@ class jInstaller {
                     }
                     $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
                     break;
-                case 3:
+                case ItemException::ERROR_REMOVED_ITEM_IS_NEEDED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.delete.dependency',array($depName, $component->getName()));
                     break;
-                case 5:
+                case ItemException::ERROR_ITEM_TO_INSTALL_SHOULD_BE_REMOVED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.install.dependency',array($depName, $component->getName()));
                     break;
-                case 6:
+                case ItemException::ERROR_DEPENDENCY_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 7:
+                case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 8:
+                case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 9:
+                case ItemException::ERROR_CHOICE_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.choice.unknown', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 10:
+                case ItemException::ERROR_CHOICE_AMBIGUOUS:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                    $this->error('module.choice.ambigus', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.choice.ambiguous', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
 
             }
