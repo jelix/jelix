@@ -11,7 +11,7 @@
 class jaclModuleInstaller extends jInstallerModule2 {
     function install()
     {
-        foreach($this->globalSetup->getEntryPointList() as $entrypoint) {
+        foreach($this->getEntryPointsList() as $entrypoint) {
             $this->setEpConf($entrypoint);
         }
     }

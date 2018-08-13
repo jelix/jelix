@@ -16,7 +16,7 @@ class jelixModuleUpgrader_redisprofile extends jInstallerModule2 {
 
     function install() {
         $ini = new jIniFileModifier(jApp::configPath('profiles.ini.php'));
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             foreach($ini->getSectionList() as $section) {
                 if (strpos($section, 'jkvdb:') === 0) {
                     $driver = $ini->getValue('driver', $section);

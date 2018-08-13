@@ -13,7 +13,7 @@
 class jauthdb_adminModuleInstaller extends jInstallerModule2 {
     function install()
     {
-        foreach($this->globalSetup->getEntryPointList() as $entrypoint) {
+        foreach($this->getEntryPointsList() as $entrypoint) {
             if ($this->setEpConf($entrypoint)) {
                 break;
             }

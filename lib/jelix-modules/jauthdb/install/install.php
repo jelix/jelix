@@ -20,7 +20,7 @@ class jauthdbModuleInstaller extends jInstallerModule2 {
     function install()
     {
         $confList = [];
-        foreach ($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach ($this->getEntryPointsList() as $entryPoint) {
             $config = $entryPoint->getConfigIni();
             $authConfig = $this->getCoordPluginConf($config, 'auth');
             if (!$authConfig) {

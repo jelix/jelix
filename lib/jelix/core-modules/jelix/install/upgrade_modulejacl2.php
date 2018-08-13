@@ -15,7 +15,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
     protected $date = '2012-09-19 11:05';
 
     function install() {
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $this->_upgradeconf('jacl2', $entryPoint);
             $this->_upgradeconf('jacl', $entryPoint);
         }

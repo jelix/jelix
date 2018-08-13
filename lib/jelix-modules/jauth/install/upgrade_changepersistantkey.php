@@ -15,7 +15,7 @@ class jauthModuleUpgrader_changepersistantkey extends jInstallerModule2 {
 
     function install() {
 
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $config = $entryPoint->getConfigIni();
             $authconfig = $this->getCoordPluginConf($config, 'auth');
             if ($authconfig) {

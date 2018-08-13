@@ -255,7 +255,7 @@ class jInstallerGlobalSetup {
     /**
      * @return jInstallerEntryPoint2[]
      */
-    public function getEntryPointList() {
+    public function getEntryPointsList() {
         return $this->entryPoints;
     }
 

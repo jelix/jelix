@@ -15,7 +15,7 @@ class jauthModuleUpgrader_newencryption extends jInstallerModule2 {
 
     function install() {
 
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
             if (!$authConfig) {
                 continue;

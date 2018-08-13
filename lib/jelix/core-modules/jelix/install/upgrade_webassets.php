@@ -22,7 +22,7 @@ class jelixModuleUpgrader_webassets extends jInstallerModule2 {
 
         $mainConfig = $this->getConfigIni();
 
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $epConfig = $entryPoint->getConfigIni();
             $this->changeConfig($mainConfig, $epConfig, $epConfig['entrypoint']);
         }

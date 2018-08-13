@@ -17,7 +17,7 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
 
     function install() {
 
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
                                                  $entryPoint->getEpId(),
                                                  $entryPoint->getUrlMap());
@@ -26,7 +26,7 @@ class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
     }
 
     function postInstall() {
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
                                                  $entryPoint->getEpId(),
                                                  $entryPoint->getUrlMap());

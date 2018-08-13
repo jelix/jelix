@@ -219,6 +219,23 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
+     * Point d'entrée principal de l'application (en général index.php)
+     * @return jInstallerEntryPoint2
+     */
+    public function getMainEntryPoint() {
+        return $this->globalSetup->getMainEntryPoint();
+    }
+
+    /**
+     * List of entry points of the application
+     *
+     * @return jInstallerEntryPoint2[]
+     */
+    public function getEntryPointsList() {
+        return $this->globalSetup->getEntryPointsList();
+    }
+
+    /**
      * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      */

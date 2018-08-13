@@ -22,7 +22,7 @@ class jauthModuleInstaller extends jInstallerModule2 {
         $authconfigMaster = $this->getConfigIni()->getValue('auth','coordplugins');
 
         $authConfigList = [];
-        foreach($this->globalSetup->getEntryPointList() as $entryPoint) {
+        foreach($this->getEntryPointsList() as $entryPoint) {
             $authconfig = $entryPoint->getConfigIni()->getValue('auth', 'coordplugins');
 
             $forWS = (in_array($entryPoint->getType(), array('json', 'jsonrpc', 'soap', 'xmlrpc')));
