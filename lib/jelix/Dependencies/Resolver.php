@@ -41,17 +41,23 @@ class Resolver
     protected $circularDependencyTracker = array();
     protected $circularReverseDependencyTracker = array();
 
+    protected $allowToForceInstallDependencies = true;
+
     /**
      * Return the list of item to process, in the right order.
      * Their action property may have changed and indicate what
      * to do with them.
      *
+     * @param boolean $allowToInstallDependencies true if the resolver is authorized
+     *                to force the installation of dependencies that have not the
+     *                the action flag ACTION_INSTALL
      * @return Item[] list of item
      *
      * @throws ItemException when there is a circular dependency...
      */
-    public function getDependenciesChainForInstallation()
+    public function getDependenciesChainForInstallation($allowToForceInstallDependencies = true)
     {
+        $this->allowToForceInstallDependencies = $allowToForceInstallDependencies;
         $this->checkedItems = array();
         $this->chain = array();
 
@@ -76,7 +82,7 @@ class Resolver
                     continue;
                 }
                 $this->_checkDependencies($item);
-            } else {
+            } else { // self::ACTION_UPGRADE
                 $this->_checkDependencies($item);
             }
             $this->chain[] = $item;
@@ -160,6 +166,10 @@ class Resolver
                         $item, ItemException::ERROR_BAD_ITEM_VERSION, $depItem);
                 }
                 if (!$depItem->isInstalled()) {
+                    if (!$depItem->canBeInstalled() || !$this->allowToForceInstallDependencies) {
+                        throw new ItemException("item '".$depItemName."' needed by ".$item->getName()."cannot be installed ",
+                            $item, ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED, $depItem);
+                    }
                     $depItem->setAction(self::ACTION_INSTALL);
                     $this->_checkDependencies($depItem);
                     $this->chain[] = $depItem;
@@ -212,8 +222,11 @@ class Resolver
                     if ($depItem->isInstalled()) {
                         $choiceDepInstalled[] = $depItem;
                     }
-                    else {
+                    else if ($depItem->canBeInstalled() || !$this->allowToForceInstallDependencies) {
                         $choiceDepToInstall[] = $depItem;
+                    }
+                    else {
+                        $choiceMissing[] = $depItemName;
                     }
                 } elseif ($depItem->getAction() == self::ACTION_INSTALL) {
                     $version = $depItem->getCurrentVersion();
@@ -240,7 +253,7 @@ class Resolver
                 continue;
             }
             if (!count($choiceDepToInstall)) {
-                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are unknown or do not met version criterias. Install or upgrade one of them before installing it.',
+                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it.',
                     $item, ItemException::ERROR_CHOICE_MISSING_ITEM, $choiceMissing);
             }
             if (count($choiceDepToInstall) > 1) {

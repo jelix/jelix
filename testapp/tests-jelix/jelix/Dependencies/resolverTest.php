@@ -53,6 +53,47 @@ class resolverTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 11
+     */
+    public function testForbidInstallDependencies() {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation(false);
+    }
+
+
+    /**
+     * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 11
+     */
+    public function testInstallDependenciesThatCannotBeInstalled() {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false, false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
+
+    /**
+     * @expectedException \Jelix\Dependencies\ItemException
      * @expectedExceptionCode 1
      */
     public function testCircularDependencies() {
@@ -492,7 +533,7 @@ class resolverTest extends PHPUnit_Framework_TestCase {
      *
      * @expectedException \Jelix\Dependencies\ItemException
      * @expectedExceptionCode 9
-     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met version criterias. Install or upgrade one of them before installing it
+     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it
      */
     public function testChoiceBadVersionItem() {
         $packA = new Item('testA', "1.0", false);
@@ -524,7 +565,7 @@ class resolverTest extends PHPUnit_Framework_TestCase {
      *
      * @expectedException \Jelix\Dependencies\ItemException
      * @expectedExceptionCode 9
-     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met version criterias. Install or upgrade one of them before installing it
+     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it
      */
     public function testChoiceUnknownItems() {
         $packA = new Item('testA', "1.0", false);
