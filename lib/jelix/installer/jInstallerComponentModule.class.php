@@ -517,10 +517,12 @@ class jInstallerComponentModule {
     public function getResolverItem() {
         $action = $this->getInstallAction();
         if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, true, $this->sourceVersion, Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
+            $item = new Item($this->name, $this->sourceVersion, true);
+            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
         }
         else {
-            $item = new Item($this->name, $this->isInstalled(), $this->sourceVersion, $action);
+            $item = new Item($this->name, $this->sourceVersion, $this->isInstalled());
+            $item->setAction($action);
         }
 
         foreach($this->dependencies as $dep) {
