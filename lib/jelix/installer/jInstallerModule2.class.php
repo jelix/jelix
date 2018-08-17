@@ -117,13 +117,6 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     protected $defaultDbProfile = '';
 
     /**
-     * @var boolean true if this is an installation for the whole application.
-     *              false if this is an installation in an
-     *              already installed application. Always False for upgraders.
-     */
-    protected $installWholeApp = false;
-
-    /**
      * parameters for the installer, indicated in the configuration file or
      * dynamically, by a launcher in a command line for instance.
      * @var array
@@ -140,15 +133,13 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @param string $name name of the installer
      * @param string $path the component path
      * @param string $version version of the component
-     * @param boolean $installWholeApp true if the installation is during the whole app installation
-     *                                 false if it is only few modules and this module
+     * @param boolean $installWholeApp deprecated
      */
     function __construct ($componentName, $name, $path, $version, $installWholeApp = false) {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
         $this->componentName = $componentName;
-        $this->installWholeApp = $installWholeApp;
     }
 
     function getName() {

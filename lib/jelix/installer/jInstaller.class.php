@@ -225,10 +225,9 @@ class jInstaller {
     /**
      * core of the installation
      * @param Item[] $modulesChain
-     * @param boolean $installWholeApp true if the installation is done during app installation
      * @return boolean true if the installation is ok
      */
-    protected function _installModules($modulesChain, $installWholeApp) {
+    protected function _installModules($modulesChain) {
 
         $this->notice('install.start');
         jApp::setConfig($this->mainEntryPoint->getConfigObj());
@@ -237,7 +236,7 @@ class jInstaller {
             $this->notice('install.installers.disabled');
         }
 
-        $componentsToInstall = $this->runPreInstall($modulesChain, $installWholeApp);
+        $componentsToInstall = $this->runPreInstall($modulesChain);
         if ($componentsToInstall === false) {
             $this->warning('install.bad.end');
             return false;
@@ -329,10 +328,9 @@ class jInstaller {
 
     /**
      * @param \Jelix\Dependencies\Item[] $moduleschain
-     * @param $installWholeApp
      * @return array|bool
      */
-    protected function runPreInstall(&$moduleschain, $installWholeApp) {
+    protected function runPreInstall(&$moduleschain) {
         $result = true;
         // ----------- pre install
         // put also available installers into $componentsToInstall for
@@ -348,7 +346,7 @@ class jInstaller {
                     if ($installersDisabled) {
                         $installer = null;
                     } else {
-                        $installer = $component->getInstaller($installWholeApp);
+                        $installer = $component->getInstaller();
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($installer) {
@@ -374,7 +372,7 @@ class jInstaller {
                     if ($installersDisabled) {
                         $installer = null;
                     } else {
-                        $installer = $component->getInstaller($installWholeApp);
+                        $installer = $component->getInstaller();
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {

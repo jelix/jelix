@@ -210,13 +210,12 @@ class jInstallerComponentModule {
     /**
      * instancies the object which is responsible to install the module
      *
-     * @param boolean $installWholeApp true if the installation is done during app installation
      * @return jIInstallerComponent|jIInstallerComponent2|null|false the installer, or null
      *          if there isn't any installer
      *         or false if the installer is useless for the given parameter
      * @throws jInstallerException when install class not found
      */
-    function getInstaller($installWholeApp) {
+    function getInstaller() {
 
         $this->_setAccess();
 
@@ -244,7 +243,7 @@ class jInstallerComponentModule {
                                                 $this->name,
                                                 $this->moduleInfos->getPath(),
                                                 $this->sourceVersion,
-                                                $installWholeApp
+                                                true
                                                 );
             if ($this->moduleInstaller instanceof jIInstallerComponent2) {
                 $this->moduleInstaller->setGlobalSetup($this->globalSetup);
