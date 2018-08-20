@@ -88,6 +88,11 @@ class jInstallerComponentModule {
     protected $moduleInfos = null;
 
     /**
+     * @var jInstallerModuleConfigurator
+     */
+    protected $moduleConfigurator = null;
+
+    /**
      * @var jInstallerModule2|jInstallerModule
      */
     protected $moduleInstaller = null;
@@ -161,6 +166,15 @@ class jInstallerComponentModule {
 
     public function setInstallParameters($parameters) {
         $this->moduleInfos->parameters = $parameters;
+        $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
+        if ($sparam === null) {
+            $sparam = '';
+        }
+
+        $sp = $this->moduleInfos->serializeParameters();
+        if ($sparam != $sp) {
+            $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
+        }
     }
 
     public function getInstallParameters() {
@@ -208,11 +222,55 @@ class jInstallerComponentModule {
     }
 
     /**
+     * instancies the object which is responsible to configure the module
+     *
+     * @param bool $forLocalConfiguration  true if the configuration should be done
+     *             with the local configuration, else it will be done with the
+     *             main configuration
+     * @return jInstallerModuleConfigurator|null the configurator, or null
+     *          if there isn't any configurator
+     * @throws jInstallerException when configurator class not found
+     */
+    function getConfigurator($forLocalConfiguration = false) {
+
+        $this->_setAccess();
+
+        // false means that there isn't an installer for the module
+        if ($this->moduleConfigurator === false) {
+            return null;
+        }
+
+        if ($this->moduleConfigurator === null) {
+            if (!file_exists($this->moduleInfos->getPath().'install/configure.php') ||
+                $this->moduleInfos->skipInstaller
+            ) {
+                $this->moduleConfigurator = false;
+                return null;
+            }
+
+            require_once($this->moduleInfos->getPath().'install/configure.php');
+
+            $cname = $this->name.'ModuleConfigurator';
+            if (!class_exists($cname)) {
+                throw new jInstallerException("module.configurator.class.not.found", array($cname, $this->name));
+            }
+
+            $this->moduleConfigurator = new $cname($this->name,
+                $this->name,
+                $this->moduleInfos->getPath(),
+                $this->sourceVersion,
+                $forLocalConfiguration
+            );
+            $this->moduleConfigurator->setGlobalSetup($this->globalSetup);
+        }
+        return $this->moduleConfigurator;
+    }
+
+    /**
      * instancies the object which is responsible to install the module
      *
-     * @return jIInstallerComponent|jIInstallerComponent2|null|false the installer, or null
+     * @return jIInstallerComponent|jIInstallerComponent2|null the installer, or null
      *          if there isn't any installer
-     *         or false if the installer is useless for the given parameter
      * @throws jInstallerException when install class not found
      */
     function getInstaller() {
@@ -509,8 +567,7 @@ class jInstallerComponentModule {
     }
 
     /**
-     * @param string $epId
-     * @param bool $installedByDefault
+     * @param bool $forConfigure
      * @return Item
      */
     public function getResolverItem() {

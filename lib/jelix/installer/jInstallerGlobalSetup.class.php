@@ -241,6 +241,9 @@ class jInstallerGlobalSetup {
         return null;
     }
 
+    /**
+     * @return jInstallerComponentModule[]
+     */
     public function getModuleComponentsList() {
         return $this->modules;
     }
@@ -257,6 +260,29 @@ class jInstallerGlobalSetup {
      */
     public function getEntryPointsList() {
         return $this->entryPoints;
+    }
+
+    /**
+     * @return jInstallerEntryPoint2
+     */
+    public function getEntryPointById($epId) {
+        if (isset($this->entryPoints[$epId])) {
+            return $this->entryPoints[$epId];
+        }
+        return null;
+    }
+
+    /**
+     * @return jInstallerEntryPoint2[]
+     */
+    public function getEntryPointsByType($type = 'classic') {
+        $list = [];
+        foreach($this->entryPoints as $id =>$ep) {
+            if ($ep->getType() == $type) {
+                $list[$id] = $ep;
+            }
+        }
+        return $list;
     }
 
     /**

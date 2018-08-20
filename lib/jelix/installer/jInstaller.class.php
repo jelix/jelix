@@ -12,6 +12,7 @@ require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
@@ -23,7 +24,7 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-require(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
 use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
@@ -261,8 +262,9 @@ class jInstaller {
     protected function resolveDependencies(Resolver $resolver) {
 
         try {
-            $moduleschain = $resolver->getDependenciesChainForInstallation();
-        } catch(ItemException $e) {
+            $moduleschain = $resolver->getDependenciesChainForInstallation(false);
+        }
+        catch(ItemException $e) {
             $item = $e->getItem();
             $component = $item->getProperty('component');
 
@@ -311,7 +313,11 @@ class jInstaller {
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.choice.ambiguous', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-
+                case ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('module.dependency.error', array($depName, $component->getName()));
+                    break;
             }
 
             $this->ok('install.bad.end');

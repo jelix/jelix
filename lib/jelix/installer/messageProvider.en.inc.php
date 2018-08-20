@@ -59,10 +59,12 @@ return array(
         'module.circular.dependency'=>"Circular dependency ! Cannot install the component %s",
         'module.needed'         =>'To install %s these modules are needed: %s',
         'module.forbidden'         =>'The module %s is in conflict with %s. Only one of them can be installed.',
+        'module.dependency.error' => 'The module %s, which is a dependency of %s, cannot be installed',
         'module.choice.ambiguous'   =>"The module %s needs one of these modules, %s. But you must explicitely to install one of them.",
         'module.choice.unknown'     =>"The module %s needs one of these modules, %s. But there are unknown or do not met version criterias",
         'module.bad.jelix.version'=>'The module %s needs another jelix version (%s - %s)',
         'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
+        'module.configurator.class.not.found'=>'The configuration class %s for the module %s doesn\'t exist',
         'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
         'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
         'module.error.delete.dependency' => 'Module %s, , needed by module %s, should be removed at the same time',
@@ -80,7 +82,7 @@ return array(
         'install.entrypoint.wrong.config' => 'The entry point %s should have its own configuration file',
 
         'install.dependencies.ok'   =>'All modules dependencies are ok',
-        'install.bad.dependencies'  =>'Error in dependencies. Installation cancelled.',
+        'install.bad.dependencies'  =>'Error in dependencies.',
         'install.invalid.xml.file'  =>'The identity file  %s is invalid or not found',
 
         'install.module.already.installed'=>'Module %s is already installed',
@@ -90,4 +92,11 @@ return array(
         'install.module.upgraded'       =>'Module %s upgraded to the version %s',
         'install.module.uninstalled'       =>'Module %s has been uninstalled',
         'more.details'                  =>'More details',
+
+        'configuration.start'  =>'Configuration starts',
+        'configuration.end'    =>'Modules are configured',
+        'configuration.bad.end'=>'Configuration is aborted',
+        'configuration.module.configured'  =>'Module %s configured',
+        'configuration.module.error'          =>'An error occured during the configuration of the module %s: %s',
+        'configuration.ask.parameters'  => 'Parameters to install module %s',
 );

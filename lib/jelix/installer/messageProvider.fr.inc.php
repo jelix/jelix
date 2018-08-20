@@ -59,10 +59,12 @@ return array(
         'module.circular.dependency'=>"Dépendance circulaire ! le composant %s ne peut être installé",
         'module.needed'         =>'Pour installer le module %s, ces modules doivent être présent : %s',
         'module.forbidden'         =>'Le module %s est en conflit avec le module %s. Seul l\'un d\'eux peut être installé',
+        'module.dependency.error' => 'Le module %s, qui est une dépendance de %s, ne peut pas être installé',
         'module.choice.ambiguous'   =>"Le module %s nécessite l'un de ces modules, %s. Mais il est nécessaire de choisir d'installer d'abord l'un d'entre eux",
         'module.choice.unknown'     =>"Le module %s nécessite l'un de ces modules, %s. Mais ils sont inexistants ou n'ont pas la version requise",
         'module.bad.jelix.version'=>'Le module %s necessite une autre version de jelix (%s - %s)',
         'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
+        'module.configurator.class.not.found'=>'La classe de configuration %s pour le module %s n\'existe pas',
         'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
         'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
         'module.error.delete.dependency' => 'Le module %s, qui est doit être désinstallé, est nécessaire au module %s',
@@ -78,7 +80,7 @@ return array(
         'install.installers.disabled'=>'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.',
 
         'install.dependencies.ok'   =>'Toutes les dépendances des modules sont valides',
-        'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances. Installation annulée.',
+        'install.bad.dependencies'  =>'Il y a des erreurs dans les dépendances.',
         'install.invalid.xml.file'  =>'Le fichier identité %s est invalide ou inexistant',
 
         'install.entrypoint.wrong.config' => 'Le point d\'entrée %s devrait avoir son propre fichier de configuration',
@@ -90,4 +92,11 @@ return array(
         'install.module.upgraded'           =>'Le module %s est mis à jour à la version %s',
         'install.module.uninstalled'        =>'Le module %s a été désinstallé',
         'more.details'                      =>'Plus de details',
+
+        'configuration.start'  =>'La configuration démarre',
+        'configuration.end'    =>'Les modules sont configurés',
+        'configuration.bad.end'=>'Configuration interrompue pour cause d\'erreurs',
+        'configuration.module.installed' =>'Le module %s est configuré',
+        'configuration.module.error'     =>'Une erreur est survenue durant la configuration du module %s: %s',
+        'configuration.ask.parameters'  => 'Paramètres pour installer le module %s',
 );
