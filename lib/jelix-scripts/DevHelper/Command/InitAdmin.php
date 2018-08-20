@@ -14,6 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Jelix\DevHelper\AbstractCommand;
+
+
 
 class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
@@ -47,27 +50,30 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                InputOption::VALUE_NONE,
                'Do not use and do not configure the driver \'db\' of jAcl2'
             )
-
         ;
-        parent::configure();
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-        $this->loadAppConfig();
-        return $this->_execute($input, $output);
-    }
-
-    protected function _execute(InputInterface $input, OutputInterface $output) {
+        AbstractCommand::execute($input, $output);
         $entrypoint = $input->getArgument('entrypoint');
         if (($p = strpos($entrypoint, '.php')) !== false) {
             $entrypoint = substr($entrypoint,0,$p);
         }
+        $this->selectedEntryPointId = $entrypoint;
+        $this->loadAppConfig($this->selectedEntryPointId);
+        return $this->_execute($input, $output);
+    }
 
-        $ep = $this->getEntryPointInfo($entrypoint);
+    protected function _execute(InputInterface $input, OutputInterface $output) {
 
-        if ($ep == null) {
+        $entrypoint = $this->selectedEntryPointId;
+        try {
+
+            $ep = $this->getEntryPointInfo($entrypoint);
+        }
+        catch (\Exception $e) {
             try {
                 $options = array(
                     'entrypoint'=>$entrypoint,

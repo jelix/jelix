@@ -84,6 +84,8 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                'Do not register the module in the application configuration'
             )
         ;
+
+        $this->addEpOption();
         parent::configure();
     }
 
@@ -174,7 +176,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 $xmlEp = $xmlMap->getDefaultEntryPoint('classic');
             }
             else {
-                $xmlEp = $xmlMap->getEntryPoint($this->entryPointId);
+                $xmlEp = $xmlMap->getEntryPoint($this->selectedEntryPointId);
             }
             if ($xmlEp) {
                 $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default'=>true));
@@ -206,9 +208,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 'method'=>'index',
             );
 
-            if ($input->getOption('entry-point')) {
-                $arguments['--entry-point'] = $input->getOption('entry-point');
-            }
             if ($input->getOption('cmdline')) {
                 $arguments['--cmdline'] = true;
             }

@@ -27,7 +27,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             ->addArgument(
                 'entrypoint',
                 InputArgument::REQUIRED,
-                'Name of the new entrypoint. It can contain a sub-directory'
+                'Name of the new entrypoint. It can contain a directory path related to the config dir'
             )
             ->addArgument(
                 'config',
@@ -169,7 +169,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         if (!$ep->length) {
             $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
+            $this->projectXml->documentElement->appendChild($ep);
             $ep->appendChild($elem);
         }
         else {
