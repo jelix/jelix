@@ -158,6 +158,11 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
             return null;
     }
 
+    function getConfigurationMode() {
+        return $this->forLocalConfiguration;
+    }
+
+
     function setGlobalSetup(jInstallerGlobalSetup $setup) {
         $this->globalSetup = $setup;
     }

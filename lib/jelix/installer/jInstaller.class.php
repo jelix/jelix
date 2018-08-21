@@ -136,18 +136,6 @@ class jInstaller {
     }
 
     /**
-     * set parameters for the installer of a module
-     * @param string $moduleName the name of the module
-     * @param array $parameters  parameters
-     */
-    public function setModuleParameters($moduleName, $parameters) {
-        $module = $this->globalSetup->getModuleComponent($moduleName);
-        if ($module) {
-            $module->saveInstallParameters($parameters);
-        }
-    }
-
-    /**
      * install and upgrade if needed, all modules
      *
      * Only modules which have an access property > 0

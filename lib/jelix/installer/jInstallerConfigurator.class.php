@@ -144,14 +144,15 @@ class jInstallerConfigurator {
      * @param array $modulesList array of module names
      * @param string $dedicatedEntryPointId entry point from which the module will
      *        be mainly accessible
-     * @param bool $forLocalConfig true if the configuration should be done into
-     *                              the local configuration instead of app configuration
+     * @param bool|null $forLocalConfig true if the configuration should be done into
+     *                         the local configuration instead of app configuration (false).
+     *                          give null to use the default configuration mode
      * @param bool $forceReconfigure true if an already configured module should
      *              be reconfigured
      */
     public function configureModules($modulesList,
                                      $dedicatedEntryPointId = 'index',
-                                     $forLocalConfig = false,
+                                     $forLocalConfig = null,
                                      $forceReconfigure = false
     ) {
         $this->startMessage();
@@ -204,7 +205,7 @@ class jInstallerConfigurator {
             return false;
         }
 
-        if (!$this->runConfigure($componentsToConfigure, $entryPoint)) {
+        if (!$this->runConfigure($componentsToConfigure, $entryPoint, $forLocalConfig)) {
             $this->warning('configuration.bad.end');
             return false;
         }
@@ -330,7 +331,7 @@ class jInstallerConfigurator {
                         $configurator->setInteractiveComponent($this->questionHelper, $this->consoleInput, $this->consoleOutput);
                         $configurator->askParameters();
                     }
-                    $component->saveInstallParameters($configurator->getParameters(), $forLocalConfig);
+                    $component->setInstallParameters($configurator->getParameters());
 
                     $configurator->preConfigure();
                 }
@@ -352,7 +353,7 @@ class jInstallerConfigurator {
      * @param Item[] $componentsToConfigure
      * @return bool
      */
-    protected function runConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint, $forLocalConfig) {
         $result = true;
         try {
             foreach($componentsToConfigure as $item) {
@@ -363,6 +364,7 @@ class jInstallerConfigurator {
                 if ($configurator) {
                     $configurator->configure();
 
+                    $component->saveModuleInfos($forLocalConfig);
                     // we save the configuration at each module because its
                     // installer may have modified it, and we want to save it
                     // in case the next module installer fails.

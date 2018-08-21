@@ -45,6 +45,13 @@ class jInstallerModuleInfos {
 
     public $skipInstaller = false;
 
+
+    const CONFIG_SCOPE_APP = 0;
+    const CONFIG_SCOPE_LOCAL = 1;
+
+    public $configurationScope = 0;
+
+
     protected $path;
 
     /**
@@ -69,6 +76,11 @@ class jInstallerModuleInfos {
         if (isset($config[$name.'.skipinstaller']) &&  $config[$name.'.skipinstaller'] == 'skip') {
             $this->skipInstaller = true;
         }
+
+        if (isset($config[$name.'.localconf'])) {
+            $this->configurationScope = ($config[$name.'.localconf']?self::CONFIG_SCOPE_LOCAL: self::CONFIG_SCOPE_APP);
+        }
+
     }
 
     function getPath() {
@@ -77,6 +89,44 @@ class jInstallerModuleInfos {
 
     function getName() {
         return $this->name;
+    }
+
+    function saveInfos(\Jelix\IniFile\IniModifier $configIni) {
+        $configIni->setValue($this->name.'.access', $this->access, 'modules');
+
+        if ($this->dbProfile && $this->dbProfile != 'default') {
+            $configIni->setValue($this->name.'.dbprofile', $this->dbProfile, 'modules');
+        }
+        else {
+            $configIni->removeValue($this->name.'.dbprofile', 'modules');
+        }
+
+        $parameters = self::serializeParameters($this->parameters);
+        if ($parameters) {
+            $configIni->setValue($this->name.'.installparam', $parameters, 'modules');
+        }
+        else {
+            $configIni->removeValue($this->name.'.installparam', 'modules');
+        }
+
+        if ($this->skipInstaller) {
+            $configIni->setValue($this->name.'.skipinstaller', true, 'modules');
+        }
+        else {
+            $configIni->removeValue($this->name.'.skipinstaller', 'modules');
+        }
+        if ($this->configurationScope == self::CONFIG_SCOPE_LOCAL) {
+            $configIni->setValue($this->name.'.localconf', self::CONFIG_SCOPE_LOCAL, 'modules');
+        }
+        else {
+            $configIni->removeValue($this->name.'.localconf', 'modules');
+        }
+    }
+
+    function clearInfos(\Jelix\IniFile\IniModifier $configIni) {
+        foreach(array('access', 'dbprofile', 'installparam', 'skipinstaller', 'localconf',) as $param) {
+            $configIni->removeValue($this->name.'.'.$param, 'modules');
+        }
     }
 
 

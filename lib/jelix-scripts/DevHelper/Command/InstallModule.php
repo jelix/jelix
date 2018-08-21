@@ -24,12 +24,6 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 InputArgument::REQUIRED,
                 'Name of the module to install/upgrade'
             )
-            ->addOption(
-               'parameters',
-               'p',
-               InputOption::VALUE_REQUIRED,
-               'parameters for the installer of the module: -p "param1;param2=value;..."'
-            )
         ;
         parent::configure();
     }
@@ -55,9 +49,6 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $installer = new \jInstaller($reporter);
-        if ($parameters) {
-            $installer->setModuleParameters($module, $parameters);
-        }
         $installer->installModules(array($module));
 
         try {

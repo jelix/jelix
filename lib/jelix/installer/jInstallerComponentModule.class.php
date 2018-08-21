@@ -165,25 +165,27 @@ class jInstallerComponentModule {
     }
 
     /**
-     * Save installation parameters infos into the configuration
+     * Set installation parameters into module infos
      * @param string[] $parameters
      */
-    public function saveInstallParameters($parameters, $forLocalConfig = false) {
+    public function setInstallParameters($parameters) {
         $this->moduleInfos->parameters = $parameters;
-        $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
-        if ($sparam === null) {
-            $sparam = '';
+    }
+
+    /**
+     * save module infos into the app config or the localconfig
+     * @param bool $forLocalConfig
+     */
+    public function saveModuleInfos($forLocalConfig = false) {
+
+        if ($forLocalConfig) {
+            $conf = $this->globalSetup->getLocalConfigIni();
         }
-        $sp = $this->moduleInfos->getSerializedParameters();
-        if ($sparam != $sp) {
-            if ($forLocalConfig) {
-                $conf = $this->globalSetup->getLocalConfigIni();
-            }
-            else {
-                $conf = $this->globalSetup->getConfigIni()['main'];
-            }
-            $conf->setValue($this->name.'.installparam', $sp, 'modules');
+        else {
+            $this->moduleInfos->clearInfos($this->globalSetup->getConfigIni()['local']);
+            $conf = $this->globalSetup->getConfigIni()['main'];
         }
+        $this->moduleInfos->saveInfos($conf);
     }
 
     /**
@@ -212,7 +214,7 @@ class jInstallerComponentModule {
             ) {
                 return;
             }
-
+            $this->moduleInfos->access = 2;
             $config['main']->setValue($this->name.'.access', 2, 'modules');
         }
         else if ($action == Resolver::ACTION_REMOVE) {
@@ -220,6 +222,7 @@ class jInstallerComponentModule {
             if ($accessLocal !== null) {
                 if ($accessLocal !== 0) {
                     $config['local']->setValue($this->name.'.access', 0, 'modules');
+                    $this->moduleInfos->access = 0;
                 }
                 return;
             }
@@ -227,6 +230,7 @@ class jInstallerComponentModule {
             if ($accessMain !== null) {
                 if ($accessMain !== 0) {
                     $config['main']->setValue($this->name.'.access', 0, 'modules');
+                    $this->moduleInfos->access = 0;
                 }
                 return;
             }
@@ -243,7 +247,7 @@ class jInstallerComponentModule {
      *          if there isn't any configurator
      * @throws jInstallerException when configurator class not found
      */
-    function getConfigurator($forLocalConfiguration = false) {
+    function getConfigurator($forLocalConfiguration = null) {
 
         $this->_setAccess();
 
@@ -266,6 +270,14 @@ class jInstallerComponentModule {
             if (!class_exists($cname)) {
                 throw new jInstallerException("module.configurator.class.not.found", array($cname, $this->name));
             }
+
+            if ($forLocalConfiguration === null) {
+                $forLocalConfiguration = $this->moduleInfos->configurationScope;
+            }
+            else {
+                $this->moduleInfos->configurationScope = $forLocalConfiguration;
+            }
+
 
             $this->moduleConfigurator = new $cname($this->name,
                 $this->name,

@@ -144,7 +144,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $authini->setValue('profile',$profile, 'Db');
             }
             $authini->save();
-            $installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
+
+            // FIXME : call configurator
+            //$installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
             $installer->installModules(array('jauthdb', 'jauthdb_admin'));
         }
         else {
@@ -161,7 +163,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $dbini->save();
             }
             $installer = new \jInstaller($reporter);
-            $installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
+            // FIXME : call configurator
+            //$installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
             $installer->installModules(array('jacl2db', 'jacl2db_admin'));
         }
         else {

@@ -42,6 +42,12 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 InputOption::VALUE_NONE,
                 'configure the module only into the local configuration'
             )
+            ->addOption(
+                'no-local',
+                '',
+                InputOption::VALUE_NONE,
+                'configure the module into the app configuration, when it was previously configured for the local configuration'
+            )
         ;
         parent::configure();
     }
@@ -75,8 +81,11 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
         }
 
+        $localConfig = $input->getOption('local')?true:($input->getOption('no-local')?true:null);
+
+
         $configurator->configureModules(array($module), $this->selectedEntryPointId,
-            $input->getOption('local'), $input->getOption('force'));
+            $localConfig, $input->getOption('force'));
 
         \jAppManager::open();
     }
