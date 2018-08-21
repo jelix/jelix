@@ -41,28 +41,5 @@ interface jIInstallerComponent2 {
      */
     function postInstall();
 
-    /**
-     * Called before the uninstallation of all other modules
-     *
-     * Here, you should check if the module can be uninstalled or not
-     * @throws Exception if the module cannot be uninstalled
-     */
-    function preUninstall();
-
-    /**
-     * should unconfigure the module
-     *
-     * @throws Exception  if an error occurs during the uninstall.
-     */
-    function uninstall();
-
-    /**
-     * Redefine this method if you do some additional process after
-     * the uninstallation of all modules
-     *
-     * @throws Exception  if an error occurs during the post installation.
-     */
-    function postUninstall();
-
 }
 

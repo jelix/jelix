@@ -66,6 +66,7 @@ return array(
         'module.bad.dependency.version'=>'The module %s needs another version of the module %s (%s - %s)',
         'module.configurator.class.not.found'=>'The configuration class %s for the module %s doesn\'t exist',
         'module.installer.class.not.found'=>'The installation class %s for the module %s doesn\'t exist',
+        'module.uninstaller.class.not.found'=>'The uninstallation class %s for the module %s doesn\'t exist',
         'module.upgrader.class.not.found'=>'The upgrade class %s for the module %s doesn\'t exist',
         'module.error.delete.dependency' => 'Module %s, , needed by module %s, should be removed at the same time',
         'module.error.install.dependency' => 'Module %s,  should be removed because of the removal of one of its dependencies, module %s, but it asked to be install/upgrade at the same time',

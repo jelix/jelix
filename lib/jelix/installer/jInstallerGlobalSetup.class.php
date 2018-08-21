@@ -486,4 +486,17 @@ class jInstallerGlobalSetup {
         }
     }
 
+    /**
+     * @param \Jelix\IniFile\IniModifier $config
+     * @param string $name the name of webassets
+     * @param string $collection the name of the webassets collection
+     */
+    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifier $config, $name, $collection) {
+
+        $section = 'webassets_'.$collection;
+        $config->removeValue($name.'.css', $section);
+        $config->removeValue($name.'.js', $section);
+        $config->removeValue($name.'.require', $section);
+    }
+
 }

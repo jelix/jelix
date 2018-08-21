@@ -98,6 +98,11 @@ class jInstallerComponentModule {
     protected $moduleInstaller = null;
 
     /**
+     * @var jInstallerModule2Uninstaller|jInstallerModule
+     */
+    protected $moduleUninstaller = null;
+
+    /**
      * @var jInstallerModule2[]|jInstallerModule[]
      */
     protected $moduleUpgraders = null;
@@ -346,6 +351,61 @@ class jInstallerComponentModule {
 
         return $this->moduleInstaller;
     }
+
+    /**
+     * instancies the object which is responsible to uninstall the module
+     *
+     * @return jIInstallerComponent|jIInstallerComponent2Uninstaller|null the uninstaller, or null
+     *          if there isn't any uninstaller
+     * @throws jInstallerException when install class not found
+     */
+    function getUninstaller() {
+
+        // false means that there isn't an installer for the module
+        if ($this->moduleUninstaller === false) {
+            return null;
+        }
+
+        if ($this->moduleUninstaller === null) {
+
+            if ($this->moduleInfos->skipInstaller) {
+                $this->moduleUninstaller = false;
+                return null;
+            }
+
+            $installer = $this->getInstaller();
+            if ($installer && $installer instanceof jIInstallerComponent) {
+                $this->moduleUninstaller = $installer;
+                $this->moduleUninstaller->setParameters($this->moduleInfos->parameters);
+                return $this->moduleUninstaller;
+            }
+
+            if (!file_exists($this->moduleInfos->getPath().'install/uninstall.php')) {
+                $this->moduleUninstaller = false;
+                return null;
+            }
+
+            require_once($this->moduleInfos->getPath().'install/uninstall.php');
+
+            $cname = $this->name.'ModuleUninstaller';
+            if (!class_exists($cname)) {
+                throw new jInstallerException("module.uninstaller.class.not.found", array($cname, $this->name));
+            }
+
+            $this->moduleUninstaller = new $cname($this->name,
+                $this->name,
+                $this->moduleInfos->getPath(),
+                $this->sourceVersion,
+                true
+            );
+            $this->moduleUninstaller->setGlobalSetup($this->globalSetup);
+        }
+
+        $this->moduleUninstaller->initDbProfile($this->moduleInfos->dbProfile);
+        $this->moduleUninstaller->setParameters($this->moduleInfos->parameters);
+        return $this->moduleUninstaller;
+    }
+
 
     /**
      * return the list of objects which are responsible to upgrade the module

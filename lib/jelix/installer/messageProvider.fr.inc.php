@@ -66,6 +66,7 @@ return array(
         'module.bad.dependency.version'=>'Le module %s necessite une autre version du module %s (%s - %s)',
         'module.configurator.class.not.found'=>'La classe de configuration %s pour le module %s n\'existe pas',
         'module.installer.class.not.found'=>'La classe d\'installation %s pour le module %s n\'existe pas',
+        'module.uninstaller.class.not.found'=>'La classe de désinstallation %s pour le module %s n\'existe pas',
         'module.upgrader.class.not.found'=>'La classe de mise à jour %s pour le module %s n\'existe pas',
         'module.error.delete.dependency' => 'Le module %s, qui est doit être désinstallé, est nécessaire au module %s',
         'module.error.install.dependency' => 'Le module %s, que vous demandez d\'installer, doit être désinstallé à cause de la désinstallation du module %s',

@@ -124,11 +124,17 @@ class jFile {
      * @return string the path which is a system valid path
      */
     public static function parseJelixPath($path){
-        return str_replace(
-            array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:', 'appconfig:'),
+        $path = str_replace(
+            array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:',
+                'appconfig:'),
             array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
-                jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(), jApp::appConfigPath()),
+                jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(),
+                jApp::appConfigPath()),
             $path );
+        if (strpos($path, 'jelixwww:') === 0 && jApp::config()) {
+            $path = jApp::config()->urlengine['jelixWWWPath'].'/'.substr($path, 9);
+        }
+        return $path;
     }
 
     /**

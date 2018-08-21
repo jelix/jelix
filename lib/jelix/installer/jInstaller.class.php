@@ -15,10 +15,13 @@ require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
+require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2Uninstaller.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerGlobalSetup.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerModule2Abstract.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerModule2Uninstaller.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
@@ -315,7 +318,7 @@ class jInstaller {
                     if ($installersDisabled) {
                         $installer = null;
                     } else {
-                        $installer = $component->getInstaller();
+                        $installer = $component->getUninstaller();
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {
@@ -350,7 +353,7 @@ class jInstaller {
         try {
             foreach($componentsToInstall as $item) {
                 /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModule2 $installer */
+                /** @var jInstallerModule2|jInstallerModule2Uninstaller $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
@@ -458,12 +461,11 @@ class jInstaller {
     protected function runPostInstall($installedModules) {
 
         $result = true;
-        // post install
-        /** @var jInstallerComponentModule $component */
-        /** @var jInstallerModule $installer */
 
         foreach($installedModules as $item) {
             try {
+                /** @var jInstallerComponentModule $component */
+                /** @var jInstallerModule2|jInstallerModule2Uninstaller  $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
