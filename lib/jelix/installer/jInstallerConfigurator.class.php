@@ -23,6 +23,7 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPointConfigurator.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
@@ -143,9 +144,16 @@ class jInstallerConfigurator {
      * @param array $modulesList array of module names
      * @param string $dedicatedEntryPointId entry point from which the module will
      *        be mainly accessible
-     * @param bool $forceReconfigure true if an already configured module should be reconfigured
+     * @param bool $forLocalConfig true if the configuration should be done into
+     *                              the local configuration instead of app configuration
+     * @param bool $forceReconfigure true if an already configured module should
+     *              be reconfigured
      */
-    public function configureModules($modulesList, $dedicatedEntryPointId = 'index', $forceReconfigure = false) {
+    public function configureModules($modulesList,
+                                     $dedicatedEntryPointId = 'index',
+                                     $forLocalConfig = false,
+                                     $forceReconfigure = false
+    ) {
         $this->startMessage();
 
         // check that all given modules are existing
@@ -190,7 +198,7 @@ class jInstallerConfigurator {
             $this->notice('install.installers.disabled');
         }
 
-        $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint);
+        $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
         if ($componentsToConfigure === false) {
             $this->warning('configuration.bad.end');
             return false;
@@ -292,7 +300,7 @@ class jInstallerConfigurator {
      * @param \Jelix\Dependencies\Item[] $moduleschain
      * @return array|bool
      */
-    protected function runPreConfigure(&$moduleschain, jInstallerEntryPoint2 $entryPoint) {
+    protected function runPreConfigure(&$moduleschain, jInstallerEntryPoint2 $entryPoint, $forLocalConfig) {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
@@ -304,7 +312,7 @@ class jInstallerConfigurator {
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator();
+                    $configurator = $component->getConfigurator($forLocalConfig);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
@@ -322,7 +330,7 @@ class jInstallerConfigurator {
                         $configurator->setInteractiveComponent($this->questionHelper, $this->consoleInput, $this->consoleOutput);
                         $configurator->askParameters();
                     }
-                    $component->saveInstallParameters($configurator->getParameters());
+                    $component->saveInstallParameters($configurator->getParameters(), $forLocalConfig);
 
                     $configurator->preConfigure();
                 }
@@ -365,7 +373,7 @@ class jInstallerConfigurator {
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
                         $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFile(), true,
+                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
                                 $entryPoint->isCliScript(),
                                 $entryPoint->getScriptName()));
                         jApp::setConfig($entryPoint->getConfigObj());
@@ -407,7 +415,7 @@ class jInstallerConfigurator {
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
                         $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFile(), true,
+                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
                                 $entryPoint->isCliScript(),
                                 $entryPoint->getScriptName()));
                         jApp::setConfig($entryPoint->getConfigObj());

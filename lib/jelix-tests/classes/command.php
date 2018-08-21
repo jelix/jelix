@@ -117,7 +117,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
         // let's load configuration now, and coordinator. it could be needed by tests
         // (during load of their php files or during execution)
-        jApp::setConfig(jConfigCompiler::readAndCache($epInfo->getConfigFile(), null, $this->entryPoint));
+        jApp::setConfig(jConfigCompiler::readAndCache($epInfo->getConfigFileName(), null, $this->entryPoint));
         jApp::setCoord(new jCoordinator('', false));
 
         if ($modulesTests == 0) {

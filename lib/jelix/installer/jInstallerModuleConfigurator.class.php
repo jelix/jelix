@@ -308,36 +308,42 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
     }
 
     /**
-     * Point d'entrée principal de l'application (en général index.php)
-     * @return jInstallerEntryPoint2
-     */
-    protected function getMainEntryPoint() {
-        return $this->globalSetup->getMainEntryPoint();
-    }
-
-    /**
      * List of entry points of the application
      *
-     * @return jInstallerEntryPoint2[]
+     * @return jInstallerEntryPointConfigurator[]
      */
     protected function getEntryPointsList() {
-        return $this->globalSetup->getEntryPointsList();
+        $list = $this->globalSetup->getEntryPointsList();
+        $globalSetup = $this->globalSetup;
+        $flc = $this->forLocalConfiguration;
+        return array_map(function($ep) use($globalSetup, $flc) {
+            return new jInstallerEntryPointConfigurator($ep, $globalSetup, $flc);
+        }, $list);
     }
 
     /**
      * @param string $type
-     * @return jInstallerEntryPoint2[]
+     * @return jInstallerEntryPointConfigurator[]
      */
     protected function getEntryPointsByType($type='classic') {
-        return $this->globalSetup->getEntryPointsByType($type);
+        $list = $this->globalSetup->getEntryPointsByType($type);
+        $globalSetup = $this->globalSetup;
+        $flc = $this->forLocalConfiguration;
+        return array_map(function($ep) use($globalSetup, $flc) {
+            return new jInstallerEntryPointConfigurator($ep, $globalSetup, $flc);
+        }, $list);
     }
 
     /**
      * @param $epId
-     * @return jInstallerEntryPoint2
+     * @return jInstallerEntryPointConfigurator
      */
     protected function getEntryPointsById($epId) {
-        return $this->globalSetup->getEntryPointById($epId);
+        $ep = $this->globalSetup->getEntryPointById($epId);
+        if ($ep) {
+            $ep = new jInstallerEntryPointConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
+        }
+        return $ep;
     }
 
     /**
@@ -527,4 +533,3 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
         $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $collection, $force);
     }
 }
-

@@ -168,7 +168,7 @@ class jInstallerComponentModule {
      * Save installation parameters infos into the configuration
      * @param string[] $parameters
      */
-    public function saveInstallParameters($parameters) {
+    public function saveInstallParameters($parameters, $forLocalConfig = false) {
         $this->moduleInfos->parameters = $parameters;
         $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         if ($sparam === null) {
@@ -176,7 +176,13 @@ class jInstallerComponentModule {
         }
         $sp = $this->moduleInfos->getSerializedParameters();
         if ($sparam != $sp) {
-            $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
+            if ($forLocalConfig) {
+                $conf = $this->globalSetup->getLocalConfigIni();
+            }
+            else {
+                $conf = $this->globalSetup->getConfigIni()['main'];
+            }
+            $conf->setValue($this->name.'.installparam', $sp, 'modules');
         }
     }
 
@@ -336,8 +342,10 @@ class jInstallerComponentModule {
             $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
         }
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
-            $legacyEp = $mainEntryPoint->getLegacyInstallerEntryPoint();
-            $this->moduleInstaller->setEntryPoint($legacyEp,
+            if (!$mainEntryPoint->legacyInstallerEntryPoint) {
+                $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+            }
+            $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                 $this->moduleInfos->dbProfile);
         }
         else {
@@ -516,8 +524,10 @@ class jInstallerComponentModule {
         $upgrader->setParameters($this->moduleInfos->parameters);
 
         if ($upgrader instanceof jIInstallerComponent) {
-            $legacyEp = $mainEntryPoint->getLegacyInstallerEntryPoint();
-            $upgrader->setEntryPoint($legacyEp,
+            if (!$mainEntryPoint->legacyInstallerEntryPoint) {
+                $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+            }
+            $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                 $this->moduleInfos->dbProfile);
         }
         else {

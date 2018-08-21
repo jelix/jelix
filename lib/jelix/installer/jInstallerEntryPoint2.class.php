@@ -10,12 +10,12 @@
 use Jelix\Routing\UrlMapping\XmlEntryPoint;
 use Jelix\IniFile\IniModifier;
 
-
 /**
- * container for entry points properties
+ * container for entry points properties, for installers
  */
 class jInstallerEntryPoint2
 {
+
 
     /**
      * @var StdObj   configuration parameters. compiled content of config files
@@ -28,13 +28,13 @@ class jInstallerEntryPoint2
      * @var string the filename of the configuration file dedicated to the entry point
      *       ex: <apppath>/app/config/index/config.ini.php
      */
-    protected $configFile;
+    protected $configFileName;
 
     /**
      * all original configuration files combined
      * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $configIni;
+    protected $appConfigIni;
 
     /**
      * all local configuration files combined with original configuration file
@@ -81,6 +81,11 @@ class jInstallerEntryPoint2
     protected $globalSetup;
 
     /**
+     * @var jInstallerEntryPoint
+     */
+    public $legacyInstallerEntryPoint = null;
+
+    /**
      * @param jInstallerGlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
@@ -92,7 +97,7 @@ class jInstallerEntryPoint2
     {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
-        $this->configFile = $configFile;
+        $this->configFileName = $configFile;
         $this->scriptName = ($this->_isCliScript ? $file : '/' . $file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
@@ -103,12 +108,12 @@ class jInstallerEntryPoint2
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
 
-        $this->configIni = clone $globalSetup->getConfigIni();
-        $this->configIni['entrypoint'] = new IniModifier($appConfigPath);
+        $this->appConfigIni = clone $globalSetup->getConfigIni();
+        $this->appConfigIni['entrypoint'] = new IniModifier($appConfigPath);
 
         $varConfigPath = jApp::varConfigPath($configFile);
         $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
-        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni = clone $this->appConfigIni;
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
@@ -121,16 +126,6 @@ class jInstallerEntryPoint2
 
         $this->urlMap = $globalSetup->getUrlModifier()
             ->addEntryPoint($this->getEpId(), $type);
-    }
-
-    protected $legacyInstallerEntryPoint = null;
-
-    public function getLegacyInstallerEntryPoint()
-    {
-        if ($this->legacyInstallerEntryPoint === null) {
-            $this->legacyInstallerEntryPoint = new jInstallerEntryPoint($this, $this->globalSetup);
-        }
-        return $this->legacyInstallerEntryPoint;
     }
 
     public function getType()
@@ -186,9 +181,9 @@ class jInstallerEntryPoint2
      *
      * @return \Jelix\IniFile\IniModifierArray
      */
-    function getConfigIni()
+    function getAppConfigIni()
     {
-        return $this->configIni;
+        return $this->appConfigIni;
     }
 
     /*
@@ -228,9 +223,9 @@ class jInstallerEntryPoint2
     /**
      * @return string the config file name of the entry point
      */
-    function getConfigFile()
+    function getConfigFileName()
     {
-        return $this->configFile;
+        return $this->configFileName;
     }
 
     /**
@@ -247,15 +242,4 @@ class jInstallerEntryPoint2
         $this->config = $config;
     }
 
-    /**
-     * Declare web assets into the entry point config
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $collection the name of the webassets collection
-     * @param bool $force
-     */
-    public function declareWebAssets($name, array $values, $collection, $force)
-    {
-        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
-    }
 }

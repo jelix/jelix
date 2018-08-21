@@ -23,6 +23,7 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPointConfigurator.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
 
@@ -490,7 +491,7 @@ class jInstaller {
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
                         $this->mainEntryPoint->setConfigObj(
-                            jConfigCompiler::read($this->mainEntryPoint->getConfigFile(), true,
+                            jConfigCompiler::read($this->mainEntryPoint->getConfigFileName(), true,
                                 $this->mainEntryPoint->isCliScript(),
                                 $this->mainEntryPoint->getScriptName()));
                         jApp::setConfig($this->mainEntryPoint->getConfigObj());
@@ -557,7 +558,7 @@ class jInstaller {
                         // we re-load configuration file for each module because
                         // previous module installer could have modify it.
                         $this->mainEntryPoint->setConfigObj(
-                            jConfigCompiler::read($this->mainEntryPoint->getConfigFile(), true,
+                            jConfigCompiler::read($this->mainEntryPoint->getConfigFileName(), true,
                                 $this->mainEntryPoint->isCliScript(),
                                 $this->mainEntryPoint->getScriptName()));
                         jApp::setConfig($this->mainEntryPoint->getConfigObj());
