@@ -259,11 +259,10 @@ class jInstallerModule2 implements jIInstallerComponent2 {
         $this->dbProfile = $dbProfile;
 
         // we check if it is an alias
-        if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
-            $dbprofiles = parse_ini_file(jApp::varConfigPath('profiles.ini.php'));
-            if (isset($dbprofiles['jdb'][$dbProfile])) {
-                $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
-            }
+        $profilesIni = $this->globalSetup->getProfilesIni();
+        $alias = $profilesIni->getValue($dbProfile, 'jdb');
+        if ($alias) {
+            $this->dbProfile = $alias;
         }
 
         $this->_dbConn = null; // we force to retrieve a db connection
@@ -473,7 +472,8 @@ class jInstallerModule2 implements jIInstallerComponent2 {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
+
+        $profiles = $this->globalSetup->getProfilesIni();
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section

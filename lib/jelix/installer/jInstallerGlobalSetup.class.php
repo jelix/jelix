@@ -37,6 +37,11 @@ class jInstallerGlobalSetup {
     protected $urlMapModifier;
 
     /**
+     *  @var \Jelix\IniFile\IniModifier it represents the profiles.ini.php file.
+     */
+    protected $profilesIni = null;
+
+    /**
      *  @var \Jelix\IniFile\IniModifier it represents the installer.ini.php file.
      */
     protected $installerIni = null;
@@ -87,6 +92,19 @@ class jInstallerGlobalSetup {
             $projectXmlFileName = jApp::appPath('project.xml');
         }
         $this->projectXmlPath = $projectXmlFileName;
+
+        $profileIniFileName = jApp::varConfigPath('profiles.ini.php');
+        if (!file_exists($profileIniFileName)) {
+            $profileIniDist = jApp::varConfigPath('profiles.ini.php.dist');
+            if (file_exists($profileIniDist)) {
+                copy($profileIniDist, $profileIniFileName);
+            }
+            else {
+                file_put_contents($profileIniFileName, ';<'.'?php die(\'\');?'.'> ');
+            }
+        }
+
+        $this->profilesIni = new \Jelix\IniFile\IniModifier($profileIniFileName);
 
         if (!$mainConfigFileName) {
             $mainConfigFileName = jApp::mainConfigFile();
@@ -309,6 +327,14 @@ class jInstallerGlobalSetup {
      */
     public function getLiveConfigIni() {
         return $this->liveConfigIni;
+    }
+
+    /**
+     * the profiles.ini.php file
+     * @return \Jelix\IniFile\IniModifier
+     */
+    public function getProfilesIni() {
+        return $this->profilesIni;
     }
 
     /**

@@ -435,7 +435,7 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      * @return boolean true if the ini file has been changed
      */
     protected function declareDbProfile($name, $sectionContent = null, $force = true ) {
-        $profiles = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
+        $profiles = $this->globalSetup->getProfilesIni();
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section
