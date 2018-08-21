@@ -44,17 +44,7 @@ class InstallModule extends \Jelix\DevHelper\AbstractCommandForApp {
         $parameters = $input->getOption('parameters');
 
         if ($parameters) {
-            $params = explode(';', $parameters);
-            $parameters = array();
-            foreach($params as $param) {
-                $kp = explode("=", $param);
-                if (count($kp) > 1) {
-                    $parameters[$kp[0]] = $kp[1];
-                }
-                else {
-                    $parameters[$kp[0]] = true;
-                }
-            }
+            $parameters = \jInstallerModuleInfos::unserializeParameters($parameters);
         }
 
         if ($this->verbose()) {

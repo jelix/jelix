@@ -63,21 +63,7 @@ class jInstallerModuleInfos {
         $this->version = $config[$name.'.version'];
 
         if (isset($config[$name.'.installparam'])) {
-            $params = explode(';', $config[$name.'.installparam']);
-            foreach($params as $param) {
-                $kp = explode("=", $param);
-                if (count($kp) > 1) {
-                    $v = $kp[1];
-                    if (strpos($v, ',') !== false) {
-                        $this->parameters[$kp[0]] = explode(',', $v);
-                    }
-                    else {
-                        $this->parameters[$kp[0]] = $v;
-                    }
-                } else {
-                    $this->parameters[$kp[0]] = true;
-                }
-            }
+            $this->parameters = self::unserializeParameters($config[$name.'.installparam']);
         }
 
         if (isset($config[$name.'.skipinstaller']) &&  $config[$name.'.skipinstaller'] == 'skip') {
@@ -94,9 +80,33 @@ class jInstallerModuleInfos {
     }
 
 
-    function serializeParameters() {
+    static function unserializeParameters($parameters) {
+        $trueParams = array();
+        $params = explode(';', $parameters);
+        foreach($params as $param) {
+            $kp = explode("=", $param);
+            if (count($kp) > 1) {
+                $v = $kp[1];
+                if (strpos($v, ',') !== false) {
+                    $trueParams[$kp[0]] = explode(',', $v);
+                }
+                else {
+                    $trueParams[$kp[0]] = $v;
+                }
+            } else {
+                $trueParams[$kp[0]] = true;
+            }
+        }
+        return $trueParams;
+    }
+
+    function getSerializedParameters() {
+        return self::unserializeParameters($this->parameters);
+    }
+
+    static function serializeParameters($parameters) {
         $p = [];
-        foreach($this->parameters as $name=>$v) {
+        foreach($parameters as $name=>$v) {
             if (is_array($v)) {
                 if (!count($v)) {
                     continue;

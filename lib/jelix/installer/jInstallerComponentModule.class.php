@@ -174,8 +174,7 @@ class jInstallerComponentModule {
         if ($sparam === null) {
             $sparam = '';
         }
-
-        $sp = $this->moduleInfos->serializeParameters();
+        $sp = $this->moduleInfos->getSerializedParameters();
         if ($sparam != $sp) {
             $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
         }
@@ -332,7 +331,7 @@ class jInstallerComponentModule {
             $sparam = '';
         }
 
-        $sp = $this->moduleInfos->serializeParameters();
+        $sp = $this->moduleInfos->getSerializedParameters();
         if ($sparam != $sp) {
             $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
         }
