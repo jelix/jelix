@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2009-2010 Laurent Jouanneau
+* @copyright   2009-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -92,34 +92,34 @@ class jInstallerModuleInfos {
     }
 
     function saveInfos(\Jelix\IniFile\IniModifier $configIni) {
-        $configIni->setValue($this->name.'.access', $this->access, 'modules');
-
-        if ($this->dbProfile && $this->dbProfile != 'default') {
-            $configIni->setValue($this->name.'.dbprofile', $this->dbProfile, 'modules');
-        }
-        else {
-            $configIni->removeValue($this->name.'.dbprofile', 'modules');
+        $previous = $configIni->getValue($this->name.'.access', 'modules');
+        if ($previous !== $this->access) {
+            $configIni->setValue($this->name.'.access', $this->access, 'modules');
         }
 
-        $parameters = self::serializeParameters($this->parameters);
-        if ($parameters) {
-            $configIni->setValue($this->name.'.installparam', $parameters, 'modules');
-        }
-        else {
-            $configIni->removeValue($this->name.'.installparam', 'modules');
-        }
+        $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default'? $this->dbProfile: ''));
+        $this->setConfigInfo($configIni, 'installparam', self::serializeParameters($this->parameters));
+        $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller?'skip':''));
+        $this->setConfigInfo($configIni, 'localconf',
+            ($this->configurationScope == self::CONFIG_SCOPE_LOCAL?self::CONFIG_SCOPE_LOCAL:0));
+    }
 
-        if ($this->skipInstaller) {
-            $configIni->setValue($this->name.'.skipinstaller', true, 'modules');
+    /**
+     * @param \Jelix\IniFile\IniModifier $configIni
+     * @param string $name
+     * @param mixed $value
+     */
+    private function setConfigInfo($configIni, $name, $value) {
+        // only modify the file when the value is not already set
+        // to avoid to have to save the ini file  #perfs
+        $previous = $configIni->getValue($this->name.'.'.$name, 'modules');
+        if ($value) {
+            if ($previous != $value) {
+                $configIni->setValue($this->name.'.'.$name, $value, 'modules');
+            }
         }
-        else {
-            $configIni->removeValue($this->name.'.skipinstaller', 'modules');
-        }
-        if ($this->configurationScope == self::CONFIG_SCOPE_LOCAL) {
-            $configIni->setValue($this->name.'.localconf', self::CONFIG_SCOPE_LOCAL, 'modules');
-        }
-        else {
-            $configIni->removeValue($this->name.'.localconf', 'modules');
+        else if ($previous) {
+            $configIni->removeValue($this->name.'.'.$name, 'modules');
         }
     }
 

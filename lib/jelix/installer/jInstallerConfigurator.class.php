@@ -205,7 +205,7 @@ class jInstallerConfigurator {
             return false;
         }
 
-        if (!$this->runConfigure($componentsToConfigure, $entryPoint, $forLocalConfig)) {
+        if (!$this->runConfigure($componentsToConfigure, $entryPoint)) {
             $this->warning('configuration.bad.end');
             return false;
         }
@@ -313,7 +313,7 @@ class jInstallerConfigurator {
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator($forLocalConfig);
+                    $configurator = $component->getConfigurator(true, $forLocalConfig);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
@@ -353,7 +353,7 @@ class jInstallerConfigurator {
      * @param Item[] $componentsToConfigure
      * @return bool
      */
-    protected function runConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint, $forLocalConfig) {
+    protected function runConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
         $result = true;
         try {
             foreach($componentsToConfigure as $item) {
@@ -364,16 +364,16 @@ class jInstallerConfigurator {
                 if ($configurator) {
                     $configurator->configure();
 
-                    $component->saveModuleInfos($forLocalConfig);
+                    $component->saveModuleInfos();
                     // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
+                    // configurator may have modified it, and we want to save it
+                    // in case the next module configurator fails.
                     if ($this->globalSetup->getLiveConfigIni()->isModified()) {
                         //$ep->getLocalConfigIni()->save();
                         $this->globalSetup->getLiveConfigIni()->save();
 
                         // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
+                        // previous module configurator could have modify it.
                         $entryPoint->setConfigObj(
                             jConfigCompiler::read($entryPoint->getConfigFileName(), true,
                                 $entryPoint->isCliScript(),
@@ -396,9 +396,6 @@ class jInstallerConfigurator {
     protected function runPostConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
 
         $result = true;
-        // post install
-        /** @var jInstallerComponentModule $component */
-        /** @var jInstallerModule $installer */
 
         foreach($componentsToConfigure as $item) {
             try {
@@ -409,13 +406,13 @@ class jInstallerConfigurator {
                     $configurator->postConfigure();
 
                     // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
+                    // configurator may have modified it, and we want to save it
+                    // in case the next module configurator fails.
                     if ($this->globalSetup->getLiveConfigIni()->isModified()) {
                         $this->globalSetup->getLiveConfigIni()->save();
 
                         // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
+                        // previous module configurator could have modify it.
                         $entryPoint->setConfigObj(
                             jConfigCompiler::read($entryPoint->getConfigFileName(), true,
                                 $entryPoint->isCliScript(),
@@ -434,6 +431,209 @@ class jInstallerConfigurator {
         }
         return $result;
     }
+
+    /**
+     * Unconfigure a module
+     * @param string the module name
+     * @param string $dedicatedEntryPointId entry point from which the module is
+     *        mainly accessible
+     */
+    public function unconfigureModule($moduleName,
+                                     $dedicatedEntryPointId = 'index'
+    ) {
+        $this->startMessage();
+
+        // check that all given modules are existing
+        $component = $this->globalSetup->getModuleComponent($moduleName);
+        if (!$component) {
+            $this->error('module.unknown', $moduleName);
+            return false;
+        }
+
+        // get all modules
+        $resolver = new Resolver();
+        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
+            if ($name == $moduleName) {
+                if ($component->isActivated()) {
+                    $resolverItem->setAction(Resolver::ACTION_REMOVE);
+                }
+            }
+            $resolver->addItem($resolverItem);
+        }
+
+        // configure modules
+        $modulesChain = $this->resolveDependencies($resolver);
+        $modulesToConfigure = array();
+
+        foreach ($modulesChain as $resolverItem) {
+            if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
+                $modulesToConfigure[] = $resolverItem;
+            }
+        }
+
+        $this->notice('configuration.start');
+        $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
+        jApp::setConfig($entryPoint->getConfigObj());
+
+        if ($entryPoint->getConfigObj()->disableInstallers) {
+            $this->notice('install.installers.disabled');
+        }
+
+        $componentsToConfigure = $this->runPreUnconfigure($modulesToConfigure, $entryPoint);
+        if ($componentsToConfigure === false) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        if (!$this->runUnconfigure($componentsToConfigure, $entryPoint)) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        $result = $this->runPostUnconfigure($componentsToConfigure, $entryPoint);
+        if (!$result) {
+            $this->warning('configuration.bad.end');
+        }
+        else {
+            $this->ok('configuration.end');
+        }
+
+        $this->endMessage();
+        return $result;
+    }
+
+
+
+    /**
+     * Launch the preUnconfigure method of each modules configurator
+     *
+     * @param \Jelix\Dependencies\Item[] $moduleschain
+     * @return array|bool
+     */
+    protected function runPreUnconfigure(&$moduleschain, jInstallerEntryPoint2 $entryPoint) {
+        $result = true;
+        $componentsToInstall = array();
+        $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+        foreach($moduleschain as $resolverItem) {
+            /** @var jInstallerComponentModule $component */
+            $component = $resolverItem->getProperty('component');
+
+            try {
+                if ($installersDisabled) {
+                    $configurator = null;
+                } else {
+                    $configurator = $component->getConfigurator(false);
+                }
+                $componentsToInstall[] = array($configurator, $component);
+
+                if ($configurator) {
+                    // setup installation parameters
+                    $parameters = $configurator->getDefaultParameters();
+                    $parameters = array_merge($parameters, $component->getInstallParameters());
+                    $configurator->setParameters($parameters);
+                    $component->setInstallParameters($parameters);
+
+                    $configurator->preUnconfigure();
+                }
+            } catch (jInstallerException $e) {
+                $result = false;
+                $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+            } catch (Exception $e) {
+                $result = false;
+                $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
+            }
+        }
+        if (!$result) {
+            return false;
+        }
+        return $componentsToInstall;
+    }
+
+    /**
+     * @param Item[] $componentsToConfigure
+     * @return bool
+     */
+    protected function runUnconfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+        $result = true;
+        try {
+            foreach($componentsToConfigure as $item) {
+                /** @var jInstallerComponentModule $component */
+                /** @var jInstallerModuleConfigurator $configurator */
+                list($configurator, $component) = $item;
+
+                if ($configurator) {
+                    $configurator->unconfigure();
+
+                    $component->saveModuleInfos();
+                    // we save the configuration at each module because its
+                    // configurator may have modified it, and we want to save it
+                    // in case the next module installer fails.
+                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
+                        //$ep->getLocalConfigIni()->save();
+                        $this->globalSetup->getLiveConfigIni()->save();
+
+                        // we re-load configuration file for each module because
+                        // previous module configurator could have modify it.
+                        $entryPoint->setConfigObj(
+                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                                $entryPoint->isCliScript(),
+                                $entryPoint->getScriptName()));
+                        jApp::setConfig($entryPoint->getConfigObj());
+                    }
+                    $this->globalSetup->getUrlModifier()->save();
+                }
+            }
+        } catch (jInstallerException $e) {
+            $result = false;
+            $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+        } catch (Exception $e) {
+            $result = false;
+            $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
+        }
+        return $result;
+    }
+
+    protected function runPostUnconfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+
+        $result = true;
+
+        foreach($componentsToConfigure as $item) {
+            try {
+                /** @var jInstallerComponentModule $component */
+                /** @var jInstallerModuleConfigurator $configurator */
+                list($configurator, $component) = $item;
+                if ($configurator) {
+                    $configurator->postUnconfigure();
+
+                    // we save the configuration at each module because its
+                    // configurator may have modified it, and we want to save it
+                    // in case the next module configurator fails.
+                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
+                        $this->globalSetup->getLiveConfigIni()->save();
+
+                        // we re-load configuration file for each module because
+                        // previous module configurator could have modify it.
+                        $entryPoint->setConfigObj(
+                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                                $entryPoint->isCliScript(),
+                                $entryPoint->getScriptName()));
+                        jApp::setConfig($entryPoint->getConfigObj());
+                    }
+                    $this->globalSetup->getUrlModifier()->save();
+                }
+            } catch (jInstallerException $e) {
+                $result = false;
+                $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+            } catch (Exception $e) {
+                $result = false;
+                $this->error ('configurator.module.error', array($component->getName(), $e->getMessage()));
+            }
+        }
+        return $result;
+    }
+
+
 
     protected function startMessage () {
         $this->reporter->start();

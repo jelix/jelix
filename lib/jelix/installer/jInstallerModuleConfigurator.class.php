@@ -141,6 +141,28 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
 
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function preUnconfigure() {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function unconfigure() {
+
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function postUnconfigure() {
+
+    }
+
     // ----- other methods
 
     function getName() {

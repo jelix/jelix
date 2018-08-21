@@ -38,6 +38,7 @@ $application->add(new CreateDaoCrud($jelixScriptConfig));
 $application->add(new CreateClassFromDao($jelixScriptConfig));
 $application->add(new CreateModule($jelixScriptConfig));
 $application->add(new ConfigureModule($jelixScriptConfig));
+$application->add(new UnconfigureModule($jelixScriptConfig));
 $application->add(new CreateEntryPoint($jelixScriptConfig));
 $application->add(new CreateForm($jelixScriptConfig));
 $application->add(new CreateLangPackage($jelixScriptConfig));

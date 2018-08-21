@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -179,11 +179,10 @@ class jInstallerComponentModule {
 
     /**
      * save module infos into the app config or the localconfig
-     * @param bool $forLocalConfig
      */
-    public function saveModuleInfos($forLocalConfig = false) {
+    public function saveModuleInfos() {
 
-        if ($forLocalConfig) {
+        if ($this->moduleInfos->configurationScope == jInstallerModuleInfos::CONFIG_SCOPE_LOCAL) {
             $conf = $this->globalSetup->getLocalConfigIni();
         }
         else {
@@ -201,50 +200,9 @@ class jInstallerComponentModule {
     }
 
     /**
-     * Sets the access parameter in the right configuration file
-     */
-    protected function _setAccess()
-    {
-        $config = $this->globalSetup->getLiveConfigIni();
-        $accessLocal =   $config['local']->getValue($this->name . '.access', 'modules');
-        $accessMain =    $config['main']->getValue($this->name . '.access', 'modules');
-
-        $action = $this->getInstallAction();
-
-        if ($action == Resolver::ACTION_INSTALL) {
-            if ($accessLocal == 1 ||
-                $accessLocal == 2 ||
-                $accessMain == 1 ||
-                $accessMain == 2
-            ) {
-                return;
-            }
-            $this->moduleInfos->access = 2;
-            $config['main']->setValue($this->name.'.access', 2, 'modules');
-        }
-        else if ($action == Resolver::ACTION_REMOVE) {
-
-            if ($accessLocal !== null) {
-                if ($accessLocal !== 0) {
-                    $config['local']->setValue($this->name.'.access', 0, 'modules');
-                    $this->moduleInfos->access = 0;
-                }
-                return;
-            }
-
-            if ($accessMain !== null) {
-                if ($accessMain !== 0) {
-                    $config['main']->setValue($this->name.'.access', 0, 'modules');
-                    $this->moduleInfos->access = 0;
-                }
-                return;
-            }
-        }
-    }
-
-    /**
      * instancies the object which is responsible to configure the module
      *
+     * @param bool $actionMode  true to configure, false to unconfigure
      * @param bool $forLocalConfiguration  true if the configuration should be done
      *             with the local configuration, else it will be done with the
      *             main configuration
@@ -252,9 +210,9 @@ class jInstallerComponentModule {
      *          if there isn't any configurator
      * @throws jInstallerException when configurator class not found
      */
-    function getConfigurator($forLocalConfiguration = null) {
+    function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
 
-        $this->_setAccess();
+        $this->moduleInfos->access = ($actionMode?2:0);
 
         // false means that there isn't an installer for the module
         if ($this->moduleConfigurator === false) {

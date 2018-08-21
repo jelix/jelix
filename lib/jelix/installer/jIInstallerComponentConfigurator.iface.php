@@ -82,6 +82,34 @@ interface jIInstallerComponentConfigurator {
      */
     public function postConfigure();
 
+    /**
+     * called before unconfiguration of any modules.
+     *
+     * This is the opportunity to check some things. Throw an exception to
+     * interrupt the configuration process.
+     *
+     * @throws Exception if the module cannot be unconfigured
+     */
+    public function preUnconfigure();
+
+
+    /**
+     * Unconfigure the module
+     *
+     * You can remove some configuration parameters from the application
+     * parameters that are not needed for the uninstaller. You can
+     * also delete some files you installed into the configure() method,
+     * remove the url mapping etc..
+     *
+     * @throws Exception if the module cannot be unconfigured
+     */
+    public function unconfigure();
+
+    /**
+     * called after the unconfiguration of all modules.
+     */
+    public function postUnconfigure();
+
 
 }
 

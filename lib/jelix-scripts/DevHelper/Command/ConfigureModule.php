@@ -54,7 +54,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
 
         \jAppManager::close();
 
