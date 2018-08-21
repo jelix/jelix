@@ -164,7 +164,11 @@ class jInstallerComponentModule {
         $this->moduleInfos->version = $version;
     }
 
-    public function setInstallParameters($parameters) {
+    /**
+     * Save installation parameters infos into the configuration
+     * @param string[] $parameters
+     */
+    public function saveInstallParameters($parameters) {
         $this->moduleInfos->parameters = $parameters;
         $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
         if ($sparam === null) {
@@ -177,6 +181,9 @@ class jInstallerComponentModule {
         }
     }
 
+    /**
+     * @return string[]
+     */
     public function getInstallParameters() {
         return $this->moduleInfos->parameters;
     }

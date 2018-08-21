@@ -227,6 +227,14 @@ class jInstallerModule2 implements jIInstallerComponent2 {
     }
 
     /**
+     * @param $epId
+     * @return jInstallerEntryPoint2
+     */
+    protected function getEntryPointsById($epId) {
+        return $this->globalSetup->getEntryPointById($epId);
+    }
+
+    /**
      * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      */

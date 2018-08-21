@@ -142,7 +142,7 @@ class jInstaller {
     public function setModuleParameters($moduleName, $parameters) {
         $module = $this->globalSetup->getModuleComponent($moduleName);
         if ($module) {
-            $module->setInstallParameters($parameters);
+            $module->saveInstallParameters($parameters);
         }
     }
 

@@ -101,6 +101,7 @@ class jInstallerConfigurator {
     protected $consoleOutput = null;
 
     protected $moduleParameters = array();
+
     /**
      * initialize the configuration
      *
@@ -130,6 +131,7 @@ class jInstallerConfigurator {
     public function setModuleParameters($moduleName, $parameters) {
         $this->moduleParameters[$moduleName] = $parameters;
     }
+
 
     public function setInteractiveMode(QuestionHelper $helper, InputInterface $input, OutputInterface $output) {
         $this->consoleInput = $input;
@@ -307,18 +309,20 @@ class jInstallerConfigurator {
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
+                    // setup installation parameters
                     $parameters = $configurator->getDefaultParameters();
                     $parameters = array_merge($parameters, $component->getInstallParameters());
                     if (isset($this->moduleParameters[$component->getName()])) {
                         $parameters = array_merge($parameters, $this->moduleParameters[$resolverItem->getName()]);
                     }
                     $configurator->setParameters($parameters);
+
                     if ($this->consoleOutput && $this->consoleInput) {
                         $this->notice('configuration.ask.parameters', array($component->getName()));
                         $configurator->setInteractiveComponent($this->questionHelper, $this->consoleInput, $this->consoleOutput);
                         $configurator->askParameters();
                     }
-                    $component->setInstallParameters($configurator->getParameters());
+                    $component->saveInstallParameters($configurator->getParameters());
 
                     $configurator->preConfigure();
                 }

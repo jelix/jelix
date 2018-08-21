@@ -67,7 +67,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
             $this->selectedEntryPointId = $this->getSelectedEntryPoint($this->epOptionName, $input);
         }
         else if ($this->epListOptionName) {
-            $this->selectedEntryPointsIdList = $this->getSelectedEntryPoint($this->epOptionName, $input, true);
+            $this->selectedEntryPointsIdList = $this->getSelectedEntryPoint($this->epListOptionName, $input, true);
             if (count($this->selectedEntryPointsIdList)) {
                 $this->selectedEntryPointId = $this->selectedEntryPointsIdList[0];
             }

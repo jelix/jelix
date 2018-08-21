@@ -39,7 +39,7 @@ class jInstallerModuleInfos {
     public $version;
 
     /**
-     * @var array parameters for installation
+     * @var string[] parameters for installation
      */
     public $parameters = array();
 
@@ -66,10 +66,17 @@ class jInstallerModuleInfos {
             $params = explode(';', $config[$name.'.installparam']);
             foreach($params as $param) {
                 $kp = explode("=", $param);
-                if (count($kp) > 1)
-                    $this->parameters[$kp[0]] = $kp[1];
-                else
+                if (count($kp) > 1) {
+                    $v = $kp[1];
+                    if (strpos($v, ',') !== false) {
+                        $this->parameters[$kp[0]] = explode(',', $v);
+                    }
+                    else {
+                        $this->parameters[$kp[0]] = $v;
+                    }
+                } else {
                     $this->parameters[$kp[0]] = true;
+                }
             }
         }
 
@@ -88,15 +95,21 @@ class jInstallerModuleInfos {
 
 
     function serializeParameters() {
-        $p = '';
+        $p = [];
         foreach($this->parameters as $name=>$v) {
-            if ($v === true || $v == '')
-                $p.=';'.$name;
-            else
-                $p .= ';'.$name.'='.$v;
+            if (is_array($v)) {
+                if (!count($v)) {
+                    continue;
+                }
+                $v = implode(',', $v);
+            }
+            if ($v === true || $v === '') {
+                $p[] = $name;
+            }
+            else {
+                $p[] = $name . '=' . $v;
+            }
         }
-        if ($p == '')
-            return '';
-        return substr($p, 1);
+        return implode(';', $p);
     }
 }

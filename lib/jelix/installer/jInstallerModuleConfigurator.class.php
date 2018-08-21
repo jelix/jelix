@@ -244,6 +244,9 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
     protected function askInChoice($questionMessage, array $choice,
                                    $defaultResponse=0, $multipleChoice = false,
                                    $errorMessage='%s is invalid') {
+        if (is_array($defaultResponse)) {
+            $defaultResponse = implode(',', $defaultResponse);
+        }
         $question = new ChoiceQuestion($questionMessage, $choice, $defaultResponse);
         $question->setErrorMessage($errorMessage);
         if ($multipleChoice) {
@@ -252,13 +255,52 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
         return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
     }
 
+    /**
+     * Ask to choose an entry point
+     *
+     * To call from askParameters().
+     *
+     * @param string $questionMessage
+     * @param string $entryPointType the type of entry point. Empty value means any entry points
+     * @param bool $multipleChoice true if the user can choose different entry point
+     * @param string $errorMessage error message when the user didn't indicate a value from the choice
+     * @return string|string[]|false  list of entry points id, selected by the user.
+     *                                returns false if there is no choice
+     */
+    protected function askEntryPoints($questionMessage, $entryPointType='',
+                                      $multipleChoice = false, $preselectedChoice = array(),
+                                   $errorMessage='%s is an unknown entry points') {
 
+        if ($entryPointType == '') {
+            $choice = array_keys($this->globalSetup->getEntryPointsList());
+        }
+        else {
+            $choice = array_keys($this->globalSetup->getEntryPointsByType($entryPointType));
+        }
+        if (!count($choice)) {
+            return false;
+        }
+
+        if ($multipleChoice && count($choice) > 1) {
+            if ($this->askConfirmation($questionMessage. ' Select all of these entry points: '.implode(', ',$choice).'?', false)) {
+                return $choice;
+            }
+            $questionMessage .= "\nseveral values can be choice, separate them by a coma.";
+        }
+
+        $question = new ChoiceQuestion($questionMessage, $choice, implode(',', $preselectedChoice));
+        $question->setErrorMessage($errorMessage);
+        if ($multipleChoice && count($choice)) {
+            $question->setMultiselect(true);
+        }
+        return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
+    }
 
     /**
      * default config and main config combined
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getConfigIni() {
+    protected function getConfigIni() {
         if ($this->forLocalConfiguration) {
             return $this->globalSetup->getLocalConfigIni();
         }
@@ -269,7 +311,7 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      * Point d'entrée principal de l'application (en général index.php)
      * @return jInstallerEntryPoint2
      */
-    public function getMainEntryPoint() {
+    protected function getMainEntryPoint() {
         return $this->globalSetup->getMainEntryPoint();
     }
 
@@ -278,12 +320,24 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      *
      * @return jInstallerEntryPoint2[]
      */
-    public function getEntryPointsList() {
+    protected function getEntryPointsList() {
         return $this->globalSetup->getEntryPointsList();
     }
 
-    public function getEntryPointsByType($type='classic') {
+    /**
+     * @param string $type
+     * @return jInstallerEntryPoint2[]
+     */
+    protected function getEntryPointsByType($type='classic') {
         return $this->globalSetup->getEntryPointsByType($type);
+    }
+
+    /**
+     * @param $epId
+     * @return jInstallerEntryPoint2
+     */
+    protected function getEntryPointsById($epId) {
+        return $this->globalSetup->getEntryPointById($epId);
     }
 
     /**
