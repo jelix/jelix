@@ -271,13 +271,14 @@ class jInstaller {
     }
 
     /**
+     * launch preInstall()/preUninstall() methods of  installers or upgraders
+     *
      * @param \Jelix\Dependencies\Item[] $moduleschain
      * @return array|bool
      */
     protected function runPreInstall(&$moduleschain) {
         $result = true;
-        // ----------- pre install
-        // put also available installers into $componentsToInstall for
+        // put available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
         $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
@@ -294,7 +295,6 @@ class jInstaller {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->preInstall();
                     }
                 }
@@ -307,7 +307,6 @@ class jInstaller {
                     }
 
                     foreach($upgraders as $upgrader) {
-                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
                         $upgrader->preInstall();
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
@@ -320,7 +319,6 @@ class jInstaller {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->preUninstall();
                     }
                 }
@@ -338,12 +336,17 @@ class jInstaller {
         return $componentsToInstall;
     }
 
+    /**
+     * Launch the install()/uninstall() method of installers or upgraders
+     * @param array $componentsToInstall
+     * @return array|bool
+     */
     protected function runInstall($componentsToInstall) {
 
         $installedModules = array();
         $result = true;
         $installerIni = $this->globalSetup->getInstallerIni();
-        // -----  installation process
+
         try {
             foreach($componentsToInstall as $item) {
                 /** @var jInstallerComponentModule $component */
@@ -352,7 +355,6 @@ class jInstaller {
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->install();
                         $saveConfigIni = true;
                     }
@@ -374,7 +376,6 @@ class jInstaller {
                     $lastversion = '';
                     /** @var jInstallerModule2 $upgrader */
                     foreach($installer as $upgrader) {
-                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
                         $upgrader->install();
                         $saveConfigIni = true;
 
@@ -404,7 +405,6 @@ class jInstaller {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->uninstall();
                         $saveConfigIni = true;
                     }
@@ -449,6 +449,12 @@ class jInstaller {
         return $installedModules;
     }
 
+    /**
+     * Launch the postInstall()/postUninstall() method of installers or upgraders
+     *
+     * @param array $installedModules
+     * @return bool
+     */
     protected function runPostInstall($installedModules) {
 
         $result = true;
@@ -462,7 +468,6 @@ class jInstaller {
                 $saveConfigIni = false;
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->postInstall();
                         $component->installFinished();
                         $saveConfigIni = true;
@@ -470,7 +475,6 @@ class jInstaller {
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     foreach ($installer as $upgrader) {
-                        $component->setAsCurrentModuleUpgrader($upgrader, $this->mainEntryPoint);
                         $upgrader->postInstall();
                         $component->upgradeFinished($upgrader);
                         $saveConfigIni = true;
@@ -478,7 +482,6 @@ class jInstaller {
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $component->setAsCurrentModuleInstaller($this->mainEntryPoint);
                         $installer->postUninstall();
                         $component->uninstallFinished();
                         $saveConfigIni = true;

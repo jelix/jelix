@@ -299,8 +299,6 @@ class jInstallerComponentModule {
      */
     function getInstaller() {
 
-        $this->_setAccess();
-
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
             return null;
@@ -334,26 +332,7 @@ class jInstallerComponentModule {
 
         if ($this->moduleInstaller instanceof jIInstallerComponent) {
             $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
-        }
-        return $this->moduleInstaller;
-    }
-
-    public function setAsCurrentModuleInstaller(jInstallerEntryPoint2 $mainEntryPoint)
-    {
-        if (!$this->moduleInstaller) {
-            return;
-        }
-        $this->moduleInstaller->setParameters($this->moduleInfos->parameters);
-        $sparam = $this->globalSetup->getLocalConfigIni()->getValue($this->name.'.installparam','modules');
-        if ($sparam === null) {
-            $sparam = '';
-        }
-
-        $sp = $this->moduleInfos->getSerializedParameters();
-        if ($sparam != $sp) {
-            $this->globalSetup->getConfigIni()['main']->setValue($this->name.'.installparam', $sp, 'modules');
-        }
-        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+            $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
             if (!$mainEntryPoint->legacyInstallerEntryPoint) {
                 $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
             }
@@ -363,8 +342,10 @@ class jInstallerComponentModule {
         else {
             $this->moduleInstaller->initDbProfile($this->moduleInfos->dbProfile);
         }
-    }
+        $this->moduleInstaller->setParameters($this->moduleInfos->parameters);
 
+        return $this->moduleInstaller;
+    }
 
     /**
      * return the list of objects which are responsible to upgrade the module
@@ -516,11 +497,22 @@ class jInstallerComponentModule {
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-            if ($this->moduleInstaller instanceof jIInstallerComponent) {
+            if ($upgrader instanceof jIInstallerComponent) {
                 $upgrader->setContext($this->upgradersContexts[$class]);
+                $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
+                if (!$mainEntryPoint->legacyInstallerEntryPoint) {
+                    $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+                }
+                $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
+                                            $this->moduleInfos->dbProfile);
             }
+            else {
+                $upgrader->initDbProfile($this->moduleInfos->dbProfile);
+            }
+            $upgrader->setParameters($this->moduleInfos->parameters);
             $list[] = $upgrader;
         }
+
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
         usort($list, function ($upgA, $upgB) {
                 return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
@@ -530,21 +522,6 @@ class jInstallerComponentModule {
             $list[] = $this->moduleMainUpgrader;
         }
         return $list;
-    }
-
-    public function setAsCurrentModuleUpgrader($upgrader, jInstallerEntryPoint2 $mainEntryPoint) {
-        $upgrader->setParameters($this->moduleInfos->parameters);
-
-        if ($upgrader instanceof jIInstallerComponent) {
-            if (!$mainEntryPoint->legacyInstallerEntryPoint) {
-                $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
-            }
-            $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
-                $this->moduleInfos->dbProfile);
-        }
-        else {
-            $upgrader->initDbProfile($this->moduleInfos->dbProfile);
-        }
     }
 
     public function installFinished() {
@@ -595,7 +572,6 @@ class jInstallerComponentModule {
     }
 
     /**
-     * @param bool $forConfigure
      * @return Item
      */
     public function getResolverItem() {
