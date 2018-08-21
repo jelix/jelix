@@ -155,58 +155,7 @@ class jInstaller {
         }
         $modulesChains = $this->resolveDependencies($resolver);
 
-        $result = $this->_installModules($modulesChains, true);
-        $this->globalSetup->getInstallerIni()->save();
-        $this->endMessage();
-        return $result;
-    }
-
-    /**
-     * install given modules even if they don't have an access property > 0
-     * @param array $modulesList array of module names
-     * @return boolean true if the installation is ok
-     */
-    public function installModules($modulesList)
-    {
-        return $this->_selectedModules(Resolver::ACTION_INSTALL, $modulesList);
-    }
-
-    /**
-     * uninstall given modules
-     * @param array $modulesList array of module names
-     * @return boolean true if the uninstallation is ok
-     * @throws Exception
-     */
-    public function uninstallModules($modulesList) {
-        return $this->_selectedModules(Resolver::ACTION_REMOVE, $modulesList);
-    }
-
-    protected function _selectedModules($action, $modulesList) {
-        $this->startMessage();
-
-        // check that all given modules are existing
-        $hasError = false;
-        foreach ($modulesList as $name) {
-            if (!$this->globalSetup->getModuleComponent($name)) {
-                $this->error('module.unknown', $name);
-                $hasError = true;
-            }
-        }
-        if ($hasError) {
-            return false;
-        }
-        // get all modules
-        $resolver = new Resolver();
-        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
-            $resolverItem = $module->getResolverItem();
-            if (in_array($name, $modulesList)) {
-                $resolverItem->setAction($action);
-            }
-            $resolver->addItem($resolverItem);
-        }
-        // install modules
-        $modulesChains = $this->resolveDependencies($resolver);
-        $result = $this->_installModules($modulesChains, false);
+        $result = $this->_installModules($modulesChains);
         $this->globalSetup->getInstallerIni()->save();
         $this->endMessage();
         return $result;
