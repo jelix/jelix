@@ -200,6 +200,42 @@ class jInstallerComponentModule {
     }
 
     /**
+     * Backup the uninstall.php outside the module
+     *
+     * It allows to run the uninstall.php script of the module, even if the
+     * module does not exist any more. This could be the case when the module is
+     * bundled into a composer package, and we removed the composer package from
+     * composer.json before deploying the application.
+     * The script is copied into the app:install/uninstall/ directory.
+     *
+     * For some components that don't have an uninstaller script, we should
+     * reference them into uninstaller.ini.php anyway, because we need their
+     * informations because they are reverse dependencies of an other module
+     * we should uninstall.
+     *
+     * @return bool true if there is a uninstall.php script
+     */
+    public function backupUninstallScript() {
+        $targetPath = jApp::appPath('install/uninstall/'.$this->moduleInfos->getName());
+        jFile::createDir($targetPath);
+        copy($this->moduleInfos->getPath().'module.xml', $targetPath);
+        $uninstallerIni = $this->globalSetup->getUninstallerIni();
+        $this->moduleInfos->saveInfos($uninstallerIni);
+
+        if (file_exists($this->moduleInfos->getPath().'install/uninstall.php')) {
+            jFile::createDir($targetPath.'/install');
+            copy($this->moduleInfos->getPath().'install/uninstall.php',
+                $targetPath.'/install');
+            return true;
+        }
+        return false;
+    }
+
+    public function hasUninstallScript() {
+        return file_exists($this->moduleInfos->getPath().'install/uninstall.php');
+    }
+
+    /**
      * instancies the object which is responsible to configure the module
      *
      * @param bool $actionMode  true to configure, false to unconfigure
@@ -213,6 +249,11 @@ class jInstallerComponentModule {
     function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
 
         $this->moduleInfos->access = ($actionMode?2:0);
+
+        if ($actionMode) {
+            $uninstallerIni = $this->globalSetup->getUninstallerIni();
+            $this->moduleInfos->clearInfos($uninstallerIni);
+        }
 
         // false means that there isn't an installer for the module
         if ($this->moduleConfigurator === false) {

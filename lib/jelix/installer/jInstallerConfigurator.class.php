@@ -217,6 +217,7 @@ class jInstallerConfigurator {
         else {
             $this->ok('configuration.end');
         }
+        $this->globalSetup->getUninstallerIni()->save();
 
         $this->endMessage();
         return $result;
@@ -365,6 +366,7 @@ class jInstallerConfigurator {
                     $configurator->configure();
 
                     $component->saveModuleInfos();
+
                     // we save the configuration at each module because its
                     // configurator may have modified it, and we want to save it
                     // in case the next module configurator fails.
@@ -480,25 +482,25 @@ class jInstallerConfigurator {
             $this->notice('install.installers.disabled');
         }
 
-        $componentsToConfigure = $this->runPreUnconfigure($modulesToConfigure, $entryPoint);
-        if ($componentsToConfigure === false) {
+        $componentsToUnconfigure = $this->runPreUnconfigure($modulesToConfigure, $entryPoint);
+        if ($componentsToUnconfigure === false) {
             $this->warning('configuration.bad.end');
             return false;
         }
 
-        if (!$this->runUnconfigure($componentsToConfigure, $entryPoint)) {
+        if (!$this->runUnconfigure($componentsToUnconfigure, $entryPoint)) {
             $this->warning('configuration.bad.end');
             return false;
         }
 
-        $result = $this->runPostUnconfigure($componentsToConfigure, $entryPoint);
+        $result = $this->runPostUnconfigure($componentsToUnconfigure, $entryPoint);
         if (!$result) {
             $this->warning('configuration.bad.end');
         }
         else {
             $this->ok('configuration.end');
         }
-
+        $this->globalSetup->getUninstallerIni()->save();
         $this->endMessage();
         return $result;
     }
@@ -551,13 +553,25 @@ class jInstallerConfigurator {
     }
 
     /**
-     * @param Item[] $componentsToConfigure
+     * @param Item[] $componentsToUnconfigure
      * @return bool
      */
-    protected function runUnconfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runUnconfigure($componentsToUnconfigure, jInstallerEntryPoint2 $entryPoint) {
         $result = true;
+
+        // In $componentsToConfigure, we have the module to unconfigure and
+        // all of its reverse dependencies to unconfigure. If none of them have an
+        // install script, we don't need to register them into the uninstaller.ini.php
+        // and we don't need to backup their uninstall.php script.
+        // Else, to uninstall properly the module, we need its uninstall.php script,
+        // but also all of its reverse dependencies into uninstaller.ini.php
+        $shouldBackupUninstallScript = array_reduce($componentsToUnconfigure,
+            function($carry, $item) {
+                return $carry | $item[1]->hasUninstallScript();
+            }, false);
+
         try {
-            foreach($componentsToConfigure as $item) {
+            foreach($componentsToUnconfigure as $item) {
                 /** @var jInstallerComponentModule $component */
                 /** @var jInstallerModuleConfigurator $configurator */
                 list($configurator, $component) = $item;
@@ -566,6 +580,10 @@ class jInstallerConfigurator {
                     $configurator->unconfigure();
 
                     $component->saveModuleInfos();
+                    if ($shouldBackupUninstallScript) {
+                        $component->backupUninstallScript();
+                    }
+
                     // we save the configuration at each module because its
                     // configurator may have modified it, and we want to save it
                     // in case the next module installer fails.
@@ -594,11 +612,11 @@ class jInstallerConfigurator {
         return $result;
     }
 
-    protected function runPostUnconfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runPostUnconfigure($componentsToUnconfigure, jInstallerEntryPoint2 $entryPoint) {
 
         $result = true;
 
-        foreach($componentsToConfigure as $item) {
+        foreach($componentsToUnconfigure as $item) {
             try {
                 /** @var jInstallerComponentModule $component */
                 /** @var jInstallerModuleConfigurator $configurator */

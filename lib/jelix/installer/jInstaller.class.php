@@ -156,6 +156,12 @@ class jInstaller {
             $resolverItem = $module->getResolverItem();
             $resolver->addItem($resolverItem);
         }
+
+        foreach($this->globalSetup->getGhostModuleComponents() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
+            $resolver->addItem($resolverItem);
+        }
+
         $modulesChains = $this->resolveDependencies($resolver);
 
         $result = $this->_installModules($modulesChains);

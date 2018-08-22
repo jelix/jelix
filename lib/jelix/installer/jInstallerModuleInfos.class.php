@@ -124,7 +124,8 @@ class jInstallerModuleInfos {
     }
 
     function clearInfos(\Jelix\IniFile\IniModifier $configIni) {
-        foreach(array('access', 'dbprofile', 'installparam', 'skipinstaller', 'localconf',) as $param) {
+        foreach(array('access', 'dbprofile', 'installparam',
+                    'skipinstaller', 'localconf') as $param) {
             $configIni->removeValue($this->name.'.'.$param, 'modules');
         }
     }

@@ -48,6 +48,12 @@ class jInstallerGlobalSetup {
 
 
     /**
+     *  @var \Jelix\IniFile\IniModifier it represents the install/uninstall/uninstaller.ini.php file.
+     */
+    protected $uninstallerIni = null;
+
+
+    /**
      * list of entry point and their properties
      * @var jInstallerEntryPoint2[]  keys are entry point id.
      */
@@ -67,10 +73,19 @@ class jInstallerGlobalSetup {
     protected $epId = array();
 
     /**
-     * list of modules for each entry point
+     * list of modules
      * @var jInstallerComponentModule[] key: module name
      */
     protected $modules = array();
+
+    /**
+     * list of ghost modules
+     *
+     * ghost module is a module for which we have only its uninstaller
+     *
+     * @var jInstallerComponentModule[] key: module name
+     */
+    protected $ghostModules = array();
 
     protected $projectXmlPath;
 
@@ -141,6 +156,14 @@ class jInstallerGlobalSetup {
         $this->liveConfigIni['live'] = $liveConfigFileName;
 
         $this->installerIni = $this->loadInstallerIni();
+
+        $this->uninstallerIni = new \Jelix\IniFile\IniModifier(
+            jApp::appPath('install/uninstall/uninstaller.ini.php'),
+            ";<?php die(''); ?>
+; for security reasons , don't remove or modify the first line
+; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
+
+");
 
         if (!$urlXmlFileName) {
             $urlXmlFileName = jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
@@ -217,6 +240,40 @@ class jInstallerGlobalSetup {
             $this->addModuleComponent($compModule);
         }
 
+        // load ghost modules we have to uninstall
+        $uninstallersDir = jApp::appPath('install/uninstall');
+        if (file_exists($uninstallersDir)) {
+            $dir = new DirectoryIterator($uninstallersDir);
+            $modulesInfos = $this->uninstallerIni->getValues('modules');
+            foreach ($dir as $dirContent) {
+                if ($dirContent->isDot() || !$dirContent->isDir()) {
+                    continue;
+                }
+
+                $moduleName = $dirContent->getFilename();
+
+                if (
+                    isset($this->modules[$moduleName]) ||
+                    !$this->installerIni->getValue($moduleName.'.installed', 'modules') ||
+                    !isset($modulesInfos[$moduleName.'.access'])
+                ) {
+                    continue;
+                }
+
+                $modulesInfos[$moduleName.'.installed'] = 1;
+                $modulesInfos[$moduleName.'.version'] = $this->installerIni->getValue($moduleName.'.version', 'modules');
+                $modulesInfos[$moduleName.'.access'] = 0;
+
+                $moduleInfos = new jInstallerModuleInfos($moduleName,
+                    $dirContent->getPathname(), $modulesInfos);
+
+                $this->ghostModules[$moduleName] = new jInstallerComponentModule($moduleInfos, $this);
+                $this->ghostModules[$moduleName]->init();
+
+            }
+        }
+
+
         // remove informations about modules that don't exist anymore
         $modules = $this->installerIni->getValues('modules');
         foreach($modules as $key=>$value) {
@@ -224,7 +281,7 @@ class jInstallerGlobalSetup {
             if (count($l)<=1) {
                 continue;
             }
-            if (!isset($modulesList[$l[0]])) {
+            if (!isset($modulesList[$l[0]]) && !isset($this->ghostModules[$l[0]])) {
                 $this->installerIni->removeValue($key, 'modules');
             }
         }
@@ -264,6 +321,15 @@ class jInstallerGlobalSetup {
      */
     public function getModuleComponentsList() {
         return $this->modules;
+    }
+
+    /**
+     * List of modules that should be uninstall and we
+     * have only their uninstaller into install/uninstall/
+     * @return jInstallerComponentModule[]
+     */
+    public function getGhostModuleComponents() {
+        return $this->ghostModules;
     }
 
     /**
@@ -343,6 +409,14 @@ class jInstallerGlobalSetup {
      */
     public function getInstallerIni() {
         return $this->installerIni;
+    }
+
+    /**
+     * the uninstaller.ini.php
+     * @return \Jelix\IniFile\IniModifier
+     */
+    public function getUninstallerIni() {
+        return $this->uninstallerIni;
     }
 
     /**
