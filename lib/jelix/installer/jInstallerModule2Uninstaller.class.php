@@ -19,6 +19,8 @@
  */
 class jInstallerModule2Uninstaller  extends jInstallerModule2Abstract implements jIInstallerComponent2Uninstaller {
 
+    use jInstallerUninstallerHelpersTrait;
+
     /**
      * @inheritdoc
      */
@@ -41,64 +43,16 @@ class jInstallerModule2Uninstaller  extends jInstallerModule2Abstract implements
     }
 
     /**
-     * remove the whole content of a directory from the application
-     *
-     * @param string $targetPath the path of the directory to remove
-     *                  the path may content Jelix shortcuts parts like www:, app:...
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
+     * @param \Jelix\IniFile\IniModifier $config the global configuration content
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws Exception when the configuration filename is not found
      */
-    final protected function removeDirectoryContent($targetPath) {
-        $path = jFile::parseJelixPath($targetPath);
-        jFile::removeDir($path, true);
-    }
-
-    /**
-     * delete a file from the the application
-     * @param string $targetPath the path of the file
-     *             the path may content Jelix shortcuts parts like www:, app:...
-     */
-    final protected function removeFile($targetPath) {
-        $path = jFile::parseJelixPath($targetPath);
-        unlink($path);
-    }
-
-    /**
-     * remove a db profile
-     *
-     * @param string $name  the name of the section/alias
-     */
-    protected function removeDbProfile($name) {
-
-        $profiles = $this->globalSetup->getProfilesIni();
-        if ($profiles->getValue($name, 'jdb')) {
-            $profiles->removeValue($name, 'jdb');
-            return;
-        }
-        if ($profiles->isSection('jdb:'.$name)) {
-            $aliases = $profiles->getValues('jdb');
-            foreach($aliases as $alias=>$profile) {
-                if ($profile == $name) {
-                    // if there are some aliases to the profile
-                    // we don't remove it to avoid to break
-                    // the application
-                    return;
-                }
-            }
-            $profiles->removeValue(null, 'jdb:'.$name);
-        }
-        jProfiles::clear();
-        return;
-    }
-
-    /**
-     * remove web assets from the main configuration
-     *
-     * @param string $name the name of webassets
-     * @param string $collection the name of the webassets collection
-     */
-    public function removeGlobalWebAssets($name, $collection)
+    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName)
     {
-        $config = $this->globalSetup->getConfigIni();
-        $this->globalSetup->removeWebAssetsFromConfig($config['main'], $name, $collection);
+        return $this->globalSetup->getCoordPluginConf($config, $pluginName);
     }
 }
 

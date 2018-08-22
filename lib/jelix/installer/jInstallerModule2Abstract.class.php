@@ -99,7 +99,7 @@ class jInstallerModule2Abstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    public function getConfigIni() {
+    protected function getConfigIni() {
         return $this->globalSetup->getConfigIni();
     }
 
@@ -108,7 +108,7 @@ class jInstallerModule2Abstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    public function getLocalConfigIni() {
+    protected function getLocalConfigIni() {
         return $this->globalSetup->getLocalConfigIni();
     }
 
@@ -117,7 +117,7 @@ class jInstallerModule2Abstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    public function getLiveConfigIni() {
+    protected function getLiveConfigIni() {
         return $this->globalSetup->getLiveConfigIni();
     }
 
@@ -125,7 +125,7 @@ class jInstallerModule2Abstract {
      * Point d'entrée principal de l'application (en général index.php)
      * @return jInstallerEntryPoint2
      */
-    public function getMainEntryPoint() {
+    protected function getMainEntryPoint() {
         return $this->globalSetup->getMainEntryPoint();
     }
 
@@ -134,7 +134,7 @@ class jInstallerModule2Abstract {
      *
      * @return jInstallerEntryPoint2[]
      */
-    public function getEntryPointsList() {
+    protected function getEntryPointsList() {
         return $this->globalSetup->getEntryPointsList();
     }
 
@@ -144,6 +144,10 @@ class jInstallerModule2Abstract {
      */
     protected function getEntryPointsById($epId) {
         return $this->globalSetup->getEntryPointById($epId);
+    }
+
+    protected function getProfilesIni() {
+        return $this->globalSetup->getProfilesIni();
     }
 
     /**
@@ -207,67 +211,6 @@ class jInstallerModule2Abstract {
         return $conn->dbms;
     }
 
-    protected function expandPath($path) {
-        if (strpos($path, 'www:') === 0)
-            $path = str_replace('www:', jApp::wwwPath(), $path);
-        elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->globalSetup->getConfigIni()->getValue('jelixWWWPath','urlengine');
-            if (substr($p, -1) != '/') {
-                $p .= '/';
-            }
-            $path = str_replace('jelixwww:', jApp::wwwPath($p), $path);
-        }
-        elseif (strpos($path, 'varconfig:') === 0) {
-            $path = str_replace('varconfig:', jApp::varConfigPath(), $path);
-        }
-        elseif (strpos($path, 'appconfig:') === 0) {
-            $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
-        }
-        elseif (strpos($path, 'epconfig:') === 0) {
-            throw new \Exception("'epconfig:' alias is no more supported in path");
-        }
-        elseif (strpos($path, 'config:') === 0) {
-            throw new \Exception("'config:' alias is no more supported in path");
-        }
-        return $path;
-    }
 
-    /**
-     * return the section name of configuration of a plugin for the coordinator
-     * or the IniModifier for the configuration file of the plugin if it exists.
-     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
-     * @param string $pluginName
-     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
-     * @throws Exception when the configuration filename is not found
-     */
-    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName) {
-        $conf = $config->getValue($pluginName, 'coordplugins');
-        if (!$conf) {
-            return null;
-        }
-        if ($conf == '1') {
-            $pluginConf = $config->getValues($pluginName);
-            if ($pluginConf) {
-                return array($config, $pluginName);
-            }
-            else {
-                // old section naming. deprecated
-                $pluginConf = $config->getValues('coordplugin_' . $pluginName);
-                if ($pluginConf) {
-                    return array($config, 'coordplugin_' . $pluginName);
-                }
-            }
-            return null;
-        }
-        // the configuration value is a filename
-        $confpath = jApp::appConfigPath($conf);
-        if (!file_exists($confpath)) {
-            $confpath = jApp::varConfigPath($conf);
-            if (!file_exists($confpath)) {
-                return null;
-            }
-        }
-        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
-    }
 }
 

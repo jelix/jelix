@@ -13,6 +13,8 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerInstallerHelpersTrait.trait.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerUninstallerHelpersTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
@@ -366,23 +368,7 @@ class jInstallerConfigurator {
                     $configurator->configure();
 
                     $component->saveModuleInfos();
-
-                    // we save the configuration at each module because its
-                    // configurator may have modified it, and we want to save it
-                    // in case the next module configurator fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        //$ep->getLocalConfigIni()->save();
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module configurator could have modify it.
-                        $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
-                                $entryPoint->isCliScript(),
-                                $entryPoint->getScriptName()));
-                        jApp::setConfig($entryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($entryPoint);
                 }
             }
         } catch (jInstallerException $e) {
@@ -406,22 +392,7 @@ class jInstallerConfigurator {
                 list($configurator, $component) = $item;
                 if ($configurator) {
                     $configurator->postConfigure();
-
-                    // we save the configuration at each module because its
-                    // configurator may have modified it, and we want to save it
-                    // in case the next module configurator fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module configurator could have modify it.
-                        $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
-                                $entryPoint->isCliScript(),
-                                $entryPoint->getScriptName()));
-                        jApp::setConfig($entryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($entryPoint);
                 }
             } catch (jInstallerException $e) {
                 $result = false;
@@ -584,22 +555,7 @@ class jInstallerConfigurator {
                         $component->backupUninstallScript();
                     }
 
-                    // we save the configuration at each module because its
-                    // configurator may have modified it, and we want to save it
-                    // in case the next module installer fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        //$ep->getLocalConfigIni()->save();
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module configurator could have modify it.
-                        $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
-                                $entryPoint->isCliScript(),
-                                $entryPoint->getScriptName()));
-                        jApp::setConfig($entryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($entryPoint);
                 }
             }
         } catch (jInstallerException $e) {
@@ -623,22 +579,7 @@ class jInstallerConfigurator {
                 list($configurator, $component) = $item;
                 if ($configurator) {
                     $configurator->postUnconfigure();
-
-                    // we save the configuration at each module because its
-                    // configurator may have modified it, and we want to save it
-                    // in case the next module configurator fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module configurator could have modify it.
-                        $entryPoint->setConfigObj(
-                            jConfigCompiler::read($entryPoint->getConfigFileName(), true,
-                                $entryPoint->isCliScript(),
-                                $entryPoint->getScriptName()));
-                        jApp::setConfig($entryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($entryPoint);
                 }
             } catch (jInstallerException $e) {
                 $result = false;
@@ -651,7 +592,30 @@ class jInstallerConfigurator {
         return $result;
     }
 
+    protected function saveConfigurationFiles(jInstallerEntryPoint2 $entryPoint) {
 
+        // we save the configuration at each module because its
+        // configurator may have modified it, and we want to save it
+        // in case the next module configurator fails.
+        if ($this->globalSetup->getLiveConfigIni()->isModified()) {
+            //$ep->getLocalConfigIni()->save();
+            $this->globalSetup->getLiveConfigIni()->save();
+
+            // we re-load configuration file for each module because
+            // previous module configurator could have modify it.
+            $entryPoint->setConfigObj(
+                jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                    $entryPoint->isCliScript(),
+                    $entryPoint->getScriptName()));
+            jApp::setConfig($entryPoint->getConfigObj());
+        }
+        $this->globalSetup->getUrlModifier()->save();
+        $profileIni = $this->globalSetup->getProfilesIni();
+        if ($profileIni->isModified()) {
+            $profileIni->save();
+            jProfiles::clear();
+        }
+    }
 
     protected function startMessage () {
         $this->reporter->start();

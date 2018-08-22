@@ -13,6 +13,8 @@ require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerInstallerHelpersTrait.trait.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerUninstallerHelpersTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2Uninstaller.iface.php');
@@ -408,22 +410,7 @@ class jInstaller {
                 }
 
                 if ($saveConfigIni) {
-                    // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        //$ep->getLocalConfigIni()->save();
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
-                        $this->mainEntryPoint->setConfigObj(
-                            jConfigCompiler::read($this->mainEntryPoint->getConfigFileName(), true,
-                                $this->mainEntryPoint->isCliScript(),
-                                $this->mainEntryPoint->getScriptName()));
-                        jApp::setConfig($this->mainEntryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
             }
         } catch (jInstallerException $e) {
@@ -478,21 +465,7 @@ class jInstaller {
                 }
 
                 if ($saveConfigIni) {
-                    // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
-                    if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-                        $this->globalSetup->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
-                        $this->mainEntryPoint->setConfigObj(
-                            jConfigCompiler::read($this->mainEntryPoint->getConfigFileName(), true,
-                                $this->mainEntryPoint->isCliScript(),
-                                $this->mainEntryPoint->getScriptName()));
-                        jApp::setConfig($this->mainEntryPoint->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
             } catch (jInstallerException $e) {
                 $result = false;
@@ -503,6 +476,31 @@ class jInstaller {
             }
         }
         return $result;
+    }
+
+
+    protected function saveConfigurationFiles(jInstallerEntryPoint2 $entryPoint) {
+
+        // we save the configuration at each module because its
+        // installer may have modified it, and we want to save it
+        // in case the next module installer fails.
+        if ($this->globalSetup->getLiveConfigIni()->isModified()) {
+            $this->globalSetup->getLiveConfigIni()->save();
+
+            // we re-load configuration file for each module because
+            // previous module installer could have modify it.
+            $entryPoint->setConfigObj(
+                jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                    $entryPoint->isCliScript(),
+                    $entryPoint->getScriptName()));
+            jApp::setConfig($entryPoint->getConfigObj());
+        }
+        $this->globalSetup->getUrlModifier()->save();
+        $profileIni = $this->globalSetup->getProfilesIni();
+        if ($profileIni->isModified()) {
+            $profileIni->save();
+            jProfiles::clear();
+        }
     }
 
     protected function startMessage () {

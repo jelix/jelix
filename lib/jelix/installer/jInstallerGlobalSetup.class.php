@@ -573,4 +573,42 @@ class jInstallerGlobalSetup {
         $config->removeValue($name.'.require', $section);
     }
 
+
+    /**
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
+     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws Exception when the configuration filename is not found
+     */
+    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName) {
+        $conf = $config->getValue($pluginName, 'coordplugins');
+        if (!$conf) {
+            return null;
+        }
+        if ($conf == '1') {
+            $pluginConf = $config->getValues($pluginName);
+            if ($pluginConf) {
+                return array($config, $pluginName);
+            }
+            else {
+                // old section naming. deprecated
+                $pluginConf = $config->getValues('coordplugin_' . $pluginName);
+                if ($pluginConf) {
+                    return array($config, 'coordplugin_' . $pluginName);
+                }
+            }
+            return null;
+        }
+        // the configuration value is a filename
+        $confpath = jApp::appConfigPath($conf);
+        if (!file_exists($confpath)) {
+            $confpath = jApp::varConfigPath($conf);
+            if (!file_exists($confpath)) {
+                return null;
+            }
+        }
+        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
+    }
 }
