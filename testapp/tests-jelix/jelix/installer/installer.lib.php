@@ -192,7 +192,7 @@ class testInstallerMain extends jInstaller {
         foreach ($this->globalSetup->configContent as $ep=>$conf) {
             
             foreach($nativeModules as $module) {
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.enabled'] = ($module == 'jelix');
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.installed'] = 0;
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
@@ -203,12 +203,12 @@ class testInstallerMain extends jInstaller {
 
     }
 
-    function testAddModule($name, $moduleXML, $access = 2, $installed = 0, $version = '1.0', $dbprofile='default') {
+    function testAddModule($name, $moduleXML, $enabled = false, $installed = 0, $version = '1.0', $dbprofile='default') {
         $this->moduleXMLDesc[$name] = $moduleXML;
         foreach($this->globalSetup->configContent as $ep=>$conf) {
             $this->globalSetup->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
             $this->globalSetup->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.access'] = $access;
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.enabled'] = $enabled;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;

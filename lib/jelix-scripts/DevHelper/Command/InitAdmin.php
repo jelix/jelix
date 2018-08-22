@@ -110,9 +110,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
 
         $installConfig->setValue('jacl.installed', '0', 'modules');
-        $inifile->setValue('jacl.access', '0', 'modules');
+        $inifile->setValue('jacl.enabled', false, 'modules');
         $installConfig->setValue('jacldb.installed', '0', 'modules');
-        $inifile->setValue('jacldb.access', '0', 'modules');
+        $inifile->setValue('jacldb.enabled', false, 'modules');
         $inifile->save();
 
         $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
@@ -152,7 +152,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         else {
             $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
             $installConfig->save();
-            $inifile->setValue('jauthdb_admin.access', '0', 'modules');
+            $inifile->setValue('jauthdb_admin.enabled', false, 'modules');
             $inifile->save();
         }
 
@@ -170,7 +170,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         else {
             $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
             $installConfig->save();
-            $inifile->setValue('jacl2db_admin.access', '0', 'modules');
+            $inifile->setValue('jacl2db_admin.enabled', false, 'modules');
             $inifile->save();
         }
 

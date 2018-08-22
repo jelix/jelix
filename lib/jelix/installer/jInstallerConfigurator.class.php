@@ -174,7 +174,7 @@ class jInstallerConfigurator {
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem();
             if (in_array($name, $modulesList)) {
-                if (!$component->isActivated() || $forceReconfigure) {
+                if (!$component->isEnabled() || $forceReconfigure) {
                     $resolverItem->setAction(Resolver::ACTION_INSTALL);
                 }
             }
@@ -457,7 +457,7 @@ class jInstallerConfigurator {
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem();
             if ($name == $moduleName) {
-                if ($component->isActivated()) {
+                if ($component->isEnabled()) {
                     $resolverItem->setAction(Resolver::ACTION_REMOVE);
                 }
             }

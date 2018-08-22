@@ -81,6 +81,6 @@ class jInstallerEntryPointConfigurator
      */
     public function declareWebAssets($name, array $values, $collection, $force)
     {
-        $this->globalSetup->declareWebAssetsInConfig($this->appConfigIni['entrypoint'], $name, $values, $collection, $force);
+        $this->globalSetup->declareWebAssetsInConfig($this->entryPoint->getAppConfigIni()['entrypoint'], $name, $values, $collection, $force);
     }
 }

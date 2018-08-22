@@ -138,8 +138,8 @@ class jInstallerComponentModule {
         return $this->incompatibilities;
     }
 
-    public function getAccessLevel() {
-        return $this->moduleInfos->access;
+    public function isEnabled() {
+        return $this->moduleInfos->isEnabled;
     }
 
     public function isInstalled() {
@@ -154,11 +154,6 @@ class jInstallerComponentModule {
             throw new jInstallerException("installer.ini.missing.version", array($this->name));
         }
         return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos->version) == 0;
-    }
-
-    public function isActivated() {
-        $access = $this->moduleInfos->access;
-        return ($access == 1 || $access ==2);
     }
 
     public function getInstalledVersion() {
@@ -248,7 +243,7 @@ class jInstallerComponentModule {
      */
     function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
 
-        $this->moduleInfos->access = ($actionMode?2:0);
+        $this->moduleInfos->isEnabled = $actionMode;
 
         if ($actionMode) {
             $uninstallerIni = $this->globalSetup->getUninstallerIni();
@@ -666,7 +661,7 @@ class jInstallerComponentModule {
 
     protected function getInstallAction() {
         if ($this->isInstalled()) {
-            if (!$this->isActivated()) {
+            if (!$this->isEnabled()) {
                 return Resolver::ACTION_REMOVE;
             }
             elseif ($this->isUpgraded()) {
@@ -674,7 +669,7 @@ class jInstallerComponentModule {
             }
             return Resolver::ACTION_UPGRADE;
         }
-        elseif ($this->isActivated()) {
+        elseif ($this->isEnabled()) {
             return Resolver::ACTION_INSTALL;
         }
         return Resolver::ACTION_NONE;

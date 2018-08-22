@@ -26,7 +26,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
 
         $conf = null;
         // get from entrypoint config
-        $globalConf = $entryPoint->getConfigIni();
+        $globalConf = $entryPoint->getAppConfigIni();
         $aclConfig = $this->getCoordPluginConf($globalConf['entrypoint'], $module);
         if (!$aclConfig) {
             $globalConf = $this->getLocalConfigIni();

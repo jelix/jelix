@@ -59,25 +59,6 @@ class jInstaller {
     const STATUS_INSTALLED = 1;
 
     /**
-     * value for the access level of a component: "forbidden" level.
-     * a module which have this level won't be installed
-     */
-    const ACCESS_FORBIDDEN = 0;
-
-    /**
-     * value for the access level of a component: "private" level.
-     * a module which have this level won't be accessible directly
-     * from the web, but only from other modules
-     */
-    const ACCESS_PRIVATE = 1;
-
-    /**
-     * value for the access level of a component: "public" level.
-     * the module is accessible from the web
-     */
-    const ACCESS_PUBLIC = 2;
-
-    /**
      * error code stored in a component: impossible to install
      * the module because dependencies are missing
      */
@@ -141,8 +122,8 @@ class jInstaller {
     /**
      * install and upgrade if needed, all modules
      *
-     * Only modules which have an access property > 0
-     * are installed. Errors appeared during the installation are passed
+     * Only modules which are enabled are installed.
+     * Errors appearing during the installation are passed
      * to the reporter.
      *
      * @return boolean true if succeed, false if there are some errors

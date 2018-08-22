@@ -16,21 +16,22 @@ class jInstallerModuleInfos {
      * @var string
      */
     public $name;
+
     /**
-     * the access level of the module for the entry point
-     * @var integer
+     * indicate if the module is enabled into the application or not
+     * @var bool
      */
-    public $access;
+    public $isEnabled = false;
     /**
      * @var string
      */
     public $dbProfile;
 
     /**
-     * indicate if the module is marked as installed for the entry point
+     * indicate if the module is marked as installed
      * @var boolean  true/false or 0/1
      */
-    public $isInstalled;
+    public $isInstalled = false;
 
     /**
      * The version of the module that has been installed.
@@ -64,7 +65,7 @@ class jInstallerModuleInfos {
     function __construct($name, $path, $config) {
         $this->name = $name;
         $this->path = $path;
-        $this->access = $config[$name.'.access'];
+        $this->isEnabled = $config[$name.'.enabled'];
         $this->dbProfile = $config[$name.'.dbprofile'];
         $this->isInstalled = $config[$name.'.installed'];
         $this->version = $config[$name.'.version'];
@@ -92,9 +93,9 @@ class jInstallerModuleInfos {
     }
 
     function saveInfos(\Jelix\IniFile\IniModifier $configIni) {
-        $previous = $configIni->getValue($this->name.'.access', 'modules');
-        if ($previous !== $this->access) {
-            $configIni->setValue($this->name.'.access', $this->access, 'modules');
+        $previous = $configIni->getValue($this->name.'.enabled', 'modules');
+        if ($previous === null || $previous != $this->isEnabled) {
+            $configIni->setValue($this->name.'.enabled', $this->isEnabled, 'modules');
         }
 
         $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default'? $this->dbProfile: ''));
@@ -124,7 +125,7 @@ class jInstallerModuleInfos {
     }
 
     function clearInfos(\Jelix\IniFile\IniModifier $configIni) {
-        foreach(array('access', 'dbprofile', 'installparam',
+        foreach(array('enabled', 'dbprofile', 'installparam',
                     'skipinstaller', 'localconf') as $param) {
             $configIni->removeValue($this->name.'.'.$param, 'modules');
         }

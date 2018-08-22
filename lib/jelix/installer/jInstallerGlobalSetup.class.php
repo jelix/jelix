@@ -255,14 +255,14 @@ class jInstallerGlobalSetup {
                 if (
                     isset($this->modules[$moduleName]) ||
                     !$this->installerIni->getValue($moduleName.'.installed', 'modules') ||
-                    !isset($modulesInfos[$moduleName.'.access'])
+                    !isset($modulesInfos[$moduleName.'.enabled'])
                 ) {
                     continue;
                 }
 
                 $modulesInfos[$moduleName.'.installed'] = 1;
                 $modulesInfos[$moduleName.'.version'] = $this->installerIni->getValue($moduleName.'.version', 'modules');
-                $modulesInfos[$moduleName.'.access'] = 0;
+                $modulesInfos[$moduleName.'.enabled'] = false;
 
                 $moduleInfos = new jInstallerModuleInfos($moduleName,
                     $dirContent->getPathname(), $modulesInfos);

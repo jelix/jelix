@@ -145,6 +145,11 @@ class jInstallerMigration {
             }
         }
 
+        $this->migrateAccessValue_1_7_0($mainConfigIni);
+        if ($localConfigIni) {
+            $this->migrateAccessValue_1_7_0($localConfigIni);
+        }
+
         // migrate installer.ini
         $installerIni = new IniModifier(jApp::varConfigPath('installer.ini.php'));
         if (!$installerIni->isSection('modules')) {
@@ -290,6 +295,20 @@ class jInstallerMigration {
 
             $epConfigIni->removeValue('', 'modules');
             $epConfigIni->save();
+            $masterConfigIni->save();
+        }
+    }
+
+    protected function migrateAccessValue_1_7_0(IniModifier $masterConfigIni) {
+        $modulesParameters = $masterConfigIni->getValues('modules');
+        if ($modulesParameters) {
+            foreach($modulesParameters as $name => $value) {
+                list($module, $param) = explode('.', $name, 2);
+                if ($param == 'access') {
+                    $masterConfigIni->setValue($module.'.enabled', ($value > 0), 'modules');
+                    $masterConfigIni->removeValue($module.'.access', 'modules');
+                }
+            }
             $masterConfigIni->save();
         }
     }

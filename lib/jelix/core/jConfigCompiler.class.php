@@ -296,28 +296,28 @@ class jConfigCompiler {
             }
 
             if ($f == 'jelix') {
-                $config->modules['jelix.access'] = 2; // the jelix module should always be public
+                $config->modules['jelix.enabled'] = true; // the jelix module should always be public
             }
             else {
                 if ($config->enableAllModules) {
                     if ($config->disableInstallers
                         || $installation['modules'][$f.'.installed']
                         || $allModuleInfo) {
-                        $config->modules[$f.'.access'] = 2;
+                        $config->modules[$f.'.enabled'] = true;
                     } else {
-                        $config->modules[$f.'.access'] = 0;
+                        $config->modules[$f.'.enabled'] = false;
                     }
                 }
-                else if (!isset($config->modules[$f.'.access'])) {
-                    // no given access in defaultconfig and ep config
-                    $config->modules[$f.'.access'] = 0;
+                else if (!isset($config->modules[$f.'.enabled'])) {
+                    // no given enabling status in mainconfig and ep config
+                    $config->modules[$f.'.enabled'] = false;
                 }
                 else if (!$installation['modules'][$f.'.installed']) {
                     // module is not installed.
-                    // outside installation mode, we force the access to 0
-                    // so the module is unusable until it is installed
+                    // outside installation mode, we force the disabling
+                    // so we are sure the module is unusable until it is installed
                     if (!$allModuleInfo) {
-                        $config->modules[$f.'.access'] = 0;
+                        $config->modules[$f.'.enabled'] = false;
                     }
                 }
             }
@@ -348,7 +348,7 @@ class jConfigCompiler {
                 $config->_allModulesPathList[$f] = $path;
             }
 
-            if ($config->modules[$f.'.access']) {
+            if ($config->modules[$f.'.enabled']) {
                 $config->_modulesPathList[$f] = $path;
             }
         }
