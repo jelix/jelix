@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2005-2016 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2018 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @copyright   2011 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -134,7 +134,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
         //require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter(($output->isVerbose()?'notice':'warning')));
+        $installer = new \jInstaller(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
         $installer->installApplication();
 
         $moduleok = true;

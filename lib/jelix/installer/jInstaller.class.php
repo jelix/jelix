@@ -121,6 +121,17 @@ class jInstaller {
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
     }
 
+    static public function setModuleAsInstalled($moduleName, $initialVersion, $versionDate) {
+        $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        $install->setValue($moduleName.'.installed', 1, 'modules');
+        $install->setValue($moduleName.'.version', $initialVersion, 'modules');
+        $install->setValue($moduleName.'.version.date', $versionDate, 'modules');
+        $install->setValue($moduleName.'.firstversion', $initialVersion, 'modules');
+        $install->setValue($moduleName.'.firstversion.date', $versionDate, 'modules');
+        $install->save();
+
+    }
+
     /**
      * install and upgrade if needed, all modules
      *

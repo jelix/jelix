@@ -142,6 +142,10 @@ class jInstallerConfigurator {
         $this->questionHelper = $helper;
     }
 
+    static public function setModuleAsConfigured($moduleName, \Jelix\IniFile\IniModifierInterface $configIni) {
+        $configIni->setValue($moduleName.'.enabled', true , 'modules');
+    }
+
     /**
      * @param array $modulesList array of module names
      * @param string $dedicatedEntryPointId entry point from which the module will

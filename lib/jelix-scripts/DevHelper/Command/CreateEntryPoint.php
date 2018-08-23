@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -144,13 +144,6 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         $this->updateProjectXml($name.".php", $configFile , $type);
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");
-        }
-
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter('warning'));
-        $installer->installApplication();
-        if ($this->verbose()) {
-            $output->writeln("All modules have been initialized for the new entry point.");
         }
     }
 

@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @copyright   2015 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -89,7 +89,10 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $installConfig = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
 
-        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(
+            \jConfig::getDefaultConfigFile(),
+            \jApp::mainConfigFile()
+        );
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
                                               \jApp::appConfigPath($ep['config']));
 
@@ -127,10 +130,15 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $xmlMap->save();
 
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
+        require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
 
-        $reporter = new \textInstallReporter(($output->isVerbose()? 'notice':'warning'));
-        $installer = new \jInstaller($reporter);
-        $installer->installModules(array('jauth','master_admin'));
+        $globalSetup = new jInstallerGlobalSetup();
+        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
+        $configurator = new \jInstallerConfigurator($reporter, $globalSetup);
+        $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));
+        //$configurator->setModuleParameters('master_admin', array());
+        $configurator->configureModules(array('jauth','master_admin'), $entrypoint);
+
 
         $authini = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
@@ -145,15 +153,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             }
             $authini->save();
 
-            // FIXME : call configurator
-            //$installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
-            $installer->installModules(array('jauthdb', 'jauthdb_admin'));
-        }
-        else {
-            $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
-            $installConfig->save();
-            $inifile->setValue('jauthdb_admin.enabled', false, 'modules');
-            $inifile->save();
+            $configurator->setModuleParameters('jauthdb', array('defaultuser'=>true));
+            $configurator->configureModules(array('jauthdb', 'jauthdb_admin'), $entrypoint);
         }
 
         if (!$input->getOption('noacl2db')) {
@@ -162,18 +163,15 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }
-            $installer = new \jInstaller($reporter);
-            // FIXME : call configurator
-            //$installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
-            $installer->installModules(array('jacl2db', 'jacl2db_admin'));
-        }
-        else {
-            $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
-            $installConfig->save();
-            $inifile->setValue('jacl2db_admin.enabled', false, 'modules');
-            $inifile->save();
+
+            $configurator->setModuleParameters('jacl2db', array('defaultuser'=>true, 'defaultgroups'=>true));
+            $configurator->configureModules(array('jacl2db', 'jacl2db_admin'), $entrypoint);
         }
 
-        $installer->installModules(array('jpref_admin'));
+        $configurator->configureModules(array('jpref_admin'), $entrypoint);
+
+        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
+        $installer = new \jInstaller($reporter, $globalSetup);
+        $installer->installApplication();
     }
 }

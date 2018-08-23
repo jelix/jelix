@@ -17,16 +17,11 @@ domainName =
 
 
 [modules]
-; modulename.enabled = on
-
 jelix.enabled = on
-
-; jacldb is deprecated. keep it uninstall if possible. install jacl2db instead
-jacldb.enabled = off
-
 jacl2db.enabled = off
 jauth.enabled = off
 jauthdb.enabled = off
+
 
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
