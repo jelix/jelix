@@ -182,6 +182,10 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
             return null;
     }
 
+    /**
+     * @return bool true if the configuration is local, false if it is for the
+     * application
+     */
     function getConfigurationMode() {
         return $this->forLocalConfiguration;
     }

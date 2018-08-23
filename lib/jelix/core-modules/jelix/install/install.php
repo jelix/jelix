@@ -23,28 +23,25 @@ class jelixModuleInstaller extends jInstallerModule2 {
         }
 
         // --- install table for jCache if needed
-        $cachefile = jApp::varConfigPath('profiles.ini.php');
+        $ini = $this->getProfilesIni();
+        $dbProfileDone = [];
 
-        if (file_exists($cachefile)) {
-            $ini = new \Jelix\IniFile\IniModifier($cachefile);
-            $dbProfileDone = [];
+        foreach ($ini->getSectionList() as $section) {
+            if (substr($section,0,7) != 'jcache:')
+                continue;
+            $driver = $ini->getValue('driver', $section);
+            $dao = $ini->getValue('dao', $section);
+            $dbProfile = $ini->getValue('dbprofile', $section);
 
-            foreach ($ini->getSectionList() as $section) {
-                if (substr($section,0,7) != 'jcache:')
-                    continue;
-                $driver = $ini->getValue('driver', $section);
-                $dao = $ini->getValue('dao', $section);
-                $dbProfile = $ini->getValue('dbprofile', $section);
-
-                if ($driver == 'db' &&
-                    $dao == 'jelix~jcache' &&
-                    !isset($dbProfileDone[$dbProfile])
-                ) {
-                    $this->useDbProfile($dbProfile);
-                    $this->execSQLScript('sql/install_jcache.schema');
-                    $dbProfileDone[$dbProfile] = true;
-                }
+            if ($driver == 'db' &&
+                $dao == 'jelix~jcache' &&
+                !isset($dbProfileDone[$dbProfile])
+            ) {
+                $this->useDbProfile($dbProfile);
+                $this->execSQLScript('sql/install_jcache.schema');
+                $dbProfileDone[$dbProfile] = true;
             }
         }
+
     }
 }

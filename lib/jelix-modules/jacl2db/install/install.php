@@ -21,13 +21,6 @@ class jacl2dbModuleInstaller extends jInstallerModule2 {
 
     function install() {
 
-        $this->declareDbProfile('jacl2_profile', null, false);
-        $config = $this->getLocalConfigIni();
-        $driver = $config->getValue('driver','acl2');
-        if ($driver != 'db') {
-            $config['main']->setValue('driver','db','acl2');
-        }
-
         /*
         $mapper = new jDaoDbMapper('jacl2_profile');
         $mapper->createTableFromDao("jacl2db~jacl2group");
