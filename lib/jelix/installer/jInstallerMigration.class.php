@@ -194,6 +194,36 @@ class jInstallerMigration {
             $installerIni->save();
         }
 
+        // set installparameters for the jelix module
+        $this->reporter->message('Update installer parameters for the jelix module', 'notice');
+        $jelixWWWPath = $mainConfigIni->getValue('jelixWWWPath', 'urlengine');
+        $targetPath = jApp::wwwPath($jelixWWWPath);
+        $jelixWWWDirExists = $jelixWWWLinkExists = false;
+        if (file_exists($targetPath)) {
+            if (is_dir($targetPath)) {
+                $wwwfiles = '';
+            }
+            else if (is_link($targetPath)) {
+                $wwwfiles = 'link';
+            }
+        }
+        else {
+            // no file, so the path to jelix-www should probably be set into the
+            // web server configuration
+            $wwwfiles = 'vhost';
+        }
+        $jelixInstallParams = $mainConfigIni->getValue('jelix.installparam', 'modules');
+        if ($jelixInstallParams) {
+            $jelixInstallParams = jInstallerModuleInfos::unserializeParameters($jelixInstallParams);
+            if (!isset($jelixInstallParams['wwwfiles'])) {
+                $jelixInstallParams['wwwfiles'] = $wwwfiles;
+            }
+        }
+        else {
+            $jelixInstallParams = array('wwwfiles'=>$wwwfiles);
+        }
+        $mainConfigIni->setValue('jelix.installparam', jInstallerModuleInfos::serializeParameters($jelixInstallParams), 'modules');
+
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 

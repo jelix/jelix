@@ -10,8 +10,30 @@
 
 class jelixModuleConfigurator extends jInstallerModuleConfigurator {
 
+    public function getDefaultParameters() {
+        return array('wwwfiles'=>'');
+    }
+
+
     public function askParameters()
     {
+
+        $this->parameters['wwwfiles'] = $this->askInChoice(
+            "How to install jelix-www files?".
+            "\ncopy: will be copied int the www/ directory".
+            "\nfilelink: a file system link into the www/ directory will point to the jelix-www directory".
+            "\nvhost: you will configure your web server to set an alias to the jelix-www directory"
+            ,
+            array('copy', 'vhost', 'filelink'), 0
+            );
+
+        $configIni = $this->getConfigIni();
+        $jelixWWWPath = $configIni->getValue('jelixWWWPath', 'urlengine');
+        $jelixWWWPath = $this->askInformation('Web path to the content of jelix-www?', $jelixWWWPath);
+        if ($jelixWWWPath == '') {
+            $jelixWWWPath = 'jelix/';
+        }
+        $configIni->setValue('jelixWWWPath', $jelixWWWPath, 'urlengine');
 
         if ($this->askConfirmation('Do you want to configure the access to the database?')) {
             $profilesIni = $this->getProfilesIni();
@@ -32,8 +54,6 @@ class jelixModuleConfigurator extends jInstallerModuleConfigurator {
                 $this->declareDbProfile('default', $profile, true);
             }
         }
-
-        $configIni = $this->getConfigIni();
 
         $storage = $configIni->getValue("storage", "sessions");
 

@@ -12,6 +12,41 @@ class jelixModuleInstaller extends jInstallerModule2 {
 
     function install() {
 
+        // --- copy jelix-wwww files
+        $wwwFilesMode = $this->getParameter('wwwfiles');
+        $jelixWWWPath = $this->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
+        $targetPath = jApp::wwwPath($jelixWWWPath);
+        $jelixWWWDirExists = $jelixWWWLinkExists = false;
+        if (file_exists($targetPath)) {
+            if (is_dir($targetPath)) {
+                $jelixWWWDirExists = true;
+            }
+            else if (is_link($targetPath)) {
+                $jelixWWWLinkExists = true;
+            }
+        }
+        if ($wwwFilesMode == 'copy' || $wwwFilesMode == '' ) {
+            if ($jelixWWWLinkExists) {
+                unlink($targetPath);
+            }
+            $this->copyDirectoryContent('../../../../jelix-www/', $targetPath, true);
+        }
+        else if ($wwwFilesMode == 'link') {
+            if ($jelixWWWDirExists) {
+                jFile::removeDir($targetPath, true);
+            }
+            symlink(LIB_PATH.'jelix-www', $targetPath);
+        }
+        else {
+            if ($jelixWWWLinkExists) {
+                unlink($targetPath);
+            }
+            if ($jelixWWWDirExists) {
+                jFile::removeDir($targetPath, true);
+            }
+        }
+
+
         // ---  install table for session storage if needed
         $sessionStorage = $this->getLocalConfigIni()->getValue("storage", "sessions");
         $sessionDao = $this->getLocalConfigIni()->getValue("dao_selector", "sessions");
