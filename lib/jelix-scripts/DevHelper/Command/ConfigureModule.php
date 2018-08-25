@@ -65,12 +65,8 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $parameters = \jInstallerModuleInfos::unserializeParameters($parameters);
         }
 
-        if ($this->verbose()) {
-            $reporter = new \consoleInstallReporter($output);
-        }
-        else {
-            $reporter = new \consoleInstallReporter($output, 'error');
-        }
+        $reporter = new \consoleInstallReporter($output,
+            ($this->verbose()?'notice':'error'), 'Configuration');
 
         $configurator = new \jInstallerConfigurator($reporter);
         if ($parameters) {

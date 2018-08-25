@@ -133,7 +133,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
 
         $globalSetup = new jInstallerGlobalSetup();
-        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
+        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
         $configurator = new \jInstallerConfigurator($reporter, $globalSetup);
         $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));
         //$configurator->setModuleParameters('master_admin', array());

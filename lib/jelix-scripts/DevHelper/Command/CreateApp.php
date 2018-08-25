@@ -133,6 +133,13 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
+        $configurator = new \jInstallerConfigurator(new \consoleInstallReporter(
+            $output, ($output->isVerbose()?'notice':'error'), 'Configuration'));
+        if ($input->isInteractive()) {
+            $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
+        }
+        $configurator->configureModules(array('jelix'), 'index', false, true);
+
         //require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
         $installer = new \jInstaller(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
         $installer->installApplication();

@@ -228,7 +228,8 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      *   should throw an exception when the value is invalid.
      * @return string the value given by the user
      */
-    protected function askInformation($questionMessage, $defaultResponse = false, $autocompleterValues = false, $validator = null) {
+    protected function askInformation($questionMessage, $defaultResponse = false,
+                                      $autocompleterValues = false, $validator = null) {
         $question = new Question($questionMessage, $defaultResponse);
         if (is_array($autocompleterValues)) {
             $question->setAutocompleterValues($autocompleterValues);
@@ -254,8 +255,8 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      * @param string $questionMessage
      * @return string the value
      */
-    protected function askSecretInformation($questionMessage) {
-        $question = new Question($questionMessage);
+    protected function askSecretInformation($questionMessage, $defaultResponse = false) {
+        $question = new Question($questionMessage, $defaultResponse);
         $question->setHidden(true);
         $question->setHiddenFallback(false);
 
@@ -328,6 +329,200 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
         }
         return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
     }
+
+
+    private $dbProfileProperties = array(
+        'mssql'=> array('host', 'database', 'user', 'password', 'persistent'),
+        'mysqli'=> array('host', 'database', 'user', 'password', 'persistent',
+            'force_encoding', 'ssl'),
+        'oci'=> array(array('dsn', array('host', 'port', 'database')), 'user',
+            'password', 'persistent'),
+        'pgsql'=> array(array('service', array('host', 'port','database',
+            'user', 'password')), 'persistent', 'force_encoding', 'timeout',
+            'pg_options', 'search_path', 'single_transaction'),
+        'sqlite3'=> array('database','persistent','extensions','busytimeout'),
+        'sqlsrv'=> array('host','database','user','password','force_encoding'),
+    );
+
+    /**
+     * Ask parameters to access to a database
+     *
+     * To call from askParameters().
+     *
+     */
+    protected function askDbProfile($currentProfileValues = array()) {
+
+        $profile = array();
+
+        $profile['driver'] = $this->askInChoice(
+            "Which is the type of your database?",
+            array_keys($this->dbProfileProperties),
+            (isset($currentProfileValues['driver'])?$currentProfileValues['driver']:'mysqli')
+        );
+        $properties = $this->dbProfileProperties[$profile['driver']];
+        foreach($properties as $property) {
+            if (is_array($property)) {
+                if (!$this->askDbProperty($property[0], $profile, $currentProfileValues)) {
+                    foreach($property[1] as $p) {
+                        $this->askDbProperty($p, $profile, $currentProfileValues);
+                    }
+                }
+            }
+            else {
+                $this->askDbProperty($property, $profile, $currentProfileValues);
+            }
+        }
+
+        if ( $this->askConfirmation('Use a PDO to connect to the database?',
+            (isset($currentProfileValues['usepdo'])?$currentProfileValues['usepdo']:false))
+        ) {
+            $profile['usepdo'] = true;
+        }
+        ;
+        if ( $this->askConfirmation('For all tables accessible from this connection, are they name prefixed?',
+            (isset($currentProfileValues['table_prefix']) && $currentProfileValues['table_prefix'])
+            )
+        ) {
+            $value = $this->askConfirmation('Indicate the prefix',
+                (isset($currentProfileValues['table_prefix'])?$currentProfileValues['table_prefix']:false));
+            if ( $value ) {
+                $profile['table_prefix'] = $value;
+            }
+        }
+
+        return $profile;
+    }
+
+    private function askDbProperty($property, &$profile, &$currentProfileValues) {
+        $defaultValue = (isset($currentProfileValues['$property'])?$currentProfileValues['$property']:false);
+        switch($property) {
+            case 'host':
+                $host = $this->askInformation('Host of the database server', $defaultValue, array('localhost'));
+                if ($host != '' || $profile['driver'] !== 'pgsql') {
+                    $profile['host'] = $host;
+                }
+                break;
+
+            case 'port':
+                $port = $this->askInformation('Port of the database server',
+                    $defaultValue, false, function($answer) {
+                        if (!is_numeric($answer) || intval($answer) == 0) {
+                            throw new \RuntimeException(
+                                'The given value is not a number'
+                            );
+                        }
+                        return $answer;
+                    });
+                if ($port) {
+                    $profile['port'] = $port;
+                }
+                break;
+
+            case 'database':
+                if ($profile['driver'] == 'sqlite3') {
+                    $question = 'The database file name';
+                }
+                else {
+                    $question = 'The database name';
+                }
+                $profile['database'] = $this->askInformation($question, $defaultValue);
+                break;
+
+            case 'user':
+                $profile['user'] = $this->askInformation('The login to authenticate against the database server', $defaultValue);
+                break;
+
+            case 'password':
+                $profile['password'] = $this->askSecretInformation('The password to authenticate against the database server', $defaultValue);
+                break;
+
+            case 'persistent':
+                $profile['persistent'] = $this->askConfirmation('Use a persistent connection?', $defaultValue);
+                break;
+
+            case 'force_encoding':
+                $profile['force_encoding'] = $this->askConfirmation('Should the encoding be forced during the connection?', $defaultValue);
+                break;
+
+            case 'ssl':
+                $profile['ssl'] = $this->askConfirmation('Use ssl to connect to the server?', $defaultValue);
+                if ($profile['ssl']) {
+                    $profile['ssl_key_pem'] = $this->askInformation('Path to the ssl key pem', $defaultValue);
+                    $profile['ssl_cert_pem'] = $this->askInformation('Path to the ssl cert pem', $defaultValue);
+                    $profile['ssl_cacert_pem'] = $this->askInformation('Path to the ssl cacert pem', $defaultValue);
+                }
+                break;
+
+            case 'dsn':
+                $dsn = $this->askInformation('Indicate the DSN to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
+                if ($dsn) {
+                    $profile['dsn'] = $dsn;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+                break;
+
+            case 'service':
+                $service = $this->askInformation('Indicate the service name to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
+                if ($service) {
+                    $profile['service'] = $service;
+                    return true;
+                }
+                else {
+                    return false;
+                }
+                break;
+            case 'timeout':
+                $timeout = $this->askInformation('Connection timeout', $defaultValue);
+                if ( $timeout ) {
+                    $profile['timeout'] = $timeout;
+                }
+                break;
+
+            case 'pg_options':
+                $value = $this->askInformation('Options connection for Postgresql', $defaultValue);
+                if ( $value ) {
+                    $profile['pg_options'] = $value;
+                }
+                break;
+
+            case 'search_path':
+                $value = $this->askInformation('Search path for schema', $defaultValue);
+                if ( $value ) {
+                    $profile['search_path'] = $value;
+                }
+                break;
+
+            case 'single_transaction':
+                $value = $this->askConfirmation('Use a single transaction during the process of the http request?', $defaultValue);
+                if ( $value ) {
+                    $profile['single_transaction'] = $value;
+                }
+
+                break;
+
+            case 'extensions':
+                $value = $this->askInformation('Extensions to load', $defaultValue);
+                if ( $value ) {
+                    $profile['extensions'] = $value;
+                }
+
+                break;
+
+            case 'busytimeout':
+                $value = $this->askInformation('busy timeout (milliseconds)', $defaultValue);
+                if ( $value ) {
+                    $profile['busytimeout'] = $value;
+                }
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
 
     /**
      * default config and main config combined

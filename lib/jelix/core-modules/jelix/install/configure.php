@@ -12,15 +12,39 @@ class jelixModuleConfigurator extends jInstallerModuleConfigurator {
 
     public function askParameters()
     {
+
+        if ($this->askConfirmation('Do you want to configure the access to the database?')) {
+            $profilesIni = $this->getProfilesIni();
+            $profile = null;
+            $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
+            if ($defaultAliasProfile) {
+                $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
+            }
+            else {
+                $profile = $profilesIni->getValues('jdb:default');
+            }
+
+            $profile = $this->askDbProfile($profile);
+            if ($defaultAliasProfile) {
+                $this->declareDbProfile($defaultAliasProfile, $profile, true);
+            }
+            else {
+                $this->declareDbProfile('default', $profile, true);
+            }
+        }
+
         $configIni = $this->getConfigIni();
-        if ($this->askConfirmation('Do you want to store sessions into a database?', false)) {
+
+        $storage = $configIni->getValue("storage", "sessions");
+
+        if ($this->askConfirmation('Do you want to store sessions into a database?', $storage == 'dao')) {
             $configIni->setValue('storage', 'dao', 'session');
             if (!$configIni->getValue("dao_selector", "sessions")) {
                 $dao = $this->askInformation('Indicate the dao selector to store session data', "jelix~jsession");
                 $configIni->setValue('dao_selector', $dao,  'session');
             }
         }
-        else if ($this->askConfirmation('Do you want to store sessions as files into a specific directory?', false)) {
+        else if ($this->askConfirmation('Do you want to store sessions as files into a specific directory?', $storage == 'files')) {
             $configIni->setValue('storage', 'files', 'session');
             $path = $this->askInformation('Indicate the path of the directory', $configIni->getValue("files_path", "sessions"));
             if ($path) {
