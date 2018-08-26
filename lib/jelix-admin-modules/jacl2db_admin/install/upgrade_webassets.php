@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jacl2db_adminModuleUpgrader_webassets extends jInstallerModule2 {
+class jacl2db_adminModuleUpgrader_webassets extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.7.0-beta.2');
 

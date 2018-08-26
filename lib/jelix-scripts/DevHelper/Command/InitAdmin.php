@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2008-2011 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @copyright   2015 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -14,6 +14,9 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Jelix\DevHelper\AbstractCommand;
+
+
 
 class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
@@ -47,27 +50,30 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                InputOption::VALUE_NONE,
                'Do not use and do not configure the driver \'db\' of jAcl2'
             )
-
         ;
-        parent::configure();
+
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-        $this->loadAppConfig();
-        return $this->_execute($input, $output);
-    }
-
-    protected function _execute(InputInterface $input, OutputInterface $output) {
+        AbstractCommand::execute($input, $output);
         $entrypoint = $input->getArgument('entrypoint');
         if (($p = strpos($entrypoint, '.php')) !== false) {
             $entrypoint = substr($entrypoint,0,$p);
         }
+        $this->selectedEntryPointId = $entrypoint;
+        $this->loadAppConfig($this->selectedEntryPointId);
+        return $this->_execute($input, $output);
+    }
 
-        $ep = $this->getEntryPointInfo($entrypoint);
+    protected function _execute(InputInterface $input, OutputInterface $output) {
 
-        if ($ep == null) {
+        $entrypoint = $this->selectedEntryPointId;
+        try {
+
+            $ep = $this->getEntryPointInfo($entrypoint);
+        }
+        catch (\Exception $e) {
             try {
                 $options = array(
                     'entrypoint'=>$entrypoint,
@@ -83,7 +89,10 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $installConfig = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
 
-        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(
+            \jConfig::getDefaultConfigFile(),
+            \jApp::mainConfigFile()
+        );
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
                                               \jApp::appConfigPath($ep['config']));
 
@@ -104,9 +113,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
 
         $installConfig->setValue('jacl.installed', '0', 'modules');
-        $inifile->setValue('jacl.access', '0', 'modules');
+        $inifile->setValue('jacl.enabled', false, 'modules');
         $installConfig->setValue('jacldb.installed', '0', 'modules');
-        $inifile->setValue('jacldb.access', '0', 'modules');
+        $inifile->setValue('jacldb.enabled', false, 'modules');
         $inifile->save();
 
         $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
@@ -120,11 +129,13 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
         $xmlMap->save();
 
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
+        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
+        $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));
+        //$configurator->setModuleParameters('master_admin', array());
+        $configurator->configureModules(array('jauth','master_admin'), $entrypoint);
 
-        $reporter = new \textInstallReporter(($output->isVerbose()? 'notice':'warning'));
-        $installer = new \jInstaller($reporter);
-        $installer->installModules(array('jauth','master_admin'));
 
         $authini = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath($entrypoint.'/auth.coord.ini.php'));
         $authini->setValue('after_login','master_admin~default:index');
@@ -138,14 +149,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $authini->setValue('profile',$profile, 'Db');
             }
             $authini->save();
-            $installer->setModuleParameters('jauthdb',array('defaultuser'=>true));
-            $installer->installModules(array('jauthdb', 'jauthdb_admin'));
-        }
-        else {
-            $installConfig->setValue('jauthdb_admin.installed', '0', 'modules');
-            $installConfig->save();
-            $inifile->setValue('jauthdb_admin.access', '0', 'modules');
-            $inifile->save();
+
+            $configurator->setModuleParameters('jauthdb', array('defaultuser'=>true));
+            $configurator->configureModules(array('jauthdb', 'jauthdb_admin'), $entrypoint);
         }
 
         if (!$input->getOption('noacl2db')) {
@@ -154,17 +160,15 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }
-            $installer = new \jInstaller($reporter);
-            $installer->setModuleParameters('jacl2db',array('defaultuser'=>true));
-            $installer->installModules(array('jacl2db', 'jacl2db_admin'));
-        }
-        else {
-            $installConfig->setValue('jacl2db_admin.installed', '0', 'modules');
-            $installConfig->save();
-            $inifile->setValue('jacl2db_admin.access', '0', 'modules');
-            $inifile->save();
+
+            $configurator->setModuleParameters('jacl2db', array('defaultuser'=>true, 'defaultgroups'=>true));
+            $configurator->configureModules(array('jacl2db', 'jacl2db_admin'), $entrypoint);
         }
 
-        $installer->installModules(array('jpref_admin'));
+        $configurator->configureModules(array('jpref_admin'), $entrypoint);
+
+        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
+        $installer = new \jInstaller($reporter, $globalSetup);
+        $installer->installApplication();
     }
 }

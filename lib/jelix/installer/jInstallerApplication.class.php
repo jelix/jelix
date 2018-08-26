@@ -38,21 +38,21 @@ class jInstallerApplication {
 
     /**
      * the global app setup
-     * @var jInstallerGlobalSetup
+     * @var \Jelix\Installer\GlobalSetup
      */
     protected $globalSetup;
 
     /**
      * @param string $projectFile the filename of the XML project file
      */
-    function __construct($projectFile='', jInstallerGlobalSetup $globalSetup = null) {
+    function __construct($projectFile='', \Jelix\Installer\GlobalSetup $globalSetup = null) {
 
         if ($projectFile != '') {
             $this->projectXmlFilename = $projectFile;
         }
 
         if (!$globalSetup) {
-            $globalSetup = new jInstallerGlobalSetup(jApp::appPath($this->projectXmlFilename));
+            $globalSetup = new \Jelix\Installer\GlobalSetup(jApp::appPath($this->projectXmlFilename));
         }
         $this->globalSetup = $globalSetup;
 
@@ -105,7 +105,7 @@ class jInstallerApplication {
         $this->entryPointList = array();
         for ($i=0; $i < $listEp->length; $i++) {
             $epElt = $listEp->item($i);
-            $ep = new jInstallerEntryPoint2($this->globalSetup,
+            $ep = new \Jelix\Installer\EntryPoint($this->globalSetup,
                                            $epElt->getAttribute("config"),
                                            $epElt->getAttribute("file"),
                                            $epElt->getAttribute("type"));

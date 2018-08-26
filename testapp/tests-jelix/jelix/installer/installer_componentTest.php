@@ -13,7 +13,7 @@
 
 require_once(__DIR__.'/installer.lib.php');
 
-class testInstallerComponentModule2 extends jInstallerComponentModule {
+class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLauncher {
 
     function setSourceVersionDate($version, $date) {
         $this->sourceDate = $date;
@@ -24,13 +24,13 @@ class testInstallerComponentModule2 extends jInstallerComponentModule {
 
 
 
-class testInstallerComponentForDependencies extends jInstallerComponentModule {
+class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInstallerLauncher {
     
     protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
     
-    function getInstaller($installWholeApp) {
+    function getInstaller() {
         return null;
     }
 
@@ -65,13 +65,13 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     public function testDependenciesReading() {
         $conf =(object) array( 'modules'=>array(
-            'test.access'=>2,
+            'test.enabled'=>true,
             'test.dbprofile'=>'default',
             'test.installed'=>false,
             'test.version'=>jFramework::version(),
         ));
 
-        $moduleInfos = new jInstallerModuleInfos('test',
+        $moduleInfos = new \Jelix\Installer\ModuleStatus('test',
             jApp::appPath().'modules/test/', $conf->modules);
 
         $comp = new testInstallerComponentForDependencies($moduleInfos, $this->globalSetup);
@@ -165,16 +165,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetInstallerWithNoInstaller() {
         try {
             $conf =(object) array( 'modules'=>array(
-                'testinstall1.access'=>2,
+                'testinstall1.enabled'=>true,
                 'testinstall1.dbprofile'=>'default',
                 'testinstall1.installed'=>false,
                 'testinstall1.version'=>jFramework::version(),
             ));
 
-            $moduleInfos = new jInstallerModuleInfos('testinstall1',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall1',
                 jApp::appPath().'modules/testinstall1/', $conf->modules);
             // testinstall1 has no install.php file
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $installer = $component->getInstaller(true);
@@ -190,17 +190,17 @@ class jInstaller_ComponentTest extends jUnitTestCase {
         try {
             // dummy ini file modifier. not used by installer of tested modules
             $conf =(object) array( 'modules'=>array(
-                'testinstall2.access'=>2,
+                'testinstall2.enabled'=>true,
                 'testinstall2.dbprofile'=>'default',
                 'testinstall2.installed'=>false,
                 'testinstall2.version'=>jFramework::version(),
             ));
 
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // testinstall2 has an install.php file
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $installer = $component->getInstaller(true);
@@ -216,16 +216,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithNoUpgraders() {
         try {
             $conf =(object) array( 'modules'=>array(
-               'testinstall1.access'=>2,
+               'testinstall1.enabled'=>true,
                'testinstall1.dbprofile'=>'default',
                'testinstall1.installed'=>false,
                'testinstall1.version'=>jFramework::version(),
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall1',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall1',
                 jApp::appPath().'modules/testinstall1/', $conf->modules);
 
             // testinstall1 has no upgrade scripts
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -242,18 +242,18 @@ class jInstaller_ComponentTest extends jUnitTestCase {
         try {
             // the current version is the latest one : no updaters
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>jFramework::version(),
             ));
 
             //------------ testinstall2 has some upgraders file
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // testinstall2 has an install.php file
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -268,16 +268,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithOneValidUpgrader() {
         try {
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.2.3", 
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -295,16 +295,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithTwoValidUpgrader() {
         try {
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1.2", 
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have second then newupgraderfilename
@@ -323,16 +323,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithTwoValidUpgrader2() {
         try {
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1.1", 
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have newupgraderfilename then second
@@ -363,13 +363,13 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'modules');
 
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1", 
             ));
 
-            $moduleInfos = new jInstallerModuleInfos('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $this->globalSetup->addModuleComponent($component);
@@ -387,12 +387,12 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $installerIni->setValue('testinstall2.version', '1.1.5' , 'modules');
             $installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'modules');
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2,
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default', 
                'testinstall2.installed'=>false, 
                'testinstall2.version'=>"1.1.5", 
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $this->globalSetup->addModuleComponent($component);
@@ -410,16 +410,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithAllUpgraders() {
         try {
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2,
+               'testinstall2.enabled'=>true,
                'testinstall2.dbprofile'=>'default',
                'testinstall2.installed'=>false,
                'testinstall2.version'=>"0.9",
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall2',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
             // the current version is a very old one : all updaters
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -439,16 +439,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithMainUpgrader() {
         try {
             $conf =(object) array( 'modules'=>array(
-                'testinstall3.access'=>2,
+                'testinstall3.enabled'=>true,
                 'testinstall3.dbprofile'=>'default',
                 'testinstall3.installed'=>false,
                 'testinstall3.version'=>"1.5.0",
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
                 jApp::appPath().'modules/testinstall3/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -466,16 +466,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithMainUpgraderAlreadyUpgraded() {
         try {
             $conf =(object) array( 'modules'=>array(
-                'testinstall3.access'=>2,
+                'testinstall3.enabled'=>true,
                 'testinstall3.dbprofile'=>'default',
                 'testinstall3.installed'=>false,
                 'testinstall3.version'=>"1.7.0-beta.3",
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
                 jApp::appPath().'modules/testinstall3/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();
@@ -491,16 +491,16 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     function testGetUpgradersWithMainUpgraderNoUpgrader() {
         try {
             $conf =(object) array( 'modules'=>array(
-                'testinstall3.access'=>2,
+                'testinstall3.enabled'=>true,
                 'testinstall3.dbprofile'=>'default',
                 'testinstall3.installed'=>false,
                 'testinstall3.version'=>"1.6.3",
             ));
-            $moduleInfos = new jInstallerModuleInfos('testinstall3',
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
                 jApp::appPath().'modules/testinstall3/', $conf->modules);
 
             // the current version is the previous one : one updater
-            $component = new jInstallerComponentModule($moduleInfos, $this->globalSetup);
+            $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $upgraders = $component->getUpgraders();

@@ -10,9 +10,9 @@
 */
 
 
-class master_adminModuleInstaller extends jInstallerModule2 {
+class master_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
-        $this->declareGlobalWebAssets('master_admin', array('css'=>array('design/master_admin.css')), 'common', false);
+
     }
 }

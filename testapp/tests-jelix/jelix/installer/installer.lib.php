@@ -12,7 +12,7 @@
 
 require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
-class testInstallerGlobalSetup extends jInstallerGlobalSetup {
+class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     public $configContent = array();
 
@@ -75,10 +75,10 @@ class testInstallerGlobalSetup extends jInstallerGlobalSetup {
 
     protected function createComponentModule($name, $path) {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $moduleInfos = new jInstallerModuleInfos($name, $path, $moduleSetupList);
+        $moduleInfos = new \Jelix\Installer\ModuleStatus($name, $path, $moduleSetupList);
 
         if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
-            return new jInstallerComponentModule($moduleInfos, $this);
+            return new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this);
         }
         else {
             return new testInstallerComponentModule($moduleInfos, $this);
@@ -87,7 +87,7 @@ class testInstallerGlobalSetup extends jInstallerGlobalSetup {
 }
 
 
-class testInstallerComponentModule extends jInstallerComponentModule {
+class testInstallerComponentModule extends \Jelix\Installer\ModuleInstallerLauncher {
 
     protected function readIdentity() {
         $xml = simplexml_load_string($this->mainInstaller->moduleXMLDesc[$this->name]);
@@ -97,7 +97,7 @@ class testInstallerComponentModule extends jInstallerComponentModule {
 
 }
 
-class testInstallerEntryPoint extends jInstallerEntryPoint2 {
+class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
 
     function __construct($globalSetup,
                          $epConfigFile, $file, $type, $configContent) {
@@ -192,7 +192,7 @@ class testInstallerMain extends jInstaller {
         foreach ($this->globalSetup->configContent as $ep=>$conf) {
             
             foreach($nativeModules as $module) {
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.access'] = ($module == 'jelix'?2:0);
+                $this->globalSetup->configContent[$ep]['modules'][$module.'.enabled'] = ($module == 'jelix');
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.installed'] = 0;
                 $this->globalSetup->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
@@ -203,12 +203,12 @@ class testInstallerMain extends jInstaller {
 
     }
 
-    function testAddModule($name, $moduleXML, $access = 2, $installed = 0, $version = '1.0', $dbprofile='default') {
+    function testAddModule($name, $moduleXML, $enabled = false, $installed = 0, $version = '1.0', $dbprofile='default') {
         $this->moduleXMLDesc[$name] = $moduleXML;
         foreach($this->globalSetup->configContent as $ep=>$conf) {
             $this->globalSetup->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
             $this->globalSetup->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.access'] = $access;
+            $this->globalSetup->configContent[$ep]['modules'][$name.'.enabled'] = $enabled;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;

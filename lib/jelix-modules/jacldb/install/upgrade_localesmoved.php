@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacldbModuleUpgrader_localesmoved extends jInstallerModule2 {
+class jacldbModuleUpgrader_localesmoved extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.5');
     protected $date = '2012-09-21 09:37';

@@ -14,19 +14,12 @@
  *    - defaultgroups    add default groups admin, users, anonymous
  *    - defaultuser      add a default user, admin and add default groups
  */
-class jacl2dbModuleInstaller extends jInstallerModule2 {
+class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
 
     protected $defaultDbProfile = 'jacl2_profile';
 
     function install() {
-
-        $this->declareDbProfile('jacl2_profile', null, false);
-        $config = $this->getLocalConfigIni();
-        $driver = $config->getValue('driver','acl2');
-        if ($driver != 'db') {
-            $config['main']->setValue('driver','db','acl2');
-        }
 
         /*
         $mapper = new jDaoDbMapper('jacl2_profile');

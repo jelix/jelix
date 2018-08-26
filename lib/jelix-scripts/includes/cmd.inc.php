@@ -3,7 +3,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
-* @copyright   2005-2016 Laurent Jouanneau
+* @copyright   2005-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -31,14 +31,14 @@ $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
 $application = new Application("Jelix helpers");
 $application->add(new InstallApp($jelixScriptConfig));
-$application->add(new InstallModule($jelixScriptConfig));
-$application->add(new UninstallModule($jelixScriptConfig));
 $application->add(new InitAdmin($jelixScriptConfig));
 $application->add(new CreateCtrl($jelixScriptConfig));
 $application->add(new CreateDao($jelixScriptConfig));
 $application->add(new CreateDaoCrud($jelixScriptConfig));
 $application->add(new CreateClassFromDao($jelixScriptConfig));
 $application->add(new CreateModule($jelixScriptConfig));
+$application->add(new ConfigureModule($jelixScriptConfig));
+$application->add(new UnconfigureModule($jelixScriptConfig));
 $application->add(new CreateEntryPoint($jelixScriptConfig));
 $application->add(new CreateForm($jelixScriptConfig));
 $application->add(new CreateLangPackage($jelixScriptConfig));

@@ -4,8 +4,8 @@ disableInstallers = on
 ;enableAllModules = on
 
 [modules]
-jelix.access = 2
-aaa.access = 2 
+jelix.enabled = on
+aaa.enabled = on
 
 [urlengine]
 enableParser = on

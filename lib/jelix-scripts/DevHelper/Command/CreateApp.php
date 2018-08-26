@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2005-2016 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2018 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @copyright   2011 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -133,8 +133,15 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
+        $configurator = new \Jelix\Installer\Configurator(new \consoleInstallReporter(
+            $output, ($output->isVerbose()?'notice':'error'), 'Configuration'));
+        if ($input->isInteractive()) {
+            $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
+        }
+        $configurator->configureModules(array('jelix'), 'index', false, true);
+
         //require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter(($output->isVerbose()?'notice':'warning')));
+        $installer = new \jInstaller(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
         $installer->installApplication();
 
         $moduleok = true;
@@ -236,7 +243,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
 
-        $this->createDir($appPath.'install');
+        $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
         $this->createDir(\jApp::appPath('app/responses'));
@@ -309,6 +316,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(\jApp::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'install/uninstall/uninstaller.ini.php','installer/uninstall/uninstaller.ini.php',$param, "uninstaller.ini.php file");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
         $temp = dirname(rtrim(\jApp::tempBasePath(),'/'));

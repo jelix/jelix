@@ -4,16 +4,13 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
@@ -34,22 +31,22 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
 
         \jAppManager::close();
         if ($this->verbose()) {
-            $reporter = new \textInstallReporter('notice', 'Low-level migration');
+            $reporter = new \consoleInstallReporter($output, 'notice', 'Low-level migration');
         }
         else {
-            $reporter = new \textInstallReporter('error', 'Low-level migration');
+            $reporter = new \consoleInstallReporter($output, 'error', 'Low-level migration');
         }
 
         // launch the low-level migration
-        $migrator = new \jInstallerMigration($reporter);
+        $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrate();
 
         // we can now launch the installer/updater
         if ($this->verbose()) {
-            $reporter = new \textInstallReporter('notice');
+            $reporter = new \consoleInstallReporter($output, 'notice');
         }
         else {
-            $reporter = new \textInstallReporter('error');
+            $reporter = new \consoleInstallReporter($output, 'error');
         }
         $installer = new \jInstaller($reporter);
         $installer->installApplication();

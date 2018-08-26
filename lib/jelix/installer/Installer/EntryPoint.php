@@ -1,24 +1,24 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2009-2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer;
+
 use Jelix\Routing\UrlMapping\XmlEntryPoint;
 use Jelix\IniFile\IniModifier;
 
-
 /**
- * container for entry points properties
+ * container for entry points properties, for installers
+ *
+ * @since 1.7
  */
-class jInstallerEntryPoint2
+class EntryPoint
 {
-
     /**
-     * @var StdObj   configuration parameters. compiled content of config files
+     * @var \StdClass   configuration parameters. compiled content of config files
      *  result of the merge of entry point config, localconfig.ini.php,
      *  mainconfig.ini.php and defaultconfig.ini.php
      */
@@ -28,13 +28,13 @@ class jInstallerEntryPoint2
      * @var string the filename of the configuration file dedicated to the entry point
      *       ex: <apppath>/app/config/index/config.ini.php
      */
-    protected $configFile;
+    protected $configFileName;
 
     /**
      * all original configuration files combined
      * @var \Jelix\IniFile\IniModifierArray
      */
-    protected $configIni;
+    protected $appConfigIni;
 
     /**
      * all local configuration files combined with original configuration file
@@ -76,61 +76,56 @@ class jInstallerEntryPoint2
     protected $urlMap;
 
     /**
-     * @var jInstallerGlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
     /**
-     * @param jInstallerGlobalSetup $globalSetup
+     * @var \jInstallerEntryPoint
+     */
+    public $legacyInstallerEntryPoint = null;
+
+    /**
+     * @param GlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/config directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
-    function __construct(jInstallerGlobalSetup $globalSetup,
+    function __construct(GlobalSetup $globalSetup,
                          $configFile, $file, $type)
     {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
-        $this->configFile = $configFile;
+        $this->configFileName = $configFile;
         $this->scriptName = ($this->_isCliScript ? $file : '/' . $file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appConfigPath = jApp::appConfigPath($configFile);
+        $appConfigPath = \jApp::appConfigPath($configFile);
         if (!file_exists($appConfigPath)) {
-            jFile::createDir(dirname($appConfigPath));
+            \jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
 
-        $this->configIni = clone $globalSetup->getConfigIni();
-        $this->configIni['entrypoint'] = new IniModifier($appConfigPath);
+        $this->appConfigIni = clone $globalSetup->getConfigIni();
+        $this->appConfigIni['entrypoint'] = new IniModifier($appConfigPath);
 
-        $varConfigPath = jApp::varConfigPath($configFile);
+        $varConfigPath = \jApp::varConfigPath($configFile);
         $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
-        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni = clone $this->appConfigIni;
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->liveConfigIni = clone $this->localConfigIni;
         $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];
 
-        $this->config = jConfigCompiler::read($configFile, true,
+        $this->config = \jConfigCompiler::read($configFile, true,
             $this->_isCliScript,
             $this->scriptName);
 
         $this->urlMap = $globalSetup->getUrlModifier()
             ->addEntryPoint($this->getEpId(), $type);
-    }
-
-    protected $legacyInstallerEntryPoint = null;
-
-    public function getLegacyInstallerEntryPoint()
-    {
-        if ($this->legacyInstallerEntryPoint === null) {
-            $this->legacyInstallerEntryPoint = new jInstallerEntryPoint($this, $this->globalSetup);
-        }
-        return $this->legacyInstallerEntryPoint;
     }
 
     public function getType()
@@ -186,9 +181,9 @@ class jInstallerEntryPoint2
      *
      * @return \Jelix\IniFile\IniModifierArray
      */
-    function getConfigIni()
+    function getAppConfigIni()
     {
-        return $this->configIni;
+        return $this->appConfigIni;
     }
 
     /*
@@ -228,13 +223,13 @@ class jInstallerEntryPoint2
     /**
      * @return string the config file name of the entry point
      */
-    function getConfigFile()
+    function getConfigFileName()
     {
-        return $this->configFile;
+        return $this->configFileName;
     }
 
     /**
-     * @return stdObj the config content of the entry point, as seen when
+     * @return \StdClass the config content of the entry point, as seen when
      * calling jApp::config()
      */
     function getConfigObj()
@@ -242,20 +237,12 @@ class jInstallerEntryPoint2
         return $this->config;
     }
 
+    /**
+     * @param \StdClass $config
+     */
     function setConfigObj($config)
     {
         $this->config = $config;
     }
 
-    /**
-     * Declare web assets into the entry point config
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $collection the name of the webassets collection
-     * @param bool $force
-     */
-    public function declareWebAssets($name, array $values, $collection, $force)
-    {
-        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
-    }
 }

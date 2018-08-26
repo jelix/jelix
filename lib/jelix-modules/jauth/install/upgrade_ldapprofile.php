@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
+class jauthModuleUpgrader_ldapprofile extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.7.0-beta.2');
     protected $date = '2016-06-22 09:14';
@@ -20,9 +20,11 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
         }
     }
 
-    function updateLdapEpConf(jInstallerEntryPoint2 $entryPoint) {
+    protected $ldapConfFiles = array();
 
-        $authConfig = $this->getCoordPluginConf($entryPoint->getConfigIni(), 'auth');
+    function updateLdapEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
+
+        $authConfig = $this->getCoordPluginConf($entryPoint->getAppConfigIni(), 'auth');
         if (!$authConfig) {
             return;
         }
@@ -34,10 +36,11 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
             return;
         }
 
-        $tag = 'authconfldap-'.\Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $conf->getFileName());
-        if (!$this->firstExec($tag)) {
+        $tag = \Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $conf->getFileName());
+        if (isset($this->ldapConfFiles[$tag])) {
             return;
         }
+        $this->ldapConfFiles[$tag] = true;
 
         if ($section === 0) {
             // the configuration is in a separate file, not in the main configuration file
@@ -54,7 +57,7 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
             $section_ldap = 'auth_ldap';
         }
 
-        $profileIni = new \Jelix\IniFile\IniModifier(jApp::varConfigPath('profiles.ini.php'));
+        $profileIni = $this->getProfilesIni();
         $suffix = '';
         while ($profileIni->isSection('authldap:ldap'.$suffix)) {
             if ($suffix) {
@@ -72,8 +75,6 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
             $profileIni->setValue($prop, $val, $sectionProfile);
             $conf->removeValue($prop, $section_ldap);
         }
-
-        $profileIni->save();
         $conf->save();
     }
 }

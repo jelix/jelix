@@ -142,6 +142,7 @@ class jInstallerModule implements jIInstallerComponent {
      * @var boolean true if this is an installation for the whole application.
      *              false if this is an installation in an
      *              already installed application. Always False for upgraders.
+     * @deprecated
      */
     protected $installWholeApp = false;
 
@@ -158,7 +159,7 @@ class jInstallerModule implements jIInstallerComponent {
      * @param string $path the component path
      * @param string $version version of the component
      * @param boolean $installWholeApp true if the installation is during the whole app installation
-     *                                 false if it is only few modules and this module
+     *                                 false if it is only few modules and this module. deprecated.
      */
     function __construct ($componentName, $name, $path, $version, $installWholeApp = false) {
         $this->path = $path;

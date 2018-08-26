@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -27,7 +27,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             ->addArgument(
                 'entrypoint',
                 InputArgument::REQUIRED,
-                'Name of the new entrypoint. It can contain a sub-directory'
+                'Name of the new entrypoint. It can contain a directory path related to the config dir'
             )
             ->addArgument(
                 'config',
@@ -145,13 +145,6 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");
         }
-
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter('warning'));
-        $installer->installApplication();
-        if ($this->verbose()) {
-            $output->writeln("All modules have been initialized for the new entry point.");
-        }
     }
 
     protected function _execute(InputInterface $input, OutputInterface $output)
@@ -169,7 +162,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         if (!$ep->length) {
             $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
+            $this->projectXml->documentElement->appendChild($ep);
             $ep->appendChild($elem);
         }
         else {

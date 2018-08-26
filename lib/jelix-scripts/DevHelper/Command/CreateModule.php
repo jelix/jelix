@@ -4,7 +4,7 @@
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud
 * @contributor Bastien Jaillot
-* @copyright   2005-2016 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+* @copyright   2005-2018 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -84,6 +84,8 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                'Do not register the module in the application configuration'
             )
         ;
+
+        $this->addEpOption();
         parent::configure();
     }
 
@@ -161,6 +163,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 $output->writeln("Sub directories have been created in the new module $module.");
             }
             $this->createFile($path.'install/install.php','module/install.tpl',$param);
+            $this->createFile($path.'install/configure.php','module/configure.tpl',$param);
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
@@ -174,7 +177,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 $xmlEp = $xmlMap->getDefaultEntryPoint('classic');
             }
             else {
-                $xmlEp = $xmlMap->getEntryPoint($this->entryPointId);
+                $xmlEp = $xmlMap->getEntryPoint($this->selectedEntryPointId);
             }
             if ($xmlEp) {
                 $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default'=>true));
@@ -188,27 +191,27 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             }
         }
         $xmlMap->save();
-        $iniDefault->setValue($module.'.access', 2 , 'modules');
+
+        // Configure the module. We don't launch the configurator,
+        // as there is nothing to configure for the module.
+        // just enabling it.
+        \Jelix\Installer\Configurator::setModuleAsConfigured($module, $iniDefault);
         $iniDefault->save();
 
-        $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
-        $install->setValue($module.'.installed', 1, 'modules');
-        $install->setValue($module.'.version', $initialVersion, 'modules');
-        $install->save();
+        // Install the module into the application instance
+        // we don't have an installer, so just fill the installer.ini.php
+        \jInstaller::setModuleAsInstalled($module, $initialVersion, date('Y-m-d'));
 
         \jApp::declareModule($path);
 
         // create a default controller
-        if(!$input->getOption('nocontroller')){
+        if (!$input->getOption('nocontroller')) {
             $arguments = array(
                 'module'=>$module,
                 'controller'=>'default',
                 'method'=>'index',
             );
 
-            if ($input->getOption('entry-point')) {
-                $arguments['--entry-point'] = $input->getOption('entry-point');
-            }
             if ($input->getOption('cmdline')) {
                 $arguments['--cmdline'] = true;
             }

@@ -112,12 +112,12 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             $this->arguments['testFile'] = '';
         }
 
-        $globalSetup = new jInstallerGlobalSetup();
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
         $epInfo = $globalSetup->getMainEntryPoint();
 
         // let's load configuration now, and coordinator. it could be needed by tests
         // (during load of their php files or during execution)
-        jApp::setConfig(jConfigCompiler::readAndCache($epInfo->getConfigFile(), null, $this->entryPoint));
+        jApp::setConfig(jConfigCompiler::readAndCache($epInfo->getConfigFileName(), null, $this->entryPoint));
         jApp::setCoord(new jCoordinator('', false));
 
         if ($modulesTests == 0) {
@@ -163,7 +163,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
     }
 
-    protected function getAllModulesTestSuites(jInstallerGlobalSetup $globalSetup) {
+    protected function getAllModulesTestSuites(\Jelix\Installer\GlobalSetup $globalSetup) {
 
 
         $moduleList = $globalSetup->getModulesList();
@@ -197,7 +197,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
     }
 
 
-    protected function getModuleTestSuite(jInstallerGlobalSetup $globalSetup, $module, $testFile = '') {
+    protected function getModuleTestSuite(\Jelix\Installer\GlobalSetup $globalSetup, $module, $testFile = '') {
 
         $moduleList = $globalSetup->getModulesList();
 

@@ -9,9 +9,10 @@
 */
 
 /**
- * simple text reporter
+ * reporter using Symfony Console Output
  */
 class textInstallReporter implements jIInstallReporter {
+
     use jInstallerReporterTrait;
 
     /**

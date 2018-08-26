@@ -11,12 +11,8 @@
 
 /**
  */
-class jprefModuleInstaller extends jInstallerModule {
+class jprefModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
-        $path = jApp::appConfigPath('preferences.ini.php');
-        if (!file_exists($path)) {
-            file_put_contents($path, ";<"."?php die(''); ?>\n;for security reasons , don't remove or modify the first line\n\n");
-        }
     }
 }

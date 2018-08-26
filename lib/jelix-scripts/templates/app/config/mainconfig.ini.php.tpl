@@ -17,19 +17,11 @@ domainName =
 
 
 [modules]
-; modulename.access = x where x =
-; 0 if installed but not used (database schema is ok for example)
-; 1 if accessible by other modules (other modules can use it, but it is not accessible directly through the web)
-; 2 if public (accessible through the web)
+jelix.enabled = on
+jacl2db.enabled = off
+jauth.enabled = off
+jauthdb.enabled = off
 
-jelix.access = 2
-
-; jacldb is deprecated. keep it uninstall if possible. install jacl2db instead
-jacldb.access = 0
-
-jacl2db.access = 0
-jauth.access = 0
-jauthdb.access = 0
 
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1

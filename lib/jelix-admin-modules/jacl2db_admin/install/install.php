@@ -10,9 +10,9 @@
 */
 
 
-class jacl2db_adminModuleInstaller extends jInstallerModule2 {
+class jacl2db_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
-        $this->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
+
     }
 }

@@ -11,10 +11,10 @@
 
 /**
  */
-class jprefModuleUpgrader_moveini extends jInstallerModule {
+class jprefModuleUpgrader_moveini extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.1');
-    public $date = '2016-11-24';
+    protected $targetVersions = array('1.1');
+    protected $date = '2016-11-24';
 
     function install() {
         $path = jApp::varConfigPath('preferences.ini.php');
