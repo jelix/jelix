@@ -11,16 +11,14 @@
 */
 
 include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
-include (JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-include (JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 
 /**
  * an HTML reporter for jInstallChecker
  * @package    jelix-modules
  * @subpackage jelix-module
  */
-class checkZoneInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class checkZoneInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
 
     public $trace = '';
     protected $messageProvider = null;
@@ -90,7 +88,7 @@ class check_installZone extends jZone {
             jApp::config()->locale = $locale;
         }
 
-        $messages = new jInstallerMessageProvider($lang);
+        $messages = new \Jelix\Installer\Checker\Messages($lang);
         $reporter = new checkZoneInstallReporter($messages);
         $check = new jInstallCheck($reporter, $messages);
         $check->run();

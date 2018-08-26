@@ -1,26 +1,24 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2007-2015 Laurent Jouanneau
+* @copyright   2007-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer\Reporter;
 
 /**
- * an HTML reporter for jInstallChecker
- * @package jelix
+ * an HTML reporter
  */
-class jHtmlInstallChecker implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class Html implements ReporterInterface {
+    use ReporterTrait;
 
     /**
-     * @var \jInstallerMessageProvider
+     * @var \Jelix\SimpleLocalization\Container
      */
     protected $messageProvider;
 
-    function __construct(jInstallerMessageProvider $messageProvider) {
+    function __construct(\Jelix\SimpleLocalization\Container $messageProvider) {
         $this->messageProvider = $messageProvider;
     }
 

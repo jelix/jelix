@@ -135,8 +135,8 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
 /**
  *
  */
-class testInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class testInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
 
     public $startCounter = 0;
 
@@ -186,7 +186,7 @@ class testInstallerMain extends \Jelix\Installer\Installer {
         copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
         $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
-        $this->messages = new jInstallerMessageProvider('en');
+        $this->messages = new \Jelix\Installer\Checker\Messages('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
         $config = jApp::config();
         foreach ($this->globalSetup->configContent as $ep=>$conf) {

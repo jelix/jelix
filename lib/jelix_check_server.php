@@ -12,13 +12,13 @@
 * @since       1.0b2
 */
 
-#includephp jelix/installer/jIInstallReporter.iface.php
+#includephp jelix/installer/Installer/Reporter/ReporterInterface.php
 #includephp jelix/installer/jInstallerMessageProvider.class.php
 #includephp jelix/installer/jInstallChecker.class.php
-#includephp jelix/installer/jHtmlInstallChecker.class.php
+#includephp jelix/installer/Installer/Reporter/Html.php
 
 class checker extends jInstallCheckerBase {
-    function __construct (jIInstallReporter $reporter, $messages) {
+    function __construct (\Jelix\Installer\Reporter\ReporterInterface $reporter, $messages) {
         parent::__construct ($reporter, $messages);
         $this->buildProperties = array(
 #expand    'PHP_VERSION_TARGET'=>'__PHP_VERSION_TARGET__',
@@ -65,7 +65,7 @@ $messages = new jInstallerMessageProvider(
     )
 );
 
-$reporter = new jHtmlInstallChecker($messages);
+$reporter = new \Jelix\Installer\Reporter\Html($messages);
 $check = new checker($reporter, $messages);
 $check->addDatabaseCheck(array('mysql','sqlite','pgsql'), false);
 

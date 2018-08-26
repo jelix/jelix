@@ -10,7 +10,6 @@
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-require(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 
 class installappWizPage extends installWizardPage {
     
@@ -49,8 +48,8 @@ class installappWizPage extends installWizardPage {
  /**
  * 
  */
-class wizInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class wizInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
     /**
      * @var string error, notice or warning
      */

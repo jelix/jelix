@@ -31,10 +31,10 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
 
         \jAppManager::close();
         if ($this->verbose()) {
-            $reporter = new \consoleInstallReporter($output, 'notice', 'Low-level migration');
+            $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Low-level migration');
         }
         else {
-            $reporter = new \consoleInstallReporter($output, 'error', 'Low-level migration');
+            $reporter = new \Jelix\Installer\Reporter\Console($output, 'error', 'Low-level migration');
         }
 
         // launch the low-level migration
@@ -43,10 +43,10 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
 
         // we can now launch the installer/updater
         if ($this->verbose()) {
-            $reporter = new \consoleInstallReporter($output, 'notice');
+            $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice');
         }
         else {
-            $reporter = new \consoleInstallReporter($output, 'error');
+            $reporter = new \Jelix\Installer\Reporter\Console($output, 'error');
         }
         $installer = new \Jelix\Installer\Installer($reporter);
         $installer->installApplication();

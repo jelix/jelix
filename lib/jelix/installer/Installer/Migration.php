@@ -9,11 +9,6 @@ namespace Jelix\Installer;
 
 use \Jelix\IniFile\IniModifier;
 
-require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
-
 /**
  * do changes in the application before the installation of modules can be done
  *
@@ -25,11 +20,11 @@ class Migration {
     
     /**
      * the object responsible of the results output
-     * @var \jIInstallReporter
+     * @var Reporter\ReporterInterface
      */
     protected $reporter;
 
-    function __construct(\jIInstallReporter $reporter) {
+    function __construct(Reporter\ReporterInterface $reporter) {
         $this->reporter = $reporter;
     }
 

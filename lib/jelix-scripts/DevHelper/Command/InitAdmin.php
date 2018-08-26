@@ -130,7 +130,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $xmlMap->save();
 
         $globalSetup = new \Jelix\Installer\GlobalSetup();
-        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
+        $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
         $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));
         //$configurator->setModuleParameters('master_admin', array());
@@ -167,7 +167,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $configurator->configureModules(array('jpref_admin'), $entrypoint);
 
-        $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
+        $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose()? 'notice':'warning'));
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
     }

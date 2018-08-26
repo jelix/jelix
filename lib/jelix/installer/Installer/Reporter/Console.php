@@ -7,14 +7,15 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * simple text reporter
  */
-class consoleInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class Console implements ReporterInterface {
+    use ReporterTrait;
 
     /**
      * @var string error, notice or warning

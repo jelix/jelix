@@ -6,21 +6,19 @@
 * @package     InstallWizard
 * @subpackage  pages
 * @author      Laurent Jouanneau
-* @copyright   2010-2011 Laurent Jouanneau
+* @copyright   2010-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
 $lib_jelix = __DIR__.'/../../../jelix/';
-include $lib_jelix.'/installer/jIInstallReporter.iface.php';
-include $lib_jelix.'/installer/jInstallerMessageProvider.class.php';
 include $lib_jelix.'/installer/jInstallChecker.class.php';
 
 /**
  * page for a wizard, to check a jelix installation
  */
-class checkjelixWizPage extends installWizardPage  implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class checkjelixWizPage extends installWizardPage  implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
     protected $tpl;
     protected $messages;
 
@@ -30,7 +28,7 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
      */
     function show (\Jelix\Castor\Castor $tpl) {
         $this->tpl = $tpl;
-        $messages = new jInstallerMessageProvider();
+        $messages = new \Jelix\Installer\Checker\Messages();
         $check = new jInstallCheck($this, $messages);
         if (isset($this->config['verbose'])) {
             $check->verbose = (!!$this->config['verbose']);
@@ -54,7 +52,7 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
         return ($check->nbError == 0);
     }
 
-    //----- jIInstallReporter implementation
+    //----- \Jelix\Installer\Reporter\ReporterInterface implementation
 
     function start() {}
 
@@ -63,7 +61,7 @@ class checkjelixWizPage extends installWizardPage  implements jIInstallReporter 
         $this->messages[] = array($type, $message);
     }
     
-    function end($results){
+    function end(){
         $nbError = $this->getMessageCounter('error');
         $nbWarning = $this->getMessageCounter('warning');
         $nbNotice = $this->getMessageCounter('notice');

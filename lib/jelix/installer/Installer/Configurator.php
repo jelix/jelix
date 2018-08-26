@@ -51,14 +51,14 @@ class Configurator {
 
     /**
      * the object responsible of the results output
-     * @var \jIInstallReporter
+     * @var Reporter\ReporterInterface
      */
-    public $reporter;
+    protected $reporter;
 
     /**
      * @var \JInstallerMessageProvider
      */
-    public $messages;
+    protected $messages;
 
     /**
      * the global app setup
@@ -89,12 +89,12 @@ class Configurator {
      * GlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to configure modules.
      *
-     * @param \jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct (\jIInstallReporter $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    public function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new \jInstallerMessageProvider($lang);
+        $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
         if (!$globalSetup) {
             $globalSetup = new GlobalSetup();

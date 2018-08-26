@@ -135,7 +135,7 @@ cd lib/jelix/forms
   __ALL_RECURSIVELY__
 
 cd lib/jelix/installer
-  __ALL__
+  __ALL_RECURSIVELY__
 
 cd lib/jelix/kvdb
   __ALL__

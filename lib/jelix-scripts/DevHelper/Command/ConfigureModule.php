@@ -63,7 +63,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
         }
 
-        $reporter = new \consoleInstallReporter($output,
+        $reporter = new \Jelix\Installer\Reporter\Console($output,
             ($this->verbose()?'notice':'error'), 'Configuration');
 
         $configurator = new \Jelix\Installer\Configurator($reporter);

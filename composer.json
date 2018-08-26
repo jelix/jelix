@@ -24,6 +24,7 @@
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "^1.7.2",
         "jelix/inifile": "^2.4.0",
+        "jelix/simplelocalization": "1.7.1",
         "jelix/wikirenderer-plugin": "^1.7.1",
         "symfony/console":"^3.2.0",
         "jelix/file-utilities": "^1.8.3",
@@ -46,6 +47,7 @@
         "psr-4": {
             "Jelix\\DevHelper\\": "lib/jelix-scripts/DevHelper/",
             "Jelix\\Routing\\UrlMapping\\": "lib/jelix/core/UrlMapping/",
+            "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
             "Jelix\\Dependencies\\" : "lib/jelix/Dependencies"
         },
         "classmap": [ ],

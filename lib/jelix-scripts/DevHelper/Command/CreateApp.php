@@ -133,14 +133,15 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
-        $configurator = new \Jelix\Installer\Configurator(new \consoleInstallReporter(
-            $output, ($output->isVerbose()?'notice':'error'), 'Configuration'));
+        $configurator = new \Jelix\Installer\Configurator(
+            new \Jelix\Installer\Reporter\Console(
+                $output, ($output->isVerbose()?'notice':'error'), 'Configuration'));
         if ($input->isInteractive()) {
             $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
         }
         $configurator->configureModules(array('jelix'), 'index', false, true);
 
-        $installer = new \Jelix\Installer\Installer(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
+        $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose()?'notice':'warning')));
         $installer->installApplication();
 
         $moduleok = true;

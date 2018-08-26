@@ -7,11 +7,11 @@
  */
 namespace Jelix\Installer;
 
+// load legacy interfaces and classes
 require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
 require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 
 use \Jelix\Dependencies\Item;
@@ -67,12 +67,12 @@ class Installer {
 
     /**
      * the object responsible of the results output
-     * @var \jIInstallReporter
+     * @var Reporter\ReporterInterface
      */
     public $reporter;
 
     /**
-     * @var \jInstallerMessageProvider
+     * @var \Jelix\Installer\Checker\Messages
      */
     public $messages;
 
@@ -88,12 +88,12 @@ class Installer {
      * GlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to install/upgrade modules.
      *
-     * @param \jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct (\jIInstallReporter $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new \jInstallerMessageProvider($lang);
+        $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
         if (!$globalSetup) {
             $globalSetup = new GlobalSetup();

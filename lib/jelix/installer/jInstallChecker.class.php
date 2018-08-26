@@ -23,12 +23,12 @@ class jInstallCheckerBase {
 
     /**
      * the object responsible of the results output
-     * @var jIInstallReporter
+     * @var \Jelix\Installer\Reporter\ReporterInterface
      */
     protected $reporter;
 
     /**
-     * @var jInstallerMessageProvider
+     * @var \Jelix\Installer\Checker\Messages
      */
     public $messages;
 
@@ -41,12 +41,12 @@ class jInstallCheckerBase {
     /**
      *
      */
-    function __construct (jIInstallReporter $reporter, $lang=''){
+    function __construct (\Jelix\Installer\Reporter\ReporterInterface $reporter, $lang=''){
         $this->reporter = $reporter;
         if (is_string($lang)) {
-            $this->messages = new jInstallerMessageProvider($lang);
+            $this->messages = new \Jelix\Installer\Checker\Messages($lang);
         }
-        else if ($lang instanceof jInstallerMessageProvider) {
+        else if ($lang instanceof \Jelix\Installer\Checker\Messages) {
             $this->messages = $lang;
         }
         else {
