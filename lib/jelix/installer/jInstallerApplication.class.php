@@ -13,6 +13,7 @@
 * @package    jelix
 * @subpackage installer
 * @since 1.3
+ * @deprecated
 */
 class jInstallerApplication {
 
