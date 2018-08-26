@@ -124,7 +124,7 @@ class ModuleStatus {
         }
     }
 
-    function clearInfos(\Jelix\IniFile\IniModifier $configIni) {
+    function clearInfos(\Jelix\IniFile\IniModifierInterface $configIni) {
         foreach(array('enabled', 'dbprofile', 'installparam',
                     'skipinstaller', 'localconf') as $param) {
             $configIni->removeValue($this->name.'.'.$param, 'modules');

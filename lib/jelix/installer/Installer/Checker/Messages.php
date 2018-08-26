@@ -21,7 +21,7 @@ class Messages extends \Jelix\SimpleLocalization\Container {
      */
     function __construct($lang='', $langFilePath=''){
         if ($langFilePath == '') {
-            $langFilePath = __DIR__.'/installmessages.%LANG%.inc.php';
+            $langFilePath = __DIR__.'/installmessages.%LANG%.php';
         }
         parent::__construct($langFilePath, $lang);
     }

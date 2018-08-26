@@ -209,6 +209,12 @@ class Configurator implements ConfiguratorInterface {
      * @return boolean true it the user has confirmed
      */
     protected function askConfirmation($questionMessage, $defaultResponse = false) {
+        $questionMessage = "<question>$questionMessage</question>";
+        if (strpos($questionMessage, "\n") !== false) {
+            $questionMessage.="\n";
+        }
+        $questionMessage .= " ( 'y' or 'n', default is ".($defaultResponse?'y':'n').')';
+        $questionMessage .= "<inputstart> > </inputstart>";
         $question = new ConfirmationQuestion($questionMessage, $defaultResponse);
         return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
     }
@@ -228,6 +234,14 @@ class Configurator implements ConfiguratorInterface {
      */
     protected function askInformation($questionMessage, $defaultResponse = false,
                                       $autoCompleterValues = false, $validator = null) {
+        $questionMessage = "<question>$questionMessage</question>";
+        if ($defaultResponse) {
+            if (strpos($questionMessage, "\n") !== false) {
+                $questionMessage.="\n";
+            }
+            $questionMessage .= " (default is '$defaultResponse')";
+        }
+        $questionMessage .= "<inputstart> > </inputstart>";
         $question = new Question($questionMessage, $defaultResponse);
         if (is_array($autoCompleterValues)) {
             $question->setAutocompleterValues($autoCompleterValues);
@@ -254,6 +268,8 @@ class Configurator implements ConfiguratorInterface {
      * @return string the value
      */
     protected function askSecretInformation($questionMessage, $defaultResponse = false) {
+        $questionMessage = "<question>$questionMessage</question>";
+        $questionMessage .= "<inputstart> > </inputstart>";
         $question = new Question($questionMessage, $defaultResponse);
         $question->setHidden(true);
         $question->setHiddenFallback(false);
@@ -276,8 +292,15 @@ class Configurator implements ConfiguratorInterface {
     protected function askInChoice($questionMessage, array $choice,
                                    $defaultResponse=0, $multipleChoice = false,
                                    $errorMessage='%s is invalid') {
+        $questionMessage = "<question>$questionMessage</question>";
         if (is_array($defaultResponse)) {
             $defaultResponse = implode(',', $defaultResponse);
+        }
+        if ($defaultResponse !== false) {
+            if (strpos($questionMessage, "\n") !== false) {
+                $questionMessage.="\n";
+            }
+            $questionMessage .= " (default is '$defaultResponse')";
         }
         $question = new ChoiceQuestion($questionMessage, $choice, $defaultResponse);
         $question->setErrorMessage($errorMessage);
@@ -302,7 +325,7 @@ class Configurator implements ConfiguratorInterface {
     protected function askEntryPoints($questionMessage, $entryPointType='',
                                       $multipleChoice = false, $preselectedChoice = array(),
                                    $errorMessage='%s is an unknown entry points') {
-
+        $questionMessage = "<question>$questionMessage</question>";
         if ($entryPointType == '') {
             $choice = array_keys($this->globalSetup->getEntryPointsList());
         }
@@ -314,10 +337,16 @@ class Configurator implements ConfiguratorInterface {
         }
 
         if ($multipleChoice && count($choice) > 1) {
-            if ($this->askConfirmation($questionMessage. ' Select all of these entry points: '.implode(', ',$choice).'?', false)) {
+            if ($this->askConfirmation($questionMessage. "\n".' Select all of these entry points: '.implode(', ',$choice).'?', false)) {
                 return $choice;
             }
             $questionMessage .= "\nseveral values can be choice, separate them by a coma.";
+        }
+        if ($preselectedChoice) {
+            if (strpos($questionMessage, "\n") !== false) {
+                $questionMessage.="\n";
+            }
+            $questionMessage .= " (default is '".implode(',', $preselectedChoice)."')";
         }
 
         $question = new ChoiceQuestion($questionMessage, $choice, implode(',', $preselectedChoice));
@@ -353,7 +382,7 @@ class Configurator implements ConfiguratorInterface {
         $profile = array();
 
         $profile['driver'] = $this->askInChoice(
-            "Which is the type of your database?",
+            "Which is the type of your database? ",
             array_keys($this->dbProfileProperties),
             (isset($currentProfileValues['driver'])?$currentProfileValues['driver']:'mysqli')
         );
@@ -395,14 +424,14 @@ class Configurator implements ConfiguratorInterface {
         $defaultValue = (isset($currentProfileValues['$property'])?$currentProfileValues['$property']:false);
         switch($property) {
             case 'host':
-                $host = $this->askInformation('Host of the database server', $defaultValue, array('localhost'));
+                $host = $this->askInformation('Host of the database server?', $defaultValue, array('localhost'));
                 if ($host != '' || $profile['driver'] !== 'pgsql') {
                     $profile['host'] = $host;
                 }
                 break;
 
             case 'port':
-                $port = $this->askInformation('Port of the database server',
+                $port = $this->askInformation('Port of the database server (leave empty for the default one)? ',
                     $defaultValue, false, function($answer) {
                         if (!is_numeric($answer) || intval($answer) == 0) {
                             throw new \RuntimeException(
@@ -435,6 +464,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'persistent':
+                $defaultValue = (isset($currentProfileValues['$property'])?$currentProfileValues['$property']:true);
                 $profile['persistent'] = $this->askConfirmation('Use a persistent connection?', $defaultValue);
                 break;
 
@@ -502,7 +532,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'extensions':
-                $value = $this->askInformation('Extensions to load', $defaultValue);
+                $value = $this->askInformation('Extensions to load if any (names separated by a coma)', $defaultValue);
                 if ( $value ) {
                     $profile['extensions'] = $value;
                 }
@@ -510,7 +540,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'busytimeout':
-                $value = $this->askInformation('busy timeout (milliseconds)', $defaultValue);
+                $value = $this->askInformation('Busy timeout (milliseconds) (default: empty)', $defaultValue);
                 if ( $value ) {
                     $profile['busytimeout'] = $value;
                 }

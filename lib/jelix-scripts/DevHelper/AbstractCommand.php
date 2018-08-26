@@ -12,6 +12,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 abstract class AbstractCommand extends Command
 {
@@ -39,6 +40,7 @@ abstract class AbstractCommand extends Command
             $this->isVerbose = true;
         }
         $this->output = $output;
+        $this->setUpOutput($output);
     }
 
     protected function verbose()
@@ -179,5 +181,14 @@ abstract class AbstractCommand extends Command
         }
 
         return trim($version);
+    }
+
+    protected function setUpOutput(OutputInterface $output) {
+        $outputStyle = new OutputFormatterStyle('cyan', 'default');
+        $output->getFormatter()->setStyle('question', $outputStyle);
+
+        $outputStyle = new OutputFormatterStyle('yellow', 'default', array('bold'));
+        $output->getFormatter()->setStyle('inputstart', $outputStyle);
+
     }
 }

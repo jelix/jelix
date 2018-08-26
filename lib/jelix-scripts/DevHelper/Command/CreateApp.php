@@ -113,6 +113,8 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
+        $this->setUpOutput($output);
+
         $this->prepareSubCommandApp($appName, $appPath);
 
         \jApp::setEnv('jelix-scripts');

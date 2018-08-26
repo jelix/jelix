@@ -182,7 +182,7 @@ class ModuleInstallerLauncher {
             $conf = $this->globalSetup->getLocalConfigIni();
         }
         else {
-            $this->moduleInfos->clearInfos($this->globalSetup->getConfigIni()['local']);
+            $this->moduleInfos->clearInfos($this->globalSetup->getLocalConfigIni());
             $conf = $this->globalSetup->getConfigIni()['main'];
         }
         $this->moduleInfos->saveInfos($conf);
