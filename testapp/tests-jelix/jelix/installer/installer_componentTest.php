@@ -180,7 +180,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $installer = $component->getInstaller(true);
             $this->assertNull($installer);
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
         
@@ -207,7 +207,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertTrue (is_object($installer));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -232,7 +232,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertTrue(is_array($upgraders));
             $this->assertEquals(0, count($upgraders));
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -260,7 +260,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertTrue (is_array($upgraders));
             $this->assertEquals(0, count($upgraders));
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -286,7 +286,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -315,7 +315,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[1]));
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -344,7 +344,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[1]));
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[2]));
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -402,7 +402,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals(1, count($upgraders));
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[0]));
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -431,7 +431,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[3]));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -458,7 +458,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall3ModuleUpgrader', get_class($upgraders[1]));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -483,7 +483,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals(0, count($upgraders));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }
@@ -509,7 +509,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $this->assertEquals('testinstall3ModuleUpgrader', get_class($upgraders[0]));
 
         }
-        catch(jInstallerException $e) {
+        catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
     }

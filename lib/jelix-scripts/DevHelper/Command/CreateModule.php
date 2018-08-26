@@ -200,7 +200,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         // Install the module into the application instance
         // we don't have an installer, so just fill the installer.ini.php
-        \jInstaller::setModuleAsInstalled($module, $initialVersion, date('Y-m-d'));
+        \Jelix\Installer\Installer::setModuleAsInstalled($module, $initialVersion, date('Y-m-d'));
 
         \jApp::declareModule($path);
 

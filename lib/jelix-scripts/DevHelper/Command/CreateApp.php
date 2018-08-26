@@ -140,8 +140,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         }
         $configurator->configureModules(array('jelix'), 'index', false, true);
 
-        //require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
+        $installer = new \Jelix\Installer\Installer(new \consoleInstallReporter($output, ($output->isVerbose()?'notice':'warning')));
         $installer->installApplication();
 
         $moduleok = true;

@@ -174,9 +174,9 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 }
 
 /**
- * mockup class for jInstaller
+ * mockup class for Jelix\Installer\Installer
  */
-class testInstallerMain extends jInstaller {
+class testInstallerMain extends \Jelix\Installer\Installer {
 
     public $moduleXMLDesc = array();
 

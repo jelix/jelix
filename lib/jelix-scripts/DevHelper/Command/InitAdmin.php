@@ -168,7 +168,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $configurator->configureModules(array('jpref_admin'), $entrypoint);
 
         $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'));
-        $installer = new \jInstaller($reporter, $globalSetup);
+        $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
     }
 }

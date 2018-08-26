@@ -13,7 +13,7 @@ jApp::setEnv('installadmin');
 $migrator = new \Jelix\Installer\Migration(new textInstallReporter('notice', 'Low-level migration'));
 $migrator->migrate();
 
-$installer = new jInstaller(new textInstallReporter());
+$installer = new \Jelix\Installer\Installer(new textInstallReporter());
 
 $installer->installApplication();
 

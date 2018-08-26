@@ -29,7 +29,7 @@ class installappWizPage extends installWizardPage {
         
         
         $reporter = new wizInstallReporter($level, $this);
-        $installer = new jInstaller($reporter);
+        $installer = new \Jelix\Installer\Installer($reporter);
         $ok = $installer->installApplication();
         
         $tpl->assign('messages', $reporter->messages);

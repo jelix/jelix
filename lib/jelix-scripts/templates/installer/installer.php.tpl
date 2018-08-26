@@ -17,7 +17,7 @@ $migrator = new \Jelix\Installer\Migration(new textInstallReporter('notice', 'Lo
 $migrator->migrate();
 
 // we can now launch the installer/updater
-$installer = new jInstaller(new textInstallReporter());
+$installer = new Jelix\Installer\Installer(new textInstallReporter());
 if (!$installer->installApplication()) {
     exit(1);
 }
