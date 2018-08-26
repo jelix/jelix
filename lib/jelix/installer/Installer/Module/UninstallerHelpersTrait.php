@@ -1,14 +1,18 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer\Module;
 
-trait jInstallerUninstallerHelpersTrait {
+/**
+ * Trait for uninstaller/configurator classes
+ *
+ * @since 1.7
+ */
+trait UninstallerHelpersTrait {
 
     /**
      * remove the whole content of a directory from the application
@@ -17,8 +21,8 @@ trait jInstallerUninstallerHelpersTrait {
      *                  the path may content Jelix shortcuts parts like www:, app:...
      */
     final protected function removeDirectoryContent($targetPath) {
-        $path = jFile::parseJelixPath($targetPath);
-        jFile::removeDir($path, true);
+        $path = \jFile::parseJelixPath($targetPath);
+        \jFile::removeDir($path, true);
     }
 
     /**
@@ -27,7 +31,7 @@ trait jInstallerUninstallerHelpersTrait {
      *             the path may content Jelix shortcuts parts like www:, app:...
      */
     final protected function removeFile($targetPath) {
-        $path = jFile::parseJelixPath($targetPath);
+        $path = \jFile::parseJelixPath($targetPath);
         unlink($path);
     }
 

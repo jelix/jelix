@@ -14,7 +14,7 @@
  *    - defaultgroups    add default groups admin, users, anonymous
  *    - defaultuser      add a default user, admin and add default groups
  */
-class jacl2dbModuleInstaller extends jInstallerModule2 {
+class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
 
     protected $defaultDbProfile = 'jacl2_profile';

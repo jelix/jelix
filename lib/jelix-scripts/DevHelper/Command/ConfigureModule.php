@@ -54,21 +54,19 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
-
         \jAppManager::close();
 
         $module = $input->getArgument('module');
         $parameters = $input->getOption('parameters');
 
         if ($parameters) {
-            $parameters = \jInstallerModuleInfos::unserializeParameters($parameters);
+            $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
         }
 
         $reporter = new \consoleInstallReporter($output,
             ($this->verbose()?'notice':'error'), 'Configuration');
 
-        $configurator = new \jInstallerConfigurator($reporter);
+        $configurator = new \Jelix\Installer\Configurator($reporter);
         if ($parameters) {
             $configurator->setModuleParameters($module, $parameters);
         }

@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
+class jauthModuleUpgrader_ldapprofile extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.7.0-beta.2');
     protected $date = '2016-06-22 09:14';
@@ -22,7 +22,7 @@ class jauthModuleUpgrader_ldapprofile extends jInstallerModule2 {
 
     protected $ldapConfFiles = array();
 
-    function updateLdapEpConf(jInstallerEntryPoint2 $entryPoint) {
+    function updateLdapEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
 
         $authConfig = $this->getCoordPluginConf($entryPoint->getAppConfigIni(), 'auth');
         if (!$authConfig) {

@@ -1,12 +1,12 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer\Module;
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -15,15 +15,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Helper\QuestionHelper;
 
 /**
- *
- * @package     jelix
- * @subpackage  installer
+ * Base class for classes which configure a module
  * @since 1.7
  */
-class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
+class Configurator implements ConfiguratorInterface {
 
-    use jInstallerInstallerHelpersTrait;
-    use jInstallerUninstallerHelpersTrait;
+    use InstallerHelpersTrait;
+    use UninstallerHelpersTrait;
 
     /**
      * @var string name of the component
@@ -49,7 +47,7 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
 
     /**
      * global setup
-     * @var jInstallerGlobalSetup
+     * @var \Jelix\Installer\GlobalSetup
      */
     private $globalSetup;
 
@@ -92,7 +90,7 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
     }
 
 
-    // ----- jIInstallerComponentConfigurator implementation
+    // ----- ConfiguratorInterface implementation
 
     /**
      * @inheritdoc
@@ -191,7 +189,7 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
     }
 
 
-    function setGlobalSetup(jInstallerGlobalSetup $setup) {
+    function setGlobalSetup(\Jelix\Installer\GlobalSetup $setup) {
         $this->globalSetup = $setup;
     }
 
@@ -222,17 +220,17 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
      *
      * @param string $questionMessage
      * @param bool $defaultResponse
-     * @param string[]|false $autocompleterValues list of values for autocompletion
+     * @param string[]|false $autoCompleterValues list of values for autocompletion
      * @param callable|null $validator function to validate the value. It accepts
      *   a string as parameter, should return the value (may be modified), and
      *   should throw an exception when the value is invalid.
      * @return string the value given by the user
      */
     protected function askInformation($questionMessage, $defaultResponse = false,
-                                      $autocompleterValues = false, $validator = null) {
+                                      $autoCompleterValues = false, $validator = null) {
         $question = new Question($questionMessage, $defaultResponse);
-        if (is_array($autocompleterValues)) {
-            $question->setAutocompleterValues($autocompleterValues);
+        if (is_array($autoCompleterValues)) {
+            $question->setAutocompleterValues($autoCompleterValues);
         }
         $question->setNormalizer(function ($value) {
             // $value can be null here
@@ -538,38 +536,38 @@ class jInstallerModuleConfigurator implements jIInstallerComponentConfigurator {
     /**
      * List of entry points of the application
      *
-     * @return jInstallerEntryPointConfigurator[]
+     * @return \Jelix\Installer\EntryPointConfigurator[]
      */
     protected function getEntryPointsList() {
         $list = $this->globalSetup->getEntryPointsList();
         $globalSetup = $this->globalSetup;
         $flc = $this->forLocalConfiguration;
         return array_map(function($ep) use($globalSetup, $flc) {
-            return new jInstallerEntryPointConfigurator($ep, $globalSetup, $flc);
+            return new \Jelix\Installer\EntryPointConfigurator($ep, $globalSetup, $flc);
         }, $list);
     }
 
     /**
      * @param string $type
-     * @return jInstallerEntryPointConfigurator[]
+     * @return \Jelix\Installer\EntryPointConfigurator[]
      */
     protected function getEntryPointsByType($type='classic') {
         $list = $this->globalSetup->getEntryPointsByType($type);
         $globalSetup = $this->globalSetup;
         $flc = $this->forLocalConfiguration;
         return array_map(function($ep) use($globalSetup, $flc) {
-            return new jInstallerEntryPointConfigurator($ep, $globalSetup, $flc);
+            return new \Jelix\Installer\EntryPointConfigurator($ep, $globalSetup, $flc);
         }, $list);
     }
 
     /**
      * @param $epId
-     * @return jInstallerEntryPointConfigurator
+     * @return \Jelix\Installer\EntryPointConfigurator
      */
     protected function getEntryPointsById($epId) {
         $ep = $this->globalSetup->getEntryPointById($epId);
         if ($ep) {
-            $ep = new jInstallerEntryPointConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
+            $ep = new \Jelix\Installer\EntryPointConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
         }
         return $ep;
     }

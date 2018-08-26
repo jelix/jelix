@@ -15,45 +15,8 @@
  * It handles installer messages.
  * @package  jelix
  * @subpackage installer
+ * @deprecated
  */
-class jInstallerException extends Exception {
-
-    /**
-     * the locale key
-     * @var string
-     */
-    protected $localeKey = '';
-
-    /**
-     * parameters for the locale key
-     */
-    protected $localeParams = null;
-
-    /**
-     * @param string $localekey a locale key
-     * @param array $localeParams parameters for the message (for sprintf)
-     */
-    public function __construct($localekey, $localeParams = null) {
-
-        $this->localeKey = $localekey;
-        $this->localeParams = $localeParams;
-        parent::__construct($localekey, 0);
-    }
-
-    /**
-     * getter for the locale parameters
-     * @return string
-     */
-    public function getLocaleParameters(){
-        return $this->localeParams;
-    }
-
-    /**
-     * getter for the locale key
-     * @return string
-     */
-    public function getLocaleKey(){
-        return $this->localeKey;
-    }
+class jInstallerException extends \Jelix\Installer\Exception {
 
 }

@@ -1,17 +1,17 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2009-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
 
 /**
  * container for module properties, according to a specific entry point configuration
+ *
  */
-class jInstallerModuleInfos {
+class ModuleStatus {
     /**
      * @var string
      */

@@ -9,7 +9,7 @@
 */
 
 
-class %%module%%ModuleConfigurator extends jInstallerModuleConfigurator {
+class %%module%%ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function getDefaultParameters() {
         return array();

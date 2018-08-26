@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jauthdbModuleConfigurator extends jInstallerModuleConfigurator {
+class jauthdbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function getDefaultParameters()
     {

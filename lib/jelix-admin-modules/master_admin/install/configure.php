@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class master_adminModuleConfigurator extends jInstallerModuleConfigurator {
+class master_adminModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure() {
         $this->declareGlobalWebAssets('master_admin', array('css'=>array('design/master_admin.css')), 'common', false);

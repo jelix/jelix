@@ -1,14 +1,18 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer\Module;
 
-trait jInstallerInstallerHelpersTrait
+/**
+ * Trait for installer/configurator classes
+ *
+ * @since 1.7
+ */
+trait InstallerHelpersTrait
 {
 
     /**
@@ -31,8 +35,8 @@ trait jInstallerInstallerHelpersTrait
      */
     private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite)
     {
-        jFile::createDir($targetPath);
-        $dir = new DirectoryIterator($sourcePath);
+        \jFile::createDir($targetPath);
+        $dir = new \DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
             if ($dirContent->isFile()) {
                 $p = $targetPath . substr($dirContent->getPathName(), strlen($dirContent->getPath()));
@@ -59,13 +63,14 @@ trait jInstallerInstallerHelpersTrait
         if (!$overwrite && file_exists($targetPath))
             return;
         $dir = dirname($targetPath);
-        jFile::createDir($dir);
+        \jFile::createDir($dir);
         copy($this->path . 'install/' . $relativeSourcePath, $targetPath);
     }
 
     /**
      * declare a new db profile. if the content of the section is not given,
      * it will declare an alias to the default profile
+     *
      * @param string $name the name of the new section/alias
      * @param null|string|array $sectionContent the content of the new section, or null
      *     to create an alias.
@@ -116,24 +121,24 @@ trait jInstallerInstallerHelpersTrait
             }
         }
         $profiles->save();
-        jProfiles::clear();
+        \jProfiles::clear();
         return true;
     }
 
     protected function expandPath($path)
     {
         if (strpos($path, 'www:') === 0)
-            $path = str_replace('www:', jApp::wwwPath(), $path);
+            $path = str_replace('www:', \jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
             $p = $this->globalSetup->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
             if (substr($p, -1) != '/') {
                 $p .= '/';
             }
-            $path = str_replace('jelixwww:', jApp::wwwPath($p), $path);
+            $path = str_replace('jelixwww:', \jApp::wwwPath($p), $path);
         } elseif (strpos($path, 'varconfig:') === 0) {
-            $path = str_replace('varconfig:', jApp::varConfigPath(), $path);
+            $path = str_replace('varconfig:', \jApp::varConfigPath(), $path);
         } elseif (strpos($path, 'appconfig:') === 0) {
-            $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
+            $path = str_replace('appconfig:', \jApp::appConfigPath(), $path);
         } elseif (strpos($path, 'epconfig:') === 0) {
             throw new \Exception("'epconfig:' alias is no more supported in path");
         } elseif (strpos($path, 'config:') === 0) {
@@ -161,7 +166,7 @@ trait jInstallerInstallerHelpersTrait
      * @param \Jelix\IniFile\IniModifier $config the global configuration content
      * @param string $pluginName
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
-     * @throws Exception when the configuration filename is not found
+     * @throws \Exception when the configuration filename is not found
      */
     public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName)
     {

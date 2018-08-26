@@ -1,12 +1,12 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer;
+
 
 /**
  * container for entry points properties for configurators
@@ -24,23 +24,25 @@
  * @method getConfigFileName()
  * @method getConfigObj()
  * @method setConfigObj($config)
+ *
+ * @since 1.7
  */
-class jInstallerEntryPointConfigurator
+class EntryPointConfigurator
 {
     /**
-     * @var jInstallerEntryPoint2
+     * @var EntryPoint
      */
     protected $entryPoint;
 
     protected $configureOnLocalConfig = false;
 
     /**
-     * @var jInstallerGlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
-    function __construct(jInstallerEntryPoint2 $entryPoint,
-                         jInstallerGlobalSetup $globalSetup,
+    function __construct(EntryPoint $entryPoint,
+                         GlobalSetup $globalSetup,
                          $configureOnLocalConfig
     )
     {

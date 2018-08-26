@@ -9,7 +9,7 @@
 */
 
 
-class %%module%%ModuleInstaller extends jInstallerModule2 {
+class %%module%%ModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
         //$this->execSQLScript('sql/install');

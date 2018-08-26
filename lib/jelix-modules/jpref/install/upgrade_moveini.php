@@ -11,7 +11,7 @@
 
 /**
  */
-class jprefModuleUpgrader_moveini extends jInstallerModule2 {
+class jprefModuleUpgrader_moveini extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.1');
     protected $date = '2016-11-24';

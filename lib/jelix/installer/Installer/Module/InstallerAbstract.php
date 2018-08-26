@@ -1,21 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2008-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer\Module;
 
 /**
  * Base class for installers and uninstallers
  *
- * @package     jelix
- * @subpackage  installer
  * @since 1.7
  */
-class jInstallerModule2Abstract {
+abstract class InstallerAbstract {
 
     /**
      * @var string name of the component
@@ -29,7 +26,7 @@ class jInstallerModule2Abstract {
 
     /**
      * global setup
-     * @var jInstallerGlobalSetup
+     * @var \Jelix\Installer\GlobalSetup
      */
     protected $globalSetup;
 
@@ -57,7 +54,7 @@ class jInstallerModule2Abstract {
     protected $parameters = array();
 
     /**
-     * @var jDbConnection
+     * @var \jDbConnection
      */
     private $_dbConn = null;
 
@@ -90,7 +87,7 @@ class jInstallerModule2Abstract {
             return null;
     }
 
-    function setGlobalSetup(jInstallerGlobalSetup $setup) {
+    function setGlobalSetup(\Jelix\Installer\GlobalSetup $setup) {
         $this->globalSetup = $setup;
     }
 
@@ -123,7 +120,7 @@ class jInstallerModule2Abstract {
 
     /**
      * Point d'entrée principal de l'application (en général index.php)
-     * @return jInstallerEntryPoint2
+     * @return \Jelix\Installer\EntryPoint
      */
     protected function getMainEntryPoint() {
         return $this->globalSetup->getMainEntryPoint();
@@ -132,7 +129,7 @@ class jInstallerModule2Abstract {
     /**
      * List of entry points of the application
      *
-     * @return jInstallerEntryPoint2[]
+     * @return \Jelix\Installer\EntryPoint[]
      */
     protected function getEntryPointsList() {
         return $this->globalSetup->getEntryPointsList();
@@ -140,7 +137,7 @@ class jInstallerModule2Abstract {
 
     /**
      * @param $epId
-     * @return jInstallerEntryPoint2
+     * @return \Jelix\Installer\EntryPoint
      */
     protected function getEntryPointsById($epId) {
         return $this->globalSetup->getEntryPointById($epId);
@@ -185,14 +182,14 @@ class jInstallerModule2Abstract {
     }
 
     /**
-     * @return jDbTools  the tool class of jDb
+     * @return \jDbTools  the tool class of jDb
      */
     protected function dbTool () {
         return $this->dbConnection()->tools();
     }
 
     /**
-     * @return jDbConnection  the connection to the database used for the module
+     * @return \jDbConnection  the connection to the database used for the module
      */
     protected function dbConnection () {
         if (!$this->_dbConn)

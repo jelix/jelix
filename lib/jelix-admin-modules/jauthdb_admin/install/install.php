@@ -10,7 +10,7 @@
 */
 
 
-class jauthdb_adminModuleInstaller extends jInstallerModule2 {
+class jauthdb_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install()
     {

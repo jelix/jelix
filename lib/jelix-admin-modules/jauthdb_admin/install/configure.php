@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jauthdb_adminModuleConfigurator extends jInstallerModuleConfigurator {
+class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure() {
         foreach($this->getEntryPointsList() as $entrypoint) {
@@ -18,7 +18,7 @@ class jauthdb_adminModuleConfigurator extends jInstallerModuleConfigurator {
         }
     }
 
-    protected function setEpConf(jInstallerEntryPoint2 $entryPoint) {
+    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
         $config = $entryPoint->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
 

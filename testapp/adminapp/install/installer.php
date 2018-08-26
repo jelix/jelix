@@ -10,7 +10,7 @@ require_once (__DIR__.'/../application.init.php');
 jApp::setEnv('installadmin');
 
 // launch the low-level migration
-$migrator = new \jInstallerMigration(new textInstallReporter('notice', 'Low-level migration'));
+$migrator = new \Jelix\Installer\Migration(new textInstallReporter('notice', 'Low-level migration'));
 $migrator->migrate();
 
 $installer = new jInstaller(new textInstallReporter());

@@ -195,7 +195,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         // Configure the module. We don't launch the configurator,
         // as there is nothing to configure for the module.
         // just enabling it.
-        \jInstallerConfigurator::setModuleAsConfigured($module, $iniDefault);
+        \Jelix\Installer\Configurator::setModuleAsConfigured($module, $iniDefault);
         $iniDefault->save();
 
         // Install the module into the application instance

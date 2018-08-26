@@ -11,7 +11,7 @@
 
 /**
  */
-class jprefModuleInstaller extends jInstallerModule2 {
+class jprefModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
     }

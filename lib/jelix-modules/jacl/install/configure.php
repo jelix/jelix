@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jaclModuleConfigurator extends jInstallerModuleConfigurator {
+class jaclModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure() {
         foreach($this->getEntryPointsList() as $entrypoint) {
@@ -16,7 +16,7 @@ class jaclModuleConfigurator extends jInstallerModuleConfigurator {
         }
     }
 
-    protected function setEpConf(jInstallerEntryPoint2 $entryPoint) {
+    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
         $conf = $entryPoint->getConfigIni();
         if (null == $conf->getValue('jacl', 'coordplugins')) {
             $conf->setValue('jacl', '1', 'coordplugins');

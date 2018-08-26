@@ -13,7 +13,7 @@
  * parameters for this installer
  *    - defaultuser      add a default user, admin
  */
-class jauthdbModuleInstaller extends jInstallerModule2 {
+class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $dbTablesInstalled = false;
 

@@ -12,7 +12,7 @@ use \Jelix\IniFile\IniModifier;
 use \Jelix\IniFile\IniModifierArray;
 use \Jelix\IniFile\IniModifierInterface;
 
-class jelixModuleUpgrader_webassets extends jInstallerModule2 {
+class jelixModuleUpgrader_webassets extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.7.0-beta.2');
 

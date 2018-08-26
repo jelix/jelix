@@ -1,23 +1,17 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer\Module;
 
 /**
- * @package     jelix
- * @subpackage  installer
+ * Interface for classes which configure a module
  * @since 1.7
  */
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\QuestionHelper;
-
-interface jIInstallerComponentConfigurator {
+interface ConfiguratorInterface {
 
     /**
      * List of possible installation parameters with their default values
@@ -44,7 +38,7 @@ interface jIInstallerComponentConfigurator {
      * The implementation should provides methods or components to
      * ask informations on the console.
      *
-     * @throws Exception  if an error occurs during the installation.
+     * @throws \Exception  if an error occurs during the installation.
      */
     public function askParameters();
 
@@ -61,7 +55,7 @@ interface jIInstallerComponentConfigurator {
      * This is the opportunity to check some things. Throw an exception to
      * interrupt the configuration process.
      *
-     * @throws Exception if the module cannot be configured
+     * @throws \Exception if the module cannot be configured
      */
     public function preConfigure();
 
@@ -73,7 +67,7 @@ interface jIInstallerComponentConfigurator {
      * files, you can also copy some files into the application, setup the
      * urls mapping etc..
      *
-     * @throws Exception if the module cannot be configured
+     * @throws \Exception if the module cannot be configured
      */
     public function configure();
 
@@ -88,7 +82,7 @@ interface jIInstallerComponentConfigurator {
      * This is the opportunity to check some things. Throw an exception to
      * interrupt the configuration process.
      *
-     * @throws Exception if the module cannot be unconfigured
+     * @throws \Exception if the module cannot be unconfigured
      */
     public function preUnconfigure();
 
@@ -101,7 +95,7 @@ interface jIInstallerComponentConfigurator {
      * also delete some files you installed into the configure() method,
      * remove the url mapping etc..
      *
-     * @throws Exception if the module cannot be unconfigured
+     * @throws \Exception if the module cannot be unconfigured
      */
     public function unconfigure();
 

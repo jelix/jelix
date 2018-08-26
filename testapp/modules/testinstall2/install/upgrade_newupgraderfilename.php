@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testinstall2ModuleUpgrader_newupgraderfilename extends jInstallerModule2 {
+class testinstall2ModuleUpgrader_newupgraderfilename extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.1.2', '1.2.4');
 

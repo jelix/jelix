@@ -1,20 +1,19 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2017-2018 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer;
+
 
 use \Jelix\IniFile\IniReader;
 
 /**
- * Class jInstallerGlobalSetup
  * @since 1.7.0
  */
-class jInstallerGlobalSetup {
+class GlobalSetup {
 
     /**
      * @var \Jelix\IniFile\IniModifierArray
@@ -55,12 +54,12 @@ class jInstallerGlobalSetup {
 
     /**
      * list of entry point and their properties
-     * @var jInstallerEntryPoint2[]  keys are entry point id.
+     * @var EntryPoint[]  keys are entry point id.
      */
     protected $entryPoints = array();
 
     /**
-     * @var jInstallerEntryPoint2
+     * @var EntryPoint
      */
     protected $mainEntryPoint = null;
 
@@ -74,7 +73,7 @@ class jInstallerGlobalSetup {
 
     /**
      * list of modules
-     * @var jInstallerComponentModule[] key: module name
+     * @var ModuleInstallerLauncher[] key: module name
      */
     protected $modules = array();
 
@@ -83,14 +82,14 @@ class jInstallerGlobalSetup {
      *
      * ghost module is a module for which we have only its uninstaller
      *
-     * @var jInstallerComponentModule[] key: module name
+     * @var ModuleInstallerLauncher[] key: module name
      */
     protected $ghostModules = array();
 
     protected $projectXmlPath;
 
     /**
-     * jInstallerGlobalSetup constructor.
+     * GlobalSetup constructor.
      * @param string|null $projectXmlFileName
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
@@ -104,13 +103,13 @@ class jInstallerGlobalSetup {
     {
 
         if (!$projectXmlFileName) {
-            $projectXmlFileName = jApp::appPath('project.xml');
+            $projectXmlFileName = \jApp::appPath('project.xml');
         }
         $this->projectXmlPath = $projectXmlFileName;
 
-        $profileIniFileName = jApp::varConfigPath('profiles.ini.php');
+        $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
         if (!file_exists($profileIniFileName)) {
-            $profileIniDist = jApp::varConfigPath('profiles.ini.php.dist');
+            $profileIniDist = \jApp::varConfigPath('profiles.ini.php.dist');
             if (file_exists($profileIniDist)) {
                 copy($profileIniDist, $profileIniFileName);
             }
@@ -122,13 +121,13 @@ class jInstallerGlobalSetup {
         $this->profilesIni = new \Jelix\IniFile\IniModifier($profileIniFileName);
 
         if (!$mainConfigFileName) {
-            $mainConfigFileName = jApp::mainConfigFile();
+            $mainConfigFileName = \jApp::mainConfigFile();
         }
 
         if (!$localConfigFileName) {
-            $localConfigFileName = jApp::varConfigPath('localconfig.ini.php');
+            $localConfigFileName = \jApp::varConfigPath('localconfig.ini.php');
             if (!file_exists($localConfigFileName)) {
-                $localConfigDist = jApp::varConfigPath('localconfig.ini.php.dist');
+                $localConfigDist = \jApp::varConfigPath('localconfig.ini.php.dist');
                 if (file_exists($localConfigDist)) {
                     copy($localConfigDist, $localConfigFileName);
                 }
@@ -138,12 +137,12 @@ class jInstallerGlobalSetup {
             }
         }
 
-        $liveConfigFileName = jApp::varConfigPath('liveconfig.ini.php');
+        $liveConfigFileName = \jApp::varConfigPath('liveconfig.ini.php');
         if (!file_exists($liveConfigFileName)) {
             file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
 
-        $defaultConfig = new IniReader(jConfig::getDefaultConfigFile());
+        $defaultConfig = new IniReader(\jConfig::getDefaultConfigFile());
 
         $this->configIni = new \Jelix\IniFile\IniModifierArray(array(
             'default'=> $defaultConfig,
@@ -158,7 +157,7 @@ class jInstallerGlobalSetup {
         $this->installerIni = $this->loadInstallerIni();
 
         $this->uninstallerIni = new \Jelix\IniFile\IniModifier(
-            jApp::appPath('install/uninstall/uninstaller.ini.php'),
+            \jApp::appPath('install/uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
@@ -166,7 +165,7 @@ class jInstallerGlobalSetup {
 ");
 
         if (!$urlXmlFileName) {
-            $urlXmlFileName = jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
+            $urlXmlFileName = \jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
@@ -175,21 +174,21 @@ class jInstallerGlobalSetup {
 
         // be sure temp path is ready
         $chmod = $this->configIni->getValue('chmodDir');
-        jFile::createDir(jApp::tempPath(), intval($chmod, 8));
+        \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
     }
 
     /**
      * read the list of entrypoint from the project.xml file
      * and read all modules data used by each entry point
-     * @param SimpleXmlElement $xml
-     * @throws Exception
+     * @param \SimpleXmlElement $xml
+     * @throws \Exception
      */
-    protected function readEntryPointData($xml) {
+    protected function readEntryPointData(\SimpleXmlElement $xml) {
 
         $configFileList = array();
 
         if (!isset($xml->entrypoints->entry)) {
-            throw new Exception("Entrypoint declaration is missing into project.xml");
+            throw new \Exception("Entrypoint declaration is missing into project.xml");
         }
 
         // read all entry points data
@@ -228,7 +227,7 @@ class jInstallerGlobalSetup {
      * @internal for tests
      */
     protected function createEntryPointObject($configFile, $file, $type) {
-        return new jInstallerEntryPoint2($this, $configFile, $file, $type);
+        return new EntryPoint($this, $configFile, $file, $type);
     }
 
     protected function readModuleInfos() {
@@ -241,9 +240,9 @@ class jInstallerGlobalSetup {
         }
 
         // load ghost modules we have to uninstall
-        $uninstallersDir = jApp::appPath('install/uninstall');
+        $uninstallersDir = \jApp::appPath('install/uninstall');
         if (file_exists($uninstallersDir)) {
-            $dir = new DirectoryIterator($uninstallersDir);
+            $dir = new \DirectoryIterator($uninstallersDir);
             $modulesInfos = $this->uninstallerIni->getValues('modules');
             foreach ($dir as $dirContent) {
                 if ($dirContent->isDot() || !$dirContent->isDir()) {
@@ -264,10 +263,10 @@ class jInstallerGlobalSetup {
                 $modulesInfos[$moduleName.'.version'] = $this->installerIni->getValue($moduleName.'.version', 'modules');
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
-                $moduleInfos = new jInstallerModuleInfos($moduleName,
+                $moduleInfos = new ModuleStatus($moduleName,
                     $dirContent->getPathname(), $modulesInfos);
 
-                $this->ghostModules[$moduleName] = new jInstallerComponentModule($moduleInfos, $this);
+                $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
                 $this->ghostModules[$moduleName]->init();
 
             }
@@ -287,7 +286,7 @@ class jInstallerGlobalSetup {
         }
     }
 
-    public function addModuleComponent(jInstallerComponentModule $compModule) {
+    public function addModuleComponent(ModuleInstallerLauncher $compModule) {
         $name = $compModule->getName();
         $this->modules[$name] = $compModule;
         $compModule->init();
@@ -297,17 +296,17 @@ class jInstallerGlobalSetup {
 
     /**
      * @internal for tests
-     * @return jInstallerComponentModule
+     * @return ModuleInstallerLauncher
      */
     protected function createComponentModule($name, $path) {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $moduleInfos = new jInstallerModuleInfos($name, $path, $moduleSetupList);
-        return new jInstallerComponentModule($moduleInfos, $this);
+        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList);
+        return new ModuleInstallerLauncher($moduleInfos, $this);
     }
 
     /**
      * @param string $name
-     * @return jInstallerComponentModule|null
+     * @return ModuleInstallerLauncher|null
      */
     public function getModuleComponent($name) {
         if (isset($this->modules[$name])) {
@@ -317,7 +316,7 @@ class jInstallerGlobalSetup {
     }
 
     /**
-     * @return jInstallerComponentModule[]
+     * @return ModuleInstallerLauncher[]
      */
     public function getModuleComponentsList() {
         return $this->modules;
@@ -326,28 +325,28 @@ class jInstallerGlobalSetup {
     /**
      * List of modules that should be uninstall and we
      * have only their uninstaller into install/uninstall/
-     * @return jInstallerComponentModule[]
+     * @return ModuleInstallerLauncher[]
      */
     public function getGhostModuleComponents() {
         return $this->ghostModules;
     }
 
     /**
-     * @return jInstallerEntryPoint2
+     * @return EntryPoint
      */
     public function getMainEntryPoint() {
         return $this->mainEntryPoint;
     }
 
     /**
-     * @return jInstallerEntryPoint2[]
+     * @return EntryPoint[]
      */
     public function getEntryPointsList() {
         return $this->entryPoints;
     }
 
     /**
-     * @return jInstallerEntryPoint2
+     * @return EntryPoint
      */
     public function getEntryPointById($epId) {
         if (isset($this->entryPoints[$epId])) {
@@ -357,7 +356,7 @@ class jInstallerGlobalSetup {
     }
 
     /**
-     * @return jInstallerEntryPoint2[]
+     * @return EntryPoint[]
      */
     public function getEntryPointsByType($type = 'classic') {
         $list = [];
@@ -421,22 +420,22 @@ class jInstallerGlobalSetup {
 
     /**
      * @return \Jelix\IniFile\IniModifier the modifier for the installer.ini.php file
-     * @throws Exception
+     * @throws \Exception
      */
     protected function loadInstallerIni() {
-        if (!file_exists(jApp::varConfigPath('installer.ini.php'))) {
-            if (false === @file_put_contents(jApp::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
+        if (!file_exists(\jApp::varConfigPath('installer.ini.php'))) {
+            if (false === @file_put_contents(\jApp::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
 ")) {
-                throw new Exception('impossible to create var/config/installer.ini.php');
+                throw new \Exception('impossible to create var/config/installer.ini.php');
             }
         }
         else {
-            copy(jApp::varConfigPath('installer.ini.php'), jApp::varConfigPath('installer.bak.ini.php'));
+            copy(\jApp::varConfigPath('installer.ini.php'), \jApp::varConfigPath('installer.bak.ini.php'));
         }
-        return new \Jelix\IniFile\IniModifier(jApp::varConfigPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
     }
 
     /**
@@ -452,7 +451,7 @@ class jInstallerGlobalSetup {
      * @param string $epId
      * @param string $epType
      * @param string $configFileName
-     * @throws Exception
+     * @throws \Exception
      */
     public function declareNewEntryPoint($epId, $epType, $configFileName) {
 
@@ -487,8 +486,8 @@ class jInstallerGlobalSetup {
     }
 
     /**
-     * @return DOMDocument
-     * @throws Exception
+     * @return \DOMDocument
+     * @throws \Exception
      */
     protected function loadProjectXml() {
         $doc = new \DOMDocument();
@@ -529,8 +528,9 @@ class jInstallerGlobalSetup {
      * @param string $collection the name of the webassets collection
      * @param boolean $force
      */
-    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config, $name, array $values, $collection, $force) {
-
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config,
+                                             $name, array $values, $collection, $force)
+    {
         $section = 'webassets_'.$collection;
         if (!$force && (
                 $config->getValue($name.'.css', $section) ||
@@ -565,8 +565,9 @@ class jInstallerGlobalSetup {
      * @param string $name the name of webassets
      * @param string $collection the name of the webassets collection
      */
-    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifier $config, $name, $collection) {
-
+    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifier $config,
+                                              $name, $collection)
+    {
         $section = 'webassets_'.$collection;
         $config->removeValue($name.'.css', $section);
         $config->removeValue($name.'.js', $section);
@@ -582,7 +583,9 @@ class jInstallerGlobalSetup {
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
      * @throws Exception when the configuration filename is not found
      */
-    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName) {
+    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config,
+                                       $pluginName)
+    {
         $conf = $config->getValue($pluginName, 'coordplugins');
         if (!$conf) {
             return null;
@@ -602,9 +605,9 @@ class jInstallerGlobalSetup {
             return null;
         }
         // the configuration value is a filename
-        $confpath = jApp::appConfigPath($conf);
+        $confpath = \jApp::appConfigPath($conf);
         if (!file_exists($confpath)) {
-            $confpath = jApp::varConfigPath($conf);
+            $confpath = \jApp::varConfigPath($conf);
             if (!file_exists($confpath)) {
                 return null;
             }

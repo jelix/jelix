@@ -112,7 +112,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             $this->arguments['testFile'] = '';
         }
 
-        $globalSetup = new jInstallerGlobalSetup();
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
         $epInfo = $globalSetup->getMainEntryPoint();
 
         // let's load configuration now, and coordinator. it could be needed by tests
@@ -163,7 +163,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
     }
 
-    protected function getAllModulesTestSuites(jInstallerGlobalSetup $globalSetup) {
+    protected function getAllModulesTestSuites(\Jelix\Installer\GlobalSetup $globalSetup) {
 
 
         $moduleList = $globalSetup->getModulesList();
@@ -197,7 +197,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
     }
 
 
-    protected function getModuleTestSuite(jInstallerGlobalSetup $globalSetup, $module, $testFile = '') {
+    protected function getModuleTestSuite(\Jelix\Installer\GlobalSetup $globalSetup, $module, $testFile = '') {
 
         $moduleList = $globalSetup->getModulesList();
 

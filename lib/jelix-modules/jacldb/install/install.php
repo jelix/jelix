@@ -10,7 +10,7 @@
 */
 
 
-class jacldbModuleInstaller extends jInstallerModule2 {
+class jacldbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $defaultDbProfile = 'jacl_profile';
 

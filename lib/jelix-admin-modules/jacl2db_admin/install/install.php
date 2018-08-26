@@ -10,7 +10,7 @@
 */
 
 
-class jacl2db_adminModuleInstaller extends jInstallerModule2 {
+class jacl2db_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
 

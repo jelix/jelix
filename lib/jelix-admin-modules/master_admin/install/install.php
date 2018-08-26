@@ -10,7 +10,7 @@
 */
 
 
-class master_adminModuleInstaller extends jInstallerModule2 {
+class master_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
 

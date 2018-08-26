@@ -129,12 +129,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
         $xmlMap->save();
 
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
-
-        $globalSetup = new jInstallerGlobalSetup();
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
         $reporter = new \consoleInstallReporter($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
-        $configurator = new \jInstallerConfigurator($reporter, $globalSetup);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
         $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));
         //$configurator->setModuleParameters('master_admin', array());
         $configurator->configureModules(array('jauth','master_admin'), $entrypoint);

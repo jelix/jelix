@@ -1,12 +1,11 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
 * @author      Laurent Jouanneau
 * @copyright   2008-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer;
 
 use Jelix\Version\VersionComparator;
 use \Jelix\Dependencies\Resolver;
@@ -15,11 +14,9 @@ use \Jelix\Dependencies\Item;
 /**
  * Manage status of a module and its installer/updaters
  *
- * @package     jelix
- * @subpackage  installer
- * @since 1.2
+ * @since 1.7
  */
-class jInstallerComponentModule {
+class ModuleInstallerLauncher {
 
     /**
      *  @var string  name of the module
@@ -52,7 +49,7 @@ class jInstallerComponentModule {
     protected $identityFile = 'module.xml';
 
     /**
-     * @var jInstallerGlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup = null;
 
@@ -83,42 +80,42 @@ class jInstallerComponentModule {
 
     /**
      *
-     * @var jInstallerModuleInfos
+     * @var ModuleStatus
      */
     protected $moduleInfos = null;
 
     /**
-     * @var jInstallerModuleConfigurator
+     * @var Module\Configurator
      */
     protected $moduleConfigurator = null;
 
     /**
-     * @var jInstallerModule2|jInstallerModule
+     * @var Module\Installer|\jInstallerModule
      */
     protected $moduleInstaller = null;
 
     /**
-     * @var jInstallerModule2Uninstaller|jInstallerModule
+     * @var Module\Uninstaller|\jInstallerModule
      */
     protected $moduleUninstaller = null;
 
     /**
-     * @var jInstallerModule2[]|jInstallerModule[]
+     * @var Module\Installer[]|\jInstallerModule[]
      */
     protected $moduleUpgraders = null;
 
     /**
-     * @var jInstallerModule2|jInstallerModule
+     * @var Module\Installer|\jInstallerModule
      */
     protected $moduleMainUpgrader = null;
 
     protected $upgradersContexts = array();
 
     /**
-     * @param jInstallerModuleInfos $moduleInfos
-     * @param jInstallerGlobalSetup $globalSetup
+     * @param ModuleStatus $moduleInfos
+     * @param GlobalSetup $globalSetup
      */
-    function __construct(jInstallerModuleInfos $moduleInfos, jInstallerGlobalSetup $globalSetup) {
+    function __construct(ModuleStatus $moduleInfos, GlobalSetup $globalSetup) {
         $this->globalSetup = $globalSetup;
         $this->moduleInfos = $moduleInfos;
         $this->name = $moduleInfos->getName();
@@ -146,12 +143,16 @@ class jInstallerComponentModule {
         return $this->moduleInfos->isInstalled;
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function isUpgraded() {
         if (!$this->isInstalled()) {
             return false;
         }
         if ($this->moduleInfos->version == '') {
-            throw new jInstallerException("installer.ini.missing.version", array($this->name));
+            throw new Exception("installer.ini.missing.version", array($this->name));
         }
         return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos->version) == 0;
     }
@@ -177,7 +178,7 @@ class jInstallerComponentModule {
      */
     public function saveModuleInfos() {
 
-        if ($this->moduleInfos->configurationScope == jInstallerModuleInfos::CONFIG_SCOPE_LOCAL) {
+        if ($this->moduleInfos->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL) {
             $conf = $this->globalSetup->getLocalConfigIni();
         }
         else {
@@ -211,14 +212,14 @@ class jInstallerComponentModule {
      * @return bool true if there is a uninstall.php script
      */
     public function backupUninstallScript() {
-        $targetPath = jApp::appPath('install/uninstall/'.$this->moduleInfos->getName());
-        jFile::createDir($targetPath);
+        $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleInfos->getName());
+        \jFile::createDir($targetPath);
         copy($this->moduleInfos->getPath().'module.xml', $targetPath);
         $uninstallerIni = $this->globalSetup->getUninstallerIni();
         $this->moduleInfos->saveInfos($uninstallerIni);
 
         if (file_exists($this->moduleInfos->getPath().'install/uninstall.php')) {
-            jFile::createDir($targetPath.'/install');
+            \jFile::createDir($targetPath.'/install');
             copy($this->moduleInfos->getPath().'install/uninstall.php',
                 $targetPath.'/install');
             return true;
@@ -237,9 +238,9 @@ class jInstallerComponentModule {
      * @param bool $forLocalConfiguration  true if the configuration should be done
      *             with the local configuration, else it will be done with the
      *             main configuration
-     * @return jInstallerModuleConfigurator|null the configurator, or null
+     * @return Module\Configurator|null the configurator, or null
      *          if there isn't any configurator
-     * @throws jInstallerException when configurator class not found
+     * @throws Exception when configurator class not found
      */
     function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
 
@@ -267,7 +268,7 @@ class jInstallerComponentModule {
 
             $cname = $this->name.'ModuleConfigurator';
             if (!class_exists($cname)) {
-                throw new jInstallerException("module.configurator.class.not.found", array($cname, $this->name));
+                throw new Exception("module.configurator.class.not.found", array($cname, $this->name));
             }
 
             if ($forLocalConfiguration === null) {
@@ -292,9 +293,9 @@ class jInstallerComponentModule {
     /**
      * instancies the object which is responsible to install the module
      *
-     * @return jIInstallerComponent|jIInstallerComponent2|null the installer, or null
+     * @return \jIInstallerComponent|Module\InstallerInterface|null the installer, or null
      *          if there isn't any installer
-     * @throws jInstallerException when install class not found
+     * @throws Exception when install class not found
      */
     function getInstaller() {
 
@@ -315,7 +316,7 @@ class jInstallerComponentModule {
 
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname)) {
-                throw new jInstallerException("module.installer.class.not.found", array($cname, $this->name));
+                throw new Exception("module.installer.class.not.found", array($cname, $this->name));
             }
 
             $this->moduleInstaller = new $cname($this->name,
@@ -324,16 +325,16 @@ class jInstallerComponentModule {
                                                 $this->sourceVersion,
                                                 true
                                                 );
-            if ($this->moduleInstaller instanceof jIInstallerComponent2) {
+            if ($this->moduleInstaller instanceof \Jelix\Installer\Module\InstallerInterface) {
                 $this->moduleInstaller->setGlobalSetup($this->globalSetup);
             }
         }
 
-        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+        if ($this->moduleInstaller instanceof \jIInstallerComponent) {
             $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
             $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
             if (!$mainEntryPoint->legacyInstallerEntryPoint) {
-                $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+                $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
             }
             $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                 $this->moduleInfos->dbProfile);
@@ -349,9 +350,9 @@ class jInstallerComponentModule {
     /**
      * instancies the object which is responsible to uninstall the module
      *
-     * @return jIInstallerComponent|jIInstallerComponent2Uninstaller|null the uninstaller, or null
+     * @return \jIInstallerComponent|Module\UninstallerInterface|null the uninstaller, or null
      *          if there isn't any uninstaller
-     * @throws jInstallerException when install class not found
+     * @throws Exception when install class not found
      */
     function getUninstaller() {
 
@@ -368,7 +369,7 @@ class jInstallerComponentModule {
             }
 
             $installer = $this->getInstaller();
-            if ($installer && $installer instanceof jIInstallerComponent) {
+            if ($installer && $installer instanceof \jIInstallerComponent) {
                 $this->moduleUninstaller = $installer;
                 $this->moduleUninstaller->setParameters($this->moduleInfos->parameters);
                 return $this->moduleUninstaller;
@@ -383,7 +384,7 @@ class jInstallerComponentModule {
 
             $cname = $this->name.'ModuleUninstaller';
             if (!class_exists($cname)) {
-                throw new jInstallerException("module.uninstaller.class.not.found", array($cname, $this->name));
+                throw new Exception("module.uninstaller.class.not.found", array($cname, $this->name));
             }
 
             $this->moduleUninstaller = new $cname($this->name,
@@ -409,8 +410,8 @@ class jInstallerComponentModule {
      * dependencies. Needed modules should be
      * installed/upgraded before calling this method
      *
-     * @return jIInstallerComponent[]|jIInstallerComponent2[]
-     * @throws jInstallerException  if an error occurs during the install.
+     * @return \jIInstallerComponent[]|Module\InstallerInterface[]
+     * @throws Exception  if an error occurs during the install.
      */
     function getUpgraders() {
 
@@ -425,7 +426,7 @@ class jInstallerComponentModule {
 
                 $cname = $this->name.'ModuleUpgrader';
                 if (!class_exists($cname)) {
-                    throw new jInstallerException("module.upgrader.class.not.found", array($cname, $this->name));
+                    throw new Exception("module.upgrader.class.not.found", array($cname, $this->name));
                 }
 
                 $this->moduleMainUpgrader = new $cname($this->name,
@@ -437,7 +438,7 @@ class jInstallerComponentModule {
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->sourceVersion));
 
-                if ($this->moduleMainUpgrader instanceof jIInstallerComponent2) {
+                if ($this->moduleMainUpgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
                     $this->moduleMainUpgrader->setGlobalSetup($this->globalSetup);
                 }
             }
@@ -473,7 +474,7 @@ class jInstallerComponentModule {
                 require_once($p.$fileInfo[0]);
                 $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
                 if (!class_exists($cname))
-                    throw new jInstallerException("module.upgrader.class.not.found",array($cname,$this->name));
+                    throw new Exception("module.upgrader.class.not.found",array($cname,$this->name));
 
                 $upgrader = new $cname($this->name,
                                         $fileInfo[2],
@@ -485,17 +486,17 @@ class jInstallerComponentModule {
                     $upgrader->setTargetVersions(array($fileInfo[1]));
                 }
                 if (count($upgrader->getTargetVersions()) == 0) {
-                    throw new jInstallerException("module.upgrader.missing.version",array($fileInfo[0], $this->name));
+                    throw new Exception("module.upgrader.missing.version",array($fileInfo[0], $this->name));
                 }
                 $this->moduleUpgraders[] = $upgrader;
-                if ($upgrader instanceof jIInstallerComponent2) {
+                if ($upgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
                     $upgrader->setGlobalSetup($this->globalSetup);
                 }
             }
         }
 
         if ((count($this->moduleUpgraders) || $this->moduleMainUpgrader) && $this->moduleInfos->version == '') {
-            throw new jInstallerException("installer.ini.missing.version", array($this->name));
+            throw new Exception("installer.ini.missing.version", array($this->name));
         }
 
         $list = array();
@@ -551,11 +552,11 @@ class jInstallerComponentModule {
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
-            if ($upgrader instanceof jIInstallerComponent) {
+            if ($upgrader instanceof \jIInstallerComponent) {
                 $upgrader->setContext($this->upgradersContexts[$class]);
                 $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
                 if (!$mainEntryPoint->legacyInstallerEntryPoint) {
-                    $mainEntryPoint->legacyInstallerEntryPoint = new jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+                    $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
                 }
                 $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                                             $this->moduleInfos->dbProfile);
@@ -579,7 +580,7 @@ class jInstallerComponentModule {
     }
 
     public function installFinished() {
-        if ($this->moduleInstaller instanceof jIInstallerComponent) {
+        if ($this->moduleInstaller instanceof \jIInstallerComponent) {
             $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
         }
         else {
@@ -589,7 +590,7 @@ class jInstallerComponentModule {
     }
 
     public function upgradeFinished($upgrader) {
-        if ($upgrader instanceof jIInstallerComponent) {
+        if ($upgrader instanceof \jIInstallerComponent) {
             $class = get_class($upgrader);
             $this->upgradersContexts[$class] = $upgrader->getContexts();
         }
@@ -680,10 +681,10 @@ class jInstallerComponentModule {
      * @throws \Exception
      */
     protected function readIdentity() {
-        $xmlDescriptor = new DOMDocument();
+        $xmlDescriptor = new \DOMDocument();
 
         if(!$xmlDescriptor->load($this->moduleInfos->getPath().$this->identityFile)){
-            throw new jInstallerException('install.invalid.xml.file',array($this->moduleInfos->getPath().$this->identityFile));
+            throw new Exception('install.invalid.xml.file',array($this->moduleInfos->getPath().$this->identityFile));
         }
 
         $root = $xmlDescriptor->documentElement;
@@ -691,11 +692,11 @@ class jInstallerComponentModule {
         if ($root->namespaceURI == $this->identityNamespace) {
             $xml = simplexml_import_dom($xmlDescriptor);
             if (!isset($xml->info[0]->version[0])) {
-                throw new jInstallerException('module.missing.version', array($this->name));
+                throw new Exception('module.missing.version', array($this->name));
             }
             $this->sourceVersion = $this->fixVersion((string) $xml->info[0]->version[0]);
             if (trim($this->sourceVersion) == '') {
-                throw new jInstallerException('module.missing.version', array($this->name));
+                throw new Exception('module.missing.version', array($this->name));
             }
             if (isset($xml->info[0]->version['date'])) {
                 $this->sourceDate = (string)$xml->info[0]->version['date'];
@@ -805,7 +806,7 @@ class jInstallerComponentModule {
 
     /**
      * @param string $type
-     * @param SimpleXMLElement $comp
+     * @param \SimpleXMLElement $comp
      * @return array
      * @throws Exception
      */
@@ -874,11 +875,11 @@ class jInstallerComponentModule {
     protected function fixVersion($version) {
         switch($version) {
             case '__LIB_VERSION_MAX__':
-                return jFramework::versionMax();
+                return \jFramework::versionMax();
             case '__LIB_VERSION__':
-                return jFramework::version();
+                return \jFramework::version();
             case '__VERSION__':
-                return jApp::version();
+                return \jApp::version();
         }
         return trim($version);
     }

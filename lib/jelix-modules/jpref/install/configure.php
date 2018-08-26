@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jprefModuleConfigurator extends jInstallerModuleConfigurator {
+class jprefModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure() {
         $path = jApp::appConfigPath('preferences.ini.php');

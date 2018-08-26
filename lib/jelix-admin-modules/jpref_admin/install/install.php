@@ -11,7 +11,7 @@
 */
 
 
-class jpref_adminModuleInstaller extends jInstallerModule2 {
+class jpref_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
         jAcl2DbManager::addSubjectGroup('jprefs.prefs.management', 'jpref_admin~admin.acl.grp.prefs.management');

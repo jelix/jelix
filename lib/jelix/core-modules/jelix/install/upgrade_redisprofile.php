@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelixModuleUpgrader_redisprofile extends jInstallerModule2 {
+class jelixModuleUpgrader_redisprofile extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.6.14pre.3368');
     protected $date = '2017-01-31 18:51';

@@ -38,7 +38,7 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         // launch the low-level migration
-        $migrator = new \jInstallerMigration($reporter);
+        $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrate();
 
         // we can now launch the installer/updater

@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
+class jelixModuleUpgrader_modulejacl2 extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.5a1.2504');
     protected $date = '2012-09-19 11:05';
@@ -21,7 +21,7 @@ class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
         }
     }
     
-    protected function _upgradeconf($module, jInstallerEntryPoint2 $entryPoint) {
+    protected function _upgradeconf($module, \Jelix\Installer\EntryPoint $entryPoint) {
         // move options from jacl2 configuration file to global configuration
 
         $conf = null;

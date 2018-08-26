@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jauthModuleUpgrader_movepersistantkey extends jInstallerModule2 {
+class jauthModuleUpgrader_movepersistantkey extends \Jelix\Installer\Module\Installer {
 
     protected $targetVersions = array('1.3.1', '1.7.0-beta.2');
     protected $date = '2018-05-28 22:20';

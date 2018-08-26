@@ -81,12 +81,12 @@ class jInstallerEntryPoint {
 
     /**
      * Creates a jInstallerEntryPoint object from a new
-     * jInstallerEntryPoint2 object
-     * @param jInstallerEntryPoint2 $entryPoint
-     * @param jInstallerGlobalSetup $globalSetup
+     * \Jelix\Installer\EntryPoint object
+     * @param \Jelix\Installer\EntryPoint $entryPoint
+     * @param \Jelix\Installer\GlobalSetup $globalSetup
      */
-    function __construct(jInstallerEntryPoint2 $entryPoint,
-                         jInstallerGlobalSetup $globalSetup) {
+    function __construct(\Jelix\Installer\EntryPoint $entryPoint,
+                         \Jelix\Installer\GlobalSetup $globalSetup) {
         $this->type = $entryPoint->getType();
         $this->isCliScript = $entryPoint->isCliScript();
         $this->configFile = $entryPoint->getConfigFileName();

@@ -1,33 +1,11 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  installer
  * @author      Laurent Jouanneau
  * @copyright   2008-2018 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-
-require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/consoleInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerInstallerHelpersTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerUninstallerHelpersTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent2.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerException.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerGlobalSetup.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerModule.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerModule2.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerComponentModule.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerEntryPointConfigurator.class.php');
-require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerMessageProvider.class.php');
+namespace Jelix\Installer;
 
 use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
@@ -41,12 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  * main class to configure modules
  *
  * It loads all entry points configurations and all informations about activated
- * modules. jInstaller then constructs a tree dependencies for these
- * activated modules, and launch configuration given module
+ * modules. Configurator then constructs a tree dependencies for these
+ * activated modules, and launch configuration of given module
  *
+ * @since 1.7
  */
-class jInstallerConfigurator {
-
+class Configurator {
 
     /**
      * error code stored in a component: impossible to install
@@ -67,24 +45,24 @@ class jInstallerConfigurator {
 
     /**
      * the main entrypoint of the application
-     * @var jInstallerEntryPoint2
+     * @var EntryPoint
      */
     protected $mainEntryPoint = null;
 
     /**
      * the object responsible of the results output
-     * @var jIInstallReporter
+     * @var \jIInstallReporter
      */
     public $reporter;
 
     /**
-     * @var JInstallerMessageProvider
+     * @var \JInstallerMessageProvider
      */
     public $messages;
 
     /**
      * the global app setup
-     * @var jInstallerGlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
@@ -108,18 +86,18 @@ class jInstallerConfigurator {
     /**
      * initialize the configuration
      *
-     * jInstallerGlobalSetup reads configurations files of all entry points, and prepare object for
+     * GlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to configure modules.
      *
-     * @param jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param \jIInstallReporter $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    function __construct (jIInstallReporter $reporter, jInstallerGlobalSetup $globalSetup = null, $lang='') {
+    function __construct (\jIInstallReporter $reporter, GlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new jInstallerMessageProvider($lang);
+        $this->messages = new \jInstallerMessageProvider($lang);
 
         if (!$globalSetup) {
-            $globalSetup = new jInstallerGlobalSetup();
+            $globalSetup = new GlobalSetup();
         }
         $this->globalSetup = $globalSetup;
 
@@ -199,7 +177,7 @@ class jInstallerConfigurator {
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        jApp::setConfig($entryPoint->getConfigObj());
+        \jApp::setConfig($entryPoint->getConfigObj());
 
         if ($entryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -308,12 +286,12 @@ class jInstallerConfigurator {
      * @param \Jelix\Dependencies\Item[] $moduleschain
      * @return array|bool
      */
-    protected function runPreConfigure(&$moduleschain, jInstallerEntryPoint2 $entryPoint, $forLocalConfig) {
+    protected function runPreConfigure(&$moduleschain, EntryPoint $entryPoint, $forLocalConfig) {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
         foreach($moduleschain as $resolverItem) {
-            /** @var jInstallerComponentModule $component */
+            /** @var ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
 
             try {
@@ -342,10 +320,10 @@ class jInstallerConfigurator {
 
                     $configurator->preConfigure();
                 }
-            } catch (jInstallerException $e) {
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
             }
@@ -360,12 +338,12 @@ class jInstallerConfigurator {
      * @param Item[] $componentsToConfigure
      * @return bool
      */
-    protected function runConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runConfigure($componentsToConfigure, EntryPoint $entryPoint) {
         $result = true;
         try {
             foreach($componentsToConfigure as $item) {
-                /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModuleConfigurator $configurator */
+                /** @var ModuleInstallerLauncher $component */
+                /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
@@ -375,33 +353,33 @@ class jInstallerConfigurator {
                     $this->saveConfigurationFiles($entryPoint);
                 }
             }
-        } catch (jInstallerException $e) {
+        } catch (Exception $e) {
             $result = false;
             $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $result = false;
             $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
         }
         return $result;
     }
 
-    protected function runPostConfigure($componentsToConfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runPostConfigure($componentsToConfigure, EntryPoint $entryPoint) {
 
         $result = true;
 
         foreach($componentsToConfigure as $item) {
             try {
-                /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModuleConfigurator $configurator */
+                /** @var ModuleInstallerLauncher $component */
+                /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
                     $configurator->postConfigure();
                     $this->saveConfigurationFiles($entryPoint);
                 }
-            } catch (jInstallerException $e) {
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('configurator.module.error', array($component->getName(), $e->getMessage()));
             }
@@ -451,7 +429,7 @@ class jInstallerConfigurator {
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        jApp::setConfig($entryPoint->getConfigObj());
+        \jApp::setConfig($entryPoint->getConfigObj());
 
         if ($entryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -488,12 +466,12 @@ class jInstallerConfigurator {
      * @param \Jelix\Dependencies\Item[] $moduleschain
      * @return array|bool
      */
-    protected function runPreUnconfigure(&$moduleschain, jInstallerEntryPoint2 $entryPoint) {
+    protected function runPreUnconfigure(&$moduleschain, EntryPoint $entryPoint) {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
         foreach($moduleschain as $resolverItem) {
-            /** @var jInstallerComponentModule $component */
+            /** @var ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
 
             try {
@@ -513,10 +491,10 @@ class jInstallerConfigurator {
 
                     $configurator->preUnconfigure();
                 }
-            } catch (jInstallerException $e) {
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
             }
@@ -531,7 +509,7 @@ class jInstallerConfigurator {
      * @param Item[] $componentsToUnconfigure
      * @return bool
      */
-    protected function runUnconfigure($componentsToUnconfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
         $result = true;
 
         // In $componentsToConfigure, we have the module to unconfigure and
@@ -547,8 +525,8 @@ class jInstallerConfigurator {
 
         try {
             foreach($componentsToUnconfigure as $item) {
-                /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModuleConfigurator $configurator */
+                /** @var ModuleInstallerLauncher $component */
+                /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
@@ -562,33 +540,33 @@ class jInstallerConfigurator {
                     $this->saveConfigurationFiles($entryPoint);
                 }
             }
-        } catch (jInstallerException $e) {
+        } catch (Exception $e) {
             $result = false;
             $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $result = false;
             $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
         }
         return $result;
     }
 
-    protected function runPostUnconfigure($componentsToUnconfigure, jInstallerEntryPoint2 $entryPoint) {
+    protected function runPostUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
 
         $result = true;
 
         foreach($componentsToUnconfigure as $item) {
             try {
-                /** @var jInstallerComponentModule $component */
-                /** @var jInstallerModuleConfigurator $configurator */
+                /** @var ModuleInstallerLauncher $component */
+                /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
                     $configurator->postUnconfigure();
                     $this->saveConfigurationFiles($entryPoint);
                 }
-            } catch (jInstallerException $e) {
+            } catch (Exception $e) {
                 $result = false;
                 $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $result = false;
                 $this->error ('configurator.module.error', array($component->getName(), $e->getMessage()));
             }
@@ -596,7 +574,7 @@ class jInstallerConfigurator {
         return $result;
     }
 
-    protected function saveConfigurationFiles(jInstallerEntryPoint2 $entryPoint) {
+    protected function saveConfigurationFiles(EntryPoint $entryPoint) {
 
         // we save the configuration at each module because its
         // configurator may have modified it, and we want to save it
@@ -608,16 +586,16 @@ class jInstallerConfigurator {
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.
             $entryPoint->setConfigObj(
-                jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                \jConfigCompiler::read($entryPoint->getConfigFileName(), true,
                     $entryPoint->isCliScript(),
                     $entryPoint->getScriptName()));
-            jApp::setConfig($entryPoint->getConfigObj());
+            \jApp::setConfig($entryPoint->getConfigObj());
         }
         $this->globalSetup->getUrlModifier()->save();
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();
-            jProfiles::clear();
+            \jProfiles::clear();
         }
     }
 

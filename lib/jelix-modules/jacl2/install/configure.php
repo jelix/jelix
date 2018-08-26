@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class jacl2ModuleConfigurator extends jInstallerModuleConfigurator {
+class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function getDefaultParameters()
     {

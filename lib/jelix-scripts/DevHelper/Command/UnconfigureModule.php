@@ -30,15 +30,13 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        require_once (JELIX_LIB_PATH.'installer/jInstallerConfigurator.class.php');
-
         \jAppManager::close();
 
         $module = $input->getArgument('module');
 
         $reporter = new \consoleInstallReporter($output,
             ($this->verbose()?'notice':'error'), 'Unconfiguration');
-        $configurator = new \jInstallerConfigurator($reporter);
+        $configurator = new \Jelix\Installer\Configurator($reporter);
 
         $configurator->unconfigureModule($module, $this->selectedEntryPointId);
 
