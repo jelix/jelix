@@ -69,12 +69,12 @@ class Installer {
      * the object responsible of the results output
      * @var Reporter\ReporterInterface
      */
-    public $reporter;
+    protected $reporter;
 
     /**
      * @var \Jelix\Installer\Checker\Messages
      */
-    public $messages;
+    protected $messages;
 
     /**
      * the global app setup

@@ -11,9 +11,6 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-$lib_jelix = __DIR__.'/../../../jelix/';
-include $lib_jelix.'/installer/jInstallChecker.class.php';
-
 /**
  * page for a wizard, to check a jelix installation
  */
@@ -29,7 +26,7 @@ class checkjelixWizPage extends installWizardPage  implements \Jelix\Installer\R
     function show (\Jelix\Castor\Castor $tpl) {
         $this->tpl = $tpl;
         $messages = new \Jelix\Installer\Checker\Messages();
-        $check = new jInstallCheck($this, $messages);
+        $check = new \Jelix\Installer\Checker\Checker($this, $messages);
         if (isset($this->config['verbose'])) {
             $check->verbose = (!!$this->config['verbose']);
         }
