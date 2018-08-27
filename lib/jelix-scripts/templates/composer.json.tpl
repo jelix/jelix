@@ -6,7 +6,7 @@
     "license": "",
     "authors": [
         {
-            "name": "%%default_creator_name%%",
+            "name": "%%default_creator_name%%"
            
         }
     ],

@@ -17,9 +17,6 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function askParameters()
     {
-
-        //$this->askConfirmation("<info>info</info>\n<comment>comment</comment>\n<question>question</question>\n<error>error</error>");
-
         $this->parameters['wwwfiles'] = $this->askInChoice(
             "How to install jelix-www files?".
             "\n   copy: will be copied int the www/ directory".

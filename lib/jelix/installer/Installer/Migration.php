@@ -192,7 +192,6 @@ class Migration {
         }
 
         // set installparameters for the jelix module
-        $this->reporter->message('Update installer parameters for the jelix module', 'notice');
         $jelixWWWPath = $mainConfigIni->getValue('jelixWWWPath', 'urlengine');
         $targetPath = \jApp::wwwPath($jelixWWWPath);
         $jelixWWWDirExists = $jelixWWWLinkExists = false;
@@ -209,7 +208,7 @@ class Migration {
             // web server configuration
             $wwwfiles = 'vhost';
         }
-        $jelixInstallParams = $mainConfigIni->getValue('jelix.installparam', 'modules');
+        $jelixInstallParams = $originalJelixInstallParams = $mainConfigIni->getValue('jelix.installparam', 'modules');
         if ($jelixInstallParams) {
             $jelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
             if (!isset($jelixInstallParams['wwwfiles'])) {
@@ -219,7 +218,11 @@ class Migration {
         else {
             $jelixInstallParams = array('wwwfiles'=>$wwwfiles);
         }
-        $mainConfigIni->setValue('jelix.installparam', ModuleStatus::serializeParameters($jelixInstallParams), 'modules');
+        $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
+        if ($jelixInstallParams != $originalJelixInstallParams) {
+            $this->reporter->message('Update installer parameters for the jelix module', 'notice');
+            $mainConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
+        }
 
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }

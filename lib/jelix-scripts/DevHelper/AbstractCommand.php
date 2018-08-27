@@ -17,7 +17,7 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 abstract class AbstractCommand extends Command
 {
     /**
-     * @var Jelix\DevHelper\CommandConfig
+     * @var CommandConfig
      */
     protected $config;
 
