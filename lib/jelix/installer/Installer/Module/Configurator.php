@@ -76,6 +76,11 @@ class Configurator implements ConfiguratorInterface {
     protected $consoleOutput = null;
 
     /**
+     * @var \Jelix\Scripts\InputHelpers
+     */
+    protected $inputHelpers = null;
+
+    /**
      * @param string $componentName name of the component
      * @param string $name name of the installer
      * @param string $path the component path
@@ -197,6 +202,8 @@ class Configurator implements ConfiguratorInterface {
         $this->questionHelper = $helper;
         $this->consoleInput = $input;
         $this->consoleOutput = $output;
+        $this->inputHelpers = new \Jelix\Scripts\InputHelpers($helper, $input, $output);
+
     }
 
     /**
@@ -209,14 +216,7 @@ class Configurator implements ConfiguratorInterface {
      * @return boolean true it the user has confirmed
      */
     protected function askConfirmation($questionMessage, $defaultResponse = false) {
-        $questionMessage = "<question>$questionMessage</question>";
-        if (strpos($questionMessage, "\n") !== false) {
-            $questionMessage.="\n";
-        }
-        $questionMessage .= " ( 'y' or 'n', default is ".($defaultResponse?'y':'n').')';
-        $questionMessage .= "<inputstart> > </inputstart>";
-        $question = new ConfirmationQuestion($questionMessage, $defaultResponse);
-        return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
+        return $this->inputHelpers->askConfirmation($questionMessage, $defaultResponse);
     }
 
     /**
@@ -234,29 +234,8 @@ class Configurator implements ConfiguratorInterface {
      */
     protected function askInformation($questionMessage, $defaultResponse = false,
                                       $autoCompleterValues = false, $validator = null) {
-        $questionMessage = "<question>$questionMessage</question>";
-        if ($defaultResponse) {
-            if (strpos($questionMessage, "\n") !== false) {
-                $questionMessage.="\n";
-            }
-            $questionMessage .= " (default is '$defaultResponse')";
-        }
-        $questionMessage .= "<inputstart> > </inputstart>";
-        $question = new Question($questionMessage, $defaultResponse);
-        if (is_array($autoCompleterValues)) {
-            $question->setAutocompleterValues($autoCompleterValues);
-        }
-        $question->setNormalizer(function ($value) {
-            // $value can be null here
-            return $value ? trim($value) : '';
-        });
-
-        if ($validator) {
-            $question->setValidator($validator);
-            $question->setMaxAttempts(10);
-        }
-
-        return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
+        return $this->inputHelpers->askInformation($questionMessage, $defaultResponse,
+            $autoCompleterValues, $validator);
     }
 
     /**
@@ -268,13 +247,7 @@ class Configurator implements ConfiguratorInterface {
      * @return string the value
      */
     protected function askSecretInformation($questionMessage, $defaultResponse = false) {
-        $questionMessage = "<question>$questionMessage</question>";
-        $questionMessage .= "<inputstart> > </inputstart>";
-        $question = new Question($questionMessage, $defaultResponse);
-        $question->setHidden(true);
-        $question->setHiddenFallback(false);
-
-        return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
+        return $this->inputHelpers->askSecretInformation($questionMessage, $defaultResponse);
     }
 
     /**
@@ -292,22 +265,8 @@ class Configurator implements ConfiguratorInterface {
     protected function askInChoice($questionMessage, array $choice,
                                    $defaultResponse=0, $multipleChoice = false,
                                    $errorMessage='%s is invalid') {
-        $questionMessage = "<question>$questionMessage</question>";
-        if (is_array($defaultResponse)) {
-            $defaultResponse = implode(',', $defaultResponse);
-        }
-        if ($defaultResponse !== false) {
-            if (strpos($questionMessage, "\n") !== false) {
-                $questionMessage.="\n";
-            }
-            $questionMessage .= " (default is '$defaultResponse')";
-        }
-        $question = new ChoiceQuestion($questionMessage, $choice, $defaultResponse);
-        $question->setErrorMessage($errorMessage);
-        if ($multipleChoice) {
-            $question->setMultiselect(true);
-        }
-        return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
+        return $this->inputHelpers->askInChoice($questionMessage, $choice,
+            $defaultResponse, $multipleChoice, $errorMessage);
     }
 
     /**
@@ -337,7 +296,7 @@ class Configurator implements ConfiguratorInterface {
         }
 
         if ($multipleChoice && count($choice) > 1) {
-            if ($this->askConfirmation($questionMessage. "\n".' Select all of these entry points: '.implode(', ',$choice).'?', false)) {
+            if ($this->inputHelpers->askConfirmation($questionMessage. "\n".' Select all of these entry points: '.implode(', ',$choice).'?', false)) {
                 return $choice;
             }
             $questionMessage .= "\nseveral values can be choice, separate them by a coma.";
@@ -381,7 +340,7 @@ class Configurator implements ConfiguratorInterface {
 
         $profile = array();
 
-        $profile['driver'] = $this->askInChoice(
+        $profile['driver'] = $this->inputHelpers->askInChoice(
             "Which is the type of your database? ",
             array_keys($this->dbProfileProperties),
             (isset($currentProfileValues['driver'])?$currentProfileValues['driver']:'mysqli')
@@ -400,17 +359,17 @@ class Configurator implements ConfiguratorInterface {
             }
         }
 
-        if ( $this->askConfirmation('Use a PDO to connect to the database?',
+        if ( $this->inputHelpers->askConfirmation('Use a PDO to connect to the database?',
             (isset($currentProfileValues['usepdo'])?$currentProfileValues['usepdo']:false))
         ) {
             $profile['usepdo'] = true;
         }
         ;
-        if ( $this->askConfirmation('For all tables accessible from this connection, are they name prefixed?',
+        if ( $this->inputHelpers->askConfirmation('For all tables accessible from this connection, are they name prefixed?',
             (isset($currentProfileValues['table_prefix']) && $currentProfileValues['table_prefix'])
             )
         ) {
-            $value = $this->askConfirmation('Indicate the prefix',
+            $value = $this->inputHelpers->askConfirmation('Indicate the prefix',
                 (isset($currentProfileValues['table_prefix'])?$currentProfileValues['table_prefix']:false));
             if ( $value ) {
                 $profile['table_prefix'] = $value;
@@ -421,17 +380,17 @@ class Configurator implements ConfiguratorInterface {
     }
 
     private function askDbProperty($property, &$profile, &$currentProfileValues) {
-        $defaultValue = (isset($currentProfileValues['$property'])?$currentProfileValues['$property']:false);
+        $defaultValue = (isset($currentProfileValues[$property])?$currentProfileValues[$property]:false);
         switch($property) {
             case 'host':
-                $host = $this->askInformation('Host of the database server?', $defaultValue, array('localhost'));
+                $host = $this->inputHelpers->askInformation('Host of the database server?', $defaultValue, array('localhost'));
                 if ($host != '' || $profile['driver'] !== 'pgsql') {
                     $profile['host'] = $host;
                 }
                 break;
 
             case 'port':
-                $port = $this->askInformation('Port of the database server (leave empty for the default one)? ',
+                $port = $this->inputHelpers->askInformation('Port of the database server (leave empty for the default one)? ',
                     $defaultValue, false, function($answer) {
                         if (!is_numeric($answer) || intval($answer) == 0) {
                             throw new \RuntimeException(
@@ -452,37 +411,37 @@ class Configurator implements ConfiguratorInterface {
                 else {
                     $question = 'The database name';
                 }
-                $profile['database'] = $this->askInformation($question, $defaultValue);
+                $profile['database'] = $this->inputHelpers->askInformation($question, $defaultValue);
                 break;
 
             case 'user':
-                $profile['user'] = $this->askInformation('The login to authenticate against the database server', $defaultValue);
+                $profile['user'] = $this->inputHelpers->askInformation('The login to authenticate against the database server', $defaultValue);
                 break;
 
             case 'password':
-                $profile['password'] = $this->askSecretInformation('The password to authenticate against the database server', $defaultValue);
+                $profile['password'] = $this->inputHelpers->askSecretInformation('The password to authenticate against the database server', $defaultValue);
                 break;
 
             case 'persistent':
-                $defaultValue = (isset($currentProfileValues['$property'])?$currentProfileValues['$property']:true);
-                $profile['persistent'] = $this->askConfirmation('Use a persistent connection?', $defaultValue);
+                $defaultValue = (isset($currentProfileValues[$property])?$currentProfileValues[$property]:true);
+                $profile['persistent'] = $this->inputHelpers->askConfirmation('Use a persistent connection?', $defaultValue);
                 break;
 
             case 'force_encoding':
-                $profile['force_encoding'] = $this->askConfirmation('Should the encoding be forced during the connection?', $defaultValue);
+                $profile['force_encoding'] = $this->inputHelpers->askConfirmation('Should the encoding be forced during the connection?', $defaultValue);
                 break;
 
             case 'ssl':
-                $profile['ssl'] = $this->askConfirmation('Use ssl to connect to the server?', $defaultValue);
+                $profile['ssl'] = $this->inputHelpers->askConfirmation('Use ssl to connect to the server?', $defaultValue);
                 if ($profile['ssl']) {
-                    $profile['ssl_key_pem'] = $this->askInformation('Path to the ssl key pem', $defaultValue);
-                    $profile['ssl_cert_pem'] = $this->askInformation('Path to the ssl cert pem', $defaultValue);
-                    $profile['ssl_cacert_pem'] = $this->askInformation('Path to the ssl cacert pem', $defaultValue);
+                    $profile['ssl_key_pem'] = $this->inputHelpers->askInformation('Path to the ssl key pem', $defaultValue);
+                    $profile['ssl_cert_pem'] = $this->inputHelpers->askInformation('Path to the ssl cert pem', $defaultValue);
+                    $profile['ssl_cacert_pem'] = $this->inputHelpers->askInformation('Path to the ssl cacert pem', $defaultValue);
                 }
                 break;
 
             case 'dsn':
-                $dsn = $this->askInformation('Indicate the DSN to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
+                $dsn = $this->inputHelpers->askInformation('Indicate the DSN to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
                 if ($dsn) {
                     $profile['dsn'] = $dsn;
                     return true;
@@ -493,7 +452,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'service':
-                $service = $this->askInformation('Indicate the service name to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
+                $service = $this->inputHelpers->askInformation('Indicate the service name to connect to the server, or leave empty to indicate host, database etc separately', $defaultValue);
                 if ($service) {
                     $profile['service'] = $service;
                     return true;
@@ -503,28 +462,28 @@ class Configurator implements ConfiguratorInterface {
                 }
                 break;
             case 'timeout':
-                $timeout = $this->askInformation('Connection timeout', $defaultValue);
+                $timeout = $this->inputHelpers->askInformation('Connection timeout', $defaultValue);
                 if ( $timeout ) {
                     $profile['timeout'] = $timeout;
                 }
                 break;
 
             case 'pg_options':
-                $value = $this->askInformation('Options connection for Postgresql', $defaultValue);
+                $value = $this->inputHelpers->askInformation('Options connection for Postgresql', $defaultValue);
                 if ( $value ) {
                     $profile['pg_options'] = $value;
                 }
                 break;
 
             case 'search_path':
-                $value = $this->askInformation('Search path for schema', $defaultValue);
+                $value = $this->inputHelpers->askInformation('Search path for schema', $defaultValue);
                 if ( $value ) {
                     $profile['search_path'] = $value;
                 }
                 break;
 
             case 'single_transaction':
-                $value = $this->askConfirmation('Use a single transaction during the process of the http request?', $defaultValue);
+                $value = $this->inputHelpers->askConfirmation('Use a single transaction during the process of the http request?', $defaultValue);
                 if ( $value ) {
                     $profile['single_transaction'] = $value;
                 }
@@ -532,7 +491,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'extensions':
-                $value = $this->askInformation('Extensions to load if any (names separated by a coma)', $defaultValue);
+                $value = $this->inputHelpers->askInformation('Extensions to load if any (names separated by a coma)', $defaultValue);
                 if ( $value ) {
                     $profile['extensions'] = $value;
                 }
@@ -540,7 +499,7 @@ class Configurator implements ConfiguratorInterface {
                 break;
 
             case 'busytimeout':
-                $value = $this->askInformation('Busy timeout (milliseconds) (default: empty)', $defaultValue);
+                $value = $this->inputHelpers->askInformation('Busy timeout (milliseconds) (default: empty)', $defaultValue);
                 if ( $value ) {
                     $profile['busytimeout'] = $value;
                 }

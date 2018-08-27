@@ -48,6 +48,7 @@
             "Jelix\\DevHelper\\": "lib/jelix-scripts/DevHelper/",
             "Jelix\\Routing\\UrlMapping\\": "lib/jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
+            "Jelix\\Scripts\\": "lib/jelix/Scripts/",
             "Jelix\\Dependencies\\" : "lib/jelix/Dependencies"
         },
         "classmap": [ ],

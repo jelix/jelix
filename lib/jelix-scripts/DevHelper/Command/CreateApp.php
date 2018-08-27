@@ -78,7 +78,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
     }
 
     protected function prepareSubCommandApp($appName, $appPath) {
-        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+
         $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
@@ -113,7 +113,14 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
-        $this->setUpOutput($output);
+        parent::execute($input, $output);
+
+        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+        if ($input->isInteractive()) {
+            $this->askAppInfos($input, $output);
+        }
+
+
 
         $this->prepareSubCommandApp($appName, $appPath);
 
@@ -204,6 +211,38 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             }
             $this->executeSubCommand('app:createentrypoint', $options, $output);
         }
+    }
+
+    protected function askAppInfos(InputInterface $input, OutputInterface $output) {
+        $cliHelpers = new \Jelix\Scripts\InputHelpers($this->getHelper('question'), $input, $output);
+        $this->output->writeln('<comment>Please give some informations to store in file headers and module/project identity files</comment>');
+        $this->config->newAppInfoWebsite = $cliHelpers->askInformation('The web site of your company', $this->config->infoWebsite);
+        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $this->config->newAppInfoWebsite, $m)) {
+            list($domainname) = explode('/', $m[3]);
+            $this->config->newAppInfoIDSuffix = '@'.$domainname;
+            $this->config->newAppInfoCopyright = date('Y').' '.$domainname;
+            if ($this->config->infoIDSuffix == '@yourwebsite.undefined') {
+                $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
+            }
+            if (strpos($this->config->infoCopyright, 'your name') !== false) {
+                $this->config->infoCopyright = $this->config->newAppInfoCopyright;
+            }
+            if ($this->config->infoCreatorName == 'your name') {
+                $this->config->infoCreatorName = $domainname;
+            }
+            if ($this->config->infoCreatorMail == 'your-email@yourwebsite.undefined') {
+                $this->config->infoCreatorMail = '';
+            }
+        }
+
+        $this->config->newAppInfoLicence = $cliHelpers->askInformation('The licence of your application and modules', $this->config->infoLicence);
+        $this->config->newAppInfoLicenceUrl = $cliHelpers->askInformation('The url to the licence if any', $this->config->infoLicenceUrl);
+        $this->config->newAppInfoCopyright = $cliHelpers->askInformation('Copyright on your application and modules', $this->config->infoCopyright);
+        $this->config->newAppInfoIDSuffix = $cliHelpers->askInformation('The suffix of your modules id', $this->config->infoIDSuffix);
+
+        $this->config->infoCreatorName = $cliHelpers->askInformation('The creator name (your name for example)', $this->config->infoCreatorName);
+        $this->config->infoCreatorMail = $cliHelpers->askInformation('The email of the creator', $this->config->infoCreatorMail);
+
     }
 
     protected function convertRp($rp) {

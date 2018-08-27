@@ -26,6 +26,7 @@
             "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
             "Jelix\\Routing\\UrlMapping\\": "jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "jelix/installer/Installer/",
+            "Jelix\\Scripts\\": "jelix/Scripts/",
             "Jelix\\Dependencies\\" : "jelix/Dependencies"
         },
         "classmap": [ ],
