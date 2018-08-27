@@ -1,0 +1,142 @@
+<?php
+/**
+ * @author    Vincent Viaud
+ * @contributor Laurent Jouanneau
+ * @copyright 2010 Vincent Viaud, 2014-2018 Laurent Jouanneau
+ * @link      http://havefnubb.org
+ * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+namespace Jelix\Core\Infos;
+
+abstract class XmlParserAbstract {
+
+    /**
+     * @var string the path of the xml file to read
+     */
+    protected $path;
+
+    /**
+     * @param string $path the path of the xml file to read
+     */
+    public function __construct($path) {
+        $this->path = $path;
+    }
+
+    /**
+     * @return InfosAbstract
+     */
+    abstract protected function createInfos();
+
+    /**
+     *
+     */
+    public function parse(){
+        $object = $this->createInfos();
+        $xml = new \XMLreader();
+        $xml->open($this->path, '', LIBXML_COMPACT );
+
+        while ($xml->read()) {
+            if($xml->nodeType == \XMLReader::ELEMENT) {
+                $method = 'parse' . ucfirst($xml->name);
+                if (method_exists ($this, $method)) {
+                    $this->$method($xml, $object);
+                }
+            }
+        }
+        $xml->close();
+        return $object;
+    }
+
+    protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
+        // we don't read the name attribute for the module name as in previous
+        // jelix version, it has always to be the directory name
+        $object->name = (string)$xml->getAttribute('name');
+        if ($object->name == '') {
+            $object->name = basename(dirname($object->getFilePath()));
+        }
+        $object->id = (string)$xml->getAttribute('id');
+
+        $object->createDate = (string)$xml->getAttribute('createdate');
+
+        while ($xml->read()) {
+
+            if (\XMLReader::END_ELEMENT == $xml->nodeType && 'info' == $xml->name) {
+                break;
+            }
+
+            if($xml->nodeType == \XMLReader::ELEMENT) {
+
+                $property = $xml->name;
+
+                if ('label' == $property || 'description' == $property) {
+                    $lang = 'en';
+                    while ($xml->moveToNextAttribute()) {
+                        if ($xml->name == 'lang') {
+                            $lang = substr($xml->value, 0, 2);
+                        }
+                    }
+                    $xml->read();
+                    $object->{$property}[$lang] = trim($xml->value);
+                }
+                elseif ('author' == $property || 'creator' == $property || 'contributor' == $property) {
+                    $name = $email = $role = '';
+                    while ($xml->moveToNextAttribute()) {
+                        $attrName = $xml->name;
+                        switch($attrName) {
+                            case 'name':
+                                $name = $xml->value;
+                                break;
+                            case 'email':
+                                $email = $xml->value;
+                                break;
+                            case 'role':
+                                $role = $xml->value;
+                                break;
+                        }
+                    }
+                    if ($name != '') {
+                        if ($role == '' && $property != 'author') {
+                            $role = $property;
+                        }
+                        $object->author[] = new Author($name, $email, $role);
+                    }
+                }
+                elseif ('licence' == $property) { // we support licence and license, but store always as license
+                    while ($xml->moveToNextAttribute()) {
+                        $attrProperty = 'license' . ucfirst($xml->name);
+                        $object->$attrProperty = $xml->value;
+                    }
+                    $xml->read();
+                    $object->license = trim($xml->value);
+                }
+                else { // <version> <license> <copyright> <homepageURL> <updateURL>
+                    // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
+                    while ($xml->moveToNextAttribute()) {
+                        $attrProperty = $property . ucfirst($xml->name);
+                        $object->$attrProperty = $xml->value;
+                    }
+                    $xml->read();
+                    if ($property == 'version') {
+                        $object->$property = $this->fixVersion($xml->value);
+                    }
+                    else {
+                        $object->$property = trim($xml->value);
+                    }
+                }
+            }
+        }
+        return $object;
+    }
+
+
+    /**
+     * Fix version for non built lib
+     */
+    protected function fixVersion($version) {
+        $v = str_replace('__LIB_VERSION_MAX__', \jFramework::versionMax(), $version);
+        $v = str_replace('__LIB_VERSION__', \jFramework::version(), $v);
+        $v = str_replace('__VERSION__', \jApp::version(), $v);
+        return $v;
+    }
+}
+
