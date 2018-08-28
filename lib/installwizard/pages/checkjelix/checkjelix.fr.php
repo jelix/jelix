@@ -5,6 +5,6 @@ $locales = array(
     'title'=>'Prerequis',
     'results'=>'Resultats',
 
-#include ../../../jelix/installer/messageProvider.fr.inc.php
+#include ../../../jelix/installer/Installer/Checker/installmessages.fr.php
 
 );

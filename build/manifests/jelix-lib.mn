@@ -4,7 +4,7 @@ cd .
   composer.json
 
 cd bin
-  create-jelix-app.php
+  create-jelix-app
 
 cd lib
   .htaccess
@@ -137,6 +137,9 @@ cd lib/jelix/installer
   __ALL_RECURSIVELY__
 
 cd lib/jelix/kvdb
+  __ALL__
+
+cd lib/jelix/Scripts
   __ALL__
 
 cd lib/jelix/tpl/
