@@ -53,7 +53,7 @@ class jSelectorDao extends jSelectorModule {
 
     protected function _createPath(){
 
-        if(!isset(jApp::config()->_modulesPathList[$this->module])){
+        if(!jApp::isModuleEnabled($this->module)){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
@@ -75,7 +75,7 @@ class jSelectorDao extends jSelectorModule {
 
         
         // else check if the module exists in the current module
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = jApp::getModulePath($this->module).$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable ($this->_path)){
             throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), "dao"));

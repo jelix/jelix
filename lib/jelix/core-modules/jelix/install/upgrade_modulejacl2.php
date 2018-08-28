@@ -4,27 +4,29 @@
  * @package    jelix-modules
  * @subpackage jelix-module
 * @author      Laurent Jouanneau
-* @copyright   2012 Laurent Jouanneau
+* @copyright   2012-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelixModuleUpgrader_modulejacl2 extends jInstallerModule2 {
+class jelixModuleUpgrader_modulejacl2 extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.5a1.2504');
-    public $date = '2012-09-19 11:05';
+    protected $targetVersions = array('1.5a1.2504');
+    protected $date = '2012-09-19 11:05';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $this->_upgradeconf('jacl2', $entryPoint);
-        $this->_upgradeconf('jacl', $entryPoint);
+    function install() {
+        foreach($this->getEntryPointsList() as $entryPoint) {
+            $this->_upgradeconf('jacl2', $entryPoint);
+            $this->_upgradeconf('jacl', $entryPoint);
+        }
     }
     
-    protected function _upgradeconf($module, jInstallerEntryPoint2 $entryPoint) {
+    protected function _upgradeconf($module, \Jelix\Installer\EntryPoint $entryPoint) {
         // move options from jacl2 configuration file to global configuration
 
         $conf = null;
         // get from entrypoint config
-        $globalConf = $entryPoint->getConfigIni();
+        $globalConf = $entryPoint->getAppConfigIni();
         $aclConfig = $this->getCoordPluginConf($globalConf['entrypoint'], $module);
         if (!$aclConfig) {
             $globalConf = $this->getLocalConfigIni();

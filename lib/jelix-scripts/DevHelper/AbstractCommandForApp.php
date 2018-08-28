@@ -8,6 +8,7 @@
 */
 namespace Jelix\DevHelper;
 
+use Jelix\Core\Infos\InfosAbstract;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -23,78 +24,103 @@ abstract class AbstractCommandForApp extends AbstractCommand
     protected $allEntryPoint = true;
 
     /**
-     * indicate the entry point name on which the command should apply.
-     * Filled by the option reader.
-     */
-    protected $entryPointName = 'index.php';
-
-    /**
      * indicate the entry point id on which the command should apply.
      * Filled by the option reader.
      */
-    protected $entryPointId = 'index';
+    protected $selectedEntryPointId = 'index';
 
-    protected function configure()
-    {
+    /** @var array list of entry points id on which the command should apply */
+    protected $selectedEntryPointsIdList = array();
+
+
+    private $epOptionName = '';
+
+    private $epListOptionName = '';
+
+    protected function addEpOption($name = 'entry-point', $shortName = 'e') {
+        $this->epOptionName = $name;
         $this
             ->addOption(
-               'entry-point',
-               'e',
-               InputOption::VALUE_REQUIRED,
-               'indicate the entry point on which this command should be applied'
+                $name,
+                $shortName,
+                InputOption::VALUE_REQUIRED,
+                'indicate the entry point on which this command should be applied'
             )
         ;
     }
 
+    protected function addEpListOption($name = 'entry-points', $shortName = 'e') {
+        $this->epListOptionName = $name;
+        $this
+            ->addOption(
+                $name,
+                $shortName,
+                InputOption::VALUE_REQUIRED,
+                'indicate the list of entry point (names separated by a coma) on which this command should be applied'
+            )
+        ;
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        $this->readEPOption($input);
-        $this->loadAppConfig();
+        if ($this->epOptionName) {
+            $this->selectedEntryPointId = $this->getSelectedEntryPoint($this->epOptionName, $input);
+        }
+        else if ($this->epListOptionName) {
+            $this->selectedEntryPointsIdList = $this->getSelectedEntryPoint($this->epListOptionName, $input, true);
+            if (count($this->selectedEntryPointsIdList)) {
+                $this->selectedEntryPointId = $this->selectedEntryPointsIdList[0];
+            }
+        }
+        $this->loadAppConfig($this->selectedEntryPointId);
         return $this->_execute($input, $output);
     }
 
     abstract protected function _execute(InputInterface $input, OutputInterface $output);
     
-    protected function readEPOption(InputInterface $input)
+    protected function getSelectedEntryPoint($optionName, InputInterface $input, $allowList = false)
     {
         // check entry point
-        $ep = $input->getOption('entry-point');
+        $ep = $input->getOption($optionName);
         if ($ep) {
-            $this->entryPointName = $ep;
             $this->allEntryPoint = false;
-            if (($p = strpos($this->entryPointName, '.php')) === false) {
-                $this->entryPointId = $this->entryPointName;
-                $this->entryPointName .= '.php';
-            } else {
-                $this->entryPointId = substr($this->entryPointName, 0, $p);
+
+            if ($allowList) {
+                $list = preg_split('/\s*,\s*/', $ep);
+                return array_map(array($this, 'normalizeEp'), $list);
             }
+            return $this->normalizeEp($ep);
+        }
+        else if ($allowList) {
+            return array();
+        }
+        else {
+            return 'index';
         }
     }
 
-    protected function loadAppConfig()
+    private function normalizeEp($ep)
     {
-        if (\jApp::config()) {
-            return;
+        if (($p = strpos($ep, '.php')) === false) {
+            return $ep;
+        } else {
+            return  substr($ep, 0, $p);
+        }
+    }
+
+    protected function loadAppConfig($epId = 'index')
+    {
+        $this->loadProjectInfos();
+
+        $entrypoint = $this->projectInfos->getEntryPointInfo($epId);
+        if (!$entrypoint) {
+            throw new \Exception($this->getName().": Entry point $epId is unknown");
         }
 
-        $xml = simplexml_load_file(\jApp::appPath('project.xml'));
-        $configFile = '';
+        $configFile = $entrypoint->configFile;
 
-        foreach ($xml->entrypoints->entry as $entrypoint) {
-            $file = (string) $entrypoint['file'];
-            if ($file == $this->entryPointName) {
-                $configFile = (string) $entrypoint['config'];
-                break;
-            }
-        }
-
-        if ($configFile == '') {
-            throw new \Exception($this->getName().': Entry point is unknown');
-        }
-
-        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $this->entryPointName));
+        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypoint->getFile()));
     }
 
     /**
@@ -106,13 +132,12 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     protected function getModulePath($module)
     {
-        $this->loadAppConfig();
-
+        $config = \jApp::config();
+        if (!$config) {
+            $this->loadAppConfig($this->selectedEntryPointId);
+        }
         $config = \jApp::config();
         if (!isset($config->_modulesPathList[$module])) {
-            if (isset($config->_externalModulesPathList[$module])) {
-                return $config->_externalModulesPathList[$module];
-            }
             throw new \Exception($this->getName().": The module $module doesn't exist");
         }
 
@@ -120,118 +145,33 @@ abstract class AbstractCommandForApp extends AbstractCommand
     }
 
     /**
-     * @var DOMDocument the content of the project.xml file, loaded by loadProjectXml
+     * @var \Jelix\Core\Infos\AppInfos
      */
-    protected $projectXml = null;
+    protected $projectInfos;
+
+    protected function loadProjectInfos() {
+        if ($this->projectInfos) {
+            return;
+        }
+        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
+        $this->projectInfos = $parser->parse();
+    }
 
     /**
-     * load the content of the project.xml file, and store the corresponding DOM
-     * into the $projectXml property.
+     * @param string $name the entry point name
+     * @return \Jelix\Core\Infos\EntryPoint
+     * @throws \Exception
      */
-    protected function loadProjectXml()
-    {
-        if ($this->projectXml) {
-            return;
-        }
-
-        $doc = new \DOMDocument();
-
-        if (!$doc->load(\jApp::appPath('project.xml'))) {
-            throw new \Exception($this->getName().': cannot load project.xml');
-        }
-
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0') {
-            throw new \Exception($this->getName().': bad namespace in project.xml');
-        }
-        $this->projectXml = $doc;
-    }
-
-    protected function getEntryPointsList()
-    {
-        $this->loadProjectXml();
-        $listEps = $this->projectXml->documentElement->getElementsByTagName('entrypoints');
-        if (!$listEps->length) {
-            return array();
-        }
-
-        $listEp = $listEps->item(0)->getElementsByTagName('entry');
-        if (!$listEp->length) {
-            return array();
-        }
-
-        $list = array();
-        for ($i = 0; $i < $listEp->length; ++$i) {
-            $epElt = $listEp->item($i);
-            $ep = array(
-             'file' => $epElt->getAttribute('file'),
-             'config' => $epElt->getAttribute('config'),
-             'isCli' => ($epElt->getAttribute('type') == 'cmdline'),
-             'type' => $epElt->getAttribute('type'),
-          );
-            if (($p = strpos($ep['file'], '.php')) !== false) {
-                $ep['id'] = substr($ep['file'], 0, $p);
-            } else {
-                $ep['id'] = $ep['file'];
-            }
-
-            $list[] = $ep;
-        }
-
-        return $list;
-    }
-
     protected function getEntryPointInfo($name)
     {
-        $this->loadProjectXml();
-        $listEps = $this->projectXml->documentElement->getElementsByTagName('entrypoints');
-        if (!$listEps->length) {
-            return;
-        }
+        $this->loadProjectInfos();
+        $ep = $this->projectInfos->getEntryPointInfo($name);
 
-        $listEp = $listEps->item(0)->getElementsByTagName('entry');
-        if (!$listEp->length) {
-            return;
+        if (!$ep) {
+            throw new \Exception($this->getName().": The entry point $name doesn't exist");
         }
-
-        for ($i = 0; $i < $listEp->length; ++$i) {
-            $epElt = $listEp->item($i);
-            $ep = array(
-             'file' => $epElt->getAttribute('file'),
-             'config' => $epElt->getAttribute('config'),
-             'isCli' => ($epElt->getAttribute('type') == 'cmdline'),
-             'type' => $epElt->getAttribute('type'),
-          );
-            if (($p = strpos($ep['file'], '.php')) !== false) {
-                $ep['id'] = substr($ep['file'], 0, $p);
-            } else {
-                $ep['id'] = $ep['file'];
-            }
-            if ($ep['id'] == $name) {
-                return $ep;
-            }
-        }
-
-        return;
+        return $ep;
     }
-
-    protected function getSupportedJelixVersion()
-    {
-        $this->loadProjectXml();
-
-        $deps = $this->projectXml->getElementsByTagName('dependencies');
-        $minversion = '';
-        $maxversion = '';
-        if ($deps && $deps->length > 0) {
-            $jelix = $deps->item(0)->getElementsByTagName('jelix');
-            if ($jelix && $jelix->length > 0) {
-                $minversion = $this->fixVersion($jelix->item(0)->getAttribute('minversion'));
-                $maxversion = $this->fixVersion($jelix->item(0)->getAttribute('maxversion'));
-            }
-        }
-
-        return array($minversion, $maxversion);
-    }
-
 
     protected function registerModulesDir($repository, $repositoryPath)
     {

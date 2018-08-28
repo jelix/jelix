@@ -3,32 +3,35 @@
 * @package     jelix
 * @subpackage  core-module
 * @author      Laurent Jouanneau
-* @copyright   2016 Laurent Jouanneau
+* @copyright   2016-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 require(__DIR__.'/UrlEngineUpgrader.php');
 
-class jelixModuleUpgrader_newurlengine extends jInstallerModule2 {
+class jelixModuleUpgrader_newurlengine extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.7.0-beta.1');
-    public $date = '2016-06-19 11:05';
+    protected $targetVersions = array('1.7.0-beta.1');
+    protected $date = '2016-06-19 11:05';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function install() {
 
-        $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                                             $entryPoint->getEpId(),
-                                             $entryPoint->getUrlMap());
-        $upgraderUrl->upgrade();
+        foreach($this->getEntryPointsList() as $entryPoint) {
+            $upgraderUrl = new UrlEngineUpgrader($entryPoint->getAppConfigIni(),
+                                                 $entryPoint->getEpId(),
+                                                 $entryPoint->getUrlMap());
+            $upgraderUrl->upgrade();
+        }
     }
 
-    function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                                             $entryPoint->getEpId(),
-                                             $entryPoint->getUrlMap());
-
-        $upgraderUrl->cleanConfig($this->getConfigIni()['main']);
+    function postInstall() {
+        foreach($this->getEntryPointsList() as $entryPoint) {
+            $upgraderUrl = new UrlEngineUpgrader($entryPoint->getAppConfigIni(),
+                                                 $entryPoint->getEpId(),
+                                                 $entryPoint->getUrlMap());
+            $upgraderUrl->cleanConfig($this->getConfigIni()['main']);
+        }
     }
 }
 

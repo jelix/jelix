@@ -16,8 +16,8 @@ class wwwCtrl extends jController {
     public function getfile() {
         $module = $this->param('targetmodule');
 
-        if (!jApp::isModuleEnabled($module) || jApp::config()->modules[$module.'.access'] < 2) {
-            throw new jException('jelix~errors.module.untrusted',$module);
+        if (!jApp::isModuleEnabled($module) || !jApp::config()->modules[$module.'.enabled']) {
+            throw new jException('jelix~errors.module.untrusted', $module);
         }
 
         $dir = jApp::getModulePath($module).'www/';
@@ -33,7 +33,7 @@ class wwwCtrl extends jController {
         $rep = $this->getResponse('binary');
 
         $dateModif = new DateTime();
-        $dateModif->setTimestamp(filemtime($fileName));
+        $dateModif->setTimestamp(filemtime($filename));
         if ($rep->isValidCache($dateModif)) {
             return $rep;
         }

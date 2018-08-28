@@ -10,26 +10,10 @@
 */
 
 
-class jauthdb_adminModuleInstaller extends jInstallerModule2 {
+class jauthdb_adminModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $config = $entryPoint->getConfigIni();
-        $authconfig = $this->getCoordPluginConf($config, 'auth');
+    function install()
+    {
 
-        if ($authconfig &&  $entryPoint->getType() != 'cmdline' && $this->firstExec('authdbadmin')) {
-            list($conf, $section) = $authconfig;
-            if ($section === 0) {
-                $section_db = 'Db';
-            }
-            else {
-                $section_db = 'auth_db';
-            }
-            $daoName = $conf->getValue('dao', $section_db);
-            $formName = $conf->getValue('form', $section_db);
-            if ($daoName == 'jauthdb~jelixuser' && $formName == '') {
-                $conf->setValue('form','jauthdb_admin~jelixuser', $section_db);
-                $conf->save();
-            }
-        }
     }
 }

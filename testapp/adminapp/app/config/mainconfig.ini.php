@@ -17,28 +17,23 @@ domainName=
 
 
 [modules]
-; modulename.access = x where x =
-; 0 if installed but not used (database schema is ok for example)
-; 1 if accessible by other modules (other modules can use it, but it is not accessible directly through the web)
-; 2 if public (accessible through the web)
-
-jelix.access=2
-jacl.access=0
-jacldb.access=0
-jsoap.access=0
-jauth.access=2
-master_admin.access=2
-jauthdb.access=2
 jauthdb.installparam=defaultuser
-jauthdb_admin.access=2
-jacl2.access=2
-jacl2db.access=2
 jacl2db.installparam=defaultuser
-jacl2db_admin.access=2
-jpref.access=2
-jpref_admin.access=2
 
 
+jelix.enabled=on
+jacl.enabled=off
+jacldb.enabled=off
+jsoap.enabled=off
+jauth.enabled=on
+master_admin.enabled=on
+jauthdb.enabled=on
+jauthdb_admin.enabled=on
+jacl2.enabled=on
+jacl2db.enabled=on
+jacl2db_admin.enabled=on
+jpref.enabled=on
+jpref_admin.enabled=on
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
 
@@ -155,7 +150,7 @@ smtpTimeout=10
 
 [acl2]
 ; example of driver: "db"
-driver=
+driver=db
 
 [sessions]
 ; If several applications are installed in the same documentRoot but with

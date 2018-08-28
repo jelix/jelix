@@ -22,6 +22,13 @@ class jConfig {
      */
     public static $fromCache = true;
 
+
+    const sectionsToIgnoreForEp = array(
+        'httpVersion', 'timeZone', 'domainName', 'forceHTTPPort', 'forceHTTPSPort',
+        'chmodFile', 'chmodDir', 'disableInstallers', 'enableAllModules',
+        'modules', '_coreResponses', 'compilation'
+    );
+
     /**
      * this is a static class, so private constructor
      */

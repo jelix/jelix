@@ -10,25 +10,7 @@
 
 /**
  * a reporter which reports... nothing
+ * @deprecated
  */
-class ghostInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
-
-    function start() {
-    }
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    function message($message, $type='') {
-        $this->addMessageType($type);
-    }
-
-    /**
-     * called when the installation is finished
-     */
-    function end() {
-    }
+class ghostInstallReporter extends \Jelix\Installer\Reporter\NoOutput {
 }

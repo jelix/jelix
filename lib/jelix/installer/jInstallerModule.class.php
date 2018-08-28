@@ -7,6 +7,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 
 /**
  * A class that does processing to configure and install a module into
@@ -142,6 +143,7 @@ class jInstallerModule implements jIInstallerComponent {
      * @var boolean true if this is an installation for the whole application.
      *              false if this is an installation in an
      *              already installed application. Always False for upgraders.
+     * @deprecated
      */
     protected $installWholeApp = false;
 
@@ -158,7 +160,7 @@ class jInstallerModule implements jIInstallerComponent {
      * @param string $path the component path
      * @param string $version version of the component
      * @param boolean $installWholeApp true if the installation is during the whole app installation
-     *                                 false if it is only few modules and this module
+     *                                 false if it is only few modules and this module. deprecated.
      */
     function __construct ($componentName, $name, $path, $version, $installWholeApp = false) {
         $this->path = $path;
@@ -179,6 +181,31 @@ class jInstallerModule implements jIInstallerComponent {
             return null;
     }
 
+    function getName() {
+        return $this->name;
+    }
+
+
+    function getTargetVersions() {
+        return $this->targetVersions;
+    }
+
+    function setTargetVersions($versions) {
+        $this->targetVersions = $versions;
+    }
+
+    function getDate() {
+        return $this->date;
+    }
+
+    function getVersion() {
+        return $this->version;
+    }
+
+    function setVersion($version) {
+        $this->version = $version;
+    }
+
     /**
      * @var jDbConnection
      */
@@ -194,12 +221,20 @@ class jInstallerModule implements jIInstallerComponent {
     public function setEntryPoint(jInstallerEntryPoint $ep, $dbProfile) {
         $this->entryPoint = $ep;
         $this->config = $ep->configIni;
+        $this->initDbProfile($dbProfile);
+    }
 
+    /**
+     * internal use
+     * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
+     */
+    public function initDbProfile($dbProfile) {
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
         }
-        else
+        else {
             $this->useDbProfile($dbProfile);
+        }
     }
 
     /**

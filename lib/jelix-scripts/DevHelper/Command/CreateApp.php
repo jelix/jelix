@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2005-2016 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2018 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @copyright   2011 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -78,7 +78,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
     }
 
     protected function prepareSubCommandApp($appName, $appPath) {
-        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+
         $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
@@ -113,6 +113,13 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
+        parent::execute($input, $output);
+
+        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+        if ($input->isInteractive()) {
+            $this->askAppInfos($input, $output);
+        }
+
         $this->prepareSubCommandApp($appName, $appPath);
 
         \jApp::setEnv('jelix-scripts');
@@ -133,8 +140,23 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
-        //require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter(($output->isVerbose()?'notice':'warning')));
+        // launch configuration of the jelix module
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'error'), 'Configuration');
+        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
+        $projectInfos = $parser->parse();
+        $globalSetup = new \Jelix\Installer\GlobalSetup($projectInfos);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
+
+        if ($input->isInteractive()) {
+            $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
+        }
+        $configurator->configureModules(array('jelix'), 'index', false, true);
+
+        // launch the installer for this new application
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'warning'), 'Installation');
+        $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
 
         $moduleok = true;
@@ -197,6 +219,38 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         }
     }
 
+    protected function askAppInfos(InputInterface $input, OutputInterface $output) {
+        $cliHelpers = new \Jelix\Scripts\InputHelpers($this->getHelper('question'), $input, $output);
+        $this->output->writeln('<comment>Please give some informations to store in file headers and module/project identity files</comment>');
+        $this->config->newAppInfoWebsite = $cliHelpers->askInformation('The web site of your company', $this->config->infoWebsite);
+        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $this->config->newAppInfoWebsite, $m)) {
+            list($domainname) = explode('/', $m[3]);
+            $this->config->newAppInfoIDSuffix = '@'.$domainname;
+            $this->config->newAppInfoCopyright = date('Y').' '.$domainname;
+            if ($this->config->infoIDSuffix == '@yourwebsite.undefined') {
+                $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
+            }
+            if (strpos($this->config->infoCopyright, 'your name') !== false) {
+                $this->config->infoCopyright = $this->config->newAppInfoCopyright;
+            }
+            if ($this->config->infoCreatorName == 'your name') {
+                $this->config->infoCreatorName = $domainname;
+            }
+            if ($this->config->infoCreatorMail == 'your-email@yourwebsite.undefined') {
+                $this->config->infoCreatorMail = '';
+            }
+        }
+
+        $this->config->newAppInfoLicence = $cliHelpers->askInformation('The licence of your application and modules', $this->config->infoLicence);
+        $this->config->newAppInfoLicenceUrl = $cliHelpers->askInformation('The url to the licence if any', $this->config->infoLicenceUrl);
+        $this->config->newAppInfoCopyright = $cliHelpers->askInformation('Copyright on your application and modules', $this->config->infoCopyright);
+        $this->config->newAppInfoIDSuffix = $cliHelpers->askInformation('The suffix of your modules id', $this->config->infoIDSuffix);
+
+        $this->config->infoCreatorName = $cliHelpers->askInformation('The creator name (your name for example)', $this->config->infoCreatorName);
+        $this->config->infoCreatorMail = $cliHelpers->askInformation('The email of the creator', $this->config->infoCreatorMail);
+
+    }
+
     protected function convertRp($rp) {
         if(strpos($rp, './') === 0) {
             $rp = substr($rp, 2);
@@ -236,7 +290,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
 
-        $this->createDir($appPath.'install');
+        $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
         $this->createDir(\jApp::appPath('app/responses'));
@@ -309,6 +363,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(\jApp::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'install/uninstall/uninstaller.ini.php','installer/uninstall/uninstaller.ini.php',$param, "uninstaller.ini.php file");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
         $temp = dirname(rtrim(\jApp::tempBasePath(),'/'));

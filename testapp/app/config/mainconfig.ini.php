@@ -11,24 +11,27 @@ timeZone="Europe/Paris"
 theme=default
 
 [modules]
-jelix.access=2
-jelix_tests.access=2
-testapp.access=2
-testurls.access=2
-jsoap.access=2
-jacl.access=1
-jacldb.access=1
-jacl2.access=1
-jacl2db.access=1
+
+jelix_tests.enabled=on
+testapp.enabled=on
+testurls.enabled=on
+jsoap.enabled=on
+jacl.enabled=on
+jacldb.enabled=on
+jacl2.enabled=on
+jacl2db.enabled=on
 jacl2db.installparam=defaultuser
-jauthdb.access=1
-jauth.access=1
-jpref.access=1
-jminify.access=1
-jfeeds.access=2
-jsitemap.access=2
-news.access=2
-articles.access=2
+jauthdb.enabled=on
+jauth.enabled=on
+jpref.enabled=on
+jminify.enabled=on
+jfeeds.enabled=on
+jsitemap.enabled=on
+news.enabled=on
+articles.enabled=on
+
+jelix.enabled=on
+jelix.installparam="wwwfiles=vhost"
 
 [coordplugins]
 auth=auth.coord.ini.php
@@ -74,6 +77,7 @@ multiview=off
 ; : basePath="/aaa/" )
 basePath=
 
+jelixWWWPath="jelix/"
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
@@ -115,3 +119,6 @@ localapp="http://testapp17.local"
 [jforms_builder_html]
 ;control = plugin
 
+
+[session]
+storage=

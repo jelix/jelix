@@ -6,21 +6,17 @@
 * @contributor Laurent Jouanneau, Julien Issler
 * @copyright  2008 Bastien Jaillot
 * @copyright  2009 Julien Issler
-* @copyright 2012 Laurent Jouanneau
+* @copyright 2012-2018 Laurent Jouanneau
 * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
-
-include (JELIX_LIB_PATH.'installer/jInstallChecker.class.php');
-include (JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-include (JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
 
 /**
  * an HTML reporter for jInstallChecker
  * @package    jelix-modules
  * @subpackage jelix-module
  */
-class checkZoneInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class checkZoneInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
 
     public $trace = '';
     protected $messageProvider = null;
@@ -90,13 +86,13 @@ class check_installZone extends jZone {
             jApp::config()->locale = $locale;
         }
 
-        $messages = new jInstallerMessageProvider($lang);
+        $messages = new \Jelix\Installer\Checker\Messages($lang);
         $reporter = new checkZoneInstallReporter($messages);
-        $check = new jInstallCheck($reporter, $messages);
+        $check = new \Jelix\Installer\Checker\Checker($reporter, $messages);
         $check->run();
 
         $this->_tpl->assign('wwwpath', jApp::wwwPath());
         $this->_tpl->assign('configpath', jApp::varConfigPath());
-        $this->_tpl->assign('check',$reporter->trace);
+        $this->_tpl->assign('check', $reporter->trace);
    }
 }

@@ -165,7 +165,7 @@ class jCoordinator {
         $this->action =
         $this->originalAction = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
-        if ($config->modules[$this->moduleName.'.access'] < 2) {
+        if (!$config->modules[$this->moduleName.'.enabled']) {
             throw new jException('jelix~errors.module.untrusted', $this->moduleName);
         }
     }

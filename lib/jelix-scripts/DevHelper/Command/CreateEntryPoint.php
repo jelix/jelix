@@ -4,7 +4,7 @@
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2008-2016 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
@@ -27,7 +27,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             ->addArgument(
                 'entrypoint',
                 InputArgument::REQUIRED,
-                'Name of the new entrypoint. It can contain a sub-directory'
+                'Name of the new entrypoint. It can contain a directory path related to the config dir'
             )
             ->addArgument(
                 'config',
@@ -80,7 +80,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $entryPointDir = dirname($entryPointFullPath).'/';
 
-        $this->loadProjectXml();
+        $this->loadProjectInfos();
 
         // retrieve the config file name
         $configFile = $input->getArgument('config');
@@ -103,7 +103,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             $originalConfig = $input->getOption('copy-config');
             if ($originalConfig) {
                 if (! file_exists(\jApp::appConfigPath($originalConfig))) {
-                    throw new Exception ("unknown original configuration file");
+                    throw new \Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
                                   file_get_contents(\jApp::appConfigPath($originalConfig)));
@@ -141,16 +141,11 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             $xmlMap->save();
         }
 
-        $this->updateProjectXml($name.".php", $configFile , $type);
+        $this->projectInfos->addEntryPointInfo($name.".php", $configFile , $type);
+        $this->projectInfos->save();
+
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");
-        }
-
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
-        $installer = new \jInstaller(new \textInstallReporter('warning'));
-        $installer->installEntryPoint($name.".php");
-        if ($this->verbose()) {
-            $output->writeln("All modules have been initialized for the new entry point.");
         }
     }
 
@@ -158,24 +153,4 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
     {
     }
 
-    protected function updateProjectXml ($fileName, $configFileName, $type) {
-
-        $elem = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $fileName);
-        $elem->setAttribute("config", $configFileName);
-        $elem->setAttribute("type", $type);
-
-        $ep = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-
-        if (!$ep->length) {
-            $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
-            $ep->appendChild($elem);
-        }
-        else {
-            $ep->item(0)->appendChild($elem);
-        }
-
-        $this->projectXml->save(\jApp::appPath('project.xml'));
-    }
 }

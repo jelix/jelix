@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testinstall2ModuleInstaller extends jInstallerModule {
+class testinstall2ModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     function install() {
 

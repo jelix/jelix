@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  core-module
 * @author      Laurent Jouanneau
-* @copyright   2017 Laurent Jouanneau
+* @copyright   2017-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -12,20 +12,24 @@ use \Jelix\IniFile\IniModifier;
 use \Jelix\IniFile\IniModifierArray;
 use \Jelix\IniFile\IniModifierInterface;
 
-class jelixModuleUpgrader_webassets extends jInstallerModule2 {
+class jelixModuleUpgrader_webassets extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.7.0-beta.2');
+    protected $targetVersions = array('1.7.0-beta.2');
 
-    public $date = '2017-02-07 08:58';
+    protected $date = '2017-02-07 08:58';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $epConfig = $entryPoint->getConfigIni();
+    function install() {
+
         $mainConfig = $this->getConfigIni();
 
-        $this->changeConfig($mainConfig, $epConfig, $epConfig['entrypoint']);
+        foreach($this->getEntryPointsList() as $entryPoint) {
+            $epConfig = $entryPoint->getAppConfigIni();
+            $this->changeConfig($mainConfig, $epConfig, $epConfig['entrypoint']);
+        }
+
     }
 
-    function postInstallEntrypoint(jInstallerEntryPoint2 $entryPoint) {
+    function postInstall() {
         $mainConfig = $this->getConfigIni();
         $this->changeConfig($mainConfig['default'], $mainConfig,
             $mainConfig['main']);

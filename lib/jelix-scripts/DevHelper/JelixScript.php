@@ -15,7 +15,7 @@ class JelixScript {
     /**
      * load the configuration of jelix-scripts
      * @param string $appname the application name
-     * @return Jelix\DevHelper\CommandConfig
+     * @return CommandConfig
      */
     static function loadConfig($appname='') {
         $config = new CommandConfig();

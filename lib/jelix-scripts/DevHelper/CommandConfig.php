@@ -145,7 +145,7 @@ class CommandConfig {
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2015 a name';
+    public $newAppInfoCopyright='2018 a name';
 
     /**
      * @var string

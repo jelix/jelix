@@ -4,19 +4,17 @@
 * @package     jelix
 * @subpackage  jacldb module
 * @author      Laurent Jouanneau
-* @copyright   2012 Laurent Jouanneau
+* @copyright   2012-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacldbModuleUpgrader_localesmoved extends jInstallerModule2 {
+class jacldbModuleUpgrader_localesmoved extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.5');
-    public $date = '2012-09-21 09:37';
+    protected $targetVersions = array('1.5');
+    protected $date = '2012-09-21 09:37';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        if (!$this->firstDbExec())
-            return;
+    function install() {
         $db = $this->dbConnection();
 
         if ($db->dbms == 'mysql') {

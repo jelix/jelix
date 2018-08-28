@@ -93,9 +93,6 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         $arguments = array();
-        if ($input->getOption('entry-point')) {
-            $arguments['--entry-point'] = $input->getOption('entry-point');
-        }
         if ($output->isVerbose()) {
             $arguments['-v'] = true;
         }

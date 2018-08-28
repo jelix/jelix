@@ -4,7 +4,7 @@
         <version date="2018-07-15 17:53">1.7.0-beta.3</version>
         <label>Jelix tests</label>
         <description>unit tests for jelix</description>
-        <license URL=""/>
+        <license URL="" />
         <copyright>Copyright 2006-2011 jelix.org</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->

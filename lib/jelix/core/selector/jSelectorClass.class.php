@@ -47,10 +47,10 @@ class jSelectorClass extends jSelectorModule {
     }
 
     protected function _createPath(){
-        if (!isset(jApp::config()->_modulesPathList[$this->module])) {
+        if (!jApp::isModuleEnabled($this->module)) {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->subpath.$this->className.$this->_suffix;
+        $this->_path = jApp::getModulePath($this->module).$this->_dirname.$this->subpath.$this->className.$this->_suffix;
 
         if (!file_exists($this->_path) || strpos($this->subpath,'..') !== false ) { // second test for security issues
             throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));

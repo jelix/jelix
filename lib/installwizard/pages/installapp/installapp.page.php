@@ -6,11 +6,10 @@
 * @package     InstallWizard
 * @subpackage  pages
 * @author      Laurent Jouanneau
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-require(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
 
 class installappWizPage extends installWizardPage {
     
@@ -29,7 +28,7 @@ class installappWizPage extends installWizardPage {
         
         
         $reporter = new wizInstallReporter($level, $this);
-        $installer = new jInstaller($reporter);
+        $installer = new \Jelix\Installer\Installer($reporter);
         $ok = $installer->installApplication();
         
         $tpl->assign('messages', $reporter->messages);
@@ -49,8 +48,8 @@ class installappWizPage extends installWizardPage {
  /**
  * 
  */
-class wizInstallReporter implements jIInstallReporter {
-    use jInstallerReporterTrait;
+class wizInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface {
+    use \Jelix\Installer\Reporter\ReporterTrait;
     /**
      * @var string error, notice or warning
      */
