@@ -66,7 +66,8 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
         $reporter = new \Jelix\Installer\Reporter\Console($output,
             ($this->verbose()?'notice':'error'), 'Configuration');
 
-        $configurator = new \Jelix\Installer\Configurator($reporter);
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->projectInfos);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
         if ($parameters) {
             $configurator->setModuleParameters($module, $parameters);
         }

@@ -120,8 +120,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             $this->askAppInfos($input, $output);
         }
 
-
-
         $this->prepareSubCommandApp($appName, $appPath);
 
         \jApp::setEnv('jelix-scripts');
@@ -142,15 +140,23 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::declareModulesDir(array($appPath.'/modules/'));
 
-        $configurator = new \Jelix\Installer\Configurator(
-            new \Jelix\Installer\Reporter\Console(
-                $output, ($output->isVerbose()?'notice':'error'), 'Configuration'));
+        // launch configuration of the jelix module
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'error'), 'Configuration');
+        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
+        $projectInfos = $parser->parse();
+        $globalSetup = new \Jelix\Installer\GlobalSetup($projectInfos);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
+
         if ($input->isInteractive()) {
             $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
         }
         $configurator->configureModules(array('jelix'), 'index', false, true);
 
-        $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose()?'notice':'warning')));
+        // launch the installer for this new application
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'warning'), 'Installation');
+        $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
 
         $moduleok = true;

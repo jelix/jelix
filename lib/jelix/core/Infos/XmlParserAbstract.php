@@ -28,7 +28,7 @@ abstract class XmlParserAbstract {
     abstract protected function createInfos();
 
     /**
-     *
+     * @return InfosAbstract
      */
     public function parse(){
         $object = $this->createInfos();

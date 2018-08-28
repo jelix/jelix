@@ -166,23 +166,6 @@ abstract class AbstractCommand extends Command
         }
     }
 
-    /**
-     * Fix version for non built lib.
-     */
-    protected function fixVersion($version)
-    {
-        switch ($version) {
-            case '__LIB_VERSION_MAX__':
-                return \jFramework::versionMax();
-            case '__LIB_VERSION__':
-                return \jFramework::version();
-            case '__VERSION__':
-                return \jApp::version();
-        }
-
-        return trim($version);
-    }
-
     protected function setUpOutput(OutputInterface $output) {
         $outputStyle = new OutputFormatterStyle('cyan', 'default');
         $output->getFormatter()->setStyle('question', $outputStyle);

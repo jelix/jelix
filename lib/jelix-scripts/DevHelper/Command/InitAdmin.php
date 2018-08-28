@@ -79,7 +79,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                     'entrypoint'=>$entrypoint,
                 );
                 $this->executeSubCommand('app:createentrypoint', $options, $output);
-                $this->projectXml = null;
+                $this->projectInfos = null;
                 $ep = $this->getEntryPointInfo($entrypoint);
             }
             catch (\Exception $e) {
@@ -94,7 +94,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             \jApp::mainConfigFile()
         );
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
-                                              \jApp::appConfigPath($ep['config']));
+                                              \jApp::appConfigPath($ep->configFile));
 
         $params = array();
         $this->createFile(\jApp::appPath('app/responses/adminHtmlResponse.class.php'),
@@ -129,7 +129,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
         $xmlMap->save();
 
-        $globalSetup = new \Jelix\Installer\GlobalSetup();
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->projectInfos);
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose()? 'notice':'warning'), 'Configuration');
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
         $configurator->setModuleParameters('jauth', array('eps'=>array($entrypoint)));

@@ -80,7 +80,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $entryPointDir = dirname($entryPointFullPath).'/';
 
-        $this->loadProjectXml();
+        $this->loadProjectInfos();
 
         // retrieve the config file name
         $configFile = $input->getArgument('config');
@@ -103,7 +103,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             $originalConfig = $input->getOption('copy-config');
             if ($originalConfig) {
                 if (! file_exists(\jApp::appConfigPath($originalConfig))) {
-                    throw new Exception ("unknown original configuration file");
+                    throw new \Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
                                   file_get_contents(\jApp::appConfigPath($originalConfig)));
@@ -141,7 +141,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
             $xmlMap->save();
         }
 
-        $this->updateProjectXml($name.".php", $configFile , $type);
+        $this->projectInfos->addEntryPointInfo($name.".php", $configFile , $type);
+        $this->projectInfos->save();
+
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");
         }
@@ -151,24 +153,4 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
     {
     }
 
-    protected function updateProjectXml ($fileName, $configFileName, $type) {
-
-        $elem = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $fileName);
-        $elem->setAttribute("config", $configFileName);
-        $elem->setAttribute("type", $type);
-
-        $ep = $this->projectXml->documentElement->getElementsByTagName("entrypoints");
-
-        if (!$ep->length) {
-            $ep = $this->projectXml->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $this->projectXml->documentElement->appendChild($ep);
-            $ep->appendChild($elem);
-        }
-        else {
-            $ep->item(0)->appendChild($elem);
-        }
-
-        $this->projectXml->save(\jApp::appPath('project.xml'));
-    }
 }

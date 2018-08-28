@@ -28,4 +28,8 @@ trait ReporterTrait {
         }
         return $this->messageCounter[$type];
     }
+
+    public function resetMessageCounter() {
+        $this->messageCounter = array();
+    }
 }

@@ -20,4 +20,8 @@ class EntryPoint {
         $this->type = $type;
         $this->configFile = $configFile;
     }
+
+    function getFile() {
+        return $this->id.'.php';
+    }
 }

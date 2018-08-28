@@ -36,7 +36,9 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $reporter = new \Jelix\Installer\Reporter\Console($output,
             ($this->verbose()?'notice':'error'), 'Unconfiguration');
-        $configurator = new \Jelix\Installer\Configurator($reporter);
+
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->projectInfos);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
 
         $configurator->unconfigureModule($module, $this->selectedEntryPointId);
 

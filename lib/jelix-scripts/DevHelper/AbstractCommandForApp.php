@@ -8,6 +8,7 @@
 */
 namespace Jelix\DevHelper;
 
+use Jelix\Core\Infos\InfosAbstract;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -110,14 +111,16 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
     protected function loadAppConfig($epId = 'index')
     {
-        $entrypointList = $this->getEntryPointsList();
-        if (!isset($entrypointList[$epId])) {
+        $this->loadProjectInfos();
+
+        $entrypoint = $this->projectInfos->getEntryPointInfo($epId);
+        if (!$entrypoint) {
             throw new \Exception($this->getName().": Entry point $epId is unknown");
         }
 
-        $configFile = $entrypointList[$epId]['config'];
+        $configFile = $entrypoint->configFile;
 
-        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypointList[$epId]['file']));
+        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypoint->getFile()));
     }
 
     /**
@@ -142,95 +145,33 @@ abstract class AbstractCommandForApp extends AbstractCommand
     }
 
     /**
-     * @var \DOMDocument the content of the project.xml file, loaded by loadProjectXml
+     * @var \Jelix\Core\Infos\AppInfos
      */
-    protected $projectXml = null;
+    protected $projectInfos;
+
+    protected function loadProjectInfos() {
+        if ($this->projectInfos) {
+            return;
+        }
+        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
+        $this->projectInfos = $parser->parse();
+    }
 
     /**
-     * load the content of the project.xml file, and store the corresponding DOM
-     * into the $projectXml property.
-     * @return \DOMDocument
+     * @param string $name the entry point name
+     * @return \Jelix\Core\Infos\EntryPoint
+     * @throws \Exception
      */
-    protected function loadProjectXml()
-    {
-        if ($this->projectXml) {
-            return $this->projectXml;
-        }
-
-        $doc = new \DOMDocument();
-
-        if (!$doc->load(\jApp::appPath('project.xml'))) {
-            throw new \Exception($this->getName().': cannot load project.xml');
-        }
-
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'project/1.0') {
-            throw new \Exception($this->getName().': bad namespace in project.xml');
-        }
-        $this->projectXml = $doc;
-        return $this->projectXml;
-    }
-
-    protected function getEntryPointsList()
-    {
-        $this->loadProjectXml();
-        $listEps = $this->projectXml->documentElement->getElementsByTagName('entrypoints');
-        if (!$listEps->length) {
-            return array();
-        }
-
-        $listEp = $listEps->item(0)->getElementsByTagName('entry');
-        if (!$listEp->length) {
-            return array();
-        }
-
-        $list = array();
-        for ($i = 0; $i < $listEp->length; ++$i) {
-            $epElt = $listEp->item($i);
-            $ep = array(
-             'file' => $epElt->getAttribute('file'),
-             'config' => $epElt->getAttribute('config'),
-             'isCli' => ($epElt->getAttribute('type') == 'cmdline'),
-             'type' => $epElt->getAttribute('type'),
-          );
-            if (($p = strpos($ep['file'], '.php')) !== false) {
-                $ep['id'] = substr($ep['file'], 0, $p);
-            } else {
-                $ep['id'] = $ep['file'];
-            }
-
-            $list[$ep['id']] = $ep;
-        }
-
-        return $list;
-    }
-
     protected function getEntryPointInfo($name)
     {
-        $list = $this->getEntryPointsList();
-        if (!isset($list[$name])) {
+        $this->loadProjectInfos();
+        $ep = $this->projectInfos->getEntryPointInfo($name);
+
+        if (!$ep) {
             throw new \Exception($this->getName().": The entry point $name doesn't exist");
         }
-        return $list[$name];
+        return $ep;
     }
-
-    protected function getSupportedJelixVersion()
-    {
-        $this->loadProjectXml();
-
-        $deps = $this->projectXml->getElementsByTagName('dependencies');
-        $minversion = '';
-        $maxversion = '';
-        if ($deps && $deps->length > 0) {
-            $jelix = $deps->item(0)->getElementsByTagName('jelix');
-            if ($jelix && $jelix->length > 0) {
-                $minversion = $this->fixVersion($jelix->item(0)->getAttribute('minversion'));
-                $maxversion = $this->fixVersion($jelix->item(0)->getAttribute('maxversion'));
-            }
-        }
-
-        return array($minversion, $maxversion);
-    }
-
 
     protected function registerModulesDir($repository, $repositoryPath)
     {
