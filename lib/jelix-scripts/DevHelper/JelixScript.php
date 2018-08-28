@@ -76,17 +76,4 @@ class JelixScript {
         return $config;
     }
 
-    static function checkTempPath() {
-        $tempBasePath = \jApp::tempBasePath();
-
-        // we always clean the temp directory. But first, let's check the temp path (see ticket #840)...
-
-        if ($tempBasePath == DIRECTORY_SEPARATOR || $tempBasePath == '' || $tempBasePath == '/') {
-            throw new \Exception("Error: bad path in jApp::tempBasePath(), it is equals to '".$tempBasePath."' !!\n".
-                                "       Jelix cannot clear the content of the temp directory.\n".
-                                "       Correct the path for the temp directory or create the directory you\n".
-                                "       indicated with jApp in your application.init.php.\n");
-        }
-        \jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy', '.empty'));
-    }
 }

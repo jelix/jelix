@@ -224,6 +224,13 @@ class Migration {
             $mainConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
         }
 
+        $consolePath = \jApp::appPath('console.php');
+        if (!file_exists($consolePath)) {
+            file_put_contents($consolePath, '<'.'?php require (__DIR__.\'/application.init.php\');
+\\Jelix\\Scripts\\ModulesCommands::run();');
+            $this->reporter->message('create console.php to launch module commands', 'notice');
+        }
+
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 

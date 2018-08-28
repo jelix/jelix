@@ -2,6 +2,7 @@ cd testapp
   project.xml
   .htaccess
   application.init.php
+  console.php
   cmd.php
   composer.json
   README.md

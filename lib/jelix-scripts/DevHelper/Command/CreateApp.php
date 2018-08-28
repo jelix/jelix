@@ -124,7 +124,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         \jApp::setEnv('jelix-scripts');
 
-        \Jelix\DevHelper\JelixScript::checkTempPath();
+        \Jelix\Scripts\Utils::checkTempPath();
 
         if ($p = $input->getOption('wwwpath')) {
             $wwwpath = Path::shortestPath($appPath , $p).'/';
@@ -353,6 +353,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
+        $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
         $this->createFile(\jApp::appConfigPath('mainconfig.ini.php'), 'app/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");

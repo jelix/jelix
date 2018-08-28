@@ -21,18 +21,10 @@ class JelixCommands {
 
     static function setup() {
 
-        if (!\jServer::isCLI()) {
-            echo "Error: you're not allowed to execute this script outside a command line shell.\n";
-            exit(1);
-        }
-
-        if (!\jApp::isInit()) {
-            echo "Error: should run within an application\n";
-            exit(1);
-        }
+        \Jelix\Scripts\Utils::checkEnv();
 
         \jApp::setEnv('jelix-scripts');
-        \Jelix\DevHelper\JelixScript::checkTempPath();
+        \Jelix\Scripts\Utils::checkTempPath();
 
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
