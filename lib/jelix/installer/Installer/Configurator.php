@@ -349,7 +349,7 @@ class Configurator {
                 if ($configurator) {
                     $configurator->configure();
 
-                    $component->saveModuleInfos();
+                    $component->saveModuleStatus();
                     $this->saveConfigurationFiles($entryPoint);
                 }
             }
@@ -532,7 +532,7 @@ class Configurator {
                 if ($configurator) {
                     $configurator->unconfigure();
 
-                    $component->saveModuleInfos();
+                    $component->saveModuleStatus();
                     if ($shouldBackupUninstallScript) {
                         $component->backupUninstallScript();
                     }

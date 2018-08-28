@@ -64,14 +64,6 @@ class GlobalSetup {
     protected $mainEntryPoint = null;
 
     /**
-     * list of entry point identifiant (provided by the configuration compiler).
-     * identifiant of the entry point is the path+filename of the entry point
-     * without the php extension
-     * @var array   key=entry point name, value=url id
-     */
-    protected $epId = array();
-
-    /**
      * list of modules
      * @var ModuleInstallerLauncher[] key: module name
      */
@@ -89,8 +81,13 @@ class GlobalSetup {
     protected $projectXmlPath;
 
     /**
+     * @var \Jelix\Core\Infos\AppInfos
+     */
+    protected $projectInfos;
+
+    /**
      * GlobalSetup constructor.
-     * @param string|null $projectXmlFileName
+     * @param string|\Jelix\Core\Infos\AppInfos|null $projectXmlFileName
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
      * @param string|null $urlXmlFileName
@@ -102,10 +99,18 @@ class GlobalSetup {
         $urlXmlFileName = null)
     {
 
-        if (!$projectXmlFileName) {
-            $projectXmlFileName = \jApp::appPath('project.xml');
+        if ($projectXmlFileName instanceof \Jelix\Core\Infos\AppInfos) {
+            $this->projectInfos = $projectXmlFileName;
+            $this->projectXmlPath = $this->projectInfos->getFilePath();
         }
-        $this->projectXmlPath = $projectXmlFileName;
+        else {
+            if (!$projectXmlFileName) {
+                $projectXmlFileName = \jApp::appPath('project.xml');
+            }
+            $this->projectXmlPath = $projectXmlFileName;
+            $parser = new \Jelix\Core\Infos\ProjectXmlParser($projectXmlFileName);
+            $this->projectInfos = $parser->parse();
+        }
 
         $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
         if (!file_exists($profileIniFileName)) {
@@ -169,7 +174,8 @@ class GlobalSetup {
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
-        $this->readEntryPointData(simplexml_load_file($projectXmlFileName));
+
+        $this->readEntryPointData();
         $this->readModuleInfos();
 
         // be sure temp path is ready
@@ -180,45 +186,35 @@ class GlobalSetup {
     /**
      * read the list of entrypoint from the project.xml file
      * and read all modules data used by each entry point
-     * @param \SimpleXmlElement $xml
      * @throws \Exception
      */
-    protected function readEntryPointData(\SimpleXmlElement $xml) {
+    protected function readEntryPointData() {
 
         $configFileList = array();
 
-        if (!isset($xml->entrypoints->entry)) {
+        if (!count($this->projectInfos->entrypoints)) {
             throw new \Exception("Entrypoint declaration is missing into project.xml");
         }
 
         // read all entry points data
-        foreach ($xml->entrypoints->entry as $entrypoint) {
-
-            $file = (string)$entrypoint['file'];
-            $configFile = (string)$entrypoint['config'];
-            if (isset($entrypoint['type'])) {
-                $type = (string)$entrypoint['type'];
-            }
-            else {
-                $type = "classic";
-            }
+        foreach ($this->projectInfos->entrypoints as $entrypoint) {
 
             // ignore entry point which have the same config file of an other one
             // FIXME: what about installer.ini ?
-            if (isset($configFileList[$configFile]))
+            if (isset($configFileList[$entrypoint->configFile]))
                 continue;
 
-            $configFileList[$configFile] = true;
+            $configFileList[$entrypoint->configFile] = true;
 
             // we create an object corresponding to the entry point
-            $ep = $this->createEntryPointObject($configFile, $file, $type);
+            $ep = $this->createEntryPointObject($entrypoint->configFile,
+                $entrypoint->id.'.php', $entrypoint->type);
             $epId = $ep->getEpId();
 
             if (!$this->mainEntryPoint || $epId == 'index') {
                 $this->mainEntryPoint = $ep;
             }
 
-            $this->epId[$file] = $epId;
             $this->entryPoints[$epId] = $ep;
         }
     }
@@ -457,44 +453,14 @@ class GlobalSetup {
 
         $this->urlMapModifier->addEntryPoint($epId, $epType);
 
-        $doc = $this->loadProjectXml();
-        $eplist = $doc->documentElement->getElementsByTagName("entrypoints");
-        if (!$eplist->length) {
-            $ep = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entrypoints');
-            $doc->documentElement->appendChild($ep);
-        }
-        else {
-            $ep = $eplist->item(0);
-            foreach($ep->getElementsByTagName("entry") as $entry){
-                if ($entry->getAttribute("file") == $epId.'.php'){
-                    $entryType = $entry->getAttribute("type") ?: 'classic';
-                    if ($entryType != $epType) {
-                        throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
-                    }
-                    return;
-                }
-            }
+        if (isset($this->projectInfos->entrypoints[$epId])) {
+            throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
         }
 
-        $elem = $doc->createElementNS(JELIX_NAMESPACE_BASE.'project/1.0', 'entry');
-        $elem->setAttribute("file", $epId.'.php');
-        $elem->setAttribute("config", $configFileName);
-        $elem->setAttribute("type", $epType);
-        $ep->appendChild($elem);
-        $ep->appendChild(new \DOMText("\n    "));
-        $doc->save($this->projectXmlPath);
-    }
+        $this->projectInfos->entrypoints[$epId] = new \Jelix\Core\Infos\EntryPoint($epId, $configFileName, $epType);
 
-    /**
-     * @return \DOMDocument
-     * @throws \Exception
-     */
-    protected function loadProjectXml() {
-        $doc = new \DOMDocument();
-        if (!$doc->load($this->projectXmlPath)) {
-            throw new \Exception("declareNewEntryPoint: cannot load project.xml");
-        }
-        return $doc;
+        $writer = new \Jelix\Core\Infos\ProjectXmlWriter($this->projectInfos->getFilePath());
+        $writer->write($this->projectInfos);
     }
 
     /**

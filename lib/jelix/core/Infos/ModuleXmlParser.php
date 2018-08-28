@@ -18,7 +18,22 @@ class ModuleXmlParser extends XmlParserAbstract
     }
 
     protected function parseDependencies (\XMLReader $xml, ModuleInfos $object) {
-
+        /*
+        <dependencies>
+            <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
+            <module id="" name="" minversion="" maxversion="" />
+            <choice>
+               <modules>
+                  <module id="" name="" minversion="" maxversion="" />
+                  <module id="" name="" minversion="" maxversion="" />
+               </modules>
+               <module id="" name="" minversion="" maxversion="" />
+            </choice>
+            <conflict>
+                  <module id="" name="" minversion="" maxversion="" />
+            </conflict>
+        </dependencies>
+        */
         while ($xml->read()) {
 
             if ($xml->nodeType == \XMLReader::END_ELEMENT && 'dependencies' == $xml->name) {

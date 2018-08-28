@@ -48,6 +48,20 @@ abstract class XmlParserAbstract {
     }
 
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
+        /*
+        <info id="jelix@modules.jelix.org" name="jelix" createdate="">
+            <version stability="stable" date="">1.0</version>
+            <label lang="en_US" locale="">Jelix Main Module</label>
+            <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
+            <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
+            <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
+            <creator name="Laurent Jouanneau" nickname="" email=""/>
+            <contributor name="hisname" email="hisemail@yoursite.undefined" since="" role=""/>
+            <homepageURL>http://jelix.org</homepageURL>
+            <updateURL>http://jelix.org</updateURL>
+        </info>
+       */
+
         // we don't read the name attribute for the module name as in previous
         // jelix version, it has always to be the directory name
         $object->name = (string)$xml->getAttribute('name');
@@ -113,7 +127,16 @@ abstract class XmlParserAbstract {
                     // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
                     while ($xml->moveToNextAttribute()) {
                         $attrProperty = $property . ucfirst($xml->name);
-                        $object->$attrProperty = $xml->value;
+                        if ($attrProperty == 'versionDate') {
+                            $d = $xml->value;
+                            if ($d == '__TODAY__') { // for non-packages modules
+                                $d = date('Y-m-d');
+                            }
+                            $object->versionDate = $d;
+                        }
+                        else {
+                            $object->$attrProperty = $xml->value;
+                        }
                     }
                     $xml->read();
                     if ($property == 'version') {

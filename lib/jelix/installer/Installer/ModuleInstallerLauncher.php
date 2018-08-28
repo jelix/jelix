@@ -24,44 +24,9 @@ class ModuleInstallerLauncher {
     protected $name = '';
 
     /**
-     * @var string version of the current sources of the module
-     */
-    protected $sourceVersion = '';
-
-    /**
-     * @var string the date of the current sources of the module
-     */
-    protected $sourceDate = '';
-
-    /**
-     * @var string the namespace of the xml file
-     */
-    protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
-
-    /**
-     * @var string the expected name of the root element in the xml file
-     */
-    protected $rootName = 'module';
-
-    /**
-     * @var string the name of the xml file
-     */
-    protected $identityFile = 'module.xml';
-
-    /**
      * @var GlobalSetup
      */
     protected $globalSetup = null;
-
-    /**
-     * list of dependencies of the module
-     */
-    protected $dependencies = array();
-
-    /**
-     * list of incompatibilities of the module
-     */
-    protected $incompatibilities = array();
 
     /**
      * @var string the minimum version of jelix for which the component is compatible
@@ -80,9 +45,15 @@ class ModuleInstallerLauncher {
 
     /**
      *
-     * @var ModuleStatus
+     * @var \Jelix\Core\Infos\ModuleInfos
      */
     protected $moduleInfos = null;
+
+    /**
+     *
+     * @var ModuleStatus
+     */
+    protected $moduleStatus = null;
 
     /**
      * @var Module\Configurator
@@ -112,35 +83,62 @@ class ModuleInstallerLauncher {
     protected $upgradersContexts = array();
 
     /**
-     * @param ModuleStatus $moduleInfos
+     * @param ModuleStatus $moduleStatus
      * @param GlobalSetup $globalSetup
      */
-    function __construct(ModuleStatus $moduleInfos, GlobalSetup $globalSetup) {
+    function __construct(ModuleStatus $moduleStatus, GlobalSetup $globalSetup) {
         $this->globalSetup = $globalSetup;
-        $this->moduleInfos = $moduleInfos;
-        $this->name = $moduleInfos->getName();
+        $this->moduleStatus = $moduleStatus;
+        $this->name = $moduleStatus->getName();
+    }
+
+    /**
+     * initialize the object, by reading the identity file
+     */
+    public function init () {
+        if ($this->moduleInfos) {
+            return;
+        }
+        $modulexml = $this->moduleStatus->getPath().'module.xml';
+        if(!file_exists($modulexml)){
+            throw new Exception('install.invalid.xml.file',array($modulexml));
+        }
+        $parser = new \Jelix\Core\Infos\ModuleXmlParser($modulexml);
+        $this->moduleInfos = $parser->parse();
+
+        if ($this->moduleInfos->version == '') {
+            throw new Exception('module.missing.version', array($this->name));
+        }
+
+        foreach($this->moduleInfos->dependencies as $dep) {
+            if ($dep['type'] == 'module' && $dep['name'] == 'jelix') {
+                $this->jelixMinVersion = $dep['minversion'];
+                $this->jelixMaxVersion = $dep['maxversion'];
+                break;
+            }
+        }
     }
 
     public function getName() { return $this->name; }
-    public function getPath() { return $this->moduleInfos->getPath(); }
-    public function getSourceVersion() { return $this->sourceVersion; }
-    public function getSourceDate() { return $this->sourceDate; }
+    public function getPath() { return $this->moduleStatus->getPath(); }
+    public function getSourceVersion() { return $this->moduleInfos->version; }
+    public function getSourceDate() { return $this->moduleInfos->versionDate; }
     public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
 
     public function getDependencies() {
-        return $this->dependencies;
+        return $this->moduleInfos->dependencies;
     }
 
     public function getIncompatibilities() {
-        return $this->incompatibilities;
+        return $this->moduleInfos->incompatibilities;
     }
 
     public function isEnabled() {
-        return $this->moduleInfos->isEnabled;
+        return $this->moduleStatus->isEnabled;
     }
 
     public function isInstalled() {
-        return $this->moduleInfos->isInstalled;
+        return $this->moduleStatus->isInstalled;
     }
 
     /**
@@ -151,18 +149,18 @@ class ModuleInstallerLauncher {
         if (!$this->isInstalled()) {
             return false;
         }
-        if ($this->moduleInfos->version == '') {
+        if ($this->moduleStatus->version == '') {
             throw new Exception("installer.ini.missing.version", array($this->name));
         }
-        return VersionComparator::compareVersion($this->sourceVersion, $this->moduleInfos->version) == 0;
+        return VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatus->version) == 0;
     }
 
     public function getInstalledVersion() {
-        return $this->moduleInfos->version;
+        return $this->moduleStatus->version;
     }
 
     public function setInstalledVersion($version) {
-        $this->moduleInfos->version = $version;
+        $this->moduleStatus->version = $version;
     }
 
     /**
@@ -170,29 +168,29 @@ class ModuleInstallerLauncher {
      * @param string[] $parameters
      */
     public function setInstallParameters($parameters) {
-        $this->moduleInfos->parameters = $parameters;
+        $this->moduleStatus->parameters = $parameters;
     }
 
     /**
      * save module infos into the app config or the localconfig
      */
-    public function saveModuleInfos() {
+    public function saveModuleStatus() {
 
-        if ($this->moduleInfos->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL) {
+        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL) {
             $conf = $this->globalSetup->getLocalConfigIni();
         }
         else {
-            $this->moduleInfos->clearInfos($this->globalSetup->getLocalConfigIni());
+            $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
             $conf = $this->globalSetup->getConfigIni()['main'];
         }
-        $this->moduleInfos->saveInfos($conf);
+        $this->moduleStatus->saveInfos($conf);
     }
 
     /**
      * @return string[]
      */
     public function getInstallParameters() {
-        return $this->moduleInfos->parameters;
+        return $this->moduleStatus->parameters;
     }
 
     /**
@@ -212,15 +210,15 @@ class ModuleInstallerLauncher {
      * @return bool true if there is a uninstall.php script
      */
     public function backupUninstallScript() {
-        $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleInfos->getName());
+        $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleStatus->getName());
         \jFile::createDir($targetPath);
-        copy($this->moduleInfos->getPath().'module.xml', $targetPath);
+        copy($this->moduleStatus->getPath().'module.xml', $targetPath);
         $uninstallerIni = $this->globalSetup->getUninstallerIni();
-        $this->moduleInfos->saveInfos($uninstallerIni);
+        $this->moduleStatus->saveInfos($uninstallerIni);
 
-        if (file_exists($this->moduleInfos->getPath().'install/uninstall.php')) {
+        if (file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
             \jFile::createDir($targetPath.'/install');
-            copy($this->moduleInfos->getPath().'install/uninstall.php',
+            copy($this->moduleStatus->getPath().'install/uninstall.php',
                 $targetPath.'/install');
             return true;
         }
@@ -228,7 +226,7 @@ class ModuleInstallerLauncher {
     }
 
     public function hasUninstallScript() {
-        return file_exists($this->moduleInfos->getPath().'install/uninstall.php');
+        return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
     }
 
     /**
@@ -244,11 +242,11 @@ class ModuleInstallerLauncher {
      */
     function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
 
-        $this->moduleInfos->isEnabled = $actionMode;
+        $this->moduleStatus->isEnabled = $actionMode;
 
         if ($actionMode) {
             $uninstallerIni = $this->globalSetup->getUninstallerIni();
-            $this->moduleInfos->clearInfos($uninstallerIni);
+            $this->moduleStatus->clearInfos($uninstallerIni);
         }
 
         // false means that there isn't an installer for the module
@@ -257,14 +255,14 @@ class ModuleInstallerLauncher {
         }
 
         if ($this->moduleConfigurator === null) {
-            if (!file_exists($this->moduleInfos->getPath().'install/configure.php') ||
-                $this->moduleInfos->skipInstaller
+            if (!file_exists($this->moduleStatus->getPath().'install/configure.php') ||
+                $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleConfigurator = false;
                 return null;
             }
 
-            require_once($this->moduleInfos->getPath().'install/configure.php');
+            require_once($this->moduleStatus->getPath().'install/configure.php');
 
             $cname = $this->name.'ModuleConfigurator';
             if (!class_exists($cname)) {
@@ -272,17 +270,17 @@ class ModuleInstallerLauncher {
             }
 
             if ($forLocalConfiguration === null) {
-                $forLocalConfiguration = $this->moduleInfos->configurationScope;
+                $forLocalConfiguration = $this->moduleStatus->configurationScope;
             }
             else {
-                $this->moduleInfos->configurationScope = $forLocalConfiguration;
+                $this->moduleStatus->configurationScope = $forLocalConfiguration;
             }
 
 
             $this->moduleConfigurator = new $cname($this->name,
                 $this->name,
-                $this->moduleInfos->getPath(),
-                $this->sourceVersion,
+                $this->moduleStatus->getPath(),
+                $this->moduleInfos->version,
                 $forLocalConfiguration
             );
             $this->moduleConfigurator->setGlobalSetup($this->globalSetup);
@@ -305,14 +303,14 @@ class ModuleInstallerLauncher {
         }
 
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->moduleInfos->getPath().'install/install.php') ||
-                $this->moduleInfos->skipInstaller
+            if (!file_exists($this->moduleStatus->getPath().'install/install.php') ||
+                $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleInstaller = false;
                 return null;
             }
 
-            require_once($this->moduleInfos->getPath().'install/install.php');
+            require_once($this->moduleStatus->getPath().'install/install.php');
 
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname)) {
@@ -321,8 +319,8 @@ class ModuleInstallerLauncher {
 
             $this->moduleInstaller = new $cname($this->name,
                                                 $this->name,
-                                                $this->moduleInfos->getPath(),
-                                                $this->sourceVersion,
+                                                $this->moduleStatus->getPath(),
+                                                $this->moduleInfos->version,
                                                 true
                                                 );
             if ($this->moduleInstaller instanceof \Jelix\Installer\Module\InstallerInterface) {
@@ -337,12 +335,12 @@ class ModuleInstallerLauncher {
                 $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
             }
             $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
-                $this->moduleInfos->dbProfile);
+                $this->moduleStatus->dbProfile);
         }
         else {
-            $this->moduleInstaller->initDbProfile($this->moduleInfos->dbProfile);
+            $this->moduleInstaller->initDbProfile($this->moduleStatus->dbProfile);
         }
-        $this->moduleInstaller->setParameters($this->moduleInfos->parameters);
+        $this->moduleInstaller->setParameters($this->moduleStatus->parameters);
 
         return $this->moduleInstaller;
     }
@@ -363,7 +361,7 @@ class ModuleInstallerLauncher {
 
         if ($this->moduleUninstaller === null) {
 
-            if ($this->moduleInfos->skipInstaller) {
+            if ($this->moduleStatus->skipInstaller) {
                 $this->moduleUninstaller = false;
                 return null;
             }
@@ -371,16 +369,16 @@ class ModuleInstallerLauncher {
             $installer = $this->getInstaller();
             if ($installer && $installer instanceof \jIInstallerComponent) {
                 $this->moduleUninstaller = $installer;
-                $this->moduleUninstaller->setParameters($this->moduleInfos->parameters);
+                $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
                 return $this->moduleUninstaller;
             }
 
-            if (!file_exists($this->moduleInfos->getPath().'install/uninstall.php')) {
+            if (!file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
                 $this->moduleUninstaller = false;
                 return null;
             }
 
-            require_once($this->moduleInfos->getPath().'install/uninstall.php');
+            require_once($this->moduleStatus->getPath().'install/uninstall.php');
 
             $cname = $this->name.'ModuleUninstaller';
             if (!class_exists($cname)) {
@@ -389,15 +387,15 @@ class ModuleInstallerLauncher {
 
             $this->moduleUninstaller = new $cname($this->name,
                 $this->name,
-                $this->moduleInfos->getPath(),
-                $this->sourceVersion,
+                $this->moduleStatus->getPath(),
+                $this->moduleInfos->version,
                 true
             );
             $this->moduleUninstaller->setGlobalSetup($this->globalSetup);
         }
 
-        $this->moduleUninstaller->initDbProfile($this->moduleInfos->dbProfile);
-        $this->moduleUninstaller->setParameters($this->moduleInfos->parameters);
+        $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
+        $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
         return $this->moduleUninstaller;
     }
 
@@ -416,13 +414,13 @@ class ModuleInstallerLauncher {
     function getUpgraders() {
 
         if ($this->moduleMainUpgrader === null) {
-            if (!file_exists($this->moduleInfos->getPath() . 'install/upgrade.php') ||
-                $this->moduleInfos->skipInstaller
+            if (!file_exists($this->moduleStatus->getPath() . 'install/upgrade.php') ||
+                $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleMainUpgrader = false;
             }
             else {
-                require_once($this->moduleInfos->getPath().'install/upgrade.php');
+                require_once($this->moduleStatus->getPath().'install/upgrade.php');
 
                 $cname = $this->name.'ModuleUpgrader';
                 if (!class_exists($cname)) {
@@ -431,12 +429,12 @@ class ModuleInstallerLauncher {
 
                 $this->moduleMainUpgrader = new $cname($this->name,
                     $this->name,
-                    $this->moduleInfos->getPath(),
-                    $this->sourceVersion,
+                    $this->moduleStatus->getPath(),
+                    $this->moduleInfos->version,
                     false
                 );
 
-                $this->moduleMainUpgrader->setTargetVersions(array($this->sourceVersion));
+                $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
 
                 if ($this->moduleMainUpgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
                     $this->moduleMainUpgrader->setGlobalSetup($this->globalSetup);
@@ -448,8 +446,8 @@ class ModuleInstallerLauncher {
 
             $this->moduleUpgraders = array();
 
-            $p = $this->moduleInfos->getPath().'install/';
-            if (!file_exists($p)  || $this->moduleInfos->skipInstaller) {
+            $p = $this->moduleStatus->getPath().'install/';
+            if (!file_exists($p)  || $this->moduleStatus->skipInstaller) {
                 return array();
             }
 
@@ -478,7 +476,7 @@ class ModuleInstallerLauncher {
 
                 $upgrader = new $cname($this->name,
                                         $fileInfo[2],
-                                        $this->moduleInfos->getPath(),
+                                        $this->moduleStatus->getPath(),
                                         $fileInfo[1],
                                         false);
 
@@ -495,7 +493,7 @@ class ModuleInstallerLauncher {
             }
         }
 
-        if ((count($this->moduleUpgraders) || $this->moduleMainUpgrader) && $this->moduleInfos->version == '') {
+        if ((count($this->moduleUpgraders) || $this->moduleMainUpgrader) && $this->moduleStatus->version == '') {
             throw new Exception("installer.ini.missing.version", array($this->name));
         }
 
@@ -506,11 +504,11 @@ class ModuleInstallerLauncher {
             $foundVersion = '';
             // check the version
             foreach($upgrader->getTargetVersions() as $version) {
-                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) >= 0 ) {
+                if (VersionComparator::compareVersion($this->moduleStatus->version, $version) >= 0 ) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
-                if (VersionComparator::compareVersion($this->sourceVersion, $version) < 0 ) {
+                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
                     // we don't execute upgraders having a version higher than the version indicated in the module.xml
                     continue;
                 }
@@ -559,12 +557,12 @@ class ModuleInstallerLauncher {
                     $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
                 }
                 $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
-                                            $this->moduleInfos->dbProfile);
+                                            $this->moduleStatus->dbProfile);
             }
             else {
-                $upgrader->initDbProfile($this->moduleInfos->dbProfile);
+                $upgrader->initDbProfile($this->moduleStatus->dbProfile);
             }
-            $upgrader->setParameters($this->moduleInfos->parameters);
+            $upgrader->setParameters($this->moduleStatus->parameters);
             $list[] = $upgrader;
         }
 
@@ -573,7 +571,7 @@ class ModuleInstallerLauncher {
                 return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
         });
 
-        if ($this->moduleMainUpgrader && VersionComparator::compareVersion($this->moduleInfos->version, $this->sourceVersion) < 0 ) {
+        if ($this->moduleMainUpgrader && VersionComparator::compareVersion($this->moduleStatus->version, $this->moduleInfos->version) < 0 ) {
             $list[] = $this->moduleMainUpgrader;
         }
         return $list;
@@ -612,35 +610,20 @@ class ModuleInstallerLauncher {
     }
 
     /**
-     * @var boolean  indicate if the identify file has already been readed
-     */
-    protected $identityReaded = false;
-
-    /**
-     * initialize the object, by reading the identity file
-     */
-    public function init () {
-        if ($this->identityReaded)
-            return;
-        $this->identityReaded = true;
-        $this->readIdentity();
-    }
-
-    /**
      * @return Item
      */
     public function getResolverItem() {
         $action = $this->getInstallAction();
         if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, $this->sourceVersion, true);
-            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
+            $item = new Item($this->name, $this->moduleInfos->version, true);
+            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleStatus->version);
         }
         else {
-            $item = new Item($this->name, $this->sourceVersion, $this->isInstalled());
+            $item = new Item($this->name, $this->moduleInfos->version, $this->isInstalled());
             $item->setAction($action);
         }
 
-        foreach($this->dependencies as $dep) {
+        foreach($this->moduleInfos->dependencies as $dep) {
             if ($dep['type'] == 'choice') {
                 $list = array();
                 foreach($dep['choice'] as $choice) {
@@ -653,7 +636,7 @@ class ModuleInstallerLauncher {
             }
         }
 
-        foreach($this->incompatibilities as $dep) {
+        foreach($this->moduleInfos->incompatibilities as $dep) {
             $item->addIncompatibility($dep['name'], $dep['version']);
         }
         $item->setProperty('component', $this);
@@ -676,211 +659,14 @@ class ModuleInstallerLauncher {
         return Resolver::ACTION_NONE;
     }
 
-    /**
-     * read the identity file
-     * @throws \Exception
-     */
-    protected function readIdentity() {
-        $xmlDescriptor = new \DOMDocument();
-
-        if(!$xmlDescriptor->load($this->moduleInfos->getPath().$this->identityFile)){
-            throw new Exception('install.invalid.xml.file',array($this->moduleInfos->getPath().$this->identityFile));
-        }
-
-        $root = $xmlDescriptor->documentElement;
-
-        if ($root->namespaceURI == $this->identityNamespace) {
-            $xml = simplexml_import_dom($xmlDescriptor);
-            if (!isset($xml->info[0]->version[0])) {
-                throw new Exception('module.missing.version', array($this->name));
-            }
-            $this->sourceVersion = $this->fixVersion((string) $xml->info[0]->version[0]);
-            if (trim($this->sourceVersion) == '') {
-                throw new Exception('module.missing.version', array($this->name));
-            }
-            if (isset($xml->info[0]->version['date'])) {
-                $this->sourceDate = (string)$xml->info[0]->version['date'];
-                if ($this->sourceDate == '__TODAY__') { // for non-packages modules
-                    $this->sourceDate = date('Y-m-d');
-                }
-            } else {
-                $this->sourceDate = '';
-            }
-            $this->readDependencies($xml);
-        }
-    }
-
-    protected function readDependencies($xml) {
-
-        /*
-  <module xmlns="http://jelix.org/ns/module/1.0">
-      <info id="jelix@modules.jelix.org" name="jelix" createdate="">
-          <version stability="stable" date="">1.0</version>
-          <label lang="en_US" locale="">Jelix Main Module</label>
-          <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
-          <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
-          <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
-          <creator name="Laurent Jouanneau" nickname="" email=""/>
-          <contributor name="hisname" email="hisemail@yoursite.undefined" since="" role=""/>
-          <homepageURL>http://jelix.org</homepageURL>
-          <updateURL>http://jelix.org</updateURL>
-      </info>
-      <dependencies>
-          <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
-          <module id="" name="" minversion="" maxversion="" />
-          <choice>
-             <modules>
-                <module id="" name="" minversion="" maxversion="" />
-                <module id="" name="" minversion="" maxversion="" />
-             </modules>
-             <module id="" name="" minversion="" maxversion="" />
-          </choice>
-          <conflict>
-                <module id="" name="" minversion="" maxversion="" />
-          </conflict>
-      </dependencies>
-  </module>
-        */
-
-        $this->dependencies = array();
-        $this->incompatibilities = array();
-
-        if (isset($xml->dependencies)) {
-            foreach ($xml->dependencies->children() as $type=>$dependency) {
-                if ($type == 'conflict') {
-                    foreach ($dependency->children() as $type2=>$component) {
-                        if ($type2 == 'module') {
-                            $info2 = $this->readComponentDependencyInfo($type2, $component);
-                            $info2['forbiddenby'] = $this->name;
-                            $this->incompatibilities[] = $info2;
-                        }
-                    }
-                    continue;
-                }
-
-                if ($type == 'choice') {
-                    $choice = array();
-                    foreach ($dependency->children() as $type2=>$component) {
-                        if ($type2 == 'module') {
-                            $choice[] = $this->readComponentDependencyInfo($type2, $component);
-                        }
-                    }
-                    if (count($choice) > 1) {
-                        $this->dependencies[] = array(
-                            'type'=> 'choice',
-                            'choice' => $choice
-                        );
-                    }
-                    else if (count($choice) == 1) {
-                        $this->dependencies[] = $choice[0];
-                    }
-                    continue;
-                }
-
-                if ($type != 'jelix' && $type != 'module') {
-                    continue;
-                }
-
-                $info = $this->readComponentDependencyInfo($type, $dependency);
-
-                if ($type == 'jelix' || ($type == 'module' && $info['name'] == 'jelix')) {
-                    $this->jelixMinVersion = $info['minversion'];
-                    $this->jelixMaxVersion = $info['maxversion'];
-                    if ($this->name != 'jelix') {
-                        $this->dependencies[] = array(
-                            'type'=> 'module',
-                            'id' => 'jelix@jelix.org',
-                            'name' => 'jelix',
-                            'minversion' => $this->jelixMinVersion,
-                            'maxversion' => $this->jelixMaxVersion,
-                            'version' => $info['version']
-                        );
-                    }
-                }
-                else if ($type == 'module') {
-                    $this->dependencies[] = $info;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param string $type
-     * @param \SimpleXMLElement $comp
-     * @return array
-     * @throws Exception
-     */
-    protected function readComponentDependencyInfo($type, $comp)
-    {
-        $versionRange = '';
-        $minversion = isset($comp['minversion'])?
-            $this->fixVersion((string)$comp['minversion']):
-            '0';
-        if (trim($minversion) == '') {
-            $minversion = '0';
-        }
-        if ($minversion != '0') {
-            $versionRange = '>='.$minversion;
-        }
-        $maxversion = isset($comp['maxversion'])?
-            $this->fixVersion((string)$comp['maxversion']):
-            '*';
-        if (trim($maxversion) == '') {
-            $maxversion = '*';
-        }
-        if ($maxversion != '*') {
-            $v = '<='.$maxversion;
-            if ($versionRange != '') {
-                $v = ','.$v;
-            }
-            $versionRange .= $v;
-        }
-
-        if ($versionRange == '') {
-            $versionRange = '*';
-        }
-
-
-        $name = (string)$comp['name'];
-        if (trim($name) == '' && $type != 'jelix') {
-            throw new Exception('Name is missing for "'.$type.'" in a dependency declaration in module '.$this->name);
-        }
-        $id = isset($comp['id'])?(string)$comp['id']: '';
-
-        return array(
-            'type'=> $type,
-            'id' => $id,
-            'name' => $name,
-            'minversion' => $minversion,
-            'maxversion' => $maxversion,
-            'version' => $versionRange
-        );
-    }
-
-
     public function checkJelixVersion ($jelixVersion) {
         return VersionComparator::compareVersionRange($jelixVersion, $this->jelixMinVersion.' - '.$this->jelixMaxVersion);
     }
 
     public function checkVersion($min, $max) {
         if ($max == '*') {
-            return VersionComparator::compareVersionRange($this->sourceVersion, '>='.$min);
+            return VersionComparator::compareVersionRange($this->moduleInfos->version, '>='.$min);
         }
-        return VersionComparator::compareVersionRange($this->sourceVersion, $min.' - '.$max);
-    }
-
-    /**
-     * Fix version for non built lib
-     */
-    protected function fixVersion($version) {
-        switch($version) {
-            case '__LIB_VERSION_MAX__':
-                return \jFramework::versionMax();
-            case '__LIB_VERSION__':
-                return \jFramework::version();
-            case '__VERSION__':
-                return \jApp::version();
-        }
-        return trim($version);
+        return VersionComparator::compareVersionRange($this->moduleInfos->version, $min.' - '.$max);
     }
 }
