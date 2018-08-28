@@ -17,23 +17,23 @@ domainName=
 
 
 [modules]
-jelix.access=2
-jacl.access=0
-jacldb.access=0
-jsoap.access=0
-jauth.access=2
-master_admin.access=2
-jauthdb.access=2
 jauthdb.installparam=defaultuser
-jauthdb_admin.access=2
-jacl2.access=2
-jacl2db.access=2
 jacl2db.installparam=defaultuser
-jacl2db_admin.access=2
-jpref.access=2
-jpref_admin.access=2
 
 
+jelix.enabled=on
+jacl.enabled=off
+jacldb.enabled=off
+jsoap.enabled=off
+jauth.enabled=on
+master_admin.enabled=on
+jauthdb.enabled=on
+jauthdb_admin.enabled=on
+jacl2.enabled=on
+jacl2db.enabled=on
+jacl2db_admin.enabled=on
+jpref.enabled=on
+jpref_admin.enabled=on
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
 

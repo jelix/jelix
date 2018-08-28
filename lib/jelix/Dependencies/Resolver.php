@@ -77,7 +77,7 @@ class Resolver
                 }
                 $this->_checkReverseDependencies($item);
             } elseif ($item->getAction() == self::ACTION_INSTALL) {
-                if ($item->isInstalled()) {
+                if ($item->isInstalled() && !$allowToForceInstallDependencies) {
                     $this->checkedItems[$itemName] = true;
                     continue;
                 }

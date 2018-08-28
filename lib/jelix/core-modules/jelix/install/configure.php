@@ -23,7 +23,7 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
             "\n   filelink: a file system link into the www/ directory will point to the jelix-www directory".
             "\n   vhost: you will configure your web server to set an alias to the jelix-www directory"
             ,
-            array('copy', 'vhost', 'filelink'), 0
+            array('copy', 'vhost', 'filelink'), $this->parameters['wwwfiles']
             );
 
         $configIni = $this->getConfigIni();

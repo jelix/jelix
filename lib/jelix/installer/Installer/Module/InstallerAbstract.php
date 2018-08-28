@@ -193,7 +193,7 @@ abstract class InstallerAbstract {
      */
     protected function dbConnection () {
         if (!$this->_dbConn)
-            $this->_dbConn = jDb::getConnection($this->dbProfile);
+            $this->_dbConn = \jDb::getConnection($this->dbProfile);
         return $this->_dbConn;
     }
 
@@ -204,7 +204,7 @@ abstract class InstallerAbstract {
     protected function getDbType($profile = null) {
         if (!$profile)
             $profile = $this->dbProfile;
-        $conn = jDb::getConnection($profile);
+        $conn = \jDb::getConnection($profile);
         return $conn->dbms;
     }
 

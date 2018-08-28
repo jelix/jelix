@@ -161,6 +161,7 @@ class GlobalSetup {
 
         $this->installerIni = $this->loadInstallerIni();
 
+        \jFile::createDir(\jApp::appPath('install/uninstall'));
         $this->uninstallerIni = new \Jelix\IniFile\IniModifier(
             \jApp::appPath('install/uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>

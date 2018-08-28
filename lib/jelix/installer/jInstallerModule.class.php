@@ -7,6 +7,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+require_once(JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php');
 
 /**
  * A class that does processing to configure and install a module into

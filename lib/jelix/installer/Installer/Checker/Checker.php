@@ -25,7 +25,7 @@ class Checker extends CheckerBase {
 
     function checkAppPaths(){
         $ok = true;
-        if(!defined('JELIX_LIB_PATH') || !jApp::isInit()){
+        if(!defined('JELIX_LIB_PATH') || !\jApp::isInit()){
             throw new \Exception($this->messages->get('path.core'));
         }
 

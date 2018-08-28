@@ -55,6 +55,71 @@ class resolverTest extends PHPUnit_Framework_TestCase {
      * @expectedException \Jelix\Dependencies\ItemException
      * @expectedExceptionCode 11
      */
+    public function testTwoDependItemsNoForceInstall() {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation(false);
+
+    }
+
+
+    public function testTwoDependItemsForceInstall() {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation(true);
+
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testA', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+    }
+
+
+    public function testTwoDependItemsForceReinstall() {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", true);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation(true);
+
+        $this->assertEquals(1, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+    }
+
+    /**
+     * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 11
+     */
     public function testForbidInstallDependencies() {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
