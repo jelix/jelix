@@ -47,6 +47,23 @@ abstract class XmlParserAbstract {
         return $object;
     }
 
+    public function parseFromString($xmlContent) {
+        $object = $this->createInfos();
+        $xml = new \XMLreader();
+        $xml->xml($xmlContent, 'utf-8', LIBXML_COMPACT );
+
+        while ($xml->read()) {
+            if($xml->nodeType == \XMLReader::ELEMENT) {
+                $method = 'parse' . ucfirst($xml->name);
+                if (method_exists ($this, $method)) {
+                    $this->$method($xml, $object);
+                }
+            }
+        }
+        $xml->close();
+        return $object;
+    }
+
     protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
         /*
         <info id="jelix@modules.jelix.org" name="jelix" createdate="">

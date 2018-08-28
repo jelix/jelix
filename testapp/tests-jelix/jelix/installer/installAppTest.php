@@ -3,11 +3,6 @@ require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
 require_once (JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 
 
-class testInstallApp extends jInstallerApplication {
-
-}
-
-
 class installAppTest extends PHPUnit_Framework_TestCase {
 
     function setUp() {
@@ -23,19 +18,19 @@ class installAppTest extends PHPUnit_Framework_TestCase {
      * @expectedException Exception
      */
     function testNoEntryPoint() {
-        $app = new testInstallApp('project_empty.xml');
+        $app = new jInstallerApplication('project_empty.xml');
     }
 
     /**
      * @expectedException Exception
      */
     function testNoEntryPoint2() {
-        $app = new testInstallApp('project_empty2.xml');
+        $app = new jInstallerApplication('project_empty2.xml');
     }
 
     function testEntryPointsList () {
 
-        $app = new testInstallApp('project.xml');
+        $app = new jInstallerApplication('project.xml');
         $list = $app->getEntryPointsList();
         $this->assertEquals(2, count($list));
         

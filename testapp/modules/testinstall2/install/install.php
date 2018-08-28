@@ -1,7 +1,7 @@
 <?php
 /**
 * @package     testapp
-* @subpackage  jelix_tests module
+* @subpackage  testinstall2 module
 * @author      Laurent Jouanneau
 * @contributor
 * @copyright   2009 Laurent Jouanneau

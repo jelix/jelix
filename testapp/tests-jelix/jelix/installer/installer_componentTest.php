@@ -25,11 +25,11 @@ class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLaun
 
 
 class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInstallerLauncher {
-    
-    protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
-    protected $rootName = 'module';
-    protected $identityFile = 'module.xml';
-    
+
+    function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
+        return null;
+    }
+
     function getInstaller() {
         return null;
     }
@@ -37,13 +37,23 @@ class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInsta
     function getUpgraders() {
         return null;
     }
-    
-    function readDependenciesFromString($xmlcontent) {
-        $xml = simplexml_load_string($xmlcontent);
-        //$this->sourceVersion = (string) $xml->info[0]->version[0];   
-        $this->readDependencies($xml);
+
+
+    public function setModuleXmlContent ($xmlContent) {
+
+        $modulexml = $this->moduleStatus->getPath().'module.xml';
+        $parser = new testInstallerModuleParser($modulexml);
+        $this->moduleInfos = $parser->parseFromString($xmlContent);
+
+        foreach($this->moduleInfos->dependencies as $dep) {
+            if ($dep['type'] == 'module' && $dep['name'] == 'jelix') {
+                $this->jelixMinVersion = $dep['minversion'];
+                $this->jelixMaxVersion = $dep['maxversion'];
+                break;
+            }
+        }
     }
-    
+
 }
 
 class jInstaller_ComponentTest extends jUnitTestCase {
@@ -55,7 +65,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     function setUp() {
         self::initJelixConfig();
-        $this->globalSetup = new testInstallerGlobalSetup();
+        $parser = new testInstallerProjectParser(jApp::appPath('project.xml'));
+        $appInfos = $parser->parse();
+        $this->globalSetup = new testInstallerGlobalSetup($appInfos);
         jApp::saveContext();
     }
 
@@ -76,10 +88,11 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
         $comp = new testInstallerComponentForDependencies($moduleInfos, $this->globalSetup);
 
+
         $str = '<?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
 </module>';
-        $comp->readDependenciesFromString($str);
+        $comp->setModuleXmlContent($str);
         $this->assertEquals(array(), $comp->getDependencies());
         $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
@@ -88,7 +101,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     <dependencies>
     </dependencies>
 </module>';
-        $comp->readDependenciesFromString($str);
+        $comp->setModuleXmlContent($str);
         $this->assertEquals(array(), $comp->getDependencies());
         $this->assertEquals(array('*','*'), $comp->getJelixVersion());
 
@@ -99,7 +112,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     </dependencies>
 </module>';
 
-        $comp->readDependenciesFromString($str);
+        $comp->setModuleXmlContent($str);
         $this->assertEquals(array(
             array(
                 'type'=> 'module',
@@ -123,7 +136,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
     </dependencies>
 </module>';
 
-        $comp->readDependenciesFromString($str);
+        $comp->setModuleXmlContent($str);
         $this->assertEquals(array(
             array(
                 'type'=> 'module',
@@ -177,8 +190,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
-            $installer = $component->getInstaller(true);
+            $installer = $component->getInstaller();
             $this->assertNull($installer);
+            $configurator = $component->getConfigurator(true);
+            $this->assertNull($configurator);
         }
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -199,13 +214,15 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
 
-            // testinstall2 has an install.php file
+            // testinstall2 has an install.php and configure.php file
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
-            $installer = $component->getInstaller(true);
+            $installer = $component->getInstaller();
             $this->assertTrue (is_object($installer));
 
+            $installer = $component->getConfigurator(true);
+            $this->assertTrue (is_object($installer));
         }
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -330,6 +347,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
+
 
             // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);

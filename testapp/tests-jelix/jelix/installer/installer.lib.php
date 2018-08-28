@@ -12,6 +12,40 @@
 
 require_once(JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
+
+class testInstallerAppInfos extends \Jelix\Core\Infos\AppInfos {
+
+    function save() {
+        return true;
+    }
+}
+
+class testInstallerProjectParser extends \Jelix\Core\Infos\ProjectXmlParser {
+
+    protected function createInfos() {
+        return new testInstallerAppInfos($this->path, true);
+    }
+}
+
+
+
+class testInstallerModuleInfos extends \Jelix\Core\Infos\ModuleInfos {
+
+    function save() {
+        return true;
+    }
+}
+
+class testInstallerModuleParser extends \Jelix\Core\Infos\ModuleXmlParser {
+
+    protected function createInfos() {
+        return new testInstallerModuleInfos($this->path, true);
+    }
+}
+
+
+
+
 class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     public $configContent = array();
@@ -99,30 +133,29 @@ class testInstallerComponentModule extends \Jelix\Installer\ModuleInstallerLaunc
 
 class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
 
-    function __construct($globalSetup,
-                         $epConfigFile, $file, $type, $configContent) {
+    function __construct(\Jelix\Installer\GlobalSetup $globalSetup,
+                         $configFile, $file, $type, $configContent) {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
+        $this->configFileName = $configFile;
         $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        if (!is_object($epConfigFile)) {
-            $epConfigFile = new testInstallerIniFileModifier($epConfigFile);
-        }
-        $localEpConfigIni = new testInstallerIniFileModifier($epConfigFile->getFileName());
+        $appConfigPath = \jApp::appConfigPath($configFile);
+        $this->appConfigIni = clone $globalSetup->getConfigIni();
+        $this->appConfigIni['entrypoint'] = new testInstallerIniFileModifier($appConfigPath);
+
+        $varConfigPath = \jApp::varConfigPath($configFile);
+        $localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
 
 
-        $this->configFile = $epConfigFile->getFileName();
-        $this->configIni = clone $globalSetup->getConfigIni();
-        $this->configIni['entrypoint'] = $epConfigFile;
-
-        $this->localConfigIni = clone $this->configIni;
+        $this->localConfigIni = clone $this->appConfigIni;
         $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = new testInstallerIniFileModifier(jApp::varConfigPath('localconfig.ini.php'));
+        $this->liveConfigIni['live'] = new testInstallerIniFileModifier(jApp::varConfigPath('liveconfig.ini.php'));
 
         $this->config = $configContent;
     }
