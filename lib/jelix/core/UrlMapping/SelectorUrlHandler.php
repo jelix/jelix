@@ -18,9 +18,8 @@ class SelectorUrlHandler extends \jSelectorClass
 
     protected function _createPath()
     {
-        $conf = \jApp::config();
-        if (isset($conf->_modulesPathList[$this->module])) {
-            $p = $conf->_modulesPathList[$this->module];
+        if (\jApp::isModuleEnabled($this->module)) {
+            $p = \jApp::getModulePath($this->module);
         } else {
             throw new \jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }

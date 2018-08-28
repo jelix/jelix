@@ -53,7 +53,7 @@ class jSelectorTpl extends jSelectorModule {
      */
     protected function _createPath(){
 
-        if(!isset(jApp::config()->_modulesPathList[$this->module])){
+        if(!jApp::isModuleEnabled($this->module)){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
 
@@ -78,7 +78,7 @@ class jSelectorTpl extends jSelectorModule {
         }
 
         // check if the template exists in the current module
-        $mpath = jApp::config()->_modulesPathList[$this->module].$this->_dirname;
+        $mpath = jApp::getModulePath($this->module).$this->_dirname;
         $this->_path = $mpath.$locale.'/'.$this->resource.'.tpl';
         if (is_readable ($this->_path)){
             $this->_cachePrefix = 'modules/'.$this->module.'/'.$lpath;

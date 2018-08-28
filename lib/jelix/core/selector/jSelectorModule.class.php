@@ -74,10 +74,10 @@ abstract class jSelectorModule implements jISelector {
 
     protected function _createPath(){
 
-        if(!isset(jApp::config()->_modulesPathList[$this->module])){
+        if(!jApp::isModuleEnabled($this->module)){
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
-        $this->_path = jApp::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = jApp::getModulePath($this->module).$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)){
             if($this->type == 'loc'){
                 throw new Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');

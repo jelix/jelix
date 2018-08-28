@@ -27,6 +27,7 @@
  * @method static pushCurrentModule($module)
  * @method static popCurrentModule()
  * @method static getCurrentModule()
+ * @method static getEnabledModulesPaths()
  */
 class jApp
 {

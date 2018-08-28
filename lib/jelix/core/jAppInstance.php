@@ -245,6 +245,10 @@ class jAppInstance
         }
     }
 
+    public function getEnabledModulesPaths() {
+        return $this->config->_modulesPathList;
+    }
+
     /**
      * returns all modules path, even those are not used by the application.
      *

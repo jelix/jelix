@@ -65,7 +65,7 @@ class jSelectorLoc extends jSelectorModule {
 
     protected function _createPath(){
 
-        if (!isset(jApp::config()->_modulesPathList[$this->module])) {
+        if (!jApp::isModuleEnabled($this->module)) {
             if ($this->module == 'jelix') {
                 throw new Exception('jelix module is not enabled !!');
             }
@@ -107,7 +107,7 @@ class jSelectorLoc extends jSelectorModule {
         }
 
         // else check for the original locale file in the module
-        $path = jApp::config()->_modulesPathList[$this->module].'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
+        $path = jApp::getModulePath($this->module).'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
         if (is_readable ($path)){
             $this->_where = 'modules/';
             $this->_path = $path;
