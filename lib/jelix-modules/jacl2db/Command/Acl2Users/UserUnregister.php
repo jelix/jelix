@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2Users;
+namespace Jelix\Acl2Db\Command\Acl2Users;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class UserUnregister  extends \Jelix\DevHelper\AbstractCommandForApp {
+class UserUnregister  extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function configure()
     {
@@ -43,7 +43,7 @@ class UserUnregister  extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $login = $input->getArgument('login');
         if (!$input->getOption('confirm')) {

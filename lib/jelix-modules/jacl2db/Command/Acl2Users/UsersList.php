@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2Users;
+namespace Jelix\Acl2Db\Command\Acl2Users;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,7 +20,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;
 
 
-class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
+class UsersList  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -38,7 +38,7 @@ class UsersList  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
     }
 
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $cnx = \jDb::getConnection('jacl2_profile');
         $table = new Table($output);

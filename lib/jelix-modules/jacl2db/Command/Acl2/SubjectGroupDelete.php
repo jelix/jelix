@@ -7,7 +7,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2;
+namespace Jelix\Acl2Db\Command\Acl2;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,18 +15,18 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class SubjectDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
+class SubjectGroupDelete  extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function configure()
     {
         $this
-            ->setName('acl2:subject-delete')
-            ->setDescription('Delete a subject"')
+            ->setName('acl2:sg-delete')
+            ->setDescription('Delete a subject group')
             ->setHelp('')
             ->addArgument(
-                'subject',
+                'group',
                 InputArgument::REQUIRED,
-                'the subject id to delete'
+                'Name of the subject group'
             )
             ->addOption(
                'confirm',
@@ -34,42 +34,44 @@ class SubjectDelete  extends \Jelix\DevHelper\AbstractCommandForApp {
                InputOption::VALUE_NONE,
                'Avoid to wait after user confirmation'
             )
-
         ;
         parent::configure();
     }
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $subject = $input->getArgument('subject');
-        $cnx = \jDb::getConnection('jacl2_profile');
+        $group = $input->getArgument('group');
 
         if (!$input->getOption('confirm')) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('are you sure you want to delete subject '.$subject.' (y/N)?', false);
+            $question = new ConfirmationQuestion('are you sure you want to delete subject group '.$group.' (y/N)?', false);
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
                 return;
             }
         }
 
-        $sql="SELECT id_aclsbj FROM ".$cnx->prefixTable('jacl2_subject')
-            ." WHERE id_aclsbj=".$cnx->quote($subject);
+        $cnx = \jDb::getConnection('jacl2_profile');
+
+        $sql="SELECT id_aclsbjgrp FROM ".$cnx->prefixTable('jacl2_subject_group')
+            ." WHERE id_aclsbjgrp=".$cnx->quote($group);
         $rs = $cnx->query($sql);
         if (!$rs->fetch()) {
-            throw new \Exception("This subject does not exist");
+            throw new \Exception("This subject group does not exist");
         }
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_rights')." WHERE id_aclsbj=";
-        $sql.=$cnx->quote($subject);
+        $sql="UDPATE ".$cnx->prefixTable('jacl2_rights')." SET id_aclsbjgrp=NULL WHERE id_aclsbjgrp=";
+        $sql.=$cnx->quote($group);
         $cnx->exec($sql);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_subject')." WHERE id_aclsbj=";
-        $sql.=$cnx->quote($subject);
+        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_subject_group')." WHERE id_aclsbjgrp=";
+        $sql.=$cnx->quote($group);
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln("Rights: subject ".$subject." is deleted");
+            $output->writeln("Rights: group of subjects '".$group."' is deleted.");
         }
+ 
     }
 }

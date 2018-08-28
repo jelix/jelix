@@ -121,6 +121,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         $configFile = $entrypoint->configFile;
 
         \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypoint->getFile()));
+        \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
     }
 
     /**

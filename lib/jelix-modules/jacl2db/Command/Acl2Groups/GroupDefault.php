@@ -10,51 +10,50 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2Users;
+namespace Jelix\Acl2Db\Command\Acl2Groups;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserRemoveGroup  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
+class GroupDefault  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
         $this
-            ->setName('acl2user:removegroup')
-            ->setDescription('Remove a user from a group')
+            ->setName('acl2group:default')
+            ->setDescription('Set a user group as default group for new users')
             ->setHelp('')
-            ->addArgument(
-                'login',
-                InputArgument::REQUIRED,
-                'the login of the user'
-            )
             ->addArgument(
                 'group',
                 InputArgument::REQUIRED,
-                'the group id from which the user should be removed'
+                'the group id'
+            )
+            ->addOption(
+               'no-default',
+               null,
+               InputOption::VALUE_NONE,
+               'To set the group as non default group for new users'
             )
         ;
         parent::configure();
     }
 
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
-        $login = $input->getArgument('login');
+        $def = ($input->getOption('no-default')?0:1);
+        $id = $this->_getGrpId($input, true);
 
         $cnx = \jDb::getConnection('jacl2_profile');
-        $groupid = $this->_getGrpId($input);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')
-            ." WHERE login=".$cnx->quote($login)." AND id_aclgrp=".$cnx->quote($groupid);
+        $sql="UPDATE ".$cnx->prefixTable('jacl2_group')
+            ." SET grouptype=$def  WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
-
         if ($output->isVerbose()) {
-            $output->writeln("User '".$login."' is removed from group '".$group."'");
+            $output->writeln("Group '".$group."' is ".($def?' now a default group':' no more a default group'));
         }
     }
 }

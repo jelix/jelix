@@ -10,7 +10,7 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2Groups;
+namespace Jelix\Acl2Db\Command\Acl2Groups;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,7 +19,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 
-class GroupDelete  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
+class GroupDelete  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -43,7 +43,7 @@ class GroupDelete  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
         parent::configure();
     }
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $id = $this->_getGrpId($input, true);
         if (!$input->getOption('confirm')) {

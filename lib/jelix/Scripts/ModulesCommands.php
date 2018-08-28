@@ -34,7 +34,7 @@ class ModulesCommands {
         $ep = $projectInfos->getEntryPointInfo('index');
 
         \jApp::setConfig(\jConfigCompiler::read($ep->configFile, true, true, 'console.php'));
-
+        \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
 
         // ----- init the Application object
         $application = new Application($projectInfos->name." commands");

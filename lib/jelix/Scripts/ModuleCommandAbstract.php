@@ -16,7 +16,6 @@ use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 abstract class ModuleCommandAbstract extends Command
 {
-    private $isVerbose = false;
 
     /** @var OutputInterface */
     protected $output = null;

@@ -10,15 +10,13 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2Groups;
+namespace Jelix\Acl2Db\Command\Acl2Groups;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class GroupName  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
+class GroupName  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
 
     protected function configure()
     {
@@ -41,7 +39,7 @@ class GroupName  extends \Jelix\DevHelper\Command\Acl2\AbstractAcl2Cmd {
     }
 
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
         $name = $input->getArgument('name');

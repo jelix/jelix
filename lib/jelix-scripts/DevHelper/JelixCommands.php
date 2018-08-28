@@ -47,27 +47,6 @@ class JelixCommands {
         $application->add(new Command\OpenApp($jelixScriptConfig));
         $application->add(new Command\FilesRights($jelixScriptConfig));
 
-        $application->add(new Command\Acl2\RightsList($jelixScriptConfig));
-        $application->add(new Command\Acl2\AddRight($jelixScriptConfig));
-        $application->add(new Command\Acl2\RemoveRight($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectList($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectCreate($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectDelete($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectGroupList($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectGroupCreate($jelixScriptConfig));
-        $application->add(new Command\Acl2\SubjectGroupDelete($jelixScriptConfig));
-
-        $application->add(new Command\Acl2Groups\GroupsList($jelixScriptConfig));
-        $application->add(new Command\Acl2Groups\GroupCreate($jelixScriptConfig));
-        $application->add(new Command\Acl2Groups\GroupDelete($jelixScriptConfig));
-        $application->add(new Command\Acl2Groups\GroupName($jelixScriptConfig));
-        $application->add(new Command\Acl2Groups\GroupDefault($jelixScriptConfig));
-
-        $application->add(new Command\Acl2Users\UsersList($jelixScriptConfig));
-        $application->add(new Command\Acl2Users\UserRegister($jelixScriptConfig));
-        $application->add(new Command\Acl2Users\UserUnregister($jelixScriptConfig));
-        $application->add(new Command\Acl2Users\UserAddGroup($jelixScriptConfig));
-        $application->add(new Command\Acl2Users\UserRemoveGroup($jelixScriptConfig));
 
         return $application;
     }

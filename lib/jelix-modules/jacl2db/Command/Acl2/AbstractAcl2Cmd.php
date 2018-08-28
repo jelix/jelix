@@ -7,12 +7,12 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2;
+namespace Jelix\Acl2Db\Command\Acl2;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
-abstract class AbstractAcl2Cmd  extends \Jelix\DevHelper\AbstractCommandForApp {
+abstract class AbstractAcl2Cmd  extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function _getGrpId(InputInterface $input, $onlypublic=false){
         $param = $input->getArgument('group');

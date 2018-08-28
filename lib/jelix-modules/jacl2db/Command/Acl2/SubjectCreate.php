@@ -7,14 +7,14 @@
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
-namespace Jelix\DevHelper\Command\Acl2;
+namespace Jelix\Acl2Db\Command\Acl2;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
+class SubjectCreate  extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function configure()
     {
@@ -47,7 +47,7 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
     }
 
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
         $subject = $input->getArgument('subject');
         $labelkey = $input->getArgument('labelkey');
@@ -83,7 +83,7 @@ class SubjectCreate  extends \Jelix\DevHelper\AbstractCommandForApp {
             preg_match("/^([a-zA-Z0-9_\.]+)~([a-zA-Z0-9_]+)\.([a-zA-Z0-9_\.]+)$/", $labelkey, $m)) {
 
             $localestring = "\n".$m[3].'='.$subjectlabel;
-            $path = $this->getModulePath($m[1]);
+            $path = \jApp::getModulePath($m[1]);
             $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.'.
                     \jApp::config()->charset.'.properties';
             if (file_exists($file)) {
