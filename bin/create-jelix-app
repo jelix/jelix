@@ -8,11 +8,15 @@
 */
 
 if (file_exists(__DIR__.'/../vendor/autoload.php')) {
-    // when Jelix is installed via a tar.gz package
+    // when launched from a copy of the git repository
     require(__DIR__.'/../vendor/autoload.php');
 }
+else if (file_exists(__DIR__.'/../lib/vendor/autoload.php')) {
+    // when Jelix is installed via a tar.gz package
+    require(__DIR__.'/../lib/vendor/autoload.php');
+}
 else if (file_exists(__DIR__.'/../../../../autoload.php')) {
-    // when Jelix is installed via Composer
+    // when Jelix is installed via Composer, and so we are in the vendor directory
     require(__DIR__.'/../../../autoload.php');
 }
 else {
