@@ -29,7 +29,7 @@ TESTPATHSWITCH="MAIN_TARGET_PATH=_dev"
 endif
 
 ifndef PHPDOC
-PHPDOC=phpdoc
+PHPDOC="$(CURRENT_PATH)/build/vendor/bin/phpdoc"
 endif
 
 .PHONY: default
@@ -42,15 +42,20 @@ default:
 
 .PHONY: nightlies
 nightlies:
-	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D IS_NIGHTLY=1 -D ENABLE_DEVELOPER=1 ./build/config/jelix-dist.ini
 
 .PHONY: docs
-docs: 
+docs:
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
-	composer install --working-dir $(TESTPATH) --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	cp build/phpdoc/phpdoc.xml $(TESTPATH)
 	sed -i -- s!__PARSER_CACHE__!$(DOCSCACHEPATH)!g $(TESTPATH)/phpdoc.xml
 	sed -i -- s!__TARGET_PATH__!$(DOCSTARGETPATH)!g $(TESTPATH)/phpdoc.xml
 	(cd $(TESTPATH) && $(PHPDOC) project:run)
 	cp build/phpdoc/template.css $(DOCSTARGETPATH)/css/
+
+.PHONY: release
+release:
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist.ini

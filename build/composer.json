@@ -1,0 +1,33 @@
+{
+  "name": "jelix/jelixbuild",
+  "description": "Tools to build Jelix package",
+  "homepage": "http://jelix.org",
+  "license": "LGPL-2.1-or-later",
+  "authors": [
+    {
+      "name": "Laurent Jouanneau",
+      "email": "laurent@jelix.org"
+    },
+    {
+      "name": "Jelix Community",
+      "homepage": "https://github.com/jelix/jelix/graphs/contributors"
+    }
+  ],
+  "require": {
+    "jelix/buildtools": "2.0.*",
+    "jelix/inifile": "^2.5.0",
+    "jelix/simplelocalization": "1.7.1",
+    "jelix/file-utilities": "^1.8.3",
+    "jelix/version": "1.0.*",
+    "phpdocumentor/phpdocumentor": "2.9.*"
+  },
+  "config" : {
+    "platform" : {
+        "php": "5.6.0"
+    }
+  },
+  "autoload": {
+  },
+  "minimum-stability": "stable"
+
+}

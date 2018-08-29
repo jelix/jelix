@@ -209,10 +209,8 @@ cd lib/jelix-plugins/cache/
 cd lib/jelix-plugins/kvdb/
   __ALL_RECURSIVELY__
 
-#if ENABLE_DEVELOPER
 cd lib/jelix-tests/
   __ALL_RECURSIVELY__
-#endif
 
 cd lib/installwizard/
   __ALL__
