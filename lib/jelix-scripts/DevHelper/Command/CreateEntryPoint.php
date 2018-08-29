@@ -38,7 +38,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
                'type',
                null,
                InputOption::VALUE_REQUIRED,
-               'indicates the type of the entry point: classic, jsonrpc, xmlrpc, soap, cmdline',
+               'indicates the type of the entry point: classic, jsonrpc, xmlrpc, soap',
                'classic'
             )
             ->addOption(
@@ -54,7 +54,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
     {
         // retrieve the type of entry point we want to create
         $type = $input->getOption('type');
-        if(!in_array($type, array('classic','jsonrpc','xmlrpc','soap','cmdline'))) {
+        if(!in_array($type, array('classic','jsonrpc','xmlrpc','soap'))) {
             throw new \Exception("invalid type");
         }
 
@@ -65,14 +65,8 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         // the full path of the entry point
-        if ($type == 'cmdline') {
-            $entryPointFullPath = \jApp::scriptsPath($name.'.php');
-            $entryPointTemplate = 'scripts/cmdline.php.tpl';
-        }
-        else {
-            $entryPointFullPath = \jApp::wwwPath($name.'.php');
-            $entryPointTemplate = 'www/'.($type=='classic'?'index':$type).'.php.tpl';
-        }
+        $entryPointFullPath = \jApp::wwwPath($name.'.php');
+        $entryPointTemplate = 'www/'.($type=='classic'?'index':$type).'.php.tpl';
 
         if (file_exists($entryPointFullPath)) {
             throw new \Exception("the entry point already exists");
@@ -86,12 +80,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         $configFile = $input->getArgument('config');
 
         if ($configFile == null) {
-            if ($type == 'cmdline') {
-                $configFile = 'cmdline/'.$name.'.ini.php';
-            }
-            else {
-                $configFile = $name.'/config.ini.php';
-            }
+            $configFile = $name.'/config.ini.php';
         }
 
         // let's create the config file if needed
@@ -133,13 +122,11 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $this->createFile($entryPointFullPath, $entryPointTemplate, $param, "Entry point");
 
-        if ($type != 'cmdline') {
-            $xmlEp = $xmlMap->addEntryPoint($name, $type);
-            /*if ($type == 'classic') {
-                $xmlEp->addUrlAction('/', $module, $action);
-            }*/
-            $xmlMap->save();
-        }
+        $xmlEp = $xmlMap->addEntryPoint($name, $type);
+        /*if ($type == 'classic') {
+            $xmlEp->addUrlAction('/', $module, $action);
+        }*/
+        $xmlMap->save();
 
         $this->projectInfos->addEntryPointInfo($name.".php", $configFile , $type);
         $this->projectInfos->save();

@@ -46,7 +46,7 @@ class jApp
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath var config directory
-     * @param string $scriptPath scripts directory
+     * @param string $scriptPath scripts directory (deprecated)
      */
     public static function initPaths($appPath,
                                      $wwwPath = null,
@@ -126,6 +126,11 @@ class jApp
         return self::$_currentApp->wwwPath.$file;
     }
 
+    /**
+     * @param string $file
+     * @return string
+     * @deprecated
+     */
     public static function scriptsPath($file = '')
     {
         return self::$_currentApp->scriptPath.$file;

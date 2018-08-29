@@ -25,6 +25,10 @@ class jAppInstance
 
     public $wwwPath = '';
 
+    /**
+     * @var string
+     * @deprecated
+     */
     public $scriptPath = '';
 
     public $env = 'www/';
@@ -62,7 +66,7 @@ class jAppInstance
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath config directory
-     * @param string $scriptPath scripts directory
+     * @param string $scriptPath scripts directory (deprecated)
      */
     public function __construct($appPath,
                                 $wwwPath = null,

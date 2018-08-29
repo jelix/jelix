@@ -15,6 +15,7 @@
  * This allows us to handle exit code of commands properly
  * @package  jelix
  * @subpackage core
+ * @deprecated
  */
 class jCmdlineCoordinator extends jCoordinator {
 

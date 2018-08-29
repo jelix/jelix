@@ -15,6 +15,7 @@
  * @package    jelix
  * @subpackage controllers
  * @since 1.0a3
+ * @deprecated
  */
 class jControllerCmdLine extends jController {
     /**

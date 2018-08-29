@@ -52,7 +52,7 @@
                <attribute name="file" />
                <!-- relative path of the ini file to the config directory -->
                <attribute name="config" />
-               <!-- type of the entry point 'classic', 'cmdline'...-->
+               <!-- type of the entry point 'classic', 'soap'...-->
                <optional>
                   <attribute name="type" />
                </optional>

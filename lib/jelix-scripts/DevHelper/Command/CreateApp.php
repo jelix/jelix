@@ -57,12 +57,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                'Indicate to not create a default module'
             )
             ->addOption(
-               'withcmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'Indicate to add a command line script'
-            )
-            ->addOption(
                'modulename',
                null,
                InputOption::VALUE_REQUIRED,
@@ -186,37 +180,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                 $output->writeln("However the application has been created");
             }
         }
-
-        if ($input->getOption('withcmdline')) {
-            if(!$input->getOption('nodefaultmodule') && $moduleok){
-                if ($output->isVerbose()) {
-                    $output->writeln("Create a controller in the default module for the cli script");
-                }
-
-                $options = array(
-                    'module'=>$param['modulename'],
-                    'controller'=>'default',
-                    'method'=>'index',
-                    '--cmdline'=> true,
-                );
-                if ($output->isVerbose()) {
-                    $options['-v'] = true;
-                }
-                $this->executeSubCommand('module:createctrl', $options, $output);
-            }
-            if ($output->isVerbose()) {
-                $output->writeln("Create the cli script");
-            }
-
-            $options = array(
-                'entrypoint'=>$param['modulename'],
-                '--type' => 'cmdline'
-            );
-            if ($output->isVerbose()) {
-                $options['-v'] = true;
-            }
-            $this->executeSubCommand('app:createentrypoint', $options, $output);
-        }
     }
 
     protected function askAppInfos(InputInterface $input, OutputInterface $output) {
@@ -295,7 +258,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($appPath.'plugins');
         $this->createDir(\jApp::appPath('app/responses'));
         $this->createDir($appPath.'tests');
-        $this->createDir(\jApp::scriptsPath());
 
         $param = array();
         $param['default_id'] = $appName.$this->config->infoIDSuffix;
@@ -322,7 +284,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['rp_log']   = Path::shortestPath($appPath, \jApp::logPath()).'/';
         $param['rp_conf']  = Path::shortestPath($appPath, $configPath).'/';
         $param['rp_www']   = Path::shortestPath($appPath, $wwwpath).'/';
-        $param['rp_cmd']   = Path::shortestPath($appPath, \jApp::scriptsPath()).'/';
         $param['rp_jelix'] = Path::shortestPath($appPath, JELIX_LIB_PATH).'/';
         $param['rp_lib']   = Path::shortestPath($appPath, LIB_PATH).'/';
         $param['rp_vendor'] = '';
@@ -345,7 +306,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(\jApp::appPath().'app/themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
-        $this->createFile(\jApp::scriptsPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::tempBasePath().'.dummy', 'dummy.tpl', array());
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
@@ -390,7 +350,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['php_rp_log']  = $this->convertRp($param['rp_log']);
         $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
         $param['php_rp_www']  = $this->convertRp($param['rp_www']);
-        $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
         $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
         if ($param['rp_vendor']) {
            $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);

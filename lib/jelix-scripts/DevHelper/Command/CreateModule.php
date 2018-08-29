@@ -47,12 +47,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                'don\'t create a default controller'
             )
             ->addOption(
-               'cmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'To create a controller for a command line script'
-            )
-            ->addOption(
                'addinstallzone',
                null,
                InputOption::VALUE_NONE,
@@ -212,9 +206,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 'method'=>'index',
             );
 
-            if ($input->getOption('cmdline')) {
-                $arguments['--cmdline'] = true;
-            }
             if ($addInstallZone) {
                 $arguments['--addinstallzone'] =true;
             }
