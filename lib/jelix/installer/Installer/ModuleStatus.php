@@ -92,14 +92,14 @@ class ModuleStatus {
         return $this->name;
     }
 
-    function saveInfos(\Jelix\IniFile\IniModifier $configIni) {
+    function saveInfos(\Jelix\IniFile\IniModifier $configIni, $defaultParameters = array()) {
         $previous = $configIni->getValue($this->name.'.enabled', 'modules');
         if ($previous === null || $previous != $this->isEnabled) {
             $configIni->setValue($this->name.'.enabled', $this->isEnabled, 'modules');
         }
 
         $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default'? $this->dbProfile: ''));
-        $this->setConfigInfo($configIni, 'installparam', self::serializeParameters($this->parameters));
+        $this->setConfigInfo($configIni, 'installparam', self::serializeParameters($this->parameters, $defaultParameters));
         $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller?'skip':''));
         $this->setConfigInfo($configIni, 'localconf',
             ($this->configurationScope == self::CONFIG_SCOPE_LOCAL?self::CONFIG_SCOPE_LOCAL:0));
@@ -156,7 +156,7 @@ class ModuleStatus {
         return self::unserializeParameters($this->parameters);
     }
 
-    static function serializeParameters($parameters) {
+    static function serializeParameters($parameters, $defaultParameters = array()) {
         $p = [];
         foreach($parameters as $name=>$v) {
             if (is_array($v)) {
@@ -166,9 +166,18 @@ class ModuleStatus {
                 $v = implode(',', $v);
             }
             if ($v === true || $v === '') {
+                if (isset($defaultParameters[$name]) &&
+                    ($defaultParameters[$name] === true || $defaultParameters[$name] === '')) {
+                    // don't write values that are default ones
+                    continue;
+                }
                 $p[] = $name;
             }
             else {
+                if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v) {
+                    // don't write values that are default ones
+                    continue;
+                }
                 $p[] = $name . '=' . $v;
             }
         }

@@ -183,7 +183,7 @@ class ModuleInstallerLauncher {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
             $conf = $this->globalSetup->getConfigIni()['main'];
         }
-        $this->moduleStatus->saveInfos($conf);
+        $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator?$this->moduleConfigurator->getDefaultParameters():array()));
     }
 
     /**
