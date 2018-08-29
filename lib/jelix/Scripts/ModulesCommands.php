@@ -29,8 +29,7 @@ class ModulesCommands {
         Utils::checkTempPath();
 
 
-        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
-        $projectInfos = $parser->parse();
+        $projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
         $ep = $projectInfos->getEntryPointInfo('index');
 
         \jApp::setConfig(\jConfigCompiler::read($ep->configFile, true, true, 'console.php'));

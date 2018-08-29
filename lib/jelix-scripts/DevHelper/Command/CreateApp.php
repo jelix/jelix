@@ -137,8 +137,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         // launch configuration of the jelix module
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output, ($output->isVerbose()?'notice':'error'), 'Configuration');
-        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
-        $projectInfos = $parser->parse();
+        $projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
         $globalSetup = new \Jelix\Installer\GlobalSetup($projectInfos);
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
 

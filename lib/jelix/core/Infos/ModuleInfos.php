@@ -59,4 +59,19 @@ class ModuleInfos extends InfosAbstract {
         return false;
     }
 
+
+    /**
+     * create a new ModuleInfos object, loaded from a file that is into the
+     * given directory
+     *
+     * @param string $directoryPath the path to the directory
+     * @return ModuleInfos
+     */
+    public static function load($directoryPath) {
+        if (!file_exists($directoryPath.'/module.xml')) {
+            throw new \Exception('No module.xml file into '.$directoryPath);
+        }
+        $parser = new ModuleXmlParser($directoryPath.'/module.xml');
+        return $parser->parse();
+    }
 }

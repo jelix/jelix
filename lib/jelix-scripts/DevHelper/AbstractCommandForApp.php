@@ -154,8 +154,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         if ($this->projectInfos) {
             return;
         }
-        $parser = new \Jelix\Core\Infos\ProjectXmlParser(\jApp::appPath('project.xml'));
-        $this->projectInfos = $parser->parse();
+        $this->projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
     }
 
     /**

@@ -99,12 +99,7 @@ class ModuleInstallerLauncher {
         if ($this->moduleInfos) {
             return;
         }
-        $modulexml = $this->moduleStatus->getPath().'module.xml';
-        if(!file_exists($modulexml)){
-            throw new Exception('install.invalid.xml.file',array($modulexml));
-        }
-        $parser = new \Jelix\Core\Infos\ModuleXmlParser($modulexml);
-        $this->moduleInfos = $parser->parse();
+        $this->moduleInfos = \Jelix\Core\Infos\ModuleInfos::load($this->moduleStatus->getPath());
 
         if ($this->moduleInfos->version == '') {
             throw new Exception('module.missing.version', array($this->name));

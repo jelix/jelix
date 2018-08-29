@@ -48,4 +48,19 @@ class AppInfos extends InfosAbstract {
         return false;
     }
 
+    /**
+     * create a new AppInfos object, loaded from a file that is into the
+     * given directory
+     *
+     * @param string $directoryPath the path to the directory
+     * @return AppInfos
+     */
+    public static function load($directoryPath) {
+        if (!file_exists($directoryPath.'/project.xml')) {
+            throw new \Exception('No project.xml file into '.$directoryPath);
+        }
+        $parser = new ProjectXmlParser($directoryPath.'/project.xml');
+        return $parser->parse();
+    }
+
 }
