@@ -39,17 +39,5 @@ class Uninstaller  extends InstallerAbstract implements UninstallerInterface {
 
     }
 
-    /**
-     * return the section name of configuration of a plugin for the coordinator
-     * or the IniModifier for the configuration file of the plugin if it exists.
-     * @param \Jelix\IniFile\IniModifier $config the global configuration content
-     * @param string $pluginName
-     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
-     * @throws \Exception when the configuration filename is not found
-     */
-    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName)
-    {
-        return $this->globalSetup->getCoordPluginConf($config, $pluginName);
-    }
 }
 

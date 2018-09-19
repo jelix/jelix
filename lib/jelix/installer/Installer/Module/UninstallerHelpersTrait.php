@@ -42,7 +42,7 @@ trait UninstallerHelpersTrait {
      */
     protected function removeDbProfile($name) {
 
-        $profiles = $this->globalSetup->getProfilesIni();
+        $profiles = $this->getProfilesIni();
         if ($profiles->getValue($name, 'jdb')) {
             $profiles->removeValue($name, 'jdb');
             return;
@@ -60,17 +60,4 @@ trait UninstallerHelpersTrait {
             $profiles->removeValue(null, 'jdb:'.$name);
         }
     }
-
-    /**
-     * remove web assets from the main configuration
-     *
-     * @param string $name the name of webassets
-     * @param string $collection the name of the webassets collection
-     */
-    public function removeGlobalWebAssets($name, $collection)
-    {
-        $config = $this->globalSetup->getConfigIni();
-        $this->globalSetup->removeWebAssetsFromConfig($config['main'], $name, $collection);
-    }
-
 }

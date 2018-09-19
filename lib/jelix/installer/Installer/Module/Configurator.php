@@ -9,8 +9,6 @@ namespace Jelix\Installer\Module;
 
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Helper\QuestionHelper;
 
@@ -22,43 +20,15 @@ class Configurator implements ConfiguratorInterface {
 
     use InstallerHelpersTrait;
     use UninstallerHelpersTrait;
-
-    /**
-     * @var string name of the component
-     */
-    private $componentName;
-
-    /**
-     * @var string name of the installer
-     */
-    private $name;
-
-
-    /**
-     * The path of the module
-     * @var string
-     */
-    private $path;
+    use HelpersTrait;
 
     /**
      * @var string the version for which the installer is called
      */
     private $version = '0';
 
-    /**
-     * global setup
-     * @var \Jelix\Installer\GlobalSetup
-     */
-    private $globalSetup;
 
     private $forLocalConfiguration = false;
-
-    /**
-     * parameters for the installer, indicated in the configuration file or
-     * dynamically, by a launcher in a command line for instance.
-     * @var array
-     */
-    protected $parameters = array();
 
     /**
      * @var QuestionHelper
@@ -107,23 +77,10 @@ class Configurator implements ConfiguratorInterface {
     /**
      * @inheritdoc
      */
-    public function setParameters($parameters) {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function askParameters() {
 
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function getParameters() {
-        return $this->parameters;
-    }
 
     /**
      * @inheritdoc
@@ -170,40 +127,24 @@ class Configurator implements ConfiguratorInterface {
 
     // ----- other methods
 
-    function getName() {
-        return $this->name;
-    }
-
-    function getVersion() {
+    final function getVersion() {
         return $this->version;
-    }
-
-    function getParameter($name) {
-        if (isset($this->parameters[$name]))
-            return $this->parameters[$name];
-        else
-            return null;
     }
 
     /**
      * @return bool true if the configuration is local, false if it is for the
      * application
      */
-    function getConfigurationMode() {
+    final function getConfigurationMode() {
         return $this->forLocalConfiguration;
     }
 
 
-    function setGlobalSetup(\Jelix\Installer\GlobalSetup $setup) {
-        $this->globalSetup = $setup;
-    }
-
-    function setInteractiveComponent(QuestionHelper $helper, InputInterface $input, OutputInterface $output) {
+    final function setInteractiveComponent(QuestionHelper $helper, InputInterface $input, OutputInterface $output) {
         $this->questionHelper = $helper;
         $this->consoleInput = $input;
         $this->consoleOutput = $output;
         $this->inputHelpers = new \Jelix\Scripts\InputHelpers($helper, $input, $output);
-
     }
 
     /**
@@ -315,7 +256,6 @@ class Configurator implements ConfiguratorInterface {
         }
         return $this->questionHelper->ask($this->consoleInput, $this->consoleOutput, $question);
     }
-
 
     private $dbProfileProperties = array(
         'mssql'=> array('host', 'database', 'user', 'password', 'persistent'),
@@ -515,7 +455,7 @@ class Configurator implements ConfiguratorInterface {
      * default config and main config combined
      * @return \Jelix\IniFile\IniModifierArray
      */
-    protected function getConfigIni() {
+    protected final function getConfigIni() {
         if ($this->forLocalConfiguration) {
             return $this->globalSetup->getLocalConfigIni();
         }
@@ -527,7 +467,7 @@ class Configurator implements ConfiguratorInterface {
      *
      * @return \Jelix\Installer\EntryPointConfigurator[]
      */
-    protected function getEntryPointsList() {
+    protected final function getEntryPointsList() {
         $list = $this->globalSetup->getEntryPointsList();
         $globalSetup = $this->globalSetup;
         $flc = $this->forLocalConfiguration;
@@ -540,7 +480,7 @@ class Configurator implements ConfiguratorInterface {
      * @param string $type
      * @return \Jelix\Installer\EntryPointConfigurator[]
      */
-    protected function getEntryPointsByType($type='classic') {
+    protected final function getEntryPointsByType($type='classic') {
         $list = $this->globalSetup->getEntryPointsByType($type);
         $globalSetup = $this->globalSetup;
         $flc = $this->forLocalConfiguration;
@@ -553,7 +493,7 @@ class Configurator implements ConfiguratorInterface {
      * @param $epId
      * @return \Jelix\Installer\EntryPointConfigurator
      */
-    protected function getEntryPointsById($epId) {
+    protected final function getEntryPointsById($epId) {
         $ep = $this->globalSetup->getEntryPointById($epId);
         if ($ep) {
             $ep = new \Jelix\Installer\EntryPointConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
@@ -561,7 +501,4 @@ class Configurator implements ConfiguratorInterface {
         return $ep;
     }
 
-    protected function getProfilesIni() {
-        return $this->globalSetup->getProfilesIni();
-    }
 }

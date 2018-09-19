@@ -77,7 +77,7 @@ trait InstallerHelpersTrait
      * @param boolean $force true:erase the existing profile
      * @return boolean true if the ini file has been changed
      */
-    protected function declareDbProfile($name, $sectionContent = null, $force = true)
+    protected final function declareDbProfile($name, $sectionContent = null, $force = true)
     {
 
         $profiles = $this->globalSetup->getProfilesIni();
@@ -130,7 +130,7 @@ trait InstallerHelpersTrait
         if (strpos($path, 'www:') === 0)
             $path = str_replace('www:', \jApp::wwwPath(), $path);
         elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->globalSetup->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
+            $p = $this->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
             if (substr($p, -1) != '/') {
                 $p .= '/';
             }
@@ -147,29 +147,5 @@ trait InstallerHelpersTrait
         return $path;
     }
 
-    /**
-     * declare web assets into the main configuration
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $collection the name of the webassets collection
-     * @param bool $force
-     */
-    public function declareGlobalWebAssets($name, array $values, $collection, $force)
-    {
-        $config = $this->globalSetup->getConfigIni();
-        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $collection, $force);
-    }
 
-    /**
-     * return the section name of configuration of a plugin for the coordinator
-     * or the IniModifier for the configuration file of the plugin if it exists.
-     * @param \Jelix\IniFile\IniModifier $config the global configuration content
-     * @param string $pluginName
-     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
-     * @throws \Exception when the configuration filename is not found
-     */
-    public function getCoordPluginConf(\Jelix\IniFile\IniModifierInterface $config, $pluginName)
-    {
-        return $this->globalSetup->getCoordPluginConf($config, $pluginName);
-    }
 }

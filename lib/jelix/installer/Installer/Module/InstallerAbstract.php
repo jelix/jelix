@@ -14,27 +14,7 @@ namespace Jelix\Installer\Module;
  */
 abstract class InstallerAbstract {
 
-    /**
-     * @var string name of the component
-     */
-    protected $componentName;
-
-    /**
-     * @var string name of the installer
-     */
-    protected $name;
-
-    /**
-     * global setup
-     * @var \Jelix\Installer\GlobalSetup
-     */
-    protected $globalSetup;
-
-    /**
-     * The path of the module
-     * @var string
-     */
-    protected $path;
+    use HelpersTrait;
 
     /**
      * @var string the jDb profile for the component
@@ -46,12 +26,6 @@ abstract class InstallerAbstract {
      */
     protected $defaultDbProfile = '';
 
-    /**
-     * parameters for the installer, indicated in the configuration file or
-     * dynamically, by a launcher in a command line for instance.
-     * @var array
-     */
-    protected $parameters = array();
 
     /**
      * @var \jDbConnection
@@ -72,24 +46,6 @@ abstract class InstallerAbstract {
         $this->componentName = $componentName;
     }
 
-    function getName() {
-        return $this->name;
-    }
-
-    function setParameters($parameters) {
-        $this->parameters = $parameters;
-    }
-
-    function getParameter($name) {
-        if (isset($this->parameters[$name]))
-            return $this->parameters[$name];
-        else
-            return null;
-    }
-
-    function setGlobalSetup(\Jelix\Installer\GlobalSetup $setup) {
-        $this->globalSetup = $setup;
-    }
 
     /**
      * default config and main config combined
@@ -114,7 +70,7 @@ abstract class InstallerAbstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    protected function getLiveConfigIni() {
+    protected final function getLiveConfigIni() {
         return $this->globalSetup->getLiveConfigIni();
     }
 
@@ -122,7 +78,7 @@ abstract class InstallerAbstract {
      * Point d'entrée principal de l'application (en général index.php)
      * @return \Jelix\Installer\EntryPoint
      */
-    protected function getMainEntryPoint() {
+    protected final function getMainEntryPoint() {
         return $this->globalSetup->getMainEntryPoint();
     }
 
@@ -131,7 +87,7 @@ abstract class InstallerAbstract {
      *
      * @return \Jelix\Installer\EntryPoint[]
      */
-    protected function getEntryPointsList() {
+    protected final function getEntryPointsList() {
         return $this->globalSetup->getEntryPointsList();
     }
 
@@ -139,19 +95,17 @@ abstract class InstallerAbstract {
      * @param $epId
      * @return \Jelix\Installer\EntryPoint
      */
-    protected function getEntryPointsById($epId) {
+    protected final function getEntryPointsById($epId) {
         return $this->globalSetup->getEntryPointById($epId);
     }
 
-    protected function getProfilesIni() {
-        return $this->globalSetup->getProfilesIni();
-    }
+
 
     /**
      * internal use
      * @param string $dbProfile the name of the current jdb profile. It will be replaced by $defaultDbProfile if it exists
      */
-    public function initDbProfile($dbProfile) {
+    public final function initDbProfile($dbProfile) {
         if ($this->defaultDbProfile != '') {
             $this->useDbProfile($this->defaultDbProfile);
         }
@@ -164,7 +118,7 @@ abstract class InstallerAbstract {
      * real db profile if this is the case.
      * @param string $dbProfile the profile name
      */
-    protected function useDbProfile($dbProfile) {
+    protected final function useDbProfile($dbProfile) {
 
         if ($dbProfile == '')
             $dbProfile = 'default';
@@ -184,14 +138,14 @@ abstract class InstallerAbstract {
     /**
      * @return \jDbTools  the tool class of jDb
      */
-    protected function dbTool () {
+    protected final function dbTool () {
         return $this->dbConnection()->tools();
     }
 
     /**
      * @return \jDbConnection  the connection to the database used for the module
      */
-    protected function dbConnection () {
+    protected final function dbConnection () {
         if (!$this->_dbConn)
             $this->_dbConn = \jDb::getConnection($this->dbProfile);
         return $this->_dbConn;
@@ -201,13 +155,106 @@ abstract class InstallerAbstract {
      * @param string $profile the db profile
      * @return string the name of the type of database
      */
-    protected function getDbType($profile = null) {
+    protected final function getDbType($profile = null) {
         if (!$profile)
             $profile = $this->dbProfile;
         $conn = \jDb::getConnection($profile);
         return $conn->dbms;
     }
 
+    /**
+     * execute a sql script with the current profile.
+     *
+     * The name of the script should be store in install/$name.databasetype.sql
+     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
+     * You can however provide a script compatible with all databases, but then
+     * you should indicate the full name of the script, with a .sql extension.
+     *
+     * @param string $name the name of the script
+     * @param string $module the module from which we should take the sql file. null for the current module
+     * @param boolean $inTransaction indicate if queries should be executed inside a transaction
+     * @throws \Exception
+     */
+    final protected function execSQLScript ($name, $module = null, $inTransaction = true)
+    {
+        $conn = $this->dbConnection();
+        $tools = $this->dbTool();
+
+        if ($module) {
+            $conf = $this->globalSetup->getMainEntryPoint()->getConfigObj()->_modulesPathList;
+            if (!isset($conf[$module])) {
+                throw new \Exception('execSQLScript : invalid module name');
+            }
+            $path = $conf[$module];
+        }
+        else {
+            $path = $this->path;
+        }
+
+        $file = $path.'install/'.$name;
+        if (substr($name, -4) != '.sql')
+            $file .= '.'.$conn->dbms.'.sql';
+
+        if ($inTransaction)
+            $conn->beginTransaction();
+        try {
+            $tools->execSQLScript($file);
+            if ($inTransaction) {
+                $conn->commit();
+            }
+        }
+        catch(\Exception $e) {
+            if ($inTransaction)
+                $conn->rollback();
+            throw $e;
+        }
+    }
+
+
+    /**
+     * Insert data into a database, from a json file, using a DAO mapping
+     *
+     * @param string $relativeSourcePath name of the json file into the install directory
+     * @param integer $option one of jDbTools::IBD_* const
+     * @return integer number of records inserted/updated
+     * @throws \Exception
+     * @since 1.6.16
+     */
+    final protected function insertDaoData($relativeSourcePath, $option, $module = null) {
+
+        if ($module) {
+            $conf = $this->globalSetup->getMainEntryPoint()->getModulesList();
+            if (!isset($conf[$module])) {
+                throw new \Exception('insertDaoData : invalid module name');
+            }
+            $path = $conf[$module];
+        }
+        else {
+            $path = $this->path;
+        }
+
+        $file = $path.'install/'.$relativeSourcePath;
+        $dataToInsert = json_decode(file_get_contents($file), true);
+        if (!$dataToInsert) {
+            throw new \Exception("Bad format for dao data file.");
+        }
+        if (is_object($dataToInsert)) {
+            $dataToInsert = array($dataToInsert);
+        }
+        $daoMapper = new \jDaoDbMapper($this->dbProfile);
+        $count = 0;
+        foreach($dataToInsert as $daoData) {
+            if (!isset($daoData['dao']) ||
+                !isset($daoData['properties']) ||
+                !isset($daoData['data'])
+            ) {
+                throw new \Exception("Bad format for dao data file.");
+            }
+            $count += $daoMapper->insertDaoData($daoData['dao'],
+                $daoData['properties'], $daoData['data'], $option);
+        }
+        return $count;
+    }
 
 }
 
