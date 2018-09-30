@@ -25,7 +25,7 @@ class HtmlBuilder extends BuilderBase {
     protected $jFormsJsVarName = 'jForms';
 
     /**
-     * @var array containing the formwidget for the current builder
+     * @var array define plugins for each formwidget for the current builder
      */
     protected $pluginsConf = array();
 
@@ -56,6 +56,7 @@ class HtmlBuilder extends BuilderBase {
      * @param array $options some parameters <ul>
      *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
      *      <li>"method" => "post" or "get". default is "post"</li>
+     *      <li>"plugins" => list of class names for widget. keys are controls refs</li>
      *      </ul>
      */
     public function setOptions($options) {
@@ -191,7 +192,7 @@ class HtmlBuilder extends BuilderBase {
             $ctrls = $this->_form->getControls();
             echo '<ul id="' . $this->_name . '_errors" class="jforms-error-list">';
             foreach ($errors as $cname => $err) {
-                if (!$this->_form->isActivated($ctrls[$cname]->ref)) continue;
+                if (!array_key_exists( $cname, $ctrls ) || !$this->_form->isActivated($ctrls[$cname]->ref)) continue;
                 if ($err === \jForms::ERRDATA_REQUIRED) {
                     if ($ctrls[$cname]->alertRequired) {
                         echo '<li>', $ctrls[$cname]->alertRequired, '</li>';
@@ -225,6 +226,12 @@ class HtmlBuilder extends BuilderBase {
 
     protected $widgets = array();
 
+    /**
+     * @param \jFormsControl $ctrl
+     * @param ParentWidgetInterface|null $parentWidget
+     * @return WidgetBase
+     * @throws \Exception
+     */
     public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null) {
         if (isset($this->widgets[$ctrl->ref])) {
             return $this->widgets[$ctrl->ref];
