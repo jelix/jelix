@@ -141,6 +141,9 @@ abstract class WidgetBase implements WidgetInterface {
         if (!isset($attr['class'])) {
             $attr['class'] = '';
         }
+        else {
+            $attr['class'] .= ' ';
+        }
         $attr['class'] .= 'jforms-label';
         $attr['class'] .= (isset($this->builder->getForm()->getContainer()->errors[$this->ctrl->ref]) ?' jforms-error':'');
         if ($editMode) {
