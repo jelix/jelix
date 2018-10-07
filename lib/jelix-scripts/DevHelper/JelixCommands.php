@@ -30,6 +30,7 @@ class JelixCommands {
 
         $application = new Application("Jelix helpers");
         $application->add(new Command\InstallApp($jelixScriptConfig));
+        $application->add(new Command\MigrateApp($jelixScriptConfig));
         $application->add(new Command\InitAdmin($jelixScriptConfig));
         $application->add(new Command\CreateCtrl($jelixScriptConfig));
         $application->add(new Command\CreateDao($jelixScriptConfig));
@@ -46,8 +47,6 @@ class JelixCommands {
         $application->add(new Command\CloseApp($jelixScriptConfig));
         $application->add(new Command\OpenApp($jelixScriptConfig));
         $application->add(new Command\FilesRights($jelixScriptConfig));
-
-
         return $application;
     }
 
