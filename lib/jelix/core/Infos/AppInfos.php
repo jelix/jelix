@@ -56,11 +56,18 @@ class AppInfos extends InfosAbstract {
      * @return AppInfos
      */
     public static function load($directoryPath) {
-        if (!file_exists($directoryPath.'/project.xml')) {
-            throw new \Exception('No project.xml file into '.$directoryPath);
+        /*if (file_exists($directoryPath.'/jelix-app.json')) {
+            $parser = new AppJsonParser($directoryPath.'/jelix-app.json');
+            return $parser->parse();
         }
-        $parser = new ProjectXmlParser($directoryPath.'/project.xml');
-        return $parser->parse();
+        else*/
+        if (file_exists($directoryPath.'/project.xml')) {
+            $parser = new ProjectXmlParser($directoryPath.'/project.xml');
+            return $parser->parse();
+        }
+
+        //throw new \Exception('No project.xml or jelix-app.json file into '.$directoryPath);
+        throw new \Exception('No project.xml file into '.$directoryPath);
     }
 
 }

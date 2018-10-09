@@ -72,6 +72,9 @@ class ModuleXmlWriter extends XmlWriterAbstract
         if ($moduleInfos['maxversion'] !== '' && $moduleInfos['maxversion'] !== '*') {
             $module->setAttribute('maxversion', $moduleInfos['maxversion'] );
         }
+        /*if ($moduleInfos['version'] !== '') {
+            $module->setAttribute('version', $moduleInfos['version'] );
+        }*/
         return $module;
     }
 
@@ -107,36 +110,39 @@ class ModuleXmlWriter extends XmlWriterAbstract
         }
 
         foreach($infos->autoloadPsr0Namespaces as $ns => $dir) {
-            $elem = $doc->createElement('psr0');
-            $elem->setAttribute('namespace', $ns);
-            $elem->setAttribute('dir', $dir[0]);
-            if ($dir[1] != '.php') {
-                $elem->setAttribute('suffix', $dir[1]);
+            foreach ($dir as $d ) {
+                $elem = $this->createAutoloadElement($doc, 'psr0', $ns, $d);
+                $autoload->appendChild($elem);
             }
-            $autoload->appendChild($elem);
         }
 
         foreach($infos->autoloadPsr4Namespaces as $ns => $dir) {
-            $elem = $doc->createElement('psr4');
-            $elem->setAttribute('namespace', $ns);
-            $elem->setAttribute('dir', $dir[0]);
-            if ($dir[1] != '.php') {
-                $elem->setAttribute('suffix', $dir[1]);
+            foreach ($dir as $d ) {
+                $elem = $this->createAutoloadElement($doc, 'psr4', $ns, $d);
+                $autoload->appendChild($elem);
             }
-            $autoload->appendChild($elem);
         }
 
         foreach($infos->autoloadIncludePath as $dir) {
-            $elem = $doc->createElement('includePath');
-            $elem->setAttribute('dir', $dir[0]);
-            if ($dir[1] != '.php') {
-                $elem->setAttribute('suffix', $dir[1]);
-            }
+            $elem = $this->createAutoloadElement($doc, 'includePath', '', $dir);
             $autoload->appendChild($elem);
         }
+
         if ($autoload->firstChild) {
             $doc->documentElement->appendChild($autoload);
         }
+    }
+
+    protected function createAutoloadElement($doc, $name, $ns, $dir) {
+        $elem = $doc->createElement($name);
+        if ($ns) {
+            $elem->setAttribute('namespace', $ns);
+        }
+        $elem->setAttribute('dir', $dir[0]);
+        if ($dir[1] != '.php') {
+            $elem->setAttribute('suffix', $dir[1]);
+        }
+        return $elem;
     }
 
 }

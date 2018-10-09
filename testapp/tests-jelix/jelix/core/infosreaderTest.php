@@ -145,13 +145,13 @@ class infosreaderTest extends jUnitTestCase {
         </array>
         <array property="autoloadPsr0Namespaces">
             <array key="jelixTests\foo">
-                <string>autoloadtest</string>
+                <array><string>autoloadtest</string><string>.php</string></array>
             </array>
         </array>
         <array property="autoloadPsr4Namespaces">
             <array key="jelixTests\bar">
-                <string>autoloadtest/barns</string>
-                <string>.class.php</string>
+                <array><string>autoloadtest/barns</string>
+                <string>.class.php</string></array>
             </array>
         </array>
         <array property="autoloadIncludePath">

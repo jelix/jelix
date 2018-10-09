@@ -52,6 +52,11 @@ abstract class InfosAbstract {
     public $licenseURL = '';
     public $copyright = '';
 
+    /**
+     * InfosAbstract constructor.
+     * @param string $filePath the path of the xml file to read
+     * @param boolean $isXml
+     */
     function __construct($filePath, $isXml)
     {
         $this->path = $filePath;
@@ -60,7 +65,7 @@ abstract class InfosAbstract {
     }
 
     /**
-     * @return string the path of the component, with trailing slash
+     * @return string the path of the file to read/write
      */
     public function getFilePath() {
         return $this->path;

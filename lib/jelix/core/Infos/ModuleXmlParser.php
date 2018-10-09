@@ -191,7 +191,9 @@ class ModuleXmlParser extends XmlParserAbstract
                         $object->autoloadClasses[$attr['name']] = $attr['file'];
                         break;
                     case 'classPattern':
-                        $object->autoloadClassPatterns[$attr['pattern']] = $dir;
+                        if ($dir != '') {
+                            $object->autoloadClassPatterns[$attr['pattern']] = $dir;
+                        }
                         break;
                     case 'namespace':
                     case 'psr0':
@@ -199,12 +201,17 @@ class ModuleXmlParser extends XmlParserAbstract
                             break;
                         }
                         if (isset($attr['namespace'])) {
-                            $namespace = (isset($attr['namespace'])?$attr['namespace']:'');
+                            $namespace = $attr['namespace'];
                         }
                         else {
                             $namespace = (isset($attr['name'])?$attr['name']:'');
                         }
-                        $object->autoloadPsr0Namespaces[trim($namespace,'\\')] = $dir;
+                        if ($namespace == '') {
+                            $object->autoloadPsr0Namespaces[0][] = $dir;
+                        }
+                        else {
+                            $object->autoloadPsr0Namespaces[trim($namespace,'\\')][] = $dir;
+                        }
                         break;
                     case 'namespacePathMap':
                     case 'psr4':
@@ -212,12 +219,17 @@ class ModuleXmlParser extends XmlParserAbstract
                             break;
                         }
                         if (isset($attr['namespace'])) {
-                            $namespace = (isset($attr['namespace'])?$attr['namespace']:'');
+                            $namespace = $attr['namespace'];
                         }
                         else {
                             $namespace = (isset($attr['name'])?$attr['name']:'');
                         }
-                        $object->autoloadPsr4Namespaces[trim($namespace,'\\')] = $dir;
+                        if ($namespace == '') {
+                            $object->autoloadPsr4Namespaces[0][] = $dir;
+                        }
+                        else {
+                            $object->autoloadPsr4Namespaces[trim($namespace,'\\')][] = $dir;
+                        }
                         break;
                     case 'includePath':
                         if ($dir != '') {
