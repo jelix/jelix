@@ -8,7 +8,31 @@
 namespace Jelix\Core\Infos;
 
 /**
+ * Parse a jelix-module.json file
  *
+ * ```
+ * {
+ *   "required-modules" : { "<name>": "<version>", ... },
+ *   "required-modules-choice" : [
+ *      { "<name>" : "<version>", ... },
+ *      ...
+ *   ],
+ *   "conflict" : { "<name>": "<version>", ... },
+ *   "autoload" : {
+ *      "autoloaders": ["<rel_filepath>", ... ],
+ *      "include-path": ["<rel_dirpath>", ... ],
+ *      "classmap": [ "<rel_dirpath>", ... ],
+ *      "psr-0": { "": "<rel_dirpath>" or ['<rel_dirpath>', ...],
+ *              "<namespace>": "<rel_dirpath>" or ['<rel_dirpath>', ...],
+ *              ...
+ *      },
+ *      "psr-4": { "": "<rel_dirpath>" or ['<rel_dirpath>', ...],
+ *              "<namespace>": "<rel_dirpath>" or ['<rel_dirpath>', ...],
+ *      }
+ *   }
+ * }
+ *
+ * ```
  */
 class ModuleJsonParser extends JsonParserAbstract {
 
@@ -28,7 +52,7 @@ class ModuleJsonParser extends JsonParserAbstract {
         ), $this->json);
 
         $json['autoload'] = array_merge(array(
-            'files'=>array(),
+            'autoloaders'=>array(),
             'classmap'=>array(),
             'psr-0'=>array(),
             'psr-4'=>array(),
@@ -74,6 +98,10 @@ class ModuleJsonParser extends JsonParserAbstract {
                 if(!is_array($dir)) {
                     $dir = array($dir);
                 }
+                $dir = array_map(function($d) {
+                    return array($d, '.php');
+                }, $dir);
+
                 if ($ns == '') {
                     $object->autoloadPsr4Namespaces[0] = $dir;
                 }
@@ -88,6 +116,9 @@ class ModuleJsonParser extends JsonParserAbstract {
                 if(!is_array($dir)) {
                     $dir = array($dir);
                 }
+                $dir = array_map(function($d) {
+                    return array($d, '.php');
+                }, $dir);
                 if ($ns == '') {
                     $object->autoloadPsr0Namespaces[0] = $dir;
                 }
@@ -112,11 +143,14 @@ class ModuleJsonParser extends JsonParserAbstract {
             }
         }
 
-        if (isset($json['autoload']['files'])) {
-            $object->autoloaders            = $json['autoload']['files'];
+        if (isset($json['autoload']['autoloaders'])) {
+            $object->autoloaders            = $json['autoload']['autoloaders'];
         }
+
         if (isset($json['autoload']['include-path'])) {
-            $object->autoloadIncludePath    = $json['autoload']['include-path'];
+            $object->autoloadIncludePath = array_map(function($d) {
+                return array($d, '.php');
+            }, $json['autoload']['include-path']);
         }
 
         return $object;

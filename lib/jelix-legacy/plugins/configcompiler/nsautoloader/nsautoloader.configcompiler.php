@@ -83,7 +83,7 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
             $config->_autoload_classpattern['path'][] =  $finalpath;
         }
 
-        $processNs = function($modulePath, $ns, $path, $config) {
+        $processNs = function($ns, $path) use ($modulePath, $moduleFile, $config) {
             if (is_array($path)) {
                 $p = $modulePath.$path[0];
                 $finalpath = $modulePath.join("|", $path);
@@ -103,18 +103,18 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
         };
 
         foreach($module->autoloadPsr0Namespaces[0] as $path) {
-            $processNs($modulePath, 0, $path, $config);
+            $processNs(0, $path);
         }
 
         foreach($module->autoloadPsr0Namespaces as $ns => $pathList) {
             if ($ns === 0)
                 continue;
             foreach($pathList as $path) {
-                $processNs($modulePath, $ns, $path, $config);
+                $processNs($ns, $path);
             }
         }
 
-        $processNs2 = function($modulePath, $ns, $path, $config) {
+        $processNs2 = function($ns, $path) use ($modulePath, $moduleFile, $config) {
             if (is_array($path)) {
                 $p = $modulePath.$path[0];
                 $finalpath = $modulePath.join("|", $path);
@@ -134,14 +134,14 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
         };
 
         foreach($module->autoloadPsr4Namespaces[0] as $path) {
-            $processNs2($modulePath, 0, $path, $config);
+            $processNs2(0, $path);
         }
 
         foreach($module->autoloadPsr4Namespaces as $ns => $pathList) {
             if ($ns === 0)
                 continue;
             foreach($pathList as $path) {
-                $processNs2($modulePath, $ns, $path, $config);
+                $processNs2($ns, $path);
             }
         }
     }

@@ -13,48 +13,68 @@ class ModuleInfos extends InfosAbstract {
     public $type = 'module';
 
     /**
-     * @var array of array('name'=>'', 'version'=>'')
+     * list of module dependencies
+     * @var array[]  items are: array('name'=>'', 'version'=>'')
      */
     public $dependencies = array();
 
     /**
-     * @var array of array of array('name'=>'', 'version'=>'')
+     * List of alternative module dependencies
+     * @var array[]  items are array of array('name'=>'', 'version'=>'')
      */
     public $alternativeDependencies = array();
 
     /**
      * list of incompatibilities of the module
-     * @var array of array('name'=>'', 'version'=>'')
+     * @var array[]  items are array('name'=>'', 'version'=>'')
      */
     public $incompatibilities = array();
 
     /**
-     * @var array of path
+     * List of files that initialize an autoloader
+     * @var string[]
      */
     public $autoloaders = array();
 
     /**
-     * @var array  classname => file path relative to the module directory
+     * List of classes and their relative path to the module
+     * @var string[]  Keys are class name, values are path
      */
     public $autoloadClasses = array();
 
     /**
-     * @var array  pattern => directory path relative to the module directory
+     * List of directories where to find classes having a specific name pattern
+     *
+     * @var array[]  key is a regexp. Value is: array ('<rel_dirpath>', '<suffix>')
      */
     public $autoloadClassPatterns = array();
 
     /**
-     * @var array namespace name => psr0 path, 0 => array( fallback path )
+     * List of namespaces and corresponding path following PSR-0
+     *
+     * Each namespace may have several directories where to search.
+     *
+     * @var array[]
+     *      'namespace name' => array( array ('<rel_dirpath>', '<suffix>')),
+     *      0 => array( array ('<rel_dirpath>', '<suffix>'),... )
      */
     public $autoloadPsr0Namespaces = array(0=>array());
 
     /**
-     * @var array namespace name => psr4 path, 0 => array( fallback path )
+     * List of namespaces and corresponding path following PSR-4
+     *
+     * Each namespace may have several directories where to search.
+     *
+     * @var array[]
+     *      'namespace name' => array( array ('<rel_dirpath>', '<suffix>')),
+     *      0 => array( array ('<rel_dirpath>', '<suffix>'),... )
      */
     public $autoloadPsr4Namespaces = array(0=>array());
 
     /**
-     *  @var array  of strings (path)
+     * list of relative path to directories where a class could be found
+     *
+     * @var array[] items are  array ('<rel_dirpath>', '<suffix>')
      */
     public $autoloadIncludePath = array();
 

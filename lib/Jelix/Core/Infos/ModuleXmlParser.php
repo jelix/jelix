@@ -122,7 +122,6 @@ class ModuleXmlParser extends XmlParserAbstract {
             if ($xml->nodeType == \XMLReader::ELEMENT) {
 
                 $name = $xml->name;
-                $val = $xml->value;
                 $attr = array();
                 while ($xml->moveToNextAttribute()) {
                     $attr[$xml->name] = $xml->value;
@@ -144,7 +143,9 @@ class ModuleXmlParser extends XmlParserAbstract {
                         $object->autoloadClasses[$attr['name']] = $attr['file'];
                         break;
                     case 'classPattern':
-                        $object->autoloadClassPatterns[$attr['pattern']] = $dir;
+                        if ($dir != '') {
+                            $object->autoloadClassPatterns[$attr['pattern']] = $dir;
+                        }
                         break;
                     case 'namespace':
                     case 'psr0':
