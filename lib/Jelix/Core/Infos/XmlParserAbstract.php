@@ -66,13 +66,23 @@ abstract class XmlParserAbstract {
             if($xml->nodeType == \XMLReader::ELEMENT) {
 
                 $property = $xml->name;
+                $attributes = array();
+                $textContent = '';
+                if ($xml->hasAttributes) {
+                    while ($xml->moveToNextAttribute()) {
+                        $attributes[$xml->name] = $xml->value;
+                    }
+                    $xml->moveToElement();
+                }
+                if (!$xml->isEmptyElement) {
+                    $xml->read();
+                    $textContent = $xml->value;
+                }
 
                 if ('label' == $property || 'description' == $property) {
-                    if ($xml->getAttribute('lang') == $locale[$property] ||
+                    if (isset($attributes['lang']) && $attributes['lang'] == $locale[$property] ||
                         $locale[$property] == '') {
-
-                        $xml->read();
-                        $object->$property = $xml->value;
+                        $object->$property = $textContent;
                         if ($locale[$property] == '') {
                             // let's mark we readed the element corresponding to the locale
                             $locale[$property] = '__readed__';
@@ -80,33 +90,27 @@ abstract class XmlParserAbstract {
                     }
                 }
                 elseif ('author' == $property || 'creator' == $property || 'contributor' == $property) {
-                    $person = array();
-                    while ($xml->moveToNextAttribute()) {
-                        $attrName = $xml->name;
-                        $person[$attrName] = $xml->value;
-                    }
-                    array_push($object->authors, $person);
+                    array_push($object->authors, $attributes);
                 }
                 elseif ('licence' == $property) { // we support licence and license, but store always as license
-                    while ($xml->moveToNextAttribute()) {
-                        $attrProperty = 'license' . ucfirst($xml->name);
-                        $object->$attrProperty = $xml->value;
+                    foreach($attributes as $attr => $val) {
+                        $attrProperty = 'license' . ucfirst($attr);
+                        $object->$attrProperty = $val;
                     }
-                    $xml->read();
-                    $object->license = $xml->value;
+                    $object->license = $textContent;
                 }
                 else { // <version> <license> <copyright> <homepageURL> <updateURL>
                     // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
-                    while ($xml->moveToNextAttribute()) {
-                        $attrProperty = $property . ucfirst($xml->name);
-                        $object->$attrProperty = $xml->value;
+                    foreach($attributes as $attr => $val) {
+                        $attrProperty = $property . ucfirst($attr);
+                        $object->$attrProperty = $val;
                     }
-                    $xml->read();
+
                     if ($property == 'version') {
-                        $object->$property = $this->fixVersion($xml->value);
+                        $object->$property = $this->fixVersion($textContent);
                     }
                     else {
-                        $object->$property = $xml->value;
+                        $object->$property = $textContent;
                     }
                 }
             }
