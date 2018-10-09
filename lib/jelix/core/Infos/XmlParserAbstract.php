@@ -95,36 +95,30 @@ abstract class XmlParserAbstract {
                 break;
             }
 
-            if($xml->nodeType == \XMLReader::ELEMENT) {
+            if ($xml->nodeType == \XMLReader::ELEMENT) {
 
                 $property = $xml->name;
+                $attributes = array();
+                $textContent = '';
+                if ($xml->hasAttributes) {
+                    while ($xml->moveToNextAttribute()) {
+                        $attributes[$xml->name] = $xml->value;
+                    }
+                    $xml->moveToElement();
+                }
+                if (!$xml->isEmptyElement) {
+                    $xml->read();
+                    $textContent = $xml->value;
+                }
 
                 if ('label' == $property || 'description' == $property) {
-                    $lang = 'en';
-                    while ($xml->moveToNextAttribute()) {
-                        if ($xml->name == 'lang') {
-                            $lang = substr($xml->value, 0, 2);
-                        }
-                    }
-                    $xml->read();
-                    $object->{$property}[$lang] = trim($xml->value);
+                    $lang = isset($attributes['lang']) ? substr($attributes['lang'], 0, 2) : 'en';
+                    $object->{$property}[$lang] = trim($textContent);
                 }
                 elseif ('author' == $property || 'creator' == $property || 'contributor' == $property) {
-                    $name = $email = $role = '';
-                    while ($xml->moveToNextAttribute()) {
-                        $attrName = $xml->name;
-                        switch($attrName) {
-                            case 'name':
-                                $name = $xml->value;
-                                break;
-                            case 'email':
-                                $email = $xml->value;
-                                break;
-                            case 'role':
-                                $role = $xml->value;
-                                break;
-                        }
-                    }
+                    $name = isset($attributes['name']) ? $attributes['name']:'';
+                    $email = isset($attributes['email']) ? $attributes['email']:'';
+                    $role = isset($attributes['role']) ? $attributes['role']:'';
                     if ($name != '') {
                         if ($role == '' && $property != 'author') {
                             $role = $property;
@@ -133,29 +127,27 @@ abstract class XmlParserAbstract {
                     }
                 }
                 elseif ('licence' == $property) { // we support licence and license, but store always as license
-                    while ($xml->moveToNextAttribute()) {
-                        $attrProperty = 'license' . ucfirst($xml->name);
-                        $object->$attrProperty = $xml->value;
+                    foreach($attributes as $attr => $val) {
+                        $attrProperty = 'license' . ucfirst($attr);
+                        $object->$attrProperty = $val;
                     }
-                    $xml->read();
-                    $object->license = trim($xml->value);
+                    $object->license = $textContent;
                 }
                 else { // <version> <license> <copyright> <homepageURL> <updateURL>
                     // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
-                    while ($xml->moveToNextAttribute()) {
-                        $attrProperty = $property . ucfirst($xml->name);
+                    foreach($attributes as $attr => $val) {
+                        $attrProperty = $property . ucfirst($attr);
                         if ($attrProperty == 'versionDate') {
-                            $d = $xml->value;
-                            if ($d == '__TODAY__') { // for non-packages modules
-                                $d = date('Y-m-d');
+                            if ($val == '__TODAY__') { // for non-packages modules
+                                $val = date('Y-m-d');
                             }
-                            $object->versionDate = $d;
+                            $object->versionDate = $val;
                         }
                         else {
-                            $object->$attrProperty = $xml->value;
+                            $object->$attrProperty = $val;
                         }
                     }
-                    $xml->read();
+
                     if ($property == 'version') {
                         $object->$property = $this->fixVersion($xml->value);
                     }
