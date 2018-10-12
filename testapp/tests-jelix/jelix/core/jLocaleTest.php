@@ -3,11 +3,13 @@
 * @package     jelix tests
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-20012 Laurent Jouanneau
+* @copyright   2006-2018 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use \Jelix\PropertiesFile\Properties;
+use \Jelix\PropertiesFile\Parser;
 
 class jLocaleTest extends jUnitTestCase {
 
@@ -32,11 +34,12 @@ class jLocaleTest extends jUnitTestCase {
     public function testBundleUnknownFile(){
         $this->assertTrue($this->filePath != '');
         try {
-            $parser = new jPropertiesFileReader ($this->filePath.'unknownfile');
-            $parser->parse();
+            $properties = new Properties();
+            $reader = new Parser();
+            $reader->parseFromFile($this->filePath.'unknownfile', $properties);
             self::fail('should throw an exception when trying reading unknownfile');
         }catch(Exception $e){
-            $this->assertEquals('Cannot load the resource '.$this->filePath.'unknownfile', $e->getMessage(),
+            $this->assertEquals('Cannot load the properties file '.$this->filePath.'unknownfile', $e->getMessage(),
             'should throw the right exception when trying reading unknownfile (wrong message: '.$e->getMessage().')');
         }
     }
@@ -73,10 +76,13 @@ class jLocaleTest extends jUnitTestCase {
      */
     public function testBundle($file, $content){
         try {
-            $parser = new jPropertiesFileReader ($this->filePath.$file);
-            $parser->parse();
-            $strings = $parser->getProperties();
-            $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",$file );
+            $properties = new Properties();
+            $reader = new Parser();
+            $reader->parseFromFile($this->filePath.$file, $properties);
+            $this->assertComplexIdenticalStr(
+                $properties->getAllProperties(),
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",
+                $file);
         }
         catch(Exception $e){
             self::fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());

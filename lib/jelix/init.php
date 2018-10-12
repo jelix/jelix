@@ -57,7 +57,6 @@ require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jRequest.class.php');
 require (JELIX_LIB_CORE_PATH . 'jResponse.class.php');
 require (JELIX_LIB_CORE_PATH . 'jBundle.class.php');
-require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLocale.class.php');
 require (JELIX_LIB_CORE_PATH . 'jLog.class.php');
 require (JELIX_LIB_CORE_PATH . 'jIncluder.class.php');

@@ -4,14 +4,12 @@
 * @subpackage core
 * @author     Laurent Jouanneau
 * @author     Gerald Croes
-* @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
-* Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
-* copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
-* initial authors : Gerald Croes, Laurent Jouanneau.
-* enhancement by Laurent Jouanneau for Jelix.
+* @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use \Jelix\PropertiesFile\Properties;
+use \Jelix\PropertiesFile\Parser;
 
 /**
 * a bundle contains all readed properties in a given language, and for all charsets
@@ -94,9 +92,10 @@ class jBundle {
                 return;
             }
         }
-        $reader = new jPropertiesFileReader($source, $charset);
-        $reader->parse();
-        $this->_strings[$charset] = $reader->getProperties();
+        $properties = new Properties();
+        $reader = new Parser();
+        $reader->parseFromFile($source, $properties, $charset);
+        $this->_strings[$charset] = $properties->getAllProperties();
         $content = '<?php return '.var_export($this->_strings[$charset], true).";\n";
         jFile::write($cache, $content);
     }

@@ -11,6 +11,7 @@
         "jelix/feeds-module": "^1.7.3",
         "jelix/inifile": "^2.5.0",
         "jelix/simplelocalization": "1.7.1",
+        "jelix/properties-file": "^1.0.0",
         "jelix/wikirenderer-plugin": "^1.7.2",
         "symfony/console":"^3.2.0",
         "jelix/file-utilities": "^1.8.3",
