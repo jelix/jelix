@@ -690,6 +690,7 @@ cd lib/jelix/plugins/tpl/common
   function.cycle_init.php
   function.cycle.php
   function.cycle_reset.php
+  function.dumptolog.php
   function.repeat_string.php
   modifier.cat.php
   modifier.count_array.php
@@ -746,6 +747,7 @@ cd lib/jelix/plugins/tpl/html
   function.jlocale.php
   function.jrooturl.php
   function.jurl.php
+  function.jurlpattern.php
   function.link_to_remote.php
   function.mailto.php
   function.pagelinks.php
@@ -754,6 +756,7 @@ cd lib/jelix/plugins/tpl/html
   meta.html.php
   meta.htmlmodule.php
   modifier.nl2br.php
+  modifier.vardump.php
 
 cd lib/jelix/plugins/tpl/ltx2pdf
   function.jlocale.php
@@ -768,6 +771,7 @@ cd lib/jelix/plugins/tpl/text
   function.jlocale.php
   function.jurl.php
   function.formdatafull.php
+  modifier.vardump.php
 
 cd lib/jelix/plugins/tpl/xml
   cfunction.const.php
