@@ -436,6 +436,11 @@ cd lib/jelix/utils/
   jZipCreator.class.php
 * jZone.class.php
 
+cd lib/jelix/utils/Version
+  Parser.php
+  Version.php
+  VersionComparator.php
+
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
 cd lib/jelix/plugins/auth/db

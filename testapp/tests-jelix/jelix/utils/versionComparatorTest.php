@@ -13,69 +13,81 @@
 
 class versionComparatorTest extends PHPUnit_Framework_TestCase {
 
-    public function testCompareVersion() {
-        
+    public function getCompareVersion() {
+        return array(
+            array(0,'1.0','1.0'),
+            array(1, '1.1','1.0'),
+            array(-1, '1.0','1.1'),
+            array(-1, '1.1','1.1.1'),
+            array(1, '1.1.2','1.1'),
+            array(1, '1.2','1.2b'),
+            array(1, '1.2','1.2a'),
+            array(1, '1.2','1.2RC'),
+            array(1, '1.2','1.2bETA'),
+            array(1, '1.2','1.2alpha'),
+            array(1, '1.2','1.2pre'),
+            array(-1, '1.2b','1.2'),
+            array(-1, '1.2a','1.2'),
+            array(-1, '1.2RC','1.2'),
+            array(-1, '1.2bEta','1.2'),
+            array(-1, '1.2alpha','1.2'),
+            array(-1, '1.2b1','1.2b2'),
+            array(-1, '1.2B1','1.2b2'),
+            array(1, '1.2b2','1.2b1'),
+            array(1, '1.2b2','1.2b2-dev'),
+            array(-1, '1.2b2-dev','1.2b2'),
+            array(-1, '1.2b2-dev.2324','1.2b2'),
+            array(0, '1.2b2pre','1.2b2-dev'),
+            array(1, '1.2b2pre.4','1.2b2-dev'),
+            array(-1, '1.2b2pre.4','1.2b2-dev.9'),
+            array(-1, '1.2b2pre','1.2b2-dev.9'),
+            array(-1, '1.2RC1','1.2RC2'),
+            array(0, '1.2.3a1pre','1.2.3a1-dev'),
+
+            array(-1,'1.2RC-dev','1.2RC'),
+            array(1,'1.2RC','1.2RC-dev'),
+
+            array(-1,'1.2pre','1.2a'),
+            array(-1,'1.2pre.0','1.2a'),
+            array(-1,'1.2pre','1.2b'),
+            array(-1,'1.2pre','1.2RC'),
+            array(-1,'1.2PRE','1.2RC'),
+            array(-1,'1.2a','1.2b'),
+            array(-1,'1.2b','1.2rc'),
+            array(-1,'1.2rc','1.2'),
+            array(-1,'1.2-3.0','1.2-3.1'),
+            array(1,'1.2-3.0','1.2'),
+            array(-1,'1.2-3.0','1.3'),
+            array(0,'1.2-3.0','1.2-3'),
+            array(0,'1.2-3','1.2-3.0.0'),
+            array(1,'1.2-3.0','1.2-2.9'),
+            array(-1,'1.2-3.0','1.2.1-3.0'),
+            array(-1,'1.2-3.0','1.2.1-1'),
+            array(1,'1.2-3.0','1.2-alpha.2'),
+            array(1,'1.2-3.0','1.2-beta.2'),
+            array(1,'1.2-3.0','1.2-rc.2'),
+
+            array(0, '1.*','1'),
+            array(0, '1','1.*'),
+            array(0, '1.1.1','1.1.*'),
+            array(0, '1.1.*','1.1.1'),
+            array(1, '1.2.2','1.1.*'),
+            array(1, '1.2.*','1.1.1'),
+            array(-1, '1.0.2','1.1.*'),
+            array(-1, '1.0.*','1.1.0'),
+        );
+    }
+
+
+    /**
+     * @dataProvider getCompareVersion
+     */
+    public function testCompareVersion($result, $v1, $v2) {
         // 0 = equals
         // -1 : v1 < v2
         // 1 : v1 > v2
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.0','1.0'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.1','1.0'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.0','1.1'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.1','1.1.1'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.1.2','1.1'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2b'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2a'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2RC'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2bETA'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2alpha'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2','1.2pre'));
 
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b','1.2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2a','1.2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2RC','1.2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2bEta','1.2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2alpha','1.2'));
-
-        
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b1','1.2b2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2B1','1.2b2'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2b2','1.2b1'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2b2','1.2b2-dev'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b2-dev','1.2b2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b2-dev.2324','1.2b2'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.2b2pre','1.2b2-dev'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2b2pre.4','1.2b2-dev'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b2pre.4','1.2b2-dev.9'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b2pre','1.2b2-dev.9'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2RC1','1.2RC2'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.2.3a1pre','1.2.3a1-dev'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre171102','3.2pre.180212'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2pre.180212'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2rc1'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('3.2pre.171102','3.2.0'));
-
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2RC-dev','1.2RC'));
-        $this->assertEquals(1, jVersionComparator::compareVersion('1.2RC','1.2RC-dev'));
-
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2pre','1.2a'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2pre','1.2b'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2pre','1.2RC'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2PRE','1.2RC'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2a','1.2b'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2b','1.2rc'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.2rc','1.2'));
-
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.*','1'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.1.*','1.1.1'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.1.2','1.1.*'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.1.*','1.1'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.1','1.1.*'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.1.*','1.2'));
-        $this->assertEquals(-1, jVersionComparator::compareVersion('1.1','1.2.*'));
-        
-        $this->assertEquals(0, jVersionComparator::compareVersion('1.1','*'));
-        $this->assertEquals(0, jVersionComparator::compareVersion('*','1.1'));
-
+        $this->assertEquals($result, jVersionComparator::compareVersion($v1,$v2));
     }
 
 
