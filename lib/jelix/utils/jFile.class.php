@@ -166,6 +166,33 @@ class jFile {
         return $allIsDeleted;
     }
 
+
+    /**
+     * copy the whole content of a directory into an other
+     *
+     * @param string $sourcePath the path of the directory content. It does not create
+     *                  the directory itself into the target directory.
+     * @param string $targetPath the full path of the directory to where to copy
+     *                  the content. The directory is created if it does not exists.
+     * @since 1.6.19
+     */
+    public static function copyDirectoryContent($sourcePath, $targetPath, $overwrite = false) {
+        self::createDir($targetPath);
+        $dir = new DirectoryIterator($sourcePath);
+        foreach ($dir as $dirContent) {
+            if ($dirContent->isFile()) {
+                $p = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                if ($overwrite || !file_exists($p))
+                    copy($dirContent->getPathName(), $p);
+            } else {
+                if (!$dirContent->isDot() && $dirContent->isDir()) {
+                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                    self::copyDirectoryContent($dirContent->getPathName(), $newTarget, $overwrite);
+                }
+            }
+        }
+    }
+
     /**
      * get the MIME Type of a file
      *
