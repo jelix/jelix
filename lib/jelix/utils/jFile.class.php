@@ -181,12 +181,12 @@ class jFile {
         $dir = new DirectoryIterator($sourcePath);
         foreach ($dir as $dirContent) {
             if ($dirContent->isFile()) {
-                $p = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
-                if ($overwrite || !file_exists($p))
-                    copy($dirContent->getPathName(), $p);
+                $f = $targetPath.'/'.$dirContent->getFilename();
+                if ($overwrite || !file_exists($f))
+                    copy($dirContent->getPathName(), $f);
             } else {
                 if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $newTarget = $targetPath.substr($dirContent->getPathName(), strlen($dirContent->getPath()));
+                    $newTarget = $targetPath.'/'.$dirContent->getFilename();
                     self::copyDirectoryContent($dirContent->getPathName(), $newTarget, $overwrite);
                 }
             }
