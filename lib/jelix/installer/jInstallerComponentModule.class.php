@@ -321,6 +321,15 @@ class jInstallerComponentModule extends jInstallerComponentBase {
 
         if ($this->moduleMainUpgrader && jVersionComparator::compareVersion($this->moduleInfos[$epId]->version, $this->sourceVersion) < 0 ) {
             $list[] = $this->moduleMainUpgrader;
+            $class = $this->name.'ModuleUpgrader';
+            if (!isset($this->upgradersContexts[$class])) {
+                $this->upgradersContexts[$class] = array();
+            }
+
+            $this->moduleMainUpgrader->setEntryPoint($ep,
+                $ep->configIni,
+                $this->moduleInfos[$epId]->dbProfile,
+                $this->upgradersContexts[$class]);
         }
 
         return $list;
