@@ -259,6 +259,7 @@ cd testapp/modules/testinstall2
 *  module.xml
 cd testapp/modules/testinstall2/install
   install.php
+  upgrade.php
   upgrade_to_1.1.5_second.php
   upgrade_to_1.1_first.php
   upgrade_newupgraderfilename.php
