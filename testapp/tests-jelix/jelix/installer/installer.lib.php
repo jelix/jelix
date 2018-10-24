@@ -143,7 +143,7 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->globalSetup = $globalSetup;
 
         $appConfigPath = \jApp::appConfigPath($configFile);
-        $this->appConfigIni = clone $globalSetup->getConfigIni();
+        $this->appConfigIni = clone $globalSetup->getAppConfigIni();
         $this->appConfigIni['entrypoint'] = new testInstallerIniFileModifier($appConfigPath);
 
         $varConfigPath = \jApp::varConfigPath($configFile);
@@ -151,7 +151,7 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
 
 
         $this->localConfigIni = clone $this->appConfigIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
+        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni();
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->liveConfigIni = clone $this->localConfigIni;

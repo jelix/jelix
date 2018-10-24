@@ -100,8 +100,8 @@ trait HelpersTrait
      */
     protected final function declareGlobalWebAssets($name, array $values, $collection, $force)
     {
-        $config = $this->getConfigIni();
-        $this->globalSetup->declareWebAssetsInConfig($config['main'], $name, $values, $collection, $force);
+        $config = $this->getSingleConfigIni();
+        $this->globalSetup->declareWebAssetsInConfig($config, $name, $values, $collection, $force);
     }
 
     /**
@@ -112,8 +112,8 @@ trait HelpersTrait
      */
     protected final function removeGlobalWebAssets($name, $collection)
     {
-        $config = $this->globalSetup->getConfigIni();
-        $this->globalSetup->removeWebAssetsFromConfig($config['main'], $name, $collection);
+        $config = $this->getSingleConfigIni();
+        $this->globalSetup->removeWebAssetsFromConfig($config, $name, $collection);
     }
 
     protected final function getProfilesIni() {

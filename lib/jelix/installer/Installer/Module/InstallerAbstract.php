@@ -52,8 +52,8 @@ abstract class InstallerAbstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    protected function getConfigIni() {
-        return $this->globalSetup->getConfigIni();
+    protected final function getConfigIni() {
+        return $this->globalSetup->getAppConfigIni();
     }
 
     /**
@@ -61,8 +61,10 @@ abstract class InstallerAbstract {
      * @return \Jelix\IniFile\IniModifierArray
      * @since 1.7
      */
-    protected function getLocalConfigIni() {
-        return $this->globalSetup->getLocalConfigIni();
+    protected final function getLocalConfigIni() {
+        $ini = $this->globalSetup->getAppConfigIni(true);
+        $ini['local'] = $this->globalSetup->getLocalConfigIni();
+        return $ini;
     }
 
     /**
@@ -71,7 +73,7 @@ abstract class InstallerAbstract {
      * @since 1.7
      */
     protected final function getLiveConfigIni() {
-        return $this->globalSetup->getLiveConfigIni();
+        return $this->globalSetup->getFullConfigIni(true);
     }
 
     /**

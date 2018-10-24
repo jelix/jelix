@@ -79,8 +79,7 @@ trait InstallerHelpersTrait
      */
     protected final function declareDbProfile($name, $sectionContent = null, $force = true)
     {
-
-        $profiles = $this->globalSetup->getProfilesIni();
+        $profiles = $this->getProfilesIni();
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:' . $name)) {
                 // no section

@@ -8,6 +8,9 @@
 namespace Jelix\Installer;
 
 
+use Jelix\IniFile\IniModifier;
+use Jelix\IniFile\IniModifierArray;
+use Jelix\IniFile\IniModifierReadOnly;
 use \Jelix\IniFile\IniReader;
 
 /**
@@ -16,17 +19,30 @@ use \Jelix\IniFile\IniReader;
 class GlobalSetup {
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the ini file: jelix/core/defaultconfig.ini.php
+     *
+     * @var \Jelix\IniFile\IniReader
      */
-    protected $configIni;
+    protected $defaultConfigIni;
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the mainconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
+     */
+    protected $appConfigIni;
+
+    /**
+     * the localconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
      */
     protected $localConfigIni;
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the liveconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
      */
     protected $liveConfigIni;
 
@@ -147,22 +163,18 @@ class GlobalSetup {
             file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
 
-        $defaultConfig = new IniReader(\jConfig::getDefaultConfigFile());
+        $this->defaultConfigIni = new IniReader(\jConfig::getDefaultConfigFile());
 
-        $this->configIni = new \Jelix\IniFile\IniModifierArray(array(
-            'default'=> $defaultConfig,
-            'main' => $mainConfigFileName,
-        ));
-        $this->localConfigIni = clone $this->configIni;
-        $this->localConfigIni['local'] = $localConfigFileName;
+        $this->appConfigIni = new IniModifier($mainConfigFileName);
 
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = $liveConfigFileName;
+        $this->localConfigIni = new IniModifier($localConfigFileName);
+
+        $this->liveConfigIni = new IniModifier($liveConfigFileName);
 
         $this->installerIni = $this->loadInstallerIni();
 
         \jFile::createDir(\jApp::appPath('install/uninstall'));
-        $this->uninstallerIni = new \Jelix\IniFile\IniModifier(
+        $this->uninstallerIni = new IniModifier(
             \jApp::appPath('install/uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
@@ -171,7 +183,9 @@ class GlobalSetup {
 ");
 
         if (!$urlXmlFileName) {
-            $urlXmlFileName = \jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
+            $ini = $this->getAppConfigIni();
+            $ini['local'] = $this->localConfigIni;
+            $urlXmlFileName = \jApp::appConfigPath($ini->getValue('significantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
@@ -180,7 +194,7 @@ class GlobalSetup {
         $this->readModuleInfos();
 
         // be sure temp path is ready
-        $chmod = $this->configIni->getValue('chmodDir');
+        $chmod = $this->getAppConfigIni()->getValue('chmodDir');
         \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
     }
 
@@ -241,6 +255,7 @@ class GlobalSetup {
         if (file_exists($uninstallersDir)) {
             $dir = new \DirectoryIterator($uninstallersDir);
             $modulesInfos = $this->uninstallerIni->getValues('modules');
+
             foreach ($dir as $dirContent) {
                 if ($dirContent->isDot() || !$dirContent->isDir()) {
                     continue;
@@ -261,7 +276,8 @@ class GlobalSetup {
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
                 $moduleInfos = new ModuleStatus($moduleName,
-                    $dirContent->getPathname(), $modulesInfos);
+                                                $dirContent->getPathname(),
+                                                $modulesInfos);
 
                 $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
                 $this->ghostModules[$moduleName]->init();
@@ -369,23 +385,72 @@ class GlobalSetup {
      * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getConfigIni() {
-        return $this->configIni;
+    public function getAppConfigIni($readOnly = false) {
+        if ($readOnly) {
+            return new IniModifierArray(array(
+                'default' => $this->defaultConfigIni,
+                'main' => new IniModifierReadOnly($this->appConfigIni)
+            ));
+        }
+
+        return new IniModifierArray(array(
+            'default' => $this->defaultConfigIni,
+            'main' => $this->appConfigIni
+        ));
     }
 
     /**
-     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php,
-     * with localconfig.ini.php
+     * All combined config files :  defaultconfig.ini.php, mainconfig.ini.php
+     * localconfig.ini.php and liveconfig.ini.php
+     * @param bool $readOnly
      * @return \Jelix\IniFile\IniModifierArray
+     */
+    public function getFullConfigIni($readOnly = false) {
+        $ini = $this->getAppConfigIni($readOnly);
+        $ini['local'] = $this->localConfigIni;
+        $ini['live'] = $this->liveConfigIni;
+        return $ini;
+    }
+
+    /**
+     * the defaultconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniReader
+     */
+    public function getDefaultConfigIni() {
+        return $this->defaultConfigIni;
+    }
+
+    /**
+     * the mainconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniModifier
+     */
+    public function getMainConfigIni() {
+        return $this->appConfigIni;
+    }
+
+    /**
+     * the mainconfig.ini.php file in read only mode
+     *
+     * @return \Jelix\IniFile\IniReaderInterface
+     */
+    public function getReadOnlyMainConfigIni() {
+        return new IniModifierReadOnly($this->appConfigIni);
+    }
+
+    /**
+     * the localconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniModifier
      */
     public function getLocalConfigIni() {
         return $this->localConfigIni;
     }
 
     /**
-     * the combined config files defaultconfig.ini.php and mainconfig.ini.php
-     * with localconfig.ini.php and liveconfig.ini.php
-     * @return \Jelix\IniFile\IniModifierArray
+     * the liveconfig.ini.php file
+     * @return \Jelix\IniFile\IniModifier
      */
     public function getLiveConfigIni() {
         return $this->liveConfigIni;
@@ -545,7 +610,7 @@ class GlobalSetup {
     /**
      * return the section name of configuration of a plugin for the coordinator
      * or the IniModifier for the configuration file of the plugin if it exists.
-     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
+     * @param \Jelix\IniFile\IniModifierInterface $config  the global configuration content
      * @param string $pluginName
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
      * @throws Exception when the configuration filename is not found

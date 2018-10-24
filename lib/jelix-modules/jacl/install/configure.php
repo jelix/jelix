@@ -16,7 +16,7 @@ class jaclModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         }
     }
 
-    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
+    protected function setEpConf(\Jelix\Installer\EntryPointConfigurator $entryPoint) {
         $conf = $entryPoint->getConfigIni();
         if (null == $conf->getValue('jacl', 'coordplugins')) {
             $conf->setValue('jacl', '1', 'coordplugins');

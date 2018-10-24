@@ -452,14 +452,27 @@ class Configurator implements ConfiguratorInterface {
 
 
     /**
-     * default config and main config combined
+     * default config, main config combined with or without local config
      * @return \Jelix\IniFile\IniModifierArray
      */
     protected final function getConfigIni() {
         if ($this->forLocalConfiguration) {
+            $ini = $this->globalSetup->getAppConfigIni(true);
+            $ini['local'] = $this->globalSetup->getLocalConfigIni();
+            return $ini;
+        }
+        return $this->globalSetup->getAppConfigIni();
+    }
+
+    /**
+     * main config or local config ini file alone
+     * @return \Jelix\IniFile\IniModifier
+     */
+    protected final function getSingleConfigIni() {
+        if ($this->forLocalConfiguration) {
             return $this->globalSetup->getLocalConfigIni();
         }
-        return $this->globalSetup->getConfigIni();
+        return $this->globalSetup->getMainConfigIni();
     }
 
     /**

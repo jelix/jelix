@@ -29,7 +29,7 @@ class jacl2dbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         $config = $this->getConfigIni();
         $driver = $config->getValue('driver','acl2');
         if ($driver != 'db') {
-            $config['main']->setValue('driver','db','acl2');
+            $config->setValue('driver','db','acl2');
         }
     }
 

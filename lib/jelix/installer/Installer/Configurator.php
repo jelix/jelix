@@ -92,13 +92,10 @@ class Configurator {
      * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    public function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    public function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup, $lang='') {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
-        if (!$globalSetup) {
-            $globalSetup = new GlobalSetup();
-        }
         $this->globalSetup = $globalSetup;
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
@@ -579,9 +576,10 @@ class Configurator {
         // we save the configuration at each module because its
         // configurator may have modified it, and we want to save it
         // in case the next module configurator fails.
-        if ($this->globalSetup->getLiveConfigIni()->isModified()) {
+        $fullConfig = $this->globalSetup->getFullConfigIni();
+        if ($fullConfig->isModified()) {
             //$ep->getLocalConfigIni()->save();
-            $this->globalSetup->getLiveConfigIni()->save();
+            $fullConfig->save();
 
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.

@@ -89,6 +89,7 @@ class Installer {
      * each module, needed to install/upgrade modules.
      *
      * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param GlobalSetup $globalSetup
      * @param string $lang  the language code for messages
      */
     function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
@@ -477,8 +478,9 @@ class Installer {
         // we save the configuration at each module because its
         // installer may have modified it, and we want to save it
         // in case the next module installer fails.
-        if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-            $this->globalSetup->getLiveConfigIni()->save();
+        $fullConfig = $this->globalSetup->getFullConfigIni();
+        if ($fullConfig->isModified()) {
+            $fullConfig->save();
 
             // we re-load configuration file for each module because
             // previous module installer could have modify it.

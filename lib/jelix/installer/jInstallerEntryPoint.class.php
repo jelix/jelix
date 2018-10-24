@@ -96,8 +96,8 @@ class jInstallerEntryPoint {
         $this->epConfigIni = $entryPoint->getAppConfigIni()['entrypoint'];
 
         $mainConfig = new \Jelix\IniFile\MultiIniModifier(
-            $globalSetup->getConfigIni()['default'],
-            $globalSetup->getConfigIni()['main']
+            $globalSetup->getDefaultConfigIni(),
+            $globalSetup->getMainConfigIni()
         );
 
         $this->configIni = new \Jelix\IniFile\MultiIniModifier(
@@ -106,7 +106,7 @@ class jInstallerEntryPoint {
 
         $localConfig = new \Jelix\IniFile\MultiIniModifier(
             $mainConfig,
-            $globalSetup->getLocalConfigIni()['local']);
+            $globalSetup->getLocalConfigIni());
 
         $this->localConfigIni = new \Jelix\IniFile\MultiIniModifier(
             $localConfig,
@@ -114,7 +114,7 @@ class jInstallerEntryPoint {
 
         $this->config = $entryPoint->getConfigObj();
 
-        $this->liveConfigIni = $globalSetup->getLiveConfigIni()['live'];
+        $this->liveConfigIni = $globalSetup->getLiveConfigIni();
     }
 
     /**

@@ -108,17 +108,17 @@ class EntryPoint
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
 
-        $this->appConfigIni = clone $globalSetup->getConfigIni();
+        $this->appConfigIni = $globalSetup->getAppConfigIni();
         $this->appConfigIni['entrypoint'] = new IniModifier($appConfigPath);
 
         $varConfigPath = \jApp::varConfigPath($configFile);
         $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
         $this->localConfigIni = clone $this->appConfigIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
+        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni();
         $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
         $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];
+        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni();
 
         $this->config = \jConfigCompiler::read($configFile, true,
             $this->_isCliScript,

@@ -78,7 +78,6 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $localConfig = $input->getOption('local')?true:($input->getOption('no-local')?true:null);
 
-
         $configurator->configureModules(array($module), $this->selectedEntryPointId,
             $localConfig, $input->getOption('force'));
 

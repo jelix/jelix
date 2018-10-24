@@ -18,7 +18,7 @@ class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
         }
     }
 
-    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
+    protected function setEpConf(\Jelix\Installer\EntryPointConfigurator $entryPoint) {
         $config = $entryPoint->getConfigIni();
         $authconfig = $this->getCoordPluginConf($config, 'auth');
 
