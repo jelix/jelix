@@ -14,6 +14,7 @@ namespace Jelix\Installer\Module;
  */
 abstract class InstallerAbstract {
 
+    use InstallConfigTrait;
     use HelpersTrait;
 
     /**

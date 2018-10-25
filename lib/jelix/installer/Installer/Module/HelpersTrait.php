@@ -15,64 +15,10 @@ namespace Jelix\Installer\Module;
 trait HelpersTrait
 {
     /**
-     * @var string name of the component
-     */
-    private $componentName;
-
-    /**
-     * @var string name of the installer
-     */
-    private $name;
-
-
-    /**
-     * The path of the module
-     * @var string
-     */
-    private $path;
-
-    /**
      * global setup
      * @var \Jelix\Installer\GlobalSetup
      */
     private $globalSetup;
-
-    /**
-     * parameters for the installer, indicated in the configuration file or
-     * dynamically, by a launcher in a command line for instance.
-     * @var array
-     */
-    protected $parameters = array();
-
-    final function getName() {
-        return $this->name;
-    }
-
-    final function getPath() {
-        return $this->path;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public final function setParameters($parameters) {
-        $this->parameters = $parameters;
-    }
-
-
-    final function getParameter($name) {
-        if (isset($this->parameters[$name]))
-            return $this->parameters[$name];
-        else
-            return null;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public final function getParameters() {
-        return $this->parameters;
-    }
 
     final function setGlobalSetup(\Jelix\Installer\GlobalSetup $setup) {
         $this->globalSetup = $setup;

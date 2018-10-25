@@ -18,7 +18,7 @@ use Symfony\Component\Console\Helper\QuestionHelper;
  */
 class Configurator implements ConfiguratorInterface {
 
-
+    use InstallConfigTrait;
     use HelpersTrait;
 
     /**
