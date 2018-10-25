@@ -11,6 +11,7 @@ use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
 use \Jelix\Dependencies\ItemException;
 
+use Jelix\Installer\Module\InteractiveConfigurator;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -150,7 +151,7 @@ class Configurator {
         if ($hasError) {
             return false;
         }
-        // get all modules
+        // get all modules and their dependencies
         $resolver = new Resolver();
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem();
@@ -287,6 +288,13 @@ class Configurator {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+
+        $interactiveCli = null;
+        if ($this->consoleOutput && $this->consoleInput) {
+            $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+                $this->consoleInput, $this->consoleOutput);
+        }
+
         foreach($moduleschain as $resolverItem) {
             /** @var ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
@@ -308,10 +316,9 @@ class Configurator {
                     }
                     $configurator->setParameters($parameters);
 
-                    if ($this->consoleOutput && $this->consoleInput) {
+                    if ($interactiveCli) {
                         $this->notice('configuration.ask.parameters', array($component->getName()));
-                        $configurator->setInteractiveComponent($this->questionHelper, $this->consoleInput, $this->consoleOutput);
-                        $configurator->askParameters();
+                        $configurator->askParameters($interactiveCli);
                     }
                     $component->setInstallParameters($configurator->getParameters());
 
