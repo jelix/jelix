@@ -273,6 +273,7 @@ class Installer {
             $component = $resolverItem->getProperty('component');
 
             try {
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
                 if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
                     if ($installersDisabled) {
                         $installer = null;
@@ -339,6 +340,8 @@ class Installer {
                 /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
                         $installer->install();
@@ -436,6 +439,7 @@ class Installer {
                 /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller  $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
                         $installer->postInstall();

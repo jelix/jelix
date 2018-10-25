@@ -24,7 +24,7 @@ trait InstallerHelpersTrait
     final protected function copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite = false)
     {
         $targetPath = $this->expandPath($targetPath);
-        $this->_copyDirectoryContent($this->path . 'install/' . $relativeSourcePath, $targetPath, $overwrite);
+        $this->_copyDirectoryContent($this->globalSetup->getCurrentModulePath() . 'install/' . $relativeSourcePath, $targetPath, $overwrite);
     }
 
     /**
@@ -64,7 +64,7 @@ trait InstallerHelpersTrait
             return;
         $dir = dirname($targetPath);
         \jFile::createDir($dir);
-        copy($this->path . 'install/' . $relativeSourcePath, $targetPath);
+        copy($this->globalSetup->getCurrentModulePath() . 'install/' . $relativeSourcePath, $targetPath);
     }
 
     /**

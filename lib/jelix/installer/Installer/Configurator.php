@@ -181,6 +181,8 @@ class Configurator {
             $this->notice('install.installers.disabled');
         }
 
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+
         $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
         if ($componentsToConfigure === false) {
             $this->warning('configuration.bad.end');
@@ -308,6 +310,8 @@ class Configurator {
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                     // setup installation parameters
                     $parameters = $configurator->getDefaultParameters();
                     $parameters = array_merge($parameters, $component->getInstallParameters());
@@ -351,6 +355,7 @@ class Configurator {
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
                     $configurator->configure();
 
                     $component->saveModuleStatus();
@@ -377,6 +382,7 @@ class Configurator {
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
                     $configurator->postConfigure();
                     $this->saveConfigurationFiles($entryPoint);
                 }
@@ -487,6 +493,8 @@ class Configurator {
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                     // setup installation parameters
                     $parameters = $configurator->getDefaultParameters();
                     $parameters = array_merge($parameters, $component->getInstallParameters());
@@ -534,6 +542,7 @@ class Configurator {
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
                     $configurator->unconfigure();
 
                     $component->saveModuleStatus();
@@ -564,6 +573,7 @@ class Configurator {
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
                     $configurator->postUnconfigure();
                     $this->saveConfigurationFiles($entryPoint);
                 }

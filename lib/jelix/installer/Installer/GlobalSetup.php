@@ -646,4 +646,27 @@ class GlobalSetup {
         }
         return array(new \Jelix\IniFile\IniModifier($confpath), 0);
     }
+
+    /**
+     * @var ModuleInstallerLauncher
+     */
+    protected $currentProcessedModule;
+
+    public function setCurrentProcessedModule($name) {
+        $this->currentProcessedModule = $this->modules[$name];
+    }
+
+    public function getCurrentModulePath() {
+        return $this->currentProcessedModule->getPath();
+    }
+
+    private $forLocalConfiguration = false;
+
+    public function setCurrentConfiguratorStatus($forLocalConfiguration) {
+        $this->forLocalConfiguration = $forLocalConfiguration;
+    }
+
+    public function forLocalConfiguration() {
+        return $this->forLocalConfiguration;
+    }
 }
