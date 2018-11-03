@@ -14,6 +14,7 @@ use \Jelix\Dependencies\ItemException;
 use Jelix\IniFile\IniModifierInterface;
 use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
+use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 use Jelix\Installer\Module\InteractiveConfigurator;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -356,6 +357,7 @@ class Configurator {
     protected function runConfigure($componentsToConfigure, EntryPoint $entryPoint) {
         $result = true;
         $configHelpers = new ConfigurationHelpers($this->globalSetup);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup);
         try {
             foreach($componentsToConfigure as $item) {
                 /** @var ModuleInstallerLauncher $component */
@@ -368,7 +370,7 @@ class Configurator {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
                             $configurator->configure($configHelpers);
                         }
-                        $configurator->localConfigure($configHelpers);
+                        $configurator->localConfigure($localConfigHelpers);
                     }
                     else {
                         $configurator->configure($configHelpers);
@@ -547,6 +549,7 @@ class Configurator {
     protected function runUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
         $result = true;
         $configHelpers = new ConfigurationHelpers($this->globalSetup);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup);
 
         // In $componentsToConfigure, we have the module to unconfigure and
         // all of its reverse dependencies to unconfigure. If none of them have an
@@ -571,7 +574,7 @@ class Configurator {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
                             $configurator->unconfigure($configHelpers);
                         }
-                        $configurator->localUnconfigure($configHelpers);
+                        $configurator->localUnconfigure($localConfigHelpers);
                     }
                     else {
                         $configurator->unconfigure($configHelpers);

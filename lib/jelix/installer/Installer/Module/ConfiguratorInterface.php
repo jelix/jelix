@@ -9,6 +9,7 @@ namespace Jelix\Installer\Module;
 
 use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
+use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 
 /**
  * Interface for classes which configure a module
@@ -85,7 +86,7 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be configured
      */
-    public function localConfigure(ConfigurationHelpers $helpers);
+    public function localConfigure(LocalConfigurationHelpers $helpers);
 
     /**
      * called after the configuration of all modules.
@@ -126,7 +127,7 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be unconfigured
      */
-    public function localUnconfigure(ConfigurationHelpers $helpers);
+    public function localUnconfigure(LocalConfigurationHelpers $helpers);
 
     /**
      * called after the unconfiguration of all modules.

@@ -10,6 +10,7 @@ namespace Jelix\Installer\Module;
 
 use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
+use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 
 /**
  * Base class for classes which configure a module
@@ -75,7 +76,7 @@ class Configurator implements ConfiguratorInterface {
     /**
      * @inheritdoc
      */
-    public function localConfigure(ConfigurationHelpers $helpers) {
+    public function localConfigure(LocalConfigurationHelpers $helpers) {
 
     }
 
@@ -104,7 +105,7 @@ class Configurator implements ConfiguratorInterface {
     /**
      * @inheritdoc
      */
-    public function localUnconfigure(ConfigurationHelpers $helpers) {
+    public function localUnconfigure(LocalConfigurationHelpers $helpers) {
 
     }
 
