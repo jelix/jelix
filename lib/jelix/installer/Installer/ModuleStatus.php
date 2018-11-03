@@ -7,6 +7,8 @@
 */
 namespace Jelix\Installer;
 
+use \Jelix\IniFile\IniModifierInterface;
+
 /**
  * container for module properties, according to a specific entry point configuration
  *
@@ -50,6 +52,12 @@ class ModuleStatus {
     const CONFIG_SCOPE_APP = 0;
     const CONFIG_SCOPE_LOCAL = 1;
 
+    /**
+     * indicate if the module is configured into the app, or only for
+     * the instance, so only into local configuration
+     *
+     * @var int one of CONFIG_SCOPE_* constants
+     */
     public $configurationScope = 0;
 
 
@@ -92,39 +100,43 @@ class ModuleStatus {
         return $this->name;
     }
 
-    function saveInfos(\Jelix\IniFile\IniModifier $configIni, $defaultParameters = array()) {
+    function saveInfos(IniModifierInterface $configIni, $defaultParameters = array()) {
         $previous = $configIni->getValue($this->name.'.enabled', 'modules');
         if ($previous === null || $previous != $this->isEnabled) {
             $configIni->setValue($this->name.'.enabled', $this->isEnabled, 'modules');
         }
 
-        $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default'? $this->dbProfile: ''));
-        $this->setConfigInfo($configIni, 'installparam', self::serializeParameters($this->parameters, $defaultParameters));
-        $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller?'skip':''));
+        $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default'? $this->dbProfile: ''), '');
+        $this->setConfigInfo($configIni, 'installparam', self::serializeParameters($this->parameters, $defaultParameters), '');
+        $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller?'skip':''), '');
         $this->setConfigInfo($configIni, 'localconf',
-            ($this->configurationScope == self::CONFIG_SCOPE_LOCAL?self::CONFIG_SCOPE_LOCAL:0));
+            ($this->configurationScope == self::CONFIG_SCOPE_LOCAL?self::CONFIG_SCOPE_LOCAL:0),
+            self::CONFIG_SCOPE_APP);
     }
 
     /**
-     * @param \Jelix\IniFile\IniModifier $configIni
+     * @param IniModifierInterface $configIni
      * @param string $name
      * @param mixed $value
      */
-    private function setConfigInfo($configIni, $name, $value) {
+    private function setConfigInfo($configIni, $name, $value, $defaultValue) {
         // only modify the file when the value is not already set
         // to avoid to have to save the ini file  #perfs
         $previous = $configIni->getValue($this->name.'.'.$name, 'modules');
-        if ($value) {
+        if ($value !== $defaultValue) {
             if ($previous != $value) {
                 $configIni->setValue($this->name.'.'.$name, $value, 'modules');
             }
         }
-        else if ($previous) {
+        else if ($previous !== null) {
+            // if the value is the default one, and there was a previous value
+            // be sure to remove the key from the configuration file to
+            // slim the configuration file
             $configIni->removeValue($this->name.'.'.$name, 'modules');
         }
     }
 
-    function clearInfos(\Jelix\IniFile\IniModifierInterface $configIni) {
+    function clearInfos(IniModifierInterface $configIni) {
         foreach(array('enabled', 'dbprofile', 'installparam',
                     'skipinstaller', 'localconf') as $param) {
             $configIni->removeValue($this->name.'.'.$param, 'modules');

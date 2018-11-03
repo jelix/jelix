@@ -136,6 +136,10 @@ class ModuleInstallerLauncher {
         return $this->moduleStatus->isInstalled;
     }
 
+    public function isEnabledOnlyInLocalConfiguration() {
+        return $this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL;
+    }
+
     /**
      * @return bool
      * @throws Exception
@@ -224,10 +228,13 @@ class ModuleInstallerLauncher {
         return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
     }
 
+    const CONFIGURATOR_TO_CONFIGURE = 0;
+    const CONFIGURATOR_TO_UNCONFIGURE = 1;
+
     /**
      * instancies the object which is responsible to configure the module
      *
-     * @param bool $actionMode  true to configure, false to unconfigure
+     * @param integer $actionMode  one of CONFIGURATOR_TO_* constants
      * @param bool $forLocalConfiguration  true if the configuration should be done
      *             with the local configuration, else it will be done with the
      *             main configuration
@@ -235,11 +242,30 @@ class ModuleInstallerLauncher {
      *          if there isn't any configurator
      * @throws Exception when configurator class not found
      */
-    function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
+    function getConfigurator($actionMode, $forLocalConfiguration = null) {
 
-        $this->moduleStatus->isEnabled = $actionMode;
+        if (!$this->moduleStatus->isEnabled) {
+            if ($forLocalConfiguration !== null) {
+                // if the module is configured for the first time, we take care
+                // about the target configuration files. In the case of
+                // configuring the module for local configuration, it means
+                // that the module is installed by the user, not by the developer
+                // so all of its configuration should be done on local configuration
+                // files only
+                if ($forLocalConfiguration) {
+                    $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_LOCAL;
+                }
+                else {
+                    $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_APP;
+                }
+            }
+        }
 
-        if ($actionMode) {
+        $this->moduleStatus->isEnabled = ($actionMode == self::CONFIGURATOR_TO_CONFIGURE);
+
+        if ($actionMode == self::CONFIGURATOR_TO_CONFIGURE) {
+            // if the module was unconfigured before, let's erase information
+            // about it from the uninstaller.ini
             $uninstallerIni = $this->globalSetup->getUninstallerIni();
             $this->moduleStatus->clearInfos($uninstallerIni);
         }
@@ -264,21 +290,12 @@ class ModuleInstallerLauncher {
                 throw new Exception("module.configurator.class.not.found", array($cname, $this->name));
             }
 
-            if ($forLocalConfiguration === null) {
-                $forLocalConfiguration = $this->moduleStatus->configurationScope;
-            }
-            else {
-                $this->moduleStatus->configurationScope = $forLocalConfiguration;
-            }
-
-
-            $this->moduleConfigurator = new $cname($this->name,
+            $this->moduleConfigurator = new $cname(
+                $this->name,
                 $this->name,
                 $this->moduleStatus->getPath(),
-                $this->moduleInfos->version,
-                $forLocalConfiguration
+                $this->moduleInfos->version
             );
-            $this->moduleConfigurator->setGlobalSetup($this->globalSetup);
         }
         return $this->moduleConfigurator;
     }

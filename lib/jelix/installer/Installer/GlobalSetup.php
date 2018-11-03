@@ -30,7 +30,7 @@ class GlobalSetup {
      *
      * @var \Jelix\IniFile\IniModifier
      */
-    protected $appConfigIni;
+    protected $mainConfigIni;
 
     /**
      * the localconfig.ini.php of the application
@@ -102,6 +102,11 @@ class GlobalSetup {
     protected $projectInfos;
 
     /**
+     * @var bool true if the configuration can be modified
+     */
+    protected $readWriteConfigMode = true;
+
+    /**
      * GlobalSetup constructor.
      * @param string|\Jelix\Core\Infos\AppInfos|null $projectXmlFileName
      * @param string|null $mainConfigFileName
@@ -165,7 +170,7 @@ class GlobalSetup {
 
         $this->defaultConfigIni = new IniReader(\jConfig::getDefaultConfigFile());
 
-        $this->appConfigIni = new IniModifier($mainConfigFileName);
+        $this->mainConfigIni = new IniModifier($mainConfigFileName);
 
         $this->localConfigIni = new IniModifier($localConfigFileName);
 
@@ -196,6 +201,20 @@ class GlobalSetup {
         // be sure temp path is ready
         $chmod = $this->getAppConfigIni()->getValue('chmodDir');
         \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
+    }
+
+    /**
+     * @param bool $rwMode indicate if the configuration can be modified or not
+     */
+    public function setReadWriteConfigMode($rwMode) {
+        $this->readWriteConfigMode = $rwMode;
+    }
+
+    /**
+     * @return bool true if the configuration can be modified
+     */
+    public function isReadWriteConfigMode() {
+        return $this->readWriteConfigMode;
     }
 
     /**
@@ -385,30 +404,23 @@ class GlobalSetup {
      * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getAppConfigIni($readOnly = false) {
-        if ($readOnly) {
-            return new IniModifierArray(array(
-                'default' => $this->defaultConfigIni,
-                'main' => new IniModifierReadOnly($this->appConfigIni)
-            ));
-        }
-
+    public function getAppConfigIni($forceReadOnly = false) {
         return new IniModifierArray(array(
             'default' => $this->defaultConfigIni,
-            'main' => $this->appConfigIni
+            'main' => $this->getMainConfigIni($forceReadOnly)
         ));
     }
 
     /**
      * All combined config files :  defaultconfig.ini.php, mainconfig.ini.php
      * localconfig.ini.php and liveconfig.ini.php
-     * @param bool $readOnly
+     * @param bool $forceReadOnly
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getFullConfigIni($readOnly = false) {
-        $ini = $this->getAppConfigIni($readOnly);
-        $ini['local'] = $this->localConfigIni;
-        $ini['live'] = $this->liveConfigIni;
+    public function getFullConfigIni($forceReadOnly = false) {
+        $ini = $this->getAppConfigIni($forceReadOnly);
+        $ini['local'] = $this->getLocalConfigIni($forceReadOnly);
+        $ini['live'] = $this->getLiveConfigIni($forceReadOnly);
         return $ini;
     }
 
@@ -424,43 +436,46 @@ class GlobalSetup {
     /**
      * the mainconfig.ini.php file
      *
-     * @return \Jelix\IniFile\IniModifier
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getMainConfigIni() {
-        return $this->appConfigIni;
-    }
-
-    /**
-     * the mainconfig.ini.php file in read only mode
-     *
-     * @return \Jelix\IniFile\IniReaderInterface
-     */
-    public function getReadOnlyMainConfigIni() {
-        return new IniModifierReadOnly($this->appConfigIni);
+    public function getMainConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || $this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->mainConfigIni);
+        }
+        return $this->mainConfigIni;
     }
 
     /**
      * the localconfig.ini.php file
      *
-     * @return \Jelix\IniFile\IniModifier
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getLocalConfigIni() {
+    public function getLocalConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || $this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->localConfigIni);
+        }
         return $this->localConfigIni;
     }
 
     /**
      * the liveconfig.ini.php file
-     * @return \Jelix\IniFile\IniModifier
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getLiveConfigIni() {
+    public function getLiveConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || $this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->liveConfigIni);
+        }
         return $this->liveConfigIni;
     }
 
     /**
      * the profiles.ini.php file
-     * @return \Jelix\IniFile\IniModifier
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getProfilesIni() {
+    public function getProfilesIni($forceReadOnly = false) {
+        if ($forceReadOnly || $this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->profilesIni);
+        }
         return $this->profilesIni;
     }
 
@@ -560,7 +575,7 @@ class GlobalSetup {
      * @param string $collection the name of the webassets collection
      * @param boolean $force
      */
-    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config,
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifierInterface $config,
                                              $name, array $values, $collection, $force)
     {
         $section = 'webassets_'.$collection;
@@ -597,7 +612,7 @@ class GlobalSetup {
      * @param string $name the name of webassets
      * @param string $collection the name of the webassets collection
      */
-    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifier $config,
+    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifierInterface $config,
                                               $name, $collection)
     {
         $section = 'webassets_'.$collection;
@@ -644,7 +659,15 @@ class GlobalSetup {
                 return null;
             }
         }
-        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
+
+        if ($this->readWriteConfigMode) {
+            $ini = new \Jelix\IniFile\IniModifier($confpath);
+        }
+        else {
+            $ini = new \Jelix\IniFile\IniReader($confpath);
+        }
+
+        return array($ini, 0);
     }
 
     /**

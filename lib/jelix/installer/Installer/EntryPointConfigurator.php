@@ -9,70 +9,12 @@ namespace Jelix\Installer;
 
 
 /**
- * container for entry points properties for configurators
- *
- * @method getType()
- * @method getScriptName()
- * @method getFileName()
- * @method isCliScript()
- * @method getUrlMap()
- * @method getEpId()
- * @method getModulesList()
- * @method getAppConfigIni()
- * @method getLocalConfigIni()
- * @method getLiveConfigIni()
- * @method getConfigFileName()
- * @method getConfigObj()
- * @method setConfigObj($config)
+ * entry points properties for configurators
  *
  * @since 1.7
  */
-class EntryPointConfigurator
+class EntryPointConfigurator extends EntryPointPreConfigurator
 {
-    /**
-     * @var EntryPoint
-     */
-    protected $entryPoint;
-
-    protected $configureOnLocalConfig = false;
-
-    /**
-     * @var GlobalSetup
-     */
-    protected $globalSetup;
-
-    function __construct(EntryPoint $entryPoint,
-                         GlobalSetup $globalSetup,
-                         $configureOnLocalConfig
-    )
-    {
-        $this->entryPoint = $entryPoint;
-        $this->globalSetup = $globalSetup;
-        $this->configureOnLocalConfig = $configureOnLocalConfig;
-    }
-
-    public function __call ( $function_name , $arguments) {
-        return call_user_func_array([$this->entryPoint, $function_name], $arguments);
-    }
-
-    function getConfigurationMode() {
-        return $this->configureOnLocalConfig;
-    }
-
-    /**
-     * access to the configuration, app config or local config
-     * depending on the configuration mode
-     *
-     * @return \Jelix\IniFile\IniModifierArray
-     * @see self::getLocalConfigIni(), self:getAppConfigIni()
-     */
-    function getConfigIni()
-    {
-        if ($this->configureOnLocalConfig) {
-            return $this->entryPoint->getLocalConfigIni();
-        }
-        return $this->entryPoint->getAppConfigIni();
-    }
 
     /**
      * Declare web assets into the entry point config
@@ -83,6 +25,7 @@ class EntryPointConfigurator
      */
     public function declareWebAssets($name, array $values, $collection, $force)
     {
-        $this->globalSetup->declareWebAssetsInConfig($this->entryPoint->getAppConfigIni()['entrypoint'], $name, $values, $collection, $force);
+        $ini = $this->entryPoint->getSingleConfigIni();
+        $this->globalSetup->declareWebAssetsInConfig($ini, $name, $values, $collection, $force);
     }
 }

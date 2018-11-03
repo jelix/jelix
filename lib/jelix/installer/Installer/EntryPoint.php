@@ -9,6 +9,7 @@ namespace Jelix\Installer;
 
 use Jelix\Routing\UrlMapping\XmlEntryPoint;
 use Jelix\IniFile\IniModifier;
+use \Jelix\IniFile\IniModifierReadOnly;
 
 /**
  * container for entry points properties, for installers
@@ -31,23 +32,16 @@ class EntryPoint
     protected $configFileName;
 
     /**
-     * all original configuration files combined
-     * @var \Jelix\IniFile\IniModifierArray
+     * application entry point configuration
+     * * @var \Jelix\IniFile\IniModifier
      */
-    protected $appConfigIni;
+    protected $appEpConfigIni;
 
     /**
-     * all local configuration files combined with original configuration file
-     * @var \Jelix\IniFile\IniModifierArray
+     * local entry point configuration
+     * @var \Jelix\IniFile\IniModifier
      */
-    protected $localConfigIni;
-
-    /**
-     * the live configuration file combined with all other configuration files
-     * @var \Jelix\IniFile\IniModifierArray
-     */
-    protected $liveConfigIni;
-
+    protected $localEpConfigIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -107,18 +101,10 @@ class EntryPoint
             \jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
         }
-
-        $this->appConfigIni = $globalSetup->getAppConfigIni();
-        $this->appConfigIni['entrypoint'] = new IniModifier($appConfigPath);
-
         $varConfigPath = \jApp::varConfigPath($configFile);
-        $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
-        $this->localConfigIni = clone $this->appConfigIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni();
-        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
 
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni();
+        $this->appEpConfigIni = new IniModifier($appConfigPath);
+        $this->localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
 
         $this->config = \jConfigCompiler::read($configFile, true,
             $this->_isCliScript,
@@ -171,53 +157,46 @@ class EntryPoint
     }
 
 
-    /**
-     * the full original configuration of the entry point
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *
-     * @return \Jelix\IniFile\IniModifierArray
-     */
-    function getAppConfigIni()
-    {
-        return $this->appConfigIni;
+    public function getConfigIni() {
+
+        if ($this->globalSetup->isReadWriteConfigMode()) {
+            $appCf = $this->appEpConfigIni;
+        }
+        else {
+            $appCf = new IniModifierReadOnly($this->appEpConfigIni);
+        }
+
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $ini = $this->globalSetup->getAppConfigIni(true);
+            $ini['entrypoint'] = $appCf;
+            $ini['local'] = $this->globalSetup->getLocalConfigIni();
+            if ($this->globalSetup->isReadWriteConfigMode()) {
+                $ini['localentrypoint'] = $this->localEpConfigIni;
+            }
+            else {
+                $ini['localentrypoint'] = new IniModifierReadOnly($this->localEpConfigIni);
+            }
+            return $ini;
+        }
+        $ini = $this->globalSetup->getAppConfigIni();
+        $ini['entrypoint'] = $appCf;
+        return $ini;
     }
 
-    /*
-     * the local entry point config (in var/config) combined with the original configuration
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *  - "local" => localconfig.ini.php
-     *  - "localentrypoint" => var/config/$entrypointConfigFile
-     *
-     * @return \Jelix\IniFile\IniModifierArray
-     */
-    function getLocalConfigIni()
-    {
-        return $this->localConfigIni;
-    }
+    public function getSingleConfigIni() {
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $ini = $this->localEpConfigIni;
+        }
+        else {
+            $ini = $this->appEpConfigIni;
+        }
 
-    /*
-     * the live config combined with other configuration files
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *  - "local" => localconfig.ini.php
-     *  - "localentrypoint" => var/config/$entrypointConfigFile
-     *  - "live" => var/config/liveconfig.ini.php
-     * @return \Jelix\IniFile\IniModifierArray
-     */
-    function getLiveConfigIni()
-    {
-        return $this->liveConfigIni;
+        if ($this->globalSetup->isReadWriteConfigMode()) {
+            return $ini;
+        }
+        else {
+            return new IniModifierReadOnly($ini);
+        }
     }
 
     /**

@@ -7,6 +7,9 @@
  */
 namespace Jelix\Installer\Module;
 
+use Jelix\Installer\Module\API\ConfigurationHelpers;
+use Jelix\Installer\Module\API\PreConfigurationHelpers;
+
 /**
  * Interface for classes which configure a module
  * @since 1.7
@@ -59,7 +62,7 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be configured
      */
-    public function preConfigure();
+    public function preConfigure(PreConfigurationHelpers $helpers);
 
 
     /**
@@ -71,12 +74,23 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be configured
      */
-    public function configure();
+    public function configure(ConfigurationHelpers $helpers);
+
+    /**
+     * Configure the module in the context of the local configuration
+     *
+     * You can set some configuration parameters in the local configuration
+     * files, you can also copy some files into the application, setup the
+     * urls mapping etc..
+     *
+     * @throws \Exception if the module cannot be configured
+     */
+    public function localConfigure(ConfigurationHelpers $helpers);
 
     /**
      * called after the configuration of all modules.
      */
-    public function postConfigure();
+    public function postConfigure(ConfigurationHelpers $helpers);
 
     /**
      * called before unconfiguration of any modules.
@@ -86,7 +100,7 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be unconfigured
      */
-    public function preUnconfigure();
+    public function preUnconfigure(PreConfigurationHelpers $helpers);
 
 
     /**
@@ -99,12 +113,25 @@ interface ConfiguratorInterface {
      *
      * @throws \Exception if the module cannot be unconfigured
      */
-    public function unconfigure();
+    public function unconfigure(ConfigurationHelpers $helpers);
+
+
+    /**
+     * Unconfigure the module in the context of the local configuration
+     *
+     * You can remove some configuration parameters from the application
+     * parameters that are not needed for the uninstaller. You can
+     * also delete some files you installed into the configure() method,
+     * remove the url mapping etc..
+     *
+     * @throws \Exception if the module cannot be unconfigured
+     */
+    public function localUnconfigure(ConfigurationHelpers $helpers);
 
     /**
      * called after the unconfiguration of all modules.
      */
-    public function postUnconfigure();
+    public function postUnconfigure(ConfigurationHelpers $helpers);
 
 
 }
