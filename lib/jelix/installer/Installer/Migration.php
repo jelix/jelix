@@ -291,8 +291,10 @@ class Migration {
                 // is, so just move it to app/config
                 if (file_exists($ini->getFileName())) {
                     $rpath = \Jelix\FileUtilities\Path::shortestPath(\jApp::varConfigPath(), $ini->getFileName());
-                    $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
-                    rename ($ini->getFileName(), \jApp::appConfigPath($rpath));
+                    if (!file_exists(\jApp::appConfigPath($rpath))) {
+                        $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
+                        rename ($ini->getFileName(), \jApp::appConfigPath($rpath));
+                    }
                 }
                 continue;
             }
