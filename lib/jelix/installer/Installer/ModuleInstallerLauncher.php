@@ -140,6 +140,10 @@ class ModuleInstallerLauncher {
         return $this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL;
     }
 
+    public function getDbProfile() {
+        return $this->moduleStatus->dbProfile;
+    }
+
     /**
      * @return bool
      * @throws Exception
@@ -349,9 +353,7 @@ class ModuleInstallerLauncher {
             $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                 $this->moduleStatus->dbProfile);
         }
-        else {
-            $this->moduleInstaller->initDbProfile($this->moduleStatus->dbProfile);
-        }
+
         $this->moduleInstaller->setParameters($this->moduleStatus->parameters);
 
         return $this->moduleInstaller;
@@ -381,6 +383,7 @@ class ModuleInstallerLauncher {
             $installer = $this->getInstaller();
             if ($installer && $installer instanceof \jIInstallerComponent) {
                 $this->moduleUninstaller = $installer;
+                $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
                 $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
                 return $this->moduleUninstaller;
             }
@@ -406,7 +409,9 @@ class ModuleInstallerLauncher {
             $this->moduleUninstaller->setGlobalSetup($this->globalSetup);
         }
 
-        $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
+        if ($this->moduleUninstaller instanceof \jIInstallerComponent) {
+            $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
+        }
         $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
         return $this->moduleUninstaller;
     }
@@ -558,10 +563,12 @@ class ModuleInstallerLauncher {
                         continue;
                 }
             }
+
             $class = get_class($upgrader);
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
+
             if ($upgrader instanceof \jIInstallerComponent) {
                 $upgrader->setContext($this->upgradersContexts[$class]);
                 $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
@@ -571,9 +578,7 @@ class ModuleInstallerLauncher {
                 $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                                             $this->moduleStatus->dbProfile);
             }
-            else {
-                $upgrader->initDbProfile($this->moduleStatus->dbProfile);
-            }
+
             $upgrader->setParameters($this->moduleStatus->parameters);
             $list[] = $upgrader;
         }

@@ -1,0 +1,76 @@
+<?php
+/**
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ * @link        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+namespace Jelix\Installer\Module\API;
+
+
+/**
+ *
+ * @since 1.7
+ */
+class InstallHelpers extends PreInstallHelpers
+{
+    //use FileHelpersTrait;
+    use DbProfileHelpersTrait;
+
+    /**
+     * @var DatabaseHelpers $databaseHelpers
+     */
+    protected $databaseHelpers;
+
+    function __construct(\Jelix\Installer\GlobalSetup $setup, DatabaseHelpers $database)
+    {
+        parent::__construct($setup);
+        $this->databaseHelpers = $database;
+    }
+
+    /**
+     * @return DatabaseHelpers
+     */
+    public function database() {
+        return $this->databaseHelpers;
+    }
+
+    /**
+     * the liveconfig.ini.php file combined with localconfig, main and default config
+     * @return \Jelix\IniFile\IniModifierArray
+     * @since 1.7
+     */
+    public function getLiveConfigIni() {
+        $ini = $this->globalSetup->getAppConfigIni(true);
+        $ini['local'] = $this->globalSetup->getLocalConfigIni();
+        $ini['live'] = $this->globalSetup->getLiveConfigIni();
+        return $ini;
+    }
+
+    /**
+     * declare web assets into the main configuration
+     * @param string $name the name of webassets
+     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
+     * @param string $collection the name of the webassets collection
+     * @param bool $force
+     */
+    public function declareGlobalWebAssets($name, array $values, $collection, $force)
+    {
+        $config = $this->getLocalConfigIni();
+        $this->globalSetup->declareWebAssetsInConfig($config, $name, $values, $collection, $force);
+    }
+
+    /**
+     * remove web assets from the main configuration
+     *
+     * @param string $name the name of webassets
+     * @param string $collection the name of the webassets collection
+     */
+    public function removeGlobalWebAssets($name, $collection)
+    {
+        $config = $this->getLocalConfigIni();
+        $this->globalSetup->removeWebAssetsFromConfig($config, $name, $collection);
+    }
+
+
+}

@@ -161,12 +161,14 @@ class Installer {
             $this->notice('install.installers.disabled');
         }
 
+        $this->globalSetup->setReadWriteConfigMode(false);
         $componentsToInstall = $this->runPreInstall($modulesChain);
         if ($componentsToInstall === false) {
             $this->warning('install.bad.end');
             return false;
         }
 
+        $this->globalSetup->setReadWriteConfigMode(true);
         $installedModules = $this->runInstall($componentsToInstall);
         if ($installedModules === false) {
             $this->warning('install.bad.end');
@@ -268,6 +270,9 @@ class Installer {
         // the next step
         $componentsToInstall = array();
         $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
+
+        $helpers = new Module\API\PreInstallHelpers($this->globalSetup);
+
         foreach($moduleschain as $resolverItem) {
             /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
@@ -282,7 +287,12 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($installer) {
-                        $installer->preInstall();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->preInstall();
+                        }
+                        else {
+                            $installer->preInstall($helpers);
+                        }
                     }
                 }
                 elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
@@ -294,7 +304,12 @@ class Installer {
                     }
 
                     foreach($upgraders as $upgrader) {
-                        $upgrader->preInstall();
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->preInstall();
+                        }
+                        else {
+                            $upgrader->preInstall($helpers);
+                        }
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
                 }
@@ -306,7 +321,12 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {
-                        $installer->preUninstall();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->preUninstall();
+                        }
+                        else {
+                            $installer->preUninstall($helpers);
+                        }
                     }
                 }
             } catch (Exception $e) {
@@ -334,6 +354,9 @@ class Installer {
         $result = true;
         $installerIni = $this->globalSetup->getInstallerIni();
 
+        $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
+        $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
+
         try {
             foreach($componentsToInstall as $item) {
                 /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
@@ -342,9 +365,22 @@ class Installer {
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
 
+                $defaultDbProfile = $installer->getDefaultDbProfile();
+                if ($defaultDbProfile != '') {
+                    $databaseHelpers->useDbProfile($defaultDbProfile);
+                }
+                else {
+                    $databaseHelpers->useDbProfile($component->getDbProfile());
+                }
+
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $installer->install();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->install();
+                        }
+                        else {
+                            $installer->install($helpers);
+                        }
                         $saveConfigIni = true;
                     }
 
@@ -363,9 +399,14 @@ class Installer {
                 }
                 elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
-                    /** @var \Jelix\Installer\Module\Installer $upgrader */
+                    /** @var \jInstallerModule|\Jelix\Installer\Module\Installer $upgrader */
                     foreach($installer as $upgrader) {
-                        $upgrader->install();
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->install();
+                        }
+                        else {
+                            $upgrader->install($helpers);
+                        }
                         $saveConfigIni = true;
 
                         // we set the version of the upgrade, so if an error occurs in
@@ -394,7 +435,12 @@ class Installer {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $installer->uninstall();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->uninstall();
+                        }
+                        else {
+                            $installer->uninstall($helpers);
+                        }
                         $saveConfigIni = true;
                     }
                     $installerIni->removeValue($component->getName().'.installed', 'modules');
@@ -432,6 +478,8 @@ class Installer {
     protected function runPostInstall($installedModules) {
 
         $result = true;
+        $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
+        $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
 
         foreach($installedModules as $item) {
             try {
@@ -440,23 +488,47 @@ class Installer {
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
+
+                $defaultDbProfile = $installer->getDefaultDbProfile();
+                if ($defaultDbProfile != '') {
+                    $databaseHelpers->useDbProfile($defaultDbProfile);
+                }
+                else {
+                    $databaseHelpers->useDbProfile($component->getDbProfile());
+                }
+
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $installer->postInstall();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->postInstall();
+                        }
+                        else {
+                            $installer->postInstall($helpers);
+                        }
                         $component->installFinished();
                         $saveConfigIni = true;
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     foreach ($installer as $upgrader) {
-                        $upgrader->postInstall();
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->postInstall();
+                        }
+                        else {
+                            $upgrader->postInstall($helpers);
+                        }
                         $component->upgradeFinished($upgrader);
                         $saveConfigIni = true;
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $installer->postUninstall();
+                        if ($installer instanceof \jInstallerModule) {
+                            $installer->postUninstall();
+                        }
+                        else {
+                            $installer->postUninstall($helpers);
+                        }
                         $component->uninstallFinished();
                         $saveConfigIni = true;
                     }

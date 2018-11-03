@@ -1,11 +1,14 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2018 Laurent Jouanneau
+* @copyright   2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer\Module;
+
+use Jelix\Installer\Module\API\InstallHelpers;
+use Jelix\Installer\Module\API\PreInstallHelpers;
 
 /**
  * Bas class for classes that does processing to install a module into
@@ -16,26 +19,24 @@ namespace Jelix\Installer\Module;
  */
 class Installer extends InstallerAbstract implements InstallerInterface {
 
-    use InstallerHelpersTrait;
-
     /**
      * @inheritdoc
      */
-    function preInstall() {
+    function preInstall(PreInstallHelpers $helpers) {
 
     }
 
     /**
      * @inheritdoc
      */
-    function install() {
+    function install(InstallHelpers $helpers) {
 
     }
 
     /**
      * @inheritdoc
      */
-    function postInstall() {
+    function postInstall(InstallHelpers $helpers) {
 
     }
 

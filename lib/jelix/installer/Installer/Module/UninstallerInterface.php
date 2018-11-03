@@ -7,6 +7,9 @@
 */
 namespace Jelix\Installer\Module;
 
+use Jelix\Installer\Module\API\InstallHelpers;
+use Jelix\Installer\Module\API\PreInstallHelpers;
+
 /**
  * interface for classes that uninstall a module
  * @since 1.7
@@ -19,14 +22,14 @@ interface UninstallerInterface {
      * Here, you should check if the module can be uninstalled or not
      * @throws \Exception if the module cannot be uninstalled
      */
-    function preUninstall();
+    function preUninstall(PreInstallHelpers $helpers);
 
     /**
      * should uninstall the module
      *
      * @throws \Exception  if an error occurs during the uninstall.
      */
-    function uninstall();
+    function uninstall(InstallHelpers $helpers);
 
     /**
      * Redefine this method if you do some additional process after
@@ -34,7 +37,7 @@ interface UninstallerInterface {
      *
      * @throws \Exception  if an error occurs during the post installation.
      */
-    function postUninstall();
+    function postUninstall(InstallHelpers $helpers);
 
 }
 

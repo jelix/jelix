@@ -1,11 +1,15 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2018 Laurent Jouanneau
+* @copyright   2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer\Module;
+
+
+use Jelix\Installer\Module\API\InstallHelpers;
+use Jelix\Installer\Module\API\PreInstallHelpers;
 
 /**
  * A class that does processing to uninstall a module from an instance of
@@ -14,28 +18,26 @@ namespace Jelix\Installer\Module;
  *
  * @since 1.7
  */
-class Uninstaller  extends InstallerAbstract implements UninstallerInterface {
-
-    use UninstallerHelpersTrait;
+class Uninstaller extends InstallerAbstract implements UninstallerInterface {
 
     /**
      * @inheritdoc
      */
-    function preUninstall() {
+    function preUninstall(PreInstallHelpers $helpers) {
 
     }
 
     /**
      * @inheritdoc
      */
-    function uninstall() {
+    function uninstall(InstallHelpers $helpers) {
 
     }
 
     /**
      * @inheritdoc
      */
-    function postUninstall() {
+    function postUninstall(InstallHelpers $helpers) {
 
     }
 

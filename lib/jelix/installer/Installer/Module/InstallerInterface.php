@@ -8,6 +8,9 @@
 namespace Jelix\Installer\Module;
 
 
+use Jelix\Installer\Module\API\InstallHelpers;
+use Jelix\Installer\Module\API\PreInstallHelpers;
+
 /**
  * interface of classes which install a module
  * @since 1.7
@@ -21,7 +24,7 @@ interface InstallerInterface {
      * Here, you should check if the module can be installed or not
      * @throws \Exception if the module cannot be installed
      */
-    function preInstall();
+    function preInstall(PreInstallHelpers $helpers);
 
     /**
      * Should configure the module
@@ -30,7 +33,7 @@ interface InstallerInterface {
      * to cancel/revert all things the method did before the error
      * @throws \Exception  if an error occurs during the installation.
      */
-    function install();
+    function install(InstallHelpers $helpers);
 
     /**
      * Redefine this method if you do some additional process after
@@ -38,7 +41,7 @@ interface InstallerInterface {
      *
      * @throws \Exception  if an error occurs during the post installation.
      */
-    function postInstall();
+    function postInstall(InstallHelpers $helpers);
 
 }
 
