@@ -368,12 +368,12 @@ class Configurator {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
-                            $configurator->configure($configHelpers);
+                            $this->execModuleConfigure($configurator, $configHelpers);
                         }
                         $configurator->localConfigure($localConfigHelpers);
                     }
                     else {
-                        $configurator->configure($configHelpers);
+                        $this->execModuleConfigure($configurator, $configHelpers);
                     }
                     $component->saveModuleStatus();
                     $this->saveConfigurationFiles($entryPoint);
@@ -387,6 +387,33 @@ class Configurator {
             $this->error ('configuration.module.error', array($component->getName(), $e->getMessage()));
         }
         return $result;
+    }
+
+    protected function execModuleConfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers) {
+        $configurator->configure($configHelpers);
+
+        $prefix = $this->globalSetup->getCurrentModulePath() . 'install/';
+        foreach($configurator->getFilesToCopy() as $source => $target) {
+            if (is_dir($prefix.$source)) {
+                $configHelpers->copyDirectoryContent($source, $target, true);
+            }
+            else if (is_file($prefix.$source)) {
+                $configHelpers->copyFile($source, $target, true);
+            }
+        }
+    }
+
+    protected function execModuleUnconfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers) {
+        $configurator->unconfigure($configHelpers);
+        $prefix = $this->globalSetup->getCurrentModulePath() . 'install/';
+        foreach($configurator->getFilesToCopy() as $source => $target) {
+            if (is_dir($prefix.$source)) {
+                $configHelpers->removeDirectoryContent($target);
+            }
+            else if (is_file($prefix.$source)) {
+                $configHelpers->removeFile($target);
+            }
+        }
     }
 
     protected function runPostConfigure($componentsToConfigure, EntryPoint $entryPoint) {
@@ -572,12 +599,12 @@ class Configurator {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
-                            $configurator->unconfigure($configHelpers);
+                            $this->execModuleUnconfigure($configurator, $configHelpers);
                         }
                         $configurator->localUnconfigure($localConfigHelpers);
                     }
                     else {
-                        $configurator->unconfigure($configHelpers);
+                        $this->execModuleUnconfigure($configurator, $configHelpers);
                     }
 
                     $component->saveModuleStatus();

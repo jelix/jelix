@@ -51,6 +51,19 @@ class Configurator implements ConfiguratorInterface {
         return array();
     }
 
+
+    /**
+     * List of files or directories to copy
+     *
+     * @return string[]
+     *          - keys are relative path to the install/ directory of the module
+     *          - values are target path. Shortcut allowed ('www:', 'config:', 'var:', 'temp:', 'log:')
+     */
+    public function getFilesToCopy() {
+        return array();
+    }
+
+
     /**
      * @inheritdoc
      */
