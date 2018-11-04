@@ -10,6 +10,9 @@ namespace Jelix\Installer\Module\API;
 /**
  * Trait for installer/configurator classes
  *
+ * For methods having a target path as parameter, the path may content these Jelix
+ * shortcuts parts: 'www:', 'config:', 'var:', 'temp:', 'log:'.
+ *
  * @since 1.7
  */
 trait FileHelpersTrait
@@ -19,9 +22,11 @@ trait FileHelpersTrait
      * copy the whole content of a directory existing in the install/ directory
      * of the component, to the given directory
      * @param string $relativeSourcePath relative path to the install/ directory of the component
-     * @param string $targetPath the full path where to copy the content
+     * @param string $targetPath the path where to copy the content.
+     *                          the path may content Jelix shortcuts, see FileHelpersTrait
+     *
      */
-    final protected function copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite = false)
+    public function copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite = false)
     {
         $targetPath = $this->expandPath($targetPath);
         $this->_copyDirectoryContent($this->globalSetup->getCurrentModulePath() . 'install/' . $relativeSourcePath, $targetPath, $overwrite);
@@ -33,7 +38,7 @@ trait FileHelpersTrait
      * @param string $sourcePath
      * @param string $targetPath
      */
-    private function _copyDirectoryContent($sourcePath, $targetPath, $overwrite)
+    protected function _copyDirectoryContent($sourcePath, $targetPath, $overwrite)
     {
         \jFile::createDir($targetPath);
         $dir = new \DirectoryIterator($sourcePath);
@@ -55,9 +60,10 @@ trait FileHelpersTrait
     /**
      * copy a file from the install/ directory to an other
      * @param string $relativeSourcePath relative path to the install/ directory of the file to copy
-     * @param string $targetPath the full path where to copy the file
+     * @param string $targetPath the path where to copy the file.
+     *                          the path may content Jelix shortcuts, see FileHelpersTrait
      */
-    final protected function copyFile($relativeSourcePath, $targetPath, $overwrite = false)
+    public function copyFile($relativeSourcePath, $targetPath, $overwrite = false)
     {
         $targetPath = $this->expandPath($targetPath);
         if (!$overwrite && file_exists($targetPath))
@@ -72,41 +78,56 @@ trait FileHelpersTrait
      * remove the whole content of a directory from the application
      *
      * @param string $targetPath the path of the directory to remove
-     *                  the path may content Jelix shortcuts parts like www:, app:...
+     *                  the path may content Jelix shortcuts, see FileHelpersTrait
      */
-    final protected function removeDirectoryContent($targetPath) {
-        $path = \jFile::parseJelixPath($targetPath);
+    public function removeDirectoryContent($targetPath) {
+        $path = $this->expandPath($targetPath);
         \jFile::removeDir($path, true);
     }
 
     /**
      * delete a file from the the application
      * @param string $targetPath the path of the file
-     *             the path may content Jelix shortcuts parts like www:, app:...
+     *             the path may content Jelix shortcuts, see FileHelpersTrait
      */
-    final protected function removeFile($targetPath) {
-        $path = \jFile::parseJelixPath($targetPath);
+    public function removeFile($targetPath) {
+        $path = $this->expandPath($targetPath);
         unlink($path);
     }
 
     protected function expandPath($path)
     {
-        if (strpos($path, 'www:') === 0)
-            $path = str_replace('www:', \jApp::wwwPath(), $path);
-        elseif (strpos($path, 'jelixwww:') === 0) {
-            $p = $this->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
-            if (substr($p, -1) != '/') {
-                $p .= '/';
+        if (preg_match("/^([a-z])\\:/", $path, $m)) {
+            switch($m[1]) {
+                case 'www':
+                    $path = str_replace('www:', \jApp::wwwPath(), $path);
+                    break;
+                case 'varconfig':
+                    $path = str_replace('varconfig:', \jApp::varConfigPath(), $path);
+                    break;
+                case 'appconfig':
+                    $path = str_replace('appconfig:', \jApp::appConfigPath(), $path);
+                    break;
+                case 'config':
+                    if ($this->globalSetup->forLocalConfiguration()) {
+                        $path = str_replace('config:', \jApp::varConfigPath(), $path);
+                    }
+                    else {
+                        $path = str_replace('config:', \jApp::appConfigPath(), $path);
+                    }
+                    break;
+                case 'var':
+                    $path = str_replace('var:', \jApp::varPath(), $path);
+                    break;
+                case 'temp':
+                    $path = str_replace('temp:', \jApp::tempPath(), $path);
+                    break;
+                case 'log':
+                    $path = str_replace('log:', \jApp::logPath(), $path);
+                    break;
+                default:
+                    throw new \InvalidArgumentException($m[1]." is an invalid shortcut");
             }
-            $path = str_replace('jelixwww:', \jApp::wwwPath($p), $path);
-        } elseif (strpos($path, 'varconfig:') === 0) {
-            $path = str_replace('varconfig:', \jApp::varConfigPath(), $path);
-        } elseif (strpos($path, 'appconfig:') === 0) {
-            $path = str_replace('appconfig:', \jApp::appConfigPath(), $path);
-        } elseif (strpos($path, 'epconfig:') === 0) {
-            throw new \Exception("'epconfig:' alias is no more supported in path");
-        } elseif (strpos($path, 'config:') === 0) {
-            throw new \Exception("'config:' alias is no more supported in path");
         }
         return $path;
     }

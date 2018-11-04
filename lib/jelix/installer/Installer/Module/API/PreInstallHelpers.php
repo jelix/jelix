@@ -27,7 +27,7 @@ class PreInstallHelpers
     }
 
     /**
-     * default config, main config combined with or without local config
+     * default config, main config combined with local config. Read only.
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getConfigIni() {

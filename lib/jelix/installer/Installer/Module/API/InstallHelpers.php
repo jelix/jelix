@@ -36,15 +36,23 @@ class InstallHelpers extends PreInstallHelpers
     }
 
     /**
-     * the liveconfig.ini.php file combined with localconfig, main and default config
+     * default config, main config combined with local config (RW) and live config (RW)
      * @return \Jelix\IniFile\IniModifierArray
-     * @since 1.7
      */
-    public function getLiveConfigIni() {
+    public function getConfigIni() {
         $ini = $this->globalSetup->getAppConfigIni(true);
         $ini['local'] = $this->globalSetup->getLocalConfigIni();
         $ini['live'] = $this->globalSetup->getLiveConfigIni();
         return $ini;
+    }
+
+    /**
+     * the liveconfig.ini.php file
+     * @return \Jelix\IniFile\IniModifierInterface
+     * @since 1.7
+     */
+    public function getLiveConfigIni() {
+        return $this->globalSetup->getLiveConfigIni();
     }
 
     /**
