@@ -63,15 +63,6 @@ class Configurator implements ConfiguratorInterface {
         return array();
     }
 
-
-    /**
-     * @inheritdoc
-     */
-    public function askParameters(InteractiveConfigurator $cli) {
-
-    }
-
-
     /**
      * @inheritdoc
      */

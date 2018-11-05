@@ -7,6 +7,7 @@
  */
 namespace Jelix\Installer\Module\API;
 
+use Jelix\Installer\Module\InteractiveConfigurator;
 /**
  *
  * @since 1.7
@@ -14,6 +15,23 @@ namespace Jelix\Installer\Module\API;
 class ConfigurationHelpers extends PreConfigurationHelpers {
 
     use FileHelpersTrait;
+
+    /**
+     * @var InteractiveConfigurator
+     */
+    protected $interactiveConfigurator;
+
+    function __construct(\Jelix\Installer\GlobalSetup $setup, InteractiveConfigurator $cli) {
+        parent::__construct($setup);
+        $this->interactiveConfigurator = $cli;
+    }
+
+    /**
+     * @return InteractiveConfigurator
+     */
+    public function cli() {
+        return $this->interactiveConfigurator;
+    }
 
     /**
      * Main entrypoint of the application (in most of case, index.php)

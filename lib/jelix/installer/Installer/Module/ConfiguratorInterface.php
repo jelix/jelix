@@ -28,25 +28,11 @@ interface ConfiguratorInterface {
      * indicates installation parameters to use.
      *
      * can be called whether the interactive mode is enabled or not
-     * (but before askParameters())
+     * (but before preConfigure())
      *
      * @param array $parameters
      */
     public function setParameters($parameters);
-
-    /**
-     * It should asks installation parameters to the user on the console.
-     *
-     * It is called when the interactive mode is enabled. It should fill
-     * itself its installation parameters.
-     *
-     * The configuration should not be modify by this method.
-     *
-     * @param InteractiveConfigurator $cli the object which provides methods
-     *  to ask things to the user.
-     * @throws \Exception  if an error occurs during the installation.
-     */
-    public function askParameters(InteractiveConfigurator $cli);
 
     /**
      * return list of installation parameters

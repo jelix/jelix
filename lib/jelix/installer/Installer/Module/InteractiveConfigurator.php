@@ -53,7 +53,10 @@ class InteractiveConfigurator {
      * @return boolean true it the user has confirmed
      */
     public function askConfirmation($questionMessage, $defaultResponse = false) {
-        return $this->inputHelpers->askConfirmation($questionMessage, $defaultResponse);
+        if ($this->consoleInput->isInteractive()) {
+            return $this->inputHelpers->askConfirmation($questionMessage, $defaultResponse);
+        }
+        return $defaultResponse;
     }
 
     /**
@@ -69,6 +72,9 @@ class InteractiveConfigurator {
      */
     public function askInformation($questionMessage, $defaultResponse = false,
                                       $autoCompleterValues = false, $validator = null) {
+        if (!$this->consoleInput->isInteractive()) {
+            return $defaultResponse;
+        }
         return $this->inputHelpers->askInformation($questionMessage, $defaultResponse,
             $autoCompleterValues, $validator);
     }
@@ -76,19 +82,18 @@ class InteractiveConfigurator {
     /**
      * Ask a hidden value to the user, like a password
      *
-     * To call from askParameters().
-     *
      * @param string $questionMessage
      * @return string the value
      */
     public function askSecretInformation($questionMessage, $defaultResponse = false) {
+        if (!$this->consoleInput->isInteractive()) {
+            return $defaultResponse;
+        }
         return $this->inputHelpers->askSecretInformation($questionMessage, $defaultResponse);
     }
 
     /**
      * Ask a value from a choice
-     *
-     * To call from askParameters().
      *
      * @param string $questionMessage
      * @param array $choice list of possible values
@@ -100,14 +105,15 @@ class InteractiveConfigurator {
     public function askInChoice($questionMessage, array $choice,
                                    $defaultResponse=0, $multipleChoice = false,
                                    $errorMessage='%s is invalid') {
+        if (!$this->consoleInput->isInteractive()) {
+            return $defaultResponse;
+        }
         return $this->inputHelpers->askInChoice($questionMessage, $choice,
             $defaultResponse, $multipleChoice, $errorMessage);
     }
 
     /**
      * Ask to choose an entry point
-     *
-     * To call from askParameters().
      *
      * @param string $questionMessage
      * @param string $entryPointType the type of entry point. Empty value means any entry points
@@ -119,6 +125,7 @@ class InteractiveConfigurator {
     public function askEntryPoints($questionMessage, $entryPointType='',
                                       $multipleChoice = false, $preselectedChoice = array(),
                                       $errorMessage='%s is an unknown entry points') {
+
         $questionMessage = "<question>$questionMessage</question>";
         if ($entryPointType == '') {
             $choice = array_keys($this->globalSetup->getEntryPointsList());
@@ -128,6 +135,10 @@ class InteractiveConfigurator {
         }
         if (!count($choice)) {
             return false;
+        }
+
+        if (!$this->consoleInput->isInteractive()) {
+            return $preselectedChoice;
         }
 
         if ($multipleChoice && count($choice) > 1) {
@@ -168,18 +179,23 @@ class InteractiveConfigurator {
     /**
      * Ask parameters to access to a database
      *
-     * To call from askParameters().
-     *
      */
     public function askDbProfile($currentProfileValues = array()) {
 
         $profile = array();
 
-        $profile['driver'] = $this->inputHelpers->askInChoice(
-            "Which is the type of your database? ",
-            array_keys($this->dbProfileProperties),
-            (isset($currentProfileValues['driver'])?$currentProfileValues['driver']:'mysqli')
-        );
+        $defaultProfile = (isset($currentProfileValues['driver'])?$currentProfileValues['driver']:'mysqli');
+
+        if ($this->consoleInput->isInteractive()) {
+            $profile['driver'] = $this->inputHelpers->askInChoice(
+                "Which is the type of your database? ",
+                array_keys($this->dbProfileProperties),
+                $defaultProfile
+            );
+        }
+        else {
+            $profile['driver'] = $defaultProfile;
+        }
         $properties = $this->dbProfileProperties[$profile['driver']];
         foreach($properties as $property) {
             if (is_array($property)) {
@@ -194,28 +210,41 @@ class InteractiveConfigurator {
             }
         }
 
-        if ( $this->inputHelpers->askConfirmation('Use a PDO to connect to the database?',
-            (isset($currentProfileValues['usepdo'])?$currentProfileValues['usepdo']:false))
-        ) {
-            $profile['usepdo'] = true;
-        }
-        ;
-        if ( $this->inputHelpers->askConfirmation('For all tables accessible from this connection, are they name prefixed?',
-            (isset($currentProfileValues['table_prefix']) && $currentProfileValues['table_prefix'])
-        )
-        ) {
-            $value = $this->inputHelpers->askConfirmation('Indicate the prefix',
-                (isset($currentProfileValues['table_prefix'])?$currentProfileValues['table_prefix']:false));
-            if ( $value ) {
-                $profile['table_prefix'] = $value;
+        $defaultUsePdo = (isset($currentProfileValues['usepdo'])?$currentProfileValues['usepdo']:false);
+        if ($this->consoleInput->isInteractive()) {
+            if ($this->inputHelpers->askConfirmation('Use a PDO to connect to the database?', $defaultUsePdo)) {
+                $profile['usepdo'] = true;
             }
         }
+        else {
+            $profile['usepdo'] = $defaultUsePdo;
+        }
 
+        $defaultUseTablePrefix = (isset($currentProfileValues['table_prefix']) && $currentProfileValues['table_prefix']);
+        $defaultTablePrefix = (isset($currentProfileValues['table_prefix'])?$currentProfileValues['table_prefix']:false);
+        if ($this->consoleInput->isInteractive()) {
+            if ($this->inputHelpers->askConfirmation('For all tables accessible from this connection, are they name prefixed?', $defaultUseTablePrefix)) {
+                $value = $this->inputHelpers->askConfirmation('Indicate the prefix', $defaultTablePrefix);
+                if ($value) {
+                    $profile['table_prefix'] = $value;
+                }
+                else {
+                    $profile['table_prefix'] =  '';
+                }
+            }
+        }
+        else {
+            $profile['table_prefix'] = ($defaultTablePrefix === false ? '': $defaultTablePrefix);
+        }
         return $profile;
     }
 
     private function askDbProperty($property, &$profile, &$currentProfileValues) {
         $defaultValue = (isset($currentProfileValues[$property])?$currentProfileValues[$property]:false);
+        if ($this->consoleInput->isInteractive()) {
+            $profile[$property] = $defaultValue;
+            return true;
+        }
         switch($property) {
             case 'host':
                 $host = $this->inputHelpers->askInformation('Host of the database server?', $defaultValue, array('localhost'));

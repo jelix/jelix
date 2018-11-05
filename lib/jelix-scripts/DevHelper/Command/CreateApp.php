@@ -139,11 +139,9 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             $output, ($output->isVerbose()?'notice':'error'), 'Configuration');
         $projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
         $globalSetup = new \Jelix\Installer\GlobalSetup($projectInfos);
-        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup,
+            $this->getHelper('question'), $input, $output);
 
-        if ($input->isInteractive()) {
-            $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
-        }
         $configurator->configureModules(array('jelix'), 'index', false, true);
 
         // launch the installer for this new application

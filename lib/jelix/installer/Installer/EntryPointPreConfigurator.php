@@ -56,4 +56,16 @@ class EntryPointPreConfigurator
         throw new \ErrorException("Unknown method $functionName on ".__CLASS__);
     }
 
+    /**
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
+     *
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws \Exception when the configuration filename is not found
+     */
+    public function getCoordPluginConf($pluginName)
+    {
+        return $this->globalSetup->getCoordPluginConf($this->getConfigIni(), $pluginName);
+    }
 }

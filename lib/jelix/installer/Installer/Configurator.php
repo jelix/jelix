@@ -97,13 +97,23 @@ class Configurator {
      * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
      * @param string $lang  the language code for messages
      */
-    public function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup, $lang='') {
+    public function __construct (
+        Reporter\ReporterInterface $reporter,
+        GlobalSetup $globalSetup,
+        QuestionHelper $helper,
+        InputInterface $input,
+        OutputInterface $output,
+        $lang=''
+    ) {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
         $this->globalSetup = $globalSetup;
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
+        $this->consoleInput = $input;
+        $this->consoleOutput = $output;
+        $this->questionHelper = $helper;
     }
 
     /**
@@ -113,13 +123,6 @@ class Configurator {
      */
     public function setModuleParameters($moduleName, $parameters) {
         $this->moduleParameters[$moduleName] = $parameters;
-    }
-
-
-    public function setInteractiveMode(QuestionHelper $helper, InputInterface $input, OutputInterface $output) {
-        $this->consoleInput = $input;
-        $this->consoleOutput = $output;
-        $this->questionHelper = $helper;
     }
 
     static public function setModuleAsConfigured($moduleName, \Jelix\IniFile\IniModifierInterface $configIni) {
@@ -297,12 +300,6 @@ class Configurator {
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
 
-        $interactiveCli = null;
-        if ($this->consoleOutput && $this->consoleInput) {
-            $interactiveCli = new InteractiveConfigurator($this->questionHelper,
-                $this->consoleInput, $this->consoleOutput);
-        }
-
         $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
 
         foreach($moduleschain as $resolverItem) {
@@ -327,13 +324,6 @@ class Configurator {
                         $parameters = array_merge($parameters, $this->moduleParameters[$resolverItem->getName()]);
                     }
                     $configurator->setParameters($parameters);
-
-                    if ($interactiveCli) {
-                        $this->notice('configuration.ask.parameters', array($component->getName()));
-                        $configurator->askParameters($interactiveCli);
-                    }
-                    $component->setInstallParameters($configurator->getParameters());
-
                     $configurator->preConfigure($preconfigHelpers);
                 }
             } catch (Exception $e) {
@@ -356,8 +346,10 @@ class Configurator {
      */
     protected function runConfigure($componentsToConfigure, EntryPoint $entryPoint) {
         $result = true;
-        $configHelpers = new ConfigurationHelpers($this->globalSetup);
-        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup);
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup, $interactiveCli);
         try {
             foreach($componentsToConfigure as $item) {
                 /** @var ModuleInstallerLauncher $component */
@@ -375,6 +367,7 @@ class Configurator {
                     else {
                         $this->execModuleConfigure($configurator, $configHelpers);
                     }
+                    $component->setInstallParameters($configurator->getParameters());
                     $component->saveModuleStatus();
                     $this->saveConfigurationFiles($entryPoint);
                 }
@@ -419,7 +412,9 @@ class Configurator {
     protected function runPostConfigure($componentsToConfigure, EntryPoint $entryPoint) {
 
         $result = true;
-        $configHelpers = new ConfigurationHelpers($this->globalSetup);
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
 
         foreach($componentsToConfigure as $item) {
             try {

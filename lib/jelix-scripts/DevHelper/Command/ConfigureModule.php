@@ -67,13 +67,9 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             ($this->verbose()?'notice':'error'), 'Configuration');
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->projectInfos);
-        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup);
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
         if ($parameters) {
             $configurator->setModuleParameters($module, $parameters);
-        }
-
-        if ($input->isInteractive()) {
-            $configurator->setInteractiveMode($this->getHelper('question'), $input, $output);
         }
 
         $localConfig = $input->getOption('local')?true:($input->getOption('no-local')?true:null);
