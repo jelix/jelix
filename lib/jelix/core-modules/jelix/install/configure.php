@@ -14,58 +14,40 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         return array('wwwfiles'=>'');
     }
 
-
-    public function askParameters()
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers)
     {
-        $this->parameters['wwwfiles'] = $this->askInChoice(
+        $cli = $helpers->cli();
+        $this->parameters['wwwfiles'] = $cli->askInChoice(
             "How to install jelix-www files?".
-            "\n   copy: will be copied int the www/ directory".
-            "\n   filelink: a file system link into the www/ directory will point to the jelix-www directory".
-            "\n   vhost: you will configure your web server to set an alias to the jelix-www directory"
+            "\n   copy: will be copied into the www/ directory".
+            "\n   filelink: a symbolic link into the www/ directory will point to the lib/jelix-www directory".
+            "\n   vhost: you will configure your web server to set an alias to the lib/jelix-www directory"
             ,
             array('copy', 'vhost', 'filelink'), $this->parameters['wwwfiles']
-            );
+        );
 
-        $configIni = $this->getConfigIni();
+        $configIni = $helpers->getConfigIni();
         $jelixWWWPath = $configIni->getValue('jelixWWWPath', 'urlengine');
-        $jelixWWWPath = $this->askInformation('Web path to the content of jelix-www?', $jelixWWWPath);
+        $jelixWWWPath = $cli->askInformation('Web path to the content of lib/jelix-www?', $jelixWWWPath);
         if ($jelixWWWPath == '') {
             $jelixWWWPath = 'jelix/';
         }
+
         $configIni->setValue('jelixWWWPath', $jelixWWWPath, 'urlengine');
 
-        if ($this->askConfirmation('Do you want to configure the access to the database?')) {
-            $profilesIni = $this->getProfilesIni();
-            $profile = null;
-            $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
-            if ($defaultAliasProfile) {
-                $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
-            }
-            else {
-                $profile = $profilesIni->getValues('jdb:default');
-            }
-
-            $profile = $this->askDbProfile($profile);
-            if ($defaultAliasProfile) {
-                $this->declareDbProfile($defaultAliasProfile, $profile, true);
-            }
-            else {
-                $this->declareDbProfile('default', $profile, true);
-            }
-        }
 
         $storage = $configIni->getValue("storage", "sessions");
 
-        if ($this->askConfirmation('Do you want to store sessions into a database?', $storage == 'dao')) {
+        if ($cli->askConfirmation('Do you want to store sessions into a database?', $storage == 'dao')) {
             $configIni->setValue('storage', 'dao', 'session');
             if (!$configIni->getValue("dao_selector", "sessions")) {
-                $dao = $this->askInformation('Indicate the dao selector to store session data', "jelix~jsession");
+                $dao = $cli->askInformation('Indicate the dao selector to store session data', "jelix~jsession");
                 $configIni->setValue('dao_selector', $dao,  'session');
             }
         }
-        else if ($this->askConfirmation('Do you want to store sessions as files into a specific directory?', $storage == 'files')) {
+        else if ($cli->askConfirmation('Do you want to store sessions as files into a specific directory?', $storage == 'files')) {
             $configIni->setValue('storage', 'files', 'session');
-            $path = $this->askInformation('Indicate the path of the directory', $configIni->getValue("files_path", "sessions"));
+            $path = $cli->askInformation('Indicate the path of the directory', $configIni->getValue("files_path", "sessions"));
             if ($path) {
                 $configIni->setValue('storage', 'files', 'session');
                 $configIni->setValue('files_path', $path,  'session');
@@ -79,8 +61,28 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         }
     }
 
-    public function configure() {
+    public function localConfigure(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers)
+    {
+        $cli = $helpers->cli();
+        if ($cli->askConfirmation('Do you want to configure the default access to the database?')) {
+            $profilesIni = $helpers->getProfilesIni();
+            $profile = null;
+            $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
+            if ($defaultAliasProfile) {
+                $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
+            }
+            else {
+                $profile = $profilesIni->getValues('jdb:default');
+            }
+
+            $profile = $cli->askDbProfile($profile);
+            if ($defaultAliasProfile) {
+                $helpers->declareDbProfile($defaultAliasProfile, $profile, true);
+            }
+            else {
+                $helpers->declareDbProfile('default', $profile, true);
+            }
+        }
 
     }
-
 }

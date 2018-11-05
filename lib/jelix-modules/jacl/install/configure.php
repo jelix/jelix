@@ -10,8 +10,8 @@
 
 class jaclModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    public function configure() {
-        foreach($this->getEntryPointsList() as $entrypoint) {
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        foreach($helpers->getEntryPointsList() as $entrypoint) {
             $this->setEpConf($entrypoint);
         }
     }

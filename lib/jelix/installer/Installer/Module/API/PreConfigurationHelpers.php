@@ -121,4 +121,23 @@ class PreConfigurationHelpers {
         }
         return $ep;
     }
+
+    /**
+     * Path to the configuration directory
+     *
+     * It gives the path to app/config or local/config, depending if the
+     * configuration is for the application or for the instance
+     *
+     * @param string $file
+     * @return string the path
+     */
+    public function configFilePath($file = '') {
+        if ($this->globalSetup->forLocalConfiguration()) {
+            return  \jApp::appConfigPath($file);
+        }
+        else {
+            return \jApp::varConfigPath($file);
+        }
+    }
+
 }

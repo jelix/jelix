@@ -11,13 +11,16 @@
 class jacldbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
 
-    public function configure() {
-        $this->declareDbProfile('jacl_profile', null, false);
-        $config = $this->getConfigIni();
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        $config = $helpers->getConfigIni();
         $driver = $config->getValue('driver','acl');
         if ($driver != 'db') {
             $config->setValue('driver', 'db', 'acl');
         }
+    }
+
+    public function localConfigure(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers) {
+        $helpers->declareDbProfile('jacl_profile', null, false);
     }
 
 }
