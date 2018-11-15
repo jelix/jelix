@@ -1,5 +1,6 @@
 cd lib/jelix-scripts
   createapp.php
+  inifile.php
   LICENCE
   INSTALL
   CREDITS
@@ -30,6 +31,7 @@ cd lib/jelix-scripts/commands
   resetfilesrights.cmd.php
 cd lib/jelix-scripts/commands-single/
   createapp.cmd.php
+  setinivalue.cmd.php
 cd lib/jelix-scripts/includes
   cmd.inc.php
   JelixScript.class.php
