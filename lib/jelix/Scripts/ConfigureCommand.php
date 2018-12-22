@@ -1,0 +1,129 @@
+<?php
+/**
+ * @package     jelix-scripts
+ * @author Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ * @link        https://jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+namespace Jelix\Scripts;
+
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class ConfigureCommand extends Command {
+
+    protected function configure()
+    {
+        $this
+            ->setName('configure')
+            ->setDescription('Launch configuration of a module')
+            ->addArgument(
+                'module',
+                InputArgument::REQUIRED,
+                'name of the module to configure'
+            )
+            ->addOption(
+                'parameters',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'parameters for the installer of the module: -p "param1;param2=value;..."'
+            )
+            ->addOption(
+                'force',
+                'f',
+                InputOption::VALUE_NONE,
+                'force to launch configuration when already configured'
+            )
+            ->addOption(
+                'entry-points',
+                'e',
+                InputOption::VALUE_REQUIRED,
+                'indicate the list of entry points (names separated by a coma) for which the module will be configured'
+            )
+        ;
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        \jAppManager::close();
+
+
+        $reporter = new \Jelix\Installer\Reporter\Console($output,
+            ($output->isVerbose()?'notice':'error'), 'Configuration migration');
+
+        // launch the low-level migration
+        $migrator = new \Jelix\Installer\Migration($reporter);
+        $migrator->migrateLocal();
+
+        $module = $input->getArgument('module');
+        $parameters = null;
+        if ($module) {
+            $parameters = $input->getOption('parameters');
+            if ($parameters) {
+                $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
+            }
+        }
+
+        $selectedEntryPointId = 'index';
+        $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
+        if (count($selectedEntryPointsIdList)) {
+            $selectedEntryPointId = $selectedEntryPointsIdList[0];
+        }
+
+        $reporter = new \Jelix\Installer\Reporter\Console($output,
+            ($output->isVerbose()?'notice':'error'), 'Configuration');
+
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
+
+        $configurator = new \Jelix\Installer\Configurator(
+            $reporter, $globalSetup,
+            $this->getHelper('question'), $input, $output);
+
+        if ($parameters) {
+            $configurator->setModuleParameters($module, $parameters);
+        }
+
+        $configurator->configureModules(
+            array($module),
+            $selectedEntryPointId,
+            true,
+            $input->getOption('force'));
+
+        \jAppManager::open();
+        return 0;
+    }
+
+    protected function getSelectedEntryPoint($ep, $allowList = false)
+    {
+        // check entry point
+
+        if ($ep) {
+            $this->allEntryPoint = false;
+
+            if ($allowList) {
+                $list = preg_split('/\s*,\s*/', $ep);
+                return array_map(array($this, 'normalizeEp'), $list);
+            }
+            return $this->normalizeEp($ep);
+        }
+        else if ($allowList) {
+            return array();
+        }
+        else {
+            return 'index';
+        }
+    }
+
+    private function normalizeEp($ep)
+    {
+        if (($p = strpos($ep, '.php')) === false) {
+            return $ep;
+        } else {
+            return  substr($ep, 0, $p);
+        }
+    }
+}

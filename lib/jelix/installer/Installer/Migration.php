@@ -150,6 +150,25 @@ class Migration {
             $this->reporter->message('create console.php to launch module commands', 'notice');
         }
 
+        $configurePath = \jApp::appPath('install/configure.php');
+        if (!file_exists($configurePath)) {
+            file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/application.init.php\');
+\\Jelix\\Scripts\\Configure::launch();');
+            $this->reporter->message('create install/configure.php to launch instance configuration', 'notice');
+        }
+
+        $installerPath = \jApp::appPath('install/installer.php');
+        $rewriteInstaller = false;
+        if (file_exists($installerPath)) {
+            $content = file_get_contents($installerPath);
+            $rewriteInstaller = (strpos($content, 'Installer::launch') === false);
+        }
+        if (!file_exists($installerPath) || $rewriteInstaller) {
+            file_put_contents($installerPath, '<'.'?php require (__DIR__.\'/application.init.php\');
+\\Jelix\\Scripts\\Installer::launch();');
+            $this->reporter->message('create install/installer.php to launch instance installation', 'notice');
+        }
+
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
