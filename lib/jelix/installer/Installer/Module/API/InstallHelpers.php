@@ -14,7 +14,7 @@ namespace Jelix\Installer\Module\API;
  */
 class InstallHelpers extends PreInstallHelpers
 {
-    //use FileHelpersTrait;
+    use FileHelpersTrait;
     use DbProfileHelpersTrait;
 
     /**

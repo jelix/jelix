@@ -64,7 +64,7 @@ class EntryPointPreConfigurator
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
      * @throws \Exception when the configuration filename is not found
      */
-    public function getCoordPluginConf($pluginName)
+    public function getCoordPluginConfig($pluginName)
     {
         return $this->globalSetup->getCoordPluginConf($this->getConfigIni(), $pluginName);
     }

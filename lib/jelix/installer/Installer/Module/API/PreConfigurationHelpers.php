@@ -6,7 +6,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 namespace Jelix\Installer\Module\API;
-
+use Jelix\IniFile\IniReaderInterface;
 
 /**
  *
@@ -46,12 +46,18 @@ class PreConfigurationHelpers {
      * or the IniModifier for the configuration file of the plugin if it exists.
      *
      * @param string $pluginName
+     * @param IniReaderInterface $config  the configuration file from which we
+     *                          should extract the plugin configuration. default
+     *                          is the full configuration.
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
      * @throws \Exception when the configuration filename is not found
      */
-    public function getCoordPluginConf($pluginName)
+    public function getCoordPluginConfig($pluginName, IniReaderInterface $config = null)
     {
-        return $this->globalSetup->getCoordPluginConf($this->getConfigIni(), $pluginName);
+        if (!$config) {
+            $config = $this->getConfigIni();
+        }
+        return $this->globalSetup->getCoordPluginConf($config, $pluginName);
     }
 
     /**

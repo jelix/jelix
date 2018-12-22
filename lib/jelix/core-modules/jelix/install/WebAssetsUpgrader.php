@@ -1,53 +1,44 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core-module
-* @author      Laurent Jouanneau
-* @copyright   2017-2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  core-module
+ * @author      Laurent Jouanneau
+ * @copyright   2017-2018 Laurent Jouanneau
+ * @link        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
-use \Jelix\IniFile\IniModifier;
-use \Jelix\IniFile\IniModifierArray;
-use \Jelix\IniFile\IniModifierInterface;
+class WebAssetsUpgrader
+{
 
-class jelixModuleUpgrader_webassets extends \Jelix\Installer\Module\Installer {
+    /**
+     * @var \Jelix\IniFile\IniReaderInterface
+     */
+    protected $refConfig;
 
-    protected $targetVersions = array('1.7.0-beta.2');
-
-    protected $date = '2017-02-07 08:58';
-
-    function install() {
-
-        $mainConfig = $this->getConfigIni();
-
-        foreach($this->getEntryPointsList() as $entryPoint) {
-            $epConfig = $entryPoint->getAppConfigIni();
-            $this->changeConfig($mainConfig, $epConfig, $epConfig['entrypoint']);
-        }
-
-    }
-
-    function postInstall() {
-        $mainConfig = $this->getConfigIni();
-        $this->changeConfig($mainConfig['default'], $mainConfig,
-            $mainConfig['main']);
+    /**
+     * WebAssetsUpgrader constructor.
+     *
+     * @param \Jelix\IniFile\IniReaderInterface $refConfig the config containing default values
+     * @param $epId
+     * @param \Jelix\Routing\UrlMapping\XmlEntryPoint $xml
+     */
+    function __construct(\Jelix\IniFile\IniReaderInterface $refConfig)
+    {
+        $this->refConfig = $refConfig;
     }
 
     /**
-     * @param IniModifierInterface $refConfig the config containing default values beside $config
-     * @param IniModifierArray $config The configuration in which we found actual values
-     * @param IniModifier $targetConfig the file to modify
+     * @param \Jelix\IniFile\IniModifierArray $config The configuration in which we found actual values
+     * @param \Jelix\IniFile\IniModifier $targetConfig the file to modify
      */
-    protected function changeConfig(IniModifierInterface $refConfig,
-                                    IniModifierArray $config,
-                                    IniModifier $targetConfig) {
+    public function changeConfig(\Jelix\IniFile\IniModifierArray $config,
+                                 \Jelix\IniFile\IniModifier $targetConfig) {
         $defaultConfig = $this->getConfigIni()['default'];
 
         // move jqueryPath to webassets
         $jqueryPath = $config->getValue('jqueryPath', 'urlengine');
-        $jqueryPathOrig = $refConfig->getValue('jqueryPath', 'urlengine');
+        $jqueryPathOrig = $this->refConfig->getValue('jqueryPath', 'urlengine');
         if ($jqueryPathOrig != $jqueryPath &&
             $targetConfig->getValue('jquery.js', 'webassets_common') === null) {
             $targetConfig->setValue('useCollection', 'main', 'webassets');
@@ -201,4 +192,3 @@ class jelixModuleUpgrader_webassets extends \Jelix\Installer\Module\Installer {
         }
     }
 }
-

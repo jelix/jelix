@@ -8,6 +8,8 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+require(__DIR__.'/WebAssetsUpgrader.php');
+
 class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function getDefaultParameters() {
@@ -16,6 +18,7 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers)
     {
+        $this->migrate($helpers);
         $cli = $helpers->cli();
         $this->parameters['wwwfiles'] = $cli->askInChoice(
             "How to install jelix-www files?".
@@ -63,6 +66,7 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function localConfigure(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers)
     {
+        $this->migrateLocal($helpers);
         $cli = $helpers->cli();
         if ($cli->askConfirmation('Do you want to configure the default access to the database?')) {
             $profilesIni = $helpers->getProfilesIni();
@@ -83,6 +87,64 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
                 $helpers->declareDbProfile('default', $profile, true);
             }
         }
+    }
 
+    protected function migrate(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        if (!$helpers->forLocalConfiguration()) {
+            $mainConfig = $helpers->getConfigIni();
+            $webassets = new WebAssetsUpgrader($mainConfig);
+            foreach($helpers->getEntryPointsList() as $entryPoint) {
+                $epConfig = $entryPoint->getConfigIni();
+                $webassets->changeConfig($epConfig, $epConfig['entrypoint']);
+            }
+            $webassets = new WebAssetsUpgrader($mainConfig['default']);
+            $webassets->changeConfig($mainConfig, $mainConfig['main']);
+
+            foreach($helpers->getEntryPointsList() as $entryPoint) {
+                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
+                    $entryPoint->getEpId(),
+                    $entryPoint->getUrlMap());
+                $upgraderUrl->upgrade();
+            }
+
+            foreach($helpers->getEntryPointsList() as $entryPoint) {
+                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
+                    $entryPoint->getEpId(),
+                    $entryPoint->getUrlMap());
+                $upgraderUrl->cleanConfig($helpers->getConfigIni()['main']);
+            }
+        }
+    }
+
+
+    protected function migrateLocal(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers) {
+        $mainConfig = $helpers->getConfigIni();
+        $webassets = new WebAssetsUpgrader($mainConfig);
+        foreach($helpers->getEntryPointsList() as $entryPoint) {
+            $epConfig = $entryPoint->getConfigIni();
+            $webassets->changeConfig($epConfig, $epConfig['localentrypoint']);
+        }
+
+        $ini = $helpers->getProfilesIni();
+        foreach($helpers->getEntryPointsList() as $entryPoint) {
+            foreach($ini->getSectionList() as $section) {
+                if (strpos($section, 'jkvdb:') === 0) {
+                    $driver = $ini->getValue('driver', $section);
+                    if ($driver == 'redis' &&
+                        isset ($entryPoint->getConfigObj()->_pluginsPathList_kvdb['redis_php'])
+                    ) {
+                        $ini->setValue('driver', 'redis_php', $section);
+                    }
+                }
+                else if (strpos($section, 'jcache:') === 0) {
+                    $driver = $ini->getValue('driver', $section);
+                    if ($driver == 'redis' &&
+                        isset ($entryPoint->getConfigObj()->_pluginsPathList_cache['redis_php'])
+                    ) {
+                        $ini->setValue('driver', 'redis_php', $section);
+                    }
+                }
+            }
+        }
     }
 }
