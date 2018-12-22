@@ -18,8 +18,8 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommandForApp {
     protected function configure()
     {
         $this
-            ->setName('app:migrate')
-            ->setDescription('Migrate files of an old Jelix application for the current Jelix version')
+            ->setName('jelix:migrate')
+            ->setDescription('Migrate files of an old Jelix application to the current Jelix version')
             ->setHelp('')
         ;
         parent::configure();

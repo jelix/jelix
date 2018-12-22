@@ -144,6 +144,13 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
                         $ini->setValue('driver', 'redis_php', $section);
                     }
                 }
+                // profiles.ini.php change mysql driver from "mysql" to "mysqli"
+                else if (strpos($section, 'jdb:') === 0) {
+                    $driver = $ini->getValue('driver', $section);
+                    if ($driver == 'mysql') {
+                        $ini->setValue('driver', 'mysqli', $section);
+                    }
+                }
             }
         }
     }

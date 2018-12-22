@@ -37,6 +37,21 @@ class Migration {
         $this->reporter->end();
     }
 
+    public function migrateLocal()
+    {
+
+        $installFile = \jApp::varConfigPath('installer.ini.php');
+        if (!file_exists($installFile)) {
+            return;
+        }
+        $this->reporter->start();
+
+        // functions called here should be idempotent
+        $this->migrateLocal_1_7_0();
+
+        $this->reporter->end();
+    }
+
     protected function migrate_1_7_0() {
         $this->reporter->message('Start migration to Jelix 1.7.0', 'notice');
         $newConfigPath = \jApp::appConfigPath();
@@ -124,105 +139,9 @@ class Migration {
             $this->migrateCoordPluginsConf_1_7_0($epConfig);
         }
 
-        $localConfigPath = \jApp::varConfigPath('localconfig.ini.php');
-        $localConfigIni = null;
-        if (file_exists($localConfigPath)) {
-            $localConfigIni = new IniModifier($localConfigPath);
-            $this->migrateCoordPluginsConf_1_7_0($localConfigIni);
-        }
-        foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $configFile = \jApp::varConfigPath((string)$entrypoint['config']);
-            if (file_exists($configFile)) {
-                $localEpConfigIni = new IniModifier($configFile);
-                $this->migrateCoordPluginsConf_1_7_0($localEpConfigIni);
-                if ($localConfigIni && $localEpConfigIni->getValues('modules')) {
-                    $this->reporter->message('Migrate modules section from var/config/'.(string)$entrypoint['config'].' content to localconfig.ini.php', 'notice');
-                    $this->migrateModulesSection_1_7_0($localConfigIni, $localEpConfigIni);
-                }
-            }
-        }
-
         $this->migrateAccessValue_1_7_0($mainConfigIni);
-        if ($localConfigIni) {
-            $this->migrateAccessValue_1_7_0($localConfigIni);
-        }
 
-        // migrate installer.ini
-        $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
-        if (!$installerIni->isSection('modules')) {
-            $this->reporter->message('Migrate var/config/installer.ini.php content', 'notice');
-            $allModules = array();
-            foreach ($installerIni->getSectionList() as $section) {
-                if ($section == '__modules_data') {
-                    continue;
-                }
-                $modules = array();
-                foreach ($installerIni->getValues($section) as $name => $value) {
-                    list($module, $param) = explode('.', $name, 2);
-                    if (!isset($modules[$module])) {
-                        $modules[$module] = array();
-                    }
-                    $modules[$module][$param] = $value;
-                }
-
-                foreach ($modules as $module => $params) {
-                    if (
-                        isset($allModules[$module]) ||
-                        !isset($params['installed']) ||
-                        $params['installed'] == 0
-                    ) {
-                        continue;
-                    }
-                    $allModules[$module] = $params;
-                }
-            }
-
-            foreach ($allModules as $module => $params) {
-                foreach ($params as $name => $value) {
-                    $installerIni->setValue($module . '.' . $name, $value, 'modules');
-                }
-            }
-            foreach ($installerIni->getSectionList() as $section) {
-                if ($section == '__modules_data' || $section == 'modules') {
-                    continue;
-                }
-                $installerIni->removeValue('', $section);
-            }
-            $installerIni->save();
-        }
-
-        // set installparameters for the jelix module
-        $jelixWWWPath = $mainConfigIni->getValue('jelixWWWPath', 'urlengine');
-        $targetPath = \jApp::wwwPath($jelixWWWPath);
-        $jelixWWWDirExists = $jelixWWWLinkExists = false;
-        if (file_exists($targetPath)) {
-            if (is_dir($targetPath)) {
-                $wwwfiles = '';
-            }
-            else if (is_link($targetPath)) {
-                $wwwfiles = 'link';
-            }
-        }
-        else {
-            // no file, so the path to jelix-www should probably be set into the
-            // web server configuration
-            $wwwfiles = 'vhost';
-        }
-        $jelixInstallParams = $originalJelixInstallParams = $mainConfigIni->getValue('jelix.installparam', 'modules');
-        if ($jelixInstallParams) {
-            $jelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
-            if (!isset($jelixInstallParams['wwwfiles'])) {
-                $jelixInstallParams['wwwfiles'] = $wwwfiles;
-            }
-        }
-        else {
-            $jelixInstallParams = array('wwwfiles'=>$wwwfiles);
-        }
-        $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
-        if ($jelixInstallParams != $originalJelixInstallParams) {
-            $this->reporter->message('Update installer parameters for the jelix module', 'notice');
-            $mainConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
-        }
+        $this->migrateJelixInstallParameters_1_7_0($mainConfigIni);
 
         $consolePath = \jApp::appPath('console.php');
         if (!file_exists($consolePath)) {
@@ -234,6 +153,44 @@ class Migration {
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
+    protected function migrateLocal_1_7_0() {
+        $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        if ($installerIni->isSection('modules')) {
+            return;
+        }
+
+        if (file_exists(\jApp::varConfigPath('profiles.ini.php'))) {
+            $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php'));
+            $this->migrateProfilesIni_1_7_0($profilesini);
+        }
+
+        $localConfigPath = \jApp::varConfigPath('localconfig.ini.php');
+        $localConfigIni = null;
+
+        if (file_exists($localConfigPath)) {
+            $localConfigIni = new IniModifier($localConfigPath);
+            $projectxml = simplexml_load_file(\jApp::appPath('project.xml'));
+
+            $this->migrateCoordPluginsConf_1_7_0($localConfigIni, true);
+            foreach ($projectxml->entrypoints->entry as $entrypoint) {
+                $configFile = \jApp::varConfigPath((string)$entrypoint['config']);
+                if (file_exists($configFile)) {
+                    $localEpConfigIni = new IniModifier($configFile);
+                    $this->migrateCoordPluginsConf_1_7_0($localEpConfigIni, true);
+                    if ($localEpConfigIni->getValues('modules')) {
+                        $this->reporter->message('Migrate modules section from var/config/'.(string)$entrypoint['config'].' content to localconfig.ini.php', 'notice');
+                        $this->migrateModulesSection_1_7_0($localConfigIni, $localEpConfigIni);
+                    }
+                }
+            }
+
+            $this->migrateAccessValue_1_7_0($localConfigIni);
+            $this->migrateJelixInstallParameters_1_7_0($localConfigIni);
+            $this->migrateInstallerIni_1_7_0();
+        }
+        $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
+    }
+
     private function migrateProfilesIni_1_7_0(IniModifier $profilesini) {
         foreach ($profilesini->getSectionList() as $name) {
             // move jSoapClient classmap files
@@ -242,8 +199,13 @@ class Migration {
                 if ($classmapFile != '' &&
                     file_exists(\jApp::varConfigPath($classmapFile))
                 ) {
-                    $this->reporter->message("Move " . $classmapFile . " to app/config/", 'notice');
-                    rename(\jApp::varConfigPath($classmapFile), \jApp::appConfigPath($classmapFile));
+                    if (!file_exists(\jApp::appConfigPath($classmapFile))) {
+                        $this->reporter->message("Move " . $classmapFile . " to app/config/", 'notice');
+                        rename(\jApp::varConfigPath($classmapFile), \jApp::appConfigPath($classmapFile));
+                    }
+                    else {
+                        unlink(\jApp::varConfigPath($classmapFile));
+                    }
                 }
             }
             // profiles.ini.php change mysql driver from "mysql" to "mysqli"
@@ -264,7 +226,7 @@ class Migration {
 
     protected $allPluginConfigs = array();
 
-    private function migrateCoordPluginsConf_1_7_0(IniModifier $config) {
+    private function migrateCoordPluginsConf_1_7_0(IniModifier $config, $localConf = false) {
         $pluginsConf = $config->getValues('coordplugins');
         foreach($pluginsConf as $name => $conf) {
             if (strpos($name, '.') !== false) {
@@ -289,7 +251,7 @@ class Migration {
             if (count($sections)) {
                 // the file has some section, we cannot merge it into $config as
                 // is, so just move it to app/config
-                if (file_exists($ini->getFileName())) {
+                if (file_exists($ini->getFileName()) && !$localConf) {
                     $rpath = \Jelix\FileUtilities\Path::shortestPath(\jApp::varConfigPath(), $ini->getFileName());
                     if (!file_exists(\jApp::appConfigPath($rpath))) {
                         $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
@@ -349,6 +311,90 @@ class Migration {
                 }
             }
             $masterConfigIni->save();
+        }
+    }
+
+    protected function migrateInstallerIni_1_7_0() {
+        $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        if (!$installerIni->isSection('modules')) {
+            $this->reporter->message('Migrate var/config/installer.ini.php content', 'notice');
+            $allModules = array();
+            foreach ($installerIni->getSectionList() as $section) {
+                if ($section == '__modules_data') {
+                    continue;
+                }
+                $modules = array();
+                foreach ($installerIni->getValues($section) as $name => $value) {
+                    list($module, $param) = explode('.', $name, 2);
+                    if (!isset($modules[$module])) {
+                        $modules[$module] = array();
+                    }
+                    $modules[$module][$param] = $value;
+                }
+
+                foreach ($modules as $module => $params) {
+                    if (
+                        isset($allModules[$module]) ||
+                        !isset($params['installed']) ||
+                        $params['installed'] == 0
+                    ) {
+                        continue;
+                    }
+                    $allModules[$module] = $params;
+                }
+            }
+
+            foreach ($allModules as $module => $params) {
+                foreach ($params as $name => $value) {
+                    $installerIni->setValue($module . '.' . $name, $value, 'modules');
+                }
+            }
+            foreach ($installerIni->getSectionList() as $section) {
+                if ($section == '__modules_data' || $section == 'modules') {
+                    continue;
+                }
+                $installerIni->removeValue('', $section);
+            }
+            $installerIni->save();
+        }
+    }
+
+    protected function migrateJelixInstallParameters_1_7_0 (IniModifier $masterConfigIni) {
+        // set installparameters for the jelix module
+        $jelixWWWPath = $masterConfigIni->getValue('jelixWWWPath', 'urlengine');
+        if (!$jelixWWWPath) {
+            return;
+        }
+        $targetPath = \jApp::wwwPath($jelixWWWPath);
+        $jelixWWWDirExists = $jelixWWWLinkExists = false;
+        if (file_exists($targetPath)) {
+            if (is_dir($targetPath)) {
+                $wwwfiles = '';
+            }
+            else if (is_link($targetPath)) {
+                $wwwfiles = 'link';
+            }
+        }
+        else {
+            // no file, so the path to jelix-www should probably be set into the
+            // web server configuration
+            $wwwfiles = 'vhost';
+        }
+
+        $jelixInstallParams = $originalJelixInstallParams = $masterConfigIni->getValue('jelix.installparam', 'modules');
+        if ($jelixInstallParams) {
+            $jelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
+            if (!isset($jelixInstallParams['wwwfiles'])) {
+                $jelixInstallParams['wwwfiles'] = $wwwfiles;
+            }
+        }
+        else {
+            $jelixInstallParams = array('wwwfiles'=>$wwwfiles);
+        }
+        $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
+        if ($jelixInstallParams != $originalJelixInstallParams) {
+            $this->reporter->message('Update installer parameters for the jelix module', 'notice');
+            $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
         }
     }
 
