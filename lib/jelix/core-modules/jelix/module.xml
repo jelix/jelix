@@ -12,4 +12,7 @@
     <dependencies>
         <jelix minversion="1.7.0-beta.4" maxversion="1.7.0"/>
     </dependencies>
+    <autoload>
+        <psr4 namespace="\Jelix\JelixModule" dir="./"/>
+    </autoload>
 </module>

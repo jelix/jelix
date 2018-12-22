@@ -2,18 +2,17 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @copyright   2010-2016 Laurent Jouanneau
+* @copyright   2010-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
+namespace Jelix\JelixModule\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CloseApp  extends \Jelix\DevHelper\AbstractCommand {
+class CloseApp  extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function configure()
     {

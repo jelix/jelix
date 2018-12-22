@@ -28,7 +28,7 @@ class JelixCommands {
 
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
-        $application = new Application("Jelix helpers");
+        $application = new Application("Jelix helpers for the developer");
         $application->add(new Command\InstallApp($jelixScriptConfig));
         $application->add(new Command\MigrateApp($jelixScriptConfig));
         $application->add(new Command\InitAdmin($jelixScriptConfig));
@@ -43,10 +43,6 @@ class JelixCommands {
         $application->add(new Command\CreateForm($jelixScriptConfig));
         $application->add(new Command\CreateLangPackage($jelixScriptConfig));
         $application->add(new Command\CreateZone($jelixScriptConfig));
-        $application->add(new Command\ClearTemp($jelixScriptConfig));
-        $application->add(new Command\CloseApp($jelixScriptConfig));
-        $application->add(new Command\OpenApp($jelixScriptConfig));
-        $application->add(new Command\FilesRights($jelixScriptConfig));
         return $application;
     }
 

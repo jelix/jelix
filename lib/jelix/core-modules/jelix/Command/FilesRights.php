@@ -2,18 +2,16 @@
 /**
 * @package     jelix-scripts
 * @author      Laurent Jouanneau
-* @copyright   2011-2016 Laurent Jouanneau
+* @copyright   2011-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
-namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
+namespace Jelix\JelixModule\Command;
+
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FilesRights extends \Jelix\DevHelper\AbstractCommand {
+class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
 
     protected function configure()
     {
@@ -42,15 +40,15 @@ class FilesRights extends \Jelix\DevHelper\AbstractCommand {
         if ($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR || !file_exists($path)) {
             return false;
         }
-
+        $config = \jApp::config();
         if (is_file($path)) {
-            if ($this->config->doChmod) {
-                chmod($path, intval($this->config->chmodFileValue,8));
+            if ($config->doChmod) {
+                chmod($path, intval($config->chmodFileValue,8));
             }
 
-            if ($this->config->doChown) {
-                chown($path, $this->config->chownUser);
-                chgrp($path, $this->config->chownGroup);
+            if ($config->doChown) {
+                chown($path, $config->chownUser);
+                chgrp($path, $config->chownGroup);
             }
             return true;
         }
@@ -59,13 +57,13 @@ class FilesRights extends \Jelix\DevHelper\AbstractCommand {
             return false;
         }
 
-         if ($this->config->doChmod) {
-            chmod($path, intval($this->config->chmodDirValue,8));
+         if ($config->doChmod) {
+            chmod($path, intval($config->chmodDirValue,8));
          }
 
-         if ($this->config->doChown) {
-            chown($path, $this->config->chownUser);
-            chgrp($path, $this->config->chownGroup);
+         if ($config->doChown) {
+            chown($path, $config->chownUser);
+            chgrp($path, $config->chownGroup);
          }
 
         $dir = new \DirectoryIterator($path);
