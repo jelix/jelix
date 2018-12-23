@@ -13,7 +13,7 @@ class testinstall2ModuleUpgrader_newupgraderfilename extends \Jelix\Installer\Mo
 
     protected $targetVersions = array('1.1.2', '1.2.4');
 
-    function install() {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
     }
 }
