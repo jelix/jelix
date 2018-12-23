@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2005-2018 Laurent Jouanneau
  *
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -49,7 +49,7 @@ class UrlActionMapper
     public function __construct(MapperConfig $config)
     {
         $this->config = $config;
-        $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile);
+        $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile, $config->localMapFile);
         \jIncluder::inc($this->xmlfileSelector, true);
         $this->dataCreateUrl = &$GLOBALS['SIGNIFICANT_CREATEURL'];
     }

@@ -191,6 +191,7 @@ jqueryPath="jelix/jquery/"
 notfoundAct="jelix~error:notfound"
 
 significantFile=urls.xml
+localSignificantFile=localurls.xml
 
 ; filled automatically by jelix
 urlScript=
