@@ -8,6 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use \Jelix\Installer\Module\API\InstallHelpers;
 
 /**
  * parameters for this installer
@@ -17,12 +18,11 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $dbTablesInstalled = false;
 
-    function install()
+    function install(InstallHelpers $helpers)
     {
         $confList = [];
-        foreach ($this->getEntryPointsList() as $entryPoint) {
-            $config = $entryPoint->getAppConfigIni();
-            $authConfig = $this->getCoordPluginConf($config, 'auth');
+        foreach ($helpers->getEntryPointsList() as $entryPoint) {
+            $authConfig = $entryPoint->getCoordPluginConfig('auth');
             if (!$authConfig) {
                 continue;
             }
@@ -36,12 +36,12 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer {
             $path = Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $conf->getFileName());
             if (!isset($confList[$path])) {
                 $confList[$path] = true;
-                $this->setupAuth($conf, $section_db, $entryPoint->getConfigObj());
+                $this->setupAuth($helpers, $conf, $section_db, $entryPoint->getConfigObj());
             }
         }
     }
 
-    protected function setupAuth(\Jelix\IniFile\IniModifier $conf, $section_db, $epConfig) {
+    protected function setupAuth(InstallHelpers $helpers, \Jelix\IniFile\IniModifier $conf, $section_db, $epConfig) {
 
         // a config for the auth plugin exists, so we can install
         // the module, else we ignore it
@@ -63,15 +63,15 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer {
             return;
         }
 
-        $this->useDbProfile($conf->getValue('profile', $section_db));
+        $helpers->database()->useDbProfile($conf->getValue('profile', $section_db));
 
         // FIXME: should use the given dao to create the table
         $daoName = $conf->getValue('dao', $section_db);
         if ($daoName == 'jauthdb~jelixuser' && !$this->dbTablesInstalled) {
             $this->dbTablesInstalled = true;
-            $this->execSQLScript('install_jauth.schema');
+            $helpers->database()->execSQLScript('install_jauth.schema');
             if ($this->getParameter('defaultuser')) {
-                $cn = $this->dbConnection();
+                $cn = $helpers->database()->dbConnection();
                 $rs = $cn->query("SELECT usr_login FROM ".$cn->prefixTable('jlx_user')." WHERE usr_login = 'admin'");
                 if (!$rs->fetch()) {
                     require_once(JELIX_LIB_PATH.'auth/jAuth.class.php');

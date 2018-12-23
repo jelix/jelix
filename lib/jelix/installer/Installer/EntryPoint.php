@@ -114,26 +114,41 @@ class EntryPoint
             ->addEntryPoint($this->getEpId(), $type);
     }
 
+    /**
+     * @return string the type of entry point
+     */
     public function getType()
     {
         return $this->type;
     }
 
+    /**
+     * @return string the url path of the entry point
+     */
     public function getScriptName()
     {
         return $this->scriptName;
     }
 
+    /**
+     * @return string the filename of the entry point
+     */
     public function getFileName()
     {
         return $this->file;
     }
 
+    /**
+     * @return bool
+     */
     public function isCliScript()
     {
         return $this->_isCliScript;
     }
 
+    /**
+     * @return XmlEntryPoint
+     */
     public function getUrlMap()
     {
         return $this->urlMap;
@@ -148,7 +163,7 @@ class EntryPoint
     }
 
     /**
-     * @return array the list of modules and their path, as stored in the
+     * @return string[string] the list of modules and their path, as stored in the
      * compiled configuration file
      */
     function getModulesList()
@@ -157,6 +172,10 @@ class EntryPoint
     }
 
 
+    /**
+     * @return \Jelix\IniFile\IniModifierArray list of ini content of the
+     *     configuration, and local configuration in the context of local installation
+     */
     public function getConfigIni() {
 
         if ($this->globalSetup->isReadWriteConfigMode()) {
@@ -183,6 +202,10 @@ class EntryPoint
         return $ini;
     }
 
+    /**
+     * @return IniModifier|IniModifierReadOnly ini content of the main configuration
+     *   of the entry point, or its local configuration
+     */
     public function getSingleConfigIni() {
         if ($this->globalSetup->forLocalConfiguration()) {
             $ini = $this->localEpConfigIni;

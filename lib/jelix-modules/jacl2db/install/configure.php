@@ -20,9 +20,11 @@ class jacl2dbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
         $this->parameters['defaultgroups'] = $helpers->cli()
-            ->askConfirmation('Do you want to setup default "admins" and "users" groups in acl2?', true);
+            ->askConfirmation('Do you want to setup default "admins" and "users" groups in acl2?',
+                $this->parameters['defaultgroups']);
         $this->parameters['defaultuser'] = $helpers->cli()
-            ->askConfirmation('Do you want to setup default "admin" user in acl2?', true);
+            ->askConfirmation('Do you want to setup default "admin" user in acl2?',
+                $this->parameters['defaultuser']);
 
         $config = $helpers->getConfigIni();
         $driver = $config->getValue('driver','acl2');
@@ -32,7 +34,6 @@ class jacl2dbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
     }
 
     public function localConfigure(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers) {
-
         $helpers->declareDbProfile('jacl2_profile', null, false);
     }
 

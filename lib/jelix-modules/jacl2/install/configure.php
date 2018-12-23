@@ -33,6 +33,7 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     protected function configureEntryPoint($epId, ConfigurationHelpers $helpers) {
         $entryPoint = $helpers->getEntryPointsById($epId);
+        /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
         if (null == $conf->getValue('jacl2', 'coordplugins')) {
             $conf->setValue('jacl2', '1', 'coordplugins');

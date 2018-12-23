@@ -19,7 +19,7 @@ class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $defaultDbProfile = 'jacl2_profile';
 
-    function install() {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
         /*
         $mapper = new jDaoDbMapper('jacl2_profile');
@@ -30,18 +30,18 @@ class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer {
         $mapper->createTableFromDao("jacl2db~jacl2rights");
         */
 
-        $this->execSQLScript('install_jacl2.schema');
+        $helpers->database()->execSQLScript('install_jacl2.schema');
 
-        $this->insertDaoData('data.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
+        $helpers->database()->insertDaoData('data.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
 
         if ($this->getParameter('defaultuser') || $this->getParameter('defaultgroups')) {
             // declare some groups
-            $this->insertDaoData('groups.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
+            $helpers->database()->insertDaoData('groups.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
         }
 
         if ($this->getParameter('defaultuser')) {
-            $this->insertDaoData('users.groups.json', jDbTools::IBD_IGNORE_IF_EXIST);
-            $this->insertDaoData('users.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
+            $helpers->database()->insertDaoData('users.groups.json', jDbTools::IBD_IGNORE_IF_EXIST);
+            $helpers->database()->insertDaoData('users.json', jDbTools::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY);
         }
     }
 }

@@ -13,33 +13,10 @@ class jauthModuleUpgrader_movepersistantkey extends \Jelix\Installer\Module\Inst
     protected $targetVersions = array('1.3.1', '1.7.0-beta.2');
     protected $date = '2018-05-28 22:20';
 
-    function install() {
-
-        // remove deprecated key from all auth.coord.ini.php
-        foreach($this->getEntryPointsList() as $entryPoint) {
-            $config = $entryPoint->getAppConfigIni();
-            $authconfig = $this->getCoordPluginConf($config, 'auth');
-            if ($authconfig) {
-                list($conf, $section) = $authconfig;
-                $conf->removeValue('persistant_crypt_key', $section);
-                $conf->save();
-            }
-        }
-
-        $localConfigIni = $this->getLocalConfigIni();
-
-        // remove deprecated key from localconfig.ini.php
-        $key = $localConfigIni->getValue('persistant_encryption_key', 'coordplugin_auth');
-        if ($key !== null) {
-            $localConfigIni->removeValue('persistant_encryption_key', 'coordplugin_auth');
-        }
-        $key = $localConfigIni->getValue('persistant_crypt_key', 'coordplugin_auth');
-        if ($key !== null) {
-            $localConfigIni->removeValue('persistant_crypt_key', 'coordplugin_auth');
-        }
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
         // setup new key on liveconfig.ini.php
-        $liveConfigIni = $this->getLiveConfigIni();
+        $liveConfigIni = $helpers->getLiveConfigIni();
         $key = $liveConfigIni->getValue('persistant_encryption_key', 'coordplugin_auth');
         if ($key === null) {
             $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();

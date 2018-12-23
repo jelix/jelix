@@ -19,7 +19,8 @@ class jauthdbModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
         $this->parameters['defaultuser'] = $helpers->cli()
-              ->askConfirmation('Do you want to create an "admin" user in authdb?', true);
+              ->askConfirmation('Do you want to create an "admin" user in authdb?',
+                  $this->parameters['defaultuser']);
     }
 
 }
