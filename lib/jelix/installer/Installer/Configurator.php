@@ -216,6 +216,76 @@ class Configurator {
         return $result;
     }
 
+    /**
+     * Force launch of configurator of enabled modules, in the local context.
+     *
+     * Should be used in the case of a user that just installed the application
+     * and want to configure it with local parameter.
+     *
+     * This is necessary a "forced" configuration, as modules are already
+     * enabled by the developers.
+     */
+    public function localConfigureEnabledModules() {
+
+        $this->startMessage();
+
+        // get all modules and their dependencies
+        $resolver = new Resolver();
+        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
+            if ($module->isEnabled()) {
+                $resolverItem->setAction(Resolver::ACTION_INSTALL);
+            }
+            $resolver->addItem($resolverItem);
+        }
+
+        // configure modules
+        $modulesChain = $this->resolveDependencies($resolver);
+        $modulesToConfigure = array();
+
+        foreach ($modulesChain as $resolverItem) {
+            if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
+                $modulesToConfigure[] = $resolverItem;
+            }
+        }
+
+        $this->notice('configuration.start');
+        $entryPoint = $this->globalSetup->getMainEntryPoint();
+        \jApp::setConfig($entryPoint->getConfigObj());
+
+        if ($entryPoint->getConfigObj()->disableInstallers) {
+            $this->notice('install.installers.disabled');
+        }
+
+        $forLocalConfig = true;
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+
+        $this->globalSetup->setReadWriteConfigMode(false);
+        $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
+        if ($componentsToConfigure === false) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        $this->globalSetup->setReadWriteConfigMode(true);
+        if (!$this->runConfigure($componentsToConfigure, $entryPoint)) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        $result = $this->runPostConfigure($componentsToConfigure, $entryPoint);
+        if (!$result) {
+            $this->warning('configuration.bad.end');
+        }
+        else {
+            $this->ok('configuration.end');
+        }
+        $this->globalSetup->getUninstallerIni()->save();
+
+        $this->endMessage();
+        return $result;
+    }
+
     protected function resolveDependencies(Resolver $resolver) {
 
         try {

@@ -14,17 +14,21 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Command for a user to configure an application before installing it.
+ *
+ */
 class ConfigureCommand extends Command {
 
     protected function configure()
     {
         $this
             ->setName('configure')
-            ->setDescription('Launch configuration of a module')
+            ->setDescription('Launch configuration of the application')
             ->addArgument(
                 'module',
-                InputArgument::REQUIRED,
-                'name of the module to configure'
+                InputArgument::OPTIONAL,
+                'name of a module to configure specifically'
             )
             ->addOption(
                 'parameters',
@@ -36,7 +40,7 @@ class ConfigureCommand extends Command {
                 'force',
                 'f',
                 InputOption::VALUE_NONE,
-                'force to launch configuration when already configured'
+                'force to launch configuration of a module when already configured'
             )
             ->addOption(
                 'entry-points',
@@ -59,21 +63,6 @@ class ConfigureCommand extends Command {
         $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrateLocal();
 
-        $module = $input->getArgument('module');
-        $parameters = null;
-        if ($module) {
-            $parameters = $input->getOption('parameters');
-            if ($parameters) {
-                $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
-            }
-        }
-
-        $selectedEntryPointId = 'index';
-        $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
-        if (count($selectedEntryPointsIdList)) {
-            $selectedEntryPointId = $selectedEntryPointsIdList[0];
-        }
-
         $reporter = new \Jelix\Installer\Reporter\Console($output,
             ($output->isVerbose()?'notice':'error'), 'Configuration');
 
@@ -83,15 +72,28 @@ class ConfigureCommand extends Command {
             $reporter, $globalSetup,
             $this->getHelper('question'), $input, $output);
 
-        if ($parameters) {
-            $configurator->setModuleParameters($module, $parameters);
-        }
+        $module = $input->getArgument('module');
+        if ($module) {
+            $parameters = $input->getOption('parameters');
+            if ($parameters) {
+                $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
+            }
 
-        $configurator->configureModules(
-            array($module),
-            $selectedEntryPointId,
-            true,
-            $input->getOption('force'));
+            $selectedEntryPointId = 'index';
+            $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
+            if (count($selectedEntryPointsIdList)) {
+                $selectedEntryPointId = $selectedEntryPointsIdList[0];
+            }
+            $configurator->setModuleParameters($module, $parameters);
+            $configurator->configureModules(
+                array($module),
+                $selectedEntryPointId,
+                true,
+                $input->getOption('force'));
+        }
+        else {
+            $configurator->localConfigureEnabledModules();
+        }
 
         \jAppManager::open();
         return 0;
