@@ -7,7 +7,7 @@
  */
 namespace Jelix\Installer;
 
-use Jelix\Routing\UrlMapping\XmlEntryPoint;
+
 use Jelix\IniFile\IniModifier;
 use \Jelix\IniFile\IniModifierReadOnly;
 
@@ -64,10 +64,6 @@ class EntryPoint
      */
     protected $type;
 
-    /**
-     * @var XmlEntryPoint
-     */
-    protected $urlMap;
 
     /**
      * @var GlobalSetup
@@ -110,8 +106,6 @@ class EntryPoint
             $this->_isCliScript,
             $this->scriptName);
 
-        $this->urlMap = $globalSetup->getUrlModifier()
-            ->addEntryPoint($this->getEpId(), $type);
     }
 
     /**
@@ -146,13 +140,6 @@ class EntryPoint
         return $this->_isCliScript;
     }
 
-    /**
-     * @return XmlEntryPoint
-     */
-    public function getUrlMap()
-    {
-        return $this->urlMap;
-    }
 
     /**
      * @return string the entry point id

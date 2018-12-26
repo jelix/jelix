@@ -47,9 +47,14 @@ class GlobalSetup {
     protected $liveConfigIni;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
      */
     protected $urlMapModifier;
+
+    /**
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    protected $urlLocalMapModifier;
 
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the profiles.ini.php file.
@@ -112,12 +117,15 @@ class GlobalSetup {
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
      * @param string|null $urlXmlFileName
+     * @param string|null $urlLocalXmlFileName
      */
     function __construct(
         $projectXmlFileName = null,
         $mainConfigFileName = null,
         $localConfigFileName = null,
-        $urlXmlFileName = null)
+        $urlXmlFileName = null,
+        $urlLocalXmlFileName = null
+    )
     {
 
         if ($projectXmlFileName instanceof \Jelix\Core\Infos\AppInfos) {
@@ -191,8 +199,11 @@ class GlobalSetup {
             $ini = $this->getAppConfigIni();
             $ini['local'] = $this->localConfigIni;
             $urlXmlFileName = \jApp::appConfigPath($ini->getValue('significantFile', 'urlengine'));
+            $urlLocalXmlFileName = \jApp::appConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
+        $this->urlLocalMapModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier(
+            $this->urlMapModifier, $urlLocalXmlFileName);
 
 
         $this->readEntryPointData();
@@ -522,6 +533,14 @@ class GlobalSetup {
         return $this->urlMapModifier;
     }
 
+
+    /**
+     * @return \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    public function getLocalUrlModifier() {
+        return $this->urlLocalMapModifier;
+    }
+
     /**
      * Declare a new entry point
      *
@@ -530,8 +549,8 @@ class GlobalSetup {
      * @param string $configFileName
      * @throws \Exception
      */
-    public function declareNewEntryPoint($epId, $epType, $configFileName) {
-
+    public function declareNewEntryPoint($epId, $epType, $configFileName)
+    {
         $this->urlMapModifier->addEntryPoint($epId, $epType);
 
         if (isset($this->projectInfos->entrypoints[$epId])) {

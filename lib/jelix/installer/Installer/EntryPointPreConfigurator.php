@@ -7,6 +7,7 @@
  */
 namespace Jelix\Installer;
 
+use Jelix\Routing\UrlMapping\XmlEntryPoint;
 
 /**
  * entry points properties for configurators
@@ -15,7 +16,6 @@ namespace Jelix\Installer;
  * @method getScriptName()
  * @method getFileName()
  * @method isCliScript()
- * @method getUrlMap()
  * @method getEpId()
  * @method getConfigFileName()
  * @method getModulesList()
@@ -54,6 +54,21 @@ class EntryPointPreConfigurator
             return call_user_func_array([$this->entryPoint, $functionName], $arguments);
         }
         throw new \ErrorException("Unknown method $functionName on ".__CLASS__);
+    }
+
+    /**
+     * @return XmlEntryPoint
+     */
+    public function getUrlMap()
+    {
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $urlMapModifier = $this->globalSetup->getLocalUrlModifier();
+        }
+        else {
+            $urlMapModifier = $this->globalSetup->getUrlModifier();
+        }
+
+        return $urlMapModifier->addEntryPoint($this->entryPoint->getEpId(), $this->entryPoint->getType());
     }
 
     /**

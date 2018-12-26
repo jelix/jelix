@@ -19,8 +19,8 @@ class XmlRedefinedMapModifier extends XmlMapModifier
      */
     protected $originalMap;
 
-    function __construct($originalMapFile, $redefinedMapFile) {
-        $this->originalMap = new XmlMapModifier($originalMapFile, false);
+    function __construct(XmlMapModifier $originalMapFile, $redefinedMapFile) {
+        $this->originalMap = $originalMapFile;
         parent::__construct($redefinedMapFile, true);
     }
 

@@ -566,7 +566,7 @@ class Installer {
                     $entryPoint->getScriptName()));
             \jApp::setConfig($entryPoint->getConfigObj());
         }
-        $this->globalSetup->getUrlModifier()->save();
+
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();

@@ -738,6 +738,7 @@ class Configurator {
             \jApp::setConfig($entryPoint->getConfigObj());
         }
         $this->globalSetup->getUrlModifier()->save();
+        $this->globalSetup->getLocalUrlModifier()->save();
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();
