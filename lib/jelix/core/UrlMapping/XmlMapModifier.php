@@ -115,6 +115,10 @@ class XmlMapModifier
         return null;
     }
 
+    /**
+     * @param string $type
+     * @return \DomElement[]
+     */
     protected function getEntryPointsOfType($type="classic") {
         $results = array();
         $list = $this->document->getElementsByTagName('entrypoint');

@@ -47,6 +47,13 @@ class XmlEntryPoint {
         return $this->map;
     }
 
+    /**
+     * @return \DOMElement
+     */
+    public function getDomElement() {
+        return $this->ep;
+    }
+
     protected function setElementOptions($element, $options, $authorizedOptions) {
         if ($options && is_array($options)) {
             foreach($options as $opt=>$value) {
@@ -88,7 +95,8 @@ class XmlEntryPoint {
      *      optionalTrailingSlash => true/(false)
      */
     public function addUrlAction($pathinfo, $module, $action, $parameters=null,
-                                 $statics=null, $options=null) {
+                                 $statics=null, $options=null)
+    {
         $url = $this->getUrlByModuleAction($module, $action);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
@@ -98,23 +106,29 @@ class XmlEntryPoint {
                 $url->setAttribute('action', $action);
             }
             $this->appendElement($this->ep, $url);
-        }
-        else {
+        } else {
             if ($parameters !== null && is_array($parameters)) {
                 $list = $url->getElementsByTagName('param');
-                foreach($list as $p) {
+                foreach ($list as $p) {
                     $url->removeChild($p);
                 }
             }
             if ($statics !== null && is_array($statics)) {
                 $list = $url->getElementsByTagName('static');
-                foreach($list as $p) {
+                foreach ($list as $p) {
                     $url->removeChild($p);
                 }
             }
         }
-        $this->setElementOptions($url, $options, array('default','https','noentrypoint',
-                                                       'actionoverride', 'optionalTrailingSlash'));
+        $this->setElementOptions($url, $options, array('default', 'https', 'noentrypoint',
+            'actionoverride', 'optionalTrailingSlash'));
+
+        $this->setUrlParametersStatics($url, $parameters, $statics);
+    }
+
+    protected function setUrlParametersStatics(\DOMElement $url,
+                                               $parameters=null,
+                                               $statics=null) {
 
         // set parameters
         if ($parameters !== null && is_array($parameters)) {
@@ -284,8 +298,13 @@ class XmlEntryPoint {
         $this->setElementOptions($url, $options, array('https','noentrypoint'));
     }
 
+    /**
+     * @param string $pathinfo
+     * @return \DOMElement|null
+     */
     protected function getUrlByPathinfo($pathinfo) {
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('pathinfo') == $pathinfo) {
                 return $item;
@@ -294,8 +313,18 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByPathinfo($pathinfo)  {
+        return ($this->getUrlByPathinfo($pathinfo) !== null);
+    }
+
+    /**
+     * @param string $module
+     * @return \DOMElement|null
+     */
     protected function getUrlByDedicatedModule($module) {
+        /** @var \DOMNodeList $list */
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module) {
                 if ($item->getAttribute('action') == '' &&
@@ -308,8 +337,18 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByDedicatedModule($module)  {
+        return ($this->getUrlByDedicatedModule($module) !== null);
+    }
+
+    /**
+     * @param string $handler
+     * @param string $module
+     * @return \DOMElement|null
+     */
     protected function getUrlByHandler($handler, $module) {
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module &&
                 $item->getAttribute('handler') == $handler) {
@@ -319,8 +358,18 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByHandler($handler, $module)  {
+        return ($this->getUrlByHandler($handler, $module) !== null);
+    }
+
+    /**
+     * @param string $include
+     * @param string $module
+     * @return \DOMElement|null
+     */
     protected function getUrlByInclude($include, $module) {
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module &&
                 $item->getAttribute('include') == $include) {
@@ -330,8 +379,19 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByInclude($include, $module)  {
+        return ($this->getUrlByInclude($include, $module) !== null);
+    }
+
+
+    /**
+     * @param string $module
+     * @param string $action
+     * @return \DOMElement|null
+     */
     protected function getUrlByModuleAction($module, $action) {
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module &&
                 $item->getAttribute('action') == $action) {
@@ -341,8 +401,18 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByModuleAction($module, $action) {
+        return ($this->getUrlByModuleAction($module, $action) !== null);
+    }
+
+    /**
+     * @param string $module
+     * @param string $controller
+     * @return \DOMElement|null
+     */
     protected function getUrlByModuleController($module, $controller) {
         $list = $this->ep->getElementsByTagName('url');
+        /** @var \DOMElement $item */
         foreach($list as $item) {
             if ($item->getAttribute('module') == $module &&
                 $item->getAttribute('controller') == $controller) {
@@ -352,6 +422,15 @@ class XmlEntryPoint {
         return null;
     }
 
+    public function hasUrlByModuleController($module, $controller)  {
+        return ($this->getUrlByModuleController($module, $controller) !== null);
+    }
+
+    /**
+     * @param \DOMElement $parent
+     * @param \DOMElement $child
+     * @param string $indent
+     */
     protected function appendElement(\DOMElement $parent, \DOMElement $child, $indent='        ') {
         $doc = $parent->ownerDocument;
         if ($parent->lastChild && $parent->lastChild->nodeType == XML_TEXT_NODE) {

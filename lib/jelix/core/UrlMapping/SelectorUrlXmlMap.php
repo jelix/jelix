@@ -35,7 +35,7 @@ class SelectorUrlXmlMap extends \jSelectorSimpleFile
 
         if (preg_match("/^([\w\.\/]+)$/", $selInVar, $m)) {
             $this->localFile = $m[1];
-            $this->_localPath = $this->_basePath.$m[1];
+            $this->_localPath = $this->_localBasePath.$m[1];
         }
         else {
             throw new \jExceptionSelector('jelix~errors.selector.invalid.syntax',
