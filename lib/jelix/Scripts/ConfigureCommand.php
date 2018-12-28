@@ -13,6 +13,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 /**
  * Command for a user to configure an application before installing it.
@@ -53,8 +54,8 @@ class ConfigureCommand extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->setUpOutput($output);
         \jAppManager::close();
-
 
         $reporter = new \Jelix\Installer\Reporter\Console($output,
             ($output->isVerbose()?'notice':'error'), 'Configuration migration');
@@ -67,7 +68,6 @@ class ConfigureCommand extends Command {
             ($output->isVerbose()?'notice':'error'), 'Configuration');
 
         $globalSetup = new \Jelix\Installer\GlobalSetup();
-
         $configurator = new \Jelix\Installer\Configurator(
             $reporter, $globalSetup,
             $this->getHelper('question'), $input, $output);
@@ -127,5 +127,14 @@ class ConfigureCommand extends Command {
         } else {
             return  substr($ep, 0, $p);
         }
+    }
+
+    protected function setUpOutput(OutputInterface $output) {
+        $outputStyle = new OutputFormatterStyle('cyan', 'default');
+        $output->getFormatter()->setStyle('question', $outputStyle);
+
+        $outputStyle2 = new OutputFormatterStyle('yellow', 'default', array('bold'));
+        $output->getFormatter()->setStyle('inputstart', $outputStyle2);
+
     }
 }

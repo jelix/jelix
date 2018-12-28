@@ -199,12 +199,11 @@ class GlobalSetup {
             $ini = $this->getAppConfigIni();
             $ini['local'] = $this->localConfigIni;
             $urlXmlFileName = \jApp::appConfigPath($ini->getValue('significantFile', 'urlengine'));
-            $urlLocalXmlFileName = \jApp::appConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
+            $urlLocalXmlFileName = \jApp::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
         $this->urlLocalMapModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier(
             $this->urlMapModifier, $urlLocalXmlFileName);
-
 
         $this->readEntryPointData();
         $this->readModuleInfos();
@@ -450,7 +449,7 @@ class GlobalSetup {
      * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
     public function getMainConfigIni($forceReadOnly = false) {
-        if ($forceReadOnly || $this->readWriteConfigMode) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
             return new IniModifierReadOnly($this->mainConfigIni);
         }
         return $this->mainConfigIni;
@@ -462,7 +461,7 @@ class GlobalSetup {
      * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
     public function getLocalConfigIni($forceReadOnly = false) {
-        if ($forceReadOnly || $this->readWriteConfigMode) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
             return new IniModifierReadOnly($this->localConfigIni);
         }
         return $this->localConfigIni;
@@ -473,7 +472,7 @@ class GlobalSetup {
      * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
     public function getLiveConfigIni($forceReadOnly = false) {
-        if ($forceReadOnly || $this->readWriteConfigMode) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
             return new IniModifierReadOnly($this->liveConfigIni);
         }
         return $this->liveConfigIni;
@@ -484,7 +483,7 @@ class GlobalSetup {
      * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
     public function getProfilesIni($forceReadOnly = false) {
-        if ($forceReadOnly || $this->readWriteConfigMode) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
             return new IniModifierReadOnly($this->profilesIni);
         }
         return $this->profilesIni;

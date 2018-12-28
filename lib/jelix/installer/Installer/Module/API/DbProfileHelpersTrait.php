@@ -24,7 +24,7 @@ trait DbProfileHelpersTrait {
      * @param boolean $force true:erase the existing profile
      * @return boolean true if the ini file has been changed
      */
-    protected final function declareDbProfile($name, $sectionContent = null, $force = true)
+    public function declareDbProfile($name, $sectionContent = null, $force = true)
     {
         $profiles = $this->globalSetup->getProfilesIni();
         if ($sectionContent == null) {
@@ -76,7 +76,7 @@ trait DbProfileHelpersTrait {
      *
      * @param string $name  the name of the section/alias
      */
-    protected function removeDbProfile($name) {
+    public function removeDbProfile($name) {
 
         $profiles = $this->getProfilesIni();
         if ($profiles->getValue($name, 'jdb')) {

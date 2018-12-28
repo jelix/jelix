@@ -34,7 +34,7 @@ class WebAssetsUpgrader
      */
     public function changeConfig(\Jelix\IniFile\IniModifierArray $config,
                                  \Jelix\IniFile\IniModifier $targetConfig) {
-        $defaultConfig = $this->getConfigIni()['default'];
+        $defaultConfig = $config['default'];
 
         // move jqueryPath to webassets
         $jqueryPath = $config->getValue('jqueryPath', 'urlengine');

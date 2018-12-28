@@ -175,16 +175,19 @@ class ModuleInstallerLauncher {
     }
 
     /**
-     * save module infos into the app config or the localconfig
+     * save module infos into the app config or the local config
      */
     public function saveModuleStatus() {
 
-        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL) {
-            $conf = $this->globalSetup->getLocalConfigIni();
+        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL ||
+            $this->globalSetup->forLocalConfiguration()
+        ) {
+            $conf = $this->globalSetup->getAppConfigIni(true);
+            $conf['local'] = $this->globalSetup->getLocalConfigIni();
         }
         else {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
-            $conf = $this->globalSetup->getMainConfigIni();
+            $conf = $this->globalSetup->getAppConfigIni();
         }
         $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator?$this->moduleConfigurator->getDefaultParameters():array()));
     }

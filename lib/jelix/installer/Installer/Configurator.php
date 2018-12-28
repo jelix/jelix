@@ -172,6 +172,9 @@ class Configurator {
 
         // configure modules
         $modulesChain = $this->resolveDependencies($resolver);
+        if ($modulesChain === false) {
+            return false;
+        }
         $modulesToConfigure = array();
 
         foreach ($modulesChain as $resolverItem) {
@@ -241,8 +244,10 @@ class Configurator {
 
         // configure modules
         $modulesChain = $this->resolveDependencies($resolver);
+        if ($modulesChain === false) {
+            return false;
+        }
         $modulesToConfigure = array();
-
         foreach ($modulesChain as $resolverItem) {
             if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
                 $modulesToConfigure[] = $resolverItem;

@@ -8,7 +8,7 @@
         "jelix/composer-module-setup": "0.*",
         "phpmailer/phpmailer": "^5.2.26",
         "jelix/castor": "1.0.*",
-        "jelix/feeds-module": "^1.7.3",
+        "jelix/feeds-module": "^1.7.4",
         "jelix/inifile": "^3.0.0",
         "jelix/simplelocalization": "1.7.1",
         "jelix/properties-file": "^1.0.0",

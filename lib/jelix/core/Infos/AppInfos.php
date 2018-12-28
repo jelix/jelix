@@ -37,6 +37,7 @@ class AppInfos extends InfosAbstract {
         }
 
         $this->entrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+        return $this->entrypoints[$fileName];
     }
 
     public function save()

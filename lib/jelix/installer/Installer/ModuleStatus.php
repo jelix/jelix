@@ -48,8 +48,15 @@ class ModuleStatus {
 
     public $skipInstaller = false;
 
-
+    /**
+     * the module is configured for any instance
+     */
     const CONFIG_SCOPE_APP = 0;
+
+    /**
+     * the module is configured only at the instance level
+     * (installed by the user, not by the developer)
+     */
     const CONFIG_SCOPE_LOCAL = 1;
 
     /**
@@ -154,6 +161,12 @@ class ModuleStatus {
                 if (strpos($v, ',') !== false) {
                     $trueParams[$kp[0]] = explode(',', $v);
                 }
+                else if ($v === 'false') {
+                    $trueParams[$kp[0]] = false;
+                }
+                else if ($v === 'true') {
+                    $trueParams[$kp[0]] = true;
+                }
                 else {
                     $trueParams[$kp[0]] = $v;
                 }
@@ -177,19 +190,17 @@ class ModuleStatus {
                 }
                 $v = implode(',', $v);
             }
+            if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v) {
+                // don't write values that are default ones
+                continue;
+            }
             if ($v === true || $v === '') {
-                if (isset($defaultParameters[$name]) &&
-                    ($defaultParameters[$name] === true || $defaultParameters[$name] === '')) {
-                    // don't write values that are default ones
-                    continue;
-                }
                 $p[] = $name;
             }
+            else if ($v === false) {
+                $p[] = $name . '=false';
+            }
             else {
-                if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v) {
-                    // don't write values that are default ones
-                    continue;
-                }
                 $p[] = $name . '=' . $v;
             }
         }
