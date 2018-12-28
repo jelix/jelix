@@ -365,20 +365,13 @@ class Installer {
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
 
-                $defaultDbProfile = $installer->getDefaultDbProfile();
-                if ($defaultDbProfile != '') {
-                    $databaseHelpers->useDbProfile($defaultDbProfile);
-                }
-                else {
-                    $databaseHelpers->useDbProfile($component->getDbProfile());
-                }
-
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->install();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->install($helpers);
                         }
                         $saveConfigIni = true;
@@ -405,6 +398,7 @@ class Installer {
                             $upgrader->install();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->install($helpers);
                         }
                         $saveConfigIni = true;
@@ -439,6 +433,7 @@ class Installer {
                             $installer->uninstall();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->uninstall($helpers);
                         }
                         $saveConfigIni = true;
@@ -489,20 +484,13 @@ class Installer {
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
 
-                $defaultDbProfile = $installer->getDefaultDbProfile();
-                if ($defaultDbProfile != '') {
-                    $databaseHelpers->useDbProfile($defaultDbProfile);
-                }
-                else {
-                    $databaseHelpers->useDbProfile($component->getDbProfile());
-                }
-
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->postInstall();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->postInstall($helpers);
                         }
                         $component->installFinished();
@@ -515,6 +503,7 @@ class Installer {
                             $upgrader->postInstall();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->postInstall($helpers);
                         }
                         $component->upgradeFinished($upgrader);
@@ -527,6 +516,7 @@ class Installer {
                             $installer->postUninstall();
                         }
                         else {
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->postUninstall($helpers);
                         }
                         $component->uninstallFinished();

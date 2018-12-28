@@ -7,6 +7,8 @@
  */
 namespace Jelix\Installer\Module\API;
 
+use Jelix\FileUtilities\Path;
+
 /**
  * Trait for installer/configurator classes
  *
@@ -29,7 +31,10 @@ trait FileHelpersTrait
     public function copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite = false)
     {
         $targetPath = $this->expandPath($targetPath);
-        $this->_copyDirectoryContent($this->globalSetup->getCurrentModulePath() . 'install/' . $relativeSourcePath, $targetPath, $overwrite);
+        if (!Path::isAbsolute($relativeSourcePath)) {
+            $relativeSourcePath = $this->globalSetup->getCurrentModulePath() . 'install/' . $relativeSourcePath;
+        }
+        $this->_copyDirectoryContent($relativeSourcePath, $targetPath, $overwrite);
     }
 
     /**

@@ -342,9 +342,6 @@ class ModuleInstallerLauncher {
                                                 $this->moduleInfos->version,
                                                 true
                                                 );
-            if ($this->moduleInstaller instanceof \Jelix\Installer\Module\InstallerInterface) {
-                $this->moduleInstaller->setGlobalSetup($this->globalSetup);
-            }
         }
 
         if ($this->moduleInstaller instanceof \jIInstallerComponent) {
@@ -409,7 +406,6 @@ class ModuleInstallerLauncher {
                 $this->moduleInfos->version,
                 true
             );
-            $this->moduleUninstaller->setGlobalSetup($this->globalSetup);
         }
 
         if ($this->moduleUninstaller instanceof \jIInstallerComponent) {
@@ -456,9 +452,6 @@ class ModuleInstallerLauncher {
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
 
-                if ($this->moduleMainUpgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
-                    $this->moduleMainUpgrader->setGlobalSetup($this->globalSetup);
-                }
             }
         }
 
@@ -507,9 +500,6 @@ class ModuleInstallerLauncher {
                     throw new Exception("module.upgrader.missing.version",array($fileInfo[0], $this->name));
                 }
                 $this->moduleUpgraders[] = $upgrader;
-                if ($upgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
-                    $upgrader->setGlobalSetup($this->globalSetup);
-                }
             }
         }
 
