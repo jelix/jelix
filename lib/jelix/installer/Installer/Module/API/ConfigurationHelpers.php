@@ -107,4 +107,49 @@ class ConfigurationHelpers extends PreConfigurationHelpers {
         $this->globalSetup->removeWebAssetsFromConfig($config, $name, $collection);
     }
 
+    /**
+     * Create a new entry point
+     *
+     * @param string $entryPointModelFile the entrypoint file to copy
+     * @param string $entryPointWebPath the path of the entrypoint to create into the www directory
+     * @param string $configFileName name of the configuration file. path relative to app/config or var/config
+     * @param string $epType type of the entry point (classic)
+     * @param string $configFileModel a configuration file to copy as $configFileName. default is an empty content.
+     * @throws \Exception
+     */
+    public function createEntryPoint($entryPointModelFile,
+                                     $entryPointWebPath,
+                                     $configFileName,
+                                     $epType = 'classic',
+                                     $configFileModel = '')
+    {
+        // create the entrypoint file
+
+        if (substr($entryPointWebPath, -4) == '.php') {
+            $epFile = $entryPointWebPath;
+            $epId = substr($entryPointWebPath, 0, -4);
+        }
+        else {
+            $epFile = $entryPointWebPath.'.php';
+            $epId = $entryPointWebPath;
+        }
+
+        if (!file_exists(\jApp::wwwPath($epFile))) {
+            $this->copyFile($entryPointModelFile, \jApp::wwwPath($epFile));
+        }
+
+        // create the configuration file
+        $configFilePath = $this->configFilePath($configFileName);
+        if (!file_exists($configFilePath)) {
+            if ($configFileModel) {
+                $this->copyFile($configFileModel, $configFilePath);
+            }
+            else {
+                file_put_contents($configFilePath, ';<'.'?php die(\'\');?'.'>');
+            }
+        }
+
+        // declare the entry point
+        $this->globalSetup->declareNewEntryPoint($epId, $epType, $configFileName);
+    }
 }

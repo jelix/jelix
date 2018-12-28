@@ -551,16 +551,28 @@ class GlobalSetup {
      */
     public function declareNewEntryPoint($epId, $epType, $configFileName)
     {
-        $this->urlMapModifier->addEntryPoint($epId, $epType);
+        if (strpos($epId, '.php') !== false) {
+            $epId = substr($epId, 0, -4);
+        }
 
         if (isset($this->projectInfos->entrypoints[$epId])) {
             throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
         }
 
-        $this->projectInfos->entrypoints[$epId] = new \Jelix\Core\Infos\EntryPoint($epId, $configFileName, $epType);
+        $this->projectInfos->addEntryPointInfo($epId, $configFileName, $epType);
 
         $writer = new \Jelix\Core\Infos\ProjectXmlWriter($this->projectInfos->getFilePath());
         $writer->write($this->projectInfos);
+
+        $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType);
+        $this->entryPoints[$epId] = $ep;
+
+        if ($this->forLocalConfiguration()) {
+            $this->urlLocalMapModifier->addEntryPoint($epId, $epType);
+        }
+        else {
+            $this->urlMapModifier->addEntryPoint($epId, $epType);
+        }
     }
 
     /**

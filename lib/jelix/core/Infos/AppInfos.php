@@ -10,7 +10,7 @@ namespace Jelix\Core\Infos;
 class AppInfos extends InfosAbstract {
 
     /**
-     * @var EntryPoint[]  key=filename
+     * @var EntryPoint[]  keys are filename
      */
     public $entrypoints = array();
 
