@@ -647,4 +647,72 @@ class UTCreateUrls extends jUnitTestCase {
         $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/?foo=bar', $url);
 
     }
+
+    function testRedefinedUrl() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = true;
+        $conf->forceHTTPSPort = true;
+        $conf->urlengine = array(
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'notfoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_mainredefined.xml',
+            'localSignificantFile'=> 'urlsfiles/url_redefined.xml',
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
+        );
+
+        $conf->_modulesPathList['news']='/';
+        $conf->_modulesPathList['articles']='/';
+
+        jUrl::getEngine(true);
+
+        $urlList = array();
+        $urlList[]= array('testapp~main:index', array());
+        $urlList[]= array('testapp~foo:index', array());
+        $urlList[]= array('testapp~foo:bar', array());
+
+        $urlList[]= array('news~default:index', array());
+        $urlList[]= array('news~foo:index', array());
+        $urlList[]= array('news~foo:bar', array());
+
+        $urlList[]= array('articles~default:index', array());
+        $urlList[]= array('articles~foo:index', array());
+        $urlList[]= array('articles~foo:bar', array());
+
+        $urlList[]= array('jelix~jforms:getListData@classic', array());
+
+        $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
+        $urlList[]= array('jelix_tests~urlsig:display', array('var'=>'chimlou'));
+
+        $trueResult=array(
+            "/index.php",
+            "/index.php/testapp/foo",
+            "/index.php/testapp/foo/bar",
+
+            "/news.php",
+            "/news.php/news/foo",
+            "/news.php/news/foo/bar",
+
+            "/news.php/articles",
+            "/news.php/articles/foo",
+            "/news.php/articles/foo/bar",
+
+            "/index.php/jelix/jforms/getListData",
+            "/foo/bar.php/withhandler/premier/deuxieme",
+            "/foo/bar.php/sopar/chimlou"
+        );
+
+        $this->_doCompareUrl("testRedefinedUrl", $urlList, $trueResult);
+    }
+
+
 }

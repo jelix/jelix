@@ -249,7 +249,9 @@ class UrlActionMapper
         } elseif ($urlinfo[0] == 5) {
             $this->buildForWholeController($urlact, $url, $urlinfo);
         } elseif ($urlinfo[0] == 2) {
-            $url->pathInfo = '/'.$urlact->getParam('module', \jApp::getCurrentModule()).'/'.str_replace(':', '/', $urlact->getParam('action'));
+            $url->pathInfo = $this->simplifyDefaultAction(
+                '/'.$urlact->getParam('module', \jApp::getCurrentModule()),
+                $urlact->getParam('action'));
             $url->delParam('module');
             $url->delParam('action');
         }
@@ -455,25 +457,28 @@ class UrlActionMapper
         $action = $urlact->getParam('action');
         if ($urlinfo[3]) { // if default module
             if ($action != 'default:index') {
-                $act = explode(':', $action);
-                $url->pathInfo = '/'.$module.'/'.$act[0];
-                if ($act[1] != 'index') {
-                    $url->pathInfo .= '/'.$act[1];
-                }
+                $url->pathInfo = $this->simplifyDefaultAction(
+                    '/'.$module, $action);
             }
         } else {
-            $url->pathInfo = ($urlinfo[4] ?: '/'.$module);
-            if ($action != 'default:index') {
-                $act = explode(':', $action);
-                $url->pathInfo .= '/'.$act[0];
-                if ($act[1] != 'index') {
-                    $url->pathInfo .= '/'.$act[1];
-                }
-            }
+            $url->pathInfo = $this->simplifyDefaultAction(
+                ($urlinfo[4] ?: '/'.$module), $action);
         }
         $url->delParam('module');
         $url->delParam('action');
     }
+
+    protected function simplifyDefaultAction($pathInfo, $action) {
+        if ($action != 'default:index') {
+            $act = explode(':', $action);
+            $pathInfo .= '/'.$act[0];
+            if ($act[1] != 'index') {
+                $pathInfo .= '/'.$act[1];
+            }
+        }
+        return $pathInfo;
+    }
+
 
     /**
      * for the patterns "module~ctrl:*@request".
@@ -508,7 +513,7 @@ class UrlActionMapper
             if (preg_match($reg, $url->pathInfo, $m)) {
                 $url->pathInfo = isset($m[1]) ? $m[1] : '/';
             } else {
-                return;
+                return null;
             }
         }
 
@@ -538,7 +543,9 @@ class UrlActionMapper
         }
         // call the url handler
         $urlact = $handler->parse($url);
-        $urlact->needsHttps = $needsHttps;
+        if ($urlact) {
+            $urlact->needsHttps = $needsHttps;
+        }
 
         return $urlact;
     }

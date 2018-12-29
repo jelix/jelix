@@ -36,6 +36,7 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * contain the UrlMapData object corresponding of the default
      * entrypoint of each type.
+     * @var UrlMapData[]
      */
     protected $defaultEntrypointsByType = array();
 
@@ -83,8 +84,6 @@ class XmlMapParser implements \jISimpleCompiler
     public function compile(/*SelectorUrlXmlMap*/ $aSelector)
     {
         $sourceFile = $aSelector->getPath();
-        $cachefile = $aSelector->getCompiledFilePath();
-
         $sourceLocalFile = $aSelector->getLocalPath();
         if ($aSelector->localFile == '' || !file_exists($sourceLocalFile)) {
             $sourceLocalFile = '';
@@ -274,9 +273,10 @@ class XmlMapParser implements \jISimpleCompiler
             );
             $this->createUrlInfosDedicatedModules = array();
             $this->epHasDefaultUrl = false;
+
             if ($isDefault) {
                 if ($this->defaultEntrypointsByType[$type] !== null) {
-                    throw new MapParserException($this->getErrorMsg($tag, 'Only one default entry point for the type '.$type.' is allowed'));
+                    throw new MapParserException($this->getErrorMsg($tag, 'Only one default entry point for the type ' . $type . ' is allowed'));
                 }
                 $this->defaultEntrypointsByType[$type] = $urlModel;
             }
