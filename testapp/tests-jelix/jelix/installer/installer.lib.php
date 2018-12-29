@@ -53,7 +53,8 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
     function __construct ($projectXmlFileName = null,
                           $mainConfigFileName = null,
                           $localConfigFileName = null,
-                          $urlXmlFileName = null
+                          $urlXmlFileName = null,
+                          $urlLocalXmlFileName = null
     ) {
         foreach(array(
             'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline'
@@ -86,7 +87,8 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         parent::__construct($projectXmlFileName,
             $mainConfigFileName,
             $localConfigFileName,
-            $urlXmlFileName
+            $urlXmlFileName,
+            $urlLocalXmlFileName
         );
 
     }
@@ -97,7 +99,9 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
     }
 
     function setProjectXml($projectXml) {
-        $this->readEntryPointData(simplexml_load_string($projectXml));
+        $parser = new \Jelix\Core\Infos\ProjectXmlParser($this->projectInfos->getFilePath());
+        $this->projectInfos = $parser->parseFromString($projectXml);
+        $this->readEntryPointData();
         $this->readModuleInfos();
     }
 
@@ -123,12 +127,6 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
 class testInstallerComponentModule extends \Jelix\Installer\ModuleInstallerLauncher {
 
-    protected function readIdentity() {
-        $xml = simplexml_load_string($this->mainInstaller->moduleXMLDesc[$this->name]);
-        $this->sourceVersion = (string) $xml->info[0]->version[0];
-        $this->readDependencies($xml);
-    }
-
 }
 
 class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
@@ -143,19 +141,14 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->globalSetup = $globalSetup;
 
         $appConfigPath = \jApp::appConfigPath($configFile);
-        $this->appConfigIni = clone $globalSetup->getAppConfigIni();
-        $this->appConfigIni['entrypoint'] = new testInstallerIniFileModifier($appConfigPath);
-
+        if (!file_exists($appConfigPath)) {
+            \jFile::createDir(dirname($appConfigPath));
+            file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
+        }
         $varConfigPath = \jApp::varConfigPath($configFile);
-        $localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
 
-
-        $this->localConfigIni = clone $this->appConfigIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni();
-        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
-
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = new testInstallerIniFileModifier(jApp::varConfigPath('liveconfig.ini.php'));
+        $this->appEpConfigIni = new testInstallerIniFileModifier($appConfigPath);
+        $this->localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
 
         $this->config = $configContent;
     }
@@ -197,7 +190,12 @@ class testInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface
  */
 class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
-    function __construct($filename) {}
+    function __construct($filename, $initialContent='') {
+        $this->filename = $filename;
+        if ($initialContent != '') {
+            $this->parse(preg_split("/(\r\n|\n|\r)/", $initialContent));
+        }
+    }
 
     public function save($chmod=null) {
         $this->modified = false;
@@ -215,11 +213,11 @@ class testInstallerMain extends \Jelix\Installer\Installer {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
+        $this->messages = new \Jelix\Installer\Checker\Messages('en');
 
         copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
         $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
-        $this->messages = new \Jelix\Installer\Checker\Messages('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
         $config = jApp::config();
         foreach ($this->globalSetup->configContent as $ep=>$conf) {

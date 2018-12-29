@@ -93,7 +93,7 @@ class jInstallerEntryPoint {
         $this->scriptName =  $entryPoint->getScriptName();
         $this->file = $entryPoint->getFileName();
 
-        $this->epConfigIni = $entryPoint->getAppConfigIni()['entrypoint'];
+        $this->epConfigIni = $entryPoint->getSingleConfigIni();
 
         $mainConfig = new \Jelix\IniFile\MultiIniModifier(
             $globalSetup->getDefaultConfigIni(),
