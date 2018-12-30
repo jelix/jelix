@@ -245,14 +245,14 @@ class GlobalSetup {
 
             // ignore entry point which have the same config file of an other one
             // FIXME: what about installer.ini ?
-            if (isset($configFileList[$entrypoint->configFile]))
+            if (isset($configFileList[$entrypoint->getConfigFile()]))
                 continue;
 
-            $configFileList[$entrypoint->configFile] = true;
+            $configFileList[$entrypoint->getConfigFile()] = true;
 
             // we create an object corresponding to the entry point
-            $ep = $this->createEntryPointObject($entrypoint->configFile,
-                $entrypoint->id.'.php', $entrypoint->type);
+            $ep = $this->createEntryPointObject($entrypoint->getConfigFile(),
+                $entrypoint->getFile(), $entrypoint->getType());
             $epId = $ep->getEpId();
 
             if (!$this->mainEntryPoint || $epId == 'index') {

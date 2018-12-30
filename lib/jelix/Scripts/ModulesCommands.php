@@ -32,7 +32,7 @@ class ModulesCommands {
         $projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
         $ep = $projectInfos->getEntryPointInfo('index');
 
-        \jApp::setConfig(\jConfigCompiler::read($ep->configFile, true, true, 'console.php'));
+        \jApp::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
 
         // ----- init the Application object

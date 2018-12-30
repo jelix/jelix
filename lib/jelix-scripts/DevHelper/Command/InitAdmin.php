@@ -94,7 +94,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             \jApp::mainConfigFile()
         );
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
-                                              \jApp::appConfigPath($ep->configFile));
+                                              \jApp::appConfigPath($ep->getConfigFile()));
 
         $params = array();
         $this->createFile(\jApp::appPath('app/responses/adminHtmlResponse.class.php'),

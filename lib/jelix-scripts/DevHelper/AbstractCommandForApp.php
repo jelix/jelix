@@ -118,9 +118,10 @@ abstract class AbstractCommandForApp extends AbstractCommand
             throw new \Exception($this->getName().": Entry point $epId is unknown");
         }
 
-        $configFile = $entrypoint->configFile;
+        $configFile = $entrypoint->getConfigFile();
 
-        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypoint->getFile()));
+        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true,
+            $entrypoint->getFile()));
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
     }
 

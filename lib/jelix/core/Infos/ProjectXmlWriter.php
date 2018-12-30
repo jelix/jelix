@@ -27,9 +27,9 @@ class ProjectXmlWriter extends XmlWriterAbstract
         foreach($infos->entrypoints as $ep) {
             $elem = $doc->createElement('entry');
             $elem->setAttribute('file', $ep->getFile());
-            $elem->setAttribute('config', $ep->configFile);
-            if ($ep->type != '' && $ep->type != 'classic') {
-                $elem->setAttribute('type', $ep->type);
+            $elem->setAttribute('config', $ep->getConfigFile());
+            if ($ep->getType() != '' && $ep->getType() != 'classic') {
+                $elem->setAttribute('type', $ep->getType());
             }
             $entrypoints->appendChild($elem);
         }
