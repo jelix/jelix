@@ -119,6 +119,7 @@ class GlobalSetup {
      */
     function __construct(
         $frameworkFileName = null,
+        $localFrameworkFileName = null,
         $mainConfigFileName = null,
         $localConfigFileName = null,
         $urlXmlFileName = null,
@@ -132,7 +133,10 @@ class GlobalSetup {
             if (!$frameworkFileName) {
                 $frameworkFileName = \jApp::appConfigPath('framework.ini.php');
             }
-            $this->frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName);
+            if (!$localFrameworkFileName) {
+                $localFrameworkFileName = \jApp::varConfigPath('localframework.ini.php');
+            }
+            $this->frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName, $localFrameworkFileName);
         }
 
         $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
@@ -552,7 +556,11 @@ class GlobalSetup {
             throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
         }
 
-        $this->frameworkInfos->addEntryPointInfo($epId, $configFileName, $epType);
+        if ($this->forLocalConfiguration()) {
+            $this->frameworkInfos->addLocalEntryPointInfo($epId, $configFileName, $epType);
+        } else {
+            $this->frameworkInfos->addEntryPointInfo($epId, $configFileName, $epType);
+        }
         $this->frameworkInfos->save();
 
         $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType);

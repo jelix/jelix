@@ -17,29 +17,53 @@ class FrameworkInfos {
     protected $iniFile;
 
     /**
+     * @var IniModifier
+     */
+    protected $iniLocalFile;
+
+    /**
      * @var EntryPoint[]  keys are filename
      */
     protected $entrypoints = array();
 
     /**
+     * @var EntryPoint[]  keys are filename
+     */
+    protected $localEntrypoints = array();
+
+    /**
      * FrameworkInfos constructor.
      * @param string $frameworkFile the path to the framework.ini.php file
+     * @param string $frameworkFile the path to the localframework.ini.php file
      */
-    public function __construct($frameworkFile) {
+    public function __construct($frameworkFile, $localFrameworkFile = '') {
         $this->iniFile = new IniModifier($frameworkFile, ';<' . '?php die(\'\');?' . '>');
+        $this->readIniFile($this->iniFile);
 
-        foreach ($this->iniFile->getSectionList() as $section) {
+        if ($localFrameworkFile != '') {
+            $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<' . '?php die(\'\');?' . '>');
+            $this->readIniFile($this->iniLocalFile, true);
+        }
+    }
+
+    protected function readIniFile(IniModifier $iniFile, $isLocal=false) {
+        foreach ($iniFile->getSectionList() as $section) {
             if (!preg_match("/^entrypoint\\:(.*)$/", $section, $m)) {
                 continue;
             }
             $name = $m[1];
-            $configValue = $this->iniFile->getValue('config', $section);
-            $typeValue = $this->iniFile->getValue('type', $section);
+            $configValue = $iniFile->getValue('config', $section);
+            $typeValue = $iniFile->getValue('type', $section);
             if ($typeValue === null) {
                 $typeValue = '';
             }
             if ($configValue) {
-                $this->addEntryPointInfo($name, $configValue, $typeValue);
+                if ($isLocal) {
+                    $this->addLocalEntryPointInfo($name, $configValue, $typeValue);
+                }
+                else {
+                    $this->addEntryPointInfo($name, $configValue, $typeValue);
+                }
             }
         }
     }
@@ -53,6 +77,11 @@ class FrameworkInfos {
         if (strpos($id, '.php') !== false) {
             $id = substr($id, 0, -4);
         }
+
+        if (isset($this->localEntrypoints[$id])) {
+            return $this->localEntrypoints[$id];
+        }
+
         if (isset($this->entrypoints[$id])) {
             return $this->entrypoints[$id];
         }
@@ -64,7 +93,7 @@ class FrameworkInfos {
      * @return EntryPoint[]
      */
     public function getEntryPoints() {
-        return $this->entrypoints;
+        return array_merge($this->entrypoints, $this->localEntrypoints);
     }
 
     public function addEntryPointInfo($fileName, $configFileName, $type = 'classic')
@@ -77,6 +106,19 @@ class FrameworkInfos {
         return $this->entrypoints[$fileName];
     }
 
+    public function addLocalEntryPointInfo($fileName, $configFileName, $type = 'classic')
+    {
+        if (!$this->iniLocalFile) {
+            throw new \UnexpectedValueException("no local framework ini file has been given to FrameworkInfos");
+        }
+        if (strpos($fileName, '.php') !== false) {
+            $fileName = substr($fileName, 0, -4);
+        }
+
+        $this->localEntrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+        return $this->localEntrypoints[$fileName];
+    }
+
     public function removeEntryPointInfo($fileName) {
         if (strpos($fileName, '.php') !== false) {
             $id = substr($fileName, 0, -4);
@@ -86,18 +128,37 @@ class FrameworkInfos {
             $fileName .= '.php';
         }
         unset($this->entrypoints[$id]);
+        unset($this->localEntrypoints[$id]);
         $this->iniFile->removeSection('entrypoint:'.$fileName);
+        if ($this->iniLocalFile) {
+            $this->iniLocalFile->removeSection('entrypoint:'.$fileName);
+        }
     }
 
     public function save()
     {
+        $this->updateIni();
+        $this->iniFile->save();
+        if ($this->iniLocalFile && $this->iniLocalFile->isModified()) {
+            $this->iniLocalFile->save();
+        }
+    }
+
+    protected function updateIni() {
         foreach ($this->entrypoints as $item) {
             $this->iniFile->setValues(array(
                 'config' => $item->getConfigFile(),
                 'type' => $item->getType()
-            ), 'entrypoint:'.$item->getId());
+            ), 'entrypoint:'.$item->getFile());
         }
-        return $this->iniFile->save();
+        if ($this->iniLocalFile) {
+            foreach ($this->localEntrypoints as $item) {
+                $this->iniLocalFile->setValues(array(
+                    'config' => $item->getConfigFile(),
+                    'type' => $item->getType()
+                ), 'entrypoint:'.$item->getFile());
+            }
+        }
     }
 
     /**
@@ -107,6 +168,8 @@ class FrameworkInfos {
      */
     public static function load()
     {
-        return new FrameworkInfos(\jApp::appConfigPath('framework.ini.php'));
+        return new self(
+            \jApp::appConfigPath('framework.ini.php'),
+            \jApp::varConfigPath('localframework.ini.php'));
     }
 }

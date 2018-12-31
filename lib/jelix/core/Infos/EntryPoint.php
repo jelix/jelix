@@ -17,7 +17,7 @@ class EntryPoint {
 
     function __construct($id, $configFile, $type='classic') {
         $this->id = $id;
-        $this->type = $type;
+        $this->type = ($type == '' ? 'classic': $type);
         $this->configFile = $configFile;
     }
 
