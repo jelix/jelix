@@ -311,6 +311,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
         $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
         $this->createFile(\jApp::appConfigPath('mainconfig.ini.php'), 'app/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile(\jApp::appConfigPath('framework.ini.php'), 'app/config/framework.ini.php.tpl', $param, "framework setup file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
