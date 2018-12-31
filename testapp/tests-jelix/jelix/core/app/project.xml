@@ -9,9 +9,4 @@
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" />
         <homepageURL>http://jelix.org</homepageURL>
     </info>
-    <entrypoints>
-        <entry file="index.php" config="index/config.ini.php" />
-        <entry file="rest.php" config="rest/config.ini.php" type="classic"/>
-        <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
-    </entrypoints>
 </project>

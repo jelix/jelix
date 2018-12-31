@@ -192,9 +192,7 @@ class infosreaderTest extends jUnitTestCase {
   </autoload>
 </module>
 ", $result);
-
     }
-
 
     function testReadAppXmlInfo() {
         $path = __DIR__.'/app/project.xml';
@@ -225,23 +223,6 @@ class infosreaderTest extends jUnitTestCase {
         <string property="license" value="GPL" />
         <string property="licenseURL" value="http://www.gnu.org/licenses/gpl.html" />
         <string property="copyright" value="2005-2011 Laurent Jouanneau and other contributors" />
-        <array property="entrypoints">
-            <object key="index">
-                <string property="id" value="index" />
-                <string property="configFile" value="index/config.ini.php" />
-                <string property="type" value="classic" />
-            </object>
-            <object key="rest">
-                <string property="id" value="rest" />
-                <string property="configFile" value="rest/config.ini.php" />
-                <string property="type" value="classic" />
-            </object>
-            <object key="cmdline">
-                <string property="id" value="cmdline" />
-                <string property="configFile" value="cmdline/config.ini.php" />
-                <string property="type" value="cmdline" />
-            </object>
-        </array>
     </object>';
         $this->assertComplexIdenticalStr($result, $expected);
 
@@ -259,13 +240,36 @@ class infosreaderTest extends jUnitTestCase {
     <author name=\"Laurent Jouanneau\" email=\"laurent@jelix.org\" role=\"creator\"/>
     <homepageURL>http://jelix.org</homepageURL>
   </info>
-  <entrypoints>
-    <entry file=\"index.php\" config=\"index/config.ini.php\"/>
-    <entry file=\"rest.php\" config=\"rest/config.ini.php\"/>
-    <entry file=\"cmdline.php\" config=\"cmdline/config.ini.php\" type=\"cmdline\"/>
-  </entrypoints>
 </project>
 ", $result);
 
     }
+
+
+    function testFrameworkInfo() {
+        $path = __DIR__.'/app/config/framework.ini.php';
+        $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos($path);
+        $result = $fmkInfos->getEntryPoints();
+        $expected = '<?xml version="1.0"?>
+        <array>
+            <object key="index">
+                <string method="getId" value="index" />
+                <string method="getConfigFile" value="index/config.ini.php" />
+                <string method="getType" value="classic" />
+            </object>
+            <object key="rest">
+                <string method="getId" value="rest" />
+                <string method="getConfigFile" value="rest/config.ini.php" />
+                <string method="getType" value="classic" />
+            </object>
+            <object key="cmdline">
+                <string method="getId" value="cmdline" />
+                <string method="getConfigFile" value="cmdline/config.ini.php" />
+                <string method="getType" value="cmdline" />
+            </object>
+        </array>';
+        $this->assertComplexIdenticalStr($result, $expected);
+    }
+
+
 }
