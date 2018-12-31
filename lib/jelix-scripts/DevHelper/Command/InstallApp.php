@@ -38,7 +38,7 @@ class InstallApp extends \Jelix\DevHelper\AbstractCommandForApp {
         else {
             $reporter = new \Jelix\Installer\Reporter\Console($output, 'error');
         }
-        $globalSetup = new \Jelix\Installer\GlobalSetup($this->projectInfos);
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
 
