@@ -111,16 +111,15 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
     protected function loadAppConfig($epId = 'index')
     {
-        $this->loadProjectInfos();
-
-        $entrypoint = $this->projectInfos->getEntryPointInfo($epId);
+        $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
         if (!$entrypoint) {
             throw new \Exception($this->getName().": Entry point $epId is unknown");
         }
 
-        $configFile = $entrypoint->configFile;
+        $configFile = $entrypoint->getConfigFile();
 
-        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true, $entrypoint->getFile()));
+        \jApp::setConfig(\jConfigCompiler::read($configFile, true, true,
+            $entrypoint->getFile()));
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
     }
 
@@ -146,15 +145,15 @@ abstract class AbstractCommandForApp extends AbstractCommand
     }
 
     /**
-     * @var \Jelix\Core\Infos\AppInfos
+     * @var \Jelix\Core\Infos\FrameworkInfos
      */
-    protected $projectInfos;
+    private $frameworkInfos;
 
-    protected function loadProjectInfos() {
-        if ($this->projectInfos) {
-            return;
+    protected function getFrameworkInfos($reload = false) {
+        if (!$this->frameworkInfos || $reload) {
+            $this->frameworkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         }
-        $this->projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
+        return $this->frameworkInfos;
     }
 
     /**
@@ -164,8 +163,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     protected function getEntryPointInfo($name)
     {
-        $this->loadProjectInfos();
-        $ep = $this->projectInfos->getEntryPointInfo($name);
+        $ep = $this->getFrameworkInfos()->getEntryPointInfo($name);
 
         if (!$ep) {
             throw new \Exception($this->getName().": The entry point $name doesn't exist");

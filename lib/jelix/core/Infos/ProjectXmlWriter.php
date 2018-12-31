@@ -22,18 +22,6 @@ class ProjectXmlWriter extends XmlWriterAbstract
      * @param AppInfos $infos
      */
     protected function writeData($doc, $infos) {
-        $entrypoints = $doc->createElement('entrypoints');
-
-        foreach($infos->entrypoints as $ep) {
-            $elem = $doc->createElement('entry');
-            $elem->setAttribute('file', $ep->getFile());
-            $elem->setAttribute('config', $ep->configFile);
-            if ($ep->type != '' && $ep->type != 'classic') {
-                $elem->setAttribute('type', $ep->type);
-            }
-            $entrypoints->appendChild($elem);
-        }
-        $doc->documentElement->appendChild($entrypoints);
     }
 
 }

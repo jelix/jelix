@@ -9,6 +9,7 @@
  */
 
 require(__DIR__.'/WebAssetsUpgrader.php');
+require(__DIR__.'/UrlEngineUpgrader.php');
 
 class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 

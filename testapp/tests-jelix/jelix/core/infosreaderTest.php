@@ -4,11 +4,20 @@
 class infosreaderTest extends jUnitTestCase {
 
     function tearDown() {
-        if (file_exists(__DIR__.'/tmp/project.xml')) {
-            unlink (__DIR__.'/tmp/project.xml');
+        if (file_exists(__DIR__.'/../../../temp/testframework.ini')) {
+            unlink (__DIR__.'/../../../temp/testframework.ini');
         }
-        if (file_exists(__DIR__.'/tmp')) {
-            rmdir(__DIR__.'/tmp');
+        if (file_exists(__DIR__.'/../../../temp/testlocalframework.ini')) {
+            unlink (__DIR__.'/../../../temp/testlocalframework.ini');
+        }
+    }
+
+    function setUp() {
+        if (file_exists(__DIR__.'/../../../temp/testframework.ini')) {
+            unlink (__DIR__.'/../../../temp/testframework.ini');
+        }
+        if (file_exists(__DIR__.'/../../../temp/testlocalframework.ini')) {
+            unlink (__DIR__.'/../../../temp/testlocalframework.ini');
         }
     }
 
@@ -192,9 +201,7 @@ class infosreaderTest extends jUnitTestCase {
   </autoload>
 </module>
 ", $result);
-
     }
-
 
     function testReadAppXmlInfo() {
         $path = __DIR__.'/app/project.xml';
@@ -225,23 +232,6 @@ class infosreaderTest extends jUnitTestCase {
         <string property="license" value="GPL" />
         <string property="licenseURL" value="http://www.gnu.org/licenses/gpl.html" />
         <string property="copyright" value="2005-2011 Laurent Jouanneau and other contributors" />
-        <array property="entrypoints">
-            <object key="index">
-                <string property="id" value="index" />
-                <string property="configFile" value="index/config.ini.php" />
-                <string property="type" value="classic" />
-            </object>
-            <object key="rest">
-                <string property="id" value="rest" />
-                <string property="configFile" value="rest/config.ini.php" />
-                <string property="type" value="classic" />
-            </object>
-            <object key="cmdline">
-                <string property="id" value="cmdline" />
-                <string property="configFile" value="cmdline/config.ini.php" />
-                <string property="type" value="cmdline" />
-            </object>
-        </array>
     </object>';
         $this->assertComplexIdenticalStr($result, $expected);
 
@@ -259,13 +249,86 @@ class infosreaderTest extends jUnitTestCase {
     <author name=\"Laurent Jouanneau\" email=\"laurent@jelix.org\" role=\"creator\"/>
     <homepageURL>http://jelix.org</homepageURL>
   </info>
-  <entrypoints>
-    <entry file=\"index.php\" config=\"index/config.ini.php\"/>
-    <entry file=\"rest.php\" config=\"rest/config.ini.php\"/>
-    <entry file=\"cmdline.php\" config=\"cmdline/config.ini.php\" type=\"cmdline\"/>
-  </entrypoints>
 </project>
 ", $result);
 
     }
+
+
+    function testFrameworkInfo() {
+        $path = __DIR__.'/app/app/config/framework.ini.php';
+        $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos($path);
+        $result = $fmkInfos->getEntryPoints();
+        $expected = '<?xml version="1.0"?>
+        <array>
+            <object key="index">
+                <string method="getId()" value="index" />
+                <string method="getConfigFile()" value="index/config.ini.php" />
+                <string method="getType()" value="classic" />
+            </object>
+            <object key="rest">
+                <string method="getId()" value="rest" />
+                <string method="getConfigFile()" value="rest/config.ini.php" />
+                <string method="getType()" value="classic" />
+            </object>
+            <object key="cmdline">
+                <string method="getId()" value="cmdline" />
+                <string method="getConfigFile()" value="cmdline/config.ini.php" />
+                <string method="getType()" value="cmdline" />
+            </object>
+        </array>';
+        $this->assertComplexIdenticalStr($result, $expected);
+    }
+
+
+    function testLocalFrameworkInfo() {
+        copy(__DIR__.'/app/app/config/framework.ini.php', __DIR__.'/../../../temp/testframework.ini');
+        $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos(
+            __DIR__.'/../../../temp/testframework.ini',
+            __DIR__.'/../../../temp/testlocalframework.ini'
+        );
+        $result = $fmkInfos->getEntryPoints();
+        $expected = '<?xml version="1.0"?>
+        <array>
+            <object key="index">
+                <string method="getId()" value="index" />
+                <string method="getConfigFile()" value="index/config.ini.php" />
+                <string method="getType()" value="classic" />
+            </object>
+            <object key="rest">
+                <string method="getId()" value="rest" />
+                <string method="getConfigFile()" value="rest/config.ini.php" />
+                <string method="getType()" value="classic" />
+            </object>
+            <object key="cmdline">
+                <string method="getId()" value="cmdline" />
+                <string method="getConfigFile()" value="cmdline/config.ini.php" />
+                <string method="getType()" value="cmdline" />
+            </object>
+        </array>';
+        $this->assertComplexIdenticalStr($result, $expected);
+
+
+        $fmkInfos->addEntryPointInfo('foo.php', 'foo/config.ini');
+        $fmkInfos->addLocalEntryPointInfo('localfoo.php', 'localfoo/config.ini', "soap");
+        $fmkInfos->removeEntryPointInfo("rest.php");
+        $fmkInfos->save();
+
+        $ini= new \Jelix\IniFile\IniModifier(__DIR__.'/../../../temp/testframework.ini');
+        $this->assertEquals(array(
+            'entrypoint:index.php', 'entrypoint:cmdline.php', 'entrypoint:foo.php',
+            ), $ini->getSectionList()
+        );
+        $this->assertEquals(array('config'=>'foo/config.ini', 'type'=>'classic'), $ini->getValues('entrypoint:foo.php'));
+
+        $ini= new \Jelix\IniFile\IniModifier(__DIR__.'/../../../temp/testlocalframework.ini');
+        $this->assertEquals(array(
+            'entrypoint:localfoo.php'
+            ), $ini->getSectionList()
+        );
+        $this->assertEquals(array('config'=>'localfoo/config.ini', 'type'=>'soap'), $ini->getValues('entrypoint:localfoo.php'));
+
+    }
+
+
 }

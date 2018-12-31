@@ -95,7 +95,6 @@ class Configurator {
      * each module, needed to configure modules.
      *
      * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
-     * @param string $lang  the language code for messages
      */
     public function __construct (
         Reporter\ReporterInterface $reporter,

@@ -77,37 +77,8 @@ class Migration {
 
         $mainConfigIni = new IniModifier(\jApp::appConfigPath('mainconfig.ini.php'));
         $entrypointsConfigIni = array();
-        // move entrypoint configs to app/config
-        $projectxml = simplexml_load_file(\jApp::appPath('project.xml'));
-        // read all entry points data
-        foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $configFile = (string)$entrypoint['config'];
-            $dest = \jApp::appConfigPath($configFile);
-            if (!file_exists($dest)) {
-                if (!file_exists(\jApp::varConfigPath($configFile))) {
-                    $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
-                    continue;
-                }
 
-                $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
-                \jFile::createDir(dirname($dest));
-                rename(\jApp::varConfigPath($configFile), $dest);
-            }
-
-            $epConfigIni = new IniModifier(\jApp::appConfigPath($configFile));
-            $entrypointsConfigIni[] = $epConfigIni;
-            $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
-            if ($urlFile != '') {
-                if (!file_exists(\jApp::appConfigPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-                    $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
-                    rename(\jApp::varConfigPath($urlFile), \jApp::appConfigPath($urlFile));
-                }
-            }
-            if ($epConfigIni->getValues('modules')) {
-                $this->reporter->message('Migrate modules section from app/config/'.$configFile.' content to mainconfig.ini.php', 'notice');
-                $this->migrateModulesSection_1_7_0($mainConfigIni, $epConfigIni);
-            }
-        }
+        $this->migrateProjectXml_1_7_0($mainConfigIni);
 
         // move urls.xml to app/config
         $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
@@ -188,16 +159,22 @@ class Migration {
 
         if (file_exists($localConfigPath)) {
             $localConfigIni = new IniModifier($localConfigPath);
-            $projectxml = simplexml_load_file(\jApp::appPath('project.xml'));
+
+            $frameworkIni = new IniModifier(\jApp::appConfigPath('framework.ini.php'));
+
 
             $this->migrateCoordPluginsConf_1_7_0($localConfigIni, true);
-            foreach ($projectxml->entrypoints->entry as $entrypoint) {
-                $configFile = \jApp::varConfigPath((string)$entrypoint['config']);
+            foreach ($frameworkIni->getSectionList() as $section) {
+                if (!preg_match("/^entrypoint\\:(.*)$/", $section, $m)) {
+                    continue;
+                }
+                $configValue = $frameworkIni->getValue('config', $section);
+                $configFile = \jApp::varConfigPath($configValue);
                 if (file_exists($configFile)) {
                     $localEpConfigIni = new IniModifier($configFile);
                     $this->migrateCoordPluginsConf_1_7_0($localEpConfigIni, true);
                     if ($localEpConfigIni->getValues('modules')) {
-                        $this->reporter->message('Migrate modules section from var/config/'.(string)$entrypoint['config'].' content to localconfig.ini.php', 'notice');
+                        $this->reporter->message('Migrate modules section from var/config/'.$configValue.' content to localconfig.ini.php', 'notice');
                         $this->migrateModulesSection_1_7_0($localConfigIni, $localEpConfigIni);
                     }
                 }
@@ -208,6 +185,58 @@ class Migration {
             $this->migrateInstallerIni_1_7_0();
         }
         $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
+    }
+
+    private function migrateProjectXml_1_7_0($mainConfigIni) {
+
+        $frameworkIni = new IniModifier(\jApp::appConfigPath('framework.ini.php'),
+            ';<' . '?php die(\'\');?' . '>');
+        $projectDOM = new \DOMDocument();
+        $projectDOM->load(\jApp::appPath('project.xml'));
+        $projectxml = simplexml_import_dom($projectDOM);
+        if (!isset($projectxml->entrypoints) || !isset($projectxml->entrypoints->entry)) {
+            return;
+        }
+        // read all entry points data
+        foreach ($projectxml->entrypoints->entry as $entrypoint) {
+            $name = (string)$entrypoint['name'];
+            $configFile = (string)$entrypoint['config'];
+            $type = isset($entrypoint['type'])? (string)$entrypoint['type']:'classic';
+
+            $frameworkIni->setValues(array('config'=>$configFile, 'type' => $type),
+                'entrypoint:'.$name);
+
+            $dest = \jApp::appConfigPath($configFile);
+            if (!file_exists($dest)) {
+                if (!file_exists(\jApp::varConfigPath($configFile))) {
+                    $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
+                    continue;
+                }
+
+                $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
+                \jFile::createDir(dirname($dest));
+                rename(\jApp::varConfigPath($configFile), $dest);
+            }
+
+            $epConfigIni = new IniModifier(\jApp::appConfigPath($configFile));
+            $entrypointsConfigIni[] = $epConfigIni;
+            $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
+            if ($urlFile != '') {
+                if (!file_exists(\jApp::appConfigPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
+                    $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
+                    rename(\jApp::varConfigPath($urlFile), \jApp::appConfigPath($urlFile));
+                }
+            }
+            if ($epConfigIni->getValues('modules')) {
+                $this->reporter->message('Migrate modules section from app/config/'.$configFile.' content to mainconfig.ini.php', 'notice');
+                $this->migrateModulesSection_1_7_0($mainConfigIni, $epConfigIni);
+            }
+        }
+
+        $entrypointsDOM = $projectDOM->documentElement->getElementsByTagName('entrypoints')[0];
+        $projectDOM->documentElement->removeChild($entrypointsDOM);
+        $projectDOM->save(\jApp::appPath('project.xml'));
+        $frameworkIni->save();
     }
 
     private function migrateProfilesIni_1_7_0(IniModifier $profilesini) {

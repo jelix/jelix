@@ -17,41 +17,4 @@ class ProjectXmlParser extends XmlParserAbstract {
     protected function createInfos() {
         return new AppInfos($this->path, true);
     }
-
-    protected function parseEntrypoints (\XMLReader $xml, AppInfos $object) {
-
-        $property = $xml->name;
-
-        while ($xml->read()) {
-
-            if ($xml->nodeType == \XMLReader::END_ELEMENT && 'entrypoints' == $xml->name) {
-                break;
-            }
-
-            if ($xml->nodeType == \XMLReader::ELEMENT) {
-                $id = $config = '';
-                $type = 'classic';
-                while ($xml->moveToNextAttribute()) {
-                    if ($xml->name == 'file') {
-                        $id = $xml->value;
-                    }
-                    else if ($xml->name == 'config') {
-                        $config = $xml->value;
-                    }
-                    else if ($xml->name == 'type') {
-                        $type = $xml->value;
-                    }
-                }
-                if ($id) {
-                    if ($type == '') {
-                        $type = 'classic';
-                    }
-                    if (strpos($id, '.php') !== false) {
-                        $id = substr($id, 0, -4);
-                    }
-                    $object->entrypoints[$id] = new EntryPoint($id, $config, $type);
-                }
-            }
-        }
-    }
 }

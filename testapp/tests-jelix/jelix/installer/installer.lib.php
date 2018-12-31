@@ -27,7 +27,12 @@ class testInstallerProjectParser extends \Jelix\Core\Infos\ProjectXmlParser {
     }
 }
 
-
+class testFrameworkInfos extends \Jelix\Core\Infos\FrameworkInfos
+{
+    function save() {
+        return true;
+    }
+}
 
 class testInstallerModuleInfos extends \Jelix\Core\Infos\ModuleInfos {
 
@@ -50,7 +55,7 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     public $configContent = array();
 
-    function __construct ($projectXmlFileName = null,
+    function __construct ($frameworkFileName = null,
                           $mainConfigFileName = null,
                           $localConfigFileName = null,
                           $urlXmlFileName = null,
@@ -84,7 +89,12 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
                 ),
             );
         }
-        parent::__construct($projectXmlFileName,
+
+        if (!$frameworkFileName) {
+            $frameworkFileName = testFrameworkInfos::load();
+        }
+
+        parent::__construct($frameworkFileName,
             $mainConfigFileName,
             $localConfigFileName,
             $urlXmlFileName,
@@ -93,16 +103,8 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     }
 
-
     function setInstallerIni($installerIni) {
         $this->installerIni = $installerIni;
-    }
-
-    function setProjectXml($projectXml) {
-        $parser = new \Jelix\Core\Infos\ProjectXmlParser($this->projectInfos->getFilePath());
-        $this->projectInfos = $parser->parseFromString($projectXml);
-        $this->readEntryPointData();
-        $this->readModuleInfos();
     }
 
     protected function createEntryPointObject($configFile, $file, $type) {
@@ -244,28 +246,5 @@ class testInstallerMain extends \Jelix\Installer\Installer {
             $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;
         }   
-    }
-
-    function initForTest($projectXml='<entry file="index.php" config="index/config.ini.php" />') {
-
-        $projectXml = '<?xml version="1.0" encoding="iso-8859-1"?>
-<project xmlns="http://jelix.org/ns/project/1.0">
-    <info id="test@jelix.org" name="test">
-        <version stability="stable" date="">1.0</version>
-        <label lang="en_US">Test</label>
-        <description lang="en_US">Application to test Jelix</description>
-        <copyright>2009 the company</copyright>
-        <creator name="Me" email="me@jelix.org" active="true" />
-    </info>
-    <dependencies>
-        <jelix minversion="'.jFramework::version().'" maxversion="'.jFramework::version().'" />
-    </dependencies>
-    <entrypoints>'.$projectXml.'
-    </entrypoints>
-</project>';
-
-        $this->globalSetup->setInstallerIni(new testInstallerIniFileModifier(''));
-        $this->globalSetup->setProjectXml($projectXml);
-        $this->globalSetup->getInstallerIni()->save();
     }
 }

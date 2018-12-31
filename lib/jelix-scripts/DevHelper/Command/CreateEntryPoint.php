@@ -74,8 +74,6 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $entryPointDir = dirname($entryPointFullPath).'/';
 
-        $this->loadProjectInfos();
-
         // retrieve the config file name
         $configFile = $input->getArgument('config');
 
@@ -128,8 +126,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }*/
         $xmlMap->save();
 
-        $this->projectInfos->addEntryPointInfo($name.".php", $configFile , $type);
-        $this->projectInfos->save();
+        $fmk = $this->getFrameworkInfos();
+        $fmk->addEntryPointInfo($name.".php", $configFile , $type);
+        $fmk->save();
 
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");

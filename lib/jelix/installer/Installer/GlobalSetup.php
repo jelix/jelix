@@ -99,12 +99,10 @@ class GlobalSetup {
      */
     protected $ghostModules = array();
 
-    protected $projectXmlPath;
-
     /**
-     * @var \Jelix\Core\Infos\AppInfos
+     * @var \Jelix\Core\Infos\FrameworkInfos
      */
-    protected $projectInfos;
+    protected $frameworkInfos;
 
     /**
      * @var bool true if the configuration can be modified
@@ -113,32 +111,32 @@ class GlobalSetup {
 
     /**
      * GlobalSetup constructor.
-     * @param string|\Jelix\Core\Infos\AppInfos|null $projectXmlFileName
+     * @param string|\Jelix\Core\Infos\FrameworkInfos|null $frameworkFileName
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
      * @param string|null $urlXmlFileName
      * @param string|null $urlLocalXmlFileName
      */
     function __construct(
-        $projectXmlFileName = null,
+        $frameworkFileName = null,
+        $localFrameworkFileName = null,
         $mainConfigFileName = null,
         $localConfigFileName = null,
         $urlXmlFileName = null,
         $urlLocalXmlFileName = null
     )
     {
-
-        if ($projectXmlFileName instanceof \Jelix\Core\Infos\AppInfos) {
-            $this->projectInfos = $projectXmlFileName;
-            $this->projectXmlPath = $this->projectInfos->getFilePath();
+        if ($frameworkFileName instanceof \Jelix\Core\Infos\FrameworkInfos) {
+            $this->frameworkInfos = $frameworkFileName;
         }
         else {
-            if (!$projectXmlFileName) {
-                $projectXmlFileName = \jApp::appPath('project.xml');
+            if (!$frameworkFileName) {
+                $frameworkFileName = \jApp::appConfigPath('framework.ini.php');
             }
-            $this->projectXmlPath = $projectXmlFileName;
-            $parser = new \Jelix\Core\Infos\ProjectXmlParser($projectXmlFileName);
-            $this->projectInfos = $parser->parse();
+            if (!$localFrameworkFileName) {
+                $localFrameworkFileName = \jApp::varConfigPath('localframework.ini.php');
+            }
+            $this->frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName, $localFrameworkFileName);
         }
 
         $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
@@ -235,24 +233,24 @@ class GlobalSetup {
     protected function readEntryPointData() {
 
         $configFileList = array();
-
-        if (!count($this->projectInfos->entrypoints)) {
-            throw new \Exception("Entrypoint declaration is missing into project.xml");
+        $entryPoints = $this->frameworkInfos->getEntryPoints();
+        if (!count($entryPoints)) {
+            throw new \Exception("No entrypoint declaration into framework.ini.php");
         }
 
         // read all entry points data
-        foreach ($this->projectInfos->entrypoints as $entrypoint) {
+        foreach ($entryPoints as $entrypoint) {
 
             // ignore entry point which have the same config file of an other one
             // FIXME: what about installer.ini ?
-            if (isset($configFileList[$entrypoint->configFile]))
+            if (isset($configFileList[$entrypoint->getConfigFile()]))
                 continue;
 
-            $configFileList[$entrypoint->configFile] = true;
+            $configFileList[$entrypoint->getConfigFile()] = true;
 
             // we create an object corresponding to the entry point
-            $ep = $this->createEntryPointObject($entrypoint->configFile,
-                $entrypoint->id.'.php', $entrypoint->type);
+            $ep = $this->createEntryPointObject($entrypoint->getConfigFile(),
+                $entrypoint->getFile(), $entrypoint->getType());
             $epId = $ep->getEpId();
 
             if (!$this->mainEntryPoint || $epId == 'index') {
@@ -554,14 +552,16 @@ class GlobalSetup {
             $epId = substr($epId, 0, -4);
         }
 
-        if (isset($this->projectInfos->entrypoints[$epId])) {
+        if ($this->frameworkInfos->getEntryPointInfo($epId)) {
             throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
         }
 
-        $this->projectInfos->addEntryPointInfo($epId, $configFileName, $epType);
-
-        $writer = new \Jelix\Core\Infos\ProjectXmlWriter($this->projectInfos->getFilePath());
-        $writer->write($this->projectInfos);
+        if ($this->forLocalConfiguration()) {
+            $this->frameworkInfos->addLocalEntryPointInfo($epId, $configFileName, $epType);
+        } else {
+            $this->frameworkInfos->addEntryPointInfo($epId, $configFileName, $epType);
+        }
+        $this->frameworkInfos->save();
 
         $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType);
         $this->entryPoints[$epId] = $ep;

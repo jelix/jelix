@@ -18,14 +18,8 @@ class installAppTest extends PHPUnit_Framework_TestCase {
      * @expectedException Exception
      */
     function testNoEntryPoint() {
-        $app = new jInstallerApplication('project_empty.xml');
-    }
-
-    /**
-     * @expectedException Exception
-     */
-    function testNoEntryPoint2() {
-        $app = new jInstallerApplication('project_empty2.xml');
+        $globalSetup = new \Jelix\Installer\GlobalSetup(\jApp::appConfigPath('framework_empty.ini.php'));
+        $app = new jInstallerApplication('project.xml', $globalSetup);
     }
 
     function testEntryPointsList () {
@@ -38,14 +32,14 @@ class installAppTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($ep->isCliScript());
         $this->assertEquals('/index.php', $ep->getScriptName());
         $this->assertEquals('index.php', $ep->getFileName());
-        $this->assertEquals('', $ep->getType());
+        $this->assertEquals('classic', $ep->getType());
         $this->assertEquals('aaa', $ep->getConfigObj()->isitme);
 
         $ep = $app->getEntryPointInfo('foo');
         $this->assertFalse($ep->isCliScript());
         $this->assertEquals('/foo.php', $ep->getScriptName());
         $this->assertEquals('foo.php', $ep->getFileName());
-        $this->assertEquals('', $ep->getType());
+        $this->assertEquals('classic', $ep->getType());
         $this->assertEquals('foo', $ep->getConfigObj()->isitme);
     }
 }

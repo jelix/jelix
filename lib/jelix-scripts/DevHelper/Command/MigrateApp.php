@@ -13,7 +13,7 @@ namespace Jelix\DevHelper\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class MigrateApp extends \Jelix\DevHelper\AbstractCommandForApp {
+class MigrateApp extends \Jelix\DevHelper\AbstractCommand {
 
     protected function configure()
     {
@@ -25,8 +25,9 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommandForApp {
         parent::configure();
     }
 
-    protected function _execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
         require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         if ($this->verbose()) {
