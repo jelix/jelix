@@ -98,13 +98,15 @@ class UrlEngineUpgrader {
 
     protected function migrateBasicSignificant() {
         $this->migrateSimple(true);
-        // read basic_significant_urlengine_entrypoints
-        // if the entry point is not in this section, or value is off
-        // add an attribute noentrypoint=true
-        $addEntryPoints = $this->fullConfig->getValues('basic_significant_urlengine_entrypoints');
-        if (!isset($addEntryPoints[$this->epId]) ||
-            !$addEntryPoints[$this->epId]) {
-            $this->xmlMapEntryPoint->setOptions(array('noentrypoint'=>true));
+        if ($this->fullConfig->isSection('basic_significant_urlengine_entrypoints')) {
+            // read basic_significant_urlengine_entrypoints
+            // if the entry point is not in this section, or value is off
+            // add an attribute noentrypoint=true
+            $addEntryPoints = $this->fullConfig->getValues('basic_significant_urlengine_entrypoints');
+            if (!isset($addEntryPoints[$this->epId]) ||
+                !$addEntryPoints[$this->epId]) {
+                $this->xmlMapEntryPoint->setOptions(array('noentrypoint'=>true));
+            }
         }
     }
 
