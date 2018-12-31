@@ -96,7 +96,7 @@ class jApp
 
     public static function appConfigPath($file = '')
     {
-        return self::$_currentApp->appPath.'app/config/'.$file;
+        return self::$_currentApp->appPath.'app/system/'.$file;
     }
 
     public static function varPath($file = '')
@@ -223,12 +223,12 @@ class jApp
             return self::$_mainConfigFile;
         }
 
-        $configFileName = self::$_currentApp->appPath.'app/config/mainconfig.ini.php';
+        $configFileName = self::$_currentApp->appPath.'app/system/mainconfig.ini.php';
         if (!file_exists($configFileName)) {
             if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
-                throw new \Exception("Don't find the app/config/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
+                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
             }
-            throw new \Exception("Don't find the app/config/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
+            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
         }
         self::$_mainConfigFile = $configFileName;
 

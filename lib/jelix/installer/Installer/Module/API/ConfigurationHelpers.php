@@ -112,7 +112,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers {
      *
      * @param string $entryPointModelFile the entrypoint file to copy
      * @param string $entryPointWebPath the path of the entrypoint to create into the www directory
-     * @param string $configFileName name of the configuration file. path relative to app/config or var/config
+     * @param string $configFileName name of the configuration file. path relative to app/system or var/config
      * @param string $epType type of the entry point (classic)
      * @param string $configFileModel a configuration file to copy as $configFileName. default is an empty content.
      * @throws \Exception

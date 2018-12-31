@@ -31,7 +31,7 @@ class MapperConfig {
     protected $extensionNeeded = true;
 
     /**
-     * file that contains the url mapping into app/config
+     * file that contains the url mapping into app/system
      * @var string
      */
     protected $mapFile;

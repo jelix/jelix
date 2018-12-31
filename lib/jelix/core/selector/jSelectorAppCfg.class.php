@@ -11,7 +11,7 @@
  */
 
 /**
- * Selector for files stored in the app/config directory
+ * Selector for files stored in the app/system directory
  *
  * @package    jelix
  * @subpackage core_selector

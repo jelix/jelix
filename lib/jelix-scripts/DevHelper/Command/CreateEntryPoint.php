@@ -102,7 +102,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
                 // else we create a new config file
                 $param = array();
                 $this->createFile($configFilePath,
-                                  'app/config/index/config.ini.php.tpl',
+                                  'app/system/index/config.ini.php.tpl',
                                   $param, "Configuration file");
             }
         }

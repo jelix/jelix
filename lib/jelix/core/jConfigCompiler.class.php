@@ -30,8 +30,8 @@ class jConfigCompiler {
      *
      * Merge of configuration files are made in this order:
      * - core/defaultconfig.ini.php
-     * - app/config/mainconfig.ini.php
-     * - app/config/$configFile
+     * - app/system/mainconfig.ini.php
+     * - app/system/$configFile
      * - var/config/localconfig.ini.php
      * - var/config/$configFile
      * - var/config/liveconfig.ini.php

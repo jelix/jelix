@@ -55,22 +55,26 @@ class Migration {
     protected function migrate_1_7_0() {
         $this->reporter->message('Start migration to Jelix 1.7.0', 'notice');
         $newConfigPath = \jApp::appConfigPath();
-        if (!file_exists($newConfigPath)) {
-            $this->reporter->message('Create app/config/', 'notice');
+        if (file_exists(\jApp::appPath('app/config'))) {
+            // for jelix 1.7.0-pre < version < 1.7.0-beta.5
+            rename(\jApp::appPath('app/config'), $newConfigPath);
+        }
+        elseif (!file_exists($newConfigPath)) {
+            $this->reporter->message('Create app/system/', 'notice');
             \jFile::createDir($newConfigPath);
         }
 
-        // move mainconfig.php to app/config/
+        // move mainconfig.php to app/system/
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
             if (!file_exists(\jApp::varConfigPath('mainconfig.ini.php'))) {
                 if (!file_exists(\jApp::varConfigPath('defaultconfig.ini.php'))) {
                     throw new \Exception("Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?");
                 }
-                $this->reporter->message('Move var/config/defaultconfig.ini.php to app/config/mainconfig.ini.php', 'notice');
+                $this->reporter->message('Move var/config/defaultconfig.ini.php to app/system/mainconfig.ini.php', 'notice');
                 rename(\jApp::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
             else {
-                $this->reporter->message('Move var/config/mainconfig.ini.php to app/config/', 'notice');
+                $this->reporter->message('Move var/config/mainconfig.ini.php to app/system/', 'notice');
                 rename(\jApp::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
@@ -80,13 +84,13 @@ class Migration {
 
         $this->migrateProjectXml_1_7_0($mainConfigIni);
 
-        // move urls.xml to app/config
+        // move urls.xml to app/system
         $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
         if ($urlFile == null) {
             $urlFile = 'urls.xml';
         }
         if (!file_exists(\jApp::appConfigPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-            $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
+            $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
             rename(\jApp::varConfigPath($urlFile), \jApp::appConfigPath($urlFile));
         }
 
@@ -213,7 +217,7 @@ class Migration {
                     continue;
                 }
 
-                $this->reporter->message("Move var/config/$configFile to app/config/", 'notice');
+                $this->reporter->message("Move var/config/$configFile to app/system/", 'notice');
                 \jFile::createDir(dirname($dest));
                 rename(\jApp::varConfigPath($configFile), $dest);
             }
@@ -223,12 +227,12 @@ class Migration {
             $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
             if ($urlFile != '') {
                 if (!file_exists(\jApp::appConfigPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-                    $this->reporter->message("Move var/config/$urlFile to app/config/", 'notice');
+                    $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
                     rename(\jApp::varConfigPath($urlFile), \jApp::appConfigPath($urlFile));
                 }
             }
             if ($epConfigIni->getValues('modules')) {
-                $this->reporter->message('Migrate modules section from app/config/'.$configFile.' content to mainconfig.ini.php', 'notice');
+                $this->reporter->message('Migrate modules section from app/system/'.$configFile.' content to mainconfig.ini.php', 'notice');
                 $this->migrateModulesSection_1_7_0($mainConfigIni, $epConfigIni);
             }
         }
@@ -248,7 +252,7 @@ class Migration {
                     file_exists(\jApp::varConfigPath($classmapFile))
                 ) {
                     if (!file_exists(\jApp::appConfigPath($classmapFile))) {
-                        $this->reporter->message("Move " . $classmapFile . " to app/config/", 'notice');
+                        $this->reporter->message("Move " . $classmapFile . " to app/system/", 'notice');
                         rename(\jApp::varConfigPath($classmapFile), \jApp::appConfigPath($classmapFile));
                     }
                     else {
@@ -298,11 +302,11 @@ class Migration {
             $sections = $ini->getSectionList();
             if (count($sections)) {
                 // the file has some section, we cannot merge it into $config as
-                // is, so just move it to app/config
+                // is, so just move it to app/system
                 if (file_exists($ini->getFileName()) && !$localConf) {
                     $rpath = \Jelix\FileUtilities\Path::shortestPath(\jApp::varConfigPath(), $ini->getFileName());
                     if (!file_exists(\jApp::appConfigPath($rpath))) {
-                        $this->reporter->message("Move plugin conf file ".$rpath." to app/config/", 'notice');
+                        $this->reporter->message("Move plugin conf file ".$rpath." to app/system/", 'notice');
                         rename ($ini->getFileName(), \jApp::appConfigPath($rpath));
                     }
                 }

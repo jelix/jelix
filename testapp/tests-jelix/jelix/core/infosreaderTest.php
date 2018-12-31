@@ -256,7 +256,7 @@ class infosreaderTest extends jUnitTestCase {
 
 
     function testFrameworkInfo() {
-        $path = __DIR__.'/app/app/config/framework.ini.php';
+        $path = __DIR__.'/app/app/system/framework.ini.php';
         $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos($path);
         $result = $fmkInfos->getEntryPoints();
         $expected = '<?xml version="1.0"?>
@@ -282,7 +282,7 @@ class infosreaderTest extends jUnitTestCase {
 
 
     function testLocalFrameworkInfo() {
-        copy(__DIR__.'/app/app/config/framework.ini.php', __DIR__.'/../../../temp/testframework.ini');
+        copy(__DIR__.'/app/app/system/framework.ini.php', __DIR__.'/../../../temp/testframework.ini');
         $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos(
             __DIR__.'/../../../temp/testframework.ini',
             __DIR__.'/../../../temp/testlocalframework.ini'

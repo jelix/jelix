@@ -25,7 +25,7 @@ class jInstallerEntryPoint {
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/app/config/index/config.ini.php
+     *       ex: <apppath>/app/system/index/config.ini.php
      */
     public $configFile;
 
@@ -53,7 +53,7 @@ class jInstallerEntryPoint {
     public $liveConfigIni;
 
     /**
-     * entrypoint config of app/config/
+     * entrypoint config of app/system/
      * @var \Jelix\IniFile\IniModifier
      */
     protected $epConfigIni;
@@ -133,7 +133,7 @@ class jInstallerEntryPoint {
     }
 
     /*
-     * the static entry point config alone (in app/config)
+     * the static entry point config alone (in app/system)
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */

@@ -21,7 +21,7 @@ class jPrefManager
      * Add a preference into the preference config.
      *
      * Should be used only during installation, as the configuration file
-     * is in the app/config/ directory (readonly for the web server in theory).
+     * is in the app/system/ directory (readonly for the web server in theory).
      *
      * @param jPrefItem $preference the preference to add
      */

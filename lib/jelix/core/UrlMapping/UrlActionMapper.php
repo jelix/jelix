@@ -10,7 +10,7 @@ namespace Jelix\Routing\UrlMapping;
 
 /**
  * an url engine to parse,analyse and create significant url
- * it needs an urls.xml file in the app/config directory (see documentation).
+ * it needs an urls.xml file in the app/system directory (see documentation).
  *
  * @author      Laurent Jouanneau
  * @copyright   2005-2016 Laurent Jouanneau

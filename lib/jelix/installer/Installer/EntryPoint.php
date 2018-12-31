@@ -27,7 +27,7 @@ class EntryPoint
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/app/config/index/config.ini.php
+     *       ex: <apppath>/app/system/index/config.ini.php
      */
     protected $configFileName;
 
@@ -78,7 +78,7 @@ class EntryPoint
     /**
      * @param GlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
-     *                           to the app/config directory
+     *                           to the app/system directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
