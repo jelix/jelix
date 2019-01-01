@@ -11,8 +11,8 @@
 
 class %%module%%ModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function install() {
-        //$this->execSQLScript('sql/install');
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+        //$helpers->database()->execSQLScript('sql/install');
 
         /*
         jAcl2DbManager::addSubject('my.subject', '%%module%%~acl.my.subject', 'subject.group.id');

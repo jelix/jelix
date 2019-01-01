@@ -11,6 +11,7 @@ use Jelix\DevHelper\JelixCommands;
 
 require (__DIR__.'/application.init.php');
 
+// Commands for the developer
 $application = JelixCommands::setup();
 
 // here you can add commands to $application

@@ -8,5 +8,6 @@
  */
 require (__DIR__.'/application.init.php');
 
+// Commands for the user of the application
 \Jelix\Scripts\ModulesCommands::run();
 

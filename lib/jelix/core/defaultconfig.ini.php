@@ -272,6 +272,7 @@ filesDir="mails/"
 ; the profile in profiles.ini.php where all smtp* parameters are stored
 smtpProfile=
 
+; following smtp* parameters are deprecated. They should be into the smtp profile.
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
 smtpHost=localhost
 ; default SMTP server port
