@@ -28,7 +28,7 @@ class AppInfos extends InfosAbstract {
     public static function load($directoryPath='', $fileName='') {
 
         if ($directoryPath == '') {
-            \jApp::appPath();
+            $directoryPath = \jApp::appPath();
         }
 
         if ($fileName == '') {
