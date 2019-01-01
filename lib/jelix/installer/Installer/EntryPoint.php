@@ -92,14 +92,14 @@ class EntryPoint
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appConfigPath = \jApp::appSystemPath($configFile);
-        if (!file_exists($appConfigPath)) {
-            \jFile::createDir(dirname($appConfigPath));
-            file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
+        $appSystemPath = \jApp::appSystemPath($configFile);
+        if (!file_exists($appSystemPath)) {
+            \jFile::createDir(dirname($appSystemPath));
+            file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
         }
         $varConfigPath = \jApp::varConfigPath($configFile);
 
-        $this->appEpConfigIni = new IniModifier($appConfigPath);
+        $this->appEpConfigIni = new IniModifier($appSystemPath);
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
 
         $this->config = \jConfigCompiler::read($configFile, true,
@@ -173,7 +173,7 @@ class EntryPoint
         }
 
         if ($this->globalSetup->forLocalConfiguration()) {
-            $ini = $this->globalSetup->getAppConfigIni(true);
+            $ini = $this->globalSetup->getSystemConfigIni(true);
             $ini['entrypoint'] = $appCf;
             $ini['local'] = $this->globalSetup->getLocalConfigIni();
             if ($this->globalSetup->isReadWriteConfigMode()) {
@@ -184,7 +184,7 @@ class EntryPoint
             }
             return $ini;
         }
-        $ini = $this->globalSetup->getAppConfigIni();
+        $ini = $this->globalSetup->getSystemConfigIni();
         $ini['entrypoint'] = $appCf;
         return $ini;
     }

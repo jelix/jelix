@@ -182,12 +182,12 @@ class ModuleInstallerLauncher {
         if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL ||
             $this->globalSetup->forLocalConfiguration()
         ) {
-            $conf = $this->globalSetup->getAppConfigIni(true);
+            $conf = $this->globalSetup->getSystemConfigIni(true);
             $conf['local'] = $this->globalSetup->getLocalConfigIni();
         }
         else {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
-            $conf = $this->globalSetup->getAppConfigIni();
+            $conf = $this->globalSetup->getSystemConfigIni();
         }
         $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator?$this->moduleConfigurator->getDefaultParameters():array()));
     }

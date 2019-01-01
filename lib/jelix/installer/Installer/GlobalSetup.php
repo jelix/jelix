@@ -194,7 +194,7 @@ class GlobalSetup {
 ");
 
         if (!$urlXmlFileName) {
-            $ini = $this->getAppConfigIni();
+            $ini = $this->getSystemConfigIni();
             $ini['local'] = $this->localConfigIni;
             $urlXmlFileName = \jApp::appSystemPath($ini->getValue('significantFile', 'urlengine'));
             $urlLocalXmlFileName = \jApp::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
@@ -207,7 +207,7 @@ class GlobalSetup {
         $this->readModuleInfos();
 
         // be sure temp path is ready
-        $chmod = $this->getAppConfigIni()->getValue('chmodDir');
+        $chmod = $this->getSystemConfigIni()->getValue('chmodDir');
         \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
     }
 
@@ -412,7 +412,7 @@ class GlobalSetup {
      * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getAppConfigIni($forceReadOnly = false) {
+    public function getSystemConfigIni($forceReadOnly = false) {
         return new IniModifierArray(array(
             'default' => $this->defaultConfigIni,
             'main' => $this->getMainConfigIni($forceReadOnly)
@@ -426,7 +426,7 @@ class GlobalSetup {
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getFullConfigIni($forceReadOnly = false) {
-        $ini = $this->getAppConfigIni($forceReadOnly);
+        $ini = $this->getSystemConfigIni($forceReadOnly);
         $ini['local'] = $this->getLocalConfigIni($forceReadOnly);
         $ini['live'] = $this->getLiveConfigIni($forceReadOnly);
         return $ini;

@@ -34,11 +34,11 @@ class PreConfigurationHelpers {
      */
     public function getConfigIni() {
         if ($this->globalSetup->forLocalConfiguration()) {
-            $ini = $this->globalSetup->getAppConfigIni(true);
+            $ini = $this->globalSetup->getSystemConfigIni(true);
             $ini['local'] = $this->globalSetup->getLocalConfigIni();
             return $ini;
         }
-        return $this->globalSetup->getAppConfigIni();
+        return $this->globalSetup->getSystemConfigIni();
     }
 
     /**

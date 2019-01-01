@@ -48,7 +48,7 @@ class jConfigCompiler {
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
-        $appConfigPath = jApp::appSystemPath();
+        $appSystemPath = jApp::appSystemPath();
         $varConfigPath = jApp::varConfigPath();
 
         if($tempPath=='/'){
@@ -71,7 +71,7 @@ class jConfigCompiler {
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
-        if(!file_exists($appConfigPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
+        if(!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             throw new Exception("Configuration file of the entrypoint is missing -- $configFile", 5);
         }
 
@@ -81,8 +81,8 @@ class jConfigCompiler {
         }
 
         // read the configuration of the entry point
-        if (file_exists($appConfigPath.$configFile)) {
-            if( false === @jelix_read_ini($appConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
+        if (file_exists($appSystemPath.$configFile)) {
+            if( false === @jelix_read_ini($appSystemPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }

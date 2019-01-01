@@ -32,7 +32,7 @@ class PreInstallHelpers
      * @return \Jelix\IniFile\IniModifierArray
      */
     public function getConfigIni() {
-        $ini = $this->globalSetup->getAppConfigIni(true);
+        $ini = $this->globalSetup->getSystemConfigIni(true);
         $ini['local'] = $this->globalSetup->getLocalConfigIni();
         return $ini;
     }
