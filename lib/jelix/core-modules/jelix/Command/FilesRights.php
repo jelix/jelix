@@ -8,6 +8,7 @@
 */
 namespace Jelix\JelixModule\Command;
 
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -19,11 +20,24 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
             ->setName('app:filesrights')
             ->setDescription('Set rights and owners on files and directories of the application, according to the configuration in your jelix-scripts.ini.')
             ->setHelp('It could need to launch this command as \'root\' user.')
+            ->addArgument(
+                'owner',
+                InputArgument::OPTIONAL,
+                'system user name that will own files'
+            )
+            ->addArgument(
+                'group',
+                InputArgument::OPTIONAL,
+                'system group name that will own files'
+            )
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $owner = $input->getArgument('owner');
+        $group = $input->getArgument('group');
+
         $paths = array();
         $paths[] = \jApp::tempBasePath();
         $paths[] = \jApp::logPath();
@@ -31,25 +45,29 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
         $paths[] = \jApp::varPath('db');
         
         foreach($paths as $path) {
-            $this->setRights($path);
+            $this->setRights($path, $owner, $group);
         }
     }
 
-    protected function setRights($path) {
+    protected function setRights($path, $owner, $group) {
 
         if ($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR || !file_exists($path)) {
             return false;
         }
         $config = \jApp::config();
         if (is_file($path)) {
-            if ($config->doChmod) {
-                chmod($path, intval($config->chmodFileValue,8));
+            if ($config->chmodFile) {
+                chmod($path, intval($config->chmodFile,8));
             }
 
-            if ($config->doChown) {
-                chown($path, $config->chownUser);
-                chgrp($path, $config->chownGroup);
+            if ($owner) {
+                chown($path, $owner);
             }
+
+            if ($group) {
+                chgrp($path, $group);
+            }
+
             return true;
         }
 
@@ -57,19 +75,22 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
             return false;
         }
 
-         if ($config->doChmod) {
-            chmod($path, intval($config->chmodDirValue,8));
-         }
+        if ($config->chmodDir) {
+            chmod($path, intval($config->chmodDir,8));
+        }
 
-         if ($config->doChown) {
-            chown($path, $config->chownUser);
-            chgrp($path, $config->chownGroup);
-         }
+        if ($owner) {
+            chown($path, $owner);
+        }
+
+        if ($group) {
+            chgrp($path, $group);
+        }
 
         $dir = new \DirectoryIterator($path);
         foreach ($dir as $dirContent) {
             if (!$dirContent->isDot()) {
-                $this->setRights($dirContent->getPathName());
+                $this->setRights($dirContent->getPathName(), $owner, $group);
             }
         }
         unset($dir);
