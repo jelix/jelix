@@ -21,7 +21,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
     protected function configure()
     {
         $this
-            ->setName('app:createentrypoint')
+            ->setName('app:create-entrypoint')
             ->setDescription('Create a new entry point in the www directory of the application')
             ->setHelp('')
             ->addArgument(

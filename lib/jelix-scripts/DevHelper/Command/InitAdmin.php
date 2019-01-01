@@ -23,7 +23,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
     protected function configure()
     {
         $this
-            ->setName('app:initadmin')
+            ->setName('app:init-admin')
             ->setDescription('Initialize the application with a web interface for administration')
             ->setHelp('It activates the module master_admin and configure jAuth and jAcl2')
             ->addArgument(
@@ -78,7 +78,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
                 $options = array(
                     'entrypoint'=>$entrypoint,
                 );
-                $this->executeSubCommand('app:createentrypoint', $options, $output);
+                $this->executeSubCommand('app:create-entrypoint', $options, $output);
                 $ep = $this->getEntryPointInfo($entrypoint);
             }
             catch (\Exception $e) {
