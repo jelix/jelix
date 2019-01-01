@@ -121,24 +121,8 @@ sendmailPath = "/usr/sbin/sendmail"
 ; this should be the directory in the var/ directory, where to store mail as files
 filesDir = "mails/"
 
-; if mailer = smtp , fill the following parameters
-
-; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
-smtpHost = "localhost"
-; default SMTP server port
-smtpPort = 25
-; secured connection or not. possible values: "", "ssl", "tls"
-smtpSecure = 
-; SMTP HELO of the message (Default is hostname)
-smtpHelo =
-; SMTP authentication
-smtpAuth = off
-smtpUsername =
-smtpPassword =
-; SMTP server timeout in seconds
-smtpTimeout = 10
-
-
+; The profile in profiles.ini.php where all smtp parameters are stored
+smtpProfile=mailer
 
 [acl2]
 ; example of driver: "db"

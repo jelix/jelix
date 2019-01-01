@@ -69,16 +69,17 @@ class confmailWizPage extends installWizardPage {
                 $errors[] = $this->locales['error.missing.smtpHost'];
             }
             else {
-                $profilesIni->setValue('smtpHost', $_SESSION['confmail']['smtpHost'] , $mailerProfile);
+                $profilesIni->setValue('host', $_SESSION['confmail']['smtpHost'] , $mailerProfile);
             }
             $smtpPort = $_SESSION['confmail']['smtpPort'] = trim($_POST['smtpPort']);
             if ($smtpPort != '' && intval($smtpPort) == 0) {
                 $errors[] = $this->locales['error.smtpPort'];
             }
             else {
-                $profilesIni->setValue('smtpPort',$smtpPort , $mailerProfile);
+                $profilesIni->setValue('port',$smtpPort , $mailerProfile);
             }
             $_SESSION['confmail']['smtpSecure'] = trim($_POST['smtpSecure']);
+            $profilesIni->setValue('secure_protocol', $_SESSION['confmail']['smtpSecure'], $mailerProfile);
 
             if (isset($_POST['smtpAuth'])) {
                 $smtpAuth = $_SESSION['confmail']['smtpAuth'] = trim($_POST['smtpAuth']);
@@ -86,25 +87,25 @@ class confmailWizPage extends installWizardPage {
             }
             else $smtpAuth= false;
 
-            $profilesIni->setValue('smtpAuth',$smtpAuth , $mailerProfile);
+            $profilesIni->setValue('auth_enabled',$smtpAuth , $mailerProfile);
             if ($smtpAuth) {
                 $_SESSION['confmail']['smtpUsername'] = trim($_POST['smtpUsername']);
                 if ($_SESSION['confmail']['smtpUsername'] == '') {
                     $errors[] = $this->locales['error.missing.smtpUsername'];
                 }
                 else {
-                    $profilesIni->setValue('smtpUsername', $_SESSION['confmail']['smtpUsername'] , $mailerProfile);
+                    $profilesIni->setValue('username', $_SESSION['confmail']['smtpUsername'] , $mailerProfile);
                 }
                 $_SESSION['confmail']['smtpPassword'] = trim($_POST['smtpPassword']);
                 if ($_SESSION['confmail']['smtpPassword'] == '') {
                     $errors[] = $this->locales['error.missing.smtpPassword'];
                 }
                 else {
-                    $profilesIni->setValue('smtpPassword', $_SESSION['confmail']['smtpPassword'], $mailerProfile);
+                    $profilesIni->setValue('password', $_SESSION['confmail']['smtpPassword'], $mailerProfile);
                 }
             }
-            $profilesIni->setValue('smtpHelo', $_SESSION['confmail']['smtpHelo'], $mailerProfile);
-            $profilesIni->setValue('smtpTimeout', $_SESSION['confmail']['smtpTimeout'], $mailerProfile);
+            $profilesIni->setValue('helo', $_SESSION['confmail']['smtpHelo'], $mailerProfile);
+            $profilesIni->setValue('timeout', $_SESSION['confmail']['smtpTimeout'], $mailerProfile);
 
             if (!count($errors)) {
                 $profilesIni->save();
