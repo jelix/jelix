@@ -12,6 +12,6 @@
 
 class testinstall2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    function configure() {
+    function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
     }
 }

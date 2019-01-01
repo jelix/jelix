@@ -7,22 +7,23 @@
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+use \Jelix\Installer\Module\API\ConfigurationHelpers;
 
 class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    public function configure() {
-        foreach($this->getEntryPointsList() as $entrypoint) {
+    public function configure(ConfigurationHelpers $helpers) {
+        foreach($helpers->getEntryPointsList() as $entrypoint) {
             if ($this->setEpConf($entrypoint)) {
                 break;
             }
         }
     }
 
-    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
-        $config = $entryPoint->getConfigIni();
-        $authconfig = $this->getCoordPluginConf($config, 'auth');
+    protected function setEpConf(\Jelix\Installer\EntryPointConfigurator $entryPoint) {
+        $authconfig = $entryPoint->getCoordPluginConfig('auth');
 
         if ($authconfig &&  $entryPoint->getType() != 'cmdline') {
+            /** @var \Jelix\IniFile\IniModifierInterface $conf */
             list($conf, $section) = $authconfig;
             if ($section === 0) {
                 $section_db = 'Db';

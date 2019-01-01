@@ -10,13 +10,14 @@
 
 class jaclModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    public function configure() {
-        foreach($this->getEntryPointsList() as $entrypoint) {
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        foreach($helpers->getEntryPointsList() as $entrypoint) {
             $this->setEpConf($entrypoint);
         }
     }
 
-    protected function setEpConf(\Jelix\Installer\EntryPoint $entryPoint) {
+    protected function setEpConf(\Jelix\Installer\EntryPointConfigurator $entryPoint) {
+        /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
         if (null == $conf->getValue('jacl', 'coordplugins')) {
             $conf->setValue('jacl', '1', 'coordplugins');

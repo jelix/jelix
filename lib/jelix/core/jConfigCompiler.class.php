@@ -30,8 +30,8 @@ class jConfigCompiler {
      *
      * Merge of configuration files are made in this order:
      * - core/defaultconfig.ini.php
-     * - app/config/mainconfig.ini.php
-     * - app/config/$configFile
+     * - app/system/mainconfig.ini.php
+     * - app/system/$configFile
      * - var/config/localconfig.ini.php
      * - var/config/$configFile
      * - var/config/liveconfig.ini.php
@@ -48,7 +48,7 @@ class jConfigCompiler {
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
-        $appConfigPath = jApp::appConfigPath();
+        $appSystemPath = jApp::appSystemPath();
         $varConfigPath = jApp::varConfigPath();
 
         if($tempPath=='/'){
@@ -71,7 +71,7 @@ class jConfigCompiler {
         // read the main configuration of the app
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
-        if(!file_exists($appConfigPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
+        if(!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             throw new Exception("Configuration file of the entrypoint is missing -- $configFile", 5);
         }
 
@@ -81,8 +81,8 @@ class jConfigCompiler {
         }
 
         // read the configuration of the entry point
-        if (file_exists($appConfigPath.$configFile)) {
-            if( false === @jelix_read_ini($appConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
+        if (file_exists($appSystemPath.$configFile)) {
+            if( false === @jelix_read_ini($appSystemPath.$configFile, $config, jConfig::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -195,7 +195,7 @@ class jConfigCompiler {
     static protected function getCoordPluginConfValue($name, $conf) {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = jApp::appConfigPath($conf);
+            $confFile = jApp::appSystemPath($conf);
             if (!file_exists($confFile)) {
                 $confFile = jApp::varConfigPath($conf);
                 if (!file_exists($confFile)) {

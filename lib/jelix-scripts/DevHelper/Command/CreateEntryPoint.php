@@ -74,8 +74,6 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $entryPointDir = dirname($entryPointFullPath).'/';
 
-        $this->loadProjectInfos();
-
         // retrieve the config file name
         $configFile = $input->getArgument('config');
 
@@ -84,18 +82,18 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         // let's create the config file if needed
-        $configFilePath = \jApp::appConfigPath($configFile);
+        $configFilePath = \jApp::appSystemPath($configFile);
         if (!file_exists($configFilePath)) {
             $this->createDir(dirname($configFilePath));
             // the file doesn't exists
             // if there is a -copy-config parameter, we copy this file
             $originalConfig = $input->getOption('copy-config');
             if ($originalConfig) {
-                if (! file_exists(\jApp::appConfigPath($originalConfig))) {
+                if (! file_exists(\jApp::appSystemPath($originalConfig))) {
                     throw new \Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
-                                  file_get_contents(\jApp::appConfigPath($originalConfig)));
+                                  file_get_contents(\jApp::appSystemPath($originalConfig)));
                 if ($this->verbose()) {
                     $output->writeln("Configuration file $configFile has been created from the config file $originalConfig.");
                 }
@@ -104,14 +102,14 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
                 // else we create a new config file
                 $param = array();
                 $this->createFile($configFilePath,
-                                  'app/config/index/config.ini.php.tpl',
+                                  'app/system/index/config.ini.php.tpl',
                                   $param, "Configuration file");
             }
         }
 
         $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile, $configFilePath);
-        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $urlsFile = \jApp::appSystemPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
         $param = array();
@@ -128,8 +126,9 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }*/
         $xmlMap->save();
 
-        $this->projectInfos->addEntryPointInfo($name.".php", $configFile , $type);
-        $this->projectInfos->save();
+        $fmk = $this->getFrameworkInfos();
+        $fmk->addEntryPointInfo($name.".php", $configFile , $type);
+        $fmk->save();
 
         if ($this->verbose()) {
             $output->writeln("Project.xml has been updated");

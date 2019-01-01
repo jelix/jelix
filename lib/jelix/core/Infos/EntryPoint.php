@@ -9,19 +9,35 @@ namespace Jelix\Core\Infos;
 
 class EntryPoint {
 
-    public $id;
+    protected $id;
 
-    public $type;
+    protected $type;
 
-    public $configFile;
+    protected $configFile;
 
     function __construct($id, $configFile, $type='classic') {
         $this->id = $id;
-        $this->type = $type;
+        $this->type = ($type == '' ? 'classic': $type);
         $this->configFile = $configFile;
     }
 
     function getFile() {
         return $this->id.'.php';
+    }
+
+    function getId() {
+        return $this->id;
+    }
+
+    function getType() {
+        return $this->type;
+    }
+
+    function getConfigFile() {
+        return $this->configFile;
+    }
+
+    function setConfigFile($file) {
+        $this->configFile = $file;
     }
 }

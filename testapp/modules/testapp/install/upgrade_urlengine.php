@@ -14,7 +14,7 @@ class testappModuleUpgrader_urlengine extends \Jelix\Installer\Module\Installer 
     protected $targetVersions = array('1.4b2.2406');
     protected $date = '2012-07-20';
 
-    function install() {
-        $this->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+        $helpers->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
     }
 }

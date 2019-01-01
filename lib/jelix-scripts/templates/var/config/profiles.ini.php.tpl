@@ -73,6 +73,22 @@ host = "localhost:11211"
 ;driver = 
 
 
+[smtp]
+
+;------------------ for jMailer
+[smtp:mailer]
+host=localhost
+port=25
+; "", "ssl" or"tls"
+secure_protocol=
+helo=
+auth_enabled=off
+username=
+password=
+timeout=10
+
+
+
 ;----------------- jSoapClient
 [jsoapclient]
 

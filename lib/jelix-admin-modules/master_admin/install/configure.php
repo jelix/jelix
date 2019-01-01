@@ -10,8 +10,11 @@
 
 class master_adminModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    public function configure() {
-        $this->declareGlobalWebAssets('master_admin', array('css'=>array('design/master_admin.css')), 'common', false);
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        $helpers->declareGlobalWebAssets('master_admin',
+            array('css'=>array('design/master_admin.css')),
+            'common',
+            false);
     }
 
 }

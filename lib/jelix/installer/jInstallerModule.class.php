@@ -447,10 +447,10 @@ class jInstallerModule implements jIInstallerComponent {
             $path = str_replace('varconfig:', jApp::varConfigPath(), $path);
         }
         elseif (strpos($path, 'appconfig:') === 0) {
-            $path = str_replace('appconfig:', jApp::appConfigPath(), $path);
+            $path = str_replace('appconfig:', jApp::appSystemPath(), $path);
         }
         elseif (strpos($path, 'epconfig:') === 0) {
-            $p = dirname(jApp::appConfigPath($this->entryPoint->getConfigFile()));
+            $p = dirname(jApp::appSystemPath($this->entryPoint->getConfigFile()));
             $path = str_replace('epconfig:', $p.'/', $path);
         }
         elseif (strpos($path, 'config:') === 0) {

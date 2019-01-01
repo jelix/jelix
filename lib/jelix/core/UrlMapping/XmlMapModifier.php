@@ -26,7 +26,7 @@ class XmlMapModifier
                 throw new \Exception("Url mapping file does not exists -- ".$file);
             }
             $this->document->loadXML('<'.'?xml version="1.0" encoding="utf-8"?>'."\n".
-                    '<urls xmlns="http://jelix.org/ns/urls/1.1">'."\n</urls>");
+                    '<urls xmlns="http://jelix.org/ns/urls/1.0">'."\n</urls>");
         }
         else {
             $this->document->load($file);
@@ -115,6 +115,10 @@ class XmlMapModifier
         return null;
     }
 
+    /**
+     * @param string $type
+     * @return \DomElement[]
+     */
     protected function getEntryPointsOfType($type="classic") {
         $results = array();
         $list = $this->document->getElementsByTagName('entrypoint');

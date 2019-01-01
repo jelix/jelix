@@ -14,8 +14,8 @@ class jacl2db_adminModuleUpgrader_webassets extends \Jelix\Installer\Module\Inst
 
     protected $date = '2017-02-07 19:18';
 
-    function install() {
-        $this->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+        $helpers->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
     }
 }
 

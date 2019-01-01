@@ -28,14 +28,15 @@ class ModulesCommands {
 
         Utils::checkTempPath();
 
+        $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
+        $ep = $fmkInfos->getEntryPointInfo('index');
 
-        $projectInfos = \Jelix\Core\Infos\AppInfos::load(\jApp::appPath());
-        $ep = $projectInfos->getEntryPointInfo('index');
 
-        \jApp::setConfig(\jConfigCompiler::read($ep->configFile, true, true, 'console.php'));
+        \jApp::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
 
         // ----- init the Application object
+        $projectInfos = \Jelix\Core\Infos\AppInfos::load();
         $application = new Application($projectInfos->name." commands");
 
         // try to read a commands.php file from each modules

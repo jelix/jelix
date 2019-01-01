@@ -12,27 +12,27 @@
 
 class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function install() {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
         // install tables into mysql
-        $this->useDbProfile('default');
-        $this->execSQLScript('install');
+        $helpers->database()->useDbProfile('default');
+        $helpers->database()->execSQLScript('install');
         //Create tables if they do not exist yet because of a specific configuration
         //(which is the case of testapp's out of the box config)
-        $this->execSQLScript('sql/install_jsession.schema', 'jelix');
-        $this->execSQLScript('sql/install_jcache.schema', 'jelix');
+        $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
+        $helpers->database()->execSQLScript('sql/install_jcache.schema', 'jelix');
 
         // install tables into pgsql
         try {
             $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
-            $this->useDbProfile('testapp_pgsql');
+            $helpers->database()->useDbProfile('testapp_pgsql');
         } catch (Exception $e) {
             // no profile for pgsql, don't install tables in pgsql
             return;
         }
 
-        $this->execSQLScript('install');
-        $this->execSQLScript('sql/install_jsession.schema', 'jelix');
-        $this->execSQLScript('install_jacl2.schema', 'jacl2db');
+        $helpers->database()->execSQLScript('install');
+        $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
+        $helpers->database()->execSQLScript('install_jacl2.schema', 'jacl2db');
     }
 }

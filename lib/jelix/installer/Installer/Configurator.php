@@ -11,6 +11,11 @@ use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
 use \Jelix\Dependencies\ItemException;
 
+use Jelix\IniFile\IniModifierInterface;
+use Jelix\Installer\Module\API\ConfigurationHelpers;
+use Jelix\Installer\Module\API\PreConfigurationHelpers;
+use Jelix\Installer\Module\API\LocalConfigurationHelpers;
+use Jelix\Installer\Module\InteractiveConfigurator;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -90,18 +95,24 @@ class Configurator {
      * each module, needed to configure modules.
      *
      * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
-     * @param string $lang  the language code for messages
      */
-    public function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    public function __construct (
+        Reporter\ReporterInterface $reporter,
+        GlobalSetup $globalSetup,
+        QuestionHelper $helper,
+        InputInterface $input,
+        OutputInterface $output,
+        $lang=''
+    ) {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
-        if (!$globalSetup) {
-            $globalSetup = new GlobalSetup();
-        }
         $this->globalSetup = $globalSetup;
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
+        $this->consoleInput = $input;
+        $this->consoleOutput = $output;
+        $this->questionHelper = $helper;
     }
 
     /**
@@ -113,13 +124,6 @@ class Configurator {
         $this->moduleParameters[$moduleName] = $parameters;
     }
 
-
-    public function setInteractiveMode(QuestionHelper $helper, InputInterface $input, OutputInterface $output) {
-        $this->consoleInput = $input;
-        $this->consoleOutput = $output;
-        $this->questionHelper = $helper;
-    }
-
     static public function setModuleAsConfigured($moduleName, \Jelix\IniFile\IniModifierInterface $configIni) {
         $configIni->setValue($moduleName.'.enabled', true , 'modules');
     }
@@ -127,12 +131,12 @@ class Configurator {
     /**
      * @param array $modulesList array of module names
      * @param string $dedicatedEntryPointId entry point from which the module will
-     *        be mainly accessible
+     *                                      be mainly accessible
      * @param bool|null $forLocalConfig true if the configuration should be done into
-     *                         the local configuration instead of app configuration (false).
-     *                          give null to use the default configuration mode
+     *                  the local configuration instead of app configuration (false).
+     *                  give null to use the default configuration mode
      * @param bool $forceReconfigure true if an already configured module should
-     *              be reconfigured
+     *                                    be reconfigured
      */
     public function configureModules($modulesList,
                                      $dedicatedEntryPointId = 'index',
@@ -153,7 +157,7 @@ class Configurator {
         if ($hasError) {
             return false;
         }
-        // get all modules
+        // get all modules and their dependencies
         $resolver = new Resolver();
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem();
@@ -167,6 +171,9 @@ class Configurator {
 
         // configure modules
         $modulesChain = $this->resolveDependencies($resolver);
+        if ($modulesChain === false) {
+            return false;
+        }
         $modulesToConfigure = array();
 
         foreach ($modulesChain as $resolverItem) {
@@ -183,12 +190,88 @@ class Configurator {
             $this->notice('install.installers.disabled');
         }
 
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+        $this->globalSetup->setReadWriteConfigMode(false);
+
         $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
         if ($componentsToConfigure === false) {
             $this->warning('configuration.bad.end');
             return false;
         }
 
+        $this->globalSetup->setReadWriteConfigMode(true);
+        if (!$this->runConfigure($componentsToConfigure, $entryPoint)) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        $result = $this->runPostConfigure($componentsToConfigure, $entryPoint);
+        if (!$result) {
+            $this->warning('configuration.bad.end');
+        }
+        else {
+            $this->ok('configuration.end');
+        }
+        $this->globalSetup->getUninstallerIni()->save();
+
+        $this->endMessage();
+        return $result;
+    }
+
+    /**
+     * Force launch of configurator of enabled modules, in the local context.
+     *
+     * Should be used in the case of a user that just installed the application
+     * and want to configure it with local parameter.
+     *
+     * This is necessary a "forced" configuration, as modules are already
+     * enabled by the developers.
+     */
+    public function localConfigureEnabledModules() {
+
+        $this->startMessage();
+
+        // get all modules and their dependencies
+        $resolver = new Resolver();
+        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
+            if ($module->isEnabled()) {
+                $resolverItem->setAction(Resolver::ACTION_INSTALL);
+            }
+            $resolver->addItem($resolverItem);
+        }
+
+        // configure modules
+        $modulesChain = $this->resolveDependencies($resolver);
+        if ($modulesChain === false) {
+            return false;
+        }
+        $modulesToConfigure = array();
+        foreach ($modulesChain as $resolverItem) {
+            if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
+                $modulesToConfigure[] = $resolverItem;
+            }
+        }
+
+        $this->notice('configuration.start');
+        $entryPoint = $this->globalSetup->getMainEntryPoint();
+        \jApp::setConfig($entryPoint->getConfigObj());
+
+        if ($entryPoint->getConfigObj()->disableInstallers) {
+            $this->notice('install.installers.disabled');
+        }
+
+        $forLocalConfig = true;
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+
+        $this->globalSetup->setReadWriteConfigMode(false);
+        $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
+        if ($componentsToConfigure === false) {
+            $this->warning('configuration.bad.end');
+            return false;
+        }
+
+        $this->globalSetup->setReadWriteConfigMode(true);
         if (!$this->runConfigure($componentsToConfigure, $entryPoint)) {
             $this->warning('configuration.bad.end');
             return false;
@@ -290,6 +373,9 @@ class Configurator {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+
+        $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
+
         foreach($moduleschain as $resolverItem) {
             /** @var ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
@@ -298,11 +384,13 @@ class Configurator {
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator(true, $forLocalConfig);
+                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                     // setup installation parameters
                     $parameters = $configurator->getDefaultParameters();
                     $parameters = array_merge($parameters, $component->getInstallParameters());
@@ -310,15 +398,7 @@ class Configurator {
                         $parameters = array_merge($parameters, $this->moduleParameters[$resolverItem->getName()]);
                     }
                     $configurator->setParameters($parameters);
-
-                    if ($this->consoleOutput && $this->consoleInput) {
-                        $this->notice('configuration.ask.parameters', array($component->getName()));
-                        $configurator->setInteractiveComponent($this->questionHelper, $this->consoleInput, $this->consoleOutput);
-                        $configurator->askParameters();
-                    }
-                    $component->setInstallParameters($configurator->getParameters());
-
-                    $configurator->preConfigure();
+                    $configurator->preConfigure($preconfigHelpers);
                 }
             } catch (Exception $e) {
                 $result = false;
@@ -340,6 +420,10 @@ class Configurator {
      */
     protected function runConfigure($componentsToConfigure, EntryPoint $entryPoint) {
         $result = true;
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup, $interactiveCli);
         try {
             foreach($componentsToConfigure as $item) {
                 /** @var ModuleInstallerLauncher $component */
@@ -347,8 +431,17 @@ class Configurator {
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
-                    $configurator->configure();
-
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+                    if ($this->globalSetup->forLocalConfiguration()) {
+                        if ($component->isEnabledOnlyInLocalConfiguration()) {
+                            $this->execModuleConfigure($configurator, $configHelpers);
+                        }
+                        $configurator->localConfigure($localConfigHelpers);
+                    }
+                    else {
+                        $this->execModuleConfigure($configurator, $configHelpers);
+                    }
+                    $component->setInstallParameters($configurator->getParameters());
                     $component->saveModuleStatus();
                     $this->saveConfigurationFiles($entryPoint);
                 }
@@ -363,9 +456,39 @@ class Configurator {
         return $result;
     }
 
+    protected function execModuleConfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers) {
+        $configurator->configure($configHelpers);
+
+        $prefix = $this->globalSetup->getCurrentModulePath() . 'install/';
+        foreach($configurator->getFilesToCopy() as $source => $target) {
+            if (is_dir($prefix.$source)) {
+                $configHelpers->copyDirectoryContent($source, $target, true);
+            }
+            else if (is_file($prefix.$source)) {
+                $configHelpers->copyFile($source, $target, true);
+            }
+        }
+    }
+
+    protected function execModuleUnconfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers) {
+        $configurator->unconfigure($configHelpers);
+        $prefix = $this->globalSetup->getCurrentModulePath() . 'install/';
+        foreach($configurator->getFilesToCopy() as $source => $target) {
+            if (is_dir($prefix.$source)) {
+                $configHelpers->removeDirectoryContent($target);
+            }
+            else if (is_file($prefix.$source)) {
+                $configHelpers->removeFile($target);
+            }
+        }
+    }
+
     protected function runPostConfigure($componentsToConfigure, EntryPoint $entryPoint) {
 
         $result = true;
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
 
         foreach($componentsToConfigure as $item) {
             try {
@@ -373,7 +496,8 @@ class Configurator {
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
-                    $configurator->postConfigure();
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+                    $configurator->postConfigure($configHelpers);
                     $this->saveConfigurationFiles($entryPoint);
                 }
             } catch (Exception $e) {
@@ -394,7 +518,8 @@ class Configurator {
      *        mainly accessible
      */
     public function unconfigureModule($moduleName,
-                                     $dedicatedEntryPointId = 'index'
+                                     $dedicatedEntryPointId = 'index',
+                                     $forLocalConfig = null
     ) {
         $this->startMessage();
 
@@ -419,11 +544,11 @@ class Configurator {
 
         // configure modules
         $modulesChain = $this->resolveDependencies($resolver);
-        $modulesToConfigure = array();
+        $modulesToUnconfigure = array();
 
         foreach ($modulesChain as $resolverItem) {
             if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
-                $modulesToConfigure[] = $resolverItem;
+                $modulesToUnconfigure[] = $resolverItem;
             }
         }
 
@@ -435,12 +560,16 @@ class Configurator {
             $this->notice('install.installers.disabled');
         }
 
-        $componentsToUnconfigure = $this->runPreUnconfigure($modulesToConfigure, $entryPoint);
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+        $this->globalSetup->setReadWriteConfigMode(false);
+
+        $componentsToUnconfigure = $this->runPreUnconfigure($modulesToUnconfigure, $entryPoint);
         if ($componentsToUnconfigure === false) {
             $this->warning('configuration.bad.end');
             return false;
         }
 
+        $this->globalSetup->setReadWriteConfigMode(true);
         if (!$this->runUnconfigure($componentsToUnconfigure, $entryPoint)) {
             $this->warning('configuration.bad.end');
             return false;
@@ -470,6 +599,8 @@ class Configurator {
         $result = true;
         $componentsToInstall = array();
         $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+        $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
+
         foreach($moduleschain as $resolverItem) {
             /** @var ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
@@ -478,18 +609,20 @@ class Configurator {
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator(false);
+                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_UNCONFIGURE);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                     // setup installation parameters
                     $parameters = $configurator->getDefaultParameters();
                     $parameters = array_merge($parameters, $component->getInstallParameters());
                     $configurator->setParameters($parameters);
                     $component->setInstallParameters($parameters);
 
-                    $configurator->preUnconfigure();
+                    $configurator->preUnconfigure($preconfigHelpers);
                 }
             } catch (Exception $e) {
                 $result = false;
@@ -511,6 +644,8 @@ class Configurator {
      */
     protected function runUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
         $result = true;
+        $configHelpers = new ConfigurationHelpers($this->globalSetup);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup);
 
         // In $componentsToConfigure, we have the module to unconfigure and
         // all of its reverse dependencies to unconfigure. If none of them have an
@@ -530,7 +665,16 @@ class Configurator {
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
-                    $configurator->unconfigure();
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+                    if ($this->globalSetup->forLocalConfiguration()) {
+                        if ($component->isEnabledOnlyInLocalConfiguration()) {
+                            $this->execModuleUnconfigure($configurator, $configHelpers);
+                        }
+                        $configurator->localUnconfigure($localConfigHelpers);
+                    }
+                    else {
+                        $this->execModuleUnconfigure($configurator, $configHelpers);
+                    }
 
                     $component->saveModuleStatus();
                     if ($shouldBackupUninstallScript) {
@@ -553,6 +697,7 @@ class Configurator {
     protected function runPostUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
 
         $result = true;
+        $configHelpers = new ConfigurationHelpers($this->globalSetup);
 
         foreach($componentsToUnconfigure as $item) {
             try {
@@ -560,7 +705,8 @@ class Configurator {
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
                 if ($configurator) {
-                    $configurator->postUnconfigure();
+                    $this->globalSetup->setCurrentProcessedModule($component->getName());
+                    $configurator->postUnconfigure($configHelpers);
                     $this->saveConfigurationFiles($entryPoint);
                 }
             } catch (Exception $e) {
@@ -579,9 +725,13 @@ class Configurator {
         // we save the configuration at each module because its
         // configurator may have modified it, and we want to save it
         // in case the next module configurator fails.
-        if ($this->globalSetup->getLiveConfigIni()->isModified()) {
-            //$ep->getLocalConfigIni()->save();
-            $this->globalSetup->getLiveConfigIni()->save();
+        $fullConfig = $this->globalSetup->getFullConfigIni();
+        if ($fullConfig->isModified()) {
+            $fullConfig->save();
+            $epConfig = $entryPoint->getSingleConfigIni();
+            if ($epConfig instanceof IniModifierInterface) {
+                $epConfig->save();
+            }
 
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.
@@ -592,6 +742,7 @@ class Configurator {
             \jApp::setConfig($entryPoint->getConfigObj());
         }
         $this->globalSetup->getUrlModifier()->save();
+        $this->globalSetup->getLocalUrlModifier()->save();
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();

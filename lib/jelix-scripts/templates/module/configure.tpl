@@ -15,11 +15,7 @@ class %%module%%ModuleConfigurator extends \Jelix\Installer\Module\Configurator 
         return array();
     }
 
-    public function askParameters() {
-
-    }
-
-    function configure() {
+    function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
 
     }
 }

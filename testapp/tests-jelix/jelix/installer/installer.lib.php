@@ -27,7 +27,12 @@ class testInstallerProjectParser extends \Jelix\Core\Infos\ProjectXmlParser {
     }
 }
 
-
+class testFrameworkInfos extends \Jelix\Core\Infos\FrameworkInfos
+{
+    function save() {
+        return true;
+    }
+}
 
 class testInstallerModuleInfos extends \Jelix\Core\Infos\ModuleInfos {
 
@@ -50,10 +55,11 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     public $configContent = array();
 
-    function __construct ($projectXmlFileName = null,
+    function __construct ($frameworkFileName = null,
                           $mainConfigFileName = null,
                           $localConfigFileName = null,
-                          $urlXmlFileName = null
+                          $urlXmlFileName = null,
+                          $urlLocalXmlFileName = null
     ) {
         foreach(array(
             'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline'
@@ -83,22 +89,22 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
                 ),
             );
         }
-        parent::__construct($projectXmlFileName,
+
+        if (!$frameworkFileName) {
+            $frameworkFileName = testFrameworkInfos::load();
+        }
+
+        parent::__construct($frameworkFileName,
             $mainConfigFileName,
             $localConfigFileName,
-            $urlXmlFileName
+            $urlXmlFileName,
+            $urlLocalXmlFileName
         );
 
     }
 
-
     function setInstallerIni($installerIni) {
         $this->installerIni = $installerIni;
-    }
-
-    function setProjectXml($projectXml) {
-        $this->readEntryPointData(simplexml_load_string($projectXml));
-        $this->readModuleInfos();
     }
 
     protected function createEntryPointObject($configFile, $file, $type) {
@@ -123,12 +129,6 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
 class testInstallerComponentModule extends \Jelix\Installer\ModuleInstallerLauncher {
 
-    protected function readIdentity() {
-        $xml = simplexml_load_string($this->mainInstaller->moduleXMLDesc[$this->name]);
-        $this->sourceVersion = (string) $xml->info[0]->version[0];
-        $this->readDependencies($xml);
-    }
-
 }
 
 class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
@@ -142,20 +142,15 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appConfigPath = \jApp::appConfigPath($configFile);
-        $this->appConfigIni = clone $globalSetup->getConfigIni();
-        $this->appConfigIni['entrypoint'] = new testInstallerIniFileModifier($appConfigPath);
-
+        $appSystemPath = \jApp::appSystemPath($configFile);
+        if (!file_exists($appSystemPath)) {
+            \jFile::createDir(dirname($appSystemPath));
+            file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
+        }
         $varConfigPath = \jApp::varConfigPath($configFile);
-        $localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
 
-
-        $this->localConfigIni = clone $this->appConfigIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
-        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
-
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = new testInstallerIniFileModifier(jApp::varConfigPath('liveconfig.ini.php'));
+        $this->appEpConfigIni = new testInstallerIniFileModifier($appSystemPath);
+        $this->localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
 
         $this->config = $configContent;
     }
@@ -197,7 +192,12 @@ class testInstallReporter implements \Jelix\Installer\Reporter\ReporterInterface
  */
 class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 
-    function __construct($filename) {}
+    function __construct($filename, $initialContent='') {
+        $this->filename = $filename;
+        if ($initialContent != '') {
+            $this->parse(preg_split("/(\r\n|\n|\r)/", $initialContent));
+        }
+    }
 
     public function save($chmod=null) {
         $this->modified = false;
@@ -215,11 +215,11 @@ class testInstallerMain extends \Jelix\Installer\Installer {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
+        $this->messages = new \Jelix\Installer\Checker\Messages('en');
 
-        copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
+        copy (jApp::appSystemPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
         $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
-        $this->messages = new \Jelix\Installer\Checker\Messages('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
         $config = jApp::config();
         foreach ($this->globalSetup->configContent as $ep=>$conf) {
@@ -246,28 +246,5 @@ class testInstallerMain extends \Jelix\Installer\Installer {
             $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
             $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;
         }   
-    }
-
-    function initForTest($projectXml='<entry file="index.php" config="index/config.ini.php" />') {
-
-        $projectXml = '<?xml version="1.0" encoding="iso-8859-1"?>
-<project xmlns="http://jelix.org/ns/project/1.0">
-    <info id="test@jelix.org" name="test">
-        <version stability="stable" date="">1.0</version>
-        <label lang="en_US">Test</label>
-        <description lang="en_US">Application to test Jelix</description>
-        <copyright>2009 the company</copyright>
-        <creator name="Me" email="me@jelix.org" active="true" />
-    </info>
-    <dependencies>
-        <jelix minversion="'.jFramework::version().'" maxversion="'.jFramework::version().'" />
-    </dependencies>
-    <entrypoints>'.$projectXml.'
-    </entrypoints>
-</project>';
-
-        $this->globalSetup->setInstallerIni(new testInstallerIniFileModifier(''));
-        $this->globalSetup->setProjectXml($projectXml);
-        $this->globalSetup->getInstallerIni()->save();
     }
 }

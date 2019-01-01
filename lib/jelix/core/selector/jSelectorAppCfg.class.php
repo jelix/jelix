@@ -11,7 +11,7 @@
  */
 
 /**
- * Selector for files stored in the app/config directory
+ * Selector for files stored in the app/system directory
  *
  * @package    jelix
  * @subpackage core_selector
@@ -19,7 +19,7 @@
 class jSelectorAppCfg extends jSelectorSimpleFile {
     protected $type = 'appcfg';
     function __construct($sel){
-        $this->_basePath = jApp::appConfigPath();
+        $this->_basePath = jApp::appSystemPath();
         parent::__construct($sel);
     }
 }

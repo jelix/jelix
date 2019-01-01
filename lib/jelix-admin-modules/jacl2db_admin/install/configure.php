@@ -10,8 +10,11 @@
 
 class jacl2db_adminModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
-    public function configure() {
-        $this->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
+    public function configure(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
+        $helpers->declareGlobalWebAssets('jacl2_admin',
+            array('css'=>array('design/jacl2.css')),
+            'common',
+            false);
     }
 
 }

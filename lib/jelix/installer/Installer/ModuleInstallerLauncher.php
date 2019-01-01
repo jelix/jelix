@@ -136,6 +136,14 @@ class ModuleInstallerLauncher {
         return $this->moduleStatus->isInstalled;
     }
 
+    public function isEnabledOnlyInLocalConfiguration() {
+        return $this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL;
+    }
+
+    public function getDbProfile() {
+        return $this->moduleStatus->dbProfile;
+    }
+
     /**
      * @return bool
      * @throws Exception
@@ -167,16 +175,19 @@ class ModuleInstallerLauncher {
     }
 
     /**
-     * save module infos into the app config or the localconfig
+     * save module infos into the app config or the local config
      */
     public function saveModuleStatus() {
 
-        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL) {
-            $conf = $this->globalSetup->getLocalConfigIni();
+        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL ||
+            $this->globalSetup->forLocalConfiguration()
+        ) {
+            $conf = $this->globalSetup->getSystemConfigIni(true);
+            $conf['local'] = $this->globalSetup->getLocalConfigIni();
         }
         else {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
-            $conf = $this->globalSetup->getConfigIni()['main'];
+            $conf = $this->globalSetup->getSystemConfigIni();
         }
         $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator?$this->moduleConfigurator->getDefaultParameters():array()));
     }
@@ -224,10 +235,13 @@ class ModuleInstallerLauncher {
         return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
     }
 
+    const CONFIGURATOR_TO_CONFIGURE = 0;
+    const CONFIGURATOR_TO_UNCONFIGURE = 1;
+
     /**
      * instancies the object which is responsible to configure the module
      *
-     * @param bool $actionMode  true to configure, false to unconfigure
+     * @param integer $actionMode  one of CONFIGURATOR_TO_* constants
      * @param bool $forLocalConfiguration  true if the configuration should be done
      *             with the local configuration, else it will be done with the
      *             main configuration
@@ -235,11 +249,30 @@ class ModuleInstallerLauncher {
      *          if there isn't any configurator
      * @throws Exception when configurator class not found
      */
-    function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
+    function getConfigurator($actionMode, $forLocalConfiguration = null) {
 
-        $this->moduleStatus->isEnabled = $actionMode;
+        if (!$this->moduleStatus->isEnabled) {
+            if ($forLocalConfiguration !== null) {
+                // if the module is configured for the first time, we take care
+                // about the target configuration files. In the case of
+                // configuring the module for local configuration, it means
+                // that the module is installed by the user, not by the developer
+                // so all of its configuration should be done on local configuration
+                // files only
+                if ($forLocalConfiguration) {
+                    $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_LOCAL;
+                }
+                else {
+                    $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_APP;
+                }
+            }
+        }
 
-        if ($actionMode) {
+        $this->moduleStatus->isEnabled = ($actionMode == self::CONFIGURATOR_TO_CONFIGURE);
+
+        if ($actionMode == self::CONFIGURATOR_TO_CONFIGURE) {
+            // if the module was unconfigured before, let's erase information
+            // about it from the uninstaller.ini
             $uninstallerIni = $this->globalSetup->getUninstallerIni();
             $this->moduleStatus->clearInfos($uninstallerIni);
         }
@@ -264,21 +297,12 @@ class ModuleInstallerLauncher {
                 throw new Exception("module.configurator.class.not.found", array($cname, $this->name));
             }
 
-            if ($forLocalConfiguration === null) {
-                $forLocalConfiguration = $this->moduleStatus->configurationScope;
-            }
-            else {
-                $this->moduleStatus->configurationScope = $forLocalConfiguration;
-            }
-
-
-            $this->moduleConfigurator = new $cname($this->name,
+            $this->moduleConfigurator = new $cname(
+                $this->name,
                 $this->name,
                 $this->moduleStatus->getPath(),
-                $this->moduleInfos->version,
-                $forLocalConfiguration
+                $this->moduleInfos->version
             );
-            $this->moduleConfigurator->setGlobalSetup($this->globalSetup);
         }
         return $this->moduleConfigurator;
     }
@@ -318,9 +342,6 @@ class ModuleInstallerLauncher {
                                                 $this->moduleInfos->version,
                                                 true
                                                 );
-            if ($this->moduleInstaller instanceof \Jelix\Installer\Module\InstallerInterface) {
-                $this->moduleInstaller->setGlobalSetup($this->globalSetup);
-            }
         }
 
         if ($this->moduleInstaller instanceof \jIInstallerComponent) {
@@ -332,9 +353,7 @@ class ModuleInstallerLauncher {
             $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                 $this->moduleStatus->dbProfile);
         }
-        else {
-            $this->moduleInstaller->initDbProfile($this->moduleStatus->dbProfile);
-        }
+
         $this->moduleInstaller->setParameters($this->moduleStatus->parameters);
 
         return $this->moduleInstaller;
@@ -364,6 +383,7 @@ class ModuleInstallerLauncher {
             $installer = $this->getInstaller();
             if ($installer && $installer instanceof \jIInstallerComponent) {
                 $this->moduleUninstaller = $installer;
+                $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
                 $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
                 return $this->moduleUninstaller;
             }
@@ -386,10 +406,11 @@ class ModuleInstallerLauncher {
                 $this->moduleInfos->version,
                 true
             );
-            $this->moduleUninstaller->setGlobalSetup($this->globalSetup);
         }
 
-        $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
+        if ($this->moduleUninstaller instanceof \jIInstallerComponent) {
+            $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
+        }
         $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
         return $this->moduleUninstaller;
     }
@@ -431,9 +452,6 @@ class ModuleInstallerLauncher {
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
 
-                if ($this->moduleMainUpgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
-                    $this->moduleMainUpgrader->setGlobalSetup($this->globalSetup);
-                }
             }
         }
 
@@ -482,9 +500,6 @@ class ModuleInstallerLauncher {
                     throw new Exception("module.upgrader.missing.version",array($fileInfo[0], $this->name));
                 }
                 $this->moduleUpgraders[] = $upgrader;
-                if ($upgrader instanceof \Jelix\Installer\Module\InstallerInterface) {
-                    $upgrader->setGlobalSetup($this->globalSetup);
-                }
             }
         }
 
@@ -541,10 +556,12 @@ class ModuleInstallerLauncher {
                         continue;
                 }
             }
+
             $class = get_class($upgrader);
             if (!isset($this->upgradersContexts[$class])) {
                 $this->upgradersContexts[$class] = array();
             }
+
             if ($upgrader instanceof \jIInstallerComponent) {
                 $upgrader->setContext($this->upgradersContexts[$class]);
                 $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
@@ -554,9 +571,7 @@ class ModuleInstallerLauncher {
                 $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
                                             $this->moduleStatus->dbProfile);
             }
-            else {
-                $upgrader->initDbProfile($this->moduleStatus->dbProfile);
-            }
+
             $upgrader->setParameters($this->moduleStatus->parameters);
             $list[] = $upgrader;
         }

@@ -9,7 +9,7 @@
 */
 
 class jaclModuleInstaller extends \Jelix\Installer\Module\Installer {
-    function install()
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers)
     {
     }
 }

@@ -25,7 +25,7 @@ class jInstallerEntryPoint {
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/app/config/index/config.ini.php
+     *       ex: <apppath>/app/system/index/config.ini.php
      */
     public $configFile;
 
@@ -53,7 +53,7 @@ class jInstallerEntryPoint {
     public $liveConfigIni;
 
     /**
-     * entrypoint config of app/config/
+     * entrypoint config of app/system/
      * @var \Jelix\IniFile\IniModifier
      */
     protected $epConfigIni;
@@ -93,11 +93,11 @@ class jInstallerEntryPoint {
         $this->scriptName =  $entryPoint->getScriptName();
         $this->file = $entryPoint->getFileName();
 
-        $this->epConfigIni = $entryPoint->getAppConfigIni()['entrypoint'];
+        $this->epConfigIni = $entryPoint->getSingleConfigIni();
 
         $mainConfig = new \Jelix\IniFile\MultiIniModifier(
-            $globalSetup->getConfigIni()['default'],
-            $globalSetup->getConfigIni()['main']
+            $globalSetup->getDefaultConfigIni(),
+            $globalSetup->getMainConfigIni()
         );
 
         $this->configIni = new \Jelix\IniFile\MultiIniModifier(
@@ -106,7 +106,7 @@ class jInstallerEntryPoint {
 
         $localConfig = new \Jelix\IniFile\MultiIniModifier(
             $mainConfig,
-            $globalSetup->getLocalConfigIni()['local']);
+            $globalSetup->getLocalConfigIni());
 
         $this->localConfigIni = new \Jelix\IniFile\MultiIniModifier(
             $localConfig,
@@ -114,7 +114,7 @@ class jInstallerEntryPoint {
 
         $this->config = $entryPoint->getConfigObj();
 
-        $this->liveConfigIni = $globalSetup->getLiveConfigIni()['live'];
+        $this->liveConfigIni = $globalSetup->getLiveConfigIni();
     }
 
     /**
@@ -133,7 +133,7 @@ class jInstallerEntryPoint {
     }
 
     /*
-     * the static entry point config alone (in app/config)
+     * the static entry point config alone (in app/system)
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */

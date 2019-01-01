@@ -65,9 +65,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     function setUp() {
         self::initJelixConfig();
-        $parser = new testInstallerProjectParser(jApp::appPath('project.xml'));
-        $appInfos = $parser->parse();
-        $this->globalSetup = new testInstallerGlobalSetup($appInfos);
+        $this->globalSetup = new testInstallerGlobalSetup();
         jApp::saveContext();
     }
 

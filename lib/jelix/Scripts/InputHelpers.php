@@ -42,8 +42,6 @@ class InputHelpers {
     /**
      * Ask a confirmation.
      *
-     * To call from askParameters().
-     *
      * @param string $questionMessage the question
      * @param bool $defaultResponse the default response
      * @return boolean true it the user has confirmed
@@ -61,8 +59,6 @@ class InputHelpers {
 
     /**
      * Ask a value to the user.
-     *
-     * To call from askParameters().
      *
      * @param string $questionMessage
      * @param bool $defaultResponse
@@ -102,8 +98,6 @@ class InputHelpers {
     /**
      * Ask a hidden value to the user, like a password
      *
-     * To call from askParameters().
-     *
      * @param string $questionMessage
      * @return string the value
      */
@@ -119,8 +113,6 @@ class InputHelpers {
 
     /**
      * Ask a value from a choice
-     *
-     * To call from askParameters().
      *
      * @param string $questionMessage
      * @param array $choice list of possible values

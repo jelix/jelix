@@ -41,7 +41,7 @@ class Checker extends CheckerBase {
             $this->error('path.var');
             $ok=false;
         }
-        if(!file_exists(\jApp::appConfigPath())){
+        if(!file_exists(\jApp::appSystemPath())){
             $this->error('path.config');
             $ok=false;
         }
@@ -118,8 +118,8 @@ class Checker extends CheckerBase {
         else {
             $defaultconfig = array();
         }
-        if (file_exists(\jApp::appConfigPath("index/config.ini.php"))) {
-            $indexconfig = parse_ini_file(\jApp::appConfigPath("index/config.ini.php"), true);
+        if (file_exists(\jApp::appSystemPath("index/config.ini.php"))) {
+            $indexconfig = parse_ini_file(\jApp::appSystemPath("index/config.ini.php"), true);
         }
         else {
             $indexconfig = array();

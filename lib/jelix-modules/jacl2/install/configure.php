@@ -7,6 +7,7 @@
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+use \Jelix\Installer\Module\API\ConfigurationHelpers;
 
 class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
@@ -17,26 +18,22 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         );
     }
 
-
-    public function askParameters()
+    public function configure(ConfigurationHelpers $helpers)
     {
-        $this->parameters['eps'] = $this->askEntryPoints(
+        $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
             'Select entry points on which to setup the acl2 plugin to check acl at each request.',
             '',
             true,
             $this->parameters['eps']
         );
-    }
-
-    public function configure() {
-
         foreach($this->getParameter('eps') as $epId) {
-            $this->configureEntryPoint($epId);
+            $this->configureEntryPoint($epId, $helpers);
         }
     }
 
-    protected function configureEntryPoint($epId) {
-        $entryPoint = $this->getEntryPointsById($epId);
+    protected function configureEntryPoint($epId, ConfigurationHelpers $helpers) {
+        $entryPoint = $helpers->getEntryPointsById($epId);
+        /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
         if (null == $conf->getValue('jacl2', 'coordplugins')) {
             $conf->setValue('jacl2', '1', 'coordplugins');

@@ -8,6 +8,9 @@
 namespace Jelix\Installer;
 
 
+use Jelix\IniFile\IniModifier;
+use Jelix\IniFile\IniModifierArray;
+use Jelix\IniFile\IniModifierReadOnly;
 use \Jelix\IniFile\IniReader;
 
 /**
@@ -16,24 +19,42 @@ use \Jelix\IniFile\IniReader;
 class GlobalSetup {
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the ini file: jelix/core/defaultconfig.ini.php
+     *
+     * @var \Jelix\IniFile\IniReader
      */
-    protected $configIni;
+    protected $defaultConfigIni;
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the mainconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
+     */
+    protected $mainConfigIni;
+
+    /**
+     * the localconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
      */
     protected $localConfigIni;
 
     /**
-     * @var \Jelix\IniFile\IniModifierArray
+     * the liveconfig.ini.php of the application
+     *
+     * @var \Jelix\IniFile\IniModifier
      */
     protected $liveConfigIni;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
      */
     protected $urlMapModifier;
+
+    /**
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    protected $urlLocalMapModifier;
 
     /**
      *  @var \Jelix\IniFile\IniModifier it represents the profiles.ini.php file.
@@ -78,38 +99,44 @@ class GlobalSetup {
      */
     protected $ghostModules = array();
 
-    protected $projectXmlPath;
+    /**
+     * @var \Jelix\Core\Infos\FrameworkInfos
+     */
+    protected $frameworkInfos;
 
     /**
-     * @var \Jelix\Core\Infos\AppInfos
+     * @var bool true if the configuration can be modified
      */
-    protected $projectInfos;
+    protected $readWriteConfigMode = true;
 
     /**
      * GlobalSetup constructor.
-     * @param string|\Jelix\Core\Infos\AppInfos|null $projectXmlFileName
+     * @param string|\Jelix\Core\Infos\FrameworkInfos|null $frameworkFileName
      * @param string|null $mainConfigFileName
      * @param string|null $localConfigFileName
      * @param string|null $urlXmlFileName
+     * @param string|null $urlLocalXmlFileName
      */
     function __construct(
-        $projectXmlFileName = null,
+        $frameworkFileName = null,
+        $localFrameworkFileName = null,
         $mainConfigFileName = null,
         $localConfigFileName = null,
-        $urlXmlFileName = null)
+        $urlXmlFileName = null,
+        $urlLocalXmlFileName = null
+    )
     {
-
-        if ($projectXmlFileName instanceof \Jelix\Core\Infos\AppInfos) {
-            $this->projectInfos = $projectXmlFileName;
-            $this->projectXmlPath = $this->projectInfos->getFilePath();
+        if ($frameworkFileName instanceof \Jelix\Core\Infos\FrameworkInfos) {
+            $this->frameworkInfos = $frameworkFileName;
         }
         else {
-            if (!$projectXmlFileName) {
-                $projectXmlFileName = \jApp::appPath('project.xml');
+            if (!$frameworkFileName) {
+                $frameworkFileName = \jApp::appSystemPath('framework.ini.php');
             }
-            $this->projectXmlPath = $projectXmlFileName;
-            $parser = new \Jelix\Core\Infos\ProjectXmlParser($projectXmlFileName);
-            $this->projectInfos = $parser->parse();
+            if (!$localFrameworkFileName) {
+                $localFrameworkFileName = \jApp::varConfigPath('localframework.ini.php');
+            }
+            $this->frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName, $localFrameworkFileName);
         }
 
         $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
@@ -147,22 +174,18 @@ class GlobalSetup {
             file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
 
-        $defaultConfig = new IniReader(\jConfig::getDefaultConfigFile());
+        $this->defaultConfigIni = new IniReader(\jConfig::getDefaultConfigFile());
 
-        $this->configIni = new \Jelix\IniFile\IniModifierArray(array(
-            'default'=> $defaultConfig,
-            'main' => $mainConfigFileName,
-        ));
-        $this->localConfigIni = clone $this->configIni;
-        $this->localConfigIni['local'] = $localConfigFileName;
+        $this->mainConfigIni = new IniModifier($mainConfigFileName);
 
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = $liveConfigFileName;
+        $this->localConfigIni = new IniModifier($localConfigFileName);
+
+        $this->liveConfigIni = new IniModifier($liveConfigFileName);
 
         $this->installerIni = $this->loadInstallerIni();
 
         \jFile::createDir(\jApp::appPath('install/uninstall'));
-        $this->uninstallerIni = new \Jelix\IniFile\IniModifier(
+        $this->uninstallerIni = new IniModifier(
             \jApp::appPath('install/uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
@@ -171,17 +194,35 @@ class GlobalSetup {
 ");
 
         if (!$urlXmlFileName) {
-            $urlXmlFileName = \jApp::appConfigPath($this->localConfigIni->getValue('significantFile', 'urlengine'));
+            $ini = $this->getSystemConfigIni();
+            $ini['local'] = $this->localConfigIni;
+            $urlXmlFileName = \jApp::appSystemPath($ini->getValue('significantFile', 'urlengine'));
+            $urlLocalXmlFileName = \jApp::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
-
+        $this->urlLocalMapModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier(
+            $this->urlMapModifier, $urlLocalXmlFileName);
 
         $this->readEntryPointData();
         $this->readModuleInfos();
 
         // be sure temp path is ready
-        $chmod = $this->configIni->getValue('chmodDir');
+        $chmod = $this->getSystemConfigIni()->getValue('chmodDir');
         \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
+    }
+
+    /**
+     * @param bool $rwMode indicate if the configuration can be modified or not
+     */
+    public function setReadWriteConfigMode($rwMode) {
+        $this->readWriteConfigMode = $rwMode;
+    }
+
+    /**
+     * @return bool true if the configuration can be modified
+     */
+    public function isReadWriteConfigMode() {
+        return $this->readWriteConfigMode;
     }
 
     /**
@@ -192,24 +233,24 @@ class GlobalSetup {
     protected function readEntryPointData() {
 
         $configFileList = array();
-
-        if (!count($this->projectInfos->entrypoints)) {
-            throw new \Exception("Entrypoint declaration is missing into project.xml");
+        $entryPoints = $this->frameworkInfos->getEntryPoints();
+        if (!count($entryPoints)) {
+            throw new \Exception("No entrypoint declaration into framework.ini.php");
         }
 
         // read all entry points data
-        foreach ($this->projectInfos->entrypoints as $entrypoint) {
+        foreach ($entryPoints as $entrypoint) {
 
             // ignore entry point which have the same config file of an other one
             // FIXME: what about installer.ini ?
-            if (isset($configFileList[$entrypoint->configFile]))
+            if (isset($configFileList[$entrypoint->getConfigFile()]))
                 continue;
 
-            $configFileList[$entrypoint->configFile] = true;
+            $configFileList[$entrypoint->getConfigFile()] = true;
 
             // we create an object corresponding to the entry point
-            $ep = $this->createEntryPointObject($entrypoint->configFile,
-                $entrypoint->id.'.php', $entrypoint->type);
+            $ep = $this->createEntryPointObject($entrypoint->getConfigFile(),
+                $entrypoint->getFile(), $entrypoint->getType());
             $epId = $ep->getEpId();
 
             if (!$this->mainEntryPoint || $epId == 'index') {
@@ -241,6 +282,7 @@ class GlobalSetup {
         if (file_exists($uninstallersDir)) {
             $dir = new \DirectoryIterator($uninstallersDir);
             $modulesInfos = $this->uninstallerIni->getValues('modules');
+
             foreach ($dir as $dirContent) {
                 if ($dirContent->isDot() || !$dirContent->isDir()) {
                     continue;
@@ -261,7 +303,8 @@ class GlobalSetup {
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
                 $moduleInfos = new ModuleStatus($moduleName,
-                    $dirContent->getPathname(), $modulesInfos);
+                                                $dirContent->getPathname(),
+                                                $modulesInfos);
 
                 $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
                 $this->ghostModules[$moduleName]->init();
@@ -369,33 +412,78 @@ class GlobalSetup {
      * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getConfigIni() {
-        return $this->configIni;
+    public function getSystemConfigIni($forceReadOnly = false) {
+        return new IniModifierArray(array(
+            'default' => $this->defaultConfigIni,
+            'main' => $this->getMainConfigIni($forceReadOnly)
+        ));
     }
 
     /**
-     * the combined global config files, defaultconfig.ini.php and mainconfig.ini.php,
-     * with localconfig.ini.php
+     * All combined config files :  defaultconfig.ini.php, mainconfig.ini.php
+     * localconfig.ini.php and liveconfig.ini.php
+     * @param bool $forceReadOnly
      * @return \Jelix\IniFile\IniModifierArray
      */
-    public function getLocalConfigIni() {
+    public function getFullConfigIni($forceReadOnly = false) {
+        $ini = $this->getSystemConfigIni($forceReadOnly);
+        $ini['local'] = $this->getLocalConfigIni($forceReadOnly);
+        $ini['live'] = $this->getLiveConfigIni($forceReadOnly);
+        return $ini;
+    }
+
+    /**
+     * the defaultconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniReader
+     */
+    public function getDefaultConfigIni() {
+        return $this->defaultConfigIni;
+    }
+
+    /**
+     * the mainconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
+     */
+    public function getMainConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->mainConfigIni);
+        }
+        return $this->mainConfigIni;
+    }
+
+    /**
+     * the localconfig.ini.php file
+     *
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
+     */
+    public function getLocalConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->localConfigIni);
+        }
         return $this->localConfigIni;
     }
 
     /**
-     * the combined config files defaultconfig.ini.php and mainconfig.ini.php
-     * with localconfig.ini.php and liveconfig.ini.php
-     * @return \Jelix\IniFile\IniModifierArray
+     * the liveconfig.ini.php file
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getLiveConfigIni() {
+    public function getLiveConfigIni($forceReadOnly = false) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->liveConfigIni);
+        }
         return $this->liveConfigIni;
     }
 
     /**
      * the profiles.ini.php file
-     * @return \Jelix\IniFile\IniModifier
+     * @return \Jelix\IniFile\IniReaderInterface|\Jelix\IniFile\IniModifierInterface
      */
-    public function getProfilesIni() {
+    public function getProfilesIni($forceReadOnly = false) {
+        if ($forceReadOnly || !$this->readWriteConfigMode) {
+            return new IniModifierReadOnly($this->profilesIni);
+        }
         return $this->profilesIni;
     }
 
@@ -442,6 +530,14 @@ class GlobalSetup {
         return $this->urlMapModifier;
     }
 
+
+    /**
+     * @return \Jelix\Routing\UrlMapping\XmlMapModifier
+     */
+    public function getLocalUrlModifier() {
+        return $this->urlLocalMapModifier;
+    }
+
     /**
      * Declare a new entry point
      *
@@ -450,18 +546,32 @@ class GlobalSetup {
      * @param string $configFileName
      * @throws \Exception
      */
-    public function declareNewEntryPoint($epId, $epType, $configFileName) {
+    public function declareNewEntryPoint($epId, $epType, $configFileName)
+    {
+        if (strpos($epId, '.php') !== false) {
+            $epId = substr($epId, 0, -4);
+        }
 
-        $this->urlMapModifier->addEntryPoint($epId, $epType);
-
-        if (isset($this->projectInfos->entrypoints[$epId])) {
+        if ($this->frameworkInfos->getEntryPointInfo($epId)) {
             throw new \Exception("There is already an entrypoint with the same name but with another type ($epId, $epType)");
         }
 
-        $this->projectInfos->entrypoints[$epId] = new \Jelix\Core\Infos\EntryPoint($epId, $configFileName, $epType);
+        if ($this->forLocalConfiguration()) {
+            $this->frameworkInfos->addLocalEntryPointInfo($epId, $configFileName, $epType);
+        } else {
+            $this->frameworkInfos->addEntryPointInfo($epId, $configFileName, $epType);
+        }
+        $this->frameworkInfos->save();
 
-        $writer = new \Jelix\Core\Infos\ProjectXmlWriter($this->projectInfos->getFilePath());
-        $writer->write($this->projectInfos);
+        $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType);
+        $this->entryPoints[$epId] = $ep;
+
+        if ($this->forLocalConfiguration()) {
+            $this->urlLocalMapModifier->addEntryPoint($epId, $epType);
+        }
+        else {
+            $this->urlMapModifier->addEntryPoint($epId, $epType);
+        }
     }
 
     /**
@@ -495,7 +605,7 @@ class GlobalSetup {
      * @param string $collection the name of the webassets collection
      * @param boolean $force
      */
-    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifier $config,
+    public function declareWebAssetsInConfig(\Jelix\IniFile\IniModifierInterface $config,
                                              $name, array $values, $collection, $force)
     {
         $section = 'webassets_'.$collection;
@@ -532,7 +642,7 @@ class GlobalSetup {
      * @param string $name the name of webassets
      * @param string $collection the name of the webassets collection
      */
-    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifier $config,
+    public function removeWebAssetsFromConfig(\Jelix\IniFile\IniModifierInterface $config,
                                               $name, $collection)
     {
         $section = 'webassets_'.$collection;
@@ -545,7 +655,7 @@ class GlobalSetup {
     /**
      * return the section name of configuration of a plugin for the coordinator
      * or the IniModifier for the configuration file of the plugin if it exists.
-     * @param \Jelix\IniFile\IniModifier $config  the global configuration content
+     * @param \Jelix\IniFile\IniModifierInterface $config  the global configuration content
      * @param string $pluginName
      * @return array|null null if plugin is unknown, else array($iniModifier, $section)
      * @throws Exception when the configuration filename is not found
@@ -572,13 +682,44 @@ class GlobalSetup {
             return null;
         }
         // the configuration value is a filename
-        $confpath = \jApp::appConfigPath($conf);
+        $confpath = \jApp::appSystemPath($conf);
         if (!file_exists($confpath)) {
             $confpath = \jApp::varConfigPath($conf);
             if (!file_exists($confpath)) {
                 return null;
             }
         }
-        return array(new \Jelix\IniFile\IniModifier($confpath), 0);
+
+        if ($this->readWriteConfigMode) {
+            $ini = new \Jelix\IniFile\IniModifier($confpath);
+        }
+        else {
+            $ini = new \Jelix\IniFile\IniReader($confpath);
+        }
+
+        return array($ini, 0);
+    }
+
+    /**
+     * @var ModuleInstallerLauncher
+     */
+    protected $currentProcessedModule;
+
+    public function setCurrentProcessedModule($name) {
+        $this->currentProcessedModule = $this->modules[$name];
+    }
+
+    public function getCurrentModulePath() {
+        return $this->currentProcessedModule->getPath();
+    }
+
+    private $forLocalConfiguration = false;
+
+    public function setCurrentConfiguratorStatus($forLocalConfiguration) {
+        $this->forLocalConfiguration = $forLocalConfiguration;
+    }
+
+    public function forLocalConfiguration() {
+        return $this->forLocalConfiguration;
     }
 }

@@ -14,11 +14,11 @@ class jacldbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $defaultDbProfile = 'jacl_profile';
 
-    function install() {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
-        $this->execSQLScript('install_jacl.schema');
+        $helpers->database()->execSQLScript('install_jacl.schema');
         try {
-            $this->execSQLScript('install_jacl.data');
+            $helpers->database()->execSQLScript('install_jacl.data');
         }
         catch (Exception $e) {
         }

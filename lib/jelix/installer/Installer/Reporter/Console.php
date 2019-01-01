@@ -57,7 +57,7 @@ class Console implements ReporterInterface {
                 $header = '[<error>'.$type.'</error>] ';
             }
             else if ($type == 'warning') {
-                $header = '[<fg=orange>'.$type.'</>] ';
+                $header = '[<fg=yellow>'.$type.'</>] ';
             }
             else {
                 $header = '';

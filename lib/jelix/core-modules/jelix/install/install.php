@@ -8,57 +8,31 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+require_once(__DIR__.'/InstallTrait.php');
+
+
 class jelixModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function install() {
+    use \Jelix\JelixModule\InstallTrait;
+
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
         // --- copy jelix-wwww files
-        $wwwFilesMode = $this->getParameter('wwwfiles');
-        $jelixWWWPath = $this->getConfigIni()->getValue('jelixWWWPath', 'urlengine');
-        $targetPath = jApp::wwwPath($jelixWWWPath);
-        $jelixWWWDirExists = $jelixWWWLinkExists = false;
-        if (file_exists($targetPath)) {
-            if (is_dir($targetPath)) {
-                $jelixWWWDirExists = true;
-            }
-            else if (is_link($targetPath)) {
-                $jelixWWWLinkExists = true;
-            }
-        }
-        if ($wwwFilesMode == 'copy' || $wwwFilesMode == '' ) {
-            if ($jelixWWWLinkExists) {
-                unlink($targetPath);
-            }
-            $this->copyDirectoryContent('../../../../jelix-www/', $targetPath, true);
-        }
-        else if ($wwwFilesMode == 'link') {
-            if ($jelixWWWDirExists) {
-                jFile::removeDir($targetPath, true);
-            }
-            symlink(LIB_PATH.'jelix-www', $targetPath);
-        }
-        else {
-            if ($jelixWWWLinkExists) {
-                unlink($targetPath);
-            }
-            if ($jelixWWWDirExists) {
-                jFile::removeDir($targetPath, true);
-            }
-        }
-
+        $this->setupWWWFiles($helpers);
 
         // ---  install table for session storage if needed
-        $sessionStorage = $this->getLocalConfigIni()->getValue("storage", "sessions");
-        $sessionDao = $this->getLocalConfigIni()->getValue("dao_selector", "sessions");
+        $sessionStorage = $helpers->getConfigIni()->getValue("storage", "sessions");
+        $sessionDao = $helpers->getConfigIni()->getValue("dao_selector", "sessions");
         //$sessionProfile = $this->getLocalConfigIni->getValue("dao_db_profile", "sessions");
 
+        $database = $helpers->database();
         if ($sessionStorage == "dao" &&
             $sessionDao == "jelix~jsession") {
-            $this->execSQLScript('sql/install_jsession.schema');
+            $database->execSQLScript('sql/install_jsession.schema');
         }
 
         // --- install table for jCache if needed
-        $ini = $this->getProfilesIni();
+        $ini = $helpers->getProfilesIni();
         $dbProfileDone = [];
 
         foreach ($ini->getSectionList() as $section) {
@@ -72,11 +46,11 @@ class jelixModuleInstaller extends \Jelix\Installer\Module\Installer {
                 $dao == 'jelix~jcache' &&
                 !isset($dbProfileDone[$dbProfile])
             ) {
-                $this->useDbProfile($dbProfile);
-                $this->execSQLScript('sql/install_jcache.schema');
+                $database->useDbProfile($dbProfile);
+                $database->execSQLScript('sql/install_jcache.schema');
                 $dbProfileDone[$dbProfile] = true;
             }
         }
-
     }
+
 }

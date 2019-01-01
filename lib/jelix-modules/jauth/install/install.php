@@ -10,10 +10,9 @@
 
 class jauthModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function install() {
-
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         $cryptokey = \Defuse\Crypto\Key::createNewRandomKey();
         $key = $cryptokey->saveToAsciiSafeString();
-        $this->getLiveConfigIni()->setValue('persistant_encryption_key', $key, 'coordplugin_auth');
+        $helpers->getLiveConfigIni()->setValue('persistant_encryption_key', $key, 'coordplugin_auth');
     }
 }

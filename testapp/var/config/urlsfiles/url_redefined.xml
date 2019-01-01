@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <entrypoint name="index">
+    </entrypoint>
+    <entrypoint name="foo/bar" type="classic">
+        <url handler="urlsig" module="jelix_tests" action="urlsig:url4" />
+        <url pathinfo="/sopar/:var" module="jelix_tests" action="urlsig:display">
+            <param name="var" />
+        </url>
+    </entrypoint>
+    <xmlrpcentrypoint name="xmlrpc" default="true" />
+</urls>

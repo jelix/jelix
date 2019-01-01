@@ -29,8 +29,7 @@ cd lib/jelix/core
 ! lang_to_locale.ini.php
 
 cd lib/jelix/core-modules/jelix
-   module.xml
-   urls.xml
+   __ALL__
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
@@ -39,6 +38,8 @@ cd lib/jelix/core-modules/jelix/controllers
   redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
+cd lib/jelix/core-modules/jelix/Command
+   __ALL__
 cd lib/jelix/core-modules/jelix/daos
    __ALL__
 cd lib/jelix/core-modules/jelix/install
