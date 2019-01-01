@@ -18,7 +18,7 @@ class installAppTest extends PHPUnit_Framework_TestCase {
      * @expectedException Exception
      */
     function testNoEntryPoint() {
-        $globalSetup = new \Jelix\Installer\GlobalSetup(\jApp::appConfigPath('framework_empty.ini.php'));
+        $globalSetup = new \Jelix\Installer\GlobalSetup(\jApp::appSystemPath('framework_empty.ini.php'));
         $app = new jInstallerApplication('project.xml', $globalSetup);
     }
 

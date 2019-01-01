@@ -139,7 +139,7 @@ class PreConfigurationHelpers {
      */
     public function configFilePath($file = '') {
         if ($this->globalSetup->forLocalConfiguration()) {
-            return  \jApp::appConfigPath($file);
+            return  \jApp::appSystemPath($file);
         }
         else {
             return \jApp::varConfigPath($file);

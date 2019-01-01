@@ -94,7 +94,17 @@ class jApp
         return self::$_currentApp->appPath.$file;
     }
 
+    /**
+     * @deprecated
+     * @param string $file
+     * @return string
+     */
     public static function appConfigPath($file = '')
+    {
+        return self::appSystemPath($file);
+    }
+
+    public static function appSystemPath($file = '')
     {
         return self::$_currentApp->appPath.'app/system/'.$file;
     }

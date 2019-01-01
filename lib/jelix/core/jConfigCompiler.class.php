@@ -48,7 +48,7 @@ class jConfigCompiler {
      */
     static public function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName=''){
         $tempPath = jApp::tempBasePath();
-        $appConfigPath = jApp::appConfigPath();
+        $appConfigPath = jApp::appSystemPath();
         $varConfigPath = jApp::varConfigPath();
 
         if($tempPath=='/'){
@@ -195,7 +195,7 @@ class jConfigCompiler {
     static protected function getCoordPluginConfValue($name, $conf) {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = jApp::appConfigPath($conf);
+            $confFile = jApp::appSystemPath($conf);
             if (!file_exists($confFile)) {
                 $confFile = jApp::varConfigPath($conf);
                 if (!file_exists($confFile)) {

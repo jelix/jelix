@@ -93,7 +93,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
             \jApp::mainConfigFile()
         );
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile,
-                                              \jApp::appConfigPath($ep->getConfigFile()));
+                                              \jApp::appSystemPath($ep->getConfigFile()));
 
         $params = array();
         $this->createFile(\jApp::appPath('app/responses/adminHtmlResponse.class.php'),
@@ -117,7 +117,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp {
         $inifile->setValue('jacldb.enabled', false, 'modules');
         $inifile->save();
 
-        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $urlsFile = \jApp::appSystemPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default'=>true));

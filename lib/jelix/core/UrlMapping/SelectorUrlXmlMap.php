@@ -28,7 +28,7 @@ class SelectorUrlXmlMap extends \jSelectorSimpleFile
      * @throws \jExceptionSelector
      */
     function __construct($selInApp, $selInVar = ''){
-        $this->_basePath = \jApp::appConfigPath();
+        $this->_basePath = \jApp::appSystemPath();
         $this->_localBasePath = \jApp::varConfigPath();
 
         parent::__construct($selInApp);

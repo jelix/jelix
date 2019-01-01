@@ -92,7 +92,7 @@ class EntryPoint
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appConfigPath = \jApp::appConfigPath($configFile);
+        $appConfigPath = \jApp::appSystemPath($configFile);
         if (!file_exists($appConfigPath)) {
             \jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');

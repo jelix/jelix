@@ -131,7 +131,7 @@ class GlobalSetup {
         }
         else {
             if (!$frameworkFileName) {
-                $frameworkFileName = \jApp::appConfigPath('framework.ini.php');
+                $frameworkFileName = \jApp::appSystemPath('framework.ini.php');
             }
             if (!$localFrameworkFileName) {
                 $localFrameworkFileName = \jApp::varConfigPath('localframework.ini.php');
@@ -196,7 +196,7 @@ class GlobalSetup {
         if (!$urlXmlFileName) {
             $ini = $this->getAppConfigIni();
             $ini['local'] = $this->localConfigIni;
-            $urlXmlFileName = \jApp::appConfigPath($ini->getValue('significantFile', 'urlengine'));
+            $urlXmlFileName = \jApp::appSystemPath($ini->getValue('significantFile', 'urlengine'));
             $urlLocalXmlFileName = \jApp::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
@@ -682,7 +682,7 @@ class GlobalSetup {
             return null;
         }
         // the configuration value is a filename
-        $confpath = \jApp::appConfigPath($conf);
+        $confpath = \jApp::appSystemPath($conf);
         if (!file_exists($confpath)) {
             $confpath = \jApp::varConfigPath($conf);
             if (!file_exists($confpath)) {

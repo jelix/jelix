@@ -18,7 +18,7 @@ class jprefModuleUpgrader_moveini extends \Jelix\Installer\Module\Installer {
 
     function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         $path = jApp::varConfigPath('preferences.ini.php');
-        $newpath = jApp::appConfigPath('preferences.ini.php');
+        $newpath = jApp::appSystemPath('preferences.ini.php');
         if (file_exists($path) && !file_exists($newpath)) {
             rename($path, $newpath);
         }

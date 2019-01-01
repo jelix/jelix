@@ -142,7 +142,7 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appConfigPath = \jApp::appConfigPath($configFile);
+        $appConfigPath = \jApp::appSystemPath($configFile);
         if (!file_exists($appConfigPath)) {
             \jFile::createDir(dirname($appConfigPath));
             file_put_contents($appConfigPath, ';<' . '?php die(\'\');?' . '>');
@@ -217,7 +217,7 @@ class testInstallerMain extends \Jelix\Installer\Installer {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages('en');
 
-        copy (jApp::appConfigPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
+        copy (jApp::appSystemPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
         $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
 
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');

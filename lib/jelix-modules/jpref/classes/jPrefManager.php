@@ -162,13 +162,13 @@ class jPrefManager
 
     protected static function _getPrefFile()
     {
-        return \Jelix\IniFile\Util::read(jApp::appConfigPath(self::$_pref_config_file));
+        return \Jelix\IniFile\Util::read(jApp::appSystemPath(self::$_pref_config_file));
     }
 
     protected function _loadIniModifier()
     {
         if (!self::$_ini) {
-            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::appConfigPath(self::$_pref_config_file));
+            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::appSystemPath(self::$_pref_config_file));
         }
 
         return self::$_ini;

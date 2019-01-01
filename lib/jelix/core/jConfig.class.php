@@ -65,7 +65,7 @@ class jConfig {
             $lvc = jApp::varConfigPath('liveconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(jApp::appConfigPath($configFile))>$t
+                || filemtime(jApp::appSystemPath($configFile))>$t
                 || (file_exists($lc) && filemtime($lc)>$t)
                 || (file_exists($lvc) && filemtime($lvc)>$t)
             ){

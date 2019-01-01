@@ -19,7 +19,7 @@
 class jSelectorAppCfg extends jSelectorSimpleFile {
     protected $type = 'appcfg';
     function __construct($sel){
-        $this->_basePath = jApp::appConfigPath();
+        $this->_basePath = jApp::appSystemPath();
         parent::__construct($sel);
     }
 }

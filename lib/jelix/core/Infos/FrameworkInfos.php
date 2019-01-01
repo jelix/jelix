@@ -169,7 +169,7 @@ class FrameworkInfos {
     public static function load()
     {
         return new self(
-            \jApp::appConfigPath('framework.ini.php'),
+            \jApp::appSystemPath('framework.ini.php'),
             \jApp::varConfigPath('localframework.ini.php'));
     }
 }

@@ -129,7 +129,7 @@ class jFile {
                 'appconfig:'),
             array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
                 jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(),
-                jApp::appConfigPath()),
+                jApp::appSystemPath()),
             $path );
         if (strpos($path, 'jelixwww:') === 0 && jApp::config()) {
             $path = jApp::config()->urlengine['jelixWWWPath'].'/'.substr($path, 9);

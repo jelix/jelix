@@ -82,18 +82,18 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         // let's create the config file if needed
-        $configFilePath = \jApp::appConfigPath($configFile);
+        $configFilePath = \jApp::appSystemPath($configFile);
         if (!file_exists($configFilePath)) {
             $this->createDir(dirname($configFilePath));
             // the file doesn't exists
             // if there is a -copy-config parameter, we copy this file
             $originalConfig = $input->getOption('copy-config');
             if ($originalConfig) {
-                if (! file_exists(\jApp::appConfigPath($originalConfig))) {
+                if (! file_exists(\jApp::appSystemPath($originalConfig))) {
                     throw new \Exception ("unknown original configuration file");
                 }
                 file_put_contents($configFilePath,
-                                  file_get_contents(\jApp::appConfigPath($originalConfig)));
+                                  file_get_contents(\jApp::appSystemPath($originalConfig)));
                 if ($this->verbose()) {
                     $output->writeln("Configuration file $configFile has been created from the config file $originalConfig.");
                 }
@@ -109,7 +109,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\jConfig::getDefaultConfigFile(), \jApp::mainConfigFile());
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile, $configFilePath);
-        $urlsFile = \jApp::appConfigPath($inifile->getValue('significantFile', 'urlengine'));
+        $urlsFile = \jApp::appSystemPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
         $param = array();

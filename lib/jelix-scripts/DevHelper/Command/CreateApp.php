@@ -239,9 +239,9 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $configPath = \jApp::varConfigPath();
         $this->createDir($varPath);
         $this->createDir(\jApp::logPath());
-        $this->createDir(\jApp::appConfigPath());
+        $this->createDir(\jApp::appSystemPath());
         $this->createDir($configPath);
-        $this->createDir(\jApp::appConfigPath('index/'));
+        $this->createDir(\jApp::appSystemPath('index/'));
         $this->createDir(\jApp::appPath('app/overloads/'));
         $this->createDir(\jApp::appPath('app/themes'));
         $this->createDir(\jApp::appPath('app/themes/default/'));
@@ -310,15 +310,15 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
         $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
         $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
-        $this->createFile(\jApp::appConfigPath('mainconfig.ini.php'), 'app/system/mainconfig.ini.php.tpl', $param, "Main configuration file");
-        $this->createFile(\jApp::appConfigPath('framework.ini.php'), 'app/system/framework.ini.php.tpl', $param, "framework setup file");
+        $this->createFile(\jApp::appSystemPath('mainconfig.ini.php'), 'app/system/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile(\jApp::appSystemPath('framework.ini.php'), 'app/system/framework.ini.php.tpl', $param, "framework setup file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
-        $this->createFile(\jApp::appConfigPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, "Preferences file");
-        $this->createFile(\jApp::appConfigPath('urls.xml'), 'app/system/urls.xml.tpl', $param, "URLs mapping file");
+        $this->createFile(\jApp::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, "Preferences file");
+        $this->createFile(\jApp::appSystemPath('urls.xml'), 'app/system/urls.xml.tpl', $param, "URLs mapping file");
 
-        $this->createFile(\jApp::appConfigPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, "Entry point configuration file");
+        $this->createFile(\jApp::appSystemPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, "Entry point configuration file");
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'install/configure.php','installer/configure.php.tpl',$param, "Installer script");
