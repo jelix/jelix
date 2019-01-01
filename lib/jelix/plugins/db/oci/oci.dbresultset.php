@@ -4,8 +4,9 @@
 * @subpackage db_driver
 * @author     Philippe Villiers
 * @contributor Laurent Jouanneau
-* @copyright  2013 Philippe Villiers, 2015 Laurent Jouanneau
-* 
+* @copyright  2013 Philippe Villiers
+* @copyright 2018 Laurent Jouanneau
+*
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -54,9 +55,8 @@ class ociDbResultSet extends jDbResultSet {
             $res = oci_fetch_object ($this->_idResult);
         }
 
-        if ($res && count($this->modifier)) {
-            foreach($this->modifier as $m)
-                call_user_func_array($m, array($res, $this));
+        if ($res) {
+            $this->applyModifiers($res);
         }
         return $res;
     }

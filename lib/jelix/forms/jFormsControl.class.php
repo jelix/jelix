@@ -61,6 +61,9 @@ abstract class jFormsControl {
     /** @var jFormsDataContainer  content all values of the form */
     protected $container;
 
+    /** @var array miscellaneous values attached to the control */
+    protected $attributes = array();
+
     /**
      * @param string $ref the identifiant of the control
      */
@@ -172,6 +175,17 @@ abstract class jFormsControl {
      */
     public function isReadOnly() {
         return $this->container->isReadOnly($this->ref);
+    }
+
+    public function setAttribute($name, $value) {
+        $this->attributes[$name] = $value;
+    }
+
+    public function getAttribute($name) {
+        if (isset($this->attributes[$name])) {
+            return $this->attributes[$name];
+        }
+        return null;
     }
 }
 
