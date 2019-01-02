@@ -98,7 +98,7 @@ class infosreaderTest extends jUnitTestCase {
 
     function testReadModuleXmlInfoAutoload() {
 
-        $path = __DIR__.'/../../../modules/jelix_tests/module.xml';
+        $path = __DIR__.'/app/modules/complex/module.xml';
         $parser = new \Jelix\Core\Infos\ModuleXmlParser($path);
         $result = $parser->parse();
         $this->assertTrue($result->exists());
@@ -177,7 +177,7 @@ class infosreaderTest extends jUnitTestCase {
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <module xmlns=\"http://jelix.org/ns/module/1.0\">
   <info id=\"jelix_tests@testapp.jelix.org\" name=\"jelix_tests\">
-    <version date=\"2018-07-15 17:53\">1.7.0-beta.3</version>
+    <version date=\"2019-01-02 15:11\">1.7.0-beta.5</version>
     <label lang=\"en\">Jelix tests</label>
     <description lang=\"en\">unit tests for jelix</description>
     <copyright>Copyright 2006-2011 jelix.org</copyright>
@@ -186,7 +186,7 @@ class infosreaderTest extends jUnitTestCase {
   </info>
   <dependencies>
     <module id=\"jelix@jelix.org\" name=\"jelix\" minversion=\"1.7.0-beta.3\" maxversion=\"1.7.0\"/>
-    <module name=\"testurls\" minversion=\"1.7.0-beta.3\" maxversion=\"1.7.0-beta.3\"/>
+    <module name=\"testurls\" minversion=\"1.7.0-beta.5\" maxversion=\"1.7.0-beta.5\"/>
     <module name=\"jauthdb\"/>
     <module name=\"jacl2db\"/>
     <module name=\"jacldb\"/>

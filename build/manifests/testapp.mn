@@ -106,7 +106,7 @@ cd testapp/tests-jelix/jelix/auth/
 cd testapp/tests-jelix/jelix/cache/
   __ALL__
 cd testapp/tests-jelix/jelix/core/
-  __ALL__
+  __ALL_RECURSIVELY__
 cd testapp/tests-jelix/jelix/daos
   __ALL__
 cd testapp/tests-jelix/jelix/db/
