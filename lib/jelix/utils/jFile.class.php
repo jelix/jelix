@@ -9,7 +9,7 @@
 * @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2012 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+* @copyright   2005-2019 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -93,20 +93,7 @@ class jFile {
      * @since 1.6.19
      */
     public static function copyDirectoryContent($sourcePath, $targetPath, $overwrite = false) {
-        self::createDir($targetPath);
-        $dir = new DirectoryIterator($sourcePath);
-        foreach ($dir as $dirContent) {
-            if ($dirContent->isFile()) {
-                $f = $targetPath.'/'.$dirContent->getFilename();
-                if ($overwrite || !file_exists($f))
-                    copy($dirContent->getPathName(), $f);
-            } else {
-                if (!$dirContent->isDot() && $dirContent->isDir()) {
-                    $newTarget = $targetPath.'/'.$dirContent->getFilename();
-                    self::copyDirectoryContent($dirContent->getPathName(), $newTarget, $overwrite);
-                }
-            }
-        }
+        Directory::copy($sourcePath, $targetPath, $overwrite);
     }
 
     /**
