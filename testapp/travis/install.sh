@@ -16,6 +16,7 @@ fi
 cd testapp
 composer install --prefer-dist --no-suggest --no-interaction
 
+php install/configure.php --no-interactive
 php install/installer.php
 
 cd adminapp/install
