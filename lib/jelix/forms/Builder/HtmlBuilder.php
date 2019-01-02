@@ -269,7 +269,7 @@ class HtmlBuilder extends BuilderBase {
     }
 
     public function outputFooter(){
-        $this->rootWidget->outputFooter();
+        $this->rootWidget->outputFooter($this);
         echo '</form>';
     }
 

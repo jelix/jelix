@@ -31,6 +31,7 @@ class RootWidget implements ParentWidgetInterface {
 
     /**
      * @var \jelix\forms\Builder\HtmlBuilder
+     * @deprecated
      */
     protected $builder;
 
@@ -47,13 +48,15 @@ class RootWidget implements ParentWidgetInterface {
         $this->builder = $builder;
     }
 
-    // FIXME: should accept $builder
-    public function outputFooter() {
+    /**
+     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     */
+    public function outputFooter($builder) {
         $js = "(function(){var c, c2;\n".$this->js.$this->finalJs."})();";
-        $container = $this->builder->getForm()->getContainer();
+        $container = $builder->getForm()->getContainer();
         $container->privateData['__jforms_js'] = $js;
         $formId = $container->formId;
-        $formName = $this->builder->getForm()->getSelector();
+        $formName = $builder->getForm()->getSelector();
         echo '<script type="text/javascript" src="'.\jUrl::get("jelix~jforms:js",
                 array('__form'=>$formName, '__fid' =>$formId)).'"></script>';
     }
