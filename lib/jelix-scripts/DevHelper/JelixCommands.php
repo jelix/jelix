@@ -29,7 +29,6 @@ class JelixCommands {
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
 
         $application = new Application("Jelix helpers for the developer");
-        $application->add(new Command\InstallApp($jelixScriptConfig));
         $application->add(new Command\MigrateApp($jelixScriptConfig));
         $application->add(new Command\InitAdmin($jelixScriptConfig));
         $application->add(new Command\CreateCtrl($jelixScriptConfig));
