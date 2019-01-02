@@ -170,7 +170,7 @@ function resetComposer() {
 }
 
 function initapp() {
-    php $1/install/configure.php --no-interactive
+    php $1/install/configurator.php --no-interactive
     php $1/install/installer.php
 }
 

@@ -321,7 +321,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(\jApp::appSystemPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, "Entry point configuration file");
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
-        $this->createFile($appPath.'install/configure.php','installer/configure.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'install/configurator.php','installer/configurator.php.tpl',$param, "Installer script");
         $this->createFile($appPath.'install/uninstall/uninstaller.ini.php','installer/uninstall/uninstaller.ini.php',$param, "uninstaller.ini.php file");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 

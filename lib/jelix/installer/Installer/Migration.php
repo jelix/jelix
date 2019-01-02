@@ -144,11 +144,11 @@ class Migration {
             $this->reporter->message('remove cmd.php, which is replaced by dev.php', 'notice');
         }
 
-        $configurePath = \jApp::appPath('install/configure.php');
+        $configurePath = \jApp::appPath('install/configurator.php');
         if (!file_exists($configurePath)) {
             file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/application.init.php\');
 \\Jelix\\Scripts\\Configure::launch();');
-            $this->reporter->message('create install/configure.php to launch instance configuration', 'notice');
+            $this->reporter->message('create install/configurator.php to launch instance configuration', 'notice');
         }
 
         $installerPath = \jApp::appPath('install/installer.php');
