@@ -57,6 +57,10 @@ class DatabaseHelpers {
         $this->_dbConn = null; // we force to retrieve a db connection
     }
 
+    public function getDbProfile() {
+        return $this->dbProfile;
+    }
+
     /**
      * @return \jDbTools  the tool class of jDb
      */
@@ -133,6 +137,13 @@ class DatabaseHelpers {
         }
     }
 
+    /**
+     * @param $selectorStr
+     */
+    public function createTableFromDao($selectorStr) {
+        $daoMapper = new \jDaoDbMapper($this->dbProfile);
+        $daoMapper->createTableFromDao($selectorStr);
+    }
 
     /**
      * Insert data into a database, from a json file, using a DAO mapping
