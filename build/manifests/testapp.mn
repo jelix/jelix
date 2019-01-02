@@ -3,7 +3,7 @@ cd testapp
   .htaccess
   application.init.php
   console.php
-  cmd.php
+  dev.php
   composer.json
   README.md
 

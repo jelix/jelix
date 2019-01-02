@@ -308,7 +308,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'.gitignore','git_ignore.tpl', $param, ".gitignore");
         $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
-        $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
+        $this->createFile($appPath.'dev.php','dev.php.tpl', $param, "Script for developer commands");
         $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
         $this->createFile(\jApp::appSystemPath('mainconfig.ini.php'), 'app/system/mainconfig.ini.php.tpl', $param, "Main configuration file");
         $this->createFile(\jApp::appSystemPath('framework.ini.php'), 'app/system/framework.ini.php.tpl', $param, "framework setup file");

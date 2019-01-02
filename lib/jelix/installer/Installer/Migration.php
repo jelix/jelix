@@ -125,6 +125,25 @@ class Migration {
             $this->reporter->message('create console.php to launch module commands', 'notice');
         }
 
+        $devPath = \jApp::appPath('dev.php');
+        if (!file_exists($devPath)) {
+            copy (LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+            $this->reporter->message('create dev.php to launch module commands', 'notice');
+        }
+        else {
+            $content = file_get_contents($devPath);
+            if (strpos($content, 'JelixCommands::launch') === false) {
+                copy (LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+                $this->reporter->message('Update dev.php to launch developer commands', 'notice');
+            }
+        }
+
+        $cmdPath = \jApp::appPath('cmd.php');
+        if (file_exists($cmdPath)) {
+            unlink($cmdPath);
+            $this->reporter->message('remove cmd.php, which is replaced by dev.php', 'notice');
+        }
+
         $configurePath = \jApp::appPath('install/configure.php');
         if (!file_exists($configurePath)) {
             file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/application.init.php\');
