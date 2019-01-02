@@ -61,7 +61,7 @@ class InputHelpers {
      * Ask a value to the user.
      *
      * @param string $questionMessage
-     * @param bool $defaultResponse
+     * @param string|false $defaultResponse
      * @param string[]|false $autoCompleterValues list of values for autocompletion
      * @param callable|null $validator function to validate the value. It accepts
      *   a string as parameter, should return the value (may be modified), and
@@ -99,6 +99,7 @@ class InputHelpers {
      * Ask a hidden value to the user, like a password
      *
      * @param string $questionMessage
+     * @param string|false $defaultResponse
      * @return string the value
      */
     public function askSecretInformation($questionMessage, $defaultResponse = false) {
