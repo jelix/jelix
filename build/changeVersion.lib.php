@@ -20,17 +20,17 @@ class ChangeVersion {
     const FILES = array(
         'lib/Jelix/VERSION' => 'raw',
         'lib/jelix-legacy/init.php' => 'JELIX_VERSION',
-        'lib/jelix-admin-modules/jacl2db_admin/module.xml'=>'modulexml',
-        'lib/jelix-admin-modules/jauthdb_admin/module.xml'=>'modulexml',
-        'lib/jelix-admin-modules/jpref_admin/module.xml'=>'modulexml',
-        'lib/jelix-admin-modules/master_admin/module.xml'=>'modulexml',
-        'lib/jelix-modules/jacl/module.xml'=>'modulexml',
-        'lib/jelix-modules/jacl2/module.xml'=>'modulexml',
-        'lib/jelix-modules/jacl2db/module.xml'=>'modulexml',
-        'lib/jelix-modules/jacldb/module.xml'=>'modulexml',
-        'lib/jelix-modules/jauth/module.xml'=>'modulexml',
-        'lib/jelix-modules/jauthdb/module.xml'=>'modulexml',
-        'lib/jelix-modules/jpref/module.xml'=>'modulexml',
+        'lib/jelix-admin-modules/jacl2db_admin/module.xml'=>'modulexml3',
+        'lib/jelix-admin-modules/jauthdb_admin/module.xml'=>'modulexml3',
+        'lib/jelix-admin-modules/jpref_admin/module.xml'=>'modulexml3',
+        'lib/jelix-admin-modules/master_admin/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jacl/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jacl2/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jacl2db/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jacldb/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jauth/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jauthdb/module.xml'=>'modulexml3',
+        'lib/jelix-modules/jpref/module.xml'=>'modulexml3',
         'lib/jelix-legacy/core-modules/jelix/module.xml'=>'jelixmodule',
     );
     const TESTAPP_FILES = array(
@@ -81,6 +81,7 @@ class ChangeVersion {
     }
 
     protected function changeVersionInFile($path, Version $version, $process) {
+        $this->outputMsg("<info>Change version in file $path  -> $process</info>");
         if (!file_exists($path)) {
             $this->outputMsg("<info>File $path does not exists</info>");
             return;
@@ -120,6 +121,9 @@ class ChangeVersion {
             if (!$this->changeJelixVersion($path, $version->toString(), $verMax, $version->toString())) {
                 $this->outputMsg("<info>File $path does not content a jelix tag</info>");
             }
+        }
+        else {
+            $this->outputMsg("<comment>unknown process $process</comment>");
         }
 
     }
@@ -183,12 +187,12 @@ class ChangeVersion {
             $versionNode->textContent = $moduleVersion;
         }
         if ($minversion && $maxversion) {
-            $this->updateModuleNode($document, 'jelix_tests', $minversion);
-            $this->updateModuleNode($document, 'testurls', $minversion);
+            $this->updateModuleDependencyNode($document, 'jelix_tests', $minversion);
+            $this->updateModuleDependencyNode($document, 'testurls', $minversion);
         }
         else if ($maxversion && $moduleVersion) {
-            $this->updateModuleNode($document, 'jelix_tests', $moduleVersion);
-            $this->updateModuleNode($document, 'testurls', $moduleVersion);
+            $this->updateModuleDependencyNode($document, 'jelix_tests', $moduleVersion);
+            $this->updateModuleDependencyNode($document, 'testurls', $moduleVersion);
         }
         $document->save($path);
         return true;
@@ -212,7 +216,7 @@ class ChangeVersion {
         return null;
     }
 
-    protected function updateModuleNode($document, $name, $version) {
+    protected function updateModuleDependencyNode($document, $name, $version) {
         $dep = $document->getElementsByTagName('dependencies');
         if ($dep->length) {
             $dep = $dep[0];

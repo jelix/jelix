@@ -77,9 +77,10 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector {
 
     protected function _createPath(){
 
-        if (!isset(App::config()->_modulesPathList[$this->module])) {
-            if ($this->module == 'jelix')
+        if (!App::isModuleEnabled($this->module)) {
+            if ($this->module == 'jelix') {
                 throw new Exception('jelix module is not enabled !!');
+            }
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
 
@@ -118,7 +119,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector {
         }
 
         // else check for the original locale file in the module
-        $path = App::config()->_modulesPathList[$this->module].'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
+        $path = App::getModulePath($this->module).'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
         if (is_readable ($path)){
             $this->_where = 'modules/';
             $this->_path = $path;

@@ -49,7 +49,7 @@ class mainCtrl extends jController {
 
     if ($id = $this->param('newid')) {
         $dao = jDao::get('config');
-        $rec = jDao::createRecord('config');
+        $rec = $dao->createRecord();
 
         $rec->ckey = $id;
         $rec->cvalue=$this->param('newvalue','');

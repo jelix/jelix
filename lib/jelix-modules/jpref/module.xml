@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jpref@modules.jelix.org" name="jpref" createdate="2012-11-12">
-        <version stability="stable" date="2016-11-29">1.1</version>
+        <version date="2019-01-02 15:11">1.7.0-beta.5</version>
         <label lang="en_US">jPref</label>
         <description lang="en_US">Module to manage preferences</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
@@ -11,7 +11,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix version="&gt;=1.7.0-beta.1,&lt;=2.0.0-alpha.1"/>
+        <jelix version="&gt;=1.7.0-beta.4,&lt;=2.0.0-alpha.1"/>
     </dependencies>
     <autoload>
         <class name="jPref" file="classes/jPref.php"/>

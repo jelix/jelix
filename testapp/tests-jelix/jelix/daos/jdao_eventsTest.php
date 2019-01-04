@@ -33,12 +33,12 @@ class jdao_eventsTest extends jUnitTestCaseDb {
 
         $dao = jDao::get ('products_events');
 
-        $prod1 = jDao::createRecord ('products_events');
+        $prod1 = $dao->createRecord();
         $prod1->name ='assiette';
         $prod1->price = 3.87;
 
 
-        $prod2 = jDao::createRecord ('products_events');
+        $prod2 = $dao->createRecord();
         $prod2->name ='assiette';
         $prod2->price = 3.87;
 

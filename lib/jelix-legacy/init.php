@@ -47,12 +47,12 @@ class LegacyJelixAutoloader {
         if (strpos($class, 'jelix\\') === 0) {
             $f = LIB_PATH.'jelix-legacy/'.str_replace('\\', DIRECTORY_SEPARATOR, substr($class,6)).'.php';
         }
-        elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Installer|KV).*/i', $class, $m)) {
+        elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Config|Installer|KV).*/i', $class, $m)) {
             $f = self::$libPath[$m[1]].$class.'.class.php';
         }
         elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
             // for DAO which are stored in sessions for example
-            if (!isset(jApp::config()->_modulesPathList[$m[1]])) {
+            if (!jApp::isModuleEnabled($m[1])) {
                 //this may happen if we have several entry points, but the current one does not have this module accessible
                 return;
             }
@@ -121,7 +121,6 @@ require (JELIX_LIB_CORE_PATH . 'jUrlAction.class.php');
 require (JELIX_LIB_CORE_PATH . 'jUrl.class.php');
 require (JELIX_LIB_CORE_PATH . 'jController.class.php');
 require (JELIX_LIB_CORE_PATH . 'jSession.class.php');
-require (JELIX_LIB_CORE_PATH . 'jPropertiesFileReader.class.php');
 
 /**
 * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead

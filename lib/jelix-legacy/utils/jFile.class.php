@@ -9,7 +9,7 @@
 * @contributor Olivier Demah (#733)
 * @contributor Cedric (fix bug ticket 56)
 * @contributor Julien Issler
-* @copyright   2005-2016 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+* @copyright   2005-2019 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -82,6 +82,20 @@ class jFile {
         }
     }
 
+
+    /**
+     * copy the whole content of a directory into an other
+     *
+     * @param string $sourcePath the path of the directory content. It does not create
+     *                  the directory itself into the target directory.
+     * @param string $targetPath the full path of the directory to where to copy
+     *                  the content. The directory is created if it does not exists.
+     * @since 1.6.19
+     */
+    public static function copyDirectoryContent($sourcePath, $targetPath, $overwrite = false) {
+        Directory::copy($sourcePath, $targetPath, $overwrite);
+    }
+
     /**
      * get the MIME Type of a file
      *
@@ -124,11 +138,17 @@ class jFile {
      * @return string the path which is a system valid path
      */
     public static function parseJelixPath($path){
-        return str_replace(
-            array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:', 'appconfig:'),
+        $path = str_replace(
+            array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:',
+                'appconfig:'),
             array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
-                jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(), jApp::appConfigPath()),
+                jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(),
+                jApp::appSystemPath()),
             $path );
+        if (strpos($path, 'jelixwww:') === 0 && jApp::config()) {
+            $path = jApp::config()->urlengine['jelixWWWPath'].'/'.substr($path, 9);
+        }
+        return $path;
     }
 
     /**

@@ -32,8 +32,11 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $dao = jDao::get ('products');
         $this->assertInstanceOf('jDaoFactoryBase', $dao);
 
-        $dao = jDao::createRecord ('products');
-        $this->assertInstanceOf('jDaoRecordBase', $dao);
+        $daorec = jDao::createRecord ('products');
+        $this->assertInstanceOf('jDaoRecordBase', $daorec);
+
+        $daorec = $dao->createRecord();
+        $this->assertInstanceOf('jDaoRecordBase', $daorec);
     }
 
     function testFindAllEmpty() {
@@ -67,7 +70,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertNotEquals('', self::$prod1->id, 'jDaoBase::insert : id not set');
         $this->assertNotEquals('', self::$prod1->create_date, 'jDaoBase::insert : create_date not updated');
 
-        self::$prod2 = jDao::createRecord ('products');
+        self::$prod2 = $dao->createRecord();
         self::$prod2->name ='fourchette';
         self::$prod2->price = 1.54;
         self::$prod2->promo = true;
@@ -531,7 +534,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
         $dao = jDao::create ('jelix~jsession');
 
-        $sess1 = jDao::createRecord ('jelix~jsession');
+        $sess1 = $dao->createRecord();
         $sess1->id ='sess_02939873A32B';
         $sess1->creation = '2010-02-09 10:28';
         $sess1->access = '2010-02-09 11:00';

@@ -15,8 +15,7 @@ require($vendorDir.'autoload.php');
     %%php_rp_www%%,
     %%php_rp_var%%,
     %%php_rp_log%%,
-    %%php_rp_conf%%,
-    %%php_rp_cmd%%
+    %%php_rp_conf%%
 );
 \Jelix\Core\App::setTempBasePath(%%php_rp_temp%%);
 

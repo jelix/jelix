@@ -22,7 +22,7 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
     {
         $this
             ->setName('module:create-ctrl')
-            ->setDescription('Create a new controller, either a jController or jControllerCmdLine')
+            ->setDescription('Create a new controller')
             ->setHelp('')
             ->addArgument(
                 'module',
@@ -39,12 +39,6 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
                 InputArgument::OPTIONAL,
                 'name of the first method (\'index\' by default)',
                 'index'
-            )
-            ->addOption(
-               'cmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'To create a controller for a command line script'
             )
             ->addOption(
                'addinstallzone',
@@ -66,11 +60,7 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
         $agfilename = $path.'controllers/';
         $this->createDir($agfilename);
        
-        if ($input->getOption('cmdline')) { 
-            $type = 'cmdline';
-        } else {
-            $type = 'classic';
-        }
+       $type = 'classic';
        $ctrlname = strtolower($controller).'.'. $type .'.php';
        $agfilename.= $ctrlname;
 
@@ -80,16 +70,13 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
                      'method'=>$method,
                      'module'=>$module);
 
-       if ($input->getOption('cmdline')) {
-            $tplname = 'module/controller.cmdline.tpl';
-       } else {
-            if ($input->getOption('addinstallzone')) {
-                $tplname = 'module/controller.newapp.tpl';
-            }
-            else {
-                $tplname = 'module/controller.tpl';
-            }
-       }
+
+        if ($input->getOption('addinstallzone')) {
+            $tplname = 'module/controller.newapp.tpl';
+        }
+        else {
+            $tplname = 'module/controller.tpl';
+        }
        $this->createFile($agfilename, $tplname, $param, 'Controller');
     }
 }

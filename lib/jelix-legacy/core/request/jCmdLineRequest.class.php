@@ -17,6 +17,7 @@
  * a request object for scripts used in a command line
  * @package     jelix
  * @subpackage  core_request
+ * @deprecated
  */
 class jCmdLineRequest extends jRequest {
 

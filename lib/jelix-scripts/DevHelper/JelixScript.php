@@ -15,7 +15,7 @@ class JelixScript {
     /**
      * load the configuration of jelix-scripts
      * @param string $appname the application name
-     * @return \Jelix\DevHelper\CommandConfig
+     * @return CommandConfig
      */
     static function loadConfig($appname='') {
         $config = new CommandConfig();
@@ -74,20 +74,5 @@ class JelixScript {
 
         $config->appName = $appname;
         return $config;
-    }
-
-    static function checkTempPath() {
-        $tempBasePath = \Jelix\Core\App::tempBasePath();
-
-        // we always clean the temp directory. But first, let's check the temp path (see ticket #840)...
-
-        if ($tempBasePath == DIRECTORY_SEPARATOR || $tempBasePath == '' || $tempBasePath == '/') {
-            throw new \Exception("Error: bad path in \\Jelix\\Core\\App::tempBasePath(), it is equals to '".$tempBasePath."' !!\n".
-                                "       Jelix cannot clear the content of the temp directory.\n".
-                                "       Correct the path for the temp directory or create the directory you\n".
-                                "       indicated with \\Jelix\\Core\\App in your application.init.php.\n");
-        }
-
-        \jFile::removeDir(\Jelix\Core\App::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
 }

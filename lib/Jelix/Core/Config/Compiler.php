@@ -54,8 +54,8 @@ class Compiler {
      *
      * Merge of configuration files are made in this order:
      * - core/defaultconfig.ini.php
-     * - app/config/mainconfig.ini.php
-     * - app/config/$configFile
+     * - app/system/mainconfig.ini.php
+     * - app/system/$configFile
      * - var/config/localconfig.ini.php
      * - var/config/$configFile
      * - var/config/liveconfig.ini.php
@@ -67,7 +67,7 @@ class Compiler {
      */
     protected function readConfigFiles($configFile, $additionalOptions) {
 
-        $appConfigPath = App::appConfigPath();
+        $appSystemPath = App::appSystemPath();
         $varConfigPath = App::varConfigPath();
 
         // this is the defaultconfig file of JELIX itself
@@ -80,7 +80,7 @@ class Compiler {
         }
         $this->commonConfig = clone $config;
 
-        if(!file_exists($appConfigPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
+        if(!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             if ($additionalOptions) {
                 IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
                 return $config;
@@ -94,8 +94,8 @@ class Compiler {
         }
 
         // read the configuration of the entry point
-        if (file_exists($appConfigPath.$configFile)) {
-            if( false === IniFileMgr::readAndMergeObject($appConfigPath.$configFile, $config)) {
+        if (file_exists($appSystemPath.$configFile)) {
+            if( false === IniFileMgr::readAndMergeObject($appSystemPath.$configFile, $config, 0, \Jelix\Core\Config::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -107,7 +107,7 @@ class Compiler {
 
         // read the local configuration of the entry point
         if (file_exists($varConfigPath.$configFile)) {
-            if( false === IniFileMgr::readAndMergeObject($varConfigPath.$configFile, $config)) {
+            if( false === IniFileMgr::readAndMergeObject($varConfigPath.$configFile, $config, 0, \Jelix\Core\Config::sectionsToIgnoreForEp)) {
                 throw new Exception("Syntax error in the configuration file -- $configFile", 6);
             }
         }
@@ -117,7 +117,7 @@ class Compiler {
         }
 
         if ($additionalOptions) {
-            IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
+            IniFileMgr::mergeIniObjectContents($config, $additionalOptions, 0, \Jelix\Core\Config::sectionsToIgnoreForEp);
         }
 
         return $config;
@@ -245,7 +245,7 @@ class Compiler {
     protected function getCoordPluginConfValue($name, $conf) {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = App::appConfigPath($conf);
+            $confFile = App::appSystemPath($conf);
             if (!file_exists($confFile)) {
                 $confFile = App::varConfigPath($conf);
                 if (!file_exists($confFile)) {
@@ -331,10 +331,8 @@ class Compiler {
             }
         }
 
-        $section = $config->urlengine['urlScriptId'];
-
-        if (!isset($installation[$section])) {
-            $installation[$section] = array();
+        if (!isset($installation['modules'])) {
+            $installation['modules'] = array();
         }
 
         if ($config->compilation['checkCacheFiletime']) {
@@ -346,7 +344,7 @@ class Compiler {
         $modules = array();
         $list = App::getAllModulesPath();
         foreach($list as $k=>$path){
-            $module = $this->_readModuleInfo($config, $allModuleInfo, $path, $installation, $section);
+            $module = $this->_readModuleInfo($config, $allModuleInfo, $path, $installation);
             if ($module !== null) {
                 $modules[$module->name] = $module;
             }
@@ -357,7 +355,7 @@ class Compiler {
     /**
      * @return \Jelix\Core\Infos\ModuleInfos
      */
-    protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation, $section) {
+    protected function _readModuleInfo ($config, $allModuleInfo, $path, &$installation) {
 
         $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
         if (!$moduleInfo->exists()) {
@@ -365,84 +363,71 @@ class Compiler {
         }
         $f = $moduleInfo->name;
         if ($config->disableInstallers) {
-            $installation[$section][$f.'.installed'] = 1;
+            $installation['modules'][$f.'.installed'] = 1;
         }
-        else if (!isset($installation[$section][$f.'.installed'])) {
-            $installation[$section][$f.'.installed'] = 0;
+        else if (!isset($installation['modules'][$f.'.installed'])) {
+            $installation['modules'][$f.'.installed'] = 0;
         }
 
         if ($f == 'jelix') {
-            $config->modules['jelix.access'] = 2; // the jelix module should always be public
+            $config->modules['jelix.enabled'] = true; // the jelix module should always be public
         }
         else {
             if ($config->enableAllModules) {
                 if ($config->disableInstallers
-                    || $installation[$section][$f.'.installed']
+                    || $installation['modules'][$f.'.installed']
                     || $allModuleInfo) {
-                    $config->modules[$f.'.access'] = 2;
+                    $config->modules[$f.'.enabled'] = true;
                 } else {
-                    $config->modules[$f.'.access'] = 0;
+                    $config->modules[$f.'.enabled'] = false;
                 }
             }
-            else if (!isset($config->modules[$f.'.access'])) {
+            else if (!isset($config->modules[$f.'.enabled'])) {
                 // no given access in defaultconfig and ep config
-                $config->modules[$f.'.access'] = 0;
+                $config->modules[$f.'.enabled'] = 0;
             }
-            else if ($config->modules[$f.'.access'] == 0) {
-                // we want to activate the module if it is not activated
-                // for the entry point, but is declared activated
-                // in the default config file. In this case, it means
-                // that it is activated for an other entry point,
-                // and then we want the possibility to retrieve its
-                // urls, at least
-                if (isset($this->commonConfig->modules[$f.'.access'])
-                    && $this->commonConfig->modules[$f.'.access'] > 0) {
-                    $config->modules[$f.'.access'] = 3;
-                }
-            }
-            else if (!$installation[$section][$f.'.installed']) {
+            else if (!$installation['modules'][$f.'.installed']) {
                 // module is not installed.
                 // outside installation mode, we force the access to 0
                 // so the module is unusable until it is installed
                 if (!$allModuleInfo) {
-                    $config->modules[$f.'.access'] = 0;
+                    $config->modules[$f.'.enabled'] = false;
                 }
             }
         }
 
-        if (!$config->modules[$f.'.access']) {
+        if (!$config->modules[$f.'.enabled']) {
             return null;
         }
 
-        if (!isset($installation[$section][$f.'.dbprofile'])) {
+        if (!isset($installation['modules'][$f.'.dbprofile'])) {
             $config->modules[$f.'.dbprofile'] = 'default';
         } else {
-            $config->modules[$f.'.dbprofile'] = $installation[$section][$f.'.dbprofile'];
+            $config->modules[$f.'.dbprofile'] = $installation['modules'][$f.'.dbprofile'];
         }
 
+
         if ($allModuleInfo) {
-            if (!isset($installation[$section][$f.'.version'])) {
-                $installation[$section][$f.'.version'] = '';
+            if (!isset($installation['modules'][$f.'.version'])) {
+                $installation['modules'][$f.'.version'] = '';
             }
 
-            if (!isset($installation[$section][$f.'.dataversion'])) {
-                $installation[$section][$f.'.dataversion'] = '';
+            if (!isset($installation['modules'][$f.'.dataversion'])) {
+                $installation['modules'][$f.'.dataversion'] = '';
             }
 
             if (!isset($installation['__modules_data'][$f.'.contexts'])) {
                 $installation['__modules_data'][$f.'.contexts'] = '';
             }
 
-            $config->modules[$f.'.version'] = $installation[$section][$f.'.version'];
-            $config->modules[$f.'.dataversion'] = $installation[$section][$f.'.dataversion'];
-            $config->modules[$f.'.installed'] = $installation[$section][$f.'.installed'];
+            $config->modules[$f.'.version'] = $installation['modules'][$f.'.version'];
+            $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
+            $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
 
             $config->_allModulesPathList[$f] = $path;
         }
 
-        if ($config->modules[$f.'.access'] == 3) {
-            $config->_externalModulesPathList[$f] = $path;
-        } elseif ($config->modules[$f.'.access']) {
+        if ($config->modules[$f.'.enabled']) {
             $config->_modulesPathList[$f] = $path;
         }
         return $moduleInfo;

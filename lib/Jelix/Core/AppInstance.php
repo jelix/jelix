@@ -26,6 +26,10 @@ class AppInstance
 
     public $wwwPath = '';
 
+    /**
+     * @var string
+     * @deprecated
+     */
     public $scriptPath = '';
 
     public $env = 'www/';
@@ -67,7 +71,7 @@ class AppInstance
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath config directory
-     * @param string $scriptPath scripts directory
+     * @param string $scriptPath scripts directory (deprecated)
      */
     public function __construct($appPath,
                                 $wwwPath = null,
@@ -250,6 +254,10 @@ class AppInstance
         }
     }
 
+    public function getEnabledModulesPaths() {
+        return $this->config->_modulesPathList;
+    }
+
     /**
      * returns all modules path, even those are not used by the application.
      *
@@ -372,18 +380,13 @@ class AppInstance
      * Says if the given module $name is enabled.
      *
      * @param string $moduleName
-     * @param bool   $includingExternal true if we want to know if the module
-     *                                  is also an external module, e.g. in an other entry point
-     *
+     * @param bool   $includingExternal  deprecated
      * @return bool true : module is ok
      */
     public function isModuleEnabled($moduleName, $includingExternal = false)
     {
         if (!$this->config) {
             throw new \Exception('Configuration is not loaded');
-        }
-        if ($includingExternal && isset($this->config->_externalModulesPathList[$moduleName])) {
-            return true;
         }
 
         return isset($this->config->_modulesPathList[$moduleName]);
@@ -393,8 +396,7 @@ class AppInstance
      * return the real path of an enabled module.
      *
      * @param string $module            a module name
-     * @param bool   $includingExternal true if we want the path of a module
-     *                                  enabled in an other entry point.
+     * @param bool   $includingExternal deprecated
      *
      * @return string the corresponding path
      */
@@ -405,9 +407,6 @@ class AppInstance
         }
 
         if (!isset($this->config->_modulesPathList[$module])) {
-            if ($includingExternal && isset($this->config->_externalModulesPathList[$module])) {
-                return $this->config->_externalModulesPathList[$module];
-            }
             throw new \Exception('getModulePath : invalid module name');
         }
 

@@ -9,16 +9,14 @@
 */
 
 
-class %%module%%ModuleInstaller extends \Jelix\Installer\ModuleInstaller {
+class %%module%%ModuleInstaller extends \Jelix\Installer\Module\Installer {
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
-        //if ($this->firstDbExec())
-        //    $this->execSQLScript('sql/install');
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+        //$helpers->database()->execSQLScript('sql/install');
 
-        /*if ($this->firstExec('acl2')) {
-            jAcl2DbManager::addSubject('my.subject', '%%module%%~acl.my.subject', 'subject.group.id');
-            jAcl2DbManager::addRight('admins', 'my.subject'); // for admin group
-        }
+        /*
+        jAcl2DbManager::addSubject('my.subject', '%%module%%~acl.my.subject', 'subject.group.id');
+        jAcl2DbManager::addRight('admins', 'my.subject'); // for admin group
         */
     }
 }

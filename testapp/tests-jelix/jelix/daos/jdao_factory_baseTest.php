@@ -59,7 +59,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function testFindAllPrefix() {
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -76,7 +76,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function testFindAllAliasPrefix() {
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -156,7 +156,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         $this->rs->expects($this->any())
                     ->method('fetch')
                     ->will($this->returnValue($o));
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -181,7 +181,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         $this->rs->expects($this->any())
                     ->method('fetch')
                     ->will($this->returnValue($o));
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -201,7 +201,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function testFindByPrefix() {
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $cond = new jDaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
@@ -224,7 +224,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function testFindByAliasPrefix() {
-        $this->conn->profile = array('table_prefix'=>'foo_');
+        $this->conn->profile = array('table_prefix'=>'foo_', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $cond = new jDaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');

@@ -31,8 +31,8 @@ class confmailWizPage extends installWizardPage {
      * action to process the page after the submit
      */
     function process() {
+        $ini = new  \Jelix\IniFile\IniModifier(jApp::varConfigPath('localconfig.ini.php'));
 
-        $ini = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
         $errors = array();
         $_SESSION['confmail']['webmasterEmail'] = trim($_POST['webmasterEmail']);
         if ($_SESSION['confmail']['webmasterEmail'] == '') {
@@ -56,21 +56,30 @@ class confmailWizPage extends installWizardPage {
             }
         }
         elseif ($mailerType == 'smtp') {
+            $mailerProfile = $ini->getValue('smtpProfile','mailer');
+            if (!$mailerProfile) {
+                $mailerProfile = 'mailer';
+                $ini->setValue('smtpProfile', $mailerProfile, 'mailer');
+            }
+            $mailerProfile = 'smtp:'.$mailerProfile;
+            $profilesIni = $this->getProfilesIni();
+
             $_SESSION['confmail']['smtpHost'] = trim($_POST['smtpHost']);
             if ($_SESSION['confmail']['smtpHost'] == '') {
                 $errors[] = $this->locales['error.missing.smtpHost'];
             }
             else {
-                $ini->setValue('smtpHost',$_SESSION['confmail']['smtpHost'], 'mailer');
+                $profilesIni->setValue('host', $_SESSION['confmail']['smtpHost'] , $mailerProfile);
             }
             $smtpPort = $_SESSION['confmail']['smtpPort'] = trim($_POST['smtpPort']);
             if ($smtpPort != '' && intval($smtpPort) == 0) {
                 $errors[] = $this->locales['error.smtpPort'];
             }
             else {
-                $ini->setValue('smtpPort',$smtpPort, 'mailer');
+                $profilesIni->setValue('port',$smtpPort , $mailerProfile);
             }
             $_SESSION['confmail']['smtpSecure'] = trim($_POST['smtpSecure']);
+            $profilesIni->setValue('secure_protocol', $_SESSION['confmail']['smtpSecure'], $mailerProfile);
 
             if (isset($_POST['smtpAuth'])) {
                 $smtpAuth = $_SESSION['confmail']['smtpAuth'] = trim($_POST['smtpAuth']);
@@ -78,23 +87,38 @@ class confmailWizPage extends installWizardPage {
             }
             else $smtpAuth= false;
 
-            $ini->setValue('smtpAuth',$smtpAuth, 'mailer');
+            $profilesIni->setValue('auth_enabled',$smtpAuth , $mailerProfile);
             if ($smtpAuth) {
                 $_SESSION['confmail']['smtpUsername'] = trim($_POST['smtpUsername']);
                 if ($_SESSION['confmail']['smtpUsername'] == '') {
                     $errors[] = $this->locales['error.missing.smtpUsername'];
                 }
                 else {
-                    $ini->setValue('smtpUsername',$_SESSION['confmail']['smtpUsername'], 'mailer');
+                    $profilesIni->setValue('username', $_SESSION['confmail']['smtpUsername'] , $mailerProfile);
                 }
                 $_SESSION['confmail']['smtpPassword'] = trim($_POST['smtpPassword']);
                 if ($_SESSION['confmail']['smtpPassword'] == '') {
                     $errors[] = $this->locales['error.missing.smtpPassword'];
                 }
                 else {
-                    $ini->setValue('smtpPassword',$_SESSION['confmail']['smtpPassword'], 'mailer');
+                    $profilesIni->setValue('password', $_SESSION['confmail']['smtpPassword'], $mailerProfile);
                 }
             }
+            $profilesIni->setValue('helo', $_SESSION['confmail']['smtpHelo'], $mailerProfile);
+            $profilesIni->setValue('timeout', $_SESSION['confmail']['smtpTimeout'], $mailerProfile);
+
+            if (!count($errors)) {
+                $profilesIni->save();
+            }
+            $ini->removeValue('smtpHost', 'mailer');
+            $ini->removeValue('smtpPort', 'mailer');
+            $ini->removeValue('smtpHelo', 'mailer');
+            $ini->removeValue('smtpSecure', 'mailer');
+            $ini->removeValue('smtpAuth', 'mailer');
+            $ini->removeValue('smtpUsername', 'mailer');
+            $ini->removeValue('smtpPassword', 'mailer');
+            $ini->removeValue('smtpTimeout', 'mailer');
+
         }
         if (count($errors)) {
             $_SESSION['confmail']['errors'] = $errors;
@@ -107,7 +131,12 @@ class confmailWizPage extends installWizardPage {
 
 
     protected function loadconf() {
-        $ini = new \Jelix\IniFile\IniModifier(jApp::mainConfigFile());
+        $ini = new  \Jelix\IniFile\IniModifierArray( array(
+                'default' => jConfig::getDefaultConfigFile(),
+                'main' => jApp::mainConfigFile(),
+                'local' => jApp::varConfigPath('localconfig.ini.php')
+            )
+        );
 
         $emailConfig = array(
             'webmasterEmail'=>$ini->getValue('webmasterEmail','mailer'),
@@ -126,11 +155,50 @@ class confmailWizPage extends installWizardPage {
             'errors'=>array()
         );
 
-        if (!in_array($emailConfig['mailerType'], array('mail','sendmail','smtp')))
+        if (!in_array($emailConfig['mailerType'], array('mail','sendmail','smtp'))) {
             $emailConfig['mailerType'] = 'mail';
+        }
+
+        if ($emailConfig['mailerType'] == 'smtp' && $ini->getValue('smtpProfile','mailer')) {
+            $mailerProfile = 'smtp:'.$ini->getValue('smtpProfile','mailer');
+            $profilesIni = $this->getProfilesIni();
+            $smtp = $profilesIni->getValues($mailerProfile);
+            $smtp = array_merge(array(
+                'host' => 'localhost',
+                'port' => 25,
+                'secure_protocol' => '', // or "ssl", "tls"
+                'helo' => '',
+                'auth_enabled' => false,
+                'username' => '',
+                'password' => '',
+                'timeout' => 10
+            ), $smtp);
+
+            $emailConfig['smtpHost'] = $smtp['host'];
+            $emailConfig['smtpPort'] = $smtp['port'];
+            $emailConfig['smtpSecure'] = $smtp['secure_protocol'];
+            $emailConfig['smtpHelo'] = $smtp['helo'];
+            $emailConfig['smtpAuth'] = $smtp['auth_enabled'];
+            $emailConfig['smtpUsername'] = $smtp['username'];
+            $emailConfig['smtpPassword'] = $smtp['password'];
+            $emailConfig['smtpTimeout'] = $smtp['timeout'];
+        }
 
         return $emailConfig;
     }
 
+
+    protected function getProfilesIni()  {
+        $file = jApp::varConfigPath('profiles.ini.php');
+
+        if (!file_exists($file) && file_exists(jApp::varConfigPath('profiles.ini.php.dist'))) {
+            copy(jApp::varConfigPath('profiles.ini.php.dist'), $file);
+        }
+
+        return new \Jelix\IniFile\IniModifier($file, ";<?php die(''); ?>
+;for security reasons, don't remove or modify the first line
+
+");
+    }
 
 }

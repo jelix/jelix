@@ -1,15 +1,11 @@
 cd .
   README.md
-  composer.lock
-  composer.json
-  CHANGELOG.md
 
 cd bin
-  create-jelix-app.php
+  create-jelix-app
 
 cd lib
   .htaccess
-* jelix_check_server.php
   composer.json
 
 cd lib/Jelix/Core
@@ -102,8 +98,7 @@ cd lib/jelix-legacy/core/selector
 
 
 cd lib/jelix-legacy/core-modules/jelix
-   module.xml
-   urls.xml
+   __ALL__
 cd lib/jelix-legacy/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
@@ -112,6 +107,8 @@ cd lib/jelix-legacy/core-modules/jelix/controllers
   redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
+cd lib/jelix-legacy/core-modules/jelix/Command
+   __ALL__
 cd lib/jelix-legacy/core-modules/jelix/daos
    __ALL__
 cd lib/jelix-legacy/core-modules/jelix/install
@@ -196,6 +193,9 @@ cd lib/jelix-legacy/forms
 cd lib/jelix-legacy/kvdb
   __ALL__
 
+cd lib/jelix-legacy/Scripts
+  __ALL__
+
 cd lib/jelix-legacy/tpl/
   __ALL__
 
@@ -265,10 +265,8 @@ cd lib/jelix-plugins/cache/
 cd lib/jelix-plugins/kvdb/
   __ALL_RECURSIVELY__
 
-#if ENABLE_DEVELOPER
 cd lib/jelix-tests/
   __ALL_RECURSIVELY__
-#endif
 
 cd lib/installwizard/
   __ALL__

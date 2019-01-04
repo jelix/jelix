@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2005-2016 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2018 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @copyright   2011 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -58,12 +58,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                'Indicate to not create a default module'
             )
             ->addOption(
-               'withcmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'Indicate to add a command line script'
-            )
-            ->addOption(
                'modulename',
                null,
                InputOption::VALUE_REQUIRED,
@@ -79,7 +73,8 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
     }
 
     protected function prepareSubCommandApp($appName, $appPath) {
-        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+
+        $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
         $this->config->infoWebsite = $this->config->newAppInfoWebsite;
         $this->config->infoLicence = $this->config->newAppInfoLicence;
         $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
@@ -113,11 +108,18 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
+        parent::execute($input, $output);
+
+        $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+        if ($input->isInteractive()) {
+            $this->askAppInfos($input, $output);
+        }
+
         $this->prepareSubCommandApp($appName, $appPath);
 
         App::setEnv('jelix-scripts');
 
-        \Jelix\DevHelper\JelixScript::checkTempPath();
+        \Jelix\Scripts\Utils::checkTempPath();
 
         if ($p = $input->getOption('wwwpath')) {
             $wwwpath = Path::shortestPath($appPath , $p).'/';
@@ -133,7 +135,19 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         App::declareModulesDir(array($appPath.'/modules/'));
 
-        $installer = new \Jelix\Installer\Installer(new \Jelix\Installer\Reporter\Console(($output->isVerbose()?'notice':'warning')));
+        // launch configuration of the jelix module
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'error'), 'Configuration');
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
+        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup,
+            $this->getHelper('question'), $input, $output);
+
+        $configurator->configureModules(array('jelix'), 'index', false, true);
+
+        // launch the installer for this new application
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output, ($output->isVerbose()?'notice':'warning'), 'Installation');
+        $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
 
         $moduleok = true;
@@ -163,37 +177,38 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                 $output->writeln("However the application has been created");
             }
         }
+    }
 
-        if ($input->getOption('withcmdline')) {
-            if(!$input->getOption('nodefaultmodule') && $moduleok){
-                if ($output->isVerbose()) {
-                    $output->writeln("Create a controller in the default module for the cli script");
-                }
-
-                $options = array(
-                    'module'=>$param['modulename'],
-                    'controller'=>'default',
-                    'method'=>'index',
-                    '--cmdline'=> true,
-                );
-                if ($output->isVerbose()) {
-                    $options['-v'] = true;
-                }
-                $this->executeSubCommand('module:createctrl', $options, $output);
+    protected function askAppInfos(InputInterface $input, OutputInterface $output) {
+        $cliHelpers = new \Jelix\Scripts\InputHelpers($this->getHelper('question'), $input, $output);
+        $this->output->writeln('<comment>Please give some informations to store in file headers and module/project identity files</comment>');
+        $this->config->newAppInfoWebsite = $cliHelpers->askInformation('The web site of your company', $this->config->infoWebsite);
+        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $this->config->newAppInfoWebsite, $m)) {
+            list($domainname) = explode('/', $m[3]);
+            $this->config->newAppInfoIDSuffix = '@'.$domainname;
+            $this->config->newAppInfoCopyright = date('Y').' '.$domainname;
+            if ($this->config->infoIDSuffix == '@yourwebsite.undefined') {
+                $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
             }
-            if ($output->isVerbose()) {
-                $output->writeln("Create the cli script");
+            if (strpos($this->config->infoCopyright, 'your name') !== false) {
+                $this->config->infoCopyright = $this->config->newAppInfoCopyright;
             }
-
-            $options = array(
-                'entrypoint'=>$param['modulename'],
-                '--type' => 'cmdline'
-            );
-            if ($output->isVerbose()) {
-                $options['-v'] = true;
+            if ($this->config->infoCreatorName == 'your name') {
+                $this->config->infoCreatorName = $domainname;
             }
-            $this->executeSubCommand('app:createentrypoint', $options, $output);
+            if ($this->config->infoCreatorMail == 'your-email@yourwebsite.undefined') {
+                $this->config->infoCreatorMail = '';
+            }
         }
+
+        $this->config->newAppInfoLicence = $cliHelpers->askInformation('The licence of your application and modules', $this->config->infoLicence);
+        $this->config->newAppInfoLicenceUrl = $cliHelpers->askInformation('The url to the licence if any', $this->config->infoLicenceUrl);
+        $this->config->newAppInfoCopyright = $cliHelpers->askInformation('Copyright on your application and modules', $this->config->infoCopyright);
+        $this->config->newAppInfoIDSuffix = $cliHelpers->askInformation('The suffix of your modules id', $this->config->infoIDSuffix);
+
+        $this->config->infoCreatorName = $cliHelpers->askInformation('The creator name (your name for example)', $this->config->infoCreatorName);
+        $this->config->infoCreatorMail = $cliHelpers->askInformation('The email of the creator', $this->config->infoCreatorMail);
+
     }
 
     protected function convertRp($rp) {
@@ -225,9 +240,9 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $configPath = App::varConfigPath();
         $this->createDir($varPath);
         $this->createDir(App::logPath());
-        $this->createDir(App::appConfigPath());
+        $this->createDir(App::appSystemPath());
         $this->createDir($configPath);
-        $this->createDir(App::appConfigPath('index/'));
+        $this->createDir(App::appSystemPath('index/'));
         $this->createDir(App::appPath('app/overloads/'));
         $this->createDir(App::appPath('app/themes'));
         $this->createDir(App::appPath('app/themes/default/'));
@@ -235,12 +250,11 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
 
-        $this->createDir($appPath.'install');
+        $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
         $this->createDir($appPath.'plugins');
         $this->createDir(App::appPath('app/responses'));
         $this->createDir($appPath.'tests');
-        $this->createDir(App::scriptsPath());
 
         $param = array();
 
@@ -266,7 +280,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['rp_log']   = Path::shortestPath($appPath, App::logPath()).'/';
         $param['rp_conf']  = Path::shortestPath($appPath, $configPath).'/';
         $param['rp_www']   = Path::shortestPath($appPath, $wwwpath).'/';
-        $param['rp_cmd']   = Path::shortestPath($appPath, App::scriptsPath()).'/';
         $param['rp_jelix'] = Path::shortestPath($appPath, JELIX_LIB_PATH).'/';
         $param['rp_lib']   = Path::shortestPath($appPath, LIB_PATH).'/';
         $param['rp_vendor'] = '';
@@ -289,7 +302,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile(App::appPath().'app/themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'uploads/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
-        $this->createFile(App::scriptsPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(App::tempBasePath().'.dummy', 'dummy.tpl', array());
 
         $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
@@ -297,17 +309,20 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
 
         $this->createFile($appPath.'jelix-app.json','jelix-app.json.tpl', $param, "Project description file");
         $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
-        $this->createFile($appPath.'cmd.php','cmd.php.tpl', $param, "Script for developer commands");
-        $this->createFile(App::appConfigPath('mainconfig.ini.php'), 'app/config/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile($appPath.'dev.php','dev.php.tpl', $param, "Script for developer commands");
+        $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
+        $this->createFile(App::appSystemPath('mainconfig.ini.php'), 'app/system/mainconfig.ini.php.tpl', $param, "Main configuration file");
+        $this->createFile(App::appSystemPath('framework.ini.php'), 'app/system/framework.ini.php.tpl', $param, "framework setup file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, "Profiles file");
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, "Profiles file for your repository");
-        $this->createFile(App::appConfigPath('preferences.ini.php'), 'app/config/preferences.ini.php.tpl', $param, "Preferences file");
-        $this->createFile(App::appConfigPath('urls.xml'), 'app/config/urls.xml.tpl', $param, "URLs mapping file");
-
-        $this->createFile(App::appConfigPath('index/config.ini.php'), 'app/config/index/config.ini.php.tpl', $param, "Entry point configuration file");
+        $this->createFile(App::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, "Preferences file");
+        $this->createFile(App::appSystemPath('urls.xml'), 'app/system/urls.xml.tpl', $param, "URLs mapping file");
+        $this->createFile(App::appSystemPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, "Entry point configuration file");
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, "Main response class");
         $this->createFile($appPath.'install/installer.php','installer/installer.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'install/configurator.php','installer/configurator.php.tpl',$param, "Installer script");
+        $this->createFile($appPath.'install/uninstall/uninstaller.ini.php','installer/uninstall/uninstaller.ini.php',$param, "uninstaller.ini.php file");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
         $temp = dirname(rtrim(App::tempBasePath(),'/'));
@@ -333,7 +348,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['php_rp_log']  = $this->convertRp($param['rp_log']);
         $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
         $param['php_rp_www']  = $this->convertRp($param['rp_www']);
-        $param['php_rp_cmd']  = $this->convertRp($param['rp_cmd']);
         $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
         if ($param['rp_vendor']) {
            $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);

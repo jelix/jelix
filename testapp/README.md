@@ -160,7 +160,7 @@ Installation of testapp without Vagrant
     don't touch other  "jdb" sections !
 - configure other section in profiles.ini.php: "jkvdb:", "jcache:", "jsoapclient:"
 - if you have specific configuration setting, set them into a testapp/var/config/localconfig.ini.php
-  instead of modifying testapp/app/config/mainconfig.ini.php
+  instead of modifying testapp/app/system/mainconfig.ini.php
 - put write access for apache on testapp/temp/, testapp/var/log/ and testapp/var/mails
 - run the script in install/installer.php 
     cd testapp/install && php installer.php

@@ -11,14 +11,14 @@
 
 /**
  */
-class jprefModuleUpgrader_moveini extends jInstallerModule2 {
+class jprefModuleUpgrader_moveini extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.1');
-    public $date = '2016-11-24';
+    protected $targetVersions = array('1.1');
+    protected $date = '2016-11-24';
 
-    function installEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         $path = jApp::varConfigPath('preferences.ini.php');
-        $newpath = jApp::appConfigPath('preferences.ini.php');
+        $newpath = jApp::appSystemPath('preferences.ini.php');
         if (file_exists($path) && !file_exists($newpath)) {
             rename($path, $newpath);
         }

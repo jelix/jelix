@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2018 Laurent Jouanneau
  *
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -31,10 +31,16 @@ class MapperConfig {
     protected $extensionNeeded = true;
 
     /**
-     * file that contains the url mapping
+     * file that contains the url mapping into app/system
      * @var string
      */
     protected $mapFile;
+
+    /**
+     * file that contains the url mapping, into var/config
+     * @var string
+     */
+    protected $localMapFile;
 
     /**
      *
@@ -57,6 +63,10 @@ class MapperConfig {
         }
         if (isset($options['significantFile'])) {
             $this->mapFile = $options['significantFile'];
+        }
+
+        if (isset($options['localSignificantFile'])) {
+            $this->localMapFile = $options['localSignificantFile'];
         }
     }
 

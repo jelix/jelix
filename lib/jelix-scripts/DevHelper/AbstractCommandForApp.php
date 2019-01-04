@@ -8,11 +8,13 @@
 */
 namespace Jelix\DevHelper;
 
+use Jelix\Core\Infos\InfosAbstract;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
+use Jelix\Core\App;
 
 abstract class AbstractCommandForApp extends AbstractCommand
 {
@@ -23,73 +25,103 @@ abstract class AbstractCommandForApp extends AbstractCommand
     protected $allEntryPoint = true;
 
     /**
-     * indicate the entry point name on which the command should apply.
-     * Filled by the option reader.
-     */
-    protected $entryPointName = 'index.php';
-
-    /**
      * indicate the entry point id on which the command should apply.
      * Filled by the option reader.
      */
-    protected $entryPointId = 'index';
+    protected $selectedEntryPointId = 'index';
 
-    protected function configure()
-    {
+    /** @var array list of entry points id on which the command should apply */
+    protected $selectedEntryPointsIdList = array();
+
+
+    private $epOptionName = '';
+
+    private $epListOptionName = '';
+
+    protected function addEpOption($name = 'entry-point', $shortName = 'e') {
+        $this->epOptionName = $name;
         $this
             ->addOption(
-               'entry-point',
-               'e',
-               InputOption::VALUE_REQUIRED,
-               'indicate the entry point on which this command should be applied'
+                $name,
+                $shortName,
+                InputOption::VALUE_REQUIRED,
+                'indicate the entry point on which this command should be applied'
             )
         ;
     }
 
+    protected function addEpListOption($name = 'entry-points', $shortName = 'e') {
+        $this->epListOptionName = $name;
+        $this
+            ->addOption(
+                $name,
+                $shortName,
+                InputOption::VALUE_REQUIRED,
+                'indicate the list of entry point (names separated by a coma) on which this command should be applied'
+            )
+        ;
+    }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        $this->readEPOption($input);
-        $this->loadAppConfig();
+        if ($this->epOptionName) {
+            $this->selectedEntryPointId = $this->getSelectedEntryPoint($this->epOptionName, $input);
+        }
+        else if ($this->epListOptionName) {
+            $this->selectedEntryPointsIdList = $this->getSelectedEntryPoint($this->epListOptionName, $input, true);
+            if (count($this->selectedEntryPointsIdList)) {
+                $this->selectedEntryPointId = $this->selectedEntryPointsIdList[0];
+            }
+        }
+        $this->loadAppConfig($this->selectedEntryPointId);
         return $this->_execute($input, $output);
     }
 
     abstract protected function _execute(InputInterface $input, OutputInterface $output);
     
-    protected function readEPOption(InputInterface $input)
+    protected function getSelectedEntryPoint($optionName, InputInterface $input, $allowList = false)
     {
         // check entry point
-        $ep = $input->getOption('entry-point');
+        $ep = $input->getOption($optionName);
         if ($ep) {
-            $this->entryPointName = $ep;
             $this->allEntryPoint = false;
-            if (($p = strpos($this->entryPointName, '.php')) === false) {
-                $this->entryPointId = $this->entryPointName;
-                $this->entryPointName .= '.php';
-            } else {
-                $this->entryPointId = substr($this->entryPointName, 0, $p);
+
+            if ($allowList) {
+                $list = preg_split('/\s*,\s*/', $ep);
+                return array_map(array($this, 'normalizeEp'), $list);
             }
+            return $this->normalizeEp($ep);
+        }
+        else if ($allowList) {
+            return array();
+        }
+        else {
+            return 'index';
         }
     }
 
-    protected function loadAppConfig()
+    private function normalizeEp($ep)
     {
-        if (\Jelix\Core\App::config()) {
-            return;
+        if (($p = strpos($ep, '.php')) === false) {
+            return $ep;
+        } else {
+            return  substr($ep, 0, $p);
+        }
+    }
+
+    protected function loadAppConfig($epId = 'index')
+    {
+        $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
+        if (!$entrypoint) {
+            throw new \Exception($this->getName().": Entry point $epId is unknown");
         }
 
-        $ep = $this->getEntryPointInfo($this->entryPointName);
-        if ($ep) {
-            $configFile = $ep['config'];
-        }
+        $configFile = $entrypoint->getConfigFile();
 
-        if ($configFile == '') {
-            throw new \Exception($this->getName().': Entry point is unknown');
-        }
-
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $this->entryPointName, true);
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $entrypoint->getFile(), true);
         \Jelix\Core\App::setConfig($compiler->read(true));
+        \jFile::createDir(App::tempPath(), App::config()->chmodDir);
     }
 
     /**
@@ -101,13 +133,13 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     protected function getModulePath($module)
     {
-        $this->loadAppConfig();
+        $config = App::config();
+        if (!$config) {
+            $this->loadAppConfig($this->selectedEntryPointId);
+            $config = App::config();
+        }
 
-        $config = \Jelix\Core\App::config();
         if (!isset($config->_modulesPathList[$module])) {
-            if (isset($config->_externalModulesPathList[$module])) {
-                return $config->_externalModulesPathList[$module];
-            }
             throw new \Exception($this->getName().": The module $module doesn't exist");
         }
 
@@ -115,66 +147,30 @@ abstract class AbstractCommandForApp extends AbstractCommand
     }
 
     /**
-     * @var \Jelix\Core\Infos\AppInfos the content of the project.xml or jelix-app.json file
+     * @var \Jelix\Core\Infos\FrameworkInfos
      */
-    protected $appInfos = null;
+    private $frameworkInfos;
 
-    /**
-     * load the content of the project.xml or jelix-app.json file, and store it
-     * into the $appInfos property
-     */
-    protected function loadAppInfos()
-    {
-        if ($this->appInfos) {
-            return;
+    protected function getFrameworkInfos($reload = false) {
+        if (!$this->frameworkInfos || $reload) {
+            $this->frameworkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         }
-        $this->appInfos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
-  
-        $doc = new DOMDocument();
-  
-        if (!$this->appInfos->exists()){
-            throw new Exception($this->name.": cannot load jelix-app.json or project.xml");
-        }
+        return $this->frameworkInfos;
     }
 
     /**
-     * @return generator  which returns arrays {'file'=>'', 'config'=>'', 'isCli'=>bool, 'type=>''}
+     * @param string $name the entry point name
+     * @return \Jelix\Core\Infos\EntryPoint
+     * @throws \Exception
      */
-    protected function getEntryPointsList()
+    protected function getEntryPointInfo($name)
     {
-        $this->loadAppInfos();
-        if (!count($this->appInfos->entrypoints)) {
-            return array();
-        }
-        $generator = function($entrypoints) {
-            foreach($entrypoints as $file=>$epElt) {
-                $ep = array(
-                    'file'=>$epElt["file"],
-                    'config'=>$epElt["config"],
-                    'isCli'=> ($epElt["type"] == 'cmdline'),
-                    'type'=>$epElt["type"],
-                );
-                if (($p = strpos($ep['file'], '.php')) !== false) {
-                    $ep['id'] = substr($ep['file'],0,$p);
-                }
-                else {
-                    $ep['id'] = $ep['file'];
-                }
-                yield $ep;
-            }
+        $ep = $this->getFrameworkInfos()->getEntryPointInfo($name);
 
-        };
-        return $generator($this->appInfos->entrypoints);
-     }
-
-    protected function getEntryPointInfo($name) {
-        $listEp = $this->getEntryPointsList();
-        foreach ($listEp as $ep) {
-            if ($ep['id'] == $name) {
-                return $ep;
-            }
+        if (!$ep) {
+            throw new \Exception($this->getName().": The entry point $name doesn't exist");
         }
-        return null;
+        return $ep;
     }
 
     protected function registerModulesDir($repository, $repositoryPath)

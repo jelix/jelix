@@ -41,17 +41,23 @@ class Resolver
     protected $circularDependencyTracker = array();
     protected $circularReverseDependencyTracker = array();
 
+    protected $allowToForceInstallDependencies = true;
+
     /**
      * Return the list of item to process, in the right order.
      * Their action property may have changed and indicate what
      * to do with them.
      *
+     * @param boolean $allowToInstallDependencies true if the resolver is authorized
+     *                to force the installation of dependencies that have not the
+     *                the action flag ACTION_INSTALL
      * @return Item[] list of item
      *
      * @throws ItemException when there is a circular dependency...
      */
-    public function getDependenciesChainForInstallation()
+    public function getDependenciesChainForInstallation($allowToForceInstallDependencies = true)
     {
+        $this->allowToForceInstallDependencies = $allowToForceInstallDependencies;
         $this->checkedItems = array();
         $this->chain = array();
 
@@ -71,12 +77,12 @@ class Resolver
                 }
                 $this->_checkReverseDependencies($item);
             } elseif ($item->getAction() == self::ACTION_INSTALL) {
-                if ($item->isInstalled()) {
+                if ($item->isInstalled() && !$allowToForceInstallDependencies) {
                     $this->checkedItems[$itemName] = true;
                     continue;
                 }
                 $this->_checkDependencies($item);
-            } else {
+            } else { // self::ACTION_UPGRADE
                 $this->_checkDependencies($item);
             }
             $this->chain[] = $item;
@@ -104,13 +110,13 @@ class Resolver
             if (isset($this->items[$name])) {
                 if ($this->items[$name]->isInstalled() && $this->items[$name]->getAction() != self::ACTION_REMOVE ) {
                     throw new ItemException('Item '.$name.' is in conflicts with item '.$forbiddenComponent['forbiddenby'],
-                        $this->items[$name], 7, $this->items[$forbiddenComponent['forbiddenby']]);
+                        $this->items[$name], ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT, $this->items[$forbiddenComponent['forbiddenby']]);
                 }
             }
             foreach ($this->chain as $item) {
                 if ($item->getName() == $name && $item->getAction() == self::ACTION_INSTALL) {
                     throw new ItemException('Item '.$name.' is in conflicts with item '.$forbiddenComponent['forbiddenby'],
-                        $item, 8, $this->items[$forbiddenComponent['forbiddenby']]);
+                        $item, ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT, $this->items[$forbiddenComponent['forbiddenby']]);
                 }
             }
         }
@@ -127,7 +133,8 @@ class Resolver
     protected function _checkDependencies(Item $item)
     {
         if (isset($this->circularDependencyTracker[$item->getName()])) {
-            throw new ItemException('Circular dependency! Cannot process the item '.$item->getName(), $item, 1);
+            throw new ItemException('Circular dependency! Cannot process the item '.$item->getName(),
+                $item, ItemException::ERROR_CIRCULAR_DEPENDENCY);
         }
 
         $this->circularDependencyTracker[$item->getName()] = true;
@@ -144,7 +151,8 @@ class Resolver
             }
 
             if ($depItem->getAction() == self::ACTION_REMOVE) {
-                throw new ItemException('Item '.$depItemName.', needed by item '.$item->getName().', should be removed at the same time', $item, 3, $depItem);
+                throw new ItemException('Item '.$depItemName.', needed by item '.$item->getName().', should not be removed at the same time',
+                    $item, ItemException::ERROR_REMOVED_ITEM_IS_NEEDED, $depItem);
             }
 
             if (isset($this->checkedItems[$depItemName])) {
@@ -154,9 +162,14 @@ class Resolver
             if ($depItem->getAction() == self::ACTION_NONE) {
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        $item, ItemException::ERROR_BAD_ITEM_VERSION, $depItem);
                 }
                 if (!$depItem->isInstalled()) {
+                    if (!$depItem->canBeInstalled() || !$this->allowToForceInstallDependencies) {
+                        throw new ItemException("item '".$depItemName."' needed by ".$item->getName()."cannot be installed ",
+                            $item, ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED, $depItem);
+                    }
                     $depItem->setAction(self::ACTION_INSTALL);
                     $this->_checkDependencies($depItem);
                     $this->chain[] = $depItem;
@@ -164,14 +177,16 @@ class Resolver
             } elseif ($depItem->getAction() == self::ACTION_INSTALL) {
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        $item, ItemException::ERROR_BAD_ITEM_VERSION, $depItem);
                 }
                 $this->_checkDependencies($depItem);
                 $this->chain[] = $depItem;
             } elseif ($depItem->getAction() == self::ACTION_UPGRADE) {
                 $version = $depItem->getNextVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
-                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(), $item, 2, $depItem);
+                    throw new ItemException("Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        $item, ItemException::ERROR_BAD_ITEM_VERSION, $depItem);
                 }
                 $this->_checkDependencies($depItem);
                 $this->chain[] = $depItem;
@@ -207,8 +222,11 @@ class Resolver
                     if ($depItem->isInstalled()) {
                         $choiceDepInstalled[] = $depItem;
                     }
-                    else {
+                    else if ($depItem->canBeInstalled() || !$this->allowToForceInstallDependencies) {
                         $choiceDepToInstall[] = $depItem;
+                    }
+                    else {
+                        $choiceMissing[] = $depItemName;
                     }
                 } elseif ($depItem->getAction() == self::ACTION_INSTALL) {
                     $version = $depItem->getCurrentVersion();
@@ -235,11 +253,13 @@ class Resolver
                 continue;
             }
             if (!count($choiceDepToInstall)) {
-                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are unknown or do not met version criterias. Install or upgrade one of them before installing it.', $item, 9, $choiceMissing);
+                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it.',
+                    $item, ItemException::ERROR_CHOICE_MISSING_ITEM, $choiceMissing);
             }
             if (count($choiceDepToInstall) > 1) {
                 $list = array_map(function($it) { return $it->getName(); }, $choiceDepToInstall);
-                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are ambiguities to choose them. Installed one of them before installing it.', $item, 10, $list);
+                throw new ItemException('Item '.$item->getName().' depends on alternative items but there are ambiguities to choose them. Installed one of them before installing it.',
+                    $item, ItemException::ERROR_CHOICE_AMBIGUOUS , $list);
             }
 
             $depItem = $choiceDepToInstall[0];
@@ -252,7 +272,8 @@ class Resolver
         unset($this->circularDependencyTracker[$item->getName()]);
 
         if ($missingItems) {
-            throw new ItemException('For item '.$item->getName().', some items are missing: '.implode(',', $missingItems), $item, 6, $missingItems);
+            throw new ItemException('For item '.$item->getName().', some items are missing: '.implode(',', $missingItems),
+                $item, ItemException::ERROR_DEPENDENCY_MISSING_ITEM, $missingItems);
         }
     }
 
@@ -267,7 +288,8 @@ class Resolver
     protected function _checkReverseDependencies(Item $item)
     {
         if (isset($this->circularReverseDependencyTracker[$item->getName()])) {
-            throw new ItemException('Circular reverse dependency! Cannot process the item '.$item->getName(), $item, 4);
+            throw new ItemException('Circular reverse dependency! Cannot process the item '.$item->getName(),
+                $item, ItemException::ERROR_REVERSE_CIRCULAR_DEPENDENCY);
         }
 
         $this->circularReverseDependencyTracker[$item->getName()] = true;
@@ -292,7 +314,8 @@ class Resolver
 
 
             if ($revdepItem->getAction() == self::ACTION_INSTALL || $revdepItem->getAction() == self::ACTION_UPGRADE) {
-                throw new ItemException('Item '.$revdepItemName.' should be removed because of the removal of one of its dependencies, '.$item->getName().', but it asked to be install/upgrade at the same time', $item, 5, $revdepItem);
+                throw new ItemException('Item '.$revdepItemName.' should be removed because of the removal of one of its dependencies, '.$item->getName().', but it asked to be install/upgrade at the same time',
+                    $item, ItemException::ERROR_ITEM_TO_INSTALL_SHOULD_BE_REMOVED, $revdepItem);
             }
 
             if (isset($this->checkedItems[$revdepItemName])) {

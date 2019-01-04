@@ -21,6 +21,20 @@ class jDaoImportTest extends jUnitTestCase {
         $this->assertInstanceOf('postDaoRecord', $trackerPost);
         $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
         $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
+
+        $postDao = jDao::create('jelix_tests~posts');
+        $blogPostDao = jDao::create('jelix_tests~post_blog');
+        $trackerPostDao = jDao::create('jelix_tests~post_tracker');
+
+        $post = $postDao->createRecord();
+        $blogPost = $blogPostDao->createRecord();
+        $trackerPost = $trackerPostDao->createRecord();
+
+        $this->assertInstanceOf('postDaoRecord', $post);
+        $this->assertInstanceOf('postDaoRecord', $blogPost);
+        $this->assertInstanceOf('postDaoRecord', $trackerPost);
+        $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
+        $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
     }
     
     public function testImportedEvents() {

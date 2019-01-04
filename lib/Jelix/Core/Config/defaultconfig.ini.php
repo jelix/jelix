@@ -44,17 +44,15 @@ chmodDir=0775
 ; disable all installers and the installer.ini.php
 ; useful only if you manage the installation of modules by hands (not recommanded)
 disableInstallers=off
-; if set to on, all modules have an access=2, and access values in [modules] are not readed (not recommanded)
+; if set to on, all modules are enabled (not recommanded)
 enableAllModules=off
 
 [modules]
-; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
-
-jelix.access=2
+jelix.enabled=off
 jelix.path="lib:jelix/core-modules/jelix"
 
 ; jacldb is deprecated. keep it uninstall if possible
-jacldb.access=0
+jacldb.enabled=off
 
 
 [coordplugins]
@@ -193,6 +191,7 @@ jqueryPath="jelix/jquery/"
 notfoundAct="jelix~error:notfound"
 
 significantFile=urls.xml
+localSignificantFile=localurls.xml
 
 ; filled automatically by jelix
 urlScript=
@@ -270,6 +269,10 @@ filesDir="mails/"
 
 ; if mailer = smtp , fill the following parameters
 
+; the profile in profiles.ini.php where all smtp* parameters are stored
+smtpProfile=mailer
+
+; following smtp* parameters are deprecated. They should be into the smtp profile.
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
 smtpHost=localhost
 ; default SMTP server port

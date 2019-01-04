@@ -12,11 +12,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 abstract class AbstractCommand extends Command
 {
     /**
-     * @var Jelix\DevHelper\CommandConfig
+     * @var CommandConfig
      */
     protected $config;
 
@@ -39,6 +40,7 @@ abstract class AbstractCommand extends Command
             $this->isVerbose = true;
         }
         $this->output = $output;
+        $this->setUpOutput($output);
     }
 
     protected function verbose()
@@ -164,20 +166,12 @@ abstract class AbstractCommand extends Command
         }
     }
 
-    /**
-     * Fix version for non built lib.
-     */
-    protected function fixVersion($version)
-    {
-        switch ($version) {
-            case '__LIB_VERSION_MAX__':
-                return \Jelix\Core\Framework::versionMax();
-            case '__LIB_VERSION__':
-                return \Jelix\Core\Framework::version();
-            case '__VERSION__':
-                return \Jelix\Core\App::version();
-        }
+    protected function setUpOutput(OutputInterface $output) {
+        $outputStyle = new OutputFormatterStyle('cyan', 'default');
+        $output->getFormatter()->setStyle('question', $outputStyle);
 
-        return trim($version);
+        $outputStyle = new OutputFormatterStyle('yellow', 'default', array('bold'));
+        $output->getFormatter()->setStyle('inputstart', $outputStyle);
+
     }
 }

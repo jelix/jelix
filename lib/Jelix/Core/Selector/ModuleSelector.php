@@ -89,10 +89,10 @@ abstract class ModuleSelector implements SelectorInterface {
 
     protected function _createPath(){
 
-        if (!isset(App::config()->_modulesPathList[$this->module])) {
+        if (!App::isModuleEnabled($this->module)) {
             throw new Exception('jelix~errors.selector.module.unknown', $this->toString(true));
         }
-        $this->_path = App::config()->_modulesPathList[$this->module].$this->_dirname.$this->resource.$this->_suffix;
+        $this->_path = App::getModulePath($this->module).$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable ($this->_path)) {
             if ($this->type == 'loc') {
                 throw new \Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');

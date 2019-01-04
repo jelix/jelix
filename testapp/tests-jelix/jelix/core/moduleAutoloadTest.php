@@ -50,10 +50,12 @@ class moduleAutoloadTest extends jUnitTestCase
 
     function testNamespacePathMapSection() {
         $conf = jApp::config();
-        $this->assertEquals(2, count($conf->_autoload_namespacepsr4), '_autoload_namespacepsr4 should have 2 declaration ');
-        $this->assertTrue(isset($conf->_autoload_namespacepsr4['jelixTests\bar']), '_autoload_namespacepsr4 should declare jelixTests\bar namespace');
-        $this->assertEquals(array(self::$modulePath.'autoloadtest/barns|.class.php'), $conf->_autoload_namespacepsr4['jelixTests\bar'] , 'check path');
-        $this->assertTrue(isset($conf->_autoload_namespacepsr4['Jelix\Minify']), '_autoload_namespacepsr4 should declare Jelix\Minify namespace');
+        $this->assertEquals(4, count($conf->_autoload_namespacepsr4), '_autoload_namespacepathmap should have 4 declaration ');
+        $this->assertTrue(isset($conf->_autoload_namespacepsr4['jelixTests\bar']), '_autoload_namespacepathmap should declare jelixTests\bar namespace');
+        $this->assertEquals(self::$modulePath.'autoloadtest/barns|.class.php', $conf->_autoload_namespacepathmap['jelixTests\bar'] , 'check path');
+        $this->assertTrue(isset($conf->_autoload_namespacepsr4['Jelix\Minify']), '_autoload_namespacepathmap should declare Jelix\Minify namespace');
+        $this->assertTrue(isset($conf->_autoload_namespacepsr4['Jelix\Acl2Db']), '_autoload_namespacepathmap should declare Jelix\Minify namespace');
+        $this->assertTrue(isset($conf->_autoload_namespacepsr4['Jelix\JelixModule']), '_autoload_namespacepathmap should declare Jelix\JelixModule namespace');
     }
 
     function testIncludePathSection() {
@@ -62,6 +64,7 @@ class moduleAutoloadTest extends jUnitTestCase
         $this->assertTrue(isset($conf->_autoload_includepath['path']), '_autoload_includepath should have a path property');
         $this->assertEquals(1, count($conf->_autoload_includepath['path']), '_autoload_includepath[path] should have 1 declaration');
         $this->assertEquals(self::$modulePath.'autoloadtest/incpath|.php', $conf->_autoload_includepath['path'][0] , 'check path');
+
     }
 
 

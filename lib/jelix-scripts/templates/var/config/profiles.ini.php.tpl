@@ -3,18 +3,19 @@
 
 [jdb]
 ; name of the default profile to use for any connection
-default = "%%appname%%"
+default="%%appname%%"
 
 [jdb:%%appname%%]
 ; the driver name : mysql, pgsql, sqlite3...
-driver="mysql"
+driver=sqlite3
 
 ; For most of drivers:
-database="jelix"
-host= "localhost"
-user= "root"
-password=
-persistent= on
+database="appdb.sqlite"
+
+;host="localhost"
+;user="root"
+;password=
+persistent=on
 
 ; when you have charset issues, enable force_encoding so the connection will be
 ; made with the charset indicated in jelix config
@@ -70,6 +71,22 @@ host = "localhost:11211"
 ;----------------- jKVDb for jPref
 [jkvdb:jpref]
 ;driver = 
+
+
+[smtp]
+
+;------------------ for jMailer
+[smtp:mailer]
+host=localhost
+port=25
+; "", "ssl" or"tls"
+secure_protocol=
+helo=
+auth_enabled=off
+username=
+password=
+timeout=10
+
 
 
 ;----------------- jSoapClient

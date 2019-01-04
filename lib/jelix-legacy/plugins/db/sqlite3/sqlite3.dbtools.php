@@ -155,7 +155,7 @@ class sqlite3DbTools extends jDbTools {
         // mysql -> time
         'current_time' => 'time(\'now\', \'localtime\')',
         // mysql,pgsql -> date+time
-        'now' => 'date(\'now\', \'localtime\')',
+        'now' => 'datetime(\'now\', \'localtime\')',
         // mysql date+time
         'current_timestamp' => 'date(\'now\', \'localtime\')',
         // mysql (datetime)->date, sqlite (timestring, modifier)->date

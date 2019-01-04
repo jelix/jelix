@@ -2,11 +2,12 @@ cd testapp
   project.xml
   .htaccess
   application.init.php
-  cmd.php
+  console.php
+  dev.php
   composer.json
   README.md
 
-cd testapp/app/config
+cd testapp/app/system
   auth.coord.ini.php
   auth_class.coord.ini.php
   auth_ldap.coord.ini.php.dist
@@ -18,19 +19,19 @@ cd testapp/app/config
   urls.xml
   urls_rest.xml
 
-cd testapp/app/config/index
+cd testapp/app/system/index
   config.ini.php
-cd testapp/app/config/rest
+cd testapp/app/system/rest
   config.ini.php
-cd testapp/app/config/xmlrpc
+cd testapp/app/system/xmlrpc
   config.ini.php
-cd testapp/app/config/jsonrpc
+cd testapp/app/system/jsonrpc
   config.ini.php
-cd testapp/app/config/cmdline
+cd testapp/app/system/cmdline
   config.ini.php
-cd testapp/app/config/soap
+cd testapp/app/system/soap
   config.ini.php
-cd testapp/app/config/urlsfiles
+cd testapp/app/system/urlsfiles
   __ALL__
 cd testapp/app/themes/
   __ALL_RECURSIVELY__
@@ -82,7 +83,7 @@ cd testapp/modules/testinstall1
 cd testapp/modules/testinstall2
   __ALL_RECURSIVELY__
 cd testapp/modules/testinstall3
-   module.xml
+   __ALL_RECURSIVELY__
 
 cd testapp/modules/articles
   __ALL_RECURSIVELY__
@@ -136,7 +137,7 @@ cd testapp/tests-jelix/jelix/routing/
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/app/config
+cd testapp/tests-jelix/jelix/routing/app1/app/system
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
   __ALL__
@@ -148,7 +149,7 @@ cd testapp/tests-jelix/jelix/routing/app1/temp
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/www
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/app/config/index
+cd testapp/tests-jelix/jelix/routing/app1/app/system/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
   __ALL__

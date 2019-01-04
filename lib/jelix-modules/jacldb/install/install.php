@@ -10,27 +10,15 @@
 */
 
 
-class jacldbModuleInstaller extends jInstallerModule2 {
+class jacldbModuleInstaller extends \Jelix\Installer\Module\Installer {
 
     protected $defaultDbProfile = 'jacl_profile';
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
-        if ($entryPoint->isCliScript())
-            return;
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
-        if (!$this->firstDbExec())
-            return;
-
-
-        $this->declareDbProfile('jacl_profile', null, false);
-        $config = $entryPoint->getConfigIni();
-        $driver = $config->getValue('driver','acl');
-        if ($driver != 'db') {
-            $config->setValue('driver', 'db', 'acl');
-        }
-        $this->execSQLScript('install_jacl.schema');
+        $helpers->database()->execSQLScript('install_jacl.schema');
         try {
-            $this->execSQLScript('install_jacl.data');
+            $helpers->database()->execSQLScript('install_jacl.data');
         }
         catch (Exception $e) {
         }

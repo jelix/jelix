@@ -27,6 +27,7 @@ namespace Jelix\Core;
  * @method static pushCurrentModule($module)
  * @method static popCurrentModule()
  * @method static getCurrentModule()
+ * @method static getEnabledModulesPaths()
  */
 
 class App {
@@ -46,7 +47,7 @@ class App {
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath var config directory
-     * @param string $scriptPath scripts directory
+     * @param string $scriptPath scripts directory (deprecated)
      */
     public static function initPaths($appPath,
                                      $wwwPath = null,
@@ -94,9 +95,19 @@ class App {
         return self::$_currentApp->appPath.$file;
     }
 
+    /**
+     * @deprecated
+     * @param string $file
+     * @return string
+     */
     public static function appConfigPath($file = '')
     {
-        return self::$_currentApp->appPath.'app/config/'.$file;
+        return self::appSystemPath($file);
+    }
+
+    public static function appSystemPath($file = '')
+    {
+        return self::$_currentApp->appPath.'app/system/'.$file;
     }
 
     public static function varPath($file = '')
@@ -126,6 +137,11 @@ class App {
         return self::$_currentApp->wwwPath.$file;
     }
 
+    /**
+     * @param string $file
+     * @return string
+     * @deprecated
+     */
     public static function scriptsPath($file = '')
     {
         return self::$_currentApp->scriptPath.$file;
@@ -217,12 +233,12 @@ class App {
             return self::$_mainConfigFile;
         }
 
-        $configFileName = self::$_currentApp->appPath.'app/config/mainconfig.ini.php';
+        $configFileName = self::$_currentApp->appPath.'app/system/mainconfig.ini.php';
         if (!file_exists($configFileName)) {
             if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
-                throw new \Exception("Don't find the app/config/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
+                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
             }
-            throw new \Exception("Don't find the app/config/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
+            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
         }
         self::$_mainConfigFile = $configFileName;
 

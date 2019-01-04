@@ -33,6 +33,7 @@ class jDaoDbMapper
     }
 
     /**
+     * Create a table from a jDao file
      *
      * @param string $selector the selector of the DAO file
      * @return jDbTable

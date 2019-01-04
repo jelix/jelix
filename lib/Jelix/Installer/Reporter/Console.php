@@ -1,14 +1,14 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2008-2014 Laurent Jouanneau
+* @copyright   2008-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer\Reporter;
 
 /**
- * simple text reporter
+ * reporter echoing simply the messages
  */
 class Console implements \Jelix\Installer\ReporterInterface {
     use \Jelix\Installer\ReporterTrait;

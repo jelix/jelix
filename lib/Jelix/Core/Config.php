@@ -20,6 +20,13 @@ class Config {
      */
     public static $fromCache = true;
 
+
+    const sectionsToIgnoreForEp = array(
+        'httpVersion', 'timeZone', 'domainName', 'forceHTTPPort', 'forceHTTPSPort',
+        'chmodFile', 'chmodDir', 'disableInstallers', 'enableAllModules',
+        'modules', '_coreResponses', 'compilation'
+    );
+
     /**
      * this is a static class, so private constructor
      */
@@ -56,7 +63,7 @@ class Config {
             $lvc = App::varConfigPath('liveconfig.ini.php');
 
             if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(App::appConfigPath($configFile))>$t
+                || filemtime(App::appSystemPath($configFile))>$t
                 || (file_exists($lc) && filemtime($lc)>$t)
                 || (file_exists($lvc) && filemtime($lvc)>$t)
             ){

@@ -82,7 +82,7 @@ class Includer {
     }
 
     /**
-     * include a cache file which is the results of the compilation of multiple file sotred in multiple modules
+     * include a cache file which is the results of the compilation of multiple file stored in multiple modules
     * @param    array    $aType
     *    = array(
     *    'compilator class name',

@@ -64,10 +64,10 @@ class ClassSelector extends ModuleSelector {
     }
 
     protected function _createPath(){
-        if (!isset(App::config()->_modulesPathList[$this->module])) {
+        if (!App::isModuleEnabled($this->module)) {
             throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
-        $this->_path = App::config()->_modulesPathList[$this->module].$this->_dirname.$this->subpath.$this->className.$this->_suffix;
+        $this->_path = App::getModulePath($this->module).$this->_dirname.$this->subpath.$this->className.$this->_suffix;
 
         if (!file_exists($this->_path) || strpos($this->subpath,'..') !== false ) { // second test for security issues
             throw new Exception('jelix~errors.selector.invalid.target', array($this->toString(), $this->type));

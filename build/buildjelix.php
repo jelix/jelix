@@ -101,7 +101,7 @@ $BUILD_OPTIONS = array(
     ),*/
 );
 
-require(__DIR__.'/../vendor/autoload.php');
+require(__DIR__.'/vendor/autoload.php');
 bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 
 //----------------- Prepare environment variables
