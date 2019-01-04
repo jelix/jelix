@@ -1,25 +1,25 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2009-2017 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2009-2018 Laurent Jouanneau
+ * @link        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 namespace Jelix\Installer;
 
-use Jelix\Routing\UrlMapping\XmlEntryPoint;
+
 use Jelix\IniFile\IniModifier;
+use \Jelix\IniFile\IniModifierReadOnly;
 
 /**
- * container for entry points properties
+ * container for entry points properties, for installers
  *
- * Object for legacy installers
- * @deprecated
+ * @since 1.7
  */
-class EntryPoint {
-
+class EntryPoint
+{
     /**
-     * @var StdObj   configuration parameters. compiled content of config files
+     * @var \StdClass   configuration parameters. compiled content of config files
      *  result of the merge of entry point config, localconfig.ini.php,
      *  mainconfig.ini.php and defaultconfig.ini.php
      */
@@ -27,31 +27,21 @@ class EntryPoint {
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/app/config/index/config.ini.php
+     *       ex: <apppath>/app/system/index/config.ini.php
      */
-    protected $configFile;
+    protected $configFileName;
 
     /**
-     * all original configuration files combined
-     * @var \Jelix\IniFile\IniModifierArray
+     * application entry point configuration
+     * * @var \Jelix\IniFile\IniModifier
      */
-    protected $configIni;
+    protected $appEpConfigIni;
 
     /**
-     * all local configuration files combined with original configuration file
-     * @var \Jelix\IniFile\IniModifierArray
+     * local entry point configuration
+     * @var \Jelix\IniFile\IniModifier
      */
-    protected $localConfigIni;
-
-    /** @var string entrypoint id of the entrypoint that have the same config */
-    protected $sameConfigAs = null;
-
-    /**
-     * the live configuration file combined with all other configuration files
-     * @var \Jelix\IniFile\IniModifierArray
-     */
-    protected $liveConfigIni;
-
+    protected $localEpConfigIni;
 
     /**
      * @var boolean true if the script corresponding to the configuration
@@ -74,10 +64,6 @@ class EntryPoint {
      */
     protected $type;
 
-    /**
-     * @var XmlEntryPoint
-     */
-    protected $urlMap;
 
     /**
      * @var GlobalSetup
@@ -85,288 +71,180 @@ class EntryPoint {
     protected $globalSetup;
 
     /**
-     * @var ModuleInstaller
+     * @var \jInstallerEntryPoint
      */
-    protected $moduleInstaller;
-
-    /**
-     * @var \Jelix\Core\Infos\ModuleInfos[]
-     */
-    protected $modulesInfos = array();
-
-    /**
-     * key is module name
-     * @var \Jelix\Installer\AbstractInstallLauncher[]
-     */
-    protected $moduleLaunchers = array();
-
-    /**
-     * @var \Jelix\Core\Infos\AppInfos
-     */
-    protected $appInfos;
-
+    public $legacyInstallerEntryPoint = null;
 
     /**
      * @param GlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
-     *                           to the app/config directory
+     *                           to the app/system directory
      * @param string $file the filename of the entry point
      * @param string $type type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
     function __construct(GlobalSetup $globalSetup,
-                         $configFile, $file, $type, $sameConfigAs = null)
+                         $configFile, $file, $type)
     {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
-        $this->configFile = $configFile;
+        $this->configFileName = $configFile;
         $this->scriptName = ($this->_isCliScript ? $file : '/' . $file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
-        $this->sameConfigAs = $sameConfigAs;
 
-        $appConfigPath = \Jelix\Core\App::appConfigPath($configFile);
-        if (!file_exists($appConfigPath)) {
-            \jFile::createDir(dirname($appConfigPath));
-            file_put_contents($appConfigPath, ';<'.'?php die(\'\');?'.'>');
+        $appSystemPath = \jApp::appSystemPath($configFile);
+        if (!file_exists($appSystemPath)) {
+            \jFile::createDir(dirname($appSystemPath));
+            file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
         }
-        $this->configIni = clone $globalSetup->getConfigIni();
-        $this->configIni['entrypoint'] = new IniModifier($appConfigPath);
+        $varConfigPath = \jApp::varConfigPath($configFile);
 
-        $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
-        $localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
-        $this->localConfigIni = clone $this->configIni;
-        $this->localConfigIni['local'] = $globalSetup->getLocalConfigIni()['local'];
-        $this->localConfigIni['localentrypoint'] = $localEpConfigIni;
+        $this->appEpConfigIni = new IniModifier($appSystemPath);
+        $this->localEpConfigIni = new IniModifier($varConfigPath, ';<' . '?php die(\'\');?' . '>');
 
-        $this->liveConfigIni = clone $this->localConfigIni;
-        $this->liveConfigIni['live'] = $globalSetup->getLiveConfigIni()['live'];
+        $this->config = \jConfigCompiler::read($configFile, true,
+            $this->_isCliScript,
+            $this->scriptName);
 
-        $compiler = new \Jelix\Core\Config\Compiler($configFile,
-                                                    $this->scriptName,
-                                                    $this->_isCliScript);
-        $this->config = $compiler->read(true);
-        $this->modulesInfos = $compiler->getModulesInfos();
-
-        $this->urlMap = $globalSetup->getUrlModifier()
-            ->addEntryPoint($this->getEpId(), $type);
     }
 
     /**
-     * @param ModuleInstaller $installer
-     * @access private
+     * @return string the type of entry point
      */
-    public function _setCurrentModuleInstaller(ModuleInstaller $installer)
+    public function getType()
     {
-        $this->moduleInstaller = $installer;
-    }
-
-    public function getUrlMap() {
-        return $this->urlMap;
-    }
-
-    public function isCliScript() {
-        return $this->_isCliScript;
-    }
-
-    public function getScriptName() {
-        return $this->scriptName;
-    }
-
-    public function getFileName() {
-        return $this->file;
-    }
-
-    public function getType() {
         return $this->type;
     }
 
-    public function usesSameConfigOfOtherEntryPoint() {
-        return $this->sameConfigAs;
+    /**
+     * @return string the url path of the entry point
+     */
+    public function getScriptName()
+    {
+        return $this->scriptName;
     }
 
     /**
-     * @param \Jelix\Core\Infos\AppInfos $app
+     * @return string the filename of the entry point
      */
-    public function setAppInfos(\Jelix\Core\Infos\AppInfos $app) {
-        $this->appInfos = $app;
+    public function getFileName()
+    {
+        return $this->file;
     }
 
     /**
-     * @return \Jelix\Core\Infos\AppInfos
+     * @return bool
      */
-    public function getAppInfos() {
-        return $this->appInfos;
+    public function isCliScript()
+    {
+        return $this->_isCliScript;
     }
+
 
     /**
      * @return string the entry point id
      */
-    function getEpId() {
+    function getEpId()
+    {
         return $this->config->urlengine['urlScriptId'];
     }
 
     /**
-     * @return array the list of modules and their path, as stored in the
-     * compiled configuration file
+     * @return array[string] the list of all available modules (installed or not)
+     * and their path, as stored in the compiled configuration file
      */
-    function getModulesList() {
+    function getModulesList()
+    {
         return $this->config->_allModulesPathList;
     }
 
-    /**
-     * @return ModuleStatus informations about a specific module used
-     * by the entry point
-     */
-    function getModuleStatus($moduleName)
-    {
-        return new ModuleStatus($moduleName, $this->config->modules);
-    }
 
     /**
-     * the full original configuration of the entry point
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *
-     * @return \Jelix\IniFile\IniModifierArray
+     * @return \Jelix\IniFile\IniModifierArray list of ini content of the
+     *     configuration, and local configuration in the context of local installation
      */
-    function getConfigIni()
-    {
-        return $this->configIni;
+    public function getConfigIni() {
+
+        if ($this->globalSetup->isReadWriteConfigMode()) {
+            $appCf = $this->appEpConfigIni;
+        }
+        else {
+            $appCf = new IniModifierReadOnly($this->appEpConfigIni);
+        }
+
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $ini = $this->globalSetup->getSystemConfigIni(true);
+            $ini['entrypoint'] = $appCf;
+            $ini['local'] = $this->globalSetup->getLocalConfigIni();
+            if ($this->globalSetup->isReadWriteConfigMode()) {
+                $ini['localentrypoint'] = $this->localEpConfigIni;
+            }
+            else {
+                $ini['localentrypoint'] = new IniModifierReadOnly($this->localEpConfigIni);
+            }
+            return $ini;
+        }
+        $ini = $this->globalSetup->getSystemConfigIni();
+        $ini['entrypoint'] = $appCf;
+        return $ini;
     }
 
-    /*
-     * the local entry point config (in var/config) combined with the original configuration
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *  - "local" => localconfig.ini.php
-     *  - "localentrypoint" => var/config/$entrypointConfigFile
-     *
-     * @return \Jelix\IniFile\IniModifierArray
+    /**
+     * @return IniModifier|IniModifierReadOnly ini content of the main configuration
+     *   of the entry point, or its local configuration
      */
-    function getLocalConfigIni()
-    {
-        return $this->localConfigIni;
-    }
+    public function getSingleConfigIni() {
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $ini = $this->localEpConfigIni;
+        }
+        else {
+            $ini = $this->appEpConfigIni;
+        }
 
-    /*
-     * the live config combined with other configuration files
-     *
-     * combination of
-     *  - "default" => defaultconfig.ini.php
-     *  - "main" => mainconfig.ini.php
-     *  - "entrypoint" => app/config/$entrypointConfigFile
-     *  - "local" => localconfig.ini.php
-     *  - "localentrypoint" => var/config/$entrypointConfigFile
-     *  - "live" => var/config/liveconfig.ini.php
-     * @return \Jelix\IniFile\IniModifierArray
-     */
-    function getLiveConfigIni()
-    {
-        return $this->liveConfigIni;
+        if ($this->globalSetup->isReadWriteConfigMode()) {
+            return $ini;
+        }
+        else {
+            return new IniModifierReadOnly($ini);
+        }
     }
 
     /**
      * @return string the config file name of the entry point
      */
-    function getConfigFile()
+    function getConfigFileName()
     {
-        return $this->configFile;
+        return $this->configFileName;
     }
 
     /**
-     * @return stdObj the config content of the entry point, as seen when
-     * calling App::config()
+     * @return \StdClass the config content of the entry point, as seen when
+     * calling jApp::config()
      */
-    function getConfigObj() {
+    function getConfigObj()
+    {
         return $this->config;
     }
 
-    function setConfigObj($config) {
+    /**
+     * @param \StdClass $config
+     */
+    function setConfigObj($config)
+    {
         $this->config = $config;
     }
 
-    /**
-     * @param callable $launcherGetter
-     * @internal
-     */
-    function createInstallLaunchers(callable $launcherGetter) {
-        $this->moduleLaunchers = array();
-        $epId = $this->getEpId();
-
-        // now let's read all modules properties
-        foreach ($this->config->_allModulesPathList as $name=>$path) {
-            $moduleStatus = new \Jelix\Installer\ModuleStatus($name, $this->config->modules);
-            $moduleInfos = $this->modulesInfos[$name];
-
-            $launcher = $this->moduleLaunchers[$name] = $launcherGetter($moduleStatus, $moduleInfos);
-            $launcher->addModuleStatus($epId, $moduleStatus);
-        }
-    }
 
     /**
-     * @return AbstractInstallLauncher[]
-     */
-    function getLaunchers() {
-        return $this->moduleLaunchers;
-    }
-
-    /**
-     * @return \Jelix\Installer\AbstractInstallLauncher
-     */
-    function getLauncher($moduleName) {
-        if(!isset($this->moduleLaunchers[$moduleName])) {
-            return null;
-        }
-        return $this->moduleLaunchers[$moduleName];
-    }
-
-    /**
-     * Declare web assets into the entry point config
-     * @param string $name the name of webassets
-     * @param array $values should be an array with one or more of these keys 'css' (array), 'js'  (array), 'require' (string)
-     * @param string $collection the name of the webassets collection
-     * @param bool $force
-     */
-    public function declareWebAssets($name, array $values, $collection, $force)
-    {
-        $this->globalSetup->declareWebAssetsInConfig($this->configIni['entrypoint'], $name, $values, $collection, $force);
-    }
-
-    /**
+     * return the section name of configuration of a plugin for the coordinator
+     * or the IniModifier for the configuration file of the plugin if it exists.
      *
+     * @param string $pluginName
+     * @return array|null null if plugin is unknown, else array($iniModifier, $section)
+     * @throws \Exception when the configuration filename is not found
      */
-    public function firstConfExec()
+    public function getCoordPluginConfig($pluginName)
     {
-        $config = $this->getConfigFile();
-        return $this->moduleInstaller->firstExec('cf:' . $config);
-    }
-
-    /**
-     * import a sql script into the current profile.
-     *
-     * The name of the script should be store in install/$name.databasetype.sql
-     * in the directory of the component. (replace databasetype by mysql, pgsql etc.)
-     * You can however provide a script compatible with all databases, but then
-     * you should indicate the full name of the script, with a .sql extension.
-     *
-     * @param string $name the name of the script
-     * @param string $module the module from which we should take the sql file.
-     * @param boolean $inTransaction indicate if queries should be executed inside a transaction
-     * @throws Exception
-     */
-    public function execSQLScript($name, $module, $inTransaction = true)
-    {
-        $conf = $this->getConfigObj()->_modulesPathList;
-        if (!isset($conf[$module])) {
-            throw new Exception('execSQLScript : invalid module name');
-        }
-        $path = $conf[$module];
-        $this->moduleInstaller->_execSQLScript($name, $path, $inTransaction);
+        return $this->globalSetup->getCoordPluginConf($this->getConfigIni(), $pluginName);
     }
 }

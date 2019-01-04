@@ -1,21 +1,20 @@
 <?php
 /**
-* check a jelix installation
-*
-* @author   Laurent Jouanneau
-* @contributor Bastien Jaillot
-* @contributor Olivier Demah, Brice Tence, Julien Issler
-* @copyright 2007-2014 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
-* @link     http://www.jelix.org
-* @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since 1.0b2
-*/
+ * check a jelix installation
+ *
+ * @author   Laurent Jouanneau
+ * @contributor Bastien Jaillot
+ * @contributor Olivier Demah, Brice Tence, Julien Issler
+ * @copyright 2007-2018 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
+ * @link     http://www.jelix.org
+ * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ * @since 1.7
+ */
 namespace Jelix\Installer\Checker;
-use \Jelix\Core\App as App;
 
 /**
  * check an installation of a jelix application
- * @since 1.0b2
+ * @since 1.7
  */
 class Checker extends CheckerBase {
 
@@ -26,48 +25,48 @@ class Checker extends CheckerBase {
 
     function checkAppPaths(){
         $ok = true;
-        if(!defined('JELIX_LIB_PATH') || !App::isInit()){
+        if(!defined('JELIX_LIB_PATH') || !\jApp::isInit()){
             throw new \Exception($this->messages->get('path.core'));
         }
 
-        if(!file_exists(App::tempBasePath()) || !is_writable(App::tempBasePath())){
+        if(!file_exists(\jApp::tempBasePath()) || !is_writable(\jApp::tempBasePath())){
             $this->error('path.temp');
             $ok=false;
         }
-        if(!file_exists(App::logPath()) || !is_writable(App::logPath())){
+        if(!file_exists(\jApp::logPath()) || !is_writable(\jApp::logPath())){
             $this->error('path.log');
             $ok=false;
         }
-        if(!file_exists(App::varPath())){
+        if(!file_exists(\jApp::varPath())){
             $this->error('path.var');
             $ok=false;
         }
-        if(!file_exists(App::appConfigPath())){
+        if(!file_exists(\jApp::appSystemPath())){
             $this->error('path.config');
             $ok=false;
         }
-        if(!file_exists(App::varConfigPath())){
+        if(!file_exists(\jApp::varConfigPath())){
             $this->error('path.config');
             $ok=false;
         }
         elseif ($this->checkForInstallation) {
-            if (!is_writable(App::varConfigPath())) {
+            if (!is_writable(\jApp::varConfigPath())) {
                 $this->error('path.config.writable');
                 $ok = false;
             }
-            if (file_exists(App::varConfigPath('profiles.ini.php'))
-                && !is_writable(App::varConfigPath('profiles.ini.php'))) {
+            if (file_exists(\jApp::varConfigPath('profiles.ini.php'))
+                && !is_writable(\jApp::varConfigPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(App::varConfigPath('installer.ini.php'))
-                && !is_writable(App::varConfigPath('installer.ini.php'))) {
+            if (file_exists(\jApp::varConfigPath('installer.ini.php'))
+                && !is_writable(\jApp::varConfigPath('installer.ini.php'))) {
                 $this->error('path.installer.writable');
                 $ok = false;
             }
         }
 
-        if(!file_exists(App::wwwPath())){
+        if(!file_exists(\jApp::wwwPath())){
             $this->error('path.www');
             $ok=false;
         }
@@ -82,9 +81,8 @@ class Checker extends CheckerBase {
                 $this->error('path.custom.writable', array($path));
                 $ok = false;
             }
-            else {
+            else
                 $this->ok('path.custom.ok', array($path));
-            }
         }
 
         if($ok)
@@ -96,28 +94,32 @@ class Checker extends CheckerBase {
     }
 
     protected function loadBuildFile() {
-        $composerFile = __DIR__.'/../composer.json';
+        // @deprecated
+        if (file_exists(JELIX_LIB_PATH.'BUILD')){
+            $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+            return;
+        }
+
+        $composerFile = __DIR__.'/../../../../../composer.json';
         if (!file_exists($composerFile)){
-            throw new \Exception($this->messages->get('build.not.found'));
+            $this->buildProperties['PHP_VERSION_TARGET'] = '7.0';
         } else {
             $content = json_decode(file_get_contents($composerFile));
             preg_match('/([0-9\.]+)/', $content->require->php, $m);
-            echo "version:".$m[1];
             $this->buildProperties['PHP_VERSION_TARGET'] = $m[1];
         }
     }
 
     protected function checkPhpSettings(){
-
         /*
-        if (file_exists(App::mainConfigFile())) {
-            $defaultconfig = parse_ini_file(App::mainConfigFile(), true);
+        if (file_exists(\jApp::mainConfigFile())) {
+            $defaultconfig = parse_ini_file(\jApp::mainConfigFile(), true);
         }
         else {
             $defaultconfig = array();
         }
-        if (file_exists(App::appConfigPath("index/config.ini.php"))) {
-            $indexconfig = parse_ini_file(App::appConfigPath("index/config.ini.php"), true);
+        if (file_exists(\jApp::appSystemPath("index/config.ini.php"))) {
+            $indexconfig = parse_ini_file(\jApp::appSystemPath("index/config.ini.php"), true);
         }
         else {
             $indexconfig = array();

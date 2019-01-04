@@ -1,7 +1,7 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2009-2014 Laurent Jouanneau
+* @copyright   2009-2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -11,6 +11,8 @@ namespace Jelix\Installer;
  * Installer Exception
  *
  * It handles installer messages.
+ *
+ * @since 1.7
  */
 class Exception extends \Exception {
 
@@ -38,7 +40,7 @@ class Exception extends \Exception {
 
     /**
      * getter for the locale parameters
-     * @return string
+     * @return string[]
      */
     public function getLocaleParameters(){
         return $this->localeParams;

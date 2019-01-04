@@ -1,12 +1,18 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2008-2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2008-2018 Laurent Jouanneau
+ * @link        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 namespace Jelix\Installer;
-use Jelix\Core\App as App;
+
+// load legacy interfaces and classes
+require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
+require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
+require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
+require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 
 use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
@@ -15,18 +21,18 @@ use \Jelix\Dependencies\ItemException;
 /**
  * main class for the installation
  *
- * It load all entry points configurations. Each configurations has its own
- * activated modules. jInstaller then construct a tree dependencies for these
+ * It loads all entry points configurations and all informations about activated
+ * modules. jInstaller then constructs a tree dependencies for these
  * activated modules, and launch their installation and the installation
  * of their dependencies.
  * An installation can be an initial installation, or just an upgrade
  * if the module is already installed.
+ *
  * @internal The object which drives the installation of a module
- * is an object which inherits from AbstractInstallLauncher.
+ * is an object \Jelix\Installer\ModuleInstallerLauncher.
  * This object calls load a file from the directory of the module. this
- * file should contain a class which should inherits from ModuleInstallLauncher.
- * This class should implements processes to install
- * the module.
+ * file should contain a class which should inherits from \Jelix\Installer\Module\Installer.
+ * this class should implements processes to install the module.
  */
 class Installer {
 
@@ -35,25 +41,6 @@ class Installer {
 
     /** value for the installation status of a component: "installed" status */
     const STATUS_INSTALLED = 1;
-
-    /**
-     * value for the access level of a component: "forbidden" level.
-     * a module which have this level won't be installed
-     */
-    const ACCESS_FORBIDDEN = 0;
-
-    /**
-     * value for the access level of a component: "private" level.
-     * a module which have this level won't be accessible directly
-     * from the web, but only from other modules
-     */
-    const ACCESS_PRIVATE = 1;
-
-    /**
-     * value for the access level of a component: "public" level.
-     * the module is accessible from the web
-     */
-    const ACCESS_PUBLIC = 2;
 
     /**
      * error code stored in a component: impossible to install
@@ -68,41 +55,19 @@ class Installer {
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
 
     /**
-     * error code stored in a component: 
+     * error code stored in a component:
      */
     const INSTALL_ERROR_CONFLICT = 3;
 
-    const FLAG_INSTALL_MODULE = 1;
-
-    const FLAG_UPGRADE_MODULE = 2;
-
-    const FLAG_REMOVE_MODULE = 4;
-
-    const FLAG_ALL = 7;
-
     /**
-     * list of entry point and their properties
-     * @var EntryPoint[]  keys are entry point id.
+     * the main entrypoint of the application
+     * @var \Jelix\Installer\EntryPoint
      */
-    protected $entryPoints = array();
-
-    /**
-     * list of entry point identifiant (provided by the configuration compiler).
-     * identifiant of the entry point is the path+filename of the entry point
-     * without the php extension
-     * @var array   key=entry point name, value=url id
-     */
-    protected $epId = array();
-
-    /**
-     * list of all modules of the application
-     * @var \Jelix\Installer\ModuleInstallLauncher[]   key=path of the module
-     */
-    protected $allModuleLaunchers = array();
+    protected $mainEntryPoint = null;
 
     /**
      * the object responsible of the results output
-     * @var \Jelix\Installer\ReporterInterface
+     * @var Reporter\ReporterInterface
      */
     protected $reporter;
 
@@ -120,421 +85,122 @@ class Installer {
     /**
      * initialize the installation
      *
-     * it reads configurations files of all entry points, and prepare object for
+     * GlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to install/upgrade modules.
-     * @param ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
+     *
+     * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
+     * @param GlobalSetup $globalSetup
      * @param string $lang  the language code for messages
      */
-    function __construct (ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
         $this->reporter = $reporter;
-        $this->messages = new Checker\Messages($lang);
+        $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
         if (!$globalSetup) {
             $globalSetup = new GlobalSetup();
         }
         $this->globalSetup = $globalSetup;
 
-        $appInfos = new \Jelix\Core\Infos\AppInfos();
-        $this->readEntryPointsData($appInfos);
-        $this->globalSetup->getInstallerIni()->save();
+        $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
+    }
+
+    static public function setModuleAsInstalled($moduleName, $initialVersion, $versionDate) {
+        $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        $install->setValue($moduleName.'.installed', 1, 'modules');
+        $install->setValue($moduleName.'.version', $initialVersion, 'modules');
+        $install->setValue($moduleName.'.version.date', $versionDate, 'modules');
+        $install->setValue($moduleName.'.firstversion', $initialVersion, 'modules');
+        $install->setValue($moduleName.'.firstversion.date', $versionDate, 'modules');
+        $install->save();
 
     }
 
     /**
-     * read the list of entrypoint from the project.xml file
-     * and read all modules data used by each entry point
-     * @param \Jelix\Core\Infos\AppInfos $appInfos
-     */
-    protected function readEntryPointsData(\Jelix\Core\Infos\AppInfos $appInfos) {
-
-        $configFileList = array();
-        $that = $this;
-        $installerIni = $this->globalSetup->getInstallerIni();
-
-        // read all entry points data
-        foreach ($appInfos->entrypoints as $file => $entrypoint) {
-
-            $configFile = $entrypoint['config'];
-            if (isset($entrypoint['type'])) {
-                $type = $entrypoint['type'];
-            }
-            else {
-                $type = "classic";
-            }
-
-            // we create an object corresponding to the entry point
-            $reuseSameConfig = isset($configFileList[$configFile])? $configFileList[$configFile]:null;
-            //$reuseSameConfig = $configFileList[$configFile]?? null;
-            $ep = $this->getEntryPointObject($configFile, $file, $type, $reuseSameConfig);
-            $ep->setAppInfos($appInfos);
-
-            $epId = $ep->getEpId();
-
-            $this->epId[$file] = $epId;
-            $this->entryPoints[$epId] = $ep;
-
-            // ignore entry point which have the same config file of an other one
-            if ($reuseSameConfig) {
-                continue;
-            }
-
-            $configFileList[$configFile] = $epId;
-
-            $ep->createInstallLaunchers(function ($moduleStatus, $moduleInfos)
-                                        use($that, $epId, $installerIni) {
-                $name = $moduleInfos->name;
-                $path = $moduleInfos->getPath();
-                $installerIni->setValue($name.'.installed', $moduleStatus->isInstalled, $epId);
-                $installerIni->setValue($name.'.version', $moduleStatus->version, $epId);
-                if (!isset($that->allModuleLaunchers[$path])) {
-                    $that->allModuleLaunchers[$path] = new ModuleInstallLauncher($moduleInfos, $that->globalSetup);
-                }
-                return $that->allModuleLaunchers[$path];
-            });
-
-
-            // remove informations about modules that don't exist anymore
-            $modulesList = $ep->getModulesList();
-            $modules = $installerIni->getValues($epId);
-            foreach($modules as $key=>$value) {
-                $l = explode('.', $key);
-                if (count($l)<=1) {
-                    continue;
-                }
-                if (!isset($modulesList[$l[0]])) {
-                    $installerIni->removeValue($key, $epId);
-                }
-            }
-        }
-    }
-
-    /**
-     * @internal for tests
-     * @return EntryPoint
-     */
-    protected function getEntryPointObject($configFile, $file, $type, $reuseSameConfig) {
-        return new EntryPoint($this->globalSetup, $configFile, $file, $type, $reuseSameConfig);
-    }
-
-    /**
-     * @param string $epId an entry point id
-     * @return EntryPoint the corresponding entry point object
-     */
-    public function getEntryPoint($epId) {
-        return $this->entryPoints[$epId];
-    }
-
-    /**
-     * @return ReporterInterface
-     */
-    function getReporter() {
-        return $this->reporter;
-    }
-
-    /**
-     * @return \Jelix\IniFile\IniModifier
-     */
-    function getInstallerIni() {
-        return $this->globalSetup->getInstallerIni();
-    }
-
-    /**
-     * change the module version in readed informations, to simulate an update
-     * when we call installApplication or an other method.
-     * internal use !!
-     * @param string $moduleName the name of the module
-     * @param string $version the new version
-     */
-    public function forceModuleVersion($moduleName, $version) {
-        foreach($this->entryPoints as $epId=>$ep) {
-            $launcher = $ep->getLauncher($moduleName);
-            if ($launcher) {
-               $launcher->setInstalledVersion($epId, $version);
-            }
-        }
-    }
-
-    /**
-     * set parameters for the installer of a module
-     * @param string $moduleName the name of the module
-     * @param array $parameters  parameters
-     * @param string $entrypoint  the entry point name for which parameters will be applied when installing the module.
-     *                     if null, parameters are valid for all entry points
-     */
-    public function setModuleParameters($moduleName, $parameters, $entrypoint = null) {
-        if ($entrypoint !== null) {
-            if (!isset($this->epId[$entrypoint])) {
-                throw new \Exception("Unknown entrypoint name");
-            }
-            $epId = $this->epId[$entrypoint];
-            if (!isset($this->entryPoints[$epId])) {
-                throw new \Exception("Unknown entrypoint name");
-            }
-
-            $launcher = $this->entryPoints[$epId]->getLauncher($moduleName);
-            if ($launcher) {
-               $launcher->setInstallParameters($epId, $parameters);
-            }
-        }
-        else {
-            foreach($this->entryPoints as $epId=>$ep) {
-               $launcher = $ep->getLauncher($moduleName);
-               if ($launcher) {
-                  $launcher->setInstallParameters($epId, $parameters);
-               }
-            }
-        }
-    }
-
-    /**
-     * install and upgrade if needed, all modules for each
-     * entry point. Only modules which have an access property > 0
-     * are installed. Errors appeared during the installation are passed
+     * install and upgrade if needed, all modules
+     *
+     * Only modules which are enabled are installed.
+     * Errors appearing during the installation are passed
      * to the reporter.
-     * @param int $flags flags indicating if we should install, and/or upgrade
-     *                   modules or only modify config files. internal use.
-     *                   see FLAG_* constants
+     *
      * @return boolean true if succeed, false if there are some errors
      */
-    public function installApplication($flags = false) {
-
-        if ($flags === false) {
-            $flags = self::FLAG_ALL;
-        }
+    public function installApplication() {
 
         $this->startMessage();
-
-        $modulesChainsEp = array();
-
-        foreach($this->entryPoints as $epId=>$ep) {
-            if ($ep->usesSameConfigOfOtherEntryPoint()) {
-               continue;
-            }
-            $resolver = new Resolver();
-            foreach($ep->getLaunchers() as $name => $module) {
-                $resolverItem = $module->getResolverItem($epId);
-                $resolver->addItem($resolverItem);
-            }
-            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
-        }
-
-        $result = $this->_installModules($modulesChainsEp, true, $flags);
-        if ($result) {
-            $this->completeInstallStatus();
-        }
-        $this->endMessage();
-        return $result;
-    }
-
-    protected function completeInstallStatus() {
-        $installerIni = $this->getInstallerIni();
-        foreach($this->entryPoints as $epId=>$ep) {
-            if ($ep->usesSameConfigOfOtherEntryPoint()) {
-                // let's copy the installation information of the other entry point
-                $values = $installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
-                $installerIni->setValues($values, $epId);
-                $this->ok('install.entrypoint.installed', $epId);
-            }
-        }
-    }
-    
-    /**
-     * install and upgrade if needed, all modules for the given
-     * entry point. Only modules which have an access property > 0
-     * are installed. Errors appeared during the installation are passed
-     * to the reporter.
-     * @param string $entrypoint the entrypoint name as it appears in project.xml
-     * @return bool true if succeed, false if there are some errors
-     * @throws Exception
-     */
-    public function installEntryPoint($entrypoint) {
-
-        $this->startMessage();
-
-        if (!isset($this->epId[$entrypoint])) {
-            throw new \Exception("unknown entry point");
-        }
-
-        $epId = $this->epId[$entrypoint];
-        $ep = $this->entrypoints[$epId];
-        if ($ep->usesSameConfigOfOtherEntryPoint()) {
-            $installerIni = $this->getInstallerIni();
-            // let's copy the installation information of the other entry point
-            $values = $installerIni->getValues($ep->usesSameConfigOfOtherEntryPoint());
-            $installerIni->setValues($values, $epId);
-            $installerIni->save();
-            $this->ok('install.entrypoint.installed', $epId);
-            $this->endMessage();
-            return true;
-        }
 
         $resolver = new Resolver();
-        foreach($ep->getLaunchers() as $name => $module) {
-            $resolverItem = $module->getResolverItem($epId);
+        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
             $resolver->addItem($resolverItem);
         }
-        $modulesChainsEp = array($epId => $this->resolveDependencies($resolver, $epId));
-        $result =  $this->_installModules($modulesChainsEp, true);
-        $this->endMessage();
-        return $result;
-    }
 
-    /**
-     * install given modules even if they don't have an access property > 0
-     * @param array $modulesList array of module names
-     * @param string $entrypoint  the entrypoint name as it appears in project.xml
-     *               or null if modules should be installed for all entry points
-     * @return boolean true if the installation is ok
-     */
-    public function installModules($modulesList, $entrypoint = null)
-    {
-        return $this->_singleModules(Resolver::ACTION_INSTALL, $modulesList, $entrypoint);
-    }
-
-    /**
-     * uninstall given modules
-     * @param array $modulesList array of module names
-     * @param string $entrypoint  the entrypoint name as it appears in project.xml
-     *               or null if modules should be uninstalled for all entry points
-     * @return boolean true if the uninstallation is ok
-     * @throws Exception
-     */
-    public function uninstallModules($modulesList, $entrypoint = null) {
-        return $this->_singleModules(Resolver::ACTION_REMOVE, $modulesList, $entrypoint );
-    }
-
-    protected function _singleModules($action, $modulesList, $entrypoint ) {
-        $this->startMessage();
-
-        if ($entrypoint == null) {
-            $entryPointList = $this->entryPoints;
-        }
-        else if (isset($this->epId[$entrypoint])) {
-            $entryPointList = array($this->entryPoints[$this->epId[$entrypoint]]);
-        }
-        else {
-            throw new \Exception("unknown entry point");
+        foreach($this->globalSetup->getGhostModuleComponents() as $name => $module) {
+            $resolverItem = $module->getResolverItem();
+            $resolver->addItem($resolverItem);
         }
 
-        $modulesChainsEp = array();
+        $modulesChains = $this->resolveDependencies($resolver);
 
-        foreach ($entryPointList as $epId=>$ep) {
-            if ($ep->usesSameConfigOfOtherEntryPoint()) {
-                continue;
-            }
-            $allModules = &$ep->getLaunchers();
-            $modules = array();
-            // check that all given modules are existing
-            $hasError = false;
-            foreach ($modulesList as $name) {
-                if (!isset($allModules[$name])) {
-                    $this->error('module.unknown', $name);
-                    $hasError = true;
-                }
-            }
-            if ($hasError) {
-                continue;
-            }
-
-            // get all modules
-            $resolver = new Resolver();
-            foreach($ep->getLaunchers() as $name => $module) {
-                $resolverItem = $module->getResolverItem($epId);
-                if (in_array($name, $modulesList)) {
-                    $resolverItem->setAction($action);
-                }
-                $resolver->addItem($resolverItem);
-            }
-            // install modules
-            $modulesChainsEp[$epId] = $this->resolveDependencies($resolver, $epId);
-        }
-        $result = $this->_installModules($modulesChainsEp, false);
-
-        $this->completeInstallStatus();
+        $result = $this->_installModules($modulesChains);
+        $this->globalSetup->getInstallerIni()->save();
         $this->endMessage();
         return $result;
     }
 
     /**
      * core of the installation
-     * @param Item[][] $entryPointModulesChains
-     * @param boolean $installWholeApp true if the installation is done during app installation
-     * @param integer $flags to know what to do
+     * @param Item[] $modulesChain
      * @return boolean true if the installation is ok
      */
-    protected function _installModules(&$entryPointModulesChains, $installWholeApp, $flags=7 ) {
-        $result = true;
+    protected function _installModules($modulesChain) {
 
-        foreach($entryPointModulesChains as $epId => $modulesChain) {
-            if ($modulesChain) {
-                $result = $result & $this->_installEntryPointModules($modulesChain, $epId, $installWholeApp, $flags);
-                $this->globalSetup->getInstallerIni()->save();
-                if (!$result) {
-                    break;
-                }
-            }
-            else {
-                break;
-            }
-        }
-        return $result;
-    }
+        $this->notice('install.start');
+        \jApp::setConfig($this->mainEntryPoint->getConfigObj());
 
-    /**
-     * installation for a specific entry point
-     * @param Item[] $moduleschain
-     * @param string $epId  the entrypoint id
-     * @param boolean $installWholeApp true if the installation is done during app installation
-     * @param integer $flags to know what to do
-     * @return boolean true if the installation is ok
-     */
-    protected function _installEntryPointModules(&$moduleschain, $epId, $installWholeApp, $flags=7) {
-
-        $this->notice('install.entrypoint.start', $epId);
-        $ep = $this->entryPoints[$epId];
-        App::setConfig($ep->getConfigObj());
-
-        if ($ep->getConfigObj()->disableInstallers) {
-            $this->notice('install.entrypoint.installers.disabled');
+        if ($this->mainEntryPoint->getConfigObj()->disableInstallers) {
+            $this->notice('install.installers.disabled');
         }
 
-        $componentsToInstall = $this->runPreInstallEntryPoint($moduleschain, $ep, $installWholeApp, $flags);
+        $this->globalSetup->setReadWriteConfigMode(false);
+        $componentsToInstall = $this->runPreInstall($modulesChain);
         if ($componentsToInstall === false) {
-            $this->warning('install.entrypoint.bad.end', $epId);
+            $this->warning('install.bad.end');
             return false;
         }
 
-        $installedModules = $this->runInstallEntryPoint($componentsToInstall, $ep, $epId, $flags);
+        $this->globalSetup->setReadWriteConfigMode(true);
+        $installedModules = $this->runInstall($componentsToInstall);
         if ($installedModules === false) {
-            $this->warning('install.entrypoint.bad.end', $epId);
+            $this->warning('install.bad.end');
             return false;
         }
 
-        $result = $this->runPostInstallEntryPoint($installedModules, $ep, $flags);
+        $result = $this->runPostInstall($installedModules);
         if (!$result) {
-            $this->warning('install.entrypoint.bad.end', $epId);
+            $this->warning('install.bad.end');
         }
         else {
-            $this->ok('install.entrypoint.end', $epId);
+            $this->ok('install.end');
         }
         return $result;
     }
 
-    protected function resolveDependencies(Resolver $resolver, $epId) {
+    protected function resolveDependencies(Resolver $resolver) {
 
         try {
-            $moduleschain = $resolver->getDependenciesChainForInstallation();
-        } catch(ItemException $e) {
+            $moduleschain = $resolver->getDependenciesChainForInstallation(false);
+        }
+        catch(ItemException $e) {
             $item = $e->getItem();
             $component = $item->getProperty('component');
 
             switch($e->getCode()) {
-                case 1:
-                case 4:
+                case ItemException::ERROR_CIRCULAR_DEPENDENCY:
+                case ItemException::ERROR_REVERSE_CIRCULAR_DEPENDENCY:
                     $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
                     $this->error('module.circular.dependency',$component->getName());
                     break;
-                case 2:
+                case ItemException::ERROR_BAD_ITEM_VERSION:
                     $depName = $e->getRelatedData()->getName();
                     $maxVersion = $minVersion = 0;
                     foreach($component->getDependencies() as $compInfo) {
@@ -545,42 +211,46 @@ class Installer {
                     }
                     $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
                     break;
-                case 3:
+                case ItemException::ERROR_REMOVED_ITEM_IS_NEEDED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.delete.dependency',array($depName, $component->getName()));
                     break;
-                case 5:
+                case ItemException::ERROR_ITEM_TO_INSTALL_SHOULD_BE_REMOVED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.install.dependency',array($depName, $component->getName()));
                     break;
-                case 6:
+                case ItemException::ERROR_DEPENDENCY_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 7:
+                case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 8:
+                case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 9:
+                case ItemException::ERROR_CHOICE_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.choice.unknown', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-                case 10:
+                case ItemException::ERROR_CHOICE_AMBIGUOUS:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                    $this->error('module.choice.ambigus', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.choice.ambiguous', array($component->getName(), implode(',',$e->getRelatedData())));
                     break;
-
+                case ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED:
+                    $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
+                    $depName = $e->getRelatedData()->getName();
+                    $this->error('module.dependency.error', array($depName, $component->getName()));
+                    break;
             }
 
-            $this->ok('install.entrypoint.bad.end', $epId);
+            $this->ok('install.bad.end');
             return false;
         } catch(\Exception $e) {
             $this->error('install.bad.dependencies');
-            $this->ok('install.entrypoint.bad.end', $epId);
+            $this->ok('install.bad.end');
             return false;
         }
 
@@ -588,72 +258,74 @@ class Installer {
         return $moduleschain;
     }
 
-
-    protected function runPreInstallEntryPoint(&$moduleschain, EntryPoint $ep, $installWholeApp, $flags) {
+    /**
+     * launch preInstall()/preUninstall() methods of  installers or upgraders
+     *
+     * @param \Jelix\Dependencies\Item[] $moduleschain
+     * @return array|bool
+     */
+    protected function runPreInstall(&$moduleschain) {
         $result = true;
-        // ----------- pre install
-        // put also available installers into $componentsToInstall for
+        // put available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
+        $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
+
+        $helpers = new Module\API\PreInstallHelpers($this->globalSetup);
+
         foreach($moduleschain as $resolverItem) {
+            /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
 
             try {
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
                 if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
-                    if ($ep->getConfigObj()->disableInstallers) {
+                    if ($installersDisabled) {
                         $installer = null;
                     } else {
-                        $installer = $component->getInstaller($ep, $installWholeApp);
+                        $installer = $component->getInstaller();
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
-                    if ($flags & self::FLAG_INSTALL_MODULE && $installer) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->preInstall();
                         }
                         else {
-                            $installer->preInstallEntryPoint($ep);
+                            $installer->preInstall($helpers);
                         }
                     }
                 }
                 elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
-                    if ($ep->getConfigObj()->disableInstallers) {
+                    if ($installersDisabled) {
                         $upgraders = array();
                     }
                     else {
-                        $upgraders = $component->getUpgraders($ep);
+                        $upgraders = $component->getUpgraders();
                     }
 
-                    if ($flags & self::FLAG_UPGRADE_MODULE && count($upgraders)) {
-                        foreach($upgraders as $upgrader) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
-                            if ($upgrader instanceof \jIInstallerComponent) {
-                                // legacy
-                                $upgrader->preInstall();
-                            }
-                            else {
-                                $upgrader->preInstallEntryPoint($ep);
-                            }
+                    foreach($upgraders as $upgrader) {
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->preInstall();
+                        }
+                        else {
+                            $upgrader->preInstall($helpers);
                         }
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
                 }
                 else if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
-                    if ($ep->getConfigObj()->disableInstallers) {
+                    if ($installersDisabled) {
                         $installer = null;
                     } else {
-                        $installer = $component->getInstaller($ep, $installWholeApp);
+                        $installer = $component->getUninstaller();
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
-                    if ($flags & self::FLAG_REMOVE_MODULE && $installer) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->preUninstall();
                         }
                         else {
-                            $installer->preUninstallEntryPoint($ep);
+                            $installer->preUninstall($helpers);
                         }
                     }
                 }
@@ -671,74 +343,84 @@ class Installer {
         return $componentsToInstall;
     }
 
-    protected function runInstallEntryPoint($componentsToInstall, EntryPoint $ep, $epId, $flags) {
+    /**
+     * Launch the install()/uninstall() method of installers or upgraders
+     * @param array $componentsToInstall
+     * @return array|bool
+     */
+    protected function runInstall($componentsToInstall) {
 
         $installedModules = array();
         $result = true;
         $installerIni = $this->globalSetup->getInstallerIni();
-        // -----  installation process
+
+        $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
+        $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
+
         try {
             foreach($componentsToInstall as $item) {
+                /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
+                /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                 if ($action == Resolver::ACTION_INSTALL) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->install();
                         }
                         else {
-                            $installer->installEntryPoint($ep);
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $installer->install($helpers);
                         }
                         $saveConfigIni = true;
                     }
 
                     $installerIni->setValue($component->getName().'.installed',
-                        1, $epId);
+                        1, 'modules');
                     $installerIni->setValue($component->getName().'.version',
-                        $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), 'modules');
                     $installerIni->setValue($component->getName().'.version.date',
-                        $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), 'modules');
                     $installerIni->setValue($component->getName().'.firstversion',
-                        $component->getSourceVersion(), $epId);
+                        $component->getSourceVersion(), 'modules');
                     $installerIni->setValue($component->getName().'.firstversion.date',
-                        $component->getSourceDate(), $epId);
+                        $component->getSourceDate(), 'modules');
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
                 elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
+                    /** @var \jInstallerModule|\Jelix\Installer\Module\Installer $upgrader */
                     foreach($installer as $upgrader) {
-                        if ($flags & self::FLAG_UPGRADE_MODULE) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
-                            if ($upgrader instanceof \jIInstallerComponent) {
-                                // legacy
-                                $upgrader->install();
-                            }
-                            else {
-                                $upgrader->installEntryPoint($ep);
-                            }
-                            $saveConfigIni = true;
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->install();
                         }
+                        else {
+                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $upgrader->install($helpers);
+                        }
+                        $saveConfigIni = true;
+
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
                         $installerIni->setValue($component->getName().'.version',
-                            $upgrader->version, $epId);
+                            $upgrader->getVersion(), 'modules');
                         $installerIni->setValue($component->getName().'.version.date',
-                            $upgrader->date, $epId);
+                            $upgrader->getDate(), 'modules');
                         $this->ok('install.module.upgraded',
-                            array($component->getName(), $upgrader->version));
-                        $lastversion = $upgrader->version;
+                            array($component->getName(), $upgrader->getVersion()));
+                        $lastversion = $upgrader->getVersion();
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
                         $installerIni->setValue($component->getName().'.version',
-                            $component->getSourceVersion(), $epId);
+                            $component->getSourceVersion(), 'modules');
                         $installerIni->setValue($component->getName().'.version.date',
-                            $component->getSourceDate(), $epId);
+                            $component->getSourceDate(), 'modules');
                         $this->ok('install.module.upgraded',
                             array($component->getName(), $component->getSourceVersion()));
                     }
@@ -746,44 +428,27 @@ class Installer {
 
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
-                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->uninstall();
                         }
                         else {
-                            $installer->uninstallEntryPoint($ep);
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $installer->uninstall($helpers);
                         }
                         $saveConfigIni = true;
                     }
-                    $installerIni->removeValue($component->getName().'.installed', $epId);
-                    $installerIni->removeValue($component->getName().'.version', $epId);
-                    $installerIni->removeValue($component->getName().'.version.date', $epId);
-                    $installerIni->removeValue($component->getName().'.firstversion', $epId);
-                    $installerIni->removeValue($component->getName().'.firstversion.date', $epId);
+                    $installerIni->removeValue($component->getName().'.installed', 'modules');
+                    $installerIni->removeValue($component->getName().'.version', 'modules');
+                    $installerIni->removeValue($component->getName().'.version.date', 'modules');
+                    $installerIni->removeValue($component->getName().'.firstversion', 'modules');
+                    $installerIni->removeValue($component->getName().'.firstversion.date', 'modules');
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
                 }
 
                 if ($saveConfigIni) {
-                    // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
-                    if ($ep->getLiveConfigIni()->isModified()) {
-                        //$ep->getLocalConfigIni()->save();
-                        $ep->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
-                        $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                            $ep->getScriptName(),
-                            $ep->isCliScript());
-                        $ep->setConfigObj($compiler->read(true));
-
-                        App::setConfig($ep->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
             }
         } catch (Exception $e) {
@@ -799,76 +464,68 @@ class Installer {
         return $installedModules;
     }
 
-    protected function runPostInstallEntryPoint($installedModules, EntryPoint $ep, $flags) {
+    /**
+     * Launch the postInstall()/postUninstall() method of installers or upgraders
+     *
+     * @param array $installedModules
+     * @return bool
+     */
+    protected function runPostInstall($installedModules) {
 
         $result = true;
-        // post install
+        $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
+        $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
+
         foreach($installedModules as $item) {
             try {
+                /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
+                /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller  $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
+                $this->globalSetup->setCurrentProcessedModule($component->getName());
+
                 if ($action == Resolver::ACTION_INSTALL) {
-                    if ($installer && ($flags & self::FLAG_INSTALL_MODULE)) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->postInstall();
                         }
                         else {
-                            $installer->postInstallEntryPoint($ep);
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $installer->postInstall($helpers);
                         }
-                        $component->installEntryPointFinished($ep);
+                        $component->installFinished();
                         $saveConfigIni = true;
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
-                    if ($flags & self::FLAG_UPGRADE_MODULE) {
-                        foreach ($installer as $upgrader) {
-                            $component->setAsCurrentModuleUpgrader($upgrader, $ep);
-                            if ($upgrader instanceof \jIInstallerComponent) {
-                                // legacy
-                                $upgrader->postInstall();
-                            }
-                            else {
-                                $upgrader->postInstallEntryPoint($ep);
-                            }
-                            $component->upgradeEntryPointFinished($ep, $upgrader);
-                            $saveConfigIni = true;
+                    foreach ($installer as $upgrader) {
+                        if ($upgrader instanceof \jInstallerModule) {
+                            $upgrader->postInstall();
                         }
+                        else {
+                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $upgrader->postInstall($helpers);
+                        }
+                        $component->upgradeFinished($upgrader);
+                        $saveConfigIni = true;
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
-                    if ($installer && ($flags & self::FLAG_REMOVE_MODULE)) {
-                        $component->setAsCurrentModuleInstaller($ep);
-                        if ($installer instanceof \jIInstallerComponent) {
-                            // legacy
+                    if ($installer) {
+                        if ($installer instanceof \jInstallerModule) {
                             $installer->postUninstall();
                         }
                         else {
-                            $installer->postUninstallEntryPoint($ep);
+                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $installer->postUninstall($helpers);
                         }
-                        $component->uninstallEntryPointFinished($ep);
+                        $component->uninstallFinished();
                         $saveConfigIni = true;
                     }
                 }
 
                 if ($saveConfigIni) {
-                    // we save the configuration at each module because its
-                    // installer may have modified it, and we want to save it
-                    // in case the next module installer fails.
-                    if ($ep->getLiveConfigIni()->isModified()) {
-                        //$ep->getLocalConfigIni()->save();
-                        $ep->getLiveConfigIni()->save();
-
-                        // we re-load configuration file for each module because
-                        // previous module installer could have modify it.
-                        $compiler =  new \Jelix\Core\Config\Compiler($ep->getConfigFile(),
-                            $ep->getScriptName(),
-                            $ep->isCliScript());
-                        $ep->setConfigObj($compiler->read(true));
-                        App::setConfig($ep->getConfigObj());
-                    }
-                    $this->globalSetup->getUrlModifier()->save();
+                    $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
             } catch (Exception $e) {
                 $result = false;
@@ -879,6 +536,32 @@ class Installer {
             }
         }
         return $result;
+    }
+
+
+    protected function saveConfigurationFiles(\Jelix\Installer\EntryPoint $entryPoint) {
+
+        // we save the configuration at each module because its
+        // installer may have modified it, and we want to save it
+        // in case the next module installer fails.
+        $fullConfig = $this->globalSetup->getFullConfigIni();
+        if ($fullConfig->isModified()) {
+            $fullConfig->save();
+
+            // we re-load configuration file for each module because
+            // previous module installer could have modify it.
+            $entryPoint->setConfigObj(
+                \jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                    $entryPoint->isCliScript(),
+                    $entryPoint->getScriptName()));
+            \jApp::setConfig($entryPoint->getConfigObj());
+        }
+
+        $profileIni = $this->globalSetup->getProfilesIni();
+        if ($profileIni->isModified()) {
+            $profileIni->save();
+            \jProfiles::clear();
+        }
     }
 
     protected function startMessage () {

@@ -1,17 +1,21 @@
 <?php
 /**
+* @package     jelix
+* @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2018 Laurent Jouanneau
+* @copyright   2018 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 namespace Jelix\Installer\Reporter;
 
+use Symfony\Component\Console\Output\OutputInterface;
+
 /**
- * reporter echoing simply the messages
+ * simple text reporter
  */
-class Console implements \Jelix\Installer\ReporterInterface {
-    use \Jelix\Installer\ReporterTrait;
+class Console implements ReporterInterface {
+    use ReporterTrait;
 
     /**
      * @var string error, notice or warning
@@ -20,14 +24,20 @@ class Console implements \Jelix\Installer\ReporterInterface {
 
     protected $title = '';
 
-    function __construct($level= 'notice', $title='Installation') {
+    /**
+     * @var OutputInterface
+     */
+    protected $output;
+
+    function __construct(OutputInterface $output, $level= 'notice', $title='Installation') {
        $this->level = $level;
        $this->title = $title;
+       $this->output = $output;
     }
-
+    
     function start() {
         if ($this->level == 'notice') {
-            echo $this->title." is starting\n";
+            $this->output->writeln($this->title." is starting");
         }
     }
 
@@ -38,10 +48,23 @@ class Console implements \Jelix\Installer\ReporterInterface {
      */
     function message($message, $type='') {
         $this->addMessageType($type);
-        if (($type == 'error' && $this->level != '')
+        if (
+            ($type == 'error' && $this->level != '')
             || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
-            || (($type == 'notice' || $type =='') && $this->level == 'notice'))
-        echo ($type != ''?'['.$type.'] ':'').$message."\n";
+            || (($type == 'notice' || $type =='') && $this->level == 'notice')
+        ) {
+            if ($type == 'error') {
+                $header = '[<error>'.$type.'</error>] ';
+            }
+            else if ($type == 'warning') {
+                $header = '[<fg=yellow>'.$type.'</>] ';
+            }
+            else {
+                $header = '';
+            }
+
+            $this->output->writeln($header.$message);
+        }
     }
 
     /**
@@ -49,7 +72,7 @@ class Console implements \Jelix\Installer\ReporterInterface {
      */
     function end() {
         if ($this->level == 'notice') {
-            echo $this->title." is finished\n";
+            $this->output->writeln($this->title." is finished");
         }
     }
 }

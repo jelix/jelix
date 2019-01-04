@@ -22,7 +22,7 @@ class CheckerPage {
         if (isset($_GET['verbose'])) {
             $check->verbose = true;
         }
-        $check->addDatabaseCheck(array('mysqli', 'sqlite3', 'pgsql', 'oci', 'mssql'), false);
+        $check->addDatabaseCheck(array('mysqli', 'sqlite3', 'pgsql', 'oci', 'mssql', 'sqlsrv'), false);
         header("Content-type:text/html;charset=UTF-8");
 ?>
 

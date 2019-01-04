@@ -1,36 +1,31 @@
 <?php
 /**
-* check a jelix installation
-*
-* @package  jelix
-* @subpackage installer
-* @author   Laurent Jouanneau
-* @contributor Bastien Jaillot
-* @contributor Olivier Demah, Brice Tence, Julien Issler
-* @copyright 2007-2014 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
-* @link     http://www.jelix.org
-* @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since 1.0b2
-*/
-namespace Jelix\Installer\Checker {
-// enclose namespace here because this file is inserted into jelix_check_server.php by a build tool
+ * check a jelix installation
+ *
+ * @author   Laurent Jouanneau
+ * @contributor Bastien Jaillot
+ * @contributor Olivier Demah, Brice Tence, Julien Issler
+ * @copyright 2007-2018 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
+ * @link     http://www.jelix.org
+ * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ * @since 1.0b2
+ */
+namespace Jelix\Installer\Checker;
 
 /**
  * base class for a jelix installation checker
- * @package  jelix
- * @subpackage installer
  * @since 1.7
  */
 class CheckerBase {
 
     /**
      * the object responsible of the results output
-     * @var \Jelix\Installer\ReporterInterface
+     * @var \Jelix\Installer\Reporter\ReporterInterface
      */
     protected $reporter;
 
     /**
-     * @var \Jelix\SimpleLocalization\Container
+     * @var \Jelix\Installer\Checker\Messages
      */
     public $messages;
 
@@ -43,10 +38,18 @@ class CheckerBase {
     /**
      *
      */
-    function __construct (\Jelix\Installer\ReporterInterface $reporter,
-                          \Jelix\SimpleLocalization\Container $messages){
+    function __construct (\Jelix\Installer\Reporter\ReporterInterface $reporter,
+                          $lang='en'){
         $this->reporter = $reporter;
-        $this->messages = $messages;
+        if (is_string($lang)) {
+            $this->messages = new Messages($lang);
+        }
+        else if ($lang instanceof Messages) {
+            $this->messages = $lang;
+        }
+        else {
+            throw new \Exception('Error checker: No message provider');
+        }
     }
 
     protected $otherExtensions = array();
@@ -84,7 +87,7 @@ class CheckerBase {
             $this->_otherCheck();
             $this->checkPhpExtensions();
             $this->checkPhpSettings();
-        }catch(Exception $e){
+        }catch(\Exception $e){
             $this->error('cannot.continue',$e->getMessage());
         }
         $this->reporter->end();
@@ -138,7 +141,7 @@ class CheckerBase {
         }
 
         if (count($this->databases)) {
-            $driversInfos = jDbParameters::getDriversInfosList();
+            $driversInfos = \jDbParameters::getDriversInfosList();
             $okdb = false;
 
             array_combine($this->databases, array_fill(0, count($this->databases), false));
@@ -206,6 +209,7 @@ class CheckerBase {
                     $this->notice('extension.database.missing2');
                 }
             }
+
         }
 
         foreach($this->otherExtensions as $name=>$required){
@@ -233,6 +237,7 @@ class CheckerBase {
 
     protected function checkPhpSettings(){
         $ok = true;
+
         if(ini_get('magic_quotes_gpc') == 1){
             $this->error('ini.magic_quotes_gpc');
             $ok=false;
@@ -268,4 +273,3 @@ class CheckerBase {
     }
 }
 
-}// end of namespace

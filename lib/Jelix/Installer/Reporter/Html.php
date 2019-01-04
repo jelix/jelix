@@ -1,19 +1,17 @@
 <?php
 /**
 * @author      Laurent Jouanneau
-* @copyright   2007-2015 Laurent Jouanneau
+* @copyright   2007-2018 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-namespace Jelix\Installer\Reporter {
-// enclose namespace here because this file is inserted into jelix_check_server.php by a build tool
-
+namespace Jelix\Installer\Reporter;
 
 /**
  * an HTML reporter
  */
-class Html implements \Jelix\Installer\ReporterInterface {
-    use \Jelix\Installer\ReporterTrait;
+class Html implements ReporterInterface {
+    use ReporterTrait;
 
     /**
      * @var \Jelix\SimpleLocalization\Container
@@ -63,5 +61,3 @@ class Html implements \Jelix\Installer\ReporterInterface {
         echo "</div>";
     }
 }
-
-}// end of namespace
