@@ -1,7 +1,7 @@
 <?php
 /**
 * @author     Laurent Jouanneau
-* @copyright  2015 Laurent Jouanneau
+* @copyright  2015-2018 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -36,23 +36,26 @@ namespace Jelix\Core\Infos;
  */
 class ModuleJsonParser extends JsonParserAbstract {
 
+    protected function createInfos() {
+        return new ModuleInfos($this->path, true);
+    }
 
     /**
      *
      */
-    public function parse(InfosAbstract $object) {
+    public function _parse(array $json, InfosAbstract $infos) {
 
-        parent::parse($object);
+        parent::_parse($json, $infos);
 
         $json = array_merge(array(
             "required-modules" => array(),
             "required-modules-choice" => array(),
             "conflict" => array(),
             "autoload" => array(),
-        ), $this->json);
+        ), $json);
 
         $json['autoload'] = array_merge(array(
-            'autoloaders'=>array(),
+            'files'=>array(),
             'classmap'=>array(),
             'psr-0'=>array(),
             'psr-4'=>array(),
@@ -63,7 +66,8 @@ class ModuleJsonParser extends JsonParserAbstract {
         */
 
         foreach($json['required-modules'] as $name=>$version) {
-            $object->dependencies[] = array(
+            $infos->dependencies[] = array(
+                'type' => 'module',
                 'version'=> $version,
                 'name' => $name
             );
@@ -73,22 +77,28 @@ class ModuleJsonParser extends JsonParserAbstract {
             $choice = array();
             foreach ($choicesList as $name=>$version) {
                 $choice[] = array(
+                    'type' => 'module',
                     'version'=> $version,
                     'name' => $name
                 );
             }
             if (count($choice) > 1) {
-                $object->alternativeDependencies[] = $choice;
+                $infos->dependencies[] = array(
+                    'type'=> 'choice',
+                    'choice' => $choice
+                );
             }
             else if (count($choice) == 1) {
-                $object->dependencies[] = $choice[0];
+                $infos->dependencies[] = $choice[0];
             }
         }
 
         foreach($json['conflict'] as $name=>$version) {
-            $object->incompatibilities[] = array(
+            $infos->incompatibilities[] = array(
+                'type' => 'module',
                 'version'=> $version,
-                'name' => $name
+                'name' => $name,
+                'forbiddenby' => $infos->name
             );
         }
 
@@ -103,10 +113,10 @@ class ModuleJsonParser extends JsonParserAbstract {
                 }, $dir);
 
                 if ($ns == '') {
-                    $object->autoloadPsr4Namespaces[0] = $dir;
+                    $infos->autoloadPsr4Namespaces[0] = $dir;
                 }
                 else {
-                    $object->autoloadPsr4Namespaces[trim($ns,'\\')] = $dir;
+                    $infos->autoloadPsr4Namespaces[trim($ns,'\\')] = $dir;
                 }
             }
         }
@@ -120,10 +130,10 @@ class ModuleJsonParser extends JsonParserAbstract {
                     return array($d, '.php');
                 }, $dir);
                 if ($ns == '') {
-                    $object->autoloadPsr0Namespaces[0] = $dir;
+                    $infos->autoloadPsr0Namespaces[0] = $dir;
                 }
                 else {
-                    $object->autoloadPsr0Namespaces[trim($ns,'\\')] = $dir;
+                    $infos->autoloadPsr0Namespaces[trim($ns,'\\')] = $dir;
                 }
             }
         }
@@ -139,20 +149,19 @@ class ModuleJsonParser extends JsonParserAbstract {
                     }
                     return $c;
                 }, $classes);
-                $object->autoloadClasses = array_merge($object->autoloadClasses, $classes);
+                $infos->autoloadClasses = array_merge($infos->autoloadClasses, $classes);
             }
         }
 
-        if (isset($json['autoload']['autoloaders'])) {
-            $object->autoloaders            = $json['autoload']['autoloaders'];
+        if (isset($json['autoload']['files'])) {
+            $infos->autoloaders            = $json['autoload']['files'];
         }
-
         if (isset($json['autoload']['include-path'])) {
-            $object->autoloadIncludePath = array_map(function($d) {
+            $infos->autoloadIncludePath = array_map(function($d) {
                 return array($d, '.php');
             }, $json['autoload']['include-path']);
         }
 
-        return $object;
+        return $infos;
     }
 }

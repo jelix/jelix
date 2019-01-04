@@ -72,9 +72,9 @@ class ModuleXmlWriter extends XmlWriterAbstract
         if ($moduleInfos['maxversion'] !== '' && $moduleInfos['maxversion'] !== '*') {
             $module->setAttribute('maxversion', $moduleInfos['maxversion'] );
         }
-        /*if ($moduleInfos['version'] !== '') {
+        if ($moduleInfos['version'] !== '') {
             $module->setAttribute('version', $moduleInfos['version'] );
-        }*/
+        }
         return $module;
     }
 
@@ -144,5 +144,4 @@ class ModuleXmlWriter extends XmlWriterAbstract
         }
         return $elem;
     }
-
 }

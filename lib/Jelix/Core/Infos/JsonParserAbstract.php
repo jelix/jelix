@@ -1,7 +1,7 @@
 <?php
 /**
 * @author     Laurent Jouanneau
-* @copyright  2014-2015 Laurent Jouanneau
+* @copyright  2014-2018 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -18,31 +18,43 @@ abstract class JsonParserAbstract {
     protected $path;
 
     /**
-     * @var string the json content
-     */
-    protected $json;
-
-    /**
      * @param string $path the path of the json file to read, with trailing slash
      */
-    public function __construct($path, $locale) {
-        if (!file_exists($path)) {
-            throw new \Exception($path ." does not exist");
-        }
+    public function __construct($path) {
         $this->path = $path;
-        $this->locale = substr($locale, 0, 2);
-        $this->json = @json_decode(file_get_contents($this->path), true);
-        if (!is_array($this->json)) {
-            throw new \Exception($this->path ." is not a JSON file");
-        }
     }
+
+
+    /**
+     * @return InfosAbstract
+     */
+    abstract protected function createInfos();
 
     /**
      *
      */
-    public function parse(InfosAbstract $object){
+    public function parse()
+    {
+        $json = @json_decode(file_get_contents($this->path), true);
+        if (!is_array($json)) {
+            throw new \Exception($this->path . " is not a JSON file");
+        }
+        $infos = $this->createInfos();
+        $this->_parse($json, $infos);
+        return $infos;
+    }
+
+    public function parseFromString(array $json)
+    {
+        $infos = $this->createInfos();
+        $this->_parse($json, $infos);
+        return $infos;
+    }
+
+    protected function _parse(array $json, InfosAbstract $infos) {
 
         $json = array_merge(array(
+            "id" => "",
             "name"=> "",
             "version"=> "",
             "date" => "",
@@ -51,32 +63,54 @@ abstract class JsonParserAbstract {
             "description"=> "",
             "homepage"=> "",
             "copyright"=>"",
+            "createDate"=>"",
             "authors" => array(),
-        ),$this->json);
+        ), $json);
 
-        $object->name               = $json['name'];
-        $object->version            = $json['version'];
-        $object->label              = $json['label'] ?: $json['name'];
-        $object->description        = $json['description'];
-        $object->authors            = $json['authors'];
-        $object->homepageURL        = $json['homepage'];
+        $infos->id                 = $json['id'];
+        $infos->name               = $json['name'];
+        $infos->version            = $json['version'];
+
+        if (is_array($json['label'])) {
+            $infos->label          = $json['label'];
+        }
+        else {
+            $infos->label          = array('en'=>$json['label']);
+        }
+
+        if (is_array($json['description'])) {
+            $infos->description    = $json['description'];
+        }
+        else {
+            $infos->description    = array('en'=>$json['description']);
+        }
+
+        if (is_array($json['authors'])) {
+            $infos->authors    = $json['authors'];
+        }
+        else {
+            $infos->authors    = array($json['authors']);
+        }
+
+        $infos->homepageURL        = $json['homepage'];
+        $infos->createDate         = $json['createDate'];
         if (isset($json['license'])) {
-            $object->license        = $json['license'];
+            $infos->license        = $json['license'];
         }
         else if (isset($json['licence'])) {
-            $object->license        = $json['licence'];
+            $infos->license        = $json['licence'];
         }
         if (isset($json['licenseURL'])) {
-            $object->licenseURL     = $json['licenseURL'];
+            $infos->licenseURL     = $json['licenseURL'];
         }
         else if (isset($json['licenceURL'])) {
-            $object->licenseURL     = $json['licenceURL'];
+            $infos->licenseURL     = $json['licenceURL'];
         }
 
-        $object->versionStability   = $json['stability'];
-        $object->versionDate        = $json['date'];
-        $object->copyright          = $json['copyright'];
+        $infos->versionStability   = $json['stability'];
+        $infos->versionDate        = $json['date'];
+        $infos->copyright          = $json['copyright'];
 
-        return $object;
+        return $infos;
     }
 }

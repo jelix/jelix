@@ -1,7 +1,7 @@
 <?php
 /**
 * @author     Laurent Jouanneau
-* @copyright  2014 Laurent Jouanneau
+* @copyright  2014-2018 Laurent Jouanneau
 * @link     http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -10,19 +10,11 @@ namespace Jelix\Core\Infos;
 
 class ModuleInfos extends InfosAbstract {
 
-    public $type = 'module';
-
     /**
      * list of module dependencies
      * @var array[]  items are: array('name'=>'', 'version'=>'')
      */
     public $dependencies = array();
-
-    /**
-     * List of alternative module dependencies
-     * @var array[]  items are array of array('name'=>'', 'version'=>'')
-     */
-    public $alternativeDependencies = array();
 
     /**
      * list of incompatibilities of the module
@@ -58,7 +50,7 @@ class ModuleInfos extends InfosAbstract {
      *      'namespace name' => array( array ('<rel_dirpath>', '<suffix>')),
      *      0 => array( array ('<rel_dirpath>', '<suffix>'),... )
      */
-    public $autoloadPsr0Namespaces = array(0=>array());
+    public $autoloadPsr0Namespaces = array();
 
     /**
      * List of namespaces and corresponding path following PSR-4
@@ -69,7 +61,7 @@ class ModuleInfos extends InfosAbstract {
      *      'namespace name' => array( array ('<rel_dirpath>', '<suffix>')),
      *      0 => array( array ('<rel_dirpath>', '<suffix>'),... )
      */
-    public $autoloadPsr4Namespaces = array(0=>array());
+    public $autoloadPsr4Namespaces = array();
 
     /**
      * list of relative path to directories where a class could be found
@@ -78,42 +70,31 @@ class ModuleInfos extends InfosAbstract {
      */
     public $autoloadIncludePath = array();
 
+    public function save() {
+        if ($this->isXmlFile()) {
+            $writer = new ModuleXmlWriter($this->getFilePath());
+            return $writer->write($this);
+        }
+        return false;
+    }
+
     /**
-     * @param string $path path to the module directory
+     * create a new ModuleInfos object, loaded from a file that is into the
+     * given directory
+     *
+     * @param string $directoryPath the path to the directory
+     * @return ModuleInfos
      */
-    function __construct($path) {
-        $p = rtrim($path, '/');
-        $this->path = $p.'/';
-        // by default, the module name is the directory name of the module
-        $this->name = basename($p);
-
-        $config = \Jelix\Core\App::config();
-        if ($config) {
-            $locale = $config->locale;
+    public static function load($directoryPath) {
+        if (file_exists($directoryPath.'/jelix-module.json')) {
+            $parser = new ModuleJsonParser($directoryPath.'/jelix-module.json');
+            return $parser->parse();
         }
-        else {
-            $locale = '';
+        else if (file_exists($directoryPath.'/module.xml')) {
+            $parser = new ModuleXmlParser($directoryPath.'/module.xml');
+            return $parser->parse();
         }
 
-        if (file_exists($this->path.'jelix-module.json')) {
-            $parser = new ModuleJsonParser($this->path.'jelix-module.json', $locale);
-        }
-        else if (file_exists($this->path.'module.xml')) {
-            $this->isXml = true;
-            $parser = new ModuleXmlParser($this->path.'module.xml', $locale);
-        }
-        else {
-            return;
-        }
-        $this->_exists = true;
-        $parser->parse($this);
+        throw new \Exception('No module.xml or jelix-module.json file into '.$directoryPath);
     }
-
-    public function getFile() {
-        if ($this->isXml) {
-            return 'module.xml';
-        }
-        return 'jelix-module.json';
-    }
-
 }

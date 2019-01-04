@@ -1,7 +1,7 @@
 <?php
 /**
 * @author     Laurent Jouanneau
-* @copyright  2014 Laurent Jouanneau
+* @copyright  2014-2018 Laurent Jouanneau
 * @link       http://jelix.org
 * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
@@ -10,10 +10,30 @@ namespace Jelix\Core\Infos;
 /**
  * Class to parse the module.xml file of a module
  */
-class ModuleXmlParser extends XmlParserAbstract {
+class ModuleXmlParser extends XmlParserAbstract
+{
+
+    protected function createInfos() {
+        return new ModuleInfos($this->path, true);
+    }
 
     protected function parseDependencies (\XMLReader $xml, ModuleInfos $object) {
-
+        /*
+        <dependencies>
+            <jelix minversion="1.0" maxversion="1.0" edition="dev/opt/gold"/>
+            <module id="" name="" minversion="" maxversion="" />
+            <choice>
+               <modules>
+                  <module id="" name="" minversion="" maxversion="" />
+                  <module id="" name="" minversion="" maxversion="" />
+               </modules>
+               <module id="" name="" minversion="" maxversion="" />
+            </choice>
+            <conflict>
+                  <module id="" name="" minversion="" maxversion="" />
+            </conflict>
+        </dependencies>
+        */
         while ($xml->read()) {
 
             if ($xml->nodeType == \XMLReader::END_ELEMENT && 'dependencies' == $xml->name) {
@@ -47,7 +67,10 @@ class ModuleXmlParser extends XmlParserAbstract {
                     }
 
                     if (count($choice) > 1) {
-                        $object->alternativeDependencies[] = $choice;
+                        $object->dependencies[] = array(
+                            'type'=> 'choice',
+                            'choice' => $choice
+                        );
                     }
                     else if (count($choice) == 1) {
                         $object->dependencies[] = $choice[0];
@@ -59,7 +82,23 @@ class ModuleXmlParser extends XmlParserAbstract {
                     continue;
                 }
 
-                $object->dependencies [] = $this->readComponentDependencyInfo($xml);
+                $info = $this->readComponentDependencyInfo($xml);
+
+                if ($info['name'] == 'jelix') {
+                    if ($object->name != 'jelix') {
+                        $object->dependencies[] = array(
+                            'type'=> 'module',
+                            'id' => 'jelix@jelix.org',
+                            'name' => 'jelix',
+                            'minversion' => $info['minversion'],
+                            'maxversion' => $info['maxversion'],
+                            'version' => $info['version']
+                        );
+                    }
+                }
+                else {
+                    $object->dependencies[] = $info;
+                }
             }
         }
         return $object;
@@ -72,43 +111,52 @@ class ModuleXmlParser extends XmlParserAbstract {
      */
     protected function readComponentDependencyInfo(\XMLReader $xml)
     {
-        $dependency = array(
-            'type'=>$xml->name,
-            'name'=>'',
-            'version'=>''
-        );
-        $dependency['type'] = $xml->name;
-        if ($xml->name == 'jelix') {
-            $dependency['type'] = 'module';
-            $dependency['name'] = 'jelix';
-        }
-
+        $name = ($xml->name == 'jelix'?'jelix':'');
+        $id = '';
+        $versionRange = '';
+        $minversion = '0';
+        $maxversion = '*';
         while ($xml->moveToNextAttribute()) {
             $attrName = $xml->name;
             if ($attrName == 'minversion' && $xml->value != '') { // old attribute
-                $v = '>='.$this->fixVersion($xml->value);
-                if ($dependency['version'] != '') {
-                    $v = ','.$v;
-                }
-                $dependency['version'] .= $v;
+                $minversion = $this->fixVersion($xml->value);
             }
             else if ($attrName == 'maxversion' && $xml->value != '') { // old attribute
-                $v = '<='.$this->fixVersion($xml->value);
-                if ($dependency['version'] != '') {
-                    $v = ','.$v;
-                }
-                $dependency['version'] .= $v;
+                $maxversion = $this->fixVersion($xml->value);
             }
             else if ($attrName == 'version' && $xml->value != '') {
-                $dependency['version'] = $this->fixVersion($xml->value);
+                $versionRange = $this->fixVersion($xml->value);
             }
-            else if ($attrName != 'minversion' &&
-                $attrName != 'maxversion' &&
-                $attrName != 'version') {
-                $dependency[$attrName] = $xml->value;
+            else if ($attrName == 'name' && $xml->value != '') {
+                $name = $xml->value;
+            }
+            else if ($attrName == 'id' && $xml->value != '') {
+                $id = $xml->value;
             }
         }
-        return $dependency;
+        if ($versionRange == '') {
+            if ($minversion != '0') {
+                $versionRange = '>='.$minversion;
+            }
+            if ($maxversion != '*') {
+                $v = '<='.$maxversion;
+                if ($versionRange != '') {
+                    $v = ','.$v;
+                }
+                $versionRange .= $v;
+            }
+            if ($versionRange == '') {
+                $versionRange = '*';
+            }
+        }
+        return array(
+            'type'=> 'module',
+            'id' => $id,
+            'name' => $name,
+            'minversion' => $minversion,
+            'maxversion' => $maxversion,
+            'version' => $versionRange
+        );
     }
 
     protected function parseAutoload (\XMLReader $xml, ModuleInfos $object) {
@@ -152,7 +200,12 @@ class ModuleXmlParser extends XmlParserAbstract {
                         if ($dir == '') {
                             break;
                         }
-                        $namespace = (isset($attr['name'])?$attr['name']:'');
+                        if (isset($attr['namespace'])) {
+                            $namespace = $attr['namespace'];
+                        }
+                        else {
+                            $namespace = (isset($attr['name'])?$attr['name']:'');
+                        }
                         if ($namespace == '') {
                             $object->autoloadPsr0Namespaces[0][] = $dir;
                         }
@@ -165,7 +218,12 @@ class ModuleXmlParser extends XmlParserAbstract {
                         if ($dir == '') {
                             break;
                         }
-                        $namespace = (isset($attr['name'])?$attr['name']:'');
+                        if (isset($attr['namespace'])) {
+                            $namespace = $attr['namespace'];
+                        }
+                        else {
+                            $namespace = (isset($attr['name'])?$attr['name']:'');
+                        }
                         if ($namespace == '') {
                             $object->autoloadPsr4Namespaces[0][] = $dir;
                         }

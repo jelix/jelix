@@ -2,7 +2,7 @@
 /**
  * @author    Vincent Viaud
  * @contributor Laurent Jouanneau
- * @copyright 2010 Vincent Viaud, 2014 Laurent Jouanneau
+ * @copyright 2010 Vincent Viaud, 2014-2018 Laurent Jouanneau
  * @link      http://havefnubb.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -11,27 +11,27 @@ namespace Jelix\Core\Infos;
 abstract class XmlParserAbstract {
 
     /**
-     * @var the path of the xml file to read
+     * @var string the path of the xml file to read
      */
     protected $path;
 
     /**
-     * @var the locale code for language
-     */
-    protected $locale;
-
-    /**
      * @param string $path the path of the xml file to read
      */
-    public function __construct($path, $locale) {
+    public function __construct($path) {
         $this->path = $path;
-        $this->locale = substr($locale, 0, 2);
     }
 
     /**
-     *
+     * @return InfosAbstract
      */
-    public function parse(InfosAbstract $object){
+    abstract protected function createInfos();
+
+    /**
+     * @return InfosAbstract
+     */
+    public function parse(){
+        $object = $this->createInfos();
         $xml = new \XMLreader();
         $xml->open($this->path, '', LIBXML_COMPACT );
 
@@ -47,15 +47,47 @@ abstract class XmlParserAbstract {
         return $object;
     }
 
-    protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
-        // we don't read the name attribute for the module name as in previous jelix version, it has always to be the directory name
-        if ($object->type == 'application') {
-            $object->name = (string)$xml->getAttribute('name');
+    public function parseFromString($xmlContent) {
+        $object = $this->createInfos();
+        $xml = new \XMLreader();
+        $xml->xml($xmlContent, 'utf-8', LIBXML_COMPACT );
+
+        while ($xml->read()) {
+            if($xml->nodeType == \XMLReader::ELEMENT) {
+                $method = 'parse' . ucfirst($xml->name);
+                if (method_exists ($this, $method)) {
+                    $this->$method($xml, $object);
+                }
+            }
         }
+        $xml->close();
+        return $object;
+    }
+
+    protected function parseInfo (\XMLReader $xml, InfosAbstract $object) {
+        /*
+        <info id="jelix@modules.jelix.org" name="jelix" createdate="">
+            <version stability="stable" date="">1.0</version>
+            <label lang="en_US" locale="">Jelix Main Module</label>
+            <description lang="en_US" locale="" type="text/xhtml">Main module of jelix which contains some ressources needed by jelix classes</description>
+            <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
+            <copyright>2005-2008 Laurent Jouanneau and other contributors</copyright>
+            <creator name="Laurent Jouanneau" nickname="" email=""/>
+            <contributor name="hisname" email="hisemail@yoursite.undefined" since="" role=""/>
+            <homepageURL>http://jelix.org</homepageURL>
+            <updateURL>http://jelix.org</updateURL>
+        </info>
+       */
+
+        // we don't read the name attribute for the module name as in previous
+        // jelix version, it has always to be the directory name
+        $object->name = (string)$xml->getAttribute('name');
+        if ($object->name == '') {
+            $object->name = basename(dirname($object->getFilePath()));
+        }
+        $object->id = (string)$xml->getAttribute('id');
 
         $object->createDate = (string)$xml->getAttribute('createdate');
-
-        $locale = array('label'=>$this->locale, 'description'=>$this->locale);
 
         while ($xml->read()) {
 
@@ -63,7 +95,7 @@ abstract class XmlParserAbstract {
                 break;
             }
 
-            if($xml->nodeType == \XMLReader::ELEMENT) {
+            if ($xml->nodeType == \XMLReader::ELEMENT) {
 
                 $property = $xml->name;
                 $attributes = array();
@@ -80,17 +112,19 @@ abstract class XmlParserAbstract {
                 }
 
                 if ('label' == $property || 'description' == $property) {
-                    if (isset($attributes['lang']) && $attributes['lang'] == $locale[$property] ||
-                        $locale[$property] == '') {
-                        $object->$property = $textContent;
-                        if ($locale[$property] == '') {
-                            // let's mark we readed the element corresponding to the locale
-                            $locale[$property] = '__readed__';
-                        }
-                    }
+                    $lang = isset($attributes['lang']) ? substr($attributes['lang'], 0, 2) : 'en';
+                    $object->{$property}[$lang] = trim($textContent);
                 }
                 elseif ('author' == $property || 'creator' == $property || 'contributor' == $property) {
-                    array_push($object->authors, $attributes);
+                    $name = isset($attributes['name']) ? $attributes['name']:'';
+                    $email = isset($attributes['email']) ? $attributes['email']:'';
+                    $role = isset($attributes['role']) ? $attributes['role']:'';
+                    if ($name != '') {
+                        if ($role == '' && $property != 'author') {
+                            $role = $property;
+                        }
+                        $object->author[] = new Author($name, $email, $role);
+                    }
                 }
                 elseif ('licence' == $property) { // we support licence and license, but store always as license
                     foreach($attributes as $attr => $val) {
@@ -103,14 +137,22 @@ abstract class XmlParserAbstract {
                     // read attributes 'date', 'stability' etc ... and store them into versionDate, versionStability
                     foreach($attributes as $attr => $val) {
                         $attrProperty = $property . ucfirst($attr);
-                        $object->$attrProperty = $val;
+                        if ($attrProperty == 'versionDate') {
+                            if ($val == '__TODAY__') { // for non-packages modules
+                                $val = date('Y-m-d');
+                            }
+                            $object->versionDate = $val;
+                        }
+                        else {
+                            $object->$attrProperty = $val;
+                        }
                     }
 
                     if ($property == 'version') {
-                        $object->$property = $this->fixVersion($textContent);
+                        $object->$property = $this->fixVersion($xml->value);
                     }
                     else {
-                        $object->$property = $textContent;
+                        $object->$property = trim($xml->value);
                     }
                 }
             }
@@ -123,9 +165,9 @@ abstract class XmlParserAbstract {
      * Fix version for non built lib
      */
     protected function fixVersion($version) {
-        $v = str_replace('__LIB_VERSION_MAX__', \Jelix\Core\Framework::versionMax(), $version);
-        $v = str_replace('__LIB_VERSION__', \Jelix\Core\Framework::version(), $v);
-        $v = str_replace('__VERSION__', \Jelix\Core\App::version(), $v);
+        $v = str_replace('__LIB_VERSION_MAX__', \jFramework::versionMax(), $version);
+        $v = str_replace('__LIB_VERSION__', \jFramework::version(), $v);
+        $v = str_replace('__VERSION__', \jApp::version(), $v);
         return $v;
     }
 }
