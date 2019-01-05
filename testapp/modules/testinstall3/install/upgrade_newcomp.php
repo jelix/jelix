@@ -9,11 +9,11 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testinstall3ModuleUpgrader_newcomp extends jInstallerModule {
+class testinstall3ModuleUpgrader_newcomp extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.6.0');
+    protected $targetVersions = array('1.6.0');
 
-    function install() {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
     }
 }

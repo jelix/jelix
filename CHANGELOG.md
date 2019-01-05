@@ -18,8 +18,6 @@
 - module.xml: 'minversion' and 'maxversion' are changed to 'version'
     Same syntax in this new attribute as in composer.json
 
-- jInstallerMessageProvider is now a new external package SimpleLocalization
-
 - Composer package: module name are now normalized. The module name is now the
   package name with the `/` replaced by `_`. Except if the module name is
   indicated into the composer file in `composer.extra.jelix.moduleName`.

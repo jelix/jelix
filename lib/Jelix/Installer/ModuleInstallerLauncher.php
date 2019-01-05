@@ -61,22 +61,22 @@ class ModuleInstallerLauncher {
     protected $moduleConfigurator = null;
 
     /**
-     * @var Module\Installer|\jInstallerModule
+     * @var Module\Installer
      */
     protected $moduleInstaller = null;
 
     /**
-     * @var Module\Uninstaller|\jInstallerModule
+     * @var Module\Uninstaller
      */
     protected $moduleUninstaller = null;
 
     /**
-     * @var Module\Installer[]|\jInstallerModule[]
+     * @var Module\Installer[]
      */
     protected $moduleUpgraders = null;
 
     /**
-     * @var Module\Installer|\jInstallerModule
+     * @var Module\Installer
      */
     protected $moduleMainUpgrader = null;
 
@@ -310,7 +310,7 @@ class ModuleInstallerLauncher {
     /**
      * instancies the object which is responsible to install the module
      *
-     * @return \jIInstallerComponent|Module\InstallerInterface|null the installer, or null
+     * @return Module\InstallerInterface|null the installer, or null
      *          if there isn't any installer
      * @throws Exception when install class not found
      */
@@ -344,16 +344,6 @@ class ModuleInstallerLauncher {
                                                 );
         }
 
-        if ($this->moduleInstaller instanceof \jIInstallerComponent) {
-            $this->moduleInstaller->setContext($this->globalSetup->getInstallerContexts($this->name));
-            $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
-            if (!$mainEntryPoint->legacyInstallerEntryPoint) {
-                $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
-            }
-            $this->moduleInstaller->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
-                $this->moduleStatus->dbProfile);
-        }
-
         $this->moduleInstaller->setParameters($this->moduleStatus->parameters);
 
         return $this->moduleInstaller;
@@ -362,7 +352,7 @@ class ModuleInstallerLauncher {
     /**
      * instancies the object which is responsible to uninstall the module
      *
-     * @return \jIInstallerComponent|Module\UninstallerInterface|null the uninstaller, or null
+     * @return Module\UninstallerInterface|null the uninstaller, or null
      *          if there isn't any uninstaller
      * @throws Exception when install class not found
      */
@@ -378,14 +368,6 @@ class ModuleInstallerLauncher {
             if ($this->moduleStatus->skipInstaller) {
                 $this->moduleUninstaller = false;
                 return null;
-            }
-
-            $installer = $this->getInstaller();
-            if ($installer && $installer instanceof \jIInstallerComponent) {
-                $this->moduleUninstaller = $installer;
-                $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
-                $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
-                return $this->moduleUninstaller;
             }
 
             if (!file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
@@ -408,9 +390,6 @@ class ModuleInstallerLauncher {
             );
         }
 
-        if ($this->moduleUninstaller instanceof \jIInstallerComponent) {
-            $this->moduleUninstaller->initDbProfile($this->moduleStatus->dbProfile);
-        }
         $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
         return $this->moduleUninstaller;
     }
@@ -424,7 +403,7 @@ class ModuleInstallerLauncher {
      * dependencies. Needed modules should be
      * installed/upgraded before calling this method
      *
-     * @return \jIInstallerComponent[]|Module\InstallerInterface[]
+     * @return Module\InstallerInterface[]
      * @throws Exception  if an error occurs during the install.
      */
     function getUpgraders() {
@@ -562,16 +541,6 @@ class ModuleInstallerLauncher {
                 $this->upgradersContexts[$class] = array();
             }
 
-            if ($upgrader instanceof \jIInstallerComponent) {
-                $upgrader->setContext($this->upgradersContexts[$class]);
-                $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
-                if (!$mainEntryPoint->legacyInstallerEntryPoint) {
-                    $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
-                }
-                $upgrader->setEntryPoint($mainEntryPoint->legacyInstallerEntryPoint,
-                                            $this->moduleStatus->dbProfile);
-            }
-
             $upgrader->setParameters($this->moduleStatus->parameters);
             $list[] = $upgrader;
         }
@@ -588,20 +557,12 @@ class ModuleInstallerLauncher {
     }
 
     public function installFinished() {
-        if ($this->moduleInstaller instanceof \jIInstallerComponent) {
-            $this->globalSetup->updateInstallerContexts($this->name, $this->moduleInstaller->getContexts());
-        }
-        else {
-            // remove legacy contexts
-            $this->globalSetup->removeInstallerContexts($this->name);
-        }
+        // remove legacy contexts
+        $this->globalSetup->removeInstallerContexts($this->name);
     }
 
     public function upgradeFinished($upgrader) {
-        if ($upgrader instanceof \jIInstallerComponent) {
-            $class = get_class($upgrader);
-            $this->upgradersContexts[$class] = $upgrader->getContexts();
-        }
+
     }
 
     public function uninstallFinished() {

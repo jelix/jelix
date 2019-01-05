@@ -156,13 +156,13 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appSystemPath = App::appSystemPath($configFile);
+        $appSystemPath = \Jelix\Core\App::appSystemPath($configFile);
         if (!file_exists($appSystemPath)) {
             \jFile::createDir(dirname($appSystemPath));
             file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
         }
 
-        $varConfigPath = App::varConfigPath($configFile);
+        $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
 
         $this->appEpConfigIni = new testInstallerIniFileModifier($appSystemPath);
         $this->localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);

@@ -392,8 +392,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
-            $component->setSourceVersionDate('1.1.5','2011-01-15');
             $this->globalSetup->addModuleComponent($component);
+            $component->setSourceVersionDate('1.1.5','2011-01-15');
 
             $upgraders = $component->getUpgraders();
             $this->assertTrue (is_array($upgraders));
@@ -416,8 +416,8 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
-            $component->setSourceVersionDate('1.2.5','2011-01-25');
             $this->globalSetup->addModuleComponent($component);
+            $component->setSourceVersionDate('1.2.5','2011-01-25');
 
             $upgraders = $component->getUpgraders();
             $this->assertTrue (is_array($upgraders));

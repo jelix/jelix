@@ -51,8 +51,6 @@ cd lib/Jelix/Legacy/core
 cd lib/Jelix/Legacy/events
   __ALL__
 
-cd lib/Jelix/Legacy/installer
-  __ALL__
 
 cd lib/Jelix/Legacy/utils
   __ALL__

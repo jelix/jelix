@@ -9,13 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testinstall2ModuleUpgrader_newupgraderfilenamedate extends jInstallerModule2 {
+class testinstall2ModuleUpgrader_newupgraderfilenamedate extends \Jelix\Installer\Module\Installer {
 
-    public $date = '2011-01-13';
+    protected $date = '2011-01-13';
 
-    public $targetVersions = array('1.1.3', '1.2.2');
+    protected $targetVersions = array('1.1.3', '1.2.2');
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
     }
 }

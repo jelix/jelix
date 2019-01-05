@@ -8,21 +8,19 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jelix_testsModuleUpgrader_jacl2db extends jInstallerModule2 {
+class jelix_testsModuleUpgrader_jacl2db extends \Jelix\Installer\Module\Installer {
 
     protected $defaultDbProfile = 'testapp_pgsql';
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
-        if (!$this->firstDbExec())
-            return;
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         try {
             $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
-            $this->useDbProfile('testapp_pgsql');
+            $helpers->database()->useDbProfile('testapp_pgsql');
         }
         catch(Exception $e) {
             // no profile for pgsql, don't install tables in pgsql
             return;
         }
-        $this->execSQLScript('install_jacl2.schema', 'jacl2db');
+        $helpers->database()->execSQLScript('install_jacl2.schema', 'jacl2db');
     }
 }

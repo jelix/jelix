@@ -93,15 +93,12 @@ if you want to keep your module.xml files, modify them:
         You have to change this method in your plugins
         See Jelix\Core\Config\CompilerPluginInterface
 
-- If you made some classes inheriting from internal classes of jInstaller (except jInstallerModule),
-   you should know that their API have changed.
+- The deprecated installation system, based on jInstaller* classes, has gone. You should
+  use the official installation system, based on `\Jelix\Installer\` classes.
 
 - Files that have gone
    - lib/jelix/checker.php: if you included these file, replace the inclusion instruction
      by a call to ```\Jelix\Installer\Checker\CheckerPage::show();```
-
-- Classes that don't exist anymore:
-   - jInstallerApplication
 
 - in your entry points, replace `checkAppNotInstalled()` and/or `checkAppOpened()`
   by `\Jelix\Core\AppManager::errorIfAppInstalled()` and `\Jelix\Core\AppManager::errorIfAppClosed()`

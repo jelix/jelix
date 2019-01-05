@@ -10,12 +10,9 @@
  */
 
 
-class articlesModuleInstaller extends jInstallerModule2 {
+class articlesModuleInstaller extends \Jelix\Installer\Module\Uninstaller {
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
-    }
-
-    function uninstallEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+    function uninstall(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         echo "Article module uninstalled is called!\n";
     }
 }

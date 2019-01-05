@@ -3,10 +3,10 @@
 //upgrade_to_1.2b1pre.1304_foo.php
 
 
-class jelix_testsModuleUpgrader_foo extends jInstallerModule2 {
+class jelix_testsModuleUpgrader_foo extends \Jelix\Installer\Module\Installer {
 
-    function preInstallEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
-       echo  "upgrader jelix_tests 1304 pre install\n"; 
+    function preInstall(\Jelix\Installer\Module\API\PreInstallHelpers $helpers) {
+        echo  "upgrader jelix_tests 1304 pre install\n";
     }
 
     /**
@@ -15,8 +15,7 @@ class jelix_testsModuleUpgrader_foo extends jInstallerModule2 {
      * to cancel/revert all things the method did before the error
      * @throws jException  if an error occurs during the install.
      */
-    function installEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
-        
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
        echo  "upgrader jelix_tests 1304 install\n"; 
     }
 
@@ -25,8 +24,7 @@ class jelix_testsModuleUpgrader_foo extends jInstallerModule2 {
      * all other modules (dependents modules or the whole application)
      * @throws jException  if an error occurs during the post installation.
      */
-    function postInstallEntryPoint(\Jelix\Installer\EntryPoint $entryPoint) {
-        
+    function postInstall(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
        echo  "upgrader jelix_tests 1304 post install\n"; 
     }
 

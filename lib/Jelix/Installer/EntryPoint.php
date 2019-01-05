@@ -71,11 +71,6 @@ class EntryPoint
     protected $globalSetup;
 
     /**
-     * @var \jInstallerEntryPoint
-     */
-    public $legacyInstallerEntryPoint = null;
-
-    /**
      * @param GlobalSetup $globalSetup
      * @param string $configFile the path of the configuration file, relative
      *                           to the app/system directory

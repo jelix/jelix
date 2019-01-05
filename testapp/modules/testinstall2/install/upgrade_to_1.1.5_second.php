@@ -9,9 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testinstall2ModuleUpgrader_second extends jInstallerModule2 {
+class testinstall2ModuleUpgrader_second extends \Jelix\Installer\Module\Installer {
 
-    function installEntrypoint(\Jelix\Installer\EntryPoint $entryPoint) {
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
 
     }
 }

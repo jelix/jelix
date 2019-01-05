@@ -7,13 +7,6 @@
  */
 namespace Jelix\Installer;
 
-// load legacy interfaces and classes
-require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-
 use \Jelix\Dependencies\Item;
 use \Jelix\Dependencies\Resolver;
 use \Jelix\Dependencies\ItemException;
@@ -192,6 +185,7 @@ class Installer {
         }
         catch(ItemException $e) {
             $item = $e->getItem();
+            /** @var ModuleInstallerLauncher $component */
             $component = $item->getProperty('component');
 
             switch($e->getCode()) {
@@ -287,12 +281,7 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->preInstall();
-                        }
-                        else {
-                            $installer->preInstall($helpers);
-                        }
+                        $installer->preInstall($helpers);
                     }
                 }
                 elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
@@ -304,12 +293,7 @@ class Installer {
                     }
 
                     foreach($upgraders as $upgrader) {
-                        if ($upgrader instanceof \jInstallerModule) {
-                            $upgrader->preInstall();
-                        }
-                        else {
-                            $upgrader->preInstall($helpers);
-                        }
+                        $upgrader->preInstall($helpers);
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
                 }
@@ -321,12 +305,7 @@ class Installer {
                     }
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->preUninstall();
-                        }
-                        else {
-                            $installer->preUninstall($helpers);
-                        }
+                        $installer->preUninstall($helpers);
                     }
                 }
             } catch (Exception $e) {
@@ -367,13 +346,8 @@ class Installer {
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->install();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $installer->install($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $installer->install($helpers);
                         $saveConfigIni = true;
                     }
 
@@ -392,15 +366,10 @@ class Installer {
                 }
                 elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
-                    /** @var \jInstallerModule|\Jelix\Installer\Module\Installer $upgrader */
+                    /** @var \Jelix\Installer\Module\Installer $upgrader */
                     foreach($installer as $upgrader) {
-                        if ($upgrader instanceof \jInstallerModule) {
-                            $upgrader->install();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $upgrader->install($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $upgrader->install($helpers);
                         $saveConfigIni = true;
 
                         // we set the version of the upgrade, so if an error occurs in
@@ -429,13 +398,8 @@ class Installer {
                 }
                 else if ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->uninstall();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $installer->uninstall($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $installer->uninstall($helpers);
                         $saveConfigIni = true;
                     }
                     $installerIni->removeValue($component->getName().'.installed', 'modules');
@@ -486,39 +450,24 @@ class Installer {
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->postInstall();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $installer->postInstall($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $installer->postInstall($helpers);
                         $component->installFinished();
                         $saveConfigIni = true;
                     }
                 }
                 else if ($action == Resolver::ACTION_UPGRADE) {
                     foreach ($installer as $upgrader) {
-                        if ($upgrader instanceof \jInstallerModule) {
-                            $upgrader->postInstall();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $upgrader->postInstall($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $upgrader->postInstall($helpers);
                         $component->upgradeFinished($upgrader);
                         $saveConfigIni = true;
                     }
                 }
                 elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        if ($installer instanceof \jInstallerModule) {
-                            $installer->postUninstall();
-                        }
-                        else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
-                            $installer->postUninstall($helpers);
-                        }
+                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $installer->postUninstall($helpers);
                         $component->uninstallFinished();
                         $saveConfigIni = true;
                     }

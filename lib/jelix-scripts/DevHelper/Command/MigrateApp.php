@@ -28,7 +28,6 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand {
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        require_once (JELIX_LIB_PATH.'installer/jInstaller.class.php');
 
         if ($this->verbose()) {
             $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Low-level migration');
