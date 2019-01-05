@@ -34,9 +34,11 @@ class infosreaderTest extends jUnitTestCase {
         <string property="version" value="1.0" />
         <string property="versionDate" value="" />
         <string property="versionStability" value="" />
-        <string property="label" value="simple" />
-        <string property="description" value="" />
-        <array property="authors"></array>
+        <array property="label">
+            <string key="en" value="simplé" />
+        </array>
+        <array property="description" />
+        <array property="author"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="" />
         <string property="updateURL" value="" />
@@ -202,9 +204,9 @@ class infosreaderTest extends jUnitTestCase {
     }
 
     function testReadModuleJsonInfo() {
-
-        $path = __DIR__.'/app/modules/package/';
-        $result = new \Jelix\Core\Infos\ModuleInfos($path);
+        $path = __DIR__.'/app/modules/package/jelix-module.json';
+        $parser = new \Jelix\Core\Infos\ModuleJsonParser($path);
+        $result = $parser->parse();
         $this->assertTrue($result->exists());
         $expected = '<?xml version="1.0"?>
     <object>
@@ -213,9 +215,13 @@ class infosreaderTest extends jUnitTestCase {
         <string property="version" value="1.0" />
         <string property="versionDate" value="" />
         <string property="versionStability" value="" />
-        <string property="label" value="thepackage" />
-        <string property="description" value="A jelix module using new jelix-module.json" />
-        <array property="authors"></array>
+        <array property="label">
+         
+        </array>
+        <array property="description">
+            <string key="en" value="A jelix module using new jelix-module.json" />
+        </array>
+        <array property="author"></array>
         <string property="notes" value="" />
         <string property="homepageURL" value="" />
         <string property="updateURL" value="" />
@@ -224,7 +230,6 @@ class infosreaderTest extends jUnitTestCase {
         <string property="copyright" value="" />
         <array property="dependencies">
         </array>
-        <string property="type" value="module" />
         <array property="autoloaders">
             <!--<array>
             </array>-->
@@ -254,8 +259,9 @@ class infosreaderTest extends jUnitTestCase {
     }
 
     function testReadAppJsonInfo() {
-        $path = __DIR__.'/app/';
-        $result = new \Jelix\Core\Infos\AppInfos($path);
+        $path = __DIR__.'/app/jelix-app.json';
+        $parser = new \Jelix\Core\Infos\AppJsonParser($path);
+        $result = $parser->parse();
         $this->assertTrue($result->exists());
         $expected = '<?xml version="1.0"?>
     <object>
@@ -264,9 +270,13 @@ class infosreaderTest extends jUnitTestCase {
         <string property="version" value="1.0" />
         <string property="versionDate" value="2015-04-14" />
         <string property="versionStability" value="" />
-        <string property="label" value="a label" />
-        <string property="description" value="a description" />
-        <array property="authors">
+        <array property="label">
+            <string key="en" value="a label" />
+        </array>
+        <array property="description">
+            <string key="en" value="a description" />
+        </array>
+        <array property="author">
            <array>
                <string key="name" value="me" />
                <string key="email" value="me@example.com" />
@@ -277,19 +287,6 @@ class infosreaderTest extends jUnitTestCase {
         <string property="license" value="MIT" />
         <string property="licenseURL" value="" />
         <string property="copyright" value="2015 somebody" />
-        <string property="type" value="application" />
-        <string property="configPath" value="var/config" />
-        <string property="logPath" value="var/log" />
-        <string property="varPath" value="var" />
-        <string property="wwwPath" value="www" />
-        <string property="tempPath" value="temp/" />
-        <array property="entrypoints">
-            <array key="entrypoint.php">
-                <string key="file" value="entrypoint.php" />
-                <string key="config" value="config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-        </array>
     </object>';
         $this->assertComplexIdenticalStr($result, $expected);
     }
@@ -344,206 +341,6 @@ class infosreaderTest extends jUnitTestCase {
 ", $result);
     }
 
-    function testAddEntrypointToJelixAppJson() {
-        $path = __DIR__.'/tmp';
-        if (!file_exists($path)) {
-            mkdir($path);
-        }
-        copy(__DIR__.'/app/jelix-app.json', $path.'/jelix-app.json');
-        $this->assertTrue(file_exists( $path.'/jelix-app.json'));
-        $result = new \Jelix\Core\Infos\AppInfos($path);
-        $this->assertTrue($result->exists());
-        $expected = '<?xml version="1.0"?>
-    <object>
-        <string property="name" value="myappname" />
-        <string property="createDate" value="" />
-        <string property="version" value="1.0" />
-        <string property="versionDate" value="2015-04-14" />
-        <string property="versionStability" value="" />
-        <string property="label" value="a label" />
-        <string property="description" value="a description" />
-        <array property="authors">
-           <array>
-               <string key="name" value="me" />
-               <string key="email" value="me@example.com" />
-           </array>
-        </array>
-        <string property="homepageURL" value="http://jelix.org" />
-        <string property="updateURL" value="" />
-        <string property="license" value="MIT" />
-        <string property="licenseURL" value="" />
-        <string property="copyright" value="2015 somebody" />
-        <string property="type" value="application" />
-        <string property="configPath" value="var/config" />
-        <string property="logPath" value="var/log" />
-        <string property="varPath" value="var" />
-        <string property="wwwPath" value="www" />
-        <string property="tempPath" value="temp/" />
-        <array property="entrypoints">
-            <array key="entrypoint.php">
-                <string key="file" value="entrypoint.php" />
-                <string key="config" value="config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-        </array>
-    </object>';
-        $this->assertComplexIdenticalStr($result, $expected);
-        
-        $result->addEntryPointInfo('foo.php', 'foo/config.ini.php', 'classic');
-        $expected = '<?xml version="1.0"?>
-    <object>
-        <string property="name" value="myappname" />
-        <string property="createDate" value="" />
-        <string property="version" value="1.0" />
-        <string property="versionDate" value="2015-04-14" />
-        <string property="versionStability" value="" />
-        <string property="label" value="a label" />
-        <string property="description" value="a description" />
-        <array property="authors">
-           <array>
-               <string key="name" value="me" />
-               <string key="email" value="me@example.com" />
-           </array>
-        </array>
-        <string property="homepageURL" value="http://jelix.org" />
-        <string property="updateURL" value="" />
-        <string property="license" value="MIT" />
-        <string property="licenseURL" value="" />
-        <string property="copyright" value="2015 somebody" />
-        <string property="type" value="application" />
-        <string property="configPath" value="var/config" />
-        <string property="logPath" value="var/log" />
-        <string property="varPath" value="var" />
-        <string property="wwwPath" value="www" />
-        <string property="tempPath" value="temp/" />
-        <array property="entrypoints">
-            <array key="entrypoint.php">
-                <string key="file" value="entrypoint.php" />
-                <string key="config" value="config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-            <array key="foo.php">
-                <string key="file" value="foo.php" />
-                <string key="config" value="foo/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-        </array>
-    </object>';
-        $this->assertComplexIdenticalStr($result, $expected);
-        $result = new \Jelix\Core\Infos\AppInfos($path);
-        $this->assertComplexIdenticalStr($result, $expected);
-    }
-
-    function testAddEntrypointToProjectXml() {
-        $path = __DIR__.'/tmp';
-        if (!file_exists($path)) {
-            mkdir($path);
-        }
-        copy(__DIR__.'/app2/project.xml', $path.'/project.xml');
-        
-        $result = new \Jelix\Core\Infos\AppInfos($path);
-        $this->assertTrue($result->exists());
-        $this->assertTrue($result->isXmlFile());
-        $expected = '<?xml version="1.0"?>
-    <object>
-        <string property="name" value="testapp" />
-        <string property="createDate" value="2005-01-01" />
-        <string property="version" value="2.0" />
-        <string property="versionDate" value="2015-05-14" />
-        <string property="versionStability" value="stable" />
-        <string property="label" value="Testapp" />
-        <string property="description" value="Application to test Jelix" />
-        <array property="authors">
-           <array>
-               <string key="name" value="Laurent Jouanneau" />
-               <string key="email" value="laurent@jelix.org" />
-           </array>
-        </array>
-        <string property="homepageURL" value="http://jelix.org" />
-        <string property="updateURL" value="" />
-        <string property="license" value="GPL" />
-        <string property="licenseURL" value="http://www.gnu.org/licenses/gpl.html" />
-        <string property="copyright" value="2005-2011 Laurent Jouanneau and other contributors" />
-        <string property="type" value="application" />
-        <string property="configPath" value="var/config" />
-        <string property="logPath" value="var/log" />
-        <string property="varPath" value="var" />
-        <string property="wwwPath" value="www" />
-        <string property="tempPath" value="temp" />
-        <array property="entrypoints">
-            <array key="index.php">
-                <string key="file" value="index.php" />
-                <string key="config" value="index/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-            <array key="rest.php">
-                <string key="file" value="rest.php" />
-                <string key="config" value="rest/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-            <array key="cmdline.php">
-                <string key="file" value="cmdline.php" />
-                <string key="config" value="cmdline/config.ini.php" />
-                <string key="type" value="cmdline" />
-            </array>
-        </array>
-    </object>';
-        $this->assertComplexIdenticalStr($result, $expected);
-        $result->addEntryPointInfo('foo.php', 'foo/config.ini.php', 'classic');
-        $expected = '<?xml version="1.0"?>
-    <object>
-        <string property="name" value="testapp" />
-        <string property="createDate" value="2005-01-01" />
-        <string property="version" value="2.0" />
-        <string property="versionDate" value="2015-05-14" />
-        <string property="versionStability" value="stable" />
-        <string property="label" value="Testapp" />
-        <string property="description" value="Application to test Jelix" />
-        <array property="authors">
-           <array>
-               <string key="name" value="Laurent Jouanneau" />
-               <string key="email" value="laurent@jelix.org" />
-           </array>
-        </array>
-        <string property="homepageURL" value="http://jelix.org" />
-        <string property="updateURL" value="" />
-        <string property="license" value="GPL" />
-        <string property="licenseURL" value="http://www.gnu.org/licenses/gpl.html" />
-        <string property="copyright" value="2005-2011 Laurent Jouanneau and other contributors" />
-        <string property="type" value="application" />
-        <string property="configPath" value="var/config" />
-        <string property="logPath" value="var/log" />
-        <string property="varPath" value="var" />
-        <string property="wwwPath" value="www" />
-        <string property="tempPath" value="temp" />
-        <array property="entrypoints">
-            <array key="index.php">
-                <string key="file" value="index.php" />
-                <string key="config" value="index/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-            <array key="rest.php">
-                <string key="file" value="rest.php" />
-                <string key="config" value="rest/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-            <array key="cmdline.php">
-                <string key="file" value="cmdline.php" />
-                <string key="config" value="cmdline/config.ini.php" />
-                <string key="type" value="cmdline" />
-            </array>
-            <array key="foo.php">
-                <string key="file" value="foo.php" />
-                <string key="config" value="foo/config.ini.php" />
-                <string key="type" value="classic" />
-            </array>
-        </array>
-    </object>';
-        $this->assertComplexIdenticalStr($result, $expected);
-        $result = new \Jelix\Core\Infos\AppInfos($path);
-        $this->assertComplexIdenticalStr($result, $expected);
-    }
-
     function testFrameworkInfo() {
         $path = __DIR__.'/app/app/system/framework.ini.php';
         $fmkInfos = new \Jelix\Core\Infos\FrameworkInfos($path);
@@ -568,7 +365,6 @@ class infosreaderTest extends jUnitTestCase {
         </array>';
         $this->assertComplexIdenticalStr($result, $expected);
     }
-
 
     function testLocalFrameworkInfo() {
         copy(__DIR__.'/app/app/system/framework.ini.php', __DIR__.'/../../../temp/testframework.ini');

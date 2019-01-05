@@ -75,7 +75,10 @@ class ModuleInfos extends InfosAbstract {
             $writer = new ModuleXmlWriter($this->getFilePath());
             return $writer->write($this);
         }
-        return false;
+        else {
+            $writer = new ModuleJsonWriter($this->getFilePath());
+            return $writer->write($this);
+        }
     }
 
     /**

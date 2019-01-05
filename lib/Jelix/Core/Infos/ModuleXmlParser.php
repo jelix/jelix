@@ -183,6 +183,7 @@ class ModuleXmlParser extends XmlParserAbstract
                 if (isset($attr['dir'])) {
                     $dir = array($attr['dir'], $suffix);
                 }
+
                 switch($name) {
                     case 'autoloader':
                         $object->autoloaders[] = $attr['file'];

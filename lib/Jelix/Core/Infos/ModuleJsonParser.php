@@ -37,7 +37,7 @@ namespace Jelix\Core\Infos;
 class ModuleJsonParser extends JsonParserAbstract {
 
     protected function createInfos() {
-        return new ModuleInfos($this->path, true);
+        return new ModuleInfos($this->path, false);
     }
 
     /**
@@ -139,7 +139,7 @@ class ModuleJsonParser extends JsonParserAbstract {
         }
 
         if (isset ($json['autoload']['classmap'])) {
-            $basepath = $this->path;
+            $basepath = dirname($this->path).'/';
             foreach($json['autoload']['classmap'] as $path) {
                 $classes = \Jelix\External\ClassMapGenerator::createMap($basepath.$path);
                 // remove directory base path

@@ -2,8 +2,8 @@
 
 class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
 
-    function test_read_module_info($config, $allModuleInfo, $path, &$installation, $section) {
-        $this->_readModuleInfo($config, $allModuleInfo, $path, $installation, $section);
+    function test_read_module_info($config, $allModuleInfo, $path, &$installation) {
+        $this->_readModuleInfo($config, $allModuleInfo, $path, $installation);
     }
 }
 
@@ -20,58 +20,60 @@ class fakeConfig {
 
 class configTest extends PHPUnit_Framework_TestCase {
 
+    /**
+     * @expectedException Exception
+     */
     function testReadModuleInfoUnknowPath() {
         $config = new fakeConfig();
         $modulePath = '/foo/bar';
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(0, count(array_keys($installation['index.php'])));
+        $this->assertEquals(0, count(array_keys($installation['modules'])));
     }
 
+    /**
+     * @expectedException Exception
+     */
     function testReadModuleInfoNotAModule() {
         $config = new fakeConfig();
         $modulePath = __DIR__;
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(0, count(array_keys($installation['index.php'])));
+        $this->assertEquals(0, count(array_keys($installation['modules'])));
     }
 
     function testReadModuleInfoOldModuleNotActivated() {
         $config = new fakeConfig();
         $modulePath = realpath(__DIR__.'/app/modules/simple');
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array(
-                                'simple.access' => 0
+                                'simple.enabled' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('simple.installed' => 0), $installation['index.php']);
+        $this->assertEquals(array('simple.installed' => 0), $installation['modules']);
     }
 
     function testReadModuleInfoOldModuleActivatedNotInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('simple.access'=>1);
+        $config->modules = array('simple.enabled'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/simple');
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('simple.installed' => 0), $installation['index.php']);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
+        $this->assertEquals(array('simple.installed' => 0), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.access' => 0
+                                'simple.enabled' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -79,15 +81,14 @@ class configTest extends PHPUnit_Framework_TestCase {
 
     function testReadModuleInfoOldModuleActivatedInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('simple.access'=>1);
+        $config->modules = array('simple.enabled'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/simple').'/';
-        $installation = array('index.php'=>array('simple.installed'=>1));
-        $section = 'index.php';
+        $installation = array('modules'=>array('simple.installed'=>1));
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('simple.installed' => 1), $installation['index.php']);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
+        $this->assertEquals(array('simple.installed' => 1), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.access' => 1,
+                                'simple.enabled' => 1,
                                 'simple.dbprofile' => 'default'
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
@@ -95,15 +96,15 @@ class configTest extends PHPUnit_Framework_TestCase {
 
         // with all modules info
         $config = new fakeConfig();
-        $config->modules = array('simple.access'=>1);
-        $installation = array('index.php'=>array('simple.installed'=>1));
-        $compiler->test_read_module_info($config, true, $modulePath, $installation, $section);
+        $config->modules = array('simple.enabled'=>1);
+        $installation = array('modules'=>array('simple.installed'=>1));
+        $compiler->test_read_module_info($config, true, $modulePath, $installation);
         $this->assertEquals(array('simple.installed' => 1,
                                     'simple.version' => '',
                                     'simple.dataversion' => ''
-                                  ), $installation['index.php']);
+                                  ), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.access' => 1,
+                                'simple.enabled' => 1,
                                 'simple.dbprofile' => 'default',
                                 'simple.version' => '',
                                 'simple.dataversion' => '',
@@ -117,29 +118,27 @@ class configTest extends PHPUnit_Framework_TestCase {
     function testReadModuleInfoNewModuleNotActivated() {
         $config = new fakeConfig();
         $modulePath = realpath(__DIR__.'/app/modules/package').'/';
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array(
-                                'thepackage.access' => 0
+                                'thepackage.enabled' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('thepackage.installed' => 0), $installation['index.php']);
+        $this->assertEquals(array('thepackage.installed' => 0), $installation['modules']);
     }
 
     function testReadModuleInfoNewModuleActivatedNotInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('thepackage.access'=>1);
+        $config->modules = array('thepackage.enabled'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/package').'/';
-        $installation = array('index.php'=>array());
-        $section = 'index.php';
+        $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('thepackage.installed' => 0), $installation['index.php']);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
+        $this->assertEquals(array('thepackage.installed' => 0), $installation['modules']);
         $this->assertEquals(array(
-                                'thepackage.access' => 0
+                                'thepackage.enabled' => 0
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -147,15 +146,14 @@ class configTest extends PHPUnit_Framework_TestCase {
 
     function testReadModuleInfoNewModuleActivatedInstalled() {
         $config = new fakeConfig();
-        $config->modules = array('thepackage.access'=>1);
+        $config->modules = array('thepackage.enabled'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/package').'/';
-        $installation = array('index.php'=>array('thepackage.installed'=>1));
-        $section = 'index.php';
+        $installation = array('modules'=>array('thepackage.installed'=>1));
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation, $section);
-        $this->assertEquals(array('thepackage.installed' => 1), $installation['index.php']);
+        $compiler->test_read_module_info($config, false, $modulePath, $installation);
+        $this->assertEquals(array('thepackage.installed' => 1), $installation['modules']);
         $this->assertEquals(array(
-                                'thepackage.access' => 1,
+                                'thepackage.enabled' => 1,
                                 'thepackage.dbprofile' => 'default',
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
@@ -163,16 +161,16 @@ class configTest extends PHPUnit_Framework_TestCase {
 
         // with all modules info
         $config = new fakeConfig();
-        $config->modules = array('thepackage.access'=>1);
-        $installation = array('index.php'=>array('thepackage.installed'=>1));
+        $config->modules = array('thepackage.enabled'=>1);
+        $installation = array('modules'=>array('thepackage.installed'=>1));
         $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, true, $modulePath, $installation, $section);
+        $compiler->test_read_module_info($config, true, $modulePath, $installation);
         $this->assertEquals(array('thepackage.installed' => 1,
                                 'thepackage.version' => '',
                                 'thepackage.dataversion' => ''
-                                ), $installation['index.php']);
+                                ), $installation['modules']);
         $this->assertEquals(array(
-                                'thepackage.access' => 1,
+                                'thepackage.enabled' => 1,
                                 'thepackage.dbprofile' => 'default',
                                 'thepackage.version' => '',
                                 'thepackage.dataversion' => '',

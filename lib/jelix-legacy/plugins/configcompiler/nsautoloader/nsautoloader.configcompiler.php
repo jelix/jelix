@@ -28,8 +28,8 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
 
     function onModule($config, \Jelix\Core\Infos\ModuleInfos $module) {
 
-        $modulePath = $module->getPath();
-        $moduleFile = $module->getFile();
+        $modulePath = $module->getItemPath();
+        $moduleFile = $module->getFilePath();
 
         foreach($module->autoloaders as $path) {
             $p = $modulePath.$path;
@@ -102,8 +102,10 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
             }
         };
 
-        foreach($module->autoloadPsr0Namespaces[0] as $path) {
-            $processNs(0, $path);
+        if (isset($module->autoloadPsr0Namespaces[0])) {
+            foreach($module->autoloadPsr0Namespaces[0] as $path) {
+                $processNs(0, $path);
+            }
         }
 
         foreach($module->autoloadPsr0Namespaces as $ns => $pathList) {
@@ -133,8 +135,10 @@ class nsautoloaderConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlu
             }
         };
 
-        foreach($module->autoloadPsr4Namespaces[0] as $path) {
-            $processNs2(0, $path);
+        if (isset($module->autoloadPsr4Namespaces[0])) {
+            foreach($module->autoloadPsr4Namespaces[0] as $path) {
+                $processNs2(0, $path);
+            }
         }
 
         foreach($module->autoloadPsr4Namespaces as $ns => $pathList) {

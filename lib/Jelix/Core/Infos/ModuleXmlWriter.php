@@ -66,13 +66,17 @@ class ModuleXmlWriter extends XmlWriterAbstract
             $module->setAttribute('id', $moduleInfos['id'] );
         }
         $module->setAttribute('name', $moduleInfos['name'] );
+        $writeMinVersion = false;
+        $writeMaxVersion = false;
         if ($moduleInfos['minversion'] !== '' && $moduleInfos['minversion'] !== '0') {
             $module->setAttribute('minversion', $moduleInfos['minversion'] );
+            $writeMinVersion = true;
         }
         if ($moduleInfos['maxversion'] !== '' && $moduleInfos['maxversion'] !== '*') {
             $module->setAttribute('maxversion', $moduleInfos['maxversion'] );
+            $writeMaxVersion = true;
         }
-        if ($moduleInfos['version'] !== '') {
+        if ($moduleInfos['version'] !== '' && $moduleInfos['version'] !== '*' && !$writeMaxVersion && !$writeMinVersion) {
             $module->setAttribute('version', $moduleInfos['version'] );
         }
         return $module;

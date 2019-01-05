@@ -74,22 +74,27 @@ abstract class JsonParserAbstract {
         if (is_array($json['label'])) {
             $infos->label          = $json['label'];
         }
-        else {
+        else if ($json['label'] != '') {
             $infos->label          = array('en'=>$json['label']);
         }
 
         if (is_array($json['description'])) {
             $infos->description    = $json['description'];
         }
-        else {
+        else if ($json['description'] != '') {
             $infos->description    = array('en'=>$json['description']);
         }
 
         if (is_array($json['authors'])) {
-            $infos->authors    = $json['authors'];
+            if (isset($json['authors']['name'])) {
+                $infos->author    = array($json['authors']);
+            }
+            else {
+                $infos->author    = $json['authors'];
+            }
         }
-        else {
-            $infos->authors    = array($json['authors']);
+        else  {
+            $infos->author    = array(array('name'=>$json['authors']));
         }
 
         $infos->homepageURL        = $json['homepage'];

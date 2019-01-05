@@ -2,13 +2,9 @@
 require_once(JELIX_LIB_PATH.'plugins/configcompiler/nsautoloader/nsautoloader.configcompiler.php');
 
 class testModuleJsonParser extends \Jelix\Core\Infos\ModuleJsonParser {
-    public function __construct($path, $locale, $jsonContent){
+    public function __construct($path, $locale){
         $this->path = $path;
         $this->locale = substr($locale, 0, 2);
-        $this->json = json_decode($jsonContent, true);
-        if (!is_array($this->json)) {
-            throw new \Exception(" given content is not JSON");
-        }
     }
 }
 
@@ -60,35 +56,34 @@ class configCompilerAutoloadInfoTest extends PHPUnit_Framework_TestCase {
             }
         }';
 
-        $path = __DIR__."/";
-        $jsonParser = new testModuleJsonParser($path, 'en', $composerjson);
-        $moduleInfo = new \Jelix\Core\Infos\ModuleInfos($path);
-        $jsonParser->parse($moduleInfo);
+        $path = __DIR__."/jelix-module.json";
+        $jsonParser = new testModuleJsonParser($path, 'en');
+        $moduleInfo = $jsonParser->parseFromString(json_decode($composerjson, true));
         $config = new stdClass();
         $plugin = new nsautoloaderConfigCompilerPlugin();
         $plugin->atStart($config);
         $plugin->onModule($config, $moduleInfo);
         $this->assertEquals(array(
-            'footbat' => $path.'autoload/foobat.php',
-            'foo_bateau'=> $path.'autoload/some/foo/bateau.php',
+            'footbat' => __DIR__.'/autoload/foobat.php',
+            'foo_bateau'=> __DIR__.'/autoload/some/foo/bateau.php',
                                   ), $config->_autoload_class);
         $this->assertEquals(array(
-                'blo_u\\bl_i' => array($path.'autoload/ns/other|.php'),
-                'foo' => array($path.'autoload/ns/bar|.php'),
+                'blo_u\\bl_i' => array(__DIR__.'/autoload/ns/other|.php'),
+                'foo' => array(__DIR__.'/autoload/ns/bar|.php'),
             ), $config->_autoload_namespacepsr0);
         $this->assertEquals(array(
             'foo' => array(
-                $path."autoload/ns/bar/foo|.php",
-                $path."autoload/some/foo|.php"
+                __DIR__."/autoload/ns/bar/foo|.php",
+                __DIR__."/autoload/some/foo|.php"
             )), $config->_autoload_namespacepsr4);
         $this->assertEquals(array(), $config->_autoload_classpattern);
         $this->assertEquals(array(), $config->_autoload_includepathmap);
         $this->assertEquals(array(
-            'path'=>array($path."autoload/some/bateau|.php"
+            'path'=>array(__DIR__."/autoload/some/bateau|.php"
                 )), $config->_autoload_includepath);
         $this->assertEquals(array(
             "psr4"=>array(),
-            "psr0"=>array($path.'autoload/some|.php'),
+            "psr0"=>array(__DIR__.'/autoload/some|.php'),
             ), $config->_autoload_fallback);
     }
 }
