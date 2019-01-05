@@ -135,8 +135,8 @@ abstract class AbstractCommandForApp extends AbstractCommand
         $config = \jApp::config();
         if (!$config) {
             $this->loadAppConfig($this->selectedEntryPointId);
+            $config = \jApp::config();
         }
-        $config = \jApp::config();
         if (!isset($config->_modulesPathList[$module])) {
             throw new \Exception($this->getName().": The module $module doesn't exist");
         }
