@@ -11,7 +11,7 @@
     </info>
     <dependencies>
         <jelix version="&gt;=1.7.0-beta.4,&lt;=2.0.0-alpha.1"/>
-        <module name="jacl" version="&gt;=1.6.0" />
+        <module name="jacl" version="&gt;=1.7.0-beta.5" />
     </dependencies>
     <autoload>
         <classPattern pattern="/^jAclDb/" dir="classes/" suffix=".class.php"/>

@@ -9,15 +9,5 @@
     "copyright": "2015 somebody",
     "authors":[
         { "name":"me", "email":"me@example.com" }
-    ],
-    "directories": {
-        "config":"var/config",
-        "var":"var",
-        "www":"www",
-        "log":"var/log",
-        "temp":"temp/"
-    },
-    "entrypoints" : [
-        { "file": "entrypoint", "config":"config.ini.php", "type": "classic"}
     ]
 }

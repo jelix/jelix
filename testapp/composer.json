@@ -30,7 +30,7 @@
         "jelix/sitemap-module": "2.0.x-dev",
         "guzzlehttp/guzzle": "^6.2.0",
         "jelix/ldapdao-module": "2.1.x-dev",
-        "jelix/feeds-module": "2.0.x-dev",
+        "jelix/feeds-module": "2.0.x-dev"
     },
     "autoload": {
     },

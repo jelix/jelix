@@ -46,7 +46,11 @@ class jApp {
     }
 
     public static function appConfigPath($file='') {
-        return \Jelix\Core\App::appConfigPath($file);
+        return \Jelix\Core\App::appSystemPath($file);
+    }
+
+    public static function appSystemPath($file='') {
+        return \Jelix\Core\App::appSystemPath($file);
     }
 
     public static function varConfigPath($file='') {
