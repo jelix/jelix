@@ -222,7 +222,7 @@ class Migration {
         }
         // read all entry points data
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $name = (string)$entrypoint['name'];
+            $name = (string)$entrypoint['file'];
             $configFile = (string)$entrypoint['config'];
             $type = isset($entrypoint['type'])? (string)$entrypoint['type']:'classic';
 

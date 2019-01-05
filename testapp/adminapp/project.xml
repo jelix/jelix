@@ -9,8 +9,4 @@
         <creator name="your name" email="your-email@yourwebsite.undefined"/>
         <homepageURL>http://www.yourwebsite.undefined</homepageURL>
     </info>
-    <dependencies>
-        <jelix minversion="1.7.0pre.0" maxversion="1.7.*"/>
-    </dependencies>
-    
 </project>

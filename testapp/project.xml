@@ -12,18 +12,4 @@
     <dependencies>
         <jelix minversion="1.7.0-beta.3" maxversion="1.7.0"/>
     </dependencies>
-    <entrypoints>
-        <entry file="index.php" config="index/config.ini.php"/>
-        <entry file="rest.php" config="rest/config.ini.php"/>
-        <entry file="testnews.php" config="index/config.ini.php"/>
-        <entry file="foo/bar.php" config="index/config.ini.php"/>
-        <entry file="invisible.php" config="index/config.ini.php"/>
-        <entry file="noep.php" config="index/config.ini.php"/>
-        <entry file="handlermodule.php" config="index/config.ini.php"/>
-        <entry file="news.php" config="index/config.ini.php"/>
-        <entry file="soap.php" config="soap/config.ini.php" type="soap"/>
-        <entry file="jsonrpc.php" config="jsonrpc/config.ini.php" type="jsonrpc"/>
-        <entry file="xmlrpc.php" config="xmlrpc/config.ini.php" type="xmlrpc"/>
-        <entry file="cmdline.php" config="cmdline/config.ini.php" type="cmdline"/>
-    </entrypoints>
 </project>
