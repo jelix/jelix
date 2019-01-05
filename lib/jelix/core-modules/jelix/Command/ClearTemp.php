@@ -1,6 +1,5 @@
 <?php
 /**
-* @package     jelix-scripts
 * @author      Christophe Thiriot
 * @contributor Loic Mathaud
 * @contributor Laurent Jouanneau
