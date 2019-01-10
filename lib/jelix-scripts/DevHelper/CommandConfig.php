@@ -158,6 +158,10 @@ class CommandConfig {
     public $appName = '';
 
     function initAppPaths($applicationDir) {
+
+        $this->newAppInfoCopyright = date('Y').' a name';
+        $this->infoCopyright = date('Y').' your name';
+
         $applicationDir = rtrim($applicationDir, '/');
         $applicationDir = rtrim($applicationDir, '\\');
         $appname = basename($applicationDir);
@@ -231,16 +235,23 @@ class CommandConfig {
         if (!file_exists($iniFile)) {
             return;
         }
-        $ini = parse_ini_file($iniFile);
+        $ini = parse_ini_file($iniFile, true);
         foreach ($ini as $key=>$value) {
             if (!is_array($value) && isset($this->$key)) {
+                if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+                    $value = str_replace('%YEAR%', date('Y'), $value);
+                }
                 $this->$key = $value;
             }
         }
-        if ($appname && isset($ini[$appname])) {
+        if ($appname && isset($ini[$appname]) && is_array($ini[$appname])) {
             foreach ($ini[$appname] as $key=>$value) {
-                if (isset($this->$key))
+                if (isset($this->$key)) {
+                    if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+                        $value = str_replace('%YEAR%', date('Y'), $value);
+                    }
                     $this->$key = $value;
+                }
             }
         }
     }
