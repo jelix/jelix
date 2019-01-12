@@ -14,14 +14,15 @@ namespace Jelix\DevHelper;
 class CommandConfig {
 
     /**
-     * @var string the suffix part of generated name of new modules. value readed from project.xml
+     * @var string the suffix part of generated name of new modules.
+     *    Value readed from project.xml. May be something like '@yourwebsite.undefined'
      */
-    public $infoIDSuffix='@yourwebsite.undefined';
+    public $infoIDSuffix='_auto';
 
     /**
      * @var string the web site of the project or your company. value readed from project.xml
      */
-    public $infoWebsite='http://www.yourwebsite.undefined';
+    public $infoWebsite='';
 
     /**
      * @var string the licence of generated files. value readed from project.xml
@@ -36,17 +37,17 @@ class CommandConfig {
     /**
      * @var string the creator's name inserted in new files headers
      */
-    public $infoCreatorName='your name';
+    public $infoCreatorName='_auto';
 
     /**
      * @var string the creator's mail inserted in new file headers
      */
-    public $infoCreatorMail='your-email@yourwebsite.undefined';
+    public $infoCreatorMail='_auto';
 
     /**
      * @var string copyright of new files. value readed from project.xml
      */
-    public $infoCopyright='2015 your name';
+    public $infoCopyright='_auto';
 
     /**
      * @var string default timezone for new app
@@ -125,12 +126,12 @@ class CommandConfig {
     /**
      * @var string the suffix part of generated name of modules in a new project
      */
-    public $newAppInfoIDSuffix='@yourwebsite.undefined';
+    public $newAppInfoIDSuffix='_auto';
 
     /**
      * @var string the web site of the project or your company, used in a new project
      */
-    public $newAppInfoWebsite='http://www.yourwebsite.undefined';
+    public $newAppInfoWebsite='';
 
     /**
      * @var string the licence of generated files, for a new project
@@ -145,7 +146,7 @@ class CommandConfig {
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2018 your name';
+    public $newAppInfoCopyright='_auto';
 
     /**
      * @var string
@@ -158,10 +159,6 @@ class CommandConfig {
     public $appName = '';
 
     function initAppPaths($applicationDir) {
-
-        $this->newAppInfoCopyright = date('Y').' your name';
-        $this->infoCopyright = date('Y').' your name';
-
         $applicationDir = rtrim($applicationDir, '/');
         $applicationDir = rtrim($applicationDir, '\\');
         $appname = basename($applicationDir);
@@ -182,11 +179,11 @@ class CommandConfig {
      * fill some properties from informations stored into the project.xml file.
      * @return string the application name
      */
-    function loadFromProject() {
+    function loadFromProject($projectFile) {
 
         $doc = new \DOMDocument();
 
-        if (!$doc->load(\jApp::appPath('project.xml'))){
+        if (!$doc->load($projectFile)){
             throw new \Exception("cannot load project.xml");
         }
 
@@ -200,12 +197,15 @@ class CommandConfig {
         list($name, $suffix) = explode('@', $id);
         if ($suffix=='')
             $suffix = $name;
-        $this->infoIDSuffix = $suffix;
+        $this->infoIDSuffix = '@'.$suffix;
         if ($info->getAttribute('name')) {
             $name = $info->getAttribute('name');
         }
 
-        $licence = $info->getElementsByTagName('licence');
+        $licence = $info->getElementsByTagName('license');
+        if (!$licence) {
+            $licence = $info->getElementsByTagName('licence');
+        }
         if ($licence->length) {
             $licence = $licence->item(0);
             $this->infoLicence = $licence->textContent;
@@ -223,6 +223,7 @@ class CommandConfig {
             $website = $website->item(0);
             $this->infoWebsite = $website->textContent;
         }
+        $this->appName = $name;
         return $name;
     }
 
@@ -254,5 +255,75 @@ class CommandConfig {
                 }
             }
         }
+    }
+
+    function generateUndefinedProperties($toCreateApp=false) {
+        if ($toCreateApp) {
+            $domainname = $this->getDomainName($this->newAppInfoWebsite);
+            if ($domainname == '') {
+                $domainname = $this->getDomainName($this->infoWebsite);
+            }
+            $this->infoWebsite = $this->newAppInfoWebsite;
+        }
+        else {
+            $domainname = $this->getDomainName($this->infoWebsite);
+        }
+        if ($domainname == '') {
+            $domainname = $this->appName;
+        }
+
+        if ($toCreateApp || $this->newAppInfoIDSuffix == '_auto' || $this->newAppInfoIDSuffix == '') {
+            $this->newAppInfoIDSuffix = '@' . $domainname;
+        }
+
+        if ($toCreateApp || $this->newAppInfoCopyright == '_auto') {
+            $this->newAppInfoCopyright = date('Y') . ' ' . $domainname;
+        }
+
+        if ($toCreateApp || $this->infoIDSuffix == '_auto' || $this->infoIDSuffix == '') {
+            $this->infoIDSuffix = $this->newAppInfoIDSuffix;
+        }
+        if ($toCreateApp || $this->infoCopyright == '_auto') {
+            $this->infoCopyright = $this->newAppInfoCopyright;
+        }
+        if ($this->infoCreatorName == '_auto') {
+            $this->infoCreatorName = $domainname;
+        }
+        if ($this->infoCreatorMail == '_auto') {
+            if ($domainname != $this->appName) {
+                $this->infoCreatorMail = 'contact@'.$domainname;
+            }
+            else {
+                $this->infoCreatorMail = '';
+            }
+        }
+        if ($toCreateApp) {
+            $this->infoLicence = $this->newAppInfoLicence;
+            $this->infoLicenceUrl = $this->newAppInfoLicenceUrl;
+            $this->infoLocale = $this->newAppInfoLocale;
+        }
+    }
+
+    protected function getDomainName($url) {
+        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $url, $m)) {
+            list($domainname) = explode('/', $m[3]);
+            return $domainname;
+        }
+        else {
+            return '';
+        }
+    }
+
+    public function copyAppInfo($onlyUndefined = true) {
+        if (! $onlyUndefined || $this->infoIDSuffix == '_auto' || $this->infoIDSuffix == '') {
+            $this->infoIDSuffix = $this->newAppInfoIDSuffix;
+        }
+        if (! $onlyUndefined  || $this->infoCopyright == '_auto') {
+            $this->infoCopyright = $this->newAppInfoCopyright;
+        }
+        $this->infoWebsite = $this->newAppInfoWebsite;
+        $this->infoLicence = $this->newAppInfoLicence;
+        $this->infoLicenceUrl = $this->newAppInfoLicenceUrl;
+        $this->infoLocale = $this->newAppInfoLocale;
     }
 }

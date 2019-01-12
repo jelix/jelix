@@ -8,7 +8,7 @@
 * @contributor Christophe Thiriot
 * @contributor Bastien Jaillot
 * @contributor Dominique Papin, Olivier Demah
-* @copyright   2005-2018 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+* @copyright   2005-2019 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
 * @copyright   2011 Olivier Demah
 * @link        http://www.jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -17,7 +17,6 @@
 
 namespace Jelix\DevHelper\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -125,16 +124,8 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         ;
     }
 
-    protected function prepareSubCommandApp($appName, $appPath) {
-
-        $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
-        $this->config->infoWebsite = $this->config->newAppInfoWebsite;
-        $this->config->infoLicence = $this->config->newAppInfoLicence;
-        $this->config->infoLicenceUrl = $this->config->newAppInfoLicenceUrl;
-        $this->config->infoLocale = $this->config->newAppInfoLocale;
-        $this->config->infoCopyright = $this->config->newAppInfoCopyright;
-        $this->config->initAppPaths($appPath);
-
+    protected function prepareSubCommandApp()
+    {
         if ($this->appApplication) {
             return;
         }
@@ -174,11 +165,12 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         parent::execute($input, $output);
 
         $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
+
         if ($input->isInteractive()) {
             $this->askAppInfos($input, $output);
         }
-
-        $this->prepareSubCommandApp($appName, $appPath);
+        $this->config->initAppPaths($appPath);
+        $this->prepareSubCommandApp();
 
         \jApp::setEnv('jelix-scripts');
 
@@ -242,32 +234,18 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
     protected function askAppInfos(InputInterface $input, OutputInterface $output) {
         $cliHelpers = new \Jelix\Scripts\InputHelpers($this->getHelper('question'), $input, $output);
         $this->output->writeln('<comment>Please give some informations to store in file headers and module/project identity files</comment>');
-        $this->config->newAppInfoWebsite = $cliHelpers->askInformation('The web site of your company', $this->config->infoWebsite);
-        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $this->config->newAppInfoWebsite, $m)) {
-            list($domainname) = explode('/', $m[3]);
-            $this->config->newAppInfoIDSuffix = '@'.$domainname;
-            $this->config->newAppInfoCopyright = date('Y').' '.$domainname;
-            if ($this->config->infoIDSuffix == '@yourwebsite.undefined') {
-                $this->config->infoIDSuffix = $this->config->newAppInfoIDSuffix;
-            }
-            if (strpos($this->config->infoCopyright, 'your name') !== false) {
-                $this->config->infoCopyright = $this->config->newAppInfoCopyright;
-            }
-            if ($this->config->infoCreatorName == 'your name') {
-                $this->config->infoCreatorName = $domainname;
-            }
-            if ($this->config->infoCreatorMail == 'your-email@yourwebsite.undefined') {
-                $this->config->infoCreatorMail = '';
-            }
-        }
+        $this->config->newAppInfoWebsite = $cliHelpers->askInformation('The web site of your company', $this->config->newAppInfoWebsite);
+        $this->config->generateUndefinedProperties(true);
 
-        $this->config->newAppInfoLicence = $cliHelpers->askInformation('The licence of your application and modules', $this->config->infoLicence);
-        $this->config->newAppInfoLicenceUrl = $cliHelpers->askInformation('The url to the licence if any', $this->config->infoLicenceUrl);
-        $this->config->newAppInfoCopyright = $cliHelpers->askInformation('Copyright on your application and modules', $this->config->infoCopyright);
-        $this->config->newAppInfoIDSuffix = $cliHelpers->askInformation('The suffix of your modules id', $this->config->infoIDSuffix);
+        $this->config->newAppInfoLicence = $cliHelpers->askInformation('The licence of your application and modules', $this->config->newAppInfoLicence);
+        $this->config->newAppInfoLicenceUrl = $cliHelpers->askInformation('The url to the licence if any', $this->config->newAppInfoLicenceUrl);
+        $this->config->newAppInfoCopyright = $cliHelpers->askInformation('Copyright on your application and modules', $this->config->newAppInfoCopyright);
+        $this->config->newAppInfoIDSuffix = $cliHelpers->askInformation('The suffix of your modules id', $this->config->newAppInfoIDSuffix);
 
         $this->config->infoCreatorName = $cliHelpers->askInformation('The creator name (your name for example)', $this->config->infoCreatorName);
         $this->config->infoCreatorMail = $cliHelpers->askInformation('The email of the creator', $this->config->infoCreatorMail);
+
+        $this->config->copyAppInfo(false);
 
     }
 
