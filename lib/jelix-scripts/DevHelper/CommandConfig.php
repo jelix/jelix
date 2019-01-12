@@ -145,7 +145,7 @@ class CommandConfig {
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2018 a name';
+    public $newAppInfoCopyright='2018 your name';
 
     /**
      * @var string
@@ -159,7 +159,7 @@ class CommandConfig {
 
     function initAppPaths($applicationDir) {
 
-        $this->newAppInfoCopyright = date('Y').' a name';
+        $this->newAppInfoCopyright = date('Y').' your name';
         $this->infoCopyright = date('Y').' your name';
 
         $applicationDir = rtrim($applicationDir, '/');

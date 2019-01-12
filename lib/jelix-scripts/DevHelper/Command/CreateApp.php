@@ -28,36 +28,90 @@ use Jelix\FileUtilities\Path;
 
 class CreateApp extends \Jelix\DevHelper\AbstractCommand
 {
+    const COMPJSON_NONE = "none";
+    const COMPJSON_NEW = "new";
+    const COMPJSON_CURRENT = "current";
+    const COMPJSON_NEW_CURRENT_JELIX = "new-current-jelix";
 
     /**
      * @var \Symfony\Component\Console\Application
      */
     protected $appApplication;
-    
-    public function __construct()
+
+    protected $defaultRuleForComposerJson = 'current';
+
+    protected $forbiddenRuleForComposerJson = '';
+
+    protected $jelixPath;
+    protected $jelixInstalledAsComposerPackage;
+    protected $vendorPath;
+
+    /**
+     * @var string on of COMPJSON_* const
+     */
+    protected $composerMode = '';
+
+    public function __construct($jelixPath, $jelixAsComposerPackage, $vendorPath, $defaultRule, $forbiddenRule='')
     {
+        $this->defaultRuleForComposerJson = $defaultRule;
+        $this->forbiddenRuleForComposerJson = $forbiddenRule;
+        $this->jelixPath = $jelixPath;
+        $this->vendorPath = $vendorPath;
+        $this->jelixInstalledAsComposerPackage = $jelixAsComposerPackage;
         parent::__construct(new \Jelix\DevHelper\CommandConfig());
     }
 
     protected function configure()
     {
+        $help = 'It creates all files for a new Jelix application.
+
+Parameter is the path of the new application, which will be created for you.
+
+The main option is --composer-mode, indicating how to setup the composer.json 
+file. A value should be given to this option. 
+
+Recognised values are:
+
+- "none": it doesn\'t create a composer.json file, and application.init.php will
+   include directly files from Jelix and from the vendor/directory. Use this
+   option if you don\'t want to use Composer at all.
+- "current": the composer.json provided with create-jelix-app will
+  be used for the new application, and so it will be used by you to declare other packages.
+- "new": it creates a new composer.json into the new application directory,
+  and will install a new Jelix package.
+- "new-current-jelix": creates a new composer.json into the new 
+   application directory, but uses the Jelix sources installed with create-jelix-app.
+   
+Default option value: "'.$this->defaultRuleForComposerJson.'"
+';
+        if ($this->forbiddenRuleForComposerJson) {
+            $help .= 'Because how create-jelix-app was installed, the value "'.$this->forbiddenRuleForComposerJson.'" is forbidden'."\n";
+        }
+
         $this
             ->setName('app:create')
             ->setDescription('Creates an application')
-            ->setHelp('')
+            ->setHelp($help)
             ->addArgument(
                 'path',
                 InputArgument::REQUIRED,
                 'The path of the new application directory'
             )
             ->addOption(
-               'nodefaultmodule',
+                'composer-mode',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'indicates how to create the composer.json file, and so, how to include the jelix package',
+                $this->defaultRuleForComposerJson
+            )
+            ->addOption(
+               'no-default-module',
                null,
                InputOption::VALUE_NONE,
                'Indicate to not create a default module'
             )
             ->addOption(
-               'modulename',
+               'module-name',
                null,
                InputOption::VALUE_REQUIRED,
                'The name of the default module. By default: the name of the application directory.'
@@ -107,6 +161,15 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
             throw new \Exception("this application is already created");
         }
 
+        $this->composerMode = $input->getOption('composer-mode');
+        if ($this->forbiddenRuleForComposerJson != '' && $this->composerMode == $this->forbiddenRuleForComposerJson) {
+            throw new \UnexpectedValueException("The given composer-mode value is not available, because of how create-jelix-app was installed");
+        }
+
+        if (!in_array($this->composerMode, array('none', 'new', 'current', 'new-current-jelix'))) {
+            throw new \UnexpectedValueException("Invalid value for composer-mode option");
+        }
+
         parent::execute($input, $output);
 
         $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
@@ -149,9 +212,7 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
 
-        $moduleok = true;
-
-        if (!$input->getOption('nodefaultmodule')) {
+        if (!$input->getOption('no-default-module')) {
             try {
                 if ($output->isVerbose()) {
                     $output->writeln("Create default module ".$param['modulename']);
@@ -171,7 +232,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
                 }
                 $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, "Main template");
             } catch (\Exception $e) {
-                $moduleok = false;
                 $output->writeln("<error>The module has not been created because of this error: ".$e->getMessage()."</error>");
                 $output->writeln("However the application has been created");
             }
@@ -258,12 +318,12 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param = array();
         $param['default_id'] = $appName.$this->config->infoIDSuffix;
 
-        if($input->getOption('nodefaultmodule')) {
+        if ($input->getOption('no-default-module')) {
             $param['tplname']    = 'jelix~defaultmain';
             $param['modulename'] = 'jelix';
         }
         else {
-            $moduleName = $input->getOption('modulename');
+            $moduleName = $input->getOption('module-name');
             if (!$moduleName) {
                 // note: since module name are used for name of generated name,
                 // only this characters are allowed
@@ -280,20 +340,50 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $param['rp_log']   = Path::shortestPath($appPath, \jApp::logPath()).'/';
         $param['rp_conf']  = Path::shortestPath($appPath, $configPath).'/';
         $param['rp_www']   = Path::shortestPath($appPath, $wwwpath).'/';
-        $param['rp_jelix'] = Path::shortestPath($appPath, JELIX_LIB_PATH).'/';
-        $param['rp_lib']   = Path::shortestPath($appPath, LIB_PATH).'/';
+        $param['rp_app']   = Path::shortestPath($wwwpath, $appPath).'/';
+        $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
+        $param['php_rp_var']  = $this->convertRp($param['rp_var']);
+        $param['php_rp_log']  = $this->convertRp($param['rp_log']);
+        $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
+        $param['php_rp_www']  = $this->convertRp($param['rp_www']);
+
         $param['rp_vendor'] = '';
-        foreach (array(LIB_PATH. 'vendor/',   // jelix is installed from a zip/tgz package
-                        LIB_PATH . '../vendor/', // jelix is installed from git
-                        LIB_PATH. '../../../' // jelix is installed with Composer
-                        ) as $path) {
-           if (file_exists($path)) {
-              $param['rp_vendor'] = Path::shortestPath($appPath, realpath($path).'/').'/';
-              break;
-           }
+        $param['jelix_package_name'] = 'jelix';
+        $param['jelix_version'] = \jFramework::version();
+
+
+        if ($this->composerMode == self::COMPJSON_NEW) {
+            $param['rp_jelix'] = $appPath.'/vendor/jelix/jelix/lib/jelix/';
+            $param['rp_lib']   = $appPath.'/vendor/jelix/jelix/lib/';
+            $param['rp_vendor'] = $appPath.'/vendor/';
+            $this->createFile($appPath.'composer.json','composer_new.json.tpl', $param, "Composer file");
+        }
+        elseif ($this->composerMode == self::COMPJSON_NEW_CURRENT_JELIX) {
+            $param['rp_jelix'] = Path::shortestPath($appPath, $this->jelixPath).'/';
+            $param['rp_lib']   = Path::shortestPath($appPath, dirname(rtrim($this->jelixPath, DIRECTORY_SEPARATOR))).'/';
+            $param['rp_vendor'] = $appPath.'/vendor/';
+            $this->createFile($appPath.'composer.json','composer_new_current.json.tpl', $param, "Composer file");
+        }
+        else { // composer mode COMPJSON_CURRENT and COMPJSON_NONE
+            $param['rp_jelix'] = Path::shortestPath($appPath, $this->jelixPath).'/';
+            $param['rp_lib']   = Path::shortestPath($appPath, dirname(rtrim($this->jelixPath, DIRECTORY_SEPARATOR))).'/';
+            $param['rp_vendor'] = Path::shortestPath($appPath, $this->vendorPath.'/').'/';
         }
 
-        $param['rp_app']   = Path::shortestPath($wwwpath, $appPath).'/';
+        $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
+        if ($param['rp_vendor']) {
+            $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);
+            $this->createFile($appPath.'application.init.php','application2.init.php.tpl',$param, "Bootstrap file");
+        }
+        else {
+            $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
+        }
+
+        $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
+        $this->createFile($appPath.'.gitignore','git_ignore.tpl', $param, ".gitignore");
+        $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
+        $this->createFile($appPath.'dev.php','dev.php.tpl', $param, "Script for developer commands");
+        $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
 
         $this->createFile(\jApp::logPath().'.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::varPath().'mails/.dummy', 'dummy.tpl', array());
@@ -304,12 +394,6 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(\jApp::tempBasePath().'.dummy', 'dummy.tpl', array());
 
-        $this->createFile($appPath.'.htaccess', 'htaccess_deny', $param, "Configuration file for Apache");
-        $this->createFile($appPath.'.gitignore','git_ignore.tpl', $param, ".gitignore");
-        $this->createFile($appPath.'project.xml','project.xml.tpl', $param, "Project description file");
-        $this->createFile($appPath.'composer.json','composer.json.tpl', $param, "Composer file");
-        $this->createFile($appPath.'dev.php','dev.php.tpl', $param, "Script for developer commands");
-        $this->createFile($appPath.'console.php','console.php.tpl', $param, "Script for module commands");
         $this->createFile(\jApp::appSystemPath('mainconfig.ini.php'), 'app/system/mainconfig.ini.php.tpl', $param, "Main configuration file");
         $this->createFile(\jApp::appSystemPath('framework.ini.php'), 'app/system/framework.ini.php.tpl', $param, "framework setup file");
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, "Configuration file for specific environment");
@@ -328,34 +412,30 @@ class CreateApp extends \Jelix\DevHelper\AbstractCommand
         $temp = dirname(rtrim(\jApp::tempBasePath(),'/'));
         if ($temp != rtrim($appPath,'/')) {
             if (file_exists($temp.'/.gitignore')) {
-                $gitignore = file_get_contents($temp.'/.gitignore'). "\n" .$appName."/*\n";
-                file_put_contents($temp.'/.gitignore', $gitignore);
+                $gitignore = file_get_contents($temp.'/.gitignore');
+                if (strpos($gitignore, $appName.'/*') === false) {
+                    $gitignore .= "\n" . $appName . "/*\n";
+                    file_put_contents($temp . '/.gitignore', $gitignore);
+                }
             }
             else {
                 file_put_contents($temp.'/.gitignore', $appName."/*\n");
             }
         }
         else {
-            $gitignore = file_get_contents($appPath.'.gitignore'). "\n".basename(rtrim(\jApp::tempBasePath(),'/'))."/*\n";
-            file_put_contents($appPath.'.gitignore', $gitignore);
+            $tempIgnore = $temp.'/*';
+            $gitignore = file_get_contents($appPath.'.gitignore');
+            if (strpos($gitignore, $tempIgnore) === false) {
+                $gitignore .= "\n$tempIgnore\n";
+                file_put_contents($appPath.'.gitignore', $gitignore);
+            }
         }
 
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param, "Main entry point");
         $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param, "Configuration file for Apache");
 
-        $param['php_rp_temp'] = $this->convertRp($param['rp_temp']);
-        $param['php_rp_var']  = $this->convertRp($param['rp_var']);
-        $param['php_rp_log']  = $this->convertRp($param['rp_log']);
-        $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
-        $param['php_rp_www']  = $this->convertRp($param['rp_www']);
-        $param['php_rp_jelix']  = $this->convertRp($param['rp_jelix']);
-        if ($param['rp_vendor']) {
-           $param['php_rp_vendor']  = $this->convertRp($param['rp_vendor']);
-           $this->createFile($appPath.'application.init.php','application2.init.php.tpl',$param, "Bootstrap file");
-        }
-        else {
-           $this->createFile($appPath.'application.init.php','application.init.php.tpl',$param, "Bootstrap file");
-        }
+
+
         return $param;
     }
 }
