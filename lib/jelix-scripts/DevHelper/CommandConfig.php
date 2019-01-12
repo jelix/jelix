@@ -16,7 +16,7 @@ class CommandConfig {
     /**
      * @var string the web site of the project or your company. value readed from jelix-app.json/project.xml
      */
-    public $infoWebsite='http://www.yourwebsite.undefined';
+    public $infoWebsite='';
 
     /**
      * @var string the licence of generated files. value readed from jelix-app.json/project.xml
@@ -31,17 +31,17 @@ class CommandConfig {
     /**
      * @var string the creator's name inserted in new files headers
      */
-    public $infoCreatorName='your name';
+    public $infoCreatorName='_auto';
 
     /**
      * @var string the creator's mail inserted in new file headers
      */
-    public $infoCreatorMail='your-email@yourwebsite.undefined';
+    public $infoCreatorMail='_auto';
 
     /**
      * @var string copyright of new files. value readed from jelix-app.json/project.xml
      */
-    public $infoCopyright='2015 your name';
+    public $infoCopyright='_auto';
 
     /**
      * @var string default timezone for new app
@@ -120,7 +120,7 @@ class CommandConfig {
     /**
      * @var string the web site of the project or your company, used in a new project
      */
-    public $newAppInfoWebsite='http://www.yourwebsite.undefined';
+    public $newAppInfoWebsite='';
 
     /**
      * @var string the licence of generated files, for a new project
@@ -135,7 +135,7 @@ class CommandConfig {
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='2018 a name';
+    public $newAppInfoCopyright='_auto';
 
     /**
      * @var string
@@ -168,7 +168,7 @@ class CommandConfig {
      * fill some properties from informations stored into the project.xml or jelix-app.json file.
      * @return string the application name
      */
-    function loadFromProject() {
+    function loadFromProject($projectFile) {
 
         $infos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
         if (!$infos->exists()){
@@ -179,6 +179,7 @@ class CommandConfig {
         $this->infoLicenceUrl = $infos->licenseURL;
         $this->infoCopyright = $infos->copyright;
         $this->infoWebsite = $infos->homepageURL;
+        $this->appName = $infos->name;
         return $infos->name;
     }
 
@@ -191,17 +192,84 @@ class CommandConfig {
         if (!file_exists($iniFile)) {
             return;
         }
-        $ini = parse_ini_file($iniFile);
+        $ini = parse_ini_file($iniFile, true);
         foreach ($ini as $key=>$value) {
             if (!is_array($value) && isset($this->$key)) {
+                if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+                    $value = str_replace('%YEAR%', date('Y'), $value);
+                }
                 $this->$key = $value;
             }
         }
-        if ($appname && isset($ini[$appname])) {
+        if ($appname && isset($ini[$appname]) && is_array($ini[$appname])) {
             foreach ($ini[$appname] as $key=>$value) {
-                if (isset($this->$key))
+                if (isset($this->$key)) {
+                    if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+                        $value = str_replace('%YEAR%', date('Y'), $value);
+                    }
                     $this->$key = $value;
+                }
             }
         }
+    }
+
+    function generateUndefinedProperties($toCreateApp=false) {
+        if ($toCreateApp) {
+            $domainname = $this->getDomainName($this->newAppInfoWebsite);
+            if ($domainname == '') {
+                $domainname = $this->getDomainName($this->infoWebsite);
+            }
+            $this->infoWebsite = $this->newAppInfoWebsite;
+        }
+        else {
+            $domainname = $this->getDomainName($this->infoWebsite);
+        }
+        if ($domainname == '') {
+            $domainname = $this->appName;
+        }
+
+        if ($toCreateApp || $this->newAppInfoCopyright == '_auto') {
+            $this->newAppInfoCopyright = date('Y') . ' ' . $domainname;
+        }
+
+        if ($toCreateApp || $this->infoCopyright == '_auto') {
+            $this->infoCopyright = $this->newAppInfoCopyright;
+        }
+        if ($this->infoCreatorName == '_auto') {
+            $this->infoCreatorName = $domainname;
+        }
+        if ($this->infoCreatorMail == '_auto') {
+            if ($domainname != $this->appName) {
+                $this->infoCreatorMail = 'contact@'.$domainname;
+            }
+            else {
+                $this->infoCreatorMail = '';
+            }
+        }
+        if ($toCreateApp) {
+            $this->infoLicence = $this->newAppInfoLicence;
+            $this->infoLicenceUrl = $this->newAppInfoLicenceUrl;
+            $this->infoLocale = $this->newAppInfoLocale;
+        }
+    }
+
+    protected function getDomainName($url) {
+        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $url, $m)) {
+            list($domainname) = explode('/', $m[3]);
+            return $domainname;
+        }
+        else {
+            return '';
+        }
+    }
+
+    public function copyAppInfo($onlyUndefined = true) {
+        if (! $onlyUndefined  || $this->infoCopyright == '_auto') {
+            $this->infoCopyright = $this->newAppInfoCopyright;
+        }
+        $this->infoWebsite = $this->newAppInfoWebsite;
+        $this->infoLicence = $this->newAppInfoLicence;
+        $this->infoLicenceUrl = $this->newAppInfoLicenceUrl;
+        $this->infoLocale = $this->newAppInfoLocale;
     }
 }

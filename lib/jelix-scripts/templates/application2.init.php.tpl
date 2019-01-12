@@ -21,12 +21,12 @@ require($vendorDir.'autoload.php');
 
 require($vendorDir.'jelix_app_path.php');
 
-// if you use composer, you can declares these path in the composer.json
-// file instead of declaring them here...
+// Declares here paths of directories containings plugins and modules,
+// that are not already declared into composer.json files of Composer packages
 \Jelix\Core\App::declareModulesDir(array(
-                        __DIR__.'/modules/'
-                    ));
+    __DIR__.'/modules/'
+));
 \Jelix\Core\App::declarePluginsDir(array(
-                        __DIR__.'/plugins'
-                    ));
+    __DIR__.'/plugins'
+));
 

@@ -12,7 +12,7 @@
     ],
     "require": {
         "php": ">=5.6",
-        "jelix/composer-module-setup": "0.2"
+        "jelix/composer-module-setup": "^0.4.0"
     },
     "autoload": {
         "files": [ "%%rp_jelix%%init.php"  ]

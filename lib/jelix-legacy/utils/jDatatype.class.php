@@ -113,10 +113,6 @@ class jDatatypeString extends jDatatype {
         }
         return true;
     }
-
-    public function allowWhitespace() {
-        return true;
-    }
 }
 
 /**

@@ -109,15 +109,17 @@ abstract class jFormsControl {
      */
     function check(){
         $value = $this->container->data[$this->ref];
-        if(trim($value) == '') {
-            if($this->required)
+        if (!$this->datatype->allowWhitespace()) {
+            $this->container->data[$this->ref] = $value = trim($value);
+        }
+        if (trim($value) == '') {
+            if ($this->required) {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
-            if (!$this->datatype->allowWhitespace()) {
-                $this->container->data[$this->ref] = trim($value);
             }
         }elseif(!$this->datatype->check($value)){
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
-        }elseif($this->datatype instanceof jIFilteredDatatype) {
+        }
+        if($this->datatype instanceof jIFilteredDatatype) {
             $this->container->data[$this->ref] = $this->datatype->getFilteredValue();
         }
         return null;

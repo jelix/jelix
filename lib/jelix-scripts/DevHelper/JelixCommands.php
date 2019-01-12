@@ -27,6 +27,7 @@ class JelixCommands {
         \Jelix\Scripts\Utils::checkTempPath();
 
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
+        $jelixScriptConfig->generateUndefinedProperties();
 
         $application = new Application("Jelix helpers for the developer");
         $application->add(new Command\MigrateApp($jelixScriptConfig));

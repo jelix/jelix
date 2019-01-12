@@ -14,16 +14,23 @@ class JelixScript {
 
     /**
      * load the configuration of jelix-scripts
-     * @param string $appname the application name
+     * @param string $appname the application name. leave empty to load it from
+     *       the project file
      * @return CommandConfig
      */
-    static function loadConfig($appname='') {
+    static function loadConfig($appname='')
+    {
         $config = new CommandConfig();
 
-        if ($appname === '')
-            $appname = $config->loadFromProject();
-        else if ($appname === false) // don't load from project..
+        if ($appname === '') {
+            $appname = $config->loadFromProject(\jApp::appPath('project.xml'));
+        } else if ($appname === false) {
+            // don't load from project..
             $appname = '';
+        }
+        else {
+            $config->appName = $appname;
+        }
 
         // try to find a .jelix-scripts.ini in the current directory or parent directories
         $dir = getcwd();
@@ -72,7 +79,6 @@ class JelixScript {
            date_default_timezone_set($config->infoTimezone);
         }
 
-        $config->appName = $appname;
         return $config;
     }
 }
