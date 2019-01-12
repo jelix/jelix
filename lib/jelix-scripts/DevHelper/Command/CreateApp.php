@@ -154,6 +154,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
     {
         $appPath = $input->getArgument('path');
         $appPath = Path::normalizePath($appPath, 0, getcwd());
+        // at this point, $appPath is always an absolute path
         $appName = basename($appPath);
         $appPath .= '/';
 
@@ -288,6 +289,13 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         }
     }
 
+    /**
+     * @param string $appPath absolute path to the new application directory
+     * @param string $appName
+     * @param string $wwwpath
+     * @param InputInterface $input
+     * @return array list of relative path of some directories for the application
+     */
     protected function _createSkeleton($appPath, $appName, $wwwpath, InputInterface $input) {
         
 
@@ -353,15 +361,15 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
 
 
         if ($this->composerMode == self::COMPJSON_NEW) {
-            $param['rp_jelix'] = $appPath.'/vendor/jelix/jelix/lib/jelix/';
-            $param['rp_lib']   = $appPath.'/vendor/jelix/jelix/lib/';
-            $param['rp_vendor'] = $appPath.'/vendor/';
+            $param['rp_jelix'] = 'vendor/jelix/jelix/lib/jelix/';
+            $param['rp_lib']   = 'vendor/jelix/jelix/lib/';
+            $param['rp_vendor'] = 'vendor/';
             $this->createFile($appPath.'composer.json','composer_new.json.tpl', $param, "Composer file");
         }
         elseif ($this->composerMode == self::COMPJSON_NEW_CURRENT_JELIX) {
             $param['rp_jelix'] = Path::shortestPath($appPath, $this->jelixPath).'/';
             $param['rp_lib']   = Path::shortestPath($appPath, dirname(rtrim($this->jelixPath, DIRECTORY_SEPARATOR))).'/';
-            $param['rp_vendor'] = $appPath.'/vendor/';
+            $param['rp_vendor'] = 'vendor/';
             $this->createFile($appPath.'composer.json','composer_new_current.json.tpl', $param, "Composer file");
         }
         else { // composer mode COMPJSON_CURRENT and COMPJSON_NONE
@@ -409,33 +417,51 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createFile($appPath.'install/uninstall/uninstaller.ini.php','installer/uninstall/uninstaller.ini.php',$param, "uninstaller.ini.php file");
         $this->createFile($appPath.'tests/runtests.php','tests/runtests.php', $param, "Tests script");
 
-        $temp = dirname(rtrim(\jApp::tempBasePath(),'/'));
-        if ($temp != rtrim($appPath,'/')) {
-            if (file_exists($temp.'/.gitignore')) {
-                $gitignore = file_get_contents($temp.'/.gitignore');
-                if (strpos($gitignore, $appName.'/*') === false) {
-                    $gitignore .= "\n" . $appName . "/*\n";
-                    file_put_contents($temp . '/.gitignore', $gitignore);
-                }
-            }
-            else {
-                file_put_contents($temp.'/.gitignore', $appName."/*\n");
-            }
-        }
-        else {
-            $tempIgnore = $temp.'/*';
-            $gitignore = file_get_contents($appPath.'.gitignore');
-            if (strpos($gitignore, $tempIgnore) === false) {
-                $gitignore .= "\n$tempIgnore\n";
-                file_put_contents($appPath.'.gitignore', $gitignore);
-            }
-        }
-
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl',$param, "Main entry point");
         $this->createFile($wwwpath.'.htaccess', 'htaccess_allow',$param, "Configuration file for Apache");
 
-
+        $this->updateGitIgnoreForTemp($appPath, $appName);
 
         return $param;
+    }
+
+    /**
+     * @param string $appPath absolute path of the application
+     * @param string $appName
+     */
+    protected function updateGitIgnoreForTemp($appPath, $appName) {
+        $tempParentDir = realpath(dirname(rtrim(\jApp::tempBasePath(),'/')));
+        if (strpos($tempParentDir, rtrim($appPath, '/')) === 0) {
+            // temp is inside the application, we modify the .gitignore application
+            $tempPattern = Path::shortestPath($appPath, \jApp::tempBasePath()).'/';
+            if (file_exists($appPath.'/.gitignore')) {
+                $gitignore = file_get_contents($appPath.'/.gitignore');
+                if (strpos($gitignore, $tempPattern) === false) {
+                    $gitignore .= "\n" . $tempPattern .'*';
+                    $gitignore .= "\n!" . $tempPattern . ".dummy\n";
+                    file_put_contents($appPath . '/.gitignore', $gitignore);
+                }
+            }
+            else {
+                $gitignore = "\n" . $tempPattern .'*';
+                $gitignore .= "\n!" . $tempPattern . ".dummy\n";
+                file_put_contents($appPath.'/.gitignore', $gitignore);
+            }
+        }
+        else {
+            // temp is outside the application, we modify the .gitignore of the temp directory
+            $tempPath = \jApp::tempBasePath();
+            if (file_exists($tempPath.'/.gitignore')) {
+                $gitignore = file_get_contents($tempPath.'/.gitignore');
+                if (strpos($gitignore, "\n*\n") === false) {
+                    $gitignore .= "\n*\n!.dummy\n!.gitignore\n";
+                    file_put_contents($tempPath . '/.gitignore', $gitignore);
+                }
+            }
+            else {
+                $gitignore = "\n*\n!.dummy\n!.gitignore\n";
+                file_put_contents($tempPath.'/.gitignore', $gitignore);
+            }
+        }
     }
 }
