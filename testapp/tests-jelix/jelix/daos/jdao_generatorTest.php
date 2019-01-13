@@ -774,6 +774,7 @@ class jdao_generatorTest extends jUnitTestCase {
             <values>
                  <value property="price"     expr="$price"     />
                  <value property="price_big" expr="$price_big" />
+                 <value property="name" expr="concat(name, $price)" />
             </values>
        </method>
    </factory>
@@ -787,7 +788,11 @@ class jdao_generatorTest extends jUnitTestCase {
         $src = array();
         $generator->GetBuildUpdateUserQuery($methods['test'], $src, $primaryFields);
         
-        $this->assertEquals('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
+        $this->assertEquals('    $__query = \'UPDATE  SET '."\n".
+            ' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\','.
+            ' `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\','.
+            ' `name`= concat(name, \'.($price === null ? \'NULL\' : $this->_conn->quote2($price,false)).\')\';'
+            , implode("\n",$src));
     }
 
 }
