@@ -463,6 +463,8 @@ cd lib/jelix/plugins/cache/redis_ext
 
 cd lib/jelix/plugins/configcompiler/debugbar
   debugbar.configcompiler.php
+cd lib/jelix/plugins/configcompiler/jquery
+  jquery.configcompiler.php
 cd lib/jelix/plugins/configcompiler/locales
   locales.configcompiler.php
 cd lib/jelix/plugins/configcompiler/nsautoloader

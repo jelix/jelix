@@ -65,7 +65,7 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
         $result ='<form class="foo" action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->jquery['jquery'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -83,7 +83,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="get" id="'.self::$builder->getName().'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->jquery['jquery'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1452,7 +1452,7 @@ jFormsJQ.tForm.addControl(c);
         $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'" enctype="multipart/form-data"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->jquery['jquery'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1545,7 +1545,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->jquery['jquery'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1566,7 +1566,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $result ='<form action="'.jApp::urlBasePath().'index.php/jelix_tests/urlsig/url1" method="post" id="'.self::$formname.'"><script type="text/javascript">
 //<![CDATA[
 jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/jforms/getListData\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->jquery['jquery'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
