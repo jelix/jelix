@@ -10,9 +10,9 @@ cd lib/jelix-www/design/images
 cd lib/jelix-www/js
 c __ALL__
 cd lib/jelix-www/js/jforms/datepickers/default
-c __ALL__
+  __ALL__
 cd lib/jelix-www/js/jforms/htmleditors/
-c __ALL__
+  __ALL__
 cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
   wymiframe.html
   wymiframe.css
