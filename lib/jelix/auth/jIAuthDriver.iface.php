@@ -63,7 +63,7 @@ interface jIAuthDriver {
     /**
      * construct the user list
      * @param string $pattern '' for all users
-     * @return array array of user object
+     * @return object[] array of objects representing the users
      */
     public function getUserList($pattern);
 

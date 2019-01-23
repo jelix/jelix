@@ -43,7 +43,7 @@ class jEvent {
     protected $_params = null;
 
     /**
-    * @var array of array
+    * @var mixed[][]
     */
     protected $_responses = array ();
 
@@ -134,7 +134,7 @@ class jEvent {
 
     /**
     * gets all the responses
-    * @return array of associative array
+    * @return mixed[][]  associative array
     */
     public function getResponse () {
         return $this->_responses;
@@ -175,14 +175,14 @@ class jEvent {
     * because a listener can listen several events, we should
     * create only one instancy of a listener for performance, and
     * $hashListened will contains only reference to this listener.
-    * @var array of jEventListener
+    * @var jEventListener[]
     */
     protected static $listenersSingleton = array ();
 
     /**
     * hash table for event listened.
     * $_hash['eventName'] = array of events (by reference)
-    * @var associative array of object
+    * @var object[] array of object
     */
     protected static $hashListened = array ();
 

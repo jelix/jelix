@@ -295,7 +295,7 @@ class jAuth {
     /**
      * construct the user list
      * @param string $pattern '' for all users
-     * @return array array of object
+     * @return object[] array of objects representing the users
      */
     public static function getUserList($pattern = '%'){
         $dr = self::getDriver();

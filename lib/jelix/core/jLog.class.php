@@ -81,7 +81,7 @@ class jLog {
 
     /**
      * all messages, when the memory logger is used
-     * @var array  array of jILogMessage
+     * @var jILogMessage[]
      */
     protected static $allMessages = array();
 
@@ -208,7 +208,7 @@ class jLog {
      * returns messages stored in memory (if the memory logger is activated)
      * @param string|array $filter if given, category or list of categories
      *                             of messages you want to retrieve
-     * @return array  the list of jILogMessage object
+     * @return jILogMessage[]
      */
     public static function getMessages($filter = false) {
         if ($filter === false || self::$allMessages === null)

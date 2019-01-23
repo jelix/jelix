@@ -164,7 +164,7 @@ abstract class jInstallerComponentBase {
      * 
      * @param jInstallerEntryPoint $ep the entry point
      * @throw jInstallerException  if an error occurs during the install.
-     * @return array   array of jIInstallerComponent
+     * @return jIInstallerComponent[]
      */
     abstract function getUpgraders($ep);
 
