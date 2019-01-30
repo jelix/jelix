@@ -244,6 +244,12 @@ abstract class jInstallerComponentBase {
 
         if (isset($xml->dependencies)) {
             foreach ($xml->dependencies->children() as $type=>$dependency) {
+
+                if ($type != 'jelix' && $type != 'module' && $type != 'plugin') {
+                    // lets ignore tags introduced for jelix 1.7, like <choice> or <conflicts>
+                    continue;
+                }
+
                 $minversion = isset($dependency['minversion'])?(string)$dependency['minversion']:'*';
                 if (trim($minversion) == '')
                     $minversion = '*';
