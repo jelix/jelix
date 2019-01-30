@@ -193,6 +193,14 @@ class defaultCtrl extends jController {
         jEvent::notify('jauthdbAdminBeforeCheckCreateForm', array('form'=>$form));
 
         $form->initFromRequest();
+
+        $login = $form->getData('login');
+        if (jAuth::getUser($login)) {
+            $form->setErrorOn('login', jLocale::get('crud.message.create.existing.user', $login));
+            $rep->action = 'default:create';
+            return $rep;
+        }
+
         $evresp = array();
         if ($form->check()  &&
             !jEvent::notify('jauthdbAdminCheckCreateForm', array('form'=>$form))
