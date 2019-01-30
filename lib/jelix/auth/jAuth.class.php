@@ -4,7 +4,7 @@
 * @subpackage auth
 * @author     Laurent Jouanneau
 * @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire, Vincent Viaud
-* @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+* @copyright  2001-2005 CopixTeam, 2005-2019 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
 * @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV, 2010 BP2I
 *
 * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
@@ -15,9 +15,11 @@
 
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAuthDriver.iface.php
+#includephp jIAuthDriver2.iface.php
 #includephp jAuthDriverBase.class.php
 #else
 require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
+require(JELIX_LIB_PATH.'auth/jIAuthDriver2.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 #endif
 
@@ -154,7 +156,8 @@ class jAuth {
         if (self::$driver === null) {
             $config = self::loadConfig();
             $db = strtolower($config['driver']);
-            $driver = jApp::loadPlugin($db, 'auth', '.auth.php', $config['driver'].'AuthDriver', $config[$config['driver']]);
+            $driver = jApp::loadPlugin($db, 'auth', '.auth.php',
+                $config['driver'].'AuthDriver', $config[$config['driver']]);
             if(is_null($driver))
                 throw new jException('jelix~auth.error.driver.notfound',$db);
             self::$driver = $driver;
@@ -258,8 +261,9 @@ class jAuth {
      */
     public static function updateUser($user){
         $dr = self::getDriver();
-        if($dr->updateUser($user) === false)
+        if ($dr->updateUser($user) === false) {
             return false;
+        }
 
         if(self::isConnected() && self::getUserSession()->login === $user->login){
             $config = self::loadConfig();
@@ -300,6 +304,22 @@ class jAuth {
     public static function getUserList($pattern = '%'){
         $dr = self::getDriver();
         return $dr->getUserlist($pattern);
+    }
+
+    /**
+     * Indicate if the password can be changed technically.
+     *
+     * Not related to rights with jAcl2
+     * @param string $login the login of the user
+     * @return boolean
+     * @since 1.6.21
+     */
+    public static function canChangePassword($login) {
+        $dr = self::getDriver();
+        if ($dr instanceof jIAuthDriver2) {
+            return $dr->canChangePassword($login);
+        }
+        return true;
     }
 
     /**

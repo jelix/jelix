@@ -3,7 +3,7 @@
 * @package   admin
 * @subpackage jauthdb_admin
 * @author    Laurent Jouanneau
-* @copyright 2009 Laurent Jouanneau
+* @copyright 2009-2019 Laurent Jouanneau
 * @link      http://jelix.org
 * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
 */
@@ -132,12 +132,15 @@ class defaultCtrl extends jController {
         $tpl = new jTpl();
         $tpl->assign('id', $id);
         $tpl->assign('form',$form);
-        $tpl->assign('otherInfo', jEvent::notify('jauthdbAdminGetViewInfo', array('form'=>$form, 'tpl'=>$tpl, 'himself'=>false))->getResponse());
+        $tpl->assign('otherInfo', jEvent::notify('jauthdbAdminGetViewInfo',
+            array('form'=>$form, 'tpl'=>$tpl, 'himself'=>false))->getResponse());
         $form->deactivate('password');
         $form->deactivate('password_confirm');
-        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $id) &&  jAcl2::check('auth.users.delete'));
+        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $id) &&
+            jAcl2::check('auth.users.delete'));
         $tpl->assign('canUpdate', jAcl2::check('auth.users.modify'));
-        $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password'));
+        $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password') &&
+            jAuth::canChangePassword($id));
         $rep->body->assign('MAIN', $tpl->fetch('crud_view'));
         return $rep;
     }
@@ -189,7 +192,10 @@ class defaultCtrl extends jController {
         }
         $form->initFromRequest();
         $evresp = array();
-        if($form->check()  && !jEvent::notify('jauthdbAdminCheckCreateForm', array('form'=>$form))->inResponse('check', false, $evresp)){
+        if ($form->check()  &&
+            !jEvent::notify('jauthdbAdminCheckCreateForm', array('form'=>$form))
+                ->inResponse('check', false, $evresp)
+        ){
             $props = jDao::createRecord($this->dao, $this->dbProfile)->getProperties();
 
             $user = jAuth::createUserObject($form->getData('login'),$form->getData('password'));
@@ -302,7 +308,10 @@ class defaultCtrl extends jController {
         $form->initFromRequest();
 
         $evresp = array();
-        if($form->check() && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form'=>$form, 'himself'=>false))->inResponse('check', false, $evresp)){
+        if ($form->check() &&
+            !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form'=>$form, 'himself'=>false))
+                ->inResponse('check', false, $evresp)
+        ){
             $results = $form->prepareDaoFromControls($this->dao,$id,$this->dbProfile);
             extract($results, EXTR_PREFIX_ALL, "form");
             // we call jAuth instead of using jDao, to allow jAuth to do
