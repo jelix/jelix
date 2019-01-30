@@ -190,6 +190,8 @@ class defaultCtrl extends jController {
             $rep->action = 'default:index';
             return $rep;
         }
+        jEvent::notify('jauthdbAdminBeforeCheckCreateForm', array('form'=>$form));
+
         $form->initFromRequest();
         $evresp = array();
         if ($form->check()  &&
@@ -304,6 +306,8 @@ class defaultCtrl extends jController {
             $rep->action = 'default:index';
             return $rep;
         }
+
+        jEvent::notify('jauthdbAdminBeforeCheckUpdateForm', array('form'=>$form, 'himself'=>false));
 
         $form->initFromRequest();
 
