@@ -220,8 +220,8 @@ cd lib/installwizard/pages/end/
 cd lib/installwizard/pages/welcome/
   __ALL__
 cd lib/installwizard/pages/checkjelix/
-* checkjelix.en.php
-* checkjelix.fr.php
+  checkjelix.en.php
+  checkjelix.fr.php
   checkjelix.page.php
   checkjelix.tpl
 cd lib/installwizard/pages/dbprofile/
