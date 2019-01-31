@@ -265,7 +265,7 @@ class jConfigCompiler {
             $installation = array ();
         }
         else if (file_exists($installerFile)) {
-            $installation = parse_ini_file($installerFile, true);
+            $installation = parse_ini_file($installerFile, true, INI_SCANNER_TYPED);
         }
         else {
             if ($allModuleInfo)

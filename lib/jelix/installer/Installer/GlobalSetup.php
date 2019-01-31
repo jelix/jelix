@@ -667,7 +667,7 @@ class GlobalSetup {
         if (!$conf) {
             return null;
         }
-        if ($conf == '1') {
+        if ($conf === 1 || $conf === true) {
             $pluginConf = $config->getValues($pluginName);
             if ($pluginConf) {
                 return array($config, $pluginName);

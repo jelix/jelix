@@ -23,7 +23,7 @@ class jProfilesCompiler
      */
     public function __construct($sourceFile)
     {
-        $this->sources = parse_ini_file($sourceFile, true);
+        $this->sources = parse_ini_file($sourceFile, true, INI_SCANNER_TYPED);
     }
 
     protected $plugins = array();

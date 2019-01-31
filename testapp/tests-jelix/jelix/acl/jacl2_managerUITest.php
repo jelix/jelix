@@ -26,7 +26,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
             jAcl2::clearCache();
 
             require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-            $confContent = parse_ini_file(jApp::appSystemPath('auth_class.coord.ini.php'),true);
+            $confContent = parse_ini_file(jApp::appSystemPath('auth_class.coord.ini.php'),true, INI_SCANNER_TYPED);
             $config = jAuth::loadConfig($confContent);
             self::$coordAuthPlugin = new AuthCoordPlugin($config);
 

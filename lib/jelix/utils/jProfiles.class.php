@@ -38,7 +38,7 @@ class jProfiles {
             \Jelix\IniFile\Util::write(self::$_profiles, $tempFile);
         }
         else {
-            self::$_profiles = parse_ini_file($tempFile, true);
+            self::$_profiles = parse_ini_file($tempFile, true, INI_SCANNER_TYPED);
         }
     }
 

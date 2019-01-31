@@ -251,7 +251,7 @@ class jInstallerModule implements jIInstallerComponent {
 
         // we check if it is an alias
         if (file_exists(jApp::varConfigPath('profiles.ini.php'))) {
-            $dbprofiles = parse_ini_file(jApp::varConfigPath('profiles.ini.php'));
+            $dbprofiles = parse_ini_file(jApp::varConfigPath('profiles.ini.php'), true, INI_SCANNER_TYPED);
             if (isset($dbprofiles['jdb'][$dbProfile]))
                 $this->dbProfile = $dbprofiles['jdb'][$dbProfile];
         }
