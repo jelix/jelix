@@ -19,7 +19,7 @@ class jstestsCtrl extends jController {
       $rep->title = 'Unit tests on jforms';
       $rep->bodyTpl = 'jstest_jforms';
       $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink(jApp::config()->webassets_common['jquery.js']);
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');

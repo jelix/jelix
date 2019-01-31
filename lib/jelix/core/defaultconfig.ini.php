@@ -179,7 +179,7 @@ checkHttpsOnParsing=on
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
-; if you change it, change also all pathes in [htmleditors]
+; if you change it, change also all paths in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
 
@@ -430,6 +430,7 @@ jforms_html_light.css= "$jelix/design/jform.css"
 
 jforms_datepicker_default.css=
 jforms_datepicker_default.js[]="$jelix/jquery/ui-datepicker/i18n/datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/ui.$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
@@ -440,13 +441,11 @@ jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.
 jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
 jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
 jforms_htmleditor_default.require=jquery
-
 jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
 jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
 jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
 jforms_htmleditor_wymbasic.require=jquery
-
 jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
 
 jforms_htmleditor_ckdefault.js[]="ckeditor/ckeditor.js"

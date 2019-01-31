@@ -50,7 +50,7 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
             self::$form->securityLevel = 0;
             self::$builder = new testJFormsHtmlBuilder(self::$form);
             $js0 = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->webassets_common['jquery.js'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -61,7 +61,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 '.$js0.'//]]>
 </script>';
             $js = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.jApp::config()->webassets_common['jquery.js'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);

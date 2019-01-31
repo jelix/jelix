@@ -430,13 +430,23 @@ class ModuleInstallerLauncher {
     function getUpgraders() {
 
         if ($this->moduleMainUpgrader === null) {
-            if (!file_exists($this->moduleStatus->getPath() . 'install/upgrade.php') ||
-                $this->moduleStatus->skipInstaller
-            ) {
+            // script name for Jelix 1.6 in modules compatibles with both Jelix 1.7 and 1.6
+            if (file_exists($this->moduleStatus->getPath(). 'install/upgrade_1_6.php')) {
+                $file = $this->moduleStatus->getPath() . 'install/upgrade_1_6.php';
+            }
+            // script name for modules compatible with Jelix <=1.6
+            else if (file_exists($this->moduleStatus->getPath() . 'install/upgrade.php')) {
+                $file = $this->moduleStatus->getPath(). 'install/upgrade.php';
+            }
+            else {
+                $file = '';
+            }
+
+            if ($file == '' || $this->moduleStatus->skipInstaller) {
                 $this->moduleMainUpgrader = false;
             }
             else {
-                require_once($this->moduleStatus->getPath().'install/upgrade.php');
+                require_once($file);
 
                 $cname = $this->name.'ModuleUpgrader';
                 if (!class_exists($cname)) {

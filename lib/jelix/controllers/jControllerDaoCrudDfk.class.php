@@ -54,7 +54,7 @@ class jControllerDaoCrudDfk extends jController {
      * list of properties to show in the list page
      * if empty list (default), it shows all properties.
      * this property is only usefull when you use the default "list" template
-     * @var array
+     * @var string[]
      */
     protected $propertiesForList = array();
 
@@ -64,7 +64,7 @@ class jControllerDaoCrudDfk extends jController {
      * keys are properties name, and values are "asc" or "desc".
      * Values can be changed by the user if showPropertiesOrderLinks is true.
      * In this case, '' means undetermined.
-     * @var array
+     * @var string[]
      */
     protected $propertiesForRecordsOrder = array();
 

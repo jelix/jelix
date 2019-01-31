@@ -19,6 +19,7 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget {
         $js .= "jFormsJQ.config = {locale:".$builder->escJsStr(jApp::config()->locale).
                 ',basePath:'.$builder->escJsStr(jApp::urlBasePath()).
                 ',jqueryPath:'.$builder->escJsStr($conf['jqueryPath']).
+                ',jqueryFile:'.$builder->escJsStr(jApp::config()->webassets_common['jquery.js']).
                 ',jelixWWWPath:'.$builder->escJsStr($conf['jelixWWWPath'])."};\n";
         $js .= "jFormsJQ.tForm = new jFormsJQForm('".$builder->getName()."','".
             $builder->getForm()->getSelector()."','".

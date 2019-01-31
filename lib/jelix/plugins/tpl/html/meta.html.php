@@ -114,6 +114,9 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
             $resp->addAssets('jquery');
             $base = jApp::config()->urlengine['jqueryPath'];
             switch($param){
+                case 'default':
+                    $resp->addAssets('jquery_ui');
+                    break;
                 case 'components':
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     foreach($params as $f)
@@ -126,7 +129,10 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
                         $resp->addJSLink($base.'ui/jquery.ui.effect-'.$f.'.min.js');
                     break;
                 case 'theme':
-                    $resp->addCSSLink($base.'themes/base/jquery.ui.all.css');
+                    $css = jApp::config()->jquery['jqueryui.css'];
+                    foreach($css as $file) {
+                        $resp->addCSSLink($file);
+                    }
                     break;
             }
             break;
