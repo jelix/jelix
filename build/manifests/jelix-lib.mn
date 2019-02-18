@@ -68,6 +68,10 @@ cd lib/Jelix/Mailer
 cd lib/Jelix/Routing
   __ALL_RECURSIVELY__
 
+cd lib/Jelix/WebAssets
+  __ALL__
+
+
 cd lib/jelix-legacy/
   CHANGELOG
   CREDITS
@@ -256,6 +260,8 @@ cd lib/jelix-legacy/plugins/tpl/text
 
 cd lib/jelix-legacy/plugins/tpl/xml
   __ALL__
+
+
 
 cd lib/jelix-plugins/cache/
   __ALL_RECURSIVELY__
