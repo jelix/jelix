@@ -37,32 +37,6 @@ cd lib/jelix-www/jquery/ui-datepicker/images
 ! __ALL__
 
 cd lib/jelix-www/markitup
-  __ALL__
-cd lib/jelix-www/markitup/templates
-  __ALL__
-cd lib/jelix-www/markitup/sets/default
-  __ALL__
-cd lib/jelix-www/markitup/sets/default/images
-  __ALL__
-cd lib/jelix-www/markitup/sets/markdown/
-  __ALL__
-cd lib/jelix-www/markitup/sets/markdown/images
-  __ALL__
-cd lib/jelix-www/markitup/sets/wiki
-  __ALL__
-cd lib/jelix-www/markitup/sets/wiki/images
-  __ALL__
-cd lib/jelix-www/markitup/sets/wr3
-  __ALL__
-cd lib/jelix-www/markitup/sets/wr3/images
-  __ALL__
-cd lib/jelix-www/markitup/skins
-cd lib/jelix-www/markitup/skins/simple
-  __ALL__
-cd lib/jelix-www/markitup/skins/simple/images
- __ALL__
-cd lib/jelix-www/markitup/skins/markitup
-  __ALL__
-cd lib/jelix-www/markitup/skins/markitup/images
-  __ALL__
+  __ALL_RECURSIVELY__
+
 
