@@ -409,11 +409,6 @@ useCollection=common
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.min.js"
 
-; In Jelix we need only the datepicker from jQueryUI.
-; So JQuery UI bundled into Jelix has been built with only the datepicker widget
-; To have more jQueryUI features, download your own version from http://jqueryui.com/download/,
-; put files into you www/ of your app, and list them here.
-; Do not overwrite files into lib/jelix-www/ !
 jquery_ui.js = "$jelix/jquery/ui/jquery-ui.min.js"
 jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.min.css"
 jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.structure.min.css"
@@ -433,9 +428,10 @@ jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/ui.$lang.js
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
-; we don't have yet a real datetime picker
 jforms_datetimepicker_default.require=jforms_datepicker_default
-jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
+jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
 jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
 jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
