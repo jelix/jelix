@@ -22,7 +22,7 @@ class Profiles {
 
     /**
      * pool of objects loaded for profiles
-     * @var array   array of object
+     * @var object[]
      */
     protected static $_objectPool = array();
 
@@ -36,7 +36,7 @@ class Profiles {
             \Jelix\IniFile\Util::write(self::$_profiles, $tempFile);
         }
         else {
-            self::$_profiles = parse_ini_file($tempFile, true);
+            self::$_profiles = parse_ini_file($tempFile, true, INI_SCANNER_TYPED);
         }
     }
 

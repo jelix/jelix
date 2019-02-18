@@ -192,7 +192,7 @@ class CommandConfig {
         if (!file_exists($iniFile)) {
             return;
         }
-        $ini = parse_ini_file($iniFile, true);
+        $ini = parse_ini_file($iniFile, true, INI_SCANNER_TYPED);
         foreach ($ini as $key=>$value) {
             if (!is_array($value) && isset($this->$key)) {
                 if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {

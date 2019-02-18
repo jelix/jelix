@@ -313,6 +313,9 @@ abstract class ClientRequest {
      */
    function isHttps() {
        if (App::config()->urlengine['forceProxyProtocol'] == 'https') {
+           if (trim(App::config()->forceHTTPSPort) === '') {
+               App::config()->forceHTTPSPort = true;
+           }
            return true;
        }
 
@@ -397,7 +400,7 @@ abstract class ClientRequest {
          $https = $forceHttps;
 
       $forcePort = ($https ? App::config()->forceHTTPSPort : App::config()->forceHTTPPort);
-      if ($forcePort === true) {
+      if ($forcePort === true || $forcePort === '1') {
          return '';
       }
       else if ($forcePort) { // a number

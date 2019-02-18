@@ -32,7 +32,7 @@ class Event {
     protected $_params = null;
 
     /**
-    * @var array of array
+    * @var mixed[][]
     */
     protected $_responses = array ();
 
@@ -123,7 +123,7 @@ class Event {
 
     /**
     * gets all the responses
-    * @return array of associative array
+    * @return mixed[][]  associative array
     */
     public function getResponse () {
         return $this->_responses;

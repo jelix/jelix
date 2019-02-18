@@ -113,13 +113,13 @@ class Checker extends CheckerBase {
     protected function checkPhpSettings(){
         /*
         if (file_exists(\jApp::mainConfigFile())) {
-            $defaultconfig = parse_ini_file(\jApp::mainConfigFile(), true);
+            $defaultconfig = parse_ini_file(\jApp::mainConfigFile(), true, INI_SCANNER_TYPED);
         }
         else {
             $defaultconfig = array();
         }
         if (file_exists(\jApp::appSystemPath("index/config.ini.php"))) {
-            $indexconfig = parse_ini_file(\jApp::appSystemPath("index/config.ini.php"), true);
+            $indexconfig = parse_ini_file(\jApp::appSystemPath("index/config.ini.php"), true, INI_SCANNER_TYPED);
         }
         else {
             $indexconfig = array();

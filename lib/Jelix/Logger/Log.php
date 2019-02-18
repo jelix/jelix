@@ -151,7 +151,7 @@ class Log {
      * returns messages stored in memory (if the memory logger is activated)
      * @param string|array $filter if given, category or list of categories
      *                             of messages you want to retrieve
-     * @return array  the list of MessageInterface object
+     * @return MessageInterface[]  the list of MessageInterface object
      */
     public static function getMessages($filter = false) {
         if ($filter === false || self::$allMessages === null)

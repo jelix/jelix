@@ -5,7 +5,7 @@
 * @author      Laurent Jouanneau
 * @contributor Yann, Dominique Papin
 * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
-* @copyright   2005-2018 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+* @copyright   2005-2019 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
 * @copyright   2008 Warren Seine, Alexis Métaireau
 * @copyright   2009 Julien Issler, Olivier Demah
 * @copyright   2010 Brice Tence
@@ -88,58 +88,59 @@ class jResponseHtml extends jResponseBasicHtml {
 
     /**
      * list of css stylesheet
-     * @var array  key = url, value=link attributes
+     * @var array[]  key = url, value=link attributes
      */
     protected $_CSSLink = array ();
 
     /**
      * list of css stylesheet for IE
-     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @var array[]  key = url, value=link attributes + optional parameter _iecondition
      * @deprecated since 1.7.0
      */
     protected $_CSSIELink = array ();
 
     /**
      * list of CSS code
+     * @var string[]
      */
     protected $_Styles  = array ();
 
     /**
      * list of js script
-     * @var array  key = url, value=link attributes
+     * @var array[]  key = url, value=link attributes
      */
     protected $_JSLink  = array ();
 
     /**
      * list of js script for IE
-     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @var array[]  key = url, value=link attributes + optional parameter _iecondition
      * @deprecated since 1.7.0
      */
     protected $_JSIELink  = array ();
 
     /**
      * inline js code to insert before js links
-     * @var array list of js source code
+     * @var string[] list of js source code
      */
     protected $_JSCodeBefore  = array ();
 
     /**
      * inline js code to insert after js links
-     * @var array list of js source code
+     * @var string[] list of js source code
      */
     protected $_JSCode  = array ();
 
-    protected $_assetsGroups = array();
+
 
     /**
      * list of keywords to add into a meta keyword tag
-     * @var array  array of strings
+     * @var string[]
      */
     protected $_MetaKeywords = array();
 
     /**
      * list of descriptions to add into a meta description tag
-     * @var array  array of strings
+     * @var string[]
      */
     protected $_MetaDescription = array();
 
@@ -181,12 +182,19 @@ class jResponseHtml extends jResponseBasicHtml {
      */
     protected $_endTag="/>\n";
 
+
+    /**
+     * @var \Jelix\WebAssets\WebAssetsSelection
+     */
+    protected $webAssetsSelection;
+
     /**
     * constructor;
     * setup the charset, the lang, the template engine
     */
     function __construct (){
         $this->body = new jTpl();
+        $this->webAssetsSelection = new \Jelix\WebAssets\WebAssetsSelection();
         parent::__construct();
     }
 
@@ -221,10 +229,19 @@ class jResponseHtml extends jResponseBasicHtml {
         // retrieve errors messages and log messages
         jLog::outputLog($this);
 
-        foreach($this->plugins as $name=>$plugin)
+        foreach($this->plugins as $name=>$plugin) {
             $plugin->beforeOutput();
+        }
 
-        $this->retrieveAssets();
+        $this->webAssetsSelection->compute(jApp::config(),
+            jApp::config()->webassets['useCollection'],
+            jApp::urlBasePath(),
+            array(
+                '$lang' =>  jLocale::getCurrentLang(),
+                '$locale' =>  jLocale::getCurrentLocale(),
+                '$theme' => rtrim('themes/'.jApp::config()->theme, '/'),
+                '$jelix' => rtrim(jApp::urlJelixWWWPath(), '/')
+        ));
 
         // now let's output the html content
         $this->sendHttpHeaders();
@@ -476,7 +493,7 @@ class jResponseHtml extends jResponseBasicHtml {
      * @param string $assetGroup
      */
     public function addAssets($assetGroup) {
-        $this->_assetsGroups[] = $assetGroup;
+        $this->webAssetsSelection->addAssetsGroup($assetGroup);
     }
 
 
@@ -566,100 +583,6 @@ class jResponseHtml extends jResponseBasicHtml {
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
     }
 
-    protected function retrieveAssets()
-    {
-        if (!count($this->_assetsGroups)) {
-            return;
-        }
-        $conf = jApp::config();
-        $assetsCollection = 'webassets_' . $conf->webassets['useCollection'];
-
-        if (!isset($conf->$assetsCollection)) {
-            return;
-        }
-        $assets = $conf->$assetsCollection;
-        foreach($this->_assetsGroups as $group) {
-            $this->includeAssetsGroup($assets, $group);
-        }
-    }
-
-    protected $includedAssetsGroups = array();
-    protected $cssAssets = array();
-    protected $jsAssets = array();
-    protected function includeAssetsGroup(&$assets, $group) {
-        if (isset($this->includedAssetsGroups[$group])) {
-            // avoid circular dependencies
-            return;
-        }
-
-        $this->includedAssetsGroups[$group] = true;
-        $missing = true;
-        if (isset($assets[$group.'.require'])) {
-            $missing = false;
-            foreach($assets[$group.'.require'] as $assetGroup) {
-                $this->includeAssetsGroup($assets, $assetGroup);
-            }
-        }
-
-        if (isset($assets[$group.'.js'])) {
-            $missing = false;
-            foreach($assets[$group.'.js'] as $jsAsset) {
-                $assetUrl = $this->parseAsset($jsAsset);
-                if (!isset($this->jsAssets[$assetUrl])) {
-                    $this->jsAssets[$assetUrl] = true;
-                }
-                if (isset($this->_JSLink[$assetUrl])) {
-                    unset($this->_JSLink[$assetUrl]);
-                }
-            }
-        }
-        if (isset($assets[$group.'.css'])) {
-            $missing = false;
-            foreach($assets[$group.'.css'] as $cssAsset) {
-                $assetUrl = $this->parseAsset($cssAsset);
-                if (!isset($this->cssAssets[$assetUrl])) {
-                    $this->cssAssets[$assetUrl] = true;
-                }
-                if (isset($this->_CSSLink[$assetUrl])) {
-                    unset($this->_CSSLink[$assetUrl]);
-                }
-            }
-        }
-        if (isset($assets[$group.'.include'])) {
-            $missing = false;
-            foreach($assets[$group.'.include'] as $assetGroup) {
-                $this->includeAssetsGroup($assets, $assetGroup);
-            }
-        }
-        if ($missing) {
-            jLog::log('Assets group '.$group.' is missing from the configuration', 'warning');
-        }
-    }
-
-    protected function parseAsset($asset) {
-        list($assetURLType , $resource) = explode('>', $asset, 2);
-        switch($assetURLType) {
-            case 'k': // relative path to base path
-                return jApp::urlBasePath().$resource;
-            case 'b': // relative path to base path with lang/locale
-                return jApp::urlBasePath().str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 'a': // action
-                return jUrl::get($resource);
-            case 'm': // resource file stored in a module
-                list($module, $src) = explode(':', $resource, 2);
-                return jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
-            case 's': // theme path  with lang/locale
-                $resource = str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 't': // theme path
-                return jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$resource;
-            case 'l': // absolute url with lang/locale
-                return str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 'u': // absolute url
-            default:
-                return $resource;
-        }
-    }
-
     /**
      * @param string[] $params  list of attributes to add to a meta element
      * @since 1.6.17
@@ -724,8 +647,11 @@ class jResponseHtml extends jResponseBasicHtml {
 
 
         // css link
-        foreach ($this->cssAssets as $src=>$v){
+        foreach ($this->webAssetsSelection->getCssLinks() as $src){
             $this->outputCssLinkTag($src, array());
+            if (isset($this->_CSSLink[$src])) {
+                unset($this->_CSSLink[$src]);
+            }
         }
         foreach ($this->_CSSLink as $src=>$params){
             $this->outputCssLinkTag($src, $params);
@@ -766,8 +692,11 @@ class jResponseHtml extends jResponseBasicHtml {
         }
 
         // js link
-        foreach ($this->jsAssets as $src=>$v){
+        foreach ($this->webAssetsSelection->getJsLinks() as $src){
             $this->outputJsScriptTag($src, array());
+            if (isset($this->_JSLink[$src])) {
+                unset($this->_JSLink[$src]);
+            }
         }
         foreach ($this->_JSLink as $src=>$params){
             $this->outputJsScriptTag($src, $params);

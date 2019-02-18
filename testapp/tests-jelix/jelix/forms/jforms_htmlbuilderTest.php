@@ -41,6 +41,12 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
     protected static $htmlJsHeader = '';
     protected static $htmlJsFooter = '';
 
+    protected function getJQuery() {
+        $collection = jApp::config()->webassets['useCollection'];
+        return jApp::config()->{'webassets_'.$collection}['jquery.js'];
+    }
+
+
     function setUp() {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
@@ -50,7 +56,7 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
             self::$form->securityLevel = 0;
             self::$builder = new testJFormsHtmlBuilder(self::$form);
             $js0 = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -61,7 +67,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 '.$js0.'//]]>
 </script>';
             $js = 'jFormsJQ.selectFillUrl=\''.jApp::urlBasePath().'index.php/jelix/forms/getdata\';
-jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
+jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 jFormsJQ.declareForm(jFormsJQ.tForm);
@@ -1720,7 +1726,7 @@ jFormsJQ.tForm.addControl(c);
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         $ctrl->setReadOnly(true);
@@ -1731,7 +1737,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1745,7 +1751,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
 
 
@@ -1757,7 +1763,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
 
 
@@ -1769,7 +1775,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         $ctrl->required=true;
@@ -1781,7 +1787,7 @@ c.required = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
+jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",jFormsJQ.config);
 ', self::$builder->getJsContent());
     }
 }

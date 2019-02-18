@@ -102,7 +102,7 @@ plugins=
 minifyCSS=off
 minifyJS=on
 minifyExcludeCSS=
-minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php
 
 [debugbar]
@@ -179,7 +179,7 @@ checkHttpsOnParsing=on
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
-; if you change it, change also all pathes in [htmleditors]
+; if you change it, change also all paths in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
 
@@ -394,8 +394,7 @@ captcha.recaptcha.widgettype=recaptcha
 ;control type = plugin name
 
 [htmleditors]
-default.engine.name=wymeditor
-wymbasic.engine.name=wymeditor
+default.engine.name=ckeditor
 ckdefault.engine.name=ckeditor
 ckfull.engine.name=ckeditor
 ckbasic.engine.name=ckeditor
@@ -410,15 +409,10 @@ useCollection=common
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.min.js"
 
-; In Jelix we need only the datepicker from jQueryUI.
-; So JQuery UI bundled into Jelix has been built with only the datepicker widget
-; To have more jQueryUI features, download your own version from http://jqueryui.com/download/,
-; put files into you www/ of your app, and list them here.
-; Do not overwrite files into lib/jelix-www/ !
-jquery_ui.js = "$jelix/jquery/ui-datepicker/jquery-ui.min.js"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.structure.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.theme.min.css"
+jquery_ui.js = "$jelix/jquery/ui/jquery-ui.min.js"
+jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.min.css"
+jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.structure.min.css"
+jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.theme.min.css"
 jquery_ui.require = jquery
 
 jforms_html.js[]= "$jelix/js/jforms_jquery.js"
@@ -429,34 +423,27 @@ jforms_html_light.js= "$jelix/js/jforms_light.js"
 jforms_html_light.css= "$jelix/design/jform.css"
 
 jforms_datepicker_default.css=
-jforms_datepicker_default.js[]="$jelix/jquery/ui-datepicker/i18n/datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/ui.$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
-; we don't have yet a real datetime picker
 jforms_datetimepicker_default.require=jforms_datepicker_default
-jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
+jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
-jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
-jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
-jforms_htmleditor_default.require=jquery
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
-jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckdefault.js"
 
-jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
-jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
-jforms_htmleditor_wymbasic.require=jquery
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckfull.js"
 
-jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
-
-jforms_htmleditor_ckdefault.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
-
-jforms_htmleditor_ckfull.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
-
-jforms_htmleditor_ckbasic.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckbasic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
 jforms_wikieditor_default.js[]="$jelix/markitup/sets/wr3/$locale.js"

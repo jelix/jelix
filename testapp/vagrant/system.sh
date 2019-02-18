@@ -78,7 +78,9 @@ function initsystem () {
         echo "setting mysql database.."
         mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS $APPNAME CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON $APPNAME.* TO test_user;FLUSH PRIVILEGES;"
     fi
-    
+
+    sed -i -- s/bind-address\s+127\.0\.0\.1/bind-address 0.0.0.0/g /etc/mysql/my.cnf
+
     # install default vhost for apache
     cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
@@ -170,7 +172,7 @@ function resetComposer() {
 }
 
 function initapp() {
-    php $1/install/configurator.php --no-interaction
-    php $1/install/installer.php
+    php $1/install/configurator.php --no-interaction --verbose
+    php $1/install/installer.php --verbose
 }
 

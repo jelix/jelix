@@ -1462,7 +1462,7 @@ jForms.tForm.addControl(c);
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
 
         $ctrl->setReadOnly(true);
@@ -1473,7 +1473,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
 
         $ctrl->hint='ceci est un tooltip';
@@ -1487,7 +1487,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
 
 
@@ -1499,7 +1499,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
 
 
@@ -1511,7 +1511,7 @@ c.readOnly = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
 
         $ctrl->required=true;
@@ -1523,7 +1523,7 @@ c.required = true;
 c.errRequired=\'"Texte" field is required\';
 c.errInvalid=\'"Texte" field is invalid\';
 jForms.tForm.addControl(c);
-jelix_wymeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
+jelix_ckeditor_default("jforms_formtestlight1_contenu","jforms_formtestlight1","default",jForms.config);
 ', self::$builder->getJsContent());
     }
 }

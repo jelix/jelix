@@ -36,39 +36,114 @@ class WebAssetsUpgrader
                                  \Jelix\IniFile\IniModifier $targetConfig) {
         $defaultConfig = $config['default'];
 
-        // move jqueryPath to webassets
         $jqueryPath = $config->getValue('jqueryPath', 'urlengine');
         $jqueryPathOrig = $this->refConfig->getValue('jqueryPath', 'urlengine');
-        if ($jqueryPathOrig != $jqueryPath &&
-            $targetConfig->getValue('jquery.js', 'webassets_common') === null) {
-            $targetConfig->setValue('useCollection', 'main', 'webassets');
-            $targetConfig->setValue('jquery.js', $jqueryPath, 'webassets_main');
+        $jqueryPathPattern = '$jelix/jquery';
+        if ($jqueryPath && $jqueryPathOrig != $jqueryPath) {
+            $jqueryPathPattern = $jqueryPath;
         }
+
+        // move jquery to webassets
+        $jqueryJs = $config->getValue('jquery', 'jquery');
+        if ($jqueryJs && $jqueryJs != '$jqueryPath/jquery.js') {
+            $targetConfig->setValue('useCollection', 'main', 'webassets');
+            $targetConfig->setValue('jquery.js', str_replace('$jqueryPath', $jqueryPathPattern, $jqueryJs),  'webassets_main');
+        }
+
+        $jqueryJs = $config->getValue('jqueryui.js', 'jquery');
+        if ($jqueryJs &&
+            $jqueryJs != array('$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js') &&
+            $jqueryJs != '$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js'
+        ) {
+            $targetConfig->setValue('useCollection', 'main', 'webassets');
+            $targetConfig->setValue('jqueryui.js', str_replace('$jqueryPath', $jqueryPathPattern, $jqueryJs),  'webassets_main');
+        }
+
+        $jqueryCss = $config->getValue('jqueryui.css', 'jquery');
+        if ($jqueryCss &&
+            $jqueryCss != array('$jqueryPath/themes/base/jquery.ui.all.css') &&
+            $jqueryCss != '$jqueryPath/themes/base/jquery.ui.all.css'
+        ) {
+            $targetConfig->setValue('useCollection', 'main', 'webassets');
+            $targetConfig->setValue('jqueryui.css', str_replace('$jqueryPath', $jqueryPathPattern, $jqueryCss),  'webassets_main');
+        }
+
+        $targetConfig->removeSection('jquery');
 
         // move datepickers scripts to webassets
 
-        $defaultDatepickerCss = $defaultConfig->getValue('jforms_datepicker_default.css', 'webassets_common');
-        $defaultDatepickerJs = $defaultConfig->getValue('jforms_datepicker_default.js', 'webassets_common');
-        $defaultDatepickerRequire = $defaultConfig->getValue('jforms_datepicker_default.require', 'webassets_common');
-        $datapickers = $targetConfig->getValues('datepickers');
+        $datapickers = $config->getValues('datepickers');
         if ($datapickers) {
             foreach($datapickers as $configName => $script) {
-                if ($configName == 'default' &&
-                    $script == 'jelix/js/jforms/datepickers/default/init.js') {
-                    $targetConfig->removeValue($configName, 'datepickers');
+                if (strpos($configName, '.') !== false) {
                     continue;
                 }
-                $config->setValue('useCollection', 'main', 'webassets');
-                if ($script == 'jelix/js/jforms/datepickers/default/init.js') {
-                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.css', $defaultDatepickerCss, 'webassets_main');
-                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.js', $defaultDatepickerJs, 'webassets_main');
-                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.require', $defaultDatepickerRequire, 'webassets_main');
+                $js =  $config->getValue($configName.'.js', 'datepickers');
+                if ($js) {
+                    if (is_array($js)) {
+                        array_unshift($js, $script);
+                    }
+                    else {
+                        $js = array($script, $js);
+                    }
+                    $js = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $js);
+                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.js', $js,  'webassets_main');
                 }
-                else {
-                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.js', $script, 'webassets_main');
+                $css =  $config->getValue($configName.'.css', 'datepickers');
+                if ($css) {
+                    if (is_array($css)) {
+                        array_unshift($css, $script);
+                    }
+                    else {
+                        $css = array($script, $css);
+                    }
+                    $css = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $css);
+                    $targetConfig->setValue('jforms_datepicker_'.$configName.'.css', $css,  'webassets_main');
                 }
-                $targetConfig->removeValue($configName, 'datepickers');
+                $targetConfig->setValue('jforms_datepicker_'.$configName.'.require', 'jquery');
             }
+            $targetConfig->removeSection('datepickers');
+        }
+
+        $datapickers = $config->getValues('datetimepickers');
+        if ($datapickers) {
+            foreach($datapickers as $configName => $script) {
+                if (strpos($configName, '.') !== false) {
+                    continue;
+                }
+                $js =  $config->getValue($configName.'.js', 'datetimepickers');
+                if ($js) {
+                    if (is_array($js)) {
+                        array_unshift($js, $script);
+                    }
+                    else {
+                        $js = array($script, $js);
+                    }
+                    $js = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $js);
+                    $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.js', $js,  'webassets_main');
+                }
+                $css =  $config->getValue($configName.'.css', 'datetimepickers');
+                if ($css) {
+                    if (is_array($css)) {
+                        array_unshift($css, $script);
+                    }
+                    else {
+                        $css = array($script, $css);
+                    }
+                    $css = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $css);
+                    $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.css', $css,  'webassets_main');
+                }
+                $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.require', 'jquery');
+            }
+            $targetConfig->removeSection('datetimepickers');
         }
 
         // move htmleditor assets
@@ -126,10 +201,21 @@ class WebAssetsUpgrader
             if (count($newWebAssets)) {
                 $config->setValue('useCollection', 'main', 'webassets');
                 foreach($newWebAssets as $configName=>$assets) {
+                    $assets['js'] = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $assets['js']);
 
                     $targetConfig->setValue('jforms_htmleditor_'.$configName.'.js', $assets['js'], 'webassets_main');
                     $targetConfig->setValue('jforms_htmleditor_'.$configName.'.require', '', 'webassets_main');
                     foreach($assets['skin'] as $skin => $skassets) {
+                        if (is_array($skassets)) {
+                            $skassets = array_map(function ($src) use ($jqueryPathPattern) {
+                                return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                            }, $skassets);
+                        }
+                        else {
+                            $skassets = str_replace('$jqueryPath', $jqueryPathPattern, $skassets);
+                        }
                         $targetConfig->setValue('jforms_htmleditor_'.$configName.'.skin.'.$skin, $skassets, 'webassets_main');
                     }
                 }
@@ -184,6 +270,12 @@ class WebAssetsUpgrader
             if (count($newWebAssets)) {
                 $config->setValue('useCollection', 'main', 'webassets');
                 foreach ($newWebAssets as $configName => $assets) {
+                    $assets['js'] = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $assets['js']);
+                    $assets['css'] = array_map(function ($src) use ($jqueryPathPattern) {
+                        return str_replace('$jqueryPath', $jqueryPathPattern, $src);
+                    }, $assets['css']);
                     $targetConfig->setValue('jforms_wikieditor_' . $configName . '.js', $assets['js'], 'webassets_main');
                     $targetConfig->setValue('jforms_wikieditor_' . $configName . '.css', $assets['css'], 'webassets_main');
                     $targetConfig->setValue('jforms_wikieditor_' . $configName . '.require', '', 'webassets_main');

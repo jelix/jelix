@@ -321,7 +321,7 @@ class Compiler {
             $installation = array ();
         }
         else if (file_exists($installerFile)) {
-            $installation = parse_ini_file($installerFile, true);
+            $installation = parse_ini_file($installerFile, true, INI_SCANNER_TYPED);
         }
         else {
             if ($allModuleInfo)
@@ -553,9 +553,13 @@ class Compiler {
             if ($urlconf['jelixWWWPath'][0] != '/') {
                 $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
             }
+            $urlconf['jelixWWWPath'] = rtrim($urlconf['jelixWWWPath'],'/').'/';
+
             if ($urlconf['jqueryPath'][0] != '/') {
-                $urlconf['jqueryPath'] = $basepath.$urlconf['jqueryPath'];
+                $urlconf['jqueryPath'] = $basepath.rtrim($urlconf['jqueryPath'],'/').'/';
             }
+            $urlconf['jqueryPath'] = rtrim($urlconf['jqueryPath'],'/').'/';
+
             $snp = substr($urlconf['urlScript'], strlen($localBasePath));
 
             if ($localBasePath == '/') {

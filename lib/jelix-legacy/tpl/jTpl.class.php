@@ -21,6 +21,7 @@ class jTpl extends \Jelix\Castor\CastorCore {
         $basePath = jApp::urlBasePath();
         $this->_vars['j_basepath'] = $basePath;
         $this->_vars['j_jelixwww'] = $config->urlengine['jelixWWWPath'];
+        // @deprecated
         $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
         $this->_vars['j_themepath'] = $basePath.'themes/'.$config->theme.'/';
         $this->_vars['j_locale'] = $config->locale;
