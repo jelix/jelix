@@ -11,7 +11,10 @@
 */
 
 class jstestsCtrl extends jController {
-
+    protected function getJQuery() {
+        $collection = jApp::config()->webassets['useCollection'];
+        return jApp::config()->{'webassets_'.$collection}['jquery.js'];
+    }
 
   function jforms() {
       $rep = $this->getResponse('html', true);
@@ -19,7 +22,7 @@ class jstestsCtrl extends jController {
       $rep->title = 'Unit tests on jforms';
       $rep->bodyTpl = 'jstest_jforms';
       $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
-      $rep->addJsLink(jApp::config()->webassets_common['jquery.js']);
+      $rep->addJsLink($this->getJQuery());
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');
@@ -37,7 +40,7 @@ class jstestsCtrl extends jController {
       $rep->title = 'Unit tests for jsonrpc';
       $rep->bodyTpl = 'jstest_jsonrpc2';
       $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink($this->getJQuery());
       $rep->addJsLink(jApp::urlBasePath().'qunit/testrunner.js');
       return $rep;
   }
@@ -48,7 +51,7 @@ class jstestsCtrl extends jController {
       $rep->title = 'Unit tests for jquery include plugin';
       $rep->bodyTpl = 'jstest_include';
       $rep->addCssLink(jApp::urlBasePath().'qunit/testsuite.css');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/jquery.js');
+      $rep->addJsLink($this->getJQuery());
       $rep->addJsLink(jApp::urlBasePath().'qunit/testrunner.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
       return $rep;

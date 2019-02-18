@@ -117,22 +117,19 @@ function jtpl_meta_html_html($tpl, $method, $param=null, $params=array())
                 case 'default':
                     $resp->addAssets('jquery_ui');
                     break;
-                case 'components':
+                case 'components':  // deprecated
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     foreach($params as $f)
                         $resp->addJSLink($base.'ui/jquery.ui.'.$f.'.min.js');
                     break;
-                case 'effects':
+                case 'effects': // deprecated
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     $resp->addJSLink($base.'ui/jquery.ui.effect.min.js');
                     foreach($params as $f)
                         $resp->addJSLink($base.'ui/jquery.ui.effect-'.$f.'.min.js');
                     break;
-                case 'theme':
-                    $css = jApp::config()->jquery['jqueryui.css'];
-                    foreach($css as $file) {
-                        $resp->addCSSLink($file);
-                    }
+                case 'theme': // deprecated
+                    $resp->addAssets('jquery_ui');
                     break;
             }
             break;

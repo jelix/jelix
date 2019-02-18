@@ -60,6 +60,8 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
 
     protected function outputHeaderScript(){
         $conf = jApp::config()->urlengine;
+        $collection = jApp::config()->webassets['useCollection'];
+        $jquery = jApp::config()->{'webassets_'.$collection}['jquery.js'];
         // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
         echo '<script type="text/javascript">
 //<![CDATA[
@@ -67,7 +69,7 @@ jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
 jFormsJQ.config = {locale:'.$this->escJsStr(jApp::config()->locale).
     ',basePath:'.$this->escJsStr($conf['basePath']).
     ',jqueryPath:'.$this->escJsStr($conf['jqueryPath']).
-    ',jqueryFile:'.$this->escJsStr(jApp::config()->webassets_common['jquery.js']).
+    ',jqueryFile:'.$this->escJsStr($jquery).
     ',jelixWWWPath:'.$this->escJsStr($conf['jelixWWWPath']).'};
 jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\',\''.$this->_form->getSelector().'\',\''.$this->_form->getContainer()->formId.'\');
 jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
