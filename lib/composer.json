@@ -28,7 +28,8 @@
             "Jelix\\Installer\\": "jelix/installer/Installer/",
             "Jelix\\Scripts\\": "jelix/Scripts/",
             "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
-            "Jelix\\Dependencies\\" : "jelix/Dependencies"
+            "Jelix\\Dependencies\\" : "jelix/Dependencies",
+            "Jelix\\WebAssets\\" : "jelix/WebAssets"
         },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]
