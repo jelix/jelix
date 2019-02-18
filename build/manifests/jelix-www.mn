@@ -13,63 +13,9 @@ cd lib/jelix-www/js/jforms/datepickers/default
   __ALL__
 cd lib/jelix-www/js/jforms/htmleditors/
   __ALL__
-cd lib/jelix-www/js/jforms/htmleditors/wymeditor_basiciframe
-  wymiframe.html
-  wymiframe.css
 
-cd lib/jelix-www/wymeditor
-!  jquery.wymeditor.js
-!  jquery.wymeditor.min.js
-  GPL-license.txt
-  MIT-license.txt
-cd lib/jelix-www/wymeditor/iframe/default
-  __ALL__
-cd lib/jelix-www/wymeditor/iframe/legacy/
-  __ALL__
-cd lib/jelix-www/wymeditor/iframe/pretty/
-  __ALL__
-cd lib/jelix-www/wymeditor/plugins/embed/
-c jquery.wymeditor.embed.js
-cd lib/jelix-www/wymeditor/plugins/fullscreen
-  icon_fullscreen.gif
-c jquery.wymeditor.fullscreen.js
-cd lib/jelix-www/wymeditor/plugins/hovertools
-c jquery.wymeditor.hovertools.js
-cd lib/jelix-www/wymeditor/plugins/list
-c jquery.wymeditor.list.js
-cd lib/jelix-www/wymeditor/plugins/rdfa
-c jquery.wymeditor.rdfa.js
-cd lib/jelix-www/wymeditor/plugins/resizable
-c jquery.wymeditor.resizable.js
-cd lib/jelix-www/wymeditor/plugins/structured_headings/
-c jquery.wymeditor.structured_headings.js
-  structured_headings.css
-  ruler_arrow.png
-cd lib/jelix-www/wymeditor/plugins/tidy
-c jquery.wymeditor.tidy.js
-  wand.png
-cd lib/jelix-www/wymeditor/plugins/table/
-c  __ALL__
-cd lib/jelix-www/wymeditor/skins
-  wymeditor_icon.png
-cd lib/jelix-www/wymeditor/skins/compact
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/default
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/legacy/
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/minimal
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/minimal/images
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/seamless/
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/silver
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/silver/images
-  __ALL__
-cd lib/jelix-www/wymeditor/skins/twopanels
-  __ALL__
+cd lib/jelix-www/ckeditor5
+  __ALL_RECURSIVELY__
 
 cd lib/jelix-www/jquery
   MIT-LICENSE.txt

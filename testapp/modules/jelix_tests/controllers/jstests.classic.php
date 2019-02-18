@@ -25,8 +25,7 @@ class jstestsCtrl extends jController {
       $rep->addJsLink($this->getJQuery());
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'jquery/include/jquery.include.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms_jquery.js');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/jquery.wymeditor.js');
-      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'wymeditor/config/default.js');
+      $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'ckeditor5/ckeditor.js');
       $rep->addJsLink(jApp::config()->urlengine['jelixWWWPath'].'js/jforms/datepickers/default/init.js');
 
       $rep->addJsLink(jApp::urlBasePath().'qunit/testrunner.js');

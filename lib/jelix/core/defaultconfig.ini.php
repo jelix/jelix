@@ -102,7 +102,7 @@ plugins=
 minifyCSS=off
 minifyJS=on
 minifyExcludeCSS=
-minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php
 
 [debugbar]
@@ -394,8 +394,7 @@ captcha.recaptcha.widgettype=recaptcha
 ;control type = plugin name
 
 [htmleditors]
-default.engine.name=wymeditor
-wymbasic.engine.name=wymeditor
+default.engine.name=ckeditor
 ckdefault.engine.name=ckeditor
 ckfull.engine.name=ckeditor
 ckbasic.engine.name=ckeditor
@@ -438,24 +437,17 @@ jforms_datepicker_default.require=jquery_ui
 jforms_datetimepicker_default.require=jforms_datepicker_default
 jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
 
-jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
-jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
-jforms_htmleditor_default.require=jquery
-jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
-jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
-jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
-jforms_htmleditor_wymbasic.require=jquery
-jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckdefault.js"
 
-jforms_htmleditor_ckdefault.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckfull.js"
 
-jforms_htmleditor_ckfull.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
-
-jforms_htmleditor_ckbasic.js[]="ckeditor/ckeditor.js"
-jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckbasic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
 jforms_wikieditor_default.js[]="$jelix/markitup/sets/wr3/$locale.js"
