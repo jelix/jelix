@@ -164,6 +164,9 @@ class WebAssetsCompiler {
 
 
     protected function parseAsset($asset) {
+        if (strpos($asset, '$jelix') !== false) {
+            $asset = str_replace('$jelix', rtrim($this->config->urlengine['jelixWWWPath'], '/'), $asset);
+        }
         if ($asset[0] == '/' || preg_match('!^https?://!', $asset)) {
             if (strpos($asset, '$lang') !== false || strpos($asset, '$locale') !== false) {
                 return 'l>'.$asset;
@@ -178,9 +181,6 @@ class WebAssetsCompiler {
         }
         else if (strpos($asset, '$theme') === 0) {
             return 't>'.$asset;
-        }
-        else if (strpos($asset, '$jelix') === 0) {
-            return 'j>'.$asset;
         }
         else {
             if (strpos($asset, '$lang') === false && strpos($asset, '$locale') === false) {

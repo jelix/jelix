@@ -91,10 +91,6 @@ class WebAssetsSelection {
                 return str_replace(array('$lang','$locale', '$theme'),
                     array($this->variables['$lang'], $this->variables['$locale'],
                         $this->variables['$theme']), $resource);
-            case 'j': // jelix assets url with probably lang/locale
-                return str_replace(array('$lang','$locale', '$jelix'),
-                    array($this->variables['$lang'], $this->variables['$locale'],
-                        $this->variables['$jelix']), $resource);
             case 'l': // absolute url with lang/locale/theme/jelix path
                 return str_replace(array('$lang','$locale'),
                     array($this->variables['$lang'], $this->variables['$locale']),

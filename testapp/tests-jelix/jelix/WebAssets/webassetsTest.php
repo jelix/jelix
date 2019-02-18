@@ -351,6 +351,9 @@ r.js = r.js
     function testWebAssetsSelection($selection, $jsLinks, $cssLinks) {
         $compiler = new WebAssetsCompiler();
         $ini = '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+
 [webassets]
 useCollection=foo
 
@@ -395,7 +398,6 @@ r.js = r.$locale.js
             '$lang' =>  'fr',
             '$locale' =>  'fr_FR',
             '$theme' => '/srv/themes/sun',
-            '$jelix' => '/srv/jelix'
         ));
 
         $this->assertEquals($jsLinks, $select->getJsLinks());
