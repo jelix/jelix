@@ -204,6 +204,10 @@ cd lib/jelix/plugins/tpl/text
 cd lib/jelix/plugins/tpl/xml
   __ALL__
 
+cd lib/jelix/WebAssets
+  __ALL__
+
+
 cd lib/jelix-plugins/cache/
   __ALL_RECURSIVELY__
 
