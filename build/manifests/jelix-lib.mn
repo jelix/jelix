@@ -590,6 +590,9 @@ cd lib/jelix/plugins/formwidget/checkboxes_html
 cd lib/jelix/plugins/formwidget/choice_html
   choice_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/color_html
+  color_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/date_html
   date_html.formwidget.php
 
