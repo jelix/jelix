@@ -415,7 +415,8 @@ class Configurator {
     }
 
     /**
-     * @param Item[] $componentsToConfigure
+     * @param array[] $componentsToConfigure each items have a
+     *  \Jelix\Installer\Module\Configurator object and a \Jelix\Installer\ModuleInstallerLauncher object
      * @return bool
      */
     protected function runConfigure($componentsToConfigure, EntryPoint $entryPoint) {
@@ -483,6 +484,11 @@ class Configurator {
         }
     }
 
+    /**
+     * @param array[] $componentsToConfigure each items have a
+     *  \Jelix\Installer\Module\Configurator object and a \Jelix\Installer\ModuleInstallerLauncher object
+     * @return bool
+     */
     protected function runPostConfigure($componentsToConfigure, EntryPoint $entryPoint) {
 
         $result = true;
@@ -639,13 +645,16 @@ class Configurator {
     }
 
     /**
-     * @param Item[] $componentsToUnconfigure
+     * @param array[] $componentsToUnconfigure each items have a
+     *  \Jelix\Installer\Module\Configurator object and a \Jelix\Installer\ModuleInstallerLauncher object
      * @return bool
      */
     protected function runUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
         $result = true;
-        $configHelpers = new ConfigurationHelpers($this->globalSetup);
-        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup);
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
+        $localConfigHelpers = new LocalConfigurationHelpers($this->globalSetup, $interactiveCli);
 
         // In $componentsToConfigure, we have the module to unconfigure and
         // all of its reverse dependencies to unconfigure. If none of them have an
@@ -655,6 +664,7 @@ class Configurator {
         // but also all of its reverse dependencies into uninstaller.ini.php
         $shouldBackupUninstallScript = array_reduce($componentsToUnconfigure,
             function($carry, $item) {
+                /** @var \Jelix\Installer\Module\Configurator $item[1] */
                 return $carry | $item[1]->hasUninstallScript();
             }, false);
 
@@ -694,10 +704,17 @@ class Configurator {
         return $result;
     }
 
+    /**
+     * @param array[] $componentsToUnconfigure each items have a
+     *  \Jelix\Installer\Module\Configurator object and a \Jelix\Installer\ModuleInstallerLauncher object
+     * @return bool
+     */
     protected function runPostUnconfigure($componentsToUnconfigure, EntryPoint $entryPoint) {
 
         $result = true;
-        $configHelpers = new ConfigurationHelpers($this->globalSetup);
+        $interactiveCli = new InteractiveConfigurator($this->questionHelper,
+            $this->consoleInput, $this->consoleOutput);
+        $configHelpers = new ConfigurationHelpers($this->globalSetup, $interactiveCli);
 
         foreach($componentsToUnconfigure as $item) {
             try {
