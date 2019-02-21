@@ -33,7 +33,8 @@ class WebAssetsCompiler {
     function compile($configuration, $storeIntoConfiguration = true)
     {
         $this->config = $configuration;
-        $this->collections = array();
+        $this->collections = array('common'=>array());
+
 
         $vars = get_object_vars($this->config);
         // read common collection
@@ -49,7 +50,7 @@ class WebAssetsCompiler {
             if (strpos($section, 'webassets_') !== 0 || $section == 'webassets_common') {
                 continue;
             }
-            $this->collections[substr($section, 10)] = $this->parseAssetsSet($section, $commonCollection);
+            $this->collections[substr($section, 10)] = $this->parseAssetsSet($section, $this->collections['common']);
         }
 
         if ($storeIntoConfiguration) {
