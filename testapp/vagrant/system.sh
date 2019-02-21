@@ -66,9 +66,13 @@ function initsystem () {
                         php${PHP_VERSION}-dba \
                         php${PHP_VERSION}-xml \
                         php${PHP_VERSION}-mbstring \
-                        php-memcache \
                         php-memcached \
                         php-redis
+
+    if [ "$PHP_VERSION" != "7.3" ]; then
+        #not compatible with 7.3
+        apt-get -y install php-memcache
+    fi
 
     apt-get -y install mysql-server mysql-client
     apt-get -y install git vim unzip curl
