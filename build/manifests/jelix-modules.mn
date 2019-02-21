@@ -22,8 +22,6 @@ cd lib/jelix-modules/jacl/plugins/tpl/common/
 
 cd lib/jelix-modules/jacldb
   __ALL__
-cd lib/jelix-modules/jacldb/Command
-  __ALL_RECURSIVELY__
 cd lib/jelix-modules/jacldb/classes
   __ALL__
 cd lib/jelix-modules/jacldb/daos
@@ -59,6 +57,8 @@ cd lib/jelix-modules/jacl2db
   __ALL__
 cd lib/jelix-modules/jacl2db/classes
   __ALL__
+cd lib/jelix-modules/jacl2db/Command
+  __ALL_RECURSIVELY__
 cd lib/jelix-modules/jacl2db/daos
   __ALL__
 cd lib/jelix-modules/jacl2db/install

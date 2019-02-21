@@ -11,6 +11,8 @@ cd lib/jelix-www/js
 c __ALL__
 cd lib/jelix-www/js/jforms/datepickers/default
   __ALL__
+cd lib/jelix-www/js/jforms/datetimepickers/default
+  __ALL__
 cd lib/jelix-www/js/jforms/htmleditors/
   __ALL__
 
@@ -21,13 +23,15 @@ cd lib/jelix-www/jquery
   MIT-LICENSE.txt
 ! jquery.min.js
   jquery.min.map
+  jquery-ui-timepicker-addon.css
+  jquery-ui-timepicker-addon.js
   VERSION
 
 cd lib/jelix-www/jquery/flash
-c jquery.flash.js
+  jquery.flash.js
 
 cd lib/jelix-www/jquery/include
-c jquery.include.js
+  jquery.include.js
 
 cd lib/jelix-www/jquery/ui
 ! __ALL__
