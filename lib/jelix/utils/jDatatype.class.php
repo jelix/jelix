@@ -378,3 +378,17 @@ class jDatatypeEmail extends jDatatype {
         return jFilter::isEmail($value);
     }
 }
+
+
+/**
+ * Datatype Color.
+ *
+ * @package     jelix
+ * @subpackage  datatypes
+ */
+class jDatatypeColor extends jDatatype {
+
+    public function check($value){
+        return preg_match("/^#[A-Fa-f0-9]{6}$/", $value);
+    }
+}

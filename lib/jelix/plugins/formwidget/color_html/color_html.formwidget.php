@@ -22,7 +22,7 @@ class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $ctrl = $this->ctrl;
 
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
-        $js = "c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $js = "c = new ".$jFormsJsVarName."ControlColor('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         $js .="c.regexp = /^#[a-fA-F0-9]{6}$/ \n";
 
         $this->parentWidget->addJs($js);
@@ -44,7 +44,7 @@ class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         $value = $this->getValue();
         $value = $this->ctrl->getDisplayValue($value);
         $attr['style'] = 'display:inline-block;width:20px;height:20px;background-color:'.$value;
-        echo '<span ';
+        echo '<span data-value="'.$value.'" ';
         $this->_outputAttr($attr);
         echo '> </span>';
     }

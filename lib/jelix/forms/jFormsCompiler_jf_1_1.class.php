@@ -197,6 +197,20 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0 {
         return parent::generateSecret($source, $control, $attributes);
     }
 
+    protected function generateColor(&$source, $control, &$attributes) {
+        $source[]='$ctrl->datatype= new jDatatypeColor();';
+        $this->attrRequired($source, $attributes);
+        $this->attrDefaultvalue($source, $attributes);
+
+        $this->readLabel($source, $control, 'color');
+        $this->readEmptyValueLabel($source, $control);
+        $this->readHelpHintAlert($source, $control);
+        $this->attrReadOnly($source, $attributes);
+        return false;
+
+    }
+
+
     protected function generateHtmleditor(&$source, $control, &$attributes) {
         if (isset($attributes['xhtml'])) {
             $source[] = '$ctrl->datatype= new jDatatypeHtml('.($attributes['xhtml'] == 'true'?'true':'false').', true);';
