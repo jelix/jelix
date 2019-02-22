@@ -68,13 +68,18 @@ function initsystem () {
                             php${PHP_VERSION}-dba \
                             php${PHP_VERSION}-xml \
                             php${PHP_VERSION}-mbstring \
-                            php-memcache \
                             php-memcached \
                             php-redis
         sed -i "/^user = www-data/c\user = vagrant" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
         sed -i "/^group = www-data/c\group = vagrant" /etc/php/$PHP_VERSION/fpm/pool.d/www.conf
         sed -i "/display_errors = Off/c\display_errors = On" /etc/php/$PHP_VERSION/fpm/php.ini
         sed -i "/display_errors = Off/c\display_errors = On" /etc/php/$PHP_VERSION/cli/php.ini
+
+        if [ "$PHP_VERSION" != "7.3" ]; then
+            #not compatible with 7.3
+            apt-get -y install php-memcache
+        fi
+
         service php${PHP_VERSION}-fpm restart
     else
         apt-get -y install  php5-fpm \
