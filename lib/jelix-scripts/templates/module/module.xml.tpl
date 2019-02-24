@@ -13,4 +13,7 @@
     <dependencies>
         <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version_next%%"/>
     </dependencies>
+    <autoload>
+        <!--<psr4 namespace="\My\Namespace\%%module%%" dir="./"/>-->
+    </autoload>
 </module>
