@@ -80,9 +80,7 @@ class Migration {
         }
 
         $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
-        $entrypointsConfigIni = array();
-
-        $this->migrateProjectXml_1_7_0($mainConfigIni);
+        $entrypointsConfigIni = $this->migrateProjectXml_1_7_0($mainConfigIni);
 
         // move urls.xml to app/system
         $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
@@ -103,6 +101,7 @@ class Migration {
             $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php'));
             $this->migrateProfilesIni_1_7_0($profilesini);
         }
+
         if (file_exists(\jApp::varConfigPath('profiles.ini.php.dist'))) {
             $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php.dist'));
             $this->migrateProfilesIni_1_7_0($profilesini);
@@ -146,7 +145,7 @@ class Migration {
 
         $configurePath = \jApp::appPath('install/configurator.php');
         if (!file_exists($configurePath)) {
-            file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/application.init.php\');
+            file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/../application.init.php\');
 \\Jelix\\Scripts\\Configure::launch();');
             $this->reporter->message('create install/configurator.php to launch instance configuration', 'notice');
         }
@@ -158,7 +157,7 @@ class Migration {
             $rewriteInstaller = (strpos($content, 'Installer::launch') === false);
         }
         if (!file_exists($installerPath) || $rewriteInstaller) {
-            file_put_contents($installerPath, '<'.'?php require (__DIR__.\'/application.init.php\');
+            file_put_contents($installerPath, '<'.'?php require (__DIR__.\'/../application.init.php\');
 \\Jelix\\Scripts\\Installer::launch();');
             $this->reporter->message('create install/installer.php to launch instance installation', 'notice');
         }
@@ -211,14 +210,14 @@ class Migration {
     }
 
     private function migrateProjectXml_1_7_0($mainConfigIni) {
-
+        $entrypointsConfigIni = array();
         $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'),
             ';<' . '?php die(\'\');?' . '>');
         $projectDOM = new \DOMDocument();
         $projectDOM->load(\jApp::appPath('project.xml'));
         $projectxml = simplexml_import_dom($projectDOM);
         if (!isset($projectxml->entrypoints) || !isset($projectxml->entrypoints->entry)) {
-            return;
+            return $entrypointsConfigIni;
         }
         // read all entry points data
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
@@ -258,8 +257,13 @@ class Migration {
 
         $entrypointsDOM = $projectDOM->documentElement->getElementsByTagName('entrypoints')[0];
         $projectDOM->documentElement->removeChild($entrypointsDOM);
+        $dependenciesDOM = $projectDOM->documentElement->getElementsByTagName('dependencies');
+        if ($dependenciesDOM->count()) {
+            $projectDOM->documentElement->removeChild($dependenciesDOM[0]);
+        }
         $projectDOM->save(\jApp::appPath('project.xml'));
         $frameworkIni->save();
+        return $entrypointsConfigIni;
     }
 
     private function migrateProfilesIni_1_7_0(IniModifier $profilesini) {
