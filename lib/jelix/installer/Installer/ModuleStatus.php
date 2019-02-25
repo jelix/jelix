@@ -153,6 +153,10 @@ class ModuleStatus {
 
     static function unserializeParameters($parameters) {
         $trueParams = array();
+        $parameters=trim($parameters);
+        if ($parameters == '') {
+            return $trueParams;
+        }
         $params = explode(';', $parameters);
         foreach($params as $param) {
             $kp = explode("=", $param);
@@ -194,7 +198,7 @@ class ModuleStatus {
                 // don't write values that are default ones
                 continue;
             }
-            if ($v === true || $v === '') {
+            if ($v === true) {
                 $p[] = $name;
             }
             else if ($v === false) {
