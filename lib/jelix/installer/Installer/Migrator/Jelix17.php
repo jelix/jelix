@@ -20,8 +20,14 @@ class Jelix17 {
      */
     protected $reporter;
 
+    /**
+     * @var \Jelix\IniFile\IniReader
+     */
+    protected $defaultConfigIni;
+
     function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter) {
         $this->reporter = $reporter;
+        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
     }
 
     function migrate() {
@@ -54,6 +60,8 @@ class Jelix17 {
 
         $this->upgradeUrlEngine($mainConfigIni, $entrypoints);
 
+        $this->upgradeWebAssets($mainConfigIni, $entrypoints);
+
         $this->updateScripts();
 
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
@@ -78,8 +86,13 @@ class Jelix17 {
             $localConfigIni = new IniModifier($localConfigPath);
 
             $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'));
+            $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
+            $mainConfig = new \Jelix\IniFile\IniModifierArray(array(
+                'default' => $this->defaultConfigIni,
+                'main' => $mainConfigIni
+            ));
 
-
+            $webassets = new WebAssetsUpgrader($mainConfig);
             $this->migrateCoordPluginsConf($localConfigIni, true);
             foreach ($frameworkIni->getSectionList() as $section) {
                 if (!preg_match("/^entrypoint\\:(.*)$/", $section, $m)) {
@@ -88,18 +101,25 @@ class Jelix17 {
                 $configValue = $frameworkIni->getValue('config', $section);
                 $configFile = \jApp::varConfigPath($configValue);
                 if (file_exists($configFile)) {
+                    $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
                     $localEpConfigIni = new IniModifier($configFile);
                     $this->migrateCoordPluginsConf($localEpConfigIni, true);
                     if ($localEpConfigIni->getValues('modules')) {
                         $this->reporter->message('Migrate modules section from var/config/'.$configValue.' content to localconfig.ini.php', 'notice');
                         $this->migrateModulesSection($localConfigIni, $localEpConfigIni);
                     }
+                    $this->upgradeWebAssetsEp($webassets, $mainConfigIni,
+                        $epConfigIni, $localConfigIni, $localEpConfigIni);
+                    $localEpConfigIni->save();
                 }
             }
 
             $this->migrateAccessValue($localConfigIni);
             $this->migrateJelixInstallParameters($localConfigIni);
             $this->migrateInstallerIni();
+
+
+            $localConfigIni->save();
         }
         $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
     }
@@ -402,7 +422,7 @@ class Jelix17 {
         }
         $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
-            $this->reporter->message('Update installer parameters for the jelix module', 'notice');
+            $this->reporter->message('Update installer parameters for the jelix : '.$jelixInstallParams, 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
         }
     }
@@ -426,12 +446,11 @@ class Jelix17 {
         $urlXmlFileName = \jApp::appSystemPath($urlFile);
         $urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
-        $defaultConfig = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
 
         foreach($entrypoints as $epId => $ep) {
             $fullConfig = new \Jelix\IniFile\IniModifierArray(
                 [
-                    'default' => $defaultConfig,
+                    'default' => $this->defaultConfigIni,
                     'main' => $mainConfigIni,
                     'entrypoint' => $ep['config']
                 ]
@@ -455,6 +474,52 @@ class Jelix17 {
         }
         $mainConfigIni->save();
     }
+
+    /**
+     * @param IniModifier $mainConfigIni
+     * @param array $entrypoints
+     * @throws \Exception
+     */
+    private function upgradeWebAssets($mainConfigIni, $entrypoints) {
+
+
+        $mainConfig = new \Jelix\IniFile\IniModifierArray(array(
+            'default' => $this->defaultConfigIni,
+            'main' => $mainConfigIni
+        ));
+
+        $webassets = new WebAssetsUpgrader($mainConfig);
+        foreach($entrypoints as $epId => $ep) {
+            $this->upgradeWebAssetsEp($webassets, $mainConfigIni, $ep['config']);
+        }
+        $webassets = new WebAssetsUpgrader($this->defaultConfigIni);
+        $webassets->changeConfig($mainConfig, $mainConfig['main']);
+    }
+
+    private function upgradeWebAssetsEp($webassets, $mainConfigIni,
+                                        $epConfigIni, $localConfigIni=null,
+                                        $localEpConfigIni=null) {
+        if (!$localConfigIni) {
+            $epConfig = new \Jelix\IniFile\IniModifierArray(array(
+                'default' => $this->defaultConfigIni,
+                'main' => $mainConfigIni,
+                'entrypoint' =>$epConfigIni,
+            ));
+        }
+        else {
+            $epConfig = new \Jelix\IniFile\IniModifierArray(array(
+                'default' => $this->defaultConfigIni,
+                'main' => $mainConfigIni,
+                'entrypoint' =>$epConfigIni,
+                'local' => $localConfigIni,
+                'localentrypoint' => $localEpConfigIni
+            ));
+
+        }
+        $webassets->changeConfig($epConfig, $epConfigIni);
+
+    }
+
 
     private function updateScripts() {
         $consolePath = \jApp::appPath('console.php');

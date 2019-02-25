@@ -3,10 +3,11 @@
  * @package     jelix
  * @subpackage  core-module
  * @author      Laurent Jouanneau
- * @copyright   2017-2018 Laurent Jouanneau
+ * @copyright   2017-2019 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Installer\Migrator;
 
 class WebAssetsUpgrader
 {
