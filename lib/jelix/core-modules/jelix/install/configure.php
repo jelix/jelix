@@ -3,13 +3,12 @@
  * @package    jelix-modules
  * @subpackage jelix-module
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2019 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 require(__DIR__.'/WebAssetsUpgrader.php');
-require(__DIR__.'/UrlEngineUpgrader.php');
 
 class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
@@ -100,20 +99,6 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
             }
             $webassets = new WebAssetsUpgrader($mainConfig['default']);
             $webassets->changeConfig($mainConfig, $mainConfig['main']);
-
-            foreach($helpers->getEntryPointsList() as $entryPoint) {
-                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                    $entryPoint->getEpId(),
-                    $entryPoint->getUrlMap());
-                $upgraderUrl->upgrade();
-            }
-
-            foreach($helpers->getEntryPointsList() as $entryPoint) {
-                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                    $entryPoint->getEpId(),
-                    $entryPoint->getUrlMap());
-                $upgraderUrl->cleanConfig($helpers->getConfigIni()['main']);
-            }
         }
     }
 

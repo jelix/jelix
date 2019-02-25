@@ -9,6 +9,8 @@
 namespace Jelix\Installer\Migrator;
 
 use \Jelix\IniFile\IniModifier;
+use \Jelix\Installer\ModuleStatus;
+
 
 class Jelix17 {
 
@@ -28,17 +30,7 @@ class Jelix17 {
         $this->moveIntoAppSystem();
 
         $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
-        $entrypointsConfigIni = $this->migrateProjectXml($mainConfigIni);
-
-        // move urls.xml to app/system
-        $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
-        if ($urlFile == null) {
-            $urlFile = 'urls.xml';
-        }
-        if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-            $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
-            rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
-        }
+        $entrypoints = $this->migrateProjectXml($mainConfigIni);
 
         if (file_exists(\jApp::varConfigPath('profiles.ini.php'))) {
             $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php'));
@@ -52,13 +44,15 @@ class Jelix17 {
 
         // move plugin configuration file to global config
         $this->migrateCoordPluginsConf($mainConfigIni);
-        foreach ($entrypointsConfigIni as $epConfig) {
-            $this->migrateCoordPluginsConf($epConfig);
+        foreach ($entrypoints as $epInfo) {
+            $this->migrateCoordPluginsConf($epInfo['config']);
         }
 
         $this->migrateAccessValue($mainConfigIni);
 
         $this->migrateJelixInstallParameters($mainConfigIni);
+
+        $this->upgradeUrlEngine($mainConfigIni, $entrypoints);
 
         $this->updateScripts();
 
@@ -143,14 +137,14 @@ class Jelix17 {
     }
 
     private function migrateProjectXml($mainConfigIni) {
-        $entrypointsConfigIni = array();
+        $entrypoints = array();
         $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'),
             ';<' . '?php die(\'\');?' . '>');
         $projectDOM = new \DOMDocument();
         $projectDOM->load(\jApp::appPath('project.xml'));
         $projectxml = simplexml_import_dom($projectDOM);
         if (!isset($projectxml->entrypoints) || !isset($projectxml->entrypoints->entry)) {
-            return $entrypointsConfigIni;
+            return $entrypoints;
         }
         // read all entry points data
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
@@ -174,7 +168,12 @@ class Jelix17 {
             }
 
             $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
-            $entrypointsConfigIni[] = $epConfigIni;
+            $entrypoints[str_replace('.php', '', $name)] = [
+                'name' => $name,
+                'type' => $type,
+                'config' => $epConfigIni
+            ];
+
             $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
             if ($urlFile != '') {
                 if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
@@ -196,7 +195,7 @@ class Jelix17 {
         }
         $projectDOM->save(\jApp::appPath('project.xml'));
         $frameworkIni->save();
-        return $entrypointsConfigIni;
+        return $entrypoints;
     }
 
     private function migrateProfilesIni(IniModifier $profilesini) {
@@ -268,7 +267,7 @@ class Jelix17 {
                 }
                 continue;
             }
-            $this->reporter->message("Import plugin conf file ".$rpath." into global configuration", 'notice');
+            $this->reporter->message("Import plugin conf file ".$conf." into global configuration", 'notice');
             $config->import($ini, $name);
             $config->setValue($name, '1', 'coordplugins');
             unlink($ini->getFileName());
@@ -374,13 +373,15 @@ class Jelix17 {
             return;
         }
         $targetPath = \jApp::wwwPath($jelixWWWPath);
-        $jelixWWWDirExists = $jelixWWWLinkExists = false;
         if (file_exists($targetPath)) {
             if (is_dir($targetPath)) {
-                $wwwfiles = '';
+                $wwwfiles = 'copy';
             }
             else if (is_link($targetPath)) {
                 $wwwfiles = 'link';
+            }
+            else {
+                $wwwfiles = 'vhost';
             }
         }
         else {
@@ -404,6 +405,55 @@ class Jelix17 {
             $this->reporter->message('Update installer parameters for the jelix module', 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
         }
+    }
+
+    /**
+     * @param IniModifier $mainConfigIni
+     * @param array $entrypoints
+     * @throws \Exception
+     */
+    private function upgradeUrlEngine(IniModifier $mainConfigIni, $entrypoints) {
+        // move urls.xml to app/system
+        $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
+        if ($urlFile == null) {
+            $urlFile = 'urls.xml';
+        }
+        if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
+            $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
+            rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
+        }
+
+        $urlXmlFileName = \jApp::appSystemPath($urlFile);
+        $urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
+
+        $defaultConfig = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
+
+        foreach($entrypoints as $epId => $ep) {
+            $fullConfig = new \Jelix\IniFile\IniModifierArray(
+                [
+                    'default' => $defaultConfig,
+                    'main' => $mainConfigIni,
+                    'entrypoint' => $ep['config']
+                ]
+            );
+            $urlMap = $urlMapModifier->getEntryPoint($ep['name']);
+            if (!$urlMap) {
+                $urlMap = $urlMapModifier->addEntryPoint($ep['name'], $ep['type']);
+            }
+            $upgraderUrl = new UrlEngineUpgrader($fullConfig, $epId, $urlMap);
+            if ($ep['type'] == 'cmdline') {
+                $upgraderUrl->cleanConfig($ep['config']);
+            }
+            else {
+                $upgraderUrl->upgrade();
+            }
+
+            $ep['config']->save();
+        }
+        if ($upgraderUrl) {
+            $upgraderUrl->cleanConfig($mainConfigIni);
+        }
+        $mainConfigIni->save();
     }
 
     private function updateScripts() {
