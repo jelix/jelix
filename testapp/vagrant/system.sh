@@ -85,7 +85,7 @@ function initsystem () {
 
     sed -i -- s/bind-address\s+127\.0\.0\.1/bind-address 0.0.0.0/g /etc/mysql/my.cnf
 
-    # install default vhost for apache
+    # install default vhost for nginx
     cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME2__/$APPHOSTNAME2/g /etc/nginx/sites-available/$APPNAME.conf
