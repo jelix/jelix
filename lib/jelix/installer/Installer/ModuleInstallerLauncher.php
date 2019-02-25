@@ -461,7 +461,7 @@ class ModuleInstallerLauncher {
                 );
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
-
+                $this->moduleMainUpgrader->setParameters($this->moduleStatus->parameters);
             }
         }
 
