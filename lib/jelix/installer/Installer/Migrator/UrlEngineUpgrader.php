@@ -67,8 +67,8 @@ class UrlEngineUpgrader {
     }
 
     public function cleanConfig(\Jelix\IniFile\IniModifier $ini) {
-        $ini->removeValue('startModule');
-        $ini->removeValue('startAction');
+        $ini->removeValue('startModule', 0, null, false);
+        $ini->removeValue('startAction', 0, null, false);
         $ini->removeValue('defaultEntrypoint', 'urlengine');
         $ini->removeValue('engine', 'urlengine');
         $ini->removeValue('simple_urlengine_https', 'urlengine');
