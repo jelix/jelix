@@ -36,6 +36,7 @@ class Jelix17 {
         $this->moveIntoAppSystem();
 
         $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
+
         $entrypoints = $this->migrateProjectXml($mainConfigIni);
 
         if (file_exists(\jApp::varConfigPath('profiles.ini.php'))) {
@@ -63,6 +64,8 @@ class Jelix17 {
         $this->upgradeWebAssets($mainConfigIni, $entrypoints);
 
         $this->updateScripts();
+
+        $mainConfigIni->save();
 
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
@@ -258,6 +261,8 @@ class Jelix17 {
     protected $allPluginConfigs = array();
 
     private function migrateCoordPluginsConf(IniModifier $config, $localConf = false) {
+        $config->removeValue('pluginsPath');
+        $config->removeValue('modulesPath');
         $pluginsConf = $config->getValues('coordplugins');
         foreach($pluginsConf as $name => $conf) {
             if (strpos($name, '.') !== false) {
@@ -296,6 +301,7 @@ class Jelix17 {
             $config->setValue($name, '1', 'coordplugins');
             unlink($ini->getFileName());
         }
+        $config->save();
     }
 
     protected function migrateModulesSection(IniModifier $masterConfigIni, IniModifier $epConfigIni) {
