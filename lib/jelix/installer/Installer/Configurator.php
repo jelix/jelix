@@ -159,8 +159,8 @@ class Configurator {
         }
         // get all modules and their dependencies
         $resolver = new Resolver();
-        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
-            $resolverItem = $module->getResolverItem();
+        foreach($this->globalSetup->getModuleComponentsList() as $name => $component) {
+            $resolverItem = $component->getResolverItem(true);
             if (in_array($name, $modulesList)) {
                 if (!$component->isEnabled() || $forceReconfigure) {
                     $resolverItem->setAction(Resolver::ACTION_INSTALL);
@@ -234,7 +234,7 @@ class Configurator {
         // get all modules and their dependencies
         $resolver = new Resolver();
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
-            $resolverItem = $module->getResolverItem();
+            $resolverItem = $module->getResolverItem(true);
             if ($module->isEnabled()) {
                 $resolverItem->setAction(Resolver::ACTION_INSTALL);
             }
@@ -539,7 +539,7 @@ class Configurator {
         // get all modules
         $resolver = new Resolver();
         foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
-            $resolverItem = $module->getResolverItem();
+            $resolverItem = $module->getResolverItem(true);
             if ($name == $moduleName) {
                 if ($component->isEnabled()) {
                     $resolverItem->setAction(Resolver::ACTION_REMOVE);

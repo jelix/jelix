@@ -632,8 +632,13 @@ class ModuleInstallerLauncher {
     /**
      * @return Item
      */
-    public function getResolverItem() {
-        $action = $this->getInstallAction();
+    public function getResolverItem($forConfiguration=false) {
+        if ($forConfiguration) {
+            $action = $this->getConfigureAction();
+        }
+        else {
+            $action = $this->getInstallAction();
+        }
         if ($action == Resolver::ACTION_UPGRADE) {
             $item = new Item($this->name, $this->moduleInfos->version, true);
             $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleStatus->version);
@@ -676,6 +681,10 @@ class ModuleInstallerLauncher {
         elseif ($this->isEnabled()) {
             return Resolver::ACTION_INSTALL;
         }
+        return Resolver::ACTION_NONE;
+    }
+
+    protected function getConfigureAction() {
         return Resolver::ACTION_NONE;
     }
 
