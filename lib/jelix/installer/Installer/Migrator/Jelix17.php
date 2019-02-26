@@ -210,8 +210,12 @@ class Jelix17 {
         $entrypointsDOM = $projectDOM->documentElement->getElementsByTagName('entrypoints')[0];
         $projectDOM->documentElement->removeChild($entrypointsDOM);
         $dependenciesDOM = $projectDOM->documentElement->getElementsByTagName('dependencies');
-        if ($dependenciesDOM->count()) {
+        if ($dependenciesDOM->length) {
             $projectDOM->documentElement->removeChild($dependenciesDOM[0]);
+        }
+        $directoriesDOM = $projectDOM->documentElement->getElementsByTagName('directories');
+        if ($directoriesDOM->length) {
+            $projectDOM->documentElement->removeChild($directoriesDOM[0]);
         }
         $projectDOM->save(\jApp::appPath('project.xml'));
         $frameworkIni->save();
