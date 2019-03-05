@@ -63,6 +63,9 @@ cd testapp/modules/testapp
 *  module.xml
    urls.xml
    urls2.xml
+   events.xml
+cd testapp/modules/testapp/classes/
+   testEventsTestapp.listener.php
 cd testapp/modules/testapp/classes/geo
    regions.class.php
 cd testapp/modules/testapp/locales/en_US
