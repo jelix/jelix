@@ -411,8 +411,6 @@ jquery.js = "$jelix/jquery/jquery.min.js"
 
 jquery_ui.js = "$jelix/jquery/ui/jquery-ui.min.js"
 jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.structure.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.theme.min.css"
 jquery_ui.require = jquery
 
 jforms_html.js[]= "$jelix/js/jforms_jquery.js"
