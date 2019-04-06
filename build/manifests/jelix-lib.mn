@@ -363,6 +363,7 @@ cd lib/jelix/forms/controls
   jFormsControlSwitch.class.php
   jFormsControlTextarea.class.php
   jFormsControlUpload.class.php
+  jFormsControlUpload2.class.php
   jFormsControlDate.class.php
   jFormsControlDatetime.class.php
   jFormsControlWikiEditor.class.php
@@ -640,6 +641,9 @@ cd lib/jelix/plugins/formwidget/textarea_html
 
 cd lib/jelix/plugins/formwidget/upload_html
   upload_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/upload2_html
+  upload2_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/wikieditor_html
   wikieditor_html.formwidget.php

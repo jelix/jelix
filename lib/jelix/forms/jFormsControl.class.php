@@ -228,6 +228,7 @@ abstract class jFormsControl {
 #includephp controls/jFormsControlSwitch.class.php
 #includephp controls/jFormsControlTextarea.class.php
 #includephp controls/jFormsControlUpload.class.php
+#includephp controls/jFormsControlUpload2.class.php
 #includephp controls/jFormsControlDate.class.php
 #includephp controls/jFormsControlDatetime.class.php
 #includephp controls/jFormsControlWikiEditor.class.php
@@ -257,6 +258,7 @@ require(JELIX_LIB_PATH.'forms/controls/jFormsControlSubmit.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlSwitch.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlTextarea.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlUpload.class.php');
+require(JELIX_LIB_PATH.'forms/controls/jFormsControlUpload2.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlDate.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlDatetime.class.php');
 require(JELIX_LIB_PATH.'forms/controls/jFormsControlWikiEditor.class.php');

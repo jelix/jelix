@@ -416,6 +416,7 @@ cd testapp/tests-jelix/jelix/forms/
   jforms_newhtmlbuilder2Test.php
   jforms_sessionTest.php
   jforms_with_daoTest.php
+  jforms_uploadTest.php
 cd testapp/tests-jelix/jelix/tpl/
   jtpl_compilerTest.php
   jtpl_expressions_parsingTest.php
