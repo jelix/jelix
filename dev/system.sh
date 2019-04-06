@@ -34,7 +34,7 @@ function initsystem () {
         apt-get install -y dirmngr
     fi
     if [ "$PHP53" != "yes" ]; then
-        apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AC0E47584A7A714D
+        wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
         echo "deb https://packages.sury.org/php $DISTRO main" > /etc/apt/sources.list.d/sury_php.list
     fi
 
