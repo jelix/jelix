@@ -1,26 +1,28 @@
 <?php
 /**
  * @package     jelix-scripts
+ *
  * @author Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
- * @link        https://jelix.org
+ *
+ * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
  */
+
 namespace Jelix\Scripts;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 /**
  * Command for a user to configure an application before installing it.
- *
  */
-class ConfigureCommand extends Command {
-
+class ConfigureCommand extends Command
+{
     protected function configure()
     {
         $this
@@ -57,20 +59,30 @@ class ConfigureCommand extends Command {
         $this->setUpOutput($output);
         \jAppManager::close();
 
-        $reporter = new \Jelix\Installer\Reporter\Console($output,
-            ($output->isVerbose()?'notice':'error'), 'Configuration migration');
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output,
+            ($output->isVerbose() ? 'notice' : 'error'),
+            'Configuration migration'
+        );
 
         // launch the low-level migration
         $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrateLocal();
 
-        $reporter = new \Jelix\Installer\Reporter\Console($output,
-            ($output->isVerbose()?'notice':'error'), 'Configuration');
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output,
+            ($output->isVerbose() ? 'notice' : 'error'),
+            'Configuration'
+        );
 
         $globalSetup = new \Jelix\Installer\GlobalSetup();
         $configurator = new \Jelix\Installer\Configurator(
-            $reporter, $globalSetup,
-            $this->getHelper('question'), $input, $output);
+            $reporter,
+            $globalSetup,
+            $this->getHelper('question'),
+            $input,
+            $output
+        );
 
         $module = $input->getArgument('module');
         if ($module) {
@@ -89,13 +101,14 @@ class ConfigureCommand extends Command {
                 array($module),
                 $selectedEntryPointId,
                 true,
-                $input->getOption('force'));
-        }
-        else {
+                $input->getOption('force')
+            );
+        } else {
             $configurator->localConfigureEnabledModules();
         }
 
         \jAppManager::open();
+
         return 0;
     }
 
@@ -108,33 +121,34 @@ class ConfigureCommand extends Command {
 
             if ($allowList) {
                 $list = preg_split('/\s*,\s*/', $ep);
+
                 return array_map(array($this, 'normalizeEp'), $list);
             }
+
             return $this->normalizeEp($ep);
         }
-        else if ($allowList) {
+        if ($allowList) {
             return array();
         }
-        else {
-            return 'index';
-        }
+
+        return 'index';
     }
 
     private function normalizeEp($ep)
     {
         if (($p = strpos($ep, '.php')) === false) {
             return $ep;
-        } else {
-            return  substr($ep, 0, $p);
         }
+
+        return  substr($ep, 0, $p);
     }
 
-    protected function setUpOutput(OutputInterface $output) {
+    protected function setUpOutput(OutputInterface $output)
+    {
         $outputStyle = new OutputFormatterStyle('cyan', 'default');
         $output->getFormatter()->setStyle('question', $outputStyle);
 
         $outputStyle2 = new OutputFormatterStyle('yellow', 'default', array('bold'));
         $output->getFormatter()->setStyle('inputstart', $outputStyle2);
-
     }
 }

@@ -2,16 +2,18 @@
 /**
  * @package     jelix
  * @subpackage  dao
+ *
  * @author      Laurent Jouanneau
  * @copyright   2017-2018 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
-require_once(__DIR__.'/jDaoParser.class.php');
+require_once __DIR__.'/jDaoParser.class.php';
 
 /**
  * It allows to create tables corresponding to a dao file.
+ *
  * @since 1.6.16
  */
 class jDaoDbMapper
@@ -22,8 +24,10 @@ class jDaoDbMapper
     protected $connection;
 
     protected $profile;
+
     /**
      * jDaoDbMapper constructor.
+     *
      * @param string $profile the jdb profile
      */
     public function __construct($profile = '')
@@ -33,12 +37,15 @@ class jDaoDbMapper
     }
 
     /**
-     * Create a table from a jDao file
+     * Create a table from a jDao file.
      *
-     * @param string $selector the selector of the DAO file
+     * @param string $selector    the selector of the DAO file
+     * @param mixed  $selectorStr
+     *
      * @return jDbTable
      */
-    public function createTableFromDao($selectorStr) {
+    public function createTableFromDao($selectorStr)
+    {
         $selector = new jSelectorDao($selectorStr, $this->profile);
         $parser = $this->getParser($selector);
 
@@ -50,20 +57,20 @@ class jDaoDbMapper
 
         // create the columns and the table
         $columns = array();
-        foreach($tableInfo['fields'] as $propertyName) {
+        foreach ($tableInfo['fields'] as $propertyName) {
             $property = $properties[$propertyName];
             $columns[] = $this->createColumnFromProperty($property);
         }
         $table = $schema->createTable($tableInfo['realname'], $columns, $tableInfo['pk']);
         if (!$table) {
             $table = $schema->getTable($tableInfo['realname']);
-            foreach($columns as $column) {
+            foreach ($columns as $column) {
                 $table->alterColumn($column);
             }
         }
 
         // create foreign keys
-        foreach($tables as $tableName=>$info) {
+        foreach ($tables as $tableName => $info) {
             if ($tableName == $tableInfo['realname']) {
                 continue;
             }
@@ -72,18 +79,21 @@ class jDaoDbMapper
                 $table->addReference($ref);
             }
         }
+
         return $table;
     }
 
     /**
-     * @param string $selectorStr the dao for which we want to insert data
-     * @param string[]  $properties list of properties for which data are given
-     * @param mixed[][] $data the data. each row is an array of values.
-     *                  Values are in the same order as $properties
-     * @param integer $option one of jDbTools::IBD_* const
-     * @return integer number of records inserted/updated
+     * @param string    $selectorStr the dao for which we want to insert data
+     * @param string[]  $properties  list of properties for which data are given
+     * @param mixed[][] $data        the data. each row is an array of values.
+     *                               Values are in the same order as $properties
+     * @param int       $option      one of jDbTools::IBD_* const
+     *
+     * @return int number of records inserted/updated
      */
-    public function insertDaoData($selectorStr, $properties, $data, $option) {
+    public function insertDaoData($selectorStr, $properties, $data, $option)
+    {
         $selector = new jSelectorDao($selectorStr, $this->profile);
         $parser = $this->getParser($selector);
         $tools = $this->connection->tools();
@@ -91,9 +101,9 @@ class jDaoDbMapper
         $tables = $parser->getTables();
         $columns = array();
         $primaryKey = array();
-        foreach($properties as $name) {
+        foreach ($properties as $name) {
             if (!isset($allProperties[$name])) {
-                throw new Exception("insertDaoData: Unknown property $name");
+                throw new Exception("insertDaoData: Unknown property ${name}");
             }
             $columns[] = $allProperties[$name]->fieldName;
             if ($allProperties[$name]->isPK) {
@@ -106,11 +116,15 @@ class jDaoDbMapper
 
         return $tools->insertBulkData(
             $tables[$parser->getPrimaryTable()]['realname'],
-            $columns, $data, $primaryKey, $option
+            $columns,
+            $data,
+            $primaryKey,
+            $option
         );
     }
 
-    protected function getParser(jSelectorDao $selector) {
+    protected function getParser(jSelectorDao $selector)
+    {
         $parser = new jDaoParser($selector);
         $daoPath = $selector->getPath();
 
@@ -121,30 +135,31 @@ class jDaoDbMapper
             throw new jException('jelix~daoxml.file.unknown', $daoPath);
         }
 
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE . 'dao/1.0') {
+        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0') {
             throw new jException('jelix~daoxml.namespace.wrong', array($daoPath, $doc->namespaceURI));
         }
 
         /** @var jDbTools $tools */
-        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver . 'DbTools');
+        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
         if (is_null($tools)) {
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
         }
 
         $parser->parse(simplexml_import_dom($doc), $tools);
+
         return $parser;
     }
 
-    protected function createColumnFromProperty(jDaoProperty $property) {
+    protected function createColumnFromProperty(jDaoProperty $property)
+    {
         if ($property->autoIncrement) {
             // it should match properties as readed by jDbSchema
             $hasDefault = true;
             $default = '';
             $notNull = true;
-        }
-        else {
+        } else {
             $hasDefault = $property->defaultValue !== null || !$property->required;
-            $default = $hasDefault?$property->defaultValue: null;
+            $default = $hasDefault ? $property->defaultValue : null;
             $notNull = $property->required;
         }
 
@@ -157,15 +172,14 @@ class jDaoDbMapper
             $notNull
         );
         $column->autoIncrement = $property->autoIncrement;
-        $column->sequence = $property->sequenceName ? $property->sequenceName: false;
+        $column->sequence = $property->sequenceName ? $property->sequenceName : false;
         if ($property->maxlength !== null) {
             $column->maxLength = $column->length = $property->maxlength;
         }
         if ($property->minlength !== null) {
             $column->minLength = $property->minlength;
         }
+
         return $column;
     }
-
-
 }

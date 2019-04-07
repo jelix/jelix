@@ -1,64 +1,69 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @contributor Dominique Papin, Olivier Demah
-* @copyright   2006-2018 Laurent Jouanneau, 2008 Dominique Papin
-* @copyright   2009 Olivier Demah
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package     jelix
+ * @subpackage  forms
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Dominique Papin, Olivier Demah
+ *
+ * @copyright   2006-2018 Laurent Jouanneau, 2008 Dominique Papin
+ * @copyright   2009 Olivier Demah
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- * base class for all jforms control
+ * base class for all jforms control.
+ *
  * @package     jelix
  * @subpackage  forms
  */
-abstract class jFormsControl {
+abstract class jFormsControl
+{
     /** @var string a type name that identify the control type */
-    public $type = null;
-    
-    /** @var string the identifiant of the control */
-    public $ref='';
+    public $type;
 
-    /** @var jDatatype  the object that manage constraints on the value */
+    /** @var string the identifiant of the control */
+    public $ref = '';
+
+    /** @var jDatatype the object that manage constraints on the value */
     public $datatype;
-    
-    /** @var boolean true if the control should be filled by the user */
+
+    /** @var bool true if the control should be filled by the user */
     public $required = false;
 
     /** @var string the label */
-    public $label='';
+    public $label = '';
 
     /** @var mixed the value when the form is created (and not initialized by a data source */
-    public $defaultValue='';
+    public $defaultValue = '';
 
-    /** @var string the message for the help on the control (typically help displayed in a popup)*/
+    /** @var string the message for the help on the control (typically help displayed in a popup) */
     public $help = '';
 
     /** @var string the message for tips on the control (typically the tooltip value) */
-    public $hint='';
+    public $hint = '';
 
     /** @var string the message when the value is invalid */
-    public $alertInvalid='';
+    public $alertInvalid = '';
 
     /** @var string the message when there is no value and it is required */
-    public $alertRequired='';
+    public $alertRequired = '';
 
-    /** @var boolean indicate if the control is in read only mode */
+    /** @var bool indicate if the control is in read only mode */
     public $initialReadOnly = false;
 
-    /** @var boolean */
+    /** @var bool */
     public $initialActivation = true;
 
     /** @var string label displayed when only values are displayed, and when there is no value */
-    public $emptyValueLabel = null;
+    public $emptyValueLabel;
 
-    /** @var jFormsBase the form object*/
+    /** @var jFormsBase the form object */
     protected $form;
 
-    /** @var jFormsDataContainer  content all values of the form */
+    /** @var jFormsDataContainer content all values of the form */
     protected $container;
 
     /** @var array miscellaneous values attached to the control */
@@ -67,35 +72,42 @@ abstract class jFormsControl {
     /**
      * @param string $ref the identifiant of the control
      */
-    function __construct($ref){
+    public function __construct($ref)
+    {
         $this->ref = $ref;
         $this->datatype = new jDatatypeString();
     }
 
     /**
      * @return string the default widget type to use to render the control
+     *
      * @since 1.6.14
      */
-    function getWidgetType() {
+    public function getWidgetType()
+    {
         return $this->type;
     }
 
     /**
      * @param jFormsBase $form
      */
-    function setForm($form) {
+    public function setForm($form)
+    {
         $this->form = $form;
         $this->container = $form->getContainer();
-        if($this->initialReadOnly)
+        if ($this->initialReadOnly) {
             $this->container->setReadOnly($this->ref, true);
-        if(!$this->initialActivation)
+        }
+        if (!$this->initialActivation) {
             $this->container->deactivate($this->ref, true);
+        }
     }
 
     /**
-     * says if the control can have multiple values
+     * says if the control can have multiple values.
      */
-    function isContainer(){
+    public function isContainer()
+    {
         return false;
     }
 
@@ -105,9 +117,10 @@ abstract class jFormsControl {
      * It is the responsability of the implementation to fill the "errors" or "data"
      * properties of the container.
      *
-     * @return int|null null if it is ok, or one of jForms::ERRDATA_* constants when there is an error
+     * @return null|int null if it is ok, or one of jForms::ERRDATA_* constants when there is an error
      */
-    function check(){
+    public function check()
+    {
         $value = $this->container->data[$this->ref];
         if (!$this->datatype->allowWhitespace()) {
             $this->container->data[$this->ref] = $value = trim($value);
@@ -116,78 +129,94 @@ abstract class jFormsControl {
             if ($this->required) {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
-        }elseif(!$this->datatype->check($value)){
+        } elseif (!$this->datatype->check($value)) {
             return $this->container->errors[$this->ref] = jForms::ERRDATA_INVALID;
         }
-        if($this->datatype instanceof jIFilteredDatatype) {
+        if ($this->datatype instanceof jIFilteredDatatype) {
             $this->container->data[$this->ref] = $this->datatype->getFilteredValue();
         }
+
         return null;
     }
 
-    function setData($value) {
+    public function setData($value)
+    {
         $this->container->data[$this->ref] = $value;
     }
 
-    function setReadOnly($r = true){
+    public function setReadOnly($r = true)
+    {
         $this->container->setReadOnly($this->ref, $r);
     }
 
     /**
      * @param jRequest $request
      */
-    function setValueFromRequest($request) {
-        $this->setData($request->getParam($this->ref,''));
+    public function setValueFromRequest($request)
+    {
+        $this->setData($request->getParam($this->ref, ''));
     }
 
-    function setDataFromDao($value, $daoDatatype) {
+    public function setDataFromDao($value, $daoDatatype)
+    {
         $this->setData($value);
     }
 
-    function getDisplayValue($value){
+    public function getDisplayValue($value)
+    {
         if ($value == '' && $this->emptyValueLabel !== null) {
             return $this->emptyValueLabel;
         }
+
         return $value;
     }
 
     /**
-     * says if the content is html or not
+     * says if the content is html or not.
+     *
      * @since 1.2
      */
-    public function isHtmlContent() {
+    public function isHtmlContent()
+    {
         return false;
     }
 
-    public function deactivate($deactivation=true) {
+    public function deactivate($deactivation = true)
+    {
         $this->container->deactivate($this->ref, $deactivation);
     }
 
     /**
-    * check if the control is activated
-    * @return boolean true if it is activated
-    */
-    public function isActivated() {
+     * check if the control is activated.
+     *
+     * @return bool true if it is activated
+     */
+    public function isActivated()
+    {
         return $this->container->isActivated($this->ref);
     }
 
     /**
-     * check if the control is readonly
-     * @return boolean true if it is readonly
+     * check if the control is readonly.
+     *
+     * @return bool true if it is readonly
      */
-    public function isReadOnly() {
+    public function isReadOnly()
+    {
         return $this->container->isReadOnly($this->ref);
     }
 
-    public function setAttribute($name, $value) {
+    public function setAttribute($name, $value)
+    {
         $this->attributes[$name] = $value;
     }
 
-    public function getAttribute($name) {
+    public function getAttribute($name)
+    {
         if (isset($this->attributes[$name])) {
             return $this->attributes[$name];
         }
+
         return null;
     }
 }
-

@@ -2,39 +2,45 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2008-2018 Laurent Jouanneau
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Installer\Reporter;
 
 /**
  * interface for classes used as reporter for installation or check etc...
- * This classes are responsible to show informations to the user
+ * This classes are responsible to show informations to the user.
+ *
  * @since 1.7
  */
-interface ReporterInterface {
-
+interface ReporterInterface
+{
     /**
-     * start the process
+     * start the process.
      */
     public function start();
 
     /**
-     * displays a message
+     * displays a message.
+     *
      * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
+     * @param string $type    the type of the message : 'error', 'notice', 'warning', ''
      */
-    public function message($message, $type='');
+    public function message($message, $type = '');
 
     /**
-     * called when the installation is finished
+     * called when the installation is finished.
      */
     public function end();
 
     /**
-     * return the number of messages of a specific type
-     * @return integer
+     * return the number of messages of a specific type.
+     *
+     * @param mixed $type
+     *
+     * @return int
      */
     public function getMessageCounter($type);
 }
-

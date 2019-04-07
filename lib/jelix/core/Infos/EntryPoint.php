@@ -2,42 +2,50 @@
 /**
  * @author     Laurent Jouanneau
  * @copyright  2018 Laurent Jouanneau
- * @link       http://jelix.org
+ *
+ * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 namespace Jelix\Core\Infos;
 
-class EntryPoint {
-
+class EntryPoint
+{
     protected $id;
 
     protected $type;
 
     protected $configFile;
 
-    function __construct($id, $configFile, $type='classic') {
+    public function __construct($id, $configFile, $type = 'classic')
+    {
         $this->id = $id;
-        $this->type = ($type == '' ? 'classic': $type);
+        $this->type = ($type == '' ? 'classic' : $type);
         $this->configFile = $configFile;
     }
 
-    function getFile() {
+    public function getFile()
+    {
         return $this->id.'.php';
     }
 
-    function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    function getType() {
+    public function getType()
+    {
         return $this->type;
     }
 
-    function getConfigFile() {
+    public function getConfigFile()
+    {
         return $this->configFile;
     }
 
-    function setConfigFile($file) {
+    public function setConfigFile($file)
+    {
         $this->configFile = $file;
     }
 }

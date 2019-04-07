@@ -1,19 +1,21 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Installer\Module;
 
 /**
- * Base class for installers and uninstallers
+ * Base class for installers and uninstallers.
  *
  * @since 1.7
  */
-abstract class InstallerAbstract {
-
+abstract class InstallerAbstract
+{
     use InstallConfigTrait;
 
     /**
@@ -22,22 +24,22 @@ abstract class InstallerAbstract {
     protected $defaultDbProfile = '';
 
     /**
-     * @param string $componentName name of the component
-     * @param string $name name of the installer
-     * @param string $path the component path
-     * @param string $version version of the component
-     * @param boolean $installWholeApp deprecated
+     * @param string $componentName   name of the component
+     * @param string $name            name of the installer
+     * @param string $path            the component path
+     * @param string $version         version of the component
+     * @param bool   $installWholeApp deprecated
      */
-    function __construct ($componentName, $name, $path, $version, $installWholeApp=true) {
+    public function __construct($componentName, $name, $path, $version, $installWholeApp = true)
+    {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
         $this->componentName = $componentName;
     }
 
-    public function getDefaultDbProfile() {
+    public function getDefaultDbProfile()
+    {
         return $this->defaultDbProfile;
     }
-
 }
-

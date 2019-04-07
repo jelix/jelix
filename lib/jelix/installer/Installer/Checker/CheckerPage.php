@@ -1,30 +1,32 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2007-2014 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since       1.0b2
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2007-2014 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @since       1.0b2
+ */
+
 namespace Jelix\Installer\Checker;
 
 /**
- * show a page with results of jelix environment checking
+ * show a page with results of jelix environment checking.
  */
-class CheckerPage {
-
-    static public function show() {
-
+class CheckerPage
+{
+    public static function show()
+    {
         $messages = new Messages();
-        $reporter =new \Jelix\Installer\Reporter\Html($messages);
+        $reporter = new \Jelix\Installer\Reporter\Html($messages);
 
         $check = new Checker($reporter, $messages);
         if (isset($_GET['verbose'])) {
             $check->verbose = true;
         }
         $check->addDatabaseCheck(array('mysqli', 'sqlite3', 'pgsql', 'oci', 'mssql', 'sqlsrv'), false);
-        header("Content-type:text/html;charset=UTF-8");
-?>
+        header('Content-type:text/html;charset=UTF-8'); ?>
 
 <!DOCTYPE html>
 <html lang="<?php echo $check->messages->getLang(); ?>">
@@ -38,13 +40,13 @@ class CheckerPage {
 
 <?php $check->run();
 
-if (!$check->verbose) {
-    ?>
+        if (!$check->verbose) {
+            ?>
     <p><a href="?verbose"><?php echo htmlspecialchars($check->messages->get('more.details')); ?></a></p>
-<?php } ?>
+<?php
+        } ?>
 </body>
 </html>
 <?php
-   }
+    }
 }
-

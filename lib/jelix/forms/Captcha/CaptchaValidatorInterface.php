@@ -2,23 +2,26 @@
 /**
  * @package     jelix
  * @subpackage  forms
+ *
  * @author      Laurent Jouanneau
  * @copyright   2017 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace jelix\forms\Captcha;
 
 /**
- * Interface for validators for the captcha widget
+ * Interface for validators for the captcha widget.
  */
-interface CaptchaValidatorInterface {
-
+interface CaptchaValidatorInterface
+{
     /**
-     * called by the widget to initialize some data when the form is generated
+     * called by the widget to initialize some data when the form is generated.
      *
      * It can returns some data that can be useful for the widget
+     *
      * @return mixed
      */
     public function initOnDisplay();
@@ -30,9 +33,9 @@ interface CaptchaValidatorInterface {
      *
      * @param string $value the value of the control if it exists
      * @param mixed
-     * @return null|integer
+     * @param mixed $internalData
+     *
+     * @return null|int
      */
     public function validate($value, $internalData);
-
-
 }

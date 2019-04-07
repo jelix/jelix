@@ -1,79 +1,85 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core_response
-* @author      Laurent Jouanneau
-* @contributor Loic Mathaud, Julien Issler
-* @copyright   2005-2010 Laurent Jouanneau
-* @copyright   2007 Loic Mathaud
-* @copyright   2017 Julien Issler
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  core_response
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Loic Mathaud, Julien Issler
+ *
+ * @copyright   2005-2010 Laurent Jouanneau
+ * @copyright   2007 Loic Mathaud
+ * @copyright   2017 Julien Issler
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 /**
-* Response for jsonrpc protocol
-* @package  jelix
-* @subpackage core_response
-* @see jResponse
-* @see http://json-rpc.org/wiki/specification
-*/
-
-final class jResponseJsonRpc extends jResponse {
+ * Response for jsonrpc protocol.
+ *
+ * @package  jelix
+ * @subpackage core_response
+ *
+ * @see jResponse
+ * @see http://json-rpc.org/wiki/specification
+ */
+final class jResponseJsonRpc extends jResponse
+{
     /**
-    * @var string
-    */
+     * @var string
+     */
     protected $_type = 'jsonrpc';
 
     /**
-     * PHP data you want to return
+     * PHP data you want to return.
+     *
      * @var mixed
      */
-    public $response = null;
+    public $response;
 
-
-    public function output(){
-
-        if($this->_outputOnlyHeaders){
+    public function output()
+    {
+        if ($this->_outputOnlyHeaders) {
             $this->sendHttpHeaders();
+
             return true;
         }
 
-        $this->_httpHeaders['Content-Type'] = "application/json";
+        $this->_httpHeaders['Content-Type'] = 'application/json';
         $req = jApp::coord()->request;
-        if($req->jsonRequestId !== null){
+        if ($req->jsonRequestId !== null) {
             $content = jJsonRpc::encodeResponse($this->response, $req->jsonRequestId);
             $this->sendHttpHeaders();
             echo $content;
-        }
-        else {
+        } else {
             $this->_httpHeaders['Content-length'] = '0';
             $this->sendHttpHeaders();
         }
+
         return true;
     }
 
-    public function outputErrors(){
+    public function outputErrors()
+    {
         $coord = jApp::coord();
         $e = $coord->getErrorMessage();
         if ($e) {
             $errorCode = $e->getCode();
-            if ($errorCode > 5000)
+            if ($errorCode > 5000) {
                 $errorMessage = $e->getMessage();
-            else
+            } else {
                 $errorMessage = $coord->getGenericErrorMessage();
-        }
-        else {
+            }
+        } else {
             $errorCode = -1;
             $errorMessage = $coord->getGenericErrorMessage();
         }
         $this->clearHttpHeaders();
-        $this->_httpStatusCode ='500';
-        $this->_httpStatusMsg ='Internal Server Error';
-        $this->_httpHeaders['Content-Type'] = "application/json";
+        $this->_httpStatusCode = '500';
+        $this->_httpStatusMsg = 'Internal Server Error';
+        $this->_httpHeaders['Content-Type'] = 'application/json';
         $content = jJsonRpc::encodeFaultResponse($errorCode, $errorMessage, $coord->request->jsonRequestId);
         $this->sendHttpHeaders();
         echo $content;
     }
 }
-

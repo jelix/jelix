@@ -1,29 +1,34 @@
 <?php
 /**
-* @package    jelix
-* @subpackage installer
-* @author     Laurent Jouanneau
-* @copyright  2011 Laurent Jouanneau
-* @link       http://jelix.org
-* @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package    jelix
+ * @subpackage installer
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2011 Laurent Jouanneau
+ *
+ * @see       http://jelix.org
+ * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
-* Application configuration reader and manager
-* @package    jelix
-* @subpackage installer
-* @since 1.3
+ * Application configuration reader and manager.
+ *
+ * @package    jelix
+ * @subpackage installer
+ *
+ * @since 1.3
  * @deprecated
-*/
-class jInstallerApplication {
-
+ */
+class jInstallerApplication
+{
     /**
      * @var string the application name
      */
     protected $appName = '';
 
     /**
-     * the global app setup
+     * the global app setup.
+     *
      * @var \Jelix\Installer\GlobalSetup
      */
     protected $globalSetup;
@@ -31,7 +36,7 @@ class jInstallerApplication {
     /**
      * @param string $projectFile the filename of the XML project file
      */
-    function __construct($projectFile='', \Jelix\Installer\GlobalSetup $globalSetup = null)
+    public function __construct($projectFile = '', Jelix\Installer\GlobalSetup $globalSetup = null)
     {
         if (!$globalSetup) {
             $globalSetup = new \Jelix\Installer\GlobalSetup();
@@ -39,11 +44,13 @@ class jInstallerApplication {
         $this->globalSetup = $globalSetup;
     }
 
-    public function getEntryPointsList() {
+    public function getEntryPointsList()
+    {
         return $this->globalSetup->getEntryPointsList();
     }
 
-    public function getEntryPointInfo($name) {
+    public function getEntryPointInfo($name)
+    {
         if (($p = strpos($name, '.php')) !== false) {
             $name = substr($name, 0, $p);
         }

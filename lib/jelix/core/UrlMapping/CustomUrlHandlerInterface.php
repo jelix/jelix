@@ -3,14 +3,15 @@
  * @author      Laurent Jouanneau
  * @copyright   2005-2016 Laurent Jouanneau
  *
- * @link        http://www.jelix.org
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Routing\UrlMapping;
 
 /**
  * interface for custom url handler.
-*/
+ */
 interface CustomUrlHandlerInterface
 {
     /**
@@ -18,7 +19,7 @@ interface CustomUrlHandlerInterface
      *
      * @param \jUrl $url
      *
-     * @return \jUrlAction|false
+     * @return false|\jUrlAction
      */
     public function parse(\jUrl $url);
 

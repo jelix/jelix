@@ -2,23 +2,26 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Installer\Module;
 
 use Jelix\Installer\Module\API\ConfigurationHelpers;
-use Jelix\Installer\Module\API\PreConfigurationHelpers;
 use Jelix\Installer\Module\API\LocalConfigurationHelpers;
+use Jelix\Installer\Module\API\PreConfigurationHelpers;
 
 /**
- * Interface for classes which configure a module
+ * Interface for classes which configure a module.
+ *
  * @since 1.7
  */
-interface ConfiguratorInterface {
-
+interface ConfiguratorInterface
+{
     /**
-     * List of possible installation parameters with their default values
+     * List of possible installation parameters with their default values.
      *
      * @return array
      */
@@ -35,7 +38,7 @@ interface ConfiguratorInterface {
     public function setParameters($parameters);
 
     /**
-     * return list of installation parameters
+     * return list of installation parameters.
      *
      * @return array
      */
@@ -51,9 +54,8 @@ interface ConfiguratorInterface {
      */
     public function preConfigure(PreConfigurationHelpers $helpers);
 
-
     /**
-     * Configure the module
+     * Configure the module.
      *
      * You can set some configuration parameters in the application configuration
      * files, you can also copy some files into the application, setup the
@@ -64,7 +66,7 @@ interface ConfiguratorInterface {
     public function configure(ConfigurationHelpers $helpers);
 
     /**
-     * Configure the module in the context of the local configuration
+     * Configure the module in the context of the local configuration.
      *
      * You can set some configuration parameters in the local configuration
      * files, you can also copy some files into the application, setup the
@@ -89,9 +91,8 @@ interface ConfiguratorInterface {
      */
     public function preUnconfigure(PreConfigurationHelpers $helpers);
 
-
     /**
-     * Unconfigure the module
+     * Unconfigure the module.
      *
      * You can remove some configuration parameters from the application
      * parameters that are not needed for the uninstaller. You can
@@ -102,9 +103,8 @@ interface ConfiguratorInterface {
      */
     public function unconfigure(ConfigurationHelpers $helpers);
 
-
     /**
-     * Unconfigure the module in the context of the local configuration
+     * Unconfigure the module in the context of the local configuration.
      *
      * You can remove some configuration parameters from the application
      * parameters that are not needed for the uninstaller. You can
@@ -119,7 +119,4 @@ interface ConfiguratorInterface {
      * called after the unconfiguration of all modules.
      */
     public function postUnconfigure(ConfigurationHelpers $helpers);
-
-
 }
-

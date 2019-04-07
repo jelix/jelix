@@ -1,20 +1,22 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @copyright   2012 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package     jelix
+ * @subpackage  forms
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2012 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 namespace jelix\forms\HtmlWidget;
 
 /**
- * Interface for HTML widgets plugins
+ * Interface for HTML widgets plugins.
  */
-interface WidgetInterface {
-
+interface WidgetInterface
+{
     /*
      * @param array $args array containing:
      *    jFormsControl,
@@ -24,51 +26,54 @@ interface WidgetInterface {
     public function __construct($args);
 
     /**
-     * return the id of the HTML element
+     * return the id of the HTML element.
      */
     public function getId();
 
     /**
-     * return the name of the HTML element
+     * return the name of the HTML element.
      */
     public function getName();
 
     /**
-     * return the value of the HTML element
+     * return the value of the HTML element.
      */
     public function getValue();
 
     /**
-     * add the CSS and javascript link
+     * add the CSS and javascript link.
+     *
      * @param \jResponseHtml $resp The response used
      */
     public function outputMetaContent($resp);
 
     /**
-     * displays the help of the form field
+     * displays the help of the form field.
      */
     public function outputHelp();
 
     /**
      * displays the form field label.
+     *
+     * @param mixed $format
+     * @param mixed $editMode
      */
-    public function outputLabel($format='', $editMode=true);
+    public function outputLabel($format = '', $editMode = true);
 
     /**
-     * displays the form field itself
+     * displays the form field itself.
      */
     public function outputControl();
 
     /**
-     * displays the value of the form field only
+     * displays the value of the form field only.
      */
     public function outputControlValue();
 
     /**
-     * set attributes to add on the HTML element
+     * set attributes to add on the HTML element.
+     *
      * @param array $attributes
      */
     public function setAttributes($attributes);
-
 }
-

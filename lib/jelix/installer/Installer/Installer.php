@@ -2,24 +2,26 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2008-2018 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Installer;
 
 // load legacy interfaces and classes
-require_once(JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php');
-require_once(JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php');
-require_once(JELIX_LIB_PATH.'installer/textInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php');
-require_once(JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
+require_once JELIX_LIB_PATH.'installer/jIInstallReporter.iface.php';
+require_once JELIX_LIB_PATH.'installer/jInstallerReporterTrait.trait.php';
+require_once JELIX_LIB_PATH.'installer/textInstallReporter.class.php';
+require_once JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php';
+require_once JELIX_LIB_PATH.'core/jConfigCompiler.class.php';
 
-use \Jelix\Dependencies\Item;
-use \Jelix\Dependencies\Resolver;
-use \Jelix\Dependencies\ItemException;
+use Jelix\Dependencies\Item;
+use Jelix\Dependencies\ItemException;
+use Jelix\Dependencies\Resolver;
 
 /**
- * main class for the installation
+ * main class for the installation.
  *
  * It loads all entry points configurations and all informations about activated
  * modules. jInstaller then constructs a tree dependencies for these
@@ -34,8 +36,8 @@ use \Jelix\Dependencies\ItemException;
  * file should contain a class which should inherits from \Jelix\Installer\Module\Installer.
  * this class should implements processes to install the module.
  */
-class Installer {
-
+class Installer
+{
     /** value for the installation status of a component: "uninstalled" status */
     const STATUS_UNINSTALLED = 0;
 
@@ -44,29 +46,31 @@ class Installer {
 
     /**
      * error code stored in a component: impossible to install
-     * the module because dependencies are missing
+     * the module because dependencies are missing.
      */
     const INSTALL_ERROR_MISSING_DEPENDENCIES = 1;
 
     /**
      * error code stored in a component: impossible to install
-     * the module because of circular dependencies
+     * the module because of circular dependencies.
      */
     const INSTALL_ERROR_CIRCULAR_DEPENDENCY = 2;
 
     /**
-     * error code stored in a component:
+     * error code stored in a component:.
      */
     const INSTALL_ERROR_CONFLICT = 3;
 
     /**
-     * the main entrypoint of the application
+     * the main entrypoint of the application.
+     *
      * @var \Jelix\Installer\EntryPoint
      */
-    protected $mainEntryPoint = null;
+    protected $mainEntryPoint;
 
     /**
-     * the object responsible of the results output
+     * the object responsible of the results output.
+     *
      * @var Reporter\ReporterInterface
      */
     protected $reporter;
@@ -77,22 +81,24 @@ class Installer {
     protected $messages;
 
     /**
-     * the global app setup
+     * the global app setup.
+     *
      * @var GlobalSetup
      */
     protected $globalSetup;
 
     /**
-     * initialize the installation
+     * initialize the installation.
      *
      * GlobalSetup reads configurations files of all entry points, and prepare object for
      * each module, needed to install/upgrade modules.
      *
-     * @param Reporter\ReporterInterface $reporter  object which is responsible to process messages (display, storage or other..)
-     * @param GlobalSetup $globalSetup
-     * @param string $lang  the language code for messages
+     * @param Reporter\ReporterInterface $reporter    object which is responsible to process messages (display, storage or other..)
+     * @param GlobalSetup                $globalSetup
+     * @param string                     $lang        the language code for messages
      */
-    function __construct (Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang='') {
+    public function __construct(Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang = '')
+    {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);
 
@@ -104,7 +110,8 @@ class Installer {
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
     }
 
-    static public function setModuleAsInstalled($moduleName, $initialVersion, $versionDate) {
+    public static function setModuleAsInstalled($moduleName, $initialVersion, $versionDate)
+    {
         $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
         $install->setValue($moduleName.'.installed', 1, 'modules');
         $install->setValue($moduleName.'.version', $initialVersion, 'modules');
@@ -112,29 +119,28 @@ class Installer {
         $install->setValue($moduleName.'.firstversion', $initialVersion, 'modules');
         $install->setValue($moduleName.'.firstversion.date', $versionDate, 'modules');
         $install->save();
-
     }
 
     /**
-     * install and upgrade if needed, all modules
+     * install and upgrade if needed, all modules.
      *
      * Only modules which are enabled are installed.
      * Errors appearing during the installation are passed
      * to the reporter.
      *
-     * @return boolean true if succeed, false if there are some errors
+     * @return bool true if succeed, false if there are some errors
      */
-    public function installApplication() {
-
+    public function installApplication()
+    {
         $this->startMessage();
 
         $resolver = new Resolver();
-        foreach($this->globalSetup->getModuleComponentsList() as $name => $module) {
+        foreach ($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem();
             $resolver->addItem($resolverItem);
         }
 
-        foreach($this->globalSetup->getGhostModuleComponents() as $name => $module) {
+        foreach ($this->globalSetup->getGhostModuleComponents() as $name => $module) {
             $resolverItem = $module->getResolverItem();
             $resolver->addItem($resolverItem);
         }
@@ -144,16 +150,19 @@ class Installer {
         $result = $this->_installModules($modulesChains);
         $this->globalSetup->getInstallerIni()->save();
         $this->endMessage();
+
         return $result;
     }
 
     /**
-     * core of the installation
+     * core of the installation.
+     *
      * @param Item[] $modulesChain
-     * @return boolean true if the installation is ok
+     *
+     * @return bool true if the installation is ok
      */
-    protected function _installModules($modulesChain) {
-
+    protected function _installModules($modulesChain)
+    {
         $this->notice('install.start');
         \jApp::setConfig($this->mainEntryPoint->getConfigObj());
 
@@ -165,6 +174,7 @@ class Installer {
         $componentsToInstall = $this->runPreInstall($modulesChain);
         if ($componentsToInstall === false) {
             $this->warning('install.bad.end');
+
             return false;
         }
 
@@ -172,99 +182,114 @@ class Installer {
         $installedModules = $this->runInstall($componentsToInstall);
         if ($installedModules === false) {
             $this->warning('install.bad.end');
+
             return false;
         }
 
         $result = $this->runPostInstall($installedModules);
         if (!$result) {
             $this->warning('install.bad.end');
-        }
-        else {
+        } else {
             $this->ok('install.end');
         }
+
         return $result;
     }
 
-    protected function resolveDependencies(Resolver $resolver) {
-
+    protected function resolveDependencies(Resolver $resolver)
+    {
         try {
             $moduleschain = $resolver->getDependenciesChainForInstallation(false);
-        }
-        catch(ItemException $e) {
+        } catch (ItemException $e) {
             $item = $e->getItem();
             $component = $item->getProperty('component');
 
-            switch($e->getCode()) {
+            switch ($e->getCode()) {
                 case ItemException::ERROR_CIRCULAR_DEPENDENCY:
                 case ItemException::ERROR_REVERSE_CIRCULAR_DEPENDENCY:
                     $component->inError = self::INSTALL_ERROR_CIRCULAR_DEPENDENCY;
-                    $this->error('module.circular.dependency',$component->getName());
+                    $this->error('module.circular.dependency', $component->getName());
+
                     break;
                 case ItemException::ERROR_BAD_ITEM_VERSION:
                     $depName = $e->getRelatedData()->getName();
                     $maxVersion = $minVersion = 0;
-                    foreach($component->getDependencies() as $compInfo) {
+                    foreach ($component->getDependencies() as $compInfo) {
                         if ($compInfo['type'] == 'module' && $compInfo['name'] == $depName) {
                             $maxVersion = $compInfo['maxversion'];
                             $minVersion = $compInfo['minversion'];
                         }
                     }
-                    $this->error('module.bad.dependency.version',array($component->getName(), $depName, $minVersion, $maxVersion));
+                    $this->error('module.bad.dependency.version', array($component->getName(), $depName, $minVersion, $maxVersion));
+
                     break;
                 case ItemException::ERROR_REMOVED_ITEM_IS_NEEDED:
                     $depName = $e->getRelatedData()->getName();
-                    $this->error('install.error.delete.dependency',array($depName, $component->getName()));
+                    $this->error('install.error.delete.dependency', array($depName, $component->getName()));
+
                     break;
                 case ItemException::ERROR_ITEM_TO_INSTALL_SHOULD_BE_REMOVED:
                     $depName = $e->getRelatedData()->getName();
-                    $this->error('install.error.install.dependency',array($depName, $component->getName()));
+                    $this->error('install.error.install.dependency', array($depName, $component->getName()));
+
                     break;
                 case ItemException::ERROR_DEPENDENCY_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                    $this->error('module.needed', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.needed', array($component->getName(), implode(',', $e->getRelatedData())));
+
                     break;
                 case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+
                     break;
                 case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+
                     break;
                 case ItemException::ERROR_CHOICE_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                    $this->error('module.choice.unknown', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.choice.unknown', array($component->getName(), implode(',', $e->getRelatedData())));
+
                     break;
                 case ItemException::ERROR_CHOICE_AMBIGUOUS:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
-                    $this->error('module.choice.ambiguous', array($component->getName(), implode(',',$e->getRelatedData())));
+                    $this->error('module.choice.ambiguous', array($component->getName(), implode(',', $e->getRelatedData())));
+
                     break;
                 case ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $depName = $e->getRelatedData()->getName();
                     $this->error('module.dependency.error', array($depName, $component->getName()));
+
                     break;
             }
 
             $this->ok('install.bad.end');
+
             return false;
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             $this->error('install.bad.dependencies');
             $this->ok('install.bad.end');
+
             return false;
         }
 
         $this->ok('install.dependencies.ok');
+
         return $moduleschain;
     }
 
     /**
-     * launch preInstall()/preUninstall() methods of  installers or upgraders
+     * launch preInstall()/preUninstall() methods of  installers or upgraders.
      *
      * @param \Jelix\Dependencies\Item[] $moduleschain
+     *
      * @return array|bool
      */
-    protected function runPreInstall(&$moduleschain) {
+    protected function runPreInstall(&$moduleschain)
+    {
         $result = true;
         // put available installers into $componentsToInstall for
         // the next step
@@ -273,7 +298,7 @@ class Installer {
 
         $helpers = new Module\API\PreInstallHelpers($this->globalSetup);
 
-        foreach($moduleschain as $resolverItem) {
+        foreach ($moduleschain as $resolverItem) {
             /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
             $component = $resolverItem->getProperty('component');
 
@@ -289,31 +314,26 @@ class Installer {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->preInstall();
-                        }
-                        else {
+                        } else {
                             $installer->preInstall($helpers);
                         }
                     }
-                }
-                elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
+                } elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
                     if ($installersDisabled) {
                         $upgraders = array();
-                    }
-                    else {
+                    } else {
                         $upgraders = $component->getUpgraders();
                     }
 
-                    foreach($upgraders as $upgrader) {
+                    foreach ($upgraders as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->preInstall();
-                        }
-                        else {
+                        } else {
                             $upgrader->preInstall($helpers);
                         }
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
-                }
-                else if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
+                } elseif ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
                     if ($installersDisabled) {
                         $installer = null;
                     } else {
@@ -323,33 +343,35 @@ class Installer {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->preUninstall();
-                        }
-                        else {
+                        } else {
                             $installer->preUninstall($helpers);
                         }
                     }
                 }
             } catch (Exception $e) {
                 $result = false;
-                $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+                $this->error($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (\Exception $e) {
                 $result = false;
-                $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
+                $this->error('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
         if (!$result) {
             return false;
         }
+
         return $componentsToInstall;
     }
 
     /**
-     * Launch the install()/uninstall() method of installers or upgraders
+     * Launch the install()/uninstall() method of installers or upgraders.
+     *
      * @param array $componentsToInstall
+     *
      * @return array|bool
      */
-    protected function runInstall($componentsToInstall) {
-
+    protected function runInstall($componentsToInstall)
+    {
         $installedModules = array();
         $result = true;
         $installerIni = $this->globalSetup->getInstallerIni();
@@ -358,7 +380,7 @@ class Installer {
         $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
 
         try {
-            foreach($componentsToInstall as $item) {
+            foreach ($componentsToInstall as $item) {
                 /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
                 /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller $installer */
                 list($installer, $component, $action) = $item;
@@ -369,35 +391,47 @@ class Installer {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->install();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->install($helpers);
                         }
                         $saveConfigIni = true;
                     }
 
-                    $installerIni->setValue($component->getName().'.installed',
-                        1, 'modules');
-                    $installerIni->setValue($component->getName().'.version',
-                        $component->getSourceVersion(), 'modules');
-                    $installerIni->setValue($component->getName().'.version.date',
-                        $component->getSourceDate(), 'modules');
-                    $installerIni->setValue($component->getName().'.firstversion',
-                        $component->getSourceVersion(), 'modules');
-                    $installerIni->setValue($component->getName().'.firstversion.date',
-                        $component->getSourceDate(), 'modules');
+                    $installerIni->setValue(
+                        $component->getName().'.installed',
+                        1,
+                        'modules'
+                    );
+                    $installerIni->setValue(
+                        $component->getName().'.version',
+                        $component->getSourceVersion(),
+                        'modules'
+                    );
+                    $installerIni->setValue(
+                        $component->getName().'.version.date',
+                        $component->getSourceDate(),
+                        'modules'
+                    );
+                    $installerIni->setValue(
+                        $component->getName().'.firstversion',
+                        $component->getSourceVersion(),
+                        'modules'
+                    );
+                    $installerIni->setValue(
+                        $component->getName().'.firstversion.date',
+                        $component->getSourceDate(),
+                        'modules'
+                    );
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
-                }
-                elseif ($action == Resolver::ACTION_UPGRADE) {
+                } elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
-                    /** @var \jInstallerModule|\Jelix\Installer\Module\Installer $upgrader */
-                    foreach($installer as $upgrader) {
+                    /** @var \Jelix\Installer\Module\Installer|\jInstallerModule $upgrader */
+                    foreach ($installer as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->install();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->install($helpers);
                         }
@@ -406,33 +440,46 @@ class Installer {
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        $installerIni->setValue($component->getName().'.version',
-                            $upgrader->getVersion(), 'modules');
-                        $installerIni->setValue($component->getName().'.version.date',
-                            $upgrader->getDate(), 'modules');
-                        $this->ok('install.module.upgraded',
-                            array($component->getName(), $upgrader->getVersion()));
+                        $installerIni->setValue(
+                            $component->getName().'.version',
+                            $upgrader->getVersion(),
+                            'modules'
+                        );
+                        $installerIni->setValue(
+                            $component->getName().'.version.date',
+                            $upgrader->getDate(),
+                            'modules'
+                        );
+                        $this->ok(
+                            'install.module.upgraded',
+                            array($component->getName(), $upgrader->getVersion())
+                        );
                         $lastversion = $upgrader->getVersion();
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
                     if ($lastversion != $component->getSourceVersion()) {
-                        $installerIni->setValue($component->getName().'.version',
-                            $component->getSourceVersion(), 'modules');
-                        $installerIni->setValue($component->getName().'.version.date',
-                            $component->getSourceDate(), 'modules');
-                        $this->ok('install.module.upgraded',
-                            array($component->getName(), $component->getSourceVersion()));
+                        $installerIni->setValue(
+                            $component->getName().'.version',
+                            $component->getSourceVersion(),
+                            'modules'
+                        );
+                        $installerIni->setValue(
+                            $component->getName().'.version.date',
+                            $component->getSourceDate(),
+                            'modules'
+                        );
+                        $this->ok(
+                            'install.module.upgraded',
+                            array($component->getName(), $component->getSourceVersion())
+                        );
                     }
                     $installedModules[] = array($installer, $component, $action);
-
-                }
-                else if ($action == Resolver::ACTION_REMOVE) {
+                } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->uninstall();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->uninstall($helpers);
                         }
@@ -453,33 +500,35 @@ class Installer {
             }
         } catch (Exception $e) {
             $result = false;
-            $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+            $this->error($e->getLocaleKey(), $e->getLocaleParameters());
         } catch (\Exception $e) {
             $result = false;
-            $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
+            $this->error('install.module.error', array($component->getName(), $e->getMessage()));
         }
         if (!$result) {
             return false;
         }
+
         return $installedModules;
     }
 
     /**
-     * Launch the postInstall()/postUninstall() method of installers or upgraders
+     * Launch the postInstall()/postUninstall() method of installers or upgraders.
      *
      * @param array $installedModules
+     *
      * @return bool
      */
-    protected function runPostInstall($installedModules) {
-
+    protected function runPostInstall($installedModules)
+    {
         $result = true;
         $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
         $helpers = new Module\API\InstallHelpers($this->globalSetup, $databaseHelpers);
 
-        foreach($installedModules as $item) {
+        foreach ($installedModules as $item) {
             try {
                 /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
-                /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller  $installer */
+                /** @var \Jelix\Installer\Module\Installer|\Jelix\Installer\Module\Uninstaller $installer */
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
@@ -488,34 +537,29 @@ class Installer {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->postInstall();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->postInstall($helpers);
                         }
                         $component->installFinished();
                         $saveConfigIni = true;
                     }
-                }
-                else if ($action == Resolver::ACTION_UPGRADE) {
+                } elseif ($action == Resolver::ACTION_UPGRADE) {
                     foreach ($installer as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->postInstall();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->postInstall($helpers);
                         }
                         $component->upgradeFinished($upgrader);
                         $saveConfigIni = true;
                     }
-                }
-                elseif ($action == Resolver::ACTION_REMOVE) {
+                } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->postUninstall();
-                        }
-                        else {
+                        } else {
                             $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->postUninstall($helpers);
                         }
@@ -529,17 +573,18 @@ class Installer {
                 }
             } catch (Exception $e) {
                 $result = false;
-                $this->error ($e->getLocaleKey(), $e->getLocaleParameters());
+                $this->error($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (\Exception $e) {
                 $result = false;
-                $this->error ('install.module.error', array($component->getName(), $e->getMessage()));
+                $this->error('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
+
         return $result;
     }
 
-
-    protected function saveConfigurationFiles(\Jelix\Installer\EntryPoint $entryPoint) {
+    protected function saveConfigurationFiles(EntryPoint $entryPoint)
+    {
 
         // we save the configuration at each module because its
         // installer may have modified it, and we want to save it
@@ -551,9 +596,13 @@ class Installer {
             // we re-load configuration file for each module because
             // previous module installer could have modify it.
             $entryPoint->setConfigObj(
-                \jConfigCompiler::read($entryPoint->getConfigFileName(), true,
+                \jConfigCompiler::read(
+                    $entryPoint->getConfigFileName(),
+                    true,
                     $entryPoint->isCliScript(),
-                    $entryPoint->getScriptName()));
+                    $entryPoint->getScriptName()
+                )
+            );
             \jApp::setConfig($entryPoint->getConfigObj());
         }
 
@@ -564,40 +613,45 @@ class Installer {
         }
     }
 
-    protected function startMessage () {
+    protected function startMessage()
+    {
         $this->reporter->start();
     }
 
-    protected function endMessage() {
+    protected function endMessage()
+    {
         $this->reporter->end();
     }
 
-    protected function error($msg, $params=null, $fullString=false){
+    protected function error($msg, $params = null, $fullString = false)
+    {
         if (!$fullString) {
-            $msg = $this->messages->get($msg,$params);
+            $msg = $this->messages->get($msg, $params);
         }
         $this->reporter->message($msg, 'error');
     }
 
-    protected function ok($msg, $params=null, $fullString=false){
+    protected function ok($msg, $params = null, $fullString = false)
+    {
         if (!$fullString) {
-            $msg = $this->messages->get($msg,$params);
+            $msg = $this->messages->get($msg, $params);
         }
         $this->reporter->message($msg, '');
     }
 
-    protected function warning($msg, $params=null, $fullString=false){
+    protected function warning($msg, $params = null, $fullString = false)
+    {
         if (!$fullString) {
-            $msg = $this->messages->get($msg,$params);
+            $msg = $this->messages->get($msg, $params);
         }
         $this->reporter->message($msg, 'warning');
     }
 
-    protected function notice($msg, $params=null, $fullString=false){
+    protected function notice($msg, $params = null, $fullString = false)
+    {
         if (!$fullString) {
-            $msg = $this->messages->get($msg,$params);
+            $msg = $this->messages->get($msg, $params);
         }
         $this->reporter->message($msg, 'notice');
     }
 }
-

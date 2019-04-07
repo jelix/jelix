@@ -1,32 +1,37 @@
 <?php
 /**
-* @package    jelix
-* @subpackage core
-* @author     Julien Issler
-* @contributor Laurent Jouanneau
-* @copyright  2007-2009 Julien Issler, 2008-2012 Laurent Jouanneau
-* @link       http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-* @since 1.0
-*/
+ * @package    jelix
+ * @subpackage core
+ *
+ * @author     Julien Issler
+ * @contributor Laurent Jouanneau
+ *
+ * @copyright  2007-2009 Julien Issler, 2008-2012 Laurent Jouanneau
+ *
+ * @see       http://www.jelix.org
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @since 1.0
+ */
 
 /**
- * session management class of the jelix core
+ * session management class of the jelix core.
  *
  * @package  jelix
  * @subpackage core
+ *
  * @since 1.0
  */
-class jSession {
-
+class jSession
+{
     protected static $_params;
 
     /**
-     * start a session
+     * start a session.
      */
-    public static function start(){
-
-        $params = & jApp::config()->sessions;
+    public static function start()
+    {
+        $params = &jApp::config()->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
         if (jApp::coord()->request instanceof jCmdLineRequest || !$params['start']) {
@@ -34,100 +39,118 @@ class jSession {
         }
 
         //make sure that the session cookie is only for the current application
-        if (!$params['shared_session'])
-            session_set_cookie_params ( 0 , jApp::urlBasePath());
+        if (!$params['shared_session']) {
+            session_set_cookie_params(0, jApp::urlBasePath());
+        }
 
         if ($params['storage'] != '') {
 
             /* on debian/ubuntu (maybe others), garbage collector launch probability is set to 0
                and replaced by a simple cron job which is not enough for jSession (different path, db storage, ...),
                so we set it to 1 as PHP's default value */
-            if(!ini_get('session.gc_probability'))
-                ini_set('session.gc_probability','1');
+            if (!ini_get('session.gc_probability')) {
+                ini_set('session.gc_probability', '1');
+            }
 
-            switch($params['storage']){
+            switch ($params['storage']) {
                 case 'dao':
                     session_set_save_handler(
-                        array(__CLASS__,'daoOpen'),
-                        array(__CLASS__,'daoClose'),
-                        array(__CLASS__,'daoRead'),
-                        array(__CLASS__,'daoWrite'),
-                        array(__CLASS__,'daoDestroy'),
-                        array(__CLASS__,'daoGarbageCollector')
+                        array(__CLASS__, 'daoOpen'),
+                        array(__CLASS__, 'daoClose'),
+                        array(__CLASS__, 'daoRead'),
+                        array(__CLASS__, 'daoWrite'),
+                        array(__CLASS__, 'daoDestroy'),
+                        array(__CLASS__, 'daoGarbageCollector')
                     );
                     self::$_params = $params;
+
                     break;
 
                 case 'files':
                     session_save_path($params['files_path']);
+
                     break;
             }
         }
 
-        if($params['name'] !=''){
-            if(!preg_match('#^[a-zA-Z0-9]+$#',$params['name'])){
+        if ($params['name'] != '') {
+            if (!preg_match('#^[a-zA-Z0-9]+$#', $params['name'])) {
                 // regexp check because session name can only be alpha numeric according to the php documentation
                 throw new jException('jelix~errors.jsession.name.invalid');
             }
             session_name($params['name']);
         }
 
-        if(isset($params['_class_to_load'])) {
-            foreach($params['_class_to_load'] as $file) {
-                require_once($file);
+        if (isset($params['_class_to_load'])) {
+            foreach ($params['_class_to_load'] as $file) {
+                require_once $file;
             }
         }
 
         session_start();
+
         return true;
     }
 
     /**
-     * end a session
+     * end a session.
      */
-    public static function end(){
+    public static function end()
+    {
         session_write_close();
+
         return true;
     }
 
-    public static function isStarted() {
+    public static function isStarted()
+    {
         if (php_sapi_name() !== 'cli') {
-            return (session_status() === PHP_SESSION_ACTIVE);
+            return session_status() === PHP_SESSION_ACTIVE;
         }
+
         return false;
     }
 
-    protected static function _getDao(){
-        if(isset(self::$_params['dao_db_profile']) && self::$_params['dao_db_profile']){
+    protected static function _getDao()
+    {
+        if (isset(self::$_params['dao_db_profile']) && self::$_params['dao_db_profile']) {
             $dao = jDao::get(self::$_params['dao_selector'], self::$_params['dao_db_profile']);
-        }
-        else{
+        } else {
             $dao = jDao::get(self::$_params['dao_selector']);
         }
+
         return $dao;
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
+     *
+     * @param mixed $save_path
+     * @param mixed $session_name
      */
-    public static function daoOpen ($save_path, $session_name) {
+    public static function daoOpen($save_path, $session_name)
+    {
         return true;
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
      */
-    public static function daoClose() {
+    public static function daoClose()
+    {
         return true;
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
+     *
+     * @param mixed $id
      */
-    public static function daoRead ($id) {
+    public static function daoRead($id)
+    {
         $session = self::_getDao()->get($id);
 
-        if(!$session){
+        if (!$session) {
             return '';
         }
 
@@ -135,13 +158,17 @@ class jSession {
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
+     *
+     * @param mixed $id
+     * @param mixed $data
      */
-    public static function daoWrite ($id, $data) {
+    public static function daoWrite($id, $data)
+    {
         $dao = self::_getDao();
 
         $session = $dao->get($id);
-        if(!$session){
+        if (!$session) {
             $session = $dao->createRecord();
             $session->id = $id;
             $session->data = $data;
@@ -149,8 +176,7 @@ class jSession {
             $session->creation = $now;
             $session->access = $now;
             $dao->insert($session);
-        }
-        else{
+        } else {
             $session->data = $data;
             $session->access = date('Y-m-d H:i:s');
             $dao->update($session);
@@ -160,26 +186,33 @@ class jSession {
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
+     *
+     * @param mixed $id
      */
-    public static function daoDestroy ($id) {
+    public static function daoDestroy($id)
+    {
         if (isset($_COOKIE[session_name()])) {
-           setcookie(session_name(), '', time()-42000, '/');
+            setcookie(session_name(), '', time() - 42000, '/');
         }
 
         self::_getDao()->delete($id);
+
         return true;
     }
 
     /**
-     * dao handler for session stored in database
+     * dao handler for session stored in database.
+     *
+     * @param mixed $maxlifetime
      */
-    public static function daoGarbageCollector ($maxlifetime) {
+    public static function daoGarbageCollector($maxlifetime)
+    {
         $date = new jDateTime();
         $date->now();
-        $date->sub(0,0,0,0,0,$maxlifetime);
+        $date->sub(0, 0, 0, 0, 0, $maxlifetime);
         self::_getDao()->deleteExpired($date->toString(jDateTime::DB_DTFORMAT));
+
         return true;
     }
-
 }

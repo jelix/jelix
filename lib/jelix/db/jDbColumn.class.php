@@ -1,19 +1,20 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db
-* @author     Laurent Jouanneau
-* @copyright  2010-2018 Laurent Jouanneau
-*
-* @link        http://jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
+ * @package    jelix
+ * @subpackage db
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2010-2018 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- * Represents an index on some columns
+ * Represents an index on some columns.
  */
-class jDbIndex {
+class jDbIndex
+{
     /**
      * @var string the index name
      */
@@ -21,17 +22,18 @@ class jDbIndex {
 
     /**
      *  the type of index : 'btree', 'hash'...
+     *
      * @var string
      */
     public $type;
 
     /**
-     * @var string[]  list of indexed columns
+     * @var string[] list of indexed columns
      */
     public $columns = array();
 
     /**
-     * @var string   SQL where clause for the index
+     * @var string SQL where clause for the index
      */
     //public $predicat = '';
 
@@ -39,10 +41,13 @@ class jDbIndex {
 
     /**
      * jDbIndex constructor.
-     * @param string $name  the index name
-     * @param string[] $columns  the list of column names
+     *
+     * @param string   $name    the index name
+     * @param string[] $columns the list of column names
+     * @param mixed    $type
      */
-    function __construct($name, $type='', $columns = array()) { //, $predicat='', ) {
+    public function __construct($name, $type = '', $columns = array())
+    { //, $predicat='', ) {
         $this->name = $name;
         $this->columns = $columns;
         $this->type = $type;
@@ -50,79 +55,82 @@ class jDbIndex {
     }
 }
 
-abstract class jDbConstraint {
+abstract class jDbConstraint
+{
     public $name;
     public $columns = array();
 
     /**
      * jDbConstraint constructor.
-     * @param string $name
-     * @param string[]|string $columns
+     *
+     * @param string          $name
+     * @param string|string[] $columns
      */
-    function __construct($name, $columns) {
+    public function __construct($name, $columns)
+    {
         $this->name = $name;
         if (is_string($columns)) {
             $this->columns = array($columns);
-        }
-        else {
+        } else {
             $this->columns = $columns;
         }
     }
 }
 
 /**
- * represents a unique key
+ * represents a unique key.
  */
-class jDbUniqueKey extends jDbConstraint {
-
-    function __construct($name, $columns = null) {
+class jDbUniqueKey extends jDbConstraint
+{
+    public function __construct($name, $columns = null)
+    {
         // for previous version <1.6.16, where $columns was $type
         if ($columns === null) {
             parent::__construct($name, array());
-        }
-        else {
+        } else {
             parent::__construct($name, $columns);
         }
-
-
     }
 }
 
 /**
- * used to declare a primary key
+ * used to declare a primary key.
  */
-class jDbPrimaryKey extends jDbConstraint {
-
-    function __construct($columns, $name = '') {
+class jDbPrimaryKey extends jDbConstraint
+{
+    public function __construct($columns, $name = '')
+    {
         // for previous version <1.6.16, where there was only one argument, $columns
         parent::__construct($name, $columns);
     }
 }
 
-
-
 /**
- * used to declare a foreign key
+ * used to declare a foreign key.
  */
-class jDbReference  extends jDbConstraint {
+class jDbReference extends jDbConstraint
+{
     public $name;
     /**
-     * list of columns on which there is the constraint
+     * list of columns on which there is the constraint.
+     *
      * @var string[]
      */
     public $columns = array();
 
     /**
-     * name of the foreign table
+     * name of the foreign table.
+     *
      * @var string
      */
     public $fTable = '';
     /**
-     * list of foreign columns
+     * list of foreign columns.
+     *
      * @var string[]
      */
     public $fColumns = array();
-    
+
     public $onUpdate = '';
     public $onDelete = '';
 
@@ -131,143 +139,158 @@ class jDbReference  extends jDbConstraint {
      *
      * Note: all parameters are optional, to be compatible with Jelix < 1.6.16
      * where parameters didn't exist
-     * @param string $name
-     * @param string[]|string $columns
-     * @param string $foreignTable
-     * @param string[]|string $foreignColumns
+     *
+     * @param string          $name
+     * @param string|string[] $columns
+     * @param string          $foreignTable
+     * @param string|string[] $foreignColumns
      */
-    function __construct($name = '', $columns = array(), $foreignTable='', $foreignColumns=array()) {
+    public function __construct($name = '', $columns = array(), $foreignTable = '', $foreignColumns = array())
+    {
         parent::__construct($name, $columns);
         $this->fTable = $foreignTable;
         if (is_string($foreignColumns)) {
             $this->fColumns = array($foreignColumns);
-        }
-        else {
+        } else {
             $this->fColumns = $foreignColumns;
         }
     }
 }
 
-
-/**
- *
- */
-class jDbColumn {
-
+class jDbColumn
+{
     /**
-     * native type of the field
+     * native type of the field.
+     *
      * @var string
      */
     public $type;
 
     /**
-     * internal use
+     * internal use.
+     *
      * @internal
      */
     public $nativeType;
 
     /**
-     * field name
+     * field name.
+     *
      * @var string
      */
     public $name;
 
     /**
-     * says if the field can be null or not
-     * @var boolean
+     * says if the field can be null or not.
+     *
+     * @var bool
      */
     public $notNull = false;
 
     /**
-     * says if the field is auto incremented
-     * @var boolean
+     * says if the field is auto incremented.
+     *
+     * @var bool
      */
     public $autoIncrement = false;
 
     /**
-     * default value
+     * default value.
+     *
      * @var string
      */
-    public $default = null;
+    public $default;
 
     /**
-     * says if there is a default value
-     * @var boolean
+     * says if there is a default value.
+     *
+     * @var bool
      */
     public $hasDefault = false;
 
     /**
-     * The length for a string
+     * The length for a string.
+     *
      * @var int
      */
     public $length = 0;
 
     /**
-     * The precision for a number
+     * The precision for a number.
+     *
      * @var int
      */
     public $precision = 0;
 
     /**
-     * The scale for a number (value after the coma, in the precision)
+     * The scale for a number (value after the coma, in the precision).
+     *
      * @var int
      */
     public $scale = 0;
 
-     /**
-     * if there is a sequence
+    /**
+     * if there is a sequence.
+     *
      * @var string
      */
     public $sequence = false;
-    
+
     public $unsigned = false;
-    
-    public $minLength = null;
-    
-    public $maxLength = null;
-    
-    public $minValue = null;
-    
-    public $maxValue = null;
+
+    public $minLength;
+
+    public $maxLength;
+
+    public $minValue;
+
+    public $maxValue;
 
     public $comment = '';
 
-    function __construct ($name, $type, $length=0, $hasDefault = false,
-                          $default = null, $notNull = false) {
+    public function __construct(
+        $name,
+        $type,
+        $length = 0,
+        $hasDefault = false,
+        $default = null,
+        $notNull = false
+    ) {
         $this->type = $type;
         $this->name = $name;
         $this->length = $length;
         $this->hasDefault = $hasDefault;
         if ($hasDefault) {
-            $this->default = ($notNull&&$default === null?'':$default);
-        }
-        else {
-            $this->default = ($notNull?'':null);
+            $this->default = ($notNull && $default === null ? '' : $default);
+        } else {
+            $this->default = ($notNull ? '' : null);
         }
         $this->notNull = $notNull;
     }
 
-    function isEqualTo($column) {
-        return (
+    public function isEqualTo($column)
+    {
+        return
             $this->name == $column->name &&
             $this->_isEqualToExceptName($column)
-        );
+        ;
     }
 
-    function hasOnlyDifferentName($otherColumn) {
-        return (
+    public function hasOnlyDifferentName($otherColumn)
+    {
+        return
             $this->name != $otherColumn->name &&
             $this->_isEqualToExceptName($otherColumn)
-        );
+        ;
     }
 
-    protected function _isEqualToExceptName($column) {
+    protected function _isEqualToExceptName($column)
+    {
         if ($column->nativeType && $this->nativeType) {
             if ($column->nativeType != $this->nativeType) {
                 return false;
             }
-        }
-        else if ($this->type != $column->type) {
+        } elseif ($this->type != $column->type) {
             return false;
         }
 
@@ -275,7 +298,8 @@ class jDbColumn {
             $this->sequence != $column->sequence) {
             return false;
         }
-        return (
+
+        return
             $this->notNull == $column->notNull &&
             $this->autoIncrement == $column->autoIncrement &&
             $this->default == $column->default &&
@@ -283,6 +307,6 @@ class jDbColumn {
             $this->length == $column->length &&
             $this->scale == $column->scale &&
             $this->unsigned == $column->unsigned
-        );
+        ;
     }
 }

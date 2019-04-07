@@ -1,10 +1,12 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Installer\Module;
 
 use Jelix\Installer\Module\API\InstallHelpers;
@@ -17,27 +19,27 @@ use Jelix\Installer\Module\API\PreInstallHelpers;
  *
  * @since 1.7
  */
-class Installer extends InstallerAbstract implements InstallerInterface {
-
+class Installer extends InstallerAbstract implements InstallerInterface
+{
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function preInstall(PreInstallHelpers $helpers) {
-
+    public function preInstall(PreInstallHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function install(InstallHelpers $helpers) {
-
+    public function install(InstallHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function postInstall(InstallHelpers $helpers) {
-
+    public function postInstall(InstallHelpers $helpers)
+    {
     }
 
     /**
@@ -49,7 +51,7 @@ class Installer extends InstallerAbstract implements InstallerInterface {
      * If you don't fill it, the name of the class file should contain the
      * target version (deprecated behavior though)
      *
-     * @var array $targetVersions list of version by asc order
+     * @var array list of version by asc order
      */
     protected $targetVersions = array();
 
@@ -63,26 +65,28 @@ class Installer extends InstallerAbstract implements InstallerInterface {
      */
     protected $version = '0';
 
-
-    function getTargetVersions() {
+    public function getTargetVersions()
+    {
         return $this->targetVersions;
     }
 
-    function setTargetVersions($versions) {
+    public function setTargetVersions($versions)
+    {
         $this->targetVersions = $versions;
     }
 
-    function getDate() {
+    public function getDate()
+    {
         return $this->date;
     }
 
-    function getVersion() {
+    public function getVersion()
+    {
         return $this->version;
     }
 
-    function setVersion($version) {
+    public function setVersion($version)
+    {
         $this->version = $version;
     }
-
 }
-

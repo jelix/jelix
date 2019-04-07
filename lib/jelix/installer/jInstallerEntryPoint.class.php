@@ -2,65 +2,72 @@
 /**
  * @package     jelix
  * @subpackage  installer
+ *
  * @author      Laurent Jouanneau
  * @copyright   2009-2017 Laurent Jouanneau
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 /**
- * container for entry points properties
+ * container for entry points properties.
  *
  * Object for legacy installers
+ *
  * @deprecated
  */
-class jInstallerEntryPoint {
-
+class jInstallerEntryPoint
+{
     /**
-     * @var StdObj   configuration parameters. compiled content of config files
-     *  result of the merge of entry point config, liveconfig.ini.php, localconfig.ini.php,
-     *  mainconfig.ini.php and defaultconfig.ini.php
+     * @var StdObj configuration parameters. compiled content of config files
+     *             result of the merge of entry point config, liveconfig.ini.php, localconfig.ini.php,
+     *             mainconfig.ini.php and defaultconfig.ini.php
      */
     public $config;
 
     /**
      * @var string the filename of the configuration file dedicated to the entry point
-     *       ex: <apppath>/app/system/index/config.ini.php
+     *             ex: <apppath>/app/system/index/config.ini.php
      */
     public $configFile;
 
     /**
-     * combination between mainconfig.ini.php (master) and entrypoint config (overrider)
+     * combination between mainconfig.ini.php (master) and entrypoint config (overrider).
+     *
      * @var jIniMultiFilesModifier
+     *
      * @deprecated
      */
     public $configIni;
 
     /**
      * combination between mainconfig.ini.php, localconfig.ini.php (master)
-     * and entrypoint config (overrider)
+     * and entrypoint config (overrider).
      *
      * @var \Jelix\IniFile\MultiIniModifier
+     *
      * @deprecated as public property
      */
     public $localConfigIni;
 
     /**
-     * liveconfig.ini.php
+     * liveconfig.ini.php.
      *
      * @var \Jelix\IniFile\IniModifier
      */
     public $liveConfigIni;
 
     /**
-     * entrypoint config of app/system/
+     * entrypoint config of app/system/.
+     *
      * @var \Jelix\IniFile\IniModifier
      */
     protected $epConfigIni;
 
     /**
-     * @var boolean true if the script corresponding to the configuration
-     *                is a script for CLI
+     * @var bool true if the script corresponding to the configuration
+     *           is a script for CLI
      */
     public $isCliScript;
 
@@ -81,16 +88,19 @@ class jInstallerEntryPoint {
 
     /**
      * Creates a jInstallerEntryPoint object from a new
-     * \Jelix\Installer\EntryPoint object
-     * @param \Jelix\Installer\EntryPoint $entryPoint
+     * \Jelix\Installer\EntryPoint object.
+     *
+     * @param \Jelix\Installer\EntryPoint  $entryPoint
      * @param \Jelix\Installer\GlobalSetup $globalSetup
      */
-    function __construct(\Jelix\Installer\EntryPoint $entryPoint,
-                         \Jelix\Installer\GlobalSetup $globalSetup) {
+    public function __construct(
+        Jelix\Installer\EntryPoint $entryPoint,
+        Jelix\Installer\GlobalSetup $globalSetup
+    ) {
         $this->type = $entryPoint->getType();
         $this->isCliScript = $entryPoint->isCliScript();
         $this->configFile = $entryPoint->getConfigFileName();
-        $this->scriptName =  $entryPoint->getScriptName();
+        $this->scriptName = $entryPoint->getScriptName();
         $this->file = $entryPoint->getFileName();
 
         $this->epConfigIni = $entryPoint->getSingleConfigIni();
@@ -101,16 +111,19 @@ class jInstallerEntryPoint {
         );
 
         $this->configIni = new \Jelix\IniFile\MultiIniModifier(
-                                $mainConfig,
-                                $this->epConfigIni);
+            $mainConfig,
+            $this->epConfigIni
+        );
 
         $localConfig = new \Jelix\IniFile\MultiIniModifier(
             $mainConfig,
-            $globalSetup->getLocalConfigIni());
+            $globalSetup->getLocalConfigIni()
+        );
 
         $this->localConfigIni = new \Jelix\IniFile\MultiIniModifier(
             $localConfig,
-            $this->epConfigIni);
+            $this->epConfigIni
+        );
 
         $this->config = $entryPoint->getConfigObj();
 
@@ -120,15 +133,17 @@ class jInstallerEntryPoint {
     /**
      * @return string the entry point id
      */
-    function getEpId() {
+    public function getEpId()
+    {
         return $this->config->urlengine['urlScriptId'];
     }
 
     /**
      * @return array the list of modules and their path, as stored in the
-     * compiled configuration file
+     *               compiled configuration file
      */
-    function getModulesList() {
+    public function getModulesList()
+    {
         return $this->config->_allModulesPathList;
     }
 
@@ -137,26 +152,30 @@ class jInstallerEntryPoint {
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
      */
-    function getEpConfigIni() {
+    public function getEpConfigIni()
+    {
         return $this->epConfigIni;
     }
 
     /**
      * @return string the config file name of the entry point
      */
-    function getConfigFile() {
+    public function getConfigFile()
+    {
         return $this->configFile;
     }
 
     /**
      * @return stdObj the config content of the entry point, as seen when
-     * calling jApp::config()
+     *                calling jApp::config()
      */
-    function getConfigObj() {
+    public function getConfigObj()
+    {
         return $this->config;
     }
 
-    function setConfigObj($config) {
+    public function setConfigObj($config)
+    {
         $this->config = $config;
     }
 }

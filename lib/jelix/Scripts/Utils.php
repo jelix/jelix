@@ -3,14 +3,16 @@
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  *
- * @link        http://www.jelix.org
+ * @see        http://www.jelix.org
  * @licence     MIT
  */
+
 namespace Jelix\Scripts;
 
-class Utils {
-
-    static function checkEnv() {
+class Utils
+{
+    public static function checkEnv()
+    {
         if (!\jServer::isCLI()) {
             echo "Error: you're not allowed to execute this script outside a command line shell.\n";
             exit(1);
@@ -22,7 +24,8 @@ class Utils {
         }
     }
 
-    static function checkTempPath() {
+    public static function checkTempPath()
+    {
         $tempBasePath = \jApp::tempBasePath();
 
         // we always clean the temp directory. But first, let's check the temp path (see ticket #840)...
@@ -35,5 +38,4 @@ class Utils {
         }
         //\jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
-
 }

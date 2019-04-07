@@ -1,12 +1,13 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
-namespace Jelix\Installer\Module;
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
+namespace Jelix\Installer\Module;
 
 use Jelix\Installer\Module\API\InstallHelpers;
 use Jelix\Installer\Module\API\PreInstallHelpers;
@@ -18,28 +19,26 @@ use Jelix\Installer\Module\API\PreInstallHelpers;
  *
  * @since 1.7
  */
-class Uninstaller extends InstallerAbstract implements UninstallerInterface {
-
+class Uninstaller extends InstallerAbstract implements UninstallerInterface
+{
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function preUninstall(PreInstallHelpers $helpers) {
-
+    public function preUninstall(PreInstallHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function uninstall(InstallHelpers $helpers) {
-
+    public function uninstall(InstallHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    function postUninstall(InstallHelpers $helpers) {
-
+    public function postUninstall(InstallHelpers $helpers)
+    {
     }
-
 }
-

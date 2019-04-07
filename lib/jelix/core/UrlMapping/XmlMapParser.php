@@ -1,18 +1,19 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @contributor Thibault Piront (nuKs)
-*
-* @copyright   2005-2016 Laurent Jouanneau
-* @copyright   2007 Thibault Piront
-*
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @contributor Thibault Piront (nuKs)
+ *
+ * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2007 Thibault Piront
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Routing\UrlMapping;
 
 /**
- * Compiler for the url engine. It can parse urls.xml files
+ * Compiler for the url engine. It can parse urls.xml files.
  */
 class XmlMapParser implements \jISimpleCompiler
 {
@@ -28,7 +29,7 @@ class XmlMapParser implements \jISimpleCompiler
      * in any url definitions of any entrypoint of the same type
      * theses modules will then be attached to the default entrypoint of the
      * corresponding entrypoint type.
-     * 
+     *
      * @var array key = entrypoint type, value = list of modules
      */
     protected $modulesDedicatedToDefaultEp;
@@ -36,6 +37,7 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * contain the UrlMapData object corresponding of the default
      * entrypoint of each type.
+     *
      * @var UrlMapData[]
      */
     protected $defaultEntrypointsByType = array();
@@ -88,7 +90,6 @@ class XmlMapParser implements \jISimpleCompiler
         if ($aSelector->localFile == '' || !file_exists($sourceLocalFile)) {
             $sourceLocalFile = '';
         }
-
 
         /*
         <urls>
@@ -208,7 +209,7 @@ class XmlMapParser implements \jISimpleCompiler
     {
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match('/^(.*)entrypoint$/', $tagname, $m)) {
-                throw new MapParserException($this->getErrorMsg($tag, "Unknown element $tagname"));
+                throw new MapParserException($this->getErrorMsg($tag, "Unknown element ${tagname}"));
             }
             $this->parseEntryPointElement($tag, $m[1]);
         }
@@ -216,6 +217,8 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * extract informations from an <entrypoint> element.
+     *
+     * @param mixed $type
      *
      * @throws MapParserException
      */
@@ -231,8 +234,10 @@ class XmlMapParser implements \jISimpleCompiler
         }
 
         if (!isset($this->modulesDedicatedToDefaultEp[$type])) {
-            $this->modulesDedicatedToDefaultEp[$type] = array_combine(array_keys($this->modulesPath),
-                                                    array_fill(0, count($this->modulesPath), true));
+            $this->modulesDedicatedToDefaultEp[$type] = array_combine(
+                array_keys($this->modulesPath),
+                array_fill(0, count($this->modulesPath), true)
+            );
         }
 
         if (!isset($this->defaultEntrypointsByType[$type])) {
@@ -246,7 +251,7 @@ class XmlMapParser implements \jISimpleCompiler
             // entry point may be already defined, we will add new urls
             list($urlModel, $this->parseInfos,
                 $this->createUrlInfosDedicatedModules,
-                $this->epHasDefaultUrl) =  $this->entrypoints[$entryPoint];
+                $this->epHasDefaultUrl) = $this->entrypoints[$entryPoint];
 
             if (isset($tag['https'])) {
                 $urlModel->isHttps = (((string) $tag['https']) == 'true');
@@ -255,8 +260,7 @@ class XmlMapParser implements \jISimpleCompiler
             if ($type != $urlModel->requestType) {
                 throw new MapParserException($this->getErrorMsg($tag, 'Redefined entry point has a different type '.$type.' than its previous definition'));
             }
-        }
-        else {
+        } else {
             $urlModel = new UrlMapData(
                 $type,
                 (string) $tag['name'],
@@ -276,7 +280,7 @@ class XmlMapParser implements \jISimpleCompiler
 
             if ($isDefault) {
                 if ($this->defaultEntrypointsByType[$type] !== null) {
-                    throw new MapParserException($this->getErrorMsg($tag, 'Only one default entry point for the type ' . $type . ' is allowed'));
+                    throw new MapParserException($this->getErrorMsg($tag, 'Only one default entry point for the type '.$type.' is allowed'));
                 }
                 $this->defaultEntrypointsByType[$type] = $urlModel;
             }
@@ -298,17 +302,20 @@ class XmlMapParser implements \jISimpleCompiler
             array($urlModel,
                 $this->parseInfos,
                 $this->createUrlInfosDedicatedModules,
-                $this->epHasDefaultUrl
+                $this->epHasDefaultUrl,
             );
     }
 
     /**
      * extract informations from an <url> element.
+     *
+     * @param mixed $optionalTrailingSlash
      */
-    protected function parseUrlElement(\SimpleXMLElement $url,
-                                       UrlMapData $u,
-                                       $optionalTrailingSlash)
-    {
+    protected function parseUrlElement(
+        \SimpleXMLElement $url,
+        UrlMapData $u,
+        $optionalTrailingSlash
+    ) {
         $include = isset($url['include']) ? trim((string) $url['include']) : '';
         $handler = isset($url['handler']) ? trim((string) $url['handler']) : '';
         $controller = isset($url['controller']) ? trim((string) $url['controller']) : '';
@@ -342,6 +349,7 @@ class XmlMapParser implements \jISimpleCompiler
                 throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an include attributes at the same time'));
             }
             $this->readInclude($url, $u, $include);
+
             return;
         }
 
@@ -358,6 +366,7 @@ class XmlMapParser implements \jISimpleCompiler
         // module will be assigned to this entry point.
         if (!$action && !$handler && !$controller) {
             $this->newDedicatedModule($u, $url);
+
             return;
         }
 
@@ -370,6 +379,7 @@ class XmlMapParser implements \jISimpleCompiler
             }
             $u->action = $controller.':*';
             $this->newWholeController($u, $url);
+
             return;
         }
 
@@ -384,12 +394,16 @@ class XmlMapParser implements \jISimpleCompiler
         // parse or create an url
         if ($handler) {
             $this->newHandler($u, $url);
+
             return;
         }
 
         // parse dynamic parameters
-        list($path, $regexppath) = $this->extractDynamicParams($url, $u,
-                                                               $optionalTrailingSlash);
+        list($path, $regexppath) = $this->extractDynamicParams(
+            $url,
+            $u,
+            $optionalTrailingSlash
+        );
 
         // parse static parameters
         $this->extractStaticParams($url, $u);
@@ -408,10 +422,9 @@ class XmlMapParser implements \jISimpleCompiler
             throw new MapParserException($this->getErrorMsg($url, 'An url not equal to / cannot be default'));
         }
 
-
         $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
-                                    $u->params, $u->escapes, $u->statics,
-                                    $u->actionOverride, $u->isHttps, );
+            $u->params, $u->escapes, $u->statics,
+            $u->actionOverride, $u->isHttps, );
         $this->appendUrlInfo($u, $path, false);
 
         if ($u->actionOverride) {
@@ -485,7 +498,7 @@ class XmlMapParser implements \jISimpleCompiler
                         $parseInfos[0]['startAction'] = 'default:index';
                     }
                     $arr = array(1, $urlModel->entryPointUrl, $urlModel->isHttps,
-                                 array(), array(), '/', false, array(), );
+                        array(), array(), '/', false, array(), );
                     $this->createUrlInfos[$parseInfos[0]['startModule'].'~'.$parseInfos[0]['startAction'].'@'.$parseInfos[0]['requestType']] = $arr;
                 }
                 /*else if ($parseInfos[0]['isDefault']) {
@@ -522,6 +535,8 @@ class XmlMapParser implements \jISimpleCompiler
      * returns the combination between $rootPathInfo and the pathinfo
      * attribute of the given $url.
      *
+     * @param mixed $rootPathInfo
+     *
      * @return string full pathinfo, or "" if both are empty or "/"
      */
     protected function getFinalPathInfo(\SimpleXMLElement $url, $rootPathInfo)
@@ -546,17 +561,19 @@ class XmlMapParser implements \jISimpleCompiler
         return $pathinfo;
     }
 
-    protected function checkStaticPathInfo(\SimpleXMLElement $url) {
+    protected function checkStaticPathInfo(\SimpleXMLElement $url)
+    {
         if (!isset($url['pathinfo'])) {
             return true;
         }
-        $pathInfo = (string)$url['pathinfo'];
-        if (preg_match("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $pathInfo)) {
+        $pathInfo = (string) $url['pathinfo'];
+        if (preg_match('/(?<!\\\\)\\\\:([a-zA-Z_0-9]+)/', $pathInfo)) {
             throw new MapParserException($this->getErrorMsg($url, 'pathinfo can content dynamic part only for actions'));
         }
+
         return true;
     }
-    
+
     /**
      * all actions of this module will be assigned to this entry point.
      */
@@ -577,8 +594,8 @@ class XmlMapParser implements \jISimpleCompiler
             $this->parseInfos[0]['startAction'] = 'default:index';
             // add parser and creator information for the default action
             $this->parseInfos[] = array($u->module, 'default:index', '!^/?$!',
-                                        array(), array(), array(),
-                                        array(), $u->isHttps, );
+                array(), array(), array(),
+                array(), $u->isHttps, );
             $u->action = 'default:index';
             $this->appendUrlInfo($u, '/', false);
             $u->action = '';
@@ -600,6 +617,8 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * all methods of a specific controller will be assigned to this entry point.
+     *
+     * @param mixed $rootPathInfo
      */
     protected function newWholeController(UrlMapData $u, \SimpleXMLElement $url, $rootPathInfo = '')
     {
@@ -607,8 +626,8 @@ class XmlMapParser implements \jISimpleCompiler
         $pathinfo = $this->getFinalPathInfo($url, $rootPathInfo);
 
         $this->parseInfos[] = array($u->module, $u->action,
-                '!^'.preg_quote($pathinfo, '!').'(?:/(.*))?$!',
-                array(), array(), array(), false, $u->isHttps, );
+            '!^'.preg_quote($pathinfo, '!').'(?:/(.*))?$!',
+            array(), array(), array(), false, $u->isHttps, );
         $this->createUrlInfos[$u->getFullSel()] = array(5, $u->entryPointUrl, $u->isHttps, $pathinfo);
     }
 
@@ -618,13 +637,15 @@ class XmlMapParser implements \jISimpleCompiler
     protected $modulesPath = array();
 
     /**
-     * @param UrlMapData $u
-     * @param \SimpleXmlElement          $url
+     * @param UrlMapData        $u
+     * @param \SimpleXmlElement $url
+     * @param mixed             $rootPathInfo
      */
-    protected function newHandler(UrlMapData $u,
-                                  \SimpleXmlElement $url,
-                                  $rootPathInfo = '/')
-    {
+    protected function newHandler(
+        UrlMapData $u,
+        \SimpleXmlElement $url,
+        $rootPathInfo = '/'
+    ) {
         $class = (string) $url['handler'];
         // we must have a module name in the selector, because, during the parsing of
         // the url in the request process, we are not still in a module context
@@ -662,9 +683,9 @@ class XmlMapParser implements \jISimpleCompiler
 
         $this->createUrlContentInc .= "include_once('".$s->getPath()."');\n";
         $this->parseInfos[] = array($u->module, $u->action, $regexp, $selclass,
-                                    $u->actionOverride, $u->isHttps, );
+            $u->actionOverride, $u->isHttps, );
         $this->createUrlInfos[$u->getFullSel()] = array(0, $u->entryPointUrl, $u->isHttps,
-                                                        $selclass, $pathinfo, );
+            $selclass, $pathinfo, );
         if ($u->actionOverride) {
             foreach ($u->actionOverride as $ao) {
                 $u->action = $ao;
@@ -677,19 +698,20 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * extract all dynamic parts of a pathinfo, read <param> elements.
      *
-     * @param \SimpleXmlElement         $url                   the url element
-     * @param UrlMapData                $u
-     * @param bool                      $optionalTrailingSlash
-     * @param string                    $rootPathInfo          the path info prefix
+     * @param \SimpleXmlElement $url                   the url element
+     * @param UrlMapData        $u
+     * @param bool              $optionalTrailingSlash
+     * @param string            $rootPathInfo          the path info prefix
      *
      * @return array first element is the final pathinfo
      *               second element is the correponding regular expression
      */
-    protected function extractDynamicParams(\SimpleXmlElement$url,
-                                            UrlMapData $u,
-                                            $optionalTrailingSlash,
-                                            $rootPathInfo = '/')
-    {
+    protected function extractDynamicParams(
+        \SimpleXmlElement $url,
+        UrlMapData $u,
+        $optionalTrailingSlash,
+        $rootPathInfo = '/'
+    ) {
         if (isset($url['optionalTrailingSlash'])) {
             $optionalTrailingSlash = ((string) $url['optionalTrailingSlash'] == 'true');
         }
@@ -714,18 +736,20 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * build the regexp corresponding to dynamic parts of a pathinfo.
      *
-     * @param \SimpleXmlElement          $url  the url element
-     * @param string                    $path the path info
-     * @param UrlMapData $u
+     * @param \SimpleXmlElement $url      the url element
+     * @param string            $path     the path info
+     * @param UrlMapData        $u
+     * @param mixed             $pathinfo
      *
      * @return string the corresponding regular expression
      */
-    protected function buildDynamicParamsRegexp(\SimpleXmlElement $url,
-                                                $pathinfo,
-                                                UrlMapData $u)
-    {
+    protected function buildDynamicParamsRegexp(
+        \SimpleXmlElement $url,
+        $pathinfo,
+        UrlMapData $u
+    ) {
         $regexppath = preg_quote($pathinfo, '!');
-        if (preg_match_all("/(?<!\\\\)\\\:([a-zA-Z_0-9]+)/", $regexppath, $m, PREG_PATTERN_ORDER)) {
+        if (preg_match_all('/(?<!\\\\)\\\\:([a-zA-Z_0-9]+)/', $regexppath, $m, PREG_PATTERN_ORDER)) {
             $u->params = $m[1];
 
             // process parameters which are declared in a <param> element
@@ -776,25 +800,27 @@ class XmlMapParser implements \jISimpleCompiler
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
-        $regexppath = str_replace('\\\\\\:', "\:", $regexppath);
 
-        return $regexppath;
+        return str_replace('\\\\\\:', '\\:', $regexppath);
     }
 
     /**
-     * @param \SimpleXmlElement          $url  the url element
-     * @param string                    $path the path info
-     * @param UrlMapData $u
+     * @param \SimpleXmlElement $url  the url element
+     * @param string            $path the path info
+     * @param UrlMapData        $u
      */
-    protected function extractStaticParams(\SimpleXmlElement $url,
-                                           UrlMapData $u)
-    {
+    protected function extractStaticParams(
+        \SimpleXmlElement $url,
+        UrlMapData $u
+    ) {
         foreach ($url->static as $var) {
             $t = '';
             if (isset($var['type'])) {
                 switch ((string) $var['type']) {
-                    case 'lang': $t = '$l'; break;
-                    case 'locale': $t = '$L'; break;
+                    case 'lang': $t = '$l';
+                        break;
+                    case 'locale': $t = '$L';
+                        break;
                     default:
                         throw new MapParserException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }
@@ -807,13 +833,14 @@ class XmlMapParser implements \jISimpleCompiler
      * register the given url informations.
      *
      * @param UrlMapData $u
-     * @param string                    $path
+     * @param string     $path
+     * @param mixed      $secondaryAction
      */
     protected function appendUrlInfo(UrlMapData $u, $path, $secondaryAction)
     {
         $cuisel = $u->getFullSel();
         $arr = array(1, $u->entryPointUrl, $u->isHttps, $u->params, $u->escapes,
-                     $path, $secondaryAction, $u->statics, );
+            $path, $secondaryAction, $u->statics, );
         if (isset($this->createUrlInfos[$cuisel])) {
             if ($this->createUrlInfos[$cuisel][0] == 4) {
                 $this->createUrlInfos[$cuisel][] = $arr;
@@ -826,13 +853,15 @@ class XmlMapParser implements \jISimpleCompiler
     }
 
     /**
-     * @param SimpleXmlElement      $url
-     * @param UrlMapData            $uInfo
+     * @param \SimpleXmlElement $url
+     * @param UrlMapData       $uInfo
+     * @param mixed            $file
      */
-    protected function readInclude(\SimpleXmlElement $url,
-                                   UrlMapData $uInfo,
-                                   $file)
-    {
+    protected function readInclude(
+        \SimpleXmlElement $url,
+        UrlMapData $uInfo,
+        $file
+    ) {
         if (isset($url['default'])) {
             throw new MapParserException($this->getErrorMsg($url, '"default" attribute is not allowed with include'));
         }
@@ -886,6 +915,7 @@ class XmlMapParser implements \jISimpleCompiler
                     throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an action attributes at the same time'));
                 }
                 $this->newDedicatedController($u, $url, $pathinfo);
+
                 continue;
             }
 
@@ -900,14 +930,17 @@ class XmlMapParser implements \jISimpleCompiler
             // parse or create an url
             if (isset($url['handler'])) {
                 $this->newHandler($u, $url, $pathinfo);
+
                 continue;
             }
 
             // parse dynamic parameters
-            list($path, $regexppath) = $this->extractDynamicParams($url,
-                                                                   $u,
-                                                                   $optionalTrailingSlash,
-                                                                   $pathinfo);
+            list($path, $regexppath) = $this->extractDynamicParams(
+                $url,
+                $u,
+                $optionalTrailingSlash,
+                $pathinfo
+            );
 
             if ($path == '' || $path == '/') {
                 $u->isDefault = true;
@@ -922,8 +955,8 @@ class XmlMapParser implements \jISimpleCompiler
             $this->extractStaticParams($url, $u);
 
             $this->parseInfos[] = array($u->module, $u->action, '!^'.$regexppath.'$!',
-                                        $u->params, $u->escapes, $u->statics,
-                                        $u->actionOverride, $u->isHttps, );
+                $u->params, $u->escapes, $u->statics,
+                $u->actionOverride, $u->isHttps, );
             $this->appendUrlInfo($u, $path, false);
             if ($u->actionOverride) {
                 foreach ($u->actionOverride as $ao) {

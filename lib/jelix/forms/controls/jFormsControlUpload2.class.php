@@ -1,27 +1,29 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @contributor Julien Issler
-* @copyright   2006-2018 Laurent Jouanneau
-* @copyright   2009 Julien Issler
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package     jelix
+ * @subpackage  forms
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Julien Issler
+ *
+ * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2009 Julien Issler
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- *
  * @package     jelix
  * @subpackage  forms
  */
-class jFormsControlUpload2 extends jFormsControl {
+class jFormsControlUpload2 extends jFormsControl
+{
+    public $type = 'upload';
 
-    public $type='upload';
+    public $mimetype = array();
 
-    public $mimetype=array();
-
-    public $maxsize=0;
+    public $maxsize = 0;
 
     public $accept = '';
 
@@ -29,10 +31,10 @@ class jFormsControlUpload2 extends jFormsControl {
 
     public $fileInfo = array();
 
-    protected $error = null;
+    protected $error;
 
-
-    function setForm($form) {
+    public function setForm($form)
+    {
         parent::setForm($form);
         if (!isset($this->container->privateData[$this->ref]['newfile'])) {
             $this->container->privateData[$this->ref]['newfile'] = '';
@@ -42,30 +44,35 @@ class jFormsControlUpload2 extends jFormsControl {
         }
     }
 
-    public function getOriginalFile() {
+    public function getOriginalFile()
+    {
         if (isset($this->container->privateData[$this->ref]['originalfile'])) {
             return $this->container->privateData[$this->ref]['originalfile'];
         }
+
         return '';
     }
 
-    public function getNewFile() {
+    public function getNewFile()
+    {
         if (isset($this->container->privateData[$this->ref]['newfile'])) {
             return $this->container->privateData[$this->ref]['newfile'];
         }
+
         return '';
     }
 
-    protected function getTempFile($file) {
+    protected function getTempFile($file)
+    {
         jFile::createDir(jApp::tempPath('uploads/'));
-        $tmpFile = jApp::tempPath('uploads/'.session_id().'-'.
+
+        return jApp::tempPath('uploads/'.session_id().'-'.
             $this->form->getSelector().'-'.$this->form->id().'-'.
             $this->ref.'-'.$file);
-        return $tmpFile;
     }
 
-
-    protected function deleteNewFile() {
+    protected function deleteNewFile()
+    {
         if ($this->container->privateData[$this->ref]['newfile'] != '') {
             $file = $this->getTempFile($this->container->privateData[$this->ref]['newfile']);
             if (is_file($file)) {
@@ -75,7 +82,8 @@ class jFormsControlUpload2 extends jFormsControl {
         }
     }
 
-    function setDataFromDao($value, $daoDatatype) {
+    public function setDataFromDao($value, $daoDatatype)
+    {
         $this->deleteNewFile();
         $this->container->privateData[$this->ref]['originalfile'] = $value;
         $this->container->data[$this->ref] = $value;
@@ -84,28 +92,30 @@ class jFormsControlUpload2 extends jFormsControl {
     /**
      * @param jRequest $request
      */
-    function setValueFromRequest($request) {
+    public function setValueFromRequest($request)
+    {
         $action = $request->getParam($this->ref.'_jf_action', '');
 
         if ($this->isReadOnly()) {
             $action = 'keep';
         }
 
-        switch($action) {
+        switch ($action) {
             case 'keep':
                 $this->deleteNewFile();
                 $this->error = null;
                 $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
+
                 break;
             case 'keepnew':
                 if ($this->container->privateData[$this->ref]['newfile'] != '' &&
                     file_exists($this->getTempFile($this->container->privateData[$this->ref]['newfile']))
                 ) {
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['newfile'];
-                }
-                else {
+                } else {
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
                 }
+
                 break;
             case 'new':
                 $fileName = $this->processNewFile();
@@ -115,35 +125,35 @@ class jFormsControlUpload2 extends jFormsControl {
                     }
                     $this->container->privateData[$this->ref]['newfile'] = $fileName;
                     $this->container->data[$this->ref] = $fileName;
-                }
-                elseif ($this->container->privateData[$this->ref]['newfile'] != '') {
+                } elseif ($this->container->privateData[$this->ref]['newfile'] != '') {
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['newfile'];
-                }
-                else {
+                } else {
                     $this->container->privateData[$this->ref]['newfile'] = '';
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
                 }
+
                 break;
             case 'del':
                 $this->deleteNewFile();
                 if (!$this->required) {
                     $this->container->data[$this->ref] = '';
                 }
+
                 break;
             default:
         }
         $this->container->privateData[$this->ref]['action'] = $action;
     }
 
-    protected function processNewFile() {
+    protected function processNewFile()
+    {
         $this->error = null;
 
         if (isset($_FILES[$this->ref])) {
             $this->fileInfo = $_FILES[$this->ref];
-        }
-        else {
-            $this->fileInfo = array('name'=>'','type'=>'','size'=>0,
-                'tmp_name'=>'', 'error'=>UPLOAD_ERR_NO_FILE);
+        } else {
+            $this->fileInfo = array('name' => '', 'type' => '', 'size' => 0,
+                'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, );
         }
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
@@ -189,34 +199,37 @@ class jFormsControlUpload2 extends jFormsControl {
             }
             $this->error = jForms::ERRDATA_FILE_UPLOAD_ERROR;
         }
+
         return null;
     }
 
-    function setNewFile($fileName) {
+    public function setNewFile($fileName)
+    {
         if ($fileName) {
             if ($this->container->privateData[$this->ref]['newfile'] != $fileName) {
                 $this->deleteNewFile();
             }
             $this->container->privateData[$this->ref]['newfile'] = $fileName;
             $this->container->data[$this->ref] = $fileName;
-        }
-        elseif ($this->container->privateData[$this->ref]['newfile'] != '') {
+        } elseif ($this->container->privateData[$this->ref]['newfile'] != '') {
             $this->deleteNewFile();
             $this->container->data[$this->ref] = '';
-        }
-        else {
+        } else {
             $this->container->data[$this->ref] = '';
         }
     }
 
-    function check() {
+    public function check()
+    {
         if ($this->error) {
             return $this->container->errors[$this->ref] = $this->error;
         }
+
         return null;
     }
 
-    function getUniqueFileName($directoryPath, $alternateName='') {
+    public function getUniqueFileName($directoryPath, $alternateName = '')
+    {
         if ($alternateName == '') {
             $alternateName = $this->container->privateData[$this->ref]['newfile'];
             if ($alternateName == '') {
@@ -224,7 +237,7 @@ class jFormsControlUpload2 extends jFormsControl {
             }
         }
         $directoryPath = rtrim($directoryPath, '/').'/';
-        $path = $directoryPath . $alternateName;
+        $path = $directoryPath.$alternateName;
         $filename = basename($path);
         $dir = rtrim(dirname($path), '/');
         $idx = 0;
@@ -235,11 +248,12 @@ class jFormsControlUpload2 extends jFormsControl {
             $splitValue[0] = $splitValue[0].$idx;
             $filename = implode('.', $splitValue);
         }
+
         return substr($dir.'/'.$filename, strlen($directoryPath));
     }
 
-    function saveFile($directoryPath, $alternateName='') {
-
+    public function saveFile($directoryPath, $alternateName = '')
+    {
         if (isset($this->container->errors[$this->ref]) &&
             $this->container->errors[$this->ref] != ''
         ) {
@@ -257,14 +271,13 @@ class jFormsControlUpload2 extends jFormsControl {
                 $alternateName = $this->container->privateData[$this->ref]['newfile'];
             }
             $newFileToCopy = $this->getTempFile($this->container->privateData[$this->ref]['newfile']);
-            $dir = dirname($directoryPath . $alternateName);
+            $dir = dirname($directoryPath.$alternateName);
             jFile::createDir($dir);
-            rename($newFileToCopy, $directoryPath . $alternateName);
+            rename($newFileToCopy, $directoryPath.$alternateName);
             $this->container->privateData[$this->ref]['originalfile'] = $alternateName;
             $this->container->data[$this->ref] = $alternateName;
             $this->container->privateData[$this->ref]['newfile'] = '';
-        }
-        elseif ($this->container->data[$this->ref] == '' &&
+        } elseif ($this->container->data[$this->ref] == '' &&
             $this->container->privateData[$this->ref]['originalfile']
         ) {
             $originalFile = $directoryPath.$this->container->privateData[$this->ref]['originalfile'];
@@ -273,10 +286,12 @@ class jFormsControlUpload2 extends jFormsControl {
             }
             $this->container->privateData[$this->ref]['originalfile'] = '';
         }
+
         return true;
     }
 
-    function deleteFile($directoryPath) {
+    public function deleteFile($directoryPath)
+    {
         if ($this->container->data[$this->ref] != '') {
             $file = $directoryPath.$this->container->data[$this->ref];
             if (file_exists($file)) {
@@ -286,8 +301,8 @@ class jFormsControlUpload2 extends jFormsControl {
         }
     }
 
-
-    function getWidgetType() {
+    public function getWidgetType()
+    {
         return 'upload2';
     }
 }
