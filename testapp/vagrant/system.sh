@@ -34,7 +34,7 @@ function initsystem () {
         apt-get install -y dirmngr
     fi
 
-    apt-key adv --keyserver keyserver.ubuntu.com --recv-keys AC0E47584A7A714D
+    wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
     echo "deb https://packages.sury.org/php $DISTRO main" > /etc/apt/sources.list.d/sury_php.list
 
     if [ "$DISTRO" == "stretch" ]; then
@@ -66,9 +66,13 @@ function initsystem () {
                         php${PHP_VERSION}-dba \
                         php${PHP_VERSION}-xml \
                         php${PHP_VERSION}-mbstring \
-                        php-memcache \
                         php-memcached \
                         php-redis
+
+    if [ "$PHP_VERSION" != "7.3" ]; then
+        #not compatible with 7.3
+        apt-get -y install php-memcache
+    fi
 
     apt-get -y install mysql-server mysql-client
     apt-get -y install git vim unzip curl
@@ -81,7 +85,7 @@ function initsystem () {
 
     sed -i -- s/bind-address\s+127\.0\.0\.1/bind-address 0.0.0.0/g /etc/mysql/my.cnf
 
-    # install default vhost for apache
+    # install default vhost for nginx
     cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME2__/$APPHOSTNAME2/g /etc/nginx/sites-available/$APPNAME.conf

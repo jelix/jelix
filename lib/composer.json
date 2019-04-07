@@ -9,7 +9,7 @@
         "phpmailer/phpmailer": "^5.2.26",
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "2.0.x-dev",
-        "jelix/inifile": "^3.2.0",
+        "jelix/inifile": "^3.2.1",
         "jelix/simplelocalization": "1.7.1",
         "jelix/properties-file": "^1.0.0",
         "jelix/wikirenderer-plugin": "^1.7.2",
@@ -31,12 +31,10 @@
         ]
     },
     "replace": {
-        "jelix/jelix":"self.version"
+        "jelix/jelix":"self.version",
+        "paragonie/random_compat": ">=1 <9.99"
     },
     "minimum-stability": "stable",
-    "replace": {
-        "jelix/jelix":"self.version"
-    },
     "extra" : {
         "jelix": {
             "modules-dir" : [

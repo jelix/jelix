@@ -99,9 +99,8 @@ class XmlMapModifier
      */
     public function getEntryPoint($name) {
         if (($pos = strpos($name, '.php')) !== false) {
-            $name = substr(0, $pos, $name);
+            $name = substr($name, 0, $pos);
         }
-        $list = $this->document->getElementsByTagName('entrypoint');
         foreach($this->document->documentElement->childNodes as $item) {
             if ($item->nodeType != XML_ELEMENT_NODE) {
                 continue;

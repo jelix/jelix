@@ -22,7 +22,7 @@
         "phpmailer/phpmailer": "^5.2.26",
         "jelix/castor": "1.0.*",
         "jelix/feeds-module": "2.0.x-dev",
-        "jelix/inifile": "^3.2.0",
+        "jelix/inifile": "^3.2.1",
         "jelix/properties-file": "^1.0.0",
         "jelix/wikirenderer-plugin": "^1.7.2",
         "symfony/console":"^3.2.0",
@@ -43,7 +43,8 @@
         "jelix/legacy": "self.version",
         "jelix/locale": "self.version",
         "jelix/logger": "self.version",
-        "jelix/routing": "self.version"
+        "jelix/routing": "self.version",
+        "paragonie/random_compat": ">=1 <9.99"
     },
     "autoload": {
         "psr-4": {

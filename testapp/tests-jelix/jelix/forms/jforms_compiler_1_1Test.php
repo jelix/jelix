@@ -441,6 +441,9 @@ class jforms_compiler_1_1Test extends jUnitTestCase {
 93=>'<input ref="nom" pattern="/^[0-9]+$/" xmlns="http://jelix.org/ns/forms/1.1">
     <label>Votre nom</label>
 </input>',
+94=>'<color ref="couleur" xmlns="http://jelix.org/ns/forms/1.1">
+    <label>Couleur</label>
+</color>',
     );
 
     protected $_PhpControls = array(
@@ -929,6 +932,10 @@ $this->addControl($ctrl);',
 93=>'$ctrl= new jFormsControlInput(\'nom\');
 $ctrl->datatype->addFacet(\'pattern\',\'/^[0-9]+$/\');
 $ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+94=>'$ctrl= new jFormsControlColor(\'couleur\');
+$ctrl->datatype= new jDatatypeColor();
+$ctrl->label=\'Couleur\';
 $this->addControl($ctrl);',
 );
 

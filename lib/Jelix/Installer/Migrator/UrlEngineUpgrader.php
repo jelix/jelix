@@ -1,12 +1,11 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core-module
 * @author      Laurent Jouanneau
-* @copyright   2016 Laurent Jouanneau
+* @copyright   2016-2019 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\Installer\Migrator;
 
 class UrlEngineUpgrader {
 
@@ -68,8 +67,8 @@ class UrlEngineUpgrader {
     }
 
     public function cleanConfig(\Jelix\IniFile\IniModifier $ini) {
-        $ini->removeValue('startModule');
-        $ini->removeValue('startAction');
+        $ini->removeValue('startModule', 0, null, false);
+        $ini->removeValue('startAction', 0, null, false);
         $ini->removeValue('defaultEntrypoint', 'urlengine');
         $ini->removeValue('engine', 'urlengine');
         $ini->removeValue('simple_urlengine_https', 'urlengine');
@@ -112,6 +111,7 @@ class UrlEngineUpgrader {
 
     protected function migrateSignificant() {
         // doing something ?
+        // remove startModule ?
         // replace <*entrypoint> ?
     }
 

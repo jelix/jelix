@@ -27,6 +27,9 @@ useCollection=foo
 [webassets_foo]
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array()
                   ))
@@ -41,6 +44,9 @@ useCollection=foo
 a.js = a.js
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a'),
                       'webassets_a.deps' => array(),
@@ -62,6 +68,9 @@ b.require = a
 a.js = a.js
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a', 'b'),
                       'webassets_a.deps' => array(),
@@ -89,6 +98,9 @@ c.js = c.js
 c.require = a
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a', 'b', 'c'),
                       'webassets_a.deps' => array(),
@@ -121,6 +133,9 @@ c.require = a
 c.include = b
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a', 'c', 'b'),
                       'webassets_a.deps' => array(),
@@ -223,6 +238,9 @@ r.js = r.js
 
 ',
               array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array(
                           'b', 'k', 'c', 'a', 'd', 'g', 'e', 'f', 'r'),

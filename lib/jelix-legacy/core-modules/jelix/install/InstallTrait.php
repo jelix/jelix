@@ -30,7 +30,7 @@ trait InstallTrait {
             }
             $helpers->copyDirectoryContent(LIB_PATH.'jelix-www', $targetPath, true);
         }
-        else if ($wwwFilesMode == 'link') {
+        else if ($wwwFilesMode == 'filelink') {
             if ($jelixWWWDirExists) {
                 \jFile::removeDir($targetPath, true);
             }

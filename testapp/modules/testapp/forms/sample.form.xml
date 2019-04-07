@@ -71,6 +71,9 @@
       <label>a wiki editor</label>
   </wikieditor>
 
+    <color ref="couleur">
+        <label>prefered color</label>
+    </color>
   <checkboxes ref="objets" required="true">
       <label>You have </label>
       <item value="maison">a house</item>

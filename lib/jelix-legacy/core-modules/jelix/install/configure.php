@@ -3,13 +3,11 @@
  * @package    jelix-modules
  * @subpackage jelix-module
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2019 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-require(__DIR__.'/WebAssetsUpgrader.php');
-require(__DIR__.'/UrlEngineUpgrader.php');
 
 class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
@@ -91,41 +89,12 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator {
     }
 
     protected function migrate(\Jelix\Installer\Module\API\ConfigurationHelpers $helpers) {
-        if (!$helpers->forLocalConfiguration()) {
-            $mainConfig = $helpers->getConfigIni();
-            $webassets = new WebAssetsUpgrader($mainConfig);
-            foreach($helpers->getEntryPointsList() as $entryPoint) {
-                $epConfig = $entryPoint->getConfigIni();
-                $webassets->changeConfig($epConfig, $epConfig['entrypoint']);
-            }
-            $webassets = new WebAssetsUpgrader($mainConfig['default']);
-            $webassets->changeConfig($mainConfig, $mainConfig['main']);
-
-            foreach($helpers->getEntryPointsList() as $entryPoint) {
-                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                    $entryPoint->getEpId(),
-                    $entryPoint->getUrlMap());
-                $upgraderUrl->upgrade();
-            }
-
-            foreach($helpers->getEntryPointsList() as $entryPoint) {
-                $upgraderUrl = new UrlEngineUpgrader($entryPoint->getConfigIni(),
-                    $entryPoint->getEpId(),
-                    $entryPoint->getUrlMap());
-                $upgraderUrl->cleanConfig($helpers->getConfigIni()['main']);
-            }
-        }
+        //if (!$helpers->forLocalConfiguration()) {
+        //}
     }
 
 
     protected function migrateLocal(\Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers) {
-        $mainConfig = $helpers->getConfigIni();
-        $webassets = new WebAssetsUpgrader($mainConfig);
-        foreach($helpers->getEntryPointsList() as $entryPoint) {
-            $epConfig = $entryPoint->getConfigIni();
-            $webassets->changeConfig($epConfig, $epConfig['localentrypoint']);
-        }
-
         $ini = $helpers->getProfilesIni();
         foreach($helpers->getEntryPointsList() as $entryPoint) {
             foreach($ini->getSectionList() as $section) {

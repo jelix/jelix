@@ -8,6 +8,8 @@ We took also all i18n files from directly the git repository https://github.com/
 If you want to update files for a newer jQuery UI version to contribute into 
 the Jelix repository, please keep this selection.
 
+jquery-ui.css includes both jquery-ui.structure.css and jquery-ui.theme.css
+
 
 
 
