@@ -26,5 +26,10 @@ class testeventsListener extends jEventListener{
         $event->Add(array('module'=>'jelix_tests','ok'=>true));
    }
 
+   function onTestEventResponse($event) {
+       if (isset(eventResponseToReturn::$responses['jelix_tests'])) {
+           $event->add(eventResponseToReturn::$responses['jelix_tests']);
+       }
+   }
+
 }
-?>
