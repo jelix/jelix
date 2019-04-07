@@ -667,6 +667,13 @@ array(
 array('foo','myfile')
 ),
 array(
+'<input ref="foo" controlclass="jFormsControlFoo" xmlns="http://jelix.org/ns/forms/1.0">
+    <label>Votre nom</label>
+</input>',
+'jelix~formserr.unknown.control.class',
+array('jFormsControlFoo','input','myfile')
+),
+array(
 '<input xmlns="http://jelix.org/ns/forms/1.0">
     <label>Votre nom</label>
 </input>',
