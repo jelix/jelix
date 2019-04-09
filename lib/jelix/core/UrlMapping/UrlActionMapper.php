@@ -287,19 +287,19 @@ class UrlActionMapper
     protected function getUrlBuilderInfo(\jUrlAction $urlact, \jUrl $url)
     {
         $module = $url->getParam('module', \jApp::getCurrentModule());
-
+        $action = $url->getParam('action');
         $urlinfo = null;
 
         // let's try to retrieve informations corresponding
         // to the given action. this informations will allow us to build
         // the url
-        $id = $module.'~'.$url->getParam('action').'@'.$urlact->requestType;
+        $id = $module.'~'.$action.'@'.$urlact->requestType;
         if (isset($this->dataCreateUrl[$id])) {
             $urlinfo = $this->dataCreateUrl[$id];
             $url->delParam('module');
             $url->delParam('action');
         } else {
-            list($ctrl, $method) = explode(':', $url->getParam('action'));
+            list($ctrl, $method) = explode(':', $action);
             $id = $module.'~'.$ctrl.':*@'.$urlact->requestType;
             if (isset($this->dataCreateUrl[$id])) {
                 $urlinfo = $this->dataCreateUrl[$id];

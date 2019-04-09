@@ -82,8 +82,10 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * @param SelectorUrlXmlMap $aSelector
+     *
+     * @return bool true if it is a success
      */
-    public function compile(/*SelectorUrlXmlMap*/ $aSelector)
+    public function compile($aSelector)
     {
         $sourceFile = $aSelector->getPath();
         $sourceLocalFile = $aSelector->getLocalPath();
@@ -205,6 +207,10 @@ class XmlMapParser implements \jISimpleCompiler
         return true;
     }
 
+    /**
+     * @param \SimpleXMLElement $xml
+     * @throws MapParserException
+     */
     protected function parseXml($xml)
     {
         foreach ($xml->children() as $tagname => $tag) {
@@ -218,7 +224,8 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * extract informations from an <entrypoint> element.
      *
-     * @param mixed $type
+     * @param \SimpleXMLElement $tag
+     * @param mixed             $type
      *
      * @throws MapParserException
      */
@@ -309,7 +316,9 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * extract informations from an <url> element.
      *
-     * @param mixed $optionalTrailingSlash
+     * @param \SimpleXMLElement $url
+     * @param UrlMapData        $u
+     * @param bool              $optionalTrailingSlash
      */
     protected function parseUrlElement(
         \SimpleXMLElement $url,
@@ -523,6 +532,11 @@ class XmlMapParser implements \jISimpleCompiler
         }
     }
 
+    /**
+     * @param \SimpleXMLElement $xml
+     * @param string $message
+     * @return string
+     */
     protected function getErrorMsg($xml, $message)
     {
         $xml = $xml->asXML();
@@ -916,7 +930,7 @@ class XmlMapParser implements \jISimpleCompiler
                 if (isset($url['action'])) {
                     throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an action attributes at the same time'));
                 }
-                $this->newDedicatedController($u, $url, $pathinfo);
+                $this->newWholeController($u, $url, $pathinfo);
 
                 continue;
             }

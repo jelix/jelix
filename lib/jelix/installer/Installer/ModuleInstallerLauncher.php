@@ -389,7 +389,7 @@ class ModuleInstallerLauncher
                 $this->moduleStatus->getPath(),
                 $this->moduleInfos->version,
                 true
-                                                );
+            );
         }
 
         if ($this->moduleInstaller instanceof \jIInstallerComponent) {
