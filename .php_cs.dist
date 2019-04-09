@@ -5,6 +5,10 @@ $finder = PhpCsFixer\Finder::create()
           //->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
           ->in(array(
                 __DIR__.'/lib/jelix/',
+                __DIR__.'/lib/jelix-admin-modules/',
+                __DIR__.'/lib/jelix-modules/',
+                __DIR__.'/lib/jelix-plugins/',
+                __DIR__.'/lib/jelix-scripts/',
           ))
         ;
 

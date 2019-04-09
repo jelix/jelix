@@ -1,18 +1,21 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+
 namespace Jelix\DevHelper\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
-
+class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
+{
     protected function configure()
     {
         $this
@@ -25,10 +28,10 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 'Name of the module to configure'
             )
             ->addOption(
-               'parameters',
-               'p',
-               InputOption::VALUE_REQUIRED,
-               'parameters for the installer of the module: -p "param1;param2=value;..."'
+                'parameters',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                'parameters for the installer of the module: -p "param1;param2=value;..."'
             )
             ->addOption(
                 'force',
@@ -63,8 +66,11 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
         }
 
-        $reporter = new \Jelix\Installer\Reporter\Console($output,
-            ($this->verbose()?'notice':'error'), 'Configuration');
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output,
+            ($this->verbose() ? 'notice' : 'error'),
+            'Configuration'
+        );
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
@@ -72,10 +78,14 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $configurator->setModuleParameters($module, $parameters);
         }
 
-        $localConfig = $input->getOption('local')?true:($input->getOption('no-local')?true:null);
+        $localConfig = $input->getOption('local') ? true : ($input->getOption('no-local') ? true : null);
 
-        $configurator->configureModules(array($module), $this->selectedEntryPointId,
-            $localConfig, $input->getOption('force'));
+        $configurator->configureModules(
+            array($module),
+            $this->selectedEntryPointId,
+            $localConfig,
+            $input->getOption('force')
+        );
 
         \jAppManager::open();
     }

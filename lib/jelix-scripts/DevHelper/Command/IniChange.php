@@ -2,9 +2,11 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2019 Laurent Jouanneau
- * @link        https://jelix.org
+ *
+ * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
  */
+
 namespace  Jelix\DevHelper\Command;
 
 use Jelix\IniFile\IniModifier;
@@ -13,8 +15,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class IniChange extends \Jelix\DevHelper\AbstractCommand {
-
+class IniChange extends \Jelix\DevHelper\AbstractCommand
+{
     protected function configure()
     {
         $this
@@ -75,17 +77,16 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand {
         }
 
         if ($createFile && !file_exists($file)) {
-            file_put_contents($file, "");
+            file_put_contents($file, '');
         }
 
         $ini = new IniModifier($file);
 
         if ($todel) {
             $ini->removeValue($param, $section);
-        }
-        else {
+        } else {
             if ($value === null) {
-                throw new \Exception("value is missing");
+                throw new \Exception('value is missing');
             }
             $ini->setValue($param, $value, $section);
         }

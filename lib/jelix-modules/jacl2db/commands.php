@@ -1,5 +1,6 @@
 <?php
-use \Jelix\Acl2Db\Command;
+
+use Jelix\Acl2Db\Command;
 
 $application->add(new Command\Acl2\RightsList());
 $application->add(new Command\Acl2\AddRight());

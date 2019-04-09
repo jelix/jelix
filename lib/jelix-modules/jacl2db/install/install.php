@@ -1,25 +1,28 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jacl2db module
-* @author      Laurent Jouanneau
-* @contributor
-* @copyright   2009-2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jacl2db module
+ *
+ * @author      Laurent Jouanneau
+ * @contributor
+ *
+ * @copyright   2009-2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 /**
  * parameters for this installer
  *    - defaultgroups    add default groups admin, users, anonymous
- *    - defaultuser      add a default user, admin and add default groups
+ *    - defaultuser      add a default user, admin and add default groups.
  */
-class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer {
-
-
+class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer
+{
     protected $defaultDbProfile = 'jacl2_profile';
 
-    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+    public function install(Jelix\Installer\Module\API\InstallHelpers $helpers)
+    {
 
         /*
         $mapper = new jDaoDbMapper('jacl2_profile');
