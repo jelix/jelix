@@ -2,33 +2,31 @@
 /**
  * @package      jelix
  * @subpackage   core
+ *
  * @author       Laurent Jouanneau
  * @copyright    2017 Laurent Jouanneau
- * @link         http://jelix.org
+ *
+ * @see         http://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-
-
-class webassetsConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
-
-    function getPriority() {
+class webassetsConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface
+{
+    public function getPriority()
+    {
         return 18;
     }
 
-    function atStart($config) {
-
+    public function atStart($config)
+    {
         $compiler = new \Jelix\WebAssets\WebAssetsCompiler();
         $compiler->compile($config);
     }
 
-    function onModule($config, $moduleName, $modulePath, $xml) {
-
+    public function onModule($config, $moduleName, $modulePath, $xml)
+    {
     }
 
-    function atEnd($config) {
-
+    public function atEnd($config)
+    {
     }
-
-
-
 }

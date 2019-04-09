@@ -1,29 +1,32 @@
 <?php
 /**
-* @package    jelix-modules
-* @subpackage jelix-module
-* @author     Laurent Jouanneau
-* @contributor Julien Issler
-* @copyright  2010-2017 Laurent Jouanneau
-* @copyright  2015 Julien Issler
-* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
-*/
+ * @package    jelix-modules
+ * @subpackage jelix-module
+ *
+ * @author     Laurent Jouanneau
+ * @contributor Julien Issler
+ *
+ * @copyright  2010-2017 Laurent Jouanneau
+ * @copyright  2015 Julien Issler
+ * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+ */
 
 /**
  * @package    jelix-modules
  * @subpackage jelix-module
  */
-class jformsCtrl extends jController {
-
+class jformsCtrl extends jController
+{
     /**
-    * web service for XHR request when a control should be filled with a list
-    * of values, depending of the value of an other control.
-    */
-    public function getListData() {
-
+     * web service for XHR request when a control should be filled with a list
+     * of values, depending of the value of an other control.
+     */
+    public function getListData()
+    {
         if (!$this->request->isPostMethod() || !$this->request->isAjax()) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('405', 'Method Not Allowed');
+
             return $rep;
         }
 
@@ -32,13 +35,13 @@ class jformsCtrl extends jController {
         try {
             $form = jForms::get($this->param('__form'), $this->param('__formid'));
             if (!$form) {
-                throw new Exception ('Unknown form');
+                throw new Exception('Unknown form');
             }
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'invalid form selector';
+
             return $rep;
         }
 
@@ -48,17 +51,19 @@ class jformsCtrl extends jController {
                 $rep = $this->getResponse('text', true);
                 $rep->setHttpStatus('422', 'Unprocessable entity');
                 $rep->content = 'invalid token';
-                jLog::logEx(new jException("jelix~formserr.invalid.token"), "error");
+                jLog::logEx(new jException('jelix~formserr.invalid.token'), 'error');
+
                 return $rep;
             }
         }
 
         // retrieve the control to fill
         $control = $form->getControl($this->param('__ref'));
-        if (!$control || ! ($control instanceof jFormsControlDatasource)) {
+        if (!$control || !($control instanceof jFormsControlDatasource)) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'bad control';
+
             return $rep;
         }
 
@@ -66,6 +71,7 @@ class jformsCtrl extends jController {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'not supported datasource type';
+
             return $rep;
         }
 
@@ -74,6 +80,7 @@ class jformsCtrl extends jController {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'no dependent controls';
+
             return $rep;
         }
 
@@ -82,18 +89,17 @@ class jformsCtrl extends jController {
         }
 
         $rep->data = array();
-        if($control->datasource->hasGroupedData()){
-            foreach($control->datasource->getData($form) as $k=>$items){
+        if ($control->datasource->hasGroupedData()) {
+            foreach ($control->datasource->getData($form) as $k => $items) {
                 $data = array();
-                foreach ($items as $k2=>$v) {
-                    $data[] = array('value'=>$k2,'label'=>$v);
+                foreach ($items as $k2 => $v) {
+                    $data[] = array('value' => $k2, 'label' => $v);
                 }
-                $rep->data[] = array('items'=>$data,'label'=>$k);
+                $rep->data[] = array('items' => $data, 'label' => $k);
             }
-        }
-        else{
-            foreach($control->datasource->getData($form) as $k=>$v) {
-                $rep->data[] = array('value'=>$k,'label'=>$v);
+        } else {
+            foreach ($control->datasource->getData($form) as $k => $v) {
+                $rep->data[] = array('value' => $k, 'label' => $v);
             }
         }
 
@@ -101,26 +107,28 @@ class jformsCtrl extends jController {
     }
 
     /**
-     * generates the javascript that verifies the form
-     * @return jResponse
+     * generates the javascript that verifies the form.
+     *
      * @throws Exception
+     *
+     * @return jResponse
      */
-    public function js() {
+    public function js()
+    {
         $rep = $this->getResponse('text', true);
 
         try {
             $form = jForms::get($this->param('__form'), $this->param('__fid'));
             if (!$form) {
-                throw new Exception ('Unknown form');
+                throw new Exception('Unknown form');
             }
-        }
-        catch(Exception $e) {
-            throw new Exception ('invalid form selector');
+        } catch (Exception $e) {
+            throw new Exception('invalid form selector');
         }
 
         $rep->content = $form->getContainer()->privateData['__jforms_js'];
         $rep->mimeType = 'application/javascript';
+
         return $rep;
     }
 }
-

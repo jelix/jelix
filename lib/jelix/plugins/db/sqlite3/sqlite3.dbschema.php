@@ -1,42 +1,46 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db_driver
-* @author     Laurent Jouanneau
-* @contributor     Loic Mathaud
-* @copyright  2006 Loic Mathaud, 2007-2017 Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package    jelix
+ * @subpackage db_driver
+ *
+ * @author     Laurent Jouanneau
+ * @contributor     Loic Mathaud
+ *
+ * @copyright  2006 Loic Mathaud, 2007-2017 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- * 
  * @package    jelix
  * @subpackage db_driver
  */
-class sqlite3DbTable extends jDbTable {
-
-    public function getPrimaryKey() {
+class sqlite3DbTable extends jDbTable
+{
+    public function getPrimaryKey()
+    {
         if ($this->primaryKey === null) {
             $this->_loadColumns();
         }
+
         return $this->primaryKey;
     }
 
-    protected function _loadColumns() {
+    protected function _loadColumns()
+    {
         $conn = $this->schema->getConn();
         $this->columns = array();
         $this->primaryKey = null;
-        $sql = "PRAGMA table_info(". $conn->quote($this->name) .")";
+        $sql = 'PRAGMA table_info('.$conn->quote($this->name).')';
         $rs = $conn->query($sql);
         $tools = $conn->tools();
         $this->primaryKey = false;
         while ($c = $rs->fetch()) {
             $hasDefault = false;
             $default = null;
-            $isPrimary  = ($c->pk == 1);
-            $notNull   = ($c->notnull != 0 || $c->pk == 1);
+            $isPrimary = ($c->pk == 1);
+            $notNull = ($c->notnull != 0 || $c->pk == 1);
 
             list($type, $length, $precision, $scale, $tail) = $tools->parseSQLType($c->type);
             $autoIncrement = false;
@@ -53,7 +57,7 @@ class sqlite3DbTable extends jDbTable {
 
             if (!$isPrimary && $c->dflt_value !== null) {
                 $hasDefault = true;
-                $default = ($c->dflt_value === 'NULL'?null:$c->dflt_value);
+                $default = ($c->dflt_value === 'NULL' ? null : $c->dflt_value);
             }
             $typeinfo = $tools->getTypeInfo($type);
             if ($typeinfo[6]) {
@@ -66,7 +70,7 @@ class sqlite3DbTable extends jDbTable {
                 $default = ($default == '1' || $default === true || strtolower($default) == 'true');
             }
 
-            $col = new jDbColumn($c->name, $type,  $length, $hasDefault, $default, $notNull);
+            $col = new jDbColumn($c->name, $type, $length, $hasDefault, $default, $notNull);
             $col->nativeType = $typeinfo[0];
             $col->maxValue = $typeinfo[3];
             $col->minValue = $typeinfo[2];
@@ -74,25 +78,25 @@ class sqlite3DbTable extends jDbTable {
             $col->minLength = $typeinfo[4];
             $col->precision = $precision;
             $col->scale = $scale;
-            if ($col->length !=0) {
+            if ($col->length != 0) {
                 $col->maxLength = $col->length;
             }
             $col->autoIncrement = $autoIncrement;
 
             $this->columns[$col->name] = $col;
-            
+
             if ($isPrimary) {
                 if (!$this->primaryKey) {
                     $this->primaryKey = new jDbPrimaryKey($c->name);
-                }
-                else {
+                } else {
                     $this->primaryKey->columns[] = $c->name;
                 }
             }
         }
     }
 
-    protected function _alterColumn(jDbColumn $oldCol, jDbColumn $newCol) {
+    protected function _alterColumn(jDbColumn $oldCol, jDbColumn $newCol)
+    {
 
         // new list of columns with the modified column
         $newColumns = array();
@@ -101,7 +105,7 @@ class sqlite3DbTable extends jDbTable {
         $newPrimaryKey = null;
         $newUniqueKeys = null;
 
-        foreach($this->columns as $colName => $col) {
+        foreach ($this->columns as $colName => $col) {
             if ($colName == $oldCol->name) {
                 if ($oldCol->name !== $newCol->name) {
                     $colName = $newCol->name;
@@ -123,14 +127,14 @@ class sqlite3DbTable extends jDbTable {
         // recreate the table with the new column
         $conn = $this->schema->getConn();
         if ($this->schema->recreateTable(
-                $this,
-                $newColumns,
-                $this->_getSqlColumnsList($conn, $this->columns),
-                $this->_getSqlColumnsList($conn, $newColumns),
-                $newPrimaryKey,
-                $newIndexes,
-                $newReferences,
-                $newUniqueKeys
+            $this,
+            $newColumns,
+            $this->_getSqlColumnsList($conn, $this->columns),
+            $this->_getSqlColumnsList($conn, $newColumns),
+            $newPrimaryKey,
+            $newIndexes,
+            $newReferences,
+            $newUniqueKeys
         )) {
             $this->columns = $newColumns;
         }
@@ -145,7 +149,8 @@ class sqlite3DbTable extends jDbTable {
      * @param $newReferences
      * @param $newPrimaryKey
      * @param $newUniqueKeys
-     * @param int $mode  1:rename, 2:drop
+     * @param int        $mode       1:rename, 2:drop
+     * @param null|mixed $newColName
      */
     protected function _updateColumnInConstraintsAndIndexes(
         $colName,
@@ -156,24 +161,22 @@ class sqlite3DbTable extends jDbTable {
         $mode,
         $newColName = null
     ) {
-        $indexes = ($newIndexes? $newIndexes:$this->indexes);
+        $indexes = ($newIndexes ? $newIndexes : $this->indexes);
         $changedIndexes = $indexes;
         $indexesChanged = false;
-        foreach($indexes as $name => $index) {
+        foreach ($indexes as $name => $index) {
             $pos = array_search($colName, $index->columns);
             if ($pos !== false) {
                 $index = clone $index;
                 if ($mode == 1) {
                     $index->columns[$pos] = $newColName;
-                }
-                else {
+                } else {
                     $index->columns = array_diff($index->columns, array($colName));
                 }
 
                 if (count($index->columns) == 0) {
                     unset($changedIndexes[$name]);
-                }
-                else {
+                } else {
                     $changedIndexes[$name] = $index;
                 }
                 $indexesChanged = true;
@@ -183,23 +186,21 @@ class sqlite3DbTable extends jDbTable {
             $newIndexes = $changedIndexes;
         }
 
-        $constraints = ($newReferences? $newReferences:$this->references);
+        $constraints = ($newReferences ? $newReferences : $this->references);
         $changedConstraints = $constraints;
         $constraintsChanged = false;
-        foreach($constraints as $name => $constraint) {
+        foreach ($constraints as $name => $constraint) {
             $pos = array_search($colName, $constraint->columns);
             if ($pos !== false) {
                 $constraint = clone $constraint;
                 if ($mode == 1) {
                     $constraint->columns[$pos] = $newColName;
-                }
-                else {
+                } else {
                     $constraint->columns = array_diff($constraint->columns, array($colName));
                 }
                 if (count($constraint->columns) == 0) {
                     unset($changedConstraints[$name]);
-                }
-                else {
+                } else {
                     $changedConstraints[$name] = $constraint;
                 }
                 $constraintsChanged = true;
@@ -209,23 +210,21 @@ class sqlite3DbTable extends jDbTable {
             $newReferences = $changedConstraints;
         }
 
-        $constraints = ($newUniqueKeys? $newUniqueKeys:$this->uniqueKeys);
+        $constraints = ($newUniqueKeys ? $newUniqueKeys : $this->uniqueKeys);
         $changedConstraints = $constraints;
         $constraintsChanged = false;
-        foreach($constraints as $name => $constraint) {
+        foreach ($constraints as $name => $constraint) {
             $pos = array_search($colName, $constraint->columns);
             if ($pos !== false) {
                 $constraint = clone $constraint;
                 if ($mode == 1) {
                     $constraint->columns[$pos] = $newColName;
-                }
-                else {
+                } else {
                     $constraint->columns = array_diff($constraint->columns, array($colName));
                 }
                 if (count($constraint->columns) == 0) {
                     unset($changedConstraints[$name]);
-                }
-                else {
+                } else {
                     $changedConstraints[$name] = $constraint;
                 }
                 $constraintsChanged = true;
@@ -235,29 +234,27 @@ class sqlite3DbTable extends jDbTable {
             $newUniqueKeys = $changedConstraints;
         }
 
-        $primaryKey = ($newPrimaryKey !== null ? $newPrimaryKey:$this->primaryKey);
+        $primaryKey = ($newPrimaryKey !== null ? $newPrimaryKey : $this->primaryKey);
         if ($primaryKey) {
             $pos = array_search($colName, $primaryKey->columns);
             if ($pos !== false) {
                 $primaryKey = clone $primaryKey;
                 if ($mode == 1) {
                     $primaryKey->columns[$pos] = $newColName;
-                }
-                else {
+                } else {
                     $primaryKey->columns = array_diff($primaryKey->columns, array($colName));
                 }
                 if (count($primaryKey->columns) == 0) {
                     $newPrimaryKey = false;
-                }
-                else {
+                } else {
                     $newPrimaryKey = $primaryKey;
                 }
             }
         }
     }
 
-
-    protected function _addColumn(jDbColumn $new) {
+    protected function _addColumn(jDbColumn $new)
+    {
         $conn = $this->schema->getConn();
         $pk = $this->getPrimaryKey();
         $isPk = ($pk && in_array($new->name, $pk->columns));
@@ -267,15 +264,15 @@ class sqlite3DbTable extends jDbTable {
         $conn->exec($sql);
     }
 
-    protected function _dropColumn(jDbColumn $oldCol) {
-
+    protected function _dropColumn(jDbColumn $oldCol)
+    {
         $newColumns = array();
         $newIndexes = null;
         $newReferences = null;
         $newPrimaryKey = null;
         $newUniqueKeys = null;
 
-        foreach($this->columns as $colName => $col) {
+        foreach ($this->columns as $colName => $col) {
             if ($colName == $oldCol->name) {
                 $this->_updateColumnInConstraintsAndIndexes(
                     $oldCol->name,
@@ -285,6 +282,7 @@ class sqlite3DbTable extends jDbTable {
                     $newUniqueKeys,
                     2
                 );
+
                 continue;
             }
             $newColumns[$colName] = $col;
@@ -292,8 +290,11 @@ class sqlite3DbTable extends jDbTable {
 
         $conn = $this->schema->getConn();
         $colList = $this->_getSqlColumnsList($conn, $newColumns);
-        $this->schema->recreateTable($this,
-            $newColumns, $colList, $colList,
+        $this->schema->recreateTable(
+            $this,
+            $newColumns,
+            $colList,
+            $colList,
             $newPrimaryKey,
             $newIndexes,
             $newReferences,
@@ -301,17 +302,19 @@ class sqlite3DbTable extends jDbTable {
         );
     }
 
-    protected function _splitColumnsName($sqlList) {
+    protected function _splitColumnsName($sqlList)
+    {
         $columns = array();
-        $list = preg_split("/\s*,\s*/", $sqlList);
-        foreach($list as $col) {
+        $list = preg_split('/\\s*,\\s*/', $sqlList);
+        foreach ($list as $col) {
             $columns[] = trim($col, '"\'');
         }
+
         return $columns;
     }
 
-
-    protected function _loadIndexesAndKeys() {
+    protected function _loadIndexesAndKeys()
+    {
         $this->indexes = array();
         $this->uniqueKeys = array();
         $this->references = array();
@@ -324,19 +327,17 @@ class sqlite3DbTable extends jDbTable {
         // provide enough informations about name (and as SQLITE ignore
         // constraint name in CREATE TABLE)
 
-        $sql = "SELECT name, sql FROM sqlite_master 
-                WHERE tbl_name = ".$conn->quote($this->name)." AND sql IS NOT NULL";
+        $sql = 'SELECT name, sql FROM sqlite_master 
+                WHERE tbl_name = '.$conn->quote($this->name).' AND sql IS NOT NULL';
         $rs = $conn->query($sql);
         while ($rec = $rs->fetch()) {
             if (isset($rec->type)) {
                 $type = $rec->type;
-            }
-            else {
+            } else {
                 // old sqlite3 version
-                if (preg_match("/^\\s*CREATE\\s+(TEMPORARY|TEMP|UNIQUE\\s+)?(INDEX|TABLE)/msi", $rec->sql, $m)) {
-                    $type = (strtolower($m[2]) == 'table'? 'table':'index');
-                }
-                else {
+                if (preg_match('/^\\s*CREATE\\s+(TEMPORARY|TEMP|UNIQUE\\s+)?(INDEX|TABLE)/msi', $rec->sql, $m)) {
+                    $type = (strtolower($m[2]) == 'table' ? 'table' : 'index');
+                } else {
                     continue;
                 }
             }
@@ -344,8 +345,7 @@ class sqlite3DbTable extends jDbTable {
             if ($type == 'index') {
                 $index = new jDbIndex($rec->name);
                 $this->indexes[$rec->name] = $index;
-            }
-            else if ($type == 'table') {
+            } elseif ($type == 'table') {
                 $definition = $tools->parseCREATETABLE($rec->sql);
                 if ($definition === false) {
                     continue;
@@ -359,32 +359,28 @@ class sqlite3DbTable extends jDbTable {
                         $column = $n[1];
                         if ($m[1]) {
                             $name = $m[1];
-                        }
-                        else {
+                        } else {
                             $name = $this->name.'_'.$column.'_unique';
                         }
                         $this->uniqueKeys[$name] = new jDbUniqueKey($name, $column);
                     }
                 }
                 foreach ($definition['constraints'] as $k => $constDef) {
-
                     if (preg_match('/^(?:CONSTRAINT "?(\\w+)"? )?UNIQUE ?\\(([^)]+)\\)/i', $constDef, $m)) {
                         $columns = $this->_splitColumnsName($m[2]);
                         if ($m[1]) {
                             $name = $m[1];
-                        }
-                        else {
+                        } else {
                             $name = $this->name.'_'.implode('_', $columns).'_unique';
                         }
 
                         $this->uniqueKeys[$name] = new jDbUniqueKey($name, $columns);
-                    }
-                    else if (preg_match('/^(?:CONSTRAINT "?(\\w+)"? )?FOREIGN KEY ?\\(([^)]+)\\) ?REFERENCES "?(\\w+)"? ?\\(([^)]+)\\)(.*)$/i', $constDef, $m)) {
+                    } elseif (preg_match('/^(?:CONSTRAINT "?(\\w+)"? )?FOREIGN KEY ?\\(([^)]+)\\) ?REFERENCES "?(\\w+)"? ?\\(([^)]+)\\)(.*)$/i', $constDef, $m)) {
                         $ref = new jDbReference();
                         $ref->columns = $this->_splitColumnsName($m[2]);
                         $ref->fTable = $m[3];
                         $ref->fColumns = $this->_splitColumnsName($m[4]);
-                        $ref->name = ($m[1] != '' ? $m[1] : $this->name.'_'.implode('_',$ref->columns).'_fkey');
+                        $ref->name = ($m[1] != '' ? $m[1] : $this->name.'_'.implode('_', $ref->columns).'_fkey');
                         $this->references[$ref->name] = $ref;
                         if (preg_match('/ON\s+DELETE\s+([^,)])/msi', $m[5], $m2)) {
                             $ref->onDelete = trim($m2[1]);
@@ -398,7 +394,7 @@ class sqlite3DbTable extends jDbTable {
         }
 
         // retrieve unicity of indexes
-        $sql = "PRAGMA index_list(". $conn->quote($this->name) .")";
+        $sql = 'PRAGMA index_list('.$conn->quote($this->name).')';
         $rs = $conn->query($sql);
         while ($indexRec = $rs->fetch()) {
             if (isset($this->indexes[$indexRec->name])) {
@@ -409,8 +405,8 @@ class sqlite3DbTable extends jDbTable {
         }
 
         // retrieve columns of indexes
-        foreach($this->indexes as $index) {
-            $rs = $conn->query("PRAGMA index_info(".$index->name.")");
+        foreach ($this->indexes as $index) {
+            $rs = $conn->query('PRAGMA index_info('.$index->name.')');
             $cols = array();
             while ($idxinfo = $rs->fetch()) {
                 $cols[$idxinfo->seqno] = $idxinfo->name;
@@ -418,10 +414,10 @@ class sqlite3DbTable extends jDbTable {
             ksort($cols, SORT_NUMERIC);
             $index->columns = array_values($cols);
         }
-
     }
 
-    protected function _createIndex(jDbIndex $index) {
+    protected function _createIndex(jDbIndex $index)
+    {
         $conn = $this->schema->getConn();
         $sql = 'CREATE ';
         if ($index->isUnique) {
@@ -429,143 +425,182 @@ class sqlite3DbTable extends jDbTable {
         }
         $sql .= 'INDEX '.$conn->encloseName($index->name).
             ' ON '.$conn->encloseName($this->name).
-            ' ('.$conn->tools()->getSQLColumnsList($index->columns).")";
+            ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
         $conn->exec($sql);
     }
 
-    protected function _dropIndex(jDbIndex $index) {
+    protected function _dropIndex(jDbIndex $index)
+    {
         $conn = $this->schema->getConn();
-        $sql = "DROP INDEX IF EXISTS ".$conn->encloseName($index->name);
+        $sql = 'DROP INDEX IF EXISTS '.$conn->encloseName($index->name);
         $conn->exec($sql);
     }
 
-    protected function _loadReferences() {
+    protected function _loadReferences()
+    {
         // already loaded by _loadIndexesAndKeys
     }
 
-    protected function _createConstraint(jDbConstraint $constraint) {
-
+    protected function _createConstraint(jDbConstraint $constraint)
+    {
         $conn = $this->schema->getConn();
         $colList = $this->_getSqlColumnsList($conn, $this->columns);
         if ($constraint instanceof jDbPrimaryKey) {
             $this->schema->recreateTable(
-                    $this, $this->columns,
-                    $colList, $colList,
-                    $constraint);
-        }
-        else if ($constraint instanceof jDbUniqueKey) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                $constraint
+            );
+        } elseif ($constraint instanceof jDbUniqueKey) {
             $uniqueKeys = $this->uniqueKeys;
             $uniqueKeys[$constraint->name] = $constraint;
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, null, $uniqueKeys);
-        }
-        else if ($constraint instanceof jDbReference) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                null,
+                $uniqueKeys
+            );
+        } elseif ($constraint instanceof jDbReference) {
             $references = $this->references;
             $references[$constraint->name] = $constraint;
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, $references);
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                $references
+            );
         }
     }
 
-    protected function _dropConstraint(jDbConstraint $constraint) {
+    protected function _dropConstraint(jDbConstraint $constraint)
+    {
         $conn = $this->schema->getConn();
         $colList = $this->_getSqlColumnsList($conn, $this->columns);
         if ($constraint instanceof jDbPrimaryKey) {
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                false);
-        }
-        else if ($constraint instanceof jDbUniqueKey) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                false
+            );
+        } elseif ($constraint instanceof jDbUniqueKey) {
             $uniqueKeys = $this->uniqueKeys;
             unset($uniqueKeys[$constraint->name]);
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, null, $uniqueKeys);
-
-        }
-        else if ($constraint instanceof jDbReference) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                null,
+                $uniqueKeys
+            );
+        } elseif ($constraint instanceof jDbReference) {
             $references = $this->references;
             unset($references[$constraint->name]);
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, $references);
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                $references
+            );
         }
     }
 
-    protected function _replaceConstraint(jDbConstraint $oldConstraint, jDbConstraint $newConstraint) {
+    protected function _replaceConstraint(jDbConstraint $oldConstraint, jDbConstraint $newConstraint)
+    {
         $conn = $this->schema->getConn();
         $colList = $this->_getSqlColumnsList($conn, $this->columns);
         if ($oldConstraint instanceof jDbPrimaryKey) {
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                $newConstraint);
-        }
-        else if ($oldConstraint instanceof jDbUniqueKey) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                $newConstraint
+            );
+        } elseif ($oldConstraint instanceof jDbUniqueKey) {
             $uniqueKeys = $this->uniqueKeys;
             unset($uniqueKeys[$oldConstraint->name]);
             $uniqueKeys[$newConstraint->name] = $newConstraint;
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, null, $uniqueKeys);
-
-        }
-        else if ($oldConstraint instanceof jDbReference) {
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                null,
+                $uniqueKeys
+            );
+        } elseif ($oldConstraint instanceof jDbReference) {
             $references = $this->references;
             unset($references[$oldConstraint->name]);
             $references[$newConstraint->name] = $newConstraint;
             $this->schema->recreateTable(
-                $this, $this->columns,
-                $colList, $colList,
-                null, null, $references);
+                $this,
+                $this->columns,
+                $colList,
+                $colList,
+                null,
+                null,
+                $references
+            );
         }
     }
 
     /**
      * @param jDbConnection $conn
-     * @param array $columns
+     * @param array         $columns
      */
-    protected function _getSqlColumnsList($conn, &$columns) {
+    protected function _getSqlColumnsList($conn, &$columns)
+    {
         $columnNames = array();
-        foreach($columns as $name=>$col) {
+        foreach ($columns as $name => $col) {
             $columnNames[] = $conn->encloseName($name);
         }
-        return implode(',', $columnNames);
 
+        return implode(',', $columnNames);
     }
 }
 
 /**
- * 
  * @package    jelix
  * @subpackage db_driver
  */
-class sqlite3DbSchema extends jDbSchema {
-
-    protected function _createTable($name, $columns, $primaryKey, $attributes = array()) {
-
+class sqlite3DbSchema extends jDbSchema
+{
+    protected function _createTable($name, $columns, $primaryKey, $attributes = array())
+    {
         $sql = $this->_createTableQuery($name, $columns, $primaryKey, $attributes);
         $this->conn->exec($sql);
-        $table = new sqlite3DbTable($name, $this);
-        return $table;
+
+        return new sqlite3DbTable($name, $this);
     }
 
     protected $supportAutoIncrement = true;
 
-    protected function _getTables() {
-        $results = array ();
+    protected function _getTables()
+    {
+        $results = array();
 
         $rs = $this->conn->query('SELECT name FROM sqlite_master WHERE type="table"');
 
-        while ($line = $rs->fetch ()){
+        while ($line = $rs->fetch()) {
             $unpName = $this->conn->unprefixTable($line->name);
             $results[$unpName] = new sqlite3DbTable($line->name, $this);
         }
@@ -573,12 +608,13 @@ class sqlite3DbSchema extends jDbSchema {
         return $results;
     }
 
-    protected function _getTableInstance($name) {
+    protected function _getTableInstance($name)
+    {
         return new sqlite3DbTable($name, $this);
     }
 
     /**
-     * Modify a table by recreating it and by migrating data
+     * Modify a table by recreating it and by migrating data.
      *
      * This is the only way to modify a table with SQLite.
      * It creates a new table with a temporary name, and new columns.
@@ -586,31 +622,40 @@ class sqlite3DbSchema extends jDbSchema {
      * Then it drops the old table and rename the new table with the old name.
      *
      * @param sqlite3DbTable $table
-     * @param jDbColumn[] $newColumns
-     * @param string $sqlOldTableColumns list of columns for the SELECT
-     * @param string $sqlNewTableColumns list of columns for the INSERT
-     * @return boolean true if it is ok
-     * @internal Internal method, only called by sqlite3DbTable.
+     * @param jDbColumn[]    $newColumns
+     * @param string         $sqlOldTableColumns list of columns for the SELECT
+     * @param string         $sqlNewTableColumns list of columns for the INSERT
+     * @param null|mixed     $newPrimaryKey
+     * @param null|mixed     $newIndexes
+     * @param null|mixed     $newReferences
+     * @param null|mixed     $newUniqueKeys
+     *
+     * @return bool true if it is ok
+     *
+     * @internal internal method, only called by sqlite3DbTable
      */
-    public function recreateTable($table,
-                                  $newColumns,
-                                  $sqlOldTableColumns,
-                                  $sqlNewTableColumns,
-                                  $newPrimaryKey =null,
-                                  $newIndexes = null,
-                                  $newReferences = null,
-                                  $newUniqueKeys = null) {
+    public function recreateTable(
+        $table,
+        $newColumns,
+        $sqlOldTableColumns,
+        $sqlNewTableColumns,
+        $newPrimaryKey = null,
+        $newIndexes = null,
+        $newReferences = null,
+        $newUniqueKeys = null
+    ) {
         $conn = $this->getConn();
 
         $tmpName = $conn->unprefixTable($table->getName()).'_tmp';
         $count = 0;
-        while($this->getTable($tmpName.$count) !== null) {
-            $count++;
+        while ($this->getTable($tmpName.$count) !== null) {
+            ++$count;
         }
         $tmpName .= $count;
         $tmpName = $this->conn->prefixTable($tmpName);
 
         $conn->beginTransaction();
+
         try {
             $sql = $this->_createTableFromObject(
                 $table,
@@ -618,10 +663,11 @@ class sqlite3DbSchema extends jDbSchema {
                 $newColumns,
                 $newPrimaryKey,
                 $newReferences,
-                $newUniqueKeys);
+                $newUniqueKeys
+            );
             $conn->exec($sql);
 
-            $sql = "INSERT INTO ".$conn->encloseName($tmpName).'('.
+            $sql = 'INSERT INTO '.$conn->encloseName($tmpName).'('.
                 $sqlNewTableColumns.') SELECT '.$sqlOldTableColumns.
                 ' FROM '.$conn->encloseName($table->getName());
             $conn->exec($sql);
@@ -632,46 +678,46 @@ class sqlite3DbSchema extends jDbSchema {
 
             if ($newIndexes !== null) {
                 $indexes = $newIndexes;
-            }
-            else {
+            } else {
                 $indexes = $table->getIndexes();
             }
-            foreach($indexes as $index) {
+            foreach ($indexes as $index) {
                 $sql = 'CREATE ';
                 if ($index->isUnique) {
                     $sql .= 'UNIQUE ';
                 }
                 $sql .= 'INDEX '.$conn->encloseName($index->name).
                     ' ON '.$conn->encloseName($table->getName()).
-                    ' ('.$conn->tools()->getSQLColumnsList($index->columns).")";
+                    ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
                 $conn->exec($sql);
             }
+
             return true;
-        }
-        catch(Exception $e) {
+        } catch (Exception $e) {
             $conn->rollback();
+
             return false;
         }
     }
 
-    protected function _createTableFromObject(jDbTable $table,
-                                              $tmpName,
-                                              $newColumns,
-                                              $newPrimaryKey,
-                                              $newReferences,
-                                              $newUniqueKeys) {
+    protected function _createTableFromObject(
+        jDbTable $table,
+        $tmpName,
+        $newColumns,
+        $newPrimaryKey,
+        $newReferences,
+        $newUniqueKeys
+    ) {
         $cols = array();
         if ($newPrimaryKey !== null) {
             $primaryKey = $newPrimaryKey;
-        }
-        else {
+        } else {
             $primaryKey = $table->getPrimaryKey();
         }
 
         if ($primaryKey) {
             $primaryKeys = $primaryKey->columns;
-        }
-        else {
+        } else {
             $primaryKeys = array();
         }
 
@@ -682,7 +728,7 @@ class sqlite3DbSchema extends jDbSchema {
         }
 
         $sql = 'CREATE TABLE '.$this->conn->encloseName($tmpName);
-        $sql .= ' ('.implode(", ",$cols);
+        $sql .= ' ('.implode(', ', $cols);
         if (count($primaryKeys) > 1) {
             $pkName = $this->conn->encloseName($primaryKey->name);
             $pkEsc = $this->conn->tools()->getSQLColumnsList($primaryKeys);
@@ -690,21 +736,19 @@ class sqlite3DbSchema extends jDbSchema {
         }
         if ($newUniqueKeys !== null) {
             $uniqueKeys = $newUniqueKeys;
-        }
-        else {
+        } else {
             $uniqueKeys = $table->getUniqueKeys();
         }
-        foreach($uniqueKeys as $uniqueKey) {
+        foreach ($uniqueKeys as $uniqueKey) {
             $sql .= ', CONSTRAINT '.$this->conn->encloseName($uniqueKey->name).
                 ' UNIQUE ('.$this->conn->tools()->getSQLColumnsList($uniqueKey->columns).')';
         }
         if ($newReferences !== null) {
             $references = $newReferences;
-        }
-        else {
+        } else {
             $references = $table->getReferences();
         }
-        foreach($references as $ref) {
+        foreach ($references as $ref) {
             $sql .= ', CONSTRAINT '.$this->conn->encloseName($ref->name).
                 ' FOREIGN KEY ('.$this->conn->tools()->getSQLColumnsList($ref->columns).')'.
                 ' REFERENCES '.$this->conn->encloseName($ref->fTable).
@@ -712,8 +756,7 @@ class sqlite3DbSchema extends jDbSchema {
         }
 
         $sql .= ')';
+
         return $sql;
     }
 }
-
-

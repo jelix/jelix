@@ -101,7 +101,7 @@ class jFormsCompiler_jf_1_0
             throw new jException('jelix~formserr.attribute.missing', array('ref', $controltype, $this->sourceFile));
         }
 
-        if (!class_exists($class, true)){
+        if (!class_exists($class, true)) {
             throw new jException('jelix~formserr.unknown.control.class', array($class, $controltype, $this->sourceFile));
         }
 

@@ -1,18 +1,24 @@
 <?php
 /**
-* @package      jelix
-* @subpackage   jtpl_plugin
-* @author       Laurent Jouanneau
-* @contributor  Dominique Papin, Julien Issler, Bastien Jaillot
-* @copyright    2007-2012 Laurent Jouanneau, 2007 Dominique Papin
-* @copyright    2008 Julien Issler, 2008 Bastien Jaillot
-* @link         http://www.jelix.org
-* @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package      jelix
+ * @subpackage   jtpl_plugin
+ *
+ * @author       Laurent Jouanneau
+ * @contributor  Dominique Papin, Julien Issler, Bastien Jaillot
+ *
+ * @copyright    2007-2012 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright    2008 Julien Issler, 2008 Bastien Jaillot
+ *
+ * @see         http://www.jelix.org
+ * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $compiler
+ * @param mixed $params
+ */
 
 /**
  * Display a full form without the use of other plugins.
- * usage : {formfull $theformobject,'submit_action', $submit_action_params}
+ * usage : {formfull $theformobject,'submit_action', $submit_action_params}.
  *
  * You can add this others parameters :<ul>
  *   <li>string $builderName  (default is 'html')</li>
@@ -22,33 +28,37 @@
  *      </ul>
  *    </li>
  *  </ul>
+ *
  * @param jTplCompiler $compiler the template compiler
- * @param array $param 0=>form object
- *                     1=>selector of submit action
- *                     2=>array of parameters for submit action
- *                     3=>name of the builder : default is html
- *                     4=>array of options for the builder
+ * @param array        $param    0=>form object
+ *                               1=>selector of submit action
+ *                               2=>array of parameters for submit action
+ *                               3=>name of the builder : default is html
+ *                               4=>array of options for the builder
+ *
  * @return string the php code corresponding to the begin or end of the block
  */
-function jtpl_cfunction_html_formfull($compiler, $params=array())
+function jtpl_cfunction_html_formfull($compiler, $params = array())
 {
     if (count($params) < 2 || count($params) > 5) {
-        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number','formfull','2-5');
+        $compiler->doError2('errors.tplplugin.cfunction.bad.argument.number', 'formfull', '2-5');
     }
 
-    if(isset($params[3]) && trim($params[3]) != '""'  && trim($params[3]) != "''")
+    if (isset($params[3]) && trim($params[3]) != '""' && trim($params[3]) != "''") {
         $builder = $params[3];
-    else
+    } else {
         $builder = "'".jApp::config()->tplplugins['defaultJformsBuilder']."'";
+    }
 
-    if(count($params) == 2){
+    if (count($params) == 2) {
         $params[2] = 'array()';
     }
 
-    if(isset($params[4]))
+    if (isset($params[4])) {
         $options = $params[4];
-    else
-        $options = "array()";
+    } else {
+        $options = 'array()';
+    }
 
     $content = ' $formfull = '.$params[0].';
     $formfullBuilder = $formfull->getBuilder('.$builder.');
@@ -62,5 +72,6 @@ function jtpl_cfunction_html_formfull($compiler, $params=array())
     $builder->setOptions('.$options.');
     $builder->outputMetaContent($t);}';
     $compiler->addMetaContent($metacontent);
+
     return $content;
 }

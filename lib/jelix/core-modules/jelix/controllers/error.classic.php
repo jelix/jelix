@@ -1,22 +1,24 @@
 <?php
 /**
-* @package    jelix-modules
-* @subpackage jelix-module
-* @author     Laurent Jouanneau
-* @copyright  2006 Laurent Jouanneau
-* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
-*/
+ * @package    jelix-modules
+ * @subpackage jelix-module
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2006 Laurent Jouanneau
+ * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+ */
 
 /**
  * @package    jelix-modules
  * @subpackage jelix-module
  */
-class errorCtrl extends jController {
-
+class errorCtrl extends jController
+{
     /**
-    * 404 error page
-    */
-    public function notfound() {
+     * 404 error page.
+     */
+    public function notfound()
+    {
         $rep = $this->getResponse('html', true);
         $rep->bodyTpl = 'jelix~404.html';
         $rep->setHttpStatus('404', 'Not Found');
@@ -25,10 +27,12 @@ class errorCtrl extends jController {
     }
 
     /**
-    * 403 error page
-    * @since 1.0.1
-    */
-    public function badright() {
+     * 403 error page.
+     *
+     * @since 1.0.1
+     */
+    public function badright()
+    {
         $rep = $this->getResponse('html', true);
         $rep->bodyTpl = 'jelix~403.html';
         $rep->setHttpStatus('403', 'Forbidden');
@@ -36,4 +40,3 @@ class errorCtrl extends jController {
         return $rep;
     }
 }
-

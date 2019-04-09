@@ -818,8 +818,10 @@ class XmlMapParser implements \jISimpleCompiler
             if (isset($var['type'])) {
                 switch ((string) $var['type']) {
                     case 'lang': $t = '$l';
+
                         break;
                     case 'locale': $t = '$L';
+
                         break;
                     default:
                         throw new MapParserException($this->getErrorMsg($var, 'invalid type on a <static> element'));
@@ -854,8 +856,8 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * @param \SimpleXmlElement $url
-     * @param UrlMapData       $uInfo
-     * @param mixed            $file
+     * @param UrlMapData        $uInfo
+     * @param mixed             $file
      */
     protected function readInclude(
         \SimpleXmlElement $url,

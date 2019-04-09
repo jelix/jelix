@@ -2,16 +2,19 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2016-2019 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
  */
+
 namespace Jelix\JelixModule\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class RedisKvdbDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract {
-
+class RedisKvdbDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract
+{
     protected function configure()
     {
         $this
@@ -32,36 +35,38 @@ class RedisKvdbDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract {
 
         if (get_class($redisDriver) != 'redis_phpKVDriver' &&
             get_class($redisDriver) != 'redis_extKVDriver') {
-            $output->writeln("<error>Error, wrong profile. It does not use a redis driver</error>");
+            $output->writeln('<error>Error, wrong profile. It does not use a redis driver</error>');
+
             return 1;
         }
 
-        $output->writeln("---  Starting worker...");
+        $output->writeln('---  Starting worker...');
         $redis = $redisDriver->getRedis();
         if (get_class($redisDriver) == 'redis_phpKVDriver') {
             $this->deletionLoop('jkvdbredisdelkeys', $output, $redis, false);
-        }
-        else if (get_class($redisDriver) == 'redis_extKVDriver') {
+        } elseif (get_class($redisDriver) == 'redis_extKVDriver') {
             $this->deletionLoop('jkvdbredisdelkeys', $output, $redis, true);
         }
+
         return 0;
     }
 
-    protected function deletionLoop($key, OutputInterface $output, $redis, $isExt) {
-        while(true) {
+    protected function deletionLoop($key, OutputInterface $output, $redis, $isExt)
+    {
+        while (true) {
             if ($isExt) {
                 $prefixKey = $redis->lPop($key);
-            }
-            else {
+            } else {
                 $prefixKey = $redis->lpop($key);
             }
 
             if (!$prefixKey) {
                 sleep(1);
+
                 continue;
             }
             if ($output->isVerbose()) {
-                $output->writeln("flush $prefixKey");
+                $output->writeln("flush ${prefixKey}");
             }
             $redis->flushByPrefix($prefixKey);
         }

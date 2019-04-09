@@ -1,5 +1,6 @@
 <?php
-use \Jelix\JelixModule\Command;
+
+use Jelix\JelixModule\Command;
 
 $application->add(new Command\OpenApp());
 $application->add(new Command\CloseApp());

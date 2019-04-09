@@ -332,7 +332,7 @@ abstract class jRequest
     /**
      * return the protocol.
      *
-     * @return string  http:// or https://
+     * @return string http:// or https://
      *
      * @since 1.2
      */
