@@ -1,24 +1,28 @@
 <?php
 /**
-* @package     jelix-scripts
-* @author      Laurent Jouanneau
-* @contributor Loic Mathaud
-* @contributor Bastien Jaillot
-* @copyright   2005-2018 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
-* @link        http://jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @package     jelix-scripts
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Loic Mathaud
+ * @contributor Bastien Jaillot
+ *
+ * @copyright   2005-2018 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+ *
+ * @see        http://jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+
 namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
+
+use Jelix\Core\App as App;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+
 use Symfony\Component\Console\Output\OutputInterface;
 
-use Jelix\Core\App as App;
-
-class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
-
+class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
+{
     protected function configure()
     {
         $this
@@ -37,47 +41,47 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
                 'app:modules/'
             )
             ->addOption(
-               'nosubdir',
-               null,
-               InputOption::VALUE_NONE,
-               'don\'t create sub-directories'
+                'nosubdir',
+                null,
+                InputOption::VALUE_NONE,
+                'don\'t create sub-directories'
             )
             ->addOption(
-               'nocontroller',
-               null,
-               InputOption::VALUE_NONE,
-               'don\'t create a default controller'
+                'nocontroller',
+                null,
+                InputOption::VALUE_NONE,
+                'don\'t create a default controller'
             )
             ->addOption(
-               'addinstallzone',
-               null,
-               InputOption::VALUE_NONE,
-               'Add the check_install zone for new application.'
+                'addinstallzone',
+                null,
+                InputOption::VALUE_NONE,
+                'Add the check_install zone for new application.'
             )
             ->addOption(
-               'defaultmodule',
-               null,
-               InputOption::VALUE_NONE,
-               'the new module become the default module for the default entry point.'
+                'defaultmodule',
+                null,
+                InputOption::VALUE_NONE,
+                'the new module become the default module for the default entry point.'
             )
             ->addOption(
-               'admin',
-               null,
-               InputOption::VALUE_NONE,
-               'the new module will be used with master_admin. Install additionnal file and set additionnal configuration stuff'
+                'admin',
+                null,
+                InputOption::VALUE_NONE,
+                'the new module will be used with master_admin. Install additionnal file and set additionnal configuration stuff'
             )
             ->addOption(
-               'ver',
-               null,
-               InputOption::VALUE_REQUIRED,
-               'indicates the initial version of the module',
-               '0.1pre'
+                'ver',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'indicates the initial version of the module',
+                '0.1pre'
             )
             ->addOption(
-               'noregistration',
-               null,
-               InputOption::VALUE_NONE,
-               'Do not register the module in the application configuration'
+                'noregistration',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not register the module in the application configuration'
             )
         ;
 
@@ -101,10 +105,10 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         // check if the module already exist or not
         $path = '';
+
         try {
             $path = $this->getModulePath($module);
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
         }
 
         if ($path != '') {
@@ -113,10 +117,10 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         // verify the given repository
         $repository = $input->getArgument('repository');
-        if (substr($repository,-1) != '/') {
+        if (substr($repository, -1) != '/') {
             $repository .= '/';
         }
-        $repositoryPath = \jFile::parseJelixPath( $repository );
+        $repositoryPath = \jFile::parseJelixPath($repository);
         if (!$input->getOption('noregistration')) {
             $this->registerModulesDir($repository, $repositoryPath);
         }
@@ -155,10 +159,10 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
             if ($this->verbose()) {
-                $output->writeln("Sub directories have been created in the new module $module.");
+                $output->writeln("Sub directories have been created in the new module ${module}.");
             }
-            $this->createFile($path.'install/install.php','module/install.tpl',$param);
-            $this->createFile($path.'install/configure.php','module/configure.tpl',$param);
+            $this->createFile($path.'install/install.php', 'module/install.tpl', $param);
+            $this->createFile($path.'install/configure.php', 'module/configure.tpl', $param);
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
@@ -170,19 +174,17 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         if ($isdefault) {
             if ($this->allEntryPoint) {
                 $xmlEp = $xmlMap->getDefaultEntryPoint('classic');
-            }
-            else {
+            } else {
                 $xmlEp = $xmlMap->getEntryPoint($this->selectedEntryPointId);
             }
             if ($xmlEp) {
-                $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default'=>true));
+                $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default' => true));
                 $xmlEp->addUrlModule('', $module);
                 if ($this->verbose()) {
-                    $output->writeln("The new module $module becomes the default module");
+                    $output->writeln("The new module ${module} becomes the default module");
                 }
-            }
-            else if ($this->verbose()) {
-                $output->writeln("No default entry point found: the new module cannot be the default module");
+            } elseif ($this->verbose()) {
+                $output->writeln('No default entry point found: the new module cannot be the default module');
             }
         }
         $xmlMap->save();
@@ -202,13 +204,13 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         // create a default controller
         if (!$input->getOption('nocontroller')) {
             $arguments = array(
-                'module'=>$module,
-                'controller'=>'default',
-                'method'=>'index',
+                'module' => $module,
+                'controller' => 'default',
+                'method' => 'index',
             );
 
             if ($addInstallZone) {
-                $arguments['--addinstallzone'] =true;
+                $arguments['--addinstallzone'] = true;
             }
             if ($output->isVerbose()) {
                 $arguments['-v'] = true;
@@ -217,7 +219,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp {
         }
 
         if ($input->getOption('admin')) {
-            $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param, "Listener");
+            $this->createFile($path.'classes/admin'.$module.'.listener.php', 'module/admin.listener.php.tpl', $param, 'Listener');
             $this->createFile($path.'events.xml', 'module/events.xml.tpl', $param);
             file_put_contents($path.'locales/en_US/interface.UTF-8.properties', 'menu.item='.$module);
             file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);

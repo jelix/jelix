@@ -1,55 +1,61 @@
 <?php
 /**
- * check a jelix installation
+ * check a jelix installation.
  *
  * @author   Laurent Jouanneau
  * @contributor Bastien Jaillot
  * @contributor Olivier Demah, Brice Tence, Julien Issler
+ *
  * @copyright 2007-2018 Laurent Jouanneau, 2008 Bastien Jaillot, 2009 Olivier Demah, 2010 Brice Tence, 2011 Julien Issler
- * @link     http://www.jelix.org
+ *
+ * @see     http://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
  * @since 1.7
  */
+
 namespace Jelix\Installer\Checker;
 
 /**
- * check an installation of a jelix application
+ * check an installation of a jelix application.
+ *
  * @since 1.7
  */
-class Checker extends CheckerBase {
-
-    protected function _otherCheck() {
+class Checker extends CheckerBase
+{
+    protected function _otherCheck()
+    {
         $this->checkAppPaths();
         $this->loadBuildFile();
     }
 
-    function checkAppPaths(){
+    public function checkAppPaths()
+    {
         $ok = true;
-        if(!defined('JELIX_LIB_PATH') || !\jApp::isInit()){
+        if (!defined('JELIX_LIB_PATH') || !\jApp::isInit()) {
             throw new \Exception($this->messages->get('path.core'));
         }
 
-        if(!file_exists(\jApp::tempBasePath()) || !is_writable(\jApp::tempBasePath())){
+        if (!file_exists(\jApp::tempBasePath()) || !is_writable(\jApp::tempBasePath())) {
             $this->error('path.temp');
-            $ok=false;
+            $ok = false;
         }
-        if(!file_exists(\jApp::logPath()) || !is_writable(\jApp::logPath())){
+        if (!file_exists(\jApp::logPath()) || !is_writable(\jApp::logPath())) {
             $this->error('path.log');
-            $ok=false;
+            $ok = false;
         }
-        if(!file_exists(\jApp::varPath())){
+        if (!file_exists(\jApp::varPath())) {
             $this->error('path.var');
-            $ok=false;
+            $ok = false;
         }
-        if(!file_exists(\jApp::appSystemPath())){
+        if (!file_exists(\jApp::appSystemPath())) {
             $this->error('path.config');
-            $ok=false;
+            $ok = false;
         }
-        if(!file_exists(\jApp::varConfigPath())){
+        if (!file_exists(\jApp::varConfigPath())) {
             $this->error('path.config');
-            $ok=false;
-        }
-        elseif ($this->checkForInstallation) {
+            $ok = false;
+        } elseif ($this->checkForInstallation) {
             if (!is_writable(\jApp::varConfigPath())) {
                 $this->error('path.config.writable');
                 $ok = false;
@@ -66,42 +72,44 @@ class Checker extends CheckerBase {
             }
         }
 
-        if(!file_exists(\jApp::wwwPath())){
+        if (!file_exists(\jApp::wwwPath())) {
             $this->error('path.www');
-            $ok=false;
+            $ok = false;
         }
 
-        foreach($this->otherPaths as $path) {
-            $realPath = \jFile::parseJelixPath( $path );
+        foreach ($this->otherPaths as $path) {
+            $realPath = \jFile::parseJelixPath($path);
             if (!file_exists($realPath)) {
                 $this->error('path.custom.not.exists', array($path));
                 $ok = false;
-            }
-            else if(!is_writable($realPath)) {
+            } elseif (!is_writable($realPath)) {
                 $this->error('path.custom.writable', array($path));
                 $ok = false;
-            }
-            else
+            } else {
                 $this->ok('path.custom.ok', array($path));
+            }
         }
 
-        if($ok)
+        if ($ok) {
             $this->ok('paths.ok');
-        else
+        } else {
             throw new \Exception($this->messages->get('too.critical.error'));
+        }
 
         return $ok;
     }
 
-    protected function loadBuildFile() {
+    protected function loadBuildFile()
+    {
         // @deprecated
-        if (file_exists(JELIX_LIB_PATH.'BUILD')){
+        if (file_exists(JELIX_LIB_PATH.'BUILD')) {
             $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
+
             return;
         }
 
         $composerFile = __DIR__.'/../../../../../composer.json';
-        if (!file_exists($composerFile)){
+        if (!file_exists($composerFile)) {
             $this->buildProperties['PHP_VERSION_TARGET'] = '7.0';
         } else {
             $content = json_decode(file_get_contents($composerFile));
@@ -110,7 +118,8 @@ class Checker extends CheckerBase {
         }
     }
 
-    protected function checkPhpSettings(){
+    protected function checkPhpSettings()
+    {
         /*
         if (file_exists(\jApp::mainConfigFile())) {
             $defaultconfig = parse_ini_file(\jApp::mainConfigFile(), true, INI_SCANNER_TYPED);

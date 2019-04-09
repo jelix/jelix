@@ -1,14 +1,16 @@
 <?php
 /**
-* @author     Laurent Jouanneau
-* @copyright  2015-2018 Laurent Jouanneau
-* @link       http://jelix.org
-* @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @author     Laurent Jouanneau
+ * @copyright  2015-2018 Laurent Jouanneau
+ *
+ * @see       http://jelix.org
+ * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+
 namespace Jelix\Core\Infos;
 
 /**
- * Parse a jelix-module.json file
+ * Parse a jelix-module.json file.
  *
  * ```
  * {
@@ -34,119 +36,113 @@ namespace Jelix\Core\Infos;
  *
  * ```
  */
-class ModuleJsonParser extends JsonParserAbstract {
-
-    protected function createInfos() {
+class ModuleJsonParser extends JsonParserAbstract
+{
+    protected function createInfos()
+    {
         return new ModuleInfos($this->path, false);
     }
 
-    /**
-     *
-     */
-    public function _parse(array $json, InfosAbstract $infos) {
-
+    public function _parse(array $json, InfosAbstract $infos)
+    {
         parent::_parse($json, $infos);
 
         $json = array_merge(array(
-            "required-modules" => array(),
-            "required-modules-choice" => array(),
-            "conflict" => array(),
-            "autoload" => array(),
+            'required-modules' => array(),
+            'required-modules-choice' => array(),
+            'conflict' => array(),
+            'autoload' => array(),
         ), $json);
 
         $json['autoload'] = array_merge(array(
-            'files'=>array(),
-            'classmap'=>array(),
-            'psr-0'=>array(),
-            'psr-4'=>array(),
+            'files' => array(),
+            'classmap' => array(),
+            'psr-0' => array(),
+            'psr-4' => array(),
         ), $json['autoload']);
 
-        /**
-        * @var array of array('type'=>'module','version'=>'','id'=>'','name'=>'')
-        */
+        // @var array of array('type'=>'module','version'=>'','id'=>'','name'=>'')
 
-        foreach($json['required-modules'] as $name=>$version) {
+        foreach ($json['required-modules'] as $name => $version) {
             $infos->dependencies[] = array(
                 'type' => 'module',
-                'version'=> $version,
-                'name' => $name
+                'version' => $version,
+                'name' => $name,
             );
         }
 
-        foreach($json['required-modules-choice'] as $choicesList) {
+        foreach ($json['required-modules-choice'] as $choicesList) {
             $choice = array();
-            foreach ($choicesList as $name=>$version) {
+            foreach ($choicesList as $name => $version) {
                 $choice[] = array(
                     'type' => 'module',
-                    'version'=> $version,
-                    'name' => $name
+                    'version' => $version,
+                    'name' => $name,
                 );
             }
             if (count($choice) > 1) {
                 $infos->dependencies[] = array(
-                    'type'=> 'choice',
-                    'choice' => $choice
+                    'type' => 'choice',
+                    'choice' => $choice,
                 );
-            }
-            else if (count($choice) == 1) {
+            } elseif (count($choice) == 1) {
                 $infos->dependencies[] = $choice[0];
             }
         }
 
-        foreach($json['conflict'] as $name=>$version) {
+        foreach ($json['conflict'] as $name => $version) {
             $infos->incompatibilities[] = array(
                 'type' => 'module',
-                'version'=> $version,
+                'version' => $version,
                 'name' => $name,
-                'forbiddenby' => $infos->name
+                'forbiddenby' => $infos->name,
             );
         }
 
         // module
         if (isset($json['autoload']['psr-4'])) {
-            foreach($json['autoload']['psr-4'] as $ns => $dir) {
-                if(!is_array($dir)) {
+            foreach ($json['autoload']['psr-4'] as $ns => $dir) {
+                if (!is_array($dir)) {
                     $dir = array($dir);
                 }
-                $dir = array_map(function($d) {
+                $dir = array_map(function ($d) {
                     return array($d, '.php');
                 }, $dir);
 
                 if ($ns == '') {
                     $infos->autoloadPsr4Namespaces[0] = $dir;
-                }
-                else {
-                    $infos->autoloadPsr4Namespaces[trim($ns,'\\')] = $dir;
+                } else {
+                    $infos->autoloadPsr4Namespaces[trim($ns, '\\')] = $dir;
                 }
             }
         }
 
         if (isset($json['autoload']['psr-0'])) {
-            foreach($json['autoload']['psr-0'] as $ns => $dir) {
-                if(!is_array($dir)) {
+            foreach ($json['autoload']['psr-0'] as $ns => $dir) {
+                if (!is_array($dir)) {
                     $dir = array($dir);
                 }
-                $dir = array_map(function($d) {
+                $dir = array_map(function ($d) {
                     return array($d, '.php');
                 }, $dir);
                 if ($ns == '') {
                     $infos->autoloadPsr0Namespaces[0] = $dir;
-                }
-                else {
-                    $infos->autoloadPsr0Namespaces[trim($ns,'\\')] = $dir;
+                } else {
+                    $infos->autoloadPsr0Namespaces[trim($ns, '\\')] = $dir;
                 }
             }
         }
 
-        if (isset ($json['autoload']['classmap'])) {
+        if (isset($json['autoload']['classmap'])) {
             $basepath = dirname($this->path).'/';
-            foreach($json['autoload']['classmap'] as $path) {
+            foreach ($json['autoload']['classmap'] as $path) {
                 $classes = \Jelix\External\ClassMapGenerator::createMap($basepath.$path);
                 // remove directory base path
-                $classes = array_map(function($c) use ($basepath) {
+                $classes = array_map(function ($c) use ($basepath) {
                     if (strpos($c, $basepath) === 0) {
                         return substr($c, strlen($basepath));
                     }
+
                     return $c;
                 }, $classes);
                 $infos->autoloadClasses = array_merge($infos->autoloadClasses, $classes);
@@ -154,10 +150,10 @@ class ModuleJsonParser extends JsonParserAbstract {
         }
 
         if (isset($json['autoload']['files'])) {
-            $infos->autoloaders            = $json['autoload']['files'];
+            $infos->autoloaders = $json['autoload']['files'];
         }
         if (isset($json['autoload']['include-path'])) {
-            $infos->autoloadIncludePath = array_map(function($d) {
+            $infos->autoloadIncludePath = array_map(function ($d) {
                 return array($d, '.php');
             }, $json['autoload']['include-path']);
         }

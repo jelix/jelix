@@ -2,13 +2,15 @@
 /**
  * @author Laurent Jouanneau
  * @copyright 2018 Laurent Jouanneau
- * @link      http://jelix.org
+ *
+ * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 namespace Jelix\Core\Infos;
 
-abstract class XmlWriterAbstract {
-
+abstract class XmlWriterAbstract
+{
     /**
      * @var string the path of the xml file to read
      */
@@ -17,11 +19,13 @@ abstract class XmlWriterAbstract {
     /**
      * @param string $path the path of the xml file to read
      */
-    public function __construct($path) {
+    public function __construct($path)
+    {
         $this->path = $path;
     }
 
-    public function write(InfosAbstract $infos, $intoFile = true) {
+    public function write(InfosAbstract $infos, $intoFile = true)
+    {
         if (!$infos->isXmlFile()) {
             return false;
         }
@@ -33,11 +37,11 @@ abstract class XmlWriterAbstract {
         $this->writeData($doc, $infos);
         if ($intoFile) {
             $doc->save($infos->getFilePath());
+
             return true;
         }
-        else {
-            return $doc->saveXML();
-        }
+
+        return $doc->saveXML();
     }
 
     /**
@@ -46,16 +50,17 @@ abstract class XmlWriterAbstract {
     abstract protected function getEmptyDocument();
 
     /**
-     * @param \DOMDocument $doc
+     * @param \DOMDocument  $doc
      * @param InfosAbstract $infos
      */
     abstract protected function writeData($doc, $infos);
 
     /**
-     * @param \DOMDocument $doc
+     * @param \DOMDocument  $doc
      * @param InfosAbstract $infos
      */
-    protected function writeInfo($doc, $infos) {
+    protected function writeInfo($doc, $infos)
+    {
         $info = $doc->createElement('info');
         if ($infos->id) {
             $info->setAttribute('id', $infos->id);
@@ -80,14 +85,14 @@ abstract class XmlWriterAbstract {
             $info->appendChild($version);
         }
 
-        foreach($infos->label as $lang => $label) {
+        foreach ($infos->label as $lang => $label) {
             $lab = $doc->createElement('label');
             $lab->textContent = $label;
             $lab->setAttribute('lang', $lang);
             $info->appendChild($lab);
         }
 
-        foreach($infos->description as $lang => $description) {
+        foreach ($infos->description as $lang => $description) {
             $desc = $doc->createElement('description');
             $desc->textContent = $description;
             $desc->setAttribute('lang', $lang);
@@ -106,7 +111,7 @@ abstract class XmlWriterAbstract {
             $elem->textContent = $infos->copyright;
             $info->appendChild($elem);
         }
-        foreach($infos->author as $author) {
+        foreach ($infos->author as $author) {
             $lab = $doc->createElement('author');
             $lab->setAttribute('name', $author->name);
             if ($author->email) {
@@ -128,8 +133,4 @@ abstract class XmlWriterAbstract {
             $info->appendChild($elem);
         }
     }
-
 }
-
-
-

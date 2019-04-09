@@ -1,18 +1,18 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2016 Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence     MIT
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2016 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     MIT
+ */
+
 namespace Jelix\DevHelper;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends Command
 {
@@ -24,7 +24,7 @@ abstract class AbstractCommand extends Command
     private $isVerbose = false;
 
     /** @var OutputInterface */
-    protected $output = null;
+    protected $output;
 
     public function __construct(CommandConfig $config)
     {
@@ -57,6 +57,8 @@ abstract class AbstractCommand extends Command
      * @param string $template relative path to the templates/ directory, of the
      *                         template file
      * @param array  $param    template values, which will replace some template variables
+     * @param mixed  $tplparam
+     * @param mixed  $fileType
      *
      * @return bool true if it is ok
      */
@@ -70,7 +72,7 @@ abstract class AbstractCommand extends Command
         $displayedFilename = implode('/', $parts);
 
         $defaultparams = array(
-            'default_website' => $this->config->infoWebsite ,
+            'default_website' => $this->config->infoWebsite,
             'default_license' => $this->config->infoLicence,
             'default_license_url' => $this->config->infoLicenceUrl,
             'default_creator_name' => $this->config->infoCreatorName,
@@ -81,7 +83,7 @@ abstract class AbstractCommand extends Command
             'appname' => $this->config->appName,
             'default_timezone' => $this->config->infoTimezone,
             'default_locale' => $this->config->infoLocale,
-         );
+        );
 
         $v = explode('.', $defaultparams['jelix_version']);
         if (count($v) < 2) {
@@ -94,12 +96,14 @@ abstract class AbstractCommand extends Command
 
         if (file_exists($filename)) {
             $this->output->writeln('<error>Warning: '.$fileType.' '.$displayedFilename.' already exists.</error>');
+
             return false;
         }
         $tplpath = JELIX_SCRIPTS_PATH.'templates/'.$template;
 
         if (!file_exists($tplpath)) {
             $this->output->writeln('<error>Warning:  to create '.$displayedFilename.', template file "'.$tplpath.'" doesn\'t exists.</error>');
+
             return false;
         }
         $tpl = file($tplpath);
@@ -107,15 +111,17 @@ abstract class AbstractCommand extends Command
         $callback = function ($matches) use (&$tplparam) {
             if (isset($tplparam[$matches[1]])) {
                 return $tplparam[$matches[1]];
-            } else {
-                return '';
             }
+
+            return '';
         };
 
         foreach ($tpl as $k => $line) {
-            $tpl[$k] = preg_replace_callback('|\%\%([a-zA-Z0-9_]+)\%\%|',
-                                           $callback,
-                                           $line);
+            $tpl[$k] = preg_replace_callback(
+                '|\%\%([a-zA-Z0-9_]+)\%\%|',
+                $callback,
+                $line
+            );
         }
 
         file_put_contents($filename, implode('', $tpl));
@@ -130,6 +136,7 @@ abstract class AbstractCommand extends Command
         }
         if (!file_exists($filename)) {
             $this->output->writeln('<error>Error:'.$fileType.' '.$displayedFilename.' could not be created</error>');
+
             return false;
         }
         if ($this->verbose()) {
@@ -166,12 +173,12 @@ abstract class AbstractCommand extends Command
         }
     }
 
-    protected function setUpOutput(OutputInterface $output) {
+    protected function setUpOutput(OutputInterface $output)
+    {
         $outputStyle = new OutputFormatterStyle('cyan', 'default');
         $output->getFormatter()->setStyle('question', $outputStyle);
 
         $outputStyle = new OutputFormatterStyle('yellow', 'default', array('bold'));
         $output->getFormatter()->setStyle('inputstart', $outputStyle);
-
     }
 }

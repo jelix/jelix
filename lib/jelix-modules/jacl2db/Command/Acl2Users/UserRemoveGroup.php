@@ -1,25 +1,25 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @contributor Julien Issler
-* @contributor Loic Mathaud
-* @copyright   2007-2016 Laurent Jouanneau
-* @copyright   2008 Julien Issler
-* @copyright   2008 Loic Mathaud
-* @link        http://www.jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @contributor Julien Issler
+ * @contributor Loic Mathaud
+ *
+ * @copyright   2007-2016 Laurent Jouanneau
+ * @copyright   2008 Julien Issler
+ * @copyright   2008 Loic Mathaud
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
 
 namespace Jelix\Acl2Db\Command\Acl2Users;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UserRemoveGroup  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
-
+class UserRemoveGroup extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
+{
     protected function configure()
     {
         $this
@@ -40,7 +40,6 @@ class UserRemoveGroup  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
         parent::configure();
     }
 
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $group = $input->getArgument('group');
@@ -49,8 +48,8 @@ class UserRemoveGroup  extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd {
         $cnx = \jDb::getConnection('jacl2_profile');
         $groupid = $this->_getGrpId($input);
 
-        $sql="DELETE FROM ".$cnx->prefixTable('jacl2_user_group')
-            ." WHERE login=".$cnx->quote($login)." AND id_aclgrp=".$cnx->quote($groupid);
+        $sql = 'DELETE FROM '.$cnx->prefixTable('jacl2_user_group')
+            .' WHERE login='.$cnx->quote($login).' AND id_aclgrp='.$cnx->quote($groupid);
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {

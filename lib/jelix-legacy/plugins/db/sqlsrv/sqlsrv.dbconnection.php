@@ -2,86 +2,98 @@
 /**
  * @package    jelix
  * @subpackage db_driver
+ *
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau, Louis S.
+ *
  * @copyright  2008 Yann Lecommandoux, 2011-2017 Laurent Jouanneau, Louis S.
- * @link     http://www.jelix.org
+ *
+ * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once(__DIR__.'/sqlsrv.dbresultset.php');
-
+require_once __DIR__.'/sqlsrv.dbresultset.php';
 
 /**
  * @experimental
  */
-class sqlsrvDbConnection extends jDbConnection {
-
+class sqlsrvDbConnection extends jDbConnection
+{
     /**
-     * Default constructor
+     * Default constructor.
+     *
      * @param array $profile profile de connexion
+     *
      * @throws jException
      */
-    function __construct($profile){
-        if(!function_exists('sqlsrv_connect')){
-            throw new jException('jelix~db.error.nofunction','sqlsrv');
+    public function __construct($profile)
+    {
+        if (!function_exists('sqlsrv_connect')) {
+            throw new jException('jelix~db.error.nofunction', 'sqlsrv');
         }
         parent::__construct($profile);
     }
 
     /**
-     * begin a transaction
+     * begin a transaction.
      */
-    public function beginTransaction (){
+    public function beginTransaction()
+    {
         sqlsrv_begin_transaction($this->_connection);
     }
 
     /**
-     * Commit since the last begin
+     * Commit since the last begin.
      */
-    public function commit (){
+    public function commit()
+    {
         sqlsrv_commit($this->_connection);
     }
 
     /**
-     * Rollback since the last BEGIN
+     * Rollback since the last BEGIN.
      */
-    public function rollback (){
+    public function rollback()
+    {
         sqlsrv_rollback($this->_connection);
     }
 
-
     /**
-     * tell sqlsrv to be implicit commit or not
-     * @param boolean $state the state of the autocommit value
-     * @return void
+     * tell sqlsrv to be implicit commit or not.
+     *
+     * @param bool $state the state of the autocommit value
      */
-    protected function _autoCommitNotify ($state){
+    protected function _autoCommitNotify($state)
+    {
         // FIXME: check compatibility with sqlsrv driver
-        if ($state == 1 ){
-            $this->query ('SET IMPLICIT_TRANSACTIONS ON');
+        if ($state == 1) {
+            $this->query('SET IMPLICIT_TRANSACTIONS ON');
         } else {
-            $this->query ('SET IMPLICIT_TRANSACTIONS OFF');
+            $this->query('SET IMPLICIT_TRANSACTIONS OFF');
         }
     }
 
-    public function errorInfo(){
+    public function errorInfo()
+    {
         return sqlsrv_errors(SQLSRV_ERR_ERRORS);
     }
 
-    public function errorCode(){
+    public function errorCode()
+    {
         $err = sqlsrv_errors(SQLSRV_ERR_ERRORS);
         if ($err) {
             return $err['code'];
         }
+
         return 0;
     }
 
     /**
-     * initialize the connection to the database
+     * initialize the connection to the database.
+     *
      * @see lib/jelix/db/jDbConnection#_connect()
      */
-    protected function _connect (){
-
+    protected function _connect()
+    {
         $connectOptions = array();
         if (isset($this->profile['user']) && $this->profile['user'] != '') {
             $connectOptions['UID'] = $this->profile['user'];
@@ -92,55 +104,69 @@ class sqlsrvDbConnection extends jDbConnection {
         if (isset($this->profile['database']) && $this->profile['database'] != '') {
             $connectOptions['Database'] = $this->profile['database'];
         }
-        if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true){
+        if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true) {
             $connectOptions['CharacterSet'] = 'UTF-8';
         }
 
-        if ($cnx = sqlsrv_connect ($this->profile['host'], $connectOptions)){
+        if ($cnx = sqlsrv_connect($this->profile['host'], $connectOptions)) {
             return $cnx;
-        }else{
-            throw new jException('jelix~db.error.connection',$this->profile['host']);
         }
+
+        throw new jException('jelix~db.error.connection', $this->profile['host']);
     }
 
     /**
-     * 	close the connection to the database
+     * 	close the connection to the database.
+     *
      * @see lib/jelix/db/jDbConnection#_disconnect()
      */
-    protected function _disconnect (){
-        return sqlsrv_close ($this->_connection);
+    protected function _disconnect()
+    {
+        return sqlsrv_close($this->_connection);
     }
 
     /**
-     * 	execute an SQL instruction
+     * 	execute an SQL instruction.
+     *
      * @see lib/jelix/db/jDbConnection#_doQuery()
+     *
+     * @param mixed $query
      */
-    protected function _doQuery ($query){
-        if ($stmt = sqlsrv_query ($this->_connection, $query, null, array("Scrollable" =>SQLSRV_CURSOR_STATIC))) {
-            return new sqlsrvDbResultSet ($stmt);
+    protected function _doQuery($query)
+    {
+        if ($stmt = sqlsrv_query($this->_connection, $query, null, array('Scrollable' => SQLSRV_CURSOR_STATIC))) {
+            return new sqlsrvDbResultSet($stmt);
         }
-        else {
-            throw new jException('jelix~db.error.query.bad',  mssql_get_last_message());
-        }
+
+        throw new jException('jelix~db.error.query.bad', mssql_get_last_message());
     }
 
     /**
      * @see lib/jelix/db/jDbConnection#_doExec()
+     *
+     * @param mixed $query
      */
-    protected function _doExec($query){
-        if ($stmt = sqlsrv_query ($this->_connection, $query)) {
-            $nbRows =  sqlsrv_rows_affected($stmt);
+    protected function _doExec($query)
+    {
+        if ($stmt = sqlsrv_query($this->_connection, $query)) {
+            $nbRows = sqlsrv_rows_affected($stmt);
             sqlsrv_free_stmt($stmt);
+
             return $nbRows;
         }
-        else {
-            throw new jException('jelix~db.error.query.bad', mssql_get_last_message());
-        }
+
+        throw new jException('jelix~db.error.query.bad', mssql_get_last_message());
     }
+
     /**
      * @see lib/jelix/db/jDbConnection#_doLimitQuery()
+     *
+     * @param mixed $queryString
+     * @param mixed $offset
+     * @param mixed $number
      */
-    protected function _doLimitQuery ($queryString, $offset, $number){
+    protected function _doLimitQuery($queryString, $offset, $number)
+    {
 
         // we suppress existing 'TOP XX'
         $queryString = preg_replace('/^SELECT TOP[ ]\d*\s*/i', 'SELECT ', trim($queryString));
@@ -164,8 +190,7 @@ class sqlsrvDbConnection extends jDbConnection {
         if ($orderby === false) {
             if (stripos($firstField, ' as ') !== false) {
                 list($field, $key) = preg_split('/ as /', $firstField);
-            }
-            else {
+            } else {
                 $key = $firstField;
             }
 
@@ -174,81 +199,96 @@ class sqlsrvDbConnection extends jDbConnection {
         }
 
         // first we select all records from the begining to the last record of the selection
-        if(!$distinct)
+        if (!$distinct) {
             $queryString = 'SELECT TOP ';
-        else
+        } else {
             $queryString = 'SELECT DISTINCT TOP ';
+        }
 
-        $queryString .= ($number+$offset) . ' '.$firstField.','.implode(',', $fields).' FROM '.$from;
+        $queryString .= ($number + $offset).' '.$firstField.','.implode(',', $fields).' FROM '.$from;
 
         // then we select the last $number records, by retrieving the first $number record in the reverse order
-        $queryString = 'SELECT TOP ' . $number . ' * FROM (' . $queryString . ') AS inner_tbl ';
+        $queryString = 'SELECT TOP '.$number.' * FROM ('.$queryString.') AS inner_tbl ';
         $order_inner = preg_replace(array('/\bASC\b/i', '/\bDESC\b/i'), array('_DESC', '_ASC'), $orderby);
         $order_inner = str_replace(array('_DESC', '_ASC'), array('DESC', 'ASC'), $order_inner);
         $queryString .= $order_inner;
 
         // finally, we retrieve the result in the expected order
-        $queryString = 'SELECT TOP ' . $number . ' * FROM (' . $queryString . ') AS outer_tbl '.$orderby;
+        $queryString = 'SELECT TOP '.$number.' * FROM ('.$queryString.') AS outer_tbl '.$orderby;
 
         $this->lastQuery = $queryString;
-        $result = $this->_doQuery($queryString);
-        return $result;
+
+        return $this->_doQuery($queryString);
     }
 
     /**
-     * @return integer the last inserted ID incremented in database
      * @see lib/jelix/db/jDbConnection#lastInsertId()
+     *
+     * @param mixed $fromSequence
+     *
+     * @return int the last inserted ID incremented in database
      */
-    public function lastInsertId($fromSequence=''){
+    public function lastInsertId($fromSequence = '')
+    {
         $queryString = 'SELECT @@IDENTITY AS id';
         $result = $this->_doQuery($queryString);
         if ($result) {
             return $result->id;
         }
+
         return null;
     }
 
-
     /**
-     *
+     * @param mixed $query
      */
-    public function prepare ($query){
+    public function prepare($query)
+    {
         list($newQuery, $parameterNames) = $this->findParameters($query, '?');
+
         return new sqlsrvDbResultSet(null, $this, $newQuery, $parameterNames);
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function encloseName ($fieldName) {
+    public function encloseName($fieldName)
+    {
         return '['.$fieldName.']';
     }
 
-
     /**
-     * escape special characters
+     * escape special characters.
+     *
      * @todo support of binary strings
+     *
+     * @param mixed $text
+     * @param mixed $binary
      */
-    protected function _quote($text, $binary){
-        return str_replace( "'", "''", $text );
+    protected function _quote($text, $binary)
+    {
+        return str_replace("'", "''", $text);
     }
 
     /**
+     * @param int $id the attribut id
      *
-     * @param integer $id the attribut id
      * @return string the attribute value
+     *
      * @see PDO::getAttribute()
      */
-    public function getAttribute($id) {
-        return "";
+    public function getAttribute($id)
+    {
+        return '';
     }
 
     /**
-     *
-     * @param integer $id the attribut id
+     * @param int    $id    the attribut id
      * @param string $value the attribute value
+     *
      * @see PDO::setAttribute()
      */
-    public function setAttribute($id, $value) {
+    public function setAttribute($id, $value)
+    {
     }
 }

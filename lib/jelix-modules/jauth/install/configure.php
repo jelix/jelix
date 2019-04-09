@@ -2,28 +2,30 @@
 /**
  * @package     jelix
  * @subpackage  jauth
+ *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
+ *
  * @copyright   2009-2018 Laurent Jouanneau
  * @copyright   2011 Julien Issler
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-use \Jelix\Installer\Module\API\ConfigurationHelpers;
-use \Jelix\Installer\Module\API\LocalConfigurationHelpers;
+use Jelix\Installer\Module\API\ConfigurationHelpers;
+use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 
-class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
-
+class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator
+{
     public function getDefaultParameters()
     {
         return array(
-            'eps'=>array()
+            'eps' => array(),
         );
     }
 
-
-    public function configure(ConfigurationHelpers $helpers) {
-
+    public function configure(ConfigurationHelpers $helpers)
+    {
         $this->removeDeprecatedKeysFromPluginConf($helpers);
 
         $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
@@ -33,7 +35,7 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
             $this->parameters['eps']
         );
 
-        foreach($this->getParameter('eps') as $epId) {
+        foreach ($this->getParameter('eps') as $epId) {
             $this->configureEntryPoint($epId, $helpers);
         }
     }
@@ -43,44 +45,42 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         $this->removeDeprecatedKeysFromPluginConf($helpers);
         $this->removeDeprecatedKeysFromLocalConfig($helpers);
 
-        foreach($helpers->getEntryPointsList() as $entryPoint) {
+        foreach ($helpers->getEntryPointsList() as $entryPoint) {
             $this->updateLdapEpConf($helpers, $entryPoint);
         }
     }
 
-
     protected $authConfigList = array();
 
-    protected function configureEntryPoint($epId, ConfigurationHelpers $helpers) {
+    protected function configureEntryPoint($epId, ConfigurationHelpers $helpers)
+    {
         $entryPoint = $helpers->getEntryPointsById($epId);
 
         $configIni = $entryPoint->getConfigIni();
 
-        $authconfig = $configIni->getValue('auth','coordplugins');
-        $authconfigMaster = $helpers->getConfigIni()->getValue('auth','coordplugins');
+        $authconfig = $configIni->getValue('auth', 'coordplugins');
+        $authconfigMaster = $helpers->getConfigIni()->getValue('auth', 'coordplugins');
 
         $forWS = (in_array($entryPoint->getType(), array('json', 'jsonrpc', 'soap', 'xmlrpc')));
 
         if (!$authconfig || ($forWS && $authconfig == $authconfigMaster)) {
-
             if ($forWS) {
                 $pluginIni = 'authsw.coord.ini.php';
             } else {
                 $pluginIni = 'auth.coord.ini.php';
             }
 
-            $authconfig = dirname($entryPoint->getConfigFileName()) . '/' . $pluginIni;
+            $authconfig = dirname($entryPoint->getConfigFileName()).'/'.$pluginIni;
 
             if (!isset($this->authConfigList[$authconfig])) {
                 $this->authConfigList[$authconfig] = true;
                 // no configuration, let's install the plugin for the entry point
                 $entryPoint->getConfigIni()->setValue('auth', $authconfig, 'coordplugins');
 
-                $helpers->copyFile('var/config/' . $pluginIni, 'config:'.$authconfig, false);
+                $helpers->copyFile('var/config/'.$pluginIni, 'config:'.$authconfig, false);
             }
         }
     }
-
 
     protected $ldapConfFiles = array();
 
@@ -88,8 +88,8 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
      * migrate ldap configuration : move access parameters (login, pass...)
      * to the profiles.ini.php file.
      */
-    protected function updateLdapEpConf(LocalConfigurationHelpers $helpers, \Jelix\Installer\EntryPointConfigurator $entryPoint) {
-
+    protected function updateLdapEpConf(LocalConfigurationHelpers $helpers, Jelix\Installer\EntryPointConfigurator $entryPoint)
+    {
         $authConfig = $entryPoint->getCoordPluginConfig('auth');
         if (!$authConfig) {
             return;
@@ -118,8 +118,7 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
                     return;
                 }
             }
-        }
-        else {
+        } else {
             // the configuration is in the main configuration file
             $section_ldap = 'auth_ldap';
         }
@@ -128,15 +127,14 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         $suffix = '';
         while ($profileIni->isSection('authldap:ldap'.$suffix)) {
             if ($suffix) {
-                $suffix ++;
-            }
-            else {
+                ++$suffix;
+            } else {
                 $suffix = 1;
             }
         }
         $sectionProfile = 'authldap:ldap'.$suffix;
         $conf->setValue('profile', 'ldap'.$suffix, $section_ldap);
-        foreach(array('hostname', 'port', 'ldapUser', 'ldapPassword', 'protocolVersion')
+        foreach (array('hostname', 'port', 'ldapUser', 'ldapPassword', 'protocolVersion')
                 as $prop) {
             $val = $conf->getValue($prop, $section_ldap);
             $profileIni->setValue($prop, $val, $sectionProfile);
@@ -147,11 +145,13 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
 
     /**
      * @param ConfigurationHelpers|LocalConfigurationHelpers $helpers
+     *
      * @throws Exception
      */
-    protected function removeDeprecatedKeysFromPluginConf($helpers) {
+    protected function removeDeprecatedKeysFromPluginConf($helpers)
+    {
         // remove deprecated key from all auth.coord.ini.php
-        foreach($helpers->getEntryPointsList() as $entryPoint) {
+        foreach ($helpers->getEntryPointsList() as $entryPoint) {
             $authconfig = $entryPoint->getCoordPluginConfig('auth');
             if ($authconfig) {
                 /** @var \Jelix\IniFile\IniModifierInterface $conf */
@@ -162,7 +162,8 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator {
         }
     }
 
-    protected function removeDeprecatedKeysFromLocalConfig(LocalConfigurationHelpers $helpers) {
+    protected function removeDeprecatedKeysFromLocalConfig(LocalConfigurationHelpers $helpers)
+    {
         $localConfigIni = $helpers->getConfigIni();
 
         // remove deprecated key from localconfig.ini.php

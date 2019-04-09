@@ -2,10 +2,17 @@
 /**
  * @package    jelix
  * @subpackage jtpl_plugin
+ *
  * @author     Laurent Jouanneau
  * @copyright  2018 Laurent Jouanneau
- * @link       https://jelix.org
+ *
+ * @see       https://jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $tpl
+ * @param mixed $selector
+ * @param mixed $params
+ * @param mixed $placeholders
  */
 
 /**
@@ -36,17 +43,17 @@
  *
  * </code>
  *
- * @param jTpl $tpl template engine
- * @param string $selector selector action
- * @param array $params static parameters for the url
- * @param array $placeholders  list of placeholders: key=name of an url parameter,
- *              value=a placeholder name you choose
+ * @param jTpl   $tpl          template engine
+ * @param string $selector     selector action
+ * @param array  $params       static parameters for the url
+ * @param array  $placeholders list of placeholders: key=name of an url parameter,
+ *                             value=a placeholder name you choose
  */
-function jtpl_function_html_jurlpattern($tpl, $selector, $params=array(), $placeholders=array())
+function jtpl_function_html_jurlpattern($tpl, $selector, $params = array(), $placeholders = array())
 {
     $search = array();
-    $repl =array();
-    foreach($placeholders as $par => $var){
+    $repl = array();
+    foreach ($placeholders as $par => $var) {
         $params[$par] = '__@@'.$var.'@@__';
         $search[] = urlencode($params[$par]);
         $repl[] = '%'.$var.'%';
@@ -56,4 +63,3 @@ function jtpl_function_html_jurlpattern($tpl, $selector, $params=array(), $place
 
     echo str_replace($search, $repl, $url);
 }
-

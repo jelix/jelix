@@ -1,20 +1,24 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  installer
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Installer\Reporter;
 
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * simple text reporter
+ * simple text reporter.
  */
-class Console implements ReporterInterface {
+class Console implements ReporterInterface
+{
     use ReporterTrait;
 
     /**
@@ -29,37 +33,39 @@ class Console implements ReporterInterface {
      */
     protected $output;
 
-    function __construct(OutputInterface $output, $level= 'notice', $title='Installation') {
-       $this->level = $level;
-       $this->title = $title;
-       $this->output = $output;
+    public function __construct(OutputInterface $output, $level = 'notice', $title = 'Installation')
+    {
+        $this->level = $level;
+        $this->title = $title;
+        $this->output = $output;
     }
-    
-    function start() {
+
+    public function start()
+    {
         if ($this->level == 'notice') {
-            $this->output->writeln($this->title." is starting");
+            $this->output->writeln($this->title.' is starting');
         }
     }
 
     /**
-     * displays a message
+     * displays a message.
+     *
      * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
+     * @param string $type    the type of the message : 'error', 'notice', 'warning', ''
      */
-    function message($message, $type='') {
+    public function message($message, $type = '')
+    {
         $this->addMessageType($type);
         if (
             ($type == 'error' && $this->level != '')
             || ($type == 'warning' && $this->level != 'notice' && $this->level != '')
-            || (($type == 'notice' || $type =='') && $this->level == 'notice')
+            || (($type == 'notice' || $type == '') && $this->level == 'notice')
         ) {
             if ($type == 'error') {
                 $header = '[<error>'.$type.'</error>] ';
-            }
-            else if ($type == 'warning') {
+            } elseif ($type == 'warning') {
                 $header = '[<fg=yellow>'.$type.'</>] ';
-            }
-            else {
+            } else {
                 $header = '';
             }
 
@@ -68,11 +74,12 @@ class Console implements ReporterInterface {
     }
 
     /**
-     * called when the installation is finished
+     * called when the installation is finished.
      */
-    function end() {
+    public function end()
+    {
         if ($this->level == 'notice') {
-            $this->output->writeln($this->title." is finished");
+            $this->output->writeln($this->title.' is finished');
         }
     }
 }

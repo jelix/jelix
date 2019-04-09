@@ -4,14 +4,12 @@
  * @author     Laurent Jouanneau
  * @copyright  2015 Laurent Jouanneau
  *
- * @link       http://jelix.org
+ * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 namespace Jelix\Core;
 
-/**
- *
- */
 class AppInstance
 {
     public $tempBasePath = '';
@@ -28,26 +26,28 @@ class AppInstance
 
     /**
      * @var string
+     *
      * @deprecated
      */
     public $scriptPath = '';
 
     public $env = 'www/';
 
-    public $configAutoloader = null;
+    public $configAutoloader;
 
-    protected $_version = null;
+    protected $_version;
 
     /**
      * @var object object containing all configuration options of the application
      */
-    public $config = null;
+    public $config;
 
     /**
-     * The current router
+     * The current router.
+     *
      * @var \Jelix\Routing\Router
      */
-    public $router = null;
+    public $router;
 
     protected $_modulesDirPath = array();
 
@@ -55,9 +55,9 @@ class AppInstance
 
     protected $_pluginsDirPath = array();
 
-    protected $_allModulesPath = null;
+    protected $_allModulesPath;
 
-    protected $_allPluginsPath = null;
+    protected $_allPluginsPath;
 
     protected $_modulesContext = array();
 
@@ -73,12 +73,13 @@ class AppInstance
      * @param string $configPath config directory
      * @param string $scriptPath scripts directory (deprecated)
      */
-    public function __construct($appPath,
-                                $wwwPath = null,
-                                $varPath = null,
-                                $logPath = null,
-                                $configPath = null,
-                                $scriptPath = null
+    public function __construct(
+        $appPath,
+        $wwwPath = null,
+        $varPath = null,
+        $logPath = null,
+        $configPath = null,
+        $scriptPath = null
                                 ) {
         $this->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
         $this->router = null;
@@ -86,12 +87,13 @@ class AppInstance
         $this->configAutoloader = null;
     }
 
-    public function setPaths($appPath,
-                             $wwwPath = null,
-                             $varPath = null,
-                             $logPath = null,
-                             $configPath = null,
-                             $scriptPath = null
+    public function setPaths(
+        $appPath,
+        $wwwPath = null,
+        $varPath = null,
+        $logPath = null,
+        $configPath = null,
+        $scriptPath = null
                              ) {
         $this->appPath = $appPath;
         $this->wwwPath = (is_null($wwwPath) ? $appPath.'www/' : $wwwPath);
@@ -158,9 +160,11 @@ class AppInstance
     {
         if ($this->_version === null) {
             if (file_exists($this->appPath.'VERSION')) {
-                $this->_version =  trim(str_replace(array('SERIAL', "\n"),
-                                            array('0', ''),
-                                            file_get_contents($this->appPath.'VERSION')));
+                $this->_version = trim(str_replace(
+                    array('SERIAL', "\n"),
+                    array('0', ''),
+                    file_get_contents($this->appPath.'VERSION')
+                ));
             } else {
                 $this->_version = '0';
             }
@@ -172,9 +176,10 @@ class AppInstance
     /**
      * Declare a list of modules.
      *
-     * @param string|array $basePath the directory path containing modules that can be used
+     * @param array|string $basePath the directory path containing modules that can be used
      * @param null|string[]  list of module name to declare, from the directory. By default: all sub-directories (null).
      *                               parameter used only if $basePath is a string
+     * @param null|mixed $modules
      */
     public function declareModulesDir($basePath, $modules = null)
     {
@@ -205,7 +210,8 @@ class AppInstance
     /**
      * declare a module.
      *
-     * @param string|array $path the path of the module directory
+     * @param array|string $path       the path of the module directory
+     * @param mixed        $modulePath
      */
     public function declareModule($modulePath)
     {
@@ -254,7 +260,8 @@ class AppInstance
         }
     }
 
-    public function getEnabledModulesPaths() {
+    public function getEnabledModulesPaths()
+    {
         return $this->config->_modulesPathList;
     }
 
@@ -281,7 +288,7 @@ class AppInstance
                     }
                 } elseif ($names == '*' || $names === null) {
                     if ($handle = opendir($path)) {
-                        while (false !== ($name = readdir($handle))) {
+                        while (($name = readdir($handle)) !== false) {
                             if ($name[0] != '.' && is_dir($path.$name)) {
                                 $this->_allModulesPath[$name] = $path.$name.DIRECTORY_SEPARATOR;
                             }
@@ -318,7 +325,7 @@ class AppInstance
             }
 
             $bundled = realpath(__DIR__.'/../../jelix-legacy/plugins/').DIRECTORY_SEPARATOR;
-            if (file_exists($bundled) &&  !in_array($p, $this->_allPluginsPath)) {
+            if (file_exists($bundled) && !in_array($p, $this->_allPluginsPath)) {
                 array_unshift($this->_allPluginsPath, $bundled);
             }
         }
@@ -329,10 +336,10 @@ class AppInstance
     /**
      * load a plugin from a plugin directory (any type of plugins).
      *
-     * @param string $name      the name of the plugin
-     * @param string $type      the type of the plugin
-     * @param string $suffix    the suffix of the filename
-     * @param string $classname the name of the class to instancy
+     * @param string $name         the name of the plugin
+     * @param string $type         the type of the plugin
+     * @param string $suffix       the suffix of the filename
+     * @param string $classname    the name of the class to instancy
      * @param mixed  $constructArg the single argument for the constructor of the class. null = no argument.
      *
      * @return null|object null if the plugin doesn't exists
@@ -344,9 +351,9 @@ class AppInstance
         }
         if (!is_null($constructArg)) {
             return new $classname($constructArg);
-        } else {
-            return new $classname();
         }
+
+        return new $classname();
     }
 
     /**
@@ -363,16 +370,17 @@ class AppInstance
     {
         if (!class_exists($classname, false)) {
             $optname = '_pluginsPathList_'.$type;
-            if (!isset($this->config->$optname)) {
+            if (!isset($this->config->{$optname})) {
                 return false;
             }
-            $opt = & $this->config->$optname;
+            $opt = &$this->config->{$optname};
             if (!isset($opt[$name])
                 || !file_exists($opt[$name].$name.$suffix)) {
                 return false;
             }
             require_once $opt[$name].$name.$suffix;
         }
+
         return true;
     }
 
@@ -380,7 +388,8 @@ class AppInstance
      * Says if the given module $name is enabled.
      *
      * @param string $moduleName
-     * @param bool   $includingExternal  deprecated
+     * @param bool   $includingExternal deprecated
+     *
      * @return bool true : module is ok
      */
     public function isModuleEnabled($moduleName, $includingExternal = false)

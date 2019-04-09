@@ -1,16 +1,18 @@
 <?php
 /**
-* jSmtp, based on SMTP, a  PHP SMTP class by Chris Ryan
-*
-* Define an SMTP class that can be used to connect
-* and communicate with any SMTP server. It implements
-* all the SMTP functions defined in RFC821 except TURN.
-*
-* @author      Laurent Jouanneau
-* @copyright   2006-2014 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * jSmtp, based on SMTP, a  PHP SMTP class by Chris Ryan.
+ *
+ * Define an SMTP class that can be used to connect
+ * and communicate with any SMTP server. It implements
+ * all the SMTP functions defined in RFC821 except TURN.
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2006-2014 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Mailer;
 
 /**
@@ -23,7 +25,6 @@ namespace Jelix\Mailer;
  *
  * @see SMTP
  */
-class Smtp extends \SMTP {
-
-
+class Smtp extends \SMTP
+{
 }

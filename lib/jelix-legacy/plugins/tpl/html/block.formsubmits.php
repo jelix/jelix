@@ -1,16 +1,23 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jtpl_plugin
-* @author      Laurent Jouanneau
-* @contributor Mickaël Fradin
-* @copyright   2007-2008 Laurent Jouanneau, 2007 Mickaël Fradin
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jtpl_plugin
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Mickaël Fradin
+ *
+ * @copyright   2007-2008 Laurent Jouanneau, 2007 Mickaël Fradin
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $compiler
+ * @param mixed $begin
+ * @param mixed $param
+ */
 
 /**
- * a block to loop over submit button list of a form and to display them
+ * a block to loop over submit button list of a form and to display them.
  *
  * usage : {formsubmits} here content to display one submit {/formsubmits}
  * It accept also some parameters
@@ -18,27 +25,29 @@
  * 2) an optional array of submit control names : only these controls will be displayed
  *
  * @param jTplCompiler $compiler the template compiler
- * @param boolean $begin true if it is the begin of block, else false
- * @param array $param empty array
- *                     or 0=>jFormsBase object 
- *                     or 0=>jFormsBase object, 1=>array of submit names
- *                     or 0=>array of submit names
+ * @param bool         $begin    true if it is the begin of block, else false
+ * @param array        $param    empty array
+ *                               or 0=>jFormsBase object
+ *                               or 0=>jFormsBase object, 1=>array of submit names
+ *                               or 0=>array of submit names
+ *
  * @return string the php code corresponding to the begin or end of the block
+ *
  * @see jForms
  */
-function jtpl_block_html_formsubmits($compiler, $begin, $param=array())
+function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
 {
-
-    if(!$begin){
+    if (!$begin) {
         return '}} $t->_privateVars[\'__submitref\']=\'\';'; // if, foreach
     }
 
-    if(count($param) > 2){
-        $compiler->doError2('errors.tplplugin.block.bad.argument.number','formsubmits',2);
+    if (count($param) > 2) {
+        $compiler->doError2('errors.tplplugin.block.bad.argument.number', 'formsubmits', 2);
+
         return '';
     }
-    if(count($param)){
-        if(count($param) == 1){
+    if (count($param)) {
+        if (count($param) == 1) {
             $content = 'if(is_array('.$param[0].')){
                 $submits_to_display = '.$param[0].';
             }
@@ -46,12 +55,11 @@ function jtpl_block_html_formsubmits($compiler, $begin, $param=array())
                 $t->_privateVars[\'__form\'] = '.$param[0].';
                 $submits_to_display=null;
             }';
-        }
-        else{
+        } else {
             $content = ' $t->_privateVars[\'__form\'] = '.$param[0].";\n";
             $content .= ' $submits_to_display = '.$param[1].'; ';
         }
-    }else{
+    } else {
         $content = '$submits_to_display=null;';
     }
 
@@ -67,5 +75,6 @@ foreach($t->_privateVars[\'__form\']->getSubmits() as $ctrlref=>$ctrl){
         $t->_privateVars[\'__submitref\'] = $ctrlref;
         $t->_privateVars[\'__submit\'] = $ctrl;
 ';
+
     return $content;
 }

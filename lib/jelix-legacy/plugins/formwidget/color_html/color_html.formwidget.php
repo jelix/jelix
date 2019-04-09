@@ -1,35 +1,42 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms_widget_plugin
-* @author      Claudio Bernardes
-* @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
-* @copyright   2012 Claudio Bernardes
-* @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
-/**
- * HTML form builder
  * @package     jelix
  * @subpackage  forms_widget_plugin
- * @link http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
+ *
+ * @author      Claudio Bernardes
+ * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
+ *
+ * @copyright   2012 Claudio Bernardes
+ * @copyright   2006-2012 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
-    protected function outputJs() {
+/**
+ * HTML form builder.
+ *
+ * @package     jelix
+ * @subpackage  forms_widget_plugin
+ *
+ * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
+ */
+class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+{
+    protected function outputJs()
+    {
         $ctrl = $this->ctrl;
 
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
-        $js = "c = new ".$jFormsJsVarName."ControlColor('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $js .="c.regexp = /^#[a-fA-F0-9]{6}$/ \n";
+        $js = 'c = new '.$jFormsJsVarName."ControlColor('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $js .= "c.regexp = /^#[a-fA-F0-9]{6}$/ \n";
 
         $this->parentWidget->addJs($js);
         $this->commonJs();
     }
 
-    function outputControl() {
+    public function outputControl()
+    {
         $attr = $this->getControlAttributes();
         $attr['value'] = $this->getValue();
         $attr['type'] = 'color';
@@ -39,7 +46,9 @@ class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
         echo "/>\n";
         $this->outputJs();
     }
-    public function outputControlValue(){
+
+    public function outputControlValue()
+    {
         $attr = $this->getValueAttributes();
         $value = $this->getValue();
         $value = $this->ctrl->getDisplayValue($value);

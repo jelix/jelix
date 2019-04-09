@@ -1,21 +1,24 @@
 <?php
 /**
  * @package     jelix
+ *
  * @author      Laurent Jouanneau
  * @copyright   2019 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Installer\Migrator;
 
-use \Jelix\IniFile\IniModifier;
-use \Jelix\Installer\ModuleStatus;
+use Jelix\IniFile\IniModifier;
+use Jelix\Installer\ModuleStatus;
 
-
-class Jelix17 {
-
+class Jelix17
+{
     /**
-     * the object responsible of the results output
+     * the object responsible of the results output.
+     *
      * @var \Jelix\Installer\Reporter\ReporterInterface
      */
     protected $reporter;
@@ -25,12 +28,14 @@ class Jelix17 {
      */
     protected $defaultConfigIni;
 
-    function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter) {
+    public function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter)
+    {
         $this->reporter = $reporter;
         $this->defaultConfigIni = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
     }
 
-    function migrate() {
+    public function migrate()
+    {
         $this->reporter->message('Start migration to Jelix 1.7.0', 'notice');
 
         $this->moveIntoAppSystem();
@@ -70,8 +75,8 @@ class Jelix17 {
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
     }
 
-
-    function localMigrate() {
+    public function localMigrate()
+    {
         $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
         if ($installerIni->isSection('modules')) {
             return;
@@ -92,13 +97,13 @@ class Jelix17 {
             $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
             $mainConfig = new \Jelix\IniFile\IniModifierArray(array(
                 'default' => $this->defaultConfigIni,
-                'main' => $mainConfigIni
+                'main' => $mainConfigIni,
             ));
 
             $webassets = new WebAssetsUpgrader($mainConfig);
             $this->migrateCoordPluginsConf($localConfigIni, true);
             foreach ($frameworkIni->getSectionList() as $section) {
-                if (!preg_match("/^entrypoint\\:(.*)$/", $section, $m)) {
+                if (!preg_match('/^entrypoint\\:(.*)$/', $section, $m)) {
                     continue;
                 }
                 $configValue = $frameworkIni->getValue('config', $section);
@@ -111,8 +116,13 @@ class Jelix17 {
                         $this->reporter->message('Migrate modules section from var/config/'.$configValue.' content to localconfig.ini.php', 'notice');
                         $this->migrateModulesSection($localConfigIni, $localEpConfigIni);
                     }
-                    $this->upgradeWebAssetsEp($webassets, $mainConfigIni,
-                        $epConfigIni, $localConfigIni, $localEpConfigIni);
+                    $this->upgradeWebAssetsEp(
+                        $webassets,
+                        $mainConfigIni,
+                        $epConfigIni,
+                        $localConfigIni,
+                        $localEpConfigIni
+                    );
                     $localEpConfigIni->save();
                 }
             }
@@ -121,19 +131,18 @@ class Jelix17 {
             $this->migrateJelixInstallParameters($localConfigIni);
             $this->migrateInstallerIni();
 
-
             $localConfigIni->save();
         }
         $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
     }
 
-    private function moveIntoAppSystem() {
+    private function moveIntoAppSystem()
+    {
         $newConfigPath = \jApp::appSystemPath();
         if (file_exists(\jApp::appPath('app/config'))) {
             // for jelix 1.7.0-pre < version < 1.7.0-beta.5
             rename(\jApp::appPath('app/config'), $newConfigPath);
-        }
-        elseif (!file_exists($newConfigPath)) {
+        } elseif (!file_exists($newConfigPath)) {
             $this->reporter->message('Create app/system/', 'notice');
             \jFile::createDir($newConfigPath);
         }
@@ -142,27 +151,29 @@ class Jelix17 {
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
             if (!file_exists(\jApp::varConfigPath('mainconfig.ini.php'))) {
                 if (!file_exists(\jApp::varConfigPath('defaultconfig.ini.php'))) {
-                    throw new \Exception("Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?");
+                    throw new \Exception('Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?');
                 }
                 $this->reporter->message('Move var/config/defaultconfig.ini.php to app/system/mainconfig.ini.php', 'notice');
                 rename(\jApp::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
-            }
-            else {
+            } else {
                 $this->reporter->message('Move var/config/mainconfig.ini.php to app/system/', 'notice');
                 rename(\jApp::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
 
         if (!file_exists(\jApp::appPath('app/responses'))) {
-            $this->reporter->message("Move responses/ to app/responses/", 'notice');
+            $this->reporter->message('Move responses/ to app/responses/', 'notice');
             rename(\jApp::appPath('responses'), \jApp::appPath('app/responses'));
         }
     }
 
-    private function migrateProjectXml($mainConfigIni) {
+    private function migrateProjectXml($mainConfigIni)
+    {
         $entrypoints = array();
-        $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'),
-            ';<' . '?php die(\'\');?' . '>');
+        $frameworkIni = new IniModifier(
+            \jApp::appSystemPath('framework.ini.php'),
+            ';<'.'?php die(\'\');?'.'>'
+        );
         $projectDOM = new \DOMDocument();
         $projectDOM->load(\jApp::appPath('project.xml'));
         $projectxml = simplexml_import_dom($projectDOM);
@@ -171,36 +182,39 @@ class Jelix17 {
         }
         // read all entry points data
         foreach ($projectxml->entrypoints->entry as $entrypoint) {
-            $name = (string)$entrypoint['file'];
-            $configFile = (string)$entrypoint['config'];
-            $type = isset($entrypoint['type'])? (string)$entrypoint['type']:'classic';
+            $name = (string) $entrypoint['file'];
+            $configFile = (string) $entrypoint['config'];
+            $type = isset($entrypoint['type']) ? (string) $entrypoint['type'] : 'classic';
 
-            $frameworkIni->setValues(array('config'=>$configFile, 'type' => $type),
-                'entrypoint:'.$name);
+            $frameworkIni->setValues(
+                array('config' => $configFile, 'type' => $type),
+                'entrypoint:'.$name
+            );
 
             $dest = \jApp::appSystemPath($configFile);
             if (!file_exists($dest)) {
                 if (!file_exists(\jApp::varConfigPath($configFile))) {
-                    $this->reporter->message("Config file var/config/$configFile indicated in project.xml, does not exist", 'warning');
+                    $this->reporter->message("Config file var/config/${configFile} indicated in project.xml, does not exist", 'warning');
+
                     continue;
                 }
 
-                $this->reporter->message("Move var/config/$configFile to app/system/", 'notice');
+                $this->reporter->message("Move var/config/${configFile} to app/system/", 'notice');
                 \jFile::createDir(dirname($dest));
                 rename(\jApp::varConfigPath($configFile), $dest);
             }
 
             $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
-            $entrypoints[str_replace('.php', '', $name)] = [
+            $entrypoints[str_replace('.php', '', $name)] = array(
                 'name' => $name,
                 'type' => $type,
-                'config' => $epConfigIni
-            ];
+                'config' => $epConfigIni,
+            );
 
             $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
             if ($urlFile != '') {
                 if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-                    $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
+                    $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
                     rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
                 }
             }
@@ -222,10 +236,12 @@ class Jelix17 {
         }
         $projectDOM->save(\jApp::appPath('project.xml'));
         $frameworkIni->save();
+
         return $entrypoints;
     }
 
-    private function migrateProfilesIni(IniModifier $profilesini) {
+    private function migrateProfilesIni(IniModifier $profilesini)
+    {
         foreach ($profilesini->getSectionList() as $name) {
             // move jSoapClient classmap files
             if (strpos($name, 'jsoapclient:') === 0) {
@@ -234,24 +250,22 @@ class Jelix17 {
                     file_exists(\jApp::varConfigPath($classmapFile))
                 ) {
                     if (!file_exists(\jApp::appSystemPath($classmapFile))) {
-                        $this->reporter->message("Move " . $classmapFile . " to app/system/", 'notice');
+                        $this->reporter->message('Move '.$classmapFile.' to app/system/', 'notice');
                         rename(\jApp::varConfigPath($classmapFile), \jApp::appSystemPath($classmapFile));
-                    }
-                    else {
+                    } else {
                         unlink(\jApp::varConfigPath($classmapFile));
                     }
                 }
             }
             // profiles.ini.php change mysql driver from "mysql" to "mysqli"
-            else if (strpos($name, 'jdb:') === 0) {
+            elseif (strpos($name, 'jdb:') === 0) {
                 $driver = $profilesini->getValue('driver', $name);
                 if ($driver == 'mysql') {
-                    $this->reporter->message("Profiles.ini: change db driver from mysql to mysqli for ".$name." profile", 'notice');
+                    $this->reporter->message('Profiles.ini: change db driver from mysql to mysqli for '.$name.' profile', 'notice');
                     $profilesini->setValue('driver', 'mysqli', $name);
-                }
-                else if ($driver == 'sqlite') {
-                    $this->reporter->message("Profiles.ini: you still use the sqlite driver in the profile ".$name, 'warning');
-                    $this->reporter->message("You must convert your databases to sqlite3 and use the sqlite3 driver for jdb", 'warning');
+                } elseif ($driver == 'sqlite') {
+                    $this->reporter->message('Profiles.ini: you still use the sqlite driver in the profile '.$name, 'warning');
+                    $this->reporter->message('You must convert your databases to sqlite3 and use the sqlite3 driver for jdb', 'warning');
                 }
             }
         }
@@ -260,11 +274,12 @@ class Jelix17 {
 
     protected $allPluginConfigs = array();
 
-    private function migrateCoordPluginsConf(IniModifier $config, $localConf = false) {
+    private function migrateCoordPluginsConf(IniModifier $config, $localConf = false)
+    {
         $config->removeValue('pluginsPath');
         $config->removeValue('modulesPath');
         $pluginsConf = $config->getValues('coordplugins');
-        foreach($pluginsConf as $name => $conf) {
+        foreach ($pluginsConf as $name => $conf) {
             if (strpos($name, '.') !== false) {
                 continue;
             }
@@ -279,8 +294,7 @@ class Jelix17 {
                 }
                 $ini = new IniModifier($confPath);
                 $this->allPluginConfigs[$conf] = $ini;
-            }
-            else {
+            } else {
                 $ini = $this->allPluginConfigs[$conf];
             }
             $sections = $ini->getSectionList();
@@ -290,13 +304,14 @@ class Jelix17 {
                 if (file_exists($ini->getFileName()) && !$localConf) {
                     $rpath = \Jelix\FileUtilities\Path::shortestPath(\jApp::varConfigPath(), $ini->getFileName());
                     if (!file_exists(\jApp::appSystemPath($rpath))) {
-                        $this->reporter->message("Move plugin conf file ".$rpath." to app/system/", 'notice');
-                        rename ($ini->getFileName(), \jApp::appSystemPath($rpath));
+                        $this->reporter->message('Move plugin conf file '.$rpath.' to app/system/', 'notice');
+                        rename($ini->getFileName(), \jApp::appSystemPath($rpath));
                     }
                 }
+
                 continue;
             }
-            $this->reporter->message("Import plugin conf file ".$conf." into global configuration", 'notice');
+            $this->reporter->message('Import plugin conf file '.$conf.' into global configuration', 'notice');
             $config->import($ini, $name);
             $config->setValue($name, '1', 'coordplugins');
             unlink($ini->getFileName());
@@ -304,11 +319,12 @@ class Jelix17 {
         $config->save();
     }
 
-    protected function migrateModulesSection(IniModifier $masterConfigIni, IniModifier $epConfigIni) {
+    protected function migrateModulesSection(IniModifier $masterConfigIni, IniModifier $epConfigIni)
+    {
         $modulesParameters = $epConfigIni->getValues('modules');
         if ($modulesParameters) {
             $modules = array();
-            foreach($modulesParameters as $name => $value) {
+            foreach ($modulesParameters as $name => $value) {
                 list($module, $param) = explode('.', $name, 2);
                 if (!isset($modules[$module])) {
                     $modules[$module] = array();
@@ -316,17 +332,16 @@ class Jelix17 {
                 $modules[$module][$param] = $value;
             }
 
-            foreach($modules as $name => $parameters) {
+            foreach ($modules as $name => $parameters) {
                 if (!isset($parameters['access']) || $parameters['access'] == 0) {
                     continue;
                 }
                 $mainAccess = $masterConfigIni->getValue($name.'.access', 'modules');
                 if ($mainAccess === null || $mainAccess === 0) {
-                    foreach($parameters as $paramName => $paramValue) {
+                    foreach ($parameters as $paramName => $paramValue) {
                         $masterConfigIni->setValue($name.'.'.$paramName, $paramValue, 'modules');
                     }
-                }
-                else if ($mainAccess < $parameters['access'] ) {
+                } elseif ($mainAccess < $parameters['access']) {
                     $masterConfigIni->setValue($name.'.access', $parameters['access'], 'modules');
                 }
             }
@@ -337,10 +352,11 @@ class Jelix17 {
         }
     }
 
-    protected function migrateAccessValue(IniModifier $masterConfigIni) {
+    protected function migrateAccessValue(IniModifier $masterConfigIni)
+    {
         $modulesParameters = $masterConfigIni->getValues('modules');
         if ($modulesParameters) {
-            foreach($modulesParameters as $name => $value) {
+            foreach ($modulesParameters as $name => $value) {
                 list($module, $param) = explode('.', $name, 2);
                 if ($param == 'access') {
                     $masterConfigIni->setValue($module.'.enabled', ($value > 0), 'modules');
@@ -351,7 +367,8 @@ class Jelix17 {
         }
     }
 
-    protected function migrateInstallerIni() {
+    protected function migrateInstallerIni()
+    {
         $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
         if (!$installerIni->isSection('modules')) {
             $this->reporter->message('Migrate var/config/installer.ini.php content', 'notice');
@@ -383,7 +400,7 @@ class Jelix17 {
 
             foreach ($allModules as $module => $params) {
                 foreach ($params as $name => $value) {
-                    $installerIni->setValue($module . '.' . $name, $value, 'modules');
+                    $installerIni->setValue($module.'.'.$name, $value, 'modules');
                 }
             }
             foreach ($installerIni->getSectionList() as $section) {
@@ -396,7 +413,8 @@ class Jelix17 {
         }
     }
 
-    protected function migrateJelixInstallParameters (IniModifier $masterConfigIni) {
+    protected function migrateJelixInstallParameters(IniModifier $masterConfigIni)
+    {
         // set installparameters for the jelix module
         $jelixWWWPath = $masterConfigIni->getValue('jelixWWWPath', 'urlengine');
         if (!$jelixWWWPath) {
@@ -406,15 +424,12 @@ class Jelix17 {
         if (file_exists($targetPath)) {
             if (is_dir($targetPath)) {
                 $wwwfiles = 'copy';
-            }
-            else if (is_link($targetPath)) {
+            } elseif (is_link($targetPath)) {
                 $wwwfiles = 'link';
-            }
-            else {
+            } else {
                 $wwwfiles = 'vhost';
             }
-        }
-        else {
+        } else {
             // no file, so the path to jelix-www should probably be set into the
             // web server configuration
             $wwwfiles = 'vhost';
@@ -426,9 +441,8 @@ class Jelix17 {
             if (!isset($jelixInstallParams['wwwfiles'])) {
                 $jelixInstallParams['wwwfiles'] = $wwwfiles;
             }
-        }
-        else {
-            $jelixInstallParams = array('wwwfiles'=>$wwwfiles);
+        } else {
+            $jelixInstallParams = array('wwwfiles' => $wwwfiles);
         }
         $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
@@ -439,31 +453,32 @@ class Jelix17 {
 
     /**
      * @param IniModifier $mainConfigIni
-     * @param array $entrypoints
+     * @param array       $entrypoints
+     *
      * @throws \Exception
      */
-    private function upgradeUrlEngine(IniModifier $mainConfigIni, $entrypoints) {
+    private function upgradeUrlEngine(IniModifier $mainConfigIni, $entrypoints)
+    {
         // move urls.xml to app/system
         $urlFile = $mainConfigIni->getValue('significantFile', 'urlengine');
         if ($urlFile == null) {
             $urlFile = 'urls.xml';
         }
         if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-            $this->reporter->message("Move var/config/$urlFile to app/system/", 'notice');
+            $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
             rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
         }
 
         $urlXmlFileName = \jApp::appSystemPath($urlFile);
         $urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
-
-        foreach($entrypoints as $epId => $ep) {
+        foreach ($entrypoints as $epId => $ep) {
             $fullConfig = new \Jelix\IniFile\IniModifierArray(
-                [
+                array(
                     'default' => $this->defaultConfigIni,
                     'main' => $mainConfigIni,
-                    'entrypoint' => $ep['config']
-                ]
+                    'entrypoint' => $ep['config'],
+                )
             );
             $urlMap = $urlMapModifier->getEntryPoint($ep['name']);
             if (!$urlMap) {
@@ -472,8 +487,7 @@ class Jelix17 {
             $upgraderUrl = new UrlEngineUpgrader($fullConfig, $epId, $urlMap);
             if ($ep['type'] == 'cmdline') {
                 $upgraderUrl->cleanConfig($ep['config']);
-            }
-            else {
+            } else {
                 $upgraderUrl->upgrade();
             }
 
@@ -487,51 +501,52 @@ class Jelix17 {
 
     /**
      * @param IniModifier $mainConfigIni
-     * @param array $entrypoints
+     * @param array       $entrypoints
+     *
      * @throws \Exception
      */
-    private function upgradeWebAssets($mainConfigIni, $entrypoints) {
-
-
+    private function upgradeWebAssets($mainConfigIni, $entrypoints)
+    {
         $mainConfig = new \Jelix\IniFile\IniModifierArray(array(
             'default' => $this->defaultConfigIni,
-            'main' => $mainConfigIni
+            'main' => $mainConfigIni,
         ));
 
         $webassets = new WebAssetsUpgrader($mainConfig);
-        foreach($entrypoints as $epId => $ep) {
+        foreach ($entrypoints as $epId => $ep) {
             $this->upgradeWebAssetsEp($webassets, $mainConfigIni, $ep['config']);
         }
         $webassets = new WebAssetsUpgrader($this->defaultConfigIni);
         $webassets->changeConfig($mainConfig, $mainConfig['main']);
     }
 
-    private function upgradeWebAssetsEp($webassets, $mainConfigIni,
-                                        $epConfigIni, $localConfigIni=null,
-                                        $localEpConfigIni=null) {
+    private function upgradeWebAssetsEp(
+        $webassets,
+        $mainConfigIni,
+        $epConfigIni,
+        $localConfigIni = null,
+        $localEpConfigIni = null
+    ) {
         if (!$localConfigIni) {
             $epConfig = new \Jelix\IniFile\IniModifierArray(array(
                 'default' => $this->defaultConfigIni,
                 'main' => $mainConfigIni,
-                'entrypoint' =>$epConfigIni,
+                'entrypoint' => $epConfigIni,
             ));
-        }
-        else {
+        } else {
             $epConfig = new \Jelix\IniFile\IniModifierArray(array(
                 'default' => $this->defaultConfigIni,
                 'main' => $mainConfigIni,
-                'entrypoint' =>$epConfigIni,
+                'entrypoint' => $epConfigIni,
                 'local' => $localConfigIni,
-                'localentrypoint' => $localEpConfigIni
+                'localentrypoint' => $localEpConfigIni,
             ));
-
         }
         $webassets->changeConfig($epConfig, $epConfigIni);
-
     }
 
-
-    private function updateScripts() {
+    private function updateScripts()
+    {
         $consolePath = \jApp::appPath('console.php');
         if (!file_exists($consolePath)) {
             file_put_contents($consolePath, '<'.'?php require (__DIR__.\'/application.init.php\');
@@ -541,13 +556,12 @@ class Jelix17 {
 
         $devPath = \jApp::appPath('dev.php');
         if (!file_exists($devPath)) {
-            copy (LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+            copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
             $this->reporter->message('create dev.php to launch module commands', 'notice');
-        }
-        else {
+        } else {
             $content = file_get_contents($devPath);
             if (strpos($content, 'JelixCommands::launch') === false) {
-                copy (LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+                copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
                 $this->reporter->message('Update dev.php to launch developer commands', 'notice');
             }
         }
@@ -576,23 +590,25 @@ class Jelix17 {
 \\Jelix\\Scripts\\Installer::launch();');
             $this->reporter->message('create install/installer.php to launch instance installation', 'notice');
         }
-
     }
 
-
-    protected function error($msg){
+    protected function error($msg)
+    {
         $this->reporter->message($msg, 'error');
     }
 
-    protected function ok($msg){
+    protected function ok($msg)
+    {
         $this->reporter->message($msg, '');
     }
 
-    protected function warning($msg){
+    protected function warning($msg)
+    {
         $this->reporter->message($msg, 'warning');
     }
 
-    protected function notice($msg){
+    protected function notice($msg)
+    {
         $this->reporter->message($msg, 'notice');
     }
 }

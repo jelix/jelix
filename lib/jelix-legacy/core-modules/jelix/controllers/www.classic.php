@@ -1,19 +1,21 @@
 <?php
 /**
-* @package    jelix-modules
-* @subpackage jelix-module
-* @author     Laurent Jouanneau
-* @copyright  2011-2012 Laurent Jouanneau
-* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
-*/
+ * @package    jelix-modules
+ * @subpackage jelix-module
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2011-2012 Laurent Jouanneau
+ * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+ */
 
 /**
  * @package    jelix-modules
  * @subpackage jelix-module
  */
-class wwwCtrl extends jController {
-    
-    public function getfile() {
+class wwwCtrl extends jController
+{
+    public function getfile()
+    {
         $module = $this->param('targetmodule');
 
         if (!jApp::isModuleEnabled($module) || !jApp::config()->modules[$module.'.enabled']) {
@@ -27,6 +29,7 @@ class wwwCtrl extends jController {
             $rep = $this->getResponse('html', true);
             $rep->bodyTpl = 'jelix~404.html';
             $rep->setHttpStatus('404', 'Not Found');
+
             return $rep;
         }
 
@@ -41,7 +44,7 @@ class wwwCtrl extends jController {
         $rep->doDownload = false;
         $rep->fileName = $filename;
         $rep->mimeType = \Jelix\FileUtilities\File::getMimeTypeFromFilename($rep->fileName);
+
         return $rep;
     }
 }
-

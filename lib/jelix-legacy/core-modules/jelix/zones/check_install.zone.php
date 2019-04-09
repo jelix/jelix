@@ -1,29 +1,34 @@
 <?php
 /**
-* @package    jelix-modules
-* @subpackage jelix-module
-* @author     Bastien Jaillot
-* @contributor Laurent Jouanneau, Julien Issler
-* @copyright  2008 Bastien Jaillot
-* @copyright  2009 Julien Issler
-* @copyright 2012 Laurent Jouanneau
-* @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
-*/
+ * @package    jelix-modules
+ * @subpackage jelix-module
+ *
+ * @author     Bastien Jaillot
+ * @contributor Laurent Jouanneau, Julien Issler
+ *
+ * @copyright  2008 Bastien Jaillot
+ * @copyright  2009 Julien Issler
+ * @copyright 2012 Laurent Jouanneau
+ * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+ */
 
 /**
- * a zone to display a default start page with results of the installation check
+ * a zone to display a default start page with results of the installation check.
+ *
  * @package jelix
  */
-class check_installZone extends jZone {
+class check_installZone extends jZone
+{
+    protected $_tplname = 'check_install';
 
-    protected $_tplname='check_install';
-
-    protected function _prepareTpl() {
+    protected function _prepareTpl()
+    {
         $lang = jApp::config()->locale;
         if (!$this->param('no_lang_check')) {
             $locale = jLocale::getPreferedLocaleFromRequest();
-            if (!$locale)
+            if (!$locale) {
                 $locale = 'en_US';
+            }
             jApp::config()->locale = $locale;
         }
 
@@ -34,6 +39,6 @@ class check_installZone extends jZone {
 
         $this->_tpl->assign('wwwpath', jApp::wwwPath());
         $this->_tpl->assign('configpath', jApp::varConfigPath());
-        $this->_tpl->assign('check',$reporter->trace);
-   }
+        $this->_tpl->assign('check', $reporter->trace);
+    }
 }

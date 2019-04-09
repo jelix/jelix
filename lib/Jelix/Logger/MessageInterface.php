@@ -1,11 +1,14 @@
 <?php
 /**
-* @author     Laurent Jouanneau
-* @contributor F. Fernandez, Hadrien Lanneau
-* @copyright  2006-2014 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
-* @link       http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author     Laurent Jouanneau
+ * @contributor F. Fernandez, Hadrien Lanneau
+ *
+ * @copyright  2006-2014 Laurent Jouanneau, 2007 F. Fernandez, 2011 Hadrien Lanneau
+ *
+ * @see       http://www.jelix.org
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Logger;
 
 /**
@@ -14,9 +17,11 @@ namespace Jelix\Logger;
  * Classes that implements it are responsible to format
  * the message. Formatting a message depends on its type.
  */
-interface MessageInterface {
+interface MessageInterface
+{
     /**
-     * return the category of the message
+     * return the category of the message.
+     *
      * @return string category name
      */
     public function getCategory();
@@ -28,7 +33,8 @@ interface MessageInterface {
 
     /**
      * return the full message, formated for simple text output (it can contain informations
-     * other than the message itself)
+     * other than the message itself).
+     *
      * @return string the message
      */
     public function getFormatedMessage();

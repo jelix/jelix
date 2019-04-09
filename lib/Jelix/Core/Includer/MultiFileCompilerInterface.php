@@ -2,7 +2,8 @@
 /**
  * @author     Laurent Jouanneau
  * @copyright  2005-2014 Laurent Jouanneau
- * @link       http://www.jelix.org
+ *
+ * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -14,19 +15,22 @@ namespace Jelix\Core\Includer;
  * if it is still valid. The file should have a "return" statement
  * with a boolean : true if it is ok, false if it should be recompiled.
  */
-interface MultiFileCompilerInterface {
-
+interface MultiFileCompilerInterface
+{
     /**
-     * parse one of needed file
+     * parse one of needed file.
+     *
      * @param string $sourceFile the file selector
-     * @param string $module    the module name of the file
-     * @return boolean true : process ok
+     * @param string $module     the module name of the file
+     *
+     * @return bool true : process ok
      */
     public function compileItem($sourceFile, $module);
 
     /**
      * save the results in a temporary file
      * called at the end of the compilation.
+     *
      * @param string $cachefile the name of cache file
      */
     public function endCompile($cachefile);

@@ -3,7 +3,8 @@
  * @author     Laurent Jouanneau
  * @copyright  2005-2014 Laurent Jouanneau
  *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
- * @link       http://www.jelix.org
+ *
+ * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -15,34 +16,43 @@ namespace Jelix\Core;
  * correspondant php content are stored in a cache file.
  * Includer verify that cache file exists, and if not, it calls the correspondant compiler.
  * Finally, it includes the cache.
+ *
  * @author     Laurent Jouanneau
  * @copyright  2001-2014 Laurent Jouanneau
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html .
  */
-class Includer {
+class Includer
+{
     /**
      * list of loaded cache file.
-     * It avoids to do all verification when a file is include many time
+     * It avoids to do all verification when a file is include many time.
+     *
      * @var array
      */
     protected static $_includedFiles = array();
 
     /**
-     * This is a static class, so private constructor
+     * This is a static class, so private constructor.
      */
-    private function __construct() {}
+    private function __construct()
+    {
+    }
 
     /**
      * includes cache of the correspondant file selector
-     * check the cache, compile if needed, and include the cache
-     * @param    Selector\SelectorInterface   $aSelectorId    the selector corresponding to the file
+     * check the cache, compile if needed, and include the cache.
+     *
+     * @param Selector\SelectorInterface $aSelectorId      the selector corresponding to the file
+     * @param mixed                      $aSelector
+     * @param mixed                      $forceReloadCache
+     *
      * @throws \jException
-    */
-    public static function inc($aSelector, $forceReloadCache = false){
-
+     */
+    public static function inc($aSelector, $forceReloadCache = false)
+    {
         $cachefile = $aSelector->getCompiledFilePath();
 
-        if($cachefile == '' || (!$forceReloadCache && isset(self::$_includedFiles[$cachefile]))){
+        if ($cachefile == '' || (!$forceReloadCache && isset(self::$_includedFiles[$cachefile]))) {
             return;
         }
 
@@ -51,9 +61,10 @@ class Includer {
         if (!$mustCompile) {
             // if the cache file has been compiled with checkCacheFiletime=on
             // it verify itself if it is valid
-            $isValid = require($cachefile);
+            $isValid = require $cachefile;
             if ($isValid === true) {
-                self::$_includedFiles[$cachefile]=true;
+                self::$_includedFiles[$cachefile] = true;
+
                 return;
             }
         }
@@ -61,40 +72,43 @@ class Includer {
         $sourcefile = $aSelector->getPath();
 
         if ($sourcefile == '' || !file_exists($sourcefile)) {
-            throw new \jException('jelix~errors.includer.source.missing',array( $aSelector->toString(true)));
+            throw new \jException('jelix~errors.includer.source.missing', array($aSelector->toString(true)));
         }
 
         $compiler = $aSelector->getCompiler();
         if (!$compiler || !$compiler->compile($aSelector)) {
-            throw new \jException('jelix~errors.includer.source.compile',array( $aSelector->toString(true)));
+            throw new \jException('jelix~errors.includer.source.compile', array($aSelector->toString(true)));
         }
         // Because we did a require few lines ago, a second
         // require load the file content from the opcode cache
         // if it is existing. So we must invalidate the file.
         if (function_exists('opcache_invalidate')) {
-            opcache_invalidate ( $cachefile, true );
-        }
-        else if (function_exists('apc_delete_file')) {
+            opcache_invalidate($cachefile, true);
+        } elseif (function_exists('apc_delete_file')) {
             apc_delete_file($cachefile);
         }
-        require($cachefile);
-        self::$_includedFiles[$cachefile]=true;
+        require $cachefile;
+        self::$_includedFiles[$cachefile] = true;
     }
 
     /**
-     * include a cache file which is the results of the compilation of multiple file stored in multiple modules
-    * @param    array    $aType
-    *    = array(
-    *    'compilator class name',
-    *    'relative path of the compilator class file to lib/jelix/',
-    *    'foo.xml', // file name to compile (in each modules)
-    *    'foo.php',  //cache filename
-    *    );
-    *  @return mixed arbitrary value from the cached
-    */
-    public static function incAll($aType, $force = false){
+     * include a cache file which is the results of the compilation of multiple file stored in multiple modules.
+     *
+     * @param array $aType
+     *                     = array(
+     *                     'compilator class name',
+     *                     'relative path of the compilator class file to lib/jelix/',
+     *                     'foo.xml', // file name to compile (in each modules)
+     *                     'foo.php',  //cache filename
+     *                     );
+     * @param mixed $force
+     *
+     *  @return mixed arbitrary value from the cached
+     */
+    public static function incAll($aType, $force = false)
+    {
         $cachefile = App::tempPath('compiled/'.$aType[3]);
-        if(isset(self::$_includedFiles[$cachefile]) && !$force){
+        if (isset(self::$_includedFiles[$cachefile]) && !$force) {
             return;
         }
 
@@ -103,11 +117,12 @@ class Includer {
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
-            foreach ($config->_modulesPathList as $module=>$path) {
+            foreach ($config->_modulesPathList as $module => $path) {
                 $sourcefile = $path.$aType[2];
-                if (is_readable ($sourcefile)) {
+                if (is_readable($sourcefile)) {
                     if (filemtime($sourcefile) > $compiledate) {
                         $mustCompile = true;
+
                         break;
                     }
                 }
@@ -116,11 +131,11 @@ class Includer {
 
         if ($mustCompile) {
             if ($aType[1]) {
-                require_once(JELIX_LIB_PATH.$aType[1]);
+                require_once JELIX_LIB_PATH.$aType[1];
             }
-            $compiler = new $aType[0];
+            $compiler = new $aType[0]();
             $compileok = true;
-            foreach ($config->_modulesPathList as $module=>$path) {
+            foreach ($config->_modulesPathList as $module => $path) {
                 $compileok = $compiler->compileItem($path.$aType[2], $module);
                 if (!$compileok) {
                     break;
@@ -133,28 +148,27 @@ class Includer {
                 // opcode cache if it is existing.
                 // So we must invalidate the file.
                 if (function_exists('opcache_invalidate')) {
-                   opcache_invalidate ( $cachefile, true );
+                    opcache_invalidate($cachefile, true);
+                } elseif (function_exists('apc_delete_file')) {
+                    apc_delete_file($cachefile);
                 }
-                else if (function_exists('apc_delete_file')) {
-                   apc_delete_file($cachefile);
-                }
-                $returnedValue = require($cachefile);
+                $returnedValue = require $cachefile;
                 self::$_includedFiles[$cachefile] = true;
             }
-        }
-        else {
-            $returnedValue = require($cachefile);
+        } else {
+            $returnedValue = require $cachefile;
             self::$_includedFiles[$cachefile] = true;
         }
+
         return $returnedValue;
     }
 
-    public static function clear() {
-        foreach(self::$_includedFiles as $cachefile => $ok) {
+    public static function clear()
+    {
+        foreach (self::$_includedFiles as $cachefile => $ok) {
             if (function_exists('opcache_invalidate')) {
-                opcache_invalidate ( $cachefile, true );
-            }
-            else if (function_exists('apc_delete_file')) {
+                opcache_invalidate($cachefile, true);
+            } elseif (function_exists('apc_delete_file')) {
                 apc_delete_file($cachefile);
             }
         }

@@ -2,15 +2,17 @@
 /**
  * @author     Laurent Jouanneau
  * @copyright  2014-2018 Laurent Jouanneau
- * @link       http://jelix.org
+ *
+ * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 namespace Jelix\Core\Infos;
 
 use Jelix\IniFile\IniModifier;
 
-class FrameworkInfos {
-
+class FrameworkInfos
+{
     /**
      * @var IniModifier
      */
@@ -22,33 +24,37 @@ class FrameworkInfos {
     protected $iniLocalFile;
 
     /**
-     * @var EntryPoint[]  keys are filename
+     * @var EntryPoint[] keys are filename
      */
     protected $entrypoints = array();
 
     /**
-     * @var EntryPoint[]  keys are filename
+     * @var EntryPoint[] keys are filename
      */
     protected $localEntrypoints = array();
 
     /**
      * FrameworkInfos constructor.
-     * @param string $frameworkFile the path to the framework.ini.php file
-     * @param string $frameworkFile the path to the localframework.ini.php file
+     *
+     * @param string $frameworkFile      the path to the framework.ini.php file
+     * @param string $frameworkFile      the path to the localframework.ini.php file
+     * @param mixed  $localFrameworkFile
      */
-    public function __construct($frameworkFile, $localFrameworkFile = '') {
-        $this->iniFile = new IniModifier($frameworkFile, ';<' . '?php die(\'\');?' . '>');
+    public function __construct($frameworkFile, $localFrameworkFile = '')
+    {
+        $this->iniFile = new IniModifier($frameworkFile, ';<'.'?php die(\'\');?'.'>');
         $this->readIniFile($this->iniFile);
 
         if ($localFrameworkFile != '') {
-            $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<' . '?php die(\'\');?' . '>');
+            $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<'.'?php die(\'\');?'.'>');
             $this->readIniFile($this->iniLocalFile, true);
         }
     }
 
-    protected function readIniFile(IniModifier $iniFile, $isLocal=false) {
+    protected function readIniFile(IniModifier $iniFile, $isLocal = false)
+    {
         foreach ($iniFile->getSectionList() as $section) {
-            if (!preg_match("/^entrypoint\\:(.*)$/", $section, $m)) {
+            if (!preg_match('/^entrypoint\\:(.*)$/', $section, $m)) {
                 continue;
             }
             $name = $m[1];
@@ -60,8 +66,7 @@ class FrameworkInfos {
             if ($configValue) {
                 if ($isLocal) {
                     $this->addLocalEntryPointInfo($name, $configValue, $typeValue);
-                }
-                else {
+                } else {
                     $this->addEntryPointInfo($name, $configValue, $typeValue);
                 }
             }
@@ -70,7 +75,9 @@ class FrameworkInfos {
 
     /**
      * @param string $name
-     * @return EntryPoint|null
+     * @param mixed  $id
+     *
+     * @return null|EntryPoint
      */
     public function getEntryPointInfo($id)
     {
@@ -92,7 +99,8 @@ class FrameworkInfos {
     /**
      * @return EntryPoint[]
      */
-    public function getEntryPoints() {
+    public function getEntryPoints()
+    {
         return array_merge($this->entrypoints, $this->localEntrypoints);
     }
 
@@ -103,32 +111,34 @@ class FrameworkInfos {
         }
 
         $this->entrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+
         return $this->entrypoints[$fileName];
     }
 
     public function addLocalEntryPointInfo($fileName, $configFileName, $type = 'classic')
     {
         if (!$this->iniLocalFile) {
-            throw new \UnexpectedValueException("no local framework ini file has been given to FrameworkInfos");
+            throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos');
         }
         if (strpos($fileName, '.php') !== false) {
             $fileName = substr($fileName, 0, -4);
         }
 
         $this->localEntrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+
         return $this->localEntrypoints[$fileName];
     }
 
-    public function removeEntryPointInfo($fileName) {
+    public function removeEntryPointInfo($fileName)
+    {
         if (strpos($fileName, '.php') !== false) {
             $id = substr($fileName, 0, -4);
-        }
-        else {
+        } else {
             $id = $fileName;
             $fileName .= '.php';
         }
-        unset($this->entrypoints[$id]);
-        unset($this->localEntrypoints[$id]);
+        unset($this->entrypoints[$id], $this->localEntrypoints[$id]);
+
         $this->iniFile->removeSection('entrypoint:'.$fileName);
         if ($this->iniLocalFile) {
             $this->iniLocalFile->removeSection('entrypoint:'.$fileName);
@@ -144,25 +154,26 @@ class FrameworkInfos {
         }
     }
 
-    protected function updateIni() {
+    protected function updateIni()
+    {
         foreach ($this->entrypoints as $item) {
             $this->iniFile->setValues(array(
                 'config' => $item->getConfigFile(),
-                'type' => $item->getType()
+                'type' => $item->getType(),
             ), 'entrypoint:'.$item->getFile());
         }
         if ($this->iniLocalFile) {
             foreach ($this->localEntrypoints as $item) {
                 $this->iniLocalFile->setValues(array(
                     'config' => $item->getConfigFile(),
-                    'type' => $item->getType()
+                    'type' => $item->getType(),
                 ), 'entrypoint:'.$item->getFile());
             }
         }
     }
 
     /**
-     * create a new FrameworkInfos object
+     * create a new FrameworkInfos object.
      *
      * @return FrameworkInfos
      */
@@ -170,6 +181,7 @@ class FrameworkInfos {
     {
         return new self(
             \jApp::appSystemPath('framework.ini.php'),
-            \jApp::varConfigPath('localframework.ini.php'));
+            \jApp::varConfigPath('localframework.ini.php')
+        );
     }
 }

@@ -1,23 +1,25 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2008-2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2008-2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Installer;
 
+use Jelix\Dependencies\Item;
+use Jelix\Dependencies\Resolver;
 use Jelix\Version\VersionComparator;
-use \Jelix\Dependencies\Resolver;
-use \Jelix\Dependencies\Item;
 
 /**
- * Manage status of a module and its installer/updaters
+ * Manage status of a module and its installer/updaters.
  *
  * @since 1.7
  */
-class ModuleInstallerLauncher {
-
+class ModuleInstallerLauncher
+{
     /**
      *  @var string  name of the module
      */
@@ -26,7 +28,7 @@ class ModuleInstallerLauncher {
     /**
      * @var GlobalSetup
      */
-    protected $globalSetup = null;
+    protected $globalSetup;
 
     /**
      * @var string the minimum version of jelix for which the component is compatible
@@ -39,63 +41,63 @@ class ModuleInstallerLauncher {
     protected $jelixMaxVersion = '*';
 
     /**
-     * code error of the installation
+     * code error of the installation.
      */
     public $inError = 0;
 
     /**
-     *
      * @var \Jelix\Core\Infos\ModuleInfos
      */
-    protected $moduleInfos = null;
+    protected $moduleInfos;
 
     /**
-     *
      * @var ModuleStatus
      */
-    protected $moduleStatus = null;
+    protected $moduleStatus;
 
     /**
      * @var Module\Configurator
      */
-    protected $moduleConfigurator = null;
+    protected $moduleConfigurator;
 
     /**
      * @var Module\Installer
      */
-    protected $moduleInstaller = null;
+    protected $moduleInstaller;
 
     /**
      * @var Module\Uninstaller
      */
-    protected $moduleUninstaller = null;
+    protected $moduleUninstaller;
 
     /**
      * @var Module\Installer[]
      */
-    protected $moduleUpgraders = null;
+    protected $moduleUpgraders;
 
     /**
      * @var Module\Installer
      */
-    protected $moduleMainUpgrader = null;
+    protected $moduleMainUpgrader;
 
     protected $upgradersContexts = array();
 
     /**
      * @param ModuleStatus $moduleStatus
-     * @param GlobalSetup $globalSetup
+     * @param GlobalSetup  $globalSetup
      */
-    function __construct(ModuleStatus $moduleStatus, GlobalSetup $globalSetup) {
+    public function __construct(ModuleStatus $moduleStatus, GlobalSetup $globalSetup)
+    {
         $this->globalSetup = $globalSetup;
         $this->moduleStatus = $moduleStatus;
         $this->name = $moduleStatus->getName();
     }
 
     /**
-     * initialize the object, by reading the identity file
+     * initialize the object, by reading the identity file.
      */
-    public function init () {
+    public function init()
+    {
         if ($this->moduleInfos) {
             return;
         }
@@ -105,102 +107,135 @@ class ModuleInstallerLauncher {
             throw new Exception('module.missing.version', array($this->name));
         }
 
-        foreach($this->moduleInfos->dependencies as $dep) {
+        foreach ($this->moduleInfos->dependencies as $dep) {
             if ($dep['type'] == 'module' && $dep['name'] == 'jelix') {
                 $this->jelixMinVersion = $dep['minversion'];
                 $this->jelixMaxVersion = $dep['maxversion'];
+
                 break;
             }
         }
     }
 
-    public function getName() { return $this->name; }
-    public function getPath() { return $this->moduleStatus->getPath(); }
-    public function getSourceVersion() { return $this->moduleInfos->version; }
-    public function getSourceDate() { return $this->moduleInfos->versionDate; }
-    public function getJelixVersion() { return array($this->jelixMinVersion, $this->jelixMaxVersion);}
+    public function getName()
+    {
+        return $this->name;
+    }
 
-    public function getDependencies() {
+    public function getPath()
+    {
+        return $this->moduleStatus->getPath();
+    }
+
+    public function getSourceVersion()
+    {
+        return $this->moduleInfos->version;
+    }
+
+    public function getSourceDate()
+    {
+        return $this->moduleInfos->versionDate;
+    }
+
+    public function getJelixVersion()
+    {
+        return array($this->jelixMinVersion, $this->jelixMaxVersion);
+    }
+
+    public function getDependencies()
+    {
         return $this->moduleInfos->dependencies;
     }
 
-    public function getIncompatibilities() {
+    public function getIncompatibilities()
+    {
         return $this->moduleInfos->incompatibilities;
     }
 
-    public function isEnabled() {
+    public function isEnabled()
+    {
         return $this->moduleStatus->isEnabled;
     }
 
-    public function isInstalled() {
+    public function isInstalled()
+    {
         return $this->moduleStatus->isInstalled;
     }
 
-    public function isEnabledOnlyInLocalConfiguration() {
+    public function isEnabledOnlyInLocalConfiguration()
+    {
         return $this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL;
     }
 
-    public function getDbProfile() {
+    public function getDbProfile()
+    {
         return $this->moduleStatus->dbProfile;
     }
 
     /**
-     * @return bool
      * @throws Exception
+     *
+     * @return bool
      */
-    public function isUpgraded() {
+    public function isUpgraded()
+    {
         if (!$this->isInstalled()) {
             return false;
         }
         if ($this->moduleStatus->version == '') {
-            throw new Exception("installer.ini.missing.version", array($this->name));
+            throw new Exception('installer.ini.missing.version', array($this->name));
         }
+
         return VersionComparator::compareVersion($this->moduleInfos->version, $this->moduleStatus->version) == 0;
     }
 
-    public function getInstalledVersion() {
+    public function getInstalledVersion()
+    {
         return $this->moduleStatus->version;
     }
 
-    public function setInstalledVersion($version) {
+    public function setInstalledVersion($version)
+    {
         $this->moduleStatus->version = $version;
     }
 
     /**
-     * Set installation parameters into module infos
+     * Set installation parameters into module infos.
+     *
      * @param string[] $parameters
      */
-    public function setInstallParameters($parameters) {
+    public function setInstallParameters($parameters)
+    {
         $this->moduleStatus->parameters = $parameters;
     }
 
     /**
-     * save module infos into the app config or the local config
+     * save module infos into the app config or the local config.
      */
-    public function saveModuleStatus() {
-
+    public function saveModuleStatus()
+    {
         if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL ||
             $this->globalSetup->forLocalConfiguration()
         ) {
             $conf = $this->globalSetup->getSystemConfigIni(true);
             $conf['local'] = $this->globalSetup->getLocalConfigIni();
-        }
-        else {
+        } else {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
             $conf = $this->globalSetup->getSystemConfigIni();
         }
-        $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator?$this->moduleConfigurator->getDefaultParameters():array()));
+        $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array()));
     }
 
     /**
      * @return string[]
      */
-    public function getInstallParameters() {
+    public function getInstallParameters()
+    {
         return $this->moduleStatus->parameters;
     }
 
     /**
-     * Backup the uninstall.php outside the module
+     * Backup the uninstall.php outside the module.
      *
      * It allows to run the uninstall.php script of the module, even if the
      * module does not exist any more. This could be the case when the module is
@@ -215,7 +250,8 @@ class ModuleInstallerLauncher {
      *
      * @return bool true if there is a uninstall.php script
      */
-    public function backupUninstallScript() {
+    public function backupUninstallScript()
+    {
         $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleStatus->getName());
         \jFile::createDir($targetPath);
         copy($this->moduleStatus->getPath().'module.xml', $targetPath);
@@ -224,14 +260,19 @@ class ModuleInstallerLauncher {
 
         if (file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
             \jFile::createDir($targetPath.'/install');
-            copy($this->moduleStatus->getPath().'install/uninstall.php',
-                $targetPath.'/install');
+            copy(
+                $this->moduleStatus->getPath().'install/uninstall.php',
+                $targetPath.'/install'
+            );
+
             return true;
         }
+
         return false;
     }
 
-    public function hasUninstallScript() {
+    public function hasUninstallScript()
+    {
         return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
     }
 
@@ -239,18 +280,20 @@ class ModuleInstallerLauncher {
     const CONFIGURATOR_TO_UNCONFIGURE = 1;
 
     /**
-     * instancies the object which is responsible to configure the module
+     * instancies the object which is responsible to configure the module.
      *
-     * @param integer $actionMode  one of CONFIGURATOR_TO_* constants
-     * @param bool $forLocalConfiguration  true if the configuration should be done
-     *             with the local configuration, else it will be done with the
-     *             main configuration
-     * @return Module\Configurator|null the configurator, or null
-     *          if there isn't any configurator
+     * @param int  $actionMode            one of CONFIGURATOR_TO_* constants
+     * @param bool $forLocalConfiguration true if the configuration should be done
+     *                                    with the local configuration, else it will be done with the
+     *                                    main configuration
+     *
      * @throws Exception when configurator class not found
+     *
+     * @return null|Module\Configurator the configurator, or null
+     *                                  if there isn't any configurator
      */
-    function getConfigurator($actionMode, $forLocalConfiguration = null) {
-
+    public function getConfigurator($actionMode, $forLocalConfiguration = null)
+    {
         if (!$this->moduleStatus->isEnabled) {
             if ($forLocalConfiguration !== null) {
                 // if the module is configured for the first time, we take care
@@ -261,8 +304,7 @@ class ModuleInstallerLauncher {
                 // files only
                 if ($forLocalConfiguration) {
                     $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_LOCAL;
-                }
-                else {
+                } else {
                     $this->moduleStatus->configurationScope = ModuleStatus::CONFIG_SCOPE_APP;
                 }
             }
@@ -287,14 +329,15 @@ class ModuleInstallerLauncher {
                 $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleConfigurator = false;
+
                 return null;
             }
 
-            require_once($this->moduleStatus->getPath().'install/configure.php');
+            require_once $this->moduleStatus->getPath().'install/configure.php';
 
             $cname = $this->name.'ModuleConfigurator';
             if (!class_exists($cname)) {
-                throw new Exception("module.configurator.class.not.found", array($cname, $this->name));
+                throw new Exception('module.configurator.class.not.found', array($cname, $this->name));
             }
 
             $this->moduleConfigurator = new $cname(
@@ -304,17 +347,20 @@ class ModuleInstallerLauncher {
                 $this->moduleInfos->version
             );
         }
+
         return $this->moduleConfigurator;
     }
 
     /**
-     * instancies the object which is responsible to install the module
+     * instancies the object which is responsible to install the module.
      *
-     * @return Module\InstallerInterface|null the installer, or null
-     *          if there isn't any installer
      * @throws Exception when install class not found
+     *
+     * @return null|Module\InstallerInterface the installer, or null
+     *                                        if there isn't any installer
      */
-    function getInstaller() {
+    public function getInstaller()
+    {
 
         // false means that there isn't an installer for the module
         if ($this->moduleInstaller === false) {
@@ -326,21 +372,23 @@ class ModuleInstallerLauncher {
                 $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleInstaller = false;
+
                 return null;
             }
 
-            require_once($this->moduleStatus->getPath().'install/install.php');
+            require_once $this->moduleStatus->getPath().'install/install.php';
 
             $cname = $this->name.'ModuleInstaller';
             if (!class_exists($cname)) {
-                throw new Exception("module.installer.class.not.found", array($cname, $this->name));
+                throw new Exception('module.installer.class.not.found', array($cname, $this->name));
             }
 
-            $this->moduleInstaller = new $cname($this->name,
-                                                $this->name,
-                                                $this->moduleStatus->getPath(),
-                                                $this->moduleInfos->version,
-                                                true
+            $this->moduleInstaller = new $cname(
+                $this->name,
+                $this->name,
+                $this->moduleStatus->getPath(),
+                $this->moduleInfos->version,
+                true
                                                 );
         }
 
@@ -350,13 +398,15 @@ class ModuleInstallerLauncher {
     }
 
     /**
-     * instancies the object which is responsible to uninstall the module
+     * instancies the object which is responsible to uninstall the module.
      *
-     * @return Module\UninstallerInterface|null the uninstaller, or null
-     *          if there isn't any uninstaller
      * @throws Exception when install class not found
+     *
+     * @return null|Module\UninstallerInterface the uninstaller, or null
+     *                                          if there isn't any uninstaller
      */
-    function getUninstaller() {
+    public function getUninstaller()
+    {
 
         // false means that there isn't an installer for the module
         if ($this->moduleUninstaller === false) {
@@ -364,25 +414,27 @@ class ModuleInstallerLauncher {
         }
 
         if ($this->moduleUninstaller === null) {
-
             if ($this->moduleStatus->skipInstaller) {
                 $this->moduleUninstaller = false;
+
                 return null;
             }
 
             if (!file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
                 $this->moduleUninstaller = false;
+
                 return null;
             }
 
-            require_once($this->moduleStatus->getPath().'install/uninstall.php');
+            require_once $this->moduleStatus->getPath().'install/uninstall.php';
 
             $cname = $this->name.'ModuleUninstaller';
             if (!class_exists($cname)) {
-                throw new Exception("module.uninstaller.class.not.found", array($cname, $this->name));
+                throw new Exception('module.uninstaller.class.not.found', array($cname, $this->name));
             }
 
-            $this->moduleUninstaller = new $cname($this->name,
+            $this->moduleUninstaller = new $cname(
+                $this->name,
                 $this->name,
                 $this->moduleStatus->getPath(),
                 $this->moduleInfos->version,
@@ -391,9 +443,9 @@ class ModuleInstallerLauncher {
         }
 
         $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
+
         return $this->moduleUninstaller;
     }
-
 
     /**
      * return the list of objects which are responsible to upgrade the module
@@ -403,36 +455,36 @@ class ModuleInstallerLauncher {
      * dependencies. Needed modules should be
      * installed/upgraded before calling this method
      *
+     * @throws Exception if an error occurs during the install
+     *
      * @return Module\InstallerInterface[]
-     * @throws Exception  if an error occurs during the install.
      */
-    function getUpgraders() {
-
+    public function getUpgraders()
+    {
         if ($this->moduleMainUpgrader === null) {
             // script name for Jelix 1.6 in modules compatibles with both Jelix 1.7 and 1.6
-            if (file_exists($this->moduleStatus->getPath(). 'install/upgrade_1_6.php')) {
-                $file = $this->moduleStatus->getPath() . 'install/upgrade_1_6.php';
+            if (file_exists($this->moduleStatus->getPath().'install/upgrade_1_6.php')) {
+                $file = $this->moduleStatus->getPath().'install/upgrade_1_6.php';
             }
             // script name for modules compatible with Jelix <=1.6
-            else if (file_exists($this->moduleStatus->getPath() . 'install/upgrade.php')) {
-                $file = $this->moduleStatus->getPath(). 'install/upgrade.php';
-            }
-            else {
+            elseif (file_exists($this->moduleStatus->getPath().'install/upgrade.php')) {
+                $file = $this->moduleStatus->getPath().'install/upgrade.php';
+            } else {
                 $file = '';
             }
 
             if ($file == '' || $this->moduleStatus->skipInstaller) {
                 $this->moduleMainUpgrader = false;
-            }
-            else {
-                require_once($file);
+            } else {
+                require_once $file;
 
                 $cname = $this->name.'ModuleUpgrader';
                 if (!class_exists($cname)) {
-                    throw new Exception("module.upgrader.class.not.found", array($cname, $this->name));
+                    throw new Exception('module.upgrader.class.not.found', array($cname, $this->name));
                 }
 
-                $this->moduleMainUpgrader = new $cname($this->name,
+                $this->moduleMainUpgrader = new $cname(
+                    $this->name,
                     $this->name,
                     $this->moduleStatus->getPath(),
                     $this->moduleInfos->version,
@@ -445,23 +497,21 @@ class ModuleInstallerLauncher {
         }
 
         if ($this->moduleUpgraders === null) {
-
             $this->moduleUpgraders = array();
 
             $p = $this->moduleStatus->getPath().'install/';
-            if (!file_exists($p)  || $this->moduleStatus->skipInstaller) {
+            if (!file_exists($p) || $this->moduleStatus->skipInstaller) {
                 return array();
             }
 
             // we get the list of files for the upgrade
             $fileList = array();
             if ($handle = opendir($p)) {
-                while (false !== ($f = readdir($handle))) {
+                while (($f = readdir($handle)) !== false) {
                     if (!is_dir($p.$f)) {
                         if (preg_match('/^upgrade_to_([^_]+)_([^\.]+)\.php$/', $f, $m)) {
                             $fileList[] = array($f, $m[1], $m[2]);
-                        }
-                        else if (preg_match('/^upgrade_([^\.]+)\.php$/', $f, $m)){
+                        } elseif (preg_match('/^upgrade_([^\.]+)\.php$/', $f, $m)) {
                             $fileList[] = array($f, '', $m[1]);
                         }
                     }
@@ -470,44 +520,46 @@ class ModuleInstallerLauncher {
             }
 
             // now we order the list of file
-            foreach($fileList as $fileInfo) {
-                require_once($p.$fileInfo[0]);
+            foreach ($fileList as $fileInfo) {
+                require_once $p.$fileInfo[0];
                 $cname = $this->name.'ModuleUpgrader_'.$fileInfo[2];
-                if (!class_exists($cname))
-                    throw new Exception("module.upgrader.class.not.found",array($cname,$this->name));
+                if (!class_exists($cname)) {
+                    throw new Exception('module.upgrader.class.not.found', array($cname, $this->name));
+                }
 
-                $upgrader = new $cname($this->name,
-                                        $fileInfo[2],
-                                        $this->moduleStatus->getPath(),
-                                        $fileInfo[1],
-                                        false);
+                $upgrader = new $cname(
+                    $this->name,
+                    $fileInfo[2],
+                    $this->moduleStatus->getPath(),
+                    $fileInfo[1],
+                    false
+                );
 
                 if ($fileInfo[1] && count($upgrader->getTargetVersions()) == 0) {
                     $upgrader->setTargetVersions(array($fileInfo[1]));
                 }
                 if (count($upgrader->getTargetVersions()) == 0) {
-                    throw new Exception("module.upgrader.missing.version",array($fileInfo[0], $this->name));
+                    throw new Exception('module.upgrader.missing.version', array($fileInfo[0], $this->name));
                 }
                 $this->moduleUpgraders[] = $upgrader;
             }
         }
 
         if ((count($this->moduleUpgraders) || $this->moduleMainUpgrader) && $this->moduleStatus->version == '') {
-            throw new Exception("installer.ini.missing.version", array($this->name));
+            throw new Exception('installer.ini.missing.version', array($this->name));
         }
 
         $list = array();
 
-        foreach($this->moduleUpgraders as $upgrader) {
-
+        foreach ($this->moduleUpgraders as $upgrader) {
             $foundVersion = '';
             // check the version
-            foreach($upgrader->getTargetVersions() as $version) {
-                if (VersionComparator::compareVersion($this->moduleStatus->version, $version) >= 0 ) {
+            foreach ($upgrader->getTargetVersions() as $version) {
+                if (VersionComparator::compareVersion($this->moduleStatus->version, $version) >= 0) {
                     // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
                     continue;
                 }
-                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) < 0 ) {
+                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) < 0) {
                     // we don't execute upgraders having a version higher than the version indicated in the module.xml
                     continue;
                 }
@@ -515,8 +567,9 @@ class ModuleInstallerLauncher {
                 // when multiple version are specified, we take the first one which is ok
                 break;
             }
-            if (!$foundVersion)
+            if (!$foundVersion) {
                 continue;
+            }
 
             $upgrader->setVersion($foundVersion);
 
@@ -533,16 +586,18 @@ class ModuleInstallerLauncher {
                     ->getValue($this->name.'.firstversion.date', 'modules'));
 
                 if ($firstVersionDate !== null) {
-                    if ($firstVersionDate >= $upgraderDate)
+                    if ($firstVersionDate >= $upgraderDate) {
                         continue;
+                    }
                 }
 
                 // the date of the current installed version
                 $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()
                     ->getValue($this->name.'.version.date', 'modules'));
                 if ($currentVersionDate !== null) {
-                    if ($currentVersionDate >= $upgraderDate)
+                    if ($currentVersionDate >= $upgraderDate) {
                         continue;
+                    }
                 }
             }
 
@@ -557,106 +612,119 @@ class ModuleInstallerLauncher {
 
         // now let's sort upgrader, to execute them in the right order (oldest before newest)
         usort($list, function ($upgA, $upgB) {
-                return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
+            return VersionComparator::compareVersion($upgA->getVersion(), $upgB->getVersion());
         });
 
-        if ($this->moduleMainUpgrader && VersionComparator::compareVersion($this->moduleStatus->version, $this->moduleInfos->version) < 0 ) {
+        if ($this->moduleMainUpgrader && VersionComparator::compareVersion($this->moduleStatus->version, $this->moduleInfos->version) < 0) {
             $list[] = $this->moduleMainUpgrader;
         }
+
         return $list;
     }
 
-    public function installFinished() {
+    public function installFinished()
+    {
         // remove legacy contexts
         $this->globalSetup->removeInstallerContexts($this->name);
     }
 
-    public function upgradeFinished($upgrader) {
-
+    public function upgradeFinished($upgrader)
+    {
     }
 
-    public function uninstallFinished() {
+    public function uninstallFinished()
+    {
         $this->globalSetup->removeInstallerContexts($this->name);
     }
 
-    protected function _formatDate($date) {
+    protected function _formatDate($date)
+    {
         if ($date !== null) {
-            if (strlen($date) == 10)
-                $date.=' 00:00';
-            else if (strlen($date) > 16) {
+            if (strlen($date) == 10) {
+                $date .= ' 00:00';
+            } elseif (strlen($date) > 16) {
                 $date = substr($date, 0, 16);
             }
         }
+
         return $date;
     }
 
     /**
+     * @param mixed $forConfiguration
+     *
      * @return Item
      */
-    public function getResolverItem($forConfiguration=false) {
+    public function getResolverItem($forConfiguration = false)
+    {
         if ($forConfiguration) {
             $action = $this->getConfigureAction();
-        }
-        else {
+        } else {
             $action = $this->getInstallAction();
         }
         if ($action == Resolver::ACTION_UPGRADE) {
             $item = new Item($this->name, $this->moduleInfos->version, true);
             $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleStatus->version);
-        }
-        else {
+        } else {
             $item = new Item($this->name, $this->moduleInfos->version, $this->isInstalled());
             $item->setAction($action);
         }
 
-        foreach($this->moduleInfos->dependencies as $dep) {
+        foreach ($this->moduleInfos->dependencies as $dep) {
             if ($dep['type'] == 'choice') {
                 $list = array();
-                foreach($dep['choice'] as $choice) {
+                foreach ($dep['choice'] as $choice) {
                     $list[$choice['name']] = $choice['version'];
                 }
                 $item->addAlternativeDependencies($list);
-            }
-            else {
+            } else {
                 $item->addDependency($dep['name'], $dep['version']);
             }
         }
 
-        foreach($this->moduleInfos->incompatibilities as $dep) {
+        foreach ($this->moduleInfos->incompatibilities as $dep) {
             $item->addIncompatibility($dep['name'], $dep['version']);
         }
         $item->setProperty('component', $this);
+
         return $item;
     }
 
-    protected function getInstallAction() {
+    protected function getInstallAction()
+    {
         if ($this->isInstalled()) {
             if (!$this->isEnabled()) {
                 return Resolver::ACTION_REMOVE;
             }
-            elseif ($this->isUpgraded()) {
+            if ($this->isUpgraded()) {
                 return Resolver::ACTION_NONE;
             }
+
             return Resolver::ACTION_UPGRADE;
         }
-        elseif ($this->isEnabled()) {
+        if ($this->isEnabled()) {
             return Resolver::ACTION_INSTALL;
         }
+
         return Resolver::ACTION_NONE;
     }
 
-    protected function getConfigureAction() {
+    protected function getConfigureAction()
+    {
         return Resolver::ACTION_NONE;
     }
 
-    public function checkJelixVersion ($jelixVersion) {
+    public function checkJelixVersion($jelixVersion)
+    {
         return VersionComparator::compareVersionRange($jelixVersion, $this->jelixMinVersion.' - '.$this->jelixMaxVersion);
     }
 
-    public function checkVersion($min, $max) {
+    public function checkVersion($min, $max)
+    {
         if ($max == '*') {
             return VersionComparator::compareVersionRange($this->moduleInfos->version, '>='.$min);
         }
+
         return VersionComparator::compareVersionRange($this->moduleInfos->version, $min.' - '.$max);
     }
 }

@@ -1,23 +1,25 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Installer\Module;
 
-
 use Jelix\Installer\Module\API\ConfigurationHelpers;
-use Jelix\Installer\Module\API\PreConfigurationHelpers;
 use Jelix\Installer\Module\API\LocalConfigurationHelpers;
+use Jelix\Installer\Module\API\PreConfigurationHelpers;
 
 /**
- * Base class for classes which configure a module
+ * Base class for classes which configure a module.
+ *
  * @since 1.7
  */
-class Configurator implements ConfiguratorInterface {
-
+class Configurator implements ConfiguratorInterface
+{
     use InstallConfigTrait;
 
     /**
@@ -27,97 +29,98 @@ class Configurator implements ConfiguratorInterface {
 
     /**
      * @param string $componentName name of the component
-     * @param string $name name of the installer
-     * @param string $path the component path
-     * @param string $version version of the component
+     * @param string $name          name of the installer
+     * @param string $path          the component path
+     * @param string $version       version of the component
      */
-    function __construct ($componentName, $name, $path, $version) {
+    public function __construct($componentName, $name, $path, $version)
+    {
         $this->path = $path;
         $this->version = $version;
         $this->name = $name;
         $this->componentName = $componentName;
     }
 
-    final function getVersion() {
+    final public function getVersion()
+    {
         return $this->version;
     }
 
     // ----- ConfiguratorInterface implementation
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function getDefaultParameters() {
+    public function getDefaultParameters()
+    {
         return array();
     }
 
-
     /**
-     * List of files or directories to copy
+     * List of files or directories to copy.
      *
      * @return string[]
-     *          - keys are relative path to the install/ directory of the module
-     *          - values are target path. Shortcut allowed ('www:', 'config:', 'var:', 'temp:', 'log:')
+     *                  - keys are relative path to the install/ directory of the module
+     *                  - values are target path. Shortcut allowed ('www:', 'config:', 'var:', 'temp:', 'log:')
      */
-    public function getFilesToCopy() {
+    public function getFilesToCopy()
+    {
         return array();
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function preConfigure(PreConfigurationHelpers $helpers) {
-
+    public function preConfigure(PreConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function configure(ConfigurationHelpers $helpers) {
-
+    public function configure(ConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function localConfigure(LocalConfigurationHelpers $helpers) {
-
+    public function localConfigure(LocalConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function postConfigure(ConfigurationHelpers $helpers) {
-
-    }
-
-
-    /**
-     * @inheritdoc
-     */
-    public function preUnconfigure(PreConfigurationHelpers $helpers) {
-
+    public function postConfigure(ConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function unconfigure(ConfigurationHelpers $helpers) {
-
+    public function preUnconfigure(PreConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function localUnconfigure(LocalConfigurationHelpers $helpers) {
-
+    public function unconfigure(ConfigurationHelpers $helpers)
+    {
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function postUnconfigure(ConfigurationHelpers $helpers) {
-
+    public function localUnconfigure(LocalConfigurationHelpers $helpers)
+    {
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function postUnconfigure(ConfigurationHelpers $helpers)
+    {
+    }
 }

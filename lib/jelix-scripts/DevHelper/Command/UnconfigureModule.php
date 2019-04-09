@@ -1,18 +1,20 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2018 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+
 namespace Jelix\DevHelper\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
-
+class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
+{
     protected function configure()
     {
         $this
@@ -34,8 +36,11 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $module = $input->getArgument('module');
 
-        $reporter = new \Jelix\Installer\Reporter\Console($output,
-            ($this->verbose()?'notice':'error'), 'Unconfiguration');
+        $reporter = new \Jelix\Installer\Reporter\Console(
+            $output,
+            ($this->verbose() ? 'notice' : 'error'),
+            'Unconfiguration'
+        );
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);

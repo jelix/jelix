@@ -2,13 +2,15 @@
 /**
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
 namespace Jelix\Installer\Module;
 
 /**
- * Trait for installer/configurator classes
+ * Trait for installer/configurator classes.
  *
  * @since 1.7
  */
@@ -24,9 +26,9 @@ trait InstallConfigTrait
      */
     private $name;
 
-
     /**
-     * The path of the module
+     * The path of the module.
+     *
      * @var string
      */
     private $path;
@@ -34,40 +36,43 @@ trait InstallConfigTrait
     /**
      * parameters for the installer, indicated in the configuration file or
      * dynamically, by a launcher in a command line for instance.
+     *
      * @var array
      */
     protected $parameters = array();
 
-    final function getName() {
+    final public function getName()
+    {
         return $this->name;
     }
 
-    final function getPath() {
+    final public function getPath()
+    {
         return $this->path;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public final function setParameters($parameters) {
+    final public function setParameters($parameters)
+    {
         $this->parameters = $parameters;
     }
 
-
-    final function getParameter($name) {
-        if (isset($this->parameters[$name]))
+    final public function getParameter($name)
+    {
+        if (isset($this->parameters[$name])) {
             return $this->parameters[$name];
-        else
-            return null;
+        }
+
+        return null;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public final function getParameters() {
+    final public function getParameters()
+    {
         return $this->parameters;
     }
-
-
-
 }

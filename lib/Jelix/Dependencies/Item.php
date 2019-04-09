@@ -27,7 +27,7 @@ class Item
      * @param bool   $isInstalled
      * @param bool   $canBeInstalled indicate if the module can be installed automatically by the resolver
      */
-    public function __construct($name, $currentVersion, $isInstalled, $canBeInstalled=true)
+    public function __construct($name, $currentVersion, $isInstalled, $canBeInstalled = true)
     {
         $this->name = $name;
         $this->_isInstalled = $isInstalled;
@@ -63,9 +63,8 @@ class Item
     }
 
     /**
-     *
-     * @param int    $action         one of Resolver::ACTION_* const
-     * @param null   $nextVersion    if action is ACTION_UPGRADE
+     * @param int  $action      one of Resolver::ACTION_* const
+     * @param null $nextVersion if action is ACTION_UPGRADE
      */
     public function setAction($action, $nextVersion = null)
     {
@@ -94,6 +93,7 @@ class Item
         if (isset($this->properties[$name])) {
             return $this->properties[$name];
         }
+
         return null;
     }
 
@@ -108,31 +108,35 @@ class Item
     }
 
     /**
-     * @param array $choice  list of dependencies where one of them should be installed, not all
-     *   ex:
-     *   ```
-     *     [
-     *       // this dependency
-     *       '$name'=> '$version',
-     *       // or this dependency
-     *       '$name'=> '$version',
-     *       // or ...
-     *     ]
-     *   ```
+     * @param array $choice list of dependencies where one of them should be installed, not all
+     *                      ex:
+     *                      ```
+     *                      [
+     *                      // this dependency
+     *                      '$name'=> '$version',
+     *                      // or this dependency
+     *                      '$name'=> '$version',
+     *                      // or ...
+     *                      ]
+     *                      ```
      */
-    public function addAlternativeDependencies(array $choice) {
+    public function addAlternativeDependencies(array $choice)
+    {
         $this->alternativeDependencies[] = $choice;
     }
 
-    public function getAlternativeDependencies() {
+    public function getAlternativeDependencies()
+    {
         return $this->alternativeDependencies;
     }
 
-    public function addIncompatibility($name, $version = '*') {
+    public function addIncompatibility($name, $version = '*')
+    {
         $this->incompatibilities[$name] = $version;
     }
 
-    public function getIncompatibilities() {
+    public function getIncompatibilities()
+    {
         return $this->incompatibilities;
     }
 }

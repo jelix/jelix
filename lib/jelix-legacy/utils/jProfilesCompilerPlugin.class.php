@@ -4,7 +4,7 @@
  * @author      Laurent Jouanneau
  * @copyright   2015 Laurent Jouanneau
  *
- * @link        http://jelix.org
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -31,6 +31,7 @@ class jProfilesCompilerPlugin
 
     /**
      * @param array list of aliases  alias=>profile name
+     * @param mixed $aliases
      */
     public function setAliases($aliases)
     {
@@ -39,6 +40,7 @@ class jProfilesCompilerPlugin
 
     /**
      * @param array list of options that will be share by other profile of the category
+     * @param mixed $common
      */
     public function setCommon($common)
     {
@@ -47,6 +49,8 @@ class jProfilesCompilerPlugin
 
     /**
      * @param array list of options of a profile
+     * @param mixed $name
+     * @param mixed $profile
      */
     public function addProfile($name, $profile)
     {
@@ -55,6 +59,7 @@ class jProfilesCompilerPlugin
 
     /**
      * @param array the array in which analysed profiles should be stored
+     * @param mixed $profiles
      */
     public function getProfiles(&$profiles)
     {

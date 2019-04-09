@@ -1,90 +1,96 @@
 <?php
 /**
-* @author   Laurent Jouanneau
-* @copyright 2005-2014 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author   Laurent Jouanneau
+ * @copyright 2005-2014 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 namespace Jelix\Core;
 
 /**
- * static class which loads the configuration
+ * static class which loads the configuration.
+ *
  * @static
  */
-class Config {
-
+class Config
+{
     /**
      * indicate if the configuration was loading from the cache (true) or
-     * if the cache configuration was regenerated (false)
+     * if the cache configuration was regenerated (false).
      */
     public static $fromCache = true;
-
 
     const sectionsToIgnoreForEp = array(
         'httpVersion', 'timeZone', 'domainName', 'forceHTTPPort', 'forceHTTPSPort',
         'chmodFile', 'chmodDir', 'disableInstallers', 'enableAllModules',
-        'modules', '_coreResponses', 'compilation'
+        'modules', '_coreResponses', 'compilation',
     );
 
     /**
-     * this is a static class, so private constructor
+     * this is a static class, so private constructor.
      */
-    private function __construct (){ }
+    private function __construct()
+    {
+    }
 
     /**
      * load and read the configuration of the application
      * The combination of all configuration files (the given file
      * and the mainconfig.ini.php) is stored
      * in a single temporary file. So it calls the jConfigCompiler
-     * class if needed
+     * class if needed.
+     *
      * @param string $configFile the config file name
+     *
      * @return object it contains all configuration options
+     *
      * @see \Jelix\Core\Config\Compiler
      */
-    static public function load($configFile){
+    public static function load($configFile)
+    {
         $config = array();
-        $file = App::tempPath().str_replace('/','~',$configFile);
+        $file = App::tempPath().str_replace('/', '~', $configFile);
 
-        if (BYTECODE_CACHE_EXISTS)
+        if (BYTECODE_CACHE_EXISTS) {
             $file .= '.conf.php';
-        else
+        } else {
             $file .= '.resultini.php';
+        }
 
         self::$fromCache = true;
         if (!file_exists($file)) {
             // no cache, let's compile
             self::$fromCache = false;
-        }
-        else {
+        } else {
             $t = filemtime($file);
             $dc = App::mainConfigFile();
             $lc = App::varConfigPath('localconfig.ini.php');
             $lvc = App::varConfigPath('liveconfig.ini.php');
 
-            if ((file_exists($dc) && filemtime($dc)>$t)
-                || filemtime(App::appSystemPath($configFile))>$t
-                || (file_exists($lc) && filemtime($lc)>$t)
-                || (file_exists($lvc) && filemtime($lvc)>$t)
-            ){
+            if ((file_exists($dc) && filemtime($dc) > $t)
+                || filemtime(App::appSystemPath($configFile)) > $t
+                || (file_exists($lc) && filemtime($lc) > $t)
+                || (file_exists($lvc) && filemtime($lvc) > $t)
+            ) {
                 // one of the config files have been modified: let's compile
                 self::$fromCache = false;
-            }
-            else {
+            } else {
                 // let's read the cache file
                 if (BYTECODE_CACHE_EXISTS) {
-                    include($file);
+                    include $file;
                     $config = (object) $config;
-                }
-                else {
+                } else {
                     $config = \Jelix\IniFile\Util::read($file, true);
                 }
 
                 // we check all directories to see if it has been modified
                 if ($config->compilation['checkCacheFiletime']) {
                     foreach ($config->_allBasePath as $path) {
-                        if (!file_exists($path) || filemtime($path)>$t) {
+                        if (!file_exists($path) || filemtime($path) > $t) {
                             self::$fromCache = false;
+
                             break;
                         }
                     }
@@ -93,15 +99,15 @@ class Config {
         }
         if (!self::$fromCache) {
             $compiler = new Config\Compiler($configFile);
+
             return $compiler->readAndCache();
         }
-        else {
-            return $config;
-        }
+
+        return $config;
     }
 
-    static function getDefaultConfigFile() {
+    public static function getDefaultConfigFile()
+    {
         return __DIR__.'/Config/defaultconfig.ini.php';
     }
 }
-

@@ -1,20 +1,20 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2016 Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence     MIT
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2016 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     MIT
+ */
+
 namespace Jelix\DevHelper;
 
-use Jelix\Core\Infos\InfosAbstract;
+use Jelix\Core\App;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\OutputInterface;
-use Jelix\Core\App;
 
 abstract class AbstractCommandForApp extends AbstractCommand
 {
@@ -33,12 +33,12 @@ abstract class AbstractCommandForApp extends AbstractCommand
     /** @var array list of entry points id on which the command should apply */
     protected $selectedEntryPointsIdList = array();
 
-
     private $epOptionName = '';
 
     private $epListOptionName = '';
 
-    protected function addEpOption($name = 'entry-point', $shortName = 'e') {
+    protected function addEpOption($name = 'entry-point', $shortName = 'e')
+    {
         $this->epOptionName = $name;
         $this
             ->addOption(
@@ -50,7 +50,8 @@ abstract class AbstractCommandForApp extends AbstractCommand
         ;
     }
 
-    protected function addEpListOption($name = 'entry-points', $shortName = 'e') {
+    protected function addEpListOption($name = 'entry-points', $shortName = 'e')
+    {
         $this->epListOptionName = $name;
         $this
             ->addOption(
@@ -67,19 +68,19 @@ abstract class AbstractCommandForApp extends AbstractCommand
         parent::execute($input, $output);
         if ($this->epOptionName) {
             $this->selectedEntryPointId = $this->getSelectedEntryPoint($this->epOptionName, $input);
-        }
-        else if ($this->epListOptionName) {
+        } elseif ($this->epListOptionName) {
             $this->selectedEntryPointsIdList = $this->getSelectedEntryPoint($this->epListOptionName, $input, true);
             if (count($this->selectedEntryPointsIdList)) {
                 $this->selectedEntryPointId = $this->selectedEntryPointsIdList[0];
             }
         }
         $this->loadAppConfig($this->selectedEntryPointId);
+
         return $this->_execute($input, $output);
     }
 
     abstract protected function _execute(InputInterface $input, OutputInterface $output);
-    
+
     protected function getSelectedEntryPoint($optionName, InputInterface $input, $allowList = false)
     {
         // check entry point
@@ -89,32 +90,33 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
             if ($allowList) {
                 $list = preg_split('/\s*,\s*/', $ep);
+
                 return array_map(array($this, 'normalizeEp'), $list);
             }
+
             return $this->normalizeEp($ep);
         }
-        else if ($allowList) {
+        if ($allowList) {
             return array();
         }
-        else {
-            return 'index';
-        }
+
+        return 'index';
     }
 
     private function normalizeEp($ep)
     {
         if (($p = strpos($ep, '.php')) === false) {
             return $ep;
-        } else {
-            return  substr($ep, 0, $p);
         }
+
+        return  substr($ep, 0, $p);
     }
 
     protected function loadAppConfig($epId = 'index')
     {
         $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
         if (!$entrypoint) {
-            throw new \Exception($this->getName().": Entry point $epId is unknown");
+            throw new \Exception($this->getName().": Entry point ${epId} is unknown");
         }
 
         $configFile = $entrypoint->getConfigFile();
@@ -140,7 +142,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         }
 
         if (!isset($config->_modulesPathList[$module])) {
-            throw new \Exception($this->getName().": The module $module doesn't exist");
+            throw new \Exception($this->getName().": The module ${module} doesn't exist");
         }
 
         return $config->_modulesPathList[$module];
@@ -151,25 +153,30 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     private $frameworkInfos;
 
-    protected function getFrameworkInfos($reload = false) {
+    protected function getFrameworkInfos($reload = false)
+    {
         if (!$this->frameworkInfos || $reload) {
             $this->frameworkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         }
+
         return $this->frameworkInfos;
     }
 
     /**
      * @param string $name the entry point name
-     * @return \Jelix\Core\Infos\EntryPoint
+     *
      * @throws \Exception
+     *
+     * @return \Jelix\Core\Infos\EntryPoint
      */
     protected function getEntryPointInfo($name)
     {
         $ep = $this->getFrameworkInfos()->getEntryPointInfo($name);
 
         if (!$ep) {
-            throw new \Exception($this->getName().": The entry point $name doesn't exist");
+            throw new \Exception($this->getName().": The entry point ${name} doesn't exist");
         }
+
         return $ep;
     }
 
@@ -187,6 +194,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
             $dir = \Jelix\FileUtilities\Path::shortestPath(\Jelix\Core\App::appPath(), $dir);
             if ($dir == $path) {
                 $found = true;
+
                 break;
             }
         }
@@ -200,7 +208,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
                     throw new \Exception('composer.json has bad json format');
                 }
                 if (!property_exists($json, 'extra')) {
-                    $json->extra = (object) array( );
+                    $json->extra = (object) array();
                 }
                 if (!property_exists($json->extra, 'jelix')) {
                     $json->extra->jelix = (object) array('modules-dir' => array());
@@ -213,7 +221,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
                     $this->output->writeln('<notice>The given modules dir has been added into your composer.json.</notice>');
                 }
                 $this->output->writeln('<notice>You should launch \'composer update\' to have your module repository recognized.</notice>');
-           } elseif (file_exists(\Jelix\Core\App::appPath('application.init.php'))) {
+            } elseif (file_exists(\Jelix\Core\App::appPath('application.init.php'))) {
                 // we modify the application.init.php directly
                 $content = file_get_contents(\Jelix\Core\App::appPath('application.init.php'));
                 $content .= "\njApp::declareModulesDir(__DIR__.'/".$path."');\n";
@@ -225,9 +233,11 @@ abstract class AbstractCommandForApp extends AbstractCommand
         }
     }
 
-    protected function executeSubCommand($name, $arguments, $output) {
+    protected function executeSubCommand($name, $arguments, $output)
+    {
         $command = $this->getApplication()->find($name);
         $input = new ArrayInput($arguments);
+
         return $command->run($input, $output);
     }
 }

@@ -2,19 +2,21 @@
 /**
  * @package     jelix
  * @subpackage  jacl2
+ *
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-use \Jelix\Installer\Module\API\ConfigurationHelpers;
+use Jelix\Installer\Module\API\ConfigurationHelpers;
 
-class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
-
+class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
+{
     public function getDefaultParameters()
     {
         return array(
-            'eps'=>array()
+            'eps' => array(),
         );
     }
 
@@ -26,27 +28,26 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator {
             true,
             $this->parameters['eps']
         );
-        foreach($this->getParameter('eps') as $epId) {
+        foreach ($this->getParameter('eps') as $epId) {
             $this->configureEntryPoint($epId, $helpers);
         }
     }
 
-    protected function configureEntryPoint($epId, ConfigurationHelpers $helpers) {
+    protected function configureEntryPoint($epId, ConfigurationHelpers $helpers)
+    {
         $entryPoint = $helpers->getEntryPointsById($epId);
         /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
-        if (null == $conf->getValue('jacl2', 'coordplugins')) {
+        if ($conf->getValue('jacl2', 'coordplugins') == null) {
             $conf->setValue('jacl2', '1', 'coordplugins');
             if ($entryPoint->getType() != 'classic') {
                 $onerror = 1;
-            }
-            else {
+            } else {
                 $onerror = 2;
             }
             $conf->setValue('on_error', $onerror, 'coordplugin_jacl2');
-            $conf->setValue('error_message', "jacl2~errors.action.right.needed", 'coordplugin_jacl2');
-            $conf->setValue('on_error_action', "jelix~error:badright", 'coordplugin_jacl2');
+            $conf->setValue('error_message', 'jacl2~errors.action.right.needed', 'coordplugin_jacl2');
+            $conf->setValue('on_error_action', 'jelix~error:badright', 'coordplugin_jacl2');
         }
     }
-
 }

@@ -1,18 +1,20 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2011-2018 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2011-2018 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+
 namespace Jelix\JelixModule\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
-
+class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract
+{
     protected function configure()
     {
         $this
@@ -43,20 +45,20 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
         $paths[] = \Jelix\Core\App::varPath('mails');
         $paths[] = \Jelix\Core\App::varPath('db');
 
-        foreach($paths as $path) {
+        foreach ($paths as $path) {
             $this->setRights($path, $owner, $group);
         }
     }
 
-    protected function setRights($path, $owner, $group) {
-
+    protected function setRights($path, $owner, $group)
+    {
         if ($path == '' || $path == '/' || $path == DIRECTORY_SEPARATOR || !file_exists($path)) {
             return false;
         }
         $config = \jApp::config();
         if (is_file($path)) {
             if ($config->chmodFile) {
-                chmod($path, intval($config->chmodFile,8));
+                chmod($path, intval($config->chmodFile, 8));
             }
 
             if ($owner) {
@@ -75,7 +77,7 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
         }
 
         if ($config->chmodDir) {
-            chmod($path, intval($config->chmodDir,8));
+            chmod($path, intval($config->chmodDir, 8));
         }
 
         if ($owner) {
@@ -92,8 +94,8 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract {
                 $this->setRights($dirContent->getPathName(), $owner, $group);
             }
         }
-        unset($dir);
-        unset($dirContent);
+        unset($dir, $dirContent);
+
         return true;
     }
 }

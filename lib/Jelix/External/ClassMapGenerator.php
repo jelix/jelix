@@ -14,7 +14,7 @@
 namespace Jelix\External;
 
 /**
- * ClassMapGenerator
+ * ClassMapGenerator.
  *
  * @author Gyula Sallai <salla016@gmail.com>
  * @author Jordi Boggiano <j.boggiano@seld.be>
@@ -23,14 +23,14 @@ namespace Jelix\External;
 class ClassMapGenerator
 {
     /**
-     * Iterate over all files in the given directory searching for classes
+     * Iterate over all files in the given directory searching for classes.
      *
      * @param \Iterator|string $path      The path to search in or an iterator
-     * @param string          $whitelist Regex that matches against the file path
-     *
-     * @return array A class map array
+     * @param string           $whitelist Regex that matches against the file path
      *
      * @throws \RuntimeException When the path is neither an existing file nor directory
+     *
+     * @return array A class map array
      */
     public static function createMap($path, $whitelist = null)
     {
@@ -40,8 +40,8 @@ class ClassMapGenerator
             } elseif (is_dir($path)) {
                 $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
                 $path = array();
-                foreach($iterator as $k=>$item) {
-                    $ext = substr($item->getFilename(),-4);
+                foreach ($iterator as $k => $item) {
+                    $ext = substr($item->getFilename(), -4);
                     if ($ext == '.php' || $ext == '.inc') {
                         $path[] = $item;
                     }
@@ -69,7 +69,6 @@ class ClassMapGenerator
             $classes = self::findClasses($filePath);
 
             foreach ($classes as $class) {
-
                 if (!isset($map[$class])) {
                     $map[$class] = $filePath;
                 } elseif ($map[$class] !== $filePath && !preg_match('{/(test|fixture|example)s?/}i', strtr($map[$class].' '.$filePath, '\\', '/'))) {
@@ -86,11 +85,13 @@ class ClassMapGenerator
     }
 
     /**
-     * Extract the classes in the given file
+     * Extract the classes in the given file.
      *
-     * @param  string            $path The file to check
+     * @param string $path The file to check
+     *
      * @throws \RuntimeException
-     * @return array             The found classes
+     *
+     * @return array The found classes
      */
     private static function findClasses($path)
     {
@@ -122,7 +123,7 @@ class ClassMapGenerator
         $contents = preg_replace('{\?>.+<\?}s', '?><?', $contents);
         // strip trailing non-php code if needed
         $pos = strrpos($contents, '?>');
-        if (false !== $pos && false === strpos(substr($contents, $pos), '<?')) {
+        if ($pos !== false && strpos(substr($contents, $pos), '<?') === false) {
             $contents = substr($contents, 0, $pos);
         }
 
@@ -136,16 +137,16 @@ class ClassMapGenerator
         $classes = array();
         $namespace = '';
 
-        for ($i = 0, $len = count($matches['type']); $i < $len; $i++) {
+        for ($i = 0, $len = count($matches['type']); $i < $len; ++$i) {
             if (!empty($matches['ns'][$i])) {
-                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', $matches['nsname'][$i]) . '\\';
+                $namespace = str_replace(array(' ', "\t", "\r", "\n"), '', $matches['nsname'][$i]).'\\';
             } else {
                 $name = $matches['name'][$i];
                 if ($name[0] === ':') {
-                  // This is an XHP class, https://github.com/facebook/xhp
-                  $name = 'xhp'.substr(str_replace(array('-', ':'), array('_', '__'), $name), 1);
+                    // This is an XHP class, https://github.com/facebook/xhp
+                    $name = 'xhp'.substr(str_replace(array('-', ':'), array('_', '__'), $name), 1);
                 }
-                $classes[] = ltrim($namespace . $name, '\\');
+                $classes[] = ltrim($namespace.$name, '\\');
             }
         }
 

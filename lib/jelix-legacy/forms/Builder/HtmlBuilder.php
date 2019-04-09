@@ -1,25 +1,28 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin, Claudio Bernardes
-* @copyright   2006-2018 Laurent Jouanneau
-* @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package     jelix
+ * @subpackage  forms
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
+ *
+ * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 namespace jelix\forms\Builder;
 
-use \jelix\forms\HtmlWidget\ParentWidgetInterface;
-use \jelix\forms\HtmlWidget\WidgetInterface;
-use \jelix\forms\HtmlWidget\WidgetBase;
+use jelix\forms\HtmlWidget\ParentWidgetInterface;
+use jelix\forms\HtmlWidget\WidgetInterface;
 
 /**
- * Main HTML form builder
+ * Main HTML form builder.
  */
-class HtmlBuilder extends BuilderBase {
+class HtmlBuilder extends BuilderBase
+{
     protected $formType = 'html';
 
     protected $formConfig = 'jforms_builder_html';
@@ -67,7 +70,7 @@ class HtmlBuilder extends BuilderBase {
 
     /**
      * @var array list of attributes for each type of widgets. Keys are
-     *     widgets type.
+     *            widgets type.
      */
     protected $htmlWidgetsAttributes = array();
 
@@ -78,48 +81,53 @@ class HtmlBuilder extends BuilderBase {
 
     /**
      * HtmlBuilder constructor.
+     *
      * @param \jFormsBase $form
+     *
      * @throws \Exception
      */
-    public function __construct($form){
+    public function __construct($form)
+    {
         parent::__construct($form);
         $config = \jApp::config()->{$this->formConfig};
         if (isset($this->pluginsConf['root'])) { //first the builder conf
-           $pluginName = $this->pluginsConf['root'];
+            $pluginName = $this->pluginsConf['root'];
         } elseif (isset($config['root'])) { //then the ini conf
-           $pluginName = $config['root'];
+            $pluginName = $config['root'];
         } else { //finaly the control type
-           $pluginName = $this->formType;
+            $pluginName = $this->formType;
         }
-        $className = $pluginName . 'FormWidget';
+        $className = $pluginName.'FormWidget';
         $this->rootWidget = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className);
-        if (!$this->rootWidget)
+        if (!$this->rootWidget) {
             throw new \Exception('Unknown root widget plugin '.$pluginName);
+        }
     }
 
-
     /**
-     * set options
+     * set options.
+     *
      * @param array $options some parameters <ul>
-     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
-     *      <li>"method" => "post" or "get". default is "post"</li>
-     *      <li>"plugins" => list of class names for widget. keys are controls refs</li>
-     *      </ul>
+     *                       <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+     *                       <li>"method" => "post" or "get". default is "post"</li>
+     *                       <li>"plugins" => list of class names for widget. keys are controls refs</li>
+     *                       </ul>
      */
-    public function setOptions($options) {
+    public function setOptions($options)
+    {
         if (\jApp::config()->tplplugins['defaultJformsErrorDecorator']) {
             $errorDecorator = \jApp::config()->tplplugins['defaultJformsErrorDecorator'];
-        }
-        else {
+        } else {
             $errorDecorator = $this->jFormsJsVarName.'ErrorDecoratorHtml';
         }
         $this->options = array_merge(
             array(
-                'errorDecorator'=>$errorDecorator,
-                'method'=>'post'
+                'errorDecorator' => $errorDecorator,
+                'method' => 'post',
             ),
-            $options);
-         if (isset($this->options['plugins'])) {
+            $options
+        );
+        if (isset($this->options['plugins'])) {
             $this->pluginsConf = $this->options['plugins'];
             unset($this->options['plugins']);
         }
@@ -128,21 +136,26 @@ class HtmlBuilder extends BuilderBase {
     /**
      * @return string
      */
-    public function getjFormsJsVarName() {
+    public function getjFormsJsVarName()
+    {
         return $this->jFormsJsVarName;
     }
 
-    public function outputAllControls() {
-
+    public function outputAllControls()
+    {
         echo '<table class="jforms-table" border="0">';
-        foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl){
-            if($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') continue;
-            if(!$this->_form->isActivated($ctrlref)) continue;
-            if($ctrl->type == 'group') {
+        foreach ($this->_form->getRootControls() as $ctrlref => $ctrl) {
+            if ($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden') {
+                continue;
+            }
+            if (!$this->_form->isActivated($ctrlref)) {
+                continue;
+            }
+            if ($ctrl->type == 'group') {
                 echo '<tr><td colspan="2">';
                 $this->outputControl($ctrl);
                 echo '</td></tr>';
-            }else{
+            } else {
                 echo '<tr><th scope="row">';
                 $this->outputControlLabel($ctrl);
                 echo '</th><td>';
@@ -151,32 +164,39 @@ class HtmlBuilder extends BuilderBase {
             }
         }
         echo '</table> <div class="jforms-submit-buttons">';
-        if ( $ctrl = $this->_form->getReset() ) {
+        if ($ctrl = $this->_form->getReset()) {
             if ($this->_form->isActivated($ctrl->ref)) {
                 $this->outputControl($ctrl);
                 echo ' ';
             }
         }
-        foreach( $this->_form->getSubmits() as $ctrlref=>$ctrl){
-            if(!$this->_form->isActivated($ctrlref)) continue;
+        foreach ($this->_form->getSubmits() as $ctrlref => $ctrl) {
+            if (!$this->_form->isActivated($ctrlref)) {
+                continue;
+            }
             $this->outputControl($ctrl);
             echo ' ';
         }
         echo "</div>\n";
     }
 
-    public function outputMetaContent($t) {
-        $resp= \jApp::coord()->response;
-        if($resp === null || $resp->getType() !='html'){
+    public function outputMetaContent($t)
+    {
+        $resp = \jApp::coord()->response;
+        if ($resp === null || $resp->getType() != 'html') {
             return;
         }
 
         $resp->addAssets('jforms_html_light');
 
         //we loop on root control has they fill call the outputMetaContent recursively
-        foreach( $this->_form->getRootControls() as $ctrlref=>$ctrl) {
-            if($ctrl->type == 'hidden') continue;
-            if(!$this->_form->isActivated($ctrlref)) continue;
+        foreach ($this->_form->getRootControls() as $ctrlref => $ctrl) {
+            if ($ctrl->type == 'hidden') {
+                continue;
+            }
+            if (!$this->_form->isActivated($ctrlref)) {
+                continue;
+            }
 
             $widget = $this->getWidget($ctrl, $this->rootWidget);
             $widget->outputMetaContent($resp);
@@ -184,10 +204,10 @@ class HtmlBuilder extends BuilderBase {
     }
 
     /**
-     * output the header content of the form
+     * output the header content of the form.
      */
-    public function outputHeader(){
-
+    public function outputHeader()
+    {
         if (isset($this->options['attributes'])) {
             $attrs = array_merge($this->htmlFormAttributes, $this->options['attributes']);
         } else {
@@ -195,7 +215,7 @@ class HtmlBuilder extends BuilderBase {
         }
 
         echo '<form';
-        if (preg_match('#^https?://#',$this->_action)) {
+        if (preg_match('#^https?://#', $this->_action)) {
             $urlParams = $this->_actionParams;
             $attrs['action'] = $this->_action;
         } else {
@@ -206,8 +226,9 @@ class HtmlBuilder extends BuilderBase {
         $attrs['method'] = $this->options['method'];
         $attrs['id'] = $this->_name;
 
-        if($this->_form->hasUpload())
-            $attrs['enctype'] = "multipart/form-data";
+        if ($this->_form->hasUpload()) {
+            $attrs['enctype'] = 'multipart/form-data';
+        }
 
         $this->_outputAttr($attrs);
         echo '>';
@@ -216,39 +237,44 @@ class HtmlBuilder extends BuilderBase {
 
         $hiddens = '';
         foreach ($urlParams as $p_name => $p_value) {
-            $hiddens .= '<input type="hidden" name="'. $p_name .'" value="'. htmlspecialchars($p_value). '"'.$this->_endt. "\n";
+            $hiddens .= '<input type="hidden" name="'.$p_name.'" value="'.htmlspecialchars($p_value).'"'.$this->_endt."\n";
         }
 
         foreach ($this->_form->getHiddens() as $ctrl) {
-            if(!$this->_form->isActivated($ctrl->ref)) continue;
-            $hiddens .= '<input type="hidden" name="'. $ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'. htmlspecialchars($this->_form->getData($ctrl->ref)). '"'.$this->_endt. "\n";
+            if (!$this->_form->isActivated($ctrl->ref)) {
+                continue;
+            }
+            $hiddens .= '<input type="hidden" name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'.htmlspecialchars($this->_form->getData($ctrl->ref)).'"'.$this->_endt."\n";
         }
 
-        if($this->_form->securityLevel){
+        if ($this->_form->securityLevel) {
             $tok = $this->_form->createNewToken();
-            $hiddens .= '<input type="hidden" name="__JFORMS_TOKEN__" value="'.$tok.'"'.$this->_endt. "\n";
+            $hiddens .= '<input type="hidden" name="__JFORMS_TOKEN__" value="'.$tok.'"'.$this->_endt."\n";
         }
 
-        if($hiddens){
+        if ($hiddens) {
             echo '<div class="jforms-hiddens">',$hiddens,'</div>';
         }
         $this->outputErrors();
     }
 
-    protected function outputErrors() {
+    protected function outputErrors()
+    {
         $errors = $this->_form->getContainer()->errors;
-        if(count($errors)) {
+        if (count($errors)) {
             $ctrls = $this->_form->getControls();
-            echo '<ul id="' . $this->_name . '_errors" class="jforms-error-list">';
+            echo '<ul id="'.$this->_name.'_errors" class="jforms-error-list">';
             foreach ($errors as $cname => $err) {
-                if (!array_key_exists( $cname, $ctrls ) || !$this->_form->isActivated($ctrls[$cname]->ref)) continue;
+                if (!array_key_exists($cname, $ctrls) || !$this->_form->isActivated($ctrls[$cname]->ref)) {
+                    continue;
+                }
                 if ($err === \jForms::ERRDATA_REQUIRED) {
                     if ($ctrls[$cname]->alertRequired) {
                         echo '<li>', $ctrls[$cname]->alertRequired, '</li>';
                     } else {
                         echo '<li>', \jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label), '</li>';
                     }
-                } else if ($err === \jForms::ERRDATA_INVALID) {
+                } elseif ($err === \jForms::ERRDATA_INVALID) {
                     if ($ctrls[$cname]->alertInvalid) {
                         echo '<li>', $ctrls[$cname]->alertInvalid, '</li>';
                     } else {
@@ -268,7 +294,8 @@ class HtmlBuilder extends BuilderBase {
         }
     }
 
-    public function outputFooter(){
+    public function outputFooter()
+    {
         $this->rootWidget->outputFooter($this);
         echo '</form>';
     }
@@ -276,12 +303,15 @@ class HtmlBuilder extends BuilderBase {
     protected $widgets = array();
 
     /**
-     * @param \jFormsControl $ctrl
-     * @param ParentWidgetInterface|null $parentWidget
-     * @return WidgetInterface
+     * @param \jFormsControl             $ctrl
+     * @param null|ParentWidgetInterface $parentWidget
+     *
      * @throws \Exception
+     *
+     * @return WidgetInterface
      */
-    public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null) {
+    public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null)
+    {
         if (isset($this->widgets[$ctrl->ref])) {
             return $this->widgets[$ctrl->ref];
         }
@@ -296,20 +326,20 @@ class HtmlBuilder extends BuilderBase {
         // else check the ini conf
         elseif (isset($config[$ctrl->type])) {
             $pluginName = $config[$ctrl->type];
-        }
-        elseif (isset($this->defaultPluginsConf[$ctrl->type])) {
+        } elseif (isset($this->defaultPluginsConf[$ctrl->type])) {
             $pluginName = $this->defaultPluginsConf[$ctrl->type];
         }
         // else get the plugin name from the control
         else {
-            $pluginName = $ctrl->getWidgetType(). '_'. $this->formType;
+            $pluginName = $ctrl->getWidgetType().'_'.$this->formType;
         }
 
         // now we have its name, let's create the widget instance
-        $className = $pluginName . 'FormWidget';
+        $className = $pluginName.'FormWidget';
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
-        if (!$plugin)
+        if (!$plugin) {
             throw new \Exception('Widget '.$pluginName.' not found');
+        }
         $this->widgets[$ctrl->ref] = $plugin;
 
         if (isset($this->htmlWidgetsAttributes[$ctrl->getWidgetType()])) {
@@ -319,22 +349,31 @@ class HtmlBuilder extends BuilderBase {
         return $plugin;
     }
 
-    public function outputControlLabel($ctrl, $format='', $editMode=true){
-        if($ctrl->type == 'hidden' || $ctrl->type == 'button') return;
+    public function outputControlLabel($ctrl, $format = '', $editMode = true)
+    {
+        if ($ctrl->type == 'hidden' || $ctrl->type == 'button') {
+            return;
+        }
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->outputLabel($format, $editMode);
     }
 
-    public function outputControl($ctrl, $attributes=array()){
-        if($ctrl->type == 'hidden') return;
+    public function outputControl($ctrl, $attributes = array())
+    {
+        if ($ctrl->type == 'hidden') {
+            return;
+        }
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->setAttributes($attributes);
         $widget->outputControl();
         $widget->outputHelp();
     }
 
-    public function outputControlValue($ctrl, $attributes=array()){
-        if($ctrl->type == 'hidden') return;
+    public function outputControlValue($ctrl, $attributes = array())
+    {
+        if ($ctrl->type == 'hidden') {
+            return;
+        }
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         $widget->setAttributes($attributes);
         $widget->outputControlValue();
@@ -342,10 +381,13 @@ class HtmlBuilder extends BuilderBase {
 
     /**
      * @param \jFormsControl $ctrl
+     *
      * @throws \Exception
+     *
      * @since 1.6.17
      */
-    public function outputControlHelp($ctrl) {
+    public function outputControlHelp($ctrl)
+    {
         if (!$ctrl->help) {
             return;
         }
@@ -354,13 +396,15 @@ class HtmlBuilder extends BuilderBase {
         echo '<span class="jforms-help" id="'.$widget->getId().'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
     }
 
-    protected function _outputAttr(&$attributes) {
-        foreach($attributes as $name=>$val) {
+    protected function _outputAttr(&$attributes)
+    {
+        foreach ($attributes as $name => $val) {
             echo ' '.$name.'="'.htmlspecialchars($val).'"';
         }
     }
 
-    public function escJsStr($str) {
-        return '\''.str_replace(array("'","\n"),array("\\'", "\\n"), $str).'\'';
+    public function escJsStr($str)
+    {
+        return '\''.str_replace(array("'", "\n"), array("\\'", '\\n'), $str).'\'';
     }
 }

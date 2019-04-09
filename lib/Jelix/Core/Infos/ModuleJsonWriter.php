@@ -2,37 +2,42 @@
 /**
  * @author Laurent Jouanneau
  * @copyright 2018 Laurent Jouanneau
- * @link      http://jelix.org
+ *
+ * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 namespace Jelix\Core\Infos;
 
-class ModuleJsonWriter extends JsonWriterAbstract {
-
+class ModuleJsonWriter extends JsonWriterAbstract
+{
     /**
-     * @param array $json
+     * @param array         $json
      * @param InfosAbstract $infos
      */
-    protected function writeData(&$json, $infos) {
+    protected function writeData(&$json, $infos)
+    {
         $this->writeDependencies($json, $infos);
         $this->writeAutoload($json, $infos);
     }
 
     /**
-     * @param array $json
+     * @param array       $json
      * @param ModuleInfos $infos
      */
-    protected function writeDependencies(&$json, $infos) {
+    protected function writeDependencies(&$json, $infos)
+    {
         $dependencies = array();
         $dependenciesChoice = array();
 
-        foreach($infos->dependencies as $dep) {
+        foreach ($infos->dependencies as $dep) {
             if ($dep['type'] == 'choice') {
                 $elem = array();
-                foreach($dep['choice'] as $dep2) {
+                foreach ($dep['choice'] as $dep2) {
                     $elem[$dep2['name']] = $this->getVersion($dep2);
                 }
                 $dependenciesChoice[] = $elem;
+
                 continue;
             }
             $dependencies[$dep['name']] = $this->getVersion($dep);
@@ -45,7 +50,7 @@ class ModuleJsonWriter extends JsonWriterAbstract {
         }
         $conflicts = array();
         if (count($infos->incompatibilities)) {
-            foreach($infos->incompatibilities as $dep) {
+            foreach ($infos->incompatibilities as $dep) {
                 $conflicts[$dep['name']] = $this->getVersion($dep);
             }
         }
@@ -57,7 +62,8 @@ class ModuleJsonWriter extends JsonWriterAbstract {
     /**
      * @param array $moduleInfos
      */
-    protected function getVersion($moduleInfos) {
+    protected function getVersion($moduleInfos)
+    {
         if ($moduleInfos['version'] == '') {
             $version = '';
             if ($moduleInfos['minversion'] !== '' && $moduleInfos['minversion'] !== '0') {
@@ -65,42 +71,43 @@ class ModuleJsonWriter extends JsonWriterAbstract {
             }
             if ($moduleInfos['maxversion'] !== '' && $moduleInfos['maxversion'] !== '*') {
                 if ($version != '') {
-                    $version .= ",";
+                    $version .= ',';
                 }
                 $version .= '<='.$moduleInfos['maxversion'];
             }
+
             return $version;
         }
-        else {
-            return $moduleInfos['version'];
-        }
+
+        return $moduleInfos['version'];
     }
 
-    protected function writeAutoload(&$json, $infos) {
+    protected function writeAutoload(&$json, $infos)
+    {
         $autoload = array();
         if (count($infos->autoloaders)) {
             $autoload['autoloaders'] = $infos->autoloaders;
         }
         if (count($infos->autoloadIncludePath)) {
-            $autoload['include-path'] = array_map(function($d) {
+            $autoload['include-path'] = array_map(function ($d) {
                 if ($d[1] == '.php') {
                     return $d[0];
                 }
+
                 return $d;
             }, $infos->autoloadIncludePath);
         }
 
-
-        foreach($infos->autoloadClasses as $name => $file) {
+        foreach ($infos->autoloadClasses as $name => $file) {
             // not supported yet
         }
 
         if (count($infos->autoloadPsr0Namespaces)) {
             $json['autoload']['psr-0'] = array();
         }
-        foreach($infos->autoloadPsr0Namespaces as $ns => $directories) {
+        foreach ($infos->autoloadPsr0Namespaces as $ns => $directories) {
             $directoryPaths = array();
-            foreach($directories as $dirInfo) {
+            foreach ($directories as $dirInfo) {
                 if ($dirInfo[1] == '.php') {
                     $directoryPaths[] = $dirInfo[0];
                 }
@@ -115,15 +122,14 @@ class ModuleJsonWriter extends JsonWriterAbstract {
 
             if ($ns === 0) {
                 $json['autoload']['psr-0'][''] = $directoryPaths;
-            }
-            else {
+            } else {
                 $json['autoload']['psr-0'][$ns] = $directoryPaths;
             }
         }
 
-        foreach($infos->autoloadPsr4Namespaces as $ns => $directories) {
+        foreach ($infos->autoloadPsr4Namespaces as $ns => $directories) {
             $directoryPaths = array();
-            foreach($directories as $dirInfo) {
+            foreach ($directories as $dirInfo) {
                 if ($dirInfo[1] == '.php') {
                     $directoryPaths[] = $dirInfo[0];
                 }
@@ -138,8 +144,7 @@ class ModuleJsonWriter extends JsonWriterAbstract {
 
             if ($ns === 0) {
                 $json['autoload']['psr-4'][''] = $directoryPaths;
-            }
-            else {
+            } else {
                 $json['autoload']['psr-4'][$ns] = $directoryPaths;
             }
         }

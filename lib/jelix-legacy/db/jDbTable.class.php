@@ -1,19 +1,16 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db
-* @author     Laurent Jouanneau
-* @copyright  2010-2018 Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
-/**
- * 
+ * @package    jelix
+ * @subpackage db
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2010-2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-abstract class jDbTable {
-
+abstract class jDbTable
+{
     /**
      * @var string the name of the table
      */
@@ -23,58 +20,61 @@ abstract class jDbTable {
      * @var jDbSchema the schema which holds the table
      */
     protected $schema;
-  
+
     /**
      * @var jDbColumn[]. null means "columns are not loaded"
      */
-    protected $columns = null;
-    
+    protected $columns;
+
     /**
      * @var jDbPrimaryKey the primary key. null means "primary key is not loaded". false means : no primary key
      */
-    protected $primaryKey = null;
+    protected $primaryKey;
 
     /**
      * @var jDbUniqueKey[] list unique keys. null means "unique key are not loaded"
      */
-    protected $uniqueKeys = null;
+    protected $uniqueKeys;
 
     /**
      * @var jDbIndex[] list of indexes. null means "indexes are not loaded"
      */
-    protected $indexes = null;
+    protected $indexes;
 
     /**
      * @var jDbReference[] list of references. null means "references are not loaded"
      */
-    protected $references = null;
+    protected $references;
 
     /**
-     * @param string $name the table name
+     * @param string    $name   the table name
      * @param jDbSchema $schema
      */
-    function __construct($name, $schema) {
+    public function __construct($name, $schema)
+    {
         $this->name = $name;
         $this->schema = $schema;
     }
 
-
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
     /**
-     *
      * @return jDbColumn[]
      */
-    public function getColumns() {
+    public function getColumns()
+    {
         if ($this->columns === null) {
             $this->_loadTableDefinition();
         }
+
         return $this->columns;
     }
 
-    public function getColumn($name, $forChange = false) {
+    public function getColumn($name, $forChange = false)
+    {
         if ($this->columns === null) {
             $this->_loadTableDefinition();
         }
@@ -82,17 +82,20 @@ abstract class jDbTable {
             if ($forChange) {
                 return clone $this->columns[$name];
             }
+
             return $this->columns[$name];
         }
+
         return null;
     }
 
     /**
-     * add a column
-     * @return boolean  true if the column is added, false if not (already there)
+     * add a column.
+     *
+     * @return bool true if the column is added, false if not (already there)
      */
-    public function addColumn(jDbColumn $column) {
-
+    public function addColumn(jDbColumn $column)
+    {
         if ($this->columns === null) {
             $this->_loadTableDefinition();
         }
@@ -102,28 +105,34 @@ abstract class jDbTable {
             }
             $this->_alterColumn($this->columns[$column->name], $column);
             $this->columns[$column->name] = $column;
+
             return true;
         }
         $this->_addColumn($column);
         $this->columns[$column->name] = $column;
+
         return false;
     }
 
     /**
      * change a column definition. If the column does not exist,
      * it is created.
-     * @param jDbColumn $column  the colum with its new properties
-     * @param string $oldName  the name of the column to change (if the name is changed)
-     * @param boolean $doNotCreate true if the column shoul dnot be created when it does not exist
-     * @return boolean true if changed/created
+     *
+     * @param jDbColumn $column      the colum with its new properties
+     * @param string    $oldName     the name of the column to change (if the name is changed)
+     * @param bool      $doNotCreate true if the column shoul dnot be created when it does not exist
+     *
+     * @return bool true if changed/created
      */
-    public function alterColumn(jDbColumn $column, $oldName = '', $doNotCreate=false) {
-        $oldColumn = $this->getColumn(($oldName?:$column->name));
+    public function alterColumn(jDbColumn $column, $oldName = '', $doNotCreate = false)
+    {
+        $oldColumn = $this->getColumn(($oldName ?: $column->name));
         if (!$oldColumn) {
             if ($doNotCreate) {
                 return false;
             }
             $this->addColumn($column);
+
             return true;
         }
 
@@ -141,10 +150,12 @@ abstract class jDbTable {
             unset($this->columns[$oldName]);
         }
         $this->columns[$column->name] = $column;
+
         return true;
     }
 
-    public function dropColumn($name) {
+    public function dropColumn($name)
+    {
         if ($this->columns === null) {
             $this->_loadTableDefinition();
         }
@@ -158,29 +169,33 @@ abstract class jDbTable {
     }
 
     /**
-     *	@return jDbPrimaryKey|false  false if there is no primary key
+     *	@return false|jDbPrimaryKey  false if there is no primary key
      */
-    public function getPrimaryKey() {
-        if ($this->primaryKey === null)
+    public function getPrimaryKey()
+    {
+        if ($this->primaryKey === null) {
             $this->_loadTableDefinition();
+        }
+
         return $this->primaryKey;
     }
 
-    public function setPrimaryKey(jDbPrimaryKey $key) {
+    public function setPrimaryKey(jDbPrimaryKey $key)
+    {
         $pk = $this->getPrimaryKey();
         if ($pk == $key) {
             return;
         }
         if ($pk !== false) {
             $this->_replaceConstraint($pk, $key);
-        }
-        else {
+        } else {
             $this->_createConstraint($key);
         }
         $this->primaryKey = $key;
     }
 
-    public function dropPrimaryKey() {
+    public function dropPrimaryKey()
+    {
         $pk = $this->getPrimaryKey();
         if ($pk !== false) {
             $this->_dropConstraint($pk);
@@ -191,30 +206,41 @@ abstract class jDbTable {
     /**
      * @return jDbIndex[]
      */
-    public function getIndexes() {
-        if ($this->indexes === null)
+    public function getIndexes()
+    {
+        if ($this->indexes === null) {
             $this->_loadTableDefinition();
+        }
+
         return $this->indexes;
     }
 
     /**
-     * @return jDbIndex|null
+     * @param mixed $name
+     *
+     * @return null|jDbIndex
      */
-    public function getIndex($name) {
-        if ($this->indexes === null)
+    public function getIndex($name)
+    {
+        if ($this->indexes === null) {
             $this->_loadTableDefinition();
-        if (isset($this->indexes[$name]))
+        }
+        if (isset($this->indexes[$name])) {
             return $this->indexes[$name];
+        }
+
         return null;
     }
 
-    public function addIndex(jDbIndex $index) {
+    public function addIndex(jDbIndex $index)
+    {
         $this->alterIndex($index);
     }
 
-    public function alterIndex(jDbIndex $index) {
+    public function alterIndex(jDbIndex $index)
+    {
         if (trim($index->name) == '') {
-            throw new Exception("Index should have name");
+            throw new Exception('Index should have name');
         }
         $idx = $this->getIndex($index->name);
         if ($idx) {
@@ -223,8 +249,9 @@ abstract class jDbTable {
         $this->_createIndex($index);
         $this->indexes[$index->name] = $index;
     }
-    
-    public function dropIndex($indexName) {
+
+    public function dropIndex($indexName)
+    {
         $idx = $this->getIndex($indexName);
         if ($idx) {
             $this->_dropIndex($idx);
@@ -235,45 +262,54 @@ abstract class jDbTable {
     /**
      * @return jDbUniqueKey[]
      */
-    public function getUniqueKeys() {
-        if ($this->uniqueKeys === null)
+    public function getUniqueKeys()
+    {
+        if ($this->uniqueKeys === null) {
             $this->_loadTableDefinition();
+        }
+
         return $this->uniqueKeys;
     }
 
     /**
-     * @return jDbUniqueKey|null
+     * @param mixed $name
+     *
+     * @return null|jDbUniqueKey
      */
-    public function getUniqueKey($name) {
+    public function getUniqueKey($name)
+    {
         if ($this->uniqueKeys === null) {
             $this->_loadTableDefinition();
         }
         if (isset($this->uniqueKeys[$name])) {
             return $this->uniqueKeys[$name];
         }
+
         return null;
     }
 
-    public function addUniqueKey(jDbUniqueKey $key) {
+    public function addUniqueKey(jDbUniqueKey $key)
+    {
         if (trim($key->name) == '') {
             $key->name = $this->name.'_'.implode('_', $key->columns).'_unique';
         }
         $this->alterUniqueKey($key);
     }
 
-    public function alterUniqueKey(jDbUniqueKey $key) {
+    public function alterUniqueKey(jDbUniqueKey $key)
+    {
         $idx = $this->getUniqueKey($key->name);
         if ($idx) {
             $this->_replaceConstraint($idx, $key);
             unset($this->uniqueKeys[$idx->name]);
-        }
-        else {
+        } else {
             $this->_createConstraint($key);
         }
         $this->uniqueKeys[$key->name] = $key;
     }
 
-    public function dropUniqueKey($indexName) {
+    public function dropUniqueKey($indexName)
+    {
         $idx = $this->getUniqueKey($indexName);
         if ($idx) {
             $this->_dropConstraint($idx);
@@ -284,44 +320,55 @@ abstract class jDbTable {
     /**
      * @return jDbReference[]
      */
-    public function getReferences() {
-        if ($this->references === null)
+    public function getReferences()
+    {
+        if ($this->references === null) {
             $this->_loadTableDefinition();
+        }
+
         return $this->references;
     }
 
     /**
-     * @return jDbReference|null
+     * @param mixed $refName
+     *
+     * @return null|jDbReference
      */
-    public function getReference($refName) {
-        if ($this->references === null)
+    public function getReference($refName)
+    {
+        if ($this->references === null) {
             $this->_loadTableDefinition();
+        }
 
-        if (isset($this->references[$refName]))
+        if (isset($this->references[$refName])) {
             return $this->references[$refName];
+        }
+
         return null;
     }
 
-    public function addReference(jDbReference $reference) {
+    public function addReference(jDbReference $reference)
+    {
         if (trim($reference->name) == '') {
             $reference->name = $this->name.'_'.implode('_', $reference->columns).'_fkey';
         }
         $this->alterReference($reference);
     }
 
-    public function alterReference(jDbReference $reference) {
+    public function alterReference(jDbReference $reference)
+    {
         $ref = $this->getReference($reference->name);
         if ($ref) {
             $this->_replaceConstraint($ref, $reference);
             unset($this->references[$ref->name]);
-        }
-        else {
+        } else {
             $this->_createConstraint($reference);
         }
         $this->references[$reference->name] = $reference;
     }
 
-    public function dropReference($refName) {
+    public function dropReference($refName)
+    {
         $ref = $this->getReference($refName);
         if ($ref) {
             $this->_dropConstraint($ref);
@@ -329,7 +376,8 @@ abstract class jDbTable {
         }
     }
 
-    protected function _loadTableDefinition() {
+    protected function _loadTableDefinition()
+    {
         $this->_loadColumns();
         $this->_loadIndexesAndKeys();
         $this->_loadReferences();
@@ -341,7 +389,8 @@ abstract class jDbTable {
 
     abstract protected function _addColumn(jDbColumn $new);
 
-    protected function _dropColumn(jDbColumn $col) {
+    protected function _dropColumn(jDbColumn $col)
+    {
         $conn = $this->schema->getConn();
         $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
             ' DROP COLUMN '.$conn->encloseName($col->name);
@@ -360,10 +409,9 @@ abstract class jDbTable {
 
     abstract protected function _dropConstraint(jDbConstraint $constraint);
 
-    protected function _replaceConstraint(jDbConstraint $oldConstraint, jDbConstraint $newConstraint) {
+    protected function _replaceConstraint(jDbConstraint $oldConstraint, jDbConstraint $newConstraint)
+    {
         $this->_dropConstraint($oldConstraint);
         $this->_createConstraint($newConstraint);
     }
 }
-
-

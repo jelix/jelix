@@ -1,75 +1,76 @@
 <?php
 /**
-* @author     Laurent Jouanneau
-* @copyright  2011-2015 Laurent Jouanneau
-* @link       http://jelix.org
-* @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @author     Laurent Jouanneau
+ * @copyright  2011-2015 Laurent Jouanneau
+ *
+ * @see       http://jelix.org
+ * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 namespace Jelix\DevHelper;
 
 /**
- * configuration for commands
+ * configuration for commands.
  */
-class CommandConfig {
-
+class CommandConfig
+{
     /**
      * @var string the web site of the project or your company. value readed from jelix-app.json/project.xml
      */
-    public $infoWebsite='';
+    public $infoWebsite = '';
 
     /**
      * @var string the licence of generated files. value readed from jelix-app.json/project.xml
      */
-    public $infoLicence='All rights reserved';
+    public $infoLicence = 'All rights reserved';
 
     /**
      * @var string link to the licence. value readed from jelix-app.json/project.xml
      */
-    public $infoLicenceUrl='';
+    public $infoLicenceUrl = '';
 
     /**
      * @var string the creator's name inserted in new files headers
      */
-    public $infoCreatorName='_auto';
+    public $infoCreatorName = '_auto';
 
     /**
      * @var string the creator's mail inserted in new file headers
      */
-    public $infoCreatorMail='_auto';
+    public $infoCreatorMail = '_auto';
 
     /**
      * @var string copyright of new files. value readed from jelix-app.json/project.xml
      */
-    public $infoCopyright='_auto';
+    public $infoCopyright = '_auto';
 
     /**
      * @var string default timezone for new app
      */
-    public $infoTimezone='Europe/Paris';
+    public $infoTimezone = 'Europe/Paris';
 
     /**
      * @var string default locale for new app
      */
-    public $infoLocale='en_US';
+    public $infoLocale = 'en_US';
 
     /**
-     * @var boolean true = a chmod is done on new files and directories
+     * @var bool true = a chmod is done on new files and directories
      */
     public $doChmod = false;
 
     /**
-     * @var integer chmod value on new files
+     * @var int chmod value on new files
      */
     public $chmodFileValue = 0644;
 
     /**
-     * @var integer chmod value on new dir
+     * @var int chmod value on new dir
      */
     public $chmodDirValue = 0755;
 
     /**
-     * @var boolean true = a chown is done on new files and directories
+     * @var bool true = a chown is done on new files and directories
      */
     public $doChown = false;
 
@@ -89,12 +90,12 @@ class CommandConfig {
     public $helpLang = 'en';
 
     /**
-     * @var boolean true = debug mode
+     * @var bool true = debug mode
      */
     public $debugMode = false;
 
     /**
-     * @var boolean true = verbose mode, -v flag is implicit.
+     * @var bool true = verbose mode, -v flag is implicit
      */
     public $verboseMode = false;
 
@@ -120,38 +121,39 @@ class CommandConfig {
     /**
      * @var string the web site of the project or your company, used in a new project
      */
-    public $newAppInfoWebsite='';
+    public $newAppInfoWebsite = '';
 
     /**
      * @var string the licence of generated files, for a new project
      */
-    public $newAppInfoLicence='All rights reserved';
+    public $newAppInfoLicence = 'All rights reserved';
 
     /**
      * @var string link to the licence, for a new project
      */
-    public $newAppInfoLicenceUrl='';
+    public $newAppInfoLicenceUrl = '';
 
     /**
      * @var string copyright of new projects
      */
-    public $newAppInfoCopyright='_auto';
+    public $newAppInfoCopyright = '_auto';
 
     /**
      * @var string
      */
-    public $newAppInfoLocale='en_US';
+    public $newAppInfoLocale = 'en_US';
 
     /**
-     * name of the application. cannot be indicated into configuration files
+     * name of the application. cannot be indicated into configuration files.
      */
     public $appName = '';
 
-    function initAppPaths($applicationDir) {
+    public function initAppPaths($applicationDir)
+    {
         $applicationDir = rtrim($applicationDir, '/');
         $applicationDir = rtrim($applicationDir, '\\');
         $appname = basename($applicationDir);
-        $search = array( '%appdir%', '%appname%');
+        $search = array('%appdir%', '%appname%');
         $replace = array($applicationDir, $appname);
         \Jelix\Core\App::initPaths(
             $applicationDir.'/',
@@ -166,13 +168,16 @@ class CommandConfig {
 
     /**
      * fill some properties from informations stored into the project.xml or jelix-app.json file.
+     *
+     * @param mixed $projectFile
+     *
      * @return string the application name
      */
-    function loadFromProject($projectFile) {
-
+    public function loadFromProject($projectFile)
+    {
         $infos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
-        if (!$infos->exists()){
-            throw new Exception("cannot load jelix-app.json or project.xml");
+        if (!$infos->exists()) {
+            throw new Exception('cannot load jelix-app.json or project.xml');
         }
 
         $this->infoLicence = $infos->license;
@@ -180,48 +185,51 @@ class CommandConfig {
         $this->infoCopyright = $infos->copyright;
         $this->infoWebsite = $infos->homepageURL;
         $this->appName = $infos->name;
+
         return $infos->name;
     }
 
     /**
      * fill some properties from informations stored in an ini file.
+     *
      * @param string $iniFile the filename
      * @param string $appname the application name
      */
-    function loadFromIni($iniFile, $appname='') {
+    public function loadFromIni($iniFile, $appname = '')
+    {
         if (!file_exists($iniFile)) {
             return;
         }
         $ini = parse_ini_file($iniFile, true, INI_SCANNER_TYPED);
-        foreach ($ini as $key=>$value) {
-            if (!is_array($value) && isset($this->$key)) {
-                if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+        foreach ($ini as $key => $value) {
+            if (!is_array($value) && isset($this->{$key})) {
+                if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
                     $value = str_replace('%YEAR%', date('Y'), $value);
                 }
-                $this->$key = $value;
+                $this->{$key} = $value;
             }
         }
         if ($appname && isset($ini[$appname]) && is_array($ini[$appname])) {
-            foreach ($ini[$appname] as $key=>$value) {
-                if (isset($this->$key)) {
-                    if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright' ) {
+            foreach ($ini[$appname] as $key => $value) {
+                if (isset($this->{$key})) {
+                    if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
                         $value = str_replace('%YEAR%', date('Y'), $value);
                     }
-                    $this->$key = $value;
+                    $this->{$key} = $value;
                 }
             }
         }
     }
 
-    function generateUndefinedProperties($toCreateApp=false) {
+    public function generateUndefinedProperties($toCreateApp = false)
+    {
         if ($toCreateApp) {
             $domainname = $this->getDomainName($this->newAppInfoWebsite);
             if ($domainname == '') {
                 $domainname = $this->getDomainName($this->infoWebsite);
             }
             $this->infoWebsite = $this->newAppInfoWebsite;
-        }
-        else {
+        } else {
             $domainname = $this->getDomainName($this->infoWebsite);
         }
         if ($domainname == '') {
@@ -229,7 +237,7 @@ class CommandConfig {
         }
 
         if ($toCreateApp || $this->newAppInfoCopyright == '_auto') {
-            $this->newAppInfoCopyright = date('Y') . ' ' . $domainname;
+            $this->newAppInfoCopyright = date('Y').' '.$domainname;
         }
 
         if ($toCreateApp || $this->infoCopyright == '_auto') {
@@ -241,8 +249,7 @@ class CommandConfig {
         if ($this->infoCreatorMail == '_auto') {
             if ($domainname != $this->appName) {
                 $this->infoCreatorMail = 'contact@'.$domainname;
-            }
-            else {
+            } else {
                 $this->infoCreatorMail = '';
             }
         }
@@ -253,18 +260,20 @@ class CommandConfig {
         }
     }
 
-    protected function getDomainName($url) {
-        if (preg_match("/^(https?:\\/\\/)?(www\\.)?(.*)$/", $url, $m)) {
+    protected function getDomainName($url)
+    {
+        if (preg_match('/^(https?:\\/\\/)?(www\\.)?(.*)$/', $url, $m)) {
             list($domainname) = explode('/', $m[3]);
+
             return $domainname;
         }
-        else {
-            return '';
-        }
+
+        return '';
     }
 
-    public function copyAppInfo($onlyUndefined = true) {
-        if (! $onlyUndefined  || $this->infoCopyright == '_auto') {
+    public function copyAppInfo($onlyUndefined = true)
+    {
+        if (!$onlyUndefined || $this->infoCopyright == '_auto') {
             $this->infoCopyright = $this->newAppInfoCopyright;
         }
         $this->infoWebsite = $this->newAppInfoWebsite;

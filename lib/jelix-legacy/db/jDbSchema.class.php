@@ -1,49 +1,51 @@
 <?php
 /**
-* @package    jelix
-* @subpackage db
-* @author     Laurent Jouanneau
-* @contributor Aurélien Marcel
-* @copyright  2017-2018 Laurent Jouanneau, 2011 Aurélien Marcel
-*
-* @link        http://jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
-
-require_once(JELIX_LIB_PATH.'db/jDbTable.class.php');
-require_once(JELIX_LIB_PATH.'db/jDbColumn.class.php');
-
-/**
+ * @package    jelix
+ * @subpackage db
  *
+ * @author     Laurent Jouanneau
+ * @contributor Aurélien Marcel
+ *
+ * @copyright  2017-2018 Laurent Jouanneau, 2011 Aurélien Marcel
+ *
+ * @see        http://jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-abstract class jDbSchema {
+require_once JELIX_LIB_PATH.'db/jDbTable.class.php';
+require_once JELIX_LIB_PATH.'db/jDbColumn.class.php';
 
+abstract class jDbSchema
+{
     /**
      * @var jDbConnection
      */
     protected $conn;
 
-    function __construct(jDbConnection $conn) {
+    public function __construct(jDbConnection $conn)
+    {
         $this->conn = $conn;
     }
 
     /**
      * @return jDbConnection
      */
-    public function getConn() {
+    public function getConn()
+    {
         return $this->conn;
     }
 
     /**
-     * create the given table if it does not exist
+     * create the given table if it does not exist.
      *
-     * @param string $name the unprefixed table name
-     * @param jDbColumn[] $columns list of columns
+     * @param string          $name       the unprefixed table name
+     * @param jDbColumn[]     $columns    list of columns
      * @param string|string[] $primaryKey the name of the column which contains the primary key
-     * @param array $attributes  some table attributes specific to the database
+     * @param array           $attributes some table attributes specific to the database
+     *
      * @return jDbTable the object corresponding to the created table
      */
-    function createTable($name, $columns, $primaryKey, $attributes = array()) {
+    public function createTable($name, $columns, $primaryKey, $attributes = array())
+    {
         $prefixedName = $this->conn->prefixTable($name);
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
@@ -59,12 +61,14 @@ abstract class jDbSchema {
     }
 
     /**
-     * load informations of the given
+     * load informations of the given.
      *
      * @param string $name the unprefixed table name
+     *
      * @return jDbTable ready to make change
      */
-    function getTable($name) {
+    public function getTable($name)
+    {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
@@ -72,37 +76,39 @@ abstract class jDbSchema {
         if (isset($this->tables[$name])) {
             return $this->tables[$name];
         }
+
         return null;
     }
 
     /**
-     * @var null|jDbTable[]  key of the array are unprefixed name of tables
+     * @var null|jDbTable[] key of the array are unprefixed name of tables
      */
-    protected $tables = null;
+    protected $tables;
 
     /**
      * @return jDbTable[]
      */
-    public function getTables() {
+    public function getTables()
+    {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
+
         return $this->tables;
     }
 
-
     /**
-     * @param string|jDbTable $table the table object or the unprefixed table name
+     * @param jDbTable|string $table the table object or the unprefixed table name
      */
-    public function dropTable($table) {
+    public function dropTable($table)
+    {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
         if (is_string($table)) {
             $name = $this->conn->prefixTable($table);
             $unprefixedName = $table;
-        }
-        else {
+        } else {
             $name = $table->getName();
             $unprefixedName = $this->conn->unprefixTable($name);
         }
@@ -115,9 +121,11 @@ abstract class jDbSchema {
     /**
      * @param string $oldName Unprefixed name of the table to rename
      * @param string $newName The new unprefixed name of the table
-     * @return jDbTable|null
+     *
+     * @return null|jDbTable
      */
-    public function renameTable($oldName, $newName) {
+    public function renameTable($oldName, $newName)
+    {
         if ($this->tables === null) {
             $this->tables = $this->_getTables();
         }
@@ -130,26 +138,31 @@ abstract class jDbSchema {
             $newPrefixedName = $this->conn->prefixTable($newName);
             $this->_renameTable(
                 $this->conn->prefixTable($oldName),
-                $newPrefixedName);
+                $newPrefixedName
+            );
             unset($this->tables[$oldName]);
             $this->tables[$newName] = $this->_getTableInstance($newPrefixedName);
+
             return $this->tables[$newName];
         }
+
         return null;
     }
 
     /**
-     * create the given table into the database
-     * @param string $name the table name
-     * @param jDbColumn[] $columns
-     * @param string|array $primaryKey the name of the column which contains the primary key
-     * @param array $attributes
+     * create the given table into the database.
+     *
+     * @param string       $name       the table name
+     * @param jDbColumn[]  $columns
+     * @param array|string $primaryKey the name of the column which contains the primary key
+     * @param array        $attributes
+     *
      * @return jDbTable the object corresponding to the created table
      */
     abstract protected function _createTable($name, $columns, $primaryKey, $attributes = array());
 
-
-    protected function _createTableQuery($name, $columns, $primaryKey, $attributes = array()) {
+    protected function _createTableQuery($name, $columns, $primaryKey, $attributes = array())
+    {
         $cols = array();
 
         if (is_string($primaryKey)) {
@@ -170,16 +183,15 @@ abstract class jDbSchema {
 
         if (isset($attributes['temporary']) && $attributes['temporary']) {
             $sql = 'CREATE TEMPORARY TABLE ';
-        }
-        else {
+        } else {
             $sql = 'CREATE TABLE ';
         }
 
-        $sql .= $this->conn->encloseName($name).' ('.implode(", ",$cols);
+        $sql .= $this->conn->encloseName($name).' ('.implode(', ', $cols);
         if (count($primaryKey) > 1) {
             $pkName = $this->conn->encloseName($name.'_pkey');
             $pkEsc = array();
-            foreach($primaryKey as $k) {
+            foreach ($primaryKey as $k) {
                 $pkEsc[] = $this->conn->encloseName($k);
             }
             $sql .= ', CONSTRAINT '.$pkName.' PRIMARY KEY ('.implode(',', $pkEsc).')';
@@ -191,17 +203,19 @@ abstract class jDbSchema {
         }
 
         $sql .= ')';
+
         return $sql;
     }
 
     abstract protected function _getTables();
 
-
-    protected function _dropTable($name) {
+    protected function _dropTable($name)
+    {
         $this->conn->exec('DROP TABLE '.$this->conn->encloseName($name));
     }
 
-    protected function _renameTable($oldName, $newName) {
+    protected function _renameTable($oldName, $newName)
+    {
         $this->conn->exec('ALTER TABLE '.$this->conn->encloseName($oldName).
         ' RENAME TO '.$this->conn->encloseName($newName));
     }
@@ -212,31 +226,34 @@ abstract class jDbSchema {
 
     /**
      * return the SQL string corresponding to the given column.
-     * private method, should be used only by a jDbTable object
-     * @param jDbColumn $col  the column
+     * private method, should be used only by a jDbTable object.
+     *
+     * @param jDbColumn $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
+     *
      * @return string the sql string
-     * @access private
      */
-    function _prepareSqlColumn($col, $isPrimaryKey=false, $isSinglePrimaryKey=false) {
+    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    {
         $this->normalizeColumn($col);
         $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
         $ti = $this->conn->tools()->getTypeInfo($col->type);
         if ($col->precision) {
             $colstr .= '('.$col->precision;
-            if($col->scale) {
+            if ($col->scale) {
                 $colstr .= ','.$col->scale;
             }
             $colstr .= ')';
-        }
-        else if ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
+        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
             $colstr .= '('.$col->length.')';
         }
 
         if ($this->supportAutoIncrement && $col->autoIncrement) {
-            $colstr.= ' AUTO_INCREMENT ';
+            $colstr .= ' AUTO_INCREMENT ';
         }
 
-        $colstr.= ($col->notNull?' NOT NULL':'');
+        $colstr .= ($col->notNull ? ' NOT NULL' : '');
 
         if (!$col->autoIncrement && !$isPrimaryKey) {
             if ($col->hasDefault) {
@@ -245,22 +262,25 @@ abstract class jDbSchema {
                         $colstr .= ' DEFAULT NULL';
                     }
                 } else {
-                    $colstr .= ' DEFAULT ' . $this->conn->tools()->escapeValue($ti[1], $col->default, true);
+                    $colstr .= ' DEFAULT '.$this->conn->tools()->escapeValue($ti[1], $col->default, true);
                 }
             }
         }
         if ($isSinglePrimaryKey) {
             $colstr .= ' PRIMARY KEY ';
         }
+
         return $colstr;
     }
 
     /**
      * fill correctly some properties of the column, depending of its type
-     * and other properties
+     * and other properties.
+     *
      * @param jDbColumn $col
      */
-    function normalizeColumn($col) {
+    public function normalizeColumn($col)
+    {
         $type = $this->conn->tools()->getTypeInfo($col->type);
 
         $col->nativeType = $type[0];
@@ -270,6 +290,4 @@ abstract class jDbSchema {
             $col->notNull = true;
         }
     }
-
-
 }
