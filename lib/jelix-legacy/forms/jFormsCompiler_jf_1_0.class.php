@@ -92,10 +92,6 @@ class jFormsCompiler_jf_1_0
             unset($attributes['controlclass']);
         }
 
-        if (!class_exists($class, true)) {
-            throw new Exception('jForms: Unknown class \''.$class.'\' declared onto element \''.$controltype.'\' into file \''.$this->sourceFile.'\'');
-        }
-
         $method = 'generate'.$controltype;
         if (!method_exists($this, $method)) {
             throw new jException('jelix~formserr.unknown.tag', array($controltype, $this->sourceFile));
@@ -103,6 +99,10 @@ class jFormsCompiler_jf_1_0
 
         if (!isset($attributes['ref']) || $attributes['ref'] == '') {
             throw new jException('jelix~formserr.attribute.missing', array('ref', $controltype, $this->sourceFile));
+        }
+
+        if (!class_exists($class, true)) {
+            throw new jException('jelix~formserr.unknown.control.class', array($class, $controltype, $this->sourceFile));
         }
 
         // instancie the class

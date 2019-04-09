@@ -27,7 +27,7 @@ class WebAssetsCompiler
 
     /**
      * @param object $configuration
-     * @param mixed  $storeIntoConfiguration
+     * @param bool  $storeIntoConfiguration
      *
      * @return \StdClass data to use with WebAssetsSelector
      */

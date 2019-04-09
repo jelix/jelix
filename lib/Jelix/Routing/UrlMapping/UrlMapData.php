@@ -23,6 +23,9 @@ class UrlMapData
     public $isDefault = false;
     public $action = '';
     public $module = '';
+    /**
+     * @var bool|string[]
+     */
     public $actionOverride = false;
     public $requestType = '';
     public $statics = array();

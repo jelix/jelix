@@ -80,7 +80,7 @@ class AppInstance
         $logPath = null,
         $configPath = null,
         $scriptPath = null
-                                ) {
+    ) {
         $this->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
         $this->router = null;
         $this->config = null;
@@ -94,7 +94,7 @@ class AppInstance
         $logPath = null,
         $configPath = null,
         $scriptPath = null
-                             ) {
+    ) {
         $this->appPath = $appPath;
         $this->wwwPath = (is_null($wwwPath) ? $appPath.'www/' : $wwwPath);
         $this->varPath = (is_null($varPath) ? $appPath.'var/' : $varPath);

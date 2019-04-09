@@ -8,6 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use \Jelix\Installer\Migrator\UrlEngineUpgrader;
 require(LIB_PATH.'/jelix-legacy/core-modules/jelix/install/UrlEngineUpgrader.php');
 
 class urlUpgradeTest extends jUnitTestCase {

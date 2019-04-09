@@ -55,7 +55,7 @@ class App
         $logPath = null,
         $configPath = null,
         $scriptPath = null
-                                     ) {
+    ) {
         if (self::$_currentApp) {
             self::$_currentApp->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
         } else {
