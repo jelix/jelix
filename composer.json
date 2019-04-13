@@ -30,13 +30,11 @@
         "jelix/file-utilities": "^1.8.3",
         "jelix/version": "1.0.*",
         "defuse/php-encryption": "^2.2.1",
+        "paragonie/random_compat": "<9.99",
         "google/recaptcha": "^1.1.3"
     },
     "archive": {
         "exclude": [ "/build", "/temp", "/testapp", "Makefile"]
-    },
-    "replace": {
-        "paragonie/random_compat": ">=1 <9.99"
     },
     "autoload": {
         "psr-0": {
