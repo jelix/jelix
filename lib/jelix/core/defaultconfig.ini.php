@@ -481,7 +481,7 @@ cache_path=
 jelix.cache="cache/"
 
 [langToLocale]
-; overrides of lang_to_locale.ini.php
+; overrides of lang_to_locale.ini.php. set properties as : locale[XX]=YY
 
 [disabledListeners]
 ; list of jEvent listener to not call

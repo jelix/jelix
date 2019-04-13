@@ -255,7 +255,7 @@ class jLocale
     /**
      * returns the locale corresponding to a lang.
      *
-     * The file lang_to_locale give corresponding locale, but you can override these
+     * The file lang_to_locale gives corresponding locales, but you can override these
      * association into the langToLocale section of the main configuration
      *
      * @param string $lang a lang code (xx)
@@ -265,11 +265,12 @@ class jLocale
     public static function langToLocale($lang)
     {
         $conf = jApp::config();
-        if (isset($conf->langToLocale[$lang])) {
-            return $conf->langToLocale[$lang];
+        if (isset($conf->langToLocale['locale'][$lang])) {
+            return $conf->langToLocale['locale'][$lang];
         }
         if (is_null(self::$langToLocale)) {
-            self::$langToLocale = @parse_ini_file(JELIX_LIB_CORE_PATH.'lang_to_locale.ini.php');
+            $content = @parse_ini_file(JELIX_LIB_CORE_PATH.'lang_to_locale.ini.php');
+            self::$langToLocale = $content['locale'];
         }
         if (isset(self::$langToLocale[$lang])) {
             return self::$langToLocale[$lang];

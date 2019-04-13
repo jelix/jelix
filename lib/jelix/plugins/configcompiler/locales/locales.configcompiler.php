@@ -31,8 +31,8 @@ class localesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInt
         $availableLocales = explode(',', $config->availableLocales);
         foreach ($availableLocales as $locale) {
             if (preg_match('/^([a-z]{2,3})_([A-Z]{2,3})$/', $locale, $m)) {
-                if (!isset($config->langToLocale[$m[1]])) {
-                    $config->langToLocale[$m[1]] = $locale;
+                if (!isset($config->langToLocale['locale'][$m[1]])) {
+                    $config->langToLocale['locale'][$m[1]] = $locale;
                 }
             } else {
                 throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '${locale}' is not a locale code");
@@ -41,7 +41,7 @@ class localesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInt
 
         $locale = $config->locale;
         if (preg_match('/^([a-z]{2,3})_([A-Z]{2,3})$/', $locale, $m)) {
-            $config->langToLocale[$m[1]] = $locale;
+            $config->langToLocale['locale'][$m[1]] = $locale;
         } else {
             throw new Exception("Error in the main configuration. Bad locale code in default locale -- config->locale: '${locale}' is not a locale code");
         }
