@@ -154,6 +154,7 @@ abstract class AbstractCommand extends Command
      */
     protected function createDir($dirname)
     {
+        $dirname = \Jelix\FileUtilities\Path::normalizePath($dirname);
         if ($dirname == '' || $dirname == '/') {
             return;
         }
