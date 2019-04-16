@@ -9,8 +9,6 @@ cd lib
   composer.json
 
 cd lib/jelix
-  CHANGELOG
-  CREDITS
   init.php
   checker.php
   INSTALL
