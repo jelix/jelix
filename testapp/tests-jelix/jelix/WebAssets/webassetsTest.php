@@ -128,6 +128,7 @@ b.require = a
 
 a.js = "a.js|defer"
 a.css = "a.css|media=screen"
+a2.js = "mymodule.js|type=module"
 a2.css = "a2.css|media=screen and (max-width: 600px)|rel=stylesheet"
 
 c.js = c.js
@@ -144,7 +145,7 @@ c.include = b
                       'webassets_a.js' => array('k>a.js>defer'),
                       'webassets_a.css' => array('k>a.css>media=screen'),
                       'webassets_a2.deps' => array(),
-                      'webassets_a2.js' => array(),
+                      'webassets_a2.js' => array('k>mymodule.js>type=module'),
                       'webassets_a2.css' => array('k>a2.css>media=screen and (max-width: 600px)|rel=stylesheet'),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
@@ -306,7 +307,7 @@ r.js = r.js
             ),
             array(
                 array('a'),
-                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', []],
+                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', ["type"=>"module"]],
                     ['/srv/a.js', []], ['/srv/g.js', []], ['/srv/e.js', []], ['/srv/r.fr_FR.js', []]),
                 array(['/srv/b.css', []]),
             ),
@@ -317,7 +318,7 @@ r.js = r.js
             ),
             array(
                 array('c'),
-                array(['/srv/k.fr.js', []], ['/srv/c.js', []], ['/srv/r.fr_FR.js', []]),
+                array(['/srv/k.fr.js', []], ['/srv/c.js', ["type"=>"module"]], ['/srv/r.fr_FR.js', []]),
                 array(),
             ),
             array(
@@ -332,7 +333,7 @@ r.js = r.js
             ),
             array(
                 array('f'),
-                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', []],
+                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', ["type"=>"module"]],
                     ['/srv/a.js', []], ['/srv/g.js', []], ['/srv/e.js', []],
                     ['/srv/f.js', []], ['/srv/jelix/f2.js', []], ['/srv/r.fr_FR.js', []]),
                 array(['/srv/b.css', []], ['/srv/f.css', []], ['/srv/themes/sun/f2.css', []]),
@@ -354,13 +355,13 @@ r.js = r.js
             ),
             array(
                 array('a', 'e'),
-                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', []],
+                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', ["type"=>"module"]],
                     ['/srv/a.js', []], ['/srv/g.js', []], ['/srv/e.js', []], ['/srv/r.fr_FR.js', []]),
                 array(['/srv/b.css', []]),
             ),
             array(
                 array('a', 'f'),
-                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', []],
+                array(['/srv/b.js', []], ['/srv/k.fr.js', []], ['/srv/c.js', ["type"=>"module"]],
                     ['/srv/a.js', []], ['/srv/g.js', []], ['/srv/e.js', []], ['/srv/f.js', []],
                     ['/srv/jelix/f2.js', []], ['/srv/r.fr_FR.js', []]),
                 array(['/srv/b.css', []], ['/srv/f.css', []], ['/srv/themes/sun/f2.css', []]),
@@ -395,7 +396,7 @@ a.include = e
 b.js = b.js
 b.css = b.css
 
-c.js = c.js
+c.js = "c.js|type=module"
 c.require = k
 c.include = r
 

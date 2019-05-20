@@ -687,8 +687,10 @@ class jResponseHtml extends jResponseBasicHtml
                 $params .= $param_name . '="' . htmlspecialchars($param_value) . '" ';
             }
         }
-
-        echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
+        if (!isset($scriptParams['type'])) {
+            $params = 'type="text/javascript" '.$params;
+        }
+        echo '<script src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
     }
 
     protected function outputCssLinkTag($fileUrl, $cssParams)
