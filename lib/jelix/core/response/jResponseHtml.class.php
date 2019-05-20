@@ -678,7 +678,14 @@ class jResponseHtml extends jResponseBasicHtml
             if ($param_name == '_ieCondition') {
                 continue;
             }
-            $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
+            if (is_bool($param_value)) {
+                if ($param_value === true) {
+                    $params .= $param_name.' ';
+                }
+            }
+            else {
+                $params .= $param_name . '="' . htmlspecialchars($param_value) . '" ';
+            }
         }
 
         echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
@@ -691,7 +698,14 @@ class jResponseHtml extends jResponseBasicHtml
             if ($param_name == '_ieCondition') {
                 continue;
             }
-            $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
+            if (is_bool($param_value)) {
+                if ($param_value === true) {
+                    $params .= $param_name.' ';
+                }
+            }
+            else {
+                $params .= $param_name . '="' . htmlspecialchars($param_value) . '" ';
+            }
         }
 
         if (!isset($cssParams['rel'])) {
@@ -765,9 +779,9 @@ class jResponseHtml extends jResponseBasicHtml
 
         // css link
         foreach ($this->webAssetsSelection->getCssLinks() as $src) {
-            $this->outputCssLinkTag($src, array());
-            if (isset($this->_CSSLink[$src])) {
-                unset($this->_CSSLink[$src]);
+            $this->outputCssLinkTag($src[0], $src[1]);
+            if (isset($this->_CSSLink[$src[0]])) {
+                unset($this->_CSSLink[$src[0]]);
             }
         }
         foreach ($this->_CSSLink as $src => $params) {
@@ -812,10 +826,10 @@ class jResponseHtml extends jResponseBasicHtml
         }
 
         // js link
-        foreach ($this->webAssetsSelection->getJsLinks() as $src) {
-            $this->outputJsScriptTag($src, array());
-            if (isset($this->_JSLink[$src])) {
-                unset($this->_JSLink[$src]);
+        foreach ($this->webAssetsSelection->getJsLinks() as $jsUrl) {
+            $this->outputJsScriptTag($jsUrl[0], $jsUrl[1]);
+            if (isset($this->_JSLink[$jsUrl[0]])) {
+                unset($this->_JSLink[$jsUrl[0]]);
             }
         }
         foreach ($this->_JSLink as $src => $params) {

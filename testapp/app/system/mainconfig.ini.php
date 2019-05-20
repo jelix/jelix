@@ -122,3 +122,9 @@ localapp="http://testapp17.local"
 
 [session]
 storage=
+
+
+[webassets_common]
+jforms_html.js[]= "$jelix/js/jforms_jquery.js"
+jforms_html.css= "$jelix/design/jform.css"
+jforms_html.require = jquery

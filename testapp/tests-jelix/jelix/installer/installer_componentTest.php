@@ -493,7 +493,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'testinstall3.enabled'=>true,
                 'testinstall3.dbprofile'=>'default',
                 'testinstall3.installed'=>false,
-                'testinstall3.version'=>"1.7.0-beta.5",
+                'testinstall3.version'=>"1.7.0",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
                 jApp::appPath().'modules/testinstall3/', $conf->modules);

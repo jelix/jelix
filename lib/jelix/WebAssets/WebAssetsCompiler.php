@@ -60,9 +60,6 @@ class WebAssetsCompiler
         }
         foreach ($this->collections as $name => $collection) {
             $collectionName = 'compiled_webassets_'.$name;
-            $compilation->{$collectionName} = array(
-                'dependencies_order' => array(),
-            );
 
             $order = $this->getDependenciesOrder($collection);
             $compilation->{$collectionName} = array(
@@ -167,31 +164,39 @@ class WebAssetsCompiler
 
     protected function parseAsset($asset)
     {
+        if (strpos($asset, '|') !== false) {
+            list ($asset, $attributes) = explode('|', $asset, 2);
+            $attributes = '>'.$attributes;
+        }
+        else {
+            $attributes= '>';
+        }
+
         if (strpos($asset, '$jelix') !== false) {
             $asset = str_replace('$jelix', rtrim($this->config->urlengine['jelixWWWPath'], '/'), $asset);
         }
         if ($asset[0] == '/' || preg_match('!^https?://!', $asset)) {
             if (strpos($asset, '$lang') !== false || strpos($asset, '$locale') !== false) {
-                return 'l>'.$asset;
+                return 'l>'.$asset.$attributes;
             }
 
-            return 'u>'.$asset;
+            return 'u>'.$asset.$attributes;
         }
         if (preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_:]+)(?:@([a-zA-Z0-9_]+))?$/', $asset)) {
-            return 'a>'.$asset;
+            return 'a>'.$asset.$attributes;
         }
         if (preg_match('/^([a-zA-Z0-9_\\.]+):/', $asset)) {
-            return 'm>'.$asset;
+            return 'm>'.$asset.$attributes;
         }
         if (strpos($asset, '$theme') === 0) {
-            return 't>'.$asset;
+            return 't>'.$asset.$attributes;
         }
 
         if (strpos($asset, '$lang') === false && strpos($asset, '$locale') === false) {
-            return 'k>'.$asset;
+            return 'k>'.$asset.$attributes;
         }
 
-        return 'b>'.$asset;
+        return 'b>'.$asset.$attributes;
     }
 
     protected function getDependenciesOrder($collection)
