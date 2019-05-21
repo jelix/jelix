@@ -530,7 +530,7 @@ class Router
         // the config compiler has removed all deactivated plugins
         // so we don't have to check if the value $conf is empty or not
         $conf = $config->coordplugins[$pluginName];
-        if ($conf !== 1 && $conf !== true) {
+        if ($conf !== 1 && $conf !== true && !is_numeric($conf)) {
             // the path to the coordplugin conf has already been processed
             // by the config compiler, and is now a relative path to the app
             $pluginConfFile = App::appPath($conf);
