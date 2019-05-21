@@ -51,6 +51,54 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
     }
 
+    public function testUpgrade() {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.0", true);
+        $packC->setAction(Resolver::ACTION_UPGRADE, "1.1");
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+
+        $this->assertEquals(3, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testA', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+        $this->assertEquals('testC', $chain[2]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[2]->getAction());
+    }
+
+    public function testUpgradeWithLowerVersion() {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '1.0.*');
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packC = new Item('testC', "1.1", true);
+        $packC->setAction(Resolver::ACTION_UPGRADE, "1.0");
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForInstallation();
+
+        $this->assertEquals(3, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testA', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+        $this->assertEquals('testC', $chain[2]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[2]->getAction());
+    }
+
     /**
      * @expectedException \Jelix\Dependencies\ItemException
      * @expectedExceptionCode 11

@@ -13,6 +13,10 @@ use Jelix\IniFile\IniModifierInterface;
 
 /**
  * container for module properties, according to a specific entry point configuration.
+ *
+ * It represents the state of the module, as known by the application:
+ * installation status, the module version known during the last installer launch
+ * etc.
  */
 class ModuleStatus
 {

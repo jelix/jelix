@@ -146,9 +146,13 @@ class Installer
         }
 
         $modulesChains = $this->resolveDependencies($resolver);
-
-        $result = $this->_installModules($modulesChains);
-        $this->globalSetup->getInstallerIni()->save();
+        if ($modulesChains) {
+            $result = $this->_installModules($modulesChains);
+            $this->globalSetup->getInstallerIni()->save();
+        }
+        else {
+            $result = false;
+        }
         $this->endMessage();
 
         return $result;
