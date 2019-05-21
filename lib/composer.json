@@ -34,7 +34,7 @@
     "replace": {
         "jelix/jelix":"self.version"
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "extra" : {
         "jelix": {
             "modules-dir" : [

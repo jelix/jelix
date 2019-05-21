@@ -33,7 +33,7 @@
     },
     "autoload": {
     },
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "extra": {
         "jelix": {
             "configPath": "var/config",
