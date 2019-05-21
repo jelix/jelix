@@ -14,7 +14,7 @@ Jelix 2 is an open-source framework for PHP 7.0+.
 It has a modular and extensible architecture. Applications based on Jelix are made
 with modules, which allow to reuse features in several projects.
 
-For more informations, read [details about its features](http://jelix.org/articles/en/features).
+For more informations, read [details about its features](https://jelix.org/articles/en/features).
 
 About stable versions and branches
 ==================================
@@ -38,9 +38,8 @@ Installation
 
 The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.6 or more.
 
-For applications with the future Jelix 2.0, you should use
-[Composer](http://getcomposer.org). You should declare the jelix package dependency in
-your composer.json:
+The best way is to use [Composer](https://getcomposer.org).
+Create a directory and a composer.json file : 
 
 ```
 {
@@ -55,18 +54,20 @@ your composer.json:
 Then you run:
 
 ```
-php composer.phar install
+composer install
 ```
 
-Then read [the documentation to create an application](http://docs.jelix.org/en/manual-1.7/create-application).
+Instead of using Composer, you can also download directly a package containing Jelix ready
+to use. See [the download page](https://jelix.org/articles/en/download).
+
+Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.7/installation/create-application).
 
 Documentation and community
 ========================
 
-[The documentation](http://docs.jelix.org) is not updated yet with all changes since the
-release of Jelix 1.7.x. But it should be ok for most of things.
+There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.7).
 
-You can ask your questions [on the forum](http://jelix.org/forums/forum/cat/2-english) or
+You can ask your questions [on the forum](https://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.
 
 Contribution & development

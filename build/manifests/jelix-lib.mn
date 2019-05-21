@@ -73,8 +73,6 @@ cd lib/Jelix/WebAssets
 
 
 cd lib/jelix-legacy/
-  CHANGELOG
-  CREDITS
   init.php
   INSTALL
   LICENCE

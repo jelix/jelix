@@ -232,7 +232,13 @@ class Compiler
             $config->domainName = $_SERVER['SERVER_NAME'];
         }
 
+        if (!is_string($config->chmodFile)) {
+            $config->chmodFile = (string) $config->chmodFile;
+        }
         $config->chmodFile = octdec($config->chmodFile);
+        if (!is_string($config->chmodDir)) {
+            $config->chmodDir = (string) $config->chmodDir;
+        }
         $config->chmodDir = octdec($config->chmodDir);
         if (!is_array($config->error_handling['sensitiveParameters'])) {
             $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);

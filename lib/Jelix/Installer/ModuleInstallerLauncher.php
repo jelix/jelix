@@ -389,7 +389,7 @@ class ModuleInstallerLauncher
                 $this->moduleStatus->getPath(),
                 $this->moduleInfos->version,
                 true
-                                                );
+            );
         }
 
         $this->moduleInstaller->setParameters($this->moduleStatus->parameters);

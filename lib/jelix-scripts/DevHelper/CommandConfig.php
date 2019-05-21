@@ -148,6 +148,13 @@ class CommandConfig
      */
     public $appName = '';
 
+    public function __construct()
+    {
+        $this->chmodFileValue = octdec('644');
+        $this->chmodDirValue = octdec('755');
+    }
+
+
     public function initAppPaths($applicationDir)
     {
         $applicationDir = rtrim($applicationDir, '/');
@@ -203,22 +210,29 @@ class CommandConfig
         $ini = parse_ini_file($iniFile, true, INI_SCANNER_TYPED);
         foreach ($ini as $key => $value) {
             if (!is_array($value) && isset($this->{$key})) {
-                if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
-                    $value = str_replace('%YEAR%', date('Y'), $value);
-                }
-                $this->{$key} = $value;
+                $this->{$key} = $this->_parseIniValue($key, $value);
             }
         }
         if ($appname && isset($ini[$appname]) && is_array($ini[$appname])) {
             foreach ($ini[$appname] as $key => $value) {
                 if (isset($this->{$key})) {
-                    if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
-                        $value = str_replace('%YEAR%', date('Y'), $value);
-                    }
-                    $this->{$key} = $value;
+                    $this->{$key} = $this->_parseIniValue($key, $value);
                 }
             }
         }
+    }
+
+    protected function _parseIniValue($key, $value) {
+        if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
+            $value = str_replace('%YEAR%', date('Y'), $value);
+        }
+        else if ($key == 'chmodFileValue' || $key == 'chmodDirValue') {
+            if (!is_string($value)) {
+                $value = (string) $value;
+            }
+            $value = octdec($value);
+        }
+        return $value;
     }
 
     public function generateUndefinedProperties($toCreateApp = false)

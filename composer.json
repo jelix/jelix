@@ -30,6 +30,7 @@
         "jelix/simplelocalization": "1.7.1",
         "jelix/version": "1.0.*",
         "defuse/php-encryption": "^2.2.1",
+        "paragonie/random_compat": "<9.99",
         "google/recaptcha": "^1.1.3"
     },
     "archive": {
@@ -43,8 +44,7 @@
         "jelix/legacy": "self.version",
         "jelix/locale": "self.version",
         "jelix/logger": "self.version",
-        "jelix/routing": "self.version",
-        "paragonie/random_compat": ">=1 <9.99"
+        "jelix/routing": "self.version"
     },
     "autoload": {
         "psr-4": {

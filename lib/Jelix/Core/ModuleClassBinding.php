@@ -186,5 +186,6 @@ class ModuleClassBinding
 
             throw new \jException('jelix~errors.bindings.nobinding', array($this->fromSelector->toString(true)));
         }
+        return $class_selector;
     }
 }
