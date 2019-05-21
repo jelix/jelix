@@ -8,6 +8,6 @@
         <copyright>Copyright 2009-2011 jelix.org</copyright>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.3" maxversion="1.7.0"/>
+        <jelix minversion="1.7.0-beta.3" maxversion="2.0.0-alpha.1"/>
     </dependencies>
 </module>

@@ -31,7 +31,7 @@ class Jelix17
     public function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter)
     {
         $this->reporter = $reporter;
-        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
+        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(\Jelix\Core\Config::getDefaultConfigFile());
     }
 
     public function migrate()

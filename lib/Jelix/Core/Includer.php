@@ -130,6 +130,7 @@ class Includer
         }
 
         if ($mustCompile) {
+            // @deprecated
             if ($aType[1]) {
                 require_once JELIX_LIB_PATH.$aType[1];
             }
