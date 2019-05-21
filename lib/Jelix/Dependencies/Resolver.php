@@ -184,7 +184,7 @@ class Resolver
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem
@@ -207,7 +207,7 @@ class Resolver
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem
@@ -219,7 +219,7 @@ class Resolver
                 $version = $depItem->getNextVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' does not match required version by item ".$item->getName(),
+                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem

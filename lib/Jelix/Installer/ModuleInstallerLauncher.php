@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2019 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -46,11 +46,15 @@ class ModuleInstallerLauncher
     public $inError = 0;
 
     /**
+     * informations of the modules from their module.xml
+     *
      * @var \Jelix\Core\Infos\ModuleInfos
      */
     protected $moduleInfos;
 
     /**
+     * status of modules into the application
+     *
      * @var ModuleStatus
      */
     protected $moduleStatus;
@@ -663,10 +667,10 @@ class ModuleInstallerLauncher
             $action = $this->getInstallAction();
         }
         if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, $this->moduleInfos->version, true);
-            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleStatus->version);
+            $item = new Item($this->name, $this->moduleStatus->version, true);
+            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
         } else {
-            $item = new Item($this->name, $this->moduleInfos->version, $this->isInstalled());
+            $item = new Item($this->name, $this->moduleStatus->version, $this->isInstalled());
             $item->setAction($action);
         }
 
