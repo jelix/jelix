@@ -15,6 +15,7 @@
  */
 
 namespace Jelix\Installer\Checker;
+use Jelix\Core\App;
 
 /**
  * check an installation of a jelix application.
@@ -32,47 +33,47 @@ class Checker extends CheckerBase
     public function checkAppPaths()
     {
         $ok = true;
-        if (!defined('JELIX_LIB_PATH') || !\jApp::isInit()) {
+        if (!defined('JELIX_LIB_PATH') || !App::isInit()) {
             throw new \Exception($this->messages->get('path.core'));
         }
 
-        if (!file_exists(\jApp::tempBasePath()) || !is_writable(\jApp::tempBasePath())) {
+        if (!file_exists(App::tempBasePath()) || !is_writable(App::tempBasePath())) {
             $this->error('path.temp');
             $ok = false;
         }
-        if (!file_exists(\jApp::logPath()) || !is_writable(\jApp::logPath())) {
+        if (!file_exists(App::logPath()) || !is_writable(App::logPath())) {
             $this->error('path.log');
             $ok = false;
         }
-        if (!file_exists(\jApp::varPath())) {
+        if (!file_exists(App::varPath())) {
             $this->error('path.var');
             $ok = false;
         }
-        if (!file_exists(\jApp::appSystemPath())) {
+        if (!file_exists(App::appSystemPath())) {
             $this->error('path.config');
             $ok = false;
         }
-        if (!file_exists(\jApp::varConfigPath())) {
+        if (!file_exists(App::varConfigPath())) {
             $this->error('path.config');
             $ok = false;
         } elseif ($this->checkForInstallation) {
-            if (!is_writable(\jApp::varConfigPath())) {
+            if (!is_writable(App::varConfigPath())) {
                 $this->error('path.config.writable');
                 $ok = false;
             }
-            if (file_exists(\jApp::varConfigPath('profiles.ini.php'))
-                && !is_writable(\jApp::varConfigPath('profiles.ini.php'))) {
+            if (file_exists(App::varConfigPath('profiles.ini.php'))
+                && !is_writable(App::varConfigPath('profiles.ini.php'))) {
                 $this->error('path.profiles.writable');
                 $ok = false;
             }
-            if (file_exists(\jApp::varConfigPath('installer.ini.php'))
-                && !is_writable(\jApp::varConfigPath('installer.ini.php'))) {
+            if (file_exists(App::varConfigPath('installer.ini.php'))
+                && !is_writable(App::varConfigPath('installer.ini.php'))) {
                 $this->error('path.installer.writable');
                 $ok = false;
             }
         }
 
-        if (!file_exists(\jApp::wwwPath())) {
+        if (!file_exists(App::wwwPath())) {
             $this->error('path.www');
             $ok = false;
         }
@@ -121,14 +122,14 @@ class Checker extends CheckerBase
     protected function checkPhpSettings()
     {
         /*
-        if (file_exists(\jApp::mainConfigFile())) {
-            $defaultconfig = parse_ini_file(\jApp::mainConfigFile(), true, INI_SCANNER_TYPED);
+        if (file_exists(App::mainConfigFile())) {
+            $defaultconfig = parse_ini_file(App::mainConfigFile(), true, INI_SCANNER_TYPED);
         }
         else {
             $defaultconfig = array();
         }
-        if (file_exists(\jApp::appSystemPath("index/config.ini.php"))) {
-            $indexconfig = parse_ini_file(\jApp::appSystemPath("index/config.ini.php"), true, INI_SCANNER_TYPED);
+        if (file_exists(App::appSystemPath("index/config.ini.php"))) {
+            $indexconfig = parse_ini_file(App::appSystemPath("index/config.ini.php"), true, INI_SCANNER_TYPED);
         }
         else {
             $indexconfig = array();

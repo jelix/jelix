@@ -164,9 +164,9 @@ class PreConfigurationHelpers
     public function configFilePath($file = '')
     {
         if ($this->globalSetup->forLocalConfiguration()) {
-            return  \jApp::appSystemPath($file);
+            return  \Jelix\Core\App::appSystemPath($file);
         }
 
-        return \jApp::varConfigPath($file);
+        return \Jelix\Core\App::varConfigPath($file);
     }
 }

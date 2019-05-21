@@ -92,12 +92,12 @@ class EntryPoint
         $this->file = $file;
         $this->globalSetup = $globalSetup;
 
-        $appSystemPath = \jApp::appSystemPath($configFile);
+        $appSystemPath = \Jelix\Core\App::appSystemPath($configFile);
         if (!file_exists($appSystemPath)) {
             \jFile::createDir(dirname($appSystemPath));
             file_put_contents($appSystemPath, ';<'.'?php die(\'\');?'.'>');
         }
-        $varConfigPath = \jApp::varConfigPath($configFile);
+        $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
 
         $this->appEpConfigIni = new IniModifier($appSystemPath);
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');

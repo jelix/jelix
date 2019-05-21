@@ -57,7 +57,7 @@ class ConfigureCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->setUpOutput($output);
-        \jAppManager::close();
+        \Jelix\Core\AppManager::close();
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
@@ -107,7 +107,7 @@ class ConfigureCommand extends Command
             $configurator->localConfigureEnabledModules();
         }
 
-        \jAppManager::open();
+        \Jelix\Core\AppManager::open();
 
         return 0;
     }

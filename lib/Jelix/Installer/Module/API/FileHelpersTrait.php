@@ -10,6 +10,7 @@
 namespace Jelix\Installer\Module\API;
 
 use Jelix\FileUtilities\Path;
+use Jelix\Core\App;
 
 /**
  * Trait for installer/configurator classes.
@@ -87,35 +88,35 @@ trait FileHelpersTrait
         if (preg_match('/^([a-z])\\:/', $path, $m)) {
             switch ($m[1]) {
                 case 'www':
-                    $path = str_replace('www:', \jApp::wwwPath(), $path);
+                    $path = str_replace('www:', App::wwwPath(), $path);
 
                     break;
                 case 'varconfig':
-                    $path = str_replace('varconfig:', \jApp::varConfigPath(), $path);
+                    $path = str_replace('varconfig:', App::varConfigPath(), $path);
 
                     break;
                 case 'appconfig':
-                    $path = str_replace('appconfig:', \jApp::appSystemPath(), $path);
+                    $path = str_replace('appconfig:', App::appSystemPath(), $path);
 
                     break;
                 case 'config':
                     if ($this->globalSetup->forLocalConfiguration()) {
-                        $path = str_replace('config:', \jApp::varConfigPath(), $path);
+                        $path = str_replace('config:', App::varConfigPath(), $path);
                     } else {
-                        $path = str_replace('config:', \jApp::appSystemPath(), $path);
+                        $path = str_replace('config:', App::appSystemPath(), $path);
                     }
 
                     break;
                 case 'var':
-                    $path = str_replace('var:', \jApp::varPath(), $path);
+                    $path = str_replace('var:', App::varPath(), $path);
 
                     break;
                 case 'temp':
-                    $path = str_replace('temp:', \jApp::tempPath(), $path);
+                    $path = str_replace('temp:', App::tempPath(), $path);
 
                     break;
                 case 'log':
-                    $path = str_replace('log:', \jApp::logPath(), $path);
+                    $path = str_replace('log:', App::logPath(), $path);
 
                     break;
                 default:

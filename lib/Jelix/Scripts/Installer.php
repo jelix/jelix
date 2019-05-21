@@ -20,7 +20,7 @@ class Installer
     {
         Utils::checkEnv();
         // init Jelix environment
-        \jApp::setEnv('install');
+        \Jelix\Core\App::setEnv('install');
         Utils::checkTempPath();
 
         $application = new SingleCommandApplication(

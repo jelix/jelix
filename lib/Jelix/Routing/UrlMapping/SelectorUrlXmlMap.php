@@ -32,8 +32,8 @@ class SelectorUrlXmlMap extends \jSelectorSimpleFile
      */
     public function __construct($selInApp, $selInVar = '')
     {
-        $this->_basePath = \jApp::appSystemPath();
-        $this->_localBasePath = \jApp::varConfigPath();
+        $this->_basePath = \Jelix\Core\App::appSystemPath();
+        $this->_localBasePath = \Jelix\Core\App::varConfigPath();
 
         parent::__construct($selInApp);
 

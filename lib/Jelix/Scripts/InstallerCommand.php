@@ -30,7 +30,7 @@ class InstallerCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->setUpOutput($output);
-        \jAppManager::close();
+        \Jelix\Core\AppManager::close();
 
         if ($output->isVerbose()) {
             $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Installation');
@@ -44,14 +44,14 @@ class InstallerCommand extends Command
         }
 
         try {
-            \jAppManager::clearTemp();
+            \Jelix\Core\AppManager::clearTemp();
         } catch (\Exception $e) {
             $output->writeln('<comment>WARNING: temporary files cannot be deleted because of this error: '.$e->getMessage().'</comment>');
             $output->writeln('<comment>WARNING: Delete temp files by hand immediately, then run the command</comment> <fg=cyan>console.php app:open</>');
 
             return 1;
         }
-        \jAppManager::open();
+        \Jelix\Core\AppManager::open();
 
         return 0;
     }

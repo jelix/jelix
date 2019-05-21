@@ -12,6 +12,7 @@ namespace Jelix\Installer;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
 use Jelix\Dependencies\Resolver;
+use Jelix\Core\App;
 
 /**
  * main class for the installation.
@@ -105,7 +106,7 @@ class Installer
 
     public static function setModuleAsInstalled($moduleName, $initialVersion, $versionDate)
     {
-        $install = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        $install = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
         $install->setValue($moduleName.'.installed', 1, 'modules');
         $install->setValue($moduleName.'.version', $initialVersion, 'modules');
         $install->setValue($moduleName.'.version.date', $versionDate, 'modules');
@@ -157,7 +158,7 @@ class Installer
     protected function _installModules($modulesChain)
     {
         $this->notice('install.start');
-        \jApp::setConfig($this->mainEntryPoint->getConfigObj());
+        App::setConfig($this->mainEntryPoint->getConfigObj());
 
         if ($this->mainEntryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -561,7 +562,7 @@ class Installer
                     $entryPoint->getScriptName()
                 )
             );
-            \jApp::setConfig($entryPoint->getConfigObj());
+            App::setConfig($entryPoint->getConfigObj());
         }
 
         $profileIni = $this->globalSetup->getProfilesIni();

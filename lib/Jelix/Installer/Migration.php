@@ -43,7 +43,7 @@ class Migration
 
     public function migrateLocal()
     {
-        $installFile = \jApp::varConfigPath('installer.ini.php');
+        $installFile = \Jelix\Core\App::varConfigPath('installer.ini.php');
         if (!file_exists($installFile)) {
             return;
         }

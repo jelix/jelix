@@ -34,7 +34,7 @@ class AppInfos extends InfosAbstract
     public static function load($directoryPath = '', $fileName = '')
     {
         if ($directoryPath == '') {
-            $directoryPath = \jApp::appPath();
+            $directoryPath = \Jelix\Core\App::appPath();
         }
 
         if ($fileName == '') {

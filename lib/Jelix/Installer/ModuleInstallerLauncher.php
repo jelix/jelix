@@ -252,7 +252,7 @@ class ModuleInstallerLauncher
      */
     public function backupUninstallScript()
     {
-        $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleStatus->getName());
+        $targetPath = \Jelix\Core\App::appPath('install/uninstall/'.$this->moduleStatus->getName());
         \jFile::createDir($targetPath);
         copy($this->moduleStatus->getPath().'module.xml', $targetPath);
         $uninstallerIni = $this->globalSetup->getUninstallerIni();

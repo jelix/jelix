@@ -13,6 +13,7 @@ use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierArray;
 use Jelix\IniFile\IniModifierReadOnly;
 use Jelix\IniFile\IniReader;
+use Jelix\Core\App;
 
 /**
  * @since 1.7.0
@@ -132,17 +133,17 @@ class GlobalSetup
             $this->frameworkInfos = $frameworkFileName;
         } else {
             if (!$frameworkFileName) {
-                $frameworkFileName = \jApp::appSystemPath('framework.ini.php');
+                $frameworkFileName = App::appSystemPath('framework.ini.php');
             }
             if (!$localFrameworkFileName) {
-                $localFrameworkFileName = \jApp::varConfigPath('localframework.ini.php');
+                $localFrameworkFileName = App::varConfigPath('localframework.ini.php');
             }
             $this->frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName, $localFrameworkFileName);
         }
 
-        $profileIniFileName = \jApp::varConfigPath('profiles.ini.php');
+        $profileIniFileName = App::varConfigPath('profiles.ini.php');
         if (!file_exists($profileIniFileName)) {
-            $profileIniDist = \jApp::varConfigPath('profiles.ini.php.dist');
+            $profileIniDist = App::varConfigPath('profiles.ini.php.dist');
             if (file_exists($profileIniDist)) {
                 copy($profileIniDist, $profileIniFileName);
             } else {
@@ -153,13 +154,13 @@ class GlobalSetup
         $this->profilesIni = new \Jelix\IniFile\IniModifier($profileIniFileName);
 
         if (!$mainConfigFileName) {
-            $mainConfigFileName = \jApp::mainConfigFile();
+            $mainConfigFileName = App::mainConfigFile();
         }
 
         if (!$localConfigFileName) {
-            $localConfigFileName = \jApp::varConfigPath('localconfig.ini.php');
+            $localConfigFileName = App::varConfigPath('localconfig.ini.php');
             if (!file_exists($localConfigFileName)) {
-                $localConfigDist = \jApp::varConfigPath('localconfig.ini.php.dist');
+                $localConfigDist = App::varConfigPath('localconfig.ini.php.dist');
                 if (file_exists($localConfigDist)) {
                     copy($localConfigDist, $localConfigFileName);
                 } else {
@@ -168,7 +169,7 @@ class GlobalSetup
             }
         }
 
-        $liveConfigFileName = \jApp::varConfigPath('liveconfig.ini.php');
+        $liveConfigFileName = App::varConfigPath('liveconfig.ini.php');
         if (!file_exists($liveConfigFileName)) {
             file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
@@ -183,9 +184,9 @@ class GlobalSetup
 
         $this->installerIni = $this->loadInstallerIni();
 
-        \jFile::createDir(\jApp::appPath('install/uninstall'));
+        \jFile::createDir(App::appPath('install/uninstall'));
         $this->uninstallerIni = new IniModifier(
-            \jApp::appPath('install/uninstall/uninstaller.ini.php'),
+            App::appPath('install/uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
@@ -196,8 +197,8 @@ class GlobalSetup
         if (!$urlXmlFileName) {
             $ini = $this->getSystemConfigIni();
             $ini['local'] = $this->localConfigIni;
-            $urlXmlFileName = \jApp::appSystemPath($ini->getValue('significantFile', 'urlengine'));
-            $urlLocalXmlFileName = \jApp::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
+            $urlXmlFileName = App::appSystemPath($ini->getValue('significantFile', 'urlengine'));
+            $urlLocalXmlFileName = App::varConfigPath($ini->getValue('localSignificantFile', 'urlengine'));
         }
         $this->urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
         $this->urlLocalMapModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier(
@@ -210,7 +211,7 @@ class GlobalSetup
 
         // be sure temp path is ready
         $chmod = $this->getSystemConfigIni()->getValue('chmodDir');
-        \jFile::createDir(\jApp::tempPath(), intval($chmod, 8));
+        \jFile::createDir(App::tempPath(), intval($chmod, 8));
     }
 
     /**
@@ -293,7 +294,7 @@ class GlobalSetup
         }
 
         // load ghost modules we have to uninstall
-        $uninstallersDir = \jApp::appPath('install/uninstall');
+        $uninstallersDir = App::appPath('install/uninstall');
         if (file_exists($uninstallersDir)) {
             $dir = new \DirectoryIterator($uninstallersDir);
             $modulesInfos = $this->uninstallerIni->getValues('modules');
@@ -579,8 +580,8 @@ class GlobalSetup
      */
     protected function loadInstallerIni()
     {
-        if (!file_exists(\jApp::varConfigPath('installer.ini.php'))) {
-            if (@file_put_contents(\jApp::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
+        if (!file_exists(App::varConfigPath('installer.ini.php'))) {
+            if (@file_put_contents(App::varConfigPath('installer.ini.php'), ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
 
@@ -588,10 +589,10 @@ class GlobalSetup
                 throw new \Exception('impossible to create var/config/installer.ini.php');
             }
         } else {
-            copy(\jApp::varConfigPath('installer.ini.php'), \jApp::varConfigPath('installer.bak.ini.php'));
+            copy(App::varConfigPath('installer.ini.php'), App::varConfigPath('installer.bak.ini.php'));
         }
 
-        return new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        return new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
     }
 
     /**
@@ -760,9 +761,9 @@ class GlobalSetup
             return null;
         }
         // the configuration value is a filename
-        $confpath = \jApp::appSystemPath($conf);
+        $confpath = App::appSystemPath($conf);
         if (!file_exists($confpath)) {
-            $confpath = \jApp::varConfigPath($conf);
+            $confpath = App::varConfigPath($conf);
             if (!file_exists($confpath)) {
                 return null;
             }

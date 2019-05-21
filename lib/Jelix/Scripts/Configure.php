@@ -20,7 +20,7 @@ class Configure
     {
         Utils::checkEnv();
         // init Jelix environment
-        \jApp::setEnv('configure');
+        \Jelix\Core\App::setEnv('configure');
         Utils::checkTempPath();
 
         $application = new SingleCommandApplication(

@@ -10,6 +10,7 @@
 namespace Jelix\Scripts;
 
 use Symfony\Component\Console\Application;
+use Jelix\Core\App;
 
 /**
  * Launch commands from modules.
@@ -24,22 +25,22 @@ class ModulesCommands
 
         // init Jelix environment
 
-        \jApp::setEnv('console');
+        App::setEnv('console');
 
         Utils::checkTempPath();
 
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         $ep = $fmkInfos->getEntryPointInfo('index');
 
-        \jApp::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
-        \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
+        App::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
+        \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         // ----- init the Application object
         $projectInfos = \Jelix\Core\Infos\AppInfos::load();
         $application = new Application($projectInfos->name.' commands');
 
         // try to read a commands.php file from each modules
-        foreach (\jApp::getEnabledModulesPaths() as $module => $path) {
+        foreach (App::getEnabledModulesPaths() as $module => $path) {
             if (file_exists($path.'commands.php')) {
                 require $path.'commands.php';
             }

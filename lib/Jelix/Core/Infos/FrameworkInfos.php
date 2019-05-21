@@ -180,8 +180,8 @@ class FrameworkInfos
     public static function load()
     {
         return new self(
-            \jApp::appSystemPath('framework.ini.php'),
-            \jApp::varConfigPath('localframework.ini.php')
+            \Jelix\Core\App::appSystemPath('framework.ini.php'),
+            \Jelix\Core\App::varConfigPath('localframework.ini.php')
         );
     }
 }

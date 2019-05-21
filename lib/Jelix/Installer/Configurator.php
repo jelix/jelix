@@ -12,6 +12,7 @@ namespace Jelix\Installer;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
 use Jelix\Dependencies\Resolver;
+use Jelix\Core\App;
 
 use Jelix\IniFile\IniModifierInterface;
 use Jelix\Installer\Module\API\ConfigurationHelpers;
@@ -194,7 +195,7 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        \jApp::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj());
 
         if ($entryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -267,7 +268,7 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getMainEntryPoint();
-        \jApp::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj());
 
         if ($entryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -606,7 +607,7 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        \jApp::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj());
 
         if ($entryPoint->getConfigObj()->disableInstallers) {
             $this->notice('install.installers.disabled');
@@ -823,7 +824,7 @@ class Configurator
                     $entryPoint->getScriptName()
                 )
             );
-            \jApp::setConfig($entryPoint->getConfigObj());
+            App::setConfig($entryPoint->getConfigObj());
         }
         $this->globalSetup->getUrlModifier()->save();
         $this->globalSetup->getLocalUrlModifier()->save();

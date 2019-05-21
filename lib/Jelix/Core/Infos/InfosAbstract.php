@@ -123,7 +123,7 @@ abstract class InfosAbstract
         if ($locale) {
             return substr($locale, 0, 2);
         }
-        $config = \jApp::config();
+        $config = \Jelix\Core\App::config();
         if ($config) {
             return $config->locale;
         }

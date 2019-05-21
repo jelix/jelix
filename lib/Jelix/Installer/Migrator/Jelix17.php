@@ -13,6 +13,7 @@ namespace Jelix\Installer\Migrator;
 
 use Jelix\IniFile\IniModifier;
 use Jelix\Installer\ModuleStatus;
+use Jelix\Core\App;
 
 class Jelix17
 {
@@ -40,17 +41,17 @@ class Jelix17
 
         $this->moveIntoAppSystem();
 
-        $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
+        $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
 
         $entrypoints = $this->migrateProjectXml($mainConfigIni);
 
-        if (file_exists(\jApp::varConfigPath('profiles.ini.php'))) {
-            $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php'));
+        if (file_exists(App::varConfigPath('profiles.ini.php'))) {
+            $profilesini = new IniModifier(App::varConfigPath('profiles.ini.php'));
             $this->migrateProfilesIni($profilesini);
         }
 
-        if (file_exists(\jApp::varConfigPath('profiles.ini.php.dist'))) {
-            $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php.dist'));
+        if (file_exists(App::varConfigPath('profiles.ini.php.dist'))) {
+            $profilesini = new IniModifier(App::varConfigPath('profiles.ini.php.dist'));
             $this->migrateProfilesIni($profilesini);
         }
 
@@ -77,24 +78,24 @@ class Jelix17
 
     public function localMigrate()
     {
-        $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        $installerIni = new IniModifier(App::varConfigPath('installer.ini.php'));
         if ($installerIni->isSection('modules')) {
             return;
         }
 
-        if (file_exists(\jApp::varConfigPath('profiles.ini.php'))) {
-            $profilesini = new IniModifier(\jApp::varConfigPath('profiles.ini.php'));
+        if (file_exists(App::varConfigPath('profiles.ini.php'))) {
+            $profilesini = new IniModifier(App::varConfigPath('profiles.ini.php'));
             $this->migrateProfilesIni($profilesini);
         }
 
-        $localConfigPath = \jApp::varConfigPath('localconfig.ini.php');
+        $localConfigPath = App::varConfigPath('localconfig.ini.php');
         $localConfigIni = null;
 
         if (file_exists($localConfigPath)) {
             $localConfigIni = new IniModifier($localConfigPath);
 
-            $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'));
-            $mainConfigIni = new IniModifier(\jApp::appSystemPath('mainconfig.ini.php'));
+            $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
+            $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
             $mainConfig = new \Jelix\IniFile\IniModifierArray(array(
                 'default' => $this->defaultConfigIni,
                 'main' => $mainConfigIni,
@@ -107,9 +108,9 @@ class Jelix17
                     continue;
                 }
                 $configValue = $frameworkIni->getValue('config', $section);
-                $configFile = \jApp::varConfigPath($configValue);
+                $configFile = App::varConfigPath($configValue);
                 if (file_exists($configFile)) {
-                    $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
+                    $epConfigIni = new IniModifier(App::appSystemPath($configFile));
                     $localEpConfigIni = new IniModifier($configFile);
                     $this->migrateCoordPluginsConf($localEpConfigIni, true);
                     if ($localEpConfigIni->getValues('modules')) {
@@ -138,10 +139,10 @@ class Jelix17
 
     private function moveIntoAppSystem()
     {
-        $newConfigPath = \jApp::appSystemPath();
-        if (file_exists(\jApp::appPath('app/config'))) {
+        $newConfigPath = App::appSystemPath();
+        if (file_exists(App::appPath('app/config'))) {
             // for jelix 1.7.0-pre < version < 1.7.0-beta.5
-            rename(\jApp::appPath('app/config'), $newConfigPath);
+            rename(App::appPath('app/config'), $newConfigPath);
         } elseif (!file_exists($newConfigPath)) {
             $this->reporter->message('Create app/system/', 'notice');
             \jFile::createDir($newConfigPath);
@@ -149,21 +150,21 @@ class Jelix17
 
         // move mainconfig.php to app/system/
         if (!file_exists($newConfigPath.'mainconfig.ini.php')) {
-            if (!file_exists(\jApp::varConfigPath('mainconfig.ini.php'))) {
-                if (!file_exists(\jApp::varConfigPath('defaultconfig.ini.php'))) {
+            if (!file_exists(App::varConfigPath('mainconfig.ini.php'))) {
+                if (!file_exists(App::varConfigPath('defaultconfig.ini.php'))) {
                     throw new \Exception('Migration to Jelix 1.7.0 canceled: where is your mainconfig.ini.php?');
                 }
                 $this->reporter->message('Move var/config/defaultconfig.ini.php to app/system/mainconfig.ini.php', 'notice');
-                rename(\jApp::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(App::varConfigPath('defaultconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             } else {
                 $this->reporter->message('Move var/config/mainconfig.ini.php to app/system/', 'notice');
-                rename(\jApp::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
+                rename(App::varConfigPath('mainconfig.ini.php'), $newConfigPath.'mainconfig.ini.php');
             }
         }
 
-        if (!file_exists(\jApp::appPath('app/responses'))) {
+        if (!file_exists(App::appPath('app/responses'))) {
             $this->reporter->message('Move responses/ to app/responses/', 'notice');
-            rename(\jApp::appPath('responses'), \jApp::appPath('app/responses'));
+            rename(App::appPath('responses'), App::appPath('app/responses'));
         }
     }
 
@@ -171,11 +172,11 @@ class Jelix17
     {
         $entrypoints = array();
         $frameworkIni = new IniModifier(
-            \jApp::appSystemPath('framework.ini.php'),
+            App::appSystemPath('framework.ini.php'),
             ';<'.'?php die(\'\');?'.'>'
         );
         $projectDOM = new \DOMDocument();
-        $projectDOM->load(\jApp::appPath('project.xml'));
+        $projectDOM->load(App::appPath('project.xml'));
         $projectxml = simplexml_import_dom($projectDOM);
         if (!isset($projectxml->entrypoints) || !isset($projectxml->entrypoints->entry)) {
             return $entrypoints;
@@ -191,9 +192,9 @@ class Jelix17
                 'entrypoint:'.$name
             );
 
-            $dest = \jApp::appSystemPath($configFile);
+            $dest = App::appSystemPath($configFile);
             if (!file_exists($dest)) {
-                if (!file_exists(\jApp::varConfigPath($configFile))) {
+                if (!file_exists(App::varConfigPath($configFile))) {
                     $this->reporter->message("Config file var/config/${configFile} indicated in project.xml, does not exist", 'warning');
 
                     continue;
@@ -201,10 +202,10 @@ class Jelix17
 
                 $this->reporter->message("Move var/config/${configFile} to app/system/", 'notice');
                 \jFile::createDir(dirname($dest));
-                rename(\jApp::varConfigPath($configFile), $dest);
+                rename(App::varConfigPath($configFile), $dest);
             }
 
-            $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
+            $epConfigIni = new IniModifier(App::appSystemPath($configFile));
             $entrypoints[str_replace('.php', '', $name)] = array(
                 'name' => $name,
                 'type' => $type,
@@ -213,9 +214,9 @@ class Jelix17
 
             $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
             if ($urlFile != '') {
-                if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
+                if (!file_exists(App::appSystemPath($urlFile)) && file_exists(App::varConfigPath($urlFile))) {
                     $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
-                    rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
+                    rename(App::varConfigPath($urlFile), App::appSystemPath($urlFile));
                 }
             }
             if ($epConfigIni->getValues('modules')) {
@@ -234,7 +235,7 @@ class Jelix17
         if ($directoriesDOM->length) {
             $projectDOM->documentElement->removeChild($directoriesDOM[0]);
         }
-        $projectDOM->save(\jApp::appPath('project.xml'));
+        $projectDOM->save(App::appPath('project.xml'));
         $frameworkIni->save();
 
         return $entrypoints;
@@ -247,13 +248,13 @@ class Jelix17
             if (strpos($name, 'jsoapclient:') === 0) {
                 $classmapFile = $profilesini->getValue('classmap_file', $name);
                 if ($classmapFile != '' &&
-                    file_exists(\jApp::varConfigPath($classmapFile))
+                    file_exists(App::varConfigPath($classmapFile))
                 ) {
-                    if (!file_exists(\jApp::appSystemPath($classmapFile))) {
+                    if (!file_exists(App::appSystemPath($classmapFile))) {
                         $this->reporter->message('Move '.$classmapFile.' to app/system/', 'notice');
-                        rename(\jApp::varConfigPath($classmapFile), \jApp::appSystemPath($classmapFile));
+                        rename(App::varConfigPath($classmapFile), App::appSystemPath($classmapFile));
                     } else {
-                        unlink(\jApp::varConfigPath($classmapFile));
+                        unlink(App::varConfigPath($classmapFile));
                     }
                 }
             }
@@ -288,7 +289,7 @@ class Jelix17
             }
             // the configuration value is a filename
             if (!isset($this->allPluginConfigs[$conf])) {
-                $confPath = \jApp::varConfigPath($conf);
+                $confPath = App::varConfigPath($conf);
                 if (!file_exists($confPath)) {
                     continue;
                 }
@@ -302,10 +303,10 @@ class Jelix17
                 // the file has some section, we cannot merge it into $config as
                 // is, so just move it to app/system
                 if (file_exists($ini->getFileName()) && !$localConf) {
-                    $rpath = \Jelix\FileUtilities\Path::shortestPath(\jApp::varConfigPath(), $ini->getFileName());
-                    if (!file_exists(\jApp::appSystemPath($rpath))) {
+                    $rpath = \Jelix\FileUtilities\Path::shortestPath(App::varConfigPath(), $ini->getFileName());
+                    if (!file_exists(App::appSystemPath($rpath))) {
                         $this->reporter->message('Move plugin conf file '.$rpath.' to app/system/', 'notice');
-                        rename($ini->getFileName(), \jApp::appSystemPath($rpath));
+                        rename($ini->getFileName(), App::appSystemPath($rpath));
                     }
                 }
 
@@ -369,7 +370,7 @@ class Jelix17
 
     protected function migrateInstallerIni()
     {
-        $installerIni = new IniModifier(\jApp::varConfigPath('installer.ini.php'));
+        $installerIni = new IniModifier(App::varConfigPath('installer.ini.php'));
         if (!$installerIni->isSection('modules')) {
             $this->reporter->message('Migrate var/config/installer.ini.php content', 'notice');
             $allModules = array();
@@ -420,7 +421,7 @@ class Jelix17
         if (!$jelixWWWPath) {
             return;
         }
-        $targetPath = \jApp::wwwPath($jelixWWWPath);
+        $targetPath = App::wwwPath($jelixWWWPath);
         if (file_exists($targetPath)) {
             if (is_dir($targetPath)) {
                 $wwwfiles = 'copy';
@@ -464,12 +465,12 @@ class Jelix17
         if ($urlFile == null) {
             $urlFile = 'urls.xml';
         }
-        if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
+        if (!file_exists(App::appSystemPath($urlFile)) && file_exists(App::varConfigPath($urlFile))) {
             $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
-            rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
+            rename(App::varConfigPath($urlFile), App::appSystemPath($urlFile));
         }
 
-        $urlXmlFileName = \jApp::appSystemPath($urlFile);
+        $urlXmlFileName = App::appSystemPath($urlFile);
         $urlMapModifier = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlXmlFileName, true);
 
         foreach ($entrypoints as $epId => $ep) {
@@ -547,14 +548,14 @@ class Jelix17
 
     private function updateScripts()
     {
-        $consolePath = \jApp::appPath('console.php');
+        $consolePath = App::appPath('console.php');
         if (!file_exists($consolePath)) {
             file_put_contents($consolePath, '<'.'?php require (__DIR__.\'/application.init.php\');
 \\Jelix\\Scripts\\ModulesCommands::run();');
             $this->reporter->message('create console.php to launch module commands', 'notice');
         }
 
-        $devPath = \jApp::appPath('dev.php');
+        $devPath = App::appPath('dev.php');
         if (!file_exists($devPath)) {
             copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
             $this->reporter->message('create dev.php to launch module commands', 'notice');
@@ -566,20 +567,20 @@ class Jelix17
             }
         }
 
-        $cmdPath = \jApp::appPath('cmd.php');
+        $cmdPath = App::appPath('cmd.php');
         if (file_exists($cmdPath)) {
             unlink($cmdPath);
             $this->reporter->message('remove cmd.php, which is replaced by dev.php', 'notice');
         }
 
-        $configurePath = \jApp::appPath('install/configurator.php');
+        $configurePath = App::appPath('install/configurator.php');
         if (!file_exists($configurePath)) {
             file_put_contents($configurePath, '<'.'?php require (__DIR__.\'/../application.init.php\');
 \\Jelix\\Scripts\\Configure::launch();');
             $this->reporter->message('create install/configurator.php to launch instance configuration', 'notice');
         }
 
-        $installerPath = \jApp::appPath('install/installer.php');
+        $installerPath = App::appPath('install/installer.php');
         $rewriteInstaller = false;
         if (file_exists($installerPath)) {
             $content = file_get_contents($installerPath);
