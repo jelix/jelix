@@ -23,14 +23,16 @@
     ],
     "require": {
         "phpunit/phpunit": "5.7.*",
-        "jelix/for-classic-package" : "@dev",
+        "jelix/essential" : "@dev",
         "jelix/soap-server-module": "^1.7.8",
         "jelix/minify-module": "^1.7.3",
         "jelix/php-redis-plugin": "^1.7.6",
         "jelix/sitemap-module": "^1.7.4",
         "guzzlehttp/guzzle": "^6.2.0",
-        "jelix/ldapdao-module": "2.1.x-dev"
-     },
+        "jelix/ldapdao-module": "2.1.x-dev",
+        "jelix/feeds-module": "^1.7.4",
+        "jelix/wikirenderer-plugin": "^1.7.2"
+    },
     "autoload": {
     },
     "extra" : {

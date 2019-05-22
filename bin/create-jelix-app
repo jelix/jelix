@@ -37,7 +37,7 @@ else if (file_exists(__DIR__.'/../lib/vendor/autoload.php') &&
 }
 else if (file_exists(__DIR__.'/../../../autoload.php') &&
     (is_dir(__DIR__.'/../../../jelix/jelix') ||
-     is_dir(__DIR__.'/../../../jelix/for-classic-package'))
+     is_dir(__DIR__.'/../../../jelix/jelix-essential'))
 ) {
     // when Jelix is installed via Composer, and so we are in the vendor directory
     require(__DIR__.'/../../../autoload.php');
@@ -48,7 +48,7 @@ else if (file_exists(__DIR__.'/../../../autoload.php') &&
         $jelixPath = realpath(__DIR__.'/../../../jelix/jelix/');
     }
     else {
-        $jelixPath = realpath(__DIR__.'/../../../jelix/for-classic-package/');
+        $jelixPath = realpath(__DIR__.'/../../../jelix/jelix-essential/');
     }
     $jelixAsComposerPackage = true;
 }

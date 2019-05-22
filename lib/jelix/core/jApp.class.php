@@ -123,7 +123,7 @@ class jApp
 
     public static function configPath($file = '')
     {
-        trigger_error('jApp::varConfigPath() is deprecated. use jApp::varConfigPath() instead', E_USER_DEPRECATED);
+        trigger_error('jApp::configPath() is deprecated. use jApp::varConfigPath() instead', E_USER_DEPRECATED);
 
         return self::$_currentApp->configPath.$file;
     }

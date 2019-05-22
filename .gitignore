@@ -10,5 +10,4 @@ _docs.cache/
 .idea
 vendor/
 composer.lock
-.idea
 .php_cs.cache
