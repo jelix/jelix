@@ -15,6 +15,7 @@ class xmlmapTest extends jUnitTestCase {
     public function setUp() {
         //self::initClassicRequest(TESTAPP_URL.'index.php');
         copy(__DIR__.'/urls/urls.xml', jApp::tempPath('urls.xml'));
+        copy(__DIR__.'/urls/res_urls_addurl.xml', jApp::tempPath('urls2.xml'));
         parent::setUp();
     }
     function tearDown() {
@@ -73,6 +74,25 @@ class xmlmapTest extends jUnitTestCase {
         $modifier->save();
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_urls_addurl.xml'),
                             file_get_contents(jApp::tempPath('urls.xml')));
+    }
+
+    function testAddExistingUrl() {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls2.xml'));
+        $ep = $modifier->getEntryPoint('index');
+        $ep->addUrlAction("/first", "othermodule", "foo:bar");
+        $ep->addUrlAction("/first/what", "firstmodule", "foo2:bar", null, null, array("noentrypoint"=>false));
+        $ep->addUrlAction("/withparam/:hello/:world", "firstmodule", "foo3:bar",
+            array(
+                "hello"=>array(),
+                "bonjour"=>array("type"=>"string", "regexp"=>"/^aaaa/"),
+            ));
+        $ep->addUrlModule('/news', 'news2');
+        $ep->addUrlHandler('/articles', 'cms', 'superhandler2');
+        $ep->addUrlController("/dynamic/method", "firstmodule", "myctrl2");
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/res_urls_addurl2.xml'),
+            file_get_contents(jApp::tempPath('urls2.xml')));
+
     }
 
     
