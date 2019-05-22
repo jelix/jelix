@@ -39,25 +39,25 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
                 'app:modules/'
             )
             ->addOption(
-                'nosubdir',
+                'no-subdir',
                 null,
                 InputOption::VALUE_NONE,
                 'don\'t create sub-directories'
             )
             ->addOption(
-                'nocontroller',
+                'no-controller',
                 null,
                 InputOption::VALUE_NONE,
                 'don\'t create a default controller'
             )
             ->addOption(
-                'addinstallzone',
+                'add-install-zone',
                 null,
                 InputOption::VALUE_NONE,
                 'Add the check_install zone for new application.'
             )
             ->addOption(
-                'defaultmodule',
+                'default-module',
                 null,
                 InputOption::VALUE_NONE,
                 'the new module become the default module for the default entry point.'
@@ -76,7 +76,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
                 '0.1pre'
             )
             ->addOption(
-                'noregistration',
+                'no-registration',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not register the module in the application configuration'
@@ -119,7 +119,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             $repository .= '/';
         }
         $repositoryPath = \jFile::parseJelixPath($repository);
-        if (!$input->getOption('noregistration')) {
+        if (!$input->getOption('no-registration')) {
             $this->registerModulesDir($repository, $repositoryPath);
         }
 
@@ -128,9 +128,9 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
 
         \jApp::setConfig(null);
 
-        $noSubDir = $input->getOption('nosubdir');
-        $addInstallZone = $input->getOption('addinstallzone');
-        $isdefault = $input->getOption('defaultmodule');
+        $noSubDir = $input->getOption('no-subdir');
+        $addInstallZone = $input->getOption('add-install-zone');
+        $isdefault = $input->getOption('default-module');
 
         if ($input->getOption('admin')) {
             $noSubDir = false;
@@ -201,7 +201,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
         \jApp::declareModule($path);
 
         // create a default controller
-        if (!$input->getOption('nocontroller')) {
+        if (!$input->getOption('no-controller')) {
             $arguments = array(
                 'module' => $module,
                 'controller' => 'default',
@@ -209,7 +209,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             );
 
             if ($addInstallZone) {
-                $arguments['--addinstallzone'] = true;
+                $arguments['--add-install-zone'] = true;
             }
             if ($output->isVerbose()) {
                 $arguments['-v'] = true;

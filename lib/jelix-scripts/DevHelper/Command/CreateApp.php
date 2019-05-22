@@ -226,8 +226,8 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
                 }
                 $options = array(
                     'module' => $param['modulename'],
-                    '--addinstallzone' => true,
-                    '--noregistration' => true,
+                    '--add-install-zone' => true,
+                    '--no-registration' => true,
                 );
                 if ($output->isVerbose()) {
                     $options['-v'] = true;

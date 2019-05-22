@@ -41,13 +41,13 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
                 ''
             )
             ->addOption(
-                'noauthdb',
+                'no-authdb',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not use and do not configure the driver \'db\' of jAuth'
             )
             ->addOption(
-                'noacl2db',
+                'no-acl2db',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not use and do not configure the driver \'db\' of jAcl2'
@@ -147,7 +147,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
 
         $profile = $input->getOption('profile');
 
-        if (!$input->getOption('noauthdb')) {
+        if (!$input->getOption('no-authdb')) {
             if ($profile != '') {
                 $authini->setValue('profile', $profile, 'Db');
             }
@@ -157,7 +157,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
             $configurator->configureModules(array('jauthdb', 'jauthdb_admin'), $entrypoint);
         }
 
-        if (!$input->getOption('noacl2db')) {
+        if (!$input->getOption('no-acl2db')) {
             if ($profile != '') {
                 $dbini = new \Jelix\IniFile\IniModifier(\jApp::varConfigPath('profiles.ini.php'));
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');

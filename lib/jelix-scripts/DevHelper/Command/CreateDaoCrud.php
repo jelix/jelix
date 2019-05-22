@@ -51,7 +51,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
                 ''
             )
             ->addOption(
-                'createlocales',
+                'create-locales',
                 null,
                 InputOption::VALUE_NONE,
                 'creates the locales file for labels of the form'
@@ -63,7 +63,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
                 'automatically generate ACL2 rights (list, view, create, modify, delete)'
             )
             ->addOption(
-                'acl2locale',
+                'acl2-locale',
                 null,
                 InputOption::VALUE_REQUIRED,
                 'indicates the selector prefix for the file storing the locales of rights, when -acl2 is set',
@@ -116,8 +116,8 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         $options = array('module' => $module,
             'form' => $table,
             'dao' => $table, );
-        if ($input->getOption('createlocales')) {
-            $options['--createlocales'] = true;
+        if ($input->getOption('create-locales')) {
+            $options['--create-locales'] = true;
         }
         $options = array_merge($arguments, $options);
         $this->executeSubCommand('module:create-form', $options, $output);
@@ -141,7 +141,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
                 'create' => 'Create',
                 'update' => 'Update',
                 'delete' => 'Delete', );
-            $sel = $input->getOption('acl2locale');
+            $sel = $input->getOption('acl2-locale');
             if (!$sel) {
                 $sel = $module.'~acl'.$ctrlname;
             }
