@@ -36,7 +36,7 @@ trait InstallTrait
             if ($jelixWWWDirExists) {
                 \jFile::removeDir($targetPath, true);
             }
-            symlink(LIB_PATH.'jelix-www', $targetPath);
+            symlink(LIB_PATH.'jelix-www', rtrim($targetPath, '/'));
         } else {
             if ($jelixWWWLinkExists) {
                 unlink($targetPath);
