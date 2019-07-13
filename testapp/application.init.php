@@ -10,7 +10,6 @@
 */
 
 require (__DIR__.'/vendor/autoload.php');
-//require (__DIR__.'/../lib/jelix/init.php');
 
 jApp::initPaths(
     __DIR__.'/'

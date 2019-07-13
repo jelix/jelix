@@ -19,11 +19,12 @@ use Jelix\Routing\UrlMapping\XmlEntryPoint;
  * @method getFileName()
  * @method isCliScript()
  * @method getEpId()
- * @method getConfigFileName()
  * @method getModulesList()
  * @method getConfigIni()
  * @method getSingleConfigIni()
+ * @method getConfigFileName()
  * @method getConfigObj()
+ * @method getCoordPluginConfig($pluginName)
  *
  * @since 1.7
  */

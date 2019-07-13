@@ -57,9 +57,9 @@ class ConfigurationHelpers extends PreConfigurationHelpers
      */
     public function getEntryPointsList()
     {
-        $list = $this->globalSetup->getEntryPointsList();
         $globalSetup = $this->globalSetup;
-        $flc = $this->globalSetup->forLocalConfiguration();
+        $list = $globalSetup->getEntryPointsList();
+        $flc = $globalSetup->forLocalConfiguration();
 
         return array_map(function ($ep) use ($globalSetup, $flc) {
             return new \Jelix\Installer\EntryPointConfigurator($ep, $globalSetup, $flc);
@@ -73,9 +73,9 @@ class ConfigurationHelpers extends PreConfigurationHelpers
      */
     public function getEntryPointsByType($type = 'classic')
     {
-        $list = $this->globalSetup->getEntryPointsByType($type);
         $globalSetup = $this->globalSetup;
-        $flc = $this->globalSetup->forLocalConfiguration();
+        $list = $globalSetup->getEntryPointsByType($type);
+        $flc = $globalSetup->forLocalConfiguration();
 
         return array_map(function ($ep) use ($globalSetup, $flc) {
             return new \Jelix\Installer\EntryPointConfigurator($ep, $globalSetup, $flc);
@@ -91,7 +91,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
     {
         $ep = $this->globalSetup->getEntryPointById($epId);
         if ($ep) {
-            $ep = new \Jelix\Installer\EntryPointConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
+            $ep = new \Jelix\Installer\EntryPointConfigurator($ep, $this->globalSetup, $this->globalSetup->forLocalConfiguration());
         }
 
         return $ep;

@@ -146,7 +146,8 @@ class InteractiveConfigurator
      * Ask to choose an entry point.
      *
      * @param string $questionMessage
-     * @param string $entryPointType    the type of entry point. Empty value means any entry points
+     * @param \Jelix\Installer\EntryPointConfigurator[] $entryPointsList  the list
+     *                          of entry point in which the choice should be made.
      * @param bool   $multipleChoice    true if the user can choose different entry point
      * @param string $errorMessage      error message when the user didn't indicate a value from the choice
      * @param mixed  $preselectedChoice
@@ -156,17 +157,13 @@ class InteractiveConfigurator
      */
     public function askEntryPoints(
         $questionMessage,
-        $entryPointType = '',
+        array $entryPointsList,
         $multipleChoice = false,
         $preselectedChoice = array(),
         $errorMessage = '%s is an unknown entry points'
     ) {
         $questionMessage = "<question>${questionMessage}</question>";
-        if ($entryPointType == '') {
-            $choice = array_keys($this->globalSetup->getEntryPointsList());
-        } else {
-            $choice = array_keys($this->globalSetup->getEntryPointsByType($entryPointType));
-        }
+        $choice = array_keys($entryPointsList);
         if (!count($choice)) {
             return false;
         }

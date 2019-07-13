@@ -24,7 +24,7 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
             'Select entry points on which to setup the acl2 plugin to check acl at each request.',
-            '',
+            $helpers->getEntryPointsList(),
             true,
             $this->parameters['eps']
         );
