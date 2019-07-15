@@ -211,8 +211,10 @@ abstract class jDaoFactoryBase
     public function createRecord()
     {
         $c = $this->_DaoRecordClassName;
-
-        return new $c();
+        /** @var jDaoRecordBase $rec */
+        $rec = new $c();
+        $rec->setDbProfile($this->_conn->getProfileName());
+        return $rec;
     }
 
     /**
