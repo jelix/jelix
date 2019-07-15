@@ -13,7 +13,7 @@
  */
 
 /**
- * @experimental
+ * @deprecated
  */
 class mssqlDbTools extends jDbTools
 {
