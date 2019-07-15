@@ -14,6 +14,9 @@
  */
 abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
+    static protected $trueValue = 1;
+    static protected $falseValue = 0;
+
     function setUp() {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
@@ -25,18 +28,21 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     function testInstanciation() {
         $dao = jDao::create ('products', $this->dbProfile);
-        $this->assertInstanceOf('jDaoFactoryBase', $dao);
+        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_mysql', $dao);
 
         $dao = jDao::get ('products', $this->dbProfile);
-        $this->assertInstanceOf('jDaoFactoryBase', $dao);
+        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_mysql', $dao);
 
         $daorec = jDao::createRecord ('products', $this->dbProfile);
-        $this->assertInstanceOf('jDaoRecordBase', $daorec);
+        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_mysql', $daorec);
 
         $daorec = $dao->createRecord();
-        $this->assertInstanceOf('jDaoRecordBase', $daorec);
+        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_mysql', $daorec);
     }
 
+    /**
+     * @depends testInstanciation
+     */
     function testFindAllEmpty() {
         $this->emptyTable('product_test');
         $dao = jDao::create ('products', $this->dbProfile);
@@ -84,7 +90,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         self::$prod3->name ='verre';
         self::$prod3->price = 2.43;
         self::$prod3->promo = false;
-        $res = $dao->insert(self::$prod3);
+        $res = self::$prod3->save();
 
         $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
         $this->assertNotEquals('', self::$prod3->id, 'jDaoBase::insert : id not set');
@@ -94,15 +100,15 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
             array('id'=>self::$prod1->id,
             'name'=>'assiette',
             'price'=>3.87,
-            'promo'=>0),
+            'promo'=> static::$falseValue),
             array('id'=>self::$prod2->id,
             'name'=>'fourchette',
             'price'=>1.54,
-            'promo'=>1),
+            'promo'=>static::$trueValue),
             array('id'=>self::$prod3->id,
             'name'=>'verre',
             'price'=>2.43,
-            'promo'=>0),
+            'promo'=>static::$falseValue),
         );
         $this->assertTableContainsRecords('product_test', $records);
 
@@ -119,7 +125,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name,'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price,'jDao::get : bad price property on record');
-        $this->assertEquals(0, $prod->promo,'jDao::get : bad promo property on record');
+        $this->assertEquals(static::$falseValue, $prod->promo,'jDao::get : bad promo property on record');
     }
 
     /**
@@ -140,57 +146,57 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record');
         
         $prod->promo = 't';
         $prod->save();
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
         
         $prod->promo = 'f';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(0, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$falseValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = false;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(0, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$falseValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 'true';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 'on';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 'false';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(0, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$falseValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 0;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(0, $prod2->promo,'jDao::get : bad promo property on record : '.var_export($prod2->promo,true).' ');
+        $this->assertEquals(static::$falseValue, $prod2->promo,'jDao::get : bad promo property on record : '.var_export($prod2->promo,true).' ');
 
         $prod->promo = 1;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = '0';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(0, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$falseValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = '1';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals(1, $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals(static::$trueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
     }
 
@@ -207,25 +213,33 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         }
         $this->assertEquals(3, count($list), 'findAll doesn\'t return all products. %s ');
         $this->assertEquals(3, $dao->countAll(), 'countAll doesn\'t return 3');
-
+        usort($list, function($itemA, $itemB) {
+            if ($itemA->id > $itemB->id) {
+                return 1;
+            }
+            if ($itemA->id == $itemB->id) {
+                return 0;
+            }
+            return -1;
+        });
     $verif='<array>
     <object>
         <string property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
         <string property="price" value="5.90" />
-        <string property="promo" value="1" />
+        <string property="promo" value="'.static::$trueValue.'" />
     </object>
     <object>
         <string property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
         <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <string property="promo" value="'.static::$trueValue.'" />
     </object>
     <object>
         <string property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
         <string property="price" value="2.43" />
-        <string property="promo" value="0" />
+        <string property="promo" value="'.static::$falseValue.'" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -249,7 +263,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         <string property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
         <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <string property="promo" value="'.static::$trueValue.'" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -267,7 +281,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         <string property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
         <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <string property="promo" value="'.static::$trueValue.'" />
         <string property="dummy" value="started" />
     </object>
 </array>';
@@ -374,7 +388,15 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         foreach($res as $r){
             $list[] = $r;
         }
-
+        usort($list, function($itemA, $itemB) {
+            if ($itemA->id > $itemB->id) {
+                return 1;
+            }
+            if ($itemA->id == $itemB->id) {
+                return 0;
+            }
+            return -1;
+        });
         $this->assertEquals(2, count($list), 'findBySomeNames doesn\'t return selected products. %s ');
         $verif='<array>
     <object>
@@ -529,6 +551,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     }
 
     function testBinaryField() {
+
         $this->emptyTable('jsessions');
 
         $dao = jDao::create ('jelix~jsession', $this->dbProfile);
