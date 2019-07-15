@@ -17,8 +17,6 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     function setUp() {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
-        if ($this->getName() == 'testInstanciation')
-            $this->emptyTable('product_test');
     }
 
     function tearDown() {
@@ -26,13 +24,13 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     }
 
     function testInstanciation() {
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
         $this->assertInstanceOf('jDaoFactoryBase', $dao);
 
-        $dao = jDao::get ('products');
+        $dao = jDao::get ('products', $this->dbProfile);
         $this->assertInstanceOf('jDaoFactoryBase', $dao);
 
-        $daorec = jDao::createRecord ('products');
+        $daorec = jDao::createRecord ('products', $this->dbProfile);
         $this->assertInstanceOf('jDaoRecordBase', $daorec);
 
         $daorec = $dao->createRecord();
@@ -40,7 +38,8 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     }
 
     function testFindAllEmpty() {
-        $dao = jDao::create ('products');
+        $this->emptyTable('product_test');
+        $dao = jDao::create ('products', $this->dbProfile);
         $res = $dao->findAll();
         $list = array();
         foreach($res as $r){
@@ -58,9 +57,9 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testFindAllEmpty
      */
     function testInsert() {
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
-        self::$prod1 = jDao::createRecord ('products');
+        self::$prod1 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod1->name ='assiette';
         self::$prod1->price = 3.87;
         self::$prod1->promo = false;
@@ -81,7 +80,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertNotEquals('', self::$prod2->id, 'jDaoBase::insert : id not set');
         $this->assertNotEquals('', self::$prod2->create_date, 'jDaoBase::insert : create_date not updated');
 
-        self::$prod3 = jDao::createRecord ('products');
+        self::$prod3 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod3->name ='verre';
         self::$prod3->price = 2.43;
         self::$prod3->promo = false;
@@ -113,7 +112,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testInsert
      */
     function testGet() {
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $prod = $dao->get(self::$prod1->id);
         $this->assertInstanceOf('jDaoRecordBase', $prod,'jDao::get doesn\'t return a jDaoRecordBase object');
@@ -127,8 +126,8 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testGet
      */
     function testUpdate(){
-        $dao = jDao::create ('products');
-        $prod = jDao::createRecord ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
+        $prod = jDao::createRecord ('products', $this->dbProfile);
         $prod->name ='assiette nouvelle';
         $prod->price = 5.90;
         $prod->promo = true;
@@ -199,7 +198,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testUpdate
      */
     function testFindAllNotEmpty() {
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $res = $dao->findAll();
         $list = array();
@@ -236,7 +235,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testFindAllNotEmpty
      */
     function testEqualityOnValue() {
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $res = $dao->findFourchette();
         $list = array();
@@ -279,7 +278,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testEqualityOnValue
      */
     function testFindByCountByOrder(){
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $conditions = jDao::createConditions();
         $conditions->addItemOrder('id','DESC');
@@ -318,7 +317,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testFindByCountByOrder
      */
     function testFindByCountByConditionsOrder(){
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $conditions = jDao::createConditions();
         $conditions->addItemOrder('id','DESC');
@@ -353,7 +352,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testFindByCountByConditionsOrder
      */
     function testFindWithIn(){
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
         $res = $dao->findBySomeNames();
         $list = array();
         foreach($res as $r){
@@ -396,7 +395,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testFindWithIn
      */
     function testDelete(){
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
         $dao->delete(self::$prod1->id);
         $this->assertEquals(2, $dao->countAll(), 'countAll doesn\'t return 2');
 
@@ -437,7 +436,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
      * @depends testDelete
      */
     function testDeleteBy(){
-        $dao = jDao::create ('products');
+        $dao = jDao::create ('products', $this->dbProfile);
 
         $conditions = jDao::createConditions();
         $conditions->addCondition ('id', '=', self::$prod2->id);
@@ -471,14 +470,14 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     function testRecordCheck() {
 
-        $record = jDao::createRecord ('products');
+        $record = jDao::createRecord ('products', $this->dbProfile);
         $this->assertEquals('', $record->id);
         $record->setPk(5);
         $this->assertEquals(5, $record->id);
 
         $this->assertEquals(5, $record->getPk());
  
-        $record = jDao::createRecord ('description');
+        $record = jDao::createRecord ('description', $this->dbProfile);
         $this->assertEquals('', $record->id);
         $this->assertEquals('fr', $record->lang);
 
@@ -496,7 +495,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     function testErrorCheck() {
 
-        $record = jDao::createRecord('products');
+        $record = jDao::createRecord('products', $this->dbProfile);
         $check = $record->check();
         $expected = array('name'=>array(jDaoRecordBase::ERROR_REQUIRED));
         $this->assertEquals($expected,$check);
@@ -532,7 +531,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     function testBinaryField() {
         $this->emptyTable('jsessions');
 
-        $dao = jDao::create ('jelix~jsession');
+        $dao = jDao::create ('jelix~jsession', $this->dbProfile);
 
         $sess1 = $dao->createRecord();
         $sess1->id ='sess_02939873A32B';

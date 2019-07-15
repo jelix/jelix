@@ -121,6 +121,10 @@ abstract class jDbConnection
         }
     }
 
+    public function getProfileName() {
+        return $this->profile['_name'];
+    }
+
     /**
      * Launch a SQL Query which returns rows (typically, a SELECT statement).
      *
