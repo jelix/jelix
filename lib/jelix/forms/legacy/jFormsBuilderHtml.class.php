@@ -1044,6 +1044,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
     protected function jsOutput($ctrl)
     {
+        $this->jsContent .= 'c=null;';
     }
 
     protected function outputButton($ctrl, &$attr)
@@ -1058,6 +1059,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
     protected function jsButton($ctrl)
     {
+        $this->jsContent .= 'c=null;';
     }
 
     protected function outputUpload($ctrl, &$attr)

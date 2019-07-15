@@ -195,6 +195,14 @@ class sqlsrvDbTools extends jDbTools
         return 'datepart('.$parametersString.')';
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function encloseName ($fieldName) {
+        return '['.$fieldName.']';
+    }
+
     /**
      * retrieve the list of fields of a table.
      *

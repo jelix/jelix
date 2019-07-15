@@ -1448,19 +1448,19 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();self::$builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value=""/><span class="jforms-value"></span>'."\n", $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
         self::$form->setData('output1','laurent');
         ob_start();self::$builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
         $ctrl->setReadOnly(true);
         ob_start();self::$builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
         $ctrl->hint='ceci est un tooltip';
@@ -1469,7 +1469,7 @@ jFormsJQ.tForm.addControl(c);
 
         ob_start();self::$builder->outputControl($ctrl);$out = ob_get_clean();
         $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value" title="ceci est un tooltip">laurent</span>'."\n", $out);
-        $this->assertEquals('', self::$builder->getJsContent());
+        $this->assertEquals('c=null;', self::$builder->getJsContent());
 
     }
 

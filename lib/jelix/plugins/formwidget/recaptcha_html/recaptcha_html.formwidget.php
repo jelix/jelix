@@ -60,6 +60,7 @@ class recaptcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
     protected function outputJs()
     {
+        $this->parentWidget->addJs('c=null;');
     }
 
     public function outputControl()
