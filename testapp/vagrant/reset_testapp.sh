@@ -28,8 +28,8 @@ do
 done
 
 
-if [ -f $APPDIR/var/db/sqlite3/tests.sqlite3.bak ]; then
-    cp -a $APPDIR/var/db/sqlite3/tests.sqlite3.bak $APPDIR/var/db/sqlite3/tests.sqlite3
+if [ -f $APPDIR/var/db/sqlite3/tests.sqlite3 ]; then
+    rm $APPDIR/var/db/sqlite3/tests.sqlite3
 fi
 
 initapp $APPDIR

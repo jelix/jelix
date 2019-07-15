@@ -280,11 +280,14 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         $db->exec('DROP TABLE IF EXISTS country');
         $schema = $db->schema();
 
-        $goodList = array('products', 'product_test', 'sqlite_sequence');
+        $goodList = array('jsessions', 'products', 'product_test');
 
         $list = $schema->getTables();
         $tables = array();
         foreach($list as $table) {
+            if ($table->getName() == 'sqlite_sequence') {
+                continue;
+            }
             $tables[] = $table->getName();
         }
 
@@ -604,6 +607,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         $goodList = array(
             'country',
             'bigcity',
+            'jsessions',
             'product_test',
             'products',
             'sqlite_sequence',
@@ -772,6 +776,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
             'products',
             'sqlite_sequence',
             'test_prod',
+            'jsessions'
         );
 
         $list = $schema->getTables();
