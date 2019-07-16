@@ -222,7 +222,6 @@ abstract class jDbSchema
 
     abstract protected function _getTableInstance($name);
 
-    protected $supportAutoIncrement = false;
 
     /**
      * return the SQL string corresponding to the given column.
@@ -249,9 +248,7 @@ abstract class jDbSchema
             $colstr .= '('.$col->length.')';
         }
 
-        if ($this->supportAutoIncrement && $col->autoIncrement) {
-            $colstr .= ' AUTO_INCREMENT ';
-        }
+        $colstr .= $this->_getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey);
 
         $colstr .= ($col->notNull ? ' NOT NULL' : '');
 
@@ -272,6 +269,14 @@ abstract class jDbSchema
 
         return $colstr;
     }
+
+    /**
+     * @param jDbColumn $col                the column
+     */
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+        return '';
+    }
+
 
     /**
      * fill correctly some properties of the column, depending of its type

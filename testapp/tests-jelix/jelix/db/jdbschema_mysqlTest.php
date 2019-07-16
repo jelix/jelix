@@ -911,6 +911,8 @@ class jDbSchema_MysqlTest extends jUnitTestCase {
 
         $columns = array();
         $id = new jDbColumn('country_id', 'INTEGER');
+        // don't set autoincrement as it is not allowed on non primary/unique key
+        // and then it will fail when we will remove the PK constraint
         //$id->autoIncrement = true;
         $columns[] = $id;
         $columns[] = new jDbColumn('name', 'varchar', 50, false, null, true);

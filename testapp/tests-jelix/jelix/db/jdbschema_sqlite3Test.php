@@ -312,7 +312,7 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
 
         $verif='<array>
     <object class="jDbColumn" key="id">
-        <string property="type" value="int" />
+        <string property="type" value="integer" />
         <string property="name" value="id" />
         <boolean property="notNull" value="true"/>
         <boolean property="autoIncrement" value="true"/>
@@ -798,14 +798,16 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
      */
     public function testCreateTableAndAddDropPrimaryKey() {
         $db = jDb::getConnection('testapp_sqlite3');
+        $db->exec("DROP TABLE IF EXISTS country");
         $schema = new sqlite3DbSchema($db);
 
         $columns = array();
-        $columns[] = new jDbColumn('country_id', 'serial');
+        // don't set autoincrement as it is not allowed on non primary/unique key
+        // and then it will fail when we will remove the PK constraint
+        $columns[] = new jDbColumn('country_id', 'integer');
         $columns[] = new jDbColumn('name', 'varchar', 50, false, null, true);
 
         $country = $schema->createTable('country', $columns, 'country_id');
-
         $pk = $country->getPrimaryKey();
         $this->assertEquals(array('country_id'), $pk->columns);
 

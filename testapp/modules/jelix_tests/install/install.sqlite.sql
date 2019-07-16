@@ -1,5 +1,5 @@
 CREATE TABLE product_test (
-    id INT AUTO_INCREMENT NOT NULL PRIMARY KEY ,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name VARCHAR( 150 ) NOT NULL ,
     price FLOAT NOT NULL,
     create_date datetime default NULL,
@@ -8,7 +8,7 @@ CREATE TABLE product_test (
 );
 
 CREATE TABLE products (
-    id integer AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     name varchar(150) not null,
     price float default 0
 );

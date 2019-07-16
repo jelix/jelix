@@ -44,11 +44,12 @@ class sqlite3DbTable extends jDbTable
 
             list($type, $length, $precision, $scale, $tail) = $tools->parseSQLType($c->type);
             $autoIncrement = false;
-            if (strtolower($tail) == 'auto_increment'
+            if (strtolower($tail) == 'autoincrement'
                 || strtolower($type) == 'rowid'
                 || (strtolower($type) == 'integer' && $isPrimary)) {
                 // in sqlite, rowid or integer primary key is always an auto_increment field
                 // AUTOINCREMENT keyword just change the incremental algorithm
+                // the purpose of AUTOINCREMENT is to prevent the reuse of ROWIDs from previously deleted rows.
                 // see http://sqlite.org/autoinc.html
                 $autoIncrement = true;
                 $hasDefault = true;
@@ -126,7 +127,7 @@ class sqlite3DbTable extends jDbTable
 
         // recreate the table with the new column
         $conn = $this->schema->getConn();
-        if ($this->schema->recreateTable(
+        $this->schema->recreateTable(
             $this,
             $newColumns,
             $this->_getSqlColumnsList($conn, $this->columns),
@@ -135,9 +136,8 @@ class sqlite3DbTable extends jDbTable
             $newIndexes,
             $newReferences,
             $newUniqueKeys
-        )) {
-            $this->columns = $newColumns;
-        }
+        );
+        $this->columns = $newColumns;
     }
 
     /**
@@ -592,8 +592,6 @@ class sqlite3DbSchema extends jDbSchema
         return new sqlite3DbTable($name, $this);
     }
 
-    protected $supportAutoIncrement = true;
-
     protected function _getTables()
     {
         $results = array();
@@ -629,8 +627,6 @@ class sqlite3DbSchema extends jDbSchema
      * @param null|mixed     $newIndexes
      * @param null|mixed     $newReferences
      * @param null|mixed     $newUniqueKeys
-     *
-     * @return bool true if it is ok
      *
      * @internal internal method, only called by sqlite3DbTable
      */
@@ -691,12 +687,9 @@ class sqlite3DbSchema extends jDbSchema
                     ' ('.$conn->tools()->getSQLColumnsList($index->columns).')';
                 $conn->exec($sql);
             }
-
-            return true;
         } catch (Exception $e) {
             $conn->rollback();
-
-            return false;
+            throw $e;
         }
     }
 
@@ -758,5 +751,70 @@ class sqlite3DbSchema extends jDbSchema
         $sql .= ')';
 
         return $sql;
+    }
+
+    /**
+     * return the SQL string corresponding to the given column.
+     * private method, should be used only by a jDbTable object.
+     *
+     * @param jDbColumn $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
+     *
+     * @return string the sql string
+     */
+    public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
+    {
+        $this->normalizeColumn($col);
+        $colstr = $this->conn->encloseName($col->name).' '.$col->nativeType;
+        $ti = $this->conn->tools()->getTypeInfo($col->type);
+        if ($col->precision) {
+            $colstr .= '('.$col->precision;
+            if ($col->scale) {
+                $colstr .= ','.$col->scale;
+            }
+            $colstr .= ')';
+        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
+            $colstr .= '('.$col->length.')';
+        }
+
+        $colstr .= ($col->notNull && !$col->autoIncrement ? ' NOT NULL' : '');
+
+        if (!$col->autoIncrement && !$isPrimaryKey) {
+            if ($col->hasDefault) {
+                if ($col->default === null || strtoupper($col->default) == 'NULL') {
+                    if (!$col->notNull) {
+                        $colstr .= ' DEFAULT NULL';
+                    }
+                } else {
+                    $colstr .= ' DEFAULT '.$this->conn->tools()->escapeValue($ti[1], $col->default, true);
+                }
+            }
+        }
+        if ($isSinglePrimaryKey) {
+            $colstr .= ' PRIMARY KEY ';
+        }
+
+        $colstr .= $this->_getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey);
+
+        return $colstr;
+    }
+
+    /**
+     * @param jDbColumn $col the column
+     */
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+        if ($col->autoIncrement && $col->nativeType == 'integer') {
+            if ($isPrimaryKey && $isSinglePrimaryKey) {
+                return ' AUTOINCREMENT';
+            }
+            $col->autoIncrement = false;
+            // we don't set the AUTOINCREMENT keyword, because it is not needed
+            // in sqlite, as it is only allowed with INTEGER PRIMARY KEY, and
+            // as INTEGER PRIMARY KEY is automatically set as auto incremented.
+            // if we set AUTOINCREMENT, it also prevents to remove the "PRIMARY KEY"
+            // constraint
+        }
+        return '';
     }
 }
