@@ -25,8 +25,8 @@ class passwordCtrl extends jController
 
     public function index()
     {
-        $id = $this->param('j_user_login');
-        if ($id === null) {
+        $login = $this->param('j_user_login');
+        if ($login === null) {
             $rep = $this->getResponse('redirect');
             $rep->action = 'master_admin~default:index';
 
@@ -34,7 +34,7 @@ class passwordCtrl extends jController
         }
 
         $personalView = $this->isPersonalView();
-        if ($personalView && $id != jAuth::getUserSession()->login) {
+        if ($personalView && $login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
             $rep = $this->getResponse('redirect');
             $rep->action = 'master_admin~default:index';
@@ -45,7 +45,7 @@ class passwordCtrl extends jController
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
-        $tpl->assign('id', $id);
+        $tpl->assign('id', $login);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('personalview', $personalView);
         if ($personalView) {
@@ -60,13 +60,13 @@ class passwordCtrl extends jController
 
     public function update()
     {
-        $id = $this->param('j_user_login');
+        $login = $this->param('j_user_login');
         $pwd = $this->param('pwd');
         $pwdconf = $this->param('pwd_confirm');
         $rep = $this->getResponse('redirect');
 
         $personalView = $this->isPersonalView();
-        if ($personalView && $id != jAuth::getUserSession()->login) {
+        if ($personalView && $login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
             $rep->action = 'master_admin~default:index';
 
@@ -76,26 +76,26 @@ class passwordCtrl extends jController
         if (trim($pwd) == '' || $pwd != $pwdconf) {
             jMessage::add(jLocale::get('crud.message.bad.password'), 'error');
             $rep->action = 'password:index';
-            $rep->params['j_user_login'] = $id;
+            $rep->params['j_user_login'] = $login;
 
             return $rep;
         }
 
-        if (jAuth::changePassword($id, $pwd)) {
-            jMessage::add(jLocale::get('crud.message.change.password.ok', $id), 'notice');
+        if (jAuth::changePassword($login, $pwd)) {
+            jMessage::add(jLocale::get('crud.message.change.password.ok', $login), 'notice');
             if ($personalView) {
                 $rep->action = 'user:index';
             } else {
                 $rep->action = 'default:view';
             }
-            $rep->params['j_user_login'] = $id;
+            $rep->params['j_user_login'] = $login;
 
             return $rep;
         }
 
         jMessage::add(jLocale::get('crud.message.change.password.notok'), 'error');
         $rep->action = 'password:index';
-        $rep->params['j_user_login'] = $id;
+        $rep->params['j_user_login'] = $login;
 
         return $rep;
     }
