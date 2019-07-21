@@ -17,7 +17,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class pgsqlDbTools extends jDbTools
+class jDbPgsqlTools extends jDbTools
 {
     public $trueValue = 'TRUE';
 

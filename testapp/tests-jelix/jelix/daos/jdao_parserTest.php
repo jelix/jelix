@@ -17,7 +17,7 @@ class jdao_parserTest extends jUnitTestCase {
     protected $_tools;
     function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
-        $this->_tools= new mysqliDbTools(null);
+        $this->_tools= new jDbMysqlTools(null);
     }
 
     function tearDown() {

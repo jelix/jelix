@@ -36,7 +36,7 @@ class jdao_generatorTest extends jUnitTestCase {
 
     function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
-        $this->_tools= new mysqliDbTools(null);
+        $this->_tools= new jDbMysqlTools(null);
     }
 
     function tearDown() {
@@ -519,7 +519,7 @@ class jdao_generatorTest extends jUnitTestCase {
         </method>
     </factory>
 </dao>';
-        $tools = new pgsqlDbTools(null);
+        $tools = new jDbPgsqlTools(null);
         $parser = new jDaoParser ($this->_selector);
 
         $parser->parse(simplexml_load_string($doc), $tools);

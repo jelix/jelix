@@ -11,7 +11,7 @@
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-class sqlsrvDbTools extends jDbTools
+class jDbSqlsrvTools extends jDbTools
 {
     protected $dbmsStyle = array('/^\s*(#|\-\- )/', '/;\s*$/');
 

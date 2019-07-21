@@ -18,7 +18,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class sqlite3DbTools extends jDbTools
+class jDbSqliteTools extends jDbTools
 {
     protected $typesInfo = array(
         // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength

@@ -107,6 +107,9 @@ cd lib/jelix/dao
 cd lib/jelix/db
   __ALL__
 
+cd lib/jelix/db/tools
+  __ALL__
+
 cd lib/jelix/Dependencies
   Exception.php
   Item.php

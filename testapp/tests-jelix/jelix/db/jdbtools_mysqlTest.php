@@ -9,9 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-include_once (JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbtools.php');
+include_once (JELIX_LIB_PATH.'db/tools/jDbMysqlTools.php');
 
-class testmysqlDbTools extends mysqliDbTools {
+class testmysqlDbTools extends jDbMysqlTools {
     public function testParseSQLScript($script) {
         return $this->parseSQLScript($script);
     }

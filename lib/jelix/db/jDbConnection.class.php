@@ -465,27 +465,13 @@ abstract class jDbConnection
     }
 
     /**
-     * @var jDbTools
-     *
-     * @since 1.2
-     */
-    protected $_tools;
-
-    /**
      * @return jDbTools
      *
      * @since 1.2
      */
     public function tools()
     {
-        if (!$this->_tools) {
-            $this->_tools = jApp::loadPlugin($this->driverName, 'db', '.dbtools.php', $this->driverName.'DbTools', $this);
-            if (is_null($this->_tools)) {
-                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
-            }
-        }
-
-        return $this->_tools;
+        return jDbUtils::getTools($this->dbms, $this);
     }
 
     /**

@@ -310,7 +310,7 @@ abstract class jDbTools
                     return $this->_conn->quote($value);
                 }
 
-                    return "'".addslashes($value)."'";
+                return "'".addslashes($value)."'";
         }
     }
 
