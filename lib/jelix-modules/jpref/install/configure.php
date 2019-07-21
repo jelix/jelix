@@ -13,6 +13,6 @@ class jprefModuleConfigurator extends \Jelix\Installer\Module\Configurator
 {
     public function configure(Jelix\Installer\Module\API\ConfigurationHelpers $helpers)
     {
-        $helpers->copyFile('prefs.ini', 'config:preferences.ini.php');
+        $helpers->copyFile('prefs.ini.php', 'config:preferences.ini.php');
     }
 }
