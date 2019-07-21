@@ -84,7 +84,7 @@ trait FileHelpersTrait
 
     protected function expandPath($path)
     {
-        if (preg_match('/^([a-z])\\:/', $path, $m)) {
+        if (preg_match('/^([a-z]+)\\:/', $path, $m)) {
             switch ($m[1]) {
                 case 'www':
                     $path = str_replace('www:', \jApp::wwwPath(), $path);
