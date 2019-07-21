@@ -231,6 +231,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $xmlMap->save();
 
         // installation
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose() ? 'notice' : 'warning'));
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
