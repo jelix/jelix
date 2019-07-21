@@ -48,6 +48,7 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
             $conf->setValue('on_error', $onerror, 'coordplugin_jacl2');
             $conf->setValue('error_message', 'jacl2~errors.action.right.needed', 'coordplugin_jacl2');
             $conf->setValue('on_error_action', 'jelix~error:badright', 'coordplugin_jacl2');
+            $conf->save();
         }
     }
 }
