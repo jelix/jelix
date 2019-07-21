@@ -186,5 +186,5 @@ name=admin
 ;default = jelix/js/jforms/datepickers/default/init.js
 
 [webassets_common]
-jacl2_admin.css[]="design/jacl2.css"
-master_admin.css[]="design/master_admin.css"
+jacl2_admin.css[]="$jelix/design/jacl2.css"
+master_admin.css[]="$jelix/design/master_admin.css"
