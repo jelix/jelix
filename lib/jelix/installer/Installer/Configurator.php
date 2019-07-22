@@ -468,6 +468,7 @@ class Configurator
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
+                    $this->notice('configuration.module.start', array($component->getName()));
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
