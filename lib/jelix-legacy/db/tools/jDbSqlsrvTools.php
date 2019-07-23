@@ -11,11 +11,7 @@
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
-/**
- * @experimental
- */
-class mssqlDbTools extends jDbTools
+class jDbSqlsrvTools extends jDbTools
 {
     protected $dbmsStyle = array('/^\s*(#|\-\- )/', '/;\s*$/');
 
@@ -199,6 +195,14 @@ class mssqlDbTools extends jDbTools
         return 'datepart('.$parametersString.')';
     }
 
+
+    /**
+     * @inheritdoc
+     */
+    public function encloseName ($fieldName) {
+        return '['.$fieldName.']';
+    }
+
     /**
      * retrieve the list of fields of a table.
      *
@@ -236,8 +240,8 @@ class mssqlDbTools extends jDbTools
             if ($line->IS_NULLABLE == 'No') {
                 $field->notNull = false;
             }
-            $field->hasDefault = false;
-            $field->default = '';
+            $field->hasDefault = ($line->COLUMN_DEF !== '');
+            $field->default = $line->COLUMN_DEF;
             if (in_array($field->name, $pkeys)) {
                 $field->primary = true;
             }

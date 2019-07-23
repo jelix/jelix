@@ -9,10 +9,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-include_once (JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbtools.php');
-include_once (JELIX_LIB_PATH.'plugins/db/pgsql/pgsql.dbtools.php');
-include_once (JELIX_LIB_PATH.'plugins/db/oci/oci.dbtools.php');
-include_once (JELIX_LIB_PATH.'plugins/db/sqlite3/sqlite3.dbtools.php');
+include_once (JELIX_LIB_PATH.'db/tools/jDbMysqlTools.php');
+include_once (JELIX_LIB_PATH.'db/tools/jDbPgsqlTools.php');
+include_once (JELIX_LIB_PATH.'db/tools/jDbOciTools.php');
+include_once (JELIX_LIB_PATH.'db/tools/jDbSqliteTools.php');
 
 
 class jDbToolsTest extends jUnitTestCaseDb {
@@ -23,19 +23,19 @@ class jDbToolsTest extends jUnitTestCaseDb {
 
     function testEncloseName(){
 
-        $tools= new mysqliDbTools(null);
+        $tools= new jDbMysqlTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('`foo`',$result);
 
-        $tools= new pgsqlDbTools(null);
+        $tools= new jDbPgsqlTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('"foo"',$result);
 
-        $tools= new ociDbTools(null);
+        $tools= new jDbOciTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('foo',$result);
 
-        $tools= new sqlite3DbTools(null);
+        $tools= new jDbSqliteTools(null);
         $result = $tools->encloseName('foo');
         $this->assertEquals('foo',$result);
     }
@@ -63,7 +63,7 @@ class jDbToolsTest extends jUnitTestCaseDb {
 
     function testStringToPhpValue(){
     
-        $tools= new mysqliDbTools(null);
+        $tools= new jDbMysqlTools(null);
 
         try {
             $tools->stringToPhpValue('int','5', false);
@@ -115,7 +115,7 @@ class jDbToolsTest extends jUnitTestCaseDb {
 
     function testEscapeValue(){
     
-        $tools= new mysqliDbTools(null);
+        $tools= new jDbMysqlTools(null);
 
         try {
             $tools->escapeValue('int','5', false);
@@ -195,7 +195,7 @@ class jDbToolsTest extends jUnitTestCaseDb {
     }
 
     function testParseCreateTable() {
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $sql = "CREATE TABLE city (
                 city_id INTEGER  PRIMARY KEY AUTOINCREMENT,
                 country_id integer NOT NULL,
@@ -228,7 +228,7 @@ class jDbToolsTest extends jUnitTestCaseDb {
     }
 
     function testParseCreateTemporaryTable() {
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $sql = "CREATE TEMPORARY 
                 TABLE IF NOT
                 EXISTS city (

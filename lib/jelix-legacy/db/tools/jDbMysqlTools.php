@@ -22,7 +22,7 @@
  * @package    jelix
  * @subpackage db_driver
  */
-class mysqliDbTools extends jDbTools
+class jDbMysqlTools extends jDbTools
 {
     protected $typesInfo = array(
         // type                  native type        unified type  minvalue     maxvalue   minlength  maxlength

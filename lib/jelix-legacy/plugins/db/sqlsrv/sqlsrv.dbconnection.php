@@ -14,7 +14,7 @@
 require_once __DIR__.'/sqlsrv.dbresultset.php';
 
 /**
- * @experimental
+ *
  */
 class sqlsrvDbConnection extends jDbConnection
 {

@@ -148,18 +148,10 @@ abstract class AbstractCommandForApp extends AbstractCommand
         return $config->_modulesPathList[$module];
     }
 
-    /**
-     * @var \Jelix\Core\Infos\FrameworkInfos
-     */
-    private $frameworkInfos;
 
-    protected function getFrameworkInfos($reload = false)
+    protected function getFrameworkInfos()
     {
-        if (!$this->frameworkInfos || $reload) {
-            $this->frameworkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
-        }
-
-        return $this->frameworkInfos;
+        return \Jelix\Core\Infos\FrameworkInfos::load();
     }
 
     /**

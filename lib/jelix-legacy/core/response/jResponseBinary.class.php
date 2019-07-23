@@ -64,6 +64,11 @@ final class jResponseBinary extends jResponse
     public $mimeType = 'application/octet-stream';
 
     /**
+     * Delete file after the upload
+     */
+    public $deleteFileAfterSending = false;
+
+    /**
      * send the content or the file to the browser.
      *
      * @throws jException
@@ -95,9 +100,16 @@ final class jResponseBinary extends jResponse
             if (is_readable($this->fileName) && is_file($this->fileName)) {
                 $this->_httpHeaders['Content-Length'] = filesize($this->fileName);
                 $this->sendHttpHeaders();
+                if ($this->deleteFileAfterSending) {
+                    // ignore, to be able to delete file
+                    ignore_user_abort(true);
+                }
                 session_write_close();
                 readfile($this->fileName);
                 flush();
+                if ($this->deleteFileAfterSending) {
+                    unlink($this->fileName);
+                }
             } else {
                 throw new jException('jelix~errors.repbin.unknown.file', $this->fileName);
             }

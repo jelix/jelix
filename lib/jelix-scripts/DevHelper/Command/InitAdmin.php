@@ -42,13 +42,31 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
                 ''
             )
             ->addOption(
-                'noauthdb',
+                'no-jauthdb',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not use and do not configure the driver \'db\' of jAuth'
             )
             ->addOption(
-                'noacl2db',
+                'no-jauth',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not configure the jauth module'
+            )
+            ->addOption(
+                'no-jauthdb-admin',
+                null,
+                InputOption::VALUE_NONE,
+                'Do not configure the jauthdb_admin module'
+            )
+            ->addOption(
+                'install-jpref-admin',
+                null,
+                InputOption::VALUE_NONE,
+                'Install the jpref_admin module'
+            )
+            ->addOption(
+                'no-acl2db',
                 null,
                 InputOption::VALUE_NONE,
                 'Do not use and do not configure the driver \'db\' of jAcl2'
@@ -64,13 +82,24 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
             $entrypoint = substr($entrypoint, 0, $p);
         }
         $this->selectedEntryPointId = $entrypoint;
-        $this->loadAppConfig($this->selectedEntryPointId);
+
 
         return $this->_execute($input, $output);
     }
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
+
+        $doNotInstallJauth = $input->getOption('no-jauth');
+        $doNotInstallJauthdb = $input->getOption('no-jauthdb');
+        $doNotInstallJacl2db = $input->getOption('no-acl2db');
+        $doNotInstallJauthdbAdmin = $input->getOption('no-jauthdb-admin');
+        $doInstallJprefAdmin = $input->getOption('install-jpref-admin');
+
+        if ($doInstallJprefAdmin && $doNotInstallJacl2db) {
+            throw new \Exception("module jpref-admin needs jAcl2db");
+        }
+
         $entrypoint = $this->selectedEntryPointId;
 
         try {
@@ -86,6 +115,14 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
                 throw new \Exception('The entrypoint has not been created because of this error: '.$e->getMessage().". No other files have been created.\n");
             }
         }
+
+        $compiler = new \Jelix\Core\Config\Compiler(
+            $ep->getConfigFile(),
+            $ep->getFile(),
+            true);
+        App::setConfig($compiler->read(true));
+
+        \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         $installConfig = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
 
@@ -118,10 +155,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $repositoryPath = \jFile::parseJelixPath('lib:jelix-admin-modules');
         $this->registerModulesDir('lib:jelix-admin-modules', $repositoryPath);
 
-        $installConfig->setValue('jacl.installed', '0', 'modules');
-        $inifile->setValue('jacl.enabled', false, 'modules');
-        $installConfig->setValue('jacldb.installed', '0', 'modules');
-        $inifile->setValue('jacldb.enabled', false, 'modules');
         $inifile->save();
 
         $urlsFile = App::appSystemPath($inifile->getValue('significantFile', 'urlengine'));
@@ -129,49 +162,77 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $xmlEp = $xmlMap->getEntryPoint($entrypoint);
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default' => true));
         $xmlEp->addUrlModule('', 'master_admin');
-        $xmlEp->addUrlInclude('/admin/acl', 'jacl2db_admin', 'urls.xml');
-        $xmlEp->addUrlInclude('/admin/auth', 'jauthdb_admin', 'urls.xml');
-        $xmlEp->addUrlInclude('/admin/pref', 'jpref_admin', 'urls.xml');
-        $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
-        $xmlMap->save();
+
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose() ? 'notice' : 'warning'), 'Configuration');
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
-        $configurator->setModuleParameters('jauth', array('eps' => array($entrypoint)));
-        //$configurator->setModuleParameters('master_admin', array());
-        $configurator->configureModules(array('jauth', 'master_admin'), $entrypoint);
 
-        $authini = new \Jelix\IniFile\IniModifier(App::varConfigPath($entrypoint.'/auth.coord.ini.php'));
-        $authini->setValue('after_login', 'master_admin~default:index');
-        $authini->setValue('timeout', '30');
-        $authini->save();
+        $jcommunity = $globalSetup->getModuleComponent('jcommunity');
+        if ($jcommunity && $jcommunity->isEnabled()) {
+            $doNotInstallJauth = true;
+            $doNotInstallJauthdb = true;
+        }
+
+        $modulesToConfigure = array();
 
         $profile = $input->getOption('profile');
 
-        if (!$input->getOption('noauthdb')) {
-            if ($profile != '') {
-                $authini->setValue('profile', $profile, 'Db');
-            }
+        if (!$doNotInstallJauth) {
+            $configurator->setModuleParameters('jauth', array('eps' => array($entrypoint)));
+
+            $authini = new \Jelix\IniFile\IniModifier(App::varConfigPath($entrypoint.'/auth.coord.ini.php'));
+            $authini->setValue('after_login', 'master_admin~default:index');
+            $authini->setValue('timeout', '30');
             $authini->save();
 
-            $configurator->setModuleParameters('jauthdb', array('defaultuser' => true));
-            $configurator->configureModules(array('jauthdb', 'jauthdb_admin'), $entrypoint);
+            $modulesToConfigure[] = 'jauth';
+
+            $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
         }
 
-        if (!$input->getOption('noacl2db')) {
+        if (!$doNotInstallJauthdb) {
+            if ($profile != '' && !$doNotInstallJauth) {
+                $authini->setValue('profile', $profile, 'Db');
+                $authini->save();
+            }
+
+            $configurator->setModuleParameters('jauthdb', array('defaultuser' => true));
+            $modulesToConfigure[] = 'jauthdb';
+        }
+
+        if (!$doNotInstallJauthdbAdmin) {
+            $modulesToConfigure[] = 'jauthdb_admin';
+            $xmlEp->addUrlInclude('/admin/auth', 'jauthdb_admin', 'urls.xml');
+        }
+
+        $modulesToConfigure[] = 'master_admin';
+        //$configurator->setModuleParameters('master_admin', array());
+
+        if ($doInstallJprefAdmin) {
+            $xmlEp->addUrlInclude('/admin/pref', 'jpref_admin', 'urls.xml');
+            $modulesToConfigure[] = 'jpref_admin';
+        }
+
+        if (!$doNotInstallJacl2db) {
             if ($profile != '') {
                 $dbini = new \Jelix\IniFile\IniModifier(App::varConfigPath('profiles.ini.php'));
                 $dbini->setValue('jacl2_profile', $profile, 'jdb');
                 $dbini->save();
             }
 
+            $xmlEp->addUrlInclude('/admin/acl', 'jacl2db_admin', 'urls.xml');
             $configurator->setModuleParameters('jacl2db', array('defaultuser' => true, 'defaultgroups' => true));
-            $configurator->configureModules(array('jacl2db', 'jacl2db_admin'), $entrypoint);
+            $modulesToConfigure[] = 'jacl2db';
+            $modulesToConfigure[] = 'jacl2db_admin';
         }
 
-        $configurator->configureModules(array('jpref_admin'), $entrypoint);
+        $configurator->configureModules($modulesToConfigure, $entrypoint);
 
+        $xmlMap->save();
+
+        // installation
+        $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose() ? 'notice' : 'warning'));
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();

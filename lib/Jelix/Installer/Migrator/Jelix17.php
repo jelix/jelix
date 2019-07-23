@@ -436,16 +436,18 @@ class Jelix17
             $wwwfiles = 'vhost';
         }
 
-        $jelixInstallParams = $originalJelixInstallParams = $masterConfigIni->getValue('jelix.installparam', 'modules');
+        $jelixInstallParams = $masterConfigIni->getValue('jelix.installparam', 'modules');
         if ($jelixInstallParams) {
-            $jelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
+            $jelixInstallParams = $originalJelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
             if (!isset($jelixInstallParams['wwwfiles'])) {
                 $jelixInstallParams['wwwfiles'] = $wwwfiles;
             }
         } else {
+            $originalJelixInstallParams = array();
             $jelixInstallParams = array('wwwfiles' => $wwwfiles);
         }
-        $jelixInstallParams = ModuleStatus::serializeParameters($jelixInstallParams);
+        $jelixInstallParams = ModuleStatus::serializeParametersAsArray($jelixInstallParams);
+        $originalJelixInstallParams = ModuleStatus::serializeParametersAsArray($originalJelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
             $this->reporter->message('Update installer parameters for the jelix : '.$jelixInstallParams, 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');

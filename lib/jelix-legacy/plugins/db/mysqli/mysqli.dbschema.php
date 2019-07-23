@@ -461,8 +461,6 @@ class mysqliDbSchema extends jDbSchema
         return $table;
     }
 
-    protected $supportAutoIncrement = true;
-
     public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
         $colStr = parent::_prepareSqlColumn($col, $isPrimaryKey, $isSinglePrimaryKey);
@@ -498,5 +496,16 @@ class mysqliDbSchema extends jDbSchema
     protected function _getTableInstance($name)
     {
         return new mysqliDbTable($name, $this);
+    }
+
+    /**
+     * @param jDbColumn $col the column
+     */
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
+    {
+        if ($col->autoIncrement) {
+            return ' AUTO_INCREMENT';
+        }
+        return '';
     }
 }

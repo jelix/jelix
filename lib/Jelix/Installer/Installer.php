@@ -140,7 +140,7 @@ class Installer
         }
 
         $modulesChains = $this->resolveDependencies($resolver);
-        if ($modulesChains) {
+        if (is_array($modulesChains)) {
             $result = $this->_installModules($modulesChains);
             $this->globalSetup->getInstallerIni()->save();
         }
@@ -239,12 +239,12 @@ class Installer
                     break;
                 case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
                 case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
                 case ItemException::ERROR_CHOICE_MISSING_ITEM:

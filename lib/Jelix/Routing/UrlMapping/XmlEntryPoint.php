@@ -112,7 +112,11 @@ class XmlEntryPoint
         $options = null
     ) {
         $url = $this->getUrlByModuleAction($module, $action);
+        $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
+            if ($urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('pathinfo', $pathinfo);
             $url->setAttribute('module', $module);
@@ -121,16 +125,29 @@ class XmlEntryPoint
             }
             $this->appendElement($this->ep, $url);
         } else {
+            if ($urlPathInfo  && $url !== $urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             if ($parameters !== null && is_array($parameters)) {
                 $list = $url->getElementsByTagName('param');
+                $listP = [];
                 foreach ($list as $p) {
-                    $url->removeChild($p);
+                    // we don't remove yet, as $list is modified at each remove
+                    $listP[] = $p;
+                }
+                foreach ($listP as $p) {
+                    $this->removeElement($p);
                 }
             }
             if ($statics !== null && is_array($statics)) {
                 $list = $url->getElementsByTagName('static');
+                $listP = [];
                 foreach ($list as $p) {
-                    $url->removeChild($p);
+                    // we don't remove yet, as $list is modified at each remove
+                    $listP[] = $p;
+                }
+                foreach ($listP as $p) {
+                    $this->removeElement($p);
                 }
             }
         }
@@ -192,13 +209,20 @@ class XmlEntryPoint
     public function addUrlController($pathinfo, $module, $controller, $options = null)
     {
         $url = $this->getUrlByModuleController($module, $controller);
+        $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
+            if ($urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('pathinfo', $pathinfo);
             $url->setAttribute('module', $module);
             $url->setAttribute('controller', $controller);
             $this->appendElement($this->ep, $url);
         } else {
+            if ($urlPathInfo  && $url !== $urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             $url->setAttribute('pathinfo', $pathinfo);
         }
 
@@ -227,12 +251,20 @@ class XmlEntryPoint
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
             if ($pathinfo) {
+                $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
+                if ($urlPathInfo) {
+                    $this->removeElement($urlPathInfo);
+                }
                 $url->setAttribute('pathinfo', $pathinfo);
             }
             $url->setAttribute('module', $module);
             $this->appendElement($this->ep, $url);
             $this->map->removeUrlModuleInOtherEntryPoint($module, $this);
         } elseif ($pathinfo) {
+            $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
+            if ($urlPathInfo && $urlPathInfo !== $url) {
+                $this->removeElement($urlPathInfo);
+            }
             $url->setAttribute('pathinfo', $pathinfo);
         } else {
             $url->removeAttribute('pathinfo');
@@ -245,7 +277,7 @@ class XmlEntryPoint
     {
         $url = $this->getUrlByDedicatedModule($module);
         if ($url) {
-            $url->parentNode->removeChild($url);
+            $this->removeElement($url);
         }
     }
 
@@ -268,7 +300,11 @@ class XmlEntryPoint
     public function addUrlHandler($pathinfo, $module, $handler, $action = '', $options = null)
     {
         $url = $this->getUrlByHandler($handler, $module);
+        $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
+            if ($urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('handler', $handler);
             $url->setAttribute('pathinfo', $pathinfo);
@@ -278,6 +314,9 @@ class XmlEntryPoint
             }
             $this->appendElement($this->ep, $url);
         } else {
+            if ($urlPathInfo && $urlPathInfo !== $url) {
+                $this->removeElement($urlPathInfo);
+            }
             $url->setAttribute('pathinfo', $pathinfo);
         }
 
@@ -301,13 +340,20 @@ class XmlEntryPoint
     public function addUrlInclude($pathinfo, $module, $include, $options = null)
     {
         $url = $this->getUrlByInclude($include, $module);
+        $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
+            if ($urlPathInfo) {
+                $this->removeElement($urlPathInfo);
+            }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('include', $include);
             $url->setAttribute('pathinfo', $pathinfo);
             $url->setAttribute('module', $module);
             $this->appendElement($this->ep, $url);
         } else {
+            if ($urlPathInfo && $urlPathInfo !== $url) {
+                $this->removeElement($urlPathInfo);
+            }
             $url->setAttribute('pathinfo', $pathinfo);
         }
         $this->setElementOptions($url, $options, array('https', 'noentrypoint'));
@@ -479,5 +525,14 @@ class XmlEntryPoint
         }
         $parent->appendChild($child);
         $parent->appendChild($doc->createTextNode("\n".substr($indent, 0, strlen($indent) - 4)));
+    }
+
+    protected function removeElement(\DOMElement $child) {
+        $parent = $child->parentNode;
+        if ($child->previousSibling && $child->previousSibling->nodeType == XML_TEXT_NODE) {
+            // remove indentation
+            $parent->removeChild($child->previousSibling);
+        }
+        $parent->removeChild($child);
     }
 }

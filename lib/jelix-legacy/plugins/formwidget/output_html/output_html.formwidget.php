@@ -42,5 +42,6 @@
          $this->_outputAttr($attr);
          echo '/>';
          echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($attr['value']),"</span>\n";
+         $this->parentWidget->addJs('c=null;');
      }
  }

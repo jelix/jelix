@@ -14,15 +14,41 @@
  */
 
 /**
- * HTML form builder.
+ * Widget to display the selection of a file to upload
  *
- * @package     jelix
- * @subpackage  forms_widget_plugin
- *
- * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
+ * For images upload, some attributes can be set to indicate
+ * the url of the image. The url can be forged from a selector or from a base URI.
+ * From a selector : action, parameters, and the parameter name that will
+ * contain the filename, should be given in attributes  uriAction, uriActionParameters, uriActionFileParameter
+ * From a base URI : a baseURI attribute should be given, with the URL on which
+ * the filename will be append.
  */
 class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements \jelix\forms\HtmlWidget\ParentWidgetInterface
 {
+    /**
+     * @var string the jUrl action selector used to get the URL of the image
+     */
+    protected $uriAction = '';
+
+    /**
+     * @var array parameters for the jUrl object used to get the URL of the image
+     */
+    protected $uriActionParameters = array();
+
+    /**
+     * @var string parameter name containing the control value, for the jUrl object used to get the URL of the image
+     */
+    protected $uriActionFileParameter = '';
+
+    /**
+     * @var string base URI of the image
+     */
+    protected $baseURI = '';
+
+    protected $imgMaxWidth = 0;
+
+    protected $imgMaxHeight = 0;
+
     //------ ParentBuilderInterface
 
     public function addJs($js)
@@ -41,6 +67,20 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
     }
 
     // -------- WidgetInterface
+    public function setAttributes($attr)
+    {
+
+        foreach(array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
+                    'baseURI', 'imgMaxWidth', 'imgMaxHeight') as $parameter) {
+            if (isset($attr[$parameter])) {
+                $this->$parameter = $attr[$parameter];
+                unset($attr[$parameter]);
+            }
+        }
+
+        parent::setAttributes($attr);
+    }
+
     protected function jsChoiceInternal()
     {
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -169,8 +209,8 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             $this->_outputAttr($attr);
             echo '/>',
             "</li>\n";
-            $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
-            $this->commonJs();
+            $this->parentWidget->addJs("c = new " . $jFormsJsVarName . "ControlString('" . $this->ctrl->ref . "', " . $this->escJsStr($this->ctrl->label) . ");\n");
+            $this->parentWidget->addJs($this->commonGetJsConstraints());
             $this->parentWidget->addJs("c2.addControl(c, 'new');\n");
         } else {
             echo '<input type="hidden" name="'.$this->ctrl->ref.'_jf_action" value="new" />';
@@ -211,7 +251,32 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         echo '<span ';
         $this->_outputAttr($attr);
         echo '>';
-        echo htmlspecialchars($value);
+        $mimeType = jFile::getMimeTypeFromFilename($value);
+        if ($suffixId != 'new' && strpos($mimeType, 'image/') === 0 &&
+            ($this->uriAction || $this->baseURI)
+        ) {
+            if ($this->baseURI) {
+                $url = $this->baseURI.$value;
+            }
+            else {
+                $params = $this->uriActionParameters;
+                if ($this->uriActionFileParameter) {
+                    $params[$this->uriActionFileParameter] = $value;
+                }
+                $url = jUrl::get($this->uriAction, $params);
+            }
+            $style = '';
+            if ($this->imgMaxHeight) {
+                $style .= 'max-height:'.$this->imgMaxHeight.'px';
+            }
+            if ($this->imgMaxWidth) {
+                $style .= 'max-width:'.$this->imgMaxWidth.'px';
+            }
+            echo '<a href="'.$url.'"><img src="'.$url.'" alt="'.$value.($style?'" style="'.$style.'"':'"').' /></a>';
+        }
+        else {
+            echo htmlspecialchars($value);
+        }
         echo '</span>';
     }
 }

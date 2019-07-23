@@ -42,7 +42,7 @@ class CreateZone extends \Jelix\DevHelper\AbstractCommandForApp
                 'name of the template created with the zone (by default, the template name is the zone name)'
             )
             ->addOption(
-                'notpl',
+                'no-tpl',
                 null,
                 InputOption::VALUE_NONE,
                 'no template is created.'
@@ -67,7 +67,7 @@ class CreateZone extends \Jelix\DevHelper\AbstractCommandForApp
         $param = array('name' => $name,
             'module' => $module, );
 
-        if (!$input->getOption('notpl')) {
+        if (!$input->getOption('no-tpl')) {
             if ($template) {
                 $param['template'] = $template;
             } else {

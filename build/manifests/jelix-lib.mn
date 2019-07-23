@@ -178,6 +178,9 @@ cd lib/jelix-legacy/dao
 cd lib/jelix-legacy/db
   __ALL__
 
+cd lib/jelix-legacy/db/tools
+  __ALL__
+
 #if ENABLE_DEVELOPER
 cd lib/jelix-legacy/docs
   workflow_action.sxd

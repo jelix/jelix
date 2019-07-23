@@ -211,8 +211,10 @@ abstract class jDaoFactoryBase
     public function createRecord()
     {
         $c = $this->_DaoRecordClassName;
-
-        return new $c();
+        /** @var jDaoRecordBase $rec */
+        $rec = new $c();
+        $rec->setDbProfile($this->_conn->getProfileName());
+        return $rec;
     }
 
     /**
@@ -660,7 +662,7 @@ abstract class jDaoFactoryBase
     protected function finishInitResultSet($rs)
     {
         $rs->setFetchMode(8, $this->_DaoRecordClassName);
-        $profile = $this->_conn->profile['_name'];
+        $profile = $this->_conn->getProfileName();
         $rs->addModifier(function ($record, $rs) use ($profile) {
             $record->setDbProfile($profile);
         });

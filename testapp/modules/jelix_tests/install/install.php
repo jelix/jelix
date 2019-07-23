@@ -25,14 +25,29 @@ class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
         // install tables into pgsql
         try {
             $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
-            $helpers->database()->useDbProfile('testapp_pgsql');
+
         } catch (Exception $e) {
             // no profile for pgsql, don't install tables in pgsql
-            return;
         }
 
-        $helpers->database()->execSQLScript('install');
-        $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
-        $helpers->database()->execSQLScript('install_jacl2.schema', 'jacl2db');
+        if ($dbprofile) {
+            $helpers->database()->useDbProfile('testapp_pgsql');
+            $helpers->database()->execSQLScript('install');
+            $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
+            $helpers->database()->execSQLScript('install_jacl2.schema', 'jacl2db');
+        }
+        $dbprofile = null;
+
+        // install tables into Sqlite
+        try {
+            $dbprofile = jProfiles::get('jdb', 'testapp_sqlite3', true);
+        } catch (Exception $e) {
+            // no profile for sqlite3, don't install tables in sqlite
+        }
+        if ($dbprofile) {
+            $helpers->database()->useDbProfile('testapp_sqlite3');
+            $helpers->database()->execSQLScript('install');
+            $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
+        }
     }
 }

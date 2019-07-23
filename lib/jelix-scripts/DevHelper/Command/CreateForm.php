@@ -40,13 +40,13 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
                 'selector of the dao on which the form will be based. If not given, the jforms file will be empty.'
             )
             ->addOption(
-                'createlocales',
+                'create-locales',
                 null,
                 InputOption::VALUE_NONE,
                 'creates the locales file for labels of the form'
             )
             ->addOption(
-                'usecomments',
+                'use-comments',
                 null,
                 InputOption::VALUE_NONE,
                 'it will use DAO\'s property comments like form\'s labels'
@@ -70,7 +70,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
 
         $formfile = strtolower($formName).'.form.xml';
 
-        if ($input->getOption('createlocales')) {
+        if ($input->getOption('create-locales')) {
             $locale_content = '';
             $locale_base = $module.'~'.strtolower($formName).'.form.';
 
@@ -88,7 +88,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         }
 
         if ($daoName === null) {
-            if ($input->getOption('createlocales')) {
+            if ($input->getOption('create-locales')) {
                 $locale_content = "form.ok=OK\n";
                 $this->createFile($path.$locale_filename_fr, 'locales.tpl', array('content' => $locale_content), 'Locales file');
                 $this->createFile($path.$locale_filename_en, 'locales.tpl', array('content' => $locale_content), 'Locales file');
@@ -191,8 +191,8 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
             }
 
             // use database comment to create form's label
-            if ($property->comment != '' && $input->getOption('usecomments')) {
-                if ($input->getOption('createlocales')) {
+            if ($property->comment != '' && $input->getOption('use-comments')) {
+                if ($input->getOption('create-locales')) {
                     // replace special chars by dot
                     $locale_content .= 'form.'.$name.'='.htmlspecialchars(utf8_decode($property->comment))."\n";
                     $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label locale='".$locale_base.$name."' />\n</${tag}>";
@@ -201,7 +201,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
                     $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label>".htmlspecialchars($property->comment)."</label>\n</${tag}>";
                 }
             } else {
-                if ($input->getOption('createlocales')) {
+                if ($input->getOption('create-locales')) {
                     $locale_content .= 'form.'.$name.'='.ucwords(str_replace('_', ' ', $name))."\n";
                     $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label locale='".$locale_base.$name."' />\n</${tag}>";
                 } else {
@@ -210,7 +210,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
             }
         }
 
-        if ($input->getOption('createlocales')) {
+        if ($input->getOption('create-locales')) {
             $locale_content .= "form.ok=OK\n";
             $this->createFile($path.$locale_filename_fr, 'module/locales.tpl', array('content' => $locale_content), 'Locales file');
             $this->createFile($path.$locale_filename_en, 'module/locales.tpl', array('content' => $locale_content), 'Locales file');

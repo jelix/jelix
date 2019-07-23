@@ -178,6 +178,9 @@ class jDaoProperty
                 $this->autoIncrement = true;
             }
         }
+        else if ($this->autoIncrement) {
+            throw new jDaoXmlException($parser->selector, 'property.autoincrement', array($this->fieldName));
+        }
 
         $pkeys = array_map('strtolower', $tables[$this->table]['pk']);
         $this->isPK = in_array(strtolower($this->fieldName), $pkeys);

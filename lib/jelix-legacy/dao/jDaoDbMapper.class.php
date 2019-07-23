@@ -140,7 +140,7 @@ class jDaoDbMapper
         }
 
         /** @var jDbTools $tools */
-        $tools = jApp::loadPlugin($selector->driver, 'db', '.dbtools.php', $selector->driver.'DbTools');
+        $tools = jDbUtils::getTools($selector->dbType);
         if (is_null($tools)) {
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
         }

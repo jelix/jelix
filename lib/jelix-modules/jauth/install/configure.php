@@ -30,7 +30,7 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator
 
         $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
             'Select entry points on which to setup authentication plugins.',
-            'classic',
+            $helpers->getEntryPointsByType('classic'),
             true,
             $this->parameters['eps']
         );

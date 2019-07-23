@@ -104,8 +104,10 @@ class jDao
             jIncluder::inc($sel);
         }
         $c = $sel->getDaoRecordClass();
-
-        return new $c();
+        /** @var jDaoRecordBase $rec */
+        $rec = new $c();
+        $rec->setDbProfile($profile);
+        return $rec;
     }
 
     /**

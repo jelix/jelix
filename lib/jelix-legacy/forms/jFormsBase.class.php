@@ -262,8 +262,10 @@ abstract class jFormsBase
     /**
      * set form data from a DAO.
      *
-     * @param string $daoSelector the selector of a dao file
-     * @param string $key         the primary key for the dao. if null, takes the form ID as primary key
+     * @param string|jDaoRecordBase $daoSelector the selector of a dao file or a DAO record
+     * @param string $key         the primary key for the dao. if null, takes
+     *                            the form ID as primary key. Only needed when string
+     *                            dao selector given.
      * @param string $dbProfile   the jDb profile to use with the dao
      *
      * @throws jExceptionForms
@@ -274,11 +276,19 @@ abstract class jFormsBase
      */
     public function initFromDao($daoSelector, $key = null, $dbProfile = '')
     {
-        if ($key === null) {
-            $key = $this->container->formId;
+        if (is_object($daoSelector)) {
+            $daorec = $daoSelector;
+            $daoSelector = $daorec->getSelector();
+            $dao = jDao::get($daoSelector, $dbProfile);
         }
-        $dao = jDao::create($daoSelector, $dbProfile);
-        $daorec = $dao->get($key);
+        else {
+            $dao = jDao::create($daoSelector, $dbProfile);
+            if ($key === null) {
+                $key = $this->container->formId;
+            }
+            $daorec = $dao->get($key);
+        }
+
         if (!$daorec) {
             if (is_array($key)) {
                 $key = var_export($key, true);

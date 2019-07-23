@@ -2,7 +2,6 @@
 <urls xmlns="http://jelix.org/ns/urls/1.0">
 
     <entrypoint name="index" type="classic" default="true">
-        
         <url pathinfo="/" module="view" action="default:index" default="true"/>
         <url module="view"/>
     </entrypoint>

@@ -41,7 +41,7 @@ class jDaoImportTest extends jUnitTestCase {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jApp::loadPlugin($postSel->driver, 'db', '.dbtools.php', $postSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($postSel->dbType);
 
         $postParser = new jDaoParser($postSel);
         $postXml = new SimpleXMLElement(file_get_contents($postSel->getPath()));
@@ -62,7 +62,7 @@ class jDaoImportTest extends jUnitTestCase {
     public function testImportWithRedefinedMethods() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jApp::loadPlugin($postSel->driver, 'db', '.dbtools.php', $postSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($postSel->dbType);
 
         $postTrackerParser = new jDaoParser($postSel);
         $postTrackerXml = new SimpleXMLElement(file_get_contents($trackerSel->getPath()));
@@ -438,7 +438,7 @@ class jDaoImportTest extends jUnitTestCase {
     protected function launchTestImportWithRedefinedProperties($daoName) {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao($daoName, '');
-        $dbtools = jApp::loadPlugin($blogSel->driver, 'db', '.dbtools.php', $blogSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($blogSel->dbType);
 
         $postBlogParser = new jDaoParser($blogSel);
         $postBlogXml = new SimpleXMLElement(file_get_contents($blogSel->getPath()));

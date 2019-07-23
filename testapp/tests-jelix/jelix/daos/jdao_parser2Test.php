@@ -322,7 +322,7 @@ class jdao_parser2Test extends jUnitTestCase {
         $parser = new testjDaoParser($this->_selector);
         $doc = simplexml_load_string($dao);
         $parser->testParseDatasource($doc);
-        $parser->testParseRecord($doc, new mysqliDbTools(null));
+        $parser->testParseRecord($doc, new jDbMysqlTools(null));
 
         foreach($this->methDatas as $k=>$t){
             // $this->sendMessage("test good method ".$k);
@@ -373,7 +373,7 @@ class jdao_parser2Test extends jUnitTestCase {
         $parser = new testjDaoParser($this->_selector);
         $doc = simplexml_load_string($dao);
         $parser->testParseDatasource($doc);
-        $parser->testParseRecord($doc, new mysqliDbTools(null));
+        $parser->testParseRecord($doc, new jDbMysqlTools(null));
         
         foreach($this->badmethDatas as $k=>$t){
             //$this->sendMessage("test bad method ".$k);

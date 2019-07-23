@@ -349,12 +349,12 @@ class Configurator
                     break;
                 case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
                 case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
-                    $this->error('module.forbidden', array($component->getName(), implode(',', $e->getRelatedData())));
+                    $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
                 case ItemException::ERROR_CHOICE_MISSING_ITEM:
@@ -469,6 +469,7 @@ class Configurator
                 list($configurator, $component) = $item;
 
                 if ($configurator) {
+                    $this->notice('configuration.module.start', array($component->getName()));
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
@@ -793,7 +794,7 @@ class Configurator
                 $this->error($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (\Exception $e) {
                 $result = false;
-                $this->error('configurator.module.error', array($component->getName(), $e->getMessage()));
+                $this->error('configuration.module.error', array($component->getName(), $e->getMessage()));
             }
         }
 

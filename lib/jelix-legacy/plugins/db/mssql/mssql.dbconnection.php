@@ -14,7 +14,7 @@
 require_once __DIR__.'/mssql.dbresultset.php';
 
 /**
- * @experimental
+ * @deprecated
  */
 class mssqlDbConnection extends jDbConnection
 {

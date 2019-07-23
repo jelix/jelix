@@ -97,6 +97,7 @@ return array(
     'configuration.start' => 'La configuration démarre',
     'configuration.end' => 'Les modules sont configurés',
     'configuration.bad.end' => 'Configuration interrompue pour cause d\'erreurs',
+    'configuration.module.start' => 'Configuration du module %s',
     'configuration.module.installed' => 'Le module %s est configuré',
     'configuration.module.error' => 'Une erreur est survenue durant la configuration du module %s: %s',
     'configuration.ask.parameters' => 'Paramètres pour installer le module %s',

@@ -20,8 +20,9 @@ domainName=
 jauthdb.installparam=defaultuser
 jacl2db.installparam=defaultuser
 
-
 jelix.enabled=on
+jelix.installparam="wwwfiles=vhost"
+
 jacl.enabled=off
 jacldb.enabled=off
 jsoap.enabled=off
@@ -185,5 +186,5 @@ name=admin
 ;default = jelix/js/jforms/datepickers/default/init.js
 
 [webassets_common]
-jacl2_admin.css[]="design/jacl2.css"
-master_admin.css[]="design/master_admin.css"
+jacl2_admin.css[]="$jelix/design/jacl2.css"
+master_admin.css[]="$jelix/design/master_admin.css"

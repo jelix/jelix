@@ -15,7 +15,7 @@ class master_adminModuleConfigurator extends \Jelix\Installer\Module\Configurato
     {
         $helpers->declareGlobalWebAssets(
             'master_admin',
-            array('css' => array('design/master_admin.css')),
+            array('css' => array('$jelix/design/master_admin.css')),
             'common',
             false
         );

@@ -45,7 +45,7 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp
                 'index'
             )
             ->addOption(
-                'addinstallzone',
+                'add-install-zone',
                 null,
                 InputOption::VALUE_NONE,
                 'Add the check_install zone for new application.'
@@ -74,7 +74,7 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp
             'method' => $method,
             'module' => $module, );
 
-        if ($input->getOption('addinstallzone')) {
+        if ($input->getOption('add-install-zone')) {
             $tplname = 'module/controller.newapp.tpl';
         } else {
             $tplname = 'module/controller.tpl';

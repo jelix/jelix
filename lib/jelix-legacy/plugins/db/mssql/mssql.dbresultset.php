@@ -13,7 +13,7 @@
 /**
  * Layer encapsulation resultset mssql.
  *
- * @experimental
+ * @deprecated
  */
 class mssqlDbResultSet extends jDbResultSet
 {

@@ -15,7 +15,7 @@
 /**
  * Layer encapsulation resultset mssql.
  *
- * @experimental
+ *
  */
 class sqlsrvDbResultSet extends jDbResultSet
 {

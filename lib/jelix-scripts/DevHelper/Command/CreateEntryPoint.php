@@ -124,7 +124,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp
         $param = array();
         // creation of the entry point
         $this->createDir($entryPointDir);
-        $param['rp_app'] = Path::shortestPath($entryPointDir, App::appPath());
+        $param['rp_app'] = Path::shortestPath($entryPointDir, App::appPath()).'/';
         $param['config_file'] = $configFile;
 
         $this->createFile($entryPointFullPath, $entryPointTemplate, $param, 'Entry point');

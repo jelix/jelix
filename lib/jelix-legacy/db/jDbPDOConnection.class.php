@@ -136,6 +136,10 @@ class jDbPDOConnection extends PDO
         return jApp::varPath('db/sqlite/'.$path);
     }
 
+    public function getProfileName() {
+        return $this->profile['_name'];
+    }
+
     /**
      * @internal the implementation of Iterator on PDOStatement doesn't call
      * fetch method of classes which inherit of PDOStatement.
@@ -355,25 +359,13 @@ class jDbPDOConnection extends PDO
     }
 
     /**
-     * @var jDbTools
-     */
-    protected $_tools;
-
-    /**
      * @throws jException
      *
      * @return jDbTools
      */
     public function tools()
     {
-        if (!$this->_tools) {
-            $this->_tools = jApp::loadPlugin($this->driverName, 'db', '.dbtools.php', $this->driverName.'DbTools', $this);
-            if (is_null($this->_tools)) {
-                throw new jException('jelix~db.error.driver.notfound', $this->driverName);
-            }
-        }
-
-        return $this->_tools;
+        return jDbUtils::getTools($this->dbms, $this);
     }
 
     /**
