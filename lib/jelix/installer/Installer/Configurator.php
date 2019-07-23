@@ -793,7 +793,7 @@ class Configurator
                 $this->error($e->getLocaleKey(), $e->getLocaleParameters());
             } catch (\Exception $e) {
                 $result = false;
-                $this->error('configurator.module.error', array($component->getName(), $e->getMessage()));
+                $this->error('configuration.module.error', array($component->getName(), $e->getMessage()));
             }
         }
 
