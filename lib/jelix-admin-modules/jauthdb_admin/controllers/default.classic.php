@@ -195,17 +195,18 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
-        $tpl->assign('otherInfo', jEvent::notify(
-            'jauthdbAdminGetViewInfo',
-            array('form' => $form, 'tpl' => $tpl, 'himself' => false)
-        )->getResponse());
-        $form->deactivate('password');
-        $form->deactivate('password_confirm');
         $tpl->assign('canDelete', (jAuth::getUserSession()->login != $login) &&
             jAcl2::check('auth.users.delete'));
         $tpl->assign('canUpdate', jAcl2::check('auth.users.modify'));
         $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password') &&
             jAuth::canChangePassword($login));
+        $tpl->assign('otherLinks', array());
+        $tpl->assign('otherInfo', jEvent::notify(
+            'jauthdbAdminGetViewInfo',
+            array('form'=>$form, 'tpl'=>$tpl, 'himself'=>false)
+        )->getResponse());
+        $form->deactivate('password');
+        $form->deactivate('password_confirm');
         $rep->body->assign('MAIN', $tpl->fetch('crud_view'));
 
         return $rep;
@@ -242,7 +243,9 @@ class defaultCtrl extends jController
         $tpl->assign('id', null);
         $tpl->assign('form', $form);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
-        jEvent::notify('jauthdbAdminEditCreate', array('form' => $form, 'tpl' => $tpl));
+        $tpl->assign('otherInfo', jEvent::notify(
+            'jauthdbAdminEditCreate',
+            array('form' => $form, 'tpl' => $tpl))->getResponse());
 
         $rep->body->assign('MAIN', $tpl->fetch('crud_edit'));
 
@@ -288,6 +291,7 @@ class defaultCtrl extends jController
             $form->saveAllFiles($this->uploadsDirectory);
 
             jAuth::saveNewUser($user);
+            jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user'=>$user));
 
             jForms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
@@ -374,7 +378,9 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
-        jEvent::notify('jauthdbAdminEditUpdate', array('form' => $form, 'tpl' => $tpl, 'himself' => false));
+        $tpl->assign('otherInfo', jEvent::notify(
+            'jauthdbAdminEditUpdate',
+            array('form' => $form, 'tpl' => $tpl, 'himself' => false))->getResponse());
         $form->deactivate('password'); //for security
         $form->deactivate('password_confirm');
         $form->setReadOnly('login');
