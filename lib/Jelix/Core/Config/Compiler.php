@@ -147,7 +147,7 @@ class Compiler
      *
      * @throws Exception
      *
-     * @return StdClass an object which contains configuration values
+     * @return \StdClass an object which contains configuration values
      */
     public function read($allModuleInfo = false, $additionalOptions = null)
     {

@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Config\Compiler;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
 use Jelix\Dependencies\Resolver;
@@ -817,13 +818,12 @@ class Configurator
 
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.
+            $compiler = new Compiler($entryPoint->getConfigFileName(),
+                $entryPoint->getScriptName(),
+                $entryPoint->isCliScript()
+            );
             $entryPoint->setConfigObj(
-                \jConfigCompiler::read(
-                    $entryPoint->getConfigFileName(),
-                    true,
-                    $entryPoint->isCliScript(),
-                    $entryPoint->getScriptName()
-                )
+                $compiler->read(true)
             );
             App::setConfig($entryPoint->getConfigObj());
         }

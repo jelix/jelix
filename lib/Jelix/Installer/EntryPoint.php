@@ -11,6 +11,7 @@ namespace Jelix\Installer;
 
 use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierReadOnly;
+use Jelix\Core\Config\Compiler;
 
 /**
  * container for entry points properties, for installers.
@@ -102,12 +103,11 @@ class EntryPoint
         $this->appEpConfigIni = new IniModifier($appSystemPath);
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
-        $this->config = \jConfigCompiler::read(
-            $configFile,
-            true,
-            $this->_isCliScript,
-            $this->scriptName
+        $compiler = new Compiler($configFile,
+            $this->scriptName,
+            $this->_isCliScript
         );
+        $this->config = $compiler->read(true);
     }
 
     /**

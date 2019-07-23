@@ -11,6 +11,7 @@ namespace Jelix\Scripts;
 
 use Symfony\Component\Console\Application;
 use Jelix\Core\App;
+use Jelix\Core\Config\Compiler;
 
 /**
  * Launch commands from modules.
@@ -32,7 +33,9 @@ class ModulesCommands
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         $ep = $fmkInfos->getEntryPointInfo('index');
 
-        App::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
+        $compiler = new Compiler($ep->getConfigFile(), 'console.php', true);
+
+        App::setConfig($compiler->read(true));
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         // ----- init the Application object
