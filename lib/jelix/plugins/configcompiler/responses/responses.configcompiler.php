@@ -50,15 +50,19 @@ class responsesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginI
                 $mod = $m[1];
                 if (isset($config->_modulesPathList[$mod])) {
                     $class = $m[2];
-                    $path = $config->_modulesPathList[$mod].'responses/'.$class.'.class.php';
+                    $path = $config->_modulesPathList[$mod] . 'responses/' . $class . '.class.php';
                     $config->{$list}[$type] = $class;
-                    $config->{$list}[$type.'.path'] = $path;
+                    $config->{$list}[$type . '.path'] = $path;
                     if (file_exists($path)) {
                         continue;
                     }
                 } else {
                     $path = $class;
                 }
+            } elseif (strpos($class, '\\') !== false) {
+                // class name with namespace is supposed to be autoloaded
+                $config->{$list}[$type.'.path'] = '';
+                continue;
             } elseif (file_exists($path = JELIX_LIB_CORE_PATH.'response/'.$class.'.class.php')) {
                 $config->{$list}[$type.'.path'] = $path;
 

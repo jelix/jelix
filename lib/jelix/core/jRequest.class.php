@@ -262,7 +262,7 @@ abstract class jRequest
         $respclass = $responses[$type];
         $path = $responses[$type.'.path'];
 
-        if (!class_exists($respclass, false)) {
+        if ($path != '' && !class_exists($respclass, false)) {
             require $path;
         }
         $response = new $respclass();
