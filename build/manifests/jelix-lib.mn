@@ -100,7 +100,29 @@ cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/templates
+<<<<<<< HEAD
   __ALL_RECURSIVELY__
+=======
+  404.xul.tpl
+  403.html.tpl
+  404.html.tpl
+  rss20.tpl
+  atom10.tpl
+  crud_list.tpl
+  crud_list_filter.tpl
+  crud_edit.tpl
+  crud_view.tpl
+  cruddfk_list.tpl
+  cruddfk_edit.tpl
+  cruddfk_view.tpl
+  defaultmain.tpl
+cd lib/jelix/core-modules/jelix/templates/en_EN
+  check_install.tpl
+cd lib/jelix/core-modules/jelix/templates/en_US
+  check_install.tpl
+cd lib/jelix/core-modules/jelix/templates/fr_FR
+  check_install.tpl
+>>>>>>> 1672f394a (New controller for CRUD with a filters form: jControllerDaoCrudFilter)
 cd lib/jelix/core-modules/jelix/zones
   __ALL__
 
