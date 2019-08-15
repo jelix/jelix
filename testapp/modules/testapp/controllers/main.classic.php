@@ -45,6 +45,15 @@ class mainCtrl extends jController {
       return $rep;
    }
 
+   function hello3(){
+
+      $rep = $this->getResponse('html',true);
+      $rep->title = 'Hello 3 From Jelix !';
+      $rep->bodyTpl = 'testapp~hello3';
+
+      return $rep;
+   }
+
    function testdao(){
 
     if ($id = $this->param('newid')) {

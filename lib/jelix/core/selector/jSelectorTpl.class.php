@@ -64,9 +64,13 @@ class jSelectorTpl extends jSelectorModule
         }
         $config = jApp::config();
         $locale = $config->locale;
-        $fallbackLocale = $config->fallbackLocale;
         $lpath = $locale . '/' . $this->resource;
         $flpath = '';
+        $fallbackLocale = $config->fallbackLocale;
+        if ($locale != $fallbackLocale && $fallbackLocale) {
+            $flpath = $fallbackLocale . '/' . $this->resource;
+        }
+
         $resolutionInCache = $config->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
@@ -80,10 +84,6 @@ class jSelectorTpl extends jSelectorModule
             jFile::createDir(dirname($resolutionPath));
         }
 
-        if ($locale != $fallbackLocale && $fallbackLocale) {
-            $flpath = $fallbackLocale . '/' . $this->resource;
-        }
-
         $this->findPath($config, $lpath, $flpath);
         if ($resolutionInCache) {
             symlink($this->_path, $resolutionPath);
@@ -93,18 +93,20 @@ class jSelectorTpl extends jSelectorModule
     }
 
     protected function findPath($config, $lpath, $flpath) {
-        if (($theme = $config->theme) != 'default') {
-            if ($this->checkThemePath($theme.'/'.$this->module, $lpath, $flpath, $this->resource)) {
+
+        $mpath = jApp::getModulePath($this->module).$this->_dirname;
+        if ($config->theme != 'default') {
+            if ($this->checkThemePath($config->theme, $lpath, $flpath, $mpath, $this->resource)) {
                 return;
             }
         }
 
-        if ($this->checkThemePath('default/'.$this->module, $lpath, $flpath, $this->resource)) {
+        if ($this->checkThemePath('default', $lpath, $flpath, $mpath, $this->resource)) {
             return;
         }
 
         // check if the template exists in the current module
-        $mpath = jApp::getModulePath($this->module).$this->_dirname;
+
         $this->_path = $mpath.$lpath.'.tpl';
         if (is_readable($this->_path)) {
             $this->_cachePrefix = 'modules/'.$this->module.'/'.$lpath;
@@ -131,8 +133,9 @@ class jSelectorTpl extends jSelectorModule
         throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'template'));
     }
 
-    protected function checkThemePath($subDir, $lpath, $flpath, $path)
+    protected function checkThemePath($theme, $lpath, $flpath, $mpath, $path)
     {
+        $subDir = $theme.'/'.$this->module;
         if (file_exists(jApp::varPath('themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in var/theme
             $this->_path = jApp::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
@@ -184,6 +187,35 @@ class jSelectorTpl extends jSelectorModule
             $this->_path = jApp::appPath('app/themes/'.$subDir.'/'.$path.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/'.$subDir.'/'.$path;
+
+                return true;
+            }
+        }
+
+        $mpath .= 'themes/'.$theme;
+        if (file_exists($mpath)) {
+            // check if there is a redefined template for the current theme & locale in app/theme
+            $this->_path = $mpath.'/'.$lpath.'.tpl';
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$lpath;
+
+                return true;
+            }
+
+            if ($flpath) {
+                // check if there is a redefined template for the current theme & fallback locale in app/theme
+                $this->_path = $mpath.'/'.$flpath.'.tpl';
+                if (is_readable($this->_path)) {
+                    $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$flpath;
+
+                    return true;
+                }
+            }
+
+            // check if there is a redefined template for the current theme in app/theme
+            $this->_path = $mpath.'/'.$path.'.tpl';
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$path;
 
                 return true;
             }
