@@ -6,7 +6,7 @@
  * @subpackage  core_selector
  *
  * @author      Laurent Jouanneau
- * @copyright   2005-2012 Laurent Jouanneau
+ * @copyright   2005-2019 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -46,6 +46,30 @@ class jSelectorForm extends jSelectorModule
         if (!jApp::isModuleEnabled($this->module)) {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString(true));
         }
+
+        $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
+
+        if ($resolutionInCache) {
+            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/'.$this->_dirname.$this->resource.$this->_suffix);
+            $resolutionCachePath = 'resolved/';
+            if (file_exists($resolutionPath)) {
+                $this->_path = $resolutionPath;
+                $this->_where = $resolutionCachePath;
+                return;
+            }
+            jFile::createDir(dirname($resolutionPath));
+        }
+
+        $this->findPath();
+
+        if ($resolutionInCache) {
+            symlink($this->_path, $resolutionPath);
+            $this->_path = $resolutionPath;
+            $this->_where = $resolutionCachePath;
+        }
+    }
+
+    protected function findPath() {
 
         // we see if the forms have been redefined in var/
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);

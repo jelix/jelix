@@ -117,7 +117,17 @@ errorMessage="A technical error has occured (code: %code%). Sorry for this incon
 sensitiveParameters = "password,passwd,pwd"
 
 [compilation]
+; when source file can be in different directories, like templates or locales
+; setting sourceFileResolutionInCache to 'on' set the founded path into a cache
+; avoiding to search the source file at each requests.
+; keep it to off in development environment
+sourceFileResolutionInCache=off
+
+; check if the compiled file is older than the source file.
+; You can set it to off in a production environment
 checkCacheFiletime=on
+
+; regenerate the compiled file at each requests. Use it only in development environment
 force=off
 
 [urlengine]

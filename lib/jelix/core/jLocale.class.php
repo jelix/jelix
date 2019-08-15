@@ -102,24 +102,11 @@ class jLocale
                 // unknown module..
                 throw $e;
             }
-            if ($locale === null) {
-                $locale = $config->locale;
-            }
             if ($charset === null) {
                 $charset = $config->charset;
             }
-            if (!$tryOtherLocales) {
-                throw new Exception('(211)No locale file found for the given locale key "'.$key
-                                .'" (charset '.$charset.', lang '.$locale.')');
-            }
-
-            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
-            if ($words === null) {
-                throw new Exception('(212)No locale file found for the given locale key "'.$key
-                                .'" in any other default languages (charset '.$charset.')');
-            }
-
-            return $words;
+            throw new Exception('(212)No locale file found for the given locale key "'.$key
+                            .'" in any other default languages (charset '.$charset.')');
         }
 
         $locale = $file->locale;
@@ -159,8 +146,14 @@ class jLocale
         return $string;
     }
 
-    protected static function tryOtherLocales($key, $args, $locale, $charset, $config)
-    {
+    /**
+     * return the list of alternative locales to the given one
+     * @param string $locale
+     * @param object $config the configuration object
+     * @return array
+     */
+    public static function getAlternativeLocales($locale, $config) {
+
         $otherLocales = array();
         $similarLocale = self::langToLocale(substr($locale, 0, strpos($locale, '_')));
         if ($similarLocale != $locale) {
@@ -174,7 +167,12 @@ class jLocale
         if ($config->fallbackLocale && $locale != $config->fallbackLocale) {
             $otherLocales[] = $config->fallbackLocale;
         }
+        return $otherLocales;
+    }
 
+    protected static function tryOtherLocales($key, $args, $locale, $charset, $config)
+    {
+        $otherLocales = self::getAlternativeLocales($locale, $config);
         foreach ($otherLocales as $loc) {
             try {
                 return jLocale::get($key, $args, $loc, $charset, false);
