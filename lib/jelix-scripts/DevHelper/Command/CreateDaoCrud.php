@@ -149,13 +149,13 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
             foreach ($subjects as $subject => $label) {
                 $subject = $module.'.'.$ctrlname.'.'.$subject;
                 $labelkey = $sel.'.'.$subject;
-                $options = array('subject' => $subject,
+                $options = array('role' => $subject,
                     'labelkey' => $labelkey,
-                    'subjectgroup' => 'null',
-                    'subjectlabel' => $label.' '.$ctrlname, );
+                    'rolegroup' => 'null',
+                    'rolelabel' => $label.' '.$ctrlname, );
                 $options = array_merge($arguments, $options);
                 $this->executeSubCommand(
-                    'acl2:subject-create',
+                    'acl2:role-create',
                     $options,
                     $output
                 );

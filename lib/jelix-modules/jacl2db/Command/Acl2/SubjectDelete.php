@@ -22,13 +22,13 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:subject-delete')
-            ->setDescription('Delete a subject"')
+            ->setName('acl2:role-delete')
+            ->setDescription('Delete a role"')
             ->setHelp('')
             ->addArgument(
-                'subject',
+                'role',
                 InputArgument::REQUIRED,
-                'the subject id to delete'
+                'the role id to delete'
             )
             ->addOption(
                 'confirm',
@@ -43,12 +43,12 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $subject = $input->getArgument('subject');
+        $subject = $input->getArgument('role');
         $cnx = \jDb::getConnection('jacl2_profile');
 
         if (!$input->getOption('confirm')) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('are you sure you want to delete subject '.$subject.' (y/N)?', false);
+            $question = new ConfirmationQuestion('Are you sure you want to delete role '.$subject.' (y/N)?', false);
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
@@ -60,7 +60,7 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
             .' WHERE id_aclsbj='.$cnx->quote($subject);
         $rs = $cnx->query($sql);
         if (!$rs->fetch()) {
-            throw new \Exception('This subject does not exist');
+            throw new \Exception('This role does not exist');
         }
 
         $sql = 'DELETE FROM '.$cnx->prefixTable('jacl2_rights').' WHERE id_aclsbj=';
@@ -72,7 +72,7 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln('Rights: subject '.$subject.' is deleted');
+            $output->writeln('Rights: role '.$subject.' is deleted');
         }
     }
 }

@@ -33,15 +33,15 @@ class jacl2_managerTest extends jUnitTestCaseDb {
     protected static $subjects;
 
     public function testAddSubject(){
-        jAcl2DbManager::addSubject('super.cms' , 'cms~rights.super.cms');
+        jAcl2DbManager::addRole('super.cms' , 'cms~rights.super.cms');
         self::$subjects = array(
             array('id_aclsbj'=>'super.cms', 'label_key'=>'cms~rights.super.cms'),
         );
         $this->assertTableContainsRecords('jacl2_subject', self::$subjects);
 
-        jAcl2DbManager::addSubject('jxacl.groups.management', 'jxacl~db.sbj.groups.management');
-        jAcl2DbManager::addSubject('admin.access', 'admin~rights.access');
-        jAcl2DbManager::addSubject('admin.foo', 'admin~rights.foo');
+        jAcl2DbManager::addRole('jxacl.groups.management', 'jxacl~db.sbj.groups.management');
+        jAcl2DbManager::addRole('admin.access', 'admin~rights.access');
+        jAcl2DbManager::addRole('admin.foo', 'admin~rights.foo');
 
         self::$subjects[] = array('id_aclsbj'=>'jxacl.groups.management', 'label_key'=>'jxacl~db.sbj.groups.management');
         self::$subjects[] = array('id_aclsbj'=>'admin.access', 'label_key'=>'admin~rights.access');
@@ -64,9 +64,9 @@ class jacl2_managerTest extends jUnitTestCaseDb {
      * @depends testRemoveSubject
      */
     public function testAddRight(){
-        jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-        jAcl2DbManager::addSubject('super.cms.list2' , 'cms~rights.super.cms.list');
-        jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
+        jAcl2DbManager::addRole('super.cms.list' , 'cms~rights.super.cms.list');
+        jAcl2DbManager::addRole('super.cms.list2' , 'cms~rights.super.cms.list');
+        jAcl2DbManager::addRole('super.cms.update' , 'cms~rights.super.cms.update');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.list', 'label_key'=>'cms~rights.super.cms.list');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.list2', 'label_key'=>'cms~rights.super.cms.list');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.update', 'label_key'=>'cms~rights.super.cms.update');
@@ -171,11 +171,11 @@ class jacl2_managerTest extends jUnitTestCaseDb {
 
       $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
-      jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-      jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.create' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.view' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.delete' , 'cms~rights.super.cms.delete');
+      jAcl2DbManager::addRole('super.cms.list' , 'cms~rights.super.cms.list');
+      jAcl2DbManager::addRole('super.cms.update' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.create' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.view' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.delete' , 'cms~rights.super.cms.delete');
 
       $rights = array();
       $this->assertTableContainsRecords('jacl2_rights', $rights);
@@ -257,11 +257,11 @@ class jacl2_managerTest extends jUnitTestCaseDb {
 
       $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
-      jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-      jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.create' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.view' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.delete' , 'cms~rights.super.cms.delete');
+      jAcl2DbManager::addRole('super.cms.list' , 'cms~rights.super.cms.list');
+      jAcl2DbManager::addRole('super.cms.update' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.create' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.view' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.delete' , 'cms~rights.super.cms.delete');
 
       $rights = array();
       $this->assertTableContainsRecords('jacl2_rights', $rights);

@@ -31,9 +31,9 @@ class RemoveRight extends AbstractAcl2Cmd
                 'group id'
             )
             ->addArgument(
-                'subject',
+                'role',
                 InputArgument::REQUIRED,
-                'The name of the subject'
+                'The name of the role'
             )
             ->addArgument(
                 'resource',
@@ -45,7 +45,7 @@ class RemoveRight extends AbstractAcl2Cmd
                 'allres',
                 null,
                 InputOption::VALUE_NONE,
-                'remove also all resource rights with the given subject'
+                'remove also all resource rights with the given role'
             )
             ->addOption(
                 'confirm',
@@ -62,7 +62,7 @@ class RemoveRight extends AbstractAcl2Cmd
         $cnx = \jDb::getConnection('jacl2_profile');
 
         $group = $cnx->quote($this->_getGrpId($input));
-        $subject = $cnx->quote($input->getArgument('subject'));
+        $subject = $cnx->quote($input->getArgument('role'));
         $resource = $cnx->quote($input->getArgument('resource'));
         $allResource = $input->getOption('allres');
 
@@ -98,9 +98,9 @@ class RemoveRight extends AbstractAcl2Cmd
 
         if ($output->isVerbose()) {
             if ($allResource) {
-                $output->writeln("Rights on subject ${subject} with group ${group} have been deleted");
+                $output->writeln("Rights on role ${subject} with group ${group} have been deleted");
             } else {
-                $output->writeln("Right on subject ${subject} with group ${group} and resource ${resource} is deleted");
+                $output->writeln("Right on role ${subject} with group ${group} and resource ${resource} is deleted");
             }
         }
     }

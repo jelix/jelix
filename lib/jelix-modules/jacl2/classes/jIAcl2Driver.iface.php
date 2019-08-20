@@ -20,14 +20,14 @@
 interface jIAcl2Driver
 {
     /**
-     * Return the possible values of the right on the given subject (and on the optional resource).
+     * Return the possible values of the right on the given role (and on the optional resource).
      *
-     * @param string $subject  the key of the subject
+     * @param string $role  the key of the role
      * @param string $resource the id of a resource
      *
      * @return array list of values corresponding to the right
      */
-    public function getRight($subject, $resource = null);
+    public function getRight($role, $resource = null);
 
     /**
      * Clear some cached data, it a cache exists in the driver..

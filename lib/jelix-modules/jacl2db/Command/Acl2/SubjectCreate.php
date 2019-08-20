@@ -20,28 +20,28 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:subject-create')
-            ->setDescription('Create a subject')
+            ->setName('acl2:role-create')
+            ->setDescription('Create a role')
             ->setHelp('')
             ->addArgument(
-                'subject',
+                'role',
                 InputArgument::REQUIRED,
-                'the subject id to create'
+                'the role id to create'
             )
             ->addArgument(
                 'labelkey',
                 InputArgument::REQUIRED,
-                'the selector of the label of the subject'
+                'the selector of the label of the role'
             )
             ->addArgument(
-                'subjectgroup',
+                'rolegroup',
                 InputArgument::OPTIONAL,
-                'the id of the subjet group'
+                'the id of the role group'
             )
             ->addArgument(
-                'subjectlabel',
+                'rolelabel',
                 InputArgument::OPTIONAL,
-                'The label of the subject if the given selector does not exists'
+                'The label of the role if the given selector does not exists'
             )
         ;
         parent::configure();
@@ -49,17 +49,17 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $subject = $input->getArgument('subject');
+        $subject = $input->getArgument('role');
         $labelkey = $input->getArgument('labelkey');
-        $subjectGroup = $input->getArgument('subjectgroup');
-        $subjectlabel = $input->getArgument('subjectlabel');
+        $subjectGroup = $input->getArgument('rolegroup');
+        $subjectlabel = $input->getArgument('rolelabel');
 
         $cnx = \jDb::getConnection('jacl2_profile');
         $sql = 'SELECT id_aclsbj FROM '.$cnx->prefixTable('jacl2_subject')
             .' WHERE id_aclsbj='.$cnx->quote($subject);
         $rs = $cnx->query($sql);
         if ($rs->fetch()) {
-            throw new \Exception('This subject already exists');
+            throw new \Exception('This role already exists');
         }
 
         $sql = 'INSERT into '.$cnx->prefixTable('jacl2_subject').
@@ -75,7 +75,7 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln('Rights: subject '.$subject.' is created');
+            $output->writeln('Rights: role '.$subject.' is created');
         }
 
         if ($subjectlabel &&
