@@ -24,7 +24,7 @@
  * template variable of the parent template)
  *
  *
- * <pre>{fetch 'myModule~foo', array('varname'=>'value) }</pre>
+ * <pre>{fetchtpl 'myModule~foo', array('varname'=>'value) }</pre>
  *
  * @param jTplCompiler $compiler the template compiler
  * @param array        $param    0=>string the template selector (string)

@@ -74,7 +74,7 @@ abstract class jFormsBase
     /**
      * List of uploads controls.
      *
-     * @var jFormsControlUpload[]
+     * @var jFormsControlUpload[]|jFormsControlUpload2[]
      */
     protected $uploads = array();
 
@@ -720,7 +720,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlUpload[]
+     * @return jFormsControlUpload[]|jFormsControlUpload2[]
      *
      * @since 1.2
      */
