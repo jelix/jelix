@@ -151,8 +151,15 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             $epId = $entryPointWebPath;
         }
 
-        if (!file_exists(\jApp::wwwPath($epFile))) {
-            $this->copyFile($entryPointModelFile, \jApp::wwwPath($epFile));
+        if ($epType == 'cmdline') {
+            if (!file_exists(\jApp::scriptsPath($epFile))) {
+                $this->copyFile($entryPointModelFile, \jApp::scriptsPath($epFile));
+            }
+        }
+        else {
+            if (!file_exists(\jApp::wwwPath($epFile))) {
+                $this->copyFile($entryPointModelFile, \jApp::wwwPath($epFile));
+            }
         }
 
         // create the configuration file
