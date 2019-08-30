@@ -194,7 +194,7 @@ class jSelectorTpl extends jSelectorModule
 
         $mpath .= 'themes/'.$theme;
         if (file_exists($mpath)) {
-            // check if there is a redefined template for the current theme & locale in app/theme
+            // check if there is a redefined template for the current theme & locale in <module>/themes
             $this->_path = $mpath.'/'.$lpath.'.tpl';
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$lpath;
@@ -203,7 +203,7 @@ class jSelectorTpl extends jSelectorModule
             }
 
             if ($flpath) {
-                // check if there is a redefined template for the current theme & fallback locale in app/theme
+                // check if there is a redefined template for the current theme & fallback locale in <module>/themes
                 $this->_path = $mpath.'/'.$flpath.'.tpl';
                 if (is_readable($this->_path)) {
                     $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$flpath;
@@ -212,7 +212,7 @@ class jSelectorTpl extends jSelectorModule
                 }
             }
 
-            // check if there is a redefined template for the current theme in app/theme
+            // check if there is a redefined template for the current theme in <module>/themes
             $this->_path = $mpath.'/'.$path.'.tpl';
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$path;
