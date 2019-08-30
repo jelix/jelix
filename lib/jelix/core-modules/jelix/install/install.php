@@ -4,22 +4,24 @@
  * @subpackage jelix-module
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2018 Laurent Jouanneau
+ * @copyright   2009-2019 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-require_once __DIR__.'/InstallTrait.php';
 
 class jelixModuleInstaller extends \Jelix\Installer\Module\Installer
 {
-    use \Jelix\JelixModule\InstallTrait;
 
     public function install(Jelix\Installer\Module\API\InstallHelpers $helpers)
     {
 
         // --- copy jelix-wwww files
-        $this->setupWWWFiles($helpers);
+        $helpers->setupModuleWebFiles(
+            $this->getParameter('wwwfiles'),
+            $helpers->getConfigIni()->getValue('jelixWWWPath', 'urlengine'),
+            LIB_PATH.'jelix-www'
+        );
 
         // ---  install table for session storage if needed
         $sessionStorage = $helpers->getConfigIni()->getValue('storage', 'sessions');
