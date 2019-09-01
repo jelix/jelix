@@ -287,11 +287,14 @@ class Jelix17
                 continue;
             }
             // the configuration value is a filename
-            if (!isset($this->allPluginConfigs[$conf])) {
-                $confPath = \jApp::varConfigPath($conf);
-                if (!file_exists($confPath)) {
+            $confPath = \jApp::varConfigPath($conf);
+            if (!file_exists($confPath)) {
+                if (!isset($this->allPluginConfigs[$conf])) {
+                    $this->reporter->message('plugin conf file '.$conf.' does not exist', 'Warning');
                     continue;
                 }
+            }
+            if (!isset($this->allPluginConfigs[$conf])) {
                 $ini = new IniModifier($confPath);
                 $this->allPluginConfigs[$conf] = $ini;
             } else {
@@ -448,7 +451,7 @@ class Jelix17
         $jelixInstallParams = ModuleStatus::serializeParametersAsArray($jelixInstallParams);
         $originalJelixInstallParams = ModuleStatus::serializeParametersAsArray($originalJelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
-            $this->reporter->message('Update installer parameters for the jelix : '.$jelixInstallParams, 'notice');
+            $this->reporter->message('Update installer parameters for the jelix : '.json_encode($jelixInstallParams), 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
         }
     }
