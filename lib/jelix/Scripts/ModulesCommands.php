@@ -29,7 +29,7 @@ class ModulesCommands
         Utils::checkTempPath();
 
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
-        $ep = $fmkInfos->getEntryPointInfo('index');
+        $ep = $fmkInfos->getDefaultEntryPointInfo();
 
         \jApp::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);

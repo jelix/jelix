@@ -27,7 +27,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
      * indicate the entry point id on which the command should apply.
      * Filled by the option reader.
      */
-    protected $selectedEntryPointId = 'index';
+    protected $selectedEntryPointId = '';
 
     /** @var array list of entry points id on which the command should apply */
     protected $selectedEntryPointsIdList = array();
@@ -73,6 +73,12 @@ abstract class AbstractCommandForApp extends AbstractCommand
                 $this->selectedEntryPointId = $this->selectedEntryPointsIdList[0];
             }
         }
+
+        if ($this->selectedEntryPointId == '') {
+            $entrypoint = $this->getFrameworkInfos()->getDefaultEntryPointInfo();
+            $this->selectedEntryPointId = $entrypoint->getId();
+        }
+
         $this->loadAppConfig($this->selectedEntryPointId);
 
         return $this->_execute($input, $output);
@@ -99,7 +105,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
             return array();
         }
 
-        return 'index';
+        return '';
     }
 
     private function normalizeEp($ep)
@@ -111,7 +117,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         return  substr($ep, 0, $p);
     }
 
-    protected function loadAppConfig($epId = 'index')
+    protected function loadAppConfig($epId)
     {
         $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
         if (!$entrypoint) {

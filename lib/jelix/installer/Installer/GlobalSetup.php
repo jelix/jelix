@@ -243,6 +243,8 @@ class GlobalSetup
             throw new \Exception('No entrypoint declaration into framework.ini.php');
         }
 
+        $defaultEntryPoint = $this->frameworkInfos->getDefaultEntryPointInfo();
+
         // read all entry points data
         foreach ($entryPoints as $entrypoint) {
 
@@ -262,7 +264,7 @@ class GlobalSetup
             );
             $epId = $ep->getEpId();
 
-            if (!$this->mainEntryPoint || $epId == 'index') {
+            if ($defaultEntryPoint->getId() == $entrypoint->getId()) {
                 $this->mainEntryPoint = $ep;
             }
 
