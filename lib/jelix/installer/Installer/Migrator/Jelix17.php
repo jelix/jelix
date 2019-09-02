@@ -386,7 +386,13 @@ class Jelix17
                     if (!isset($modules[$module])) {
                         $modules[$module] = array();
                     }
-                    $modules[$module][$param] = $value;
+                    if ($param == 'version') {
+                        $modules[$module][$param] = (string)$value;
+                    }
+                    else {
+                        $modules[$module][$param] = $value;
+
+                    }
                 }
 
                 foreach ($modules as $module => $params) {

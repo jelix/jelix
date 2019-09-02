@@ -365,7 +365,7 @@ class jConfigCompiler
                     $installation['__modules_data'][$f.'.contexts'] = '';
                 }
 
-                $config->modules[$f.'.version'] = $installation['modules'][$f.'.version'];
+                $config->modules[$f.'.version'] = (string) $installation['modules'][$f.'.version'];
                 $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
                 $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
 

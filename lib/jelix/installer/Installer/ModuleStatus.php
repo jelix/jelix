@@ -92,7 +92,7 @@ class ModuleStatus
         $this->isEnabled = $config[$name.'.enabled'];
         $this->dbProfile = $config[$name.'.dbprofile'];
         $this->isInstalled = $config[$name.'.installed'];
-        $this->version = $config[$name.'.version'];
+        $this->version = (string)$config[$name.'.version'];
 
         if (isset($config[$name.'.installparam'])) {
             $this->parameters = self::unserializeParameters($config[$name.'.installparam']);

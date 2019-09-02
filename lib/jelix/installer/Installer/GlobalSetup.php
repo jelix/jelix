@@ -316,7 +316,7 @@ class GlobalSetup
                 }
 
                 $modulesInfos[$moduleName.'.installed'] = 1;
-                $modulesInfos[$moduleName.'.version'] = $this->installerIni->getValue($moduleName.'.version', 'modules');
+                $modulesInfos[$moduleName.'.version'] = (string)$this->installerIni->getValue($moduleName.'.version', 'modules');
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
                 $moduleInfos = new ModuleStatus(
