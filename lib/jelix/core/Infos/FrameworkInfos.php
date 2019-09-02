@@ -56,7 +56,7 @@ class FrameworkInfos
             $this->readIniFile($this->iniLocalFile, true);
         }
 
-        if (!$this->defaultEntryPoint) {
+        if (!$this->defaultEntryPoint && count($this->entrypoints)) {
             $ep = $this->getEntryPointInfo('index');
             if (!$ep) {
                 $epid = array_keys($this->entrypoints)[0];
@@ -139,6 +139,9 @@ class FrameworkInfos
         }
 
         $this->entrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+        if (!$this->defaultEntryPoint) {
+            $this->defaultEntryPoint = $fileName;
+        }
 
         return $this->entrypoints[$fileName];
     }
@@ -167,6 +170,19 @@ class FrameworkInfos
         }
         unset($this->entrypoints[$id], $this->localEntrypoints[$id]);
 
+        if ($this->defaultEntryPoint == $id) {
+            if (count($this->entrypoints)) {
+                if (isset($this->entrypoints['index'])) {
+                    $this->defaultEntryPoint = 'index';
+                }
+                else {
+                    $this->defaultEntryPoint = array_keys($this->entrypoints)[0];
+                }
+            }
+            else {
+                $this->defaultEntryPoint = '';
+            }
+        }
         $this->iniFile->removeSection('entrypoint:'.$fileName);
         if ($this->iniLocalFile) {
             $this->iniLocalFile->removeSection('entrypoint:'.$fileName);
