@@ -167,6 +167,7 @@ class Configurator
         if ($hasError) {
             return false;
         }
+
         // get all modules and their dependencies
         $resolver = new Resolver();
         foreach ($this->globalSetup->getModuleComponentsList() as $name => $component) {
@@ -560,34 +561,40 @@ class Configurator
     }
 
     /**
-     * Unconfigure a module.
+     * Unconfigure some modules
      *
-     * @param string the module name
+     * @param array     $modulesList           array of module names
      * @param string     $dedicatedEntryPointId entry point from which the module is
      *                                          mainly accessible
-     * @param mixed      $moduleName
-     * @param null|mixed $forLocalConfig
+     * @param null|bool $forLocalConfig true if the configuration should be done into
+     *                                  the local configuration instead of app configuration (false).
+     *                                  give null to use the default configuration mode
      */
     public function unconfigureModule(
-        $moduleName,
+        $modulesList,
         $dedicatedEntryPointId = 'index',
         $forLocalConfig = null
     ) {
         $this->startMessage();
 
         // check that all given modules are existing
-        $component = $this->globalSetup->getModuleComponent($moduleName);
-        if (!$component) {
-            $this->error('module.unknown', $moduleName);
-
+        $hasError = false;
+        foreach ($modulesList as $name) {
+            $component = $this->globalSetup->getModuleComponent($name);
+            if (!$component) {
+                $this->error('module.unknown', $name);
+                $hasError = true;
+            }
+        }
+        if ($hasError) {
             return false;
         }
 
         // get all modules
         $resolver = new Resolver();
-        foreach ($this->globalSetup->getModuleComponentsList() as $name => $module) {
-            $resolverItem = $module->getResolverItem(true);
-            if ($name == $moduleName) {
+        foreach ($this->globalSetup->getModuleComponentsList() as $name => $component) {
+            $resolverItem = $component->getResolverItem(true);
+            if (in_array($name, $modulesList)) {
                 if ($component->isEnabled()) {
                     $resolverItem->setAction(Resolver::ACTION_REMOVE);
                 }
@@ -597,8 +604,10 @@ class Configurator
 
         // configure modules
         $modulesChain = $this->resolveDependencies($resolver);
+        if ($modulesChain === false) {
+            return false;
+        }
         $modulesToUnconfigure = array();
-
         foreach ($modulesChain as $resolverItem) {
             if ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
                 $modulesToUnconfigure[] = $resolverItem;

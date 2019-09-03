@@ -19,12 +19,12 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
     {
         $this
             ->setName('module:unconfigure')
-            ->setDescription('Unconfigure and disable the module from the application.')
-            ->setHelp('Launch the module configurator and disable the module')
+            ->setDescription('Unconfigure and disable given module from the application.')
+            ->setHelp('Launch configurators of modules and disable modules')
             ->addArgument(
-                'module',
-                InputArgument::REQUIRED,
-                'Name of the module to unconfigure'
+                'modules',
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                'Names of modules to unconfigure'
             )
         ;
         parent::configure();
@@ -34,7 +34,7 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
     {
         \jAppManager::close();
 
-        $module = $input->getArgument('module');
+        $modules = $input->getArgument('modules');
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
@@ -45,7 +45,7 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
 
-        $configurator->unconfigureModule($module, $this->selectedEntryPointId);
+        $configurator->unconfigureModule($modules, $this->selectedEntryPointId);
 
         \jAppManager::open();
     }
