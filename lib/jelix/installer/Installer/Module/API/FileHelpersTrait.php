@@ -98,6 +98,10 @@ trait FileHelpersTrait
                     $path = str_replace('appconfig:', \jApp::appSystemPath(), $path);
 
                     break;
+                case 'appsystem':
+                    $path = str_replace('appsystem:', \jApp::appSystemPath(), $path);
+
+                    break;
                 case 'config':
                     if ($this->globalSetup->forLocalConfiguration()) {
                         $path = str_replace('config:', \jApp::varConfigPath(), $path);
