@@ -158,6 +158,7 @@ class ociDbConnection extends jDbConnection
 
     public function getAttribute($id)
     {
+        return '';
     }
 
     public function setAttribute($id, $value)
