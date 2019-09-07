@@ -276,4 +276,36 @@ class jLocale
 
         return '';
     }
+
+    /**
+     * @var string[][] first key is lang code of translation of names, second key is lang code
+     */
+    protected static $langNames = array();
+
+    /**
+     * @param string $lang the lang for which we want the name
+     * @param string $langOfName if empty, return the name in its own language
+     * @since 1.7.0
+     */
+    public static function getLangName($lang, $langOfName='') {
+
+        if ($langOfName == '') {
+            $langOfName = '_';
+        }
+
+        if (!isset(self::$langNames[$langOfName])) {
+            $fileName = 'lang_names_'.$langOfName.'.ini';
+            if (!file_exists(__DIR__.'/'.$fileName)) {
+                $fileName = 'lang_names_en.ini';
+            }
+            $names = parse_ini_file($fileName, false,  INI_SCANNER_RAW);
+            self::$langNames[$langOfName] = $names['names'];
+        }
+
+        if (isset(self::$langNames[$langOfName][$lang])) {
+            return self::$langNames[$langOfName][$lang];
+        }
+        return $lang;
+    }
+
 }

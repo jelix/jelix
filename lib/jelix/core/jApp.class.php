@@ -121,6 +121,11 @@ class jApp
         return self::$_currentApp->logPath.$file;
     }
 
+    /**
+     * @param string $file
+     * @return string
+     * @deprecated
+     */
     public static function configPath($file = '')
     {
         trigger_error('jApp::configPath() is deprecated. use jApp::varConfigPath() instead', E_USER_DEPRECATED);
