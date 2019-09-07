@@ -102,9 +102,13 @@ abstract class InfosAbstract
         if (isset($this->labels[$locale])) {
             return $this->label[$locale];
         }
-        reset($this->label);
 
-        return current($this->label);
+        if (count($this->label)) {
+            reset($this->label);
+            return current($this->label);
+        }
+
+        return $this->name;
     }
 
     public function getDescription($locale = '')
@@ -113,9 +117,14 @@ abstract class InfosAbstract
         if (isset($this->description[$locale])) {
             return $this->description[$locale];
         }
-        reset($this->description);
 
-        return current($this->description);
+        if (count($this->description)) {
+            reset($this->description);
+
+            return current($this->description);
+        }
+
+        return '';
     }
 
     protected function getLocale($locale)
@@ -125,7 +134,7 @@ abstract class InfosAbstract
         }
         $config = \jApp::config();
         if ($config) {
-            return $config->locale;
+            return substr($config->locale, 0, 2);
         }
 
         return 'en';
