@@ -233,6 +233,40 @@ class jAcl2DbManager
     }
 
     /**
+     * set same rights with a specific role, on groups having an other specific role
+     *
+     * It can be useful when creating a new role.
+     *
+     * @param string $fromRole      the role of the role
+     * @param string $label_key    the key of a locale which represents the label of the role
+     * @param string $subjectGroup the id of the group where the role is attached to
+     * @since 1.7
+     */
+    public static function copyRoleRights($fromRole, $toRole)
+    {
+        $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+
+        $allRights = $daoright->getRightsByRole($fromRole);
+        foreach ($allRights as $right) {
+            $rightTo = $daoright->get($toRole, $right->id_aclgrp, $right->id_aclres);
+            if (!$rightTo) {
+                $rightTo = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
+                $rightTo->id_aclsbj = $toRole;
+                $rightTo->id_aclgrp = $right->id_aclgrp;
+                $rightTo->id_aclres = $right->id_aclres;
+                $rightTo->canceled = $right->canceled;
+                $daoright->insert($rightTo);
+            } elseif ($right->canceled != $rightTo->canceled) {
+                $rightTo->canceled = $right->canceled;
+                $daoright->update($rightTo);
+            }
+        }
+
+        jAcl2::clearCache();
+    }
+
+
+    /**
      * Create a new role group.
      *
      * @param string $roleGroup the key of the role group

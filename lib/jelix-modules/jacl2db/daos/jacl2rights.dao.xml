@@ -66,6 +66,12 @@
                <orderitem property="id_aclsbj" way="asc" />
            </order>
         </method>
+        <method name="getRightsByRole" type="select">
+            <parameter name="role" />
+            <conditions >
+                <eq property="id_aclsbj" expr="$role" />
+            </conditions>
+        </method>
         <method name="getAnonymousRight" type="selectfirst">
             <parameter name="role" />
             <conditions >
