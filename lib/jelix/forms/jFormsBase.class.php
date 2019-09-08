@@ -152,7 +152,7 @@ abstract class jFormsBase
     {
         $req = jApp::coord()->request;
         if ($this->securityLevel == jFormsBase::SECURITY_CSRF) {
-            if ($this->container->token !== $req->getParam('__JFORMS_TOKEN__')) {
+            if ($this->isValidToken($req->getParam('__JFORMS_TOKEN__'))) {
                 throw new jException('jelix~formserr.invalid.token');
             }
         }
@@ -1026,11 +1026,26 @@ abstract class jFormsBase
     public function createNewToken()
     {
         if ($this->container->token == '') {
-            $tok = md5($this->container->formId.time().session_id());
-
+            if (is_callable('random_bytes')) {
+                $tok = bin2hex(random_bytes(20));
+            }
+            else {
+                $tok = md5($this->container->formId.time().session_id());
+            }
             return $this->container->token = $tok;
         }
 
         return $this->container->token;
+    }
+
+    /**
+     * Check if the valid token is the token created during the display of the form
+     * @param string $receivedToken
+     * @return bool
+     * @since 1.7.0
+     */
+    public function isValidToken($receivedToken) {
+        // TODO we could check also Origin and Referer header
+        return  $this->container->token === $receivedToken;
     }
 }

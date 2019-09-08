@@ -47,7 +47,7 @@ class jformsCtrl extends jController
 
         // check CSRF
         if ($form->securityLevel == jFormsBase::SECURITY_CSRF) {
-            if ($form->getContainer()->token !== $this->param('__JFORMS_TOKEN__')) {
+            if ($form->isValidToken($this->param('__JFORMS_TOKEN__'))) {
                 $rep = $this->getResponse('text', true);
                 $rep->setHttpStatus('422', 'Unprocessable entity');
                 $rep->content = 'invalid token';
