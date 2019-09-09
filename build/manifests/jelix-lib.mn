@@ -25,9 +25,9 @@ cd lib/jelix/core
   __ALL_RECURSIVELY__
 ! defaultconfig.ini.php
 ! lang_to_locale.ini.php
-! lang_names__.ini.php
-! lang_names_en.ini.php
-! lang_names_fr.ini.php
+! lang_names__.ini
+! lang_names_en.ini
+! lang_names_fr.ini
 
 cd lib/jelix/core-modules/jelix
    __ALL__
