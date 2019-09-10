@@ -36,6 +36,6 @@ class Utils
                 "       Correct the path for the temp directory or create the directory you\n".
                 "       indicated with App in your application.init.php.\n");
         }
-        //\jFile::removeDir(\jApp::tempPath(), false, array('.svn', '.dummy', '.empty'));
+        //\jFile::removeDir(\Jelix\Core\App::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
 }

@@ -93,21 +93,21 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
 
         $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
 
-        $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
+        $resolutionInCache = App::config()->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
+            $resolutionPath = App::tempPath('resolved/' . $this->module . '/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
             $resolutionCachePath = 'resolved/';
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_where = $resolutionCachePath;
                 return;
             }
-            jFile::createDir(dirname($resolutionPath));
+            \jFile::createDir(dirname($resolutionPath));
         }
 
         if (!$this->findPath($this->locale)) {
-            $locales = jLocale::getAlternativeLocales($this->locale, jApp::config());
+            $locales = Locale::getAlternativeLocales($this->locale, App::config());
             $found = false;
             foreach ($locales as $locale) {
                 if ($this->findPath($locale)) {
@@ -127,7 +127,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
                     $l = null;
                     $c = null;
                 }
-                throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
+                throw new \jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
             }
         }
         if ($resolutionInCache) {
@@ -139,7 +139,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
 
     protected function findPath($locale) {
         // check if the locale has been overloaded in var/
-        $overloadedPath = jApp::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
+        $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {
             $this->_path = $overloadedPath;
             $this->_where = 'var/overloaded/';
@@ -148,7 +148,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         }
 
         // check if the locale is available in the locales directory in var/
-        $localesPath = jApp::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        $localesPath = App::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
         if (is_readable($localesPath)) {
             $this->_path = $localesPath;
             $this->_where = 'var/locales/';
@@ -157,7 +157,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         }
 
         // check if the locale has been overloaded in app/
-        $overloadedPath = jApp::appPath('app/overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
+        $overloadedPath = App::appPath('app/overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {
             $this->_path = $overloadedPath;
             $this->_where = 'app/overloaded/';
@@ -166,7 +166,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         }
 
         // check if the locale is available in the locales directory in app/
-        $localesPath = jApp::appPath('app/locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        $localesPath = App::appPath('app/locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
         if (is_readable($localesPath)) {
             $this->_path = $localesPath;
             $this->_where = 'app/locales/';
@@ -175,7 +175,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         }
 
         // else check for the original locale file in the module
-        $path = jApp::getModulePath($this->module).'locales/'.$locale.'/'.$this->resource.$this->_suffix;
+        $path = App::getModulePath($this->module).'locales/'.$locale.'/'.$this->resource.$this->_suffix;
         if (is_readable($path)) {
             $this->_where = 'modules/';
             $this->_path = $path;

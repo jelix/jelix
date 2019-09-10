@@ -218,7 +218,7 @@ class EntryPoint
 
     /**
      * @return \StdClass the config content of the entry point, as seen when
-     *                   calling jApp::config()
+     *                   calling App::config()
      */
     public function getConfigObj()
     {

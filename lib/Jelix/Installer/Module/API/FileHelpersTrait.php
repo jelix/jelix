@@ -100,7 +100,7 @@ trait FileHelpersTrait
 
                     break;
                 case 'appsystem':
-                    $path = str_replace('appsystem:', \jApp::appSystemPath(), $path);
+                    $path = str_replace('appsystem:', App::appSystemPath(), $path);
 
                     break;
                 case 'config':
@@ -145,7 +145,7 @@ trait FileHelpersTrait
      */
     public function setupModuleWebFiles($wwwFilesMode, $wwwDirectoryName, $sourcePath)
     {
-        $targetPath = \jApp::wwwPath($wwwDirectoryName);
+        $targetPath = App::wwwPath($wwwDirectoryName);
         $WWWDirExists = $WWWLinkExists = false;
         if (file_exists($targetPath)) {
             if (is_dir($targetPath)) {
