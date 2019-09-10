@@ -50,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-     vb.name = "jelix_1_7_php71"
+     vb.name = "jelix_1_8_php71"
      #vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 
