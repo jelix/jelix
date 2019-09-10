@@ -9,7 +9,7 @@
 What is Jelix?
 ==============
 
-Jelix 2 is an open-source framework for PHP 7.0+.
+Jelix 2 is an open-source framework for PHP 7.3+.
 
 It has a modular and extensible architecture. Applications based on Jelix are made
 with modules, which allow to reuse features in several projects.
@@ -60,12 +60,12 @@ composer install
 Instead of using Composer, you can also download directly a package containing Jelix ready
 to use. See [the download page](https://jelix.org/articles/en/download).
 
-Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.7/installation/create-application).
+Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.8/installation/create-application).
 
 Documentation and community
 ========================
 
-There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.7).
+There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.8).
 
 You can ask your questions [on the forum](https://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.

@@ -207,7 +207,7 @@ class redis_extCacheDriver implements jICacheDriver
     {
         $used_key = $this->getUsedKey($key);
 
-        return $this->redis->delete($used_key) > 0;
+        return $this->redis->del($used_key) > 0;
     }
 
     /**

@@ -33,6 +33,12 @@ class FrameworkInfos
      */
     protected $localEntrypoints = array();
 
+
+    /**
+     * @var string
+     */
+    protected $defaultEntryPoint = '';
+
     /**
      * FrameworkInfos constructor.
      *
@@ -48,6 +54,15 @@ class FrameworkInfos
         if ($localFrameworkFile != '') {
             $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<'.'?php die(\'\');?'.'>');
             $this->readIniFile($this->iniLocalFile, true);
+        }
+
+        if (!$this->defaultEntryPoint && count($this->entrypoints)) {
+            $ep = $this->getEntryPointInfo('index');
+            if (!$ep) {
+                $epid = array_keys($this->entrypoints)[0];
+                $ep = $this->getEntryPointInfo($epid);
+            }
+            $this->defaultEntryPoint = $ep->getId();
         }
     }
 
@@ -65,16 +80,18 @@ class FrameworkInfos
             }
             if ($configValue) {
                 if ($isLocal) {
-                    $this->addLocalEntryPointInfo($name, $configValue, $typeValue);
+                    $ep = $this->addLocalEntryPointInfo($name, $configValue, $typeValue);
                 } else {
-                    $this->addEntryPointInfo($name, $configValue, $typeValue);
+                    $ep = $this->addEntryPointInfo($name, $configValue, $typeValue);
+                }
+                if ($iniFile->getValue('default', $section)) {
+                    $this->defaultEntryPoint = $ep->getId();
                 }
             }
         }
     }
 
     /**
-     * @param string $name
      * @param mixed  $id
      *
      * @return null|EntryPoint
@@ -97,6 +114,17 @@ class FrameworkInfos
     }
 
     /**
+     *
+     * @return null|EntryPoint
+     */
+    public function getDefaultEntryPointInfo() {
+        if ($this->defaultEntryPoint) {
+            return $this->getEntryPointInfo($this->defaultEntryPoint);
+        }
+        return null;
+    }
+
+    /**
      * @return EntryPoint[]
      */
     public function getEntryPoints()
@@ -111,6 +139,9 @@ class FrameworkInfos
         }
 
         $this->entrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
+        if (!$this->defaultEntryPoint) {
+            $this->defaultEntryPoint = $fileName;
+        }
 
         return $this->entrypoints[$fileName];
     }
@@ -139,6 +170,19 @@ class FrameworkInfos
         }
         unset($this->entrypoints[$id], $this->localEntrypoints[$id]);
 
+        if ($this->defaultEntryPoint == $id) {
+            if (count($this->entrypoints)) {
+                if (isset($this->entrypoints['index'])) {
+                    $this->defaultEntryPoint = 'index';
+                }
+                else {
+                    $this->defaultEntryPoint = array_keys($this->entrypoints)[0];
+                }
+            }
+            else {
+                $this->defaultEntryPoint = '';
+            }
+        }
         $this->iniFile->removeSection('entrypoint:'.$fileName);
         if ($this->iniLocalFile) {
             $this->iniLocalFile->removeSection('entrypoint:'.$fileName);
@@ -161,6 +205,12 @@ class FrameworkInfos
                 'config' => $item->getConfigFile(),
                 'type' => $item->getType(),
             ), 'entrypoint:'.$item->getFile());
+            if ($item->getId() == $this->defaultEntryPoint) {
+                $this->iniFile->setValue('default', true, 'entrypoint:'.$item->getFile());
+            }
+            else {
+                $this->iniFile->removeValue('default', 'entrypoint:'.$item->getFile());
+            }
         }
         if ($this->iniLocalFile) {
             foreach ($this->localEntrypoints as $item) {
@@ -168,6 +218,12 @@ class FrameworkInfos
                     'config' => $item->getConfigFile(),
                     'type' => $item->getType(),
                 ), 'entrypoint:'.$item->getFile());
+                if ($item->getId() == $this->defaultEntryPoint) {
+                    $this->iniLocalFile->setValue('default', true, 'entrypoint:'.$item->getFile());
+                }
+                else {
+                    $this->iniLocalFile->removeValue('default', 'entrypoint:'.$item->getFile());
+                }
             }
         }
     }

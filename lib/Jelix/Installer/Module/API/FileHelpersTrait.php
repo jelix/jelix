@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2019 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -99,6 +99,10 @@ trait FileHelpersTrait
                     $path = str_replace('appconfig:', App::appSystemPath(), $path);
 
                     break;
+                case 'appsystem':
+                    $path = str_replace('appsystem:', \jApp::appSystemPath(), $path);
+
+                    break;
                 case 'config':
                     if ($this->globalSetup->forLocalConfiguration()) {
                         $path = str_replace('config:', App::varConfigPath(), $path);
@@ -125,5 +129,48 @@ trait FileHelpersTrait
         }
 
         return $path;
+    }
+
+    /**
+     * Install web files of a module
+     *
+     * It supports different way to install : copying files, creating a symbolic link
+     *   or do nothing (aka you should create an alias nto the vhost of the web server)
+     *
+     * @param string $wwwFilesMode should be 'copy' or '' (files will be copied),
+     *      'symlink' (a sym link is created) or any other value (do nothing/remove copied files)
+     * @param string $wwwDirectoryName the path inside the www path
+     * @param string $sourcePath the path of the directory
+     * @throws \jException
+     */
+    public function setupModuleWebFiles($wwwFilesMode, $wwwDirectoryName, $sourcePath)
+    {
+        $targetPath = \jApp::wwwPath($wwwDirectoryName);
+        $WWWDirExists = $WWWLinkExists = false;
+        if (file_exists($targetPath)) {
+            if (is_dir($targetPath)) {
+                $WWWDirExists = true;
+            } elseif (is_link($targetPath)) {
+                $WWWDirExists = true;
+            }
+        }
+        if ($wwwFilesMode == 'copy' || $wwwFilesMode == '') {
+            if ($WWWLinkExists) {
+                unlink($targetPath);
+            }
+            $this->copyDirectoryContent($sourcePath, $targetPath, true);
+        } elseif ($wwwFilesMode == 'symlink' || $wwwFilesMode == 'filelink') {
+            if ($WWWDirExists) {
+                \jFile::removeDir($targetPath, true);
+            }
+            symlink($sourcePath, rtrim($targetPath, '/'));
+        } elseif ($wwwFilesMode != 'nosetup') {
+            if ($WWWLinkExists) {
+                unlink($targetPath);
+            }
+            if ($WWWDirExists) {
+                \jFile::removeDir($targetPath, true);
+            }
+        }
     }
 }

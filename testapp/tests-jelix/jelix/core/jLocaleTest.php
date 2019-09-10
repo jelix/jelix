@@ -112,7 +112,7 @@ class jLocaleTest extends jUnitTestCase {
         jApp::config()->locale = 'de_DE';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
-            self::fail('no exception');
+            self::fail('no exception (found: "'.$loc.'")');
         }catch(jException $e) {
             self::fail('wrong exception type');
         }catch(Exception $e) {

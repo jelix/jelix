@@ -171,6 +171,10 @@ class infosreaderTest extends jUnitTestCase {
         </array>    
     </object>';
         $this->assertComplexIdenticalStr($result, $expected);
+
+        $this->assertEquals('Jelix tests', $result->getLabel());
+        $this->assertEquals('unit tests for jelix', $result->getDescription());
+
         $writer = new \Jelix\Core\Infos\ModuleXmlWriter($result->getFilePath());
         $result = $writer->write($result, false);
         $this->assertEqualOrDiff(

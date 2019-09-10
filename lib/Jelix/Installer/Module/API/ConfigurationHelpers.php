@@ -151,8 +151,15 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             $epId = $entryPointWebPath;
         }
 
-        if (!file_exists(\Jelix\Core\App::wwwPath($epFile))) {
-            $this->copyFile($entryPointModelFile, \Jelix\Core\App::wwwPath($epFile));
+        if ($epType == 'cmdline') {
+            if (!file_exists(\Jelix\Core\App::scriptsPath($epFile))) {
+                $this->copyFile($entryPointModelFile, \Jelix\Core\App::scriptsPath($epFile));
+            }
+        }
+        else {
+            if (!file_exists(\Jelix\Core\App::wwwPath($epFile))) {
+                $this->copyFile($entryPointModelFile, \Jelix\Core\App::wwwPath($epFile));
+            }
         }
 
         // create the configuration file

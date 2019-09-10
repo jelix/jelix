@@ -24,7 +24,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "10.205.1.7"
+  config.vm.network "private_network", ip: "10.205.2.100"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -50,7 +50,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # Example for VirtualBox:
   #
   config.vm.provider "virtualbox" do |vb|
-     vb.name = "jelix_1_7_php73"
+     vb.name = "jelix_2_0_php73"
      #vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
 

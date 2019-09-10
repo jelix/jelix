@@ -390,6 +390,11 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         return false;
     }
 
+    protected function generateUpload2(&$source, $control, &$attributes)
+    {
+        return $this->generateUpload($source, $control, $attributes);
+    }
+
     /**
      * @param array            $source
      * @param string           $controltype
@@ -413,7 +418,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
                 continue;
             }
             if (!in_array($ctrltype, array('input', 'textarea', 'output', 'checkbox', 'checkboxes', 'radiobuttons', 'button',
-                'menulist', 'listbox', 'secret', 'upload', 'hidden', 'htmleditor', 'date', 'datetime', 'wikieditor', 'choice', ))) {
+                'menulist', 'listbox', 'secret', 'upload', 'upload2', 'hidden', 'htmleditor', 'date', 'datetime', 'wikieditor', 'choice', ))) {
                 throw new jException('jelix~formserr.control.not.allowed', array($ctrltype, $controltype, $this->sourceFile));
             }
             ++$ctrlcount;

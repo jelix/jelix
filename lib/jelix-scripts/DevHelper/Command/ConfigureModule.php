@@ -23,15 +23,15 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
             ->setDescription('Configure the module for the application.')
             ->setHelp('Setup the framework for the given module, and enable the module')
             ->addArgument(
-                'module',
-                InputArgument::REQUIRED,
-                'Name of the module to configure'
+                'modules',
+                InputArgument::REQUIRED | InputArgument::IS_ARRAY,
+                'Names of modules to configure'
             )
             ->addOption(
                 'parameters',
                 'p',
                 InputOption::VALUE_REQUIRED,
-                'parameters for the installer of the module: -p "param1;param2=value;..."'
+                'parameters for the installer of the first module: -p "param1;param2=value;..."'
             )
             ->addOption(
                 'force',
@@ -43,13 +43,13 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
                 'local',
                 'l',
                 InputOption::VALUE_NONE,
-                'configure the module only into the local configuration'
+                'configure the modules only into the local configuration'
             )
             ->addOption(
                 'no-local',
                 '',
                 InputOption::VALUE_NONE,
-                'configure the module into the app configuration, when it was previously configured for the local configuration'
+                'configure the modules into the app configuration, when it was previously configured for the local configuration'
             )
         ;
         parent::configure();
@@ -59,7 +59,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
     {
         \jAppManager::close();
 
-        $module = $input->getArgument('module');
+        $modules = $input->getArgument('modules');
         $parameters = $input->getOption('parameters');
 
         if ($parameters) {
@@ -75,13 +75,13 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
         if ($parameters) {
-            $configurator->setModuleParameters($module, $parameters);
+            $configurator->setModuleParameters($modules[0], $parameters);
         }
 
         $localConfig = $input->getOption('local') ? true : ($input->getOption('no-local') ? true : null);
 
         $configurator->configureModules(
-            array($module),
+            $modules,
             $this->selectedEntryPointId,
             $localConfig,
             $input->getOption('force')

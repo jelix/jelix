@@ -100,24 +100,11 @@ class Locale
                 // unknown module..
                 throw $e;
             }
-            if ($locale === null) {
-                $locale = $config->locale;
-            }
             if ($charset === null) {
                 $charset = $config->charset;
             }
-            if (!$tryOtherLocales) {
-                throw new Exception('(211)No locale file found for the given locale key "'.$key
-                                .'" (charset '.$charset.', lang '.$locale.')');
-            }
-
-            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
-            if ($words === null) {
-                throw new Exception('(212)No locale file found for the given locale key "'.$key
-                                .'" in any other default languages (charset '.$charset.')');
-            }
-
-            return $words;
+            throw new Exception('(212)No locale file found for the given locale key "'.$key
+                            .'" in any other default languages (charset '.$charset.')');
         }
 
         $locale = $file->locale;
@@ -157,8 +144,14 @@ class Locale
         return $string;
     }
 
-    protected static function tryOtherLocales($key, $args, $locale, $charset, $config)
-    {
+    /**
+     * return the list of alternative locales to the given one
+     * @param string $locale
+     * @param object $config the configuration object
+     * @return array
+     */
+    public static function getAlternativeLocales($locale, $config) {
+
         $otherLocales = array();
         $similarLocale = self::langToLocale(substr($locale, 0, strpos($locale, '_')));
         if ($similarLocale != $locale) {
@@ -172,7 +165,12 @@ class Locale
         if ($config->fallbackLocale && $locale != $config->fallbackLocale) {
             $otherLocales[] = $config->fallbackLocale;
         }
+        return $otherLocales;
+    }
 
+    protected static function tryOtherLocales($key, $args, $locale, $charset, $config)
+    {
+        $otherLocales = self::getAlternativeLocales($locale, $config);
         foreach ($otherLocales as $loc) {
             try {
                 return Locale::get($key, $args, $loc, $charset, false);
@@ -276,4 +274,36 @@ class Locale
 
         return '';
     }
+
+    /**
+     * @var string[][] first key is lang code of translation of names, second key is lang code
+     */
+    protected static $langNames = array();
+
+    /**
+     * @param string $lang the lang for which we want the name
+     * @param string $langOfName if empty, return the name in its own language
+     * @since 1.7.0
+     */
+    public static function getLangName($lang, $langOfName='') {
+
+        if ($langOfName == '') {
+            $langOfName = '_';
+        }
+
+        if (!isset(self::$langNames[$langOfName])) {
+            $fileName = 'lang_names_'.$langOfName.'.ini';
+            if (!file_exists(__DIR__.'/'.$fileName)) {
+                $fileName = 'lang_names_en.ini';
+            }
+            $names = parse_ini_file($fileName, false,  INI_SCANNER_RAW);
+            self::$langNames[$langOfName] = $names['names'];
+        }
+
+        if (isset(self::$langNames[$langOfName][$lang])) {
+            return self::$langNames[$langOfName][$lang];
+        }
+        return $lang;
+    }
+
 }

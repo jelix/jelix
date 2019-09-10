@@ -122,6 +122,11 @@ class App
         return self::$_currentApp->logPath.$file;
     }
 
+    /**
+     * @param string $file
+     * @return string
+     * @deprecated
+     */
     public static function configPath($file = '')
     {
         trigger_error('jApp::configPath() is deprecated. use jApp::varConfigPath() instead', E_USER_DEPRECATED);
@@ -144,7 +149,8 @@ class App
      *
      * @return string
      *
-     * @deprecated
+     * @deprecated implement cli script using Symfony Console instead
+     * @see https://docs.jelix.org/en/manual-1.7/application/cmdline
      */
     public static function scriptsPath($file = '')
     {

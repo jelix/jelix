@@ -39,7 +39,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
         $rs = $cnx->query($sql);
 
         $table = new Table($output);
-        $table->setHeaders(array('Group id', 'Group name', 'Subject', 'Resource'));
+        $table->setHeaders(array('Group id', 'Group name', 'Role', 'Resource'));
 
         foreach ($rs as $rec) {
             $table->addRow(array(

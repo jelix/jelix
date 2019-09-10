@@ -30,6 +30,8 @@ class jTpl extends \Jelix\Castor\CastorCore
         $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
         $this->_vars['j_themepath'] = $basePath.'themes/'.$config->theme.'/';
         $this->_vars['j_locale'] = $config->locale;
+        $this->_vars['j_lang'] = jLocale::getCurrentLang();
+        $this->_vars['j_country'] = jLocale::getCurrentCountry();
         parent::__construct();
     }
 

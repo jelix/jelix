@@ -93,7 +93,7 @@ class sampleFormCtrl extends jController {
    function destroy(){
       jForms::destroy('sample');
       $rep= $this->getResponse("redirect");
-      $rep->action="sampleform:status";
+      $rep->action="sampleform:ok";
       return $rep;
    }
 

@@ -7,7 +7,7 @@
  * @contributor Julien Issler
  * @contributor Baptiste Toinot
  *
- * @copyright   2005-2014 Laurent Jouanneau
+ * @copyright   2005-2019 Laurent Jouanneau
  * @copyright   2007 Rahal
  * @copyright   2008 Julien Issler
  * @copyright   2008 Baptiste Toinot
@@ -93,64 +93,97 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
 
         $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
 
+        $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
+
+        if ($resolutionInCache) {
+            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
+            $resolutionCachePath = 'resolved/';
+            if (file_exists($resolutionPath)) {
+                $this->_path = $resolutionPath;
+                $this->_where = $resolutionCachePath;
+                return;
+            }
+            jFile::createDir(dirname($resolutionPath));
+        }
+
+        if (!$this->findPath($this->locale)) {
+            $locales = jLocale::getAlternativeLocales($this->locale, jApp::config());
+            $found = false;
+            foreach ($locales as $locale) {
+                if ($this->findPath($locale)) {
+                    $found = true;
+                    break;
+                }
+            }
+            if (!$found) {
+                // to avoid infinite loop in a specific lang or charset, we should check if we don't
+                // try to retrieve the same message as the one we use for the exception below,
+                // and if it is this message, it means that the error message doesn't exist
+                // in the specific lang or charset, so we retrieve it in en_US language and UTF-8 charset
+                if ($this->toString() == 'jelix~errors.selector.invalid.target') {
+                    $l = 'en_US';
+                    $c = 'UTF-8';
+                } else {
+                    $l = null;
+                    $c = null;
+                }
+                throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
+            }
+        }
+        if ($resolutionInCache) {
+            symlink($this->_path, $resolutionPath);
+            $this->_path = $resolutionPath;
+            $this->_where = $resolutionCachePath;
+        }
+    }
+
+    protected function findPath($locale) {
         // check if the locale has been overloaded in var/
-        $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
+        $overloadedPath = jApp::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {
             $this->_path = $overloadedPath;
             $this->_where = 'var/overloaded/';
 
-            return;
+            return true;
         }
 
         // check if the locale is available in the locales directory in var/
-        $localesPath = App::varPath('locales/'.$this->locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        $localesPath = jApp::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
         if (is_readable($localesPath)) {
             $this->_path = $localesPath;
             $this->_where = 'var/locales/';
 
-            return;
+            return true;
         }
 
         // check if the locale has been overloaded in app/
-        $overloadedPath = App::appPath('app/overloads/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
+        $overloadedPath = jApp::appPath('app/overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {
             $this->_path = $overloadedPath;
             $this->_where = 'app/overloaded/';
 
-            return;
+            return true;
         }
 
         // check if the locale is available in the locales directory in app/
-        $localesPath = App::appPath('app/locales/'.$this->locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
+        $localesPath = jApp::appPath('app/locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
         if (is_readable($localesPath)) {
             $this->_path = $localesPath;
             $this->_where = 'app/locales/';
 
-            return;
+            return true;
         }
 
         // else check for the original locale file in the module
-        $path = App::getModulePath($this->module).'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
+        $path = jApp::getModulePath($this->module).'locales/'.$locale.'/'.$this->resource.$this->_suffix;
         if (is_readable($path)) {
             $this->_where = 'modules/';
             $this->_path = $path;
 
-            return;
+            return true;
         }
 
-        // to avoid infinite loop in a specific lang or charset, we should check if we don't
-        // try to retrieve the same message as the one we use for the exception below,
-        // and if it is this message, it means that the error message doesn't exist
-        // in the specific lang or charset, so we retrieve it in en_EN language and UTF-8 charset
-        if ($this->toString() == 'jelix~errors.selector.invalid.target') {
-            $l = 'en_US';
-            $c = 'UTF-8';
-        } else {
-            $l = null;
-            $c = null;
-        }
-
-        throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
+        return false;
     }
 
     protected function _createCachePath()

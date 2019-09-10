@@ -6,7 +6,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Laurent Raufaste, Pulsation
  *
- * @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
+ * @copyright  2001-2005 CopixTeam, 2005-2019 Laurent Jouanneau, 2008 Laurent Raufaste, 2008 Pulsation
  *
  * This class was get originally from the Copix project (CopixZone, Copix 2.3dev20050901, http://www.copix.org)
  * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -306,24 +306,47 @@ class jZone
     private function _getCacheFiles($forCurrentResponse = true)
     {
         $module = jApp::getCurrentModule();
-        $ar = $this->_params;
-        ksort($ar);
-        $id = md5(serialize($ar));
-        $cacheFiles = array('content' => jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/'.$id.'.php'));
+
+        $id = md5(serialize($this->getCacheId()));
+
+        $path = $id[0].'/'.$id[1].$id[2].'/'.$id.'.php';
+        $rootPath = 'zonecache/'.$module.'/'.str_replace('\\', '__',strtolower(get_class($this)));
+        $cacheFiles = array(
+            'content' => jApp::tempPath($rootPath.'/'.$path)
+        );
         if ($forCurrentResponse) {
             //make distinct a cache files for metas according to response type as meta handling is often different for different responses
             $respType = jApp::coord()->response->getType();
-            $cacheFiles['meta'] = jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/meta~'.$respType.'~'.$id.'.php');
+            $cacheFiles['meta'] = jApp::tempPath($rootPath.'/meta~'.$respType.'/'.$path);
         } else {
             foreach (jApp::config()->responses as $respType) {
                 //list all response types
                 if (substr($respType, -5) != '.path') {
-                    $cacheFiles['meta.'.$respType] = jApp::tempPath('zonecache/'.$module.'/'.strtolower(get_class($this)).'/meta~'.$respType.'~'.$id.'.php');
+                    $cacheFiles['meta.'.$respType] = jApp::tempPath($rootPath.'/meta~'.$respType.'/'.$path);
                 }
             }
         }
 
         return $cacheFiles;
+    }
+
+    /**
+     * It should returns a list of values that are used for the cache Id
+     *
+     * By default, it returns all zone parameters. But some parameters may have
+     * values (like some object properties) that are not used for the zone
+     * and unfortunately which changed often. The Cache id is then not
+     * 'stable' and the cache system may generate a cache at each call.
+     *
+     * So you can redefine this method to return only values that should be used
+     * as cache ID (I.e. which determines the uniqueness of the zone content)
+     *
+     * @return array  list of values that are used for the cache Id
+     */
+    protected function getCacheId() {
+        $ar = $this->_params;
+        ksort($ar);
+        return $ar;
     }
 
     /**

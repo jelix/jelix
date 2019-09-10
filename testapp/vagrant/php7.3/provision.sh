@@ -6,9 +6,9 @@ PHP_VERSION="7.3"
 APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="$APPDIR/vagrant"
-APPHOSTNAME="testapp17.local"
+APPHOSTNAME="testapp20.local"
 APPHOSTNAME2=""
-LDAPCN="testapp17"
+LDAPCN="testapp20"
 FPM_SOCK="php\\/php7.3-fpm.sock"
 POSTGRESQL_VERSION=9.6
 

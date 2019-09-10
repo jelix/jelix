@@ -76,4 +76,11 @@ class jLocaleLangCodeTest extends jUnitTestCase {
         jApp::config()->availableLocales = array('en_US', 'fr_CA');
         $this->assertEquals('fr_CA', jLocale::getPreferedLocaleFromRequest());
     }
+
+    function testLocaleName() {
+        $this->assertEquals('فارسی', jLocale::getLangName('fa'));
+        $this->assertEquals('Persan', jLocale::getLangName('fa', 'fr'));
+        $this->assertEquals('Persian', jLocale::getLangName('fa', 'en'));
+        $this->assertEquals('Persian', jLocale::getLangName('fa', 'pgoidfgip'));
+    }
 }

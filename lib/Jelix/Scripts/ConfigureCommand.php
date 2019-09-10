@@ -91,7 +91,7 @@ class ConfigureCommand extends Command
                 $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
             }
 
-            $selectedEntryPointId = 'index';
+            $selectedEntryPointId = $globalSetup->getMainEntryPoint()->getEpId();
             $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
             if (count($selectedEntryPointsIdList)) {
                 $selectedEntryPointId = $selectedEntryPointsIdList[0];
@@ -131,7 +131,7 @@ class ConfigureCommand extends Command
             return array();
         }
 
-        return 'index';
+        return '';
     }
 
     private function normalizeEp($ep)

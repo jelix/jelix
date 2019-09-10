@@ -6,7 +6,7 @@
  * @subpackage  core_selector
  *
  * @author      Laurent Jouanneau
- * @copyright   2005-2018 Laurent Jouanneau
+ * @copyright   2005-2019 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -62,30 +62,52 @@ class jSelectorTpl extends jSelectorModule
         if (!jApp::isModuleEnabled($this->module)) {
             throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
         }
-
-        $locale = jApp::config()->locale;
-        $fallbackLocale = jApp::config()->fallbackLocale;
-        $path = $this->resource;
-        $lpath = $locale.'/'.$this->resource;
+        $config = jApp::config();
+        $locale = $config->locale;
+        $lpath = $locale . '/' . $this->resource;
         $flpath = '';
-
+        $fallbackLocale = $config->fallbackLocale;
         if ($locale != $fallbackLocale && $fallbackLocale) {
-            $flpath = $fallbackLocale.'/'.$this->resource;
+            $flpath = $fallbackLocale . '/' . $this->resource;
         }
 
-        if (($theme = jApp::config()->theme) != 'default') {
-            if ($this->checkThemePath($theme.'/'.$this->module, $lpath, $flpath, $path)) {
+        $resolutionInCache = $config->compilation['sourceFileResolutionInCache'];
+
+        if ($resolutionInCache) {
+            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/' . $this->_dirname. $config->theme . '/' . $lpath . '.tpl');
+            $resolutionCachePath = 'resolved/' . $this->module . '/' . $config->theme . '/' . $lpath;
+            if (file_exists($resolutionPath)) {
+                $this->_path = $resolutionPath;
+                $this->_cachePrefix = $resolutionCachePath;
+                return;
+            }
+            jFile::createDir(dirname($resolutionPath));
+        }
+
+        $this->findPath($config, $lpath, $flpath);
+        if ($resolutionInCache) {
+            symlink($this->_path, $resolutionPath);
+            $this->_path = $resolutionPath;
+            $this->_cachePrefix = $resolutionCachePath;
+        }
+    }
+
+    protected function findPath($config, $lpath, $flpath) {
+
+        $mpath = jApp::getModulePath($this->module).$this->_dirname;
+        if ($config->theme != 'default') {
+            if ($this->checkThemePath($config->theme, $lpath, $flpath, $mpath, $this->resource)) {
                 return;
             }
         }
 
-        if ($this->checkThemePath('default/'.$this->module, $lpath, $flpath, $path)) {
+        if ($this->checkThemePath('default', $lpath, $flpath, $mpath, $this->resource)) {
             return;
         }
 
         // check if the template exists in the current module
-        $mpath = jApp::getModulePath($this->module).$this->_dirname;
-        $this->_path = $mpath.$locale.'/'.$this->resource.'.tpl';
+
+        $this->_path = $mpath.$lpath.'.tpl';
         if (is_readable($this->_path)) {
             $this->_cachePrefix = 'modules/'.$this->module.'/'.$lpath;
 
@@ -93,7 +115,7 @@ class jSelectorTpl extends jSelectorModule
         }
 
         if ($flpath) {
-            $this->_path = $mpath.$fallbackLocale.'/'.$this->resource.'.tpl';
+            $this->_path = $mpath.$flpath.'.tpl';
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'modules/'.$this->module.'/'.$flpath;
 
@@ -103,7 +125,7 @@ class jSelectorTpl extends jSelectorModule
 
         $this->_path = $mpath.$this->resource.'.tpl';
         if (is_readable($this->_path)) {
-            $this->_cachePrefix = 'modules/'.$this->module.'/'.$path;
+            $this->_cachePrefix = 'modules/'.$this->module.'/'.$this->resource;
 
             return;
         }
@@ -111,8 +133,9 @@ class jSelectorTpl extends jSelectorModule
         throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'template'));
     }
 
-    protected function checkThemePath($subDir, $lpath, $flpath, $path)
+    protected function checkThemePath($theme, $lpath, $flpath, $mpath, $path)
     {
+        $subDir = $theme.'/'.$this->module;
         if (file_exists(jApp::varPath('themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in var/theme
             $this->_path = jApp::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
@@ -164,6 +187,35 @@ class jSelectorTpl extends jSelectorModule
             $this->_path = jApp::appPath('app/themes/'.$subDir.'/'.$path.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/'.$subDir.'/'.$path;
+
+                return true;
+            }
+        }
+
+        $mpath .= 'themes/'.$theme;
+        if (file_exists($mpath)) {
+            // check if there is a redefined template for the current theme & locale in <module>/themes
+            $this->_path = $mpath.'/'.$lpath.'.tpl';
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$lpath;
+
+                return true;
+            }
+
+            if ($flpath) {
+                // check if there is a redefined template for the current theme & fallback locale in <module>/themes
+                $this->_path = $mpath.'/'.$flpath.'.tpl';
+                if (is_readable($this->_path)) {
+                    $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$flpath;
+
+                    return true;
+                }
+            }
+
+            // check if there is a redefined template for the current theme in <module>/themes
+            $this->_path = $mpath.'/'.$path.'.tpl';
+            if (is_readable($this->_path)) {
+                $this->_cachePrefix = 'modules/'.$this->module.'/themes/'.$theme.'/'.$path;
 
                 return true;
             }

@@ -58,6 +58,9 @@ cd lib/Jelix/Legacy/utils
 cd lib/Jelix/Locale
   __ALL__
 ! lang_to_locale.ini.php
+! lang_names__.ini
+! lang_names_en.ini
+! lang_names_fr.ini
 
 cd lib/Jelix/Logger
   __ALL_RECURSIVELY__

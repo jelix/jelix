@@ -31,7 +31,7 @@ class ModulesCommands
         Utils::checkTempPath();
 
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
-        $ep = $fmkInfos->getEntryPointInfo('index');
+        $ep = $fmkInfos->getDefaultEntryPointInfo();
 
         $compiler = new Compiler($ep->getConfigFile(), 'console.php', true);
 

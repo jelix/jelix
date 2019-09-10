@@ -174,10 +174,10 @@ class jFile
     {
         $path = str_replace(
             array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:',
-                'appconfig:', ),
+                'appconfig:', 'appsystem:'),
             array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
                 jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(),
-                jApp::appSystemPath(), ),
+                jApp::appSystemPath(), jApp::appSystemPath(), ),
             $path
         );
         if (strpos($path, 'jelixwww:') === 0 && jApp::config()) {

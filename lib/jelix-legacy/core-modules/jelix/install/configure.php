@@ -23,9 +23,9 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
         $this->parameters['wwwfiles'] = $cli->askInChoice(
             'How to install jelix-www files?'.
             "\n   copy: will be copied into the www/ directory".
-            "\n   filelink: a symbolic link into the www/ directory will point to the lib/jelix-www directory".
+            "\n   symlink: a symbolic link into the www/ directory will point to the lib/jelix-www directory".
             "\n   vhost: you will configure your web server to set an alias to the lib/jelix-www directory",
-            array('copy', 'vhost', 'filelink'),
+            array('copy', 'vhost', 'symlink'),
             $this->parameters['wwwfiles']
         );
 

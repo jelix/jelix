@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacl2db
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2009 Laurent Jouanneau

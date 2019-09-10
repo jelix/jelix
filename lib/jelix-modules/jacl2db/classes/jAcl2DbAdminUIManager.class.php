@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah
  *
- * @copyright   2008-2017 Laurent Jouanneau
+ * @copyright   2008-2019 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  * @copyright   2010 Olivier Demah
  *
@@ -34,10 +34,12 @@ class jAcl2DbAdminUIManager
     /**
      * @return array
      *               'groups' : list of jacl2group objects (id_aclgrp, name, grouptype, ownerlogin)
-     *               'rights' : array( <subject> => array( <id_aclgrp> => 'y' or 'n' or ''))
-     *               'sbjgroups_localized' : list of labels of each subject groups
-     *               'subjects' : array( <subject> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
-     *               'rightsWithResources':  array(<subject> => array( <id_aclgrp> => <number of rights>))
+     *               'rights' : array( <role> => array( <id_aclgrp> => 'y' or 'n' or ''))
+     *               'rolegroups_localized' : list of labels of each roles groups
+     *               'roles' : array( <role> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
+     *               'sbjgroups_localized' : same as 'rolegroups_localized', depreacted
+     *               'subjects' :same as 'roles', deprecated
+     *               'rightsWithResources':  array(<role> => array( <id_aclgrp> => <number of rights>))
      */
     public function getGroupRights()
     {
@@ -115,15 +117,19 @@ class jAcl2DbAdminUIManager
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled ? 'n' : 'y');
         }
 
-        return compact('groups', 'rights', 'sbjgroups_localized', 'subjects', 'rightsWithResources');
+        $roles = $subjects;
+        $rolegroups_localized = $sbjgroups_localized;
+
+        return compact('groups', 'rights', 'sbjgroups_localized', 'subjects', 'roles', 'rolegroups_localized', 'rightsWithResources');
     }
 
     /**
      * @param mixed $groupid
      *
      * @return array
-     *               'subjects_localized' : list of labels of each subject
-     *               'rightsWithResources':  array(<subject> => array( <jacl2rights objects (id_aclsbj, id_aclgrp, id_aclres, canceled>))
+     *               'roles_localized' : list of labels of each roles
+     *               'subjects_localized' : same as 'roles_localized', deprecated
+     *               'rightsWithResources':  array(<role> => array( <jacl2rights objects (id_aclsbj, id_aclgrp, id_aclres, canceled>))
      *               'hasRightsOnResources' : true if there are some resources
      */
     public function getGroupRightsWithResources($groupid)
@@ -148,8 +154,8 @@ class jAcl2DbAdminUIManager
                 $subjects_localized[$rec->id_aclsbj] = $this->getLabel($rec->id_aclsbj, $rec->label_key);
             }
         }
-
-        return compact('subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
+        $roles_localized = $subjects_localized;
+        return compact('roles_localized', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 
     /**
@@ -179,21 +185,21 @@ class jAcl2DbAdminUIManager
 
     /**
      * @param string $groupid
-     * @param array  $subjects array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
+     * @param array  $roles array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
      *                         true or 'on' means 'to remove'
      */
-    public function removeGroupRightsWithResources($groupid, $subjects)
+    public function removeGroupRightsWithResources($groupid, $roles)
     {
-        $subjectsToRemove = array();
+        $rolesToRemove = array();
 
-        foreach ($subjects as $sbj => $val) {
+        foreach ($roles as $sbj => $val) {
             if ($val != '' || $val == true) {
-                $subjectsToRemove[] = $sbj;
+                $rolesToRemove[] = $sbj;
             }
         }
-        if (count($subjectsToRemove)) {
+        if (count($rolesToRemove)) {
             jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-                ->deleteRightsOnResource($groupid, $subjectsToRemove)
+                ->deleteRightsOnResource($groupid, $rolesToRemove)
             ;
         }
     }
@@ -341,6 +347,8 @@ class jAcl2DbAdminUIManager
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled ? 'n' : 'y');
         }
 
+        $roles = $subjects;
+        $rolegroups_localized = $sbjgroups_localized;
         return compact(
             'hisgroup',
             'groupsuser',
@@ -348,7 +356,9 @@ class jAcl2DbAdminUIManager
             'rights',
             'user',
             'subjects',
+            'roles',
             'sbjgroups_localized',
+            'rolegroups_localized',
             'rightsWithResources',
             'hasRightsOnResources'
         );
@@ -398,30 +408,30 @@ class jAcl2DbAdminUIManager
                 $subjects_localized[$rec->id_aclsbj] = $this->getLabel($rec->id_aclsbj, $rec->label_key);
             }
         }
-
-        return compact('user', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
+        $roles_localized = $subjects_localized;
+        return compact('user', 'subjects_localized', 'roles_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 
     /**
      * @param $user
-     * @param array $subjects <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+     * @param array $roles <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
      */
-    public function removeUserRessourceRights($user, $subjects)
+    public function removeUserRessourceRights($user, $roles)
     {
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         $grp = $daogroup->getPrivateGroup($user);
 
-        $subjectsToRemove = array();
+        $rolesToRemove = array();
 
-        foreach ($subjects as $sbj => $val) {
+        foreach ($roles as $sbj => $val) {
             if ($val != '' || $val == true) {
-                $subjectsToRemove[] = $sbj;
+                $rolesToRemove[] = $sbj;
             }
         }
 
-        if (count($subjectsToRemove)) {
+        if (count($rolesToRemove)) {
             jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-                ->deleteRightsOnResource($grp->id_aclgrp, $subjectsToRemove)
+                ->deleteRightsOnResource($grp->id_aclgrp, $rolesToRemove)
             ;
         }
     }
