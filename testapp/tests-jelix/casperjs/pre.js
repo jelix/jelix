@@ -1,5 +1,5 @@
 
-var testUrl = 'http://testapp17.local';
+var testUrl = 'http://testapp18.local';
 
 if (casper.cli.has("testurl"))
     testUrl = casper.cli.get('testurl');

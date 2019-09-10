@@ -31,7 +31,7 @@ postgresql, redis, apache, php, phpunit, Composer etc.
 It can take time the first time. It depends of your internet connection.
 
 When the "Done" message appears, and if there are no errors, Testapp is
-ready. Go on http://10.205.1.17/ to see the app and launch unit tests.
+ready. Go on http://10.205.1.8/ to see the app and launch unit tests.
 
 To shutdown the virtual machine, type
 
@@ -39,13 +39,13 @@ To shutdown the virtual machine, type
 vagrant halt
 ```
 
-You can also add in your hosts file a declaration of the testapp17.local domain
+You can also add in your hosts file a declaration of the testapp18.local domain
 
 ```
-10.205.1.17  testapp17.local
+10.205.1.18  testapp18.local
 ```
 
-And then use http://testapp17.local/ instead of http://10.205.1.17/
+And then use http://testapp18.local/ instead of http://10.205.1.8/
 
 
 Running tests in Vagrant
@@ -113,8 +113,8 @@ Debugging Testapp with PHPStorm and Vagrant
 
 In PHPStorm, create a server: settings/Languages/PHP/servers
 
-- Name : testapp 1.7
-- Host: testapp17.local or 10.205.1.7 (serveur web)
+- Name : testapp 1.8
+- Host: testapp18.local or 10.205.1.8 (serveur web)
 - port: 80
 - Debugger: xdebug
 - Mapping : map the root of the repository to "/jelixapp"
@@ -122,8 +122,8 @@ In PHPStorm, create a server: settings/Languages/PHP/servers
 Then create a debug configuration of type "PHP Remote Debug"
 (menu Run/edit configurations)
 
-- name: jelix 1.7
-- servers : choose testapp 1.7
+- name: jelix 1.8
+- servers : choose testapp 1.8
 - ide key : PHPSTORM
 
 Then you can debug:

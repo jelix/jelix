@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <phpdoc>
-    <title>Jelix 1.7</title>
+    <title>Jelix 1.8</title>
     <parser>
         <target>__PARSER_CACHE__</target>
         <encoding>utf8</encoding>

@@ -1,6 +1,6 @@
 # Jelix
 
-[![Build Status](https://travis-ci.org/jelix/jelix.svg?branch=jelix-1.7.x)](https://travis-ci.org/jelix/jelix)
+[![Build Status](https://travis-ci.org/jelix/jelix.svg?branch=jelix-1.8.x)](https://travis-ci.org/jelix/jelix)
 [![License](https://poser.pugx.org/jelix/jelix/license)](https://packagist.org/packages/jelix/jelix)
 [![Latest Stable Version](https://poser.pugx.org/jelix/jelix/v/stable)](https://packagist.org/packages/jelix/jelix)
 [![Total Downloads](https://poser.pugx.org/jelix/jelix/downloads)](https://packagist.org/packages/jelix/jelix)
@@ -9,7 +9,7 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 5.6 to PHP 7.3. 
+Jelix is an open-source framework for PHP. Jelix 1.8 is compatible from PHP 5.6 to PHP 7.3. 
 
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
@@ -41,12 +41,12 @@ composer install
 Instead of using Composer, you can also download directly a package containing Jelix ready
 to use. See [the download page](https://jelix.org/articles/en/download).
 
-Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.7/installation/create-application).
+Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.8/installation/create-application).
 
 Documentation and community
 ===========================
 
-There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.7).
+There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.8).
 
 You can ask your questions [on the forum](https://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.

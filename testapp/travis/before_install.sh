@@ -69,11 +69,11 @@ echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string testapp17.local" | debconf-set-selections
+echo "slapd slapd/domain string testapp18.local" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=testapp17,dc=local -w passjelix -f testapp/vagrant/ldap_conf.ldif
+ldapadd -x -D cn=admin,dc=testapp18,dc=local -w passjelix -f testapp/vagrant/ldap_conf.ldif
 
 
 # ----------------------- prepare postgresql base

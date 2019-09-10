@@ -12,6 +12,6 @@ echo "slapd slapd/domain string $APPHOSTNAME" | debconf-set-selections
 apt-get -y install slapd ldap-utils
 
 ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap_conf.ldif
-#ldapsearch -x -D cn=admin,dc=testapp17,dc=local -w passjelix -b "dc=testapp17,dc=local" "(objectClass=*)"
+#ldapsearch -x -D cn=admin,dc=testapp18,dc=local -w passjelix -b "dc=testapp18,dc=local" "(objectClass=*)"
 
 

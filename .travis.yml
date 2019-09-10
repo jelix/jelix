@@ -11,11 +11,12 @@ branches:
   only:
     - master
     - jelix-1.7.x
+    - jelix-1.8.x
     - travis
 
 addons:
     hosts:
-        - testapp17.local
+        - testapp18.local
 
 cache:
     directories:

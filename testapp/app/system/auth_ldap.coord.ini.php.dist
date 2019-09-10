@@ -79,7 +79,7 @@ profile = test
 
 uidProperty=uid
 ; search base
-searchBaseDN="ou=people,dc=testapp17,dc=local"
+searchBaseDN="ou=people,dc=testapp18,dc=local"
 ; search filter
 searchFilter="(objectClass=inetOrgPerson)"
 ; attributes to retrieve for the search (default "cn,distinguishedName,name")
