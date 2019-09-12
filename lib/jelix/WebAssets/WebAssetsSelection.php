@@ -132,7 +132,7 @@ class WebAssetsSelection
                 $url = str_replace(
                     array('$lang', '$locale', '$theme'),
                     array($this->variables['$lang'], $this->variables['$locale'],
-                        $this->variables['$theme'], ),
+                        $this->urlBasePath.$this->variables['$theme'], ),
                     $resource
                 );
                 break;

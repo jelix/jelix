@@ -11,6 +11,9 @@
 */
 
 
+use Jelix\Core\Infos\ModuleInfos;
+use Jelix\Version\Version;
+
 require_once(__DIR__.'/installer.lib.php');
 
 class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLauncher {
@@ -489,16 +492,18 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
     function testGetUpgradersWithMainUpgraderAlreadyUpgraded() {
         try {
+            // the current installed version is the current one: no upgraded
+            $path = jApp::appPath().'modules/testinstall3/';
+            $infos = ModuleInfos::load($path);
             $conf =(object) array( 'modules'=>array(
                 'testinstall3.enabled'=>true,
                 'testinstall3.dbprofile'=>'default',
                 'testinstall3.installed'=>false,
-                'testinstall3.version'=>"1.7.0",
+                'testinstall3.version'=>$infos->version,
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
-                jApp::appPath().'modules/testinstall3/', $conf->modules);
+                $path, $conf->modules);
 
-            // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
