@@ -27,8 +27,8 @@ application to this unstable Jelix version ( **just for tests**! ), read the fil
 
 The master branch will be Jelix 2.0.
 
-For the current stable release, see the jelix-1.6.x branch. For the next stable release,
-see the jelix-1.7.x branch.
+For the current stable release, see the jelix-1.7.x branch. For the next stable release,
+see the jelix-1.8.x branch.
 
 **Please**, to fix issues on stable versions, do it on their corresponding branches,
 not master! So **do pull requests** on stable branches!
@@ -36,7 +36,7 @@ not master! So **do pull requests** on stable branches!
 Installation
 ===========
 
-The source code of the master branch (Jelix 2.0) is compatible only with PHP 5.6 or more.
+The source code of the master branch (Jelix 2.0) is compatible only with PHP 7.3 or more.
 
 The best way is to use [Composer](https://getcomposer.org).
 Create a directory and a composer.json file : 
@@ -45,7 +45,7 @@ Create a directory and a composer.json file :
 {
     "name": "...",
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.3",
         "jelix/jelix": "dev-master"
     }
 }
