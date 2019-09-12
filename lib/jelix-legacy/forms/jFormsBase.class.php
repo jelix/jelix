@@ -152,7 +152,7 @@ abstract class jFormsBase
     {
         $req = jApp::coord()->request;
         if ($this->securityLevel == jFormsBase::SECURITY_CSRF) {
-            if ($this->isValidToken($req->getParam('__JFORMS_TOKEN__'))) {
+            if (!$this->isValidToken($req->getParam('__JFORMS_TOKEN__'))) {
                 throw new jException('jelix~formserr.invalid.token');
             }
         }

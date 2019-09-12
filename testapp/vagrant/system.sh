@@ -28,6 +28,7 @@ function initsystem () {
     update-locale LC_ALL=fr_FR.UTF-8
 
     # install all packages
+    apt-get update
     apt-get install -y software-properties-common apt-transport-https
 
     if [ "$DISTRO" == "stretch" ]; then
@@ -39,7 +40,7 @@ function initsystem () {
 
     if [ "$DISTRO" == "stretch" ]; then
         if [ ! -f "/etc/apt/sources.list.d/mysql.list" ]; then
-            echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list
+            echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-$MYSQL_VERSION\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-$MYSQL_VERSION" > /etc/apt/sources.list.d/mysql.list
             wget -O /tmp/RPM-GPG-KEY-mysql https://repo.mysql.com/RPM-GPG-KEY-mysql
             apt-key add /tmp/RPM-GPG-KEY-mysql
         fi

@@ -10,7 +10,7 @@ APPHOSTNAME="testapp20.local"
 APPHOSTNAME2=""
 LDAPCN="testapp20"
 FPM_SOCK="php\\/php7.3-fpm.sock"
-POSTGRESQL_VERSION=9.6
+POSTGRESQL_VERSION=11
 
 source $VAGRANTDIR/common_provision.sh
 

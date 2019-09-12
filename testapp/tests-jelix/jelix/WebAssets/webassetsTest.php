@@ -427,7 +427,7 @@ r.js = r.$locale.js
         $select->compute($config,'foo', '/srv/', array(
             '$lang' =>  'fr',
             '$locale' =>  'fr_FR',
-            '$theme' => '/srv/themes/sun',
+            '$theme' => 'themes/sun',
         ));
 
         $this->assertEquals($jsLinks, $select->getJsLinks());
