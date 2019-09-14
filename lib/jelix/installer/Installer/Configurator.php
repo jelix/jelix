@@ -414,20 +414,18 @@ class Configurator
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig);
+                    if (isset($this->moduleParameters[$component->getName()])) {
+                        $parameters = $this->moduleParameters[$resolverItem->getName()];
+                    }
+                    else {
+                        $parameters = null;
+                    }
+                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig, $parameters);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
-
-                    // setup installation parameters
-                    $parameters = $configurator->getDefaultParameters();
-                    $parameters = array_merge($parameters, $component->getInstallParameters());
-                    if (isset($this->moduleParameters[$component->getName()])) {
-                        $parameters = array_merge($parameters, $this->moduleParameters[$resolverItem->getName()]);
-                    }
-                    $configurator->setParameters($parameters);
                     $configurator->preConfigure($preconfigHelpers);
                 }
             } catch (Exception $e) {
@@ -680,11 +678,7 @@ class Configurator
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
 
-                    // setup installation parameters
-                    $parameters = $configurator->getDefaultParameters();
-                    $parameters = array_merge($parameters, $component->getInstallParameters());
-                    $configurator->setParameters($parameters);
-                    $component->setInstallParameters($parameters);
+                    $component->setInstallParameters($configurator->getParameters());
 
                     $configurator->preUnconfigure($preconfigHelpers);
                 }
