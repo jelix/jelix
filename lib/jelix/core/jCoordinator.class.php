@@ -255,7 +255,7 @@ class jCoordinator
 
         try {
             $this->response = $ctrl->{$this->action->method}();
-        } catch (jHttpResponseException $httpError) {
+        } catch (jHttpErrorException $httpError) {
             $this->response = $this->getHttpErrorResponse($httpError->getCode(), $httpError->getMessage(), $httpError->getReason());
         }
 

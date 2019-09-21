@@ -19,7 +19,7 @@ class errorCtrl extends jController
      */
     public function notfound()
     {
-        throw new jHttpResponseException(404);
+        throw new jHttp404NotFoundException();
     }
 
     /**
@@ -29,6 +29,6 @@ class errorCtrl extends jController
      */
     public function badright()
     {
-        throw new jHttpResponseException(403);
+        throw new jHttp403ForbiddenException();
     }
 }

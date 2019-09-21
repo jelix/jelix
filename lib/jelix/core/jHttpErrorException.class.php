@@ -4,19 +4,19 @@
  * @subpackage  core
  *
  * @author      Laurent Jouanneau
- * @copyright   2018 laurent Jouanneau
+ * @copyright   2018-2019 laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 /**
- * Jelix Exception to generate HTTP response.
+ * Jelix Exception to generate an HTTP error.
  *
  * @package  jelix
  * @subpackage core
  */
-class jHttpResponseException extends Exception
+class jHttpErrorException extends Exception
 {
     const HTTP_CODE = array(
         400 => 'Bad Request',
@@ -87,4 +87,46 @@ class jHttpResponseException extends Exception
     {
         return $this->reason;
     }
+}
+
+
+/**
+ * Jelix Exception to generate an HTTP 404 error.
+ *
+ * @package  jelix
+ * @subpackage core
+ */
+class jHttp404NotFoundException extends jHttpErrorException
+{
+    public function __construct($reason = '', Throwable $previous = null)
+    {
+        parent::__construct(404, $reason, $previous);
+    }
+}
+
+
+/**
+ * Jelix Exception to generate an HTTP 403 error.
+ *
+ * @package  jelix
+ * @subpackage core
+ */
+class jHttp403ForbiddenException extends jHttpErrorException
+{
+    public function __construct($reason = '', Throwable $previous = null)
+    {
+        parent::__construct(403, $reason, $previous);
+    }
+}
+
+
+/**
+ * Jelix Exception to generate an HTTP error. Deprecated class
+ *
+ * @package  jelix
+ * @subpackage core
+ * @deprecated
+ */
+class jHttpResponseException extends jHttpErrorException
+{
 }
