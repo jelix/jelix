@@ -330,21 +330,35 @@ class jCoordinator
         return $this->originalAction->isEqualTo($this->action);
     }
 
-    public function getHttpErrorResponse($httpCode, $httpMessage, $reason)
+    /**
+     * Create a response object to show an HTTP error (404, 403...)
+     *
+     * @param integer $httpCode the http code
+     * @param string $httpMessage the http message
+     * @param string $errorDetails reason or details of the error
+     * @return jResponseHtml|jResponseText
+     */
+    public function getHttpErrorResponse($httpCode, $httpMessage, $errorDetails)
     {
-        $response = new jResponseHtml();
-        if ($httpCode == 404) {
-            $response->bodyTpl = 'jelix~404.html';
-        } elseif ($httpCode == 403) {
-            $response->bodyTpl = 'jelix~403.html';
-        } else {
-            $response->bodyTpl = 'jelix~http_error.html';
+        $htmlOk = (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'], 'text/html'));
+        if (!$this->request->isAjax() && $htmlOk) {
+            try {
+                $response = $this->request->getResponse('htmlerror');
+            }
+            catch(\Exception $e) {
+                $response = null;
+            }
+            if ($response && $response instanceof jResponseHtml) {
+                $response->body->assign('httpErrorDetails', $errorDetails);
+                $response->setHttpStatus($httpCode, $httpMessage);
+                return $response;
+            }
         }
-        $response->body->assign('httpCode', $httpCode);
-        $response->body->assign('httpMessage', $httpMessage);
-        $response->body->assign('reason', $reason);
-        $response->setHttpStatus($httpCode, $httpMessage);
 
+        require_once __DIR__.'/response/jResponseText.class.php';
+        $response = new jResponseText();
+        $response->content = $httpMessage."\n".$errorDetails;
+        $response->setHttpStatus($httpCode, $httpMessage);
         return $response;
     }
 

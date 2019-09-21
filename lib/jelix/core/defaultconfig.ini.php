@@ -63,6 +63,7 @@ defaultJformsErrorDecorator =
 
 [responses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
@@ -80,6 +81,7 @@ htmlauth=jResponseHtml
 
 [_coreResponses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
