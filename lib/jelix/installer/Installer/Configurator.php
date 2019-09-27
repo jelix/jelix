@@ -466,8 +466,8 @@ class Configurator
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
+                $this->notice('configuration.module.start', array($component->getName()));
                 if ($configurator) {
-                    $this->notice('configuration.module.start', array($component->getName()));
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
@@ -478,9 +478,9 @@ class Configurator
                         $this->execModuleConfigure($configurator, $configHelpers);
                     }
                     $component->setInstallParameters($configurator->getParameters());
-                    $component->saveModuleStatus();
-                    $this->saveConfigurationFiles($entryPoint);
                 }
+                $component->saveModuleStatus();
+                $this->saveConfigurationFiles($entryPoint);
             }
         } catch (Exception $e) {
             $result = false;
@@ -745,14 +745,13 @@ class Configurator
                     } else {
                         $this->execModuleUnconfigure($configurator, $configHelpers);
                     }
-
-                    $component->saveModuleStatus();
-                    if ($shouldBackupUninstallScript) {
-                        $component->backupUninstallScript();
-                    }
-
-                    $this->saveConfigurationFiles($entryPoint);
                 }
+                $component->saveModuleStatus();
+                if ($shouldBackupUninstallScript) {
+                    $component->backupUninstallScript();
+                }
+
+                $this->saveConfigurationFiles($entryPoint);
             }
         } catch (Exception $e) {
             $result = false;
