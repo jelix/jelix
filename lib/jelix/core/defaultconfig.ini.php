@@ -444,15 +444,19 @@ jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
 jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
 jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
 jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckdefault.js"
 
 jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckfull.js"
 
 jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckbasic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
