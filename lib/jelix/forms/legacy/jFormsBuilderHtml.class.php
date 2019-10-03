@@ -88,13 +88,16 @@ class jFormsBuilderHtml extends jFormsBuilderBase {
                 foreach($edlist as $ed) {
 
                     if(isset($heConf[$ed->config.'.engine.file'])){
-                        $file = $heConf[$ed->config.'.engine.file'];
-                        if(is_array($file)){
-                            foreach($file as $url) {
-                                $resp->addJSLink($url);
-                            }
-                        }else
-                            $resp->addJSLink($file);
+                        $lang = jLocale::getCurrentLang();
+                        $urls = $heConf[$ed->config.'.engine.file'];
+                        if (!is_array($urls)) {
+                            $urls =array($urls);
+                        }
+
+                        foreach($urls as $url) {
+                            $url = str_replace('$lang', $lang, $url);
+                            $resp->addJSLink($url);
+                        }
                     }
 
                     if (isset($heConf[$ed->config.'.config'])) {

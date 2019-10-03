@@ -44,13 +44,17 @@ class htmlJformsBuilder extends jFormsBuilderHtml {
             if(!$v instanceof jFormsBase)
                 continue;
             foreach($v->getHtmlEditors() as $ed) {
-                if(isset($confHtmlEditor[$ed->config.'.engine.file'])){
-                    if(is_array($confHtmlEditor[$ed->config.'.engine.file'])){
-                        foreach($confHtmlEditor[$ed->config.'.engine.file'] as $url) {
-                            $resp->addJSLink($url);
-                        }
-                    }else
-                        $resp->addJSLink($confHtmlEditor[$ed->config.'.engine.file']);
+                if (isset($confHtmlEditor[$ed->config.'.engine.file'])) {
+                    $lang = jLocale::getCurrentLang();
+                    $urls = $confHtmlEditor[$ed->config.'.engine.file'];
+                    if (!is_array($urls)) {
+                        $urls =array($urls);
+                    }
+
+                    foreach($urls as $url) {
+                        $url = str_replace('$lang', $lang, $url);
+                        $resp->addJSLink($url);
+                    }
                 }
 
                 if (isset($confHtmlEditor[$ed->config.'.config'])) {
