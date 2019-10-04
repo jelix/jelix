@@ -68,7 +68,7 @@ cd lib/jelix/core/log/
   jSyslogLogger.class.php
   jMailLogger.class.php
   jStdoutLogger.class.php
-  jStdinLogger.class.php
+  jStderrLogger.class.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jLogErrorMessage.class.php
   jLogMessage.class.php
