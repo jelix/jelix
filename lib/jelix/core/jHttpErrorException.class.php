@@ -93,6 +93,8 @@ class jHttpErrorException extends Exception
 /**
  * Jelix Exception to generate an HTTP 404 error.
  *
+ * Resource not found. There is nothing at the current url.
+ *
  * @package  jelix
  * @subpackage core
  */
@@ -104,9 +106,27 @@ class jHttp404NotFoundException extends jHttpErrorException
     }
 }
 
+/**
+ * Jelix Exception to generate an HTTP 401 error.
+ *
+ * Unauthorized. The user must be authenticated to access to the resource.
+ *
+ * @package  jelix
+ * @subpackage core
+ */
+class jHttp401UnauthorizedException extends jHttpErrorException
+{
+    public function __construct($reason = '', Throwable $previous = null)
+    {
+        parent::__construct(401, $reason, $previous);
+    }
+}
+
 
 /**
  * Jelix Exception to generate an HTTP 403 error.
+ *
+ * Forbidden. The user must have the right to access to the resource.
  *
  * @package  jelix
  * @subpackage core
