@@ -228,32 +228,32 @@ class jCoordinator
 
         jApp::pushCurrentModule($this->moduleName);
 
-        if (count($this->plugins)) {
-            $pluginparams = array();
-            if (isset($ctrl->pluginParams['*'])) {
-                $pluginparams = $ctrl->pluginParams['*'];
-            }
+        try {
+            if (count($this->plugins)) {
+                $pluginparams = array();
+                if (isset($ctrl->pluginParams['*'])) {
+                    $pluginparams = $ctrl->pluginParams['*'];
+                }
 
-            if (isset($ctrl->pluginParams[$this->action->method])) {
-                $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
-            }
+                if (isset($ctrl->pluginParams[$this->action->method])) {
+                    $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
+                }
 
-            foreach ($this->plugins as $name => $obj) {
-                $result = $this->plugins[$name]->beforeAction($pluginparams);
-                if ($result) {
-                    $this->action = $result;
-                    jApp::popCurrentModule();
-                    jApp::pushCurrentModule($result->module);
-                    $this->moduleName = $result->module;
-                    $this->actionName = $result->resource;
-                    $ctrl = $this->getController($this->action);
+                foreach ($this->plugins as $name => $obj) {
+                    $result = $this->plugins[$name]->beforeAction($pluginparams);
+                    if ($result) {
+                        $this->action = $result;
+                        jApp::popCurrentModule();
+                        jApp::pushCurrentModule($result->module);
+                        $this->moduleName = $result->module;
+                        $this->actionName = $result->resource;
+                        $ctrl = $this->getController($this->action);
 
-                    break;
+                        break;
+                    }
                 }
             }
-        }
 
-        try {
             $this->response = $ctrl->{$this->action->method}();
         } catch (jHttpErrorException $httpError) {
             $this->response = $this->getHttpErrorResponse($httpError->getCode(), $httpError->getMessage(), $httpError->getReason());
