@@ -29,7 +29,7 @@ class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLaun
 
 class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInstallerLauncher {
 
-    function getConfigurator($actionMode = true, $forLocalConfiguration = null) {
+    function getConfigurator($actionMode = true, $forLocalConfiguration = null, $installParameters = null) {
         return null;
     }
 

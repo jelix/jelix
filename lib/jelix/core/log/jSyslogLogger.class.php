@@ -17,6 +17,8 @@ class jSyslogLogger implements jILogger
 {
     protected $catSyslog = array();
 
+    protected $config;
+
     public function __construct()
     {
         $this->config = jApp::config()->syslogLogger;

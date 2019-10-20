@@ -414,20 +414,18 @@ class Configurator
                 if ($installersDisabled) {
                     $configurator = null;
                 } else {
-                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig);
+                    if (isset($this->moduleParameters[$component->getName()])) {
+                        $parameters = $this->moduleParameters[$resolverItem->getName()];
+                    }
+                    else {
+                        $parameters = null;
+                    }
+                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig, $parameters);
                 }
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
-
-                    // setup installation parameters
-                    $parameters = $configurator->getDefaultParameters();
-                    $parameters = array_merge($parameters, $component->getInstallParameters());
-                    if (isset($this->moduleParameters[$component->getName()])) {
-                        $parameters = array_merge($parameters, $this->moduleParameters[$resolverItem->getName()]);
-                    }
-                    $configurator->setParameters($parameters);
                     $configurator->preConfigure($preconfigHelpers);
                 }
             } catch (Exception $e) {
@@ -468,8 +466,8 @@ class Configurator
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
+                $this->notice('configuration.module.start', array($component->getName()));
                 if ($configurator) {
-                    $this->notice('configuration.module.start', array($component->getName()));
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
                         if ($component->isEnabledOnlyInLocalConfiguration()) {
@@ -480,9 +478,9 @@ class Configurator
                         $this->execModuleConfigure($configurator, $configHelpers);
                     }
                     $component->setInstallParameters($configurator->getParameters());
-                    $component->saveModuleStatus();
-                    $this->saveConfigurationFiles($entryPoint);
                 }
+                $component->saveModuleStatus();
+                $this->saveConfigurationFiles($entryPoint);
             }
         } catch (Exception $e) {
             $result = false;
@@ -680,11 +678,7 @@ class Configurator
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
 
-                    // setup installation parameters
-                    $parameters = $configurator->getDefaultParameters();
-                    $parameters = array_merge($parameters, $component->getInstallParameters());
-                    $configurator->setParameters($parameters);
-                    $component->setInstallParameters($parameters);
+                    $component->setInstallParameters($configurator->getParameters());
 
                     $configurator->preUnconfigure($preconfigHelpers);
                 }
@@ -751,14 +745,13 @@ class Configurator
                     } else {
                         $this->execModuleUnconfigure($configurator, $configHelpers);
                     }
-
-                    $component->saveModuleStatus();
-                    if ($shouldBackupUninstallScript) {
-                        $component->backupUninstallScript();
-                    }
-
-                    $this->saveConfigurationFiles($entryPoint);
                 }
+                $component->saveModuleStatus();
+                if ($shouldBackupUninstallScript) {
+                    $component->backupUninstallScript();
+                }
+
+                $this->saveConfigurationFiles($entryPoint);
             }
         } catch (Exception $e) {
             $result = false;

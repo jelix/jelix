@@ -48,7 +48,7 @@ require JELIX_LIB_CORE_PATH.'jICoordPlugin.iface.php';
 require JELIX_LIB_CORE_PATH.'jISelector.iface.php';
 require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
 require JELIX_LIB_CORE_PATH.'jException.class.php';
-require JELIX_LIB_CORE_PATH.'jHttpResponseException.class.php';
+require JELIX_LIB_CORE_PATH.'jHttpErrorException.class.php';
 require JELIX_LIB_CORE_PATH.'jConfig.class.php';
 require JELIX_LIB_CORE_PATH.'jSelector.class.php';
 require JELIX_LIB_CORE_PATH.'jServer.class.php';

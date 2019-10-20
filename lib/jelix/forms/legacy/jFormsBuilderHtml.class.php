@@ -89,8 +89,6 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
         $resp->addAssets('jforms_html_light');
 
-        $config = jApp::config();
-        $heConf = &$config->htmleditors;
         foreach ($t->_vars as $k => $v) {
             if ($v instanceof jFormsBase &&
                 count($edlist = $v->getHtmlEditors())) {
@@ -569,7 +567,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     {
         $attr['id'] = $this->_name.'_'.$ctrl->ref.'_';
         $v = array('year' => '', 'month' => '', 'day' => '');
-        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?$#', $this->_form->getData($ctrl->ref), $matches)) {
+        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s|T)#', $this->_form->getData($ctrl->ref), $matches)) {
             if (isset($matches[1])) {
                 $v['year'] = $matches[1];
             }
@@ -613,7 +611,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     {
         $attr['id'] = $this->_name.'_'.$ctrl->ref.'_';
         $v = array('year' => '', 'month' => '', 'day' => '', 'hour' => '', 'minutes' => '', 'seconds' => '');
-        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})? (\d{2})?:(\d{2})?(:(\d{2})?)?$#', $this->_form->getData($ctrl->ref), $matches)) {
+        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?(?: |T)(\d{2})?:(\d{2})?(:(\d{2})?)?(?:$|\\s|\\.)#', $this->_form->getData($ctrl->ref), $matches)) {
             if (isset($matches[1])) {
                 $v['year'] = $matches[1];
             }
@@ -632,6 +630,20 @@ class jFormsBuilderHtml extends jFormsBuilderBase
             if (isset($matches[7])) {
                 $v['seconds'] = $matches[7];
             }
+        }
+        else if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $this->_form->getData($ctrl->ref), $matches)) {
+            if (isset($matches[1])) {
+                $v['year'] = $matches[1];
+            }
+            if (isset($matches[2])) {
+                $v['month'] = $matches[2];
+            }
+            if (isset($matches[3])) {
+                $v['day'] = $matches[3];
+            }
+            $v['hour'] = "00";
+            $v['minutes'] = "00";
+            $v['seconds'] = "00";
         }
         $f = jLocale::get('jelix~format.datetime');
         for ($i = 0; $i < strlen($f); ++$i) {

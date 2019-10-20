@@ -63,6 +63,7 @@ defaultJformsErrorDecorator =
 
 [responses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
@@ -80,6 +81,7 @@ htmlauth=jResponseHtml
 
 [_coreResponses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
@@ -213,7 +215,7 @@ documentRoot=
 
 [logger]
 ; list of loggers for each categories of log messages
-; available loggers : file, syslog, firebug, mail, memory. see plugins for others
+; available loggers : file, syslog, stderr, stdout, mail, memory. see plugins for others
 
 ; _all category is the category containing loggers executed for any categories
 _all=
@@ -258,6 +260,12 @@ emailHeaders="Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.
 [syslogLogger]
 facility=LOG_LOCAL7
 ident="php-%sapi%-%domain%[%pid%]"
+
+[stderrLogger]
+; <type> = %D% %T% %ip% [%type%] %msg%  ; formated string, default is %type% - %msg%
+
+[stdoutLogger]
+; <type> = %D% %T% %ip% [%type%] %msg%  ; formated string, default is %type% - %msg%
 
 
 [mailer]
@@ -442,15 +450,19 @@ jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
 jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
 jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
 jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckdefault.js"
 
 jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckfull.js"
 
 jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/translations/$lang.js"
 jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckbasic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"

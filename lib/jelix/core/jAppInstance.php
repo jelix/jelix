@@ -317,7 +317,7 @@ class jAppInstance
             }
 
             $bundled = realpath(__DIR__.'/../plugins/').DIRECTORY_SEPARATOR;
-            if (file_exists($bundled) && !in_array($p, $this->_allPluginsPath)) {
+            if (file_exists($bundled) && !in_array($bundled, $this->_allPluginsPath)) {
                 array_unshift($this->_allPluginsPath, $bundled);
             }
         }
