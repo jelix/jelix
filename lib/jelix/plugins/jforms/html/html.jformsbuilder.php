@@ -111,7 +111,11 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             $this->jsContent .= "jFormsJQ.tForm.addControl(c);\n";
         }
 
-        if ($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate') {
+        if ($ctrl instanceof jFormsControlDatetime || get_class($ctrl->datatype) == 'jDatatypeDateTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime') {
+            $config = isset($ctrl->datepickerConfig) ? $ctrl->datepickerConfig : jApp::config()->forms['datetimepicker'];
+            $this->jsContent .= 'jelix_datetimepicker_'.$config."(c, jFormsJQ.config);\n";
+        }
+        else if ($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate') {
             $config = isset($ctrl->datepickerConfig) ? $ctrl->datepickerConfig : jApp::config()->forms['datepicker'];
             $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
         }

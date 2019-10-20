@@ -2074,7 +2074,7 @@ c.multiFields = true;
 c.errRequired=\'"mydate" field is required\';
 c.errInvalid=\'"mydate" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_datepicker_default(c, jFormsJQ.config);
+jelix_datetimepicker_default(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         // simple date
@@ -2164,7 +2164,7 @@ c.multiFields = true;
 c.errRequired=\'"mydate" field is required\';
 c.errInvalid=\'"mydate" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_datepicker_default(c, jFormsJQ.config);
+jelix_datetimepicker_default(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         // full date time
@@ -2254,7 +2254,7 @@ c.multiFields = true;
 c.errRequired=\'"mydate" field is required\';
 c.errInvalid=\'"mydate" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_datepicker_default(c, jFormsJQ.config);
+jelix_datetimepicker_default(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         // full date time
@@ -2344,7 +2344,7 @@ c.multiFields = true;
 c.errRequired=\'"mydate" field is required\';
 c.errInvalid=\'"mydate" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_datepicker_default(c, jFormsJQ.config);
+jelix_datetimepicker_default(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
 
     }
