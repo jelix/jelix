@@ -8,22 +8,24 @@
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+namespace Jelix\Logger\Output;
+
 /**
  * logger sending message to stderr
  */
-class jStderrLogger implements jILogger {
+class Stderr implements \Jelix\Logger\OutputInterface {
 
     protected $config;
 
     protected $fileOutput = 'php://stderr';
 
     public function __construct() {
-        $this->config = jApp::config()->stderrLogger;
+        $this->config = \Jelix\Core\App::config()->stderrLogger;
     }
 
 
     /**
-     * @param jILogMessage $message the message to log
+     * @param \Jelix\Logger\MessageInterface $message the message to log
      */
     function logMessage($message) {
 
@@ -36,7 +38,7 @@ class jStderrLogger implements jILogger {
             $f = str_replace('%type%', $type, $f);
 
             if (strpos($f, '%ip%') !== false) {
-                $coord = jApp::coord();
+                $coord = \Jelix\Core\App::router();
                 if ($coord && $coord->request ) {
                     $ip = $coord->request->getIP();
                 }

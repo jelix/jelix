@@ -8,16 +8,16 @@
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-require_once(__DIR__.'/jStderrLogger.class.php');
+namespace Jelix\Logger\Output;
 
 /**
  * logger sending message to stdout
  */
-class jStdoutLogger extends jStderrLogger
+class Stdout extends Stderr
 {
     protected $fileOutput = 'php://stdout';
 
     public function __construct() {
-        $this->config = jApp::config()->stdoutLogger;
+        $this->config = \Jelix\Core\App::config()->stdoutLogger;
     }
 }
