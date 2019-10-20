@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  core
+ * @subpackage  routing
  *
  * @author      Laurent Jouanneau
  * @copyright   2018-2019 laurent Jouanneau
@@ -10,13 +10,15 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+namespace Jelix\Routing;
+
 /**
  * Jelix Exception to generate an HTTP error.
  *
  * @package  jelix
- * @subpackage core
+ * @subpackage routing
  */
-class jHttpErrorException extends Exception
+class HttpErrorException extends \Exception
 {
     const HTTP_CODE = array(
         400 => 'Bad Request',
@@ -67,7 +69,7 @@ class jHttpErrorException extends Exception
 
     protected $reason = '';
 
-    public function __construct($httpCode, $reason = '', Throwable $previous = null)
+    public function __construct($httpCode, $reason = '', \Throwable $previous = null)
     {
         if ($httpCode === 0) {
             $httpCode = 500;
@@ -90,63 +92,3 @@ class jHttpErrorException extends Exception
 }
 
 
-/**
- * Jelix Exception to generate an HTTP 404 error.
- *
- * Resource not found. There is nothing at the current url.
- *
- * @package  jelix
- * @subpackage core
- */
-class jHttp404NotFoundException extends jHttpErrorException
-{
-    public function __construct($reason = '', Throwable $previous = null)
-    {
-        parent::__construct(404, $reason, $previous);
-    }
-}
-
-/**
- * Jelix Exception to generate an HTTP 401 error.
- *
- * Unauthorized. The user must be authenticated to access to the resource.
- *
- * @package  jelix
- * @subpackage core
- */
-class jHttp401UnauthorizedException extends jHttpErrorException
-{
-    public function __construct($reason = '', Throwable $previous = null)
-    {
-        parent::__construct(401, $reason, $previous);
-    }
-}
-
-
-/**
- * Jelix Exception to generate an HTTP 403 error.
- *
- * Forbidden. The user must have the right to access to the resource.
- *
- * @package  jelix
- * @subpackage core
- */
-class jHttp403ForbiddenException extends jHttpErrorException
-{
-    public function __construct($reason = '', Throwable $previous = null)
-    {
-        parent::__construct(403, $reason, $previous);
-    }
-}
-
-
-/**
- * Jelix Exception to generate an HTTP error. Deprecated class
- *
- * @package  jelix
- * @subpackage core
- * @deprecated
- */
-class jHttpResponseException extends jHttpErrorException
-{
-}

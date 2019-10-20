@@ -4,7 +4,7 @@
  * @subpackage jelix-module
  *
  * @author     Laurent Jouanneau
- * @copyright  2006 Laurent Jouanneau
+ * @copyright  2006-2019 Laurent Jouanneau
  * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
 
@@ -19,7 +19,7 @@ class errorCtrl extends jController
      */
     public function notfound()
     {
-        throw new jHttp404NotFoundException();
+        throw new \Jelix\Routing\Http404NotFoundException();
     }
 
     /**
@@ -29,6 +29,6 @@ class errorCtrl extends jController
      */
     public function badright()
     {
-        throw new jHttp403ForbiddenException();
+        throw new \Jelix\Routing\Http403ForbiddenException();
     }
 }

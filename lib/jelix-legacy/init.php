@@ -105,7 +105,6 @@ spl_autoload_register('LegacyJelixAutoloader::loadClass');
 
 require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
 require JELIX_LIB_CORE_PATH.'jException.class.php';
-require JELIX_LIB_CORE_PATH.'jHttpResponseException.class.php';
 require JELIX_LIB_CORE_PATH.'jServer.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorActFast.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorAct.class.php';

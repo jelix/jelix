@@ -253,7 +253,7 @@ class Router
             }
 
             $this->response = $ctrl->{$this->action->method}();
-        } catch (\jHttpErrorException $httpError) {
+        } catch (HttpErrorException $httpError) {
             $this->response = $this->getHttpErrorResponse($httpError->getCode(), $httpError->getMessage(), $httpError->getReason());
         }
 
