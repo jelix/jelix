@@ -71,7 +71,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $attr['id'] = $formName.'_'.$this->ctrl->ref.'_';
         $v = array('year' => '', 'month' => '', 'day' => '');
-        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $value, $matches)) {
+        if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s|T)#', $value, $matches)) {
             if (isset($matches[1])) {
                 $v['year'] = $matches[1];
             }
@@ -94,6 +94,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                 echo ' ';
             }
         }
+        echo "\n";
         $this->outputJs();
     }
 

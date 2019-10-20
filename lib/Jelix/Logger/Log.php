@@ -156,6 +156,12 @@ class Log
                     self::$loggers[$loggername] = new Output\Syslog();
                 } elseif ($loggername == 'mail') {
                     self::$loggers[$loggername] = new Output\Mail();
+                } elseif ($loggername == 'stderr') {
+                    require(__DIR__.'/Output/jStderrLogger.class.php');
+                    self::$loggers[$loggername] = new \jStderrLogger();
+                } elseif ($loggername == 'stdout') {
+                    require(__DIR__.'/Output/jStdoutLogger.class.php');
+                    self::$loggers[$loggername] = new \jStdoutLogger();
                 } else {
                     $l = \Jelix\Core\App::loadPlugin($loggername, 'logger', '.logger.php', $loggername.'Logger');
                     if (is_null($l)) {

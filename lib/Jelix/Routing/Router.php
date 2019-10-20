@@ -226,34 +226,34 @@ class Router
 
         App::pushCurrentModule($this->moduleName);
 
-        if (count($this->plugins)) {
-            $pluginparams = array();
-            if (isset($ctrl->pluginParams['*'])) {
-                $pluginparams = $ctrl->pluginParams['*'];
-            }
+        try {
+            if (count($this->plugins)) {
+                $pluginparams = array();
+                if (isset($ctrl->pluginParams['*'])) {
+                    $pluginparams = $ctrl->pluginParams['*'];
+                }
 
-            if (isset($ctrl->pluginParams[$this->action->method])) {
-                $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
-            }
+                if (isset($ctrl->pluginParams[$this->action->method])) {
+                    $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
+                }
 
-            foreach ($this->plugins as $name => $obj) {
-                $result = $this->plugins[$name]->beforeAction($pluginparams);
-                if ($result) {
-                    $this->action = $result;
-                    App::popCurrentModule();
-                    App::pushCurrentModule($result->module);
-                    $this->moduleName = $result->module;
-                    $this->actionName = $result->resource;
-                    $ctrl = $this->getController($this->action);
+                foreach ($this->plugins as $name => $obj) {
+                    $result = $this->plugins[$name]->beforeAction($pluginparams);
+                    if ($result) {
+                        $this->action = $result;
+                        App::popCurrentModule();
+                        App::pushCurrentModule($result->module);
+                        $this->moduleName = $result->module;
+                        $this->actionName = $result->resource;
+                        $ctrl = $this->getController($this->action);
 
-                    break;
+                        break;
+                    }
                 }
             }
-        }
 
-        try {
             $this->response = $ctrl->{$this->action->method}();
-        } catch (\jHttpResponseException $httpError) {
+        } catch (\jHttpErrorException $httpError) {
             $this->response = $this->getHttpErrorResponse($httpError->getCode(), $httpError->getMessage(), $httpError->getReason());
         }
 
@@ -328,21 +328,35 @@ class Router
         return $this->originalAction->isEqualTo($this->action);
     }
 
-    public function getHttpErrorResponse($httpCode, $httpMessage, $reason)
+    /**
+     * Create a response object to show an HTTP error (404, 403...)
+     *
+     * @param integer $httpCode the http code
+     * @param string $httpMessage the http message
+     * @param string $errorDetails reason or details of the error
+     * @return \jResponseHtml|\jResponseText
+     */
+    public function getHttpErrorResponse($httpCode, $httpMessage, $errorDetails)
     {
-        $response = new \jResponseHtml();
-        if ($httpCode == 404) {
-            $response->bodyTpl = 'jelix~404.html';
-        } elseif ($httpCode == 403) {
-            $response->bodyTpl = 'jelix~403.html';
-        } else {
-            $response->bodyTpl = 'jelix~http_error.html';
+        $htmlOk = (isset($_SERVER['HTTP_ACCEPT']) && strstr($_SERVER['HTTP_ACCEPT'], 'text/html'));
+        if (!$this->request->isAjax() && $htmlOk) {
+            try {
+                $response = $this->request->getResponse('htmlerror');
+            }
+            catch(\Exception $e) {
+                $response = null;
+            }
+            if ($response && $response instanceof \jResponseHtml) {
+                $response->body->assign('httpErrorDetails', $errorDetails);
+                $response->setHttpStatus($httpCode, $httpMessage);
+                return $response;
+            }
         }
-        $response->body->assign('httpCode', $httpCode);
-        $response->body->assign('httpMessage', $httpMessage);
-        $response->body->assign('reason', $reason);
-        $response->setHttpStatus($httpCode, $httpMessage);
 
+        require_once __DIR__.'/response/jResponseText.class.php';
+        $response = new \jResponseText();
+        $response->content = $httpMessage."\n".$errorDetails;
+        $response->setHttpStatus($httpCode, $httpMessage);
         return $response;
     }
 
@@ -385,7 +399,7 @@ class Router
      * Exception handler using a response object to return the error
      * Replace the default PHP Exception handler.
      *
-     * @param Throwable $e the exception object
+     * @param \Throwable $e the exception object
      *
      * @since 1.4
      */

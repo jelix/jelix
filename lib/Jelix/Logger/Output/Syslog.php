@@ -19,6 +19,8 @@ class Syslog implements \Jelix\Logger\OutputInterface
 {
     protected $catSyslog = array();
 
+    protected $config;
+
     public function __construct()
     {
         $this->config = \Jelix\Core\App::config()->syslogLogger;

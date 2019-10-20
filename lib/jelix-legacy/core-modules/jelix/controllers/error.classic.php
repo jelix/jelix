@@ -19,11 +19,7 @@ class errorCtrl extends jController
      */
     public function notfound()
     {
-        $rep = $this->getResponse('html', true);
-        $rep->bodyTpl = 'jelix~404.html';
-        $rep->setHttpStatus('404', 'Not Found');
-
-        return $rep;
+        throw new jHttp404NotFoundException();
     }
 
     /**
@@ -33,10 +29,6 @@ class errorCtrl extends jController
      */
     public function badright()
     {
-        $rep = $this->getResponse('html', true);
-        $rep->bodyTpl = 'jelix~403.html';
-        $rep->setHttpStatus('403', 'Forbidden');
-
-        return $rep;
+        throw new jHttp403ForbiddenException();
     }
 }

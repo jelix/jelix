@@ -290,13 +290,14 @@ class ModuleInstallerLauncher
      * @param bool $forLocalConfiguration true if the configuration should be done
      *                                    with the local configuration, else it will be done with the
      *                                    main configuration
+     * @param array install parameters
      *
      * @throws Exception when configurator class not found
      *
      * @return null|Module\Configurator the configurator, or null
      *                                  if there isn't any configurator
      */
-    public function getConfigurator($actionMode, $forLocalConfiguration = null)
+    public function getConfigurator($actionMode, $forLocalConfiguration = null, $installParameters = null)
     {
         if (!$this->moduleStatus->isEnabled) {
             if ($forLocalConfiguration !== null) {
@@ -323,6 +324,10 @@ class ModuleInstallerLauncher
             $this->moduleStatus->clearInfos($uninstallerIni);
         }
 
+        return $this->createConfigurator($installParameters);
+    }
+
+    protected function createConfigurator($installParameters = null) {
         // false means that there isn't an installer for the module
         if ($this->moduleConfigurator === false) {
             return null;
@@ -350,6 +355,14 @@ class ModuleInstallerLauncher
                 $this->moduleStatus->getPath(),
                 $this->moduleInfos->version
             );
+
+            // setup installation parameters
+            $parameters = $this->moduleConfigurator->getDefaultParameters();
+            $parameters = array_merge($parameters, $this->getInstallParameters());
+            if ($installParameters) {
+                $parameters = array_merge($parameters, $installParameters);
+            }
+            $this->moduleConfigurator->setParameters($parameters);
         }
 
         return $this->moduleConfigurator;
@@ -396,7 +409,14 @@ class ModuleInstallerLauncher
             );
         }
 
-        $this->moduleInstaller->setParameters($this->moduleStatus->parameters);
+        $configurator = $this->createConfigurator();
+        if ($configurator) {
+            $parameters = $configurator->getParameters();
+        }
+        else {
+            $parameters = $this->moduleStatus->parameters;
+        }
+        $this->moduleInstaller->setParameters($parameters);
 
         return $this->moduleInstaller;
     }
@@ -446,7 +466,15 @@ class ModuleInstallerLauncher
             );
         }
 
-        $this->moduleUninstaller->setParameters($this->moduleStatus->parameters);
+        $configurator = $this->createConfigurator();
+        if ($configurator) {
+            $installParameters = $configurator->getParameters();
+        }
+        else {
+            $installParameters = $this->getInstallParameters();
+        }
+
+        $this->moduleUninstaller->setParameters($installParameters);
 
         return $this->moduleUninstaller;
     }
@@ -465,6 +493,14 @@ class ModuleInstallerLauncher
      */
     public function getUpgraders()
     {
+        $configurator = $this->createConfigurator();
+        if ($configurator) {
+            $installParameters = $configurator->getParameters();
+        }
+        else {
+            $installParameters = $this->moduleStatus->parameters;
+        }
+
         if ($this->moduleMainUpgrader === null) {
             // script name for Jelix 1.6 in modules compatibles with both Jelix 1.7 and 1.6
             if (file_exists($this->moduleStatus->getPath().'install/upgrade_1_6.php')) {
@@ -496,7 +532,7 @@ class ModuleInstallerLauncher
                 );
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
-                $this->moduleMainUpgrader->setParameters($this->moduleStatus->parameters);
+                $this->moduleMainUpgrader->setParameters($installParameters);
             }
         }
 
@@ -610,7 +646,7 @@ class ModuleInstallerLauncher
                 $this->upgradersContexts[$class] = array();
             }
 
-            $upgrader->setParameters($this->moduleStatus->parameters);
+            $upgrader->setParameters($installParameters);
             $list[] = $upgrader;
         }
 
