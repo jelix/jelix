@@ -1,0 +1,10 @@
+dn: cn=config
+changetype: modify
+add: olcTLSCertificateFile
+olcTLSCertificateFile: /etc/ssl/certs/testapp.local.crt
+-
+add: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /etc/ssl/private/testapp.local.key
+-
+add: olcTLSCACertificatePath
+olcTLSCACertificatePath: /etc/ssl/certs/jelix_tests_CA.crt

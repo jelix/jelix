@@ -6,7 +6,7 @@ charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone
-timeZone = 
+timeZone =
 
 pluginsPath = app:plugins/,lib:jelix-plugins/,module:jacl2db/plugins,module:jacldb/plugins
 modulesPath = lib:jelix-modules/,app:modules/
@@ -66,10 +66,10 @@ multiview = off
 
 ; basePath corresponds to the path to the base directory of your application.
 ; so if the url to access to your application is http://foo.com/aaa/bbb/www/index.php, you should
-; set basePath = "/aaa/bbb/www/". 
+; set basePath = "/aaa/bbb/www/".
 ; if it is http://foo.com/index.php, set basePath="/"
 ; Jelix can guess the basePath, so you can keep basePath empty. But in the case where there are some
-; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php 
+; entry points which are not in the same directory (ex: you have two entry point : http://foo.com/aaa/index.php
 ; and http://foo.com/aaa/bbb/other.php ), you MUST set the basePath (ex here, the higher entry point is index.php so
 ; : basePath="/aaa/" )
 basePath = ""
@@ -116,6 +116,14 @@ noep = on
 [jResponseHtml]
 ; list of active plugins for jResponseHtml
 plugins = debugbar
+
+[logger]
+soap=file
+auth=file
+
+[fileLogger]
+soap=soap.log
+auth=auth.log
 
 
 [mailLogger]

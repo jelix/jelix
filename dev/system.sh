@@ -20,7 +20,7 @@ function initsystem () {
     fi
     hostname $APPHOSTNAME
     echo "$APPHOSTNAME" > /etc/hostname
-    
+
     # local time
     echo "Europe/Paris" > /etc/timezone
     cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
@@ -104,14 +104,14 @@ function initsystem () {
         service php5-fpm restart
     fi
     apt-get -y install mysql-server mysql-client
-    apt-get -y install git vim unzip curl
+    apt-get -y install git vim unzip curl openssl ssl-cert
 
     # create a database into mysql + users
     if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
         echo "setting mysql database.."
         mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS $APPNAME CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON $APPNAME.* TO test_user;FLUSH PRIVILEGES;"
     fi
-    
+
     # install default vhost for apache
     cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
@@ -134,7 +134,7 @@ function initsystem () {
 
     # restart nginx
     service nginx restart
-    
+
     echo "Install composer.."
     if [ ! -f /usr/local/bin/composer ]; then
         curl -sS https://getcomposer.org/installer | php

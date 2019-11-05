@@ -11,6 +11,8 @@ source $VAGRANTDIR/system.sh
 
 initsystem
 
+source $VAGRANTDIR/gencerts.sh
+
 apt-get -y install postgresql postgresql-client
 apt-get -y install redis-server memcached memcachedb
 
