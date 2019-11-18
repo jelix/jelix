@@ -20,7 +20,7 @@ function initsystem () {
     fi
     hostname $APPHOSTNAME
     echo "$APPHOSTNAME" > /etc/hostname
-    
+
     # local time
     echo "Europe/Paris" > /etc/timezone
     cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
@@ -75,7 +75,7 @@ function initsystem () {
     fi
 
     apt-get -y install mysql-server mysql-client
-    apt-get -y install git vim unzip curl
+    apt-get -y install git vim unzip curl openssl ssl-cert
 
     # create a database into mysql + users
     if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
@@ -109,7 +109,7 @@ function initsystem () {
     service php${PHP_VERSION}-fpm restart
 
     # restart nginx
-    service nginx reload
+    service nginx restart
     
     echo "Install composer.."
     if [ ! -f /usr/local/bin/composer ]; then
