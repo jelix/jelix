@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+ROOTDIR="/jelixapp"
+APPNAME="testapp"
+APPDIR="$ROOTDIR/$APPNAME"
+VAGRANTDIR="$APPDIR/vagrant"
+LDAPCN="testapp17"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -21,9 +26,12 @@ service slapd restart
 
 # certificates have been created with gencerts.sh
 adduser openldap ssl-cert
+
+echo "configure ssl"
 ldapmodify -Y EXTERNAL -H ldapi:/// -f $VAGRANTDIR/ldap/ldap_ssl.ldif
 #ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config | grep TLS
 
+echo "add default users for tests"
 ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
 #ldapsearch -x -D cn=admin,dc=testapp17,dc=local -w passjelix -b "dc=testapp17,dc=local" "(objectClass=*)"
 
