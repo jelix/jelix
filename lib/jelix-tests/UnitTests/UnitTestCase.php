@@ -1,25 +1,26 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jelix-tests
-* @author      Laurent Jouanneau
-* @contributor Christophe Thiriot
-* @copyright   2006-2012 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jelix-tests
+ * @author      Laurent Jouanneau
+ * @contributor Christophe Thiriot
+ * @copyright   2006-2019 Laurent Jouanneau
+ * @link        https://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+namespace Jelix\UnitTests;
+use PHPUnit\Framework\TestCase;
+
 require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
-class jCoordinatorForTest extends jCoordinator {
+class CoordinatorForTest extends \jCoordinator {
     function testSetRequest($request) {
         $this->setRequest($request);
     }
 }
 
-/**
- * Class jUnitTestCase for PHPUnit < 6.0
- */
-class jUnitTestCase extends PHPUnit_Framework_TestCase {
+
+class UnitTestCase extends TestCase {
 
     /**
      * indicates if PDO is needed. If yes, PDO will be checked
@@ -50,9 +51,9 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initJelixConfig($config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        $config = jConfigCompiler::read($config, true, true, $entryPoint);
-        jApp::setConfig($config);
-        jApp::setCoord(null);
+        $config = \jConfigCompiler::read($config, true, true, $entryPoint);
+        \jApp::setConfig($config);
+        \jApp::setCoord(null);
     }
 
     /**
@@ -69,19 +70,19 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        self::$fakeServer = new Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
 
-        $config = jConfigCompiler::read($config, true, false, '/'.$entryPoint);
-        $coord = new jCoordinatorForTest($config, false);
-        jApp::setCoord($coord);
-        $request = new jClassicRequest();
+        $config = \jConfigCompiler::read($config, true, false, '/'.$entryPoint);
+        $coord = new CoordinatorForTest($config, false);
+        \jApp::setCoord($coord);
+        $request = new \jClassicRequest();
         $coord->testSetRequest($request);
     }
 
     /**
      * compatibility with simpletests
-    */
+     */
     public function assertEqualOrDiff($first, $second, $message = "%s"){
         return $this->assertEquals($first, $second, $message);
     }
@@ -107,37 +108,37 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
     }
 
-/*
+    /*
 
-<object class="jDaoMethod">
-    <string property="name" value="" />
-    <string property="type" value="" />
-    <string property="distinct" value="" />
+    <object class="jDaoMethod">
+        <string property="name" value="" />
+        <string property="type" value="" />
+        <string property="distinct" value="" />
 
-    <object method="getConditions()" class="jDaoConditions">
-        <array property="order">array()</array>
-        <array property="fields">array()</array>
-        <object property="condition" class="jDaoCondition">
-            <null property="parent"/>
-            <array property="conditions"> array(...)</array>
-            <array property="group">
-                <object key="" class="jDaoConditions" test="#foo" />
-             </array>
+        <object method="getConditions()" class="jDaoConditions">
+            <array property="order">array()</array>
+            <array property="fields">array()</array>
+            <object property="condition" class="jDaoCondition">
+                <null property="parent"/>
+                <array property="conditions"> array(...)</array>
+                <array property="group">
+                    <object key="" class="jDaoConditions" test="#foo" />
+                 </array>
+            </object>
+
         </object>
-
     </object>
-</object>
 
 
-<ressource />
-<string value="" />
-<integer value="" />
-<float value=""/>
-<null />
-<boolean value="" />
-<array>
-<object class="">
-</object>*/
+    <ressource />
+    <string value="" />
+    <integer value="" />
+    <float value=""/>
+    <null />
+    <boolean value="" />
+    <array>
+    <object class="">
+    </object>*/
 
     function _checkIdentical($xml, $value, $name, $errormessage){
         $nodename  = dom_import_simplexml($xml)->nodeName;
