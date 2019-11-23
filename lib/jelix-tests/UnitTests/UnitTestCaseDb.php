@@ -243,8 +243,8 @@ class UnitTestCaseDb extends UnitTestCase {
         if($onlyThem && count($results) != 0){
             $globalok = false;
             $this->fail($message.'. Other unknown records exists');
-            $this->sendMessage('Unexpected records');
-            $this->dump($results);
+            echo "Unexpected records\n";
+            var_export($results);
         }
 
         if($globalok){

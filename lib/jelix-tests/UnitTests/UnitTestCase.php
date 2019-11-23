@@ -35,7 +35,7 @@ class UnitTestCase extends TestCase {
      */
     protected $dbProfile ='';
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         if($this->needPDO && false === class_exists('PDO',false)){
             $this->markTestSkipped('PDO does not exists ! You should install PDO because tests need it.');
@@ -78,13 +78,6 @@ class UnitTestCase extends TestCase {
         \jApp::setCoord($coord);
         $request = new \jClassicRequest();
         $coord->testSetRequest($request);
-    }
-
-    /**
-     * compatibility with simpletests
-     */
-    public function assertEqualOrDiff($first, $second, $message = "%s"){
-        return $this->assertEquals($first, $second, $message);
     }
 
     //    complex equality
@@ -172,7 +165,7 @@ class UnitTestCase extends TestCase {
                 return true;
 
             case 'array':
-                $this->assertInternalType('array', $value, $name.': not an array'.$errormessage);
+                $this->assertIsArray($value, $name.': not an array'.$errormessage);
                 if(trim((string)$xml) != ''){
                     if( false === eval('$v='.(string)$xml.';')){
                         $this->fail("invalid php array syntax");
@@ -197,7 +190,7 @@ class UnitTestCase extends TestCase {
                 return true;
 
             case 'string':
-                $this->assertInternalType('string', $value, $name.': not a string'.$errormessage);
+                $this->assertIsString('string', $value, $name.': not a string'.$errormessage);
                 if(isset($xml['value'])){
                     $this->assertEquals((string)$xml['value'],$value, $name.': bad value. '.$errormessage);
                 }
@@ -211,13 +204,13 @@ class UnitTestCase extends TestCase {
                 return true;
             case 'float':
             case 'double':
-                $this->assertInternalType('float', $value,$name.': not a float ('.$value.') '.$errormessage);
+                $this->assertIsFloat($value,$name.': not a float ('.$value.') '.$errormessage);
                 if(isset($xml['value'])){
                     $this->assertEquals( floatval((string)$xml['value']),$value,$name.': bad value. '.$errormessage);
                 }
                 return true;
             case 'boolean':
-                $this->assertInternalType('boolean', $value,$name.': not a boolean ('.$value.') '.$errormessage);
+                $this->assertIsBool($value,$name.': not a boolean ('.$value.') '.$errormessage);
                 if(isset($xml['value'])){
                     $v = ((string)$xml['value'] == 'true');
                     $this->assertEquals($v ,$value, $name.': bad value. '.$errormessage);
@@ -230,7 +223,7 @@ class UnitTestCase extends TestCase {
                 $this->assertNotNull($value, $name.' is null'.$errormessage);
                 return true;
             case 'resource':
-                $this->assertInternalType('resource', $value,$name.': not a resource'.$errormessage);
+                $this->assertIsResource($value,$name.': not a resource'.$errormessage);
                 return true;
             default:
                 $this->fail("_checkIdentical: balise inconnue ".$nodename.$errormessage);
