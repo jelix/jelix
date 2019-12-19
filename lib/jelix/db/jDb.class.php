@@ -9,7 +9,7 @@
 * @copyright   2011 Julien Issler
 #if ENABLE_OPTIMIZED_SOURCE
 * @copyright   2001-2005 CopixTeam
-* 
+*
 * Some of these classes were get originally from the Copix project
 * (CopixDbFactory, CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
 * Some lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -150,7 +150,7 @@ class jDb {
      * @param array  $profile  profile properties
      * @return boolean  true if properties are ok
      */
-    public function testProfile ($profile) {
+    public static function testProfile ($profile) {
         try {
             self::_createConnector ($profile);
             $ok = true;
