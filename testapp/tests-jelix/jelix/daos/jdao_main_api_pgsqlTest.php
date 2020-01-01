@@ -17,7 +17,7 @@ class jdao_main_api_pgsqlTest extends jdao_main_api_base {
     static protected $trueValue = 't';
     static protected $falseValue = 'f';
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         try {

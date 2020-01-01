@@ -9,13 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_profilesTest  extends jUnitTestCase
+class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
 {
-    public function setUp() {
+    public function setUp() : void  {
         self::initJelixConfig();
     }
 
-    public function tearDown() {
+    public function tearDown() : void  {
         jProfiles::clear();
         parent::tearDown();
     }

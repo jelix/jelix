@@ -26,7 +26,7 @@ class testJFormsHtmlLightBuilder extends htmllightJformsBuilder {
 }
 
 
-class jforms_HtmlLightBuilderTest extends jUnitTestCaseDb {
+class jforms_HtmlLightBuilderTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     
     protected static $form;
@@ -34,7 +34,7 @@ class jforms_HtmlLightBuilderTest extends jUnitTestCaseDb {
     protected static $builder;
     protected static $formname = 'jforms_formtest1';
 
-    function setUp() {
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (!self::$builder) {
@@ -45,7 +45,7 @@ class jforms_HtmlLightBuilderTest extends jUnitTestCaseDb {
         }
     }
 
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
 

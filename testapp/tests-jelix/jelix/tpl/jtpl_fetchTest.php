@@ -10,14 +10,14 @@
 */
 
 
-class jtpl_fetchTest extends jUnitTestCase {
+class jtpl_fetchTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
     function testSimpleFetch() {

@@ -20,16 +20,16 @@ class UTParseUrlsIncluder extends \Jelix\Core\Includer {
 }
 
 
-class UTParseUrls extends jUnitTestCase {
+class UTParseUrls extends \Jelix\UnitTests\UnitTestCase {
 
-    function setUp() {
+    function setUp()  : void {
         jApp::saveContext();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
 
-    function tearDown() {
+    function tearDown()  : void {
         jApp::popCurrentModule();
         jApp::restoreContext();
     }

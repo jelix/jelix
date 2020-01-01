@@ -14,7 +14,7 @@ require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 require_once(JELIX_LIB_PATH.'dao/jDaoConditions.class.php');
 
 
-class jDao_ConditionsTest extends jUnitTestCase {
+class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testConditions() {
 

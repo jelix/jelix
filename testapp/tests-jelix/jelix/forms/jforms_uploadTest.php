@@ -11,7 +11,7 @@
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class jforms_uploadTest extends jUnitTestCase {
+class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
 
 
     function testUniqueName() {

@@ -8,7 +8,7 @@ class fakeConfigAutoloader extends jConfigAutoloader {
 
 }
 
-class configautoloaderTest extends PHPUnit_Framework_TestCase {
+class configautoloaderTest extends \PHPUnit\Framework\TestCase {
 
     function testPathWithoutNamespaces() {
 

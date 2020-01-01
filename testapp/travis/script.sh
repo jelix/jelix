@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd testapp/tests-jelix/
+cd testapp/travis/
 ../vendor/bin/phpunit -v -d xdebug.overload_var_dump=0
 EXITCODE=$?
 

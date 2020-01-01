@@ -9,12 +9,12 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jacl2_managerTest extends jUnitTestCaseDb {
+class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
 
     protected static $firstSetup = true;
     
-    public function setUp(){
+    public function setUp()  : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         if (!self::$firstSetup) {
             return;

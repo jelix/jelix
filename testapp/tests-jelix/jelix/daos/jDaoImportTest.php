@@ -1,13 +1,13 @@
 <?php
 
-class jDaoImportTest extends jUnitTestCase {
+class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp () {
+    public function setUp () : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
     }
 

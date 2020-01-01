@@ -9,6 +9,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+/**
+ * Class jUnitTestCaseDb for PHPUnit < 6.0
+ * @deprecated
+ */
 class jUnitTestCaseDb extends jUnitTestCase {
 
     /**

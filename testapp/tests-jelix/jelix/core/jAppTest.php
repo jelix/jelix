@@ -1,7 +1,7 @@
 <?php
 
 
-class jAppTest extends PHPUnit_Framework_TestCase {
+class jAppTest extends \PHPUnit\Framework\TestCase {
 
 
     

@@ -13,15 +13,15 @@ require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 require_once(JELIX_LIB_PATH.'dao/jDaoConditions.class.php');
 
 
-class jdao_eventsTest extends jUnitTestCaseDb {
+class jdao_eventsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         $GLOBALS['TEST_DAO_EVENTS'] = array();
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
         unset($GLOBALS['TEST_DAO_EVENTS']);
     }

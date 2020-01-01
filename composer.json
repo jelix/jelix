@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.2",
         "jelix/fakeserverconf": "1.0.*",
         "jelix/composer-module-setup": "^0.5.0",
         "phpmailer/phpmailer": "^5.2.26",
@@ -61,7 +61,8 @@
     "extra" : {
         "branch-alias": {
             "dev-master": "2.0-dev",
-            "dev-jelix-1.7.x": "1.7-dev"
+            "dev-jelix-1.7.x": "1.7-dev",
+            "dev-jelix-1.8.x": "1.8-dev"
         },
         "jelix": {
             "modules-dir" : [

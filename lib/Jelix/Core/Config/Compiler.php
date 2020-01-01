@@ -184,10 +184,9 @@ class Compiler
         $config = $this->read(false);
         $tempPath = App::tempPath();
         \jFile::createDir($tempPath, $config->chmodDir);
-        $filename = $tempPath.str_replace('/', '~', $this->configFileName);
+        $filename = self::getCacheFilename($this->configFileName);
 
         if (BYTECODE_CACHE_EXISTS) {
-            $filename .= '.conf.php';
             if ($f = @fopen($filename, 'wb')) {
                 fwrite($f, '<?php $config = '.var_export(get_object_vars($config), true).";\n?>");
                 fclose($f);
@@ -205,6 +204,31 @@ class Compiler
     public function getModulesInfos()
     {
         return $this->modulesInfos;
+    }
+
+    /**
+     * return the path of file where to store the cache of the configuration
+     * @param string $configFile the name of the configuration file of the entry
+     * point into var/config/
+     * @return string the full path of the cache
+     * @since 1.6.26
+     */
+    static public function getCacheFilename($configFile)
+    {
+        $filename = App::tempPath().str_replace('/','~',$configFile);
+        if (isset($_SERVER['HTTP_HOST'])) {
+            $filename .= '.'.str_replace(':', '-', $_SERVER['HTTP_HOST']);
+        }
+        elseif (isset($_SERVER['SERVER_NAME'])) {
+            $filename .= '.'.$_SERVER['SERVER_NAME'];
+        }
+        if (BYTECODE_CACHE_EXISTS) {
+            $filename .= '.conf.php';
+        }
+        else {
+            $filename .= '.resultini.php';
+        }
+        return $filename;
     }
 
     /**

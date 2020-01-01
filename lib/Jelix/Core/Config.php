@@ -51,13 +51,7 @@ class Config
     public static function load($configFile)
     {
         $config = array();
-        $file = App::tempPath().str_replace('/', '~', $configFile);
-
-        if (BYTECODE_CACHE_EXISTS) {
-            $file .= '.conf.php';
-        } else {
-            $file .= '.resultini.php';
-        }
+        $file = Config\Compiler::getCacheFilename($configFile);
 
         self::$fromCache = true;
         if (!file_exists($file)) {

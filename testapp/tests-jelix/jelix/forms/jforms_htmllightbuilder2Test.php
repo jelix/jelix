@@ -25,14 +25,14 @@ class testJFormsHtmlLightBuilder2 extends htmllightJformsBuilder {
 }
 
 
-class jforms_HTMLLightBuilder2Test extends jUnitTestCaseDb {
+class jforms_HTMLLightBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $form;
     protected $container;
     protected $builder;
     protected $formname;
 
-    function setUp() {
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (isset($_SESSION['JFORMS_SESSION'])) {
@@ -45,7 +45,7 @@ class jforms_HTMLLightBuilder2Test extends jUnitTestCaseDb {
         $this->formname = $this->builder->getName();
     }
 
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
     function testOutputGroup(){

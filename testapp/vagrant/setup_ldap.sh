@@ -1,4 +1,9 @@
 #!/usr/bin/env bash
+ROOTDIR="/jelixapp"
+APPNAME="testapp"
+APPDIR="$ROOTDIR/$APPNAME"
+VAGRANTDIR="$APPDIR/vagrant"
+LDAPCN="testapp20"
 
 export DEBIAN_FRONTEND=noninteractive
 
@@ -11,7 +16,22 @@ echo "slapd slapd/domain string $APPHOSTNAME" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap_conf.ldif
-#ldapsearch -x -D cn=admin,dc=testapp20,dc=local -w passjelix -b "dc=testapp20,dc=local" "(objectClass=*)"
+# server configuration
+cp $VAGRANTDIR/ldap/default /etc/default/slapd
 
+# client configuration
+cp $VAGRANTDIR/ldap/ldap.conf /etc/ldap/
+
+service slapd restart
+
+# certificates have been created with gencerts.sh
+adduser openldap ssl-cert
+
+echo "configure ssl"
+ldapmodify -Y EXTERNAL -H ldapi:/// -f $VAGRANTDIR/ldap/ldap_ssl.ldif
+#ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config | grep TLS
+
+echo "add default users for tests"
+ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
+#ldapsearch -x -D cn=admin,dc=testapp20,dc=local -w passjelix -b "dc=testapp20,dc=local" "(objectClass=*)"
 

@@ -18,7 +18,7 @@ class fakeConfig {
 }
 
 
-class configTest extends PHPUnit_Framework_TestCase {
+class configTest extends \Jelix\UnitTests\UnitTestCase {
 
     /**
      * @expectedException Exception

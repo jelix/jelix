@@ -4,11 +4,11 @@ Jelix Installation
 Server configuration
 ---------------------
 
-Jelix works with PHP 5.6 and higher, but PHP 7.3+ is prefered
+Jelix works with PHP 7.2 and higher.
 
 This php extensions should be installed : xml, simplexml, pcre, session, spl, json, mbstring et tokenizer.
 
-Jelix supports these databases: MySQL 5.5+, PostgreSQL 9.0+, SQLite 3.
+Jelix supports these databases: MySQL 5.5+, PostgreSQL 10.0+, SQLite 3.
 
 installation
 ------------

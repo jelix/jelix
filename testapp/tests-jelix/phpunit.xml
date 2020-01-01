@@ -52,8 +52,8 @@
     <testsuite name="Web Assets">
       <directory>jelix/WebAssets/</directory>
     </testsuite>
-    <testsuite name="Ldap/dao driver">
+    <!--<testsuite name="Ldap/dao driver">
       <directory>../vendor/jelix/ldapdao-module/tests/</directory>
-    </testsuite>
+    </testsuite>-->
   </testsuites>
 </phpunit>

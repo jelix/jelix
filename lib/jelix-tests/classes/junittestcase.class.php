@@ -16,7 +16,10 @@ class jCoordinatorForTest extends jCoordinator {
     }
 }
 
-
+/**
+ * Class jUnitTestCase for PHPUnit < 6.0
+ * @deprecated
+ */
 class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
     /**

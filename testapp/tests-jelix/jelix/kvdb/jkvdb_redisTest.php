@@ -21,7 +21,7 @@ class jkvdb_redisTest extends jKVDbTest {
 
     protected $redis;
 
-    function setUp () {
+    function setUp() : void {
         $this->profile = 'usingredis';
         self::initJelixConfig();
 
@@ -33,7 +33,7 @@ class jkvdb_redisTest extends jKVDbTest {
         $this->redis->flushall();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         if ($this->redis) {
             //$this->redis->quit();
             $this->redis->disconnect();

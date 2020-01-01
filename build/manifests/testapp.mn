@@ -93,12 +93,6 @@ cd testapp/modules/news
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
-cd testapp/tests-jelix/casperjs
-  launch.sh
-  pre.js
-cd testapp/tests-jelix/casperjs/tests
-  configdao.js
-  hellopage.js
 cd testapp/tests-jelix/jelix/acl/
   __ALL__
 cd testapp/tests-jelix/jelix/auth/

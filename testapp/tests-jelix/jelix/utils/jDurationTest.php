@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDurationTest extends PHPUnit_Framework_TestCase {
+class jDurationTest extends \PHPUnit\Framework\TestCase {
     function testReportedBug(){
         // Get now date/time
         $dtNow = new jDateTime();

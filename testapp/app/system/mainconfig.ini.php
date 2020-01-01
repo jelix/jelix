@@ -92,9 +92,11 @@ minifyEntryPoint=minify.php
 
 [logger]
 soap=file
+auth=file
 
 [fileLogger]
-soap=messages.log
+soap=soap.log
+auth=auth.log
 
 [mailLogger]
 ;email = root@localhost

@@ -11,14 +11,14 @@
 require_once(__DIR__.'/daotests.lib.php');
 
 
-class jdao_parser2Test extends jUnitTestCase {
+class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
 
     protected $_selector;
-    function setUp() {
+    function setUp() : void  {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         $this->_selector = null;
     }
 

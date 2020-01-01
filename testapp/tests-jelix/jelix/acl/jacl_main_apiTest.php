@@ -10,12 +10,12 @@
 */
 
 
-class jacl_main_apiTest extends jUnitTestCaseDb {
+class jacl_main_apiTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
-    public function setUp (){
+    public function setUp () : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         if (!self::$coordAuthPlugin) {
             require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
@@ -71,7 +71,7 @@ class jacl_main_apiTest extends jUnitTestCaseDb {
     }
 
 
-    public function tearDown (){
+    public function tearDown() : void {
 
         if ($this->oldAuthPlugin)
             jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;

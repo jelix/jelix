@@ -1,6 +1,6 @@
 <?php
 
-class moduleParametersTest extends PHPUnit_Framework_TestCase
+class moduleParametersTest extends \PHPUnit\Framework\TestCase
 {
 
     function getSerializedToUnserialized() {

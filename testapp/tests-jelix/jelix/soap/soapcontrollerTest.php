@@ -13,14 +13,14 @@
 /**
 * Tests of soapCtrl web services 
 */
-class soapcontrollerTest extends jUnitTestCase {
+class soapcontrollerTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
 
@@ -40,19 +40,19 @@ class soapcontrollerTest extends jUnitTestCase {
         $client = new SoapClient($wsdlURI, array('trace' => 1, 'soap_version'  => SOAP_1_1));
 
         $result = $client->__soapCall('getServerDate', array());
-        $this->assertEqualOrDiff(date('Y-m-d\TH:i:s O'),$result);
+        $this->assertEquals(date('Y-m-d\TH:i:s O'),$result);
 
         $result =  $client->__soapCall('hello', array('Sylvain'));
-        $this->assertEqualOrDiff("Hello Sylvain", $result);
+        $this->assertEquals("Hello Sylvain", $result);
 
         $result =  $client->__soapCall('concatString', array('Hi ! ', 'Sylvain', 'How are you ?'));
-        $this->assertEqualOrDiff('Hi ! SylvainHow are you ?', $result);
+        $this->assertEquals('Hi ! SylvainHow are you ?', $result);
 
         $result =  $client->__soapCall('concatArray', array(array('Hi ! ', 'Sylvain', 'How are you ?')));
-        $this->assertEqualOrDiff('Hi !  Sylvain How are you ?', $result);
+        $this->assertEquals('Hi !  Sylvain How are you ?', $result);
 
         $result =  $client->__soapCall('returnAssociativeArray', array());
-        $this->assertEqualOrDiff(array (
+        $this->assertEquals(array (
             'arg1' => 'Hi ! ',
             'arg2' => 'Sylvain',
             'arg3' => 'How are you ?',
@@ -79,10 +79,10 @@ class soapcontrollerTest extends jUnitTestCase {
 </array>';
         $this->assertComplexIdenticalStr($result, $struct);
 
-        //$this->assertEqualOrDiff(array('arg1'=>'Hi ! ', 'arg2'=>'Sylvain', 'arg3'=>'How are you ?'), $result);
+        //$this->assertEquals(array('arg1'=>'Hi ! ', 'arg2'=>'Sylvain', 'arg3'=>'How are you ?'), $result);
 
         $result =  $client->__soapCall('concatAssociativeArray', array(array('arg1'=>'Hi ! ', 'arg2'=>'Sylvain', 'arg3'=>'How are you ?')));
-        $this->assertEqualOrDiff('Hi !  Sylvain How are you ?', $result);
+        $this->assertEquals('Hi !  Sylvain How are you ?', $result);
 
         $result =  $client->__soapCall('returnObject', array());
         $struct='<object>

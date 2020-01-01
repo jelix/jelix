@@ -151,6 +151,10 @@ abstract class ServerResponse
         $this->_httpHeaders[$htype] = $hcontent;
     }
 
+    public function getHttpHeaders() {
+        return $this->_httpHeaders;
+    }
+
     /**
      * delete all http headers.
      */

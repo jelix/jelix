@@ -9,13 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_sqlite3Test extends jUnitTestCase {
+class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
     }
 
-    function setUp (){
+    function setUp () : void {
         jProfiles::clear();
         try {
             jProfiles::get('jdb', 'testapp_sqlite3', true);

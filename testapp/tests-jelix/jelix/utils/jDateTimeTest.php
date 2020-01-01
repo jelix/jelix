@@ -9,13 +9,13 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDateTimeTest extends PHPUnit_Framework_TestCase {
+class jDateTimeTest extends \PHPUnit\Framework\TestCase {
 
-    function setUp(){
+    function setUp() : void {
         date_default_timezone_set("Europe/Paris");
     }
 
-    function tearDown(){
+    function tearDown() : void {
         date_default_timezone_set(jApp::config()->timeZone);
     }
 
@@ -122,6 +122,7 @@ class jDateTimeTest extends PHPUnit_Framework_TestCase {
     // implement the leap seconds yet (also, there is no algorithm to compute 
     // when a leap second will occur).
     function testLeapSecond(){
+        $this->assertTrue(true);
         /*try{
           $dt = new jDateTime(1972, 6, 30, 23, 59, 60);
           $this->pass();
