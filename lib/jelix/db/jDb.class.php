@@ -150,7 +150,7 @@ class jDb
      *
      * @return bool true if properties are ok
      */
-    public function testProfile($profile)
+    public static function testProfile($profile)
     {
         try {
             self::_createConnector($profile);
