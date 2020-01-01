@@ -27,7 +27,7 @@ class testJFormsHtmlBuilder extends htmlJformsBuilder {
 }
 
 
-class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
+class jforms_HTMLBuilderTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected static $form;
     protected static $container;
@@ -47,7 +47,7 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb {
     }
 
 
-    function setUp() {
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (!self::$builder) {
@@ -89,11 +89,11 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
     }
 
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
 
-    static function tearDownAfterClass() {
+    static function tearDownAfterClass() : void {
         self::$container = null;
         self::$form = null;
         self::$builder = null;

@@ -13,7 +13,7 @@ require_once(__DIR__.'/jacl2.lib.php');
 
 class jacl2_main_api_pgsqlTest extends jacl2APITest {
 
-    public function setUp(){
+    public function setUp() : void {
         jDao::releaseAll();
         jProfiles::clear();
         try {
@@ -27,7 +27,7 @@ class jacl2_main_api_pgsqlTest extends jacl2APITest {
         parent::setUp();
     }
 
-    public function tearDown (){
+    public function tearDown() : void {
         parent::tearDown();
         jProfiles::clear();
         jDao::releaseAll();

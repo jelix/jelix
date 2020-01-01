@@ -16,9 +16,9 @@ class eventResponseToReturn {
 }
 
 
-class eventsTest extends jUnitTestCase {
+class eventsTest extends \Jelix\UnitTests\UnitTestCase {
 
-    function setUp() {
+    function setUp() : void {
         jEvent::clearCache();
         self::initJelixConfig();
         jFile::removeDir(jApp::tempPath(), false);

@@ -10,9 +10,9 @@
 * @since 1.1
 */
 
-class jClassesTest extends jUnitTestCase {
+class jClassesTest extends \Jelix\UnitTests\UnitTestCase {
 
-    function setUp() {
+    function setUp() : void {
         self::initJelixConfig();
         jClasses::resetBindings();
         parent::setUp();

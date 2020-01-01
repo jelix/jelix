@@ -11,11 +11,11 @@
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class jforms_With_DaoTest extends jUnitTestCaseDb {
+class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $backupGlobalsBlacklist = array('_SESSION');
 
-    static function setUpBeforeClass() {
+    static function setUpBeforeClass() : void {
         if (isset($_SESSION['JFORMS_SESSION'])) {
             unset($_SESSION['JFORMS_SESSION']);
         };
@@ -27,7 +27,7 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
         $form = jForms::create('label', array(1,'en'));
     }
 
-    function setUp(){
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if ($this->getName() == 'testInsertDao') {
@@ -37,12 +37,12 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
         }
     }
 
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
         jApp::setCoord(null);
     }
     
-    static function tearDownAfterClass() {
+    static function tearDownAfterClass() : void {
 /*        jForms::destroy('product');
         jForms::destroy('label', array(1,'fr'));
         jForms::destroy('label', array(1,'en'));
@@ -235,6 +235,7 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
      */
     function testGetValue() {
         $this->emptyTable('labels1_test');
+        $this->assertTrue(true);
     }
 }
 ?>

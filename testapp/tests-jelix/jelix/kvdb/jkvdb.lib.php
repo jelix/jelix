@@ -15,7 +15,7 @@
 * @subpackage  jelix_tests module
 */
 
-abstract class jKVDbTest extends jUnitTestCaseDb {
+abstract class jKVDbTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $profile;
 
@@ -196,6 +196,7 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
     }
 
     public function testGarbage () {
+        $this->assertTrue(true);
         /*
         $kv = jKVDb::getConnection($this->profile);
 
@@ -211,6 +212,7 @@ abstract class jKVDbTest extends jUnitTestCaseDb {
     }
 
     public function testFlush (){
+        $this->assertTrue(true);
         /*
         $kv = jKVDb::getConnection($this->profile);
 

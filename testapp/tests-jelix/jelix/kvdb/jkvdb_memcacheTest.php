@@ -18,7 +18,7 @@ require_once(__DIR__.'/jkvdb.lib.php');
 
 class jkvdb_memcacheTest extends jKVDbTest {
 
-    function setUp (){
+    function setUp() : void {
         $this->profile = 'usingmemcache';
         self::initJelixConfig();
 
@@ -34,7 +34,7 @@ class jkvdb_memcacheTest extends jKVDbTest {
         parent::setUp();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         if ($this->mmc) {
             memcache_close($this->mmc);
             $this->mmc = null;

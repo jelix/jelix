@@ -16,9 +16,9 @@ class testMinifyHTMLResponsePlugin extends minifyHTMLResponsePlugin {
 }
 
 
-class minifyHTMLResponsePluginTest extends jUnitTestCase
+class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
 {
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         self::initJelixConfig();
     }
 

@@ -11,6 +11,7 @@
 
 /**
  * Class jUnitTestCaseDb for PHPUnit < 6.0
+ * @deprecated
  */
 class jUnitTestCaseDb extends jUnitTestCase {
 

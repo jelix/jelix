@@ -10,13 +10,13 @@
 */
 require_once(LIB_PATH.'jelix-modules/jacl2/classes/jAcl2.class.php');
 
-class jacl2_managerUITest extends jUnitTestCaseDb {
+class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected static $driver = 'db';
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
-    public function setUp(){
+    public function setUp() : void {
         $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
 
@@ -104,7 +104,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         jAcl2DbUserGroup::clearCache();
     }
 
-    public function tearDown(){
+    public function tearDown() : void {
         if ($this->oldAuthPlugin)
             jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
         else
@@ -112,7 +112,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         unset($_SESSION[self::$coordAuthPlugin->config['session_name']]);
     }
 
-    static function tearDownAfterClass() {
+    static function tearDownAfterClass() : void {
         self::$coordAuthPlugin = null;
     }
 
@@ -465,7 +465,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
     }
 
     /**
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testTryRestorePartialAdminRightsToAUser()
     {
@@ -492,6 +491,8 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
             'acl.group.delete' => 'y',
             //'acl.group.view' =>'y',
         );
+
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveUserRights('theadmin', $rights, 'theadmin');
     }
 
@@ -686,7 +687,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
 
     /**
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testRemoveAllRights() {
         // it should fail because of some admin rights set on admins
@@ -696,12 +696,12 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
             'admins' => array(),
             'users' => array()
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights);
     }
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testNonAdminTryingToRemoveRightAdminOfAnAloneAdminGroup() {
         jAuth::login('oneuser','pwd', false);
@@ -719,12 +719,12 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
                 'super.cms.update' => 'y',
             )
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights);
     }
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testNonAdminTryingToRemovePrivateRightAdminOfAnAloneUserAdmin() {
         // it should fail
@@ -733,6 +733,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
         $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
             'acl.group.delete' =>'', // change, anybody else have this right
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveUserRights('theadmin', $rights);
     }
 
@@ -894,7 +895,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testAdminTryingToRemoveRightAdminsFromHisAdminGroup() {
         // it should fail
@@ -913,12 +913,12 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
                 'acl.user.modify' => 'y'
             )
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights, 'theadmin');
     }
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testAdminTryingToRemoveHisPrivateRightAdmins() {
         // it should fail
@@ -929,6 +929,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
             'acl.group.delete' =>'y',
             'acl.group.view' =>'y',
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveUserRights('theadmin', $rights);
     }
 
@@ -1133,18 +1134,16 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testAdminTryingToDeleteTheSingleAdminGroup() {
         jAuth::login('theadmin','pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->removeGroup('admins');
     }
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
-     * @expectedExceptionCode 3
      */
     public function testAdminTryingToDeleteItsOwnAdminGroup() {
         // create a new admin group with a user in it
@@ -1175,6 +1174,8 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
         jAuth::login('theadmin','pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
+        $this->expectException(jAcl2DbAdminUIException::class);
+        $this->expectExceptionCode(3);
         $mgr->removeGroup('admins', 'theadmin');
     }
 
@@ -1277,7 +1278,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testAdminTryingToDeleteOneOfAdminGroupButOtherAreEmptyGroups()
     {
@@ -1300,6 +1300,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
         jAuth::login('theadmin','pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->removeGroup('admins');
     }
 
@@ -1347,11 +1348,11 @@ class jacl2_managerUITest extends jUnitTestCaseDb {
 
     /**
      * it should fail
-     * @expectedException jAcl2DbAdminUIException
      */
     public function testAdminTryingToRemoveAUserFromAdminGroupButItIsTheOnlyOneAdmin() {
         jAuth::login('theadmin','pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->removeUserFromGroup('theadmin', 'admins');
     }
 

@@ -17,13 +17,13 @@
 
 define ("NB_USERS_LDAP",3);
 
-class ldap_pluginAuthTest extends jUnitTestCase {
+class ldap_pluginAuthTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $config;
 
     protected $listenersBackup;
 
-    function setUp(){
+    function setUp() : void {
         parent::setUp();
         if(!file_exists(jApp::appSystemPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
@@ -54,7 +54,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         }
     }
 
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
         unset(jApp::coord()->plugins['auth']);
         unset($_SESSION[$this->config['session_name']]);

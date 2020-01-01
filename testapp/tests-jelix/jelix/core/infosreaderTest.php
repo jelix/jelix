@@ -1,9 +1,9 @@
 <?php
 
 
-class infosreaderTest extends jUnitTestCase {
+class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
 
-    function tearDown() {
+    function tearDown() : void  {
         if (file_exists(__DIR__.'/../../../temp/testframework.ini')) {
             unlink (__DIR__.'/../../../temp/testframework.ini');
         }
@@ -12,7 +12,7 @@ class infosreaderTest extends jUnitTestCase {
         }
     }
 
-    function setUp() {
+    function setUp() : void  {
         if (file_exists(__DIR__.'/../../../temp/testframework.ini')) {
             unlink (__DIR__.'/../../../temp/testframework.ini');
         }
@@ -81,7 +81,7 @@ class infosreaderTest extends jUnitTestCase {
 
         $writer = new \Jelix\Core\Infos\ModuleXmlWriter($result->getFilePath());
         $result = $writer->write($result, false);
-        $this->assertEqualOrDiff(
+        $this->assertEquals(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <module xmlns=\"http://jelix.org/ns/module/1.0\">
   <info id=\"simple@testapp.jelix.org\" name=\"simple\">
@@ -176,7 +176,7 @@ class infosreaderTest extends jUnitTestCase {
 
         $writer = new \Jelix\Core\Infos\ModuleXmlWriter($result->getFilePath());
         $result = $writer->write($result, false);
-        $this->assertEqualOrDiff(
+        $this->assertEquals(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <module xmlns=\"http://jelix.org/ns/module/1.0\">
   <info id=\"jelix_tests@testapp.jelix.org\" name=\"jelix_tests\">
@@ -240,7 +240,7 @@ class infosreaderTest extends jUnitTestCase {
 
         $writer = new \Jelix\Core\Infos\ProjectXmlWriter($result->getFilePath());
         $result = $writer->write($result, false);
-        $this->assertEqualOrDiff(
+        $this->assertEquals(
             "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <project xmlns=\"http://jelix.org/ns/project/1.0\">
   <info name=\"testapp\" createdate=\"2005-01-01\">

@@ -8,7 +8,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class requestTest extends jUnitTestCase
+class requestTest extends \Jelix\UnitTests\UnitTestCase
 {
 
 

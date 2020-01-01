@@ -1,7 +1,7 @@
 <?php
 
 
-class jPrefTest extends jUnitTestCase {
+class jPrefTest extends \Jelix\UnitTests\UnitTestCase {
 
     /**
      * @covers jPref::set

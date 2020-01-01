@@ -19,7 +19,7 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
     static protected $productPriceType = 'float';
     static protected $productPromoType = 'integer';
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         try {
@@ -47,6 +47,7 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
     }
     function testBinaryField() {
         // FIXME sqlite3 driver does not support binary field
+        $this->assertTrue(true);
     }
 }
 

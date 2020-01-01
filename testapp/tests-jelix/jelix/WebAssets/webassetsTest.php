@@ -14,7 +14,7 @@ class htmlRespAssetsTest extends jResponseHtml {
 }
 
 
-class webassetsTest extends jUnitTestCase
+class webassetsTest extends \Jelix\UnitTests\UnitTestCase
 {
 
     public function getWebAssets() {

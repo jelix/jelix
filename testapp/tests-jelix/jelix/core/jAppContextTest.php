@@ -1,7 +1,7 @@
 <?php
 
 
-class jAppContextTest extends PHPUnit_Framework_TestCase {
+class jAppContextTest extends \PHPUnit\Framework\TestCase {
 
     function testContext() {
     

@@ -9,14 +9,14 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class selectors_moduleTest extends jUnitTestCase {
+class selectors_moduleTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
     }
 

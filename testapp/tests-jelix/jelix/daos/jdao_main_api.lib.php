@@ -12,7 +12,7 @@
 /**
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
-abstract class jdao_main_api_base extends jUnitTestCaseDb {
+abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
 
     static protected $trueValue = 1;
     static protected $falseValue = 0;
@@ -21,12 +21,12 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     static protected $productPriceType = 'string';
     static protected $productPromoType = 'string';
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
     }
 
@@ -230,7 +230,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     <object>
         <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <'.static::$productPriceType.' property="price" value="5.90" />
+        <'.static::$productPriceType.' property="price" value="5.9" />
         <'.static::$productPromoType.' property="promo" value="'.static::$trueValue.'" />
     </object>
     <object>
@@ -325,7 +325,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     <object>
         <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <'.static::$productPriceType.' property="price" value="5.90" />
+        <'.static::$productPriceType.' property="price" value="5.9" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -406,7 +406,7 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
     <object>
         <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <'.static::$productPriceType.' property="price" value="5.90" />
+        <'.static::$productPriceType.' property="price" value="5.9" />
     </object>
     <object>
         <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />

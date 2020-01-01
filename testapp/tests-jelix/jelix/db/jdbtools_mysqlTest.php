@@ -17,9 +17,9 @@ class testmysqlDbTools extends jDbMysqlTools {
     }
 }
 
-class jDbTools_MysqlTest extends jUnitTestCase {
+class jDbTools_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         self::initJelixConfig();
     }
 

@@ -2,7 +2,7 @@
 
 
 
-class cliControllerTest extends PHPUnit_Framework_TestCase
+class cliControllerTest extends \PHPUnit\Framework\TestCase
 {
 
     function testEmptyParameters() {
@@ -25,12 +25,12 @@ class cliControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException jException
      */
     function testMissingParameters() {
         $cliArgs = array('foo');
         $optionsDecl = array();
         $paramsDecl = array('p1'=>true, 'p2'=>true);
+        $this->expectException(jException::class);
         list($options, $parameters) = jCmdUtils::getOptionsAndParams($cliArgs, $optionsDecl, $paramsDecl);
     }
 
@@ -95,22 +95,22 @@ class cliControllerTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException jException
      */
     function testOptionMissingValueWithDash() {
         $cliArgs = array('-f', '-hello', 'foo');
         $optionsDecl = array('-f'=>true, '-hello'=>false);
         $paramsDecl = array('p1'=>true, 'p2'=>false);
+        $this->expectException(jException::class);
         list($options, $parameters) = jCmdUtils::getOptionsAndParams($cliArgs, $optionsDecl, $paramsDecl);
     }
 
     /**
-     * @expectedException jException
      */
     function testOptionMissingParameter() {
         $cliArgs = array('-f', 'foo');
         $optionsDecl = array('-f'=>true);
         $paramsDecl = array('p1'=>true, 'p2'=>false);
+        $this->expectException(jException::class);
         list($options, $parameters) = jCmdUtils::getOptionsAndParams($cliArgs, $optionsDecl, $paramsDecl);
     }
 

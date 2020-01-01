@@ -12,16 +12,16 @@
 
 include_once (JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbschema.php');
 
-class jDbSchema_MysqlTest extends jUnitTestCase {
+class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
     }
 
     protected $countryColumns = array();
     protected $cityColumns = array();
 
-    public function setUp(){
+    public function setUp() : void {
         if (!count($this->countryColumns)) {
             $is64bits = ( PHP_INT_SIZE*8 == 64 );
             $this->countryColumns ['country_id'] = '<object class="jDbColumn" key="country_id">

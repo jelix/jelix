@@ -26,10 +26,10 @@ class testIFRForm extends jFormsBase {
     }
 }
 
-class jforms_init_from_request extends PHPUnit_Framework_TestCase {
+class jforms_init_from_request extends \PHPUnit\Framework\TestCase {
     protected $form;
     protected $container;
-    function setUp() {
+    function setUp() : void {
         $this->container = new jFormsDataContainer('','');
         $this->form = new testIFRForm('bar',$this->container, true);
         $this->form->securityLevel = 0 ; // by default, we don't want to deal with a token in our test
@@ -39,7 +39,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
         jApp::coord()->request = new jClassicRequest();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         jApp::restoreContext();
     }
 

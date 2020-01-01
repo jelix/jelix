@@ -49,7 +49,7 @@ class fakeAutoloader extends jAutoloader {
 
 
 
-class autoloaderTest extends PHPUnit_Framework_TestCase {
+class autoloaderTest extends \PHPUnit\Framework\TestCase {
 
     function testPathWithoutNamespaces() {
 

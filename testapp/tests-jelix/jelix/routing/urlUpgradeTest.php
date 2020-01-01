@@ -13,15 +13,15 @@ require(LIB_PATH.'/jelix/installer/Installer/Migrator/UrlEngineUpgrader.php');
 
 
 
-class urlUpgradeTest extends jUnitTestCase {
+class urlUpgradeTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         copy(__DIR__.'/urls/urls_empty.xml', jApp::tempPath('urls.xml'));
         copy(__DIR__.'/urls/configurl.ini', jApp::tempPath('config.ini'));
         parent::setUp();
     }
 
-    function tearDown() {
+    function tearDown() : void {
     }
 
     function testSimpleUpgrade() {

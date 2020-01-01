@@ -9,10 +9,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTCreateUrls extends jUnitTestCase {
+class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
     protected $oldserver;
 
-    function setUp() {
+    function setUp() : void  {
         $this->oldserver = $_SERVER;
         jApp::saveContext();
         self::initClassicRequest(TESTAPP_URL.'index.php');
@@ -20,7 +20,7 @@ class UTCreateUrls extends jUnitTestCase {
         parent::setUp();
     }
     
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
         jApp::restoreContext();
         $_SERVER = $this->oldserver;

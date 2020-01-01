@@ -34,7 +34,7 @@ class testJFormsCompiler10 extends jFormsCompiler_jf_1_0 {
     }
 }
 
-class jforms_compilerTest extends jUnitTestCase {
+class jforms_compilerTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $_XmlControls = array(
 0=>'<input ref="nom" xmlns="http://jelix.org/ns/forms/1.0">
