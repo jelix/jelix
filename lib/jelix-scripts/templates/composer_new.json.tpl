@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.2",
         "jelix/jelix": "^%%jelix_version%%"
     },
     "minimum-stability": "stable"
