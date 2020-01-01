@@ -1,25 +1,26 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jelix-tests
-* @author      Laurent Jouanneau
-* @contributor Christophe Thiriot
-* @copyright   2006-2012 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jelix-tests
+ * @author      Laurent Jouanneau
+ * @contributor Christophe Thiriot
+ * @copyright   2006-2019 Laurent Jouanneau
+ * @link        https://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+namespace Jelix\UnitTests;
+use PHPUnit\Framework\TestCase;
+
 require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
-class jCoordinatorForTest extends jCoordinator {
+class CoordinatorForTest extends \jCoordinator {
     function testSetRequest($request) {
         $this->setRequest($request);
     }
 }
 
-/**
- * Class jUnitTestCase for PHPUnit < 6.0
- */
-class jUnitTestCase extends PHPUnit_Framework_TestCase {
+
+class UnitTestCase extends TestCase {
 
     /**
      * indicates if PDO is needed. If yes, PDO will be checked
@@ -34,7 +35,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      */
     protected $dbProfile ='';
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         if($this->needPDO && false === class_exists('PDO',false)){
             $this->markTestSkipped('PDO does not exists ! You should install PDO because tests need it.');
@@ -50,9 +51,9 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initJelixConfig($config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        $config = jConfigCompiler::read($config, true, true, $entryPoint);
-        jApp::setConfig($config);
-        jApp::setCoord(null);
+        $config = \jConfigCompiler::read($config, true, true, $entryPoint);
+        \jApp::setConfig($config);
+        \jApp::setCoord(null);
     }
 
     /**
@@ -69,21 +70,14 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        self::$fakeServer = new Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
 
-        $config = jConfigCompiler::read($config, true, false, '/'.$entryPoint);
-        $coord = new jCoordinatorForTest($config, false);
-        jApp::setCoord($coord);
-        $request = new jClassicRequest();
+        $config = \jConfigCompiler::read($config, true, false, '/'.$entryPoint);
+        $coord = new CoordinatorForTest($config, false);
+        \jApp::setCoord($coord);
+        $request = new \jClassicRequest();
         $coord->testSetRequest($request);
-    }
-
-    /**
-     * compatibility with simpletests
-    */
-    public function assertEqualOrDiff($first, $second, $message = "%s"){
-        return $this->assertEquals($first, $second, $message);
     }
 
     //    complex equality
@@ -107,37 +101,37 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
         return $this->_checkIdentical($xml, $value, '$value', $errormessage);
     }
 
-/*
+    /*
 
-<object class="jDaoMethod">
-    <string property="name" value="" />
-    <string property="type" value="" />
-    <string property="distinct" value="" />
+    <object class="jDaoMethod">
+        <string property="name" value="" />
+        <string property="type" value="" />
+        <string property="distinct" value="" />
 
-    <object method="getConditions()" class="jDaoConditions">
-        <array property="order">array()</array>
-        <array property="fields">array()</array>
-        <object property="condition" class="jDaoCondition">
-            <null property="parent"/>
-            <array property="conditions"> array(...)</array>
-            <array property="group">
-                <object key="" class="jDaoConditions" test="#foo" />
-             </array>
+        <object method="getConditions()" class="jDaoConditions">
+            <array property="order">array()</array>
+            <array property="fields">array()</array>
+            <object property="condition" class="jDaoCondition">
+                <null property="parent"/>
+                <array property="conditions"> array(...)</array>
+                <array property="group">
+                    <object key="" class="jDaoConditions" test="#foo" />
+                 </array>
+            </object>
+
         </object>
-
     </object>
-</object>
 
 
-<ressource />
-<string value="" />
-<integer value="" />
-<float value=""/>
-<null />
-<boolean value="" />
-<array>
-<object class="">
-</object>*/
+    <ressource />
+    <string value="" />
+    <integer value="" />
+    <float value=""/>
+    <null />
+    <boolean value="" />
+    <array>
+    <object class="">
+    </object>*/
 
     function _checkIdentical($xml, $value, $name, $errormessage){
         $nodename  = dom_import_simplexml($xml)->nodeName;
@@ -171,7 +165,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 return true;
 
             case 'array':
-                $this->assertInternalType('array', $value, $name.': not an array'.$errormessage);
+                $this->assertIsArray($value, $name.': not an array'.$errormessage);
                 if(trim((string)$xml) != ''){
                     if( false === eval('$v='.(string)$xml.';')){
                         $this->fail("invalid php array syntax");
@@ -196,7 +190,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 return true;
 
             case 'string':
-                $this->assertInternalType('string', $value, $name.': not a string'.$errormessage);
+                $this->assertIsString('string', $value, $name.': not a string'.$errormessage);
                 if(isset($xml['value'])){
                     $this->assertEquals((string)$xml['value'],$value, $name.': bad value. '.$errormessage);
                 }
@@ -210,13 +204,13 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 return true;
             case 'float':
             case 'double':
-                $this->assertInternalType('float', $value,$name.': not a float ('.$value.') '.$errormessage);
+                $this->assertIsFloat($value,$name.': not a float ('.$value.') '.$errormessage);
                 if(isset($xml['value'])){
                     $this->assertEquals( floatval((string)$xml['value']),$value,$name.': bad value. '.$errormessage);
                 }
                 return true;
             case 'boolean':
-                $this->assertInternalType('boolean', $value,$name.': not a boolean ('.$value.') '.$errormessage);
+                $this->assertIsBool($value,$name.': not a boolean ('.$value.') '.$errormessage);
                 if(isset($xml['value'])){
                     $v = ((string)$xml['value'] == 'true');
                     $this->assertEquals($v ,$value, $name.': bad value. '.$errormessage);
@@ -229,7 +223,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                 $this->assertNotNull($value, $name.' is null'.$errormessage);
                 return true;
             case 'resource':
-                $this->assertInternalType('resource', $value,$name.': not a resource'.$errormessage);
+                $this->assertIsResource($value,$name.': not a resource'.$errormessage);
                 return true;
             default:
                 $this->fail("_checkIdentical: balise inconnue ".$nodename.$errormessage);

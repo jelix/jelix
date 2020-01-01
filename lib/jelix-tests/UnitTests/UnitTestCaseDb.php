@@ -4,28 +4,26 @@
 * @subpackage  jelix-tests
 * @author      Laurent
 * @contributor Christophe Thiriot
-* @copyright   2007-2012 Jouanneau laurent
+* @copyright   2007-2019 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace Jelix\UnitTests;
 
-/**
- * Class jUnitTestCaseDb for PHPUnit < 6.0
- */
-class jUnitTestCaseDb extends jUnitTestCase {
+class UnitTestCaseDb extends UnitTestCase {
 
     /**
     *   erase all record in a table
     */
     public function emptyTable($table){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
         $db->exec('DELETE FROM '.$db->encloseName($table));
     }
 
     public function insertRecordsIntoTable($table, $fields, $records, $emptyBefore=false){
         if($emptyBefore)
             $this->emptytable($table);
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
 
         $fieldsList = '';
         foreach($fields as $f) {
@@ -53,7 +51,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if the table is empty
      */
     public function assertTableIsEmpty($table, $message="%s"){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should be empty");
@@ -74,7 +72,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if the table is not empty
      */
     public function assertTableIsNotEmpty($table, $message="%s"){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table shouldn't be empty");
@@ -95,7 +93,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if a table has a specific number of records
      */
     public function assertTableHasNRecords($table, $n, $message="%s"){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
         $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should contains ".$n." records");
@@ -116,7 +114,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * check if all given record are in the table
      */
     public function assertTableContainsRecords($table, $records, $onlyThem = true, $message ="%s"){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
 
         $message = sprintf( $message, $table. " table should contains given records.");
 
@@ -184,7 +182,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
      * @param string $message the error message
      */
     public function assertTableContainsRecordsByKeys($table, $records, $keys, $onlyThem = true, $message ="%s"){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
 
         if (is_string ($keys))
             $keys = array($keys);
@@ -245,8 +243,8 @@ class jUnitTestCaseDb extends jUnitTestCase {
         if($onlyThem && count($results) != 0){
             $globalok = false;
             $this->fail($message.'. Other unknown records exists');
-            $this->sendMessage('Unexpected records');
-            $this->dump($results);
+            echo "Unexpected records\n";
+            var_export($results);
         }
 
         if($globalok){
@@ -259,7 +257,7 @@ class jUnitTestCaseDb extends jUnitTestCase {
     }
 
     public function getLastId($fieldName, $tableName){
-        $db = jDb::getConnection($this->dbProfile);
+        $db = \jDb::getConnection($this->dbProfile);
         return $db->lastIdInTable($fieldName, $tableName);
     }
 }
