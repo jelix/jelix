@@ -26,10 +26,10 @@ class testCDForm extends jFormsBase {
     }
 }
 
-class jforms_check_data extends jUnitTestCaseDb {
+class jforms_check_data extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
-    function setUp() {
+    function setUp() : void {
         self::initJelixConfig();
         $this->container = new jFormsDataContainer('','');
         $this->form = new testCDForm('foo',$this->container);

@@ -14,18 +14,18 @@ require_once(__DIR__.'/daotests.lib.php');
 require_once(JELIX_LIB_PATH.'db/jDb.class.php');
 require_once(JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbconnection.php');
 
-class jdao_factory_baseTest extends jUnitTestCaseDb {
+class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $conn, $rs;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         jDao::get('testapp~products'); // just to load the generated class of the dao
         jDao::get('testapp~productsalias'); // just to load the generated class of the dao
     }
 
-    function setUp() {
+    function setUp() : void  {
         $this->conn = $this->getMockBuilder('mysqliDbConnection')
                         ->disableOriginalConstructor()
                         ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect', 'hasTablePrefix'))

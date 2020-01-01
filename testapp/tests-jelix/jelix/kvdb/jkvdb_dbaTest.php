@@ -18,14 +18,14 @@ require_once(__DIR__.'/jkvdb.lib.php');
 
 class jkvdb_dbaTest extends jKVDbTest {
 
-    static function setUpBeforeClass() {
+    static function setUpBeforeClass() : void {
         $p = jApp::tempPath('kvdbdba.db4');
         if (file_exists($p)) {
             unlink($p);
         }
     }
 
-    function setUp (){
+    function setUp() : void {
         $this->profile = 'usingdba';
         $this->supportTTL = false;
         self::initJelixConfig();
@@ -39,7 +39,7 @@ class jkvdb_dbaTest extends jKVDbTest {
         parent::setUp();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         if ($this->mmc) {
             dba_close($this->mmc);
             $this->mmc = null;

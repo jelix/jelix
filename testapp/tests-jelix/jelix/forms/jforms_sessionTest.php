@@ -18,7 +18,7 @@ class UTjformsDummyObject {
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class jforms_sessionTest extends jUnitTestCase {
+class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $backupGlobalsBlacklist = array('_SESSION');
 
@@ -26,14 +26,14 @@ class jforms_sessionTest extends jUnitTestCase {
 
     protected $form1Descriptor, $form2Descriptor, $formLabelDescriptor;
 
-    static function setUpBeforeClass() {
+    static function setUpBeforeClass() : void {
         if (isset($_SESSION['JFORMS_SESSION'])) {
             unset($_SESSION['JFORMS_SESSION']);
         };
         jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
     }
     
-    function setUp(){
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         $this->form1Descriptor = '
@@ -133,7 +133,7 @@ class jforms_sessionTest extends jUnitTestCase {
 </object>';
     }
 
-    function tearDown(){
+    function tearDown() : void {
         $_SESSION['JFORMS_SESSION']->save();
         jApp::popCurrentModule();
     }

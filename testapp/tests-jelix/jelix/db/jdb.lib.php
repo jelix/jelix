@@ -12,7 +12,7 @@
 /**
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
-abstract class jDb_queryBase extends jUnitTestCase {
+abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);

@@ -38,9 +38,9 @@ class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
 }
 
 
-class jforms_compiler_1_1Test extends jUnitTestCase {
+class jforms_compiler_1_1Test extends \Jelix\UnitTests\UnitTestCase {
 
-    function setUp() {
+    function setUp() : void {
         self::initJelixConfig();
     }
 

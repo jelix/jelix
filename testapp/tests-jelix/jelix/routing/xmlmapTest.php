@@ -9,16 +9,16 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class xmlmapTest extends jUnitTestCase {
+class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
 
-    public function setUp() {
+    public function setUp() : void {
         //self::initClassicRequest(TESTAPP_URL.'index.php');
         copy(__DIR__.'/urls/urls.xml', jApp::tempPath('urls.xml'));
         copy(__DIR__.'/urls/res_urls_addurl.xml', jApp::tempPath('urls2.xml'));
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void {
     }
 
     function getEpTestsList() {

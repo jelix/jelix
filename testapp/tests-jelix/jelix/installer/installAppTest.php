@@ -3,22 +3,23 @@ require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
 require_once (JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
 
 
-class installAppTest extends PHPUnit_Framework_TestCase {
+class installAppTest extends \PHPUnit\Framework\TestCase {
 
-    function setUp() {
+    function setUp() : void {
         jApp::saveContext();
         jApp::initPaths(__DIR__.'/app1/');
     }
 
-    function tearDown() {
+    function tearDown() : void {
         jApp::restoreContext();
     }
 
     /**
-     * @expectedException Exception
      */
     function testNoEntryPoint() {
+        $this->expectException(Exception::class);
         $globalSetup = new \Jelix\Installer\GlobalSetup(\jApp::appSystemPath('framework_empty.ini.php'));
+        $this->expectException(Exception::class);
         $app = new jInstallerApplication('project.xml', $globalSetup);
     }
 

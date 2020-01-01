@@ -11,22 +11,22 @@
 use \Jelix\PropertiesFile\Properties;
 use \Jelix\PropertiesFile\Parser;
 
-class jLocaleTest extends jUnitTestCase {
+class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $filePath;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
     }
 
-    function setUp() {
+    function setUp() : void  {
         jApp::saveContext();
         jApp::pushCurrentModule('jelix_tests');
         $this->filePath =  jApp::appPath().'modules/jelix_tests/locales/';
         parent::setUp();
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::restoreContext();
         parent::tearDown();
     }

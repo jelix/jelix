@@ -16,7 +16,7 @@
 * @subpackage  jelix_tests module
 */
 
-abstract class jCacheAPITest extends jUnitTestCaseDb {
+abstract class jCacheAPITest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $profile = '';
     
@@ -24,11 +24,11 @@ abstract class jCacheAPITest extends jUnitTestCaseDb {
 
     protected $tmpFile;
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
     }
 
-    function setUp() {
+    function setUp() : void  {
         $conf = parse_ini_file(jApp::varConfigPath('profiles.ini.php'), true, INI_SCANNER_TYPED);
         if (isset($conf['jcache:'.$this->profile]) && $conf['jcache:'.$this->profile]['enabled']) {
             $this->conf = $conf['jcache:'.$this->profile];

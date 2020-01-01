@@ -2,17 +2,17 @@
 
 require_once(JELIX_LIB_CORE_PATH.'/request/jClassicRequest.class.php');
 
-class httpcacheTest extends jUnitTestCase
+class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
 {
 
     protected $_server;
 
-    function setUp(){
+    function setUp() : void {
         jApp::saveContext();
         self::initClassicRequest(TESTAPP_URL.'index.php');
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::restoreContext();
     }
 
@@ -35,8 +35,8 @@ class httpcacheTest extends jUnitTestCase
         $this->assertTrue($rep->isValidCache($good_date));
         $this->assertFalse($rep->isValidCache($wrong_date));
         
-        //test the suppresion of unused headers
-        $this->assertAttributeNotContains($unusedHeaderValue, '_httpHeaders', $rep);
+        //test the deletion of unused headers
+        $this->assertNotContains($unusedHeaderValue, $rep->getHttpHeaders());
     }
     
     /**
@@ -66,14 +66,14 @@ class httpcacheTest extends jUnitTestCase
         $rep->setLifeTime(30);
         $value = 'private, maxage=30';
         $expected_headers = array('Cache-Control' => $value, 'Expires' => '', 'Pragma' => '');
-        $this->assertAttributeEquals($expected_headers, '_httpHeaders', $rep);
+        $this->assertEquals($expected_headers, $rep->getHttpHeaders());
         
         $expected_headers = null;
         
         $rep->setLifeTime(10, true);
         $value = 'public, s-maxage=10';
         $expected_headers = array('Cache-Control' => $value, 'Expires' => '', 'Pragma' => '');
-        $this->assertAttributeEquals($expected_headers, '_httpHeaders', $rep);
+        $this->assertEquals($expected_headers, $rep->getHttpHeaders());
     }
     
     /**
@@ -88,7 +88,7 @@ class httpcacheTest extends jUnitTestCase
         $rep->setExpires($good_date);
 
         $expected_headers = array('Cache-Control' => '', 'Expires' => $good_date, 'Pragma' => '');
-        $this->assertAttributeEquals($expected_headers, '_httpHeaders', $rep);
+        $this->assertEquals($expected_headers, $rep->getHttpHeaders());
     }
     
     /**
@@ -122,28 +122,23 @@ class httpcacheTest extends jUnitTestCase
     
     /**
      * @covers jResponse::_checkRequestType
-     * @expectedException PHPUnit_Framework_Error
-     */ 
+     */
     public function testCheckRequestType(){
         
-        if(class_exists('ReflectionMethod')){
-            //prepare
-            $rep = jApp::coord()->request->getResponse('html');
-        
-            $method = new ReflectionMethod('jResponse', '_checkRequestType');
-            $method->setAccessible(TRUE);
-     
-            $_SERVER['REQUEST_METHOD'] = 'GET';
-            $this->assertTrue($method->invoke($rep));
-     
-            $_SERVER['REQUEST_METHOD'] = 'HEAD';
-            $this->assertTrue($method->invoke($rep));
-            
-            $_SERVER['REQUEST_METHOD'] = 'POST';
-            $method->invoke($rep);
-        }
-        else
-            trigger_error('you dont support the ReflexionMethod class'); //for not fail at the assertion
+        $rep = jApp::coord()->request->getResponse('html');
+
+        $method = new ReflectionMethod('jResponse', '_checkRequestType');
+        $method->setAccessible(TRUE);
+
+        $_SERVER['REQUEST_METHOD'] = 'GET';
+        $this->assertTrue($method->invoke($rep));
+
+        $_SERVER['REQUEST_METHOD'] = 'HEAD';
+        $this->assertTrue($method->invoke($rep));
+
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $this->expectException(\PHPUnit\Framework\Error\Warning::class);
+        $method->invoke($rep);
     }
     
 }

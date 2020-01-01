@@ -21,9 +21,9 @@ class testJMailer extends jMailer {
 }
 
 
-class jMailerTest extends jUnitTestCase {
+class jMailerTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp () {
+    public function setUp() : void {
         self::initJelixConfig();
     }
 

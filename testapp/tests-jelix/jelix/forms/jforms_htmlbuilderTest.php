@@ -42,8 +42,9 @@ class testJFormsHtmlBuilder extends htmlJformsBuilder
 }
 
 
-class jforms_HTMLBuilderTest extends jUnitTestCaseDb
+class jforms_HTMLBuilderTest extends \Jelix\UnitTests\UnitTestCaseDb
 {
+
     protected static $form;
     protected static $container;
     protected static $builder;
@@ -62,7 +63,7 @@ class jforms_HTMLBuilderTest extends jUnitTestCaseDb
     }
 
 
-    public function setUp()
+    public function setUp() : void
     {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
@@ -105,12 +106,12 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         jApp::popCurrentModule();
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass() : void
     {
         self::$container = null;
         self::$form = null;

@@ -10,14 +10,14 @@
 */
 
 
-class jzone_cacheTest extends jUnitTestCase {
+class jzone_cacheTest extends \Jelix\UnitTests\UnitTestCase {
 
-    function setUp() {
+    function setUp() : void  {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         jApp::coord()->response = new jResponseHtml();
     }
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
     }
 

@@ -25,10 +25,10 @@ class tesMForm extends jFormsBase {
     }
 }
 
-class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
+class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
-    function setUp() {
+    function setUp() : void {
         $this->container = new jFormsDataContainer('','');
         $this->form = new tesMForm('foo', $this->container);
 

@@ -1,8 +1,8 @@
 <?php
 
-class jLocaleLangCodeTest extends jUnitTestCase {
+class jLocaleLangCodeTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
     }
 
@@ -10,14 +10,14 @@ class jLocaleLangCodeTest extends jUnitTestCase {
     protected $backupAcceptedLanguage;
     protected $backupLangToLocale;
 
-    function setUp() {
+    function setUp() : void  {
         $this->backupLangToLocale = jApp::config()->langToLocale ;
         $this->backupAcceptedLanguage = isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])?$_SERVER['HTTP_ACCEPT_LANGUAGE']:'';
         $this->backupAvailableLocale = jApp::config()->availableLocales ;
         parent::setUp();
     }
 
-    public function tearDown() {
+    public function tearDown() : void  {
         jApp::config()->langToLocale = $this->backupLangToLocale;
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $this->backupAcceptedLanguage;
         jApp::config()->availableLocales = $this->backupAvailableLocale;

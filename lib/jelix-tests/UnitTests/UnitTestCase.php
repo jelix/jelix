@@ -11,7 +11,7 @@
 namespace Jelix\UnitTests;
 use PHPUnit\Framework\TestCase;
 
-require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
+require_once (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
 class CoordinatorForTest extends \jCoordinator {
     function testSetRequest($request) {
@@ -20,7 +20,7 @@ class CoordinatorForTest extends \jCoordinator {
 }
 
 
-class UnitTestCase extends TestCase {
+abstract class UnitTestCase extends TestCase {
 
     /**
      * indicates if PDO is needed. If yes, PDO will be checked
@@ -64,13 +64,13 @@ class UnitTestCase extends TestCase {
     /**
      * initialize a full jelix environment with a coordinator, a request object etc.
      *
-     * it initializes a coordinator, a classic request object. It sets jApp::coord(),
+     * it initializes a coordinator, a classic request object. It sets \jApp::coord(),
      * @param string $url the full requested URL (with http://, the domaine name etc.)
      * @param string $config the configuration file to use, as if you were inside an entry point
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php') {
-        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(\jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
 
         $config = \jConfigCompiler::read($config, true, false, '/'.$entryPoint);

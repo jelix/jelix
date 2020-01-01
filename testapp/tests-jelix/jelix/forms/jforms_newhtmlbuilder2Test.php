@@ -46,7 +46,7 @@ class testHtmlFormsBuilder2 extends htmlFormBuilder {
 
 class jforms_newHTMLBuilder2Test extends jforms_HTMLBuilder2Test {
 
-    function setUp() {
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (isset($_SESSION['JFORMS_SESSION'])) {

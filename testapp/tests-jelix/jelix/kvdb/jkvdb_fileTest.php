@@ -18,7 +18,7 @@ require_once(__DIR__.'/jkvdb.lib.php');
 
 class jkvdb_fileTest extends jKVDbTest {
 
-    function setUp (){
+    function setUp() : void {
         $this->profile = 'usingfile';
         self::initJelixConfig();
 

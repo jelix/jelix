@@ -21,9 +21,9 @@ class testJProfiles extends jProfiles {
 }
 
 
-class profilesTest extends jUnitTestCase
+class profilesTest extends \Jelix\UnitTests\UnitTestCase
 {
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         self::initJelixConfig();
     }
 

@@ -11,13 +11,13 @@
 
 require_once(LIB_PATH.'jelix-modules/jacl2/classes/jAcl2.class.php');
 
-abstract class jacl2APITest extends jUnitTestCaseDb {
+abstract class jacl2APITest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected static $driver = 'db';
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
-    public function setUp (){
+    public function setUp () : void {
         $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
 
@@ -57,7 +57,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         jAcl2DbUserGroup::clearCache();
     }
 
-    public function tearDown(){
+    public function tearDown() : void {
         if ($this->oldAuthPlugin)
             jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
         else
@@ -65,7 +65,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
         unset($_SESSION[self::$coordAuthPlugin->config['session_name']]);
     }
 
-    static function tearDownAfterClass() {
+    static function tearDownAfterClass() : void {
         self::$coordAuthPlugin = null;
     }
 

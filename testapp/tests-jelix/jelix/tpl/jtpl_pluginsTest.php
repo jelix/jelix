@@ -11,14 +11,14 @@
 */
 
 
-class jtpl_pluginsTest extends jUnitTestCase {
+class jtpl_pluginsTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
     protected $templates = array(

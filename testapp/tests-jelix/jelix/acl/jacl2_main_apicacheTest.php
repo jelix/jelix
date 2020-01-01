@@ -13,7 +13,7 @@ require_once(__DIR__.'/jacl2.lib.php');
 
 class jacl2_main_apicacheTest extends jacl2APITest {
 
-    public function setUp ()
+    public function setUp () : void
     {
         self::$driver = 'dbcache';
         parent::setUp();

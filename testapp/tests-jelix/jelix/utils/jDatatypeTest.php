@@ -11,7 +11,7 @@
 
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
-class jDatatypeTest extends PHPUnit_Framework_TestCase {
+class jDatatypeTest extends \PHPUnit\Framework\TestCase {
 
     function testString() {
         $dt=new jDatatypeString();

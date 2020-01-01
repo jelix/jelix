@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jFilterTest extends PHPUnit_Framework_TestCase {
+class jFilterTest extends \PHPUnit\Framework\TestCase {
 
     public function testIsBool(){
         $this->assertTrue(jFilter::isBool('true'), "isBool('true')");

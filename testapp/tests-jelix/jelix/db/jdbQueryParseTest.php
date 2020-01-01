@@ -35,13 +35,13 @@ class queryparseConnection extends jDbConnection {
 
 
 
-class jdbQueryParseTest  extends jUnitTestCase
+class jdbQueryParseTest  extends \Jelix\UnitTests\UnitTestCase
 {
-    /*public function setUp() {
+    /*public function setUp() : void {
         //self::initJelixConfig();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         //parent::tearDown();
     }
 */

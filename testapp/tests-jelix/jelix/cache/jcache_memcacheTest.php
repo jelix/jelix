@@ -22,7 +22,7 @@ class jCache_MemcacheTest extends jCacheAPITest {
     protected $mmhost;
     protected $mmport;
 
-    function setUp () {
+    function setUp () : void  {
         $this->mmhost= 'localhost';
         $this->mmport= 11211;
         $this->profile = 'usingmemcache';

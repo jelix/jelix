@@ -8,9 +8,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_MysqliTest extends jUnitTestCaseDb {
+class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         $this->dbProfile ='mysqli_profile';
         try{
@@ -23,7 +23,7 @@ class jDb_MysqliTest extends jUnitTestCaseDb {
         jApp::pushCurrentModule('jelix_tests');
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         $this->emptyTable('labels_test');
         jApp::popCurrentModule();
     }

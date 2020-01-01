@@ -10,12 +10,12 @@
 */
 require_once(JELIX_LIB_CORE_PATH.'jConfigCompiler.class.php');
 
-class requestsTest extends jUnitTestCase {
+class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $server;
     protected $fServer;
 
-    public function setUp() {
+    public function setUp() : void {
         $this->server = $_SERVER;
         jApp::saveContext();
         jApp::initPaths(__DIR__.'/app1/');
@@ -30,7 +30,7 @@ class requestsTest extends jUnitTestCase {
         //self::initClassicRequest(TESTAPP_URL.'index.php');
         parent::setUp();
     }
-    function tearDown() {
+    function tearDown() : void {
         unset($this->fServer);
         $_SERVER = $this->server;
         jApp::restoreContext();
@@ -44,7 +44,7 @@ class requestsTest extends jUnitTestCase {
                                           true,
                                           false,
                                           $scriptPath);
-        $coord = new jCoordinatorForTest($config, false);
+        $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
         jApp::setCoord($coord);
         $request = new jClassicRequest();
         $coord->testSetRequest($request);

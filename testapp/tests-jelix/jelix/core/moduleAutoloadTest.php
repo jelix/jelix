@@ -5,10 +5,10 @@
 // we should then have into jApp::config() this informations
 // let's check them
 
-class moduleAutoloadTest extends jUnitTestCase
+class moduleAutoloadTest extends \Jelix\UnitTests\UnitTestCase
 {
     protected static $modulePath;
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void  {
         self::initJelixConfig();
         self::$modulePath = jApp::config()->_modulesPathList['jelix_tests'];
     }

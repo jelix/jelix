@@ -10,7 +10,7 @@
 */
 namespace Jelix\UnitTests;
 
-class UnitTestCaseDb extends UnitTestCase {
+abstract class UnitTestCaseDb extends UnitTestCase {
 
     /**
     *   erase all record in a table

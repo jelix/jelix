@@ -11,9 +11,9 @@
 
 require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
-class jforms_datasourcesTest extends jUnitTestCaseDb {
+class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
-    function setUp(){
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (isset($_SESSION['JFORMS_SESSION'])) {
@@ -40,7 +40,7 @@ class jforms_datasourcesTest extends jUnitTestCaseDb {
         $this->insertRecordsIntoTable('labels_test', array('key','keyalias', 'lang','label'), $labels, true);
     }
 
-    function tearDown(){
+    function tearDown() : void {
         
         jApp::coord()->request->params = $this->savedParams;
         jForms::destroy('product');

@@ -1,6 +1,6 @@
 <?php
 
-class jcacheTest extends jUnitTestCase
+class jcacheTest extends \Jelix\UnitTests\UnitTestCase
 {
     /**
      */

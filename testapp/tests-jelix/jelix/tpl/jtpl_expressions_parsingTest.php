@@ -53,14 +53,14 @@ class testJtplCompiler extends jTplCompiler {
 function testjtplcontentUserModifier($s){}
 
 
-class jtpl_expressions_parsingTest extends jUnitTestCase {
+class jtpl_expressions_parsingTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public function setUp() {
+    public function setUp() : void {
         self::initJelixConfig();
         jApp::saveContext();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         jApp::restoreContext();
     }
      

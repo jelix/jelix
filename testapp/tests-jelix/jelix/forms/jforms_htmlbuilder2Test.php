@@ -25,7 +25,7 @@ class testJFormsHtmlBuilder2 extends htmlJformsBuilder {
 }
 
 
-class jforms_HTMLBuilder2Test extends jUnitTestCaseDb {
+class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $form;
     protected $container;
@@ -37,7 +37,7 @@ class jforms_HTMLBuilder2Test extends jUnitTestCaseDb {
         return jApp::config()->{'webassets_'.$collection}['jquery.js'];
     }
 
-    function setUp() {
+    function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (isset($_SESSION['JFORMS_SESSION'])) {
@@ -48,7 +48,7 @@ class jforms_HTMLBuilder2Test extends jUnitTestCaseDb {
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testJFormsHtmlBuilder2($this->form);
     }
-    function tearDown(){
+    function tearDown() : void {
         jApp::popCurrentModule();
     }
     function testOutputGroup(){

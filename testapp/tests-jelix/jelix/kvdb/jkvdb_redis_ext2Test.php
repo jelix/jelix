@@ -20,7 +20,7 @@ class jkvdb_redis_ext2Test extends jKVDbTest {
 
     protected $redis;
 
-    function setUp () {
+    function setUp() : void {
         if (!extension_loaded('redis'))
             $this->markTestSkipped('jkvdb_redis_ext2Test cannot be run because redis extension is not installed');
 
@@ -37,7 +37,7 @@ class jkvdb_redis_ext2Test extends jKVDbTest {
         $this->redis->flushall();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         if ($this->redis) {
             $this->redis->close();
         }

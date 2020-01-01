@@ -8,7 +8,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jFileTest extends jUnitTestCase {
+class jFileTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testParseJelixPath() {
         $this->assertEquals(LIB_PATH.'foo', jFile::parseJelixPath('lib:foo'));

@@ -20,7 +20,7 @@ class jkvdb_dbTest extends jKVDbTest {
 
     protected $db = null;
 
-    function setUp (){
+    function setUp() : void {
         $this->profile = 'usingdb';
         self::initJelixConfig();
         if ($this->_kvdbSetUp()) {

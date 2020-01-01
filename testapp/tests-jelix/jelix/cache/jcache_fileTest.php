@@ -20,7 +20,7 @@ require_once(__DIR__.'/jcache.lib.php');
 
 class jCache_FileTest extends jCacheAPITest {
 
-    public function setUp (){
+    public function setUp () : void {
         $this->profile = 'usingfile';
         if (file_exists(jApp::tempPath().'cache'))
             jFile::removeDir(jApp::tempPath().'cache/',false);

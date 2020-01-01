@@ -14,7 +14,7 @@
  * Tests on user and group management in jAcl
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
-class jacl2_users_groupsTest extends jUnitTestCaseDb {
+class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     
     protected static $groups;
     protected static $defaultGroupId;
@@ -29,7 +29,7 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
 
     protected static $firstSetup = true;
     
-    public function setUp(){
+    public function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         $this->dbProfile = 'jacl2_profile';
         if (!self::$firstSetup) {

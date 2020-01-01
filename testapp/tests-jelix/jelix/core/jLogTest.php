@@ -10,7 +10,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jLogTest extends jUnitTestCase {
+class jLogTest extends \Jelix\UnitTests\UnitTestCase {
 
     public function testLogFile(){
         self::initJelixConfig();

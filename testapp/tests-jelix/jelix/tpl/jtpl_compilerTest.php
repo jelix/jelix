@@ -36,9 +36,9 @@ function testjtplcontentUserFunction($t,$a,$b) {
 }
 
 
-class jtpl_compilerTest extends jUnitTestCase {
+class jtpl_compilerTest extends \Jelix\UnitTests\UnitTestCase {
 
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         self::initJelixConfig();
     }
 

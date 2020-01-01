@@ -9,7 +9,7 @@
 use Jelix\Dependencies\Resolver;
 use Jelix\Dependencies\Item;
 
-class resolverTest extends PHPUnit_Framework_TestCase {
+class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      *
@@ -100,8 +100,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 11
      */
     public function testTwoDependItemsNoForceInstall() {
         $packA = new Item('testA', "1.0", false);
@@ -116,6 +114,8 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(11);
         $chain = $resolver->getDependenciesChainForInstallation(false);
 
     }
@@ -165,8 +165,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 11
      */
     public function testForbidInstallDependencies() {
         $packA = new Item('testA', "1.0", false);
@@ -181,13 +179,14 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(11);
+
         $chain = $resolver->getDependenciesChainForInstallation(false);
     }
 
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 11
      */
     public function testInstallDependenciesThatCannotBeInstalled() {
         $packA = new Item('testA', "1.0", false);
@@ -202,12 +201,13 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(11);
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 1
      */
     public function testCircularDependencies() {
         $packA = new Item('testA', "1.0", false);
@@ -224,6 +224,9 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(1);
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
@@ -387,8 +390,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 5
      */
     public function testRemoveOneAncesterToInstallDependItems() {
         $packA = new Item('testA', "1.0", true);
@@ -403,12 +404,13 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(5);
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
     /**
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 4
      */
     public function testRemoveCircularDependencies() {
         $packA = new Item('testA', "1.0", true);
@@ -425,6 +427,9 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(4);
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
@@ -484,9 +489,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 8
-     * @expectedExceptionMessage Item testB is in conflicts with item testA
      */
     public function testConflictItems() {
         $packA = new Item('testA', "1.0", false);
@@ -501,14 +503,15 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(8);
+        $this->expectExceptionMessage('Item testB is in conflicts with item testA');
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 7
-     * @expectedExceptionMessage Item testB is in conflicts with item testA
      */
     public function testConflictItemAlreadyInstalled() {
         $packA = new Item('testA', "1.0", false);
@@ -523,6 +526,9 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packB);
         $resolver->addItem($packC);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(7);
+        $this->expectExceptionMessage('Item testB is in conflicts with item testA');
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
@@ -612,9 +618,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 10
-     * @expectedExceptionMessage Item testA depends on alternative items but there are ambiguities to choose them. Installed one of them before installing it.
      */
     public function testChoiceAmbigusItems() {
         $packA = new Item('testA', "1.0", false);
@@ -639,14 +642,14 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packB);
         $resolver->addItem($packC);
         $resolver->addItem($packD);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(10);
+        $this->expectExceptionMessage('Item testA depends on alternative items but there are ambiguities to choose them. Installed one of them before installing it.');
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 9
-     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it
      */
     public function testChoiceBadVersionItem() {
         $packA = new Item('testA', "1.0", false);
@@ -670,15 +673,16 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packB);
         //$resolver->addItem($packC);
         $resolver->addItem($packD);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(9);
+        $this->expectExceptionMessage('Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it');
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 9
-     * @expectedExceptionMessage Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it
      */
     public function testChoiceUnknownItems() {
         $packA = new Item('testA', "1.0", false);
@@ -702,14 +706,15 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         //$resolver->addItem($packB);
         //$resolver->addItem($packC);
         $resolver->addItem($packD);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(9);
+        $this->expectExceptionMessage('Item testA depends on alternative items but there are unknown or do not met installation criterias. Install or upgrade one of them before installing it');
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 6
-     * @expectedExceptionMessage For item testB, some items are missing: testD
      */
     public function testChoiceItemHasBadDependency() {
         $packA = new Item('testA', "1.0", false);
@@ -733,6 +738,10 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packB);
         //$resolver->addItem($packC);
         //$resolver->addItem($packD);
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(6);
+        $this->expectExceptionMessage('For item testB, some items are missing: testD');
+
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
@@ -781,9 +790,6 @@ class resolverTest extends PHPUnit_Framework_TestCase {
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 6
-     * @expectedExceptionMessage For item testD, some items are missing: testB
      */
     public function testOptionalDependenciesWithMissingDependency() {
         /*
@@ -810,7 +816,9 @@ class resolverTest extends PHPUnit_Framework_TestCase {
         $resolver->addItem($packA);
         $resolver->addItem($packC);
         $resolver->addItem($packD);
-
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(6);
+        $this->expectExceptionMessage('For item testD, some items are missing: testB');
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 }

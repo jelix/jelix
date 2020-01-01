@@ -1,8 +1,8 @@
 <?php
 
-class soapclientTest extends jUnitTestCase
+class soapclientTest extends \Jelix\UnitTests\UnitTestCase
 {
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass() : void {
         self::initJelixConfig();
     }
 

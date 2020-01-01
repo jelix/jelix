@@ -10,13 +10,13 @@
 */
 
 
-class jDb_parametersTest  extends jUnitTestCase
+class jDb_parametersTest  extends \Jelix\UnitTests\UnitTestCase
 {
-    public function setUp() {
+    public function setUp() : void {
         self::initJelixConfig();
     }
 
-    public function tearDown() {
+    public function tearDown() : void {
         parent::tearDown();
     }
 

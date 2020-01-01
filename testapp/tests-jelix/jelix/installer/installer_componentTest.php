@@ -58,20 +58,20 @@ class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInsta
     }
 }
 
-class jInstaller_ComponentTest extends jUnitTestCase {
+class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
 
     /**
      * @var testInstallerGlobalSetup
      */
     protected $globalSetup;
 
-    function setUp() {
+    function setUp() : void {
         self::initJelixConfig();
         $this->globalSetup = new testInstallerGlobalSetup();
         jApp::saveContext();
     }
 
-    function tearDown() {
+    function tearDown() : void {
         jApp::restoreContext();
     }
 

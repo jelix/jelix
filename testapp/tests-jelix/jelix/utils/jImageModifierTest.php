@@ -9,12 +9,11 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jImageModifierTest extends jUnitTestCase {
+class jImageModifierTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $origFile;
 
-    protected function setUp()
-    {
+    protected function setUp() : void {
         if (!is_writable(jApp::wwwPath('cache/images/'))) {
             $this->markTestSkipped(
               'cache/images/ is not writable'

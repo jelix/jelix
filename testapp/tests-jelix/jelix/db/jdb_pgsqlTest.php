@@ -10,9 +10,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class jDb_PgsqlTest extends jUnitTestCaseDb {
+class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
-    function setUp() {
+    function setUp() : void  {
         self::initJelixConfig();
         $this->dbProfile = 'pgsql_profile';
         try{
@@ -28,7 +28,7 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
         jApp::pushCurrentModule('jelix_tests');
     }
 
-    function tearDown() {
+    function tearDown() : void  {
         jApp::popCurrentModule();
     }
 
