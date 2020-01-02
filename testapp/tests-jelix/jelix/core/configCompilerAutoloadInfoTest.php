@@ -9,7 +9,7 @@ class testModuleJsonParser extends \Jelix\Core\Infos\ModuleJsonParser {
 }
 
 
-class configCompilerAutoloadInfoTest extends PHPUnit_Framework_TestCase {
+class configCompilerAutoloadInfoTest extends \PHPUnit\Framework\TestCase {
 /*
     function testNamespacesModuleXml() {
         $modulexml = '
