@@ -21,13 +21,13 @@ class fakeConfig {
 class configTest extends \Jelix\UnitTests\UnitTestCase {
 
     /**
-     * @expectedException Exception
      */
     function testReadModuleInfoUnknowPath() {
         $config = new fakeConfig();
         $modulePath = '/foo/bar';
         $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
+        $this->expectException(\Exception::class);
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
@@ -36,13 +36,13 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     /**
-     * @expectedException Exception
      */
     function testReadModuleInfoNotAModule() {
         $config = new fakeConfig();
         $modulePath = __DIR__;
         $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
+        $this->expectException(\Exception::class);
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(0, count(array_keys($config->modules)));
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
