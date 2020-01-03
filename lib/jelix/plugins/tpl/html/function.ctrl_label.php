@@ -6,14 +6,10 @@
  * @author       Laurent Jouanneau
  * @contributor  Dominique Papin
  *
- * @copyright    2007-2015 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright    2007-2020 Laurent Jouanneau, 2007 Dominique Papin
  *
  * @see         http://www.jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $tpl
- * @param mixed $ctrlname
- * @param mixed $format
  */
 
 /**
@@ -27,38 +23,9 @@
  */
 function jtpl_function_html_ctrl_label($tpl, $ctrlname = '', $format = '')
 {
-    if ((!isset($tpl->_privateVars['__ctrlref']) || $tpl->_privateVars['__ctrlref'] == '') && $ctrlname == '') {
-        return;
+    if (!isset($tpl->_privateVars['__formTplController'])) {
+        throw new Exception('Cannot display a control outside a form (template '.$tpl->_templateName.")");
     }
 
-    if ($ctrlname == '') {
-        $ctrl = $tpl->_privateVars['__ctrl'];
-    } else {
-        $ctrls = $tpl->_privateVars['__form']->getControls();
-        if (!isset($ctrls[$ctrlname])) {
-            throw new jException(
-                'jelix~formserr.unknown.control',
-                array($ctrlname, $tpl->_privateVars['__form']->getSelector(), $tpl->_templateName)
-            );
-        }
-        $ctrl = $ctrls[$ctrlname];
-    }
-    if ($ctrl->type == 'hidden') {
-        return;
-    }
-
-    if (!$tpl->_privateVars['__form']->isActivated($ctrl->ref)) {
-        return;
-    }
-
-    $editMode = !(isset($tpl->_privateVars['__formViewMode']) && $tpl->_privateVars['__formViewMode']);
-
-    if ($editMode) {
-        if ($ctrl->type == 'submit' || $ctrl->type == 'reset') {
-            return;
-        }
-    } elseif ($ctrl->type == 'captcha') {
-        return;
-    }
-    $tpl->_privateVars['__formbuilder']->outputControlLabel($ctrl, $format, $editMode);
+    $tpl->_privateVars['__formTplController']->outputControlLabel($ctrlname, $format, $tpl->_templateName);
 }

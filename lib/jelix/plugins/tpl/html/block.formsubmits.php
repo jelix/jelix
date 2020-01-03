@@ -6,14 +6,10 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin
  *
- * @copyright   2007-2008 Laurent Jouanneau, 2007 Mickaël Fradin
+ * @copyright   2007-2020 Laurent Jouanneau, 2007 Mickaël Fradin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $param
  */
 
 /**
@@ -52,11 +48,11 @@ function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
                 $submits_to_display = '.$param[0].';
             }
             else {
-                $t->_privateVars[\'__form\'] = '.$param[0].';
+                $form = '.$param[0].';
                 $submits_to_display=null;
             }';
         } else {
-            $content = ' $t->_privateVars[\'__form\'] = '.$param[0].";\n";
+            $content = ' $form = '.$param[0].";\n";
             $content .= ' $submits_to_display = '.$param[1].'; ';
         }
     } else {
@@ -64,16 +60,13 @@ function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
     }
 
     $content .= '
-if (!isset($t->_privateVars[\'__displayed_submits\'])) {
-    $t->_privateVars[\'__displayed_submits\'] = array();
+if (!isset($t->_privateVars[\'__formTplController\'])) {
+    if ($form === null) { throw new \Exception("Error: form is missing to process formsubmits"); }
+    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,"html");
 }
-$t->_privateVars[\'__submitref\']=\'\';
-foreach($t->_privateVars[\'__form\']->getSubmits() as $ctrlref=>$ctrl){ 
-    if(!$t->_privateVars[\'__form\']->isActivated($ctrlref)) continue;
-    if(!isset($t->_privateVars[\'__displayed_submits\'][$ctrlref]) 
-        && ( $submits_to_display===null || in_array($ctrlref, $submits_to_display))){
-        $t->_privateVars[\'__submitref\'] = $ctrlref;
-        $t->_privateVars[\'__submit\'] = $ctrl;
+';
+    $content .= '
+foreach($t->_privateVars[\'__formTplController\']->submitsLoop($submits_to_display) as $ctrl) { 
 ';
 
     return $content;
