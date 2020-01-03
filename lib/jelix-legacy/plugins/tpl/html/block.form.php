@@ -6,15 +6,11 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Bastien Jaillot, Dominique Papin
  *
- * @copyright   2006-2012 Laurent Jouanneau
+ * @copyright   2006-2020 Laurent Jouanneau
  * @copyright   2008 Julien Issler, 2008 Bastien Jaillot, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $param
  */
 
 /**
@@ -46,11 +42,8 @@
 function jtpl_block_html_form($compiler, $begin, $param = array())
 {
     if (!$begin) {
-        return '$t->_privateVars[\'__formbuilder\']->outputFooter();
-unset($t->_privateVars[\'__form\']);
-unset($t->_privateVars[\'__formbuilder\']);
-unset($t->_privateVars[\'__formViewMode\']);
-unset($t->_privateVars[\'__displayed_ctrl\']);';
+        return '$t->_privateVars[\'__formTplController\']->endForm();
+unset($t->_privateVars[\'__formTplController\']);';
     }
 
     if (count($param) < 2 || count($param) > 5) {
@@ -74,14 +67,8 @@ unset($t->_privateVars[\'__displayed_ctrl\']);';
         $options = 'array()';
     }
 
-    $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
-$t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder('.$builder.');
-$t->_privateVars[\'__formbuilder\']->setOptions('.$options.');
-$t->_privateVars[\'__formbuilder\']->setAction('.$param[1].','.$param[2].');
-$t->_privateVars[\'__formbuilder\']->outputHeader();
-$t->_privateVars[\'__formViewMode\'] = 0;
-$t->_privateVars[\'__displayed_ctrl\'] = array();
-';
+    $content = ' $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController('.$param[0].','.$builder.','.$options.','.$param[1].','.$param[2].');';
+    $content .= '$t->_privateVars[\'__formTplController\']->startForm();';
 
     $metacontent = 'if(isset('.$param[0].')) { $builder = '.$param[0].'->getBuilder('.$builder.');
     $builder->setOptions('.$options.');

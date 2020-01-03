@@ -82,6 +82,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
     /**
      * compatibility with simpletests
+     * @deprecated
     */
     public function assertEqualOrDiff($first, $second, $message = "%s"){
         return $this->assertEquals($first, $second, $message);
@@ -159,17 +160,11 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                         $v = $value->$n;
                     }elseif(isset($child['method'])){
                         $n = (string)$child['method'];
-                        if(preg_match('/\(\)$/', $n)) {
-                            $n = substr($n,0,-2);
-                        }
-                        $n=trim($n);
+                        $n = trim(str_replace("()", "", $n));
                         $v = $value->$n();
                     }elseif(isset($child['m'])){
                         $n = (string)$child['m'];
-                        if(preg_match('/\(\)$/', $n)) {
-                            $n = substr($n,0,-2);
-                        }
-                        $n=trim($n);
+                        $n = trim(str_replace("()", "", $n));
                         $v = $value->$n();
                     }else{
                         trigger_error('no method or attribute on '.(dom_import_simplexml($child)->nodeName), E_USER_WARNING);

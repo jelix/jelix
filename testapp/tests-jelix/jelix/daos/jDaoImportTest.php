@@ -244,19 +244,18 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                     <object p="condition" class="jDaoCondition">
                         <null p="parent" />
                         <array p="conditions">
-                           <array>
-                            {"field_id":"type",
-                            "value":"tracker",
-                            "operator":"=",
+                           <array>{"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":""}
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            {"field_id":"status",
-                            "value":"open",
-                            "operator":"=",
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":"LOWER(%s)"}
+                            "field_pattern" : "LOWER(%s)"}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -282,18 +281,18 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            {"field_id":"type",
-                            "value":"tracker",
-                            "operator":"=",
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":""}
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            {"field_id":"status",
-                            "value":"open",
-                            "operator":"=",
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":"LOWER(%s)"}
+                            "field_pattern" : "LOWER(%s)"}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -321,11 +320,11 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            {"field_id":"type",
-                            "value":"tracker",
-                            "operator":"=",
-                            "isExpr":false,
-                            "field_pattern":""}
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -350,18 +349,18 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            {"field_id":"type",
-                            "value":"tracker",
-                            "operator":"=",
-                            "isExpr": false,
-                            "field_pattern":""}
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            {"field_id":"status",
-                            "value":"open",
-                            "operator":"=",
-                            "isExpr": false,
-                            "field_pattern":""}
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -387,18 +386,18 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            {"field_id":"type",
-                            "value":"tracker",
-                            "operator":"=",
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":""}
+                            "field_pattern" : ""}
                             </array>
-                           <array>
-                            {"field_id":"status",
-                            "value":"open",
-                            "operator":"=",
+                           <array>{
+                            "field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern":""}
+                            "field_pattern" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>

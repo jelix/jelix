@@ -336,6 +336,22 @@ abstract class WidgetBase implements WidgetInterface
         echo '</span>';
     }
 
+    public function outputControlRawValue()
+    {
+        $value = $this->getValue();
+        if (is_array($value)) {
+            $s = '';
+            foreach ($value as $v) {
+                $s .= $this->valuesSeparator.htmlspecialchars($v);
+            }
+            echo substr($s, strlen($this->valuesSeparator));
+        } elseif ($this->ctrl->type == 'password') {
+            echo "*****";
+        } else {
+            echo htmlspecialchars($value);
+        }
+    }
+
     protected function fillSelect($ctrl, $value)
     {
         $data = $ctrl->datasource->getData($this->builder->getForm());

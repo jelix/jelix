@@ -4,14 +4,10 @@
  * @subpackage  jtpl_plugin
  *
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2020 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $params
  */
 
 /**
@@ -33,12 +29,9 @@ function jtpl_block_html_ifctrl_value($compiler, $begin, $params = array())
             $content = '';
             $compiler->doError1('errors.tplplugin.block.bad.argument.number', 'ifctrl_value', '1+');
         } elseif (count($params) == 1) {
-            $content = ' if(isset($t->_privateVars[\'__ctrlref\'])&&';
-            $content .= '$t->_privateVars[\'__form\']->getData($t->_privateVars[\'__ctrlref\']) == '.$params[0].'):';
+            $content = ' if($t->_privateVars[\'__formTplController\']->isControlValueEqualsTo('.$params[0].')):';
         } else {
-            $content = ' if(isset($t->_privateVars[\'__ctrlref\'])&&(';
-            $content .= '$t->_privateVars[\'__ctrlref\']=='.$params[0].') &&';
-            $content .= '$t->_privateVars[\'__form\']->getData('.$params[0].') == '.$params[1].'):';
+            $content = ' if($t->_privateVars[\'__formTplController\']->isControlValueEqualsTo('.$params[1].','.$params[0].')):';
         }
     } else {
         $content = ' endif; ';

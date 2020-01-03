@@ -62,7 +62,9 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -78,7 +80,9 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -96,7 +100,9 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -115,13 +121,16 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">[
                              {"field_id":"foo1","field_pattern":"%s","value":"100", "operator":"&lt;", "isExpr":false},
-                             {"field_id":"foo1","field_pattern":"%s","value":"0", "operator":"&gt;", "isExpr":false}]</array>
+                             {"field_id":"foo1","field_pattern":"%s","value":"0", "operator":"&gt;", "isExpr":false}
+                             ]</array>
                             <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
                         </object>
@@ -142,7 +151,10 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">
+                    [
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -161,13 +173,16 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[{"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}]</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">[
-                             {"field_id":"foo1","field_pattern":"ROUND(%s)","value":"100", "operator":"&lt;", "isExpr":false},
-                             {"field_id":"foo1","field_pattern":"CEIL(%s)","value":"0", "operator":"&gt;", "isExpr":false}]</array>
+                                {"field_id":"foo1","field_pattern":"ROUND(%s)","value":"100", "operator":"&lt;", "isExpr":false},
+                                {"field_id":"foo1","field_pattern":"CEIL(%s)","value":"0", "operator":"&gt;", "isExpr":false}
+                            ]</array>
                             <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
                         </object>

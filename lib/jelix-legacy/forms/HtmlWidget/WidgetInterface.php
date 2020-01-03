@@ -71,6 +71,11 @@ interface WidgetInterface
     public function outputControlValue();
 
     /**
+     * displays the raw value of the form field only.
+     */
+    public function outputControlRawValue();
+
+    /**
      * set attributes to add on the HTML element.
      *
      * @param array $attributes

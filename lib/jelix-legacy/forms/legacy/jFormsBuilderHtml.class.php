@@ -306,6 +306,28 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         echo '</span>';
     }
 
+    public function outputControlRawValue($ctrl, $attributes = array())
+    {
+        $separator = ' ';
+        if (isset($attributes['separator'])) {
+            $separator = $attributes['separator'];
+            unset($attributes['separator']);
+        }
+
+        $value = $this->_form->getData($ctrl->ref);
+        if (is_array($value)) {
+            $s = '';
+            foreach ($value as $v) {
+                $s .= $separator.htmlspecialchars($v);
+            }
+            echo substr($s, strlen($separator));
+        } elseif ($ctrl->type == 'password') {
+            echo "*****";
+        } else {
+            echo htmlspecialchars($value);
+        }
+    }
+
     protected function _outputAttr(&$attributes)
     {
         foreach ($attributes as $name => $val) {

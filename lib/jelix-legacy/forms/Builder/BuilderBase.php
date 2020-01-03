@@ -146,6 +146,14 @@ abstract class BuilderBase
      */
     abstract public function outputAllControls();
 
+
+    /**
+     * displays all data of the form.
+     *
+     * @since 1.8
+     */
+    abstract public function outputAllControlsValues();
+
     /**
      * displays the content corresponding of the given control.
      *
@@ -170,6 +178,14 @@ abstract class BuilderBase
      * @param array          $attributes attribute to add on the generated code (html attributes for example)
      */
     abstract public function outputControlValue($ctrl, $attributes = array());
+
+    /**
+     * displays the raw value of the control (without the control).
+     *
+     * @param \jFormsControl $ctrl       the control to display
+     * @param array          $attributes attribute to add on the generated code (html attributes for example)
+     */
+    abstract public function outputControlRawValue($ctrl, $attributes = array());
 
     /**
      * generates a name for the form.

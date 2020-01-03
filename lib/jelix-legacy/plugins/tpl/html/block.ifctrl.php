@@ -4,14 +4,11 @@
  * @subpackage  jtpl_plugin
  *
  * @author      Dominique Papin
- * @copyright   2008 Dominique Papin
+ * @contributor Laurent Jouanneau
+ * @copyright   2008 Dominique Papin, 2008-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $params
  */
 
 /**
@@ -33,11 +30,8 @@ function jtpl_block_html_ifctrl($compiler, $begin, $params = array())
             $content = '';
             $compiler->doError1('errors.tplplugin.block.bad.argument.number', 'ifctrl', '1+');
         } else {
-            $content = ' if(isset($t->_privateVars[\'__ctrlref\'])&&(';
-            foreach ($params as $ctrlname) {
-                $content .= '$t->_privateVars[\'__ctrlref\']=='.$ctrlname.' || ';
-            }
-            $content = substr($content, 0, -4);
+            $content = ' if($t->_privateVars[\'__formTplController\']->isCurrentControl(';
+            $content .= implode(',', $params);
             $content .= ')):';
         }
     } else {

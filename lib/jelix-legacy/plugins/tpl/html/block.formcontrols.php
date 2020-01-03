@@ -6,14 +6,10 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin, F. Fernandez, Dominique Papin, Alexis Métaireau
  *
- * @copyright   2007-2008 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
+ * @copyright   2007-2020 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $param
  */
 
 /**
@@ -38,7 +34,7 @@
 function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
 {
     if (!$begin) {
-        return '}} $t->_privateVars[\'__ctrlref\']=\'\';'; // if, foreach
+        return '}'; // foreach
     }
 
     if (count($param) > 3) {
@@ -49,26 +45,28 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
     if (count($param)) {
         if (count($param) == 1) {
             $content = 'if(is_array('.$param[0].')){
+                $form = null;
                 $ctrls_to_display = '.$param[0].';
                 $ctrls_notto_display = null;
             }
             else {
-                $t->_privateVars[\'__form\'] = '.$param[0].';
+                $form = '.$param[0].';
                 $ctrls_to_display=null;
                 $ctrls_notto_display = null;
             }';
         } elseif (count($param) == 2) {
             $content = 'if(is_array('.$param[0].') || '.$param[0].' === null){
+                $form = null;
                 $ctrls_to_display = '.$param[0].';
                 $ctrls_notto_display = '.$param[1].';
             }
             else {
-                $t->_privateVars[\'__form\'] = '.$param[0].';
+                $form = '.$param[0].';
                 $ctrls_to_display='.$param[1].';
                 $ctrls_notto_display = null;
             }';
         } else {
-            $content = ' $t->_privateVars[\'__form\'] = '.$param[0].";\n";
+            $content = ' $form = '.$param[0].";\n";
             $content .= ' $ctrls_to_display = '.$param[1].'; ';
             $content .= ' $ctrls_notto_display = '.$param[2].'; ';
         }
@@ -78,33 +76,14 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
     }
     $_frmctrlInsideForm = $compiler->isInsideBlock('form');
     $content .= '
-if (!isset($t->_privateVars[\'__formbuilder\'])) {
-    $t->_privateVars[\'__formViewMode\'] = 1;
-    $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\');
+if (!isset($t->_privateVars[\'__formTplController\'])) {
+    if ($form === null) { throw new \Exception("Error: form is missing to process formcontrols"); }
+    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,"html");
 }
-if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
-    $t->_privateVars[\'__displayed_ctrl\'] = array();
-}
-$t->_privateVars[\'__ctrlref\']=\'\';
 ';
 
     $content .= '
-foreach($t->_privateVars[\'__form\']->getRootControls() as $ctrlref=>$ctrl){
-    if(!$t->_privateVars[\'__form\']->isActivated($ctrlref)) continue;
-    if($ctrl->type == \'reset\' || $ctrl->type == \'hidden\') continue;'."\n";
-    if (!$_frmctrlInsideForm) {
-        $content .= 'if($ctrl->type == \'submit\' && $ctrl->standalone) continue;
-            if($ctrl->type == \'captcha\' || $ctrl->type == \'secretconfirm\') continue;'."\n";
-    } else {
-        $content .= 'if($ctrl->type == \'submit\') continue;';
-    }
-
-    $content .= 'if(!isset($t->_privateVars[\'__displayed_ctrl\'][$ctrlref])
-       && (  ($ctrls_to_display===null && $ctrls_notto_display === null)
-          || ($ctrls_to_display===null && !in_array($ctrlref, $ctrls_notto_display))
-          || (is_array($ctrls_to_display) && in_array($ctrlref, $ctrls_to_display) ))) {
-        $t->_privateVars[\'__ctrlref\'] = $ctrlref;
-        $t->_privateVars[\'__ctrl\'] = $ctrl;
+foreach($t->_privateVars[\'__formTplController\']->controlsLoop('.($_frmctrlInsideForm?'true':'false').', $ctrls_to_display, $ctrls_notto_display) as $ctrl) {
 ';
 
     return $content;

@@ -154,7 +154,8 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
                     <null p="parent" />
                     <array p="conditions">[
                      {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
-                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}]</array>
+                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}
+                     ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -187,7 +188,9 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
                     <null p="parent" />
                     <array p="conditions">[
                      {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
-                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}]</array>
+                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}
+                     ]
+                     </array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="OR"/>
                 </object>
@@ -232,22 +235,27 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <notnull p="parent" />
-                            <array p="conditions">[
-                            {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
-                            {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}]</array>
+                            <array p="conditions">
+                            [
+                             {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
+                             {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}
+                             ]</array>
                             <array p="group">[]</array>
                             <string p="glueOp" value="AND"/>
                         </object>
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
                             <array p="conditions">[
-                            {"field_id":"subject","field_pattern":"","value":"bar2", "operator":"=", "isExpr":false}]</array>
+                                {"field_id":"subject","field_pattern":"","value":"bar2", "operator":"=", "isExpr":false}
+                            ]</array>
                             <array p="group">
                                 <object p="condition" class="jDaoCondition">
                                     <notnull p="parent" />
-                                    <array p="conditions">[
-                                    {"field_id":"texte","field_pattern":"","value":"machine2", "operator":"=", "isExpr":false},
-                                    {"field_id":"texte","field_pattern":"","value":"truc", "operator":"=", "isExpr":false}]</array>
+                                    <array p="conditions">
+                                    [
+                                     {"field_id":"texte","field_pattern":"","value":"machine2", "operator":"=", "isExpr":false},
+                                     {"field_id":"texte","field_pattern":"","value":"truc", "operator":"=", "isExpr":false}
+                                     ]</array>
                                     <array p="group">[]</array>
                                     <string p="glueOp" value="OR"/>
                                 </object>
@@ -284,9 +292,10 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">[
-                     {"field_id":"subject","field_pattern":"","value":"", "operator":"=", "isExpr":false},
-                     {"field_id":"texte","field_pattern":"","value":"\'machine\'", "operator":"=", "isExpr":true}]</array>
+                    <array p="conditions"> [
+                             {"field_id":"subject","field_pattern":"","value":"", "operator":"=", "isExpr":false},
+                             {"field_id":"texte","field_pattern":"","value":"\'machine\'", "operator":"=", "isExpr":true}
+                             ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
@@ -302,7 +311,15 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
 
     );
 
-    function testMethods() {
+
+    function getMethodData() {
+        return $this->methDatas;
+    }
+
+    /**
+     * @dataProvider getMethodData
+     */
+    function testMethods($xmls, $expected) {
         $dao ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
   <datasources>
@@ -324,18 +341,16 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
         $parser->testParseDatasource($doc);
         $parser->testParseRecord($doc, new jDbMysqlTools(null));
 
-        foreach($this->methDatas as $k=>$t){
-            // $this->sendMessage("test good method ".$k);
-            $xml= simplexml_load_string($t[0]);
-            try{
-                $p = new jDaoMethod($xml, $parser);
-                $this->assertComplexIdenticalStr($p, $t[1]);
-            }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
-            }/*catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }*/
-        }
+        // $this->sendMessage("test good method ".$k);
+        $xml= simplexml_load_string($xmls);
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->assertComplexIdenticalStr($p, $expected);
+        }catch(jDaoXmlException $e){
+            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
+        }/*catch(Exception $e){
+            $this->fail("Exception inconnue : ".$e->getMessage());
+        }*/
     }
 
 
@@ -348,12 +363,23 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
                 <orderitem property="publishdate" way="$afoo"/>
             </order>
           </method>',
-          'jelix~daoxml.method.orderitem.parameter.unknown', array('foo~bar','','foo','$afoo')
-          ),
+          'jelix~daoxml.method.orderitem.parameter.unknown',
+          array('foo~bar','','foo','$afoo')
+      ),
 
     );
 
-   function testBadMethods() {
+    function getBadMethodData() {
+        return $this->badmethDatas;
+    }
+
+    /**
+     * @dataProvider getBadMethodData
+     * @param $xmls
+     * @param $localeKey
+     * @param $localeParameters
+     */
+   function testBadMethods($xmls, $localeKey, $localeParameters) {
  $dao ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
   <datasources>
@@ -375,19 +401,18 @@ class jdao_parser2Test extends \Jelix\UnitTests\UnitTestCase {
         $parser->testParseDatasource($doc);
         $parser->testParseRecord($doc, new jDbMysqlTools(null));
         
-        foreach($this->badmethDatas as $k=>$t){
-            //$this->sendMessage("test bad method ".$k);
-            $xml= simplexml_load_string($t[0]);
-            try{
-                $p = new jDaoMethod($xml, $parser);
-                $this->fail("Pas d'exception survenue !");
-            }catch(jDaoXmlException $e){
-                $this->assertEquals($t[1], $e->getLocaleKey());
-                $this->assertEquals($t[2], $e->getLocaleParameters());
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
+        //$this->sendMessage("test bad method ".$k);
+        $xml= simplexml_load_string($xmls);
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->fail("Pas d'exception survenue !");
+        }catch(jDaoXmlException $e){
+            $this->assertEquals($localeKey, $e->getLocaleKey());
+            $this->assertEquals($localeParameters, $e->getLocaleParameters());
+        }catch(Exception $e){
+            $this->fail("Exception inconnue : ".$e->getMessage());
         }
+
     }
 
 }
