@@ -252,7 +252,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     }
 
     /**
-     * @depends testOutputFooter
+     *
      */
     function testOutputColor(){
         $ctrl= new jFormsControlColor('inputcol');
@@ -264,7 +264,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->assertEquals('<label class="jforms-label" for="'.$this->formname.'_inputcol" id="'.$this->formname.'_inputcol_label">Couleur</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="" type="color"/>'."\n", $out);
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="" type="color" style="width:5em;height:25px;"/>'."\n", $out);
         $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
@@ -273,8 +273,8 @@ jFormsJQ.tForm.addControl(c);
 
         $this->form->setData('inputcol','#F0F0F0');
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
@@ -282,19 +282,17 @@ jFormsJQ.tForm.addControl(c);
 
         $this->form->setData('inputcol','#778899');
         ob_start();$this->builder->outputControl($ctrl, array('class'=>'foo', 'onclick'=>"alert('bla')"));$out = ob_get_clean();
-        $this->assertEquals('<input class="foo jforms-ctrl-input" onclick="alert(\'bla\')" name="inputcol" id="'.$this->formname.'_inputcol" value="#778899" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input class="foo jforms-ctrl-color" onclick="alert(\'bla\')" name="inputcol" id="'.$this->formname.'_inputcol" value="#778899" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', $this->builder->getJsContent());
 
-
-
         $ctrl->defaultValue='#F0F0F0';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#778899" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
@@ -303,8 +301,8 @@ jFormsJQ.tForm.addControl(c);
         $this->form->removeControl($ctrl->ref);
         $this->form->addControl($ctrl);
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
@@ -312,8 +310,8 @@ jFormsJQ.tForm.addControl(c);
 
         $ctrl->required=true;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color jforms-required" value="#F0F0F0" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color jforms-required" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.required = true;
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
@@ -324,8 +322,8 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->setReadOnly(true);
         $ctrl->required=false;
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" readonly="readonly" class="jforms-ctrl-color jforms-readonly" value="#F0F0F0" type="color"/>'."\n", $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" readonly="readonly" class="jforms-ctrl-color jforms-readonly" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n", $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.readOnly = true;
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
@@ -336,8 +334,8 @@ jFormsJQ.tForm.addControl(c);
         $ctrl->setReadOnly(false);
         $ctrl->help='some help';
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n".'<span class="jforms-help" id="jforms_formtest1_inputcol-help">&nbsp;<span>some help</span></span>', $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n".'<span class="jforms-help" id="'.$this->formname.'_inputcol-help">&nbsp;<span>some help</span></span>', $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
@@ -346,8 +344,8 @@ jFormsJQ.tForm.addControl(c);
 
         $ctrl->help="some \nhelp with ' and\nline break.";
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n".'<span class="jforms-help" id="jforms_formtest1_inputcol-help">'."&nbsp;<span>some \nhelp with ' and\nline break.</span>".'</span>', $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" class="jforms-ctrl-color" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n".'<span class="jforms-help" id="'.$this->formname.'_inputcol-help">'."&nbsp;<span>some \nhelp with ' and\nline break.</span>".'</span>', $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);
@@ -359,8 +357,8 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEquals('<label class="jforms-label" for="'.$this->formname.'_inputcol" id="'.$this->formname.'_inputcol_label" title="ceci est un tooltip">Couleur</label>'."\n", $out);
 
         ob_start();$this->builder->outputControl($ctrl);$out = ob_get_clean();
-        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" title="ceci est un tooltip" class="jforms-ctrl-color" value="#F0F0F0" type="color"/>'."\n".'<span class="jforms-help" id="jforms_formtest1_inputcol-help">&nbsp;<span>some help</span></span>', $out);
-        $this->assertEquals('c = new jFormsJQControlString(\'inputcol\', \'Couleur\');
+        $this->assertEquals('<input name="inputcol" id="'.$this->formname.'_inputcol" title="ceci est un tooltip" class="jforms-ctrl-color" value="#F0F0F0" type="color" style="width:5em;height:25px;"/>'."\n".'<span class="jforms-help" id="'.$this->formname.'_inputcol-help">&nbsp;<span>some help</span></span>', $out);
+        $this->assertEquals('c = new jFormsJQControlColor(\'inputcol\', \'Couleur\');
 c.errRequired=\'"Couleur" field is required\';
 c.errInvalid=\'"Couleur" field is invalid\';
 jFormsJQ.tForm.addControl(c);

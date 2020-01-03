@@ -29,7 +29,6 @@ class color_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
         $js = 'c = new '.$jFormsJsVarName."ControlColor('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
-        $js .= "c.regexp = /^#[a-fA-F0-9]{6}$/ \n";
 
         $this->parentWidget->addJs($js);
         $this->commonJs();
