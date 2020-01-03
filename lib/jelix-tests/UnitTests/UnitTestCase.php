@@ -152,10 +152,12 @@ class UnitTestCase extends TestCase {
                         $v = $value->$n;
                     }elseif(isset($child['method'])){
                         $n = (string)$child['method'];
-                        eval('$v=$value->'.$n.';');
+                        $n = trim(str_replace("()", "", $n));
+                        $v = $value->$n();
                     }elseif(isset($child['m'])){
                         $n = (string)$child['m'];
-                        eval('$v=$value->'.$n.';');
+                        $n = trim(str_replace("()", "", $n));
+                        $v = $value->$n();
                     }else{
                         trigger_error('no method or attribute on '.(dom_import_simplexml($child)->nodeName), E_USER_WARNING);
                         continue;
@@ -166,12 +168,23 @@ class UnitTestCase extends TestCase {
 
             case 'array':
                 $this->assertIsArray($value, $name.': not an array'.$errormessage);
-                if(trim((string)$xml) != ''){
-                    if( false === eval('$v='.(string)$xml.';')){
-                        $this->fail("invalid php array syntax");
-                        return false;
+                if(trim((string)$xml) != '') {
+                    $xmlstr = trim((string)$xml);
+                    if (strpos($xmlstr, 'array') === 0) {
+                        // @deprecated
+                        if( false === eval('$v='.$xmlstr.';')){
+                            $this->fail("invalid php array syntax");
+                            return false;
+                        }
                     }
-                    $this->assertEquals($v,$value,'negative test on '.$name.': '.$errormessage);
+                    else {
+                        $v = json_decode($xmlstr, true);
+                        if ($v === null || !is_array($v)) {
+                            $this->fail("invalid json array syntax ".(string)$xml);
+                            return false;
+                        }
+                    }
+                    $this->assertEquals($v, $value, 'negative test on '.$name.': '.$errormessage);
                 }else{
                     $key=0;
                     foreach ($xml->children() as $child) {
@@ -226,7 +239,7 @@ class UnitTestCase extends TestCase {
                 $this->assertIsResource($value,$name.': not a resource'.$errormessage);
                 return true;
             default:
-                $this->fail("_checkIdentical: balise inconnue ".$nodename.$errormessage);
+                $this->fail("_checkIdentical: unknown element ".$nodename.$errormessage);
                 return false;
         }
     }
