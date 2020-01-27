@@ -229,4 +229,15 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
     function testFieldNameEnclosure(){
         $this->assertEquals('"toto"', jDb::getConnection($this->dbProfile)->encloseName('toto'));
     }
+
+
+    function testVersion() {
+
+        $cnx = jDb::getConnection($this->dbProfile);
+        $version = $cnx->getAttribute($cnx::ATTR_CLIENT_VERSION);
+
+        $this->assertNotEquals('', $version);
+    }
+
+
 }
