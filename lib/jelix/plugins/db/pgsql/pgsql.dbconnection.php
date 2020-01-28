@@ -252,5 +252,18 @@ class pgsqlDbConnection extends jDbConnection {
     public function setAttribute($id, $value) {
     }
 
+
+    protected $serverVersion = 0;
+
+    public function getServerMajorVersion() {
+        if ($this->serverVersion === 0) {
+            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
+            if ($version != '') {
+                $version = explode('.', $version);
+                $this->serverVersion = intval($version[0]);
+            }
+        }
+        return $this->serverVersion;
+    }
 }
 
