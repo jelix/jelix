@@ -272,4 +272,13 @@ class jDb_PgsqlTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('product_test', $this->records);
     }
 
+    function testVersion() {
+
+        $cnx = jDb::getConnection($this->dbProfile);
+        $version = $cnx->getAttribute($cnx::ATTR_CLIENT_VERSION);
+
+        $this->assertNotEquals('', $version);
+    }
+
+
 }
