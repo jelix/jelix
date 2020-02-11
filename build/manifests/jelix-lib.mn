@@ -352,6 +352,7 @@ cd lib/jelix/forms/controls
   jFormsControlGroup.class.php
   jFormsControlHidden.class.php
   jFormsControlHtmlEditor.class.php
+  jFormsControlImageUpload.class.php
   jFormsControlInput.class.php
   jFormsControlListbox.class.php
   jFormsControlMenulist.class.php
@@ -610,6 +611,9 @@ cd lib/jelix/plugins/formwidget/html
 
 cd lib/jelix/plugins/formwidget/htmleditor_html
   htmleditor_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/imageupload_html
+  imageupload_html.formwidget.php
 
 cd lib/jelix/plugins/formwidget/input_html
   input_html.formwidget.php
