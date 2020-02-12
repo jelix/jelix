@@ -576,6 +576,12 @@ cd lib/jelix/plugins/debugbar/soaplog
 cd lib/jelix/plugins/formbuilder/html
   html.formbuilder.php
 
+cd lib/jelix/plugins/formwidget/autocomplete_html
+  autocomplete_html.formwidget.php
+
+cd lib/jelix/plugins/formwidget/autocompleteajax_html
+  autocompleteajax_html.formwidget.php
+
 cd lib/jelix/plugins/formwidget/button_html
   button_html.formwidget.php
 
