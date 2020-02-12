@@ -479,6 +479,19 @@ jforms_wikieditor_default.css[]="$jelix/markitup/skins/simple/style.css"
 jforms_wikieditor_default.css[]="$jelix/markitup/sets/wr3/style.css"
 jforms_wikieditor_default.require=jquery
 
+jforms_imageupload.js[]="$jelix/js/cropper.min.js"
+jforms_imageupload.js[]="$jelix/js/jforms/choice.js"
+jforms_imageupload.js[]="$jelix/js/jforms/imageSelector.js"
+jforms_imageupload.css[]="$jelix/js/cropper.min.css"
+jforms_imageupload.require=jquery_ui
+
+jforms_autocomplete.js[]="$jelix/js/jforms/jAutocomplete.jqueryui.js"
+jforms_autocomplete.require=jquery_ui
+
+jforms_autocompleteajax.js[]="$jelix/js/jforms/jAutocompleteAjax.jqueryui.js"
+jforms_autocompleteajax.require=jquery_ui
+
+
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery
 

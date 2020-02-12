@@ -44,6 +44,10 @@
  */
 class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
 
+    public function outputMetaContent($resp) {
+        $resp->addAssets('jforms_autocomplete');
+    }
+
     protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
@@ -61,12 +65,6 @@ class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
         $searchInId = (strpos($this->getCSSClass(), 'autocomplete-search-in-id') !== false);
 
         $this->parentWidget->addFinalJs('$(\'#'.$this->getId().'_autocomplete\').jAutocomplete({searchInId: '.($searchInId?'true':'false').'})');
-        $resp = jApp::coord()->response;
-        if ($resp instanceof jResponseHtml) {
-            $config = jApp::config();
-            $www = $config->urlengine['jelixWWWPath'];
-            $resp->addJSLink($www.'js/jforms/jAutocomplete.jqueryui.js');
-        }
     }
 
     function outputControl() {

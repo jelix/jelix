@@ -39,12 +39,7 @@ class imageupload_htmlFormWidget extends upload2_htmlFormWidget {
     }
 
     public function outputMetaContent($resp) {
-        $confUrlEngine = &jApp::config()->urlengine;
-        $www = $confUrlEngine['jelixWWWPath'];
-        $resp->addJSLink($www.'js/cropper.min.js');
-        $resp->addJSLink($www.'js/jforms/choice.js');
-        $resp->addJSLink($www.'js/jforms/imageSelector.js');
-        $resp->addCSSLink($www.'js/cropper.min.css');
+        $resp->addAssets('jforms_imageupload');
     }
 
     protected function _outputInputFile($attr, $idChoiceItem = '', $existingFile = '') {
