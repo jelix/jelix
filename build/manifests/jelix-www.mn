@@ -8,7 +8,9 @@ cd lib/jelix-www/design/icons
 cd lib/jelix-www/design/images
   __ALL__
 cd lib/jelix-www/js
-c __ALL__
+  __ALL__
+cd lib/jelix-www/js/jforms/
+  __ALL__
 cd lib/jelix-www/js/jforms/datepickers/default
   __ALL__
 cd lib/jelix-www/js/jforms/datetimepickers/default
