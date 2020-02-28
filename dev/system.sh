@@ -8,52 +8,43 @@ if [ -f /etc/os-release ]; then
     else
         if [ "$VERSION_ID" = "9" ]; then
             DISTRO="stretch"
+        else
+            if [ "$VERSION_ID" = "10" ]; then
+                DISTRO="buster"
+            fi
         fi
     fi
 fi
+if [ "$DISTRO" == "" ]; then
+  echo "Unknown DISTRO. Update system.sh."
+  exit 1
+fi
 
-function initsystem () {
-    # create hostname
-    HOST=`grep $APPHOSTNAME /etc/hosts`
-    if [ "$HOST" == "" ]; then
-        echo "127.0.0.1 $APPHOSTNAME $APPHOSTNAME2" >> /etc/hosts
-    fi
-    hostname $APPHOSTNAME
-    echo "$APPHOSTNAME" > /etc/hostname
-
-    # local time
-    echo "Europe/Paris" > /etc/timezone
-    cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
-    locale-gen fr_FR.UTF-8
-    update-locale LC_ALL=fr_FR.UTF-8
-
-    # install all packages
-    apt-get update
-    apt-get install -y software-properties-common apt-transport-https
-    if [ "$DISTRO" == "stretch" ]; then
-        apt-get install -y dirmngr
-    fi
-    if [ "$PHP53" != "yes" ]; then
-        wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
-        echo "deb https://packages.sury.org/php $DISTRO main" > /etc/apt/sources.list.d/sury_php.list
-    fi
-
-    if [ "$DISTRO" == "stretch" ]; then
+function installMysql() {
+    if [ "$DISTRO" != "jessie" ]; then
         if [ ! -f "/etc/apt/sources.list.d/mysql.list" ]; then
-            echo -e "deb http://repo.mysql.com/apt/debian/ stretch mysql-5.7\ndeb-src http://repo.mysql.com/apt/debian/ stretch mysql-5.7" > /etc/apt/sources.list.d/mysql.list
+            echo -e "deb http://repo.mysql.com/apt/debian/ $DISTRO mysql-${MYSQL_VERSION}" > /etc/apt/sources.list.d/mysql.list
             wget -O /tmp/RPM-GPG-KEY-mysql https://repo.mysql.com/RPM-GPG-KEY-mysql
             apt-key add /tmp/RPM-GPG-KEY-mysql
         fi
+        apt-get update
     fi
-
-    apt-get update
-    apt-get -y upgrade
-    apt-get -y install debconf-utils
-    export DEBIAN_FRONTEND=noninteractive
     echo "mysql-server-$MYSQL_VERSION mysql-server/root_password password jelix" | debconf-set-selections
     echo "mysql-server-$MYSQL_VERSION mysql-server/root_password_again password jelix" | debconf-set-selections
+    apt-get -y install mysql-server mysql-client
+}
 
-    apt-get -y install nginx
+function installMariaDb() {
+    apt-get -y install mariadb-server mariadb-client
+}
+
+
+function installPHP() {
+    if [ "$PHP53" != "yes" ]; then
+        wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
+        echo "deb https://packages.sury.org/php $DISTRO main" > /etc/apt/sources.list.d/sury_php.list
+        apt-get update
+    fi
     if [ "$PHP53" != "yes" ]; then
         apt-get -y install  php${PHP_VERSION}-fpm \
                             php${PHP_VERSION}-cli \
@@ -103,16 +94,14 @@ function initsystem () {
         sed -i "/display_errors = Off/c\display_errors = On" /etc/php5/cli/php.ini
         service php5-fpm restart
     fi
-    apt-get -y install mysql-server mysql-client
-    apt-get -y install git vim unzip curl openssl ssl-cert
+}
 
-    # create a database into mysql + users
-    if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
-        echo "setting mysql database.."
-        mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS $APPNAME CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON $APPNAME.* TO test_user;FLUSH PRIVILEGES;"
-    fi
 
-    # install default vhost for apache
+function installNginx() {
+
+    apt-get -y install nginx
+
+    # install default vhost for nginx
     cp $VAGRANTDIR/vhost /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME__/$APPHOSTNAME/g /etc/nginx/sites-available/$APPNAME.conf
     sed -i -- s/__APPHOSTNAME2__/$APPHOSTNAME2/g /etc/nginx/sites-available/$APPNAME.conf
@@ -134,6 +123,57 @@ function initsystem () {
 
     # restart nginx
     service nginx restart
+}
+
+
+function initsystem () {
+    # create hostname
+    HOST=`grep $APPHOSTNAME /etc/hosts`
+    if [ "$HOST" == "" ]; then
+        echo "127.0.0.1 $APPHOSTNAME $APPHOSTNAME2" >> /etc/hosts
+    fi
+    hostname $APPHOSTNAME
+    echo "$APPHOSTNAME" > /etc/hostname
+
+    # local time
+    echo "Europe/Paris" > /etc/timezone
+    cp /usr/share/zoneinfo/Europe/Paris /etc/localtime
+
+
+    apt-get update
+
+    # install some packages
+    if [ "$DISTRO" == "jessie" -o "$DISTRO" == "stretch" ]; then
+      apt -y install locales-all
+    fi
+    locale-gen fr_FR.UTF-8
+    update-locale LC_ALL=fr_FR.UTF-8
+
+    apt-get install -y software-properties-common apt-transport-https
+    if [ "$DISTRO" != "jessie" ]; then
+        apt-get install -y dirmngr
+    fi
+
+    apt-get update
+    apt-get -y upgrade
+    apt-get -y install debconf-utils git vim unzip curl openssl ssl-cert
+    export DEBIAN_FRONTEND=noninteractive
+
+    if [ "$MYSQL_VERSION" == "" ]; then
+      installMariaDb
+    else
+      installMysql
+    fi
+
+    installPHP
+
+    installNginx
+
+    # create a database into mysql + users
+    if [ ! -d /var/lib/mysql/$APPNAME/ ]; then
+        echo "setting mysql database.."
+        mysql -u root -pjelix -e "CREATE DATABASE IF NOT EXISTS $APPNAME CHARACTER SET utf8;CREATE USER test_user IDENTIFIED BY 'jelix';GRANT ALL ON $APPNAME.* TO test_user;FLUSH PRIVILEGES;"
+    fi
 
     echo "Install composer.."
     if [ ! -f /usr/local/bin/composer ]; then
@@ -142,6 +182,7 @@ function initsystem () {
     fi
 
     echo 'alias ll="ls -al"' > /home/vagrant/.bash_aliases
+    echo 'alias ll="ls -al"' > /root/.bash_aliases
 }
 
 
