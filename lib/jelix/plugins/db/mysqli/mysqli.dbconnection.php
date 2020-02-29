@@ -177,7 +177,7 @@ class mysqliDbConnection extends jDbConnection
     }
 
     public function lastInsertId($fromSequence = '')
-    {// on n'a pas besoin de l'argument pour mysqli
+    {
         return $this->_connection->insert_id;
     }
 

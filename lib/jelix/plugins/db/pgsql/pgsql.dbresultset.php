@@ -80,6 +80,8 @@ class pgsqlDbResultSet extends jDbResultSet
         return pg_num_rows($this->_idResult);
     }
 
+    protected $boundParameters = array();
+
     public function bindColumn($column, &$param, $type = null)
     {
         throw new jException('jelix~db.error.feature.unsupported', array('pgsql', 'bindColumn'));
