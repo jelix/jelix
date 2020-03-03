@@ -7,7 +7,11 @@ initsystem
 source $VAGRANTDIR/gencerts.sh
 
 apt-get -y install postgresql postgresql-client
-apt-get -y install redis-server memcached memcachedb
+apt-get -y install redis-server memcached
+
+if [ "$DISTRO" == "jessie" ]; then
+  apt-get -y install memcacheddb
+fi
 
 # create a database into pgsql + users
 su postgres -c $VAGRANTDIR/create_pgsql_db.sh
