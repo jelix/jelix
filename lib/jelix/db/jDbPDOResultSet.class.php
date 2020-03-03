@@ -93,9 +93,10 @@ class jDbPDOResultSet extends PDOStatement
      *
      * @return bool true if the fetch mode is ok
      */
-    public function setFetchMode($mode, $arg1 = null, $arg2 = null)
+    public function setFetchMode($mode, $arg1 = null, $arg2 = array())
     {
         $this->_fetchMode = $mode;
+
         // depending the mode, original setFetchMode throw an error if wrong arguments
         // are given, even if there are null
         if ($arg1 === null) {
