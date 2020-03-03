@@ -76,7 +76,7 @@ class pgsqlDbConnection extends jDbConnection {
     }
 
     public function prepare ($query){
-        $id=(string)mktime();
+        $id = microtime();
         $res = pg_prepare($this->_connection, $id, $query);
         if($res){
             $rs= new pgsqlDbResultSet ($res, $id, $this->_connection );
