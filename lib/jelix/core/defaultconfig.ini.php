@@ -200,7 +200,7 @@ jelixWWWPath="jelix/"
 jqueryPath="jelix/jquery/"
 
 ; action to show the 'page not found' error
-notfoundAct="jelix~error:notfound"
+notFoundAct="jelix~error:notfound"
 
 significantFile=urls.xml
 localSignificantFile=localurls.xml
