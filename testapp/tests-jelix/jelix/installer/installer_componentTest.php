@@ -25,11 +25,11 @@ class testInstallerComponentModule2 extends jInstallerComponentModule {
 
 
 class testInstallerComponentForDependencies extends jInstallerComponentBase {
-    
+
     protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
-    
+
     function getInstaller($ep, $installWholeApp) {
         return null;
     }
@@ -37,13 +37,13 @@ class testInstallerComponentForDependencies extends jInstallerComponentBase {
     function getUpgraders($ep) {
         return null;
     }
-    
+
     function readDependenciesFromString($xmlcontent) {
         $xml = simplexml_load_string($xmlcontent);
-        //$this->sourceVersion = (string) $xml->info[0]->version[0];   
+        //$this->sourceVersion = (string) $xml->info[0]->version[0];
         $this->readDependencies($xml);
     }
-    
+
 }
 
 class jInstaller_ComponentTest extends jUnitTestCase {
@@ -106,6 +106,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
+                'optional' => false,
                 ''
             )
             ), $comp->dependencies);
@@ -118,7 +119,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
         <jelix minversion="1.0" maxversion="1.1" />
         <module name="jauthdb" />
         <module name="jacl2db" id="jacl2db@jelix.org"  />
-        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0"/>
+        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0" optional="true"/>
     </dependencies>
 </module>';
 
@@ -130,6 +131,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
+                'optional' => false,
                 ''
             ),
             array(
@@ -138,6 +140,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jauthdb',
                 'minversion' => '*',
                 'maxversion' => '*',
+                'optional' => false,
                 ''
             ),
             array(
@@ -146,6 +149,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jacl2db',
                 'minversion' => '*',
                 'maxversion' => '*',
+                'optional' => false,
                 ''
             ),
             array(
@@ -154,6 +158,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
                 'name' => 'jacldb',
                 'minversion' => '1.0',
                 'maxversion' => '*',
+                'optional' => true,
                 ''
             ),
             ), $comp->dependencies);
@@ -170,9 +175,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
             $component->init();
             $conf =(object) array( 'modules'=>array(
-               'testinstall1.access'=>2, 
-               'testinstall1.dbprofile'=>'default', 
-               'testinstall1.installed'=>false, 
+               'testinstall1.access'=>2,
+               'testinstall1.dbprofile'=>'default',
+               'testinstall1.installed'=>false,
                'testinstall1.version'=>JELIX_VERSION,
             ));
 
@@ -186,7 +191,7 @@ class jInstaller_ComponentTest extends jUnitTestCase {
         catch(jInstallerException $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
-        
+
     }
 
     function testGetInstallerWithInstaller() {
@@ -235,9 +240,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component = new jInstallerComponentModule('testinstall1', jApp::appPath().'modules/testinstall1/', null);
             $component->init();
             $conf =(object) array( 'modules'=>array(
-               'testinstall1.access'=>2, 
-               'testinstall1.dbprofile'=>'default', 
-               'testinstall1.installed'=>false, 
+               'testinstall1.access'=>2,
+               'testinstall1.dbprofile'=>'default',
+               'testinstall1.installed'=>false,
                'testinstall1.version'=>JELIX_VERSION,
             ));
             $EPindex = $this->getEntryPoint($ini, $conf);
@@ -264,10 +269,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
 
             // the current version is the latest one : no updaters
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>JELIX_VERSION, 
+               'testinstall2.access'=>2,
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>JELIX_VERSION,
             ));
 
             $EPindex = $this->getEntryPoint($ini, $conf);
@@ -293,10 +298,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.2.3", 
+               'testinstall2.access'=>2,
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.2.3",
             ));
 
             $EPindex = $this->getEntryPoint($iniIndex, $conf);
@@ -335,10 +340,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.2", 
+               'testinstall2.access'=>2,
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.2",
             ));
 
             $EPindex = $this->getEntryPoint($iniIndex, $conf);
@@ -379,10 +384,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component->init();
 
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.1", 
+               'testinstall2.access'=>2,
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.1",
             ));
 
             $EPindex = $this->getEntryPoint($iniIndex, $conf);
@@ -436,10 +441,10 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $installer->installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'index');
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $conf =(object) array( 'modules'=>array(
-               'testinstall2.access'=>2, 
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1", 
+               'testinstall2.access'=>2,
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1",
             ));
 
             $EPindex = $this->getEntryPoint($iniIndex, $conf);
@@ -460,9 +465,9 @@ class jInstaller_ComponentTest extends jUnitTestCase {
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.access'=>2,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.5", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.5",
             ));
 
             $EPindex = $this->getEntryPoint($iniIndex, $conf);
