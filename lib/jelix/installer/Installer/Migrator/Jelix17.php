@@ -497,16 +497,16 @@ class Jelix17
             }
             $upgraderUrl = new UrlEngineUpgrader($fullConfig, $epId, $urlMap);
             if ($ep['type'] == 'cmdline') {
-                $upgraderUrl->cleanConfig($ep['config']);
+                $upgraderUrl::cleanConfig($ep['config']);
             } else {
                 $upgraderUrl->upgrade();
             }
 
             $ep['config']->save();
         }
-        if ($upgraderUrl) {
-            $upgraderUrl->cleanConfig($mainConfigIni);
-        }
+
+        UrlEngineUpgrader::cleanConfig($mainConfigIni);
+
         $mainConfigIni->save();
     }
 

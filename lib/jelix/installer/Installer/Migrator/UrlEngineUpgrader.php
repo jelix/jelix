@@ -69,10 +69,10 @@ class UrlEngineUpgrader
 
         $this->migrateStartModuleAction();
 
-        $this->cleanConfig($this->epConfig);
+        self::cleanConfig($this->epConfig);
     }
 
-    public function cleanConfig(\Jelix\IniFile\IniModifier $ini)
+    public static function cleanConfig(\Jelix\IniFile\IniModifier $ini)
     {
         $ini->removeValue('startModule', 0, null, false);
         $ini->removeValue('startAction', 0, null, false);
