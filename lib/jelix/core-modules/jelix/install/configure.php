@@ -85,14 +85,19 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
 
     protected function migrate(Jelix\Installer\Module\API\ConfigurationHelpers $helpers)
     {
-        //if (!$helpers->forLocalConfiguration()) {
-        //}
+        $this->migrateConfig($helpers->getConfigIni()['main']);
+        foreach ($helpers->getEntryPointsList() as $entryPoint) {
+            $this->migrateConfig($entryPoint->getConfigIni()['entrypoint']);
+        }
     }
 
     protected function migrateLocal(Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers)
     {
         $ini = $helpers->getProfilesIni();
         foreach ($helpers->getEntryPointsList() as $entryPoint) {
+
+            $this->migrateConfig($entryPoint->getConfigIni()['localentrypoint'], true);
+
             foreach ($ini->getSectionList() as $section) {
                 if (strpos($section, 'jkvdb:') === 0) {
                     $driver = $ini->getValue('driver', $section);
@@ -118,5 +123,28 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
                 }
             }
         }
+    }
+
+
+
+    /**
+     * @param \Jelix\IniFile\IniReaderInterface $ini
+     */
+    protected function migrateConfig($ini, $forLocal=false) {
+
+        if (! $ini instanceof \Jelix\IniFile\IniModifierInterface) {
+            echo "ERROR ".$ini->getFileName()." not allowed to be writable by the Jelix configurator\n";
+        }
+
+        $val = $ini->getValue('notfoundAct', 'urlengine');
+        if ($val !== null) {
+            if (!$forLocal) {
+                // we don't remove old parameter, to support the case where
+                // the mainconfig is not updated in instances
+                $ini->removeValue('notfoundAct', 'urlengine');
+            }
+            $ini->setValue('notFoundAct', $val, 'urlengine');
+        }
+        $ini->save();
     }
 }

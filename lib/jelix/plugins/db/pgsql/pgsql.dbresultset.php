@@ -6,7 +6,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau
  *
- * @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau
  * This class was get originally from the Copix project (CopixDBResultSetPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
  * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -45,10 +45,12 @@ class pgsqlDbResultSet extends jDbResultSet
             }
         } elseif ($this->_fetchMode == jDbConnection::FETCH_INTO) {
             $res = pg_fetch_object($this->_idResult);
-            $values = get_object_vars($res);
-            $res = $this->_fetchModeParam;
-            foreach ($values as $k => $value) {
-                $res->{$k} = $value;
+            if ($res) {
+                $values = get_object_vars($res);
+                $res = $this->_fetchModeParam;
+                foreach ($values as $k => $value) {
+                    $res->{$k} = $value;
+                }
             }
         } else {
             $res = pg_fetch_object($this->_idResult);
@@ -79,6 +81,8 @@ class pgsqlDbResultSet extends jDbResultSet
     {
         return pg_num_rows($this->_idResult);
     }
+
+    protected $boundParameters = array();
 
     public function bindColumn($column, &$param, $type = null)
     {

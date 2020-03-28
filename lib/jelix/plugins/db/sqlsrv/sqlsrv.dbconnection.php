@@ -58,17 +58,20 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * tell sqlsrv to be implicit commit or not.
-     *
-     * @param bool $state the state of the autocommit value
+     * tell sqlsrv to be implicit commit or not
+     * @param boolean $state the state of the autocommit value
+     * @return void
+     *  @see https://docs.microsoft.com/en-us/sql/t-sql/statements/set-implicit-transactions-transact-sql?view=sql-server-ver15
      */
-    protected function _autoCommitNotify($state)
-    {
-        // FIXME: check compatibility with sqlsrv driver
-        if ($state == 1) {
-            $this->query('SET IMPLICIT_TRANSACTIONS ON');
-        } else {
+    protected function _autoCommitNotify ($state){
+        if ($state) {
+            // per doc: When OFF, each of the preceding T-SQL statements is
+            // bounded by an unseen BEGIN TRANSACTION and an unseen COMMIT
+            // TRANSACTION statement. When OFF, we say the transaction mode
+            // is autocommit.
             $this->query('SET IMPLICIT_TRANSACTIONS OFF');
+        } else {
+            $this->query('SET IMPLICIT_TRANSACTIONS ON');
         }
     }
 
@@ -132,13 +135,18 @@ class sqlsrvDbConnection extends jDbConnection
      *
      * @param mixed $query
      */
-    protected function _doQuery($query)
+    protected function _doQuery ($query)
     {
-        if ($stmt = sqlsrv_query($this->_connection, $query, null, array('Scrollable' => SQLSRV_CURSOR_STATIC))) {
-            return new sqlsrvDbResultSet($stmt);
+        if (preg_match('/^\s*EXEC\s+/i', $query)) {
+            $stmt = sqlsrv_query($this->_connection, $query);
+        } else {
+            $stmt = sqlsrv_query($this->_connection, $query, null, array('Scrollable' => SQLSRV_CURSOR_STATIC));
         }
 
-        throw new jException('jelix~db.error.query.bad', mssql_get_last_message());
+        if ($stmt) {
+            return new sqlsrvDbResultSet ($stmt);
+        }
+        throw new jException('jelix~db.error.query.bad',  $this->_getErrorMsg());
     }
 
     /**
@@ -155,10 +163,22 @@ class sqlsrvDbConnection extends jDbConnection
             return $nbRows;
         }
 
-        throw new jException('jelix~db.error.query.bad', mssql_get_last_message());
+        throw new jException('jelix~db.error.query.bad', $this->_getErrorMsg());
+    }
+
+    protected function _getErrorMsg() {
+        $errors = sqlsrv_errors();
+        $msg = '';
+        foreach($errors as $error) {
+            $msg .= '['.$error[ 'SQLSTATE'].'] '.$error[ 'code'].': '.$error[ 'message']."\n";
+        }
+        return $msg;
     }
 
     /**
+     * @param string $queryString
+     * @param int $offset
+     * @param int $number
      * @see lib/jelix/db/jDbConnection#_doLimitQuery()
      *
      * @param mixed $queryString
@@ -246,7 +266,7 @@ class sqlsrvDbConnection extends jDbConnection
     {
         list($newQuery, $parameterNames) = $this->findParameters($query, '?');
 
-        return new sqlsrvDbResultSet(null, $this, $newQuery, $parameterNames);
+        return new sqlsrvDbResultSet(null, $this->_connection, $newQuery, $parameterNames);
     }
 
     /**

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ROOTDIR="/jelixapp"
-MYSQL_VERSION="5.7"
+MYSQL_VERSION=""
 PHP_VERSION="7.3"
 APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"

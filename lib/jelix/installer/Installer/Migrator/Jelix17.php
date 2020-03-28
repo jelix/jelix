@@ -73,6 +73,10 @@ class Jelix17
         $mainConfigIni->save();
 
         $this->reporter->message('Migration to Jelix 1.7.0 is done', 'notice');
+
+        $this->reporter->message('Start migration to Jelix 1.7.3', 'notice');
+        $this->migrate173($mainConfigIni);
+        $this->reporter->message('Migration to Jelix 1.7.3 is done', 'notice');
     }
 
     public function localMigrate()
@@ -497,16 +501,16 @@ class Jelix17
             }
             $upgraderUrl = new UrlEngineUpgrader($fullConfig, $epId, $urlMap);
             if ($ep['type'] == 'cmdline') {
-                $upgraderUrl->cleanConfig($ep['config']);
+                $upgraderUrl::cleanConfig($ep['config']);
             } else {
                 $upgraderUrl->upgrade();
             }
 
             $ep['config']->save();
         }
-        if ($upgraderUrl) {
-            $upgraderUrl->cleanConfig($mainConfigIni);
-        }
+
+        UrlEngineUpgrader::cleanConfig($mainConfigIni);
+
         $mainConfigIni->save();
     }
 
@@ -600,6 +604,34 @@ class Jelix17
             file_put_contents($installerPath, '<'.'?php require (__DIR__.\'/../application.init.php\');
 \\Jelix\\Scripts\\Installer::launch();');
             $this->reporter->message('create install/installer.php to launch instance installation', 'notice');
+        }
+    }
+
+    protected function migrate173(IniModifier $mainConfigIni) {
+        $this->migrateConfig173($mainConfigIni);
+        $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'));
+        foreach ($frameworkIni->getSectionList() as $section) {
+            if (!preg_match('/^entrypoint\\:(.*)$/', $section, $m)) {
+                continue;
+            }
+            $configValue = $frameworkIni->getValue('config', $section);
+            $configFile = \jApp::appSystemPath($configValue);
+            if (file_exists($configFile)) {
+                $ini = new IniModifier($configFile);
+                $this->migrateConfig173($ini);
+            }
+        }
+    }
+
+    /**
+     * @param \Jelix\IniFile\IniReaderInterface $ini
+     */
+    protected function migrateConfig173($ini) {
+        $val = $ini->getValue('notfoundAct', 'urlengine');
+        if ($val !== null) {
+            $ini->removeValue('notfoundAct', 'urlengine');
+            $ini->setValue('notFoundAct', $val, 'urlengine');
+            $ini->save();
         }
     }
 

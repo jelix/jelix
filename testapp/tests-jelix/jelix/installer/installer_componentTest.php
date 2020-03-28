@@ -56,7 +56,6 @@ class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInsta
             }
         }
     }
-
 }
 
 class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
@@ -121,7 +120,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
-                'version' => '>=1.0,<=1.1'
+                'version' => '>=1.0,<=1.1',
+                'optional' => false
             )
             ), $comp->getDependencies());
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
@@ -133,7 +133,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         <jelix minversion="1.0" maxversion="1.1" />
         <module name="jauthdb" />
         <module name="jacl2db" id="jacl2db@jelix.org"  />
-        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0"/>
+        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0" optional="true"/>
     </dependencies>
 </module>';
 
@@ -145,7 +145,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'name' => 'jelix',
                 'minversion' => '1.0',
                 'maxversion' => '1.1',
-                'version' => '>=1.0,<=1.1'
+                'version' => '>=1.0,<=1.1',
+                'optional' => false,
             ),
             array(
                 'type'=> 'module',
@@ -153,7 +154,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'name' => 'jauthdb',
                 'minversion' => '0',
                 'maxversion' => '*',
-                'version' => '*'
+                'version' => '*',
+                'optional' => false,
             ),
             array(
                 'type'=> 'module',
@@ -161,7 +163,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'name' => 'jacl2db',
                 'minversion' => '0',
                 'maxversion' => '*',
-                'version' => '*'
+                'version' => '*',
+                'optional' => false,
             ),
             array(
                 'type'=> 'module',
@@ -169,7 +172,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'name' => 'jacldb',
                 'minversion' => '1.0',
                 'maxversion' => '*',
-                'version' => '>=1.0'
+                'version' => '>=1.0',
+                'optional' => true,
             ),
             ), $comp->getDependencies());
         $this->assertEquals(array('1.0', '1.1'), $comp->getJelixVersion());
@@ -199,7 +203,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
         }
-        
+
     }
 
     function testGetInstallerWithInstaller() {
@@ -261,8 +265,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             // the current version is the latest one : no updaters
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
                'testinstall2.version'=>jFramework::version(),
             ));
 
@@ -287,9 +291,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         try {
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.2.3", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.2.3",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
@@ -315,9 +319,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         try {
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.2", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.2",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
@@ -346,9 +350,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         try {
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.1", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.1",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
                 jApp::appPath().'modules/testinstall2/', $conf->modules);
@@ -388,9 +392,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1",
             ));
 
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
@@ -413,9 +417,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             $installerIni->setValue('testinstall2.version.date', '2011-01-15' , 'modules');
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
-               'testinstall2.dbprofile'=>'default', 
-               'testinstall2.installed'=>false, 
-               'testinstall2.version'=>"1.1.5", 
+               'testinstall2.dbprofile'=>'default',
+               'testinstall2.installed'=>false,
+               'testinstall2.version'=>"1.1.5",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);

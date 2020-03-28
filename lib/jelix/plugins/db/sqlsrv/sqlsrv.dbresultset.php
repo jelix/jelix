@@ -40,6 +40,9 @@ class sqlsrvDbResultSet extends jDbResultSet
 
     public function fetch()
     {
+        if (! $this->_idResult) {
+            return false;
+        }
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
             if ($this->_fetchModeCtoArgs) {
                 $res = sqlsrv_fetch_object($this->_idResult, $this->_fetchModeParam, $this->_fetchModeCtoArgs, $this->nextFetchRow);
@@ -48,10 +51,12 @@ class sqlsrvDbResultSet extends jDbResultSet
             }
         } elseif ($this->_fetchMode == jDbConnection::FETCH_INTO) {
             $res = sqlsrv_fetch_object($this->_idResult, null, array(), $this->nextFetchRow);
-            $values = get_object_vars($res);
-            $res = $this->_fetchModeParam;
-            foreach ($values as $k => $value) {
-                $res->{$k} = $value;
+            if ($res) {
+                $values = get_object_vars($res);
+                $res = $this->_fetchModeParam;
+                foreach ($values as $k => $value) {
+                    $res->{$k} = $value;
+                }
             }
         } else {
             $res = sqlsrv_fetch_object($this->_idResult, null, array(), $this->nextFetchRow);
@@ -135,6 +140,8 @@ class sqlsrvDbResultSet extends jDbResultSet
         }
 
         if (!$this->_idResult) {
+            // this is the first call of execute(), so no prepared query yet
+            // let's prepare it.
             $this->parametersReferences = array();
             foreach ($this->parameterNames as $k => $name) {
                 if (!isset($parameters[$name])) {

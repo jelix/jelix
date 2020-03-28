@@ -112,7 +112,7 @@
                <data type="anyURI"/>
             </element>
          </optional>
-      </element>      
+      </element>
    </define>
 
    <define name="notes">
@@ -166,6 +166,9 @@
          <attribute name="name" />
          <optional><attribute name="maxversion" /></optional>
          <optional><attribute name="minversion" /></optional>
+         <optional><attribute name="optional">
+            <data type="boolean" />
+         </attribute></optional>
       </element>
    </define>
 

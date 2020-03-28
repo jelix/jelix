@@ -87,7 +87,7 @@ class pgsqlDbConnection extends jDbConnection
     public function prepare($query)
     {
         list($newQuery, $parameterNames) = $this->findParameters($query, '$%');
-        $id = (string) time();
+        $id = microtime();
         $res = pg_prepare($this->_connection, $id, $newQuery);
         if ($res) {
             $rs = new pgsqlDbResultSet($res, $id, $this->_connection, $parameterNames);
@@ -180,7 +180,7 @@ class pgsqlDbConnection extends jDbConnection
 
     protected function _disconnect()
     {
-        return pg_close($this->_connection);
+        return @pg_close($this->_connection);
     }
 
     protected function _doQuery($queryString)

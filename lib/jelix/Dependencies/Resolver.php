@@ -156,13 +156,16 @@ class Resolver
         $this->circularDependencyTracker[$item->getName()] = true;
 
         $missingItems = array();
-        foreach ($item->getDependencies() as $depItemName => $depItemVersion) {
+        foreach ($item->getDependencies() as $depItemName => $depItemInfo) {
+            list($depItemVersion, $depItemOptional) = $depItemInfo;
             $depItem = null;
 
             if (isset($this->items[$depItemName])) {
                 $depItem = $this->items[$depItemName];
             } else {
-                $missingItems[] = $depItemName;
+                if (!$depItemOptional) {
+                    $missingItems[] = $depItemName;
+                }
 
                 continue;
             }

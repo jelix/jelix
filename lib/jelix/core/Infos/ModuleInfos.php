@@ -17,7 +17,7 @@ class ModuleInfos extends InfosAbstract
     /**
      * list of module dependencies.
      *
-     * @var array[] items are: array('name'=>'', 'version'=>'')
+     * @var array[] items are: array('name'=>'', 'version'=>'', 'optional'=>true/false)
      */
     public $dependencies = array();
 
