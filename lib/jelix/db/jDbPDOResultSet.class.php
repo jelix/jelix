@@ -102,7 +102,7 @@ class jDbPDOResultSet extends PDOStatement
         if ($arg1 === null) {
             return parent::setFetchMode($mode);
         }
-        if ($arg2 === null) {
+        if ($arg2 === null || $arg2 == array()) {
             return parent::setFetchMode($mode, $arg1);
         }
 
