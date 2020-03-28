@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="testurls@testapp.jelix.org" name="testurls">
-        <version date="2020-03-28 20:19">1.7.3</version>
+        <version date="2020-03-28 20:19">1.7.4-pre</version>
         <label>testurls</label>
         <description>Test module for urls</description>
         <license URL=""/>
