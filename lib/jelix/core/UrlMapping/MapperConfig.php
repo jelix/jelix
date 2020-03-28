@@ -48,7 +48,7 @@ class MapperConfig
     {
         $availableOptions = array('enableParser', 'basePath',
             'checkHttpsOnParsing',
-            'notfoundAct', );
+            'notFoundAct', );
         foreach ($availableOptions as $opt) {
             if (isset($options[$opt])) {
                 $this->{$opt} = $options[$opt];

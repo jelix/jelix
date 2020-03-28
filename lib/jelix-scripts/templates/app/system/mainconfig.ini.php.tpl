@@ -69,7 +69,7 @@ multiview = off
 basePath = ""
 
 ; action to show the 'page not found' error
-notfoundAct = "jelix~error:notfound"
+notFoundAct = "jelix~error:notfound"
 
 
 [jResponseHtml]
