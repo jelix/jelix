@@ -111,6 +111,7 @@ abstract class jDbConnection
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
+            $this->_connection = null;
         }
     }
 
@@ -118,6 +119,7 @@ abstract class jDbConnection
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
+            $this->_connection = null;
         }
     }
 
@@ -375,7 +377,12 @@ abstract class jDbConnection
     abstract public function getAttribute($id);
 
     /**
+<<<<<<< HEAD
      * @param int    $id    the attribut id
+=======
+     *
+     * @param integer $id the attribut id
+>>>>>>> origin/jelix-1.6.x
      * @param string $value the attribute value
      *
      * @see PDO::setAttribute()
@@ -479,7 +486,7 @@ abstract class jDbConnection
      *
      * @since 1.2
      */
-    protected $_schema;
+    protected $_schema = null;
 
     /**
      * @return jDbSchema

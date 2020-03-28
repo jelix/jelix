@@ -97,9 +97,9 @@ class Item
         return null;
     }
 
-    public function addDependency($name, $version = '*')
+    public function addDependency($name, $version = '*', $optional = false)
     {
-        $this->dependencies[$name] = $version;
+        $this->dependencies[$name] = array($version, $optional);
     }
 
     public function getDependencies()

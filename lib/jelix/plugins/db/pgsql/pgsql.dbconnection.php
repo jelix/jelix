@@ -180,7 +180,7 @@ class pgsqlDbConnection extends jDbConnection
 
     protected function _disconnect()
     {
-        return pg_close($this->_connection);
+        return @pg_close($this->_connection);
     }
 
     protected function _doQuery($queryString)
