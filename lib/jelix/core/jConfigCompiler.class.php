@@ -553,6 +553,11 @@ class jConfigCompiler
 
         $urlconf['urlScriptId'] = $snp;
         $urlconf['urlScriptIdenc'] = rawurlencode($snp);
+
+        // fix compatibility with previous name of notFoundAct
+        if(isset($urlconf['notfoundAct'])) {
+            $urlconf['notFoundAct'] = $urlconf['notfoundAct'];
+        }
     }
 
     public static function findServerName($ext = '.php', $isCli = false)

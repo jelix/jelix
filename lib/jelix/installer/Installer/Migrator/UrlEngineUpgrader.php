@@ -81,6 +81,11 @@ class UrlEngineUpgrader
         $ini->removeValue('simple_urlengine_https', 'urlengine');
         $ini->removeValue(null, 'simple_urlengine_entrypoints');
         $ini->removeValue(null, 'basic_significant_urlengine_entrypoints');
+        $val = $ini->getValue('notfoundAct', 'urlengine');
+        if ($val !== null) {
+            $ini->removeValue('notfoundAct', 'urlengine');
+            $ini->setValue('notFoundAct', $val, 'urlengine');
+        }
     }
 
     protected $httpsSelectors;
