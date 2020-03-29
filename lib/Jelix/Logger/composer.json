@@ -16,8 +16,8 @@
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "jelix/core": "self.version",
+        "php": ">=7.3.0",
+        "jelix/core": "self.version"
     },
     "replace": {
     },
