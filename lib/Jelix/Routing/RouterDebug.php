@@ -69,7 +69,7 @@ class RouterDebug extends Router
 
             $ctrl = $this->getController($this->action);
         } catch (\jException $e) {
-            $notFoundAct = $this->urlActionMapper->getConfig()->notfoundAct;
+            $notFoundAct = $this->urlActionMapper->getConfig()->notFoundAct;
             if ($notFoundAct == '') {
                 throw $e;
             }

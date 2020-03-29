@@ -39,7 +39,7 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp
                 'to-overload',
                 'o',
                 InputOption::VALUE_NONE,
-                'Indicate to store new locales into the var/overload/ dir instead of var/locales/'
+                'Indicate to store new locales into the app/overload/ dir instead of app/locales/'
             )
         ;
         parent::configure();

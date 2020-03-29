@@ -112,7 +112,7 @@ class mysqliDbResultSet extends jDbResultSet
             } else {
                 $dataType = 's';
             }
-        } else {
+        } else if ($dataType != 'i'  && $dataType != 's' && $dataType != 'b' ) {
             $dataType = 's';
         }
         $this->boundParameterTypes[$parameter] = $dataType;
@@ -161,11 +161,12 @@ class mysqliDbResultSet extends jDbResultSet
             throw new Exception('Execute: number of parameters should equals number of parameters declared in the query');
         }
 
-        $allParams = array(implode('', $types));
+        $allParams = array('');
         foreach ($this->parameterNames as $k => $name) {
             if (!isset($parameters[$name])) {
                 throw new Exception("Execute: parameter '${name}' is missing from parameters");
             }
+            $allParams[0] .= $types[$name];
             $allParams[] = &$parameters[$name];
         }
 
@@ -214,6 +215,6 @@ class mysqliDbResultSet extends jDbResultSet
             throw new Exception('Not a prepared statement');
         }
 
-        return $this->_stmt->get_attr($attr, $value);
+        return $this->_stmt->set_attr($attr, $value);
     }
 }

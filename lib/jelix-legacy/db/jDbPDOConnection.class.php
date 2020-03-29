@@ -258,6 +258,14 @@ class jDbPDOConnection extends PDO
         return 'SELECT TOP '.$limitCount.' * FROM ('.$queryString.') AS outer_tbl '.$orderby;
     }
 
+    public function prepare($query, $driverOptions = []) {
+        $result = parent::prepare($query, $driverOptions);
+        if ($result) {
+            $result->setFetchMode(\PDO::FETCH_OBJ);
+        }
+        return $result;
+    }
+
     /**
      * sets the autocommit state.
      *

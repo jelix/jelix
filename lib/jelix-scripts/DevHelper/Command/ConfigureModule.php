@@ -78,7 +78,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
             $configurator->setModuleParameters($modules[0], $parameters);
         }
 
-        $localConfig = $input->getOption('local') ? true : ($input->getOption('no-local') ? true : null);
+        $localConfig = $input->getOption('local') ? true : ($input->getOption('no-local') ? false : null);
 
         $configurator->configureModules(
             $modules,

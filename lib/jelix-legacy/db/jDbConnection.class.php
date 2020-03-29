@@ -111,6 +111,7 @@ abstract class jDbConnection
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
+            $this->_connection = null;
         }
     }
 
@@ -118,6 +119,7 @@ abstract class jDbConnection
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
+            $this->_connection = null;
         }
     }
 
@@ -479,7 +481,7 @@ abstract class jDbConnection
      *
      * @since 1.2
      */
-    protected $_schema;
+    protected $_schema = null;
 
     /**
      * @return jDbSchema

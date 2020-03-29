@@ -30,9 +30,10 @@ class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $container;
     function setUp() : void {
         $this->container = new jFormsDataContainer('','');
-        $this->form = new tesMForm('foo',$this->container);
+        $this->form = new tesMForm('foo', $this->container);
 
         $ctrl = new jFormsControlInput('inputctrl');
+        $ctrl->setForm($this->form);
         $ctrl->setData('toto');
         $this->form->addCtrl($ctrl);
         $this->form->setData('inputctrl', 'toto');
@@ -51,7 +52,7 @@ class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-        
+
         $ctrl= new jFormsControlListbox('list');
         $ctrl->multiple=true;
         $ctrl->datasource = new jFormsStaticDatasource();
@@ -59,7 +60,7 @@ class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->form->addCtrl($ctrl, false);
         $this->form->setData('list', array('bbb','123'));
     }
-    
+
     function testinitModifiedControlsList() {
         $this->form->initModifiedControlsList();
 
@@ -74,10 +75,10 @@ class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
           );
         $this->assertEquals($initForm, $this->form->getContainer()->originalData);
     }
-    
+
     function testModifiedControls1() {
         $this->form->initModifiedControlsList();
-        
+
         $this->form->setData('chckbxctrl', '0');
         $newForm = array (
           'inputctrl' => 'toto',
@@ -247,7 +248,7 @@ class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $modifiedControls = array (
            'list' => array());
         $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
-        
+
         $this->form->setData('list', array('123','aaa'));
         $this->form->initModifiedControlsList();
         $this->form->setData('list', array('aaa', '123'));

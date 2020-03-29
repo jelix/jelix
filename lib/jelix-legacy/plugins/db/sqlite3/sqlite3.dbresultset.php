@@ -133,7 +133,7 @@ class sqlite3DbResultSet extends jDbResultSet
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
-        $this->_stmt->bindParam($parameter, $variable, $this->getSqliteType($data_type));
+        return $this->_stmt->bindParam($parameter, $variable, $this->getSqliteType($data_type));
     }
 
     public function bindValue($parameter, $value, $data_type = PDO::PARAM_STR)
@@ -141,7 +141,7 @@ class sqlite3DbResultSet extends jDbResultSet
         if (!$this->_stmt) {
             throw new Exception('Not a prepared statement');
         }
-        $this->_stmt->bindValue($parameter, $value, $this->getSqliteType($data_type));
+        return $this->_stmt->bindValue($parameter, $value, $this->getSqliteType($data_type));
     }
 
     public function columnCount()

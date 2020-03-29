@@ -96,6 +96,7 @@ class ModuleXmlParser extends XmlParserAbstract
                             'minversion' => $info['minversion'],
                             'maxversion' => $info['maxversion'],
                             'version' => $info['version'],
+                            'optional' => false
                         );
                     }
                 } else {
@@ -120,6 +121,7 @@ class ModuleXmlParser extends XmlParserAbstract
         $versionRange = '';
         $minversion = '0';
         $maxversion = '*';
+        $optional = false;
         while ($xml->moveToNextAttribute()) {
             $attrName = $xml->name;
             if ($attrName == 'minversion' && $xml->value != '') { // old attribute
@@ -132,6 +134,8 @@ class ModuleXmlParser extends XmlParserAbstract
                 $name = $xml->value;
             } elseif ($attrName == 'id' && $xml->value != '') {
                 $id = $xml->value;
+            } elseif ($attrName == 'optional' && $xml->value == 'true') {
+                $optional = true;
             }
         }
         if ($versionRange == '') {
@@ -157,6 +161,7 @@ class ModuleXmlParser extends XmlParserAbstract
             'minversion' => $minversion,
             'maxversion' => $maxversion,
             'version' => $versionRange,
+            'optional'=> $optional
         );
     }
 

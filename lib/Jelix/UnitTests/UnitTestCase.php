@@ -203,7 +203,7 @@ abstract class UnitTestCase extends TestCase {
                 return true;
 
             case 'string':
-                $this->assertIsString('string', $value, $name.': not a string'.$errormessage);
+                $this->assertIsString($value, $name.': not a string'.$errormessage);
                 if(isset($xml['value'])){
                     $this->assertEquals((string)$xml['value'],$value, $name.': bad value. '.$errormessage);
                 }

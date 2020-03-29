@@ -744,4 +744,82 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
         $chain = $resolver->getDependenciesChainForInstallation();
     }
+
+
+    public function testOptionalDependencies() {
+        /*
+                A->B
+                A->C
+                D->B
+                D->E optional
+        */
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB');
+        $packA->addDependency('testC');
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $packD = new Item('testD', "1.0", false);
+        $packD->setAction(Resolver::ACTION_INSTALL);
+        $packD->addDependency('testB');
+        $packD->addDependency('testE', '*', true);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $resolver->addItem($packD);
+
+        $chain = $resolver->getDependenciesChainForInstallation();
+
+        $this->assertEquals(4, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testC', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+        $this->assertEquals('testA', $chain[2]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[2]->getAction());
+        $this->assertEquals('testD', $chain[3]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[3]->getAction());
+    }
+
+    /**
+     *
+     * @expectedException \Jelix\Dependencies\ItemException
+     * @expectedExceptionCode 6
+     * @expectedExceptionMessage For item testD, some items are missing: testB
+     */
+    public function testOptionalDependenciesWithMissingDependency() {
+        /*
+                A->B optional and missing
+                A->C
+                D->B
+                D->E optional
+        */
+
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addDependency('testB', '*', true);
+        $packA->addDependency('testC');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $packD = new Item('testD', "1.0", false);
+        $packD->setAction(Resolver::ACTION_INSTALL);
+        $packD->addDependency('testB');
+        $packD->addDependency('testE', '*', true);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packC);
+        $resolver->addItem($packD);
+
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
 }

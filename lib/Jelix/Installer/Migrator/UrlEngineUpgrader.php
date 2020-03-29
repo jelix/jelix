@@ -69,10 +69,10 @@ class UrlEngineUpgrader
 
         $this->migrateStartModuleAction();
 
-        $this->cleanConfig($this->epConfig);
+        self::cleanConfig($this->epConfig);
     }
 
-    public function cleanConfig(\Jelix\IniFile\IniModifier $ini)
+    public static function cleanConfig(\Jelix\IniFile\IniModifier $ini)
     {
         $ini->removeValue('startModule', 0, null, false);
         $ini->removeValue('startAction', 0, null, false);
@@ -81,6 +81,11 @@ class UrlEngineUpgrader
         $ini->removeValue('simple_urlengine_https', 'urlengine');
         $ini->removeValue(null, 'simple_urlengine_entrypoints');
         $ini->removeValue(null, 'basic_significant_urlengine_entrypoints');
+        $val = $ini->getValue('notfoundAct', 'urlengine');
+        if ($val !== null) {
+            $ini->removeValue('notfoundAct', 'urlengine');
+            $ini->setValue('notFoundAct', $val, 'urlengine');
+        }
     }
 
     protected $httpsSelectors;
