@@ -104,9 +104,8 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         $options = array('module' => $module,
             'daoname' => $table,
             'table' => $table, );
-        $profile = '';
-        if ($input->getOption('profile')) {
-            $profile = $input->getOption('profile');
+        $profile = $input->getOption('profile');
+        if ($profile) {
             $options['--profile'] = $profile;
         }
         $options = array_merge($arguments, $options);
@@ -115,7 +114,11 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         // create the form file
         $options = array('module' => $module,
             'form' => $table,
-            'dao' => $table, );
+            'dao' => $table
+        );
+        if ($profile) {
+            $options['--profile'] = $profile;
+        }
         if ($input->getOption('create-locales')) {
             $options['--create-locales'] = true;
         }

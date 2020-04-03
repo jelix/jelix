@@ -377,12 +377,7 @@ abstract class jDbConnection
     abstract public function getAttribute($id);
 
     /**
-<<<<<<< HEAD
      * @param int    $id    the attribut id
-=======
-     *
-     * @param integer $id the attribut id
->>>>>>> origin/jelix-1.6.x
      * @param string $value the attribute value
      *
      * @see PDO::setAttribute()

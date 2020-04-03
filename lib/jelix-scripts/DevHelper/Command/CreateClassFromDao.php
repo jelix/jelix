@@ -15,6 +15,7 @@ namespace Jelix\DevHelper\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
@@ -40,6 +41,13 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
                 InputArgument::REQUIRED,
                 'the name of the dao from which the class will be generated'
             )
+            ->addOption(
+                'profile',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'indicate the name of the profile to use for the database connection',
+                ''
+            )
         ;
         parent::configure();
     }
@@ -49,6 +57,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
         $module = $input->getArgument('module');
         $daoname = $input->getArgument('daoname');
         $classname = $input->getArgument('classname');
+        $profileName = $input->getOption('profile');
 
         // Computing some paths and filenames
 
@@ -66,8 +75,8 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
 
         // Parsing the dao xml file
 
-        $selector = new \jSelectorDao($module.'~'.$daoname, '');
-        $tools = \jDb::getConnection()->tools();
+        $selector = new \jSelectorDao($module.'~'.$daoname, $profileName);
+        $tools = \jDb::getConnection($profileName)->tools();
 
         $doc = new \DOMDocument();
 
@@ -81,6 +90,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
            );
         }
 
+        require_once JELIX_LIB_PATH.'dao/jDaoParser.class.php';
         $parser = new \jDaoParser($selector);
         $parser->parse(simplexml_import_dom($doc), $tools);
         $properties = $parser->getProperties();
