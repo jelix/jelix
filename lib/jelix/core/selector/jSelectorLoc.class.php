@@ -10,7 +10,7 @@
  * @contributor Julien Issler
  * @contributor Baptiste Toinot
  *
- * @copyright   2005-2019 Laurent Jouanneau
+ * @copyright   2005-2020 Laurent Jouanneau
  * @copyright   2007 Rahal
  * @copyright   2008 Julien Issler
  * @copyright   2008 Baptiste Toinot

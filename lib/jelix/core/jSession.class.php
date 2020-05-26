@@ -38,9 +38,26 @@ class jSession
             return false;
         }
 
-        //make sure that the session cookie is only for the current application
+        $cookieOptions = array(
+            'path' => '/',
+            'secure' => $params['cookieSecure'], // true to send the cookie only on a secure channel
+            'httponly' => $params['cookieHttpOnly'],
+            'lifetime' => $params['cookieLifetime']
+        );
+
         if (!$params['shared_session']) {
-            session_set_cookie_params(0, jApp::urlBasePath());
+            //make sure that the session cookie is only for the current application
+            $cookieOptions['path'] = jApp::urlBasePath();
+        }
+
+        if (PHP_VERSION_ID < 70300) {
+            session_set_cookie_params($cookieOptions['lifetime'], $cookieOptions['path'], '', $cookieOptions['secure'], $cookieOptions['httponly']);
+        }
+        else {
+            if ($params['cookieSameSite'] != '') {
+                $cookieOptions['samesite'] = $params['cookieSameSite'];
+            }
+            session_set_cookie_params($cookieOptions);
         }
 
         if ($params['storage'] != '') {

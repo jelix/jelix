@@ -367,6 +367,17 @@ start=1
 ; share the same php session
 shared_session=off
 
+; parameters for the session cookie
+
+; if on, cookie sent only with https
+cookieSecure=off
+; if on, the cookie is not accessible in JS (keep "on" !)
+cookieHttpOnly=on
+; lifetime of the session cookie in seconds. 0 means "until the browser is closed"
+cookieLifetime=0
+; only supported with php 7.3.0+. Possible values: None, Strict, Lax
+cookieSameSite=
+
 ; indicate a session name for each applications installed with the same
 ; domain and basePath, if their respective sessions shouldn't be shared
 name=

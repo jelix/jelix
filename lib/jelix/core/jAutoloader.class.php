@@ -153,7 +153,7 @@ class jAutoloader
         // namespace mapping
 
         foreach ($this->nsPaths as $ns => $info) {
-            if (strpos($className, $ns) === 0) {
+            if ($className == $ns || strpos($className, $ns.'\\') === 0) {
                 $path = '';
                 list($incPath, $ext, $psr0) = $info;
                 if ($lastNsPos !== false) {
