@@ -188,7 +188,7 @@ spl_autoload_register("jelix_autoload");
  */
 function checkAppOpened() {
     if (!jApp::isInit()) {
-        header("HTTP/1.1 500 Application not available");
+        header("HTTP/1.1 500 Internal Server Error");
         header('Content-type: text/html');
         echo "checkAppOpened: jApp is not initialized!";
         exit(1);
@@ -204,10 +204,11 @@ function checkAppOpened() {
         if (file_exists(jApp::appPath('install/closed.html'))) {
             $file = jApp::appPath('install/closed.html');
         }
-        else
+        else {
             $file = JELIX_LIB_PATH.'installer/closed.html';
+        }
 
-        header("HTTP/1.1 500 Application not available");
+        header("HTTP/1.1 503 Application not available");
         header('Content-type: text/html');
         echo str_replace('%message%', $message, file_get_contents($file));
         exit(1);
@@ -227,7 +228,7 @@ function checkAppNotInstalled() {
             echo "Application is installed. The script cannot be runned.\n";
         }
         else {
-            header("HTTP/1.1 500 Application not available");
+            header("HTTP/1.1 500 Internal Server Error");
             header('Content-type: text/plain');
             echo "Application is installed. The script cannot be runned.\n";
         }
