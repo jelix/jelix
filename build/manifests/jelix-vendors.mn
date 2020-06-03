@@ -81,15 +81,20 @@ cd lib/php5redis/lib
 
 cd lib/phpMailer
 ! class.phpmailer.php
+! class.phpmailerauth.php
+! class.phpmailerauthgoogle.php
 ! class.pop3.php
 ! class.smtp.php
+! get_oauth_token.php
 ! LICENSE
 ! README.md
+! VERSION
 
 cd lib/phpMailer/language
 ! phpmailer.lang-am.php
 ! phpmailer.lang-ar.php
 ! phpmailer.lang-az.php
+! phpmailer.lang-ba.php
 ! phpmailer.lang-be.php
 ! phpmailer.lang-bg.php
 ! phpmailer.lang-br.php
@@ -127,6 +132,7 @@ cd lib/phpMailer/language
 ! phpmailer.lang-pt.php
 ! phpmailer.lang-pt_br.php
 ! phpmailer.lang-ro.php
+! phpmailer.lang-rs.php
 ! phpmailer.lang-ru.php
 ! phpmailer.lang-se.php
 ! phpmailer.lang-sk.php
