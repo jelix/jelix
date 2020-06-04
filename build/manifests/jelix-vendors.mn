@@ -81,8 +81,8 @@ cd lib/php5redis/lib
 
 cd lib/phpMailer
 ! class.phpmailer.php
-! class.phpmailerauth.php
-! class.phpmailerauthgoogle.php
+! class.phpmaileroauth.php
+! class.phpmaileroauthgoogle.php
 ! class.pop3.php
 ! class.smtp.php
 ! get_oauth_token.php
