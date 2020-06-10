@@ -38,7 +38,7 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
         $entryPoint = $helpers->getEntryPointsById($epId);
         /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
-        if ($conf->getValue('jacl2', 'coordplugins') == null) {
+        if ($conf->getValue('jacl2', 'coordplugins') == null && $entryPoint->getType() != 'cmdline') {
             $conf->setValue('jacl2', '1', 'coordplugins');
             if ($entryPoint->getType() != 'classic') {
                 $onerror = 1;

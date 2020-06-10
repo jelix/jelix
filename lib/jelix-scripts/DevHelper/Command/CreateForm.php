@@ -40,6 +40,13 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
                 'selector of the dao on which the form will be based. If not given, the jforms file will be empty.'
             )
             ->addOption(
+                'profile',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'indicate the name of the profile to use for the database connection',
+                ''
+            )
+            ->addOption(
                 'create-locales',
                 null,
                 InputOption::VALUE_NONE,
@@ -60,6 +67,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         $module = $input->getArgument('module');
         $formName = $input->getArgument('form');
         $daoName = $input->getArgument('dao');
+        $profileName = $input->getOption('profile');
 
         require_once JELIX_LIB_PATH.'dao/jDaoParser.class.php';
 
@@ -101,10 +109,10 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         \Jelix\Core\App::config()->startModule = $module;
         \Jelix\Core\App::pushCurrentModule($module);
 
-        $tools = \jDb::getConnection()->tools();
+        $tools = \jDb::getConnection($profileName)->tools();
 
         // we're going to parse the dao
-        $selector = new \jSelectorDao($daoName, '');
+        $selector = new \jSelectorDao($daoName, $profileName);
 
         $doc = new \DOMDocument();
         $daoPath = $selector->getPath();

@@ -23,7 +23,7 @@ class SimpleFileSelector implements SelectorInterface
 
     public function __construct($sel)
     {
-        if (preg_match('/^([\\w\\.\\/]+)$/', $sel, $m)) {
+        if (preg_match('/^([\\w_\\-\\.\\/]+)$/', $sel, $m)) {
             $this->file = $m[1];
             $this->_path = $this->_basePath.$m[1];
         } else {

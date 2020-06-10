@@ -83,7 +83,7 @@ class Autoloader
         namespace = "/path|.ext"
         */
         foreach ($this->config->_autoload_namespacepsr0 as $ns => $info) {
-            if (strpos($className, $ns) === 0) {
+            if ($className == $ns || strpos($className, $ns.'\\') === 0) {
                 if (is_array($info)) {
                     foreach ($info as $inf) {
                         list($incPath, $ext) = explode('|', $inf);
@@ -107,7 +107,7 @@ class Autoloader
         namespace[] = "/path|.ext"
         */
         foreach ($this->config->_autoload_namespacepsr4 as $ns => $info) {
-            if (strpos($className, $ns) === 0) {
+            if (strpos($className, $ns.'\\') === 0) {
                 if (is_array($info)) {
                     foreach ($info as $inf) {
                         list($incPath, $ext) = explode('|', $inf);

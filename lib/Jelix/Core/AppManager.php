@@ -98,7 +98,7 @@ class AppManager
     {
         if (!App::isInit()) {
             if (!\jServer::isCLI()) {
-                header('HTTP/1.1 500 Application not available');
+                header('HTTP/1.1 500 Internal Server Error');
                 header('Content-type: text/html');
             }
             echo 'Jelix App is not initialized!';
@@ -118,7 +118,7 @@ class AppManager
                 $file = __DIR__.'/closed.html';
             }
 
-            header('HTTP/1.1 500 Application not available');
+            header('HTTP/1.1 503 Application not available');
             header('Content-type: text/html');
             echo str_replace('%message%', $message, file_get_contents($file));
             exit(1);
@@ -137,7 +137,7 @@ class AppManager
             if (\jServer::isCLI()) {
                 echo "Application is installed. The script cannot be runned.\n";
             } else {
-                header('HTTP/1.1 500 Application not available');
+                header('HTTP/1.1 500 Internal Server Error');
                 header('Content-type: text/plain');
                 echo "Application is installed. The script cannot be runned.\n";
             }

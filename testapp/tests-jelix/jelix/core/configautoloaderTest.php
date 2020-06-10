@@ -28,7 +28,7 @@ path[]="'.__DIR__.'/autoload/some|.php"
         $this->assertEquals(__DIR__.'/autoload/some/bateau.php', $autoloader->test_get_path('\bateau'));
         $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php', $autoloader->test_get_path('\foo\bateau'));
     }
-    
+
     function testClassPath() {
         $autoloader = new fakeConfigAutoloader((object) parse_ini_string('
 [_autoload_namespacepsr0]
@@ -57,14 +57,19 @@ foo\bateau="'.__DIR__.'/autoload/foobat.php"
 [_autoload_includepath]
 [_autoload_namespacepsr0]
 foo = "'.__DIR__.'/autoload/ns/bar|.php"
+foobar = "'.__DIR__.'/autoload/ns/bar3|.php"
 blo_u\bl_i="'.__DIR__.'/autoload/ns/other|.php"
 [_autoload_fallback]
 psr0[]="'.__DIR__.'/autoload/some|.php"
 ', true));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('foo'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo.php', $autoloader->test_get_path('\foo'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar.php', $autoloader->test_get_path('foobar'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar.php', $autoloader->test_get_path('\foobar'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('foo\bar\myclass'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/blob/myclass.php', $autoloader->test_get_path('foobar\blob\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/blob/my/superclass.php', $autoloader->test_get_path('\foobar\blob\my_superclass'));
         $this->assertEquals(__DIR__.'/autoload/ns/other/blo_u/bl_i/bla/p.php', $autoloader->test_get_path('blo_u\bl_i\bla_p'));
         $this->assertEquals(__DIR__.'/autoload/ns/other/blo_u/bl/i.php', $autoloader->test_get_path('blo_u\bl_i'));
         $this->assertEquals(__DIR__.'/autoload/some/bateau.php',$autoloader->test_get_path('bateau'));
@@ -118,12 +123,16 @@ foo[] = "'.__DIR__.'/autoload/some/foo|.php"
 [_autoload_includepath]
 [_autoload_namespacepsr4]
 foo = "'.__DIR__.'/autoload/ns/bar/foo|.php"
+foobar = "'.__DIR__.'/autoload/ns/bar3/foobar|.php"
 [_autoload_fallback]
 psr0[]="'.__DIR__.'/autoload/some|.php"
 ', true));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('\foo\bar\myclass'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/myclass2.php', $autoloader->test_get_path('\foo\myclass2'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/blob/myclass.php', $autoloader->test_get_path('\foobar\blob\myclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/blob/my/superclass.php', $autoloader->test_get_path('\foobar\blob\my_superclass'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/myclass2.php', $autoloader->test_get_path('\foobar\myclass2'));
         $this->assertEquals(__DIR__.'/autoload/some/bateau.php',$autoloader->test_get_path('bateau'));
         $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
         $this->assertFalse($autoloader->test_get_path('foo\something'));
