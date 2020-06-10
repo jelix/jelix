@@ -90,7 +90,7 @@ class jConfigAutoloader
         namespace = "/path|.ext"
         */
         foreach ($this->config->_autoload_namespace as $ns => $info) {
-            if (strpos($className, $ns) === 0) {
+            if ($className == $ns || strpos($className, $ns.'\\') === 0) {
                 $path = '';
                 if ($lastNsPos !== false) {
                     if ($namespace) {
@@ -110,7 +110,7 @@ class jConfigAutoloader
         namespace = "/path|.ext"
         */
         foreach ($this->config->_autoload_namespacepathmap as $ns => $info) {
-            if (strpos($className, $ns) === 0) {
+            if (strpos($className, $ns.'\\') === 0) {
                 $path = '';
                 if ($lastNsPos !== false) {
                     $namespace = substr($namespace, strlen($ns) + 1);
