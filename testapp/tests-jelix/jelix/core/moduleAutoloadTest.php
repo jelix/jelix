@@ -24,7 +24,7 @@ class moduleAutoloadTest extends jUnitTestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(22, count($conf->_autoload_class), '_autoload_class should have 22 declarations');
+        $this->assertEquals(23, count($conf->_autoload_class), '_autoload_class should have 23 declarations');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }
