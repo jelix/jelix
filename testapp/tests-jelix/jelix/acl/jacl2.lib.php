@@ -78,7 +78,6 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
      * @depends testIsMemberOfGroup
      */
     public function testCheckRight(){
-        echo "#1 testCheckRight\n";
         jAcl2DbManager::addSubject('super.cms.list', 'cms~rights.super.cms');
         jAcl2DbManager::addSubject('super.cms.update', 'cms~rights.super.cms');
         jAcl2DbManager::addSubject('super.cms.delete', 'cms~rights.super.cms');
@@ -107,7 +106,6 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
      * @depends testCheckRight
      */
     public function testCheckRightByUser(){
-        echo "#2 testCheckRightByUser\n";
         jAcl2DbManager::addSubject('super.cms.list', 'cms~rights.super.cms');
         jAcl2DbManager::addSubject('super.cms.update', 'cms~rights.super.cms');
         jAcl2DbManager::addSubject('super.cms.delete', 'cms~rights.super.cms');
@@ -149,7 +147,6 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
     * @depends testCheckRightByUser
     */
     public function testAddRight(){
-        echo "#3 testAddRight\n";
         jAcl2DbManager::addRight('group1', 'admin.access');
 
         $this->assertTrue(jAcl2::check('admin.access'));
