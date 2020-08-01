@@ -400,6 +400,8 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(), $table->getIndexes());
         $this->assertEquals(array(), $table->getUniqueKeys());
         $this->assertEquals(array(), $table->getReferences());
+        $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
     }
 
     function testCreateTable()
@@ -563,6 +565,12 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array('country_id'), $pk->columns);
         $pk = $city->getPrimaryKey();
         $this->assertEquals(array('city_id'), $pk->columns);
+
+        $this->assertTrue($country->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($country->getColumn('name')->isAutoincrementedColumn());
+        $this->assertTrue($city->getColumn('city_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('name')->isAutoincrementedColumn());
 
         $columns='<array>'.$this->countryColumns ['country_id'].
             $this->countryColumns ['name']. '</array>';
@@ -1028,5 +1036,33 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(), $city->getReferences());
     }
 
+    public function testEqualColumn()
+    {
+        $col1 = new jDbColumn(
+            'id',
+            'integer',
+            0,
+            true,
+            '',
+            true
+        );
+        $col1->nativeType = 'integer';
+        $col1->autoIncrement = true;
+        $col1->sequence = 'community_users_id_seq';
+
+        $col2 = new jDbColumn(
+            'id',
+            'autoincrement',
+            0,
+            true,
+            '',
+            true
+        );
+        $col2->nativeType = 'serial';
+        $col2->autoIncrement = true;
+        $col2->sequence = false;
+
+        $this->assertTrue($col1->isEqualTo($col2));
+    }
 }
 
