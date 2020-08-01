@@ -401,6 +401,8 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
 </array>';
 
         $this->assertComplexIdenticalStr($table->getColumns(), $verif);
+        $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
     }
 
 
@@ -563,6 +565,12 @@ class jDbSchema_sqlite3Test extends jUnitTestCase {
         $this->assertEquals(array('country_id'), $pk->columns);
         $pk = $city->getPrimaryKey();
         $this->assertEquals(array('city_id'), $pk->columns);
+
+        $this->assertTrue($country->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($country->getColumn('name')->isAutoincrementedColumn());
+        $this->assertTrue($city->getColumn('city_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('country_id')->isAutoincrementedColumn());
+        $this->assertFalse($city->getColumn('name')->isAutoincrementedColumn());
 
         $columns='<array>'.$this->countryColumns ['country_id'].
             $this->countryColumns ['name']. '</array>';
