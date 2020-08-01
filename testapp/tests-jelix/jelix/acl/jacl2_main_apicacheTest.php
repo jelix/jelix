@@ -56,7 +56,7 @@ class jacl2_main_apicacheTest extends jacl2APITest {
     }
 
     /**
-    * @depends testCheckRight
+    * @depends testCheckRightByUser
     */
     public function testAddRight(){
         // because of the right adding in the parent method,

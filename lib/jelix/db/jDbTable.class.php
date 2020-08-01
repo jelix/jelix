@@ -73,6 +73,11 @@ abstract class jDbTable
         return $this->columns;
     }
 
+    /**
+     * @param string $name
+     * @param bool $forChange
+     * @return jDbColumn|null
+     */
     public function getColumn($name, $forChange = false)
     {
         if ($this->columns === null) {
