@@ -319,6 +319,7 @@ cd testapp/tests-jelix/jelix/core/
   selectors_actionTest.php
   selectors_moduleTest.php
   urlsParsingTest.php
+  urlsTest.php
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php
