@@ -6,7 +6,7 @@
  * @author     Gérald Croes
  * @contributor  Laurent Jouanneau, Frédéric Guillot, Antoine Detante, Julien Issler
  *
- * @copyright  2001-2005 CopixTeam, 2005-2011 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+ * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
  * @copyright  2007 Julien Issler
  *
  * This class was get originally from an experimental branch of the Copix project
@@ -94,19 +94,13 @@ class AuthCoordPlugin implements jICoordPlugin
             }
             if (jApp::coord()->request->isAjax() && !$badip) {
                 if (isset($this->config['on_ajax_error_action']) && $this->config['on_ajax_error_action']) {
-                    $auth_url_return = jApp::coord()->request->getParam('auth_url_return');
-                    if ($auth_url_return === null) {
-                        jApp::coord()->request->params['auth_url_return'] = jUrl::getCurrentUrl();
-                    }
+                    $this->setReturnUrl();
                     $selector = new jSelectorAct($this->config['on_ajax_error_action']);
                 } else {
                     throw new jException($this->config['error_message']);
                 }
             } elseif (!$badip) {
-                $auth_url_return = jApp::coord()->request->getParam('auth_url_return');
-                if ($auth_url_return === null) {
-                    jApp::coord()->request->params['auth_url_return'] = jUrl::getCurrentUrl();
-                }
+                $this->setReturnUrl();
                 $selector = new jSelectorAct($this->config['on_error_action']);
             }
         }
@@ -117,6 +111,15 @@ class AuthCoordPlugin implements jICoordPlugin
     public function beforeOutput()
     {
     }
+
+    protected function setReturnUrl()
+    {
+        $auth_url_return = jApp::coord()->request->getParam('auth_url_return');
+        if (!jAuth::checkReturnUrl($auth_url_return)) {
+            jApp::coord()->request->params['auth_url_return'] = jUrl::getCurrentUrl();
+        }
+    }
+
 
     public function afterProcess()
     {
