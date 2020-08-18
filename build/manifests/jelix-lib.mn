@@ -131,6 +131,7 @@ cd lib/jelix/core-modules/jelix/controllers
   redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
+  mailer.cmdline.php
 cd lib/jelix/core-modules/jelix/daos
    jsession.dao.xml
    jcache.dao.xml
@@ -242,10 +243,13 @@ cd lib/jelix/core-modules/jelix/templates
   check_install.tpl
 cd lib/jelix/core-modules/jelix/templates/en_EN
   check_install.tpl
+  email_test.tpl
 cd lib/jelix/core-modules/jelix/templates/en_US
   check_install.tpl
+  email_test.tpl
 cd lib/jelix/core-modules/jelix/templates/fr_FR
   check_install.tpl
+  email_test.tpl
 cd lib/jelix/core-modules/jelix/zones
   check_install.zone.php
 

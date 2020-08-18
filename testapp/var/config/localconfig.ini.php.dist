@@ -9,3 +9,10 @@
 [recaptcha]
 sitekey=
 secret=
+
+
+[mailer]
+webmasterEmail = test@jelix.org
+webmasterName = Testapp webmaster
+
+mailerType = file
