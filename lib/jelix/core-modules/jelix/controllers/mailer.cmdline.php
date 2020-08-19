@@ -1,16 +1,17 @@
 <?php
 /**
- * @author       Laurent Jouanneau <laurent@xulfr.org>
- * @contributor
+ * @package    jelix-modules
+ * @subpackage jelix-module
+ * @author       Laurent Jouanneau
  *
- * @copyright    2007-2019 Laurent Jouanneau
+ * @copyright    2020 Laurent Jouanneau
  *
- * @link         http://jelix.org
+ * @link         https://jelix.org
  * @licence      http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
 
 /**
- * controller for the password reset process, initiated by an admin
+ * controller to test email configuration
  */
 class mailerCtrl extends \jControllerCmdLine
 {
@@ -38,6 +39,7 @@ class mailerCtrl extends \jControllerCmdLine
 
     public function test()
     {
+        /** @var jResponseCmdline $rep */
         $rep = $this->getResponse('cmdline');
         $email = $this->param('email');
 
@@ -66,6 +68,7 @@ class mailerCtrl extends \jControllerCmdLine
         $mail->msgHTML($body, '', array($mail, 'html2textKeepLinkSafe'));
         if (!$mail->Send()) {
             $rep->addContent("It seems something goes wrong during the message sending.\n");
+            $rep->setExitCode(1);
         }
         else {
             $rep->addContent("Message has been sent.\n");
