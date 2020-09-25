@@ -373,6 +373,7 @@ cd lib/jelix/forms/controls
   jFormsControlUpload2.class.php
   jFormsControlDate.class.php
   jFormsControlDatetime.class.php
+  jFormsControlTime.class.php
   jFormsControlWikiEditor.class.php
 #endif
 
