@@ -38,7 +38,6 @@ cd lib/jelix/core-modules/jelix/controllers
 ! error.xmlrpc.php
   jforms.classic.php
   www.classic.php
-  mailer.cmdline.php
 cd lib/jelix/core-modules/jelix/Command
    __ALL__
 cd lib/jelix/core-modules/jelix/daos
