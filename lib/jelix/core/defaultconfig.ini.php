@@ -446,11 +446,13 @@ loadClasses=
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
 controls.datetime.input = "menulists"
+controls.time.input = "menulists"
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels = "names"
 ; define the default config for datepickers in jforms
 datepicker = default
 datetimepicker = default
+timepicker = default
 
 ; default captcha type
 captcha = simple

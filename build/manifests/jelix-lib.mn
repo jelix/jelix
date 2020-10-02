@@ -665,6 +665,9 @@ cd lib/jelix/plugins/formwidget/upload2_html
 cd lib/jelix/plugins/formwidget/wikieditor_html
   wikieditor_html.formwidget.php
 
+cd lib/jelix/plugins/formwidget/time_html
+  time_html.formwidget.php
+
 cd lib/jelix/plugins/jforms/html
   html.jformsbuilder.php
 
