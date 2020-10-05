@@ -15,22 +15,24 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
     {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
-        $js = 'c = new '.$jFormsJsVarName."ControlTime('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $js = 'c = new '.$jFormsJsVarName."ControlTime2('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         $js .= "c.multiFields = true;\n";
         $minTime = $ctrl->datatype->getFacet('minValue');
         $maxTime = $ctrl->datatype->getFacet('maxValue');
         if ($minTime) {
-            $js .= "c.min${minTime} = '".$minTime->toString(jDateTime::DB_TFORMAT)."';\n";
+            $js .= "c.minTime = '".$minTime->toString(jDateTime::DB_TFORMAT)."';\n";
         }
         if ($maxTime) {
-            $js .= "c.max${maxTime} = '".$maxTime->toString(jDateTime::DB_TFORMAT)."';\n";
+            $js .= "c.maxTime = '".$maxTime->toString(jDateTime::DB_TFORMAT)."';\n";
         }
         $this->parentWidget->addJs($js);
         $this->commonJs();
 
         if ($ctrl instanceof jFormsControlTime || get_class($ctrl->datatype) == 'jDatatypeTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
             $config = isset($ctrl->timepickerConfig) ? $ctrl->timepickerConfig : jApp::config()->forms['timepicker'];
-            $this->parentWidget->addJs('jelix_timepicker_'.$config."(c, jFormsJQ.config);\n");
+            if ($config) {
+                $this->parentWidget->addJs('jelix_timepicker_'.$config."(c, jFormsJQ.config);\n");
+            }
         }
     }
 

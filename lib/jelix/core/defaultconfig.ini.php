@@ -452,7 +452,7 @@ controls.datetime.months.labels = "names"
 ; define the default config for datepickers in jforms
 datepicker = default
 datetimepicker = default
-timepicker = default
+timepicker=
 
 ; default captcha type
 captcha = simple
