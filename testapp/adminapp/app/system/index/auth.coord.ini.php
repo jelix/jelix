@@ -51,7 +51,7 @@ after_login="master_admin~default:index"
 after_logout="jauth~login:form"
 
 ; says if after_login can be overloaded by a "auth_url_return" parameter in the url/form for the login
-enable_after_login_override=off
+enable_after_login_override=on
 
 ; says if after_logout can be overloaded by a "auth_url_return" parameter in the url/form for the login
 enable_after_logout_override=off

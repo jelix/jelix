@@ -107,7 +107,7 @@ class WebAssetsUpgrader
                     }, $css);
                     $targetConfig->setValue('jforms_datepicker_'.$configName.'.css', $css, 'webassets_main');
                 }
-                $targetConfig->setValue('jforms_datepicker_'.$configName.'.require', 'jquery');
+                $targetConfig->setValue('jforms_datepicker_'.$configName.'.require', 'jquery', 'webassets_main');
             }
             $targetConfig->removeSection('datepickers');
         }
@@ -142,7 +142,7 @@ class WebAssetsUpgrader
                     }, $css);
                     $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.css', $css, 'webassets_main');
                 }
-                $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.require', 'jquery');
+                $targetConfig->setValue('jforms_datetimepicker_'.$configName.'.require', 'jquery', 'webassets_main');
             }
             $targetConfig->removeSection('datetimepickers');
         }

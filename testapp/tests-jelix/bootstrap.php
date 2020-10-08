@@ -13,5 +13,5 @@ if (file_exists(jApp::tempPath())) {
 }
 
 define('TESTAPP_URL', 'http://testapp18.local/');
+define('TESTAPP_URL_HOST', 'testapp18.local');
 define('TESTAPP_HOST', 'testapp18.local');
-

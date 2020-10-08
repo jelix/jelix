@@ -401,7 +401,7 @@ class jCoordinator
      * Exception handler using a response object to return the error
      * Replace the default PHP Exception handler.
      *
-     * @param Exception $e the exception object
+     * @param Exception|Throwable $e the exception object
      *
      * @since 1.4
      */
