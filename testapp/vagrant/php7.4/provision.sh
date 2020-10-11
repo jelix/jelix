@@ -5,10 +5,10 @@ MYSQL_VERSION=""
 PHP_VERSION="7.4"
 APPNAME="testapp"
 APPDIR="$ROOTDIR/$APPNAME"
-VAGRANTDIR="/vagrantscripts"
-APPHOSTNAME="testapp16.local"
+VAGRANTDIR="$APPDIR/vagrant"
+APPHOSTNAME="testapp17.local"
 APPHOSTNAME2=""
-LDAPCN="testapp16"
+LDAPCN="testapp17"
 FPM_SOCK="php\\/php7.4-fpm.sock"
 POSTGRESQL_VERSION=11
 
