@@ -187,11 +187,11 @@ function resetJelixInstall() {
         mkdir $appdir/var/log
     fi
 
-    if [ -f $appdir/var/config/profiles.ini.php.dist ]; then
-        cp -a $appdir/var/config/profiles.ini.php.dist $appdir/var/config/profiles.ini.php
+    if [ -f $appdir/var/config/profiles.ini.php.vagrant.dist ]; then
+        cp -a $appdir/var/config/profiles.ini.php.vagrant.dist $appdir/var/config/profiles.ini.php
     fi
-    if [ -f $appdir/var/config/localconfig.ini.php.dist ]; then
-        cp -a $appdir/var/config/localconfig.ini.php.dist $appdir/var/config/localconfig.ini.php
+    if [ -f $appdir/var/config/localconfig.ini.php.vagrant.dist ]; then
+        cp -a $appdir/var/config/localconfig.ini.php.vagrant.dist $appdir/var/config/localconfig.ini.php
     fi
     if [ -f $appdir/var/config/installer.ini.php ]; then
         rm -f $appdir/var/config/installer.ini.php

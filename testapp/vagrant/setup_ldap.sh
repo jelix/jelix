@@ -32,6 +32,6 @@ ldapmodify -Y EXTERNAL -H ldapi:/// -f $VAGRANTDIR/ldap/ldap_ssl.ldif
 #ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config | grep TLS
 
 echo "add default users for tests"
-ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
-#ldapsearch -x -D cn=admin,dc=testapp17,dc=local -w passjelix -b "dc=testapp17,dc=local" "(objectClass=*)"
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
+#ldapsearch -x -D cn=admin,dc=tests,dc=jelix -w passjelix -b "dc=tests,dc=jelix" "(objectClass=*)"
 

@@ -50,6 +50,8 @@ if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
     apt-get install php7.1-ldap
 fi
 
+cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
+
 # ---------------------- configure apache virtual hosts
 
 rm -f /etc/apache2/sites-enabled/000-default.conf

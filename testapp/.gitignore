@@ -21,3 +21,5 @@ temp/*
 !temp/.dummy
 tests-jelix/jelix/installer/app1/var/config/installer.ini.php
 tests-jelix/jelix/installer/app1/var/config/liveconfig.ini.php
+docker-conf/certs/*
+!docker-conf/certs/.dummy

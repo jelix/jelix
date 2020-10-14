@@ -22,7 +22,7 @@ mysqli_profile = testapp_mysqli
 ; do not change the driver ! testapp really need a mysql database for this profile
 driver="mysqli"
 database="testapp"
-host= "localhost"
+host= "mysql"
 user= "test_user"
 password=jelix
 persistent= on
@@ -34,7 +34,7 @@ persistent= on
 ; and setup a pdo connection
 [jdb:testapppdo]
 driver=mysqli
-host=localhost
+host=mysql
 database="testapp"
 usepdo=1
 ; you can change user option : use same value as user in testapp profiles
@@ -45,7 +45,7 @@ password=jelix
 ; to run tests with pgsql. don't use pdo !
 [jdb:testapp_pgsql]
 driver="pgsql"
-host=localhost
+host=pgsql
 database=testapp
 user=test_user
 password=jelix
@@ -59,7 +59,7 @@ database="tests.sqlite3"
 [jdb:testapp_mysqli]
 driver="mysqli"
 database="testapp"
-host= "localhost"
+host= "mysql"
 user= "test_user"
 password=jelix
 persistent= on
@@ -131,24 +131,24 @@ automatic_cleaning_factor = 0
 
 [jkvdb:usingredis]
 driver=redis_php
-host=localhost
+host=redis
 port=6379
 
 [jkvdb:usingredis2]
 driver=redis_php
-host=localhost
+host=redis
 port=6379
 db=1
 key_prefix=bcd/
 
 [jkvdb:usingredis_ext]
 driver=redis_ext
-host=localhost
+host=redis
 port=6379
 
 [jkvdb:usingredis_ext2]
 driver=redis_ext
-host=localhost
+host=redis
 port=6379
 db=1
 key_prefix=bcd/
@@ -237,13 +237,13 @@ directory_level = 2
 [jcache:usingredis]
 enabled = 1
 driver=redis_php
-host=localhost
+host=redis
 port=6379
 
 [jcache:usingredis2]
 enabled = 1
 driver=redis_php
-host=localhost
+host=redis
 port=6379
 key_prefix=abc:
 db=1
@@ -251,13 +251,13 @@ db=1
 [jcache:usingredis_ext]
 enabled = 1
 driver=redis_ext
-host=localhost
+host=redis
 port=6379
 
 [jcache:usingredis_ext2]
 enabled = 1
 driver=redis_ext
-host=localhost
+host=redis
 port=6379
 key_prefix=abc:
 db=1
@@ -271,11 +271,11 @@ file_name_prefix=acl2dbcache
 
 [authldap:test]
 ; default "localhost"
-hostname=localhost
+hostname=openldap
 ; default 389
 port=389
 
 ; DOMAIN\user or user@DOMAIN to connect with LDAP (user who has at least search right)
-ldapUser="cn=admin,dc=testapp17,dc=local"
+ldapUser="cn=admin,dc=tests,dc=jelix"
 ; password used to connect with LDAP
 ldapPassword="passjelix"

@@ -10,7 +10,7 @@ jacl2_profile=adminapp
 ; the driver name : mysqli, pgsql, sqlite3...
 driver="mysqli"
 database="testapp"
-host= "localhost"
+host= "mysql"
 user= "test_user"
 password=jelix
 persistent= on
@@ -30,7 +30,7 @@ jforms =
 ;----------------- jKVDb for jPref
 [jkvdb:jpref]
 driver = memcache
-host = "localhost:11211"
+host = "memcached:11211"
 
 
 
