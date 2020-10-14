@@ -418,6 +418,11 @@ datepicker=default
 ; a jelix_datetimepicker_<config> function
 datetimepicker=default
 
+; same as datepicker but for time pickers.
+; value is suffix for jforms_timepicker_<config> web assets group and
+; a jelix_timepicker_<config> function
+timepicker=
+
 ; default captcha type
 captcha = simple
 
@@ -467,6 +472,10 @@ jforms_datetimepicker_default.require=jforms_datepicker_default
 jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
 jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
 jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
+
+;jforms_timepicker_default.require=
+;jforms_timepicker_default.js=
+;jforms_timepicker_default.css=
 
 jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
 jforms_htmleditor_default.js[]="$jelix/ckeditor5/translations/$lang.js"

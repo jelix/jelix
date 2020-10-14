@@ -154,6 +154,36 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         return false;
     }
 
+
+    protected function generateTime(&$source, $control, &$attributes)
+    {
+        $this->attrDefaultvalue($source, $attributes);
+        $this->attrReadOnly($source, $attributes);
+        $this->attrRequired($source, $attributes);
+        $this->readLabel($source, $control, 'time');
+        $this->readEmptyValueLabel($source, $control);
+        $this->readHelpHintAlert($source, $control);
+        if (isset($attributes['mintime'])) {
+            $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mintime'].'\');';
+            unset($attributes['mintime']);
+        }
+        if (isset($attributes['maxtime'])) {
+            $source[]='$ctrl->datatype->addFacet(\'maxValue\',\''.$attributes['maxtime'].'\');';
+            unset($attributes['maxtime']);
+        }
+        if (isset($attributes['seconds'])) {
+            if ($attributes['seconds'] == "true") {
+                $source[]='$ctrl->enableSeconds = true;';
+            }
+            unset($attributes['seconds']);
+        }
+        if (isset($attributes['timepicker'])) {
+            $source[]='$ctrl->timepickerConfig = \''.$attributes['timepicker'].'\';';
+            unset($attributes['timepicker']);
+        }
+        return false;
+    }
+
     protected function generateTextarea(&$source, $control, &$attributes)
     {
         if (isset($attributes['type'])) {
@@ -305,7 +335,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         $this->attrReadOnly($source, $attributes);
         $hasCheckbox = false;
         if (isset($attributes['withcheckbox'])) {
-            if ($attributes['withcheckbox'] == 'true') {
+            if ('true' == $attributes['withcheckbox']) {
                 $hasCheckbox = true;
                 $source[] = '$ctrl->hasCheckbox=true;';
             }
