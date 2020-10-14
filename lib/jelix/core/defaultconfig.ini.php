@@ -405,6 +405,8 @@ loadClasses=
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
 controls.datetime.input=menulists
+; define input type for time widgets : "textboxes" or "menulists"
+controls.time.input = "menulists"
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels=names
 ; define the configuration name to use for datepickers in jforms

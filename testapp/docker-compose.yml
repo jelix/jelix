@@ -36,7 +36,7 @@ services:
     build: ./docker-conf/openldap
     container_name: jelix_${JLXBRANCH}_test_ldap
     environment:
-      #SLAPD_FORCE_RECONFIGURE: false
+      #SLAPD_FORCE_RECONFIGURE: "true"
       SLAPD_PASSWORD: "passjelix"
       SLAPD_ORGANISATION: "Jelix"
       SLAPD_DOMAIN: "tests.jelix"
@@ -51,8 +51,11 @@ services:
   php:
     build: ./docker-conf/phpfpm
     container_name: jelix_${JLXBRANCH}_test_php
+    environment:
+      TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
     volumes:
       - "../:/jelixapp/"
+      - "./docker-conf/certs:/customcerts"
     networks:
       - default
   web:
