@@ -11,6 +11,43 @@
  */
 class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
+
+    public function outputMetaContent($resp) {
+
+        $confTime = &jApp::config()->timepickers;
+        $datepicker_default_config = jApp::config()->forms['timepicker'];
+
+        if (isset($this->ctrl->timepickerConfig)  && $this->ctrl->timepickerConfig) {
+            $config = $this->ctrl->timepickerConfig;
+        }
+        else {
+            $config = $datepicker_default_config;
+        }
+
+        if ($config == '') {
+            return;
+        }
+
+        if (isset($confTime[$config.'.js'])) {
+            $js = $confTime[$config.'.js'];
+            foreach($js as $file) {
+                $file = str_replace('$lang', jLocale::getCurrentLang(), $file);
+                $resp->addJSLink($file);
+            }
+        }
+        if (isset($confTime[$config])) {
+            $resp->addJSLink($confTime[$config]);
+        }
+
+        if (isset($confTime[$config.'.css'])) {
+            $css = $confTime[$config.'.css'];
+            foreach($css as $file) {
+                $resp->addCSSLink($file);
+            }
+        }
+    }
+
+
     protected function outputJs()
     {
         $ctrl = $this->ctrl;
@@ -29,7 +66,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->commonJs();
 
         if ($ctrl instanceof jFormsControlTime || get_class($ctrl->datatype) == 'jDatatypeTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
-            $config = isset($ctrl->timepickerConfig) ? $ctrl->timepickerConfig : jApp::config()->forms['timepicker'];
+            $config = $ctrl->timepickerConfig != '' ? $ctrl->timepickerConfig : jApp::config()->forms['timepicker'];
             if ($config) {
                 $this->parentWidget->addJs('jelix_timepicker_'.$config."(c, jFormsJQ.config);\n");
             }
@@ -52,7 +89,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                 $v['minutes'] = $matches[2];
             }
             if (isset($matches[3])) {
-                $v['seconds'] = $matches[3];
+                $v['seconds'] = $matches[4];
             }
         }
         $f = jLocale::get('jelix~format.time');

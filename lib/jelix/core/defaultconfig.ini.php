@@ -487,6 +487,9 @@ default.js[]=$jqueryPath/ui/i18n/jquery.ui.datepicker-$lang.js
 default.js[]=$jelix/js/jforms/datepickers/default/ui.$lang.js
 default.css[]=$jqueryPath/themes/base/jquery.ui.all.css
 
+[timepickers]
+
+
 [htmleditors]
 default.engine.name = wymeditor
 default.engine.file[] = $jqueryPath/jquery.js

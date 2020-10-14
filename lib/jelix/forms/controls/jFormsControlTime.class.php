@@ -15,6 +15,7 @@ class jFormsControlTime extends jFormsControl
 {
     public $type = 'time';
     public $enableSeconds = false;
+    public $timepickerConfig = false;
 
     public function __construct($ref)
     {

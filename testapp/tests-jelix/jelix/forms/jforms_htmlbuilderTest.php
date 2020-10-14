@@ -2044,7 +2044,7 @@ jelix_wymeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<select name="date1[minutes]" id="' . self::$formname . '_date1_minutes" class="jforms-ctrl-date">'.
+        $this->assertEquals('<select name="date1[month]" id="' . self::$formname . '_date1_month" class="jforms-ctrl-date">'.
                 '<option value="">Month</option>'.
             '<option value="01">January</option><option value="02">February</option>'.
             '<option value="03">March</option><option value="04">April</option>'.
@@ -2087,7 +2087,7 @@ jelix_datepicker_default(c, jFormsJQ.config);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<select name="date1[minutes]" id="' . self::$formname . '_date1_minutes" class="jforms-ctrl-date">'.
+        $this->assertEquals('<select name="date1[month]" id="' . self::$formname . '_date1_month" class="jforms-ctrl-date">'.
             '<option value="">Month</option>'.
             '<option value="01">January</option><option value="02">February</option>'.
             '<option value="03">March</option><option value="04">April</option>'.
@@ -2495,6 +2495,7 @@ jelix_datepicker_default(c, jFormsJQ.config);
 
         // full date time
         self::$form->setData('date2', '2019-07-24T15:03:27.123465');
+        $ctrl->enableSeconds = true;
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -2573,8 +2574,41 @@ jelix_datepicker_default(c, jFormsJQ.config);
             '<option value="55">55</option><option value="56">56</option>'.
             '<option value="57">57</option><option value="58">58</option>'.
             '<option value="59">59</option></select> '.
-            '<input type="hidden" id="' . self::$formname . '_date2_seconds" name="date2[seconds]" value="27"/>'
-            . "\n", $out);
+            '<select name="date2[seconds]" id="' . self::$formname . '_date2_seconds" class="jforms-ctrl-datetime">'.
+            '<option value="">Seconds</option>'.
+            '<option value="00">00</option><option value="01">01</option>'.
+            '<option value="02">02</option><option value="03">03</option>'.
+            '<option value="04">04</option><option value="05">05</option>'.
+            '<option value="06">06</option><option value="07">07</option>'.
+            '<option value="08">08</option><option value="09">09</option>'.
+            '<option value="10">10</option><option value="11">11</option>'.
+            '<option value="12">12</option><option value="13">13</option>'.
+            '<option value="14">14</option><option value="15">15</option>'.
+            '<option value="16">16</option><option value="17">17</option>'.
+            '<option value="18">18</option><option value="19">19</option>'.
+            '<option value="20">20</option><option value="21">21</option>'.
+            '<option value="22">22</option><option value="23">23</option>'.
+            '<option value="24">24</option><option value="25">25</option>'.
+            '<option value="26">26</option><option value="27" selected="selected">27</option>'.
+            '<option value="28">28</option><option value="29">29</option>'.
+            '<option value="30">30</option><option value="31">31</option>'.
+            '<option value="32">32</option><option value="33">33</option>'.
+            '<option value="34">34</option><option value="35">35</option>'.
+            '<option value="36">36</option><option value="37">37</option>'.
+            '<option value="38">38</option><option value="39">39</option>'.
+            '<option value="40">40</option><option value="41">41</option>'.
+            '<option value="42">42</option><option value="43">43</option>'.
+            '<option value="44">44</option><option value="45">45</option>'.
+            '<option value="46">46</option><option value="47">47</option>'.
+            '<option value="48">48</option><option value="49">49</option>'.
+            '<option value="50">50</option><option value="51">51</option>'.
+            '<option value="52">52</option><option value="53">53</option>'.
+            '<option value="54">54</option><option value="55">55</option>'.
+            '<option value="56">56</option><option value="57">57</option>'.
+            '<option value="58">58</option><option value="59">59</option>'.
+            '</select>'.
+            PHP_EOL, $out);
+
         $this->assertEquals('c = new jFormsJQControlDatetime(\'date2\', \'mydate\');
 c.multiFields = true;
 c.errRequired=\'"mydate" field is required\';
@@ -2648,49 +2682,20 @@ jelix_datepicker_default(c, jFormsJQ.config);
                 '<option value="56">56</option><option value="57">57</option>'.
                 '<option value="58">58</option><option value="59">59</option>'.
             '</select> '.
-            '<select name="time1[seconds]" id="' . self::$formname . '_time1_seconds" class="jforms-ctrl-time">'.
-            '<option value="">Seconds</option>'.
-                '<option value="00">00</option><option value="01">01</option>'.
-                '<option value="02">02</option><option value="03">03</option>'.
-                '<option value="04">04</option><option value="05">05</option>'.
-                '<option value="06">06</option><option value="07">07</option>'.
-                '<option value="08">08</option><option value="09">09</option>'.
-                '<option value="10">10</option><option value="11">11</option>'.
-                '<option value="12">12</option><option value="13">13</option>'.
-                '<option value="14">14</option><option value="15">15</option>'.
-                '<option value="16">16</option><option value="17">17</option>'.
-                '<option value="18">18</option><option value="19">19</option>'.
-                '<option value="20">20</option><option value="21">21</option>'.
-                '<option value="22">22</option><option value="23">23</option>'.
-                '<option value="24">24</option><option value="25">25</option>'.
-                '<option value="26">26</option><option value="27">27</option>'.
-                '<option value="28">28</option><option value="29">29</option>'.
-                '<option value="30">30</option><option value="31">31</option>'.
-                '<option value="32">32</option><option value="33">33</option>'.
-                '<option value="34">34</option><option value="35">35</option>'.
-                '<option value="36">36</option><option value="37">37</option>'.
-                '<option value="38">38</option><option value="39">39</option>'.
-                '<option value="40">40</option><option value="41">41</option>'.
-                '<option value="42">42</option><option value="43">43</option>'.
-                '<option value="44">44</option><option value="45">45</option>'.
-                '<option value="46">46</option><option value="47">47</option>'.
-                '<option value="48">48</option><option value="49">49</option>'.
-                '<option value="50">50</option><option value="51">51</option>'.
-                '<option value="52">52</option><option value="53">53</option>'.
-                '<option value="54">54</option><option value="55">55</option>'.
-                '<option value="56">56</option><option value="57">57</option>'.
-                '<option value="58">58</option><option value="59">59</option>'.
-            '</select> '.PHP_EOL, $out);
-        $this->assertEquals('c = new jFormsJQControlTime(\'time1\', \'mytime\');
+            '<input type="hidden" id="' . self::$formname . '_time1_seconds" name="time1[seconds]" value=""/>'
+            . PHP_EOL, $out);
+
+        $this->assertEquals('c = new jFormsJQControlTime2(\'time1\', \'mytime\');
 c.multiFields = true;
 c.errRequired=\'"mytime" field is required\';
 c.errInvalid=\'"mytime" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_timepicker_default(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
 
         // simple time
         self::$form->setData('time1', '13:41:00');
+        $ctrl->enableSeconds = true;
+        $ctrl->timepickerConfig = 'foo';
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -2774,13 +2779,13 @@ jelix_timepicker_default(c, jFormsJQ.config);
         '<option value="54">54</option><option value="55">55</option>'.
         '<option value="56">56</option><option value="57">57</option>'.
         '<option value="58">58</option><option value="59">59</option>'.
-    '</select> '.PHP_EOL, $out);
-        $this->assertEquals('c = new jFormsJQControlTime(\'time1\', \'mytime\');
+    '</select>'.PHP_EOL, $out);
+        $this->assertEquals('c = new jFormsJQControlTime2(\'time1\', \'mytime\');
 c.multiFields = true;
 c.errRequired=\'"mytime" field is required\';
 c.errInvalid=\'"mytime" field is invalid\';
 jFormsJQ.tForm.addControl(c);
-jelix_timepicker_default(c, jFormsJQ.config);
+jelix_timepicker_foo(c, jFormsJQ.config);
 ', self::$builder->getJsContent());
     }
 }
