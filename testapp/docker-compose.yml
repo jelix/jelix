@@ -62,7 +62,7 @@ services:
   web:
     image: nginx:alpine
     container_name: jelix_${JLXBRANCH}_test_web
-    hostname: testapp17.local
+    hostname: testapp.local
     volumes:
       - "./docker-conf/nginx-default.conf:/etc/nginx/conf.d/default.conf"
       - "../:/jelixapp/"
@@ -72,7 +72,7 @@ services:
     networks:
       default:
          aliases:
-           - testapp17.local
+           - testapp.local
 volumes:
   pg_data:
     name: "jelix_${JLXBRANCH}_pg_data"

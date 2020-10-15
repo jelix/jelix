@@ -20,3 +20,7 @@ webmasterEmail = test@jelix.org
 webmasterName = Testapp webmaster
 
 mailerType = file
+
+[rootUrls]
+soap="http://testapp17.local"
+localapp="http://testapp17.local"

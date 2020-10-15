@@ -71,7 +71,7 @@ echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string testapp17.local" | debconf-set-selections
+echo "slapd slapd/domain string testapp.local" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 

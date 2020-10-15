@@ -50,8 +50,8 @@ Available commands:
 
 
 You can view the application at `http://localhost:8817` in your browser. 
-Or, if you set `127.0.0.1 testapp17.local` into your `/etc/hosts`, you can
-view at `http://testapp17.local:8817`.
+Or, if you set `127.0.0.1 testapp.local` into your `/etc/hosts`, you can
+view at `http://testapp.local:8817`.
 
 You can change the port by setting the environment variable `TESTAPP_WEB_PORT`
 before launching `run-docker`.

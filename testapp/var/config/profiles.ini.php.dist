@@ -175,7 +175,7 @@ file="temp:kvdbdba.db4"
 [jsoapclient:default]
 
 ; WARNING !!  Change the domain name and the path to index.php, according to your installation !!
-wsdl="http://testapp17.local:${TESTAPP_WEB_PORT}/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
+wsdl="http://testapp.local/index.php/jsoap/WSDL/wsdl?service=testapp~soap"
 trace=1
 soap_version=SOAP_1_1
 
