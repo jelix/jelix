@@ -116,8 +116,8 @@ test="http://www.junittest.com/"
 secure_test="https://www.junittest.com/"
 foo_relPath=foo
 foo_absPath="/foo"
-soap="http://testapp18.local"
-localapp="http://testapp18.local"
+soap="http://testapp.local"
+localapp="http://testapp.local"
 
 [jforms_builder_html]
 ;control = plugin

@@ -26,7 +26,8 @@ cd docker-conf
 cd ..
 ./run-docker build
 ./run-docker
-./app-ctl ldapreset
+./app-ctl ldap-reset
+./app-ctl reset
 ```
 
 You can execute some commands into the php container, by using this command:
@@ -37,17 +38,29 @@ You can execute some commands into the php container, by using this command:
 
 Available commands:
 
-* `reset`: to reinitialize the application 
+* `reset`: to reinitialize the application (It reinstall the configuration files,
+  remove temp files, create tables in databases, and it launches the jelix installer...) 
 * `composer-update` and `composer-install`: to install update PHP packages 
 * `unit-tests`: to launch unit tests. you can also indicate a path of tests directory.
 * `clean-temp`: to delete temp files 
-* `install`: to launch the Jelix installer
+* `install`: to launch the Jelix installer, if you changed the version of a module,
+   or after you reset all things by hand.
 * `ldap-reset`: to restore default users in the ldap
 * `ldap-users`: to show users defined in the ldap
 
 
-You can view the application at `http://testapp:8028` or at `http://testapp.local:8028`
-if you set `127.0.0.1 testapp.local` into your `/etc/hosts`.
+You can view the application at `http://localhost:8818` in your browser. 
+Or, if you set `127.0.0.1 testapp.local` into your `/etc/hosts`, you can
+view at `http://testapp.local:8818`.
+
+
+You can change the port by setting the environment variable `TESTAPP_WEB_PORT`
+before launching `run-docker`.
+
+```
+export TESTAPP_WEB_PORT=12345
+./run-docker
+```
 
 Testapp with Vagrant
 ====================

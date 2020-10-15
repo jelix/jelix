@@ -500,7 +500,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
         $conf->domainName = '';
         jUrl::getEngine(true);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
         $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url8', $url);
@@ -517,7 +517,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('http://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://configdomain.local'.(TESTAPP_PORT?':'.TESTAPP_PORT:'').'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
         $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
@@ -570,7 +570,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
@@ -609,7 +609,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('/zip/yo/', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/zip/yo/', $url);
 
         $conf = jApp::config();
         $conf->domainName = TESTAPP_HOST;
@@ -644,7 +644,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/?foo=bar', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/zip/yo/?foo=bar', $url);
 
     }
 

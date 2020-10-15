@@ -7,11 +7,6 @@ if [ "$JLXBRANCH" == "" ]; then
   export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-
-if [ "$JLX_IP_PREFIX" == "" ]; then
-  export JLX_IP_PREFIX=10.205.18
-fi
-
 if [ "$COMMAND" == "" ]; then
     echo "Error: command is missing"
     echo "Possible commands: "

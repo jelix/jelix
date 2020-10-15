@@ -53,6 +53,7 @@ services:
     container_name: jelix_${JLXBRANCH}_test_php
     environment:
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
+      TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"
@@ -61,25 +62,18 @@ services:
   web:
     image: nginx:alpine
     container_name: jelix_${JLXBRANCH}_test_web
-    hostname: testapp18.local
+    hostname: testapp.local
     volumes:
       - "./docker-conf/nginx-default.conf:/etc/nginx/conf.d/default.conf"
       - "../:/jelixapp/"
     command: /bin/sh -c "nginx -g 'daemon off;'"
+    ports:
+      - "${TESTAPP_WEB_PORT}:80"
     networks:
       default:
          aliases:
-           - testapp18.local
-      jelix_17_net:
-        ipv4_address: "${JLX_IP_PREFIX}.6"
+           - testapp.local
 volumes:
   pg_data:
     name: "jelix_${JLXBRANCH}_pg_data"
 
-networks:
-  jelix_17_net:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-        - subnet: "${JLX_IP_PREFIX}.0/24"
