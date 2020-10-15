@@ -5,7 +5,7 @@ EXTRA_DOMAIN=testapp16.local
 if [ "$1" == "--reset" ]; then
   rm -f /etc/ssl/private/jelix_tests_CA.key
   rm -f /etc/ssl/certs/jelix_tests_CA.crt
-  rm -f /etc/ssl/certs/testapp.local.key
+  rm -f /etc/ssl/private/testapp.local.key
   rm -f /etc/ssl/certs/testapp.local.crt
   rm -f /etc/ssl/certs/testapp.local.csr
 
@@ -57,7 +57,7 @@ if [ ! -f /etc/ssl/certs/testapp.local.crt -o "$REGEN_CRT" == "1" ]; then
 
   # create configuration file. We need it for both CSR and CRT
   cp /etc/ssl/openssl.cnf /etc/ssl/testapp.local.cnf
-  (printf "[SAN]\nextendedKeyUsage=serverAuth,clientAuth,codeSigning\nbasicConstraints=CA:FALSE\nkeyUsage=nonRepudiation,digitalSignature,keyEncipherment,dataEncipherment\nnsCertType=client,server\nsubjectAltName=DNS:testapp.local,DNS:$EXTRA_DOMAIN") >> /etc/ssl/testapp.local.cnf
+  (printf "[SAN]\nextendedKeyUsage=serverAuth,clientAuth,codeSigning\nbasicConstraints=CA:FALSE\nkeyUsage=nonRepudiation,digitalSignature,keyEncipherment,dataEncipherment\nnsCertType=client,server\nsubjectAltName=DNS:tests.jelix,DNS:$EXTRA_DOMAIN") >> /etc/ssl/testapp.local.cnf
 
   openssl req -new -sha256 \
     -key /etc/ssl/private/testapp.local.key \

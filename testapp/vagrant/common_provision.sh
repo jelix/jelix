@@ -31,6 +31,8 @@ if [ ! -f /usr/bin/phpunit ]; then
     ln -s $APPDIR/vendor/bin/phpunit  /usr/bin/phpunit
 fi
 
+cp $VAGRANTDIR/phpunit_bootstrap.php /srv/
+
 source $VAGRANTDIR/reset_testapp.sh
 
 echo "Done."

@@ -1,8 +1,8 @@
 
 server {
-    listen 8017;
+    listen 8018;
     listen 80;
-    listen [::]:8017; 
+    listen [::]:8018;
     listen [::]:80;
 
     server_name __APPHOSTNAME__ __APPHOSTNAME2__;

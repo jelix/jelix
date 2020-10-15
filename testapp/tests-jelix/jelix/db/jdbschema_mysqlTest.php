@@ -32,7 +32,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
@@ -70,7 +70,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
@@ -106,7 +106,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="0" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
@@ -329,7 +329,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
@@ -452,13 +452,13 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         }
 
         $obj = '<object>
-        <string property="Type" value="int(11)" />
+        <string property="Type" value="int" />
         <string property="Field" value="id" />
         <string property="Null" value="NO" />
         <string property="Extra"  value="auto_increment" />
         <null property="Default" />
         </object>';
-
+        $list['id']->Type = preg_replace("/\(\d+\)/", "", $list['id']->Type);
         $this->assertComplexIdenticalStr($list['id'], $obj);
 
         $obj = '<object>
@@ -482,23 +482,23 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($list['price'], $obj);
 
         $obj = '<object>
-        <string property="Type" value="tinyint(1)" />
+        <string property="Type" value="tinyint" />
         <string property="Field" value="promo" />
         <string property="Null" value="YES" />
         <string property="Extra"  value="" />
         <string property="Default" value="1"/>
         </object>';
-
+        $list['promo']->Type = preg_replace("/\(\d+\)/", "", $list['promo']->Type);
         $this->assertComplexIdenticalStr($list['promo'], $obj);
 
         $obj = '<object>
-        <string property="Type" value="int(11)" />
+        <string property="Type" value="int" />
         <string property="Field" value="product_id" />
         <string property="Null" value="NO" />
         <string property="Extra"  value="" />
         <null property="Default" />
         </object>';
-
+        $list['product_id']->Type = preg_replace("/\(\d+\)/", "", $list['product_id']->Type);
         $this->assertComplexIdenticalStr($list['product_id'], $obj);
 
 
@@ -520,7 +520,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="true"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />
@@ -573,7 +573,7 @@ class jDbSchema_MysqlTest extends \Jelix\UnitTests\UnitTestCase {
         <string property="default" value="" />
         <boolean property="hasDefault" value="false"/>
         <integer property="length" value="0"/>
-        <integer property="precision" value="11"/>
+        <integer property="precision" value="0"/>
         <integer property="scale" value="0"/>
         <boolean property="sequence" value="false" />
         <boolean property="unsigned" value="false" />

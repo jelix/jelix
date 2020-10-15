@@ -31,7 +31,7 @@ class jCache_Redis_extTest extends jCacheAPITest {
         parent::setUp();
 
         $this->redis = new jRedis();
-        $this->redis->connect('localhost',6379);
+        $this->redis->connect(TESTAPP_REDIS_HOST,6379);
         $this->redis->flushAll();
     }
 

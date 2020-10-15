@@ -24,3 +24,5 @@ tests-jelix/jelix/installer/app1/var/config/installer.bak.ini.php
 tests-jelix/jelix/installer/app1/var/config/liveconfig.ini.php
 tests-jelix/jelix/installer/app1/var/config/profiles.ini.php
 tests-jelix/.phpunit.result.cache
+docker-conf/certs/*
+!docker-conf/certs/.dummy

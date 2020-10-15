@@ -8,17 +8,17 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-class UTUrls extends jUnitTestCase
+class UTUrls extends \Jelix\UnitTests\UnitTestCase
 {
 
-    function setUp()
+    function setUp() : void
     {
         self::initClassicRequest(TESTAPP_URL . 'index.php');
         jApp::pushCurrentModule('jelix_tests');
         parent::setUp();
     }
 
-    function tearDown()
+    function tearDown() : void
     {
         jApp::popCurrentModule();
         jUrl::getEngine(true);

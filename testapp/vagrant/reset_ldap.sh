@@ -5,5 +5,5 @@ APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="$APPDIR/vagrant"
 LDAPCN="testapp18"
 
-ldapdelete -x -c -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_delete.ldif
-ldapadd -x -c -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
+ldapdelete -x -c -D cn=admin,dc=tests,dc=jelix -w passjelix -f $VAGRANTDIR/ldap/ldap_delete.ldif
+ldapadd -x -c -D cn=admin,dc=tests,dc=jelix -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif

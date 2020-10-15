@@ -27,8 +27,18 @@ class mysqliDbTable extends jDbTable
         $rs = $conn->query('SHOW FULL FIELDS FROM '.$conn->encloseName($this->name));
         while ($line = $rs->fetch()) {
             list($type, $length, $precision, $scale) = $tools->parseSQLType($line->Type);
+            $typeInfo = $tools->getTypeInfo($type);
             if ($type == 'tinyint' && $precision == 1) {
                 $type = 'boolean';
+                $typeInfo = $tools->getTypeInfo($type);
+                $precision = 0;
+            }
+            else if ($tools->unifiedToPHPType($typeInfo[1]) == 'integer') {
+                // let's ignore precision type, as in Mysql, the number in `INT(11)`
+                // is not the precision, but the size of display
+                // Note that some PHP driver for Mysql or Mysql/MariaDb version
+                // don't return the precision
+
                 $precision = 0;
             }
 
@@ -58,19 +68,19 @@ class mysqliDbTable extends jDbTable
                 $default = ($line->Default === 'NULL' ? null : $line->Default);
             }
 
-            $typeinfo = $tools->getTypeInfo($type);
-            if ($hasDefault && $typeinfo[1] == 'boolean') {
+
+            if ($hasDefault && $typeInfo[1] == 'boolean') {
                 $default = ($default == '1' || $default === true || strtolower($default) == 'true');
             }
 
             $col = new jDbColumn($line->Field, $type, $length, $hasDefault, $default, $notNull);
             $col->autoIncrement = $autoIncrement;
 
-            $col->nativeType = $typeinfo[0];
-            $col->maxValue = $typeinfo[3];
-            $col->minValue = $typeinfo[2];
-            $col->maxLength = $typeinfo[5];
-            $col->minLength = $typeinfo[4];
+            $col->nativeType = $typeInfo[0];
+            $col->maxValue = $typeInfo[3];
+            $col->minValue = $typeInfo[2];
+            $col->maxLength = $typeInfo[5];
+            $col->minLength = $typeInfo[4];
             $col->precision = $precision;
             $col->scale = $scale;
             if ($col->length != 0) {
