@@ -15,8 +15,8 @@ if [ "$JLXBRANCH" == "" ]; then
   export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
 
-if [ "$JLX_IP_PREFIX" == "" ]; then
-  export JLX_IP_PREFIX=10.205.17
+if [ "$TESTAPP_WEB_PORT" == "" ]; then
+  export TESTAPP_WEB_PORT=8817
 fi
 
 docker-compose -p jelix-${JLXBRANCH}-tests $CMD

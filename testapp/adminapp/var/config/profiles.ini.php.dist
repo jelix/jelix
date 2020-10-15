@@ -47,7 +47,7 @@ adminPassword=passjelix
 
 ; base dn to search users. Used to search a user using the filter from searchUserFilter
 ; example for Active Directory: "ou=ADAM users,o=Microsoft,c=US", or "OU=Town,DC=my-town,DC=com"
-searchUserBaseDN="ou=people,dc=testapp17,dc=local"
+searchUserBaseDN="ou=people,dc=tests,dc=jelix"
 
 ; filter to get user information, with the given login name
 ; example for Active Directory: "(sAMAccountName=%%LOGIN%%)"
@@ -60,8 +60,8 @@ searchUserFilter[]="(&(objectClass=simpleSecurityObject)(cn=%%LOGIN%%))"
 ; Or it can contain  `%%LOGIN%%`, replaced by the given login
 ; Or it can contain only an attribute name, starting with a `$`: the
 ; attribute should then contain a full DN.
-bindUserDN[]="uid=%?%,ou=people,dc=testapp17,dc=local"
-bindUserDN[]="cn=%?%,dc=testapp17,dc=local"
+bindUserDN[]="uid=%?%,ou=people,dc=tests,dc=jelix"
+bindUserDN[]="cn=%?%,dc=tests,dc=jelix"
 
 ; attributes to retrieve for a user
 ; for dao mapping: "ldap attribute:dao attribute"
@@ -86,7 +86,7 @@ searchGroupFilter="(&(objectClass=groupOfNames)(cn=*)(member=%%USERDN%%))"
 searchGroupProperty="cn"
 
 ; base dn to search groups. Used to search a group using the filter from searchGroupFilter
-searchGroupBaseDN="ou=groups,dc=testapp17,dc=local"
+searchGroupBaseDN="ou=groups,dc=tests,dc=jelix"
 
 ; if set to on, users are set in default groups during groups synchronization
 ; default is on.
