@@ -35,9 +35,9 @@ host = "memcached:11211"
 
 
 [ldap:multiauth_ldap]
-hostname= localhost
+hostname= openldap
 port = 389
-adminUserDn="cn=admin,dc=testapp17,dc=local"
+adminUserDn="cn=admin,dc=tests,dc=jelix"
 adminPassword=passjelix
 
 

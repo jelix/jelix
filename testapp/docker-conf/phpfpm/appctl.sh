@@ -46,6 +46,7 @@ function resetApp() {
 
     if [ -f $appdir/app/system/auth_ldap.coord.ini.php.dist ]; then
         cp $appdir/app/system/auth_ldap.coord.ini.php.dist $appdir/app/system/auth_ldap.coord.ini.php
+        chown -R $APP_USER:$APP_GROUP $appdir/app/system/auth_ldap.coord.ini.php
     fi
     if [ -f $appdir/var/config/profiles.ini.php.dist ]; then
         cp $appdir/var/config/profiles.ini.php.dist $appdir/var/config/profiles.ini.php
@@ -53,7 +54,7 @@ function resetApp() {
     if [ -f $appdir/var/config/localconfig.ini.php.dist ]; then
         cp $appdir/var/config/localconfig.ini.php.dist $appdir/var/config/localconfig.ini.php
     fi
-    chown -R $APP_USER:$APP_GROUP $appdir/var/config/profiles.ini.php $APPDIR/var/config/localconfig.ini.php
+    chown -R $APP_USER:$APP_GROUP $appdir/var/config/profiles.ini.php $appdir/var/config/localconfig.ini.php
 
     if [ -f $appdir/var/config/installer.ini.php ]; then
         rm -f $appdir/var/config/installer.ini.php

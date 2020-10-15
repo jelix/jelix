@@ -28,7 +28,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     function setUp() {
         $this->conn = $this->getMockBuilder('mysqliDbConnection')
                         ->disableOriginalConstructor()
-                        ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect'))
+                        ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect', 'hasTablePrefix'))
                         ->getMock();
 
         $this->rs =  $this->getMockBuilder('mysqliDbResultSet')
@@ -43,6 +43,12 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
         $this->conn->expects($this->any())
                     ->method('query')
                     ->will($this->returnValue(0));
+        $me = $this;
+        $this->conn->expects($this->any())
+                    ->method('hasTablePrefix')
+                    ->will($this->returnCallback(function() use ($me) {
+                        return $me->conn->profile['table_prefix'] != '';
+                    }));
         /*$this->conn->expects($this->any())
                     ->method('prefixTable')
                     ->will($this->returnCallback(function($table) {
@@ -197,6 +203,7 @@ class jdao_factory_baseTest extends jUnitTestCaseDb {
     }
 
     function testFindBy() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $cond = new jDaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
