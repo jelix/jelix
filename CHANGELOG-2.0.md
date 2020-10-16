@@ -1,4 +1,4 @@
-# Changes since Jelix 1.7
+# Changes into Jelix 2.0
 
 
 - Many Jelix classes are now under a namespace, but some classes with old names

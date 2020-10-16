@@ -5,14 +5,14 @@ APPDIR="$ROOTDIR/$APPNAME"
 VAGRANTDIR="$APPDIR/vagrant"
 LDAPCN="testapp20"
 
-export DEBIAN_FRONTEND=noninteractive
+#export DEBIAN_FRONTEND=noninteractive
 
 echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections
 echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string $APPHOSTNAME" | debconf-set-selections
+echo "slapd slapd/domain string tests.jelix" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
@@ -32,6 +32,6 @@ ldapmodify -Y EXTERNAL -H ldapi:/// -f $VAGRANTDIR/ldap/ldap_ssl.ldif
 #ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=config | grep TLS
 
 echo "add default users for tests"
-ldapadd -x -D cn=admin,dc=$LDAPCN,dc=local -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
-#ldapsearch -x -D cn=admin,dc=testapp20,dc=local -w passjelix -b "dc=testapp20,dc=local" "(objectClass=*)"
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f $VAGRANTDIR/ldap/ldap_conf.ldif
+#ldapsearch -x -D cn=admin,dc=tests,dc=jelix -w passjelix -b "dc=tests,dc=jelix" "(objectClass=*)"
 

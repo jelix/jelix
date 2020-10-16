@@ -1,0 +1,150 @@
+#!/bin/sh
+
+EXPORT_DIR=${EXPORT_DIR:=/sslcerts}
+CA_KEY_PASSWORD=${CA_KEY_PASSWORD:=jelix}
+CA_CERT_DOMAIN=${CA_CERT_DOMAIN:=tests.jelix}
+CA_CERT_FILE_BASE_NAME=${CA_CERT_FILE_BASE_NAME:=${CA_CERT_DOMAIN}-CA}
+CA_VALIDITY_DAYS=${CA_VALIDITY_DAYS:=3650}
+CA_CERT_SUBJECT=${CA_CERT_SUBJECT="/C=FR/ST=France/L=Paris/O=Jelix/OU=dev/CN=$CA_CERT_DOMAIN"}
+
+CERT_DOMAIN=${CERT_DOMAIN:=dev.jelix}
+CERT_FILE_BASE_NAME=${CERT_FILE_BASE_NAME:=$CERT_DOMAIN}
+CERT_VALIDITY_DAYS=${CERT_VALIDITY_DAYS:=365}
+CERT_SUBJECT=${CERT_SUBJECT:="/C=FR/ST=France/L=Paris/O=Jelix/OU=dev/CN=$CERT_DOMAIN"}
+CERT_SAN_SECTION=${CERT_SAN_SECTION:="[SAN]\nextendedKeyUsage=serverAuth,clientAuth,codeSigning\nbasicConstraints=CA:FALSE\nkeyUsage=nonRepudiation,digitalSignature,keyEncipherment,dataEncipherment\nnsCertType=client,server\nsubjectAltName=DNS:$CERT_DOMAIN"}
+
+echo "CERT_DOMAIN=$CERT_DOMAIN"
+echo "CERT_SUBJECT=$CERT_SUBJECT"
+
+REGEN_CRT=0
+
+COMMAND="$1"
+
+
+if [ "$COMMAND" == "" ]; then
+    echo "Error: command is missing"
+    exit 1;
+fi
+
+
+# creates the private key for the CA
+function genCACertPrivateKey() {
+  if [ ! -f $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.key ]; then
+    openssl genrsa -passout pass:$CA_KEY_PASSWORD -out $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.key 2048
+    echo "private key for the CA created"
+    echo ""
+  fi
+}
+
+
+function genCACert() {
+  # Creates and self-sign the certficate for the CA
+  if [ ! -f $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.crt ]; then
+    openssl req -x509 -new -nodes \
+        -key $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.key \
+        -sha256 -days $CA_VALIDITY_DAYS \
+        -out $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.crt \
+        --passin pass:$CA_KEY_PASSWORD  \
+        -subj "$CA_CERT_SUBJECT"
+    REGEN_CRT=1
+    echo "certficate for the CA created and self-signed"
+    echo ""
+  fi
+}
+
+function genCertKey() {
+  #Generates the key of the cert for the web/ldap
+  if [ ! -f $EXPORT_DIR/$CERT_FILE_BASE_NAME.key ]; then
+    openssl genrsa -out $EXPORT_DIR/$CERT_FILE_BASE_NAME.key -passout pass:  2048
+    REGEN_CRT=1
+    echo "key of the cert for $CERT_DOMAIN created"
+    echo ""
+  fi
+}
+
+function resetCA() {
+  rm -f $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.*
+  rm -f $EXPORT_DIR/$CERT_FILE_BASE_NAME.*
+
+  echo "Existing CA certificates and keys, removed"
+  echo ""
+}
+
+function resetCerts() {
+  rm -f $EXPORT_DIR/$CERT_FILE_BASE_NAME.*
+
+  echo "Existing certificates and keys, removed"
+  echo ""
+}
+
+
+function genCert() {
+
+  # create the CSR for the cert for the web/ldap
+  if [ ! -f $EXPORT_DIR/$CERT_FILE_BASE_NAME.crt -o "$REGEN_CRT" == "1" ]; then
+
+    # create configuration file. We need it for both CSR and CRT
+    cp /etc/ssl/openssl.cnf $EXPORT_DIR/$CERT_FILE_BASE_NAME.cnf
+    (printf "$CERT_SAN_SECTION") >> $EXPORT_DIR/$CERT_FILE_BASE_NAME.cnf
+
+    openssl req -new -sha256 \
+      -key $EXPORT_DIR/$CERT_FILE_BASE_NAME.key \
+      -out $EXPORT_DIR/$CERT_FILE_BASE_NAME.csr \
+      -subj "$CERT_SUBJECT" \
+      -reqexts SAN \
+      -config $EXPORT_DIR/$CERT_FILE_BASE_NAME.cnf
+
+    echo "CSR of the cert for the $CERT_DOMAIN created"
+    echo ""
+
+    # Generate the certificate using the testapp.local csr and key along with the CA Root key
+    openssl x509 -req -in $EXPORT_DIR/$CERT_FILE_BASE_NAME.csr \
+      -CA $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.crt \
+      -CAkey $EXPORT_DIR/$CA_CERT_FILE_BASE_NAME.key \
+      -CAcreateserial \
+      -passin pass:$CA_KEY_PASSWORD \
+      -extfile $EXPORT_DIR/$CERT_FILE_BASE_NAME.cnf \
+      -extensions SAN \
+      -out $EXPORT_DIR/$CERT_FILE_BASE_NAME.crt \
+      -days $CERT_VALIDITY_DAYS -sha256
+
+    echo "Cert for the $CERT_DOMAIN domain created"
+    echo ""
+  fi
+}
+
+function checkCSR() {
+  openssl req -noout -text -in $EXPORT_DIR/$CERT_FILE_BASE_NAME.csr
+}
+
+function checkCert() {
+  openssl x509 -text -noout -in $EXPORT_DIR/$CERT_FILE_BASE_NAME.crt
+}
+echo "COMMAND=$COMMAND"
+case $COMMAND in
+    reset)
+        resetCerts
+        ;;
+    resetCA)
+        resetCA
+        ;;
+    createCA)
+        genCACertPrivateKey
+        genCACert
+        ;;
+    createCert)
+        genCertKey
+        genCert
+        ;;
+    checkCSR)
+        checkCSR
+        ;;
+    checkCert)
+        checkCert
+        ;;
+    *)
+        exec "$@"
+        ;;
+esac
+
+

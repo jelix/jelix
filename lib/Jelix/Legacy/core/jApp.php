@@ -100,6 +100,11 @@ class jApp
         \Jelix\Core\App::setEnv($env);
     }
 
+    public static function urlJelixWWWPath()
+    {
+        return \Jelix\Core\App::urlJelixWWWPath();
+    }
+
     public static function urlBasePath()
     {
         return \Jelix\Core\App::urlBasePath();

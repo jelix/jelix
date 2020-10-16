@@ -2,3 +2,22 @@
 ;for security reasons , don't remove or modify the first line
 ; this is configuration specific to the local server, to this specific instance.
 ; it overrides app/system/mainconfig.ini.php parameters
+
+forceHTTPPort=${TESTAPP_WEB_PORT}
+
+[compilation]
+checkCacheFiletime  = on
+force  = on
+
+[forms]
+;captcha=recaptcha
+
+[recaptcha]
+sitekey=
+secret=
+
+[mailer]
+webmasterEmail = test@jelix.org
+webmasterName = Testapp webmaster
+
+mailerType = file

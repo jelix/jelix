@@ -29,7 +29,7 @@ class jkvdb_redis2Test extends jKVDbTest {
         if (!$this->_kvdbSetUp())
             return;
 
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis(TESTAPP_REDIS_HOST,6379);
         $this->redis->select_db(1);
         $this->redis->flushall();
     }

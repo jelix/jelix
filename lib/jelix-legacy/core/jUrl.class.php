@@ -8,7 +8,7 @@
  * @contributor Loic Mathaud
  * @contributor Hadrien Lanneau
  *
- * @copyright   2005-2013 Laurent Jouanneau
+ * @copyright   2005-2020 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  * @copyright   2006 Loic Mathaud, 2010 Hadrien Lanneau
  * @copyright   2001-2005 CopixTeam
@@ -371,5 +371,37 @@ class jUrl extends jUrlBase
         }
 
         return jApp::config()->rootUrls[$ressourceType];
+    }
+
+    /**
+     * tells if the given url is for the current application or if it matches
+     * given authorized domains
+     *
+     * @param string $url
+     * @param string[] $authorizedDomains
+     * @return boolean
+     */
+    public static function isUrlFromApp($url, $authorizedDomains=array())
+    {
+        $res = @parse_url($url);
+        if (!$res) {
+            return false;
+        }
+        $req = jApp::coord()->request;
+        if (isset($res['host']) && $res['host'] != '') {
+            if ($res['host'] != $req->getDomainName()) {
+                if (!count($authorizedDomains)) {
+                    return false;
+                }
+                if (!in_array($res['host'], $authorizedDomains)) {
+                    return false;
+                }
+                return true;
+            }
+        }
+        $basePath = jApp::urlBasePath();
+        $path = (isset($res['path']) && $res['path'] != '' ? $res['path']: '/');
+        $path = rtrim($path, '/').'/';
+        return (strpos($path, $basePath) === 0);
     }
 }

@@ -152,7 +152,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         // creation d'un user dans les acl, sans le mettre dans les groupes par defaut
         jAcl2DbUserGroup::createUser('laurent',false);
-        self::$grpId5 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId5 = '__priv_laurent';
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId5,
             'name'=>'laurent',
@@ -173,7 +173,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         // creation d'un deuxième user dans les acl, en le mettant 
         // dans les groupes par defaut
         jAcl2DbUserGroup::createUser('max');
-        self::$grpId6 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId6 = '__priv_max';
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId6,
             'name'=>'max',
@@ -195,7 +195,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     public function testAddUserIntoGroup(){
         // ajout d'un user dans un groupe
         jAcl2DbUserGroup::createUser('robert');
-        self::$grpId7 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId7 = '__priv_robert';
         jAcl2DbUserGroup::addUserToGroup('robert', self::$grpId1);
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId7,

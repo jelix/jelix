@@ -32,7 +32,7 @@ class jkvdb_redis_extTest extends jKVDbTest {
             return;
 
         $this->redis = new jRedis();
-        $this->redis->connect('localhost',6379);
+        $this->redis->connect(TESTAPP_REDIS_HOST,6379);
         $this->redis->flushAll();
     }
 

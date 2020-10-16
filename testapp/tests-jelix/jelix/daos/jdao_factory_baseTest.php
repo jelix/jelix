@@ -28,7 +28,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function setUp() : void  {
         $this->conn = $this->getMockBuilder('mysqliDbConnection')
                         ->disableOriginalConstructor()
-                        ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect'))
+                        ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect', 'hasTablePrefix'))
                         ->getMock();
 
         $this->rs =  $this->getMockBuilder('mysqliDbResultSet')
@@ -43,6 +43,12 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->conn->expects($this->any())
                     ->method('query')
                     ->will($this->returnValue(0));
+        $me = $this;
+        $this->conn->expects($this->any())
+                    ->method('hasTablePrefix')
+                    ->will($this->returnCallback(function() use ($me) {
+                        return $me->conn->profile['table_prefix'] != '';
+                    }));
         /*$this->conn->expects($this->any())
                     ->method('prefixTable')
                     ->will($this->returnCallback(function($table) {
@@ -51,6 +57,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testFindAll() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -68,6 +75,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testFindAllAlias() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -85,6 +93,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testCountAll() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $o = new stdClass();
         $o->c = '54';
         $this->rs->expects($this->any())
@@ -99,6 +108,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testCountAllPrefix() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $o = new stdClass();
         $o->c = '54';
         $this->rs->expects($this->any())
@@ -113,6 +123,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testCountAllAlias() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $o = new stdClass();
         $o->c = '54';
         $this->rs->expects($this->any())
@@ -144,6 +155,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->rs->expects($this->any())
                     ->method('fetch')
                     ->will($this->returnValue($o));
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -169,6 +181,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->rs->expects($this->any())
                     ->method('fetch')
                     ->will($this->returnValue($o));
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $this->conn->expects($this->once())
                     ->method('query')
@@ -190,6 +203,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testFindBy() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_products_Jx_mysql($this->conn);
         $cond = new jDaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
@@ -213,6 +227,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testFindByAlias() {
+        $this->conn->profile = array('table_prefix'=>'', '_name'=>'default');
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($this->conn);
         $cond = new jDaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');

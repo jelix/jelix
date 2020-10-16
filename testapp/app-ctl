@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+COMMAND="$1"
+shift
+
+if [ "$JLXBRANCH" == "" ]; then
+  export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
+fi
+
+if [ "$COMMAND" == "" ]; then
+    echo "Error: command is missing"
+    echo "Possible commands: "
+    echo "- Into php: reset, rights, clean-temp, install, composer-install,"
+    echo "  composer-update, unit-tests"
+    echo "- To manage the ldap server: ldap-reset, ldap-users"
+    echo "- To enter into the php container: shell, shellroot"
+    echo "- to enter into a interactive database shell: pgsql, mysql or redis"
+    exit 1;
+fi
+
+case $COMMAND in
+    clean-temp)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh clean_tmp;;
+    reset)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh reset;;
+    install)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh install;;
+    rights)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh rights;;
+    composer-install)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh composer_install;;
+    composer-update)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh composer_update;;
+    unit-tests)
+        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh unit-tests $@;;
+    shell)
+       docker exec -it --user usertest jelix_${JLXBRANCH}_test_php  /bin/sh -l;;
+    shell-root)
+       docker exec -it jelix_${JLXBRANCH}_test_php  /bin/sh  -l;;
+    ldap-reset)
+      docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh reset
+      ;;
+    ldap-users)
+       docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh showusers
+       ;;
+    pgsql)
+       docker exec -it --user postgres -e PGPASSWORD="lizmap1234!" jelix_${JLXBRANCH}_test_pgsql psql --username=lizmap lizmap
+       ;;
+    redis)
+      docker exec -it jelix_${JLXBRANCH}_test_redis redis-cli
+      ;;
+    mysql)
+      docker exec -it jelix_${JLXBRANCH}_test_mysql mysql -u test_user -pjelix testapp
+      ;;
+    *)
+        echo "wrong command"
+        exit 2
+        ;;
+esac
+

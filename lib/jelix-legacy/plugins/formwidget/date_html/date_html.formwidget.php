@@ -28,7 +28,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
      */
     public function outputMetaContent($resp)
     {
-        $config = isset($this->ctrl->datepickerConfig) ?
+        $config = $this->ctrl->datepickerConfig ?
                         $this->ctrl->datepickerConfig :
                         jApp::config()->forms['datepicker'];
         $resp->addAssets('jforms_datepicker_'.$config);
@@ -56,10 +56,14 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         if ($ctrl instanceof jFormsControlDate ||
             get_class($ctrl->datatype) == 'jDatatypeDate' ||
             get_class($ctrl->datatype) == 'jDatatypeLocaleDate') {
-            $config = isset($ctrl->datepickerConfig) ?
+            $config = $ctrl->datepickerConfig != '' ?
                             $ctrl->datepickerConfig :
                             jApp::config()->forms['datepicker'];
-            $this->parentWidget->addJs('jelix_datepicker_'.$config."(c, jFormsJQ.config);\n");
+            if ($config) {
+                $this->parentWidget->addJs(
+                    'jelix_datepicker_' . $config . "(c, jFormsJQ.config);\n"
+                );
+            }
         }
     }
 

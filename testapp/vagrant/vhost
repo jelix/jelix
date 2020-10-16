@@ -2,7 +2,7 @@
 server {
     listen 8020;
     listen 80;
-    listen [::]:8020; 
+    listen [::]:8020;
     listen [::]:80;
 
     server_name __APPHOSTNAME__ __APPHOSTNAME2__;

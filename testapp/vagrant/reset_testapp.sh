@@ -12,8 +12,8 @@ source $VAGRANTDIR/system.sh
 resetJelixMysql testapp test_user jelix
 resetJelixInstall $APPDIR
 
-if [ -f $APPDIR/app/system/auth_ldap.coord.ini.php.dist ]; then
-    cp -a $APPDIR/app/system/auth_ldap.coord.ini.php.dist $APPDIR/app/system/auth_ldap.coord.ini.php
+if [ -f $APPDIR/app/system/auth_ldap.coord.ini.php.vagrant.dist ]; then
+    cp -a $APPDIR/app/system/auth_ldap.coord.ini.php.vagrant.dist $APPDIR/app/system/auth_ldap.coord.ini.php
 fi
 
 MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
