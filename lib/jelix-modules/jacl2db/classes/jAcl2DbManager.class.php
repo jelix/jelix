@@ -227,7 +227,14 @@ class jAcl2DbManager {
      * Existing rights not given in parameters are considered as deleted.
      *
      * Rights with resources are not changed.
-     * @param array $rightsChanges array(<id_aclgrp> => array( <id_aclsbj> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
+     *
+     * @param array      $rightsChanges         array(<id_aclgrp> => array( <id_aclsbj> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
+     * @param null|mixed $sessionUser
+     * @param mixed      $setForAllPublicGroups
+     * @param mixed      $setAllRightsInGroups
+     * @param null|mixed $ignoredUser
+     * @param null|mixed $ignoreUserInGroup
+     *
      * @return int one of the ACL_ADMIN_RIGHTS_* const
      */
     public static function checkAclAdminRightsChanges($rightsChanges,
