@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix_modules
- * @subpackage  jacl2db
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah
  *
@@ -155,6 +152,7 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+
         return compact('roles_localized', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 
@@ -185,8 +183,8 @@ class jAcl2DbAdminUIManager
 
     /**
      * @param string $groupid
-     * @param array  $roles array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
-     *                         true or 'on' means 'to remove'
+     * @param array  $roles   array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
+     *                        true or 'on' means 'to remove'
      */
     public function removeGroupRightsWithResources($groupid, $roles)
     {
@@ -349,6 +347,7 @@ class jAcl2DbAdminUIManager
 
         $roles = $subjects;
         $rolegroups_localized = $sbjgroups_localized;
+
         return compact(
             'hisgroup',
             'groupsuser',
@@ -409,6 +408,7 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+
         return compact('user', 'subjects_localized', 'roles_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 
@@ -461,6 +461,26 @@ class jAcl2DbAdminUIManager
             throw new jAcl2DbAdminUIException('User cannot be removed from group, else acl management is not possible anymore', 2);
         }
         jAcl2DbUserGroup::removeUserFromGroup($login, $groupId);
+    }
+
+    public function addUserToGroup($login, $groupId, $sessionUser = null)
+    {
+        $rightsChanged = array();
+        $groupRights = $this->getGroupRights();
+        foreach (jAcl2DbManager::$ACL_ADMIN_RIGHTS as $right) {
+            if (jAcl2::check($right) && in_array($groupRights['rights'][$right][$groupId], array(null, false))) {
+                $rightsChanged[$groupId][$right] = 'n';
+            }
+        }
+        $checking = jAcl2DbManager::checkAclAdminRightsChanges($rightsChanged, $sessionUser);
+
+        if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
+            throw new jAcl2DbAdminUIException("User cannot be add to group, else you wouldn't manage acl anymore", 3);
+        }
+        if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
+            throw new jAcl2DbAdminUIException('User cannot be add to group, else acl management is not possible anymore', 2);
+        }
+        jAcl2DbUserGroup::addUserToGroup($login, $groupId);
     }
 
     public function canRemoveUser($login)
