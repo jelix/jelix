@@ -9,6 +9,8 @@
 
 namespace Jelix\Installer\Module\API;
 
+use Jelix\Core\Profiles;
+
 /**
  * Trait for installer/configurator classes.
  *
@@ -73,7 +75,7 @@ trait DbProfileHelpersTrait
             }
         }
         $profiles->save();
-        \jProfiles::clear();
+        Profiles::clear();
 
         return true;
     }

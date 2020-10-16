@@ -11,6 +11,11 @@
 
 namespace Jelix\Core;
 
+use Jelix\Profiles\ProfilesContainer;
+use Jelix\Profiles\ProfilesReader;
+use Jelix\Profiles\ReaderPlugin;
+
+
 /**
  * class to read profiles from the profiles.ini.php.
  */
@@ -19,28 +24,34 @@ class Profiles
     /**
      * loaded profiles.
      *
-     * @var array
+     * @var ProfilesContainer
      */
     protected static $_profiles = null;
 
     /**
-     * pool of objects loaded for profiles.
-     *
-     * @var object[]
+     * @var \Jelix\Profiles\ReaderPlugin[]
      */
-    protected static $_objectPool = array();
+    protected static $_plugins = array();
+
 
     protected static function loadProfiles()
     {
         $file = App::varConfigPath('profiles.ini.php');
         $tempFile = App::tempPath('profiles.cache.php');
-        if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
-            $compiler = new \jProfilesCompiler($file);
-            self::$_profiles = $compiler->compile();
-            \Jelix\IniFile\Util::write(self::$_profiles, $tempFile);
-        } else {
-            self::$_profiles = parse_ini_file($tempFile, true, INI_SCANNER_TYPED);
-        }
+
+        $compiler = new ProfilesReader(function($name) {
+
+            if (!isset(self::$_plugins[$name])) {
+                $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
+                if (!$plugin) {
+                    $plugin = new ReaderPlugin($name);
+                }
+                self::$_plugins[$name] = $plugin;
+            }
+            return self::$_plugins[$name];
+        });
+
+        self::$_profiles = $compiler->readFromFile($file, $tempFile);
     }
 
     /**
@@ -67,28 +78,7 @@ class Profiles
             self::loadProfiles();
         }
 
-        if ($name == '') {
-            $name = 'default';
-        }
-        $section = $category.':'.$name;
-
-        // the name attribute created in this method will be the name of the connection
-        // in the connections pool. So profiles of aliases and real profiles should have
-        // the same name attribute.
-
-        if (isset(self::$_profiles[$section])) {
-            return self::$_profiles[$section];
-        }
-        // if the profile doesn't exist, we take the default one
-        if (!$noDefault && isset(self::$_profiles[$category.':default'])) {
-            return self::$_profiles[$category.':default'];
-        }
-
-        if ($name == 'default') {
-            throw new \jException('jelix~errors.profile.default.unknown', $category);
-        }
-
-        throw new \jException('jelix~errors.profile.unknown', array($name, $category));
+        return self::$_profiles->get($category, $name, $noDefault);
     }
 
     /**
@@ -101,7 +91,11 @@ class Profiles
      */
     public static function storeInPool($category, $name, $object)
     {
-        self::$_objectPool[$category][$name] = $object;
+        if (self::$_profiles === null) {
+            self::loadProfiles();
+        }
+
+        self::$_profiles->storeInPool($category, $name, $object);
     }
 
     /**
@@ -114,11 +108,11 @@ class Profiles
      */
     public static function getFromPool($category, $name)
     {
-        if (isset(self::$_objectPool[$category][$name])) {
-            return self::$_objectPool[$category][$name];
+        if (self::$_profiles === null) {
+            self::loadProfiles();
         }
 
-        return null;
+        return self::$_profiles->getFromPool($category, $name);
     }
 
     /**
@@ -136,16 +130,11 @@ class Profiles
      */
     public static function getOrStoreInPool($category, $name, $function, $nodefault = false)
     {
-        $profile = self::get($category, $name, $nodefault);
-        if (isset(self::$_objectPool[$category][$profile['_name']])) {
-            return self::$_objectPool[$category][$profile['_name']];
-        }
-        $obj = call_user_func($function, $profile);
-        if ($obj) {
-            self::$_objectPool[$category][$profile['_name']] = $obj;
+        if (self::$_profiles === null) {
+            self::loadProfiles();
         }
 
-        return $obj;
+        return self::$_profiles->getOrStoreInPool($category, $name, $function, $nodefault);
     }
 
     /**
@@ -160,36 +149,11 @@ class Profiles
      */
     public static function createVirtualProfile($category, $name, $params)
     {
-        if ($name == '') {
-            throw new \jException('jelix~errors.profile.virtual.no.name', $category);
-        }
-
         if (self::$_profiles === null) {
             self::loadProfiles();
         }
 
-        if (is_string($params)) {
-            if (isset(self::$_profiles[$category.':'.$params])) {
-                self::$_profiles[$category.':'.$name] = self::$_profiles[$category.':'.$params];
-            } else {
-                throw new \jException('jelix~errors.profile.unknown', array($params, $category));
-            }
-        } else {
-            $plugin = App::loadPlugin($category, 'profiles', '.profiles.php', $category.'ProfilesCompiler', $category);
-            if (!$plugin) {
-                $plugin = new \jProfilesCompilerPlugin($category);
-            }
-
-            if (isset(self::$_profiles[$category.':__common__'])) {
-                $plugin->setCommon(self::$_profiles[$category.':__common__']);
-            }
-            $plugin->addProfile($name, $params);
-            $plugin->getProfiles(self::$_profiles);
-        }
-        unset(self::$_objectPool[$category][$name]); // close existing connection with the same pool name
-        if (gc_enabled()) {
-            gc_collect_cycles();
-        }
+        self::$_profiles->createVirtualProfile($category, $name, $params);
     }
 
     /**
@@ -199,9 +163,5 @@ class Profiles
     public static function clear()
     {
         self::$_profiles = null;
-        self::$_objectPool = array();
-        if (gc_enabled()) {
-            gc_collect_cycles();
-        }
     }
 }

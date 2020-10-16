@@ -1,12 +1,13 @@
 # Changes into Jelix 2.0
 
+- minimum PHP version is 7.3.0
+- upgrade PHPUnit to 8.5.0
 
 - Many Jelix classes are now under a namespace, but some classes with old names
   still exist to ease the transition, although it is recommanded to use new name
   as these old classes are deprecated.
 
 - `jApp::coord()` is replaced by `\Jelix\Core\App::router()`
-
 
 - Jelix config is able to read namespaces declaration as in composer.json
 
@@ -28,3 +29,6 @@
 
 - `$GLOBALS['JELIX_EVENTS']` does not exists anymore
 
+## removed classes and methods
+
+- `jJsonRpc`

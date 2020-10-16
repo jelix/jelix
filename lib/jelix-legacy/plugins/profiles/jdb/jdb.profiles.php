@@ -5,12 +5,12 @@
  * @subpackage  profiles
  *
  * @author      Laurent Jouanneau
- * @copyright   2015 Laurent Jouanneau
+ * @copyright   2015-2020 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-class jdbProfilesCompiler extends jProfilesCompilerPlugin
+class jdbProfilesCompiler extends \Jelix\Profiles\ReaderPlugin
 {
     protected function consolidate($profile)
     {

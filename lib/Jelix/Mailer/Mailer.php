@@ -21,6 +21,8 @@
 
 namespace Jelix\Mailer;
 
+use Jelix\Core\Profiles;
+
 /**
  * jMailer based on PHPMailer - PHP email transport class.
  *
@@ -138,7 +140,7 @@ class Mailer extends \PHPMailer
             if (isset($config->mailer['smtpProfile']) &&
                 $config->mailer['smtpProfile'] != ''
             ) {
-                $smtp = jProfiles::get('smtp', $config->mailer['smtpProfile']);
+                $smtp = Profiles::get('smtp', $config->mailer['smtpProfile']);
                 $smtp = array_merge(array(
                     'host' => 'localhost',
                     'port' => 25,

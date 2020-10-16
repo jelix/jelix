@@ -147,8 +147,8 @@ abstract class jCacheAPITest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ttl=strtotime("+1 day");
         try{
             jCache::add('added1Key', 111, $ttl,'invalidProfil');
-            $this->fail("jCache should throw an exeception when we give an invalid profile");
-        }catch(jException $e){
+            $this->fail("jCache should throw an exception when we give an invalid profile");
+        }catch(\Jelix\Profiles\Exception $e){
             $this->assertTrue(true);
         }
 
