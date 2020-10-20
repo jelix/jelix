@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah
  *
@@ -71,6 +68,7 @@ class groupsCtrl extends jController
         $tpl = new jTpl();
 
         $this->loadGroupRights($tpl);
+        $tpl->assign('groupId', $this->param('group'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
         $rep->body->assign('selectedMenuItem', 'usersgroups');
 
@@ -88,8 +86,7 @@ class groupsCtrl extends jController
         $rights = $this->param('rights', array());
 
         try {
-            $manager = new jAcl2DbAdminUIManager();
-            $manager->saveGroupRights($rights, jAuth::getUserSession()->login);
+            jAcl2DbManager::setRightsOnGroup($this->param('group'), $rights);
             jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'savegrouprights');
@@ -193,17 +190,42 @@ class groupsCtrl extends jController
     public function newgroup()
     {
         $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:index';
+        $rep->action = 'jacl2db_admin~groups:rights';
 
-        $name = $this->param('newgroup');
-        $id = $this->param('newgroupid');
+        $name = $this->param('name');
+        $id = $this->param('id');
+        $copyGroup = $this->param('rights-copy');
+
+
         if (trim($id) == '') {
             $id = null;
         }
         if ($name != '') {
-            jAcl2DbUserGroup::createGroup($name, $id);
+            $grpId = jAcl2DbUserGroup::createGroup($name, $id);
+            if ($copyGroup) {
+                $manager = new jAcl2DbAdminUIManager();
+                $rights = $manager->getGroupRights()['rights'];
+
+                $groupRights = array();
+                foreach ($rights as $right => $value) {
+                    $groupRights[$right] = $value[$copyGroup];
+                }
+                jAcl2DbManager::setRightsOnGroup($grpId, $groupRights);
+            }
             jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
+            $rep->params = array('group' => $grpId);
         }
+
+        return $rep;
+    }
+
+    public function create()
+    {
+        $rep = $this->getResponse('html');
+        $tpl = new jTpl();
+
+        $tpl->assign('groups', jAcl2DbUserGroup::getGroupList()->fetchAll());
+        $rep->body->assign('MAIN', $tpl->fetch('group_create'));
 
         return $rep;
     }
@@ -230,11 +252,42 @@ class groupsCtrl extends jController
 
         try {
             $manager = new jAcl2DbAdminUIManager();
-            $manager->removeGroup($this->param('group_id'));
+            $manager->removeGroup($this->param('group'));
             jMessage::add(jLocale::get('acl2.message.group.delete.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'group.delete');
         }
+
+        return $rep;
+    }
+
+    public function view()
+    {
+        $rep = $this->getResponse('html');
+
+        $group = jAcl2DbUserGroup::getGroupByName($this->param('group'));
+        $manager = new jAcl2DbAdminUIManager();
+        $rights = $manager->getGroupRights()['rights'];
+
+        $groupRights = array_keys(array_filter($rights, function ($elem) use ($group) {
+            if ($elem[$group->id_aclgrp] === 'y') {
+                return true;
+            }
+        }));
+        $subjects = jDao::get('jacl2db~jacl2subject')->findAllSubject()->fetchAll();
+        $groupRights = array_filter(array_map(function ($elem) use ($groupRights) {
+            if (in_array($elem->id_aclsbj, $groupRights)) {
+                return jLocale::get($elem->label_key);
+            }
+        }, $subjects));
+
+        $users = array_map(function ($elem) {
+            return $elem->login;
+        }, jAcl2DbUserGroup::getUsersList($group->id_aclgrp)->fetchAll());
+
+        $tpl = new jTpl();
+        $tpl->assign(array('group' => $group, 'rights' => $groupRights, 'users' => $users));
+        $rep->body->assign('MAIN', $tpl->fetch('group_view'));
 
         return $rep;
     }
