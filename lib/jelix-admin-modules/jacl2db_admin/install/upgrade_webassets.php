@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jacl2db_admin
- *
  * @author      Laurent Jouanneau
  * @copyright   2017-2018 Laurent Jouanneau
  *
@@ -17,6 +14,6 @@ class jacl2db_adminModuleUpgrader_webassets extends \Jelix\Installer\Module\Inst
 
     public function install(Jelix\Installer\Module\API\InstallHelpers $helpers)
     {
-        $helpers->declareGlobalWebAssets('jacl2_admin', array('css' => array('$jelix/design/jacl2.css')), 'common', false);
+        $helpers->declareGlobalWebAssets('jacl2_admin', array('css' => array('$jelix/design/jacl2.css'), 'js' => array('$jelix/jquery/jquery.min.js')), 'common', false);
     }
 }

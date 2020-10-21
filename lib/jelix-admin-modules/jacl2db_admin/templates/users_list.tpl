@@ -1,4 +1,5 @@
 {meta_html assets 'jacl2_admin'}
+{meta_html js $j_jelixwww.'js/jacldb_admin.js'}
 
 <h1>{@jacl2db_admin~acl2.users.title@}</h1>
 
@@ -14,7 +15,7 @@
 <fieldset><legend>{@jacl2db_admin~acl2.filter.title@}</legend>
 {formurlparam 'jacl2db_admin~rights:index'}
     <label for="type-list">{@jacl2db_admin~acl2.filter.type@}</label>
-    <select name="typeName" id="type-list" onChange="document.getElementById('hideField').style.display = document.filterForm.typeName.selectedIndex ? 'none' : 'inline'">
+    <select name="typeName" id="type-list" onchange="hideSelect();">
         <option value="user" {if $type == "user"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.user@}</option>
         <option value="group" {if $type == "group"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.group@}</option>
         <option value="all" {if $type == "all"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.all@}</option>

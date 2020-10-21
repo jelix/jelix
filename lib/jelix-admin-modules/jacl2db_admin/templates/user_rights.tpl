@@ -1,4 +1,5 @@
 {meta_html assets 'jacl2_admin'}
+{meta_html js $j_jelixwww.'js/jacldb_admin.js'}
 
 <h1>{@jacl2db_admin~acl2.user.rights.title@} {$user}</h1>
 
@@ -14,9 +15,16 @@
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights@}</th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.res@}</th>
         {if $nbgrp}
-        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
+        <th id="group-head" colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
-        <th class="colblank" rowspan="2"></th>
+        <th rowspan="2"><select id="groupSelector">
+        {foreach $groups as $group}
+            {if !isset($groupsuser[$group->id_aclgrp])}
+                <option value="{$group->id_aclgrp}">{$group->name}</option>
+            {/if}
+        {/foreach}
+        </select>
+        <button type="button" onclick="showColumn();">{@jacl2db_admin~acl2.button.display@}</button></th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@}</th>
     </tr>
     <tr>
@@ -24,7 +32,7 @@
         {if isset($groupsuser[$group->id_aclgrp])}
         <th>{$group->name} <a class="removegroup" href="{jurl 'jacl2db_admin~users:removegroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2db_admin~acl2.remove.group.tooltip@}">-</a></th>
         {else}
-        <th class="notingroup">{$group->name} <a class="addgroup" href="{jurl 'jacl2db_admin~users:addgroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2db_admin~acl2.add.group.tooltip@}">+</a></th>
+        <th class="notingroup {$group->id_aclgrp}" style="display:none;">{$group->name} <a class="addgroup" href="{jurl 'jacl2db_admin~users:addgroup',array('user'=>$user,'grpid'=>$group->id_aclgrp)}" title="{@jacl2db_admin~acl2.add.group.tooltip@}">+</a></th>
         {/if}
     {/foreach}
     </tr>
@@ -67,7 +75,7 @@
     </td>
     <td>    {if $rightsWithResources[$subject]}yes{/if}</td>
         {else}
-    <td {if !isset($groupsuser[$group])}class="notingroup">
+    <td {if !isset($groupsuser[$group])}class="notingroup {$group}" style="display:none;">
             {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept_disabled.png" alt="yes" />
             {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel_disabled.png" alt="no" />{/if}
         {else}>
