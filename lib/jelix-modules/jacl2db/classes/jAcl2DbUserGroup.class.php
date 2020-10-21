@@ -74,16 +74,16 @@ class jAcl2DbUserGroup
      */
     public static function getGroups()
     {
-        if (!jAuth::isConnected()) {
+        $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+        if ($login === null) {
             self::$groups = null;
-
             return array();
         }
 
         // load groups
         if (self::$groups === null) {
             $gp = jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile')
-                ->getGroupsUser(jAuth::getUserSession()->login)
+                ->getGroupsUser($login)
             ;
             self::$groups = array();
             foreach ($gp as $g) {
@@ -128,10 +128,10 @@ class jAcl2DbUserGroup
     public static function getPrivateGroup($login = null)
     {
         if (!$login) {
-            if (!jAuth::isConnected()) {
+            $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($login === null) {
                 return null;
             }
-            $login = jAuth::getUserSession()->login;
         }
         $privateGroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->getPrivateGroup($login);
         if (!$privateGroup) {
