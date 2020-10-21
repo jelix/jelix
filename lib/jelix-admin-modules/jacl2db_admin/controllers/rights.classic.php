@@ -37,7 +37,7 @@ class rightsCtrl extends jController
         $manager = new jAcl2DbAdminUIManager();
         $listPageSize = 15;
 
-        $type = $this->param('typeName', 'user');
+        $type = $this->param('typeName', 'group');
         $offset = $this->param('idx', 0, true);
         $grpid = $this->param('grpid', jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, true);
         $filter = trim($this->param('filter'));

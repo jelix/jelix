@@ -1,4 +1,5 @@
 {meta_html assets 'jacl2_admin'}
+{meta_html js $j_jelixwww.'js/jacldb_admin.js'}
 
 <h1>{@jacl2db_admin~acl2.users.title@}</h1>
 
@@ -14,12 +15,12 @@
 <fieldset><legend>{@jacl2db_admin~acl2.filter.title@}</legend>
 {formurlparam 'jacl2db_admin~rights:index'}
     <label for="type-list">{@jacl2db_admin~acl2.filter.type@}</label>
-    <select name="typeName" id="type-list" onChange="document.getElementById('hideField').style.display = document.filterForm.typeName.selectedIndex ? 'none' : 'inline'">
+    <select name="typeName" id="type-list" onchange="hideSelect();">
         <option value="user" {if $type == "user"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.user@}</option>
         <option value="group" {if $type == "group"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.group@}</option>
         <option value="all" {if $type == "all"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.all@}</option>
     </select><br/>
-    <div id="hideField" style="display: {if $type == 'user'}inline;{else} none;{/if}">
+    <div id="hideField" style="display: {if $type == 'user'} inline;{else} none;{/if}">
     <label for="user-list-group">{@jacl2db_admin~acl2.filter.group@}</label>
     <select name="grpid" id="user-list-group">
     {foreach $groups as $group}
@@ -42,7 +43,7 @@
     <tr>
         <th>{@jacl2db_admin~acl2.col.groups.name@}</th>
         <th>{@jacl2db_admin~acl2.col.type@}</th>
-        <th>{@jacl2db_admin~acl2.col.groups@}</th>
+        {if $type !== 'group'}<th>{@jacl2db_admin~acl2.col.groups@}</th>{/if}
         <th></th>
     </tr>
 </thead>
@@ -53,13 +54,15 @@
         {assign $typeLocale = 'jacl2db_admin~acl2.type.'.$result->type}
         <td>{$result->login}</td>
         <td>{@$typeLocale@}</td>
+        {if $type !== 'group'}
         <td>{foreach $result->groups as $key => $group} 
-            {if $key == $last}
+            {if $key == $result->last}
                 {$group->name}
             {else}
                 {$group->name.', '}
             {/if}
         {/foreach}</td>
+        {/if}
         <td><a href="{jurl 'jacl2db_admin~rights:rights', array('name' => $result->login, 'type' => $result->type)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
     </tr>
 {assign $line = !$line}

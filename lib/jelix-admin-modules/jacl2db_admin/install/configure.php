@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jacl2db_admin
- *
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau
  *
@@ -15,7 +12,7 @@ class jacl2db_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
     {
         $helpers->declareGlobalWebAssets(
             'jacl2_admin',
-            array('css' => array('$jelix/design/jacl2.css')),
+            array('css' => array('$jelix/design/jacl2.css'), 'js' => array('$jelix/jquery/jquery.min.js')),
             'common',
             false
         );

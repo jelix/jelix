@@ -269,6 +269,7 @@ class jAcl2DbAdminUIManager
                     $u->groups[] = $g;
                 }
             }
+            $u->last = count($u->groups) - 1;
             $results[] = $u;
         }
 
