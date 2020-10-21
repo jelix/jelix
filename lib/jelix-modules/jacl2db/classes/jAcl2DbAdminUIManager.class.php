@@ -261,7 +261,7 @@ class jAcl2DbAdminUIManager
         $results = array();
         $dao2 = jDao::get('jacl2db~jacl2groupsofuser', $p);
         foreach ($rs as $u) {
-            $u->type = jLocale::get('acl2.type.user');
+            $u->type = 'user';
             $u->groups = array();
             $gl = $dao2->getGroupsUser($u->login);
             foreach ($gl as $g) {
@@ -282,7 +282,8 @@ class jAcl2DbAdminUIManager
         foreach ($groups as $group) {
             if (empty($filter) || strstr($group->name, $filter)) {
                 $group->login = $group->name;
-                $group->type = jLocale::get('acl2.type.group');
+                $group->type = 'group';
+                $group->groups = array();
                 $results[] = $group;
             }
         }

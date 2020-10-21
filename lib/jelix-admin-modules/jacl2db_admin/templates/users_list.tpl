@@ -50,9 +50,9 @@
 {assign $line = true}
 {foreach $results as $result}
     <tr class="{if $line}odd{else}even{/if}">
-        
-        <td><a href="{jurl 'jacl2db_admin~users:rights', array('user'=>$user->login)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
+        {assign $typeLocale = 'jacl2db_admin~acl2.type.'.$result->type}
         <td>{$result->login}</td>
+        <td>{@$typeLocale@}</td>
         <td>{foreach $result->groups as $key => $group} 
             {if $key == $last}
                 {$group->name}
@@ -60,8 +60,7 @@
                 {$group->name.', '}
             {/if}
         {/foreach}</td>
-        <td>{$result->type}</td>
-        <td><a href="{jurl 'jacl2db_admin~rights:rights', array('user'=>$result->login)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
+        <td><a href="{jurl 'jacl2db_admin~rights:rights', array('name' => $result->login, 'type' => $result->type)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
     </tr>
 {assign $line = !$line}
 {/foreach}

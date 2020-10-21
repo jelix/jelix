@@ -67,4 +67,22 @@ class rightsCtrl extends jController
 
         return $rep;
     }
+
+    public function rights()
+    {
+        $rep = $this->getResponse('redirect');
+        $type = $this->param('type').'s';
+        $name = $this->param('name');
+        $group = null;
+        if ($type == 'groups') {
+            $group = jAcl2DbUserGroup::getGroupByName($name)->id_aclgrp;
+        }
+        $rep->params = array(
+            'user' => $name,
+            'group' => $group,
+        );
+        $rep->action = 'jacl2db_admin~'.$type.':rights';
+
+        return $rep;
+    }
 }
