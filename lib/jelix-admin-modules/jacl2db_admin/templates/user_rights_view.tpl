@@ -9,9 +9,16 @@
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights@}</th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.res@}</th>
         {if $nbgrp}
-        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
+        <th id="group-head" colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
-        <th class="colblank" rowspan="2"></th>
+        <th rowspan="2"><select id="groupSelector">
+        {foreach $groups as $group}
+            {if !isset($groupsuser[$group->id_aclgrp])}
+                <option value="{$group->id_aclgrp}">{$group->name}</option>
+            {/if}
+        {/foreach}
+        </select>
+        <button type="button" onclick="showColumn();">{@jacl2db_admin~acl2.button.display@}</button></th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@}</th>
     </tr>
     <tr>
@@ -19,7 +26,7 @@
         {if isset($groupsuser[$group->id_aclgrp])}
         <th>{$group->name}</th>
         {else}
-        <th class="notingroup">{$group->name}</th>
+        <th class="notingroup {$group->id_aclgrp}" style="display:none;">{$group->name}</th>
         {/if}
     {/foreach}
     </tr>
