@@ -70,6 +70,13 @@ class rightsCtrl extends jController
     {
         $rep = $this->getResponse('redirect');
         $type = $this->param('type').'s';
+        if ($type === 's') {
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'jacl2db_admin~rights:index';
+            jMessage::add('Invalid Entry, select an entry from the autocomplete list.', 'error');
+
+            return $rep;
+        }
         $name = $this->param('name');
         $group = null;
         if ($type == 'groups') {
