@@ -1,12 +1,12 @@
 {meta_html assets 'jacl2_admin'}
-{meta_html js $j_jelixwww.'js/jacldb_admin.js'}
 
 <h1>{@jacl2db_admin~acl2.users.title@}</h1>
 
 <form action="{formurl 'jacl2db_admin~rights:rights'}" method="get" class="form-inline">
     <div>
         <label>{@jacl2db_admin~acl2.user.rights.title@}</label>
-        <input name="user"></input>
+        <input name="name" id="search-bar" data-select-on-ac="true" data-link="{jurl 'jacl2db_admin~rights:autocomplete'}"/>
+        <input name="type" id="type-hidden" style="display: none;"/>
         <button type="submit">{@jacl2db_admin~acl2.show.button@}</button>
     </div>
 </form>
