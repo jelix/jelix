@@ -103,7 +103,9 @@ class groupsCtrl extends jController
         $groupid = $this->param('group', null);
 
         if ($groupid === null || $groupid == '') {
-            $rep->body->assign('MAIN', '<p>invalid group.</p>');
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'jacldb_admin~groups:index';
+            jMessage::add('Invalid Group', 'error');
 
             return $rep;
         }
@@ -112,7 +114,9 @@ class groupsCtrl extends jController
         if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
-                $rep->body->assign('MAIN', '<p>invalid group.</p>');
+                $rep = $this->getResponse('redirect');
+                $rep->action = 'jacldb_admin~groups:index';
+                jMessage::add('Invalid Group', 'error');
 
                 return $rep;
             }
@@ -262,6 +266,13 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
 
         $group = jAcl2DbUserGroup::getGroupByName($this->param('group'));
+        if ($group === null) {
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'jacl2db_admin~groups:index';
+            jMessage::add('Invalid Group', 'error');
+
+            return $rep;
+        }
         $manager = new jAcl2DbAdminUIManager();
         $rights = $manager->getGroupRights()['rights'];
 
