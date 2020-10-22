@@ -4,12 +4,7 @@ class rightsCtrl extends jController
 {
     public $pluginParams = array(
         'index'      => array('jacl2.right' => 'acl.group.view'),
-        'rights'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'newgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
-        'changename' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'delgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
-        'setdefault' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'rights'     => array('jacl2.right' => 'acl.group.view'),
     );
 
     public function index()
