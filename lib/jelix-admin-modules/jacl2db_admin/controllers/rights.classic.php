@@ -3,12 +3,12 @@
 class rightsCtrl extends jController
 {
     public $pluginParams = array(
-        'index' => array('jacl2.right' => 'acl.group.view'),
-        'rights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'index'      => array('jacl2.right' => 'acl.group.view'),
+        'rights'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'newgroup' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
+        'newgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
         'changename' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'delgroup' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
+        'delgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
         'setdefault' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
     );
 
@@ -52,12 +52,10 @@ class rightsCtrl extends jController
         } elseif ($type === 'all') {
             $usersResults = $manager->getUsersList($grpid, null, $filter, $offset, $listPageSize);
             $groupResults = $manager->getGroupByFilter($filter);
-            jLog::dump($usersResults, 'users', 'error');
             $results = array(
-                'results' => array_merge($usersResults['results'], $groupResults['results']),
+                'results'      => array_merge($usersResults['results'], $groupResults['results']),
                 'resultsCount' => $usersResults['resultsCount'] + $groupResults['resultsCounts'],
             );
-            jLog::dump($results, 'results', 'error');
             $tpl->assign($results);
         }
 
@@ -78,10 +76,41 @@ class rightsCtrl extends jController
             $group = jAcl2DbUserGroup::getGroupByName($name)->id_aclgrp;
         }
         $rep->params = array(
-            'user' => $name,
+            'user'  => $name,
             'group' => $group,
         );
         $rep->action = 'jacl2db_admin~'.$type.':rights';
+
+        return $rep;
+    }
+
+    public function autocomplete()
+    {
+        $rep = $this->getResponse('json');
+        $term = $this->param('term', '');
+
+        if (strlen($term) < 2) {
+            $rep->data = array();
+
+            return $rep;
+        }
+
+        $results = array();
+        $manager = new jAcl2DbAdminUIManager();
+        $usersResults = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, null, $term);
+        $groupResults = $manager->getGroupByFilter($term);
+        $resultsObjects = array_merge($usersResults['results'], $groupResults['results']);
+        foreach ($resultsObjects as $result) {
+            $results[] = array(
+                'label' => $result->login.' ('.jLocale::get('jacl2db_admin~acl2.type.'.$result->type).')',
+                'value' => array(
+                    'login' => $result->login,
+                    'type'  => $result->type,
+                ),
+            );
+        }
+
+        $rep->data = $results;
 
         return $rep;
     }

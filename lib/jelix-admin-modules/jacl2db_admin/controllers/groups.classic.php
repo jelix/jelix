@@ -13,12 +13,12 @@
 class groupsCtrl extends jController
 {
     public $pluginParams = array(
-        'index' => array('jacl2.right' => 'acl.group.view'),
-        'rights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'index'      => array('jacl2.right' => 'acl.group.view'),
+        'rights'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'newgroup' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
+        'newgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
         'changename' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'delgroup' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
+        'delgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
         'setdefault' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
     );
 
@@ -288,6 +288,25 @@ class groupsCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign(array('group' => $group, 'rights' => $groupRights, 'users' => $users));
         $rep->body->assign('MAIN', $tpl->fetch('group_view'));
+
+        return $rep;
+    }
+
+    public function autocomplete()
+    {
+        $rep = $this->getResponse('json');
+        $term = $this->param('term', '');
+
+        if (strlen($term) < 2) {
+            $rep->data = array();
+
+            return $rep;
+        }
+        $manager = new jAcl2DbAdminUIManager();
+        $filteredGroupObjects = $manager->getGroupByFilter($term);
+        $rep->data = array_map(function ($elem) {
+            return $elem->name;
+        }, $filteredGroupObjects['results']);
 
         return $rep;
     }

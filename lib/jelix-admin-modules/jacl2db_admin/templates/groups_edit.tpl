@@ -4,8 +4,8 @@
 
 <form action="{formurl 'jacl2db_admin~groups:view'}" method="get" class="form-inline">
     <div>
-        <label>{@jacl2db_admin~acl2.user.rights.title@}</label>
-        <input name="group"></input>
+        <label>{@jacl2db_admin~acl2.groups.view.title@}</label>
+        <input name="group" id="search-bar" data-link="{jurl 'jacl2db_admin~groups:autocomplete'}"/>
         <button type="submit">{@jacl2db_admin~acl2.show.button@}</button>
     </div>
 </form>
