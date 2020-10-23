@@ -12,11 +12,11 @@
 class usersCtrl extends jController
 {
     public $pluginParams = array(
-        'index' => array('jacl2.rights.and' => array('acl.user.view')),
-        'rights' => array('jacl2.rights.and' => array('acl.user.view')),
-        'saverights' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'index'       => array('jacl2.rights.and' => array('acl.user.view')),
+        'rights'      => array('jacl2.rights.and' => array('acl.user.view')),
+        'saverights'  => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
         'removegroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
-        'addgroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'addgroup'    => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
     );
 
     protected function checkException(jAcl2DbAdminUIException $e, $category)
@@ -109,7 +109,6 @@ class usersCtrl extends jController
 
         $tpl = new jTpl();
         $tpl->assign($data);
-        // $tpl->assign('nbgrp', count($data['groups']));
         $tpl->assign('nbgrp', count($data['groupsuser']));
 
         if (jAcl2::check('acl.user.modify')) {

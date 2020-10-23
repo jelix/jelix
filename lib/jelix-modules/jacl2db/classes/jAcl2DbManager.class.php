@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jacl2db
- *
  * @author      Laurent Jouanneau
  * @copyright   2006-2019 Laurent Jouanneau
  *
@@ -15,8 +12,6 @@
 /**
  * This class is used to manage rights. Works only with db driver of jAcl2.
  *
- * @package     jelix
- * @subpackage  acl
  * @static
  */
 class jAcl2DbManager
@@ -40,7 +35,7 @@ class jAcl2DbManager
      * add a right on the given role/group/resource.
      *
      * @param string $group    the group id
-     * @param string $role  the key of the role
+     * @param string $role     the key of the role
      * @param string $resource the id of a resource
      *
      * @return bool true if the right is set
@@ -80,7 +75,7 @@ class jAcl2DbManager
      * inherit from other groups if the user is in multiple groups of users.
      *
      * @param string $group    the group id
-     * @param string $role  the key of the role
+     * @param string $role     the key of the role
      * @param string $resource the id of a resource
      * @param bool   $canceled true if the removing is to cancel a right, instead of an inheritance
      */
@@ -123,6 +118,7 @@ class jAcl2DbManager
      */
     public static function setRightsOnGroup($group, $rights)
     {
+        $subjects = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject()->fetchAll();
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
         // retrieve old rights.
@@ -132,16 +128,37 @@ class jAcl2DbManager
             $oldrights[$rec->id_aclsbj] = ($rec->canceled ? 'n' : 'y');
         }
 
+        $roots = array();
+        foreach ($subjects as $subject) {
+            $matches = array();
+            if (preg_match('/(.*)(\.view)$/', $subject->id_aclsbj, $matches)) {
+                $roots[] = $matches[1];
+            }
+        }
+
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach ($rights as $sbj => $val) {
             if ($val === '' || $val == false) {
                 // remove
             } elseif ($val === true || $val == 'y') {
+                foreach ($roots as $root) {
+                    if (preg_match('/^('.$root.'.)/', $sbj)) {
+                        self::addRight($group, $root.'.view');
+                    }
+                }
                 self::addRight($group, $sbj);
                 unset($oldrights[$sbj]);
             } elseif ($val == 'n') {
                 // cancel
+                $matches = array();
+                if (preg_match('/(.*)(\.view)$/', $sbj, $matches)) {
+                    foreach ($subjects as $subject) {
+                        if (preg_match('/^('.$matches[1].'.)/', $sbj)) {
+                            self::removeRight($group, $subject, '-', true);
+                        }
+                    }
+                }
                 if (isset($oldrights[$sbj])) {
                     unset($oldrights[$sbj]);
                 }
@@ -153,14 +170,13 @@ class jAcl2DbManager
             // $oldrights contains now rights to remove
             $dao->deleteByGroupAndRoles($group, array_keys($oldrights));
         }
-
         jAcl2::clearCache();
     }
 
     /**
      * remove the right on the given role/resource, for all groups.
      *
-     * @param string $role  the key of the role
+     * @param string $role     the key of the role
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($role, $resource)
@@ -175,9 +191,10 @@ class jAcl2DbManager
     /**
      * create a new role.
      *
-     * @param string $role      the key of the role
+     * @param string $role         the key of the role
      * @param string $label_key    the key of a locale which represents the label of the role
      * @param string $subjectGroup the id of the group where the role is attached to
+     *
      * @since 1.7
      */
     public static function addRole($role, $label_key, $subjectGroup = null)
@@ -199,7 +216,8 @@ class jAcl2DbManager
      *
      * @deprecated
      * @see addRole()
-     * @param string $role      the key of the role
+     *
+     * @param string $role         the key of the role
      * @param string $label_key    the key of a locale which represents the label of the role
      * @param string $subjectGroup the id of the group where the role is attached to
      */
@@ -212,6 +230,7 @@ class jAcl2DbManager
      * Delete the given role.
      *
      * @param string $role the key of the role
+     *
      * @since 1.7
      */
     public static function removeRole($role)
@@ -225,6 +244,7 @@ class jAcl2DbManager
      * Delete the given role.
      *
      * @param string $role the key of the role
+     *
      * @deprecated see removeRole()
      */
     public static function removeSubject($role)
@@ -233,13 +253,15 @@ class jAcl2DbManager
     }
 
     /**
-     * set same rights with a specific role, on groups having an other specific role
+     * set same rights with a specific role, on groups having an other specific role.
      *
      * It can be useful when creating a new role.
      *
-     * @param string $fromRole      the role of the role
+     * @param string $fromRole     the role of the role
      * @param string $label_key    the key of a locale which represents the label of the role
      * @param string $subjectGroup the id of the group where the role is attached to
+     * @param mixed  $toRole
+     *
      * @since 1.7
      */
     public static function copyRoleRights($fromRole, $toRole)
@@ -265,12 +287,11 @@ class jAcl2DbManager
         jAcl2::clearCache();
     }
 
-
     /**
      * Create a new role group.
      *
      * @param string $roleGroup the key of the role group
-     * @param string $label_key    the key of a locale which represents the label of the role group
+     * @param string $label_key the key of a locale which represents the label of the role group
      *
      * @since 1.7
      */
@@ -291,7 +312,7 @@ class jAcl2DbManager
      * Create a new role group.
      *
      * @param string $roleGroup the key of the role group
-     * @param string $label_key    the key of a locale which represents the label of the role group
+     * @param string $label_key the key of a locale which represents the label of the role group
      *
      * @since 1.3
      * @deprecated see addRoleGroup()
