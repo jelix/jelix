@@ -2,7 +2,7 @@
 
 <h1>{@jacl2db_admin~acl2.groups.rights.title@}</h1>
 
-<form action="{formurl 'jacl2db_admin~groups:saverights'}" method="post">
+<form id="rights-edit" action="{formurl 'jacl2db_admin~groups:saverights'}" method="post">
 <fieldset><legend>{@jacl2db_admin~acl2.rights.title@}</legend>
 <div>{formurlparam 'jacl2db_admin~groups:saverights'}</div>
 <table class="records-list jacl2-list">
@@ -30,7 +30,7 @@
     <th title="{$subject}">{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     {if $group == $groupId}
-    <td><select name="rights[{$group}][{$subject}]">
+    <td><select name="rights[{$group}][{$subject}]" id="{$subject|eschtml}">
         <option value=""  {if $r == ''}selected="selected"{/if}>-</option>
         <option value="y" {if $r == 'y'}selected="selected"{/if}>{@acl2.group.rights.value.yes@}</option>
         <option value="n" {if $r == 'n'}selected="selected"{/if}>{@acl2.group.rights.value.no@}</option>

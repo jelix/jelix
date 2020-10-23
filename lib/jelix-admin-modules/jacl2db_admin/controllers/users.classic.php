@@ -1,8 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor Julien Issler
+ * @contributor Julien Issler, Adrien Lagroy de Croutte
  *
+ * @copyright   2020 Adrien Lagroy de Croutte
  * @copyright   2008-2017 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  *
@@ -13,11 +14,11 @@
 class usersCtrl extends jController
 {
     public $pluginParams = array(
-        'index' => array('jacl2.rights.and' => array('acl.user.view')),
-        'rights' => array('jacl2.rights.and' => array('acl.user.view')),
-        'saverights' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'index'       => array('jacl2.rights.and' => array('acl.user.view')),
+        'rights'      => array('jacl2.rights.and' => array('acl.user.view')),
+        'saverights'  => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
         'removegroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
-        'addgroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'addgroup'    => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
     );
 
     protected function checkException(jAcl2DbAdminUIException $e, $category)

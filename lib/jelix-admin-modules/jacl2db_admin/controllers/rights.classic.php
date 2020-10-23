@@ -1,4 +1,13 @@
 <?php
+/**
+ * @author      Adrien Lagroy de Croutte
+ *
+ * @copyright   2020 Adrien Lagroy de Croutte
+ *
+ * @see        http://jelix.org
+ * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
+ */
+
 
 class rightsCtrl extends jController
 {
