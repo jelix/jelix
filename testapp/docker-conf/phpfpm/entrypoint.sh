@@ -3,9 +3,6 @@
 set -e
 set -x
 
-sed -i "/^user =/c\user = usertest"   /etc/php7/php-fpm.d/www.conf
-sed -i "/^group =/c\group = grouptest" /etc/php7/php-fpm.d/www.conf
-
 if [ -n "$TLS_CA_CRT_FILENAME" ]; then
     cp -a /customcerts/$TLS_CA_CRT_FILENAME /etc/ssl/certs/tests_CA.crt
     chown root:grouptest /etc/ssl/certs/tests_CA.crt

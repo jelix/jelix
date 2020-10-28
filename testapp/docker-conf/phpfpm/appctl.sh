@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 APPDIR="/jelixapp/testapp"
 APP_USER=usertest
 APP_GROUP=grouptest

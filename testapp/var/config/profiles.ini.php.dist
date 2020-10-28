@@ -112,7 +112,7 @@ driver = memcache
 ;  host[] = memcache_host1:11211
 ;  host[] = memcache_host2:11211
 ;  ...
-host = "localhost:11211"
+host = "memcached:11211"
 
 [jkvdb:usingfile]
 driver = file
@@ -210,7 +210,7 @@ driver = memcache
 ; Can be a list e.g
 ;servers = memcache_host1:11211;memcache_host2:11211;memcache_host3:11211 i.e HOST_NAME:PORT
 ;servers = localhost:11211
-servers = localhost:11211
+servers = memcached:11211
 
 [jcache:usingfile]
 enabled = 1

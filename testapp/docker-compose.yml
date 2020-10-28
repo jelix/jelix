@@ -16,11 +16,11 @@ services:
     container_name: "jelix_${JLXBRANCH}_test_redis"
     networks:
      - default
-#  memcached:
-#    image: memcached:1.6
-#    container_name: "jelix_${JLXBRANCH}_test_memcached"
-#    networks:
-#     - default
+  memcached:
+    image: memcached:1.6
+    container_name: "jelix_${JLXBRANCH}_test_memcached"
+    networks:
+     - default
   mysql:
     image: mysql
     container_name: jelix_${JLXBRANCH}_test_mysql
@@ -54,11 +54,18 @@ services:
     environment:
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
       TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
+      PHP_VERSION: "${PHP_VERSION}"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"
     networks:
       - default
+    depends_on:
+      - pgsql
+      - redis
+      - memcached
+      - mysql
+      - openldap
   web:
     image: nginx:alpine
     container_name: jelix_${JLXBRANCH}_test_web
@@ -73,6 +80,8 @@ services:
       default:
          aliases:
            - testapp.local
+    depends_on:
+      - php
 volumes:
   pg_data:
     name: "jelix_${JLXBRANCH}_pg_data"

@@ -34,9 +34,9 @@ case $COMMAND in
     unit-tests)
         docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh unit-tests $@;;
     shell)
-       docker exec -it --user usertest jelix_${JLXBRANCH}_test_php  /bin/sh -l;;
+       docker exec -it --user usertest jelix_${JLXBRANCH}_test_php  /bin/bash -l;;
     shell-root)
-       docker exec -it jelix_${JLXBRANCH}_test_php  /bin/sh  -l;;
+       docker exec -it jelix_${JLXBRANCH}_test_php  /bin/bash  -l;;
     ldap-reset)
       docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh reset
       ;;

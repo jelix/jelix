@@ -18,19 +18,40 @@ Testapp with Docker
 
 A docker configuration is provided to launch the application into a container.
 
-To launch containers the first time:
+build
+-----
+Before launching containers, you have to run these commands:
 
 ```
 cd docker-conf
 ./setup.sh
 cd ..
 ./run-docker build
-./run-docker
+```
+
+
+launch
+-------
+
+To launch containers, just run `./run-docker`.
+
+The first time you run the containers, you have to initialize databases and
+application configuration by executing these commands:
+
+```
 ./app-ctl ldap-reset
 ./app-ctl reset
 ```
 
-You can execute some commands into the php container, by using this command:
+If you made change into jelix, you can rerun these commands.
+
+Then you can launch unit tests:
+
+```
+./app-ctl unit-tests
+```
+
+You can execute some commands into containers, by using this script:
 
 ```
 ./app-ctl <command>
@@ -48,6 +69,8 @@ Available commands:
 * `ldap-reset`: to restore default users in the ldap
 * `ldap-users`: to show users defined in the ldap
 
+browsing the application
+------------------------
 
 You can view the application at `http://localhost:8817` in your browser. 
 Or, if you set `127.0.0.1 testapp.local` into your `/etc/hosts`, you can
@@ -60,6 +83,21 @@ before launching `run-docker`.
 export TESTAPP_WEB_PORT=12345
 ./run-docker
 ```
+
+Using a specific php version
+-----------------------------
+
+By default, PHP 7.4 is installed. If you want to use an other PHP version,
+set the environment variable `PHP_VERSION`, and rebuild the containers:
+
+```
+export PHP_VERSION=7.3
+
+./run-docker stop # if containers are running
+./run-docker build
+./run-docker
+```
+
 
 Testapp with Vagrant
 ====================
