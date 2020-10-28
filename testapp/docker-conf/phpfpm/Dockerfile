@@ -1,6 +1,6 @@
 FROM debian:buster-slim
 
-ARG composer_version=1.9.3
+ARG composer_version=2.0.3
 
 ARG FPM_USER_ID=1000
 ARG FPM_GROUP_ID=1000
@@ -41,6 +41,7 @@ RUN apt-get -y install \
     wget \
     postgresql-client \
     mariadb-client \
+    unzip \
     ; apt-get clean
 
 ## Install Composer
