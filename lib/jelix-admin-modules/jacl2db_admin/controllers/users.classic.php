@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
@@ -51,7 +48,8 @@ class usersCtrl extends jController
         $o->grouptype = jAcl2DbUserGroup::GROUPTYPE_NORMAL;
         $groups[] = $o;
 
-        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
+        $groupList = jAcl2DbUserGroup::getGroupList();
+        foreach ($groupList as $grp) {
             $groups[] = $grp;
         }
 
@@ -61,6 +59,7 @@ class usersCtrl extends jController
         $offset = $this->param('idx', 0, true);
         $grpid = $this->param('grpid', jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, true);
         $filter = trim($this->param('filter'));
+        $last = count($groups) - 3;
         $tpl = new jTpl();
 
         if (is_numeric($grpid) && intval($grpid) < 0) {
@@ -69,7 +68,7 @@ class usersCtrl extends jController
             $tpl->assign($manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
         }
 
-        $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter'));
+        $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter', 'last'));
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
         $rep->body->assign('selectedMenuItem', 'usersrights');
 

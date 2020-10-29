@@ -44,16 +44,9 @@ class dbcacheAcl2Driver implements jIAcl2Driver2
      */
     public function getRight($subject, $resource = '-')
     {
-        if (!jAuth::isConnected()) {
+        $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+        if ($login === null) {
             return $this->getAnonymousRight($subject, $resource);
-        }
-
-        $user = jAuth::getUserSession();
-        if ($user) {
-            $login = $user->login;
-        }
-        else {
-            $login = '';
         }
         return $this->getRightByUser($login, $subject, $resource);
     }

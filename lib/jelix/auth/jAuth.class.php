@@ -591,6 +591,14 @@ class jAuth
         return str_shuffle($pass);
     }
 
+    /**
+     * check the token from the cookie used for persistant session
+     *
+     * If the cookie is good, the login  is made
+     *
+     * @return bool true if the cookie was ok and login has been succeed
+     * @throws jException
+     */
     public static function checkCookieToken()
     {
         $config = self::loadConfig();
@@ -602,18 +610,45 @@ class jAuth
                 if (isset($_COOKIE[$cookieName]) &&
                     is_string($_COOKIE[$cookieName]) &&
                     strlen($_COOKIE[$cookieName])) {
-                    $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString($config['persistant_encryption_key']);
-                    $decrypted = \Defuse\Crypto\Crypto::decrypt($_COOKIE[$cookieName], $cryptokey);
+                    try {
+                        $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString(
+                            $config['persistant_encryption_key']
+                        );
+                        $decrypted = \Defuse\Crypto\Crypto::decrypt(
+                            $_COOKIE[$cookieName],
+                            $cryptokey
+                        );
+                    }
+                    catch(\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $e) {
+                        jLog::log('User not logged with authentication cookie: error during decryption of the cookie. Cookie not encrypted with the current encryption key.', 'notice');
+                        return false;
+                    }
+                    catch(\Defuse\Crypto\Exception\CryptoException $e) {
+                        jLog::log('User not logged with authentication cookie: error during decryption of the cookie. Bad encryption key or bad cookie content.', 'warning');
+                        return false;
+                    }
                     $decrypted = json_decode($decrypted, true);
                     if ($decrypted && is_array($decrypted) && count($decrypted) == 2) {
                         list($login, $password) = $decrypted;
-                        self::login($login, $password, true);
+                        return self::login($login, $password, true);
                     }
                 }
             }
         }
+        return false;
     }
 
+    /**
+     * Generate and set an encrypted cookie with the given login password
+     *
+     * The cookie may not be set if the persistence is disable or if there is
+     * an issue with the encryption.
+     *
+     * @param string $login
+     * @param string $password
+     *
+     * @return int expiration date (UNIX timestamp), or 0 if cookie is not set
+     */
     public static function generateCookieToken($login, $password)
     {
         $persistence = 0;
@@ -634,9 +669,15 @@ class jAuth
                 $persistence = 86400; // 24h
             }
             $persistence += time();
-            $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString($config['persistant_encryption_key']);
-            $encrypted = \Defuse\Crypto\Crypto::encrypt(json_encode(array($login, $password)), $cryptokey);
-            setcookie($config['persistant_cookie_name'], $encrypted, $persistence, $config['persistant_cookie_path'], '', false, true);
+            try {
+                $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString($config['persistant_encryption_key']);
+                $encrypted = \Defuse\Crypto\Crypto::encrypt(json_encode(array($login, $password)), $cryptokey);
+                setcookie($config['persistant_cookie_name'], $encrypted, $persistence, $config['persistant_cookie_path'], '', false, true);
+            }
+            catch(\Defuse\Crypto\Exception\CryptoException $e) {
+                jLog::log('Cookie for persistant authentication. Error during encryption of the cookie token for authentication: '.$e->getMessage(), 'warning');
+                return false;
+            }
         }
 
         return $persistence;
