@@ -227,7 +227,13 @@ class usersCtrl extends jController
         if ($login != '') {
             $rep->action = 'jacl2db_admin~users:rights';
             $rep->params = array('user' => $login);
-            jAcl2DbUserGroup::addUserToGroup($login, $this->param('grpid'));
+
+            try {
+                $manager = new jAcl2DbAdminUIManager();
+                $manager->addUserToGroup($login, $this->param('grpid'));
+            } catch (jAcl2DbAdminUIException $e) {
+                $this->checkException($e, 'addusertogroup');
+            }
         } else {
             $rep->action = 'jacl2db_admin~users:index';
         }
