@@ -355,8 +355,7 @@ driver=
 [acl2]
 ; exemple of driver: "db"
 driver=
-
-
+authAdapterClass="jAcl2JAuthAdapter"
 
 [sessions]
 ; to disable sessions, set the following parameter to 0

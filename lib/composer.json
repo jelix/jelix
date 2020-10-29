@@ -4,7 +4,7 @@
     "description": "used to declare jelix dependencies for testapp or other packages",
     "license": "LGPL-2.1-or-later",
     "require": {
-        "jelix/composer-module-setup": "^0.7.0",
+        "jelix/composer-module-setup": "^1.0.0",
         "phpmailer/phpmailer": "^5.2.28",
         "jelix/castor": "^1.0.1",
         "jelix/profiles": "~1.1.0",

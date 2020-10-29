@@ -19,4 +19,8 @@ if [ "$TESTAPP_WEB_PORT" == "" ]; then
   export TESTAPP_WEB_PORT=8820
 fi
 
+if [ "$PHP_VERSION" == "" ]; then
+  export PHP_VERSION=7.4
+fi
+
 docker-compose -p jelix-${JLXBRANCH}-tests $CMD
