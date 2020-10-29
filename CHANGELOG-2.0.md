@@ -1,7 +1,6 @@
 # Changes into Jelix 2.0
 
 - minimum PHP version is 7.3.0
-- upgrade PHPUnit to 8.5.0
 
 - Many Jelix classes are now under a namespace, but some classes with old names
   still exist to ease the transition, although it is recommanded to use new name
@@ -24,6 +23,12 @@
   indicated into the composer file in `composer.extra.jelix.moduleName`.
 
 - Remove support of infoIDSuffix from jelix-scripts.ini files
+
+## test environment
+
+- Vagrant environment has been removed.
+- upgrade PHPUnit to 8.5.0
+
 
 ## internal
 

@@ -1,6 +1,5 @@
 .DS_Store
 Thumbs.db
-.vagrant
 app/system/auth_ldap.coord.ini.php
 var/config/installer.ini.php
 var/config/profiles.ini.php

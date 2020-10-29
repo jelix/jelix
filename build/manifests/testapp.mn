@@ -40,8 +40,6 @@ cd testapp/plugins
   __ALL_RECURSIVELY__
 cd testapp/app/responses
   __ALL__
-cd testapp/vagrant
-  __ALL_RECURSIVELY__
 
 cd testapp/www
   __ALL__
