@@ -37,7 +37,7 @@ before_install:
    - phpenv config-add testapp/travis/phpconf.ini
    - phpenv config-rm xdebug.ini
    - sudo ./testapp/travis/before_install.sh $(phpenv version-name)
-   - ~/.phpenv/versions/$(phpenv version-name)/bin/composer self-update
+   - ~/.phpenv/versions/$(phpenv version-name)/bin/composer self-update --2
 
 install:
    - ./testapp/travis/install.sh
