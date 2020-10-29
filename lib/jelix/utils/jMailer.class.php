@@ -464,8 +464,22 @@ class jMailer extends PHPMailer
 
     protected function getStorageFile()
     {
-        return rtrim($this->filePath, '/').'/mail.'.jApp::coord()->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        return rtrim($this->filePath, '/').'/mail.'.$this->getUserIp().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
+
+    protected function getUserIp() {
+        if (jApp::coord() && jApp::coord()->request) {
+            return jApp::coord()->request->getIP();
+        }
+        else if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+        else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']) {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+        return 'no-ip';
+    }
+
 
     public function setLanguage($lang_type = 'en', $lang_path = 'language/')
     {
@@ -513,12 +527,7 @@ class jMailer extends PHPMailer
     protected function copyMail($header, $body)
     {
         $dir = rtrim($this->filePath, '/').'/copy-'.date('Ymd').'/';
-        if (isset(jApp::coord()->request)) {
-            $ip = jApp::coord()->request->getIP();
-        } else {
-            $ip = 'no-ip';
-        }
-        $filename = $dir.'mail-'.$ip.'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        $filename = $dir.'mail-'.$this->getUserIp().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
         jFile::write($filename, $header.$body);
     }
 
