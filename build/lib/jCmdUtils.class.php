@@ -44,11 +44,11 @@ class jCmdUtils {
             array_shift($argv); // shift the script name
 
         //---------- get the switches
-        while (count($argv) && $argv[0]{0} == '-') {
+        while (count($argv) && $argv[0][0] == '-') {
             if (isset($sws[$argv[0]])) {
                 if ($sws[$argv[0]]) {
                     $multiple=($sws[$argv[0]] > 1);
-                    if (isset($argv[1]) && $argv[1]{0} != '-') {
+                    if (isset($argv[1]) && $argv[1][0] != '-') {
                         $sw = array_shift($argv);
                         if($multiple)
                             $switches[$sw][] = array_shift($argv);

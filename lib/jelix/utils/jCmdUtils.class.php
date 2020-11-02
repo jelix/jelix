@@ -52,7 +52,7 @@ class jCmdUtils {
         $parameters = array();
 
         //---------- get the switches
-        while (count($argv) && $argv[0]{0} == '-') {
+        while (count($argv) && $argv[0][0] == '-') {
             if (isset($sws[$argv[0]])) {
                 if ($sws[$argv[0]]) {
                     if (isset($argv[1]) && ($argv[1][0] != '-' || !isset($sws[$argv[1]]))) {
