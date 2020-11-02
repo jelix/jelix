@@ -75,7 +75,11 @@ class rightsCtrl extends jController
         $name = $this->param('name');
         $group = null;
         if ($type == 'groups') {
-            $group = jDao::get('jacl2db~jacl2group')->getGroupByName($name)->id_aclgrp;
+            if ($name == 'anonymous') {
+                $group = '__anonymous';
+            } else {
+                $group = jDao::get('jacl2db~jacl2group')->getGroupByName($name)->id_aclgrp;
+            }
         }
         $rep->params = array(
             'user'  => $name,
@@ -103,6 +107,16 @@ class rightsCtrl extends jController
         $groupResults = $manager->getGroupByFilter($term);
         $resultsObjects = array_merge($usersResults['results'], $groupResults['results']);
         foreach ($resultsObjects as $result) {
+            if ($result->login === 'anonymous') {
+                $results[] = array(
+                    'label' => jLocale::get('jacl2db_admin~acl2.anonymous.group.name').' ('.jLocale::get('jacl2db_admin~acl2.type.'.$result->type).')',
+                    'value' => array(
+                        'login' => $result->login,
+                        'type'  => $result->type,
+                    ),
+                );
+                continue ;
+            }
             $results[] = array(
                 'label' => $result->login.' ('.jLocale::get('jacl2db_admin~acl2.type.'.$result->type).')',
                 'value' => array(

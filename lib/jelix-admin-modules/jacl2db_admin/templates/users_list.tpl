@@ -52,7 +52,11 @@
 {foreach $results as $result}
     <tr class="{if $line}odd{else}even{/if}">
         {assign $typeLocale = 'jacl2db_admin~acl2.type.'.$result->type}
+        {if $result->login === 'anonymous'}
+        <td>{@acl2.anonymous.group.name@}</td>
+        {else}
         <td>{$result->login}</td>
+        {/if}
         <td>{@$typeLocale@}</td>
         {if $type !== 'group'}
         <td>{foreach $result->groups as $key => $group} 
