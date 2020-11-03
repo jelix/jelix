@@ -54,6 +54,7 @@ class jAcl2DbAdminUIManager
 
         $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         $rightsWithResources = array();
+        $hiddenRights = $this->getHiddenRights();
 
         // retrieve the list of groups and the number of existing rights with
         // resource for each groups
@@ -66,6 +67,9 @@ class jAcl2DbAdminUIManager
 
             $rs = $daorights->getRightsHavingRes($grp->id_aclgrp);
             foreach ($rs as $rec) {
+                if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                    continue ;
+                }
                 if (!isset($rightsWithResources[$rec->id_aclsbj])) {
                     $rightsWithResources[$rec->id_aclsbj] = array();
                 }
@@ -94,7 +98,11 @@ class jAcl2DbAdminUIManager
         $sbjgroups_localized = array();
         $subjects = array();
         $rs = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject();
+        $hiddenRights = $this->getHiddenRights();
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             $rights[$rec->id_aclsbj] = $grouprights;
             $subjects[$rec->id_aclsbj] = array(
                 'grp' => $rec->id_aclsbjgrp,
@@ -111,6 +119,9 @@ class jAcl2DbAdminUIManager
         // retrieve existing rights
         $rs = jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->getRightsByGroups($gid);
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled ? 'n' : 'y');
         }
 
@@ -132,11 +143,15 @@ class jAcl2DbAdminUIManager
     public function getGroupRightsWithResources($groupid)
     {
         $rightsWithResources = array();
+        $hiddenRights = $this->getHiddenRights();
         $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
         $rs = $daorights->getRightsHavingRes($groupid);
         $hasRightsOnResources = false;
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             if (!isset($rightsWithResources[$rec->id_aclsbj])) {
                 $rightsWithResources[$rec->id_aclsbj] = array();
             }
@@ -165,6 +180,7 @@ class jAcl2DbAdminUIManager
      */
     public function saveGroupRights($rights, $sessionUser = null)
     {
+        $rights = $this->addHiddenRightsValues($rights);
         $checking = jAcl2DbManager::checkAclAdminRightsChanges($rights, $sessionUser);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
             throw new jAcl2DbAdminUIException("Changes cannot be applied: You won't be able to change some rights", 3);
@@ -337,7 +353,11 @@ class jAcl2DbAdminUIManager
         $subjects = array();
         $sbjgroups_localized = array();
         $rs = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject();
+        $hiddenRights = $this->getHiddenRights();
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             $rights[$rec->id_aclsbj] = $grouprights;
             $subjects[$rec->id_aclsbj] = array(
                 'grp' => $rec->id_aclsbjgrp,
@@ -350,6 +370,7 @@ class jAcl2DbAdminUIManager
 
         $rightsWithResources = array_fill_keys(array_keys($rights), 0);
         $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+        $hiddenRights = $this->getHiddenRights();
 
         $rs = $daorights->getRightsHavingRes($hisgroup->id_aclgrp);
         $hasRightsOnResources = false;
@@ -360,6 +381,9 @@ class jAcl2DbAdminUIManager
 
         $rs = $daorights->getRightsByGroups($gid);
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled ? 'n' : 'y');
         }
 
@@ -387,6 +411,7 @@ class jAcl2DbAdminUIManager
         $grp = $dao->getPrivateGroup($login);
 
         $rights = array($grp->id_aclgrp => $userRights);
+        $rights = $this->addHiddenRightsValues($rights);
 
         $checking = jAcl2DbManager::checkAclAdminRightsChanges($rights, $sessionUser, false, true);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
@@ -395,7 +420,7 @@ class jAcl2DbAdminUIManager
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
             throw new jAcl2DbAdminUIException('Changes cannot be applied: nobody will be able to change some rights', 2);
         }
-
+        $userRights = $rights[$grp->id_aclgrp];
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $userRights);
     }
 
@@ -406,11 +431,15 @@ class jAcl2DbAdminUIManager
         $group = $daogroup->getPrivateGroup($user);
 
         $rightsWithResources = array();
+        $hiddenRights = $this->getHiddenRights();
         $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
         $rs = $daorights->getRightsHavingRes($group->id_aclgrp);
         $hasRightsOnResources = false;
         foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
             if (!isset($rightsWithResources[$rec->id_aclsbj])) {
                 $rightsWithResources[$rec->id_aclsbj] = array();
             }
@@ -506,5 +535,37 @@ class jAcl2DbAdminUIManager
         $checking = jAcl2DbManager::checkAclAdminRightsChanges(array(), null, false, true, $login);
 
         return $checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_STILL_USED;
+    }
+
+    public function getHiddenRights() {
+        $config = jApp::config();
+
+        if (!$config->jacl2['hideRights']) {
+            return array();
+        }
+
+        $hiddenRights = $config->jacl2['hiddenRights'];
+
+        if (!is_array($hiddenRights)) {
+            return array($hiddenRights);
+        }
+
+        return $hiddenRights;
+    }
+
+    public function addHiddenRightsValues($rights) {
+        $hiddenRights = $this->getHiddenRights();
+
+        if (empty($hiddenRights)) {
+            return $rights;
+        }
+        $hiddenRightsValues = jDao::get('jacl2db~jacl2rights')->getHiddenRightsByGroup($hiddenRights)->fetchAll();
+        foreach ($hiddenRightsValues as $value) {
+            if (!isset($rights[$value->id_aclgrp])) {
+                continue ;
+            }
+            $rights[$value->id_aclgrp][$value->id_aclsbj] = $value->canceled ? 'n' : 'y';
+        }
+        return $rights;
     }
 }

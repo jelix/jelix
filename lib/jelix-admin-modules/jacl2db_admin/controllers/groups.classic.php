@@ -86,7 +86,6 @@ class groupsCtrl extends jController
         $rights = $this->param('rights', array());
 
         try {
-            jLog::dump($rights, '', 'error');
             $manager = new jAcl2DbAdminUIManager();
             $manager->saveGroupRights($rights, jAuth::getUserSession()->login);
             jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
@@ -287,6 +286,10 @@ class groupsCtrl extends jController
             }
         }));
         $subjects = jDao::get('jacl2db~jacl2subject')->findAllSubject()->fetchAll();
+        $hiddenRights = $manager->getHiddenRights();
+        $subjects = array_filter($subjects, function ($elem) use ($hiddenRights) {
+            return !in_array($elem, $hiddenRights);
+        });
         $groupRights = array_filter(array_map(function ($elem) use ($groupRights) {
             if (in_array($elem->id_aclsbj, $groupRights)) {
                 return jLocale::get($elem->label_key);
