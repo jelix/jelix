@@ -35,16 +35,16 @@
     <label for="newname">{@jacl2db_admin~acl2.new.name.label@}</label> <input id="newname" name="newname" />
     <input name="group_id" value="{$group->id_aclgrp}" style="display:none;"/>
     <input type="submit" value="{@jacl2db_admin~acl2.rename.button@}" />
-</form>
 </fieldset>
-<br/>
-
+</form>
 {/ifacl2}
 
 {ifacl2 'acl.group.delete'}
 <form action="{formurl 'jacl2db_admin~groups:delgroup'}" method="post" onsubmit="return confirm('{@jacl2db_admin~acl2.delete.button.confirm.label@}');">
 {formurlparam 'jacl2db_admin~groups:delgroup'}
-<input type="text" name="group" value="{$group->id_aclgrp}" style="display: none;"/>
-<input type="submit" value="{@jacl2db_admin~acl2.delete.group@}"/>
+<div>
+    <input type="text" name="group" value="{$group->id_aclgrp}" style="display: none;"/>
+    <input type="submit" value="{@jacl2db_admin~acl2.delete.group@}"/>
+</div>
 </form>
 {/ifacl2}

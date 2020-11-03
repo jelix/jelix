@@ -75,7 +75,7 @@ class rightsCtrl extends jController
         $name = $this->param('name');
         $group = null;
         if ($type == 'groups') {
-            $group = jAcl2DbUserGroup::getGroupByName($name)->id_aclgrp;
+            $group = jDao::get('jacl2db~jacl2group')->getGroupByName($name)->id_aclgrp;
         }
         $rep->params = array(
             'user'  => $name,

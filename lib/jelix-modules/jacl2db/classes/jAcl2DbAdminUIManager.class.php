@@ -278,15 +278,14 @@ class jAcl2DbAdminUIManager
 
     public function getGroupByFilter($filter)
     {
-        $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAllPublicGroup()->fetchAll();
+        $filter = '%'.$filter.'%';
+        $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findGroupByFilter($filter)->fetchAll();
         $results = array();
-        foreach ($groups as $group) {
-            if (empty($filter) || strstr($group->name, $filter)) {
-                $group->login = $group->name;
-                $group->type = 'group';
-                $group->groups = array();
-                $results[] = $group;
-            }
+        foreach($groups as $group) {
+            $group->login = $group->name;
+            $group->type = 'group';
+            $group->groups = array();
+            $results[] = $group;
         }
         $resultsCount = count($results);
 

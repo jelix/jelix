@@ -155,26 +155,6 @@ class jAcl2DbUserGroup
     }
 
     /**
-     * Returns the group corresponding to $name.
-     *
-     * @param string $name The name of the group
-     *
-     * @return jDbResultSet The group
-     */
-    public static function getGroupByName($name)
-    {
-        $groups = self::getGroupList()->fetchAll();
-
-        foreach ($groups as $group) {
-            if ($group->name == $name) {
-                return $group;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * get the list of the users of a group.
      *
      * @param string $groupid id of the user group

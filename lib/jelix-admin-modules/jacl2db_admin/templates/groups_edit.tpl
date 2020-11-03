@@ -20,7 +20,7 @@
 <tbody>
 {assign $line = true}
 {foreach $groups as $group}
-    <tr>
+    <tr class="{if $line}odd{else}even{/if}">
         <td>{$group->name}</td>
         <td><a href="{jurl 'jacl2db_admin~groups:view', array('group'=>$group->name)}">{@jacl2db_admin~acl2.groups.view.link@}</a></td>
     </tr>

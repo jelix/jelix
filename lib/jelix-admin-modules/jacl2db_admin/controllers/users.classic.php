@@ -109,7 +109,6 @@ class usersCtrl extends jController
 
         $tpl = new jTpl();
         $tpl->assign($data);
-        // $tpl->assign('nbgrp', count($data['groups']));
         $tpl->assign('nbgrp', count($data['groupsuser']));
 
         if (jAcl2::check('acl.user.modify')) {

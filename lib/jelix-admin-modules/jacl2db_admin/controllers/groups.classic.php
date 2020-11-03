@@ -86,13 +86,15 @@ class groupsCtrl extends jController
         $rights = $this->param('rights', array());
 
         try {
-            jAcl2DbManager::setRightsOnGroup($this->param('group'), $rights);
+            jLog::dump($rights, '', 'error');
+            $manager = new jAcl2DbAdminUIManager();
+            $manager->saveGroupRights($rights, jAuth::getUserSession()->login);
             jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'savegrouprights');
         }
         $rep->action = 'jacl2db_admin~groups:rights';
-
+        $rep->params = array('group' => $this->param('group'));
         return $rep;
     }
 
@@ -207,14 +209,12 @@ class groupsCtrl extends jController
         if ($name != '') {
             $grpId = jAcl2DbUserGroup::createGroup($name, $id);
             if ($copyGroup) {
-                $manager = new jAcl2DbAdminUIManager();
-                $rights = $manager->getGroupRights()['rights'];
-
-                $groupRights = array();
-                foreach ($rights as $right => $value) {
-                    $groupRights[$right] = $value[$copyGroup];
+                $groupRights = jDao::get('jacl2db~jacl2rights')->getRightsByGroup($copyGroup)->fetchAll();
+                $rights = array();
+                foreach($groupRights as $groupRight) {
+                    $rights[$groupRight->id_aclsbj] = $groupRight->canceled ? 'n' : 'y';
                 }
-                jAcl2DbManager::setRightsOnGroup($grpId, $groupRights);
+                jAcl2DbManager::setRightsOnGroup($grpId, $rights);
             }
             jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
             $rep->params = array('group' => $grpId);
@@ -269,7 +269,8 @@ class groupsCtrl extends jController
     {
         $rep = $this->getResponse('html');
 
-        $group = jAcl2DbUserGroup::getGroupByName($this->param('group'));
+
+        $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
         if ($group === null) {
             $rep = $this->getResponse('redirect');
             $rep->action = 'jacl2db_admin~groups:index';

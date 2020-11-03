@@ -30,7 +30,7 @@
     <th title="{$subject}">{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     {if $group == $groupId}
-    <td><select name="rights[{$subject}]">
+    <td><select name="rights[{$group}][{$subject}]">
         <option value=""  {if $r == ''}selected="selected"{/if}>-</option>
         <option value="y" {if $r == 'y'}selected="selected"{/if}>{@acl2.group.rights.value.yes@}</option>
         <option value="n" {if $r == 'n'}selected="selected"{/if}>{@acl2.group.rights.value.no@}</option>
@@ -40,8 +40,12 @@
     <td>-</td>
     {else}
     <td>
-    {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />
-    {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{/if}
+    {if $r =='y'}
+        <input name="rights[{$group}][{$subject}]" value="y" style="display: none;"/>
+        <img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />
+    {elseif $r=='n'}
+        <input name="rights[{$group}][{$subject}]" value="n" style="display: none;"/>
+        <img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{/if}
     </td>
     {/if}
     {/foreach}
