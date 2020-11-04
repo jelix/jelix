@@ -135,16 +135,20 @@ class jAcl2DbManager
                 $roots[] = $matches[1];
             }
         }
-
+        $alreadyTreatedSbj = array();
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach ($rights as $sbj => $val) {
-            if ($val === '' || $val == false) {
+                if ($val === '' || $val == false || in_array($sbj, $alreadyTreatedSbj)) {
                 // remove
             } elseif ($val === true || $val == 'y') {
                 foreach ($roots as $root) {
                     if (strpos($sbj, $root) === 0) {
-                        self::addRight($group, $root.'.view');
+                        $viewRight = $root.'.view';
+                        self::addRight($group, $viewRight);
+                        if (isset($oldrights[$viewRight])) {
+                            unset($oldrights[$viewRight]);
+                        }
                     }
                 }
                 self::addRight($group, $sbj);
@@ -155,7 +159,8 @@ class jAcl2DbManager
                 if (preg_match('/(.*)(\.view)$/', $sbj, $matches)) {
                     foreach ($subjects as $subject) {
                         if (preg_match('/^('.$matches[1].'.)/', $sbj)) {
-                            self::removeRight($group, $subject, '-', true);
+                            self::removeRight($group, $subject->id_aclsbj, '-', true);
+                            $alreadyTreatedSbj[] = $subject->id_aclsbj;
                         }
                     }
                 }

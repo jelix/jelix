@@ -187,6 +187,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
       $this->assertTableContainsRecords('jacl2_rights', $rights);
 
@@ -197,6 +198,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -209,6 +211,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.delete' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -219,6 +222,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       jAcl2DbManager::setRightsOnGroup('group1', $newRights);
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -230,6 +234,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -247,6 +252,81 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     /**
      * @depends testSetRightsOnGroup
+     */
+    public function testLinkedRights() {
+      $this->emptyTable('jacl2_user_group');
+      $this->emptyTable('jacl2_rights');
+      $this->emptyTable('jacl2_subject');
+
+      $groups= array(array('id_aclgrp'=>'group1', 'name'=>'group1', 'grouptype'=>0, 'ownerlogin'=>null));
+
+      $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
+
+      jAcl2DbManager::addRole('super.cms.list' , 'cms~rights.super.cms.list');
+      jAcl2DbManager::addRole('super.cms.update' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.create' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.view' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::addRole('super.cms.delete' , 'cms~rights.super.cms.delete');
+
+      $rights = array();
+      $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+      $rights = array(
+            'super.cms.list' => 'y',
+            'super.cms.update' => 'y',
+            'super.cms.create' => 'y',
+            'super.cms.view' => '',
+            'super.cms.delete' => 'y',
+        );
+
+        jAcl2DbManager::setRightsOnGroup('group1', $rights);
+
+        $expectedRights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.delete' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $expectedRights);
+
+        $rights = array(
+            'super.cms.list' => '-',
+            'super.cms.update' => '-',
+            'super.cms.create' => '-',
+            'super.cms.view' => 'n',
+            'super.cms.delete' => '-',
+        );
+
+        jAcl2DbManager::setRightsOnGroup('group1', $rights);
+
+        $expectedRights = array(
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $expectedRights);
+
+        $rights = array(
+            'super.cms.list' => 'y',
+            'super.cms.update' => 'y',
+            'super.cms.create' => 'y',
+            'super.cms.view' => 'n',
+            'super.cms.delete' => 'y',
+        );
+
+        jAcl2DbManager::setRightsOnGroup('group1', $rights);
+
+        $expectedRights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.delete' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $expectedRights);
+    }
+
+    /**
+     * @depends testLinkedRights
      */
     public function testSetNewRightsOnGroup() {
       $this->emptyTable('jacl2_user_group');
@@ -273,6 +353,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
       $this->assertTableContainsRecords('jacl2_rights', $rights);
 
@@ -283,6 +364,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -294,6 +376,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.delete' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
@@ -305,6 +388,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       jAcl2DbManager::setRightsOnGroup('group1', $newRights);
       $rights = array(
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -316,6 +400,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -327,6 +412,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -338,6 +424,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
       $rights = array(
                       array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+                      array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                       array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
                 );
@@ -380,6 +467,7 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $rights = array(
             array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
             array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
         );
         $this->assertTableContainsRecords('jacl2_rights', $rights);
 
@@ -389,7 +477,9 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $rights = array(
             array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
             array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
             array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
         );
         $this->assertTableContainsRecords('jacl2_rights', $rights);
 
