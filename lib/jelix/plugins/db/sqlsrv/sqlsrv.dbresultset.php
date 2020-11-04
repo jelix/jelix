@@ -6,7 +6,7 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau
  *
- * @copyright  2008 Yann Lecommandoux, 2017 Laurent Jouanneau
+ * @copyright  2008 Yann Lecommandoux, 2017-2020 Laurent Jouanneau
  *
  * @see      http:/localhost/
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

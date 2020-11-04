@@ -4,7 +4,7 @@
  * @subpackage db_driver
  *
  * @author     Laurent Jouanneau
- * @copyright  2010-2018 Laurent Jouanneau
+ * @copyright  2010-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

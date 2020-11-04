@@ -4,7 +4,7 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2017 Laurent Jouanneau
+ * @copyright   2009-2020 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

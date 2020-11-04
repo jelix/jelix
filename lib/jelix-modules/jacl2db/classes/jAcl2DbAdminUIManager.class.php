@@ -1,11 +1,11 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor Julien Issler, Olivier Demah
+ * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
  *
  * @copyright   2008-2019 Laurent Jouanneau
  * @copyright   2009 Julien Issler
- * @copyright   2010 Olivier Demah
+ * @copyright   2010 Olivier Demah, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
