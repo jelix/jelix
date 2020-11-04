@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix_modules
- * @subpackage  jacl2db
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah
  *
@@ -155,6 +152,7 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+
         return compact('roles_localized', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 
@@ -185,8 +183,8 @@ class jAcl2DbAdminUIManager
 
     /**
      * @param string $groupid
-     * @param array  $roles array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
-     *                         true or 'on' means 'to remove'
+     * @param array  $roles   array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
+     *                        true or 'on' means 'to remove'
      */
     public function removeGroupRightsWithResources($groupid, $roles)
     {
@@ -229,7 +227,7 @@ class jAcl2DbAdminUIManager
             }
             $cond->addItemOrder('login', 'asc');
             $rs = $dao->findBy($cond, $offset, $listPageSize);
-            $usersCount = $dao->countBy($cond);
+            $resultsCount = $dao->countBy($cond);
         } elseif ($groupFilter == self::FILTER_USERS_NO_IN_GROUP) {
             //only those who have no groups
             $cnx = jDb::getConnection($p);
@@ -247,22 +245,23 @@ class jAcl2DbAdminUIManager
             }
 
             $rs = $cnx->query($sql);
-            $usersCount = $rs->rowCount();
+            $resultsCount = $rs->rowCount();
         } else {
             //in a specific group
             $dao = jDao::get('jacl2db~jacl2usergroup', $p);
             if ($userFilter) {
                 $rs = $dao->getUsersGroupLimitAndFilter($groupId, '%'.$userFilter.'%', $offset, $listPageSize);
-                $usersCount = $dao->getUsersGroupCountAndFilter($groupId, '%'.$userFilter.'%');
+                $resultsCount = $dao->getUsersGroupCountAndFilter($groupId, '%'.$userFilter.'%');
             } else {
                 $rs = $dao->getUsersGroupLimit($groupId, $offset, $listPageSize);
-                $usersCount = $dao->getUsersGroupCount($groupId);
+                $resultsCount = $dao->getUsersGroupCount($groupId);
             }
         }
 
-        $users = array();
+        $results = array();
         $dao2 = jDao::get('jacl2db~jacl2groupsofuser', $p);
         foreach ($rs as $u) {
+            $u->type = 'user';
             $u->groups = array();
             $gl = $dao2->getGroupsUser($u->login);
             foreach ($gl as $g) {
@@ -270,10 +269,27 @@ class jAcl2DbAdminUIManager
                     $u->groups[] = $g;
                 }
             }
-            $users[] = $u;
+            $u->last = count($u->groups) - 1;
+            $results[] = $u;
         }
 
-        return compact('users', 'usersCount');
+        return compact('results', 'resultsCount');
+    }
+
+    public function getGroupByFilter($filter)
+    {
+        $filter = '%'.$filter.'%';
+        $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findGroupByFilter($filter)->fetchAll();
+        $results = array();
+        foreach($groups as $group) {
+            $group->login = $group->name;
+            $group->type = 'group';
+            $group->groups = array();
+            $results[] = $group;
+        }
+        $resultsCount = count($results);
+
+        return compact('results', 'resultsCount');
     }
 
     /**
@@ -349,6 +365,7 @@ class jAcl2DbAdminUIManager
 
         $roles = $subjects;
         $rolegroups_localized = $sbjgroups_localized;
+
         return compact(
             'hisgroup',
             'groupsuser',
@@ -409,6 +426,7 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+
         return compact('user', 'subjects_localized', 'roles_localized', 'rightsWithResources', 'hasRightsOnResources');
     }
 

@@ -109,14 +109,14 @@ class usersCtrl extends jController
 
         $tpl = new jTpl();
         $tpl->assign($data);
-        $tpl->assign('nbgrp', count($data['groups']));
+        $tpl->assign('nbgrp', count($data['groupsuser']));
 
         if (jAcl2::check('acl.user.modify')) {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights'));
         } else {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
-        $rep->body->assign('selectedMenuItem', 'usersrights');
+        $rep->body->assign('selectedMenuItem', 'rights');
 
         return $rep;
     }
