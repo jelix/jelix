@@ -12,14 +12,14 @@
 #if ENABLE_OPTIMIZED_SOURCE
 * @author Croes Gerald
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2014 Laurent Jouanneau
+* @copyright 2005-2020 Laurent Jouanneau
 * @copyright 2001-2005 CopixTeam
 * @copyright 2006 Loic Mathaud
 * @copyright 2007-2009 Julien Issler
 * @link http://www.copix.org
 #else
 * @contributor Loic Mathaud, Julien Issler
-* @copyright 2005-2012 Laurent Jouanneau
+* @copyright 2005-2020 Laurent Jouanneau
 * @copyright 2007 Julien Issler
 #endif
 * @link     http://www.jelix.org

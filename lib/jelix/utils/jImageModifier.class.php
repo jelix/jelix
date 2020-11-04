@@ -5,7 +5,7 @@
  * @author      Bastien Jaillot
  * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
  * @contributor geekbay, Brunto, Laurent Jouanneau
- * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2018 Laurent Jouanneau
+ * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2020 Laurent Jouanneau
  * @link       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */

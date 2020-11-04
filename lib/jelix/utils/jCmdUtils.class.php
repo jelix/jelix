@@ -4,7 +4,7 @@
 * @subpackage utils
 * @author     Loic Mathaud
 * @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2008-2017 Laurent Jouanneau
+* @copyright  2006 Loic Mathaud, 2008-2020 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */

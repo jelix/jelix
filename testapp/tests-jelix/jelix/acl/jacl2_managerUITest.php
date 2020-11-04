@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor
+ * @contributor Adrien Lagroy de Croutte
  *
- * @copyright   2017 Laurent Jouanneau
+ * @copyright   2017-2020 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

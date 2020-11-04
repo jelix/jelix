@@ -4,11 +4,11 @@
 * @package     jelix
 * @subpackage  forms
 * @author      Laurent Jouanneau
-* @contributor Loic Mathaud, Dominique Papin, Julien Issler, Olivier Demah
+* @contributor Loic Mathaud, Dominique Papin, Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
 * @copyright   2006-2018 Laurent Jouanneau, 2007-2008 Dominique Papin
 * @copyright   2007 Loic Mathaud
 * @copyright   2008 Julien Issler
-* @copyright   2009 Olivier Demah
+* @copyright   2009 Olivier Demah, 2020 Adrien Lagroy de Croutte
 * @link        http://www.jelix.org
 * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
 */
