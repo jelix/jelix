@@ -25,7 +25,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $this->dbProfile = 'jacl2_profile';
         self::initClassicRequest(TESTAPP_URL.'index.php');
 
-        //if (!self::$coordAuthPlugin) {
         jApp::config()->acl2['driver'] = self::$driver;
         jAcl2::unloadDriver();
         jAcl2::clearCache();
@@ -107,7 +106,6 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             $rights,
             true
         );
-        //}
 
         $coord = jApp::coord();
         if (isset($coord->plugins['auth'])) {
