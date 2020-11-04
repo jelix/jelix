@@ -481,6 +481,26 @@ class jAcl2DbAdminUIManager
         jAcl2DbUserGroup::removeUserFromGroup($login, $groupId);
     }
 
+    public function addUserToGroup($login, $groupId, $sessionUser = null)
+    {
+        $rightsChanged = array();
+        $groupRights = $this->getGroupRights();
+        foreach (jAcl2DbManager::$ACL_ADMIN_RIGHTS as $right) {
+            if (jAcl2::check($right) && in_array($groupRights['rights'][$right][$groupId], array(null, false))) {
+                $rightsChanged[$groupId][$right] = 'n';
+            }
+        }
+        $checking = jAcl2DbManager::checkAclAdminRightsChanges($rightsChanged, $sessionUser);
+
+        if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
+            throw new jAcl2DbAdminUIException("User cannot be add to group, else you wouldn't manage acl anymore", 3);
+        }
+        if ($checking == jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
+            throw new jAcl2DbAdminUIException('User cannot be add to group, else acl management is not possible anymore', 2);
+        }
+        jAcl2DbUserGroup::addUserToGroup($login, $groupId);
+    }
+
     public function canRemoveUser($login)
     {
         $checking = jAcl2DbManager::checkAclAdminRightsChanges(array(), null, false, true, $login);

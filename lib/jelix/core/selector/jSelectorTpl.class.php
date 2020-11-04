@@ -27,7 +27,7 @@ class jSelectorTpl extends jSelectorModule
     protected $_dirname = 'templates/';
     protected $_suffix = '.tpl';
     protected $_cachePrefix;
-    public $outputType = '';
+    public $outputType = 'html';
     public $trusted = true;
     public $userModifiers = array();
     public $userFunctions = array();
@@ -40,10 +40,12 @@ class jSelectorTpl extends jSelectorModule
     public function __construct($sel, $outputtype = '', $trusted = true)
     {
         if ($outputtype == '') {
-            if (jApp::coord()->response) {
-                $this->outputType = jApp::coord()->response->getFormatType();
-            } else {
-                $this->outputType = jApp::coord()->request->defaultResponseType;
+            if (jApp::coord()) {
+                if (jApp::coord()->response) {
+                    $this->outputType = jApp::coord()->response->getFormatType();
+                } else {
+                    $this->outputType = jApp::coord()->request->defaultResponseType;
+                }
             }
         } else {
             $this->outputType = $outputtype;
