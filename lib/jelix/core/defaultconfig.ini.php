@@ -357,6 +357,10 @@ driver=
 driver=
 authAdapterClass="jAcl2JAuthAdapter"
 
+[jacl2]
+hiddenRights=
+hideRights = off
+
 [sessions]
 ; to disable sessions, set the following parameter to 0
 start=1
