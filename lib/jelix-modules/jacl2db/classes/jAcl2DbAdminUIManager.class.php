@@ -31,12 +31,14 @@ class jAcl2DbAdminUIManager
     /**
      * @return array
      *               'groups' : list of jacl2group objects (id_aclgrp, name, grouptype, ownerlogin)
-     *               'rights' : array( <role> => array( <id_aclgrp> => 'y' or 'n' or ''))
-     *               'rolegroups_localized' : list of labels of each roles groups
-     *               'roles' : array( <role> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
-     *               'sbjgroups_localized' : same as 'rolegroups_localized', depreacted
-     *               'subjects' :same as 'roles', deprecated
-     *               'rightsWithResources':  array(<role> => array( <id_aclgrp> => <number of rights>))
+     *               'rights' : array( <right> => array( <id_aclgrp> => 'y' or 'n' or ''))
+     *               'rightsProperties' : array( <right> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
+     *               'rightsGroupsLabels' : list of labels of each rights groups
+     *               'rightsWithResources':  array(<right> => array( <id_aclgrp> => <number of rights>))
+     *               'rolegroups_localized' : same as 'rightsGroupsLabels', depreacted
+     *               'sbjgroups_localized' : same as 'rightsGroupsLabels', depreacted
+     *               'roles' :same as 'rightsProperties', deprecated
+     *               'subjects' :same as 'rightsProperties', deprecated
      */
     public function getGroupRights()
     {
@@ -114,20 +116,25 @@ class jAcl2DbAdminUIManager
             $rights[$rec->id_aclsbj][$rec->id_aclgrp] = ($rec->canceled ? 'n' : 'y');
         }
 
+        $rightsProperties = $subjects;
         $roles = $subjects;
         $rolegroups_localized = $sbjgroups_localized;
+        $rightsGroupsLabels = $sbjgroups_localized;
 
-        return compact('groups', 'rights', 'sbjgroups_localized', 'subjects', 'roles', 'rolegroups_localized', 'rightsWithResources');
+        return compact('groups', 'rights', 'rightsProperties',  'rightsGroupsLabels', 'rightsWithResources',
+            /* @deprecated: */ 'subjects', 'roles', 'sbjgroups_localized', 'rolegroups_localized'
+        );
     }
 
     /**
      * @param mixed $groupid
      *
      * @return array
-     *               'roles_localized' : list of labels of each roles
-     *               'subjects_localized' : same as 'roles_localized', deprecated
-     *               'rightsWithResources':  array(<role> => array( <jacl2rights objects (id_aclsbj, id_aclgrp, id_aclres, canceled>))
+     *               'rightsLabels' : list of labels of each rights
+     *               'rightsWithResources':  array(<right> => array( <jacl2rights objects (id_aclsbj, id_aclgrp, id_aclres, canceled>))
      *               'hasRightsOnResources' : true if there are some resources
+     *               'roles_localized' : same as 'rightsLabels', deprecated
+     *               'subjects_localized' : same as 'rightsLabels', deprecated
      */
     public function getGroupRightsWithResources($groupid)
     {
@@ -152,8 +159,10 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+        $rightsLabels = $subjects_localized;
 
-        return compact('roles_localized', 'subjects_localized', 'rightsWithResources', 'hasRightsOnResources');
+        return compact('rightsLabels', 'rightsWithResources', 'hasRightsOnResources',
+            /* @deprecated: */ 'roles_localized', 'subjects_localized');
     }
 
     /**
@@ -183,21 +192,21 @@ class jAcl2DbAdminUIManager
 
     /**
      * @param string $groupid
-     * @param array  $roles   array( <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch))
+     * @param array  $rights   array( <right> => (true (remove), 'on'(remove) or '' (not touch))
      *                        true or 'on' means 'to remove'
      */
-    public function removeGroupRightsWithResources($groupid, $roles)
+    public function removeGroupRightsWithResources($groupid, $rights)
     {
-        $rolesToRemove = array();
+        $rightsToRemove = array();
 
-        foreach ($roles as $sbj => $val) {
+        foreach ($rights as $sbj => $val) {
             if ($val != '' || $val == true) {
-                $rolesToRemove[] = $sbj;
+                $rightsToRemove[] = $sbj;
             }
         }
-        if (count($rolesToRemove)) {
+        if (count($rightsToRemove)) {
             jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-                ->deleteRightsOnResource($groupid, $rolesToRemove)
+                ->deleteRightsOnResource($groupid, $rightsToRemove)
             ;
         }
     }
@@ -346,20 +355,25 @@ class jAcl2DbAdminUIManager
         }
 
         $roles = $subjects;
+        $rightsProperties = $subjects;
         $rolegroups_localized = $sbjgroups_localized;
+        $rightsGroupsLabels = $sbjgroups_localized;
 
         return compact(
             'hisgroup',
             'groupsuser',
             'groups',
             'rights',
+            'rightsProperties',
             'user',
+            'rightsGroupsLabels',
+            'rightsWithResources',
+            'hasRightsOnResources',
+            /** @deprecated */
             'subjects',
             'roles',
             'sbjgroups_localized',
-            'rolegroups_localized',
-            'rightsWithResources',
-            'hasRightsOnResources'
+            'rolegroups_localized'
         );
     }
 
@@ -408,30 +422,33 @@ class jAcl2DbAdminUIManager
             }
         }
         $roles_localized = $subjects_localized;
+        $rightsLabels = $subjects_localized;
 
-        return compact('user', 'subjects_localized', 'roles_localized', 'rightsWithResources', 'hasRightsOnResources');
+        return compact('user', 'rightsLabels', 'rightsWithResources', 'hasRightsOnResources',
+            /** @deprecated  */'subjects_localized', 'roles_localized'
+        );
     }
 
     /**
      * @param $user
-     * @param array $roles <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+     * @param array $rights <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
      */
-    public function removeUserRessourceRights($user, $roles)
+    public function removeUserRessourceRights($user, $rights)
     {
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         $grp = $daogroup->getPrivateGroup($user);
 
-        $rolesToRemove = array();
+        $rightsToRemove = array();
 
-        foreach ($roles as $sbj => $val) {
+        foreach ($rights as $sbj => $val) {
             if ($val != '' || $val == true) {
-                $rolesToRemove[] = $sbj;
+                $rightsToRemove[] = $sbj;
             }
         }
 
-        if (count($rolesToRemove)) {
+        if (count($rightsToRemove)) {
             jDao::get('jacl2db~jacl2rights', 'jacl2_profile')
-                ->deleteRightsOnResource($grp->id_aclgrp, $rolesToRemove)
+                ->deleteRightsOnResource($grp->id_aclgrp, $rightsToRemove)
             ;
         }
     }

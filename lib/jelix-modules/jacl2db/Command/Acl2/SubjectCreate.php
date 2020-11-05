@@ -20,28 +20,28 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:role-create')
-            ->setDescription('Create a role')
+            ->setName('acl2:right-create')
+            ->setDescription('Create a right')
             ->setHelp('')
             ->addArgument(
-                'role',
+                'right',
                 InputArgument::REQUIRED,
-                'the role id to create'
+                'the right id to create'
             )
             ->addArgument(
                 'labelkey',
                 InputArgument::REQUIRED,
-                'the selector of the label of the role'
+                'the selector of the label of the right'
             )
             ->addArgument(
-                'rolegroup',
+                'rightgroup',
                 InputArgument::OPTIONAL,
-                'the id of the role group'
+                'the id of the right group'
             )
             ->addArgument(
-                'rolelabel',
+                'rightlabel',
                 InputArgument::OPTIONAL,
-                'The label of the role if the given selector does not exists'
+                'The label of the right if the given selector does not exists'
             )
         ;
         parent::configure();
@@ -49,17 +49,17 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $subject = $input->getArgument('role');
+        $subject = $input->getArgument('right');
         $labelkey = $input->getArgument('labelkey');
-        $subjectGroup = $input->getArgument('rolegroup');
-        $subjectlabel = $input->getArgument('rolelabel');
+        $subjectGroup = $input->getArgument('rightgroup');
+        $subjectlabel = $input->getArgument('rightlabel');
 
         $cnx = \jDb::getConnection('jacl2_profile');
         $sql = 'SELECT id_aclsbj FROM '.$cnx->prefixTable('jacl2_subject')
             .' WHERE id_aclsbj='.$cnx->quote($subject);
         $rs = $cnx->query($sql);
         if ($rs->fetch()) {
-            throw new \Exception('This role already exists');
+            throw new \Exception('This right already exists');
         }
 
         $sql = 'INSERT into '.$cnx->prefixTable('jacl2_subject').
@@ -75,7 +75,7 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln('Rights: role '.$subject.' is created');
+            $output->writeln('Right '.$subject.' is created');
         }
 
         if ($subjectlabel &&

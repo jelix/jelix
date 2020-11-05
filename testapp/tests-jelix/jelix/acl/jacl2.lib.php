@@ -78,10 +78,10 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
      * @depends testIsMemberOfGroup
      */
     public function testCheckRight(){
-        jAcl2DbManager::addRole('super.cms.list', 'cms~rights.super.cms');
-        jAcl2DbManager::addRole('super.cms.update', 'cms~rights.super.cms');
-        jAcl2DbManager::addRole('super.cms.delete', 'cms~rights.super.cms');
-        jAcl2DbManager::addRole('admin.access', 'admin~rights.access');
+        jAcl2DbManager::createRight('super.cms.list', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.update', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.delete', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
         jAcl2DbManager::addRight('group1', 'super.cms.list' );
         jAcl2DbManager::addRight('group1', 'super.cms.update' );
         jAcl2DbManager::addRight('group1', 'super.cms.delete', 154);
@@ -106,10 +106,10 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
      * @depends testCheckRight
      */
     public function testCheckRightByUser(){
-        jAcl2DbManager::addSubject('super.cms.list', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('super.cms.update', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('super.cms.delete', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('admin.access', 'admin~rights.access');
+        jAcl2DbManager::createRight('super.cms.list', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.update', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.delete', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
         jAcl2DbManager::addRight('group1', 'super.cms.list' );
         jAcl2DbManager::addRight('group1', 'super.cms.update' );
         jAcl2DbManager::addRight('group1', 'super.cms.delete', 154);

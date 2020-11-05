@@ -15,8 +15,8 @@ class %%module%%ModuleInstaller extends \Jelix\Installer\Module\Installer {
         //$helpers->database()->execSQLScript('sql/install');
 
         /*
-        jAcl2DbManager::addRole('my.role', '%%module%%~acl.my.role', 'role.group.id');
-        jAcl2DbManager::addRight('admins', 'my.role'); // for admin group
+        jAcl2DbManager::createRight('my.right', '%%module%%~acl.my.right', 'right.group.id');
+        jAcl2DbManager::addRight('admins', 'my.right'); // for admin group
         */
     }
 }

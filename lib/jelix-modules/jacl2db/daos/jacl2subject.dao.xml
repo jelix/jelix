@@ -11,12 +11,29 @@
       <property name="label_group_key" fieldname="label_key" datatype="string" table="grpsbj"/>
     </record>
     <factory>
+        <method name="findAllRights" type="select">
+           <order>
+              <orderitem property="id_aclsbjgrp" way="asc" />
+              <orderitem property="id_aclsbj" way="asc" />
+           </order>
+        </method>
+        <!-- @deprecated use findAllRights -->
         <method name="findAllRoles" type="select">
            <order>
               <orderitem property="id_aclsbjgrp" way="asc" />
               <orderitem property="id_aclsbj" way="asc" />
            </order>
         </method>
+        <method name="removeRightsFromRightsGroup" type="update">
+            <parameter name="id_aclsbjgrp" />
+            <values>
+                <value property="id_aclsbjgrp" expr="NULL" />
+            </values>
+            <conditions>
+                <eq property="id_aclsbjgrp" expr="$id_aclsbjgrp" />
+            </conditions>
+        </method>
+        <!-- @deprecated see removeRightsFromRightsGroup -->
         <method name="removeRolesFromGroup" type="update">
             <parameter name="id_aclsbjgrp" />
             <values>
@@ -26,6 +43,17 @@
                 <eq property="id_aclsbjgrp" expr="$id_aclsbjgrp" />
             </conditions>
         </method>
+        <method name="replaceRightsGroup" type="update">
+            <parameter name="old_id_aclsbjgrp" />
+            <parameter name="new_id_aclsbjgrp" />
+            <values>
+                <value property="id_aclsbjgrp" expr="$new_id_aclsbjgrp" />
+            </values>
+            <conditions>
+                <eq property="id_aclsbjgrp" expr="$old_id_aclsbjgrp" />
+            </conditions>
+        </method>
+        <!-- @deprecated use replaceRightsGroup -->
         <method name="replaceRoleGroup" type="update">
             <parameter name="old_id_aclsbjgrp" />
             <parameter name="new_id_aclsbjgrp" />
@@ -36,14 +64,14 @@
                 <eq property="id_aclsbjgrp" expr="$old_id_aclsbjgrp" />
             </conditions>
         </method>
-        <!-- deprecated -->
+        <!-- @deprecated use findAllRights -->
         <method name="findAllSubject" type="select">
            <order>
               <orderitem property="id_aclsbjgrp" way="asc" />
               <orderitem property="id_aclsbj" way="asc" />
            </order>
         </method>
-        <!-- deprecated -->
+        <!-- deprecated see removeRightsFromRightsGroup -->
         <method name="removeSubjectFromGroup" type="update">
             <parameter name="id_aclsbjgrp" />
             <values>
@@ -53,7 +81,7 @@
                 <eq property="id_aclsbjgrp" expr="$id_aclsbjgrp" />
             </conditions>
         </method>
-        <!-- deprecated -->
+        <!-- @deprecated use replaceRightsGroup -->
         <method name="replaceSubjectGroup" type="update">
             <parameter name="old_id_aclsbjgrp" />
             <parameter name="new_id_aclsbjgrp" />

@@ -21,7 +21,7 @@
 /**
  * a special if block to test easily a right value.
  *
- * <pre>{ifacl2 'role',54} ..here generated content if the user has the right  {/ifacl2}</pre>
+ * <pre>{ifacl2 'right',54} ..here generated content if the user has the right  {/ifacl2}</pre>
  *
  * @param jTplCompiler $compiler the template compiler
  * @param bool         $begin    true if it is the begin of block, else false
