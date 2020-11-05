@@ -52,7 +52,7 @@ class groupsCtrl extends jController
         $tpl = new jTpl();
 
         if (jAcl2::check('acl.group.modify')) {
-            $tpl->assign('groups', jAcl2DbUserGroup::getGroupList()->fetchAll());
+            $tpl->assign('groups', array_merge(jAcl2DbUserGroup::getGroupList()->fetchAll(), array(jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup())));
             $rep->body->assign('MAIN', $tpl->fetch('groups_edit'));
         } else {
             $this->loadGroupRights($tpl);
@@ -271,7 +271,12 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
 
 
-        $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
+        if ($this->param('group') === 'anonymous') {
+            $group = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
+            $group->name = jLocale::get('acl2.anonymous.group.name');
+        } else {
+            $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
+        }
         if ($group === null) {
             $rep = $this->getResponse('redirect');
             $rep->action = 'jacl2db_admin~groups:index';

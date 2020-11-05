@@ -28,7 +28,7 @@
 </table>
 
 {ifacl2 'acl.group.modify'}
-
+{if $group->id_aclgrp !== '__anonymous'}
 <form id="rename-form" action="{formurl 'jacl2db_admin~groups:changename'}" method="post">
 <fieldset><legend>{@jacl2db_admin~acl2.change.name.title@}</legend>
 {formurlparam 'jacl2db_admin~groups:changename'}
@@ -37,9 +37,12 @@
     <input type="submit" value="{@jacl2db_admin~acl2.rename.button@}" />
 </fieldset>
 </form>
+<br/>
+{/if}
 {/ifacl2}
 
 {ifacl2 'acl.group.delete'}
+{if $group->id_aclgrp !== '__anonymous'}
 <form action="{formurl 'jacl2db_admin~groups:delgroup'}" method="post" onsubmit="return confirm('{@jacl2db_admin~acl2.delete.button.confirm.label@}');">
 {formurlparam 'jacl2db_admin~groups:delgroup'}
 <div>
@@ -47,4 +50,5 @@
     <input type="submit" value="{@jacl2db_admin~acl2.delete.group@}"/>
 </div>
 </form>
+{/if}
 {/ifacl2}
