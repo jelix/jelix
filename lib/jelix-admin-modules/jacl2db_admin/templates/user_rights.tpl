@@ -3,7 +3,7 @@
 <h1>{@jacl2db_admin~acl2.user.rights.title@} {$user}</h1>
 
 
-<form action="{formurl 'jacl2db_admin~users:saverights',array('user'=>$user)}" method="post">
+<form id="rights-edit" action="{formurl 'jacl2db_admin~users:saverights',array('user'=>$user)}" method="post">
 <fieldset><legend>{@jacl2db_admin~acl2.rights.title@}</legend>
 
 <div>{formurlparam 'jacl2db_admin~users:saverights',array('user'=>$user)}</div>
@@ -68,7 +68,7 @@
             {if $r=='y' && $resultr==''}{assign $resultr='y'}{/if}
             {if $r=='n'}{assign $resultr='n'}{/if}
     <td>
-        <select name="rights[{$subject}]" id="{$subject|eschtml}">
+        <select name="rights[{$subject}]" id="{$subject|eschtml}" >
         <option value=""  {if $r == ''}selected="selected"{/if}>-</option>
         <option value="y" {if $r == 'y'}selected="selected"{/if}>{@acl2.group.rights.value.yes@}</option>
         <option value="n" {if $r == 'n'}selected="selected"{/if}>{@acl2.group.rights.value.no@}</option>

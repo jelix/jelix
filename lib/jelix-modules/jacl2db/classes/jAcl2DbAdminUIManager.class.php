@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor Julien Issler, Olivier Demah
+ * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
  *
  * @copyright   2008-2019 Laurent Jouanneau
  * @copyright   2009 Julien Issler

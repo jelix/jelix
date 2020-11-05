@@ -118,6 +118,7 @@ class jAcl2DbManager
      */
     public static function setRightsOnGroup($group, $rights)
     {
+        $subjects = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject()->fetchAll();
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
         // retrieve old rights.
@@ -127,16 +128,42 @@ class jAcl2DbManager
             $oldrights[$rec->id_aclsbj] = ($rec->canceled ? 'n' : 'y');
         }
 
+        $roots = array();
+        foreach ($subjects as $subject) {
+            $matches = array();
+            if (preg_match('/(.*)(\.view)$/', $subject->id_aclsbj, $matches)) {
+                $roots[] = $matches[1];
+            }
+        }
+        $alreadyTreatedSbj = array();
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach ($rights as $sbj => $val) {
-            if ($val === '' || $val == false) {
+                if ($val === '' || $val == false || in_array($sbj, $alreadyTreatedSbj)) {
                 // remove
             } elseif ($val === true || $val == 'y') {
+                foreach ($roots as $root) {
+                    if (strpos($sbj, $root) === 0) {
+                        $viewRight = $root.'.view';
+                        self::addRight($group, $viewRight);
+                        if (isset($oldrights[$viewRight])) {
+                            unset($oldrights[$viewRight]);
+                        }
+                    }
+                }
                 self::addRight($group, $sbj);
                 unset($oldrights[$sbj]);
             } elseif ($val == 'n') {
                 // cancel
+                $matches = array();
+                if (preg_match('/(.*)(\.view)$/', $sbj, $matches)) {
+                    foreach ($subjects as $subject) {
+                        if (preg_match('/^('.$matches[1].'.)/', $sbj)) {
+                            self::removeRight($group, $subject->id_aclsbj, '-', true);
+                            $alreadyTreatedSbj[] = $subject->id_aclsbj;
+                        }
+                    }
+                }
                 if (isset($oldrights[$sbj])) {
                     unset($oldrights[$sbj]);
                 }
@@ -148,7 +175,6 @@ class jAcl2DbManager
             // $oldrights contains now rights to remove
             $dao->deleteByGroupAndRoles($group, array_keys($oldrights));
         }
-
         jAcl2::clearCache();
     }
 
