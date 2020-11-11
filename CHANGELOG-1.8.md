@@ -24,6 +24,7 @@ Internal changes
 
 * Upgrade PHPUnit to 8.5 for our tests
 * Tests with CasperJs have been removed
+* Some Javascript scripts like `jforms_jquery.js` are now generated with WebPack. See the `assets` directory.
 
 * jForms: move code from template plugin to a new class TemplateController.
   It allows to control the display of the form in a single class
