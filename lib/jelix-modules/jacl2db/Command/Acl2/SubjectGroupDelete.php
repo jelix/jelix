@@ -22,13 +22,13 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:role-group-delete')
-            ->setDescription('Delete a role group')
+            ->setName('acl2:rights-group-delete')
+            ->setDescription('Delete a rights group')
             ->setHelp('')
             ->addArgument(
                 'group',
                 InputArgument::REQUIRED,
-                'Name of the role group'
+                'Name of the rights group'
             )
             ->addOption(
                 'confirm',
@@ -46,7 +46,7 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
 
         if (!$input->getOption('confirm')) {
             $helper = $this->getHelper('question');
-            $question = new ConfirmationQuestion('are you sure you want to delete role group '.$group.' (y/N)?', false);
+            $question = new ConfirmationQuestion('are you sure you want to delete rights group '.$group.' (y/N)?', false);
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
@@ -60,7 +60,7 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
             .' WHERE id_aclsbjgrp='.$cnx->quote($group);
         $rs = $cnx->query($sql);
         if (!$rs->fetch()) {
-            throw new \Exception('This subject group does not exist');
+            throw new \Exception('This rights group does not exist');
         }
 
         $sql = 'UDPATE '.$cnx->prefixTable('jacl2_rights').' SET id_aclsbjgrp=NULL WHERE id_aclsbjgrp=';
@@ -72,7 +72,7 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln("Rights: group of roles '".$group."' is deleted.");
+            $output->writeln("Rights: group of rights '".$group."' is deleted.");
         }
     }
 }

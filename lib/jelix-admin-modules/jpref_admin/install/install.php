@@ -16,8 +16,8 @@ class jpref_adminModuleInstaller extends \Jelix\Installer\Module\Installer
 {
     public function install(Jelix\Installer\Module\API\InstallHelpers $helpers)
     {
-        jAcl2DbManager::addRoleGroup('jprefs.prefs.management', 'jpref_admin~admin.acl.grp.prefs.management');
-        jAcl2DbManager::addRole('jprefs.prefs.list', 'jpref_admin~admin.acl.prefs.list', 'jprefs.prefs.management');
+        jAcl2DbManager::createRightGroup('jprefs.prefs.management', 'jpref_admin~admin.acl.grp.prefs.management');
+        jAcl2DbManager::createRight('jprefs.prefs.list', 'jpref_admin~admin.acl.prefs.list', 'jprefs.prefs.management');
         jAcl2DbManager::addRight('admins', 'jprefs.prefs.list'); // for admin group
     }
 }

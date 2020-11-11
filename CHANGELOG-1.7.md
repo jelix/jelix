@@ -9,15 +9,38 @@ Jelix 1.7.6 (next)
       execute `php console.php mailer:test my.email@example.com`
     * jForms: new control jControlTime, and support of a `<time>` element in jforms 
     * New method `jEvent::getParameters()`
+    * New method `jAuth::setUserSession()`
     * jacl2db_admin interface: confirmation on groups delete button
     * Fix compat with php 7.4 in jCmdUtils
 
 * Fix web assets upgrader with jforms_datepicker and jforms_datetimepicker
+* Fix web assets loading of the datetime widget
 * Authentication: `checkCookieToken()` does not trigger anymore a 500 error page
   if the cookie token is invalid.
 * jAcl2: adapter system to make the glue to authentication.    
   It allows to use authentication library other than jAuth, like
   the jelix/authentication-module library.
+* jAcl2: reword terms 'role' to 'right'. Rewording 'subject' to 'role' into Jelix 1.7 was a mistake.
+  So some API have been renamed, but old API are still usable, even if deprecated. 
+  - `jAcl2DbManager::addRole()` becomes `createRight()`
+  - `jAcl2DbManager::removeRole()` becomes `deleteRight()`
+  - `jAcl2DbManager::removeRole()` becomes `deleteRight()`
+  - `jAcl2DbManager::copyRoleRights()` becomes `copyRightSettings()`
+  - `jAcl2DbManager::addRoleGroup()` becomes `createRightGroup()`
+  - `jAcl2DbManager::removeRoleGroup()` becomes `deleteRightGroup()`
+  - dao method `jacl2rights::getRightsByRole()` becomes `getRightSettings()`
+  - dao method `jacl2rights::deleteByRoleRes()` becomes `deleteByRightRes()`
+  - dao method `jacl2rights::deleteByRole()` becomes `deleteByRight()`
+  - dao method `jacl2rights::deleteByGroupAndRoles()` becomes `deleteByGroupAndRights()`
+  - dao method `jacl2subject::findAllRoles()` becomes `findAllRights()`
+  - dao method `jacl2subject::removeRolesFromGroup()` becomes `removeRightsFromRightsGroup()`
+  - dao method `jacl2subject::replaceRoleGroup()` becomes `replaceRightsGroup()`
+  - console command `acl2:role-create` becomes `acl2:right-create`
+  - console command `acl2:role-delete` becomes `acl2:right-delete`
+  - console command `acl2:role-group-create` becomes `acl2:rights-group-create`
+  - console command `acl2:role-group-delete` becomes `acl2:rights-group-delete`
+  - console command `acl2:role-group-list` becomes `acl2:rights-groups-list`
+  - console command `acl2:roles-list` becomes `acl2:rights-list`
 * Tests: docker configuration for a test environment, to replace Vagrant.
 
 Jelix 1.7.5

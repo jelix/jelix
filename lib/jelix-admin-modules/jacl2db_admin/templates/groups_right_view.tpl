@@ -35,7 +35,7 @@
 {foreach $rights as $subject=>$right}
 {if $subjects[$subject]['grp'] && $currentsbjgroup != $subjects[$subject]['grp']}
 <tr class="{cycle array('odd','even')}">
-    <th colspan="{=$nbgrp*2+1}"><h3>{$sbjgroups_localized[$subjects[$subject]['grp']]}</h3></th>
+    <th colspan="{=$nbgrp*2+1}"><h3>{$rightsGroupsLabels[$subjects[$subject]['grp']]}</h3></th>
 </tr>{assign $currentsbjgroup = $subjects[$subject]['grp']}
 {/if}
 <tr class="{cycle array('odd','even')}">

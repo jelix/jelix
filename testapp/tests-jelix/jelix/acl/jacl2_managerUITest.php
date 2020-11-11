@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor
+ * @contributor Adrien Lagroy de Croutte
  *
- * @copyright   2017 Laurent Jouanneau
+ * @copyright   2017-2020 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -66,12 +66,12 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             true
         );
 
-        $roles = array(
-            // dummy roles
+        $rights = array(
+            // dummy rights
             array('id_aclsbj'=>'super.cms.list',   'label_key'=>'cms~rights.super.cms', 'id_aclsbjgrp'=>null),
             array('id_aclsbj'=> 'super.cms.update', 'label_key'=>'cms~rights.super.cms', 'id_aclsbjgrp'=>null),
             array('id_aclsbj'=> 'super.cms.delete', 'label_key'=>'cms~rights.super.cms', 'id_aclsbjgrp'=>null),
-            // reserved admin roles
+            // reserved admin rights
             array('id_aclsbj'=>'acl.user.view',  'label_key'=>'', 'id_aclsbjgrp'=>null),
             array('id_aclsbj'=> 'acl.user.modify',  'label_key'=>'', 'id_aclsbjgrp'=>null),
             array('id_aclsbj'=> 'acl.group.view', 'label_key'=>'', 'id_aclsbjgrp'=>null),
@@ -81,11 +81,11 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->insertRecordsIntoTable(
             'jacl2_subject',
             array('id_aclsbj', 'label_key', 'id_aclsbjgrp'),
-            $roles,
+            $rights,
             true
         );
 
-        $rights = array(
+        $rightsSettings = array(
             array('id_aclgrp'=>'admins', 'id_aclsbj'=>'acl.user.view',  'id_aclres'=>'-', 'canceled'=>0),
             array('id_aclgrp'=> 'admins', 'id_aclsbj'=>'acl.user.modify',  'id_aclres'=>'-', 'canceled'=>0),
             array('id_aclgrp'=> 'admins', 'id_aclsbj'=>'acl.group.modify', 'id_aclres'=>'-', 'canceled'=>0),
@@ -103,7 +103,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->insertRecordsIntoTable(
             'jacl2_rights',
             array('id_aclsbj', 'id_aclgrp', 'id_aclres', 'canceled'),
-            $rights,
+            $rightsSettings,
             true
         );
 
@@ -206,7 +206,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         );
         $this->assertEquals(
             array(),
-            $rights['sbjgroups_localized']
+            $rights['rightsGroupsLabels']
         );
         $this->assertEquals(
             array(
@@ -243,7 +243,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     'label' => 'super.cms.update',
                 ),
             ),
-            $rights['subjects']
+            $rights['rightsProperties']
         );
         $this->assertEquals(
             array(
@@ -271,7 +271,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         );
         $this->assertEquals(
             array(),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertFalse($rights['hasRightsOnResources']);
 
@@ -282,7 +282,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         );
         $this->assertEquals(
             array(),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertFalse($rights['hasRightsOnResources']);
 
@@ -308,7 +308,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             array(
                 'super.cms.delete' => 'super.cms.delete',
             ),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertTrue($rights['hasRightsOnResources']);
 
@@ -319,7 +319,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         );
         $this->assertEquals(
             array(),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertFalse($rights['hasRightsOnResources']);
 
@@ -330,7 +330,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         );
         $this->assertEquals(
             array(),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertFalse($rights['hasRightsOnResources']);
     }
@@ -698,7 +698,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             array(
                 'super.cms.delete' => 'super.cms.delete',
             ),
-            $rights['subjects_localized']
+            $rights['rightsLabels']
         );
         $this->assertTrue($rights['hasRightsOnResources']);
 
@@ -709,7 +709,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
         $rights = $mgr->getGroupRightsWithResources('__priv_oneuser');
         $this->assertEquals(array(), $rights['rightsWithResources']);
-        $this->assertEquals(array(), $rights['subjects_localized']);
+        $this->assertEquals(array(), $rights['rightsLabels']);
         $this->assertFalse($rights['hasRightsOnResources']);
     }
 
@@ -1610,10 +1610,10 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     'label' => 'super.cms.update',
                 ),
             ),
-            $rightsResult['subjects']
+            $rightsResult['rightsProperties']
         );
 
-        $this->assertEquals(array(), $rightsResult['sbjgroups_localized']);
+        $this->assertEquals(array(), $rightsResult['rightsGroupsLabels']);
         $this->assertEquals(
             array(
                 'acl.group.delete' => 0,
@@ -1640,7 +1640,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         $this->assertEquals('oneuser', $rightsResult['user']);
         $this->assertEquals(array(
             'super.cms.delete' => 'super.cms.delete',
-        ), $rightsResult['subjects_localized']);
+        ), $rightsResult['rightsLabels']);
         $verif = '<array>
             <array key="super.cms.delete">
                 <object >
@@ -1662,7 +1662,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
         $rightsResult = $mgr->getUserRessourceRights('theadmin');
         $this->assertEquals('theadmin', $rightsResult['user']);
-        $this->assertEquals(array(), $rightsResult['subjects_localized']);
+        $this->assertEquals(array(), $rightsResult['rightsLabels']);
         $this->assertEquals(array(), $rightsResult['rightsWithResources']);
         $this->assertFalse($rightsResult['hasRightsOnResources']);
     }

@@ -4,9 +4,9 @@
  * @subpackage  forms
  *
  * @author      Julien Issler
- * @contributor Thomas, Zeffyr
+ * @contributor Thomas, Zeffyr, Laurent Jouanneau
  *
- * @copyright   2008 Julien Issler, 2009 Thomas, 2010 Zeffyr
+ * @copyright   2008 Julien Issler, 2009 Thomas, 2010 Zeffyr, 2013-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

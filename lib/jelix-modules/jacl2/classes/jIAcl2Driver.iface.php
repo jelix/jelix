@@ -20,15 +20,15 @@
 interface jIAcl2Driver
 {
     /**
-     * Says if there is a right on the given role (and on the optional resource)
+     * Says if there is a right on the given right (and on the optional resource)
      * for the current user
      *
-     * @param string $role  the key of the role
+     * @param string $right  the key of the right
      * @param string $resource the id of a resource
      *
      * @return boolean true if the right exists
      */
-    public function getRight($role, $resource = null);
+    public function getRight($right, $resource = null);
 
     /**
      * Clear some cached data, it a cache exists in the driver..

@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin
  *
- * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2006-2020 Laurent Jouanneau
  * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org

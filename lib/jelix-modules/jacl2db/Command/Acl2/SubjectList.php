@@ -20,8 +20,8 @@ class SubjectList extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:roles-list')
-            ->setDescription('List of roles')
+            ->setName('acl2:rights-list')
+            ->setDescription('List of rights')
             ->setHelp('')
         ;
         parent::configure();
@@ -30,7 +30,7 @@ class SubjectList extends \Jelix\Scripts\ModuleCommandAbstract
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
-        $table->setHeaders(array('Roles Group', 'id', 'label key'));
+        $table->setHeaders(array('Rights Group', 'Right id', 'label key'));
 
         $cnx = \jDb::getConnection('jacl2_profile');
         $sql = 'SELECT id_aclsbj, s.label_key, s.id_aclsbjgrp, g.label_key as group_label_key FROM '

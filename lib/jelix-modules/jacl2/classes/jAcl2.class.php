@@ -65,16 +65,16 @@ class jAcl2
     /**
      * call this method to know if the current user has the right with the given value.
      *
-     * @param string $role  the key of the role to check
+     * @param string $right  the key of the right to check
      * @param string $resource the id of a resource
      *
      * @return bool true if yes
      */
-    public static function check($role, $resource = null)
+    public static function check($right, $resource = null)
     {
         $dr = self::_getDriver();
 
-        return $dr->getRight($role, $resource);
+        return $dr->getRight($right, $resource);
     }
 
 
