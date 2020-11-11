@@ -25,9 +25,9 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
-        $config = isset($this->ctrl->datepickerConfig) ?
+        $config = $this->ctrl->datepickerConfig ?
                     $this->ctrl->datepickerConfig :
-                    jApp::config()->forms['datepicker'];
+                    jApp::config()->forms['datetimepicker'];
         $resp->addAssets('jforms_datetimepicker_'.$config);
     }
 

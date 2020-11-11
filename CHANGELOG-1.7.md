@@ -9,10 +9,12 @@ Jelix 1.7.6 (next)
       execute `php console.php mailer:test my.email@example.com`
     * jForms: new control jControlTime, and support of a `<time>` element in jforms 
     * New method `jEvent::getParameters()`
+    * New method `jAuth::setUserSession()`
     * jacl2db_admin interface: confirmation on groups delete button
     * Fix compat with php 7.4 in jCmdUtils
 
 * Fix web assets upgrader with jforms_datepicker and jforms_datetimepicker
+* Fix web assets loading of the datetime widget
 * Authentication: `checkCookieToken()` does not trigger anymore a 500 error page
   if the cookie token is invalid.
 * jAcl2: adapter system to make the glue to authentication.    
