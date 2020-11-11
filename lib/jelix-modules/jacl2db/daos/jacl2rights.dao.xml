@@ -102,12 +102,6 @@
                 <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
-        <method name="getHiddenRightsByGroup" type="select">
-            <parameter name="subjects"/>
-            <conditions>
-                 <in property="id_aclsbj" expr="$subjects"/>
-            </conditions>
-        </method>
         <method name="deleteByGroup" type="delete">
            <parameter name="group" />
            <conditions >

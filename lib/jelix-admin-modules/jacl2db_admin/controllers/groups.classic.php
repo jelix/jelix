@@ -209,7 +209,7 @@ class groupsCtrl extends jController
         if ($name != '') {
             $grpId = jAcl2DbUserGroup::createGroup($name, $id);
             if ($copyGroup) {
-                $groupRights = jDao::get('jacl2db~jacl2rights')->getRightsByGroup($copyGroup)->fetchAll();
+                $groupRights = jDao::get('jacl2db~jacl2rights')->getRightsByGroup($copyGroup);
                 $rights = array();
                 foreach($groupRights as $groupRight) {
                     $rights[$groupRight->id_aclsbj] = $groupRight->canceled ? 'n' : 'y';

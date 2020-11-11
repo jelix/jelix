@@ -577,7 +577,7 @@ class jAcl2DbAdminUIManager
         if (empty($hiddenRights)) {
             return $rights;
         }
-        $hiddenRightsValues = jDao::get('jacl2db~jacl2rights')->getHiddenRightsByGroup($hiddenRights)->fetchAll();
+        $hiddenRightsValues = jDao::get('jacl2db~jacl2rights')->getRightSettings($hiddenRights);
         foreach ($hiddenRightsValues as $value) {
             if (!isset($rights[$value->id_aclgrp])) {
                 continue ;
