@@ -57,11 +57,16 @@ class jAuth
     {
         if (self::$config === null || $newconfig) {
             if (!$newconfig) {
-                $plugin = jApp::coord()->getPlugin('auth');
-                if ($plugin === null) {
-                    throw new jException('jelix~auth.error.plugin.missing');
+                if (jApp::coord()) {
+                    $plugin = jApp::coord()->getPlugin('auth');
+                    if ($plugin === null) {
+                        throw new jException('jelix~auth.error.plugin.missing');
+                    }
+                    $config = &$plugin->config;
                 }
-                $config = &$plugin->config;
+                else {
+                    $config = jCoordinator::getPluginConf('auth');
+                }
             } else {
                 $config = $newconfig;
             }

@@ -123,7 +123,7 @@ class jCoordinator
             if (strpos($name, '.') !== false) {
                 continue;
             }
-            $conf = $this->getPluginConf($name);
+            $conf = self::getPluginConf($name);
             include_once $config->_pluginsPathList_coord[$name].$name.'.coord.php';
             $class = $name.'CoordPlugin';
             // if the plugin is registered as a replacement of an other plugin
@@ -526,10 +526,16 @@ class jCoordinator
      *
      * @return array the configuration. May be empty if the plugin is unknown
      */
-    protected function getPluginConf($pluginName)
+    public static function getPluginConf($pluginName)
     {
         $config = jApp::config();
         if (!isset($config->coordplugins[$pluginName])) {
+            foreach ($config->coordplugins as $key => $value) {
+                if (preg_match('/(.+)\\.name$/', $key, $m) && $value == $pluginName) {
+                    return self::getPluginConf($m[1]);
+                }
+            }
+
             return array();
         }
 

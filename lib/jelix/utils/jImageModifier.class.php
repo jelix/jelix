@@ -200,9 +200,12 @@ class jImageModifier
                 $srcUri = $basePath.$srcUri;
             }
             $srcPath = jFile::parseJelixPath($config['src_path']);
-        } else {
+        } else if (jApp::coord()) {
             $srcUri = jApp::coord()->request->getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
+        }
+        else {
+            throw new Exception("No router and no src_url in parameters. src_url is missing");
         }
 
         if ($config['cache_path'] && $config['cache_url']) {
@@ -211,9 +214,12 @@ class jImageModifier
                 $cacheUri = $basePath.$cacheUri;
             }
             $cachePath = jFile::parseJelixPath($config['cache_path']);
-        } else {
+        } else if (jApp::coord()) {
             $cachePath = jApp::wwwPath('cache/images/');
             $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
+        }
+        else {
+            throw new Exception("No router and no cache_url in parameters. cache_url is missing");
         }
 
         if ($src && (!isset($config['use_old_cache_path']) || !$config['use_old_cache_path'])) {
