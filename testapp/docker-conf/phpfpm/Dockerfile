@@ -68,6 +68,6 @@ COPY appctl.sh /bin/
 COPY phpunit_bootstrap.php /srv/phpunit_bootstrap.php
 RUN chmod 755 /bin/entrypoint.sh /bin/appctl.sh
 
-WORKDIR /jelixapp/
+WORKDIR /jelixapp/testapp/
 ENTRYPOINT ["/bin/entrypoint.sh"]
 CMD ["/usr/sbin/php-fpm7", "-F", "-O"]
