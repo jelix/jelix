@@ -15,6 +15,7 @@ Jelix 1.7.6 (next)
 
 * Fix web assets upgrader with jforms_datepicker and jforms_datetimepicker
 * Fix web assets loading of the datetime widget
+* Fix console: initialize a coordinator so components could work well 
 * Authentication: `checkCookieToken()` does not trigger anymore a 500 error page
   if the cookie token is invalid.
 * jAcl2: adapter system to make the glue to authentication.    

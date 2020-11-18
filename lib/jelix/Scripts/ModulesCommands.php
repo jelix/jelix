@@ -32,6 +32,7 @@ class ModulesCommands
         $ep = $fmkInfos->getDefaultEntryPointInfo();
 
         \jApp::setConfig(\jConfigCompiler::read($ep->getConfigFile(), true, true, 'console.php'));
+        \jApp::setCoord(new \jCoordinator());
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
 
         // ----- init the Application object
