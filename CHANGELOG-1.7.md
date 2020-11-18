@@ -5,6 +5,8 @@ Jelix 1.7.6 (next)
 ------------------
 
 * have all bug fixes and improvements from Jelix 1.6.30.
+    * Fix basePath in the context of a command line script
+    * Fix an error in the listbox form widget
     * new command to test the mailer. To send an email to check mailer parameters, 
       execute `php console.php mailer:test my.email@example.com`
     * jForms: new control jControlTime, and support of a `<time>` element in jforms 
@@ -12,6 +14,8 @@ Jelix 1.7.6 (next)
     * New method `jAuth::setUserSession()`
     * jacl2db_admin interface: confirmation on groups delete button
     * Fix compat with php 7.4 in jCmdUtils
+    * New methods `jServer::getDomainName()`, `jServer::getServerURI()`, 
+      `jServer::getPort()`, `jServer::isHttps()`
 
 * Fix web assets upgrader with jforms_datepicker and jforms_datetimepicker
 * Fix web assets loading of the datetime widget
