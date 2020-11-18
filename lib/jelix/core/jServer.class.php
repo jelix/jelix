@@ -133,4 +133,14 @@ class jServer {
 
         return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
     }
+
+    /**
+     * return the protocol
+     * @return string  http:// or https://
+     * @since 1.6.30
+     */
+    static function getProtocol()
+    {
+        return (self::isHttps() ? 'https://':'http://');
+    }
 }

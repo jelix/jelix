@@ -184,7 +184,7 @@ class jImageModifier {
             $srcPath = jFile::parseJelixPath( $config['src_path'] );
         }
         else {
-            $srcUri = jApp::coord()->request->getServerURI().$basePath;
+            $srcUri = jServer::getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
         }
 
@@ -197,7 +197,7 @@ class jImageModifier {
         }
         else {
             $cachePath = jApp::wwwPath('cache/images/');
-            $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
+            $cacheUri = jServer::getServerURI().$basePath.'cache/images/';
         }
 
         if ($src && (!isset($config['use_old_cache_path']) || !$config['use_old_cache_path'])) {
