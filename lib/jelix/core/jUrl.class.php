@@ -224,23 +224,23 @@ class jUrl extends jUrlBase
     public static function getFull($actSel, $params = array(), $what = 0, $domainName = null)
     {
         $domain = '';
-        $req = jApp::coord()->request;
         $url = self::get($actSel, $params, ($what != self::XMLSTRING ? self::STRING : $what));
         if (!preg_match('/^http/', $url)) {
             if ($domainName) {
                 $domain = $domainName;
                 if (!preg_match('/^http/', $domainName)) {
-                    $domain = $req->getProtocol().$domain;
+                    $domain = jServer::getProtocol().$domain;
                 }
             } else {
-                $domain = $req->getServerURI();
+                $domain = jServer::getServerURI();
+
             }
 
             if ($domain == '') {
                 throw new jException('jelix~errors.urls.domain.void');
             }
         } elseif ($domainName != '') {
-            $url = str_replace($req->getDomainName(), $domainName, $url);
+            $url = str_replace(jServer::getDomainName(), $domainName, $url);
         }
 
         return $domain.$url;
@@ -387,9 +387,8 @@ class jUrl extends jUrlBase
         if (!$res) {
             return false;
         }
-        $req = jApp::coord()->request;
         if (isset($res['host']) && $res['host'] != '') {
-            if ($res['host'] != $req->getDomainName()) {
+            if ($res['host'] != jServer::getDomainName()) {
                 if (!count($authorizedDomains)) {
                     return false;
                 }

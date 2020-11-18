@@ -228,7 +228,7 @@ class UrlActionMapper
         // setup script name
         $url->scriptName = \jApp::urlBasePath().$urlinfo[1];
         if ($urlinfo[2]) {
-            $url->scriptName = \jApp::coord()->request->getServerURI(true).$url->scriptName;
+            $url->scriptName = \jServer::getServerURI(true).$url->scriptName;
         }
 
         if ($urlinfo[1] && $this->config->extensionNeeded) {

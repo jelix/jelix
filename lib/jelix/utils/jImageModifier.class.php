@@ -201,7 +201,7 @@ class jImageModifier
             }
             $srcPath = jFile::parseJelixPath($config['src_path']);
         } else if (jApp::coord()) {
-            $srcUri = jApp::coord()->request->getServerURI().$basePath;
+            $srcUri = jServer::getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
         }
         else {
@@ -216,7 +216,7 @@ class jImageModifier
             $cachePath = jFile::parseJelixPath($config['cache_path']);
         } else if (jApp::coord()) {
             $cachePath = jApp::wwwPath('cache/images/');
-            $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
+            $cacheUri = jServer::getServerURI().$basePath.'cache/images/';
         }
         else {
             throw new Exception("No router and no cache_url in parameters. cache_url is missing");
