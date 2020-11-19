@@ -77,6 +77,7 @@ class jAcl2DbUserGroup
         $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
         if ($login === null) {
             self::$groups = null;
+
             return array();
         }
 
@@ -95,10 +96,12 @@ class jAcl2DbUserGroup
     }
 
     /**
-     * Retrieve the list of group the given user is member of
+     * Retrieve the list of group the given user is member of.
      *
      * @param string $login The user's login
+     *
      * @return array list of group id
+     *
      * @since 1.6.29
      */
     public static function getGroupsIdByUser($login)
@@ -108,7 +111,8 @@ class jAcl2DbUserGroup
         }
 
         $gp = jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile')
-                ->getGroupsUser($login);
+            ->getGroupsUser($login)
+        ;
         $groups = array();
         foreach ($gp as $g) {
             $groups[] = $g->id_aclgrp;
@@ -119,6 +123,7 @@ class jAcl2DbUserGroup
 
     /**
      * Get the private group for the current user or for the given login.
+     *
      * @param string $login The user's login
      *
      * @return string the id of the private group

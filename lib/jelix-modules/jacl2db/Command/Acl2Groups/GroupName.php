@@ -52,7 +52,7 @@ class GroupName extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln("Group '".$group."' is renamed to ${name}");
+            $output->writeln("Group '".$group."' is renamed to {$name}");
         }
     }
 }

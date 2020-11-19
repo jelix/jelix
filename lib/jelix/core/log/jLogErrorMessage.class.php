@@ -126,7 +126,7 @@ class jLogErrorMessage implements jILogMessage
 
         $traceLog = '';
         foreach ($this->trace as $k => $t) {
-            $traceLog .= "\n\t${k}\t".(isset($t['class']) ? $t['class'].$t['type'] : '').$t['function']."()\t";
+            $traceLog .= "\n\t{$k}\t".(isset($t['class']) ? $t['class'].$t['type'] : '').$t['function']."()\t";
             $traceLog .= (isset($t['file']) ? $t['file'] : '[php]').' : '.(isset($t['line']) ? $t['line'] : '');
         }
 

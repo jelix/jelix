@@ -51,7 +51,7 @@ class GroupDefault extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         $cnx = \jDb::getConnection('jacl2_profile');
 
         $sql = 'UPDATE '.$cnx->prefixTable('jacl2_group')
-            ." SET grouptype=${def}  WHERE id_aclgrp=".$cnx->quote($id);
+            ." SET grouptype={$def}  WHERE id_aclgrp=".$cnx->quote($id);
         $cnx->exec($sql);
         if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is ".($def ? ' now a default group' : ' no more a default group'));

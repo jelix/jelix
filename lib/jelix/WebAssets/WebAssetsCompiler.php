@@ -165,11 +165,10 @@ class WebAssetsCompiler
     protected function parseAsset($asset)
     {
         if (strpos($asset, '|') !== false) {
-            list ($asset, $attributes) = explode('|', $asset, 2);
+            list($asset, $attributes) = explode('|', $asset, 2);
             $attributes = '>'.$attributes;
-        }
-        else {
-            $attributes= '>';
+        } else {
+            $attributes = '>';
         }
 
         if (strpos($asset, '$jelix') !== false) {

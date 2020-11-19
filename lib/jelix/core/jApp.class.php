@@ -123,7 +123,9 @@ class jApp
 
     /**
      * @param string $file
+     *
      * @return string
+     *
      * @deprecated
      */
     public static function configPath($file = '')

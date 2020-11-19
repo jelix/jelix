@@ -14,8 +14,6 @@
 
 /**
  * Layer encapsulation resultset mssql.
- *
- *
  */
 class sqlsrvDbResultSet extends jDbResultSet
 {
@@ -40,7 +38,7 @@ class sqlsrvDbResultSet extends jDbResultSet
 
     public function fetch()
     {
-        if (! $this->_idResult) {
+        if (!$this->_idResult) {
             return false;
         }
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
@@ -145,7 +143,7 @@ class sqlsrvDbResultSet extends jDbResultSet
             $this->parametersReferences = array();
             foreach ($this->parameterNames as $k => $name) {
                 if (!isset($parameters[$name])) {
-                    throw new Exception("Execute: parameter '${name}' is missing from parameters");
+                    throw new Exception("Execute: parameter '{$name}' is missing from parameters");
                 }
                 $this->parametersReferences[] = &$parameters[$name];
             }

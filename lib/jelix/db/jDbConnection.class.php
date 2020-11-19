@@ -123,7 +123,8 @@ abstract class jDbConnection
         }
     }
 
-    public function getProfileName() {
+    public function getProfileName()
+    {
         return $this->profile['_name'];
     }
 
@@ -481,7 +482,7 @@ abstract class jDbConnection
      *
      * @since 1.2
      */
-    protected $_schema = null;
+    protected $_schema;
 
     /**
      * @return jDbSchema

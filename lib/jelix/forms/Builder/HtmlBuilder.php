@@ -303,8 +303,7 @@ class HtmlBuilder extends BuilderBase
     protected $widgets = array();
 
     /**
-     * @param \jFormsControl             $ctrl
-     * @param null|ParentWidgetInterface $parentWidget
+     * @param \jFormsControl $ctrl
      *
      * @throws \Exception
      *

@@ -273,7 +273,7 @@ class jDaoMethod
         if ($value !== null && $attr['expr'] !== null) {
             throw new jDaoXmlException($this->_parser->selector, 'method.condition.valueexpr.together', array($this->name, $op));
         }
-         if ($value !== null) {
+        if ($value !== null) {
             if ($op == 'isnull' || $op == 'isnotnull') {
                 throw new jDaoXmlException($this->_parser->selector, 'method.condition.valueexpr.notallowed', array($this->name, $op, $field_id));
             }
@@ -389,7 +389,7 @@ class jDaoMethod
         if ($value !== null && $attr['expr'] !== null) {
             throw new jDaoXmlException($this->_parser->selector, 'method.values.valueexpr', array($this->name, $prop));
         }
-         if ($value !== null) {
+        if ($value !== null) {
             $this->_values[$prop] = array($value, false);
         } elseif ($attr['expr'] !== null) {
             $this->_values[$prop] = array($attr['expr'], true);

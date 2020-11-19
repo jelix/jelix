@@ -75,8 +75,9 @@ abstract class jDbTable
 
     /**
      * @param string $name
-     * @param bool $forChange
-     * @return jDbColumn|null
+     * @param bool   $forChange
+     *
+     * @return null|jDbColumn
      */
     public function getColumn($name, $forChange = false)
     {

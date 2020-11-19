@@ -14,7 +14,7 @@
  */
 
 /**
- * Widget to display the selection of a file to upload
+ * Widget to display the selection of a file to upload.
  *
  * For images upload, some attributes can be set to indicate
  * the url of the image. The url can be forged from a selector or from a base URI.
@@ -69,11 +69,10 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
     // -------- WidgetInterface
     public function setAttributes($attr)
     {
-
-        foreach(array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
-                    'baseURI', 'imgMaxWidth', 'imgMaxHeight') as $parameter) {
+        foreach (array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
+            'baseURI', 'imgMaxWidth', 'imgMaxHeight', ) as $parameter) {
             if (isset($attr[$parameter])) {
-                $this->$parameter = $attr[$parameter];
+                $this->{$parameter} = $attr[$parameter];
                 unset($attr[$parameter]);
             }
         }
@@ -183,8 +182,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             if ($choices['keep'] === '') {
                 echo jLocale::get('jelix~jforms.upload.choice.keep.empty').
                     '</label> ';
-            }
-            else {
+            } else {
                 echo jLocale::get('jelix~jforms.upload.choice.keep').
                     '</label> ';
                 $this->_outputControlValue($choices['keep'], 'original');
@@ -215,7 +213,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             $this->_outputAttr($attr);
             echo '/>',
             "</li>\n";
-            $this->parentWidget->addJs("c = new " . $jFormsJsVarName . "ControlString('" . $this->ctrl->ref . "', " . $this->escJsStr($this->ctrl->label) . ");\n");
+            $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
             $this->parentWidget->addJs($this->commonGetJsConstraints());
             $this->parentWidget->addJs("c2.addControl(c, 'new');\n");
         } else {
@@ -263,8 +261,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         ) {
             if ($this->baseURI) {
                 $url = $this->baseURI.$value;
-            }
-            else {
+            } else {
                 $params = $this->uriActionParameters;
                 if ($this->uriActionFileParameter) {
                     $params[$this->uriActionFileParameter] = $value;
@@ -278,9 +275,8 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             if ($this->imgMaxWidth) {
                 $style .= 'max-width:'.$this->imgMaxWidth.'px;';
             }
-            echo '<a href="'.$url.'"><img src="'.$url.'" alt="'.$value.($style?'" style="'.$style.'"':'"').' /></a>';
-        }
-        else {
+            echo '<a href="'.$url.'"><img src="'.$url.'" alt="'.$value.($style ? '" style="'.$style.'"' : '"').' /></a>';
+        } else {
             echo htmlspecialchars($value);
         }
         echo '</span>';

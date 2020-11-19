@@ -64,7 +64,7 @@ final class jResponseBinary extends jResponse
     public $mimeType = 'application/octet-stream';
 
     /**
-     * Delete file after the upload
+     * Delete file after the upload.
      */
     public $deleteFileAfterSending = false;
 

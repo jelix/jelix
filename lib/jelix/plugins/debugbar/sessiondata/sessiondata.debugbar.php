@@ -83,10 +83,10 @@ class sessiondataDebugbarPlugin implements jIDebugbarPlugin
                                 $info->popupContent .= "<dd>Data:<table style=''><tr><th>name</th><th>value</th><th>original value</th><th>RO</th><th>Deact.</th></tr>";
                                 foreach ($form->data as $dn => $dv) {
                                     if (is_array($dv)) {
-                                        $info->popupContent .= "<tr><td>${dn}</td><td>".var_export($dv, true).'</td>';
+                                        $info->popupContent .= "<tr><td>{$dn}</td><td>".var_export($dv, true).'</td>';
                                         $info->popupContent .= '<td>'.(isset($form->originalData[$dn]) ? var_export($form->originalData[$dn], true) : '').'</td>';
                                     } else {
-                                        $info->popupContent .= "<tr><td>${dn}</td><td>".htmlspecialchars($dv).'</td>';
+                                        $info->popupContent .= "<tr><td>{$dn}</td><td>".htmlspecialchars($dv).'</td>';
                                         $info->popupContent .= '<td>'.(isset($form->originalData[$dn]) ? htmlspecialchars($form->originalData[$dn]) : '').'</td>';
                                     }
                                     $info->popupContent .= '<td>'.($form->isReadOnly($dn) ? 'Y' : '').'</td>';

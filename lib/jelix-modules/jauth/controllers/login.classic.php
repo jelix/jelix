@@ -110,8 +110,8 @@ class loginCtrl extends jController
                 $url_return = $this->param('auth_url_return');
                 if (!($conf['enable_after_login_override'] &&
                     jAuth::checkReturnUrl($url_return))
-                ){
-                    $url_return =  jUrl::get($conf['after_login']);
+                ) {
+                    $url_return = jUrl::get($conf['after_login']);
                 }
                 $rep = $this->getResponse('redirectUrl');
                 $rep->url = $url_return;

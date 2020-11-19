@@ -228,7 +228,7 @@ class pgsqlDbConnection extends jDbConnection
 
             return false;
         }
-        $cur = $this->query("select currval('${seqname}') as id");
+        $cur = $this->query("select currval('{$seqname}') as id");
         if ($cur) {
             $res = $cur->fetch();
             if ($res) {
@@ -259,7 +259,7 @@ class pgsqlDbConnection extends jDbConnection
     }
 
     /**
-     * @param integer $id the attribute id
+     * @param int $id the attribute id
      *
      * @return string the attribute value
      *
@@ -270,7 +270,8 @@ class pgsqlDbConnection extends jDbConnection
         switch ($id) {
             case self::ATTR_CLIENT_VERSION:
                 $v = pg_version($this->_connection);
-                return (array_key_exists('client', $v) ? $v['client'] : '');
+
+                return array_key_exists('client', $v) ? $v['client'] : '';
             case self::ATTR_SERVER_VERSION:
                 return pg_parameter_status($this->_connection, 'server_version');
 
@@ -301,6 +302,7 @@ class pgsqlDbConnection extends jDbConnection
                 $this->serverVersion = intval($version[0]);
             }
         }
+
         return $this->serverVersion;
     }
 }

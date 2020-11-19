@@ -145,12 +145,12 @@ class InteractiveConfigurator
     /**
      * Ask to choose an entry point.
      *
-     * @param string $questionMessage
-     * @param \Jelix\Installer\EntryPointConfigurator[] $entryPointsList  the list
-     *                          of entry point in which the choice should be made.
-     * @param bool   $multipleChoice    true if the user can choose different entry point
-     * @param string $errorMessage      error message when the user didn't indicate a value from the choice
-     * @param mixed  $preselectedChoice
+     * @param string                                    $questionMessage
+     * @param \Jelix\Installer\EntryPointConfigurator[] $entryPointsList   the list
+     *                                                                     of entry point in which the choice should be made
+     * @param bool                                      $multipleChoice    true if the user can choose different entry point
+     * @param string                                    $errorMessage      error message when the user didn't indicate a value from the choice
+     * @param mixed                                     $preselectedChoice
      *
      * @return false|string|string[] list of entry points id, selected by the user.
      *                               returns false if there is no choice
@@ -162,7 +162,7 @@ class InteractiveConfigurator
         $preselectedChoice = array(),
         $errorMessage = '%s is an unknown entry points'
     ) {
-        $questionMessage = "<question>${questionMessage}</question>";
+        $questionMessage = "<question>{$questionMessage}</question>";
         $choice = array_keys($entryPointsList);
         if (!count($choice)) {
             return false;
@@ -202,7 +202,7 @@ class InteractiveConfigurator
             'password', 'persistent', ),
         'pgsql' => array(array('service', array('host', 'port', 'database',
             'user', 'password', )), 'persistent', 'force_encoding', 'timeout',
-        'pg_options', 'search_path', 'single_transaction', ),
+            'pg_options', 'search_path', 'single_transaction', ),
         'sqlite3' => array('database', 'persistent', 'extensions', 'busytimeout'),
         'sqlsrv' => array('host', 'database', 'user', 'password', 'force_encoding'),
     );

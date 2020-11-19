@@ -103,7 +103,7 @@ class jDaoDbMapper
         $primaryKey = array();
         foreach ($properties as $name) {
             if (!isset($allProperties[$name])) {
-                throw new Exception("insertDaoData: Unknown property ${name}");
+                throw new Exception("insertDaoData: Unknown property {$name}");
             }
             $columns[] = $allProperties[$name]->fieldName;
             if ($allProperties[$name]->isPK) {

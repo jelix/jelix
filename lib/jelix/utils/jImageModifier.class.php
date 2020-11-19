@@ -200,12 +200,11 @@ class jImageModifier
                 $srcUri = $basePath.$srcUri;
             }
             $srcPath = jFile::parseJelixPath($config['src_path']);
-        } else if (jApp::coord()) {
+        } elseif (jApp::coord()) {
             $srcUri = jServer::getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
-        }
-        else {
-            throw new Exception("No router and no src_url in parameters. src_url is missing");
+        } else {
+            throw new Exception('No router and no src_url in parameters. src_url is missing');
         }
 
         if ($config['cache_path'] && $config['cache_url']) {
@@ -214,12 +213,11 @@ class jImageModifier
                 $cacheUri = $basePath.$cacheUri;
             }
             $cachePath = jFile::parseJelixPath($config['cache_path']);
-        } else if (jApp::coord()) {
+        } elseif (jApp::coord()) {
             $cachePath = jApp::wwwPath('cache/images/');
             $cacheUri = jServer::getServerURI().$basePath.'cache/images/';
-        }
-        else {
-            throw new Exception("No router and no cache_url in parameters. cache_url is missing");
+        } else {
+            throw new Exception('No router and no cache_url in parameters. cache_url is missing');
         }
 
         if ($src && (!isset($config['use_old_cache_path']) || !$config['use_old_cache_path'])) {
@@ -252,7 +250,7 @@ class jImageModifier
 
         // Creating an image
         switch ($mimeType) {
-            case 'image/gif' : $image = imagecreatefromgif($srcFs);
+            case 'image/gif': $image = imagecreatefromgif($srcFs);
 
 break;
             case 'image/jpeg': $image = imagecreatefromjpeg($srcFs);
@@ -496,8 +494,13 @@ break;
                     $suma += $alpha * $coeffs[$flou][$k];
                 }
                 $alpha = 127 - ((127 - ($suma / $sum)) / (100 / $opac));
-                $c = imagecolorallocatealpha($temp2, $rgb[0], $rgb[1], $rgb[2],
-                    $alpha < 0 ? 0 : ($alpha > 127 ? 127 : $alpha));
+                $c = imagecolorallocatealpha(
+                    $temp2,
+                    $rgb[0],
+                    $rgb[1],
+                    $rgb[2],
+                    $alpha < 0 ? 0 : ($alpha > 127 ? 127 : $alpha)
+                );
                 imagesetpixel($temp2, $i + $x1, $j + $y1, $c);
             }
         }

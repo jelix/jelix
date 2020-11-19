@@ -56,7 +56,7 @@ class jSelectorFactory
     public static function create($selstr, $defaulttype = false)
     {
         if (is_string($defaulttype) && strpos($selstr, ':') === false) {
-            $selstr = "${defaulttype}:${selstr}";
+            $selstr = "{$defaulttype}:{$selstr}";
         }
 
         if (preg_match('/^([a-z]{3,5})\\:([\\w~\\/\\.]+)$/', $selstr, $m)) {

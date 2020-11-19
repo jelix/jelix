@@ -12,6 +12,7 @@
 
 /**
  * driver for jDaoCompiler.
+ *
  * @deprecated
  */
 class mssqlDaoBuilder extends jDaoGenerator
@@ -27,5 +28,4 @@ class mssqlDaoBuilder extends jDaoGenerator
     {
         return '['.$name.']';
     }
-
 }

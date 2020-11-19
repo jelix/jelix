@@ -2,6 +2,7 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Adrien Lagroy de Croutte
+ *
  * @copyright   2006-2019 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
@@ -36,7 +37,7 @@ class jAcl2DbManager
      * add a right on the given users group/resource.
      *
      * @param string $group    the users group id
-     * @param string $right     the key of the right
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      *
      * @return bool true if the right is set
@@ -77,7 +78,7 @@ class jAcl2DbManager
      * multiple groups of users.
      *
      * @param string $group    the users group id
-     * @param string $right     the key of the right
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      * @param bool   $canceled true if the removing is to cancel a right, instead of an inheritance
      */
@@ -157,7 +158,7 @@ class jAcl2DbManager
     /**
      * remove the right on the given resource, for all users groups.
      *
-     * @param string $right     the key of the right
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      */
     public static function removeResourceRight($right, $resource)
@@ -172,8 +173,8 @@ class jAcl2DbManager
     /**
      * create a new right.
      *
-     * @param string $right         the key of the right
-     * @param string $label_key    the key of a locale which represents the label of the right
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
      * @param string $rightsGroup the id of the rights group where the right is attached to
      *
      * @since 1.7.6
@@ -195,8 +196,8 @@ class jAcl2DbManager
     /**
      * create a new right.
      *
-     * @param string $right         the key of the right
-     * @param string $label_key    the key of a locale which represents the label of the right
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
      * @param string $rightsGroup the id of the rights group where the right is attached to
      *
      * @deprecated
@@ -214,8 +215,8 @@ class jAcl2DbManager
      * @deprecated
      * @see createRight()
      *
-     * @param string $right         the key of the right
-     * @param string $label_key    the key of a locale which represents the label of the right
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
      * @param string $rightsGroup the id of the rights group where the right is attached to
      */
     public static function addSubject($right, $label_key, $rightsGroup = null)
@@ -267,12 +268,12 @@ class jAcl2DbManager
     }
 
     /**
-     * Set a right to users groups which have the given right
+     * Set a right to users groups which have the given right.
      *
      * It can be useful when creating a new right.
      *
-     * @param string $sourceRight  the right that users groups have
-     * @param mixed  $targetRight  the right to set on users groups having $sourceRight
+     * @param string $sourceRight the right that users groups have
+     * @param mixed  $targetRight the right to set on users groups having $sourceRight
      *
      * @since 1.7.6
      */
@@ -300,12 +301,12 @@ class jAcl2DbManager
     }
 
     /**
-     * Set a right to users groups which have the given right
+     * Set a right to users groups which have the given right.
      *
      * It can be useful when creating a new right.
      *
-     * @param string $sourceRight  the right that users groups have
-     * @param mixed  $targetRight  the right to set on users groups having $sourceRight
+     * @param string $sourceRight the right that users groups have
+     * @param mixed  $targetRight the right to set on users groups having $sourceRight
      *
      * @deprecated
      * @see copyRightSettings()
@@ -319,7 +320,7 @@ class jAcl2DbManager
      * Create a new right group.
      *
      * @param string $rightGroup the key of the right group
-     * @param string $label_key the key of a locale which represents the label of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
      *
      * @since 1.7.6
      */
@@ -340,7 +341,7 @@ class jAcl2DbManager
      * Create a new right group.
      *
      * @param string $rightGroup the key of the right group
-     * @param string $label_key the key of a locale which represents the label of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
      *
      * @deprecated see createRightGroup()
      * @since 1.7
@@ -354,7 +355,7 @@ class jAcl2DbManager
      * Create a new right group.
      *
      * @param string $rightGroup the key of the right group
-     * @param string $label_key the key of a locale which represents the label of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
      *
      * @since 1.3
      * @deprecated see createRightGroup()

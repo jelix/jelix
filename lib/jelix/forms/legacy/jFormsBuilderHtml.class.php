@@ -394,22 +394,22 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
         $maxv = $ctrl->datatype->getFacet('maxValue');
         if ($maxv !== null) {
-            $this->jsContent .= "c.maxValue = '${maxv}';\n";
+            $this->jsContent .= "c.maxValue = '{$maxv}';\n";
         }
 
         $minv = $ctrl->datatype->getFacet('minValue');
         if ($minv !== null) {
-            $this->jsContent .= "c.minValue = '${minv}';\n";
+            $this->jsContent .= "c.minValue = '{$minv}';\n";
         }
 
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if ($maxl !== null) {
-            $this->jsContent .= "c.maxLength = '${maxl}';\n";
+            $this->jsContent .= "c.maxLength = '{$maxl}';\n";
         }
 
         $minl = $ctrl->datatype->getFacet('minLength');
         if ($minl !== null) {
-            $this->jsContent .= "c.minLength = '${minl}';\n";
+            $this->jsContent .= "c.minLength = '{$minl}';\n";
         }
         $re = $ctrl->datatype->getFacet('pattern');
         if ($re !== null) {
@@ -498,7 +498,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
     }
 
-    protected function _outputDateControlHour($ctrl, $attr, $value, $configParameter='controls.datetime.input')
+    protected function _outputDateControlHour($ctrl, $attr, $value, $configParameter = 'controls.datetime.input')
     {
         $attr['name'] = $ctrl->ref.'[hour]';
         $attr['id'] .= 'hour';
@@ -519,7 +519,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
     }
 
-    protected function _outputDateControlMinutes($ctrl, $attr, $value, $configParameter='controls.datetime.input')
+    protected function _outputDateControlMinutes($ctrl, $attr, $value, $configParameter = 'controls.datetime.input')
     {
         $attr['name'] = $ctrl->ref.'[minutes]';
         $attr['id'] .= 'minutes';
@@ -540,7 +540,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
     }
 
-    protected function _outputDateControlSeconds($ctrl, $attr, $value, $configParameter='controls.datetime.input')
+    protected function _outputDateControlSeconds($ctrl, $attr, $value, $configParameter = 'controls.datetime.input')
     {
         $attr['name'] = $ctrl->ref.'[seconds]';
         $attr['id'] .= 'seconds';
@@ -630,8 +630,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
             if (isset($matches[7])) {
                 $v['seconds'] = $matches[7];
             }
-        }
-        else if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $this->_form->getData($ctrl->ref), $matches)) {
+        } elseif (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $this->_form->getData($ctrl->ref), $matches)) {
             if (isset($matches[1])) {
                 $v['year'] = $matches[1];
             }
@@ -641,9 +640,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase
             if (isset($matches[3])) {
                 $v['day'] = $matches[3];
             }
-            $v['hour'] = "00";
-            $v['minutes'] = "00";
-            $v['seconds'] = "00";
+            $v['hour'] = '00';
+            $v['minutes'] = '00';
+            $v['seconds'] = '00';
         }
         $f = jLocale::get('jelix~format.datetime');
         for ($i = 0; $i < strlen($f); ++$i) {
@@ -683,14 +682,13 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     protected function outputTime($ctrl, &$attr)
     {
         $attr['id'] = $this->_name.'_'.$ctrl->ref.'_';
-        $v = array('hour'=>'','minutes'=>'','seconds'=>'');
-        if (preg_match('#^(\d{2}):(\d{2})(:(\d{2}))?(?:$|\\s|\\.)#', $this->_form->getData($ctrl->ref), $matches)){
+        $v = array('hour' => '', 'minutes' => '', 'seconds' => '');
+        if (preg_match('#^(\d{2}):(\d{2})(:(\d{2}))?(?:$|\\s|\\.)#', $this->_form->getData($ctrl->ref), $matches)) {
             $v['hour'] = $matches[1];
             $v['minutes'] = $matches[2];
             if (isset($matches[3])) {
                 $v['seconds'] = $matches[4];
-            }
-            else {
+            } else {
                 $v['seconds'] = '00';
             }
         }
@@ -710,14 +708,16 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
     protected function jsTime($ctrl)
     {
-        $this->jsContent .= "c = new ".$this->jFormsJsVarName."ControlTime2('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+        $this->jsContent .= 'c = new '.$this->jFormsJsVarName."ControlTime2('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         $this->jsContent .= "c.multiFields = true;\n";
         $minDate = $ctrl->datatype->getFacet('minValue');
         $maxDate = $ctrl->datatype->getFacet('maxValue');
-        if($minDate)
+        if ($minDate) {
             $this->jsContent .= "c.minDate = '".$minDate->toString(jDateTime::DB_TFORMAT)."';\n";
-        if($maxDate)
+        }
+        if ($maxDate) {
             $this->jsContent .= "c.maxDate = '".$maxDate->toString(jDateTime::DB_TFORMAT)."';\n";
+        }
         $this->commonJs($ctrl);
     }
 
@@ -990,12 +990,12 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if ($maxl !== null) {
-            $this->jsContent .= "c.maxLength = '${maxl}';\n";
+            $this->jsContent .= "c.maxLength = '{$maxl}';\n";
         }
 
         $minl = $ctrl->datatype->getFacet('minLength');
         if ($minl !== null) {
-            $this->jsContent .= "c.minLength = '${minl}';\n";
+            $this->jsContent .= "c.minLength = '{$minl}';\n";
         }
 
         $this->commonJs($ctrl);
@@ -1045,12 +1045,12 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if ($maxl !== null) {
-            $this->jsContent .= "c.maxLength = '${maxl}';\n";
+            $this->jsContent .= "c.maxLength = '{$maxl}';\n";
         }
 
         $minl = $ctrl->datatype->getFacet('minLength');
         if ($minl !== null) {
-            $this->jsContent .= "c.minLength = '${minl}';\n";
+            $this->jsContent .= "c.minLength = '{$minl}';\n";
         }
         $re = $ctrl->datatype->getFacet('pattern');
         if ($re !== null) {

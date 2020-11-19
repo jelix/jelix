@@ -9,7 +9,6 @@
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
-
 class usersCtrl extends jController
 {
     public $pluginParams = array(

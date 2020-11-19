@@ -202,17 +202,17 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
                 if ($input->getOption('create-locales')) {
                     // replace special chars by dot
                     $locale_content .= 'form.'.$name.'='.htmlspecialchars(utf8_decode($property->comment))."\n";
-                    $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label locale='".$locale_base.$name."' />\n</${tag}>";
+                    $content .= "\n\n<{$tag} ref=\"{$name}\"{$attr}>\n\t<label locale='".$locale_base.$name."' />\n</{$tag}>";
                 } else {
                     // encoding special chars
-                    $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label>".htmlspecialchars($property->comment)."</label>\n</${tag}>";
+                    $content .= "\n\n<{$tag} ref=\"{$name}\"{$attr}>\n\t<label>".htmlspecialchars($property->comment)."</label>\n</{$tag}>";
                 }
             } else {
                 if ($input->getOption('create-locales')) {
                     $locale_content .= 'form.'.$name.'='.ucwords(str_replace('_', ' ', $name))."\n";
-                    $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label locale='".$locale_base.$name."' />\n</${tag}>";
+                    $content .= "\n\n<{$tag} ref=\"{$name}\"{$attr}>\n\t<label locale='".$locale_base.$name."' />\n</{$tag}>";
                 } else {
-                    $content .= "\n\n<${tag} ref=\"${name}\"${attr}>\n\t<label>".ucwords(str_replace('_', ' ', $name))."</label>\n</${tag}>";
+                    $content .= "\n\n<{$tag} ref=\"{$name}\"{$attr}>\n\t<label>".ucwords(str_replace('_', ' ', $name))."</label>\n</{$tag}>";
                 }
             }
         }

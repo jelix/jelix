@@ -77,10 +77,10 @@ class jDateTime
 
         if (!$this->_check()) {
             throw new jException(
-              'jelix~errors.datetime.invalid',
-              array($this->year, $this->month, $this->day,
-                  $this->hour, $this->minute, $this->second, )
-          );
+                'jelix~errors.datetime.invalid',
+                array($this->year, $this->month, $this->day,
+                    $this->hour, $this->minute, $this->second, )
+            );
         }
     }
 

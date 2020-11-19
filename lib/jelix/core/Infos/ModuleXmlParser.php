@@ -96,7 +96,7 @@ class ModuleXmlParser extends XmlParserAbstract
                             'minversion' => $info['minversion'],
                             'maxversion' => $info['maxversion'],
                             'version' => $info['version'],
-                            'optional' => false
+                            'optional' => false,
                         );
                     }
                 } else {
@@ -109,8 +109,6 @@ class ModuleXmlParser extends XmlParserAbstract
     }
 
     /**
-     * @param string     $type
-     * @param \XMLReader $xml
      *
      * @return array
      */
@@ -163,7 +161,7 @@ class ModuleXmlParser extends XmlParserAbstract
             'minversion' => $minversion,
             'maxversion' => $maxversion,
             'version' => $versionRange,
-            'optional'=> $optional
+            'optional' => $optional,
         );
     }
 

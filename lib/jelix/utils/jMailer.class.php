@@ -73,7 +73,8 @@ class jMailer extends PHPMailer
     protected $debugModeEnabled = false;
 
     /**
-     * Debug mode for receivers. If activated, debugReceivers should be filled
+     * Debug mode for receivers. If activated, debugReceivers should be filled.
+     *
      * @var bool
      */
     protected $debugReceiversEnabled = false;
@@ -177,7 +178,6 @@ class jMailer extends PHPMailer
         $this->filePath = jApp::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
-
 
         if ($this->debugModeEnabled) {
             $this->debugReceivers = $config->mailer['debugReceivers'];
@@ -467,19 +467,20 @@ class jMailer extends PHPMailer
         return rtrim($this->filePath, '/').'/mail.'.$this->getUserIp().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
     }
 
-    protected function getUserIp() {
+    protected function getUserIp()
+    {
         if (jApp::coord() && jApp::coord()->request) {
             return jApp::coord()->request->getIP();
         }
-        else if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']) {
+        if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']) {
             return $_SERVER['HTTP_CLIENT_IP'];
         }
-        else if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']) {
+        if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']) {
             return $_SERVER['REMOTE_ADDR'];
         }
+
         return 'no-ip';
     }
-
 
     public function setLanguage($lang_type = 'en', $lang_path = 'language/')
     {
@@ -572,7 +573,8 @@ class jMailer extends PHPMailer
         \jLog::log("jMailer error:\n".$this->ErrorInfo, 'error');
     }
 
-    public function debugOutputCallback($msg, $smtpDebugLevel) {
+    public function debugOutputCallback($msg, $smtpDebugLevel)
+    {
         \jLog::log("jMailer debug:\n".$msg);
     }
 }

@@ -174,7 +174,7 @@ class jFile
     {
         $path = str_replace(
             array('lib:', 'app:', 'var:', 'temp:', 'www:', 'log:', 'varconfig:',
-                'appconfig:', 'appsystem:'),
+                'appconfig:', 'appsystem:', ),
             array(LIB_PATH, jApp::appPath(), jApp::varPath(), jApp::tempPath(),
                 jApp::wwwPath(), jApp::logPath(), jApp::varConfigPath(),
                 jApp::appSystemPath(), jApp::appSystemPath(), ),

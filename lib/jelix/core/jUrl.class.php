@@ -233,7 +233,6 @@ class jUrl extends jUrlBase
                 }
             } else {
                 $domain = jServer::getServerURI();
-
             }
 
             if ($domain == '') {
@@ -375,13 +374,14 @@ class jUrl extends jUrlBase
 
     /**
      * tells if the given url is for the current application or if it matches
-     * given authorized domains
+     * given authorized domains.
      *
-     * @param string $url
+     * @param string   $url
      * @param string[] $authorizedDomains
-     * @return boolean
+     *
+     * @return bool
      */
-    public static function isUrlFromApp($url, $authorizedDomains=array())
+    public static function isUrlFromApp($url, $authorizedDomains = array())
     {
         $res = @parse_url($url);
         if (!$res) {
@@ -395,12 +395,14 @@ class jUrl extends jUrlBase
                 if (!in_array($res['host'], $authorizedDomains)) {
                     return false;
                 }
+
                 return true;
             }
         }
         $basePath = jApp::urlBasePath();
-        $path = (isset($res['path']) && $res['path'] != '' ? $res['path']: '/');
+        $path = (isset($res['path']) && $res['path'] != '' ? $res['path'] : '/');
         $path = rtrim($path, '/').'/';
-        return (strpos($path, $basePath) === 0);
+
+        return strpos($path, $basePath) === 0;
     }
 }

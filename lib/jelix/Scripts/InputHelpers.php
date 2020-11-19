@@ -50,7 +50,7 @@ class InputHelpers
      */
     public function askConfirmation($questionMessage, $defaultResponse = false)
     {
-        $questionMessage = "<question>${questionMessage}</question>";
+        $questionMessage = "<question>{$questionMessage}</question>";
         if (strpos($questionMessage, "\n") !== false) {
             $questionMessage .= "\n";
         }
@@ -79,12 +79,12 @@ class InputHelpers
         $autoCompleterValues = false,
         $validator = null
     ) {
-        $questionMessage = "<question>${questionMessage}</question>";
+        $questionMessage = "<question>{$questionMessage}</question>";
         if ($defaultResponse) {
             if (strpos($questionMessage, "\n") !== false) {
                 $questionMessage .= "\n";
             }
-            $questionMessage .= " (default is '${defaultResponse}')";
+            $questionMessage .= " (default is '{$defaultResponse}')";
         }
         $questionMessage .= '<inputstart> > </inputstart>';
         $question = new Question($questionMessage, $defaultResponse);
@@ -114,7 +114,7 @@ class InputHelpers
      */
     public function askSecretInformation($questionMessage, $defaultResponse = false)
     {
-        $questionMessage = "<question>${questionMessage}</question>";
+        $questionMessage = "<question>{$questionMessage}</question>";
         $questionMessage .= '<inputstart> > </inputstart>';
         $question = new Question($questionMessage, $defaultResponse);
         $question->setHidden(true);
@@ -141,7 +141,7 @@ class InputHelpers
         $multipleChoice = false,
         $errorMessage = '%s is invalid'
     ) {
-        $questionMessage = "<question>${questionMessage}</question>";
+        $questionMessage = "<question>{$questionMessage}</question>";
         if (is_array($defaultResponse)) {
             $defaultResponse = implode(',', $defaultResponse);
         }
@@ -149,7 +149,7 @@ class InputHelpers
             if (strpos($questionMessage, "\n") !== false) {
                 $questionMessage .= "\n";
             }
-            $questionMessage .= " (default is '${defaultResponse}')";
+            $questionMessage .= " (default is '{$defaultResponse}')";
         }
         $question = new ChoiceQuestion($questionMessage, $choice, $defaultResponse);
         $question->setErrorMessage($errorMessage);

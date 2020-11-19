@@ -104,10 +104,10 @@ class fileServer
                     fclose($f);
 
                     // change time of the file to the expiry time
-                    @touch("${fn}.tmp", time() + $ttl);
+                    @touch("{$fn}.tmp", time() + $ttl);
 
                     // rename the temporary file
-                    $r = @rename("${fn}.tmp", $fn);
+                    $r = @rename("{$fn}.tmp", $fn);
 
                     chmod($fn, jApp::config()->chmodFile);
                 }

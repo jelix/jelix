@@ -67,11 +67,12 @@ class jSelectorDao extends jSelectorModule
         $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/'.$this->_dirname.$this->resource.$this->_suffix);
+            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
             $resolutionCachePath = 'resolved/';
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_where = $resolutionCachePath;
+
                 return;
             }
             jFile::createDir(dirname($resolutionPath));
@@ -86,7 +87,8 @@ class jSelectorDao extends jSelectorModule
         }
     }
 
-    protected function findPath() {
+    protected function findPath()
+    {
 
         // check if the dao was redefined (overloaded) in var/
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);

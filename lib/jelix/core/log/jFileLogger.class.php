@@ -52,7 +52,7 @@ class jFileLogger implements jILogger
         try {
             $sel = new jSelectorLog($f);
             $file = $sel->getPath();
-            @error_log(date('Y-m-d H:i:s')."\t".$ip."\t${type}\t".$message->getFormatedMessage()."\n", 3, $file);
+            @error_log(date('Y-m-d H:i:s')."\t".$ip."\t{$type}\t".$message->getFormatedMessage()."\n", 3, $file);
             @chmod($file, jApp::config()->chmodFile);
         } catch (Exception $e) {
             $file = jApp::logPath('errors.log');

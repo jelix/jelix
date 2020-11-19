@@ -26,7 +26,7 @@ class legacysyslogLogger implements jILogger
         } else {
             $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         }
-        error_log(date('Y-m-d H:i:s')."\t".$ip."\t${type}\t".$message->getFormatedMessage(), 0);
+        error_log(date('Y-m-d H:i:s')."\t".$ip."\t{$type}\t".$message->getFormatedMessage(), 0);
     }
 
     public function output($response)

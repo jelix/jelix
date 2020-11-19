@@ -54,11 +54,13 @@ class jServer
     }
 
     /**
-     * return the application domain name
+     * return the application domain name.
+     *
      * @return string
+     *
      * @since 1.6.30
      */
-    static function getDomainName()
+    public static function getDomainName()
     {
         if (jApp::config()->domainName != '') {
             return jApp::config()->domainName;
@@ -78,30 +80,38 @@ class jServer
     }
 
     /**
-     * return the server URI of the application (protocol + server name + port)
-     * @return string the serveur uri
+     * return the server URI of the application (protocol + server name + port).
+     *
      * @since 1.6.30
+     *
+     * @param null|mixed $forceHttps
+     *
+     * @return string the serveur uri
      */
-    static function getServerURI($forceHttps = null)
+    public static function getServerURI($forceHttps = null)
     {
-        if ( ($forceHttps === null && self::isHttps()) || $forceHttps) {
+        if (($forceHttps === null && self::isHttps()) || $forceHttps) {
             $uri = 'https://';
-        }
-        else {
+        } else {
             $uri = 'http://';
         }
 
         $uri .= self::getDomainName();
         $uri .= self::getPort($forceHttps);
+
         return $uri;
     }
 
     /**
-     * return the server port of the application
-     * @return string the ":port" or empty string
+     * return the server port of the application.
+     *
      * @since 1.6.30
+     *
+     * @param null|mixed $forceHttps
+     *
+     * @return string the ":port" or empty string
      */
-    static function getPort($forceHttps = null)
+    public static function getPort($forceHttps = null)
     {
         $isHttps = self::isHttps();
 
@@ -132,30 +142,34 @@ class jServer
     }
 
     /**
-     *
      * @return bool true if the request is made with HTTPS
+     *
      * @todo support Forwarded and X-Forwared-Proto headers
+     *
      * @since 1.6.30
      */
-    static function isHttps()
+    public static function isHttps()
     {
         if (jApp::config()->urlengine['forceProxyProtocol'] == 'https') {
             if (trim(jApp::config()->forceHTTPSPort) === '') {
                 jApp::config()->forceHTTPSPort = true;
             }
+
             return true;
         }
 
-        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off';
     }
 
     /**
-     * return the protocol
-     * @return string  http:// or https://
+     * return the protocol.
+     *
+     * @return string http:// or https://
+     *
      * @since 1.6.30
      */
-    static function getProtocol()
+    public static function getProtocol()
     {
-        return (self::isHttps() ? 'https://':'http://');
+        return self::isHttps() ? 'https://' : 'http://';
     }
 }

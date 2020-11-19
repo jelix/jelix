@@ -89,7 +89,6 @@ class jHttpErrorException extends Exception
     }
 }
 
-
 /**
  * Jelix Exception to generate an HTTP 404 error.
  *
@@ -122,7 +121,6 @@ class jHttp401UnauthorizedException extends jHttpErrorException
     }
 }
 
-
 /**
  * Jelix Exception to generate an HTTP 403 error.
  *
@@ -139,12 +137,12 @@ class jHttp403ForbiddenException extends jHttpErrorException
     }
 }
 
-
 /**
- * Jelix Exception to generate an HTTP error. Deprecated class
+ * Jelix Exception to generate an HTTP error. Deprecated class.
  *
  * @package  jelix
  * @subpackage core
+ *
  * @deprecated
  */
 class jHttpResponseException extends jHttpErrorException

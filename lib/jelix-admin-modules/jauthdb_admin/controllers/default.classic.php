@@ -96,6 +96,7 @@ class defaultCtrl extends jController
         if ($this->form == '') {
             $rep->body->assign('MAIN', 'no form defined in the auth plugin');
             $rep->setHttpStatus(500, 'Internal Server Error');
+
             return $rep;
         }
 
@@ -203,7 +204,7 @@ class defaultCtrl extends jController
         $tpl->assign('otherLinks', array());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminGetViewInfo',
-            array('form'=>$form, 'tpl'=>$tpl, 'himself'=>false)
+            array('form' => $form, 'tpl' => $tpl, 'himself' => false)
         )->getResponse());
         $form->deactivate('password');
         $form->deactivate('password_confirm');
@@ -245,7 +246,8 @@ class defaultCtrl extends jController
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditCreate',
-            array('form' => $form, 'tpl' => $tpl))->getResponse());
+            array('form' => $form, 'tpl' => $tpl)
+        )->getResponse());
 
         $rep->body->assign('MAIN', $tpl->fetch('crud_edit'));
 
@@ -291,7 +293,7 @@ class defaultCtrl extends jController
             $form->saveAllFiles($this->uploadsDirectory);
 
             jAuth::saveNewUser($user);
-            jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user'=>$user));
+            jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user' => $user));
 
             jForms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
@@ -380,7 +382,8 @@ class defaultCtrl extends jController
         $tpl->assign('form', $form);
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditUpdate',
-            array('form' => $form, 'tpl' => $tpl, 'himself' => false))->getResponse());
+            array('form' => $form, 'tpl' => $tpl, 'himself' => false)
+        )->getResponse());
         $form->deactivate('password'); //for security
         $form->deactivate('password_confirm');
         $form->setReadOnly('login');

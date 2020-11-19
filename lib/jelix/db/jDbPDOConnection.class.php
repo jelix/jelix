@@ -136,7 +136,8 @@ class jDbPDOConnection extends PDO
         return jApp::varPath('db/sqlite/'.$path);
     }
 
-    public function getProfileName() {
+    public function getProfileName()
+    {
         return $this->profile['_name'];
     }
 
@@ -258,11 +259,13 @@ class jDbPDOConnection extends PDO
         return 'SELECT TOP '.$limitCount.' * FROM ('.$queryString.') AS outer_tbl '.$orderby;
     }
 
-    public function prepare($query, $driverOptions = []) {
+    public function prepare($query, $driverOptions = array())
+    {
         $result = parent::prepare($query, $driverOptions);
         if ($result) {
             $result->setFetchMode(\PDO::FETCH_OBJ);
         }
+
         return $result;
     }
 

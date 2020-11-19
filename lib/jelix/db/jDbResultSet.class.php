@@ -258,7 +258,7 @@ abstract class jDbResultSet implements Iterator
     {
         $this->_currentRecord = $this->fetch();
         if ($this->_currentRecord) {
-            $this->_recordIndex++;
+            ++$this->_recordIndex;
         }
     }
 

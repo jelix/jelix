@@ -58,7 +58,7 @@ class EntryPointPreConfigurator
             return call_user_func_array(array($this->entryPoint, $functionName), $arguments);
         }
 
-        throw new \ErrorException("Unknown method ${functionName} on ".__CLASS__);
+        throw new \ErrorException("Unknown method {$functionName} on ".__CLASS__);
     }
 
     /**

@@ -23,7 +23,7 @@ class jacl2dbListener extends jEventListener
     /**
      * Called when a user is created : set up default rights on this user.
      *
-     * @param jEvent $event   the event
+     * @param jEvent $event the event
      */
     public function onAuthNewUser($event)
     {
@@ -36,7 +36,7 @@ class jacl2dbListener extends jEventListener
     /**
      * Called when a user has been removed : delete rights about this user.
      *
-     * @param jEvent $event   the event
+     * @param jEvent $event the event
      */
     public function onAuthRemoveUser($event)
     {

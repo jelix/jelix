@@ -95,7 +95,6 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $ini = $helpers->getProfilesIni();
         foreach ($helpers->getEntryPointsList() as $entryPoint) {
-
             $this->migrateConfig($entryPoint->getConfigIni()['localentrypoint'], true);
 
             foreach ($ini->getSectionList() as $section) {
@@ -125,15 +124,14 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
         }
     }
 
-
-
     /**
      * @param \Jelix\IniFile\IniReaderInterface $ini
+     * @param mixed                             $forLocal
      */
-    protected function migrateConfig($ini, $forLocal=false) {
-
-        if (! $ini instanceof \Jelix\IniFile\IniModifierInterface) {
-            echo "ERROR ".$ini->getFileName()." not allowed to be writable by the Jelix configurator\n";
+    protected function migrateConfig($ini, $forLocal = false)
+    {
+        if (!$ini instanceof \Jelix\IniFile\IniModifierInterface) {
+            echo 'ERROR '.$ini->getFileName()." not allowed to be writable by the Jelix configurator\n";
         }
 
         $val = $ini->getValue('notfoundAct', 'urlengine');

@@ -180,18 +180,22 @@ class jInstallerEntryPoint
     }
 
     /**
-     * Give only the content of mainconfig.ini.php
+     * Give only the content of mainconfig.ini.php.
+     *
      * @return jIniFileModifier
      */
-    function getSingleMainConfigIni() {
+    public function getSingleMainConfigIni()
+    {
         return $this->localConfigIni->getMaster()->getMaster();
     }
 
     /**
-     * Give only the content of localconfig.ini.php
+     * Give only the content of localconfig.ini.php.
+     *
      * @return jIniFileModifier
      */
-    function getSingleLocalConfigIni() {
+    public function getSingleLocalConfigIni()
+    {
         return $this->localConfigIni->getMaster();
     }
 }

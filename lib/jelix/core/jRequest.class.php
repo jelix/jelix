@@ -407,7 +407,6 @@ abstract class jRequest
         return jServer::getServerURI($forceHttps);
     }
 
-
     /**
      * return the server port of the application.
      *

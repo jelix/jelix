@@ -187,7 +187,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         }
 
         if ($output->isVerbose()) {
-            $output->writeln("Create directories and files at ${appPath}");
+            $output->writeln("Create directories and files at {$appPath}");
         }
         $param = $this->_createSkeleton($appPath, $appName, $wwwpath, $input);
 
@@ -282,10 +282,9 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
     }
 
     /**
-     * @param string         $appPath absolute path to the new application directory
-     * @param string         $appName
-     * @param string         $wwwpath
-     * @param InputInterface $input
+     * @param string $appPath absolute path to the new application directory
+     * @param string $appName
+     * @param string $wwwpath
      *
      * @return array list of relative path of some directories for the application
      */

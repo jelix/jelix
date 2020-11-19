@@ -52,7 +52,7 @@ class jAcl2
                 throw new jException('jacl2~errors.driver.notfound', $db);
             }
 
-            /** @var jIAcl2Driver|jIAcl2Driver2 */
+            // @var jIAcl2Driver|jIAcl2Driver2
             self::$driver = jApp::loadPlugin($db, 'acl2', '.acl2.php', $config->acl2['driver'].'Acl2Driver', $config->acl2);
             if (is_null(self::$driver)) {
                 throw new jException('jacl2~errors.driver.notfound', $db);
@@ -65,7 +65,7 @@ class jAcl2
     /**
      * call this method to know if the current user has the right with the given value.
      *
-     * @param string $right  the key of the right to check
+     * @param string $right    the key of the right to check
      * @param string $resource the id of a resource
      *
      * @return bool true if yes
@@ -77,21 +77,24 @@ class jAcl2
         return $dr->getRight($right, $resource);
     }
 
-
     /**
-     * call this method to know if the given user has the right with the given value
+     * call this method to know if the given user has the right with the given value.
      *
-     * @param string $login the user login. Can be empty/null if anonymous
-     * @param string $subject the key of the subject to check
+     * @param string $login    the user login. Can be empty/null if anonymous
+     * @param string $subject  the key of the subject to check
      * @param string $resource the id of a resource
-     * @return boolean true if yes
+     *
+     * @return bool true if yes
+     *
      * @since 1.6.29
      */
-    public static function checkByUser($login, $subject, $resource=null){
+    public static function checkByUser($login, $subject, $resource = null)
+    {
         $dr = self::_getDriver();
         if (!($dr instanceof jIAcl2Driver2)) {
-            throw new Exception("the jacl2 driver does not implement the jIAcl2Driver2 interface");
+            throw new Exception('the jacl2 driver does not implement the jIAcl2Driver2 interface');
         }
+
         return $dr->getRightByUser($login, $subject, $resource);
     }
 

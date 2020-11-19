@@ -198,12 +198,12 @@ class Jelix17
             $dest = \jApp::appSystemPath($configFile);
             if (!file_exists($dest)) {
                 if (!file_exists(\jApp::varConfigPath($configFile))) {
-                    $this->reporter->message("Config file var/config/${configFile} indicated in project.xml, does not exist", 'warning');
+                    $this->reporter->message("Config file var/config/{$configFile} indicated in project.xml, does not exist", 'warning');
 
                     continue;
                 }
 
-                $this->reporter->message("Move var/config/${configFile} to app/system/", 'notice');
+                $this->reporter->message("Move var/config/{$configFile} to app/system/", 'notice');
                 \jFile::createDir(dirname($dest));
                 rename(\jApp::varConfigPath($configFile), $dest);
             }
@@ -218,7 +218,7 @@ class Jelix17
             $urlFile = $epConfigIni->getValue('significantFile', 'urlengine');
             if ($urlFile != '') {
                 if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-                    $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
+                    $this->reporter->message("Move var/config/{$urlFile} to app/system/", 'notice');
                     rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
                 }
             }
@@ -295,6 +295,7 @@ class Jelix17
             if (!file_exists($confPath)) {
                 if (!isset($this->allPluginConfigs[$conf])) {
                     $this->reporter->message('plugin conf file '.$conf.' does not exist', 'Warning');
+
                     continue;
                 }
             }
@@ -391,11 +392,9 @@ class Jelix17
                         $modules[$module] = array();
                     }
                     if ($param == 'version') {
-                        $modules[$module][$param] = (string)$value;
-                    }
-                    else {
+                        $modules[$module][$param] = (string) $value;
+                    } else {
                         $modules[$module][$param] = $value;
-
                     }
                 }
 
@@ -467,8 +466,7 @@ class Jelix17
     }
 
     /**
-     * @param IniModifier $mainConfigIni
-     * @param array       $entrypoints
+     * @param array $entrypoints
      *
      * @throws \Exception
      */
@@ -480,7 +478,7 @@ class Jelix17
             $urlFile = 'urls.xml';
         }
         if (!file_exists(\jApp::appSystemPath($urlFile)) && file_exists(\jApp::varConfigPath($urlFile))) {
-            $this->reporter->message("Move var/config/${urlFile} to app/system/", 'notice');
+            $this->reporter->message("Move var/config/{$urlFile} to app/system/", 'notice');
             rename(\jApp::varConfigPath($urlFile), \jApp::appSystemPath($urlFile));
         }
 
@@ -607,7 +605,8 @@ class Jelix17
         }
     }
 
-    protected function migrate173(IniModifier $mainConfigIni) {
+    protected function migrate173(IniModifier $mainConfigIni)
+    {
         $this->migrateConfig173($mainConfigIni);
         $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'));
         foreach ($frameworkIni->getSectionList() as $section) {
@@ -626,7 +625,8 @@ class Jelix17
     /**
      * @param \Jelix\IniFile\IniReaderInterface $ini
      */
-    protected function migrateConfig173($ini) {
+    protected function migrateConfig173($ini)
+    {
         $val = $ini->getValue('notfoundAct', 'urlengine');
         if ($val !== null) {
             $ini->removeValue('notfoundAct', 'urlengine');

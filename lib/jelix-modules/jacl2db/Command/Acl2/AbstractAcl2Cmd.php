@@ -29,7 +29,7 @@ abstract class AbstractAcl2Cmd extends \Jelix\Scripts\ModuleCommandAbstract
         }
 
         $cnx = \jDb::getConnection('jacl2_profile');
-        $sql = 'SELECT id_aclgrp FROM '.$cnx->prefixTable('jacl2_group')." WHERE ${c} ";
+        $sql = 'SELECT id_aclgrp FROM '.$cnx->prefixTable('jacl2_group')." WHERE {$c} ";
         $sql .= ' id_aclgrp = '.$cnx->quote($param);
         $rs = $cnx->query($sql);
         if ($rec = $rs->fetch()) {

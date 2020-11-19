@@ -121,8 +121,17 @@ class jAcl2DbAdminUIManager
         $rolegroups_localized = $sbjgroups_localized;
         $rightsGroupsLabels = $sbjgroups_localized;
 
-        return compact('groups', 'rights', 'rightsProperties',  'rightsGroupsLabels', 'rightsWithResources',
-            /* @deprecated: */ 'subjects', 'roles', 'sbjgroups_localized', 'rolegroups_localized'
+        return compact(
+            'groups',
+            'rights',
+            'rightsProperties',
+            'rightsGroupsLabels',
+            'rightsWithResources',
+            /* @deprecated: */ 
+            'subjects',
+            'roles',
+            'sbjgroups_localized',
+            'rolegroups_localized'
         );
     }
 
@@ -161,8 +170,14 @@ class jAcl2DbAdminUIManager
         $roles_localized = $subjects_localized;
         $rightsLabels = $subjects_localized;
 
-        return compact('rightsLabels', 'rightsWithResources', 'hasRightsOnResources',
-            /* @deprecated: */ 'roles_localized', 'subjects_localized');
+        return compact(
+            'rightsLabels',
+            'rightsWithResources',
+            'hasRightsOnResources',
+            /* @deprecated: */ 
+            'roles_localized',
+            'subjects_localized'
+        );
     }
 
     /**
@@ -192,7 +207,7 @@ class jAcl2DbAdminUIManager
 
     /**
      * @param string $groupid
-     * @param array  $rights   array( <right> => (true (remove), 'on'(remove) or '' (not touch))
+     * @param array  $rights  array( <right> => (true (remove), 'on'(remove) or '' (not touch))
      *                        true or 'on' means 'to remove'
      */
     public function removeGroupRightsWithResources($groupid, $rights)
@@ -369,7 +384,7 @@ class jAcl2DbAdminUIManager
             'rightsGroupsLabels',
             'rightsWithResources',
             'hasRightsOnResources',
-            /** @deprecated */
+            // @deprecated
             'subjects',
             'roles',
             'sbjgroups_localized',
@@ -424,8 +439,14 @@ class jAcl2DbAdminUIManager
         $roles_localized = $subjects_localized;
         $rightsLabels = $subjects_localized;
 
-        return compact('user', 'rightsLabels', 'rightsWithResources', 'hasRightsOnResources',
-            /** @deprecated  */'subjects_localized', 'roles_localized'
+        return compact(
+            'user',
+            'rightsLabels',
+            'rightsWithResources',
+            'hasRightsOnResources',
+            /* @deprecated  */
+            'subjects_localized',
+            'roles_localized'
         );
     }
 

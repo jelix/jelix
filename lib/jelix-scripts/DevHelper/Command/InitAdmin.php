@@ -82,13 +82,11 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         }
         $this->selectedEntryPointId = $entrypoint;
 
-
         return $this->_execute($input, $output);
     }
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
-
         $doNotInstallJauth = $input->getOption('no-jauth');
         $doNotInstallJauthdb = $input->getOption('no-jauthdb');
         $doNotInstallJacl2db = $input->getOption('no-acl2db');
@@ -96,7 +94,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $doInstallJprefAdmin = $input->getOption('install-jpref-admin');
 
         if ($doInstallJprefAdmin && $doNotInstallJacl2db) {
-            throw new \Exception("module jpref-admin needs jAcl2db");
+            throw new \Exception('module jpref-admin needs jAcl2db');
         }
 
         $entrypoint = $this->selectedEntryPointId;
@@ -161,11 +159,9 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $xmlEp->addUrlAction('/', 'master_admin', 'default:index', null, null, array('default' => true));
         $xmlEp->addUrlModule('', 'master_admin');
 
-
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose() ? 'notice' : 'warning'), 'Configuration');
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
-
 
         $jcommunity = $globalSetup->getModuleComponent('jcommunity');
         if ($jcommunity && $jcommunity->isEnabled()) {

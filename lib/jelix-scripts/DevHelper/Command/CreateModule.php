@@ -158,7 +158,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             $this->createDir($path.'locales/fr_FR/');
             $this->createDir($path.'install/');
             if ($this->verbose()) {
-                $output->writeln("Sub directories have been created in the new module ${module}.");
+                $output->writeln("Sub directories have been created in the new module {$module}.");
             }
             $this->createFile($path.'install/install.php', 'module/install.tpl', $param);
             $this->createFile($path.'install/configure.php', 'module/configure.tpl', $param);
@@ -180,7 +180,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
                 $xmlEp->addUrlAction('/', $module, 'default:index', null, null, array('default' => true));
                 $xmlEp->addUrlModule('', $module);
                 if ($this->verbose()) {
-                    $output->writeln("The new module ${module} becomes the default module");
+                    $output->writeln("The new module {$module} becomes the default module");
                 }
             } elseif ($this->verbose()) {
                 $output->writeln('No default entry point found: the new module cannot be the default module');

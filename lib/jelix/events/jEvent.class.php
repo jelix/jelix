@@ -113,6 +113,7 @@ class jEvent
      * return all parameters.
      *
      * @return array parameters
+     *
      * @since 1.6.30
      */
     public function getParameters()

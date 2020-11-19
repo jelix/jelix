@@ -21,8 +21,6 @@ class Resolver
     }
 
     /**
-     * @param Item $item
-     *
      * @throws Exception
      */
     public function addItem(Item $item)
@@ -140,7 +138,6 @@ class Resolver
     /**
      * check dependencies of an item.
      *
-     * @param Item   $item
      * @param string $epId
      */
     protected function _checkDependencies(Item $item)
@@ -187,7 +184,7 @@ class Resolver
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
+                        "Version of item '".$depItemName."' ({$version}) does not match required version by item ".$item->getName()." ({$depItemVersion})",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem
@@ -210,7 +207,7 @@ class Resolver
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
+                        "Version of item '".$depItemName."' ({$version}) does not match required version by item ".$item->getName()." ({$depItemVersion})",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem
@@ -222,7 +219,7 @@ class Resolver
                 $version = $depItem->getNextVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
                     throw new ItemException(
-                        "Version of item '".$depItemName."' ($version) does not match required version by item ".$item->getName(). " ($depItemVersion)",
+                        "Version of item '".$depItemName."' ({$version}) does not match required version by item ".$item->getName()." ({$depItemVersion})",
                         $item,
                         ItemException::ERROR_BAD_ITEM_VERSION,
                         $depItem
@@ -333,7 +330,6 @@ class Resolver
      *
      * Find all items having the given item as dependency, and remove them
      *
-     * @param Item   $item
      * @param string $epId
      */
     protected function _checkReverseDependencies(Item $item)
