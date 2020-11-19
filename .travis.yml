@@ -1,5 +1,5 @@
-dist: trusty
-sudo: required
+dist: bionic
+os: linux
 language: php
 php:
   - '5.6'
@@ -24,12 +24,12 @@ cache:
     directories:
     - $HOME/.composer/cache
 
-matrix:
+jobs:
     fast_finish: true
 
 services:
    - memcached
-   - redis-server
+   - redis
    - mysql
    - postgresql
 
