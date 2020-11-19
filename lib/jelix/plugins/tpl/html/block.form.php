@@ -1,17 +1,24 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jtpl_plugin
-* @author      Laurent Jouanneau
-* @contributor Julien Issler, Bastien Jaillot, Dominique Papin
-* @copyright   2006-2012 Laurent Jouanneau
-* @copyright   2008 Julien Issler, 2008 Bastien Jaillot, 2008 Dominique Papin
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jtpl_plugin
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Julien Issler, Bastien Jaillot, Dominique Papin
+ *
+ * @copyright   2006-2012 Laurent Jouanneau
+ * @copyright   2008 Julien Issler, 2008 Bastien Jaillot, 2008 Dominique Papin
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $compiler
+ * @param mixed $begin
+ * @param mixed $param
+ */
 
 /**
- * a block to display an html form, with data from a jforms
+ * a block to display an html form, with data from a jforms.
  *
  * usage : {form $theformobject,'submit_action', $submit_action_params} here form content {/form}
  *
@@ -25,19 +32,20 @@
  *  </ul>
  *
  * @param jTplCompiler $compiler the template compiler
- * @param boolean $begin true if it is the begin of block, else false
- * @param array $param 0=>form object
- *                     1=>selector of submit action
- *                     2=>array of parameters for submit action
- *                     3=>name of the builder : default is html
- *                     4=>array of options for the builder
+ * @param bool         $begin    true if it is the begin of block, else false
+ * @param array        $param    0=>form object
+ *                               1=>selector of submit action
+ *                               2=>array of parameters for submit action
+ *                               3=>name of the builder : default is html
+ *                               4=>array of options for the builder
+ *
  * @return string the php code corresponding to the begin or end of the block
+ *
  * @see jForms
  */
-function jtpl_block_html_form($compiler, $begin, $param=array())
+function jtpl_block_html_form($compiler, $begin, $param = array())
 {
-
-    if(!$begin){
+    if (!$begin) {
         return '$t->_privateVars[\'__formbuilder\']->outputFooter();
 unset($t->_privateVars[\'__form\']);
 unset($t->_privateVars[\'__formbuilder\']);
@@ -45,23 +53,26 @@ unset($t->_privateVars[\'__formViewMode\']);
 unset($t->_privateVars[\'__displayed_ctrl\']);';
     }
 
-    if(count($param) < 2 || count($param) > 5){
-        $compiler->doError2('errors.tplplugin.block.bad.argument.number','form','2-5');
+    if (count($param) < 2 || count($param) > 5) {
+        $compiler->doError2('errors.tplplugin.block.bad.argument.number', 'form', '2-5');
+
         return '';
     }
-    if(count($param) == 2){
+    if (count($param) == 2) {
         $param[2] = 'array()';
     }
 
-    if(isset($param[3]) && trim($param[3]) != '""'  && trim($param[3]) != "''")
+    if (isset($param[3]) && trim($param[3]) != '""' && trim($param[3]) != "''") {
         $builder = $param[3];
-    else
+    } else {
         $builder = "'".jApp::config()->tplplugins['defaultJformsBuilder']."'";
+    }
 
-    if(isset($param[4]))
+    if (isset($param[4])) {
         $options = $param[4];
-    else
-        $options = "array()";
+    } else {
+        $options = 'array()';
+    }
 
     $content = ' $t->_privateVars[\'__form\'] = '.$param[0].';
 $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder('.$builder.');

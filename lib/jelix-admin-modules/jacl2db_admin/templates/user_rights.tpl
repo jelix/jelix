@@ -45,13 +45,13 @@
 {assign $currentsbjgroup = '---'}
 {foreach $rights as $subject=>$right}
 
-{if $subjects[$subject]['grp'] && $currentsbjgroup != $subjects[$subject]['grp']}
+{if $rightsProperties[$subject]['grp'] && $currentsbjgroup != $rightsProperties[$subject]['grp']}
 <tr class="{cycle array('odd','even')}">
-    <th colspan="{=$nbgrp*2+4}"><h3>{$sbjgroups_localized[$subjects[$subject]['grp']]}</h3></th>
-</tr>{assign $currentsbjgroup = $subjects[$subject]['grp']}
+    <th colspan="{=$nbgrp*2+4}"><h3>{$rightsGroupsLabels[$rightsProperties[$subject]['grp']]}</h3></th>
+</tr>{assign $currentsbjgroup = $rightsProperties[$subject]['grp']}
 {/if}
 <tr class="{cycle array('odd','even')}">
-    <th><label for="{$subject|eschtml}">{$subjects[$subject]['label']|eschtml}</label></th>
+    <th><label for="{$subject|eschtml}">{$rightsProperties[$subject]['label']|eschtml}</label></th>
     {assign $resultr=''}
     {foreach $right as $group=>$r}
         {if $hisgroup && $group == $hisgroup->id_aclgrp}

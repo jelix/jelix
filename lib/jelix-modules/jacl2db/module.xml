@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jacl2db@modules.jelix.org" name="jacl2db" createdate="2008-04-06">
-        <version stability="stable" date="2012-10-16">1.5.2</version>
+        <version date="2020-08-17 22:31">1.7.6-pre</version>
         <label lang="en_US">jAcl2Db</label>
         <description lang="en_US">ressources for the jacl2 db plugin</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
-        <copyright>2008-2012 Laurent Jouanneau and other contributors</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
+        <copyright>2008-2018 Laurent Jouanneau and other contributors</copyright>
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="1.4pre" maxversion="__LIB_VERSION_MAX__"/>
-        <module name="jacl2" />
+        <jelix minversion="1.7.0-beta.4" maxversion="1.7.6"/>
+        <module name="jacl2"/>
     </dependencies>
     <autoload>
-        <classPattern pattern="/^jAcl2Db/" dir="classes/" suffix=".class.php" />
+        <psr4 namespace="\Jelix\Acl2Db" dir="./"/>
+        <classPattern pattern="/^jAcl2Db/" dir="classes/" suffix=".class.php"/>
     </autoload>
 </module>

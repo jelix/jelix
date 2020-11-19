@@ -1,14 +1,13 @@
 cd testapp
-* project.xml
+  project.xml
   .htaccess
   application.init.php
-  cmd.php
+  console.php
+  dev.php
   composer.json
   README.md
 
-cd testapp/app/
-  .htaccess
-cd testapp/app/config
+cd testapp/app/system
   auth.coord.ini.php
   auth_class.coord.ini.php
   auth_ldap.coord.ini.php.dist
@@ -20,88 +19,42 @@ cd testapp/app/config
   urls.xml
   urls_rest.xml
 
-cd testapp/app/config/index
+cd testapp/app/system/index
   config.ini.php
-cd testapp/app/config/rest
+cd testapp/app/system/rest
   config.ini.php
-cd testapp/app/config/xmlrpc
+cd testapp/app/system/xmlrpc
   config.ini.php
-cd testapp/app/config/jsonrpc
+cd testapp/app/system/jsonrpc
   config.ini.php
-cd testapp/app/config/cmdline
+cd testapp/app/system/cmdline
   config.ini.php
-cd testapp/app/config/soap
+cd testapp/app/system/soap
   config.ini.php
-cd testapp/app/config/urlsfiles
-  url_maintests.xml
-  url_dedicatedmodule.xml
-  url_defaultaction.xml
-  url_empty.xml
-  url_nodefaultep.xml
-  url_twodefaultep.xml
-cd testapp/app/themes/default/testapp
-  hello2.tpl
-cd testapp/app/locales/fr_FR/jelix_tests/locales/
-  newoverload.UTF-8.properties
-  overload.UTF-8.properties
-
-
-
+cd testapp/app/system/urlsfiles
+  __ALL__
+cd testapp/app/themes/
+  __ALL_RECURSIVELY__
 
 cd testapp/plugins
-  .htaccess
-cd testapp/plugins/tpl/common/
-  meta.testinc.php
-cd testapp/plugins/formwidget/textarea_as_input_html
-  textarea_as_input_html.formwidget.php
+  __ALL_RECURSIVELY__
 cd testapp/app/responses
-  myHtmlResponse.class.php
+  __ALL__
 cd testapp/vagrant
-  common_provision.sh
-  create_pgsql_db.sh
-  reset_testapp.sh
-  system.sh
-  vhost
-  xdebug.ini
-cd testapp/vagrant/php5.6
-  provision.sh
-  Vagrantfile
-cd testapp/vagrant/php7.0
-  provision.sh
-  Vagrantfile
-cd testapp/vagrant/php7.1
-  provision.sh
-  Vagrantfile
+  __ALL_RECURSIVELY__
 
 cd testapp/www
-  unittest.css
-  jsonrpc.php
-  .htaccess
-  xmlrpc.php
-  index.php
-  soap.php
-  testnews.php
-  check.php
-  robots.txt
-  install.php
-  rest.php
-  minify.php
+  __ALL__
 cd testapp/www/foo
   bar.php
 cd testapp/www/design
   screen.css
 cd testapp/www/tests
-  testinc1.js
-  testinc2.js
+  __ALL__
 cd testapp/www/qunit
-  testsuite.css
-  testrunner.js
-cd testapp/www/testminify/css/
-  style1.css
-  style2.css
-cd testapp/www/testminify/js/
-  s1.js
-  s2.js
+  __ALL__
+cd testapp/www/testminify/
+  __ALL_RECURSIVELY__
 cd testapp/www/imagemodifier
   logo_test.png
 cd testapp/www/cache/images/
@@ -110,360 +63,75 @@ cd testapp/modules
   .htaccess
 
 cd testapp/install
-  installer.php
-  wizard.ini.php
-cd testapp/install/wizard
-  wiz_layout.en.php
+  __ALL_RECURSIVELY__
 
 cd testapp/scripts
     cmdline.php
 
 cd testapp/modules/testapp
-*  module.xml
-   urls.xml
-   urls2.xml
-cd testapp/modules/testapp/classes/geo
-   regions.class.php
-cd testapp/modules/testapp/locales/en_US
-  parameter.ISO-8859-1.properties
-cd testapp/modules/testapp/locales/fr_FR
-  parameter.ISO-8859-1.properties
-cd testapp/modules/testapp/daos
-  config.dao.xml
-  testnews.dao.xml
-  products.dao.xml
-  productsalias.dao.xml
-  towns.dao.xml
-cd testapp/modules/testapp/classes
-  soapstructs.php
-cd testapp/modules/testapp/controllers
-  main.classic.php
-  forms.classic.php
-  sampleform.classic.php
-  syndication.classic.php
-  samplecrud.classic.php
-  default.cmdline.php
-  clientSoap.classic.php
-  soap.soap.php
-cd testapp/modules/testapp/templates
-  hello.tpl
-  hello2.tpl
-  main.tpl
-  error.tpl
-  testzone.tpl
-  sommaire.tpl
-  sampleform.tpl
-  sampleformfull.tpl
-  sampleformresult.tpl
-  sampleformcontainer.tpl
-  sampleajaxform.tpl
-  forms_edit.tpl
-  forms_liste.tpl
-  forms_view.tpl
-  soap.tpl
-  testminify.tpl
-  loremipsum.tpl
-cd testapp/modules/testapp/zones
-  test.zone.php
-  sommaire.zone.php
-cd testapp/modules/testapp/forms
-  sample.form.xml
-  sample2.form.xml
-  products.form.xml
-cd testapp/modules/testapp/install
-  base.mysql.sql
-  base.pgsql.sql
-  install.php
-  upgrade_urlengine.php
-  towns.mysql.sql
-  upgrade_createtowns.php
-cd testapp/modules/testapp/tests/
-  test1.pu.php
+  __ALL_RECURSIVELY__
 
 cd testapp/modules/jelix_tests
-  events.xml
-*  module.xml
-cd testapp/modules/jelix_tests/autoloadtest
-  autoloadtestclass.php
-  myautoloader.php
-cd testapp/modules/jelix_tests/autoloadtest/barns
-  foo.class.php
-cd testapp/modules/jelix_tests/autoloadtest/incpath
-  includedclass.php
-cd testapp/modules/jelix_tests/autoloadtest/jelixTests/foo
-  bar.php
-cd testapp/modules/jelix_tests/autoloadtest/withpattern
-  myalclassFoo.cl.php
-
-cd testapp/modules/jelix_tests/classes
-  urlsig.urlhandler.php
-  urlsigwiki.urlhandler.php
-  testevents.listener.php
-  testdaoevents.listener.php
-  test.iface.php
-  myclass.class.php
-  mydatasource.class.php
-  testAuthDriver.class.php
-  testCache.class.php
-cd testapp/modules/jelix_tests/classes/tests
-  foo.class.php
-  foo.iface.php
-  bind.class.php
-cd testapp/modules/jelix_tests/install
-  upgrade_to_1.2b1pre.1303_bar.php
-  upgrade_to_1.2b1pre.1304_foo.php
-  upgrade_to_1.2rc2-dev.1702_labels1.php
-  upgrade_to_1.2RC2-dev.1702.mysql.sql
-  upgrade_to_1.2RC2-dev.1702.pgsql.sql
-  upgrade_to_1.2rc2-dev.1707_testdaoset.php
-  install.php
-  install.mysql.sql
-  install.pgsql.sql
-  upgrade_to_1.3RC1.2079_productdate.php
-  upgrade_to_1.3RC2.2100_jacl2db.php
-cd testapp/modules/jelix_tests/locales/
-  test_A.properties
-  test_B.properties
-  test_C.properties
-  test_D.properties
-  test_E.properties
-  test_F.properties
-  test_G.properties
-  test_H.properties
-  test_I.properties
-  test_J.properties
-cd testapp/modules/jelix_tests/locales/fr_FR
-  newoverload.UTF-8.properties
-  overload.UTF-8.properties
-  testunit.ISO-8859-1.properties
-  tests1.UTF-8.properties
-  tests2.UTF-8.properties
-cd testapp/modules/jelix_tests/locales/fr_CA
-  tests1.UTF-8.properties
-cd testapp/modules/jelix_tests/locales/en_US
-  testunit.ISO-8859-1.properties
-  tests1.UTF-8.properties
-cd testapp/modules/jelix_tests/locales/en_EN
-  tests1.UTF-8.properties
-  tests3.UTF-8.properties
-  tests4.UTF-8.properties
-cd testapp/modules/jelix_tests/templates
-  jstest_include.tpl
-  jstest_jforms.tpl
-  jstest_jsonrpc2.tpl
-  menu.tpl
-  test_include.tpl
-  test_include_included.tpl
-  test_include_recursive.tpl
-  test_include_recursive2.tpl
-  test_plugin_counter_init_allarg_noexeption.tpl
-  test_plugin_counter_init_exeption.tpl
-  test_plugin_counter_init_noexeption.tpl
-  test_plugin_counter_reset_all.tpl
-  test_plugin_counter_reset.tpl
-  test_plugin_counter.tpl
-  test_plugin_jrooturl.tpl
-  test_plugin_jurl.tpl
-  test_plugin_pagelinks.tpl
-  test_truncate_html.tpl
-  test_tpl_fetch.tpl
-  test_tpl_meta_call.tpl
-  test_zone_cache.tpl
-  test_zone_cache_meta.tpl
-  test_zone_cache_meta_deep2.tpl
-cd testapp/modules/jelix_tests/controllers
-  urlsig.classic.php
-  jstests.classic.php
-  jstests.jsonrpc.php
-  myrest.classic.php
-cd testapp/modules/jelix_tests/daos
-  products.dao.xml
-  products_events.dao.xml
-  product_tags.dao.xml
-  description.dao.xml
-  labels.dao.xml
-  labels1.dao.xml
-  post.daorecord.php
-  postBlog.daorecord.php
-  postTracker.daorecord.php
-  post_blog.dao.xml
-  post_blog2.dao.xml
-  post_tracker.dao.xml
-  posts.dao.xml
-cd testapp/modules/jelix_tests/forms
-  product.form.xml
-  label.form.xml
-cd testapp/modules/jelix_tests/tests/
-  test1.pu.php
-  test2.unit.pu.php
-cd testapp/modules/jelix_tests/zones/
-  test_cache.zone.php
-  test_cache_meta.zone.php
-  test_cache_meta_deep.zone.php
-  test_cache_meta_deep2.zone.php
+  __ALL_RECURSIVELY__
 
 cd testapp/modules/testurls/
-*  module.xml
-cd testapp/modules/testurls/classes/
-  urlhandlermodule.urlhandler.php
-cd testapp/modules/testurls/controllers/
-  urlsig.classic.php
+  __ALL_RECURSIVELY__
 
 cd testapp/modules/testinstall1
-*  module.xml
+   module.xml
 
 cd testapp/modules/testinstall2
-*  module.xml
-cd testapp/modules/testinstall2/install
-  install.php
-  upgrade_to_1.1.5_second.php
-  upgrade_to_1.1_first.php
-  upgrade_newupgraderfilename.php
-  upgrade_newupgraderfilenamedate.php
+  __ALL_RECURSIVELY__
 cd testapp/modules/testinstall3
-*  module.xml
+   __ALL_RECURSIVELY__
 
 cd testapp/modules/articles
-*  module.xml
-cd testapp/modules/articles/install
-  install.php
+  __ALL_RECURSIVELY__
 cd testapp/modules/news
-*  module.xml
+   module.xml
 
 cd testapp/tests-jelix/
   bootstrap.php
   phpunit.xml
-cd testapp/tests-jelix/casperjs
-  launch.sh
-  pre.js
-cd testapp/tests-jelix/casperjs/tests
-  configdao.js
-  hellopage.js
 cd testapp/tests-jelix/jelix/acl/
-  jacl_main_apiTest.php
-  jacl_managerTest.php
-  jacl_users_and_groupsTest.php
-  jacl2_main_apiTest.php
-  jacl2_main_apicacheTest.php
-  jacl2_main_api_pgsqlTest.php
-  jacl2_managerTest.php
-  jacl2_users_groupsTest.php
-  jacl2.lib.php
+  __ALL__
 cd testapp/tests-jelix/jelix/auth/
-  ldap_pluginTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/cache/
-  jcache.lib.php
-  jcache_dbTest.php
-  jcache_fileTest.php
-  jcache_memcacheTest.php
-  jcache_redisTest.php
-  jcache_redis2Test.php
-  jcache_redis_extTest.php
-  jcache_redis_ext2Test.php
-  httpcacheTest.php
-  jzone_cacheTest.php
-  jcacheTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/core/
-  jAppTest.php
-  autoloaderTest.php
-  cliControllerTest.php
-  configautoloaderTest.php
-  configTest.php
-  jAppContextTest.php
-  moduleAutoloadTest.php
-  jLocaleTest.php
-  jLocaleLangCodeTest.php
-  jLogTest.php
-  restcontrollerTest.php
-  requestTest.php
-  selectors_actionTest.php
-  selectors_moduleTest.php
-  urlsGenerationTest.php
-  urlsParsingTest.php
-  webassetsTest.php
+  __ALL_RECURSIVELY__
 cd testapp/tests-jelix/jelix/daos
-  jDaoImportTest.php
-  jdao_conditionsTest.php
-  jdao_eventsTest.php
-  jdao_factory_baseTest.php
-  jdao_main_apiTest.php
-  jdao_main_api_pdoTest.php
-  jdao_main_api.lib.php
-  jdao_parserTest.php
-  jdao_parser2Test.php
-  jdao_parser_updateTest.php
-  jdao_generatorTest.php
-  jdao_generator_selectTest.php
-  daotests.lib.php
+  __ALL__
 cd testapp/tests-jelix/jelix/db/
-  jDb_profilesTest.php
-  jDb_sqlite3Test.php
-  jdb_queriesTest.php
-  jdb_queries_with_pdoTest.php
-  jdb_queries_with_mysqliTest.php
-  jdb.lib.php
-  jdb_mysqliTest.php
-  jdb_parametersTest.php
-  jdb_pgsqlTest.php
-  jdbschema_mysqlTest.php
-  jdbtoolsTest.php
-  jdbtools_mysqlTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/events/
-  eventsTest.php
-
+  __ALL__
 cd testapp/tests-jelix/jelix/forms/
-  jforms_check_dataTest.php
-  jforms_compilerTest.php
-  jforms_compiler_1_1Test.php
-  jforms_datasourcesTest.php
-  jforms_htmlbuilderTest.php
-  jforms_htmlbuilder2Test.php
-  jforms_htmllightbuilderTest.php
-  jforms_htmllightbuilder2Test.php
-  jforms_init_from_requestTest.php
-  jforms_modified_controlsTest.php
-  jforms_newhtmlbuilderTest.php
-  jforms_newhtmlbuilder2Test.php
-  jforms_sessionTest.php
-  jforms_with_daoTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/installer/
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/
   __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/app/config/
-  __ALL__
+cd testapp/tests-jelix/jelix/installer/app1/app/
+  __ALL_RECURSIVELY__
 cd testapp/tests-jelix/jelix/installer/app1/modules/aaa
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/plugins
   __ALL__
 cd testapp/tests-jelix/jelix/installer/app1/var/config
-  __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/app/config/foo
-  __ALL__
-cd testapp/tests-jelix/jelix/installer/app1/app/config/index
-  __ALL__
+  __ALL_RECURSIVELY__
 cd testapp/tests-jelix/jelix/installer/app1/var/log
-  __ALL__
+  .dummy
 cd testapp/tests-jelix/jelix/kvdb/
-  jkvdb_dbaTest.php
-  jkvdb_dbTest.php
-  jkvdb_fileTest.php
-  jkvdb_memcacheTest.php
-  jkvdb_redisTest.php
-  jkvdb_redis2Test.php
-  jkvdb_redis_extTest.php
-  jkvdb_redis_ext2Test.php
-  jkvdb.lib.php
-
+  __ALL__
 cd testapp/tests-jelix/jelix/prefs/
-  jPrefTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/routing/
-  requestsTest.php
-  xmlmapTest.php
-  urlUpgradeTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/app/config
+cd testapp/tests-jelix/jelix/routing/app1/app/system
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/modules/aaa
   __ALL__
@@ -471,42 +139,21 @@ cd testapp/tests-jelix/jelix/routing/app1/plugins
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/www
   __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/var/config
-  __ALL__
-cd testapp/tests-jelix/jelix/routing/app1/app/config/index
+cd testapp/tests-jelix/jelix/routing/app1/app/system/index
   __ALL__
 cd testapp/tests-jelix/jelix/routing/app1/var/log
   __ALL__
 cd testapp/tests-jelix/jelix/routing/urls
   __ALL__
 cd testapp/tests-jelix/jelix/soap/
-  soapcontrollerTest.php
-  soapclientTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/tpl/
-  jtpl_compilerTest.php
-  jtpl_expressions_parsingTest.php
-  jtpl_fetchTest.php
-  jtpl_pluginsTest.php
-  jtpl_virtualTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/utils/
-  feedsTest.php
-  jClassesTest.php
-  jDatatypeTest.php
-  jDateTimeTest.php
-  jDurationTest.php
-  jFileTest.php
-  jFilterTest.php
-  jImageModifierTest.php
-  jMailerTest.php
-  jRootUrlTest.php
-  minifyHTMLResponsePluginTest.php
-  profilesTest.php
-cd testapp/tests-jelix/jelix-scripts/
-  commandTest.php
+  __ALL__
 
 cd testapp/tests/
-  runtests.php
-  phpunit.xml
+  __ALL__
 
 cd testapp/var
   .htaccess
@@ -528,26 +175,16 @@ cd testapp/temp/
   .dummy
 
 cd testapp/adminapp/
-  .gitignore
-  .htaccess
-  application.init.php
-  cmd.php
-  project.xml
+  __ALL__
 
-cd testapp/adminapp/app/config/
-  mainconfig.ini.php
-  urls.xml
-  preferences.ini.php
-
-cd testapp/adminapp/app/config/index/
-  config.ini.php
+cd testapp/adminapp/app/
+  __ALL_RECURSIVELY__
 
 cd testapp/adminapp/install/
-  installer.php
+  __ALL__
 
 cd testapp/adminapp/app/responses/
-  adminHtmlResponse.class.php
-  adminLoginHtmlResponse.class.php
+  __ALL__
 cd testapp/adminapp/app/overloads/
   .dummy
 cd testapp/adminapp/app/themes/default/
@@ -557,10 +194,8 @@ cd testapp/adminapp/temp
   .dummy
 
 cd testapp/adminapp/var/config/
-  localconfig.ini.dist
+  localconfig.ini.php.dist
   profiles.ini.php.dist
-cd testapp/adminapp/var/config/index
-  auth.coord.ini.php
 
 cd testapp/adminapp/var/log/
   .dummy

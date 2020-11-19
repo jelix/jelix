@@ -1,0 +1,7 @@
+uid=testldap,ou=people,dc=tests,dc=jelix
+uid=john,ou=people,dc=tests,dc=jelix
+uid=jane,ou=people,dc=tests,dc=jelix
+cn=group1,ou=groups,dc=tests,dc=jelix
+cn=group2,ou=groups,dc=tests,dc=jelix
+ou=groups,dc=tests,dc=jelix
+ou=people,dc=tests,dc=jelix

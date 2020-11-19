@@ -1,24 +1,25 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  kvdb
+ * @subpackage  kvdb_plugin
+ *
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
+ *
  * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
  *
- * @link     http://www.jelix.org
+ * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  *
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
-
-class memcacheKVDriver extends jKVDriver implements jIKVttl {
-
+class memcacheKVDriver extends jKVDriver implements jIKVttl
+{
     /**
      * Array of StdClass objects that contains host/port attributes for the
      * memcache servers. Used only during _connection.
      *
-     * @var array
+     * @var object[]
      */
     private $_servers = array();
 
@@ -26,24 +27,29 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
      * Should the data be compressed ? This feature is implemented sometimes
      * in memcached drivers, and works sometimes...
      *
-     * @var boolean
+     * @var bool
      */
     protected $_compress = false;
 
     /**
-     * Connects to the memcache server
+     * Connects to the memcache server.
      *
      * The host list is in the host profile value, in the form of :
      *
      * host=server1:port1;server2:port2;server3;port3;...
-     * @return Memcache object
+     *
      * @throws jException
+     *
+     * @return Memcache object
      */
-    protected function _connect() {
-        /* A host is needed */
-        if (! isset($this->_profile['host'])) {
+    protected function _connect()
+    {
+        // A host is needed
+        if (!isset($this->_profile['host'])) {
             throw new jException(
-                'jelix~kvstore.error.no.host', $this->_profileName);
+                'jelix~kvstore.error.no.host',
+                $this->_profileName
+            );
         }
 
         /* There are 3 way to define memcache servers
@@ -67,22 +73,20 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
 
             if (isset($this->_profile['port'])
                 and
-                strpos($this->_profile['host'], ':') === false)
-            {
-                $server         = new stdClass();
-                $server->host   = $this->_profile['host'];
-                $server->port   = (int)$this->_profile['port'];
+                strpos($this->_profile['host'], ':') === false) {
+                $server = new stdClass();
+                $server->host = $this->_profile['host'];
+                $server->port = (int) $this->_profile['port'];
 
                 $this->_servers[] = $server;
-            }
-            else { // Case 2 : no port => concatened string
+            } else { // Case 2 : no port => concatened string
 
                 foreach (explode(',', $this->_profile['host']) as $host_port) {
                     $hp = explode(':', $host_port);
-    
-                    $server         = new stdClass();
-                    $server->host   = $hp[0];
-                    $server->port   = (int)$hp[1];
+
+                    $server = new stdClass();
+                    $server->host = $hp[0];
+                    $server->port = (int) $hp[1];
 
                     $this->_servers[] = $server;
                 }
@@ -93,14 +97,14 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
         elseif (is_array($this->_profile['host'])) {
             foreach ($this->_profile['host'] as $host_port) {
                 $hp = split(':', $host_port);
-                $server         = new stdClass();
-                $server->host   = $hp[0];
-                $server->port   = (int)$hp[1];
+                $server = new stdClass();
+                $server->host = $hp[0];
+                $server->port = (int) $hp[1];
                 $this->_servers[] = $server;
             }
         }
 
-        /* OK, let's connect now */
+        // OK, let's connect now
 
         $cnx = new Memcache();
 
@@ -108,17 +112,19 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
 
         foreach ($this->_servers as $s) {
             $result = @$cnx->addServer($s->host, $s->port);
-            if (! $oneServerAvalaible && $result) {
+            if (!$oneServerAvalaible && $result) {
                 $oneServerAvalaible = true;
             }
         }
 
-        if (! $oneServerAvalaible) {
+        if (!$oneServerAvalaible) {
             throw new jException(
-                'jelix~kvstore.error.memcache.server.unavailabled', $this->_profileName);
+                'jelix~kvstore.error.memcache.server.unavailabled',
+                $this->_profileName
+            );
         }
 
-        /* Setting the $_compress flag */
+        // Setting the $_compress flag
         if (isset($this->_profile['compress'])
                 and ($this->_profile['compress'] == 1)) {
             $this->_compress = true;
@@ -128,22 +134,29 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
     }
 
     /**
-     * Disconnect from the memcache server
+     * Disconnect from the memcache server.
      */
-    protected function _disconnect() {
+    protected function _disconnect()
+    {
         $this->_connection->close();
     }
 
-    public function get($key) {
+    public function get($key)
+    {
         $val = $this->_connection->get($key);
-        if ($val === false)
+        if ($val === false) {
             return null;
+        }
+
         return $val;
     }
 
-    public function set($key, $value) {
-        if (is_resource($value))
+    public function set($key, $value)
+    {
+        if (is_resource($value)) {
             return false;
+        }
+
         return $this->_connection->set(
             $key,
             $value,
@@ -152,9 +165,12 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
         );
     }
 
-    public function insert($key, $value) {
-        if (is_resource($value))
+    public function insert($key, $value)
+    {
+        if (is_resource($value)) {
             return false;
+        }
+
         return $this->_connection->add(
             $key,
             $value,
@@ -163,9 +179,12 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
         );
     }
 
-    public function replace($key, $value) {
-        if (is_resource($value))
+    public function replace($key, $value)
+    {
+        if (is_resource($value)) {
             return false;
+        }
+
         return $this->_connection->replace(
             $key,
             $value,
@@ -174,104 +193,138 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
         );
     }
 
-    public function delete($key) {
+    public function delete($key)
+    {
         return $this->_connection->delete($key);
     }
 
-    public function flush() {
+    public function flush()
+    {
         return $this->_connection->flush();
     }
 
     /**
-     * append a string to an existing key value
+     * append a string to an existing key value.
+     *
      * @param string $key   the key of the value to modify
-     * @param string $value  the value to append to the current key value
-     * @return boolean false if failure
+     * @param string $value the value to append to the current key value
+     *
+     * @return bool false if failure
      */
-    public function append ($key, $value) {
+    public function append($key, $value)
+    {
         $oldData = $this->get($key);
-        if ($oldData === null)
+        if ($oldData === null) {
             return false;
+        }
 
-        if ($this->replace($key, $oldData.$value))
+        if ($this->replace($key, $oldData.$value)) {
             return $oldData.$value;
-        else
-            return false;
+        }
+
+        return false;
     }
 
     /**
-     * prepend a string to an existing key value
+     * prepend a string to an existing key value.
+     *
      * @param string $key   the key of the value to modify
-     * @param string $value  the value to prepend to the current key value
-     * @return boolean false if failure
+     * @param string $value the value to prepend to the current key value
+     *
+     * @return bool false if failure
      */
-    public function prepend ($key, $value) {
+    public function prepend($key, $value)
+    {
         $oldData = $this->get($key);
-        if ($oldData === null)
+        if ($oldData === null) {
             return false;
+        }
 
-        if ($this->replace($key, $value.$oldData))
+        if ($this->replace($key, $value.$oldData)) {
             return $value.$oldData;
-        else
-            return false;
+        }
+
+        return false;
     }
 
     /**
-    * increment a specific data value by $var
-    * @param string $key       key used for storing data in the cache
-    * @param mixed  $var    value used
-    * @return integer   the result, or false if failure
-    */
-    public function increment($key, $incvalue = 1) {
+     * increment a specific data value by $var.
+     *
+     * @param string $key      key used for storing data in the cache
+     * @param mixed  $var      value used
+     * @param mixed  $incvalue
+     *
+     * @return int the result, or false if failure
+     */
+    public function increment($key, $incvalue = 1)
+    {
         if (!is_numeric($incvalue)) {
             return false;
         }
         $val = $this->get($key);
-        if(!is_numeric($val)) {
-            return false;
-        }else if (is_float($val)) {
-            $val = ((int)$val) + $incvalue;
-            if($this->_connection->set($key, $val))
-                return $val;
+        if (!is_numeric($val)) {
             return false;
         }
+        if (is_float($val)) {
+            $val = ((int) $val) + $incvalue;
+            if ($this->_connection->set($key, $val)) {
+                return $val;
+            }
+
+            return false;
+        }
+
         return $this->_connection->increment($key, $incvalue);
     }
 
     /**
-    * decrement a specific data value by $var
-    * @param string $key       key used for storing data in the cache
-    * @param mixed  $var    value used
-    * @return integer   the result, or false if failure
-    */
-    public function decrement($key, $decvalue = 1) {
+     * decrement a specific data value by $var.
+     *
+     * @param string $key      key used for storing data in the cache
+     * @param mixed  $var      value used
+     * @param mixed  $decvalue
+     *
+     * @return int the result, or false if failure
+     */
+    public function decrement($key, $decvalue = 1)
+    {
         if (!is_numeric($decvalue)) {
             return false;
         }
         $val = $this->get($key);
-        if(!is_numeric($val)) {
-            return false;
-        }else if (is_float($val)) {
-            $val = ((int)$val) - $decvalue;
-            if($this->_connection->set($key, $val))
-                return $val;
+        if (!is_numeric($val)) {
             return false;
         }
+        if (is_float($val)) {
+            $val = ((int) $val) - $decvalue;
+            if ($this->_connection->set($key, $val)) {
+                return $val;
+            }
+
+            return false;
+        }
+
         return $this->_connection->decrement($key, $decvalue);
     }
 
     // ----------------------------------- jIKVttl
 
     /**
-    * set a specific data with a ttl 
-    * @param string $key       key used for storing data
-    * @param mixed  $var       data to store
-    * @param int    $ttl    data time expiration
-    * @return boolean false if failure
-    */
-    public function setWithTtl($key, $value, $ttl) {
-        if (is_resource($value))
+     * set a specific data with a ttl.
+     *
+     * @param string $key   key used for storing data
+     * @param mixed  $var   data to store
+     * @param int    $ttl   data time expiration
+     * @param mixed  $value
+     *
+     * @return bool false if failure
+     */
+    public function setWithTtl($key, $value, $ttl)
+    {
+        if (is_resource($value)) {
             return false;
+        }
+
         return $this->_connection->set(
             $key,
             $value,
@@ -280,9 +333,9 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl {
         );
     }
 
-    public function garbage() {
+    public function garbage()
+    {
         // memcache api doesn't provide api to do garbage....
         return true;
     }
-
 }

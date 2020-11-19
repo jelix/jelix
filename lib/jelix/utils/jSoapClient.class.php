@@ -1,18 +1,20 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  utils
-* @author      Laurent Jouanneau
-* @copyright   2011-2014 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
-
+ * @package     jelix
+ * @subpackage  utils
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2011-2017 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 /**
- * class that handles a dump of a php value, for a logger
+ * class that handles a dump of a php value, for a logger.
  */
-class  jLogSoapMessage extends jLogMessage {
+class jLogSoapMessage extends jLogMessage
+{
     /**
      * @var string
      */
@@ -26,7 +28,7 @@ class  jLogSoapMessage extends jLogMessage {
      */
     protected $response;
     /**
-     * @var string
+     * @var int
      */
     protected $duration;
     /**
@@ -36,133 +38,173 @@ class  jLogSoapMessage extends jLogMessage {
 
     /**
      * jLogSoapMessage constructor.
+     *
      * @param $function_name
      * @param SoapClient $soapClient
-     * @param string $category
-     * @param int $duration
+     * @param string     $category
+     * @param int        $duration
      */
-    public function __construct($function_name, $soapClient, $category='default', $duration = 0) {
+    public function __construct($function_name, $soapClient, $category = 'default', $duration = 0)
+    {
         $this->category = $category;
         $this->headers = $soapClient->__getLastRequestHeaders();
-        $this->request = $soapClient->__getLastRequest ();
+        $this->request = $soapClient->__getLastRequest();
         $this->response = $soapClient->__getLastResponse();
         $this->functionName = $function_name;
         $this->duration = $duration;
         $this->message = 'Soap call: '.$function_name.'()';
     }
 
-    public function getHeaders() {
+    /**
+     * @return string http header of the request
+     */
+    public function getHeaders()
+    {
         return $this->headers;
     }
 
-    public function getResponse() {
+    /**
+     * @return string xml content of the response
+     */
+    public function getResponse()
+    {
         return $this->response;
     }
 
-    public function getRequest() {
+    /**
+     * @return string xml content of the request
+     */
+    public function getRequest()
+    {
         return $this->request;
     }
 
-    public function getDuration() {
+    /**
+     * @return int the duration of the soap call
+     */
+    public function getDuration()
+    {
         return $this->duration;
     }
 
-    public function getFormatedMessage() {
-        $message =  'Soap call: '.$this->functionName."()\n";
-        $message .= "DURATION: ".$this->duration."s\n";
-        $message .= "HEADERS:\n\t".str_replace("\n","\n\t",$this->headers)."\n";
-        $message .= "REQUEST:\n\t".str_replace("\n","\n\t",$this->request)."\n";
-        $message .= "RESPONSE:\n\t".str_replace("\n","\n\t",$this->response)."\n";
+    /**
+     * @return string soap fonction name
+     */
+    public function getFunctionName()
+    {
+        return $this->functionName;
+    }
+
+    public function getFormatedMessage()
+    {
+        $message = 'Soap call: '.$this->functionName."()\n";
+        $message .= 'DURATION: '.$this->duration."s\n";
+        $message .= "HEADERS:\n\t".str_replace("\n", "\n\t", $this->headers)."\n";
+        $message .= "REQUEST:\n\t".str_replace("\n", "\n\t", $this->request)."\n";
+        $message .= "RESPONSE:\n\t".str_replace("\n", "\n\t", $this->response)."\n";
+
         return $message;
     }
 }
 
-
-
-class SoapClientDebug extends SoapClient {
-    public function __call ( $function_name , $arguments) {
+class SoapClientDebug extends SoapClient
+{
+    public function __call($function_name, $arguments)
+    {
         $timeExecutionBegin = $this->_microtimeFloat();
         $ex = false;
+
         try {
-            $result = parent::__call($function_name , $arguments);
-        }
-        catch(Exception $e) {
+            $result = parent::__call($function_name, $arguments);
+        } catch (Exception $e) {
             $ex = $e;
         }
         $timeExecutionEnd = $this->_microtimeFloat();
 
         $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
-        jLog::log($log,'soap');
-        if ($ex)
+        jLog::log($log, 'soap');
+        if ($ex) {
             throw $ex;
+        }
+
         return $result;
     }
 
-    public function __soapCall ( $function_name , $arguments, $options=array(), $input_headers=null,  &$output_headers=null) {
+    public function __soapCall($function_name, $arguments, $options = array(), $input_headers = null, &$output_headers = null)
+    {
         $timeExecutionBegin = $this->_microtimeFloat();
         $ex = false;
+
         try {
-            $result = parent::__soapCall($function_name , $arguments, $options, $input_headers,  $output_headers);
-        }
-        catch(Exception $e) {
+            $result = parent::__soapCall($function_name, $arguments, $options, $input_headers, $output_headers);
+        } catch (Exception $e) {
             $ex = $e;
         }
         $timeExecutionEnd = $this->_microtimeFloat();
         $log = new jLogSoapMessage($function_name, $this, 'soap', $timeExecutionEnd - $timeExecutionBegin);
-        jLog::log($log,'soap');
-        if ($ex)
+        jLog::log($log, 'soap');
+        if ($ex) {
             throw $ex;
+        }
+
         return $result;
     }
 
-    protected function _microtimeFloat() {
-        list($usec, $sec) = explode(" ", microtime());
-        return ((float)$usec + (float)$sec);
+    protected function _microtimeFloat()
+    {
+        list($usec, $sec) = explode(' ', microtime());
+
+        return (float) $usec + (float) $sec;
     }
 }
 
-
-
 /**
-* provide a soap client where configuration information are stored in the profile file
-* @package     jelix
-* @subpackage  utils
-*/
-class jSoapClient {
-
+ * provide a soap client where configuration information are stored in the profile file.
+ *
+ * @package     jelix
+ * @subpackage  utils
+ */
+class jSoapClient
+{
     protected static $classmap = array();
 
     /**
-     * @param string $profile  the profile name
-     * @return object|null the profile data
+     * @param string $profile the profile name
+     *
+     * @return null|object the profile data
      */
-    public static function get($profile = '') {
+    public static function get($profile = '')
+    {
         return jProfiles::getOrStoreInPool('jsoapclient', $profile, array('jSoapClient', '_getClient'));
     }
 
     /**
      * callback method for jProfiles. Internal use.
+     *
      * @param array $profile profile parameters
+     *
      * @return SoapClient
+     *
      * @see jProfiles
      */
-    public static function _getClient($profile) {
+    public static function _getClient($profile)
+    {
         $wsdl = null;
         $client = 'SoapClient';
         if (isset($profile['wsdl'])) {
             $wsdl = $profile['wsdl'];
             if ($wsdl == '') {
-                 $wsdl = null;
-            }
-            else if (!preg_match("!^https?\\://!", $wsdl)){
+                $wsdl = null;
+            } elseif (!preg_match('!^https?\\://!', $wsdl)) {
                 $wsdl = jFile::parseJelixPath($wsdl);
             }
-            unset ($profile['wsdl']);
+            unset($profile['wsdl']);
         }
         if (isset($profile['trace'])) {
             $profile['trace'] = intval($profile['trace']); // SoapClient recognize only true integer
-            if ($profile['trace'])
+            if ($profile['trace']) {
                 $client = 'SoapClientDebug';
+            }
         }
         if (isset($profile['exceptions'])) {
             $profile['exceptions'] = intval($profile['exceptions']); // SoapClient recognize only true integer
@@ -175,12 +217,11 @@ class jSoapClient {
         $classMap = array();
         if (isset($profile['classmap_file']) && ($f = trim($profile['classmap_file'])) != '') {
             if (!isset(self::$classmap[$f])) {
-                if (!file_exists(jApp::appConfigPath($f))) {
-                    trigger_error("jSoapClient: classmap file ".$f." does not exists.", E_USER_WARNING);
+                if (!file_exists(jApp::appSystemPath($f))) {
+                    trigger_error('jSoapClient: classmap file '.$f.' does not exists.', E_USER_WARNING);
                     self::$classmap[$f] = array();
-                }
-                else {
-                    self::$classmap[$f] = parse_ini_file(jApp::appConfigPath($f), true);
+                } else {
+                    self::$classmap[$f] = parse_ini_file(jApp::appSystemPath($f), true);
                 }
             }
             if (isset(self::$classmap[$f]['__common__'])) {
@@ -192,8 +233,8 @@ class jSoapClient {
             unset($profile['classmap_file']);
         }
 
-        if (isset($profile['classmap']) && is_string ($profile['classmap']) && $profile['classmap'] != '') {
-            $map = (array)json_decode(str_replace("'", '"',$profile['classmap']));
+        if (isset($profile['classmap']) && is_string($profile['classmap']) && $profile['classmap'] != '') {
+            $map = (array) json_decode(str_replace("'", '"', $profile['classmap']));
             $classMap = array_merge($classMap, $map);
             unset($profile['classmap']);
         }
@@ -206,20 +247,19 @@ class jSoapClient {
         //$profile['stream_context'] = $context;
         if (isset($profile['ssl_self_signed'])) {
             if ($profile['ssl_self_signed']) {
-                $context = stream_context_create([
-                    'ssl' => [
+                $context = stream_context_create(array(
+                    'ssl' => array(
                         // set some SSL/TLS specific options
                         'verify_peer' => false,
                         'verify_peer_name' => false,
-                        'allow_self_signed' => true
-                    ]
-                ]);
+                        'allow_self_signed' => true,
+                    ),
+                ));
                 $profile['stream_context'] = $context;
-
             }
             unset($profile['ssl_self_signed']);
         }
-        unset ($profile['_name']);
+        unset($profile['_name']);
 
         return new $client($wsdl, $profile);
     }

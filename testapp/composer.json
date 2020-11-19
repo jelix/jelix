@@ -4,7 +4,7 @@
     "description": "Jelix Application for tests",
     "keywords": [],
     "homepage": "http://jelix.org",
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "authors": [
         {
             "name": "Laurent Jouanneau",
@@ -22,13 +22,16 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "4.8.*",
-        "jelix/for-classic-package" : "@dev",
-        "jelix/minify-module": "^1.7.1",
-        "jelix/php-redis-plugin": "^1.7.5",
-        "jelix/sitemap-module": "^1.7.2",
+        "phpunit/phpunit": "5.7.*",
+        "jelix/jelix-essential" : "@dev",
+        "jelix/soap-server-module": "^1.7.9",
+        "jelix/minify-module": "^1.7.4",
+        "jelix/php-redis-plugin": "^1.7.6",
+        "jelix/sitemap-module": "^1.7.5",
         "guzzlehttp/guzzle": "^6.2.0",
-        "jelix/ldapdao-module": "2.0.x-dev"
+        "jelix/ldapdao-module": "dev-master",
+        "jelix/feeds-module": "^1.7.5",
+        "jelix/wikirenderer-plugin": "^1.7.3"
     },
     "autoload": {
     },

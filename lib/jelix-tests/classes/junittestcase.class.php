@@ -16,7 +16,9 @@ class jCoordinatorForTest extends jCoordinator {
     }
 }
 
-
+/**
+ * Class jUnitTestCase for PHPUnit < 6.0
+ */
 class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
     /**
@@ -79,6 +81,7 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
 
     /**
      * compatibility with simpletests
+     * @deprecated
     */
     public function assertEqualOrDiff($first, $second, $message = "%s"){
         return $this->assertEquals($first, $second, $message);
@@ -156,10 +159,12 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
                         $v = $value->$n;
                     }elseif(isset($child['method'])){
                         $n = (string)$child['method'];
-                        eval('$v=$value->'.$n.';');
+                        $n = trim(str_replace("()", "", $n));
+                        $v = $value->$n();
                     }elseif(isset($child['m'])){
                         $n = (string)$child['m'];
-                        eval('$v=$value->'.$n.';');
+                        $n = trim(str_replace("()", "", $n));
+                        $v = $value->$n();
                     }else{
                         trigger_error('no method or attribute on '.(dom_import_simplexml($child)->nodeName), E_USER_WARNING);
                         continue;
@@ -171,9 +176,20 @@ class jUnitTestCase extends PHPUnit_Framework_TestCase {
             case 'array':
                 $this->assertInternalType('array', $value, $name.': not an array'.$errormessage);
                 if(trim((string)$xml) != ''){
-                    if( false === eval('$v='.(string)$xml.';')){
-                        $this->fail("invalid php array syntax");
-                        return false;
+                    $xmlstr = trim((string)$xml);
+                    if (strpos($xmlstr, 'array') === 0) {
+                        // @deprecated
+                        if( false === eval('$v='.$xmlstr.';')){
+                            $this->fail("invalid php array syntax");
+                            return false;
+                        }
+                    }
+                    else {
+                        $v = json_decode($xmlstr, true);
+                        if ($v === null || !is_array($v)) {
+                            $this->fail("invalid json array syntax ".(string)$xml);
+                            return false;
+                        }
                     }
                     $this->assertEquals($v,$value,'negative test on '.$name.': '.$errormessage);
                 }else{

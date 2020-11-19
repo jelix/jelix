@@ -5,7 +5,8 @@ namespace Jelix\Dependencies;
 class Item
 {
     protected $name;
-    protected $_isInstalled;
+    protected $_isInstalled = false;
+    protected $_canBeInstalled = true;
     protected $currentVersion;
     protected $action;
     protected $nextVersion;
@@ -13,22 +14,27 @@ class Item
     protected $properties = array();
 
     protected $dependencies = array();
+
+    protected $alternativeDependencies = array();
+
+    protected $incompatibilities = array();
+
     /**
      * Item constructor.
      *
      * @param string $name           an name that is unique among all items
-     * @param bool   $isInstalled
      * @param string $currentVersion
-     * @param int    $action         one of Resolver::ACTION_* const
-     * @param null   $nextVersion    if action is ACTION_UPGRADE
+     * @param bool   $isInstalled
+     * @param bool   $canBeInstalled indicate if the module can be installed automatically by the resolver
      */
-    public function __construct($name, $isInstalled, $currentVersion, $action = 0, $nextVersion = null)
+    public function __construct($name, $currentVersion, $isInstalled, $canBeInstalled = true)
     {
         $this->name = $name;
         $this->_isInstalled = $isInstalled;
+        $this->_canBeInstalled = $canBeInstalled;
         $this->currentVersion = $currentVersion;
-        $this->action = $action;
-        $this->nextVersion = $nextVersion;
+        $this->action = Resolver::ACTION_NONE;
+        $this->nextVersion = null;
     }
 
     public function getName()
@@ -41,6 +47,11 @@ class Item
         return $this->_isInstalled;
     }
 
+    public function canBeInstalled()
+    {
+        return $this->_canBeInstalled;
+    }
+
     public function getCurrentVersion()
     {
         return $this->currentVersion;
@@ -51,6 +62,10 @@ class Item
         return $this->nextVersion;
     }
 
+    /**
+     * @param int  $action      one of Resolver::ACTION_* const
+     * @param null $nextVersion if action is ACTION_UPGRADE
+     */
     public function setAction($action, $nextVersion = null)
     {
         $this->action = $action;
@@ -79,16 +94,49 @@ class Item
             return $this->properties[$name];
         }
 
-        return;
+        return null;
     }
 
-    public function addDependency($name, $version = '*')
+    public function addDependency($name, $version = '*', $optional = false)
     {
-        $this->dependencies[$name] = $version;
+        $this->dependencies[$name] = array($version, $optional);
     }
 
     public function getDependencies()
     {
         return $this->dependencies;
+    }
+
+    /**
+     * @param array $choice list of dependencies where one of them should be installed, not all
+     *                      ex:
+     *                      ```
+     *                      [
+     *                      // this dependency
+     *                      '$name'=> '$version',
+     *                      // or this dependency
+     *                      '$name'=> '$version',
+     *                      // or ...
+     *                      ]
+     *                      ```
+     */
+    public function addAlternativeDependencies(array $choice)
+    {
+        $this->alternativeDependencies[] = $choice;
+    }
+
+    public function getAlternativeDependencies()
+    {
+        return $this->alternativeDependencies;
+    }
+
+    public function addIncompatibility($name, $version = '*')
+    {
+        $this->incompatibilities[$name] = $version;
+    }
+
+    public function getIncompatibilities()
+    {
+        return $this->incompatibilities;
     }
 }

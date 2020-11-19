@@ -14,8 +14,7 @@ jApp::initPaths(
     %%php_rp_www%%,
     %%php_rp_var%%,
     %%php_rp_log%%,
-    %%php_rp_conf%%,
-    %%php_rp_cmd%%
+    %%php_rp_conf%%
 );
 jApp::setTempBasePath(%%php_rp_temp%%);
 

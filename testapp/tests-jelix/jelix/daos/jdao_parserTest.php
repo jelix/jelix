@@ -17,7 +17,7 @@ class jdao_parserTest extends jUnitTestCase {
     protected $_tools;
     function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
-        $this->_tools= new mysqliDbTools(null);
+        $this->_tools= new jDbMysqlTools(null);
     }
 
     function tearDown() {
@@ -35,19 +35,19 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -60,19 +60,19 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="foo_news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -88,26 +88,26 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_rubriques_id"]</array>
+            <array key="fk" value="">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array()</array>
-    <array method="getInnerJoins()">array(\'news_rubriques\')</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[]</array>
+    <array method="getInnerJoins()">["news_rubriques"]</array>
 </object>'
 ),
 
@@ -122,27 +122,27 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_id"]</array>
+            <!-- <array key="fk" value="">[]</array>-->
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk" value="">["news_rubriques_id"]</array>
+            <array key="fk" value="">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array()</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[["news_rubriques",0]]</array>
+    <array method="getInnerJoins()">[]</array>
 </object>'
 ),
 
@@ -158,54 +158,59 @@ class jdao_parserTest extends jUnitTestCase {
 
 '<?xml version="1.0"?>
 <object class="jDaoParser">
-    <array method="getProperties()">array()</array>
+    <array method="getProperties()">[]</array>
     <array method="getTables()">
         <array key="news">
             <string key="name" value="news" />
             <string key="realname" value="news" />
-            <array key="pk" value="">array(\'news_id\')</array>
-            <!-- <array key="fk" value="">array()</array>-->
-            <array key="fields">array()</array>
+            <array key="pk">["news_id"]</array>
+            <!-- <array key="fk" value="">[]</array>-->
+            <array key="fields">[]</array>
         </array>
         <array key="news_rubriques">
             <string key="name" value="news_rubriques" />
             <string key="realname" value="news_rubriques" />
-            <array key="pk" value="">array(\'news_rubriques_id\')</array>
-            <array key="fk" value="">array(\'news_rubrique\')</array>
-            <array key="fields">array()</array>
+            <array key="pk">["news_rubriques_id"]</array>
+            <array key="fk">["news_rubrique"]</array>
+            <array key="fields">[]</array>
         </array>
         <array key="news_author">
             <string key="name" value="news_author" />
             <string key="realname" value="jx_authors_news" />
-            <array key="pk" value="">array(\'author_id\')</array>
-            <array key="fk" value="">array(\'author_id\')</array>
-            <array key="fields">array()</array>
+            <array key="pk">["author_id"]</array>
+            <array key="fk">["author_id"]</array>
+            <array key="fields">[]</array>
         </array>
     </array>
     <string method="getPrimaryTable()" value="news"/>
-    <array method="getMethods()">array()</array>
-    <array method="getOuterJoins()">array(array(\'news_rubriques\',0))</array>
-    <array method="getInnerJoins()">array(\'news_author\')</array>
+    <array method="getMethods()">[]</array>
+    <array method="getOuterJoins()">[["news_rubriques",0]]</array>
+    <array method="getInnerJoins()">["news_author"]</array>
 </object>'
 ),
 
       );
 
-    function testGoodDatasources() {
+    function getDsTest() {
+        return $this->dsTest;
+    }
 
-        foreach($this->dsTest as $k=>$t){
-            //$this->sendMessage("test good datasource ".$k);
-            $xml= simplexml_load_string($t[0]);
-            $p = new testjDaoParser($this->_selector);
-            try{
-                $p->testParseDatasource($xml);
-                $this->assertComplexIdenticalStr($p, $t[1]);
-            }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
+    /**
+     * @dataProvider getDsTest
+     */
+    function testGoodDatasources($xmls, $expected) {
+        //$this->sendMessage("test good datasource ".$k);
+        $xml= simplexml_load_string($xmls);
+        $p = new testjDaoParser($this->_selector);
+        try{
+            $p->testParseDatasource($xml);
+            $this->assertComplexIdenticalStr($p, $expected);
+        }catch(jDaoXmlException $e){
+            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+        //}catch(Exception $e){
+        //    $this->fail("Exception inconnue : ".$e->getMessage());
         }
+
     }
 
 
@@ -305,20 +310,25 @@ array('foo~bar','')
 
       );
 
-    function testBadDatasources() {
+    function getDsTestBad() {
+        return $this->dsTestbad;
+    }
 
-        foreach($this->dsTestbad as $k=>$t){
-            $xml= simplexml_load_string($t[0]);
-            $p = new testjDaoParser($this->_selector);
-            try{
-                $p->testParseDatasource($xml);
-                $this->fail("No expected exception!");
-            }catch(jDaoXmlException $e){
-                $this->assertEquals($t[1], $e->getLocaleKey());
-                $this->assertEquals($t[2], $e->getLocaleParameters());
-            }catch(Exception $e){
-                $this->fail("Unknown Exception: ".$e->getMessage());
-            }
+    /**
+     * @dataProvider getDsTestBad
+     */
+    function testBadDatasources($xmls, $localeKey, $localeParameters) {
+
+        $xml= simplexml_load_string($xmls);
+        $p = new testjDaoParser($this->_selector);
+        try{
+            $p->testParseDatasource($xml);
+            $this->fail("No expected exception!");
+        }catch(jDaoXmlException $e){
+            $this->assertEquals($localeKey, $e->getLocaleKey());
+            $this->assertEquals($localeParameters, $e->getLocaleParameters());
+        //}catch(Exception $e){
+        //    $this->fail("Unknown Exception: ".$e->getMessage());
         }
     }
 
@@ -602,9 +612,9 @@ array('foo~bar','')
                 $p = new jDaoProperty($xml, $parser, $this->_tools);
                 $this->assertComplexIdenticalStr($p, $t[1], "test $k");
             }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
+                $this->fail("Exception sur le contenu xml inattendue (item $k) : ".$e->getMessage().' ('.$e->getLocaleKey().')');
+            //}catch(Exception $e){
+            //    $this->fail("Exception inconnue (item $k): ".$e->getMessage());
             }
         }
     }

@@ -15,8 +15,7 @@ jApp::initPaths(
     __DIR__.'/../www/',
     __DIR__.'/var/',
     __DIR__.'/var/log/',
-    __DIR__.'/var/config/',
-    __DIR__.'/scripts/'
+    __DIR__.'/var/config/'
 );
 jApp::setTempBasePath(__DIR__.'/../temp/');
 jApp::setEnv('admin');

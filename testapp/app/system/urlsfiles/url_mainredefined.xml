@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <entrypoint name="index" default="true">
+        <url pathinfo="/" module="testapp" action="main:index" />
+        <url pathinfo="/test/:annee/:mois" module="testapp" action="test1">
+            <param name="annee" escape="true" type="year"/>
+            <!--<param name="mois" escape="false" />-->
+            <static name="bla" value="cequejeveux" />
+        </url>
+    </entrypoint>
+    <entrypoint name="noep"  noentrypoint="true">
+        <url pathinfo="/" module="jelix_tests" action="main:index" />
+        <url pathinfo="/zip/:var/" module="jelix_tests" action="urlsig:bug1488">
+            <param name="var" />
+        </url>
+        <url module="jelix_tests" />
+    </entrypoint>
+    <entrypoint name="testnews">
+        <url module="testapp" action="main:index2" />
+    </entrypoint>
+    <classicentrypoint name="news">
+        <url module="news" default="true"/>
+        <url module="articles" />
+    </classicentrypoint>
+</urls>

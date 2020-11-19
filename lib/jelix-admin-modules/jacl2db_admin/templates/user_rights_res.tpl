@@ -28,7 +28,7 @@
 <tr class="{cycle array('odd','even')}">
     <th>
         <input type="checkbox" name="subjects[{$subject}]" id="{$subject|eschtml}" />
-        <label for="{$subject|eschtml}">{$subjects_localized[$subject]|eschtml}</label>
+        <label for="{$subject|eschtml}">{$rightsLabels[$subject]|eschtml}</label>
     </th>
     <td>{assign $firstr=true}
         {foreach $resources as $r}{if !$firstr}, {else}{assign $firstr=false}{/if}

@@ -9,14 +9,4 @@
         <creator name="your name" email="your-email@yourwebsite.undefined"/>
         <homepageURL>http://www.yourwebsite.undefined</homepageURL>
     </info>
-    <dependencies>
-        <jelix minversion="1.7.0pre.0" maxversion="1.7.*"/>
-    </dependencies>
-    <entrypoints>
-        <!-- file: the path to the entry point relative to the base path
-            config: the path to the config file used by the entry point, relative
-                    to var/config/
-            type: type of the entry point : classic, cmdline, xmlrpc....-->
-        <entry file="index.php" config="index/config.ini.php"/>
-    </entrypoints>
 </project>

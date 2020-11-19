@@ -27,7 +27,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
             jAcl2::clearCache();
 
             require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-            $confContent = parse_ini_file(jApp::appConfigPath('auth_class.coord.ini.php'),true);
+            $confContent = parse_ini_file(jApp::appSystemPath('auth_class.coord.ini.php'),true, INI_SCANNER_TYPED);
             $config = jAuth::loadConfig($confContent);
             self::$coordAuthPlugin = new AuthCoordPlugin($config);
 
@@ -43,6 +43,7 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
 
             $usergroups=array(
                 array('login'=>'laurent', 'id_aclgrp'=>'group1'),
+                array('login'=>'lau rent', 'id_aclgrp'=>'group1'),
             );
             $this->insertRecordsIntoTable('jacl2_user_group', array('login','id_aclgrp'), $usergroups, true);
         }
@@ -77,10 +78,10 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
      * @depends testIsMemberOfGroup
      */
     public function testCheckRight(){
-        jAcl2DbManager::addSubject('super.cms.list', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('super.cms.update', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('super.cms.delete', 'cms~rights.super.cms');
-        jAcl2DbManager::addSubject('admin.access', 'admin~rights.access');
+        jAcl2DbManager::createRight('super.cms.list', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.update', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.delete', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
         jAcl2DbManager::addRight('group1', 'super.cms.list' );
         jAcl2DbManager::addRight('group1', 'super.cms.update' );
         jAcl2DbManager::addRight('group1', 'super.cms.delete', 154);
@@ -102,12 +103,55 @@ abstract class jacl2APITest extends jUnitTestCaseDb {
     }
 
     /**
-    * @depends testCheckRight
+     * @depends testCheckRight
+     */
+    public function testCheckRightByUser(){
+        jAcl2DbManager::createRight('super.cms.list', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.update', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.delete', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
+        jAcl2DbManager::addRight('group1', 'super.cms.list' );
+        jAcl2DbManager::addRight('group1', 'super.cms.update' );
+        jAcl2DbManager::addRight('group1', 'super.cms.delete', 154);
+
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.list'));
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.update'));
+        $this->assertFalse(jAcl2::checkByUser('laurent', 'super.cms.create')); // doesn't exist
+        $this->assertFalse(jAcl2::checkByUser('laurent', 'super.cms.read'));// doesn't exist
+        $this->assertFalse(jAcl2::checkByUser('laurent', 'super.cms.delete'));// doesn't exist
+
+        $this->assertFalse(jAcl2::checkByUser('laurent', 'admin.access'));
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.list',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.update',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.delete',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.list',122)); // ressource non repertoriée
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'super.cms.update',122)); // ressource non repertoriée
+        $this->assertFalse(jAcl2::checkByUser('laurent', 'super.cms.delete',122)); // ressource non repertoriée
+
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.list'));
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.update'));
+        $this->assertFalse(jAcl2::checkByUser('lau rent', 'super.cms.create')); // doesn't exist
+        $this->assertFalse(jAcl2::checkByUser('lau rent', 'super.cms.read'));// doesn't exist
+        $this->assertFalse(jAcl2::checkByUser('lau rent', 'super.cms.delete'));// doesn't exist
+
+        $this->assertFalse(jAcl2::checkByUser('lau rent', 'admin.access'));
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.list',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.update',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.delete',154)); // droit sur une ressource
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.list',122)); // ressource non repertoriée
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'super.cms.update',122)); // ressource non repertoriée
+        $this->assertFalse(jAcl2::checkByUser('lau rent', 'super.cms.delete',122)); // ressource non repertoriée
+    }
+
+    /**
+    * @depends testCheckRightByUser
     */
     public function testAddRight(){
         jAcl2DbManager::addRight('group1', 'admin.access');
 
         $this->assertTrue(jAcl2::check('admin.access'));
+        $this->assertTrue(jAcl2::checkByUser('laurent', 'admin.access'));
+        $this->assertTrue(jAcl2::checkByUser('lau rent', 'admin.access'));
 
     }
 

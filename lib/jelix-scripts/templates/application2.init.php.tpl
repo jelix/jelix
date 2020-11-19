@@ -15,19 +15,18 @@ jApp::initPaths(
     %%php_rp_www%%,
     %%php_rp_var%%,
     %%php_rp_log%%,
-    %%php_rp_conf%%,
-    %%php_rp_cmd%%
+    %%php_rp_conf%%
 );
 jApp::setTempBasePath(%%php_rp_temp%%);
 
 require($vendorDir.'jelix_app_path.php');
 
-// if you use composer, you can declares these path in the composer.json
-// file instead of declaring them here...
+// Declares here paths of directories containings plugins and modules,
+// that are not already declared into composer.json files of Composer packages
 jApp::declareModulesDir(array(
-                        __DIR__.'/modules/'
-                    ));
+    __DIR__.'/modules/'
+));
 jApp::declarePluginsDir(array(
-                        __DIR__.'/plugins'
-                    ));
+    __DIR__.'/plugins'
+));
 

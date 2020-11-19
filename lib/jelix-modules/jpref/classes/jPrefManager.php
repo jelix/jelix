@@ -3,14 +3,12 @@
 /**
  * @author    Florian Lonqueu-Brochard
  * @contributor Laurent Jouanneau
+ *
  * @copyright 2012 Florian Lonqueu-Brochard, 2016 Laurent Jouanneau
  *
- *
- * @link      http://jelix.org
+ * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
-
 class jPrefManager
 {
     protected static $_ini;
@@ -21,9 +19,10 @@ class jPrefManager
      * Add a preference into the preference config.
      *
      * Should be used only during installation, as the configuration file
-     * is in the app/config/ directory (readonly for the web server in theory).
+     * is in the app/system/ directory (readonly for the web server in theory).
      *
      * @param jPrefItem $preference the preference to add
+     * @param mixed     $pref
      */
     public function addPreference($pref)
     {
@@ -65,7 +64,7 @@ class jPrefManager
     }
 
     /**
-     *
+     * @param mixed $get_prefs_values
      */
     public static function getAllPreferences($get_prefs_values = true)
     {
@@ -110,7 +109,8 @@ class jPrefManager
     }
 
     /**
-     *
+     * @param mixed $pref_id
+     * @param mixed $get_pref_value
      */
     public static function getPref($pref_id, $get_pref_value = true)
     {
@@ -133,13 +133,13 @@ class jPrefManager
             }
 
             return $p;
-        } else {
-            return;
         }
     }
 
     /**
      * @since 1.6.5
+     *
+     * @param mixed $iniFile
      */
     public static function importFromIni($iniFile)
     {
@@ -162,13 +162,13 @@ class jPrefManager
 
     protected static function _getPrefFile()
     {
-        return \Jelix\IniFile\Util::read(jApp::appConfigPath(self::$_pref_config_file));
+        return \Jelix\IniFile\Util::read(jApp::appSystemPath(self::$_pref_config_file));
     }
 
     protected function _loadIniModifier()
     {
         if (!self::$_ini) {
-            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::appConfigPath(self::$_pref_config_file));
+            self::$_ini = new \Jelix\IniFile\IniModifier(jApp::appSystemPath(self::$_pref_config_file));
         }
 
         return self::$_ini;

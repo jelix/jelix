@@ -191,9 +191,9 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
             <array property="data">
                 <string key="name" value="" />
                 <string key="price" value="" />
-                <array key="tag">array()</array>
+                <array key="tag">[]</array>
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
         $this->assertComplexIdenticalStr($container, $verif);
@@ -207,9 +207,9 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
             <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
-                <array key="tag">array()</array>
+                <array key="tag">[]</array>
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
         $this->assertComplexIdenticalStr($container, $verif);
@@ -222,9 +222,9 @@ class jforms_With_DaoTest extends jUnitTestCaseDb {
             <array property="data">
                 <string key="name" value="other phone" />
                 <string key="price" value="68" />
-                <array key="tag">array(\'best seller\', \'high tech\')</array>
+                <array key="tag">["best seller", "high tech"]</array>
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
         $this->assertComplexIdenticalStr($container, $verif);

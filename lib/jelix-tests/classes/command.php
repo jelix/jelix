@@ -3,8 +3,9 @@
  * PHPUnit command line execution controller.
  * 
  * This suppose that PHPUnit is installed and declared in include path
- * 
- * @package jelix-tests
+ *
+ * @package     jelix
+ * @subpackage  jelix-tests
  * @author Laurent Jouanneau
  * @contributor  Christophe Thiriot (for some code imported from his jphpunit module)
  */
@@ -17,8 +18,6 @@ require_once(__DIR__.'/junittestcasedb.class.php');
 class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
 
     protected $entryPoint = 'index';
-
-    protected $epInfo = null;
 
     protected $testType = '';
 
@@ -113,17 +112,17 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             $this->arguments['testFile'] = '';
         }
 
-        $appInstaller = new jInstallerApplication();
-        $this->epInfo = $appInstaller->getEntryPointInfo($this->entryPoint);
+        $globalSetup = new \Jelix\Installer\GlobalSetup();
+        $epInfo = $globalSetup->getMainEntryPoint();
 
         // let's load configuration now, and coordinator. it could be needed by tests
         // (during load of their php files or during execution)
-        jApp::setConfig(jConfigCompiler::readAndCache($this->epInfo->configFile, null, $this->entryPoint));
+        jApp::setConfig(jConfigCompiler::readAndCache($epInfo->getConfigFileName(), null, $this->entryPoint));
         jApp::setCoord(new jCoordinator('', false));
 
         if ($modulesTests == 0) {
             // we add all modules in the test list
-            $suite = $this->getAllModulesTestSuites();
+            $suite = $this->getAllModulesTestSuites($globalSetup);
             if (count($suite)) {
                 $this->arguments['test'] = $suite;
                 unset ($this->arguments['testFile']);
@@ -134,7 +133,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             }
         }
         else if ($modulesTests == 1 && !$this->version36) {
-            $suite = $this->getModuleTestSuite($this->options[1][0]);
+            $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0]);
             if (count($suite)) {
                 $this->arguments['test'] = $suite;
                 if (isset($this->options[1][1])) { // a specifique test file
@@ -150,9 +149,9 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
         else if ($modulesTests == 1) {
             if (isset($this->options[1][1])) { // a specifique test file
-                $suite = $this->getModuleTestSuite($this->options[1][0], $this->options[1][1]);
+                $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0], $this->options[1][1]);
             } else {
-                $suite = $this->getModuleTestSuite($this->options[1][0]);
+                $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0]);
             }
             if (count($suite)) {
                 $this->arguments['test'] = $suite;
@@ -164,10 +163,10 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         }
     }
 
-    protected function getAllModulesTestSuites() {
+    protected function getAllModulesTestSuites(\Jelix\Installer\GlobalSetup $globalSetup) {
 
 
-        $moduleList = $this->epInfo->getModulesList();
+        $moduleList = $globalSetup->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 
@@ -198,9 +197,9 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
     }
 
 
-    protected function getModuleTestSuite($module, $testFile = '') {
+    protected function getModuleTestSuite(\Jelix\Installer\GlobalSetup $globalSetup, $module, $testFile = '') {
 
-        $moduleList = $this->epInfo->getModulesList();
+        $moduleList = $globalSetup->getModulesList();
 
         $topsuite = new PHPUnit_Framework_TestSuite();
 

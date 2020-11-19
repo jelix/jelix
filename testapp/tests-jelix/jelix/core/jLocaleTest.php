@@ -3,11 +3,13 @@
 * @package     jelix tests
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2006-20012 Laurent Jouanneau
+* @copyright   2006-2018 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use \Jelix\PropertiesFile\Properties;
+use \Jelix\PropertiesFile\Parser;
 
 class jLocaleTest extends jUnitTestCase {
 
@@ -32,11 +34,12 @@ class jLocaleTest extends jUnitTestCase {
     public function testBundleUnknownFile(){
         $this->assertTrue($this->filePath != '');
         try {
-            $parser = new jPropertiesFileReader ($this->filePath.'unknownfile');
-            $parser->parse();
+            $properties = new Properties();
+            $reader = new Parser();
+            $reader->parseFromFile($this->filePath.'unknownfile', $properties);
             self::fail('should throw an exception when trying reading unknownfile');
         }catch(Exception $e){
-            $this->assertEquals('Cannot load the resource '.$this->filePath.'unknownfile', $e->getMessage(),
+            $this->assertEquals('Cannot load the properties file '.$this->filePath.'unknownfile', $e->getMessage(),
             'should throw the right exception when trying reading unknownfile (wrong message: '.$e->getMessage().')');
         }
     }
@@ -44,10 +47,10 @@ class jLocaleTest extends jUnitTestCase {
     public function getPropertiesContent(){
         return array(
             array('test_A.properties', '<array> </array>'),
-            array('test_B.properties', '<array>array("aaa"=>"bbb","ccc"=>"")</array>'),
-            array('test_C.properties', '<array>array("aaa"=>"bbb","ccc"=>"ddd")</array>'),
-            array('test_D.properties', '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>'),
-            array('test_E.properties', '<array>array("module.description"=&gt;"Tests unitaires jelix")</array>'),
+            array('test_B.properties', '<array>{"aaa":"bbb","ccc":""}</array>'),
+            array('test_C.properties', '<array>{"aaa":"bbb","ccc":"ddd"}</array>'),
+            array('test_D.properties', '<array>{"module.description":"Tests unitaires jelix"}</array>'),
+            array('test_E.properties', '<array>{"module.description":"Tests unitaires jelix"}</array>'),
             array('test_F.properties', '<array><string key="module.description" value="Tests unitaires jelix" /></array>'),
             array('test_G.properties', '<array><string key="module.description" value="Tests unitaires jelix" />
                                     <string key="ooo" value="bbbb" />
@@ -73,10 +76,13 @@ class jLocaleTest extends jUnitTestCase {
      */
     public function testBundle($file, $content){
         try {
-            $parser = new jPropertiesFileReader ($this->filePath.$file);
-            $parser->parse();
-            $strings = $parser->getProperties();
-            $this->assertComplexIdenticalStr($strings,"<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",$file );
+            $properties = new Properties();
+            $reader = new Parser();
+            $reader->parseFromFile($this->filePath.$file, $properties);
+            $this->assertComplexIdenticalStr(
+                $properties->getAllProperties(),
+                "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n$content",
+                $file);
         }
         catch(Exception $e){
             self::fail('test failed because of exception : ['.$e->getCode().'] '.$e->getMessage());
@@ -106,7 +112,7 @@ class jLocaleTest extends jUnitTestCase {
         jApp::config()->locale = 'de_DE';
         try {
             $loc = jLocale::get('tests1.first.locale', null, 'de_DE');
-            self::fail('no exception');
+            self::fail('no exception (found: "'.$loc.'")');
         }catch(jException $e) {
             self::fail('wrong exception type');
         }catch(Exception $e) {

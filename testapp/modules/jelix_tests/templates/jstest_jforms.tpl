@@ -583,7 +583,7 @@ jFormsJQ.tForm.addControl(c);
 c = new jFormsJQControlString('description', 'Description in html');
 c.errInvalid='"Description in html" field is invalid';
 jFormsJQ.tForm.addControl(c);
-jelix_wymeditor_default("jf_description","jforms_jelix_tests_formtest");
+jelix_ckeditor_ckdefault("jf_description","jforms_jelix_tests_formtest");
 
 c = new jFormsJQControlString('objets[]', 'You have ');
 c.required = true;

@@ -1,22 +1,22 @@
 {
-    "name": "jelix/for-classic-package",
+    "name": "jelix/jelix-essential",
     "type": "library",
     "description": "used to declare jelix dependencies for testapp or other packages",
-    "license": "LGPL-2.1",
+    "license": "LGPL-2.1-or-later",
     "require": {
-        "jelix/fakeserverconf": "1.0.*",
-        "jelix/composer-module-setup": "0.*",
-        "phpmailer/phpmailer": "^5.2.18",
-        "jelix/soap-server-module": "^1.7.6",
-        "jelix/castor": "1.0.*",
-        "jelix/feeds-module": "^1.7.2",
-        "jelix/inifile": "^2.4.0",
-        "jelix/wikirenderer-plugin": "^1.7.1",
-        "symfony/console":"^3.2.0",
-        "jelix/file-utilities": "1.8.*",
-        "jelix/version": "1.0.*",
-        "defuse/php-encryption": "^2.0",
-        "google/recaptcha": "^1.1.2"
+        "jelix/fakeserverconf": "^1.0.0",
+        "jelix/composer-module-setup": "^1.0.0",
+        "phpmailer/phpmailer": "^5.2.28",
+        "jelix/castor": "^1.0.1",
+        "jelix/inifile": "^3.2.4",
+        "jelix/simplelocalization": "^1.7.1",
+        "jelix/properties-file": "^1.2.1",
+        "symfony/console":"^3.2.14",
+        "jelix/file-utilities": "^1.8.4",
+        "jelix/version": "^1.1.0",
+        "defuse/php-encryption": "^2.2.1",
+        "google/recaptcha": "^1.1.3",
+        "paragonie/random_compat": "<9.99"
     },
     "autoload": {
         "psr-0": { "jelix\\": "."
@@ -24,7 +24,12 @@
         "psr-4": {
             "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
             "Jelix\\Routing\\UrlMapping\\": "jelix/core/UrlMapping/",
-            "Jelix\\Dependencies\\" : "jelix/Dependencies"
+            "Jelix\\Installer\\": "jelix/installer/Installer/",
+            "Jelix\\Scripts\\": "jelix/Scripts/",
+            "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
+            "Jelix\\Dependencies\\" : "jelix/Dependencies",
+            "Jelix\\WebAssets\\" : "jelix/WebAssets",
+            "Jelix\\UnitTests\\" : "jelix-tests/UnitTests"
         },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]

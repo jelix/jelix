@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jelix_tests@testapp.jelix.org" name="jelix_tests">
-#expand        <version date="__TODAY__">__VERSION__</version>
+        <version date="2020-08-17 22:31">1.7.6-pre</version>
         <label>Jelix tests</label>
         <description>unit tests for jelix</description>
-        <license URL=""></license>
+        <license URL=""/>
         <copyright>Copyright 2006-2011 jelix.org</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
-#expand        <module name="testurls" minversion="__VERSION__" maxversion="__VERSION__" />
-               <module name="jauthdb" />
-               <module name="jacl2db" />
-               <module name="jacldb" />
+        <jelix minversion="1.7.0-beta.3" maxversion="1.7.6"/>
+        <module name="testurls" minversion="1.7.6-pre" maxversion="1.7.6-pre"/>
+               <module name="jauthdb"/>
+               <module name="jacl2db"/>
+               <module name="jacldb"/>
     </dependencies>
     <autoload>
-        <class name="myautoloadedclass" file="autoloadtest/autoloadtestclass.php" />
-        <classPattern pattern="/^myalclass/" dir="autoloadtest/withpattern/" suffix=".cl.php" />
-        <namespace name="jelixTests\foo" dir="autoloadtest" />
-        <namespacePathMap name="jelixTests\bar" dir="autoloadtest/barns" suffix=".class.php" />
-        <includePath dir="autoloadtest/incpath" suffix=".php" />
-        <autoloader file="autoloadtest/myautoloader.php" />
+        <class name="myautoloadedclass" file="autoloadtest/autoloadtestclass.php"/>
+        <classPattern pattern="/^myalclass/" dir="autoloadtest/withpattern/" suffix=".cl.php"/>
+        <namespace name="jelixTests\foo" dir="autoloadtest"/>
+        <namespacePathMap name="jelixTests\bar" dir="autoloadtest/barns" suffix=".class.php"/>
+        <includePath dir="autoloadtest/incpath" suffix=".php"/>
+        <autoloader file="autoloadtest/myautoloader.php"/>
     </autoload>
 </module>

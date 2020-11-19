@@ -1,10 +1,5 @@
 <?php
+$locales = include(__DIR__.'/../../../jelix/installer/Installer/Checker/installmessages.fr.php');
 
-$locales = array(
-
-    'title'=>'Prerequis',
-    'results'=>'Resultats',
-
-#include ../../../jelix/installer/messageProvider.fr.inc.php
-
-);
+$locales['title'] = 'Prerequis';
+$locales['results'] = 'Resultats';

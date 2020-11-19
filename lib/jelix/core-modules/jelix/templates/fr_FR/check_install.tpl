@@ -15,7 +15,7 @@
         </ul>
         <p>Si vous voulez utiliser un autre nom que jelix pour ce dossier,
            modifier le paramêtre <code>jelixWWWPath</code>
-           dans <em>app/config/mainconfig.ini.php</em>.</p>
+           dans <em>app/system/mainconfig.ini.php</em>.</p>
         <p>Pour plus d'informations, consultez
              <a href="http://docs.jelix.org/fr/manuel-1.7/configurer-server"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>

@@ -1,0 +1,88 @@
+version: '3.4'
+services:
+  pgsql:
+    image: postgres:11
+    container_name: "jelix_${JLXBRANCH}_test_pgsql"
+    environment:
+      POSTGRES_DB: testapp
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: jelix
+    volumes:
+      - pg_data:/var/lib/postgresql
+    networks:
+      - default
+  redis:
+    image: redis:5
+    container_name: "jelix_${JLXBRANCH}_test_redis"
+    networks:
+     - default
+  memcached:
+    image: memcached:1.6
+    container_name: "jelix_${JLXBRANCH}_test_memcached"
+    networks:
+     - default
+  mysql:
+    image: mysql
+    container_name: jelix_${JLXBRANCH}_test_mysql
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: mysqlpass
+      MYSQL_DATABASE: testapp
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: jelix
+    networks:
+      - default
+  openldap:
+    build: ./docker-conf/openldap
+    container_name: jelix_${JLXBRANCH}_test_ldap
+    environment:
+      #SLAPD_FORCE_RECONFIGURE: "true"
+      SLAPD_PASSWORD: "passjelix"
+      SLAPD_ORGANISATION: "Jelix"
+      SLAPD_DOMAIN: "tests.jelix"
+      SLAPD_TLS_CRT_FILENAME: "ldap.jelix.crt"
+      SLAPD_TLS_KEY_FILENAME: "ldap.jelix.key"
+      SLAPD_TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
+    volumes:
+      - "./docker-conf/certs:/customcerts"
+      - "./docker-conf/openldap/ldif:/customldif"
+    networks:
+      - default
+  php:
+    build: ./docker-conf/phpfpm
+    container_name: jelix_${JLXBRANCH}_test_php
+    environment:
+      TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
+      TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
+      PHP_VERSION: "${PHP_VERSION}"
+    volumes:
+      - "../:/jelixapp/"
+      - "./docker-conf/certs:/customcerts"
+    networks:
+      - default
+    depends_on:
+      - pgsql
+      - redis
+      - memcached
+      - mysql
+      - openldap
+  web:
+    image: nginx:alpine
+    container_name: jelix_${JLXBRANCH}_test_web
+    hostname: testapp.local
+    volumes:
+      - "./docker-conf/nginx-default.conf:/etc/nginx/conf.d/default.conf"
+      - "../:/jelixapp/"
+    command: /bin/sh -c "nginx -g 'daemon off;'"
+    ports:
+      - "${TESTAPP_WEB_PORT}:80"
+    networks:
+      default:
+         aliases:
+           - testapp.local
+    depends_on:
+      - php
+volumes:
+  pg_data:
+    name: "jelix_${JLXBRANCH}_pg_data"
+

@@ -4,13 +4,13 @@
         <version date="2016-06-04">1.0</version>
         <label>news</label>
         <description>module to test urls</description>
-        <license URL=""></license>
+        <license URL=""/>
         <copyright>Copyright 2016 jelix.org</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
-#expand        <module name="jelix_tests" minversion="__VERSION__" maxversion="__VERSION__" />
+        <jelix minversion="1.7.6-pre" maxversion="1.7.6"/>
+        <module name="jelix_tests" minversion="1.7.6-pre" maxversion="1.7.6-pre"/>
     </dependencies>
 </module>

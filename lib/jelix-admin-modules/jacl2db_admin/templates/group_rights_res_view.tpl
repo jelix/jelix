@@ -12,7 +12,7 @@
 <tbody>
 {foreach $rightsWithResources as $subject=>$resources}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subjects_localized[$subject]|eschtml}</th>
+    <th>{$rightsLabels[$subject]|eschtml}</th>
     <td>{assign $firstr=true}
         {foreach $resources as $r}{if !$firstr}, {else}{assign $firstr=false}{/if}
         <span class="aclres{$r->canceled}">{$r->id_aclres|eschtml}</span>{/foreach}</td>

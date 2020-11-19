@@ -4,7 +4,7 @@
  * @author    Florian Lonqueu-Brochard
  * @copyright 2012 Florian Lonqueu-Brochard
  *
- * @link      http://jelix.org
+ * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 class jPrefItem

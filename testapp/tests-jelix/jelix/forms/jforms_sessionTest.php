@@ -45,7 +45,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
     </object>
     <array method="getAllData()">
         <string key="name" value="" />
@@ -80,7 +80,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="" />
             <string key="price" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
@@ -109,18 +109,18 @@ class jforms_sessionTest extends jUnitTestCase {
         $this->formLabelDescriptor = '
 <object class="cForm_jelix_tests_Jx_label">
     <object method="getContainer()" class="jFormsDataContainer">
-        <array property="formId">array(1,\'fr\')</array>
+        <array property="formId">[1,"fr"]</array>
         <string property="formSelector" value="jelix_tests~label" />
         <array property="data">
             <string key="label" value="" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
         <string key="label" value="" />
     </array>
-    <array method="id()">array(1,\'fr\')</array>
+    <array method="id()">[1,"fr"]</array>
     <array method="getControls()">
         <object key="label" class="jFormsControlInput">
             <string property="ref" value="label"/>
@@ -158,7 +158,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="1" />
         </object>';
         $this->assertComplexIdenticalStr($form1->getContainer(), $verifContainer1);
@@ -183,7 +183,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($form2->getContainer(), $verifContainer2);
@@ -199,12 +199,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifContainer3='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($formLabel->getContainer(), $verifContainer3);
@@ -228,7 +228,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="2" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer1);
@@ -246,7 +246,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="" />
                 <string key="price" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer2);
@@ -258,12 +258,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifContainer3='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer3);
@@ -309,7 +309,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="phone" />
             <string key="price" value="45" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="2" />
     </object>
     <array method="getAllData()">
@@ -351,7 +351,7 @@ class jforms_sessionTest extends jUnitTestCase {
             <string key="name" value="phone" />
             <string key="price" value="23" />
         </array>
-        <array property="errors">array()</array>
+        <array property="errors">[]</array>
         <integer property="refcount" value="0" />
     </object>
     <array method="getAllData()">
@@ -398,7 +398,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="45" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="2" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer1);
@@ -417,7 +417,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="23" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer2);
@@ -431,12 +431,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifContainer3='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer3);
@@ -456,8 +456,8 @@ class jforms_sessionTest extends jUnitTestCase {
         <object class="jFormsDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
-            <array property="data">array()</array>
-            <array property="errors">array()</array>
+            <array property="data">[]</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="1" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
@@ -471,7 +471,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="23" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
@@ -479,12 +479,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifProduct2='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
@@ -503,7 +503,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="name" value="phone" />
                 <string key="price" value="23" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
@@ -511,12 +511,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifProduct2='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
@@ -530,12 +530,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifProduct2='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('label', array(1,'fr'), false);
@@ -563,12 +563,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifContainer3='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer3);
@@ -579,7 +579,7 @@ class jforms_sessionTest extends jUnitTestCase {
      */
     function testPrepareObjectFromControls() {
         $f = jForms::create('product');
-        $ctrl= new jFormsControlcheckbox('instock');
+        $ctrl= new jFormsControlCheckbox('instock');
         $ctrl->label='En stock?';
         $f->addControl($ctrl);
         
@@ -592,7 +592,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <string key="price" value="" />
                 <string key="instock" value="0" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
         $this->assertComplexIdenticalStr($container, $verif);
@@ -610,7 +610,7 @@ class jforms_sessionTest extends jUnitTestCase {
                 <integer key="price" value="56598" />
                 <string key="instock" value="1" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
         </object>';
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
         $this->assertComplexIdenticalStr($container, $verif);
@@ -649,12 +649,12 @@ class jforms_sessionTest extends jUnitTestCase {
 
         $verifContainer3='
         <object class="jFormsDataContainer">
-            <array property="formId">array(1,\'fr\')</array>
+            <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
                 <string key="label" value="" />
             </array>
-            <array property="errors">array()</array>
+            <array property="errors">[]</array>
             <integer property="refcount" value="0" />
         </object>';
         $this->assertComplexIdenticalStr($container, $verifContainer3);

@@ -33,15 +33,15 @@ class jacl2_managerTest extends jUnitTestCaseDb {
     protected static $subjects;
 
     public function testAddSubject(){
-        jAcl2DbManager::addSubject('super.cms' , 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms' , 'cms~rights.super.cms');
         self::$subjects = array(
             array('id_aclsbj'=>'super.cms', 'label_key'=>'cms~rights.super.cms'),
         );
         $this->assertTableContainsRecords('jacl2_subject', self::$subjects);
 
-        jAcl2DbManager::addSubject('jxacl.groups.management', 'jxacl~db.sbj.groups.management');
-        jAcl2DbManager::addSubject('admin.access', 'admin~rights.access');
-        jAcl2DbManager::addSubject('admin.foo', 'admin~rights.foo');
+        jAcl2DbManager::createRight('jxacl.groups.management', 'jxacl~db.sbj.groups.management');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
+        jAcl2DbManager::createRight('admin.foo', 'admin~rights.foo');
 
         self::$subjects[] = array('id_aclsbj'=>'jxacl.groups.management', 'label_key'=>'jxacl~db.sbj.groups.management');
         self::$subjects[] = array('id_aclsbj'=>'admin.access', 'label_key'=>'admin~rights.access');
@@ -54,7 +54,7 @@ class jacl2_managerTest extends jUnitTestCaseDb {
      * @depends testAddSubject
      */
     public function testRemoveSubject(){
-        jAcl2DbManager::removeSubject('admin.foo');
+        jAcl2DbManager::deleteRight('admin.foo');
         array_pop(self::$subjects);
         $this->assertTableContainsRecords('jacl2_subject', self::$subjects);
     }
@@ -64,9 +64,9 @@ class jacl2_managerTest extends jUnitTestCaseDb {
      * @depends testRemoveSubject
      */
     public function testAddRight(){
-        jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-        jAcl2DbManager::addSubject('super.cms.list2' , 'cms~rights.super.cms.list');
-        jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
+        jAcl2DbManager::createRight('super.cms.list' , 'cms~rights.super.cms.list');
+        jAcl2DbManager::createRight('super.cms.list2' , 'cms~rights.super.cms.list');
+        jAcl2DbManager::createRight('super.cms.update' , 'cms~rights.super.cms.update');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.list', 'label_key'=>'cms~rights.super.cms.list');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.list2', 'label_key'=>'cms~rights.super.cms.list');
         self::$subjects[] = array('id_aclsbj'=>'super.cms.update', 'label_key'=>'cms~rights.super.cms.update');
@@ -100,7 +100,8 @@ class jacl2_managerTest extends jUnitTestCaseDb {
         // let's insert some inexisting rights
         $this->assertFalse(jAcl2DbManager::addRight('group1', 'admin.access.bla'));
         $this->assertFalse(jAcl2DbManager::addRight('group1', 'admin.dont.exist'));
-        $this->assertTrue(jAcl2DbManager::addRight('group1', 'super.cms.list' )); // on tente d'inserer le meme droit
+        // let's insert an existing right
+        $this->assertTrue(jAcl2DbManager::addRight('group1', 'super.cms.list' ));
         $this->assertTableContainsRecords('jacl2_rights', self::$rights);
     }
 
@@ -147,7 +148,7 @@ class jacl2_managerTest extends jUnitTestCaseDb {
      */
     public function testRemoveSubject2(){
         // remove a subject when rights exists on it
-        jAcl2DbManager::removeSubject('super.cms.update');
+        jAcl2DbManager::deleteRight('super.cms.update');
         array_pop(self::$subjects);
         $this->assertTableContainsRecords('jacl2_subject', self::$subjects);
 
@@ -171,11 +172,11 @@ class jacl2_managerTest extends jUnitTestCaseDb {
 
       $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
-      jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-      jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.create' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.view' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.delete' , 'cms~rights.super.cms.delete');
+      jAcl2DbManager::createRight('super.cms.list' , 'cms~rights.super.cms.list');
+      jAcl2DbManager::createRight('super.cms.update' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.create' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.view' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.delete' , 'cms~rights.super.cms.delete');
 
       $rights = array();
       $this->assertTableContainsRecords('jacl2_rights', $rights);
@@ -257,11 +258,11 @@ class jacl2_managerTest extends jUnitTestCaseDb {
 
       $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
-      jAcl2DbManager::addSubject('super.cms.list' , 'cms~rights.super.cms.list');
-      jAcl2DbManager::addSubject('super.cms.update' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.create' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.view' , 'cms~rights.super.cms.update');
-      jAcl2DbManager::addSubject('super.cms.delete' , 'cms~rights.super.cms.delete');
+      jAcl2DbManager::createRight('super.cms.list' , 'cms~rights.super.cms.list');
+      jAcl2DbManager::createRight('super.cms.update' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.create' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.view' , 'cms~rights.super.cms.update');
+      jAcl2DbManager::createRight('super.cms.delete' , 'cms~rights.super.cms.delete');
 
       $rights = array();
       $this->assertTableContainsRecords('jacl2_rights', $rights);
@@ -351,6 +352,80 @@ class jacl2_managerTest extends jUnitTestCaseDb {
                 );
       $this->assertTableContainsRecords('jacl2_rights', $rights);
     }
+
+    /**
+     * @depends testSetNewRightsOnGroup
+     */
+    public function testCopyRightSettings() {
+        $this->emptyTable('jacl2_user_group');
+        $this->emptyTable('jacl2_rights');
+        $this->emptyTable('jacl2_subject');
+
+        $groups= array(
+            array('id_aclgrp'=>'group1', 'name'=>'group1', 'grouptype'=>0, 'ownerlogin'=>null),
+            array('id_aclgrp'=>'group2', 'name'=>'group2', 'grouptype'=>0, 'ownerlogin'=>null)
+        );
+
+        $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
+
+        jAcl2DbManager::createRight('super.cms.list' , 'cms~rights.super.cms.list');
+        jAcl2DbManager::createRight('super.cms.update' , 'cms~rights.super.cms.update');
+        jAcl2DbManager::createRight('super.cms.create' , 'cms~rights.super.cms.update');
+        jAcl2DbManager::createRight('super.cms.view' , 'cms~rights.super.cms.update');
+        jAcl2DbManager::createRight('super.cms.delete' , 'cms~rights.super.cms.delete');
+
+        // rights for group 1
+        $newRights = array('super.cms.list'=>true, 'super.cms.create'=>true);
+        jAcl2DbManager::setRightsOnGroup('group1', $newRights);
+        $rights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+        // rights for group 2
+        $newRights = array('super.cms.list'=>'y');
+        jAcl2DbManager::setRightsOnGroup('group2', $newRights);
+        $rights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+
+        jAcl2DbManager::copyRightSettings('super.cms.list', 'super.cms.view');
+        $rights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+
+        jAcl2DbManager::removeRight('group1', 'super.cms.list', '-', true);
+        $rights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+        jAcl2DbManager::copyRightSettings('super.cms.list', 'super.cms.view');
+        $rights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group2', 'id_aclres'=> '-', 'canceled'=>'0'),
+        );
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+
+    }
 }
 
-?>

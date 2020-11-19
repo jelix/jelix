@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <entrypoint name="index" default="true">
+        <url module="testapp" action="main:index"/>
+        <url module="testapp"/>
+        <url pathinfo="/jelix_tests/urlsig/url8" module="jelix_tests" action="urlsig:url8" https="true"/>
+        <url module="jelix_tests"/>
+        <url module="jelix" include="urls.xml" pathinfo="/jelix/"/>
+    </entrypoint>
+    <xmlrpcentrypoint name="xmlrpc" default="true"/>
+    <entrypoint name="jsonrpc" type="jsonrpc" default="true">
+        <url pathinfo="/" module="jelix_tests" action="jstests:first"/>
+    </entrypoint>
+    <entrypoint name="soap" type="soap" default="true"/>
+    <entrypoint name="rest" type="classic"/>
+    <entrypoint name="cmdline" type="cmdline"/>
+</urls>

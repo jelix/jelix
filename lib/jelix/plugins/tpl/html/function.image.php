@@ -2,15 +2,22 @@
 /**
  * @package     jelix
  * @subpackage  jtpl_plugin
+ *
  * @author      Lepeltier kévin
  * @contributor Dominique Papin, Rob2
+ *
  * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2010 Rob2
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $tpl
+ * @param mixed $src
+ * @param mixed $params
  */
 
 /**
- * image plugin :  write the url corresponding to the image
+ * image plugin :  write the url corresponding to the image.
  *
  * Add a link to the image,
  * The image is resized, and cached
@@ -46,22 +53,25 @@
  * png   -> image/png
  * other -> image/png
  *
- * @param jTpl $tpl template engine
- * @param string $src the url of image relative to the www path
- * @param array $params parameters for the transformation and img element
+ * @param jTpl   $tpl    template engine
+ * @param string $src    the url of image relative to the www path
+ * @param array  $params parameters for the transformation and img element
  */
-function jtpl_function_html_image($tpl, $src, $params=array()) {
+function jtpl_function_html_image($tpl, $src, $params = array())
+{
     $att = jImageModifier::get($src, $params, false);
 
     // alt attribute is required (xhtml/html4 spec)
-    if (!array_key_exists('alt',$att))
-        $att['alt']='';
+    if (!array_key_exists('alt', $att)) {
+        $att['alt'] = '';
+    }
 
     // generating hmtl tag img
     echo '<img';
-    foreach( $att as $key => $val ) {
-        if( !empty($val) || $key == 'alt' )
+    foreach ($att as $key => $val) {
+        if (!empty($val) || $key == 'alt') {
             echo ' '.$key.'="'.htmlspecialchars($val).'"';
+        }
     }
     echo '/>';
 }

@@ -1,28 +1,32 @@
 <?php
 
 /**
-* @package     jelix-scripts
-* @author      Laurent Jouanneau
-* @contributor Loic Mathaud
-* @contributor Bastien Jaillot
-* @copyright   2005-2016 Laurent Jouanneau, 2008 Bastien Jaillot
-* @link        http://www.jelix.org
-* @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
-*/
+ * @package     jelix-scripts
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Loic Mathaud
+ * @contributor Bastien Jaillot
+ *
+ * @copyright   2005-2016 Laurent Jouanneau, 2008 Bastien Jaillot
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
+ */
+
 namespace Jelix\DevHelper\Command;
-use Symfony\Component\Console\Command\Command;
+
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
-
+class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp
+{
     protected function configure()
     {
         $this
             ->setName('module:create-ctrl')
-            ->setDescription('Create a new controller, either a jController or jControllerCmdLine')
+            ->setDescription('Create a new controller')
             ->setHelp('')
             ->addArgument(
                 'module',
@@ -41,16 +45,10 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
                 'index'
             )
             ->addOption(
-               'cmdline',
-               null,
-               InputOption::VALUE_NONE,
-               'To create a controller for a command line script'
-            )
-            ->addOption(
-               'addinstallzone',
-               null,
-               InputOption::VALUE_NONE,
-               'Add the check_install zone for new application.'
+                'add-install-zone',
+                null,
+                InputOption::VALUE_NONE,
+                'Add the check_install zone for new application.'
             )
         ;
         parent::configure();
@@ -65,31 +63,22 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp {
 
         $agfilename = $path.'controllers/';
         $this->createDir($agfilename);
-       
-        if ($input->getOption('cmdline')) { 
-            $type = 'cmdline';
+
+        $type = 'classic';
+        $ctrlname = strtolower($controller).'.'.$type.'.php';
+        $agfilename .= $ctrlname;
+
+        $method = $input->getArgument('method');
+
+        $param = array('name' => $controller,
+            'method' => $method,
+            'module' => $module, );
+
+        if ($input->getOption('add-install-zone')) {
+            $tplname = 'module/controller.newapp.tpl';
         } else {
-            $type = 'classic';
+            $tplname = 'module/controller.tpl';
         }
-       $ctrlname = strtolower($controller).'.'. $type .'.php';
-       $agfilename.= $ctrlname;
-
-       $method = $input->getArgument('method');
-
-       $param= array('name'=>$controller ,
-                     'method'=>$method,
-                     'module'=>$module);
-
-       if ($input->getOption('cmdline')) {
-            $tplname = 'module/controller.cmdline.tpl';
-       } else {
-            if ($input->getOption('addinstallzone')) {
-                $tplname = 'module/controller.newapp.tpl';
-            }
-            else {
-                $tplname = 'module/controller.tpl';
-            }
-       }
-       $this->createFile($agfilename, $tplname, $param, 'Controller');
+        $this->createFile($agfilename, $tplname, $param, 'Controller');
     }
 }

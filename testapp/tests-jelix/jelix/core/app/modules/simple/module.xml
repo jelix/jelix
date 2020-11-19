@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<module xmlns="http://jelix.org/ns/module/1.0">
+    <info id="simple@testapp.jelix.org" name="simple">
+        <version>1.0</version>
+        <label>simplé</label>
+    </info>
+    <dependencies>
+        <jelix minversion="1.6" maxversion="2.0" />
+    </dependencies>
+</module>

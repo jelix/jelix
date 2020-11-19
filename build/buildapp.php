@@ -46,7 +46,7 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'IS_NIGHTLY'=> array(
-    false,
+    'says if it is a nightly or not',
     false,
     ),
 'SOURCE_REVISION'=> array(
@@ -57,7 +57,7 @@ $BUILD_OPTIONS = array(
     '',
     ),
 );
-require(__DIR__.'/../vendor/autoload.php');
+require(__DIR__.'/vendor/autoload.php');
 bt\Cli\Bootstrap::start($BUILD_OPTIONS);
 
 //----------------- Prepare environment variables
@@ -72,32 +72,22 @@ $TODAY = date('Y-m-d H:i');
 Environment::setFromFile('VERSION',$APPDIR.'/VERSION',true);
 $VERSION = preg_replace('/\s+/m', '', $VERSION);
 $SOURCE_REVISION = bt\FileSystem\Git::revision(__DIR__.'/../');
-
-$IS_NIGHTLY = (strpos($VERSION,'SERIAL') !== false);
-
-if($IS_NIGHTLY){
-    $PACKAGE_NAME=$APPNAME.'-'.str_replace('SERIAL', '', $VERSION);
-    if(substr($PACKAGE_NAME,-1,1) == '.')
-      $PACKAGE_NAME = substr($PACKAGE_NAME,0,-1);
-    $VERSION = str_replace('SERIAL', $SOURCE_REVISION, $VERSION);
-}
-else {
-    $PACKAGE_NAME=$APPNAME.'-'.$VERSION;
-}
-
+$PACKAGE_NAME=$APPNAME.'-'.$VERSION;
 
 Environment::setFromFile('LIB_VERSION','lib/jelix/VERSION', true);
 $LIB_VERSION = preg_replace('/\s+/m', '', $LIB_VERSION);
-$IS_LIB_NIGHTLY = (strpos($LIB_VERSION,'SERIAL') !== false);
 
-if($IS_LIB_NIGHTLY){
-    $LIB_VERSION = str_replace('SERIAL', $SOURCE_REVISION, $LIB_VERSION);
+if ($IS_NIGHTLY) {
+    $VERSION .= '.'. $SOURCE_REVISION;
+    $LIB_VERSION .= '.'. $SOURCE_REVISION;
 }
 
-if (preg_match('/\.([a-z0-9\-]+)$/i', $LIB_VERSION, $m))
+if (preg_match('/^[0-9]+\.[0-9]+\.([a-z0-9\-\.]+)$/i', $LIB_VERSION, $m))
     $LIB_VERSION_MAX =  substr($LIB_VERSION, 0, - strlen($m[1]))."*";
 else
     $LIB_VERSION_MAX = $LIB_VERSION;
+
+
 
 
 if($PACKAGE_TAR_GZ || $PACKAGE_ZIP ){
@@ -112,8 +102,13 @@ DirUtils::createDir($MAIN_TARGET_PATH);
 //... manifests execution
 Manifest::process('build/manifests/'.$APPNAME.'.mn', '.', $MAIN_TARGET_PATH, Environment::getAll());
 
-
 file_put_contents($MAIN_TARGET_PATH.$APPDIR.'/VERSION', $VERSION);
+
+if ($IS_NIGHTLY && $APPNAME == 'testapp') {
+    require(__DIR__.'/changeVersion.lib.php');
+    $modifier = new ChangeVersion($MAIN_TARGET_PATH);
+    $modifier->changeVersionInTestapp($VERSION);
+}
 
 //... packages
 if ($PACKAGE_TAR_GZ || $PACKAGE_ZIP) {

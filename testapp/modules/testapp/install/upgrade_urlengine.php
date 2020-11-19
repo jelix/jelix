@@ -9,12 +9,12 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class testappModuleUpgrader_urlengine extends jInstallerModule2 {
+class testappModuleUpgrader_urlengine extends \Jelix\Installer\Module\Installer {
 
-    public $targetVersions = array('1.4b2.2406');
-    public $date = '2012-07-20';
+    protected $targetVersions = array('1.4b2.2406');
+    protected $date = '2012-07-20';
 
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $this->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
+    function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
+        $helpers->getConfigIni()->setValue('engine', 'basic_significant', 'urlengine');
     }
 }

@@ -1,180 +1,243 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  core_response
-* @author      Laurent Jouanneau
-* @contributor Yann, Dominique Papin
-* @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
-* @copyright   2005-2017 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
-* @copyright   2008 Warren Seine, Alexis Métaireau
-* @copyright   2009 Julien Issler, Olivier Demah
-* @copyright   2010 Brice Tence
-*              few lines of code are copyrighted CopixTeam http://www.copix.org
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  core_response
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Yann, Dominique Papin
+ * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
+ *
+ * @copyright   2005-2019 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+ * @copyright   2008 Warren Seine, Alexis Métaireau
+ * @copyright   2009 Julien Issler, Olivier Demah
+ * @copyright   2010 Brice Tence
+ *              few lines of code are copyrighted CopixTeam http://www.copix.org
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+require_once __DIR__.'/jResponseBasicHtml.class.php';
+require_once JELIX_LIB_PATH.'tpl/jTpl.class.php';
 
 /**
-*
-*/
-require_once(__DIR__.'/jResponseBasicHtml.class.php');
-require_once(JELIX_LIB_PATH.'tpl/jTpl.class.php');
-
-/**
-* HTML5 response
-* @package  jelix
-* @subpackage core_response
-*/
-class jResponseHtml extends jResponseBasicHtml {
+ * HTML5 response.
+ *
+ * @package  jelix
+ * @subpackage core_response
+ */
+class jResponseHtml extends jResponseBasicHtml
+{
     /**
-    * jresponse id
-    * @var string
-    */
+     * jresponse id.
+     *
+     * @var string
+     */
     protected $_type = 'html';
 
     /**
-     * Title of the document
+     * Title of the document.
+     *
      * @var string
      */
     public $title = '';
 
     /**
-     * favicon url linked to the document
+     * favicon url linked to the document.
+     *
      * @var string
+     *
      * @since 1.0b2
      */
     public $favicon = '';
 
     /**
-     * The template engine used to generate the body content
+     * The template engine used to generate the body content.
+     *
      * @var jTpl
      */
-    public $body = null;
+    public $body;
 
     /**
      * selector of the main template file
-     * This template should contains the body content, and is used by the $body template engine
+     * This template should contains the body content, and is used by the $body template engine.
+     *
      * @var string
      */
     public $bodyTpl = '';
 
     /**
-     * Selector of the template used when there are some errors, instead of $bodyTpl
+     * Selector of the template used when there are some errors, instead of $bodyTpl.
+     *
      * @var string
      */
     public $bodyErrorTpl = '';
 
     /**
      * body attributes
-     * This attributes are written on the body tags
+     * This attributes are written on the body tags.
+     *
      * @var array
      */
-    public $bodyTagAttributes= array();
+    public $bodyTagAttributes = array();
 
     /**
-     * list of css stylesheet
-     * @var array  key = url, value=link attributes
+     * @var string indicate the value for the X-UA-Compatible meta element, which
+     *             indicate the compatiblity mode of IE. Exemple: "IE=edge"
+     *             In future version, default will be "IE=edge".
+     *
+     * @since 1.6.17
      */
-    protected $_CSSLink = array ();
+    public $IECompatibilityMode = '';
 
     /**
-     * list of css stylesheet for IE
-     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * @var string the content of the viewport meta element
+     *
+     * @since 1.6.17
+     */
+    public $metaViewport = '';
+
+    /**
+     * list of css stylesheet.
+     *
+     * @var array[] key = url, value=link attributes
+     */
+    protected $_CSSLink = array();
+
+    /**
+     * list of css stylesheet for IE.
+     *
+     * @var array[] key = url, value=link attributes + optional parameter _iecondition
+     *
      * @deprecated since 1.7.0
      */
-    protected $_CSSIELink = array ();
+    protected $_CSSIELink = array();
 
     /**
-     * list of CSS code
+     * list of CSS code.
+     *
+     * @var string[]
      */
-    protected $_Styles  = array ();
+    protected $_Styles = array();
 
     /**
-     * list of js script
-     * @var array  key = url, value=link attributes
+     * list of js script.
+     *
+     * @var array[] key = url, value=link attributes
      */
-    protected $_JSLink  = array ();
+    protected $_JSLink = array();
 
     /**
-     * list of js script for IE
-     * @var array  key = url, value=link attributes + optional parameter _iecondition
+     * list of js script for IE.
+     *
+     * @var array[] key = url, value=link attributes + optional parameter _iecondition
+     *
      * @deprecated since 1.7.0
      */
-    protected $_JSIELink  = array ();
+    protected $_JSIELink = array();
 
     /**
-     * inline js code to insert before js links
-     * @var array list of js source code
+     * inline js code to insert before js links.
+     *
+     * @var string[] list of js source code
      */
-    protected $_JSCodeBefore  = array ();
+    protected $_JSCodeBefore = array();
 
     /**
-     * inline js code to insert after js links
-     * @var array list of js source code
+     * inline js code to insert after js links.
+     *
+     * @var string[] list of js source code
      */
-    protected $_JSCode  = array ();
-
-    protected $_assetsGroups = array();
+    protected $_JSCode = array();
 
     /**
-     * list of keywords to add into a meta keyword tag
-     * @var array  array of strings
+     * list of keywords to add into a meta keyword tag.
+     *
+     * @var string[]
      */
     protected $_MetaKeywords = array();
 
     /**
-     * list of descriptions to add into a meta description tag
-     * @var array  array of strings
+     * list of descriptions to add into a meta description tag.
+     *
+     * @var string[]
      */
     protected $_MetaDescription = array();
 
     /**
-     * content of the meta author tag
+     * content of the meta author tag.
+     *
      * @var string
      */
     protected $_MetaAuthor = '';
 
     /**
-     * content of the meta generator tag
+     * content of the meta generator tag.
+     *
      * @var string
      */
     protected $_MetaGenerator = '';
 
     /**
-     * list of information to generate link tags
+     * @var bool false if it should be output <meta charset=""/> or true
+     *           for the default old behavior : <meta content="text/html; charset=""../>
+     *
+     * @since 1.6.17
+     */
+    protected $_MetaOldContentType = true;
+
+    /**
+     * @var array[] list of arrays containing attributes for each meta elements
+     *
+     * @since 1.6.17
+     */
+    protected $_Meta = array();
+
+    /**
+     * list of information to generate link tags.
+     *
      * @var array keys are the href value, valu is an array ('rel','type','title')
      */
     protected $_Link = array();
 
     /**
-     * the end tag to finish tags. it is different if we are in XHTML mode or not
+     * the end tag to finish tags. it is different if we are in XHTML mode or not.
+     *
      * @var string
      */
-    protected $_endTag="/>\n";
+    protected $_endTag = "/>\n";
 
     /**
-    * constructor;
-    * setup the charset, the lang, the template engine
-    */
-    function __construct (){
+     * @var \Jelix\WebAssets\WebAssetsSelection
+     */
+    protected $webAssetsSelection;
+
+    /**
+     * constructor;
+     * setup the charset, the lang, the template engine.
+     */
+    public function __construct()
+    {
         $this->body = new jTpl();
+        $this->webAssetsSelection = new \Jelix\WebAssets\WebAssetsSelection();
         parent::__construct();
     }
 
     /**
-     * output the html content
+     * output the html content.
      *
-     * @return boolean    true if the generated content is ok
+     * @return bool true if the generated content is ok
      */
-    public function output(){
-    
-        if($this->_outputOnlyHeaders){
+    public function output()
+    {
+        if ($this->_outputOnlyHeaders) {
             $this->sendHttpHeaders();
+
             return true;
         }
 
-        foreach($this->plugins as $name=>$plugin)
+        foreach ($this->plugins as $name => $plugin) {
             $plugin->afterAction();
+        }
 
         $this->doAfterActions();
 
@@ -186,541 +249,610 @@ class jResponseHtml extends jResponseBasicHtml {
         if ($this->bodyTpl != '') {
             $this->body->meta($this->bodyTpl);
             $content = $this->body->fetch($this->bodyTpl, 'html', true, false);
+        } else {
+            $content = '';
         }
-        else $content = '';
 
         // retrieve errors messages and log messages
         jLog::outputLog($this);
 
-        foreach($this->plugins as $name=>$plugin)
+        foreach ($this->plugins as $name => $plugin) {
             $plugin->beforeOutput();
+        }
 
-        $this->retrieveAssets();
+        $this->webAssetsSelection->compute(
+            jApp::config(),
+            jApp::config()->webassets['useCollection'],
+            jApp::urlBasePath(),
+            array(
+                '$lang' => jLocale::getCurrentLang(),
+                '$locale' => jLocale::getCurrentLocale(),
+                '$theme' => rtrim('themes/'.jApp::config()->theme, '/'),
+                '$jelix' => rtrim(jApp::urlJelixWWWPath(), '/'),
+            )
+        );
 
         // now let's output the html content
         $this->sendHttpHeaders();
         $this->outputDoctype();
         $this->outputHtmlHeader();
         echo '<body ';
-        foreach($this->bodyTagAttributes as $attr=>$value){
+        foreach ($this->bodyTagAttributes as $attr => $value) {
             echo $attr,'="', htmlspecialchars($value),'" ';
         }
         echo ">\n";
-        echo implode("\n",$this->_bodyTop);
+        echo implode("\n", $this->_bodyTop);
         echo $content;
-        echo implode("\n",$this->_bodyBottom);
+        echo implode("\n", $this->_bodyBottom);
 
-        foreach($this->plugins as $name=>$plugin)
+        foreach ($this->plugins as $name => $plugin) {
             $plugin->atBottom();
+        }
 
         echo '</body></html>';
+
         return true;
     }
 
     /**
-     * set the title of the page
-     * 
+     * set the title of the page.
+     *
      * @param string $title
-     */ 
-    public function setTitle($title) {
+     */
+    public function setTitle($title)
+    {
         $this->title = $title;
     }
 
     /**
-     * add a generic link to the head
-     * 
+     * add a generic link to the head.
+     *
      * @param string $href  url of the link
      * @param string $rel   relation name
      * @param string $type  mime type of the ressource
      * @param string $title
-     */ 
-    public function addLink($href, $rel, $type='', $title='') {
+     */
+    public function addLink($href, $rel, $type = '', $title = '')
+    {
         $this->_Link[$href] = array($rel, $type, $title);
     }
 
     /**
-     * add a link to a javascript script in the document head
+     * add a link to a javascript script in the document head.
      *
      * $forIe parameter exists since 1.0b2
      *
-     * @param string $src the link
-     * @param array $params additionnals attributes for the script tag
-     * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
+     * @param string $src    the link
+     * @param array  $params additionnals attributes for the script tag
+     * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
-    public function addJSLink ($src, $params=array(), $forIE=false){
-        if($forIE){
-            if (!isset ($this->_JSIELink[$src])){
-                if (!is_bool($forIE) && !empty($forIE))
+    public function addJSLink($src, $params = array(), $forIE = false)
+    {
+        if ($forIE) {
+            if (!isset($this->_JSIELink[$src])) {
+                if (!is_bool($forIE) && !empty($forIE)) {
                     $params['_ieCondition'] = $forIE;
+                }
                 $this->_JSIELink[$src] = $params;
             }
-        }else{
-            if (!isset ($this->_JSLink[$src])){
-                $this->_JSLink[$src] = $params;
-            }
-        }
-    }
-    
-    /**
-    *  add a link to a javascript script stored into modules
-    *
-    * @param string $module  the module where file is stored
-    * @param mixed $src the relative path inside the {module}/www/ directory
-    * @param array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
-    */
-    public function addJSLinkModule ($module, $src, $params=array(), $forIE=false){ 
-        $src = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
-        if($forIE){
-            if (!isset ($this->_JSIELink[$src])){
-                if (!is_bool($forIE) && !empty($forIE))
-                    $params['_ieCondition'] = $forIE;
-                $this->_JSIELink[$src] = $params;
-            }
-        }else{
-            if (!isset ($this->_JSLink[$src])){
+        } else {
+            if (!isset($this->_JSLink[$src])) {
                 $this->_JSLink[$src] = $params;
             }
         }
     }
 
     /**
-     * returns all JS links
-     * @return array  key = url, value=link attributes
+     *  add a link to a javascript script stored into modules.
+     *
+     * @param string $module the module where file is stored
+     * @param mixed  $src    the relative path inside the {module}/www/ directory
+     * @param array  $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
+     * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
-    public function getJSLinks() { return $this->_JSLink; }
+    public function addJSLinkModule($module, $src, $params = array(), $forIE = false)
+    {
+        $src = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+        if ($forIE) {
+            if (!isset($this->_JSIELink[$src])) {
+                if (!is_bool($forIE) && !empty($forIE)) {
+                    $params['_ieCondition'] = $forIE;
+                }
+                $this->_JSIELink[$src] = $params;
+            }
+        } else {
+            if (!isset($this->_JSLink[$src])) {
+                $this->_JSLink[$src] = $params;
+            }
+        }
+    }
 
     /**
-     * set all JS links
-     * @param array  $list key = url, value=link attributes
+     * returns all JS links.
+     *
+     * @return array key = url, value=link attributes
      */
-    public function setJSLinks($list) { $this->_JSLink = $list; }
+    public function getJSLinks()
+    {
+        return $this->_JSLink;
+    }
 
     /**
-     * returns all JS links for IE
-     * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * set all JS links.
+     *
+     * @param array $list key = url, value=link attributes
+     */
+    public function setJSLinks($list)
+    {
+        $this->_JSLink = $list;
+    }
+
+    /**
+     * returns all JS links for IE.
+     *
+     * @return array key = url, value=link attributes + optional parameter _iecondition
+     *
      * @deprecated since 1.7.0
      */
-    public function getJSIELinks() { return $this->_JSIELink; }
+    public function getJSIELinks()
+    {
+        return $this->_JSIELink;
+    }
 
     /**
-     * set all JS links for IE
-     * @param array  $list key = url, value=link attributes
+     * set all JS links for IE.
+     *
+     * @param array $list key = url, value=link attributes
+     *
      * @deprecated since 1.7.0
      */
-    public function setJSIELinks($list) { $this->_JSIELink = $list; }
-
-     /**
-     * returns all CSS links
-     * @return array  key = url, value=link attributes
-     */
-    public function getCSSLinks() { return $this->_CSSLink; }
+    public function setJSIELinks($list)
+    {
+        $this->_JSIELink = $list;
+    }
 
     /**
-     * set all CSS links
-     * @param array  $list key = url, value=link attributes
+     * returns all CSS links.
+     *
+     * @return array key = url, value=link attributes
      */
-    public function setCSSLinks($list) { $this->_CSSLink = $list; }
+    public function getCSSLinks()
+    {
+        return $this->_CSSLink;
+    }
 
     /**
-     * returns all CSS links for IE
-     * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * set all CSS links.
+     *
+     * @param array $list key = url, value=link attributes
+     */
+    public function setCSSLinks($list)
+    {
+        $this->_CSSLink = $list;
+    }
+
+    /**
+     * returns all CSS links for IE.
+     *
+     * @return array key = url, value=link attributes + optional parameter _iecondition
+     *
      * @deprecated since 1.7.0
      */
-     public function getCSSIELinks() { return $this->_CSSIELink; }
+    public function getCSSIELinks()
+    {
+        return $this->_CSSIELink;
+    }
 
     /**
-     * set all CSS links for IE
-     * @param array  $list key = url, value=link attributes
+     * set all CSS links for IE.
+     *
+     * @param array $list key = url, value=link attributes
+     *
      * @deprecated since 1.7.0
      */
-    public function setCSSIELinks($list) { $this->_CSSIELink = $list; }
+    public function setCSSIELinks($list)
+    {
+        $this->_CSSIELink = $list;
+    }
 
     /**
-     * add a link to a css stylesheet in the document head
+     * add a link to a css stylesheet in the document head.
      *
      * $forIe parameter exists since 1.0b2
      *
-     * @param string $src the link
-     * @param array $params additionnals attributes for the link tag
-     * @param mixed $forIE if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+     * @param string $src    the link
+     * @param array  $params additionnals attributes for the link tag
+     * @param mixed  $forIE  if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
-    public function addCSSLink ($src, $params=array (), $forIE=false){
-        if($forIE){
-            if (!isset ($this->_CSSIELink[$src])){
-                if (!is_bool($forIE) && !empty($forIE))
+    public function addCSSLink($src, $params = array(), $forIE = false)
+    {
+        if ($forIE) {
+            if (!isset($this->_CSSIELink[$src])) {
+                if (!is_bool($forIE) && !empty($forIE)) {
                     $params['_ieCondition'] = $forIE;
+                }
                 $this->_CSSIELink[$src] = $params;
             }
-        }else{
-            if (!isset ($this->_CSSLink[$src])){
-                $this->_CSSLink[$src] = $params;
-            }
-        }
-    }
-    
-    /**
-    *  add a link to a css stylesheet  stored into modules
-    *
-    * @param string $module  the module where file is stored
-    * @param mixed $src the relative path inside the {module}/www/ directory
-    * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
-    */
-    public function addCSSLinkModule ($module, $src, $params=array(), $forIE=false){ 
-        $src = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
-        if($forIE){
-            if (!isset ($this->_CSSIELink[$src])){
-                if (!is_bool($forIE) && !empty($forIE))
-                    $params['_ieCondition'] = $forIE;
-                $this->_CSSIELink[$src] = $params;
-            }
-        }else{
-            if (!isset ($this->_CSSLink[$src])){
+        } else {
+            if (!isset($this->_CSSLink[$src])) {
                 $this->_CSSLink[$src] = $params;
             }
         }
     }
 
     /**
-    *  add a link to a csstheme stylesheet  stored into modules
-    *
-    * @param string $module  the module where file is stored
-    * @param mixed $src the relative path inside the {module}/www/themes/{currenttheme}/ directory
-    * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-    * @param boolean $forIE if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
-    */
-    public function addCSSThemeLinkModule ($module, $src, $params=array(), $forIE=false){ 
-        $src =  $url = jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>'themes/'.jApp::config()->theme.'/'.$src));
-        if($forIE){
-            if (!isset ($this->_CSSIELink[$src])){
-                if (!is_bool($forIE) && !empty($forIE))
+     *  add a link to a css stylesheet  stored into modules.
+     *
+     * @param string $module the module where file is stored
+     * @param mixed  $src    the relative path inside the {module}/www/ directory
+     * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
+     *
+     * @param bool  $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+     * @param mixed $params
+     */
+    public function addCSSLinkModule($module, $src, $params = array(), $forIE = false)
+    {
+        $src = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+        if ($forIE) {
+            if (!isset($this->_CSSIELink[$src])) {
+                if (!is_bool($forIE) && !empty($forIE)) {
                     $params['_ieCondition'] = $forIE;
+                }
                 $this->_CSSIELink[$src] = $params;
             }
-        }else{
-            if (!isset ($this->_CSSLink[$src])){
+        } else {
+            if (!isset($this->_CSSLink[$src])) {
                 $this->_CSSLink[$src] = $params;
             }
         }
-    }  
+    }
 
     /**
-     * add inline css style into the document (inside a <style> tag)
+     *  add a link to a csstheme stylesheet  stored into modules.
+     *
+     * @param string $module the module where file is stored
+     * @param mixed  $src    the relative path inside the {module}/www/themes/{currenttheme}/ directory
+     * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
+     *
+     * @param bool  $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
+     * @param mixed $params
+     */
+    public function addCSSThemeLinkModule($module, $src, $params = array(), $forIE = false)
+    {
+        $src = $url = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => 'themes/'.jApp::config()->theme.'/'.$src));
+        if ($forIE) {
+            if (!isset($this->_CSSIELink[$src])) {
+                if (!is_bool($forIE) && !empty($forIE)) {
+                    $params['_ieCondition'] = $forIE;
+                }
+                $this->_CSSIELink[$src] = $params;
+            }
+        } else {
+            if (!isset($this->_CSSLink[$src])) {
+                $this->_CSSLink[$src] = $params;
+            }
+        }
+    }
+
+    /**
+     * add inline css style into the document (inside a <style> tag).
+     *
      * @param string $selector css selector
      * @param string $def      css properties for the given selector
      */
-    public function addStyle ($selector, $def=null){
-        if (!isset ($this->_Styles[$selector])){
+    public function addStyle($selector, $def = null)
+    {
+        if (!isset($this->_Styles[$selector])) {
             $this->_Styles[$selector] = $def;
         }
     }
 
     /**
-     * set attributes on the body tag
-     * @param array $attrArray  an associative array of attributes and their values
+     * set attributes on the body tag.
+     *
+     * @param array $attrArray an associative array of attributes and their values
      */
-    public function setBodyAttributes ( $attrArray ){
-        if( is_array($attrArray) ) {
-            foreach( $attrArray as $attr => $value ) {
-                if(!is_numeric($attr)) {
-                    $this->bodyTagAttributes[$attr]=$value;
+    public function setBodyAttributes($attrArray)
+    {
+        if (is_array($attrArray)) {
+            foreach ($attrArray as $attr => $value) {
+                if (!is_numeric($attr)) {
+                    $this->bodyTagAttributes[$attr] = $value;
                 }
             }
         }
     }
 
     /**
-     * add inline javascript code (inside a <script> tag)
-     * @param string $code  javascript source code
-     * @param boolean $before will insert the code before js links if true
+     * add inline javascript code (inside a <script> tag).
+     *
+     * @param string $code   javascript source code
+     * @param bool   $before will insert the code before js links if true
      */
-    public function addJSCode ($code, $before = false){
-        if ($before)
+    public function addJSCode($code, $before = false)
+    {
+        if ($before) {
             $this->_JSCodeBefore[] = $code;
-        else
+        } else {
             $this->_JSCode[] = $code;
+        }
     }
 
     /**
-     * adds a web assets group
+     * adds a web assets group.
+     *
      * @param string $assetGroup
      */
-    public function addAssets($assetGroup) {
-        $this->_assetsGroups[] = $assetGroup;
+    public function addAssets($assetGroup)
+    {
+        $this->webAssetsSelection->addAssetsGroup($assetGroup);
     }
 
-
     /**
-     * add some keywords in a keywords meta tag
+     * add some keywords in a keywords meta tag.
+     *
      * @author Yann
+     *
      * @param string $content keywords
+     *
      * @since 1.0b1
      */
-    public function addMetaKeywords ($content){
+    public function addMetaKeywords($content)
+    {
         $this->_MetaKeywords[] = $content;
     }
+
     /**
-     * add a description in a description meta tag
+     * add a description in a description meta tag.
+     *
      * @author Yann
+     *
      * @param string $content a description
+     *
      * @since 1.0b1
      */
-    public function addMetaDescription ($content){
+    public function addMetaDescription($content)
+    {
         $this->_MetaDescription[] = $content;
     }
+
     /**
-     * add author(s) in a author meta tag
+     * add author(s) in a author meta tag.
+     *
      * @author Olivier Demah
+     *
      * @param string $content author(s)
+     *
      * @since 1.2
      */
-    public function addMetaAuthor($content){
+    public function addMetaAuthor($content)
+    {
         $this->_MetaAuthor = $content;
     }
+
     /**
-     * add generator a generator meta tag
+     * add generator a generator meta tag.
+     *
      * @author Olivier Demah
+     *
      * @param string $content generator
+     *
      * @since 1.2
      */
-    public function addMetaGenerator($content){
+    public function addMetaGenerator($content)
+    {
         $this->_MetaGenerator = $content;
     }
+
+    /**
+     * add a meta element.
+     *
+     * @param array  list of attribute and their values to set on a new meta element
+     * @param mixed $params
+     */
+    public function addMeta($params)
+    {
+        $this->_Meta[] = $params;
+    }
+
     /**
      * generate the doctype. You can override it if you want to have your own doctype, like XHTML+MATHML.
+     *
      * @since 1.1
      */
-    protected function outputDoctype (){
+    protected function outputDoctype()
+    {
         echo '<!DOCTYPE HTML>', "\n";
         $locale = str_replace('_', '-', $this->_locale);
-        if($this->_isXhtml){
-            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" lang="',$locale,'">
-';
-        }else{
-            echo '<html lang="',$locale,'">';
+        if ($this->_isXhtml) {
+            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" lang="',$locale,'">'."\n";
+        } else {
+            echo '<html lang="',$locale,'">'."\n";
         }
     }
 
-    protected function outputJsScriptTag( $fileUrl, $scriptParams ) {
+    protected function outputJsScriptTag($fileUrl, $scriptParams)
+    {
         $params = '';
-        foreach ($scriptParams as $param_name=>$param_value){
-            if ($param_name=='_ieCondition')
-                continue ;
-            $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+        foreach ($scriptParams as $param_name => $param_value) {
+            if ($param_name == '_ieCondition') {
+                continue;
+            }
+            if (is_bool($param_value)) {
+                if ($param_value === true) {
+                    $params .= $param_name.' ';
+                }
+            } else {
+                $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
+            }
         }
-
-        echo '<script type="text/javascript" src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
+        if (!isset($scriptParams['type'])) {
+            $params = 'type="text/javascript" '.$params;
+        }
+        echo '<script src="',htmlspecialchars($fileUrl),'" ',$params,'></script>',"\n";
     }
 
-
-    protected function outputCssLinkTag( $fileUrl, $cssParams ) {
-        $params = '';   
-        foreach ($cssParams as $param_name=>$param_value){
-            if ($param_name=='_ieCondition')
-                continue ;
-            $params .= $param_name.'="'. htmlspecialchars($param_value).'" ';
+    protected function outputCssLinkTag($fileUrl, $cssParams)
+    {
+        $params = '';
+        foreach ($cssParams as $param_name => $param_value) {
+            if ($param_name == '_ieCondition') {
+                continue;
+            }
+            if (is_bool($param_value)) {
+                if ($param_value === true) {
+                    $params .= $param_name.' ';
+                }
+            } else {
+                $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
+            }
         }
 
-        if(!isset($cssParams['rel']))
-            $params .='rel="stylesheet" ';
+        if (!isset($cssParams['rel'])) {
+            $params .= 'rel="stylesheet" ';
+        }
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
     }
 
-    protected function retrieveAssets()
+    /**
+     * @param string[] $params list of attributes to add to a meta element
+     *
+     * @since 1.6.17
+     */
+    protected function outputMetaTag($params)
     {
-        if (!count($this->_assetsGroups)) {
-            return;
-        }
-        $conf = jApp::config();
-        $assetsSet = 'webassets_' . $conf->webassets['useSet'];
-
-        if (!isset($conf->$assetsSet)) {
-            return;
-        }
-        $assets = $conf->$assetsSet;
-        foreach($this->_assetsGroups as $group) {
-            $this->includeAssetsGroup($assets, $group);
-        }
-    }
-
-    protected $includedAssetsGroups = array();
-    protected $cssAssets = array();
-    protected $jsAssets = array();
-    protected function includeAssetsGroup(&$assets, $group) {
-        if (isset($this->includedAssetsGroups[$group])) {
-            // avoid circular dependencies
-            return;
+        $html = '';
+        foreach ($params as $param_name => $param_value) {
+            $html .= $param_name.'="'.htmlspecialchars($param_value).'" ';
         }
 
-        $this->includedAssetsGroups[$group] = true;
-        $missing = true;
-        if (isset($assets[$group.'.require'])) {
-            $missing = false;
-            foreach($assets[$group.'.require'] as $assetGroup) {
-                $this->includeAssetsGroup($assets, $assetGroup);
-            }
-        }
-
-        if (isset($assets[$group.'.js'])) {
-            $missing = false;
-            foreach($assets[$group.'.js'] as $jsAsset) {
-                $assetUrl = $this->parseAsset($jsAsset);
-                if (!isset($this->jsAssets[$assetUrl])) {
-                    $this->jsAssets[$assetUrl] = true;
-                }
-                if (isset($this->_JSLink[$assetUrl])) {
-                    unset($this->_JSLink[$assetUrl]);
-                }
-            }
-        }
-        if (isset($assets[$group.'.css'])) {
-            $missing = false;
-            foreach($assets[$group.'.css'] as $cssAsset) {
-                $assetUrl = $this->parseAsset($cssAsset);
-                if (!isset($this->cssAssets[$assetUrl])) {
-                    $this->cssAssets[$assetUrl] = true;
-                }
-                if (isset($this->_CSSLink[$assetUrl])) {
-                    unset($this->_CSSLink[$assetUrl]);
-                }
-            }
-        }
-        if (isset($assets[$group.'.include'])) {
-            $missing = false;
-            foreach($assets[$group.'.include'] as $assetGroup) {
-                $this->includeAssetsGroup($assets, $assetGroup);
-            }
-        }
-        if ($missing) {
-            jLog::log('Assets group '.$group.' is missing from the configuration', 'warning');
-        }
-    }
-
-    protected function parseAsset($asset) {
-        list($assetURLType , $resource) = explode('>', $asset, 2);
-        switch($assetURLType) {
-            case 'k': // relative path to base path
-                return jApp::urlBasePath().$resource;
-            case 'b': // relative path to base path with lang/locale
-                return jApp::urlBasePath().str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 'a': // action
-                return jUrl::get($resource);
-            case 'm': // resource file stored in a module
-                list($module, $src) = explode(':', $resource, 2);
-                return jUrl::get('jelix~www:getfile', array('targetmodule'=>$module, 'file'=>$src));
-            case 's': // theme path  with lang/locale
-                $resource = str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 't': // theme path
-                return jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$resource;
-            case 'l': // absolute url with lang/locale
-                return str_replace(array('$lang', '$locale'), array($this->_lang, $this->_locale), $resource);
-            case 'u': // absolute url
-            default:
-                return $resource;
-        }
+        echo '<meta ', $html, $this->_endTag;
     }
 
     /**
-     * generate the content of the <head> content
+     * generate the content of the <head> content.
      */
-    protected function outputHtmlHeader (){
-
-        echo '<head>'."\n";
-        echo implode ("\n", $this->_headTop);
-        if($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'],'application/xhtml+xml')){      
+    protected function outputHtmlHeader()
+    {
+        echo "<head>\n";
+        echo implode("\n", $this->_headTop);
+        if ($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml')) {
             echo '<meta content="application/xhtml+xml; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+        } elseif (!$this->_MetaOldContentType) {
+            echo '<meta charset="'.$this->_charset.'" '.$this->_endTag;
         } else {
             echo '<meta content="text/html; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
         }
+
+        if ($this->IECompatibilityMode) {
+            echo '<meta http-equiv="X-UA-Compatible" content="'.$this->IECompatibilityMode.'"'.$this->_endTag;
+        }
+
+        if ($this->metaViewport) {
+            echo '<meta name="viewport" content="'.$this->metaViewport.'"'.$this->_endTag;
+        }
+
+        // Meta link
+        foreach ($this->_Meta as $params) {
+            $this->outputMetaTag($params);
+        }
+
         echo '<title>'.htmlspecialchars($this->title)."</title>\n";
 
-        if(!empty($this->_MetaDescription)){
+        if (!empty($this->_MetaDescription)) {
             // meta description
-            $description = implode(' ',$this->_MetaDescription);
+            $description = implode(' ', $this->_MetaDescription);
             echo '<meta name="description" content="'.htmlspecialchars($description).'" '.$this->_endTag;
         }
 
-        if(!empty($this->_MetaKeywords)){
+        if (!empty($this->_MetaKeywords)) {
             // meta description
-            $keywords = implode(',',$this->_MetaKeywords);
-            echo '<meta name="keywords" content="'.htmlspecialchars($keywords).'" '.$this->_endTag;
+            $keywords = implode(',', $this->_MetaKeywords);
+            $this->outputMetaTag(array('name' => 'keywords', 'content' => $keywords));
         }
         if (!empty($this->_MetaGenerator)) {
-            echo '<meta name="generator" content="'.htmlspecialchars($this->_MetaGenerator).'" '.$this->_endTag;
+            $this->outputMetaTag(array('name' => 'generator', 'content' => $this->_MetaGenerator));
         }
         if (!empty($this->_MetaAuthor)) {
-            echo '<meta name="author" content="'.htmlspecialchars($this->_MetaAuthor).'" '.$this->_endTag;
+            $this->outputMetaTag(array('name' => 'author', 'content' => $this->_MetaAuthor));
         }
-
-
 
         // css link
-        foreach ($this->cssAssets as $src=>$v){
-            $this->outputCssLinkTag($src, array());
+        foreach ($this->webAssetsSelection->getCssLinks() as $src) {
+            $this->outputCssLinkTag($src[0], $src[1]);
+            if (isset($this->_CSSLink[$src[0]])) {
+                unset($this->_CSSLink[$src[0]]);
+            }
         }
-        foreach ($this->_CSSLink as $src=>$params){
+        foreach ($this->_CSSLink as $src => $params) {
             $this->outputCssLinkTag($src, $params);
         }
 
-        foreach ($this->_CSSIELink as $src=>$params){
+        foreach ($this->_CSSIELink as $src => $params) {
             // special params for conditions on IE versions
-            if (!isset($params['_ieCondition']))
-              $params['_ieCondition'] = 'IE' ;
+            if (!isset($params['_ieCondition'])) {
+                $params['_ieCondition'] = 'IE';
+            }
             echo '<!--[if '.$params['_ieCondition'].' ]>';
             $this->outputCssLinkTag($src, $params);
             echo '<![endif]-->';
         }
 
-        if($this->favicon != ''){
+        if ($this->favicon != '') {
             $fav = htmlspecialchars($this->favicon);
             echo '<link rel="icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
             echo '<link rel="shortcut icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
         }
-        
+
         // others links
-        foreach($this->_Link as $href=>$params){
+        foreach ($this->_Link as $href => $params) {
             $more = array();
-            if( !empty($params[1]))
+            if (!empty($params[1])) {
                 $more[] = 'type="'.$params[1].'"';
-            if (!empty($params[2]))
+            }
+            if (!empty($params[2])) {
                 $more[] = 'title = "'.htmlspecialchars($params[2]).'"';
+            }
             echo '<link rel="',$params[0],'" href="',htmlspecialchars($href),'" ',implode($more, ' '),$this->_endTag;
         }
 
         // js code
-        if(count($this->_JSCodeBefore)){
+        if (count($this->_JSCodeBefore)) {
             echo '<script type="text/javascript">
 // <![CDATA[
- '.implode ("\n", $this->_JSCodeBefore).'
+ '.implode("\n", $this->_JSCodeBefore).'
 // ]]>
 </script>';
         }
 
         // js link
-        foreach ($this->jsAssets as $src=>$v){
-            $this->outputJsScriptTag($src, array());
+        foreach ($this->webAssetsSelection->getJsLinks() as $jsUrl) {
+            $this->outputJsScriptTag($jsUrl[0], $jsUrl[1]);
+            if (isset($this->_JSLink[$jsUrl[0]])) {
+                unset($this->_JSLink[$jsUrl[0]]);
+            }
         }
-        foreach ($this->_JSLink as $src=>$params){
+        foreach ($this->_JSLink as $src => $params) {
             $this->outputJsScriptTag($src, $params);
         }
 
-        foreach ($this->_JSIELink as $src=>$params){
-            if (!isset($params['_ieCondition']))
-                $params['_ieCondition'] = 'IE' ;
+        foreach ($this->_JSIELink as $src => $params) {
+            if (!isset($params['_ieCondition'])) {
+                $params['_ieCondition'] = 'IE';
+            }
             echo '<!--[if '.$params['_ieCondition'].' ]>';
             $this->outputJsScriptTag($src, $params);
             echo '<![endif]-->';
         }
 
         // styles
-        if(count($this->_Styles)){
+        if (count($this->_Styles)) {
             echo "<style type=\"text/css\">\n";
-            foreach ($this->_Styles as $selector=>$value){
-                if (strlen ($value)){
+            foreach ($this->_Styles as $selector => $value) {
+                if (strlen($value)) {
                     // there is a key/value
                     echo $selector.' {'.$value."}\n";
-                }else{
+                } else {
                     // no value, it could be simply a command
                     //for example @import something, ...
                     echo $selector, "\n";
@@ -729,48 +861,58 @@ class jResponseHtml extends jResponseBasicHtml {
             echo "\n </style>\n";
         }
         // js code
-        if(count($this->_JSCode)){
+        if (count($this->_JSCode)) {
             echo '<script type="text/javascript">
 // <![CDATA[
- '.implode ("\n", $this->_JSCode).'
+ '.implode("\n", $this->_JSCode).'
 // ]]>
 </script>';
         }
-        echo implode ("\n", $this->_headBottom), '</head>';
+        echo implode("\n", $this->_headBottom), '</head>';
     }
 
     /**
-     * used to erase some head properties
+     * used to erase some head properties.
+     *
      * @param array $what list of one or many of this strings : 'CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription'. If null, it cleans all values.
      */
-    public function clearHtmlHeader ($what=null){
-        $cleanable = array ('CSSLink', 'CSSIELink', 'Styles', 'JSLink','JSIELink', 'JSCode', 'Others','MetaKeywords','MetaDescription');
-        if($what==null)
-            $what= $cleanable;
-        foreach ($what as $elem){
-            if (in_array ($elem, $cleanable)){
+    public function clearHtmlHeader($what = null)
+    {
+        $cleanable = array('CSSLink', 'CSSIELink', 'Styles', 'JSLink', 'JSIELink', 'JSCode',
+            'Others', 'MetaKeywords', 'MetaDescription', 'Meta', 'MetaAuthor', 'MetaGenerator', );
+        if ($what == null) {
+            $what = $cleanable;
+        }
+        foreach ($what as $elem) {
+            if (in_array($elem, $cleanable)) {
                 $name = '_'.$elem;
-                $this->$name = array ();
+                $this->{$name} = array();
             }
         }
     }
 
     /**
-     * change the type of html for the output
-     * @param boolean $xhtml true if you want xhtml, false if you want html
+     * change the type of html for the output.
+     *
+     * @param bool $xhtml true if you want xhtml, false if you want html
      */
-    public function setXhtmlOutput($xhtml = true){
+    public function setXhtmlOutput($xhtml = true)
+    {
         $this->_isXhtml = $xhtml;
-        if($xhtml)
+        if ($xhtml) {
             $this->_endTag = "/>\n";
-        else
+        } else {
             $this->_endTag = ">\n";
+        }
     }
 
     /**
-     * return the end of a html tag : "/>" or ">", depending if it will generate xhtml or html
+     * return the end of a html tag : "/>" or ">", depending if it will generate xhtml or html.
+     *
      * @return string
      */
-    public function endTag(){ return $this->_endTag;}
-
+    public function endTag()
+    {
+        return $this->_endTag;
+    }
 }

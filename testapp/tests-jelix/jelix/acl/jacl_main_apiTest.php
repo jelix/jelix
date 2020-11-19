@@ -19,7 +19,7 @@ class jacl_main_apiTest extends jUnitTestCaseDb {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         if (!self::$coordAuthPlugin) {
             require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
-            $confContent = parse_ini_file(jApp::appConfigPath('auth_class.coord.ini.php'),true);
+            $confContent = parse_ini_file(jApp::appSystemPath('auth_class.coord.ini.php'),true, INI_SCANNER_TYPED);
             $config = jAuth::loadConfig($confContent);
             self::$coordAuthPlugin = new AuthCoordPlugin($config);
             $this->dbProfile = 'jacl_profile';

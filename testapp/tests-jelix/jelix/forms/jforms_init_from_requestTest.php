@@ -141,7 +141,7 @@ class jforms_init_from_request extends PHPUnit_Framework_TestCase {
         $ctrl->required = true;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $choice->addChildControl($ctrl, 'item2');
 

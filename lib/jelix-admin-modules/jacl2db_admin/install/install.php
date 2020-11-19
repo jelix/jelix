@@ -1,18 +1,19 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jacl2db_admin
-* @author      Laurent Jouanneau
-* @contributor
-* @copyright   2017 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
-
-
-class jacl2db_adminModuleInstaller extends jInstallerModule2 {
-
-    function installEntrypoint(jInstallerEntryPoint2 $entryPoint) {
-        $this->declareGlobalWebAssets('jacl2_admin', array('css'=>array('design/jacl2.css')), 'common', false);
+ * @package     jelix
+ * @subpackage  jacl2db_admin
+ *
+ * @author      Laurent Jouanneau
+ * @contributor
+ *
+ * @copyright   2017-2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+class jacl2db_adminModuleInstaller extends \Jelix\Installer\Module\Installer
+{
+    public function install(Jelix\Installer\Module\API\InstallHelpers $helpers)
+    {
     }
 }

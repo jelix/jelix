@@ -1,65 +1,83 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @contributor Julien Issler, Dominique Papin, Olivier Demah
-* @copyright   2006-2015 Laurent Jouanneau
-* @copyright   2008 Julien Issler, 2008 Dominique Papin
-* @copyright   2009 Olivier Demah
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-* @deprecated
-*/
-
-include_once(JELIX_LIB_PATH.'forms/legacy/jFormsBuilderHtml.class.php');
-
-/**
- * HTML form builder
  * @package     jelix
- * @subpackage  jelix-plugins
+ * @subpackage  forms_legacybuilder_plugin
+ *
+ * @author      Laurent Jouanneau
+ * @contributor Julien Issler, Dominique Papin, Olivier Demah
+ *
+ * @copyright   2006-2015 Laurent Jouanneau
+ * @copyright   2008 Julien Issler, 2008 Dominique Papin
+ * @copyright   2009 Olivier Demah
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ *
  * @deprecated
  */
-class htmlJformsBuilder extends jFormsBuilderHtml {
+include_once JELIX_LIB_PATH.'forms/legacy/jFormsBuilderHtml.class.php';
 
+/**
+ * HTML form builder.
+ *
+ * @package     jelix
+ * @subpackage  forms_legacybuilder_plugin
+ *
+ * @deprecated
+ */
+class htmlJformsBuilder extends jFormsBuilderHtml
+{
     protected $jFormsJsVarName = 'jFormsJQ';
 
-    public function outputMetaContent($t) {
-
-        $resp= jApp::coord()->response;
-        if($resp === null || $resp->getType() !='html'){
+    public function outputMetaContent($t)
+    {
+        $resp = jApp::coord()->response;
+        if ($resp === null || $resp->getType() != 'html') {
             return;
         }
 
         $resp->addAssets('jforms_html');
 
-        foreach($t->_vars as $k=>$v){
-            if(!$v instanceof jFormsBase)
+        foreach ($t->_vars as $k => $v) {
+            if (!$v instanceof jFormsBase) {
                 continue;
-            foreach($v->getHtmlEditors() as $ed) {
+            }
+            foreach ($v->getHtmlEditors() as $ed) {
                 $resp->addAssets('jforms_htmleditor_'.$ed->config);
                 $resp->addAssets('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
             }
 
             $datepicker_default_config = jApp::config()->forms['datepicker'];
+            $timepicker_default_config = jApp::config()->forms['timepicker'];
 
-            foreach($v->getControls() as $ctrl){
-                if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-                    $config = isset($ctrl->datepickerConfig) ?
+            foreach ($v->getControls() as $ctrl) {
+                if ($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate') {
+                    $config = $ctrl->datepickerConfig != '' ?
                                 $ctrl->datepickerConfig :
                                 $datepicker_default_config;
-                    $resp->addAssets('jforms_datepicker_'.$config);
+                    if ($config) {
+                        $resp->addAssets('jforms_datepicker_'.$config);
+                    }
+                }
+                if ($ctrl instanceof jFormsControlTime || get_class($ctrl->datatype) == 'jDatatypeTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
+                    $config = $ctrl->timepickerConfig != '' ? $ctrl->timepickerConfig : $timepicker_default_config;
+                    if ($config) {
+                        $resp->addAssets('jforms_timepicker_'.$config);
+                    }
                 }
             }
 
-            foreach($v->getWikiEditors() as $ed) {
+            foreach ($v->getWikiEditors() as $ed) {
                 $resp->addAssets('jforms_wikieditor_'.$ed->config);
             }
         }
     }
 
-    protected function outputHeaderScript(){
+    protected function outputHeaderScript()
+    {
         $conf = jApp::config()->urlengine;
+        $collection = jApp::config()->webassets['useCollection'];
+        $jquery = jApp::config()->{'webassets_'.$collection}['jquery.js'];
         // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
         echo '<script type="text/javascript">
 //<![CDATA[
@@ -67,6 +85,7 @@ jFormsJQ.selectFillUrl=\''.jUrl::get('jelix~jforms:getListData').'\';
 jFormsJQ.config = {locale:'.$this->escJsStr(jApp::config()->locale).
     ',basePath:'.$this->escJsStr($conf['basePath']).
     ',jqueryPath:'.$this->escJsStr($conf['jqueryPath']).
+    ',jqueryFile:'.$this->escJsStr($jquery).
     ',jelixWWWPath:'.$this->escJsStr($conf['jelixWWWPath']).'};
 jFormsJQ.tForm = new jFormsJQForm(\''.$this->_name.'\',\''.$this->_form->getSelector().'\',\''.$this->_form->getContainer()->formId.'\');
 jFormsJQ.tForm.setErrorDecorator(new '.$this->options['errorDecorator'].'());
@@ -75,44 +94,58 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 </script>';
     }
 
-    protected function commonJs($ctrl) {
+    protected function commonJs($ctrl)
+    {
         if ($ctrl->isReadOnly()) {
-            $this->jsContent .="c.readOnly = true;\n";
+            $this->jsContent .= "c.readOnly = true;\n";
         }
 
-        if($ctrl->required){
-            $this->jsContent .="c.required = true;\n";
-            if($ctrl->alertRequired){
-                $this->jsContent .="c.errRequired=".$this->escJsStr($ctrl->alertRequired).";\n";
+        if ($ctrl->required) {
+            $this->jsContent .= "c.required = true;\n";
+        }
+
+        if ($ctrl->alertRequired) {
+            $this->jsContent .= 'c.errRequired='.$this->escJsStr($ctrl->alertRequired).";\n";
+        } else {
+            $this->jsContent .= 'c.errRequired='.$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $ctrl->label)).";\n";
+        }
+
+        if ($ctrl->alertInvalid) {
+            $this->jsContent .= 'c.errInvalid='.$this->escJsStr($ctrl->alertInvalid).";\n";
+        } else {
+            $this->jsContent .= 'c.errInvalid='.$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label)).";\n";
+        }
+
+        if ($this->isRootControl) {
+            $this->jsContent .= "jFormsJQ.tForm.addControl(c);\n";
+        }
+
+        if ($ctrl instanceof jFormsControlDatetime || get_class($ctrl->datatype) == 'jDatatypeDateTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime') {
+            $config = $ctrl->datepickerConfig != '' ? $ctrl->datepickerConfig : jApp::config()->forms['datetimepicker'];
+            if ($config) {
+                $this->jsContent .= 'jelix_datetimepicker_'.$config."(c, jFormsJQ.config);\n";
             }
-            else {
-                $this->jsContent .="c.errRequired=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.required', $ctrl->label)).";\n";
+        } elseif ($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate') {
+            $config = $ctrl->datepickerConfig != '' ? $ctrl->datepickerConfig : jApp::config()->forms['datepicker'];
+            if ($config) {
+                $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
             }
-        }
-
-        if($ctrl->alertInvalid){
-            $this->jsContent .="c.errInvalid=".$this->escJsStr($ctrl->alertInvalid).";\n";
-        }
-        else {
-            $this->jsContent .="c.errInvalid=".$this->escJsStr(jLocale::get('jelix~formserr.js.err.invalid', $ctrl->label)).";\n";
-        }
-
-        if ($this->isRootControl) $this->jsContent .="jFormsJQ.tForm.addControl(c);\n";
-
-        if($ctrl instanceof jFormsControlDate || get_class($ctrl->datatype) == 'jDatatypeDate' || get_class($ctrl->datatype) == 'jDatatypeLocaleDate'){
-            $config = isset($ctrl->datepickerConfig)?$ctrl->datepickerConfig:jApp::config()->forms['datepicker'];
-            $this->jsContent .= 'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n";
+        } elseif ($ctrl instanceof jFormsControlTime || get_class($ctrl->datatype) == 'jDatatypeTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
+            $config = $ctrl->timepickerConfig != '' ? $ctrl->timepickerConfig : jApp::config()->forms['timepicker'];
+            if ($config) {
+                $this->jsContent .= 'jelix_timepicker_'.$config."(c, jFormsJQ.config);\n";
+            }
         }
     }
 
-    protected function jsMenulist($ctrl) {
-
-        $this->jsContent .="c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
+    protected function jsMenulist($ctrl)
+    {
+        $this->jsContent .= "c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
-                $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
+                $this->jsContent .= "c.dependencies = ['".implode("','", $dependentControls)."'];\n";
                 $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
             }
         }
@@ -120,8 +153,9 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         $this->commonJs($ctrl);
     }
 
-    protected function jsListbox($ctrl) {
-        if($ctrl->multiple){
+    protected function jsListbox($ctrl)
+    {
+        if ($ctrl->multiple) {
             $this->jsContent .= "c = new jFormsJQControlString('".$ctrl->ref."[]', ".$this->escJsStr($ctrl->label).");\n";
             $this->jsContent .= "c.multiple = true;\n";
         } else {
@@ -132,17 +166,17 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
             && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
-                $this->jsContent .="c.dependencies = ['".implode("','",$dependentControls)."'];\n";
+                $this->jsContent .= "c.dependencies = ['".implode("','", $dependentControls)."'];\n";
                 $this->lastJsContent .= "jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n";
             }
         }
         $this->commonJs($ctrl);
     }
 
-    protected function jsWikieditor($ctrl) {
+    protected function jsWikieditor($ctrl)
+    {
         $this->jsTextarea($ctrl);
         $engine = jApp::config()->wikieditors[$ctrl->config.'.engine.name'];
         $this->jsContent .= '$("#'.$this->_name.'_'.$ctrl->ref.'").markItUp(markitup_'.$engine.'_settings);'."\n";
     }
-
 }

@@ -21,13 +21,27 @@ class jDaoImportTest extends jUnitTestCase {
         $this->assertInstanceOf('postDaoRecord', $trackerPost);
         $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
         $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
+
+        $postDao = jDao::create('jelix_tests~posts');
+        $blogPostDao = jDao::create('jelix_tests~post_blog');
+        $trackerPostDao = jDao::create('jelix_tests~post_tracker');
+
+        $post = $postDao->createRecord();
+        $blogPost = $blogPostDao->createRecord();
+        $trackerPost = $trackerPostDao->createRecord();
+
+        $this->assertInstanceOf('postDaoRecord', $post);
+        $this->assertInstanceOf('postDaoRecord', $blogPost);
+        $this->assertInstanceOf('postDaoRecord', $trackerPost);
+        $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
+        $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
     }
     
     public function testImportedEvents() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jApp::loadPlugin($postSel->driver, 'db', '.dbtools.php', $postSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($postSel->dbType);
 
         $postParser = new jDaoParser($postSel);
         $postXml = new SimpleXMLElement(file_get_contents($postSel->getPath()));
@@ -48,7 +62,7 @@ class jDaoImportTest extends jUnitTestCase {
     public function testImportWithRedefinedMethods() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jApp::loadPlugin($postSel->driver, 'db', '.dbtools.php', $postSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($postSel->dbType);
 
         $postTrackerParser = new jDaoParser($postSel);
         $postTrackerXml = new SimpleXMLElement(file_get_contents($trackerSel->getPath()));
@@ -230,29 +244,28 @@ class jDaoImportTest extends jUnitTestCase {
                     <object p="condition" class="jDaoCondition">
                         <null p="parent" />
                         <array p="conditions">
-                           <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                           <array>{"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'LOWER(%s)\')
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : "LOWER(%s)"}
                             </array>
                         </array>
-                        <array p="group">array()</array>
+                        <array p="group">[]</array>
                     </object>
-                    <array p="order">array()</array>
+                    <array p="order">[]</array>
                 </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
+                <array m="getParameters ()">[]</array>
+                <array m="getParametersDefaultValues ()">[]</array>
                 <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
+                <array m="getValues ()">[]</array>
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
@@ -268,28 +281,28 @@ class jDaoImportTest extends jUnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'LOWER(%s)\')
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : "LOWER(%s)"}
                             </array>
                         </array>
-                        <array p="group">array()</array>
+                        <array p="group">[]</array>
                     </object>
-                    <array p="order">array()</array>
+                    <array p="order">[]</array>
                 </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
+                <array m="getParameters ()">[]</array>
+                <array m="getParametersDefaultValues ()">[]</array>
                 <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
+                <array m="getValues ()">[]</array>
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
@@ -307,21 +320,21 @@ class jDaoImportTest extends jUnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                         </array>
-                        <array p="group">array()</array>
+                        <array p="group">[]</array>
                     </object>
-                    <array p="order">array()</array>
+                    <array p="order">[]</array>
                 </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
+                <array m="getParameters ()">[]</array>
+                <array m="getParametersDefaultValues ()">[]</array>
                 <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
+                <array m="getValues ()">[]</array>
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
@@ -336,28 +349,28 @@ class jDaoImportTest extends jUnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                            <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                            {"field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                         </array>
-                        <array p="group">array()</array>
+                        <array p="group">[]</array>
                     </object>
-                    <array p="order">array()</array>
+                    <array p="order">[]</array>
                 </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
+                <array m="getParameters ()">[]</array>
+                <array m="getParametersDefaultValues ()">[]</array>
                 <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
+                <array m="getValues ()">[]</array>
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
@@ -373,28 +386,28 @@ class jDaoImportTest extends jUnitTestCase {
                         <null p="parent" />
                         <array p="conditions">
                            <array>
-                            array(\'field_id\' => \'type\',
-                            \'value\' => \'tracker\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                            {"field_id" : "type",
+                            "value" : "tracker",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
-                           <array>
-                            array(\'field_id\' => \'status\',
-                            \'value\' => \'open\',
-                            \'operator\' => \'=\',
-                            \'isExpr\' => false,
-                            \'field_pattern\' => \'\')
+                           <array>{
+                            "field_id" : "status",
+                            "value" : "open",
+                            "operator" : "=",
+                            "isExpr" : false,
+                            "field_pattern" : ""}
                             </array>
                         </array>
-                        <array p="group">array()</array>
+                        <array p="group">[]</array>
                     </object>
-                    <array p="order">array()</array>
+                    <array p="order">[]</array>
                 </object>
-                <array m="getParameters ()">array()</array>
-                <array m="getParametersDefaultValues ()">array()</array>
+                <array m="getParameters ()">[]</array>
+                <array m="getParametersDefaultValues ()">[]</array>
                 <null m="getLimit ()"/>
-                <array m="getValues ()">array()</array>
+                <array m="getValues ()">[]</array>
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
@@ -424,7 +437,7 @@ class jDaoImportTest extends jUnitTestCase {
     protected function launchTestImportWithRedefinedProperties($daoName) {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao($daoName, '');
-        $dbtools = jApp::loadPlugin($blogSel->driver, 'db', '.dbtools.php', $blogSel->driver.'DbTools');
+        $dbtools = jDbUtils::getTools($blogSel->dbType);
 
         $postBlogParser = new jDaoParser($blogSel);
         $postBlogXml = new SimpleXMLElement(file_get_contents($blogSel->getPath()));

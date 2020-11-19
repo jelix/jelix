@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="testurls@testapp.jelix.org" name="testurls">
-#expand        <version date="__TODAY__">__VERSION__</version>
+        <version date="2020-08-17 22:31">1.7.6-pre</version>
         <label>testurls</label>
         <description>Test module for urls</description>
-        <license URL=""></license>
+        <license URL=""/>
         <copyright>Copyright 2006-2011 jelix.org</copyright>
-        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
+        <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true"/>
         <!--<contributor name="hisname" email="hisemail@yoursite.undefined" active="true" since="" role=""/>-->
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand    <jelix minversion="__LIB_VERSION__" maxversion="__LIB_VERSION_MAX__" />
+        <jelix minversion="1.7.0-beta.3" maxversion="1.7.6"/>
     </dependencies>
 </module>

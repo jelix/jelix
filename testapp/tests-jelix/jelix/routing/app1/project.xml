@@ -9,11 +9,4 @@
         <creator name="Laurent Jouanneau" email="laurent@jelix.org" active="true" />
         <homepageURL>http://jelix.org</homepageURL>
     </info>
-    <dependencies>
-        <jelix minversion="1.3a1" maxversion="1.3" />
-    </dependencies>
-    <entrypoints>
-        <entry file="index.php" config="index/config.ini.php" />
-        <entry file="foo.php" config="foo/config.ini.php" />
-    </entrypoints>
 </project>

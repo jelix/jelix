@@ -2,164 +2,48 @@ cd .
   README.md
 
 cd bin
-  createapp.php
+  create-jelix-app
 
 cd lib
   .htaccess
-* jelix_check_server.php
   composer.json
 
 cd lib/jelix
-  CHANGELOG
-  CREDITS
-* init.php
+  init.php
   checker.php
   INSTALL
   LICENCE
   VERSION
 
 cd lib/jelix/auth
-* jAuth.class.php
-  jAuthUser.class.php
-  jAuthDummyUser.class.php
-  jAuthUserLDAP.class.php
-  jIAuthDriver.iface.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jAuthDriverBase.class.php
-#endif
+  __ALL__
 
 cd lib/jelix/controllers
-  jControllerCmdLine.class.php
-*  jControllerDaoCrud.class.php
-*  jControllerDaoCrudDfk.class.php
+  __ALL__
 
 cd lib/jelix/core
-  ConfigCompilerPluginInterface.php
+  __ALL_RECURSIVELY__
 ! defaultconfig.ini.php
-  jAutoloader.class.php
-  jConfigAutoloader.class.php
-* jConfigCompiler.class.php
-  jCmdlineCoordinator.class.php
-  jCoordinatorDebug.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-* jApp.class.php
-  jAppInstance.php
-  jBasicErrorHandler.class.php
-  jBundle.class.php
-* jConfig.class.php
-* jController.class.php
-* jCoordinator.class.php
-  jException.class.php
-  jFramework.class.php
-* jIncluder.class.php
-  jLocale.class.php
-* jLog.class.php
-  jPropertiesFileReader.class.php
-  jRequest.class.php
-* jResponse.class.php
-* jSelector.class.php
-  jUrlBase.class.php
-  jUrlAction.class.php
-* jUrl.class.php
-* jSession.class.php
-  jServer.class.php
-  jelix_api.php
-  jICoordPlugin.iface.php
-  jISelector.iface.php
-#endif
 ! lang_to_locale.ini.php
-
-cd lib/jelix/core/log/
-  jFileLogger.class.php
-  jSyslogLogger.class.php
-  jMailLogger.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jLogErrorMessage.class.php
-  jLogMessage.class.php
-#endif
-
-cd lib/jelix/core/request
-  jClassicRequest.class.php
-* jCmdLineRequest.class.php
-  jJsonRpcRequest.class.php
-  jXmlRpcRequest.class.php
-  jCssRequest.class.php
-
-cd lib/jelix/core/response
-  error.en_US.php
-  jResponseBinary.class.php
-  jResponseBasicHtml.class.php
-  jResponseHtml.class.php
-  jResponseHtml4.class.php
-  jResponseJsonrpc.class.php
-  jResponseJson.class.php
-  jResponseRedirect.class.php
-  jResponseRedirectUrl.class.php
-  jResponseText.class.php
-  jResponseCmdline.class.php
-  jResponseXmlrpc.class.php
-  jResponseXml.class.php
-  jResponseZip.class.php
-  jResponseCss.class.php
-  jResponseHtmlFragment.class.php
-
-#ifnot ENABLE_OPTIMIZED_SOURCE
-cd lib/jelix/core/selector
-* jSelectorAct.class.php
-* jSelectorActFast.class.php
-* jSelectorClass.class.php
-  jSelectorDao.class.php
-  jSelectorDaoRecord.class.php
-  jSelectorFile.lib.php
-  jSelectorForm.class.php
-  jSelectorIface.class.php
-* jSelectorLoc.class.php
-* jSelectorModule.class.php
-  jSelectorSimpleFile.class.php
-  jSelectorTpl.class.php
-  jSelectorZone.class.php
-#endif
-
-cd lib/jelix/core/UrlMapping
-  CustomUrlHandlerInterface.php
-  MapParserException.php
-  MapperConfig.php
-  SelectorUrlXmlMap.php
-  SelectorUrlHandler.php
-  UrlActionMapper.php
-  UrlMapData.php
-  XmlEntryPoint.php
-  XmlMapModifier.php
-  XmlMapParser.php
+! lang_names__.ini
+! lang_names_en.ini
+! lang_names_fr.ini
 
 cd lib/jelix/core-modules/jelix
-*  module.xml
-   urls.xml
+   __ALL__
 cd lib/jelix/core-modules/jelix/controllers
 ! help.cmdline.php
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php
-  redisworker.cmdline.php
   jforms.classic.php
   www.classic.php
+cd lib/jelix/core-modules/jelix/Command
+   __ALL__
 cd lib/jelix/core-modules/jelix/daos
-   jsession.dao.xml
-   jcache.dao.xml
+   __ALL__
 cd lib/jelix/core-modules/jelix/install
-  install.php
-  upgrade_modulejacl2.php
-  upgrade_newurlengine.php
-  UrlEngineUpgrader.php
-  upgrade_webassets.php
-  upgrade_redisprofile.php
-cd lib/jelix/core-modules/jelix/install/sql
-  install_jsession.schema.mysql.sql
-  install_jsession.schema.pgsql.sql
-  install_jsession.schema.sqlite.sql
-  install_jcache.schema.mysql.sql
-  install_jcache.schema.pgsql.sql
-  install_jcache.schema.sqlite.sql
+  __ALL_RECURSIVELY__
 
 cd lib/jelix/core-modules/jelix/locales/en_US
 cch auth.UTF-8.properties(auth.%charset%.properties)
@@ -216,55 +100,18 @@ cch kvstore.UTF-8.properties(kvstore.%charset%.properties)
 cch ui.UTF-8.properties(ui.%charset%.properties)
 
 cd lib/jelix/core-modules/jelix/templates
-  403.html.tpl
-  404.html.tpl
-  crud_list.tpl
-  crud_edit.tpl
-  crud_view.tpl
-  cruddfk_list.tpl
-  cruddfk_edit.tpl
-  cruddfk_view.tpl
-  defaultmain.tpl
-  check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/en_GB
-  check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/en_US
-  check_install.tpl
-cd lib/jelix/core-modules/jelix/templates/fr_FR
-  check_install.tpl
+  __ALL_RECURSIVELY__
 cd lib/jelix/core-modules/jelix/zones
-  check_install.zone.php
+  __ALL__
 
 cd lib/jelix/dao
-  jDaoRecordBase.class.php
-  jDaoFactoryBase.class.php
-  jDao.class.php
-  jDaoCompiler.class.php
-* jDaoParser.class.php
-  jDaoConditions.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jDaoGenerator.class.php
-  jDaoProperty.class.php
-  jDaoMethod.class.php
-  jDaoXmlException.class.php
-#endif
+  __ALL__
 
 cd lib/jelix/db
-* jDb.class.php
-  jDbColumn.class.php
-  jDbParameters.class.php
-  jDbPDOConnection.class.php
-  jDbPDOConnectionDebug.class.php
-  jDbPDOResultSet.class.php
-  jDbSchema.class.php
-  jDbTable.class.php
-  jDbTools.class.php
-  jDbWidget.class.php
-  jDbParameters.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-* jDbConnection.class.php
-  jDbResultSet.class.php
-#endif
+  __ALL__
+
+cd lib/jelix/db/tools
+  __ALL__
 
 cd lib/jelix/Dependencies
   Exception.php
@@ -276,480 +123,117 @@ cd lib/jelix/Dependencies
 #if ENABLE_DEVELOPER
 cd lib/jelix/docs
   workflow_action.sxd
+#endif
 
 cd lib/jelix/docs/ns
-  dao.rng
-  events.rng
-  item_infos.rng
-  jforms_1.0.rng
-  jforms_1.1.rng
-  module.rng
-  plugin.rng
-  project.rng
-  suburls.rng
-  update.rng
-  urls.rng
-#endif
-
-cd lib/jelix/events
-* jEvent.class.php
-  jEventCompiler.class.php
-#ifnot ENABLE_OPTIMIZED_SOURCE
-  jEventListener.class.php
-#endif
-
-cd lib/jelix/forms
-  jForms.class.php
-  jFormsBase.class.php
-  jFormsCompiler.class.php
-  jFormsCompiler_jf_1_0.class.php
-  jFormsCompiler_jf_1_1.class.php
-* jFormsControl.class.php
-  jFormsDataContainer.class.php
-* jFormsDatasource.class.php
-  jFormsSession.class.php
-
-cd lib/jelix/forms/Builder
-  BuilderBase.php
-  HtmlBuilder.php
-
-cd lib/jelix/forms/Captcha
-  CaptchaValidatorInterface.php
-  ReCaptchaValidator.php
-  SimpleCaptchaValidator.php
-
-cd lib/jelix/forms/HtmlWidget
-  ParentWidgetInterface.php
-  RootWidget.php
-  WidgetBase.php
-  WidgetInterface.php
-
-cd lib/jelix/forms/legacy
-  jFormsBuilderBase.class.php
-  jFormsBuilderHtml.class.php
-
-#ifnot ENABLE_OPTIMIZED_SOURCE
-cd lib/jelix/forms/controls
-  jFormsControlDatasource.class.php
-  jFormsControlGroups.class.php
-  jFormsControlButton.class.php
-  jFormsControlCaptcha.class.php
-  jFormsControlCheckbox.class.php
-  jFormsControlCheckboxes.class.php
-  jFormsControlChoice.class.php
-  jFormsControlGroup.class.php
-  jFormsControlHidden.class.php
-  jFormsControlHtmlEditor.class.php
-  jFormsControlInput.class.php
-  jFormsControlListbox.class.php
-  jFormsControlMenulist.class.php
-  jFormsControlOutput.class.php
-  jFormsControlRadiobuttons.class.php
-  jFormsControlRepeat.class.php
-  jFormsControlReset.class.php
-  jFormsControlSecret.class.php
-  jFormsControlSecretConfirm.class.php
-  jFormsControlSubmit.class.php
-  jFormsControlSwitch.class.php
-  jFormsControlTextarea.class.php
-  jFormsControlUpload.class.php
-  jFormsControlDate.class.php
-  jFormsControlDatetime.class.php
-  jFormsControlWikiEditor.class.php
-#endif
-
-
-cd lib/jelix/installer
-  closed.html
-  ghostInstallReporter.class.php
-  jHtmlInstallChecker.class.php
-  jIInstallerComponent.iface.php
-  jIInstallerComponent2.iface.php
-  jIInstallReporter.iface.php
-  jInstaller.class.php
-  jInstallerApplication.class.php
-  jInstallChecker.class.php
-  jInstallerComponentModule.class.php
-  jInstallerEntryPoint.class.php
-  jInstallerEntryPoint2.class.php
-  jInstallerException.class.php
-  jInstallerGlobalSetup.class.php
-  jInstallerMessageProvider.class.php
-  jInstallerMigration.class.php
-  jInstallerModule.class.php
-  jInstallerModule2.class.php
-  jInstallerModuleInfos.class.php
-  jInstallerReporterTrait.trait.php
-  messageProvider.en.inc.php
-  messageProvider.fr.inc.php
-  textInstallReporter.class.php
-
-cd lib/jelix/kvdb
-* jKVDriver.class.php
-  jKVDb.class.php
-
-cd lib/jelix/tpl/
-  jTpl.class.php
-  jTplCompiler.class.php
-
-cd lib/jelix/utils/
-  jAppManager.class.php
-  jCache.class.php
-  jClasses.class.php
-  jClassBinding.class.php
-  jCmdUtils.class.php
-* jDatatype.class.php
-  jDateTime.class.php
-  jDuration.class.php
-* jFile.class.php
-* jFilter.class.php
-  jImageModifier.class.php
-  jIniFile.class.php
-  jIniFileModifier.class.php
-  jIniMultiFilesModifier.class.php
-  jJsonRpc.class.php
-  jMailer.class.php
-  jMessage.class.php
-  jMethodSniffer.class.php
-  jProfiles.class.php
-  jProfilesCompiler.class.php
-  jProfilesCompilerPlugin.class.php
-  jRedis.class.php
-  jSmtp.class.php
-  jSoapClient.class.php
-  jSoapObject.class.php
-  jXmlRpc.class.php
-  jZipCreator.class.php
-* jZone.class.php
-
-cd lib/jelix/plugins/auth/ldap
-  ldap.auth.php
-cd lib/jelix/plugins/auth/db
-  db.auth.php
-cd lib/jelix/plugins/auth/class
-* class.auth.php
-
-cd lib/jelix/plugins/cache/db
-  db.cache.php
-cd lib/jelix/plugins/cache/memcache
-  memcache.cache.php
-cd lib/jelix/plugins/cache/redis_ext
-  redis_ext.cache.php
-
-cd lib/jelix/plugins/configcompiler/debugbar
-  debugbar.configcompiler.php
-cd lib/jelix/plugins/configcompiler/locales
-  locales.configcompiler.php
-cd lib/jelix/plugins/configcompiler/nsautoloader
-  nsautoloader.configcompiler.php
-cd lib/jelix/plugins/configcompiler/responses
-  responses.configcompiler.php
-cd lib/jelix/plugins/configcompiler/session
-  session.configcompiler.php
-cd lib/jelix/plugins/configcompiler/webassets
-  webassets.configcompiler.php
-
-cd lib/jelix/plugins/coord/autolocale
-  autolocale.coord.ini.php.dist
-! autolocale.coord.php
-
-cd lib/jelix/plugins/coord/auth
-! auth.coord.php
-  auth.coord.ini.php.dist
-
-cd lib/jelix/plugins/coord/history
-! history.coord.php
-  history.coord.ini.php.dist
-
-cd lib/jelix/plugins/coord/traceexec
-! traceexec.coord.php
-  traceexec.coord.ini.php.dist
-
-cd lib/jelix/plugins/daobuilder/mssql
-  mssql.daobuilder.php
-cd lib/jelix/plugins/daobuilder/mysql
-  mysql.daobuilder.php
-cd lib/jelix/plugins/daobuilder/oci
-  oci.daobuilder.php
-cd lib/jelix/plugins/daobuilder/pgsql
-  pgsql.daobuilder.php
-cd lib/jelix/plugins/daobuilder/sqlite
-  sqlite.daobuilder.php
-
-cd lib/jelix/plugins/db/mssql
-  mssql.dbconnection.php
-  mssql.dbresultset.php
-  mssql.dbschema.php
-  mssql.dbtools.php
-
-cd lib/jelix/plugins/db/mysqli
-  mysqli.dbconnection.php
-  mysqli.dbresultset.php
-  mysqli.dbschema.php
-  mysqli.dbtools.php
-
-cd lib/jelix/plugins/db/pgsql
-  pgsql.dbconnection.php
-  pgsql.dbresultset.php
-  pgsql.dbschema.php
-  pgsql.dbtools.php
-
-cd lib/jelix/plugins/db/sqlite3
-  sqlite3.dbconnection.php
-  sqlite3.dbresultset.php
-  sqlite3.dbschema.php
-  sqlite3.dbtools.php
-
-cd lib/jelix/plugins/db/oci
-  oci.dbconnection.php
-  oci.dbresultset.php
-  oci.dbschema.php
-  oci.dbtools.php
-
-cd lib/jelix/plugins/db/sqlsrv
-  sqlsrv.dbconnection.php
-  sqlsrv.dbresultset.php
-  sqlsrv.daobuilder.php
-  sqlsrv.dbschema.php
-  sqlsrv.dbtools.php
-
-cd lib/jelix/plugins/debugbar/sqllog
-  sqllog.debugbar.php
-
-cd lib/jelix/plugins/debugbar/sessiondata
-  sessiondata.debugbar.php
-
-cd lib/jelix/plugins/debugbar/defaultlog
-  defaultlog.debugbar.php
-
-cd lib/jelix/plugins/debugbar/soaplog
-  soaplog.debugbar.php
-
-cd lib/jelix/plugins/formbuilder/html
-  html.formbuilder.php
-
-cd lib/jelix/plugins/formwidget/button_html
-  button_html.formwidget.php
-  
-cd lib/jelix/plugins/formwidget/captcha_html
-  captcha_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/recaptcha_html
-  recaptcha_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/checkbox_html
-  checkbox_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/checkboxes_html
-  checkboxes_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/choice_html
-  choice_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/date_html
-  date_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/datetime_html
-  datetime_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/group_html
-  group_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/html
-  html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/htmleditor_html
-  htmleditor_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/input_html
-  input_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/listbox_html
-  listbox_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/menulist_html
-  menulist_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/output_html
-  output_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/radiobuttons_html
-  radiobuttons_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/reset_html
-  reset_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/secret_html
-  secret_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/secretconfirm_html
-  secretconfirm_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/submit_html
-  submit_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/textarea_html
-  textarea_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/upload_html
-  upload_html.formwidget.php
-
-cd lib/jelix/plugins/formwidget/wikieditor_html
-  wikieditor_html.formwidget.php
-
-cd lib/jelix/plugins/jforms/html
-  html.jformsbuilder.php
-
-cd lib/jelix/plugins/jforms/htmllight
-  htmllight.jformsbuilder.php
-
-cd lib/jelix/plugins/kvdb/dba/
-  dba.kvdriver.php
-
-cd lib/jelix/plugins/kvdb/db/
-  db.kvdriver.php
-
-cd lib/jelix/plugins/kvdb/file2/
-  file2.kvdriver.php
-
-cd lib/jelix/plugins/kvdb/memcache/
-  memcache.kvdriver.php
-
-cd lib/jelix/plugins/kvdb/redis_ext/
-  redis_ext.kvdriver.php
-
-cd lib/jelix/plugins/logger/firebug
-  firebug.logger.php
-
-cd lib/jelix/plugins/logger/legacysyslog
-  legacysyslog.logger.php
-
-cd lib/jelix/plugins/htmlresponse/debugbar
-  debugbar.htmlresponse.php
-  errors.debugbar.php
-  debugbar.js
-  debugbar.css
-  errors.debugbar.js
-  jelix-dbg.png
-
-cd lib/jelix/plugins/htmlresponse/debugbar/icons
   __ALL__
 
+
+cd lib/jelix/events
+  __ALL__
+
+cd lib/jelix/forms
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/installer
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/kvdb
+  __ALL__
+
+cd lib/jelix/Scripts
+  __ALL__
+
+cd lib/jelix/tpl/
+  __ALL__
+
+cd lib/jelix/utils/
+  __ALL__
+
+cd lib/jelix/plugins/auth
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/cache/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/configcompiler/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/coord/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/daobuilder/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/db/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/debugbar/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/formbuilder/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/formwidget/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/jforms/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/kvdb/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/logger/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix/plugins/htmlresponse/
+  __ALL_RECURSIVELY__
+
 cd lib/jelix/plugins/profiles/jdb/
-  jdb.profiles.php
+  __ALL_RECURSIVELY__
 
 cd lib/jelix/plugins/tpl/common
-  block.ifuserconnected.php
-  block.ifusernotconnected.php
-  cfunction.fetchzone.php
-  cfunction.zone.php
-  modifier.datetime.php
-  modifier.jdatetime.php
+  __ALL__
 
 cd lib/jelix/plugins/tpl/html
-  block.form.php
-  block.formcontrols.php
-  block.formdata.php
-  block.formsubmits.php
-  block.ifctrl.php
-  cfunction.formfull.php
-  function.breadcrumb.php
-  function.ctrl_control.php
-  function.ctrl_label.php
-  function.ctrl_rawvalue.php
-  function.ctrl_value.php
-  function.formdatafull.php
-  function.formreset.php
-  function.formsubmit.php
-  function.formurl.php
-  function.formurlparam.php
-  function.hook.php
-  function.image.php
-  function.jmessage.php
-  function.jfullurl.php
-  function.jlocale.php
-  function.jrooturl.php
-  function.jurl.php
-  function.link_to_remote.php
-  function.pagelinks.php
-  function.resurl.php
-  function.urljsstring.php
-  meta.html.php
-  meta.htmlmodule.php
+  __ALL__
 
 cd lib/jelix/plugins/tpl/ltx2pdf
-  function.jlocale.php
-  function.jurl.php
+  __ALL__
 
 cd lib/jelix/plugins/tpl/text
-  function.jfullurl.php
-  function.jlocale.php
-  function.jurl.php
-  function.formdatafull.php
+  __ALL__
 
 cd lib/jelix/plugins/tpl/xml
-  function.jfullurl.php
-  function.jlocale.php
-  function.jurl.php
-  meta.xml.php
+  __ALL__
 
-cd lib/jelix-plugins/cache/file
-* file.cache.php
-  LICENCE
-
-cd lib/jelix-plugins/kvdb/file
-* file.kvdriver.php
-  LICENCE
+cd lib/jelix/WebAssets
+  __ALL__
 
 
-#if ENABLE_DEVELOPER
+cd lib/jelix-plugins/cache/
+  __ALL_RECURSIVELY__
+
+cd lib/jelix-plugins/kvdb/
+  __ALL_RECURSIVELY__
+
 cd lib/jelix-tests/
-! phpunit.inc.php
-cd lib/jelix-tests/classes
-! command.php
-! JelixTestSuite.class.php
-! junittestcase.class.php
-! junittestcasedb.class.php
-#endif
-
+  __ALL_RECURSIVELY__
 
 cd lib/installwizard/
-  error.php
-  installWizard.php
-  installWizardPage.php
-  install.php.dist
-  wiz_layout.en.php
-  wiz_layout.fr.php
-* wiz_layout.tpl
-  wizard.ini.php.dist
-  README.txt
+  __ALL__
 cd lib/installwizard/pages/end/
-  end.en.php
-  end.fr.php
-  end.page.php
-  end.tpl
+  __ALL__
 cd lib/installwizard/pages/welcome/
-  welcome.en.php
-  welcome.fr.php
-  welcome.page.php
-  welcome.tpl
+  __ALL__
 cd lib/installwizard/pages/checkjelix/
-* checkjelix.en.php
-* checkjelix.fr.php
+  checkjelix.en.php
+  checkjelix.fr.php
   checkjelix.page.php
   checkjelix.tpl
 cd lib/installwizard/pages/dbprofile/
-  dbprofile.en.php
-  dbprofile.fr.php
-  dbprofile.page.php
-  dbprofile.tpl
+  __ALL__
 cd lib/installwizard/pages/installapp/
-  installapp.en.php
-  installapp.fr.php
-  installapp.page.php
-  installapp.tpl
+  __ALL__
 cd lib/installwizard/pages/confmail/
-  confmail.en.php
-  confmail.fr.php
-  confmail.page.php
-  confmail.tpl
+  __ALL__

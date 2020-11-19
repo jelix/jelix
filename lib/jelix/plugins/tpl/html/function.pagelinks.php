@@ -1,39 +1,60 @@
 <?php
 /**
-* @package    jelix
-* @subpackage jtpl_plugin
-* @author     Laurent Jouanneau
-* @copyright  2007 Laurent Jouanneau
-* @contributor Christian Tritten (christian.tritten@laposte.net)
-* @copyright  2007 Christian Tritten
-* @link        http://www.jelix.org
-* @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package    jelix
+ * @subpackage jtpl_plugin
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2007-2019 Laurent Jouanneau
+ * @contributor Christian Tritten (christian.tritten@laposte.net)
+ *
+ * @copyright  2007 Christian Tritten
+ *
+ * @see        http://www.jelix.org
+ * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $tpl
+ * @param mixed $action
+ * @param mixed $actionParams
+ * @param mixed $itemsTotal
+ * @param mixed $offset
+ * @param mixed $pageSize
+ * @param mixed $paramName
+ * @param mixed $displayProperties
+ */
 
 /**
- * displays page links
+ * displays page links.
  *
- * @param jTpl $tpl template engine
- * @param string $action selector of the action 
- * @param array $actionParams parameters for the action
- * @param integer $itemsTotal number of items
- * @param integer $offset  index of the first item to display
- * @param integer $pageSize  items number in a page
- * @param string $paramName name of the parameter in the actionParams which will content a page offset
- * @param array $displayProperties properties for the links display
+ * @param jTpl   $tpl               template engine
+ * @param string $action            selector of the action
+ * @param array  $actionParams      parameters for the action
+ * @param int    $itemsTotal        number of items
+ * @param int    $offset            index of the first item to display
+ * @param int    $pageSize          items number in a page
+ * @param string $paramName         name of the parameter in the actionParams which will content a page offset
+ * @param array  $displayProperties properties for the links display
  *  */
-function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal, $offset, $pageSize = 15, 
-                                      $paramName = 'offset', $displayProperties = array())
-{
+function jtpl_function_html_pagelinks(
+    $tpl,
+    $action,
+    $actionParams,
+    $itemsTotal,
+    $offset,
+    $pageSize = 15,
+    $paramName = 'offset',
+    $displayProperties = array()
+) {
     $offset = intval($offset);
-    if ($offset <= 0)
+    if ($offset <= 0) {
         $offset = 0;
+    }
 
     $itemsTotal = intval($itemsTotal);
 
     $pageSize = intval($pageSize);
-    if ($pageSize < 1)
+    if ($pageSize < 1) {
         $pageSize = 1;
+    }
 
     // If there are at least two pages of results
     if ($itemsTotal > $pageSize) {
@@ -42,15 +63,16 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         $urlaction = jUrl::get($action, $actionParams, jUrl::JURLACTION);
 
         $defaultDisplayProperties = array('start-label' => '|&lt;',
-                                          'prev-label'  => '&lt;',
-                                          'next-label'  => '&gt;',
-                                          'end-label'   => '&gt;|',
-                                          'area-size'   => 0);
+            'prev-label' => '&lt;',
+            'next-label' => '&gt;',
+            'end-label' => '&gt;|',
+            'area-size' => 0, );
 
-        if (is_array($displayProperties) && count($displayProperties) > 0)
+        if (is_array($displayProperties) && count($displayProperties) > 0) {
             $displayProperties = array_merge($defaultDisplayProperties, $displayProperties);
-        else
+        } else {
             $displayProperties = $defaultDisplayProperties;
+        }
 
         $pages = array();
 
@@ -63,8 +85,8 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         $nextBound = 0;
 
         // Generates list of page offsets
-        for($curidx = 0; $curidx < $itemsTotal; $curidx += $pageSize) {
-            if($offset >= $curidx && $offset < $curidx + $pageSize) {
+        for ($curidx = 0; $curidx < $itemsTotal; $curidx += $pageSize) {
+            if ($offset >= $curidx && $offset < $curidx + $pageSize) {
                 $pages[$numpage] = '<li class="pagelinks-current">'.$numpage.'</li>';
                 $prevBound = $curidx - $pageSize;
                 $nextBound = $curidx + $pageSize;
@@ -74,7 +96,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
                 $url = $jUrlEngine->create($urlaction);
                 $pages[$numpage] = '<li><a href="'.$url->toString(true).'">'.$numpage.'</a></li>';
             }
-            $numpage++;
+            ++$numpage;
         }
 
         // Calculate start page url
@@ -93,8 +115,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
         $urlaction->params[$paramName] = (count($pages) - 1) * $pageSize;
         $urlEndPage = $jUrlEngine->create($urlaction);
 
-
-        // Links display 
+        // Links display
         echo '<ul class="pagelinks">';
 
         // Start link
@@ -103,7 +124,7 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
             if ($prevBound >= 0) {
                 echo '"><a href="', $urlStartPage->toString(true), '">', $displayProperties['start-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['start-label'] ;
+                echo ' pagelinks-disabled">',$displayProperties['start-label'];
             }
             echo '</li>', "\n";
         }
@@ -114,16 +135,33 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
             if ($prevBound >= 0) {
                 echo '"><a href="', $urlPrevPage->toString(true), '">', $displayProperties['prev-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['prev-label'] ;
+                echo ' pagelinks-disabled">',$displayProperties['prev-label'];
             }
             echo '</li>', "\n";
         }
 
         // Pages links
+        $areaSize = $displayProperties['area-size'];
+        $nbPages = count($pages);
+        if ($areaSize > 0 && $nbPages > $areaSize) {
+            $minpage = $currentPage - floor($areaSize / 2);
+            if ($minpage < 1) {
+                $minpage = 1;
+            }
+            $maxpage = ($minpage - 1) + $areaSize;
+
+            if ($maxpage >= $nbPages) {
+                $minpage = $nbPages - $areaSize + 1;
+            }
+        } else {
+            $minpage = 1;
+            $maxpage = count($pages);
+        }
+
         foreach ($pages as $key => $page) {
-            if ($displayProperties['area-size'] == 0 || ($currentPage - $displayProperties['area-size'] <= $key) 
-                && ($currentPage + $displayProperties['area-size'] >= $key))
+            if ($minpage <= $key && $maxpage >= $key) {
                 echo $page, "\n";
+            }
         }
 
         // Next link
@@ -132,9 +170,9 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
             if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlNextPage->toString(true), '">', $displayProperties['next-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['next-label'] ;
+                echo ' pagelinks-disabled">',$displayProperties['next-label'];
             }
-       	    echo '</li>', "\n";
+            echo '</li>', "\n";
         }
 
         // End link
@@ -143,12 +181,13 @@ function jtpl_function_html_pagelinks($tpl, $action, $actionParams, $itemsTotal,
             if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlEndPage->toString(true), '">', $displayProperties['end-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['end-label'] ;
+                echo ' pagelinks-disabled">',$displayProperties['end-label'];
             }
-       	    echo '</li>', "\n";
+            echo '</li>', "\n";
         }
 
         echo '</ul>';
+    } else {
+        echo '<ul class="pagelinks"><li class="pagelinks-current">1</li></ul>';
     }
-    else echo '<ul class="pagelinks"><li class="pagelinks-current">1</li></ul>';
 }

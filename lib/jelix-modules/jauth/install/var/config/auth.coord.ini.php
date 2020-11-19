@@ -60,6 +60,12 @@ enable_after_login_override = off
 ; says if after_logout can be overloaded by a "auth_url_return" parameter in the url/form for the login
 enable_after_logout_override = off
 
+; list of domains allowed for url indicated into auth_url_return.
+; should be a string for a single domain
+url_return_external_allowed_domains=
+; or a list like that:
+;url_return_external_allowed_domains[]=
+
 ;============ Parameters for the persistance of the authentification
 
 ; enable the persistance of the authentification between two sessions
@@ -76,7 +82,7 @@ persistant_duration = 1
 ; method of the hash. 0 or "" means old hashing behavior of jAuth
 ; (using password_* parameters in drivers ).
 ; Prefer to choose 1, which is the default hash method (bcrypt).
-password_hash_method = 
+password_hash_method = 1
 
 ; options for the hash method. list of "name:value" separated by a ";"
 password_hash_options = 
@@ -91,7 +97,9 @@ dao = ""
 ; profile to use for jDb 
 profile = ""
 
-; name of the php function to crypt the password in the database
+; name of the php function used to hash password in the database
+; It is deprecated but still used to convert password hash
+; to new hashes with password_hash_method
 password_crypt_function = sha1
 ; if you want to use a salt with sha1:
 ;password_crypt_function = "1:sha1WithSalt"
@@ -121,7 +129,9 @@ uploadsDirectory= ""
 ; selector of the class
 class = ""
 
-; name of the php function to crypt the password in the database
+; name of the php function used to hash password.
+; It is deprecated but still used to convert password hash
+; to new hashes with password_hash_method
 password_crypt_function = sha1
 ; if you want to use a salt with sha1:
 ;password_crypt_function = "1:sha1WithSalt"

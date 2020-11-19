@@ -5,6 +5,7 @@
    <li><a href="{jurl 'main:hello'}">Hello world in html</a></li>
    <li><a href="{jurl 'main:hello', array('output'=>'text')}">Hello world in text</a></li>
    <li><a href="{jurl 'main:hello2'}">Overloaded "Hello world" template</a></li>
+   <li><a href="{jurl 'main:hello3'}">"Hello world" template of a theme</a></li>
    <li><a href="{jurl 'main:testdao'}">Dao test</a></li>
    <li><a href="{jurl 'main:generateerror'}">error on a page</a></li>
    <li><a href="{jurl 'main:generatewarning'}">warning on a page</a></li>

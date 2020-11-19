@@ -29,7 +29,7 @@ class jkvdb_redisTest extends jKVDbTest {
         if (!$this->_kvdbSetUp())
             return;
 
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis(TESTAPP_REDIS_HOST,6379);
         $this->redis->flushall();
     }
 
@@ -74,6 +74,30 @@ class jkvdb_redisTest extends jKVDbTest {
         $this->assertNull($this->redis->get('flush3DataKey'));
 
     }
+    function testHashes() {
+        /** @var redis_phpKVDriver $kv */
+        $kv = jKVDb::getConnection($this->profile);
+        $key = 'redis_phpTest';
+        $kv->delete($key);
+
+        $this->assertFalse($kv->hExists($key, 'foo'));
+        $this->assertFalse($kv->hExists($key, 'bar'));
+
+        $this->assertEquals(1, $kv->hSet($key, 'foo', 'first'));
+        $this->assertEquals(1, $kv->hSet($key, 'bar', 'second'));
+        $this->assertFalse($kv->hSetNx($key, 'bar', 'second2'));
+
+        $this->assertEquals('first', $kv->hGet($key, 'foo'));
+        $this->assertEquals('second', $kv->hGet($key, 'bar'));
+
+        $this->assertEquals(array('foo'=>'first', 'bar'=>'second'), $kv->hGetAll($key));
+        $this->assertEquals(array('foo'=>'first', 'bar'=>'second'), $kv->hMGet($key, array('foo', 'bar')));
+        $this->assertEquals(2, $kv->hLen($key));
+        $this->assertEquals(array('foo', 'bar'), $kv->hKeys($key));
+        $this->assertEquals(array('first', 'second'), $kv->hVals($key));
+
+        $this->assertTrue($kv->hMSet($key, array('foo'=>'first2', 'bar'=>'second2')));
+        $this->assertEquals(array('foo'=>'first2', 'bar'=>'second2'), $kv->hMGet($key, array('foo', 'bar')));
+    }
 }
 
-?>

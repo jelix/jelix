@@ -6,13 +6,13 @@
     "license": "",
     "authors": [
         {
-            "name": "%%default_creator_name%%",
+            "name": "%%default_creator_name%%"
            
         }
     ],
     "require": {
-        "php": ">=5.3.3",
-        "jelix/composer-module-setup": "0.2"
+        "php": ">=5.6",
+        "jelix/composer-module-setup": "^0.5.0"
     },
     "autoload": {
         "files": [ "%%rp_jelix%%init.php"  ]

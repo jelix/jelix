@@ -40,15 +40,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'\\\'abc\\\'\',true))</array>
+            <array m="getValues ()">{"subject":["\'abc\'",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -69,15 +69,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array("mytext")</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">["mytext"]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'$mytext\',true))</array>
+            <array m="getValues ()">{"subject":["$mytext",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -97,15 +97,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -130,18 +130,20 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","field_pattern"=>"","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","field_pattern"=>"","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">
+                    [
+                     {"field_id":"subject","field_pattern":"","value":"bar", "operator":"=", "isExpr":false},
+                     {"field_id":"texte","field_pattern":"","value":"machine", "operator":"=", "isExpr":false}
+                     ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -166,18 +168,19 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(
-                     array("field_id"=>"subject","field_pattern"=>"CONCAT(%s, \'b\')","value"=>"bar", "operator"=>"=", "isExpr"=>false),
-                     array("field_id"=>"texte","field_pattern"=>"LOWER(%s)","value"=>"machine", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                     {"field_id":"subject","field_pattern":"CONCAT(%s, \'b\')","value":"bar", "operator":"=", "isExpr":false},
+                     {"field_id":"texte","field_pattern":"LOWER(%s)","value":"machine", "operator":"=", "isExpr":false}
+                     ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -198,15 +201,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
@@ -227,21 +230,28 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array()</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">[]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'subject\'=>array(\'my text\',false))</array>
+            <array m="getValues ()">{"subject":["my text",false]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>'),
     );
 
-    function testMethods() {
+    function getMethDatas() {
+        return $this->methDatas;
+    }
+
+    /**
+     * @dataProvider getMethDatas
+     */
+    function testMethods($xmls, $expected) {
         $dao ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
   <datasources>
@@ -260,22 +270,19 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
-        foreach($this->methDatas as $k=>$t){
-            //$this->sendMessage("test good method ".$k);
-            $xml= simplexml_load_string($t[0]);
-            try{
-                $p = new jDaoMethod($xml, $parser);
-                $this->assertComplexIdenticalStr($p, $t[1]);
-            }catch(jDaoXmlException $e){
-                $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
-            }/*catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }*/
+        //$this->sendMessage("test good method ".$k);
+        $xml= simplexml_load_string($xmls);
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->assertComplexIdenticalStr($p, $expected);
+        }catch(jDaoXmlException $e){
+            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage());
         }
+
     }
 
     function testMethods2() {
@@ -293,7 +300,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
@@ -317,15 +324,15 @@ class jdao_parser_updateTest extends jUnitTestCase {
             <object m="getConditions()" class="jDaoConditions">
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                 </object>
-                <array p="order">array()</array>
+                <array p="order">[]</array>
             </object>
-            <array m="getParameters ()">array(\'price\',\'price_big\')</array>
-            <array m="getParametersDefaultValues ()">array()</array>
+            <array m="getParameters ()">["price","price_big"]</array>
+            <array m="getParametersDefaultValues ()">[]</array>
             <null m="getLimit ()"/>
-            <array m="getValues ()">array(\'price\'=>array(\'$price\',true), \'price_big\'=>array(\'$price_big\',true))</array>
+            <array m="getValues ()">{"price":["$price",true], "price_big":["$price_big",true]}</array>
             <null m="getProcStock ()"/>
             <null m="getBody ()"/>
         </object>';
@@ -393,8 +400,18 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
     );
 
-   function testBadUpdateMethods() {
- $dao ='<?xml version="1.0"?>
+    function getBadMethodData() {
+        return $this->badmethDatas;
+    }
+
+    /**
+     * @param $xmls
+     * @param $localeKey
+     * @param $localeParameters
+     * @dataProvider getBadMethodData
+     */
+    function testBadUpdateMethods($xmls, $localeKey, $localeParameters) {
+        $dao ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
   <datasources>
     <primarytable name="news" primarykey="news_id" />
@@ -412,22 +429,17 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
-        foreach($this->badmethDatas as $k=>$t){
-            //$this->sendMessage("test bad method ".$k);
-            $xml= simplexml_load_string($t[0]);
-            try{
-                $p = new jDaoMethod($xml, $parser);
-                $this->fail("Pas d'exception survenue !");
-            }catch(jDaoXmlException $e){
-                $this->assertEquals($t[1], $e->getLocaleKey());
-                $this->assertEquals($t[2], $e->getLocaleParameters());
-            }catch(Exception $e){
-                $this->fail("Exception inconnue : ".$e->getMessage());
-            }
+        $xml= simplexml_load_string($xmls);
+        try{
+            $p = new jDaoMethod($xml, $parser);
+            $this->fail("no expected exception!");
+        }catch(jDaoXmlException $e){
+            $this->assertEquals($localeKey, $e->getLocaleKey());
+            $this->assertEquals($localeParameters, $e->getLocaleParameters());
         }
     }
 
@@ -445,7 +457,7 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         $parser = new testjDaoParser($this->_selector);
         $xml = simplexml_load_string($dao);
-        $tools = new mysqliDbTools(null);
+        $tools = new jDbMysqlTools(null);
         $parser->testParseDatasource($xml);
         $parser->testParseRecord($xml,$tools);
 
@@ -460,12 +472,10 @@ class jdao_parser_updateTest extends jUnitTestCase {
 
         try{
             $p = new jDaoMethod($xml, $parser);
-            $this->fail("Pas d'exception survenue !");
+            $this->fail("no expected exception!");
         }catch(jDaoXmlException $e){
             $this->assertEquals('jelix~daoxml.method.update.forbidden', $e->getLocaleKey());
             $this->assertEquals(array('foo~bar','','tryupdate'), $e->getLocaleParameters());
-        }catch(Exception $e){
-            $this->fail("Exception inconnue : ".$e->getMessage());
         }
     }
 }

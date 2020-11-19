@@ -1,13 +1,6 @@
 <?php
 require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
-require_once (JELIX_LIB_PATH.'installer/jInstallerEntryPoint2.class.php');
-require_once (JELIX_LIB_PATH.'installer/jInstallerModuleInfos.class.php');
 require_once (JELIX_LIB_PATH.'core/jConfigCompiler.class.php');
-
-
-class testInstallApp extends jInstallerApplication {
-
-}
 
 
 class installAppTest extends PHPUnit_Framework_TestCase {
@@ -21,14 +14,17 @@ class installAppTest extends PHPUnit_Framework_TestCase {
         jApp::restoreContext();
     }
 
+    /**
+     * @expectedException Exception
+     */
+    function testNoEntryPoint() {
+        $globalSetup = new \Jelix\Installer\GlobalSetup(\jApp::appSystemPath('framework_empty.ini.php'));
+        $app = new jInstallerApplication('project.xml', $globalSetup);
+    }
+
     function testEntryPointsList () {
-        $app = new testInstallApp('project_empty.xml');
-        $this->assertEquals(array(), $app->getEntryPointsList());
 
-        $app = new testInstallApp('project_empty2.xml');
-        $this->assertEquals(array(), $app->getEntryPointsList());
-
-        $app = new testInstallApp('project.xml');
+        $app = new jInstallerApplication('project.xml');
         $list = $app->getEntryPointsList();
         $this->assertEquals(2, count($list));
         
@@ -36,14 +32,14 @@ class installAppTest extends PHPUnit_Framework_TestCase {
         $this->assertFalse($ep->isCliScript());
         $this->assertEquals('/index.php', $ep->getScriptName());
         $this->assertEquals('index.php', $ep->getFileName());
-        $this->assertEquals('', $ep->getType());
+        $this->assertEquals('classic', $ep->getType());
         $this->assertEquals('aaa', $ep->getConfigObj()->isitme);
 
         $ep = $app->getEntryPointInfo('foo');
         $this->assertFalse($ep->isCliScript());
         $this->assertEquals('/foo.php', $ep->getScriptName());
         $this->assertEquals('foo.php', $ep->getFileName());
-        $this->assertEquals('', $ep->getType());
+        $this->assertEquals('classic', $ep->getType());
         $this->assertEquals('foo', $ep->getConfigObj()->isitme);
     }
 }

@@ -69,6 +69,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
 
     }
 
+    /**
+     * @depends  testCreateGroup
+     */
     public function testDefaultGroup(){
         // on met un des groupes par defaut
         jAcl2DbUserGroup::setDefaultGroup(self::$grpId2,false);
@@ -79,6 +82,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
     }
 
+    /**
+     * @depends testDefaultGroup
+     */
     public function testRenameGroup(){
         // changement de nom d'un groupe
         jAcl2DbUserGroup::updateGroup(self::$grpId3, 'newgroup3');
@@ -86,6 +92,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
     }
 
+    /**
+     * @depends testRenameGroup
+     */
     public function testGroupList(){
         // recuperation de la liste de tous les groupes
         $list = jAcl2DbUserGroup::getGroupList()->fetchAll();
@@ -114,6 +123,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertComplexIdenticalStr($list, $verif);
     }
 
+    /**
+     * @depends testGroupList
+     */
     public function testRemoveGroup(){
         // creation d'un autre groupe
         self::$grpId4 = jAcl2DbUserGroup::createGroup('group4');
@@ -132,12 +144,15 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
 
     protected static $usergroups=array();
 
+    /**
+     * @depends  testRemoveGroup
+     */
     public function testCreateUser(){
         $this->assertTableIsEmpty('jacl2_user_group');
 
         // creation d'un user dans les acl, sans le mettre dans les groupes par defaut
         jAcl2DbUserGroup::createUser('laurent',false);
-        self::$grpId5 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId5 = '__priv_laurent';
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId5,
             'name'=>'laurent',
@@ -151,11 +166,14 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_user_group', self::$usergroups);
     }
 
+    /**
+     * @depends testCreateUser
+     */
     public function testCreateUser2(){
         // creation d'un deuxième user dans les acl, en le mettant 
         // dans les groupes par defaut
         jAcl2DbUserGroup::createUser('max');
-        self::$grpId6 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId6 = '__priv_max';
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId6,
             'name'=>'max',
@@ -171,10 +189,13 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_user_group', self::$usergroups);
     }
 
+    /**
+     * @depends testCreateUser2
+     */
     public function testAddUserIntoGroup(){
         // ajout d'un user dans un groupe
         jAcl2DbUserGroup::createUser('robert');
-        self::$grpId7 = $this->getLastId('id_aclgrp', 'jacl2_group');
+        self::$grpId7 = '__priv_robert';
         jAcl2DbUserGroup::addUserToGroup('robert', self::$grpId1);
 
         self::$groups[] = array('id_aclgrp'=>self::$grpId7,
@@ -194,6 +215,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_user_group', self::$usergroups);
     }
 
+    /**
+     * @depends testAddUserIntoGroup
+     */
     public function testUsersList(){
 
         // récuperation de la liste des users
@@ -211,6 +235,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertComplexIdenticalStr($list, $verif);
     }
 
+    /**
+     * @depends testUsersList
+     */
     public function testRemoveUserFromGroup(){
 
         // on enleve un user dans un groupe
@@ -227,6 +254,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
 
     }
 
+    /**
+     * @depends testRemoveUserFromGroup
+     */
     public function testRemoveUser(){
         // on enleve un user
         jAcl2DbUserGroup::removeUser('robert');
@@ -240,6 +270,9 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
     }
 
+    /**
+     * @depends testRemoveUser
+     */
     public function testRemoveUsedGroup(){
         // on detruit un groupe qui a des users
         // on ajoute d'abord un user dans un groupe
@@ -264,9 +297,5 @@ class jacl2_users_groupsTest extends jUnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_user_group', self::$usergroups);
         unset(self::$groups[2]);
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
-
-
     }
 }
-
-?>

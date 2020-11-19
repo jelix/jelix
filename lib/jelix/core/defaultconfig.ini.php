@@ -44,26 +44,26 @@ chmodDir=0775
 ; disable all installers and the installer.ini.php
 ; useful only if you manage the installation of modules by hands (not recommanded)
 disableInstallers=off
-; if set to on, all modules have an access=2, and access values in [modules] are not readed (not recommanded)
+; if set to on, all modules are enabled (not recommanded)
 enableAllModules=off
 
 [modules]
-; modulename.access = x   where x : 0= unused/forbidden, 1 = private access, 2 = public access
-
-jelix.access=2
+jelix.enabled=off
 jelix.path="lib:jelix/core-modules/jelix"
 
 ; jacldb is deprecated. keep it uninstall if possible
-jacldb.access=0
+jacldb.enabled=off
 
 
 [coordplugins]
 
 [tplplugins]
 defaultJformsBuilder=html
+defaultJformsErrorDecorator =
 
 [responses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
@@ -81,6 +81,7 @@ htmlauth=jResponseHtml
 
 [_coreResponses]
 html=jResponseHtml
+htmlerror=jResponseHtmlError
 basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
@@ -103,7 +104,7 @@ plugins=
 minifyCSS=off
 minifyJS=on
 minifyExcludeCSS=
-minifyExcludeJS="jelix/wymeditor/jquery.wymeditor.js"
+minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php
 
 [debugbar]
@@ -112,18 +113,29 @@ defaultPosition=right
 errors_openon=error
 
 [error_handling]
-messageLogFormat="%date%\t%ip%\t[%code%]\t%msg%\t%file%\t%line%\n\t%url%\n%params%\n%trace%\n\n"
+messageLogFormat="%date%\t%ip%\t[%code%]\t%msg%\n\tat: %file%\t%line%\n\turl: %url%\n\t%http_method%: %params%\n\treferer: %referer%\n%trace%\n\n"
 errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 ; HTTP parameters that should not appears in logs. See also jController::$sensitiveParameters
 sensitiveParameters = "password,passwd,pwd"
 
 [compilation]
+; when source file can be in different directories, like templates or locales
+; setting sourceFileResolutionInCache to 'on' set the founded path into a cache
+; avoiding to search the source file at each requests.
+; keep it to off in development environment
+sourceFileResolutionInCache=off
+
+; check if the compiled file is older than the source file.
+; You can set it to off in a production environment
 checkCacheFiletime=on
+
+; regenerate the compiled file at each requests. Use it only in development environment
 force=off
 
 [urlengine]
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache)
+; @deprecated
 enableParser=on
 
 ; if multiview is activated in apache, eg, you don't have to indicate the ".php" suffix
@@ -162,15 +174,24 @@ basePath=
 ; you MUST define basePath when you define backendBasePath
 backendBasePath=
 
+; Reverse proxies often communicate with web servers with the HTTP protocol,
+; even if requests are made with HTTPS. And it may add a 'Fowarded' or a
+; 'X-Forwarded-proto' headers so the web server know what is the protocol of
+; the original request. However Jelix <=1.6 does not support these headers, so
+; you must indicate the protocol of the original requests here, if you know
+; that the web site can be reach entirely with HTTPS.
+; Possible value is 'https' or nothing (no proxy).
+forceProxyProtocol=
+
 ; for an app on a simple http server behind an https proxy, the https verification
-; should be disabled
+; should be disabled (see forceProxyProtocol).
 checkHttpsOnParsing=on
 
 ; this is the url path to the jelix-www content (you can found this content in lib/jelix-www/)
 ; because the jelix-www directory is outside the yourapp/www/ directory, you should create a link to
 ; jelix-www, or copy its content in yourapp/www/ (with a name like 'jelix' for example)
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
-; if you change it, change also all pathes in [htmleditors]
+; if you change it, change also all paths in [htmleditors]
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
 
@@ -179,9 +200,10 @@ jelixWWWPath="jelix/"
 jqueryPath="jelix/jquery/"
 
 ; action to show the 'page not found' error
-notfoundAct="jelix~error:notfound"
+notFoundAct="jelix~error:notfound"
 
 significantFile=urls.xml
+localSignificantFile=localurls.xml
 
 ; filled automatically by jelix
 urlScript=
@@ -193,7 +215,7 @@ documentRoot=
 
 [logger]
 ; list of loggers for each categories of log messages
-; available loggers : file, syslog, firebug, mail, memory. see plugins for others
+; available loggers : file, syslog, stderr, stdout, mail, memory. see plugins for others
 
 ; _all category is the category containing loggers executed for any categories
 _all=
@@ -239,6 +261,12 @@ emailHeaders="Content-Type: text/plain; charset=UTF-8\nFrom: webmaster@yoursite.
 facility=LOG_LOCAL7
 ident="php-%sapi%-%domain%[%pid%]"
 
+[stderrLogger]
+; <type> = %D% %T% %ip% [%type%] %msg%  ; formated string, default is %type% - %msg%
+
+[stdoutLogger]
+; <type> = %D% %T% %ip% [%type%] %msg%  ; formated string, default is %type% - %msg%
+
 
 [mailer]
 webmasterEmail="root@localhost"
@@ -259,6 +287,10 @@ filesDir="mails/"
 
 ; if mailer = smtp , fill the following parameters
 
+; the profile in profiles.ini.php where all smtp* parameters are stored
+smtpProfile=mailer
+
+; following smtp* parameters are deprecated. They should be into the smtp profile.
 ; SMTP hosts.  All hosts must be separated by a semicolon : "smtp1.example.com:25;smtp2.example.com"
 smtpHost=localhost
 ; default SMTP server port
@@ -274,7 +306,47 @@ smtpPassword=
 ; SMTP server timeout in seconds
 smtpTimeout=10
 
+; Copy all emails into files
 copyToFiles=off
+
+; enable the debug mode.
+debugModeEnabled = off
+
+; type of receivers set into the email
+; 1: only addresses from  debugReceivers
+; 2: only email address of the authenticated user, or addresses from  debugReceivers
+;    if the user isn't authenticated
+; 3: both, addresses from debugReceivers and address of the authenticated user
+debugReceiversType = 1
+
+; email addresses that will replace receivers in all emails. debugModeEnabled should be on.
+debugReceivers =
+;debugReceivers[] =
+
+; Receivers for 'To' having these emails will not be replaced by debugReceivers
+; Receivers for 'Cc' and 'Bcc' having these emails will not be removed
+debugReceiversWhiteList =
+;debugReceiversWhiteList[] =
+
+; if set, it replace the address of From
+debugFrom =
+
+; if set, it replace the name in From (when debugFrom is set)
+debugFromName =
+
+; Prefix to add to subject of mails, in debug mode.
+debugSubjectPrefix =
+
+; Introduction inserted at the beginning of the messages in debug mode
+debugBodyIntroduction =
+
+; smtp debug level. debugModeEnabled should be set to on
+; - `0` No output
+; - `1` Commands
+; - `2` Data and commands
+; - `3` As 2 plus connection status
+; - `4` Low-level data output
+debugSmtpLevel = 0
 
 [acl]
 ; exemple of driver: "db".
@@ -283,8 +355,7 @@ driver=
 [acl2]
 ; exemple of driver: "db"
 driver=
-
-
+authAdapterClass="jAcl2JAuthAdapter"
 
 [sessions]
 ; to disable sessions, set the following parameter to 0
@@ -294,6 +365,17 @@ start=1
 ; a different basePath, shared_session indicates if these application
 ; share the same php session
 shared_session=off
+
+; parameters for the session cookie
+
+; if on, cookie sent only with https
+cookieSecure=off
+; if on, the cookie is not accessible in JS (keep "on" !)
+cookieHttpOnly=on
+; lifetime of the session cookie in seconds. 0 means "until the browser is closed"
+cookieLifetime=0
+; only supported with php 7.3.0+. Possible values: None, Strict, Lax
+cookieSameSite=
 
 ; indicate a session name for each applications installed with the same
 ; domain and basePath, if their respective sessions shouldn't be shared
@@ -322,6 +404,8 @@ loadClasses=
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
 controls.datetime.input=menulists
+; define input type for time widgets : "textboxes" or "menulists"
+controls.time.input = "menulists"
 ; define the way month labels are displayed widgets: "numbers", "names" or "shortnames"
 controls.datetime.months.labels=names
 ; define the configuration name to use for datepickers in jforms
@@ -334,6 +418,11 @@ datepicker=default
 ; value is suffix for jforms_datetimepicker_<config> web assets group and
 ; a jelix_datetimepicker_<config> function
 datetimepicker=default
+
+; same as datepicker but for time pickers.
+; value is suffix for jforms_timepicker_<config> web assets group and
+; a jelix_timepicker_<config> function
+timepicker=
 
 ; default captcha type
 captcha = simple
@@ -348,8 +437,7 @@ captcha.recaptcha.widgettype=recaptcha
 ;control type = plugin name
 
 [htmleditors]
-default.engine.name=wymeditor
-wymbasic.engine.name=wymeditor
+default.engine.name=ckeditor
 ckdefault.engine.name=ckeditor
 ckfull.engine.name=ckeditor
 ckbasic.engine.name=ckeditor
@@ -359,20 +447,13 @@ default.engine.name=wr3
 default.wiki.rules=wr3_to_xhtml
 
 [webassets]
-useSet=common
+useCollection=common
 
 [webassets_common]
 jquery.js = "$jelix/jquery/jquery.min.js"
 
-; In Jelix we need only the datepicker from jQueryUI.
-; So JQuery UI bundled into Jelix has been built with only the datepicker widget
-; To have more jQueryUI features, download your own version from http://jqueryui.com/download/,
-; put files into you www/ of your app, and list them here.
-; Do not overwrite files into lib/jelix-www/ !
-jquery_ui.js = "$jelix/jquery/ui-datepicker/jquery-ui.min.js"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.structure.min.css"
-jquery_ui.css[] = "$jelix/jquery/ui-datepicker/jquery-ui.theme.min.css"
+jquery_ui.js = "$jelix/jquery/ui/jquery-ui.min.js"
+jquery_ui.css[] = "$jelix/jquery/ui/jquery-ui.min.css"
 jquery_ui.require = jquery
 
 jforms_html.js[]= "$jelix/js/jforms_jquery.js"
@@ -383,40 +464,54 @@ jforms_html_light.js= "$jelix/js/jforms_light.js"
 jforms_html_light.css= "$jelix/design/jform.css"
 
 jforms_datepicker_default.css=
-jforms_datepicker_default.js[]="$jelix/jquery/ui-datepicker/i18n/datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/jquery/ui/i18n/datepicker-$lang.js"
+jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/ui.$lang.js"
 jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
-; we don't have yet a real datetime picker
 jforms_datetimepicker_default.require=jforms_datepicker_default
-jforms_datetimepicker_default.js="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
+jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
+jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
-jforms_htmleditor_default.js[]="$jelix/wymeditor/jquery.wymeditor.js"
-jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/wymeditor_default.js"
-jforms_htmleditor_default.require=jquery
+;jforms_timepicker_default.require=
+;jforms_timepicker_default.js=
+;jforms_timepicker_default.css=
 
-jforms_htmleditor_default.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_default.js[]="$jelix/ckeditor5/translations/$lang.js"
+jforms_htmleditor_default.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
 
-jforms_htmleditor_wymbasic.js[]="$jelix/wymeditor/jquery.wymeditor.min.js"
-jforms_htmleditor_wymbasic.js[]="$jelix/js/jforms/htmleditors/wymeditor_basic.js"
-jforms_htmleditor_wymbasic.require=jquery
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor5/translations/$lang.js"
+jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckdefault.js"
 
-jforms_htmleditor_wymbasic.skin.default.css="$jelix/wymeditor/skins/default/skin.css"
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckfull.js[]="$jelix/ckeditor5/translations/$lang.js"
+jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckfull.js"
 
-jforms_htmleditor_ckdefault.js[]="$jelix/ckeditor/ckeditor.js"
-jforms_htmleditor_ckdefault.js[]="$jelix/js/jforms/htmleditors/ckeditor_default.js"
-
-jforms_htmleditor_ckfull.js[]="$jelix/ckeditor/ckeditor.js"
-jforms_htmleditor_ckfull.js[]="$jelix/js/jforms/htmleditors/ckeditor_full.js"
-
-jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor/ckeditor.js"
-jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_basic.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/ckeditor.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/ckeditor5/translations/$lang.js"
+jforms_htmleditor_ckbasic.js[]="$jelix/js/jforms/htmleditors/ckeditor_ckbasic.js"
 
 jforms_wikieditor_default.js[]="$jelix/markitup/jquery.markitup.js"
 jforms_wikieditor_default.js[]="$jelix/markitup/sets/wr3/$locale.js"
 jforms_wikieditor_default.css[]="$jelix/markitup/skins/simple/style.css"
 jforms_wikieditor_default.css[]="$jelix/markitup/sets/wr3/style.css"
 jforms_wikieditor_default.require=jquery
+
+jforms_imageupload.js[]="$jelix/js/cropper.min.js"
+jforms_imageupload.js[]="$jelix/js/jforms/choice.js"
+jforms_imageupload.js[]="$jelix/js/jforms/imageSelector.js"
+jforms_imageupload.css[]="$jelix/js/cropper.min.css"
+jforms_imageupload.require=jquery_ui
+
+jforms_autocomplete.js[]="$jelix/js/jforms/jAutocomplete.jqueryui.js"
+jforms_autocomplete.require=jquery_ui
+
+jforms_autocompleteajax.js[]="$jelix/js/jforms/jAutocompleteAjax.jqueryui.js"
+jforms_autocompleteajax.require=jquery_ui
+
 
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery
@@ -450,7 +545,7 @@ cache_path=
 jelix.cache="cache/"
 
 [langToLocale]
-; overrides of lang_to_locale.ini.php
+; overrides of lang_to_locale.ini.php. set properties as : locale[XX]=YY
 
 [disabledListeners]
 ; list of jEvent listener to not call
@@ -461,7 +556,7 @@ jelix.cache="cache/"
 
 [coordplugin_auth]
 ; key to use to crypt the password in the cookie
-; Warning: the value of this parameter should be stored into localconfig.ini.php
+; Warning: the value of this parameter should be stored into liveconfig.ini.php
 persistant_encryption_key=
 
 [recaptcha]

@@ -52,7 +52,7 @@ class installWizard {
      * read the configuration file
      */
     protected function readConfiguration() {
-        $conf = parse_ini_file($this->configPath,true);
+        $conf = parse_ini_file($this->configPath, true, INI_SCANNER_TYPED);
         if (!$conf)
             throw new Exception('Impossible to read the configuration file');
         $this->config = $conf;

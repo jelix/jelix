@@ -8,7 +8,10 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-require(LIB_PATH.'/jelix/core-modules/jelix/install/UrlEngineUpgrader.php');
+use \Jelix\Installer\Migrator\UrlEngineUpgrader;
+require(LIB_PATH.'/jelix/installer/Installer/Migrator/UrlEngineUpgrader.php');
+
+
 
 class urlUpgradeTest extends jUnitTestCase {
 
@@ -23,7 +26,7 @@ class urlUpgradeTest extends jUnitTestCase {
 
     function testSimpleUpgrade() {
         $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
-        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
+        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/system/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
         $config = new \Jelix\IniFile\IniModifierArray(array(
             'default'=>$defaultConfig,
@@ -45,7 +48,7 @@ class urlUpgradeTest extends jUnitTestCase {
 
     function testSimple2Upgrade() {
         $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
-        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
+        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/system/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
         $config = new \Jelix\IniFile\IniModifierArray(array(
             'default'=>$defaultConfig,
@@ -68,7 +71,7 @@ class urlUpgradeTest extends jUnitTestCase {
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
                             file_get_contents(jApp::tempPath('config.ini')));
 
-        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
+        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/system/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config2.ini'));
         $config = new \Jelix\IniFile\IniModifierArray(array(
             'default'=>$defaultConfig,
@@ -92,7 +95,7 @@ class urlUpgradeTest extends jUnitTestCase {
 
     function testBasicSignificantUpgrade() {
         $defaultConfig = new \Jelix\IniFile\IniModifier(jConfig::getDefaultConfigFile());
-        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
+        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/system/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config.ini'));
         $config = new \Jelix\IniFile\IniModifierArray(array(
             'default'=>$defaultConfig,
@@ -118,7 +121,7 @@ class urlUpgradeTest extends jUnitTestCase {
         $this->assertEquals(file_get_contents(__DIR__.'/urls/res_config_simple_2.ini'),
                             file_get_contents(jApp::tempPath('config.ini')));
 
-        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/config/mainconfig.ini.php');
+        $mainConfig = new \Jelix\IniFile\IniModifier(__DIR__.'/app1/app/system/mainconfig.ini.php');
         $epConfig = new \Jelix\IniFile\IniModifier(jApp::tempPath('config2.ini'));
         $config = new \Jelix\IniFile\IniModifierArray(array(
             'default'=>$defaultConfig,

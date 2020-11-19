@@ -1,43 +1,25 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  installer
-* @author      Laurent Jouanneau
-* @copyright   2008-2016 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  installer
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2008-2018 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
 
 /**
-* interface for classes used as reporter for installation or check etc...
-* This classes are responsible to show informations to the user
-* @package     jelix
-* @subpackage  installer
-* @since 1.2
-*/
-interface jIInstallReporter {
-
-    /**
-     * start the process
-     */
-    public function start();
-
-    /**
-     * displays a message
-     * @param string $message the message to display
-     * @param string $type the type of the message : 'error', 'notice', 'warning', ''
-     */
-    public function message($message, $type='');
-
-    /**
-     * called when the installation is finished
-     */
-    public function end();
-
-    /**
-     * return the number of messages of a specific type
-     * @return integer
-     */
-    public function getMessageCounter($type);
+ * interface for classes used as reporter for installation or check etc...
+ * This classes are responsible to show informations to the user.
+ *
+ * @package     jelix
+ * @subpackage  installer
+ *
+ * @since 1.2
+ * @deprecated
+ */
+interface jIInstallReporter extends \Jelix\Installer\Reporter\ReporterInterface
+{
 }
-

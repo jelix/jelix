@@ -71,6 +71,9 @@
       <label>a wiki editor</label>
   </wikieditor>
 
+    <color ref="couleur">
+        <label>prefered color</label>
+    </color>
   <checkboxes ref="objets" required="true">
       <label>You have </label>
       <item value="maison">a house</item>
@@ -96,6 +99,10 @@
   <datetime ref="meeting">
       <label>Next meeting</label>
   </datetime>
+
+  <time ref="testtime" seconds="true">
+    <label>Time for test no 2</label>
+  </time>
 
   <secret ref="pwd">
     <label>A password</label>

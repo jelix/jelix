@@ -23,12 +23,12 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="true" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -40,12 +40,12 @@ class jDao_ConditionsTest extends jUnitTestCase {
             $cond->addItemOrder('foo', 'DESC');
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array("foo"=>"DESC")</array>
+                <array p="order">{"foo":"DESC"}</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array()</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -58,12 +58,14 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -74,12 +76,14 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -92,12 +96,14 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"%s","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -111,18 +117,21 @@ class jDao_ConditionsTest extends jUnitTestCase {
             $cond->endGroup ();
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"%s","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
-                            <array p="conditions">array(
-                             array("field_id"=>"foo1","field_pattern"=>"%s","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
-                             array("field_id"=>"foo1","field_pattern"=>"%s","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
-                            <array p="group">array()</array>
+                            <array p="conditions">[
+                             {"field_id":"foo1","field_pattern":"%s","value":"100", "operator":"&lt;", "isExpr":false},
+                             {"field_id":"foo1","field_pattern":"%s","value":"0", "operator":"&gt;", "isExpr":false}
+                             ]</array>
+                            <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
                         </object>
                     </array>
@@ -138,12 +147,15 @@ class jDao_ConditionsTest extends jUnitTestCase {
 
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
-                    <array p="group">array()</array>
+                    <array p="conditions">
+                    [
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
+                    <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
                 </object>
             </object>';
@@ -157,18 +169,21 @@ class jDao_ConditionsTest extends jUnitTestCase {
             $cond->endGroup ();
             $check='<?xml version="1.0"?>
             <object class="jDaoConditions">
-                <array p="order">array()</array>
+                <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
                 <object p="condition" class="jDaoCondition">
                     <null p="parent" />
-                    <array p="conditions">array(array("field_id"=>"foo","field_pattern"=>"LOWER(%s)","value"=>"toto", "operator"=>"=", "isExpr"=>false))</array>
+                    <array p="conditions">[
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    ]</array>
                     <array p="group">
                         <object p="condition" class="jDaoCondition">
                             <object p="parent" class="jDaoCondition" />
-                            <array p="conditions">array(
-                             array("field_id"=>"foo1","field_pattern"=>"ROUND(%s)","value"=>"100", "operator"=>"&lt;", "isExpr"=>false),
-                             array("field_id"=>"foo1","field_pattern"=>"CEIL(%s)","value"=>"0", "operator"=>"&gt;", "isExpr"=>false))</array>
-                            <array p="group">array()</array>
+                            <array p="conditions">[
+                                {"field_id":"foo1","field_pattern":"ROUND(%s)","value":"100", "operator":"&lt;", "isExpr":false},
+                                {"field_id":"foo1","field_pattern":"CEIL(%s)","value":"0", "operator":"&gt;", "isExpr":false}
+                            ]</array>
+                            <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
                         </object>
                     </array>

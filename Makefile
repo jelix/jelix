@@ -8,19 +8,28 @@ endif
 
 CURRENT_PATH = $(shell pwd)
 
-ifdef DISTPATH
+ifndef DISTPATH
+DISTPATH=$(CURRENT_PATH)/_dist
+endif
 DISTPATHSWITCH="MAIN_TARGET_PATH=$(DISTPATH)"
-else
-DISTPATH=_dist
-DISTPATHSWITCH="MAIN_TARGET_PATH=_dist"
+
+ifndef DOCSTARGETPATH
+DOCSTARGETPATH=$(CURRENT_PATH)/_docs
 endif
 
-ifndef DOCSPATH
-DOCSPATH=_docs
+ifndef DOCSCACHEPATH
+DOCSCACHEPATH=$(CURRENT_PATH)/_docs.cache
+endif
+
+ifdef TESTPATH
+TESTPATHSWITCH="MAIN_TARGET_PATH=$(TESTPATH)"
+else
+TESTPATH=_dev
+TESTPATHSWITCH="MAIN_TARGET_PATH=_dev"
 endif
 
 ifndef PHPDOC
-PHPDOC=../../phpdoc/
+PHPDOC="$(CURRENT_PATH)/build/vendor/bin/phpdoc"
 endif
 
 .PHONY: default
@@ -33,19 +42,20 @@ default:
 
 .PHONY: nightlies
 nightlies:
-	composer install --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-dev.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_DEV
-	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist-opt.ini
-	mv $(DISTPATH)/PACKAGE_NAME  $(DISTPATH)/PACKAGE_NAME_OPT
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D IS_NIGHTLY=1 -D ENABLE_DEVELOPER=1 ./build/config/jelix-dist.ini
 
 .PHONY: docs
-docs: 
+docs:
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
-#	cp -R -f build/phpdoc/Converters/HTML/frames $(PHPDOC)phpDocumentor/Converters/HTML/
-	$(PHPDOC)phpdoc \
-	-d $(TESTPATH)/lib/jelix/ \
-	-t $(DOCSPATH) \
-	-o "HTML:frames:DOM/jelix" -s on -ct "contributor,licence" -i *.ini.php \
-	-ti "Jelix API Reference" -ric "README,INSTALL,CHANGELOG,CREDITS,LICENCE,VERSION,BUILD"
-	# -tb $(CURRENT_PATH)/build/phpdoc/
+	cp build/phpdoc/phpdoc.xml $(TESTPATH)
+	sed -i -- s!__PARSER_CACHE__!$(DOCSCACHEPATH)!g $(TESTPATH)/phpdoc.xml
+	sed -i -- s!__TARGET_PATH__!$(DOCSTARGETPATH)!g $(TESTPATH)/phpdoc.xml
+	(cd $(TESTPATH) && $(PHPDOC) project:run)
+	cp build/phpdoc/template.css $(DOCSTARGETPATH)/css/
+
+.PHONY: release
+release:
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
+	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist.ini

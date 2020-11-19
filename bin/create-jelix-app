@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+/**
+* @author      Laurent Jouanneau
+* @copyright   2016-2019 Laurent Jouanneau
+* @link        http://jelix.org
+* @licence     MIT
+*/
+
+$composerJsonRule = '';
+$composerJsonForbiddenRule = '';
+
+if (file_exists(__DIR__.'/../vendor/autoload.php')) {
+    // when launched from a copy of the git repository
+    require(__DIR__.'/../vendor/autoload.php');
+    $composerJsonRule = 'new-current-jelix';
+    $vendorPath = realpath(__DIR__.'/../vendor/');
+    $jelixPath = realpath(__DIR__.'/../lib/jelix/');
+    $jelixAsComposerPackage = false;
+}
+else if (file_exists(__DIR__.'/../lib/vendor/autoload.php') &&
+    file_exists(__DIR__.'/../lib/composer.json') &&
+    (is_dir(__DIR__.'/../lib/jelix')  || is_dir(__DIR__.'/../lib/Jelix'))
+) {
+    // when Jelix is installed via a tar.gz package
+    require(__DIR__.'/../lib/vendor/autoload.php');
+    $composerJsonRule = 'none';
+    $composerJsonForbiddenRule = 'current';
+    $vendorPath = realpath(__DIR__.'/../lib/vendor/');
+    if (is_dir(__DIR__.'/../lib/jelix')) {
+        $jelixPath = realpath(__DIR__.'/../lib/jelix/');
+    }
+    else {
+        $jelixPath = realpath(__DIR__.'/../lib/Jelix/');
+    }
+    $jelixAsComposerPackage = false;
+}
+else if (file_exists(__DIR__.'/../../../autoload.php') &&
+    (is_dir(__DIR__.'/../../../jelix/jelix') ||
+     is_dir(__DIR__.'/../../../jelix/jelix-essential'))
+) {
+    // when Jelix is installed via Composer, and so we are in the vendor directory
+    require(__DIR__.'/../../../autoload.php');
+    $composerJsonRule = 'current';
+    $composerJsonForbiddenRule = 'new-current';
+    $vendorPath = realpath(__DIR__.'/../../../');
+    if (is_dir(__DIR__.'/../../../jelix/jelix')) {
+        $jelixPath = realpath(__DIR__.'/../../../jelix/jelix/');
+    }
+    else {
+        $jelixPath = realpath(__DIR__.'/../../../jelix/jelix-essential/');
+    }
+    $jelixAsComposerPackage = true;
+}
+else {
+    echo "Error: the vendor directory of Composer is not found\n";
+    echo "   ".__FILE__."\n";
+    exit(1);
+}
+
+require(__DIR__.'/../lib/jelix-scripts/includes/scripts.inc.php');
+
+use Jelix\DevHelper\CreateAppApplication;
+
+$application = new CreateAppApplication();
+$application->initCreateAppCommand($jelixPath, $jelixAsComposerPackage, $vendorPath, $composerJsonRule, $composerJsonForbiddenRule);
+$application->run();

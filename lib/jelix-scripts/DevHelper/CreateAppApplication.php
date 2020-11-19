@@ -1,11 +1,12 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @copyright   2016 Laurent Jouanneau
-*
-* @link        http://www.jelix.org
-* @licence     MIT
-*/
+ * @author      Laurent Jouanneau
+ * @copyright   2016 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     MIT
+ */
+
 namespace Jelix\DevHelper;
 
 use Symfony\Component\Console\Application;
@@ -35,10 +36,22 @@ class CreateAppApplication extends Application
         // Keep the core default commands to have the HelpCommand
         // which is used when using the --help option
         $defaultCommands = parent::getDefaultCommands();
-
-        $defaultCommands[] = new \Jelix\DevHelper\Command\CreateApp();
+        $defaultCommands[] = $this->createAppCmd;
 
         return $defaultCommands;
+    }
+
+    protected $createAppCmd;
+
+    public function initCreateAppCommand($jelixPath, $jelixAsComposerPackage, $vendorPath, $defaultRule, $forbiddenRule = '')
+    {
+        $this->createAppCmd = new \Jelix\DevHelper\Command\CreateApp(
+            $jelixPath,
+            $jelixAsComposerPackage,
+            $vendorPath,
+            $defaultRule,
+            $forbiddenRule
+        );
     }
 
     /**

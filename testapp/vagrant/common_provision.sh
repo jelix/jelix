@@ -4,8 +4,14 @@ source $VAGRANTDIR/system.sh
 
 initsystem
 
+source $VAGRANTDIR/gencerts.sh
+
 apt-get -y install postgresql postgresql-client
-apt-get -y install redis-server memcached memcachedb
+apt-get -y install redis-server memcached
+
+if [ "$DISTRO" == "jessie" ]; then
+  apt-get -y install memcacheddb
+fi
 
 # create a database into pgsql + users
 su postgres -c $VAGRANTDIR/create_pgsql_db.sh
@@ -24,6 +30,8 @@ resetComposer $ROOTDIR
 if [ ! -f /usr/bin/phpunit ]; then
     ln -s $APPDIR/vendor/bin/phpunit  /usr/bin/phpunit
 fi
+
+cp $VAGRANTDIR/phpunit_bootstrap.php /srv/
 
 source $VAGRANTDIR/reset_testapp.sh
 

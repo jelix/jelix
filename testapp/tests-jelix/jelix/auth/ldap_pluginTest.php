@@ -21,9 +21,11 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
     protected $config;
 
+    protected $listenersBackup;
+
     function setUp(){
         parent::setUp();
-        if(!file_exists(jApp::appConfigPath().'auth_ldap.coord.ini.php')) {
+        if(!file_exists(jApp::appSystemPath().'auth_ldap.coord.ini.php')) {
             $this->config = null;
             $this->markTestSkipped('Ldap plugin for jauth is not tested because there isn\'t configuration.'.
                                ' To test it, you should create and configure an auth_ldap.coord.ini.php file.');
@@ -32,7 +34,7 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
 
-        $conf = parse_ini_file(jApp::appConfigPath().'auth_ldap.coord.ini.php',true);
+        $conf = parse_ini_file(jApp::appSystemPath().'auth_ldap.coord.ini.php',true, INI_SCANNER_TYPED);
         jAuth::loadConfig($conf);
 
         require_once( JELIX_LIB_PATH.'plugins/coord/auth/auth.coord.php');
@@ -40,6 +42,16 @@ class ldap_pluginAuthTest extends jUnitTestCase {
 
         $this->config = & jApp::coord()->plugins['auth']->config;
         $_SESSION[$this->config['session_name']] = new jAuthDummyUser();
+
+        // disable listener of jacl2db so testldap could be remove without
+        // verifying if there is still an admin
+        $this->listenersBackup = jApp::config()->disabledListeners;
+        jApp::config()->disabledListeners['AuthCanRemoveUser'] = 'jacl2db~jacl2db';
+        jEvent::clearCache();
+        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
     }
 
     function tearDown(){
@@ -48,6 +60,12 @@ class ldap_pluginAuthTest extends jUnitTestCase {
         unset($_SESSION[$this->config['session_name']]);
         $this->config = null;
         jAcl2DbUserGroup::removeUser('testldap');
+        jApp::config()->disabledListeners = $this->listenersBackup;
+        jEvent::clearCache();
+        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
+        if (file_exists($cacheFile)) {
+            unlink($cacheFile);
+        }
     }
 
     public function testUsersList() {

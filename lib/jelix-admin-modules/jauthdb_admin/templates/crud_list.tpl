@@ -13,8 +13,8 @@
 {if $canview}
 <form action="{formurl 'jauthdb_admin~default:view'}" method="get">
     <div>
-        <label>{@jauthdb_admin~crud.title.view@}</label>
-        <input name="j_user_login"></input>
+        <label for="search-login">{@jauthdb_admin~crud.title.view@}</label>
+        <input id="search-login" name="j_user_login">
         <button type="submit">{@jauthdb_admin~crud.link.view.record@}</button>
     </div>
 </form>
@@ -41,7 +41,7 @@
     {/foreach}
     <td>
         {if $canview}
-        <a href="{jurl 'jauthdb_admin~default:view',array('j_user_login'=>$record->$primarykey)}">{@jauthdb_admin~crud.link.view.record@}</a>
+        <a href="{jurl 'jauthdb_admin~default:view',array('j_user_login'=>$record->login)}">{@jauthdb_admin~crud.link.view.record@}</a>
         {/if}
     </td>
 </tr>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="master_admin@modules.jelix.org" name="master_admin" createdate="2008-12-22">
-        <version stability="stable" date="2017-02-07">1.7.0-beta.2</version>
+        <version date="2020-08-17 22:31">1.7.6-pre</version>
         <label lang="en_US">Main Administration Interface</label>
         <description lang="en_US">Main Web interface for the administration of an application</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
-        <copyright>2008-2017 Laurent Jouanneau</copyright>
+        <copyright>2008-2018 Laurent Jouanneau</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-#expand        <jelix minversion="1.7.0-beta.1" maxversion="__LIB_VERSION_MAX__"/>
+        <jelix minversion="1.7.0-beta.4" maxversion="1.7.6"/>
     </dependencies>
 </module>

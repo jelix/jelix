@@ -59,6 +59,8 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','aaa');
         $this->assertTrue($this->form->check());
+        $this->form->setData('nom','  aaa  ');
+        $this->assertTrue($this->form->check());
         $this->form->setData('nom','aaqq');
         $this->assertFalse($this->form->check());
 
@@ -67,6 +69,8 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->form->setData('nom','a');
         $this->assertFalse($this->form->check());
         $this->form->setData('nom','123');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom',' 123 ');
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','1234');
         $this->assertFalse($this->form->check());
@@ -82,7 +86,11 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','on');
         $this->assertTrue($this->form->check());
+        $this->form->setData('nom',' on ');
+        $this->assertTrue($this->form->check());
         $this->form->setData('nom','off');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom',' off ');
         $this->assertTrue($this->form->check());
 
         $ctrl = new jFormsControlInput('nom');
@@ -129,6 +137,9 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->assertEquals('', $this->form->getData('nom'));
         $this->form->setData('nom','foo@machin.com');
         $this->assertTrue($this->form->check());
+        $this->form->setData('nom','  foo@machin.com ');
+        $this->assertTrue($this->form->check());
+        $this->assertEquals('foo@machin.com', $this->form->getData('nom'));
 
         $ctrl->required = true;
         $this->form->setData('nom',null);
@@ -153,6 +164,12 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->form->setData('nom','0');
         $this->assertTrue($this->form->check());
         $this->form->setData('nom','1');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom','on ');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom',' 0');
+        $this->assertTrue($this->form->check());
+        $this->form->setData('nom',' 1 ');
         $this->assertTrue($this->form->check());
 
         $ctrl->required = true;
@@ -252,12 +269,14 @@ class jforms_check_data extends jUnitTestCaseDb {
         $this->assertFalse($this->form->check());
         $this->form->setData('nom_confirm','aaa');
         $this->assertTrue($this->form->check());
+        $this->form->setData('nom_confirm','  aaa  ');
+        $this->assertFalse($this->form->check());
         $this->form->setData('nom_confirm','aaaaaaa');
         $this->assertFalse($this->form->check());
     }
 
     function testDate(){
-        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $ctrl->hasHelp=true;
         $this->form->addCtrl($ctrl);
@@ -349,7 +368,7 @@ class jforms_check_data extends jUnitTestCaseDb {
         $ctrl->required = true;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlinput('datenaissance');
+        $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $choice->addChildControl($ctrl, 'item2');
 
@@ -410,4 +429,3 @@ class jforms_check_data extends jUnitTestCaseDb {
     }
 }
 
-?>

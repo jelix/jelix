@@ -36,7 +36,7 @@ class jdao_generatorTest extends jUnitTestCase {
 
     function setUp() {
         $this->_selector = new fakejSelectorDao("foo", "bar", "mysqli", "mysql");
-        $this->_tools= new mysqliDbTools(null);
+        $this->_tools= new jDbMysqlTools(null);
     }
 
     function tearDown() {
@@ -395,6 +395,7 @@ class jdao_generatorTest extends jUnitTestCase {
       <property name="name" fieldname="name" datatype="string" required="yes" selectpattern="TOUPPER(%s)"/>
       <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
       <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+      <property name="datecreate" fieldname="datecreate" datatype="datetime" insertpattern="NOW()" />
     </record>
     <factory>
         <method name="method1" type="select">
@@ -424,16 +425,18 @@ class jdao_generatorTest extends jUnitTestCase {
            <parameter name="login" />
            <conditions>
               <eq property="grouptype" value="2" />
-              <eq property="name" expr="TOUPPER($login)" />
+              <eq property="name" expr="TOUPPER($login)" />               
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
 
         <method name="method15" type="select">
            <parameter name="login" />
+           <parameter name="adate"/>
            <conditions>
               <eq property="grouptype" value="2" />
               <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+              <eq property="datecreate" pattern="day(%s)" expr="date_part( \'day\' , $adate)" />
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
@@ -476,10 +479,63 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
                                                 $methods['method15']->getParameters(), false);
-        $this->assertEquals(' `grouptype` = 2 AND TOUPPER(`name`) = TOUPPER(\'.$this->_conn->quote($login).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+        $this->assertEquals(' `grouptype` = 2 AND TOUPPER(`name`) = TOUPPER(\'.$this->_conn->quote($login).\') AND day(`datecreate`) = extract(day FROM \'.($adate === null ? \'NULL\' : $this->_conn->quote2($adate,false)).\') AND `grouptype` \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
 
     }
 
+    function testBuildSQLConditionWithDatePatternPgsql(){
+        $doc ='<?xml version="1.0" encoding="UTF-8"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+    <datasources>
+        <primarytable name="grp" realname="jacl_group" primarykey="id_aclgrp" />
+    </datasources>
+    <record>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="autoincrement" required="yes"/>
+      <property name="parent_id" required="false" datatype="int" />
+      <property name="name" fieldname="name" datatype="string" required="yes" selectpattern="TOUPPER(%s)"/>
+      <property name="grouptype" fieldname="grouptype" datatype="int" required="yes"/>
+      <property name="ownerlogin" fieldname="ownerlogin" datatype="string" />
+      <property name="datecreate" fieldname="datecreate" datatype="datetime" insertpattern="NOW()" />
+    </record>
+    <factory>
+         <method name="method9" type="select">
+           <parameter name="login" />
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" expr="TOUPPER($login)" />               
+              <like property="grouptype" expr="$login" />
+           </conditions>
+        </method>
+
+        <method name="method15" type="select">
+           <parameter name="login" />
+           <parameter name="adate"/>
+           <conditions>
+              <eq property="grouptype" value="2" />
+              <eq property="name" pattern="TOUPPER(%s)" expr="TOUPPER($login)" />
+              <eq property="datecreate" pattern="day(%s)" expr="day($adate)" />
+              <like property="grouptype" expr="$login" />
+           </conditions>
+        </method>
+    </factory>
+</dao>';
+        $tools = new jDbPgsqlTools(null);
+        $parser = new jDaoParser ($this->_selector);
+
+        $parser->parse(simplexml_load_string($doc), $tools);
+        $generator = new testMysqlDaoGenerator($this->_selector, $tools, $parser);
+
+        $methods=$parser->getMethods();
+
+        $where = $generator->BuildSQLCondition ($methods['method9']->getConditions()->condition, $parser->getProperties(),
+            $methods['method9']->getParameters(), false);
+        $this->assertEquals(' "grouptype" = 2 AND "name" = TOUPPER(\'.$this->_conn->quote($login).\') AND "grouptype" \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
+            $methods['method15']->getParameters(), false);
+        $this->assertEquals(' "grouptype" = 2 AND TOUPPER("name") = TOUPPER(\'.$this->_conn->quote($login).\') AND extract(day FROM TIMESTAMP "datecreate") = extract(day FROM TIMESTAMP \'.($adate === null ? \'NULL\' : $this->_conn->quote2($adate,false)).\') AND "grouptype" \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+    }
 
 
     function testBuildSimpleCondition(){
@@ -534,7 +590,7 @@ class jdao_generatorTest extends jUnitTestCase {
                <eq property="grouptype" value="1" />
             </conditions>
         </method>
-        <method name="method2" type="select" groupby="id_aclgrp,parent_id,name">
+        <method name="method2" type="select">
            <conditions>
               <neq property="grouptype" value="2" />
            </conditions>
@@ -543,11 +599,6 @@ class jdao_generatorTest extends jUnitTestCase {
            </order>
         </method>
         <method name="method3" type="select">
-           <order>
-               <orderitem property="name" way="asc" />
-           </order>
-        </method>
-        <method name="method4" type="select" groupby="id_aclgrp,parent_id,name">
            <order>
                <orderitem property="name" way="asc" />
            </order>
@@ -562,40 +613,30 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $this->assertNotNull($methods['method1']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
-                                                $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
+                                                $methods['method1']->getParameters(), false);
         $this->assertEquals(' `grouptype` = 1', $sql);
 
         $this->assertNotNull($methods['method2']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
-                                                $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
-        $this->assertEquals(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+                                                $methods['method2']->getParameters(), false);
+        $this->assertEquals(' `grouptype` <> 2 ORDER BY `name` asc', $sql);
 
         $this->assertNotNull($methods['method3']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
-                                                $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
+                                                $methods['method3']->getParameters(), false);
         $this->assertEquals(' 1=1  ORDER BY `name` asc',$sql);
 
-        $this->assertNotNull($methods['method4']->getConditions());
-        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
-                                                $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
-        $this->assertEquals(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
-
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
-                                                $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
+                                                $methods['method1']->getParameters(), true);
         $this->assertEquals(' `grp`.`grouptype` = 1', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
-                                                $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
-        $this->assertEquals(' `grp`.`grouptype` <> 2 GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
+                                                $methods['method2']->getParameters(), true);
+        $this->assertEquals(' `grp`.`grouptype` <> 2 ORDER BY `grp`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
-                                                $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
+                                                $methods['method3']->getParameters(), true);
         $this->assertEquals(' 1=1  ORDER BY `grp`.`name` asc',$sql);
-
-        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
-                                                $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
-        $this->assertEquals(' 1=1  GROUP BY `grp`.`id_aclgrp`, `grp`.`parent_id`, `grp`.`name` ORDER BY `grp`.`name` asc',$sql);
-
     }
 
  function testBuildConditionsNoAlias(){
@@ -617,7 +658,7 @@ class jdao_generatorTest extends jUnitTestCase {
                <eq property="grouptype" value="1" />
             </conditions>
         </method>
-        <method name="method2" type="select" groupby="id_aclgrp,parent_id,name">
+        <method name="method2" type="select">
            <conditions>
               <neq property="grouptype" value="2" />
            </conditions>
@@ -626,11 +667,6 @@ class jdao_generatorTest extends jUnitTestCase {
            </order>
         </method>
         <method name="method3" type="select">
-           <order>
-               <orderitem property="name" way="asc" />
-           </order>
-        </method>
-        <method name="method4" type="select" groupby="id_aclgrp,parent_id,name">
            <order>
                <orderitem property="name" way="asc" />
            </order>
@@ -645,39 +681,30 @@ class jdao_generatorTest extends jUnitTestCase {
 
         $this->assertNotNull($methods['method1']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
-                                                $methods['method1']->getParameters(), false,  $methods['method1']->getGroupBy());
+                                                $methods['method1']->getParameters(), false);
         $this->assertEquals(' `grouptype` = 1', $sql);
 
         $this->assertNotNull($methods['method2']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
-                                                $methods['method2']->getParameters(), false, $methods['method2']->getGroupBy());
-        $this->assertEquals(' `grouptype` <> 2 GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
+                                                $methods['method2']->getParameters(), false);
+        $this->assertEquals(' `grouptype` <> 2 ORDER BY `name` asc', $sql);
 
         $this->assertNotNull($methods['method3']->getConditions());
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
-                                                $methods['method3']->getParameters(), false, $methods['method3']->getGroupBy());
+                                                $methods['method3']->getParameters(), false);
         $this->assertEquals(' 1=1  ORDER BY `name` asc',$sql);
 
-        $this->assertNotNull($methods['method4']->getConditions());
-        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
-                                                $methods['method4']->getParameters(), false, $methods['method4']->getGroupBy());
-        $this->assertEquals(' 1=1  GROUP BY `id_aclgrp`, `parent_id`, `name` ORDER BY `name` asc', $sql);
-
         $sql = $generator->BuildConditions2 ($methods['method1']->getConditions(), $parser->getProperties(),
-                                                $methods['method1']->getParameters(), true,  $methods['method1']->getGroupBy());
+                                                $methods['method1']->getParameters(), true);
         $this->assertEquals(' `jacl_group`.`grouptype` = 1', $sql);
 
         $sql = $generator->BuildConditions2 ($methods['method2']->getConditions(), $parser->getProperties(),
-                                                $methods['method2']->getParameters(), true, $methods['method2']->getGroupBy());
-        $this->assertEquals(' `jacl_group`.`grouptype` <> 2 GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
+                                                $methods['method2']->getParameters(), true);
+        $this->assertEquals(' `jacl_group`.`grouptype` <> 2 ORDER BY `jacl_group`.`name` asc',$sql);
 
         $sql = $generator->BuildConditions2 ($methods['method3']->getConditions(), $parser->getProperties(),
-                                                $methods['method3']->getParameters(), true, $methods['method3']->getGroupBy());
+                                                $methods['method3']->getParameters(), true);
         $this->assertEquals(' 1=1  ORDER BY `jacl_group`.`name` asc',$sql);
-
-        $sql = $generator->BuildConditions2 ($methods['method4']->getConditions(), $parser->getProperties(),
-                                                $methods['method4']->getParameters(), true, $methods['method4']->getGroupBy());
-        $this->assertEquals(' 1=1  GROUP BY `jacl_group`.`id_aclgrp`, `jacl_group`.`parent_id`, `jacl_group`.`name` ORDER BY `jacl_group`.`name` asc',$sql);
 
     }
 
@@ -746,6 +773,7 @@ class jdao_generatorTest extends jUnitTestCase {
             <values>
                  <value property="price"     expr="$price"     />
                  <value property="price_big" expr="$price_big" />
+                 <value property="name" expr="concat(name, $price)" />
             </values>
        </method>
    </factory>
@@ -759,7 +787,11 @@ class jdao_generatorTest extends jUnitTestCase {
         $src = array();
         $generator->GetBuildUpdateUserQuery($methods['test'], $src, $primaryFields);
         
-        $this->assertEquals('    $__query = \'UPDATE  SET '."\n".' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\', `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\'\';', implode("\n",$src));
+        $this->assertEquals('    $__query = \'UPDATE  SET '."\n".
+            ' `price`= \'.($price === null ? \'NULL\' : jDb::floatToStr($price)).\','.
+            ' `price_big`= \'.($price_big === null ? \'NULL\' : jDb::floatToStr($price_big)).\','.
+            ' `name`= concat(name, \'.($price === null ? \'NULL\' : $this->_conn->quote2($price,false)).\')\';'
+            , implode("\n",$src));
     }
 
 }

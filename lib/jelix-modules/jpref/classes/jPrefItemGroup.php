@@ -6,7 +6,7 @@
  *
  * @copyright 2012 Florian Lonqueu-Brochard, 2015 Laurent Jouanneau
  *
- * @link      http://jelix.org
+ * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 class jPrefItemGroup
@@ -33,6 +33,9 @@ class jPrefItemGroup
 
     /**
      * Initialise the group with a node from an ini file.
+     *
+     * @param mixed $node_key
+     * @param mixed $node
      */
     public function setFromIniNode($node_key, $node)
     {
@@ -58,17 +61,20 @@ class jPrefItemGroup
         if (empty($a->order) || empty($b->order)) {
             if (empty($a->order) && empty($b->order)) {
                 return 0;
-            } elseif (empty($a->order)) {
-                return 1;
-            } else {
-                return -1;
             }
-        } elseif ($a->order > $b->order) {
-            return 1;
-        } elseif ($a->order < $b->order) {
+            if (empty($a->order)) {
+                return 1;
+            }
+
             return -1;
-        } else {
-            return 0;
         }
+        if ($a->order > $b->order) {
+            return 1;
+        }
+        if ($a->order < $b->order) {
+            return -1;
+        }
+
+        return 0;
     }
 }

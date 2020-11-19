@@ -3,6 +3,7 @@
    <listener name="testevents">
       <event name="TestEventWithParams" />
       <event name="TestEvent" />
+       <event name="TestEventResponse" />
    </listener>
    <listener name="testdaoevents">
       <event name="daoDeleteBefore" />

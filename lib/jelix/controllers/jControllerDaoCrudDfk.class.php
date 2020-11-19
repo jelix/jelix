@@ -1,44 +1,49 @@
 <?php
 /**
-* @package      jelix
-* @subpackage   controllers
-* @author       Laurent Jouanneau
-* @contributor  Bastien Jaillot
-* @contributor  Thibault Piront (nuKs)
-* @contributor  Bruno Perles (brunto)
-* @copyright    2007-2008 Laurent Jouanneau
-* @copyright    2007 Thibault Piront
-* @copyright    2007,2008 Bastien Jaillot
-* @copyright    2011 Bruno PERLES
-* @link         http://www.jelix.org
-* @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*
-*/
+ * @package      jelix
+ * @subpackage   controllers
+ *
+ * @author       Laurent Jouanneau
+ * @contributor  Bastien Jaillot
+ * @contributor  Thibault Piront (nuKs)
+ * @contributor  Bruno Perles (brunto)
+ *
+ * @copyright    2007-2008 Laurent Jouanneau
+ * @copyright    2007 Thibault Piront
+ * @copyright    2007,2008 Bastien Jaillot
+ * @copyright    2011 Bruno PERLES
+ *
+ * @see         http://www.jelix.org
+ * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- * a base class for crud controllers, for DAO which have a primary key based on 
+ * a base class for crud controllers, for DAO which have a primary key based on
  * two fields, a "static" field (a field that we know the value and which is a criteria to
- * to select all viewed record), and a 
- * "dynamic" field (the value of the field is created by the user or autoincremented)
+ * to select all viewed record), and a
+ * "dynamic" field (the value of the field is created by the user or autoincremented).
+ *
  * @package    jelix
  * @subpackage controllers
+ *
  * @since 1.1
  */
-class jControllerDaoCrudDfk extends jController {
-
+class jControllerDaoCrudDfk extends jController
+{
     /**
-     * name of the request parameter and of the field in the dao, for the dynamic primary key
+     * name of the request parameter and of the field in the dao, for the dynamic primary key.
      */
-    protected $dpkName ='id';
+    protected $dpkName = 'id';
 
     /**
-     * name of the request parameter and of the field in the dao, for the static primary key
+     * name of the request parameter and of the field in the dao, for the static primary key.
      */
     protected $spkName = 'spk';
 
     /**
      * selector of the dao to use for the crud.
      * It should be filled by child controller.
+     *
      * @var string
      */
     protected $dao = '';
@@ -46,15 +51,17 @@ class jControllerDaoCrudDfk extends jController {
     /**
      * selector of the form to use to edit and display a record
      * It should be filled by child controller.
+     *
      * @var string
      */
-    protected $form ='';
+    protected $form = '';
 
     /**
      * list of properties to show in the list page
      * if empty list (default), it shows all properties.
-     * this property is only usefull when you use the default "list" template
-     * @var array
+     * this property is only usefull when you use the default "list" template.
+     *
+     * @var string[]
      */
     protected $propertiesForList = array();
 
@@ -64,49 +71,57 @@ class jControllerDaoCrudDfk extends jController {
      * keys are properties name, and values are "asc" or "desc".
      * Values can be changed by the user if showPropertiesOrderLinks is true.
      * In this case, '' means undetermined.
-     * @var array
+     *
+     * @var string[]
      */
     protected $propertiesForRecordsOrder = array();
 
-     /**
-     * indicate if we show links to allow the user to order records list
-     * @var boolean
+    /**
+     * indicate if we show links to allow the user to order records list.
+     *
+     * @var bool
      */
     protected $showPropertiesOrderLinks = true;
 
     /**
-     * template to display the list of records
+     * template to display the list of records.
+     *
      * @var string
      */
     protected $listTemplate = 'jelix~cruddfk_list';
 
     /**
-     * template to display the form
+     * template to display the form.
+     *
      * @var string
      */
     protected $editTemplate = 'jelix~cruddfk_edit';
 
     /**
-     * template to display a record
+     * template to display a record.
+     *
      * @var string
      */
     protected $viewTemplate = 'jelix~cruddfk_view';
 
     /**
-     * number of record to display in the list page
-     * @var integer
+     * number of record to display in the list page.
+     *
+     * @var int
      */
     protected $listPageSize = 20;
 
     /**
      * the template variable name to display a CRUD content in the main template
-     * of the html response
+     * of the html response.
+     *
      * @var string
      */
     protected $templateAssign = 'MAIN';
 
     /**
-     * name of the parameter which contains the page offset, for the index action
+     * name of the parameter which contains the page offset, for the index action.
+     *
      * @var string
      */
     protected $offsetParameterName = 'offset';
@@ -114,6 +129,7 @@ class jControllerDaoCrudDfk extends jController {
     /**
      * id for the "pseudo" form used to show a record. You can change it if the default one corresponds to
      * a possible id in your dao.
+     *
      * @var string
      */
     protected $pseudoFormId = 'jelix_cruddf_roxor';
@@ -124,31 +140,38 @@ class jControllerDaoCrudDfk extends jController {
      * Set it to false if you want to handle yourself the uploaded files.
      * Set it with an empty string if you want to stored files in the default
      * var/uploads directory.
-     * @var string|false
+     *
+     * @var false|string
      */
-    protected $uploadsDirectory ='';
+    protected $uploadsDirectory = '';
 
     /**
-     * the jDb profile to use with the dao
+     * the jDb profile to use with the dao.
      */
     protected $dbProfile = '';
 
     /**
      * Returned a simple html response to display CRUD contents. You can override this
-     * method to return a personnalized response
+     * method to return a personnalized response.
+     *
      * @return jResponseHtml the response
      */
-    protected function _getResponse(){
+    protected function _getResponse()
+    {
         return $this->getResponse('html');
     }
 
     /**
      * returned the selector of the action corresponding of the given method of the current controller.
-     * @param string $method  name of one of method of this controller
+     *
+     * @param string $method name of one of method of this controller
+     *
      * @return string an action selector
      */
-    protected function _getAction($method){
+    protected function _getAction($method)
+    {
         $act = jApp::coord()->action;
+
         return $act->module.'~'.$act->controller.':'.$method;
     }
 
@@ -156,42 +179,49 @@ class jControllerDaoCrudDfk extends jController {
      * you can do your own data check of a form by overloading this method.
      * You can also do some other things. It is called only if the $form->check() is ok.
      * and before the save of the data.
-     * @param string $spk the static value of the primary key of the record
-     * @param jFormsBase $form the current form
-     * @param boolean $calltype   true for an update, false for a create
-     * @return boolean true if it is ok.
+     *
+     * @param string     $spk      the static value of the primary key of the record
+     * @param jFormsBase $form     the current form
+     * @param bool       $calltype true for an update, false for a create
+     *
+     * @return bool true if it is ok
      */
-    protected function _checkData($spk, $form, $calltype){
+    protected function _checkData($spk, $form, $calltype)
+    {
         return true;
     }
 
-
-    protected function _isPkAutoIncrement($dao=null) {
-        if($dao == null)
+    protected function _isPkAutoIncrement($dao = null)
+    {
+        if ($dao == null) {
             $dao = jDao::get($this->dao, $this->dbProfile);
+        }
 
         $props = $dao->getProperties();
-        return ($props[$this->dpkName]['autoIncrement'] == true);
+
+        return $props[$this->dpkName]['autoIncrement'] == true;
     }
 
-    protected function _getPk($spk, $dpk, $dao=null) {
-        if($dao == null)
+    protected function _getPk($spk, $dpk, $dao = null)
+    {
+        if ($dao == null) {
             $dao = jDao::get($this->dao, $this->dbProfile);
+        }
 
         $pks = $dao->getPrimaryKeyNames();
-        if($pks[0] == $this->spkName) {
+        if ($pks[0] == $this->spkName) {
             return array($spk, $dpk);
         }
-        else {
-            return array($dpk, $spk);
-        }
+
+        return array($dpk, $spk);
     }
 
     /**
-     * list all records
+     * list all records.
      */
-    function index(){
-        $offset = $this->intParam($this->offsetParameterName,0,true);
+    public function index()
+    {
+        $offset = $this->intParam($this->offsetParameterName, 0, true);
 
         $rep = $this->_getResponse();
 
@@ -207,11 +237,9 @@ class jControllerDaoCrudDfk extends jController {
                 $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
                 if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                     $listOrder[$lo] = 'desc';
-                }
-                elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
+                } elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
                     unset($listOrder[$lo]);
-                }
-                else {
+                } else {
                     $listOrder[$lo] = 'asc';
                 }
                 $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $listOrder;
@@ -222,68 +250,71 @@ class jControllerDaoCrudDfk extends jController {
         $cond->addCondition($this->spkName, '=', $this->param($this->spkName));
         $this->_indexSetConditions($cond);
 
-        $results = $dao->findBy($cond,$offset,$this->listPageSize);
+        $results = $dao->findBy($cond, $offset, $this->listPageSize);
 
         // we're using a form to have the portunity to have
         // labels for each columns.
         $form = jForms::create($this->form, $this->pseudoFormId);
         $tpl = new jTpl();
-        $tpl->assign('list',$results);
+        $tpl->assign('list', $results);
         $tpl->assign('dpkName', $this->dpkName);
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $this->param($this->spkName));
 
-        if(count($this->propertiesForList)) {
+        if (count($this->propertiesForList)) {
             $prop = $this->propertiesForList;
-        }else{
+        } else {
             $prop = array_keys($dao->getProperties());
         }
 
         $tpl->assign('propertiesForListOrder', $this->propertiesForListOrder);
-        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])?$_SESSION['CRUD_LISTORDER'][$keyActionDao]:$this->propertiesForListOrder);
+        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]) ? $_SESSION['CRUD_LISTORDER'][$keyActionDao] : $this->propertiesForListOrder);
         $tpl->assign('properties', $prop);
-        $tpl->assign('controls',$form->getControls());
-        $tpl->assign('editAction' , $this->_getAction('preupdate'));
-        $tpl->assign('createAction' , $this->_getAction('precreate'));
-        $tpl->assign('deleteAction' , $this->_getAction('delete'));
-        $tpl->assign('viewAction' , $this->_getAction('view'));
-        $tpl->assign('listAction' , $this->_getAction('index'));
+        $tpl->assign('controls', $form->getControls());
+        $tpl->assign('editAction', $this->_getAction('preupdate'));
+        $tpl->assign('createAction', $this->_getAction('precreate'));
+        $tpl->assign('deleteAction', $this->_getAction('delete'));
+        $tpl->assign('viewAction', $this->_getAction('view'));
+        $tpl->assign('listAction', $this->_getAction('index'));
         $tpl->assign('listPageSize', $this->listPageSize);
-        $tpl->assign('page',$offset>0?$offset:null);
-        $tpl->assign('recordCount',$dao->countBy($cond));
-        $tpl->assign('offsetParameterName',$this->offsetParameterName);
+        $tpl->assign('page', $offset > 0 ? $offset : null);
+        $tpl->assign('recordCount', $dao->countBy($cond));
+        $tpl->assign('offsetParameterName', $this->offsetParameterName);
 
         $this->_index($rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
         jForms::destroy($this->form, $this->pseudoFormId);
+
         return $rep;
     }
 
     /**
      * overload this method if you wan to do additionnal things on the response and on the list template
      * during the index action.
+     *
      * @param jResponseHtml $resp the response
-     * @param jtpl $tpl the template to display the record list
+     * @param jtpl          $tpl  the template to display the record list
      */
-    protected function _index($resp, $tpl) {
-
+    protected function _index($resp, $tpl)
+    {
     }
 
     /**
      * overload this method if you wan to do additionnal conditions to the index's select
      * during the index action.
+     *
      * @param jDaoConditions $cond the conditions
      */
-    protected function _indexSetConditions($cond) {
+    protected function _indexSetConditions($cond)
+    {
         $keyActionDao = $this->_getAction($this->dao);
         if (isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
             $itemsOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
-        }
-        else {
+        } else {
             $itemsOrder = $this->propertiesForRecordsOrder;
         }
 
-        foreach ($itemsOrder as $p=>$order) {
+        foreach ($itemsOrder as $p => $order) {
             if ($order == '') {
                 continue;
             }
@@ -294,7 +325,8 @@ class jControllerDaoCrudDfk extends jController {
     /**
      * prepare a form to create a record.
      */
-    function precreate() {
+    public function precreate()
+    {
         // first, we cannot create the form directly in the create action
         // because if the forms already exists, we wouldn't show
         // errors or already filled field. see ticket #292
@@ -303,72 +335,79 @@ class jControllerDaoCrudDfk extends jController {
         $rep = $this->getResponse('redirect');
         $rep->action = $this->_getAction('create');
         $rep->params[$this->spkName] = $this->param($this->spkName);
+
         return $rep;
     }
 
     /**
-     * overload this method if you want to do additionnal during the precreate action
+     * overload this method if you want to do additionnal during the precreate action.
+     *
      * @param jFormsBase $form the form
      */
-    protected function _preCreate($form) {
-
+    protected function _preCreate($form)
+    {
     }
 
     /**
-     * display a form to create a record
+     * display a form to create a record.
      */
-    function create(){
+    public function create()
+    {
         $form = jForms::get($this->form);
-        if($form == null){
+        if ($form == null) {
             $form = jForms::create($this->form);
         }
         $rep = $this->_getResponse();
 
         $tpl = new jTpl();
         $tpl->assign('dpk', null);
-        $tpl->assign('page' , null);
-        $tpl->assign('offsetParameterName' , null);
+        $tpl->assign('page', null);
+        $tpl->assign('offsetParameterName', null);
         $tpl->assign('dpkName', $this->dpkName);
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $this->param($this->spkName));
-        $tpl->assign('form',$form);
+        $tpl->assign('form', $form);
         $tpl->assign('submitAction', $this->_getAction('savecreate'));
-        $tpl->assign('listAction' , $this->_getAction('index'));
+        $tpl->assign('listAction', $this->_getAction('index'));
         $this->_create($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
+
         return $rep;
     }
 
     /**
      * overload this method if you wan to do additionnal things on the response and on the edit template
      * during the create action.
-     * @param jFormsBase $form the form
+     *
+     * @param jFormsBase    $form the form
      * @param jResponseHtml $resp the response
-     * @param jtpl $tpl the template to display the edit form 
+     * @param jtpl          $tpl  the template to display the edit form
      */
-    protected function _create($form, $resp, $tpl) {
-
+    protected function _create($form, $resp, $tpl)
+    {
     }
 
     /**
-     * save data of a form in a new record
+     * save data of a form in a new record.
      */
-    function savecreate(){
+    public function savecreate()
+    {
         $form = jForms::fill($this->form);
         $spk = $this->param($this->spkName);
         $rep = $this->getResponse('redirect');
         $rep->params[$this->spkName] = $spk;
 
-        if($form == null){
+        if ($form == null) {
             $rep->action = $this->_getAction('index');
+
             return $rep;
         }
 
-        if($form->check() && $this->_checkData($spk, $form, false)){
+        if ($form->check() && $this->_checkData($spk, $form, false)) {
             $results = $form->prepareDaoFromControls($this->dao, null, $this->dbProfile);
-            extract($results, EXTR_PREFIX_ALL, "form");
+            extract($results, EXTR_PREFIX_ALL, 'form');
             $form_daorec->{$this->spkName} = $spk;
-            if(!$this->_isPkAutoIncrement($form_dao)) {
+            if (!$this->_isPkAutoIncrement($form_dao)) {
                 $form_daorec->{$this->dpkName} = $this->param($this->dpkName);
             }
             $this->_beforeSaveCreate($form, $form_daorec);
@@ -377,34 +416,36 @@ class jControllerDaoCrudDfk extends jController {
 
             $rep->action = $this->_getAction('view');
             $this->_afterCreate($form, $id, $rep);
-            if ($this->uploadsDirectory !== false)
+            if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
+            }
             jForms::destroy($this->form);
 
             $pknames = $form_dao->getPrimaryKeyNames();
-            if($pknames[0] == $this->spkName) {
+            if ($pknames[0] == $this->spkName) {
                 $rep->params[$this->spkName] = $id[0];
                 $rep->params[$this->dpkName] = $id[1];
-            }
-            else {
+            } else {
                 $rep->params[$this->spkName] = $id[1];
                 $rep->params[$this->dpkName] = $id[0];
             }
-            return $rep;
-        } else {
-            $rep->action = $this->_getAction('create');
+
             return $rep;
         }
+        $rep->action = $this->_getAction('create');
+
+        return $rep;
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the dao generated by the 
-     * jFormsBase::prepareDaoFromControls method
-     * @param jFormsBase $form the form
+     * overload this method if you wan to do additionnal things on the dao generated by the
+     * jFormsBase::prepareDaoFromControls method.
+     *
+     * @param jFormsBase     $form        the form
      * @param jDaoRecordBase $form_daorec
      */
-    protected function _beforeSaveCreate($form, $form_daorec) {
-
+    protected function _beforeSaveCreate($form, $form_daorec)
+    {
     }
 
     /**
@@ -412,18 +453,20 @@ class jControllerDaoCrudDfk extends jController {
      * a record. For example, you can handle here the uploaded files. If you do
      * such handling, set the uploadsDirectory property to false, to prevent
      * the default behavior on uploaded files in the controller.
-     * @param jFormsBase $form the form object
-     * @param mixed $id the new id of the inserted record
+     *
+     * @param jFormsBase    $form the form object
+     * @param mixed         $id   the new id of the inserted record
      * @param jResponseHtml $resp the response
      */
-    protected function _afterCreate($form, $id, $resp) {
-
+    protected function _afterCreate($form, $id, $resp)
+    {
     }
 
     /**
-     * prepare a form in order to edit an existing record, and redirect to the editupdate action
+     * prepare a form in order to edit an existing record, and redirect to the editupdate action.
      */
-    function preupdate(){
+    public function preupdate()
+    {
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
@@ -431,8 +474,9 @@ class jControllerDaoCrudDfk extends jController {
         $rep = $this->getResponse('redirect');
         $rep->params[$this->spkName] = $spk;
 
-        if( $dpk === null ){
+        if ($dpk === null) {
             $rep->action = $this->_getAction('index');
+
             return $rep;
         }
 
@@ -441,8 +485,9 @@ class jControllerDaoCrudDfk extends jController {
 
         try {
             $form->initFromDao($this->dao, $id, $this->dbProfile);
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $rep->action = $this->_getAction('index');
+
             return $rep;
         }
 
@@ -451,33 +496,37 @@ class jControllerDaoCrudDfk extends jController {
         $rep->params[$this->dpkName] = $dpk;
         $rep->params[$this->offsetParameterName] = $page;
         $rep->action = $this->_getAction('editupdate');
+
         return $rep;
     }
 
     /**
-     * overload this method if you want to do additionnal things during preupdate action
+     * overload this method if you want to do additionnal things during preupdate action.
+     *
      * @param jFormsBase $form the form object
      */
-    protected function _preUpdate($form) {
-
+    protected function _preUpdate($form)
+    {
     }
 
     /**
      * displays a forms to edit an existing record. The form should be
      * prepared with the preupdate before, so a refresh of the page
-     * won't cause a reset of the form
+     * won't cause a reset of the form.
      */
-    function editupdate(){
+    public function editupdate()
+    {
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
 
         $id = $this->_getPk($spk, $dpk);
         $form = jForms::get($this->form, $id);
-        if( $form === null || $dpk === null){
+        if ($form === null || $dpk === null) {
             $rep = $this->getResponse('redirect');
             $rep->params[$this->spkName] = $spk;
             $rep->action = $this->_getAction('index');
+
             return $rep;
         }
         $rep = $this->_getResponse();
@@ -487,32 +536,35 @@ class jControllerDaoCrudDfk extends jController {
         $tpl->assign('dpkName', $this->dpkName);
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $spk);
-        $tpl->assign('form',$form);
-        $tpl->assign('page',$page);
-        $tpl->assign('offsetParameterName',$this->offsetParameterName);
+        $tpl->assign('form', $form);
+        $tpl->assign('page', $page);
+        $tpl->assign('offsetParameterName', $this->offsetParameterName);
         $tpl->assign('submitAction', $this->_getAction('saveupdate'));
-        $tpl->assign('listAction' , $this->_getAction('index'));
-        $tpl->assign('viewAction' , $this->_getAction('view'));
+        $tpl->assign('listAction', $this->_getAction('index'));
+        $tpl->assign('viewAction', $this->_getAction('view'));
         $this->_editUpdate($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->editTemplate));
+
         return $rep;
     }
 
     /**
      * overload this method if you wan to do additionnal things on the response and on the edit template
      * during the editupdate action.
-     * @param jFormsBase $form the form
+     *
+     * @param jFormsBase    $form the form
      * @param jResponseHtml $resp the response
-     * @param jtpl $tpl the template to display the edit form 
+     * @param jtpl          $tpl  the template to display the edit form
      */
-    protected function _editUpdate($form, $resp, $tpl) {
-
+    protected function _editUpdate($form, $resp, $tpl)
+    {
     }
 
     /**
-     * save data of a form in a new record
+     * save data of a form in a new record.
      */
-    function saveupdate(){
+    public function saveupdate()
+    {
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
@@ -522,39 +574,43 @@ class jControllerDaoCrudDfk extends jController {
 
         $id = $this->_getPk($spk, $dpk);
         $form = jForms::fill($this->form, $id);
-        if( $form === null || $dpk === null){
+        if ($form === null || $dpk === null) {
             $rep->action = $this->_getAction('index');
+
             return $rep;
         }
 
         $rep->params[$this->dpkName] = $dpk;
         $rep->params[$this->offsetParameterName] = $page;
 
-        if($form->check() && $this->_checkData($spk, $form, true)){
+        if ($form->check() && $this->_checkData($spk, $form, true)) {
             $results = $form->prepareDaoFromControls($this->dao, $id, $this->dbProfile);
-            extract($results, EXTR_PREFIX_ALL, "form");
+            extract($results, EXTR_PREFIX_ALL, 'form');
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
             $rep->action = $this->_getAction('view');
             $this->_afterUpdate($form, $id, $rep);
-            if ($this->uploadsDirectory !== false)
+            if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
+            }
             jForms::destroy($this->form, $id);
         } else {
             $rep->action = $this->_getAction('editupdate');
         }
+
         return $rep;
     }
 
     /**
-     * overload this method if you wan to do additionnal things on the dao generated by the 
-     * jFormsBase::prepareDaoFromControls method
-     * @param jFormsBase $form the form
+     * overload this method if you wan to do additionnal things on the dao generated by the
+     * jFormsBase::prepareDaoFromControls method.
+     *
+     * @param jFormsBase     $form        the form
      * @param jDaoRecordBase $form_daorec
-     * @param mixed $id the new id of the updated record
+     * @param mixed          $id          the new id of the updated record
      */
-    protected function _beforeSaveUpdate($form, $form_daorec, $id) {
-
+    protected function _beforeSaveUpdate($form, $form_daorec, $id)
+    {
     }
 
     /**
@@ -562,27 +618,29 @@ class jControllerDaoCrudDfk extends jController {
      * a record. For example, you can handle here the uploaded files. If you do
      * such handling, set the uploadsDirectory property to false, to prevent
      * the default behavior on uploaded files in the controller.
-     * @param jFormsBase $form the form object
-     * @param mixed $id the new id of the updated record
+     *
+     * @param jFormsBase    $form the form object
+     * @param mixed         $id   the new id of the updated record
      * @param jResponseHtml $resp the response
      */
-    protected function _afterUpdate($form, $id, $resp) {
-
+    protected function _afterUpdate($form, $id, $resp)
+    {
     }
 
     /**
-     * displays a record
+     * displays a record.
      */
-    function view(){
-
+    public function view()
+    {
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
 
-        if( $dpk === null ){
+        if ($dpk === null) {
             $rep = $this->getResponse('redirect');
             $rep->action = $this->_getAction('index');
             $rep->params[$this->spkName] = $spk;
+
             return $rep;
         }
         $rep = $this->_getResponse();
@@ -600,32 +658,35 @@ class jControllerDaoCrudDfk extends jController {
         $tpl->assign('dpkName', $this->dpkName);
         $tpl->assign('spkName', $this->spkName);
         $tpl->assign('spk', $spk);
-        $tpl->assign('form',$form);
-        $tpl->assign('page',$page);
-        $tpl->assign('offsetParameterName',$this->offsetParameterName);
-        $tpl->assign('editAction' , $this->_getAction('preupdate'));
-        $tpl->assign('deleteAction' , $this->_getAction('delete'));
-        $tpl->assign('listAction' , $this->_getAction('index'));
+        $tpl->assign('form', $form);
+        $tpl->assign('page', $page);
+        $tpl->assign('offsetParameterName', $this->offsetParameterName);
+        $tpl->assign('editAction', $this->_getAction('preupdate'));
+        $tpl->assign('deleteAction', $this->_getAction('delete'));
+        $tpl->assign('listAction', $this->_getAction('index'));
         $this->_view($form, $rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->viewTemplate));
+
         return $rep;
     }
 
     /**
      * overload this method if you want to do additionnal things on the response and on the view template
      * during the view action.
-     * @param jFormsBase $form the form
+     *
+     * @param jFormsBase    $form the form
      * @param jResponseHtml $resp the response
-     * @param jtpl $tpl the template to display the form content
+     * @param jtpl          $tpl  the template to display the form content
      */
-    protected function _view($form, $resp, $tpl) {
-
+    protected function _view($form, $resp, $tpl)
+    {
     }
 
     /**
-     * delete a record
+     * delete a record.
      */
-    function delete(){
+    public function delete()
+    {
         $spk = $this->param($this->spkName);
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
@@ -633,26 +694,28 @@ class jControllerDaoCrudDfk extends jController {
         $rep = $this->getResponse('redirect');
         $rep->action = $this->_getAction('index');
         $rep->params[$this->spkName] = $spk;
-        $rep->params = array($this->offsetParameterName=>$page);
+        $rep->params = array($this->offsetParameterName => $page);
 
         $dao = jDao::get($this->dao, $this->dbProfile);
         $id = $this->_getPk($spk, $dpk, $dao);
-        if( $dpk !== null && $this->_delete($spk, $dpk, $rep) ){
+        if ($dpk !== null && $this->_delete($spk, $dpk, $rep)) {
             $dao->delete($id);
         }
+
         return $rep;
     }
 
     /**
-     * overload this method if you want to do additionnal things before the deletion of a record
-     * @param mixed $spk the static value of the primary key of the record to delete
-     * @param mixed $dpk the dynamic value of the primary key of the record to delete
-     * @return boolean true if the record can be deleted
+     * overload this method if you want to do additionnal things before the deletion of a record.
+     *
+     * @param mixed         $spk  the static value of the primary key of the record to delete
+     * @param mixed         $dpk  the dynamic value of the primary key of the record to delete
      * @param jResponseHtml $resp the response
+     *
+     * @return bool true if the record can be deleted
      */
-    protected function _delete($spk, $dpk, $resp) {
+    protected function _delete($spk, $dpk, $resp)
+    {
         return true;
     }
-
 }
-

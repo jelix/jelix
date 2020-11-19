@@ -2,18 +2,25 @@
 /**
  * @package     jelix
  * @subpackage  jtpl_plugin
+ *
  * @author      Lepeltier kévin
  * @contributor Dominique Papin
+ *
  * @copyright   2008 Lepeltier kévin
  * @copyright   2008 Dominique Papin
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  *
  * This script uses the jQuery script written by Luke Lutman "jquery.flash.js"
+ *
+ * @param mixed $compiler
+ * @param mixed $begin
+ * @param mixed $params
  */
 
 /**
- * swfjs plugin :  Adds html and JS code to display a swf
+ * swfjs plugin :  Adds html and JS code to display a swf.
  *
  * Example :
  * {swfjs 'promobidon.swf',
@@ -43,15 +50,15 @@
  * $params[3][xx] Flashvar for the Flash Player
  *
  * @param jTplCompiler $compiler the template compiler
- * @param boolean $begin true if it is the begin of block, else false
- * @param array $params parameters for the url
+ * @param bool         $begin    true if it is the begin of block, else false
+ * @param array        $params   parameters for the url
+ *
  * @return string PHP generated code
  */
-function jtpl_block_html_swfjs($compiler, $begin, $params) {
-
-    if($begin) {
-
-        $meta  = '
+function jtpl_block_html_swfjs($compiler, $begin, $params)
+{
+    if ($begin) {
+        $meta = '
         $resp = jApp::coord()->response
         if( $resp && $resp->getType() ==\'html\') {
             $src = '.$params[0].';
@@ -89,7 +96,7 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
 
         $compiler->addMetaContent($meta);
 
-        $sortie  = '
+        return '
         $options = '.$params[1].';
 
         $att = \'\';
@@ -99,13 +106,7 @@ function jtpl_block_html_swfjs($compiler, $begin, $params) {
             $att .= \' \'.$key.\'="\'.$val.\'"\';
         echo \'<div \'.$att.\'>\';
         ';
-
-        return $sortie;
-
-    } else {
-
-        return 'echo \'</div>\'';
-
     }
 
+    return 'echo \'</div>\'';
 }

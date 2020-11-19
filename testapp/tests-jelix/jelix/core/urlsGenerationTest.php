@@ -81,10 +81,11 @@ class UTCreateUrls extends jUnitTestCase {
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'notfoundAct'=>'jelix~error:notfound',
+         'notFoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
-         'urlScriptIdenc'=>'index'
+         'urlScriptIdenc'=>'index',
+         'forceProxyProtocol' =>''
        );
 
       $conf->_modulesPathList['news']='/';
@@ -255,10 +256,11 @@ class UTCreateUrls extends jUnitTestCase {
             'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
-            'notfoundAct'=>'jelix~error:notfound',
+            'notFoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_maintests.xml',
             'checkHttpsOnParsing'=>true,
-            'urlScriptIdenc'=>'index'
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
         );
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
@@ -381,10 +383,11 @@ class UTCreateUrls extends jUnitTestCase {
             'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
-            'notfoundAct'=>'jelix~error:notfound',
+            'notFoundAct'=>'jelix~error:notfound',
             'significantFile'=>'urlsfiles/url_dedicatedmodule.xml',
             'checkHttpsOnParsing'=>true,
-            'urlScriptIdenc'=>'index'
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
         );
 
         $conf->_modulesPathList['news']='/';
@@ -433,16 +436,16 @@ class UTCreateUrls extends jUnitTestCase {
          'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
-         'notfoundAct'=>'jelix~error:notfound',
+         'notFoundAct'=>'jelix~error:notfound',
          'significantFile'=>'urlsfiles/url_maintests.xml',
          'checkHttpsOnParsing'=>true,
-         'urlScriptIdenc'=>'index'
+         'urlScriptIdenc'=>'index',
+         'forceProxyProtocol' =>''
        );
 
       $conf->_modulesPathList['news']='/';
 
       jUrl::getEngine(true); // on recharge le nouveau moteur d'url
-
 
       $urlList=array();
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
@@ -474,9 +477,10 @@ class UTCreateUrls extends jUnitTestCase {
           'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
-          'notfoundAct'=>'jelix~error:notfound',
+          'notFoundAct'=>'jelix~error:notfound',
           'significantFile'=>'urls.xml',
-          'urlScriptIdenc'=>'index'
+          'urlScriptIdenc'=>'index',
+          'forceProxyProtocol' =>''
         );
 
         // parameters
@@ -485,6 +489,7 @@ class UTCreateUrls extends jUnitTestCase {
         //   given domainName or not
         //   jelix_tests~urlsig:url3 (http) or jelix_tests~urlsig:url8 (https)
 
+        $_SERVER['HTTP_HOST'] = TESTAPP_HOST;
         $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
         $_SERVER['SERVER_PORT'] = '80';
 
@@ -495,7 +500,7 @@ class UTCreateUrls extends jUnitTestCase {
         $conf->domainName = '';
         jUrl::getEngine(true);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
         $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url8', $url);
@@ -512,7 +517,7 @@ class UTCreateUrls extends jUnitTestCase {
         jUrl::getEngine(true);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
-        $this->assertEquals('http://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
+        $this->assertEquals('http://configdomain.local'.(TESTAPP_PORT?':'.TESTAPP_PORT:'').'/index.php/jelix_tests/urlsig/url1', $url);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url8',array(),0,null);
         $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url8', $url);
@@ -565,7 +570,7 @@ class UTCreateUrls extends jUnitTestCase {
 
     function testGetCurrentUrl() {
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/index.php', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php', $url);
 
         $_SERVER['PATH_INFO'] = '/zip/yo/';
         $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
@@ -578,7 +583,7 @@ class UTCreateUrls extends jUnitTestCase {
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'notfoundAct'=>'jelix~error:notfound',
+          'notFoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
           'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
@@ -590,6 +595,7 @@ class UTCreateUrls extends jUnitTestCase {
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
           'jqueryPath' =>$conf->urlengine['jqueryPath'],
+          'forceProxyProtocol' =>''
         );
 
         jUrl::getEngine(true);
@@ -603,7 +609,7 @@ class UTCreateUrls extends jUnitTestCase {
         $this->assertEquals('/zip/yo/', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/zip/yo/', $url);
 
         $conf = jApp::config();
         $conf->domainName = TESTAPP_HOST;
@@ -613,7 +619,7 @@ class UTCreateUrls extends jUnitTestCase {
           'basePath'=>'/',
           'backendBasePath'=>'/',
           'scriptNameServerVariable'=>'SCRIPT_NAME',
-          'notfoundAct'=>'jelix~error:notfound',
+          'notFoundAct'=>'jelix~error:notfound',
           'pathInfoInQueryParameter'=>'',
           'significantFile'=>'urlsfiles/url_maintests.xml',
           'urlScript'=>'/noep.php',
@@ -625,6 +631,7 @@ class UTCreateUrls extends jUnitTestCase {
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
           'jqueryPath' =>$conf->urlengine['jqueryPath'],
+          'forceProxyProtocol' =>''
         );
         jUrl::getEngine(true);
 
@@ -637,7 +644,75 @@ class UTCreateUrls extends jUnitTestCase {
         $this->assertEquals('/zip/yo/?foo=bar', $url);
 
         $url = jUrl::getCurrentUrl(false, true);
-        $this->assertEquals('http://'.TESTAPP_HOST.'/zip/yo/?foo=bar', $url);
+        $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/zip/yo/?foo=bar', $url);
 
     }
+
+    function testRedefinedUrl() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+
+        $conf = jApp::config();
+        $conf->domainName = 'testapp.local';
+        $conf->forceHTTPPort = true;
+        $conf->forceHTTPSPort = true;
+        $conf->urlengine = array(
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/',
+            'notFoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_mainredefined.xml',
+            'localSignificantFile'=> 'urlsfiles/url_redefined.xml',
+            'checkHttpsOnParsing'=>true,
+            'urlScriptIdenc'=>'index',
+            'forceProxyProtocol' =>''
+        );
+
+        $conf->_modulesPathList['news']='/';
+        $conf->_modulesPathList['articles']='/';
+
+        jUrl::getEngine(true);
+
+        $urlList = array();
+        $urlList[]= array('testapp~main:index', array());
+        $urlList[]= array('testapp~foo:index', array());
+        $urlList[]= array('testapp~foo:bar', array());
+
+        $urlList[]= array('news~default:index', array());
+        $urlList[]= array('news~foo:index', array());
+        $urlList[]= array('news~foo:bar', array());
+
+        $urlList[]= array('articles~default:index', array());
+        $urlList[]= array('articles~foo:index', array());
+        $urlList[]= array('articles~foo:bar', array());
+
+        $urlList[]= array('jelix~jforms:getListData@classic', array());
+
+        $urlList[]= array('jelix_tests~urlsig:url4', array('first'=>'premier',  'second'=>'deuxieme'));
+        $urlList[]= array('jelix_tests~urlsig:display', array('var'=>'chimlou'));
+
+        $trueResult=array(
+            "/index.php",
+            "/index.php/testapp/foo",
+            "/index.php/testapp/foo/bar",
+
+            "/news.php",
+            "/news.php/news/foo",
+            "/news.php/news/foo/bar",
+
+            "/news.php/articles",
+            "/news.php/articles/foo",
+            "/news.php/articles/foo/bar",
+
+            "/index.php/jelix/jforms/getListData",
+            "/foo/bar.php/withhandler/premier/deuxieme",
+            "/foo/bar.php/sopar/chimlou"
+        );
+
+        $this->_doCompareUrl("testRedefinedUrl", $urlList, $trueResult);
+    }
+
+
 }

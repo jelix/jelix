@@ -31,7 +31,6 @@ cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
 # set PHP user
 if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
     cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
-    cat $PHP_ROOT/etc/php-fpm.d/www.conf
     sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
     sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
 else
@@ -50,6 +49,8 @@ fi
 if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
     apt-get install php7.1-ldap
 fi
+
+cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
 
 # ---------------------- configure apache virtual hosts
 
@@ -70,11 +71,11 @@ echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string testapp17.local" | debconf-set-selections
+echo "slapd slapd/domain string testapp.local" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=testapp17,dc=local -w passjelix -f testapp/vagrant/ldap_conf.ldif
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap_conf.ldif
 
 
 # ----------------------- prepare postgresql base

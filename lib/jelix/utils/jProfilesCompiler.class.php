@@ -4,7 +4,7 @@
  * @author      Laurent Jouanneau
  * @copyright   2015 Laurent Jouanneau
  *
- * @link        http://jelix.org
+ * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -14,16 +14,17 @@
 class jProfilesCompiler
 {
     /**
-     * @var array representing ini content.
+     * @var array representing ini content
      */
     protected $sources;
 
     /**
      * @param string path of the ini file, containing profiles data
+     * @param mixed $sourceFile
      */
     public function __construct($sourceFile)
     {
-        $this->sources = parse_ini_file($sourceFile, true);
+        $this->sources = parse_ini_file($sourceFile, true, INI_SCANNER_TYPED);
     }
 
     protected $plugins = array();

@@ -17,7 +17,6 @@ class jDb_sqlite3Test extends jUnitTestCase {
 
     function setUp (){
         jProfiles::clear();
-        copy(jApp::varPath('db/sqlite3/tests.sqlite3.dist'), jApp::varPath('db/sqlite3/tests.sqlite3'));
         try {
             jProfiles::get('jdb', 'testapp_sqlite3', true);
         }

@@ -26,7 +26,7 @@ class jCache_RedisTest extends jCacheAPITest {
     function setUp () {
         $this->profile = 'usingredis';
         parent::setUp();
-        $this->redis = new \PhpRedis\Redis('localhost',6379);
+        $this->redis = new \PhpRedis\Redis(TESTAPP_REDIS_HOST,6379);
         $this->redis->flushall();
     }
 

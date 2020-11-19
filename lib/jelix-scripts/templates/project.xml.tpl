@@ -9,14 +9,4 @@
         <creator name="%%default_creator_name%%" email="%%default_creator_email%%"/>
         <homepageURL>%%default_website%%</homepageURL>
     </info>
-    <dependencies>
-        <jelix minversion="%%jelix_version%%" maxversion="%%jelix_version_next%%" />
-    </dependencies>
-    <entrypoints>
-        <!-- file: the path to the entry point relative to the base path
-            config: the path to the config file used by the entry point, relative
-                    to var/config/
-            type: type of the entry point : classic, cmdline, xmlrpc....-->
-        <entry file="index.php" config="index/config.ini.php" />
-    </entrypoints>
 </project>

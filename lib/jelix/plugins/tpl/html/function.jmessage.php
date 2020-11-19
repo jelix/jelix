@@ -1,18 +1,23 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jtpl_plugin
-* @author      Loic Mathaud
-* @copyright   2008 Loic Mathaud
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  jtpl_plugin
+ *
+ * @author      Loic Mathaud
+ * @copyright   2008 Loic Mathaud
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $tpl
+ * @param mixed $type
+ */
 
 /**
-* function plugin :  Display messages from jMessage
-*/
-
-function jtpl_function_html_jmessage($tpl, $type = '') {
+ * function plugin :  Display messages from jMessage.
+ */
+function jtpl_function_html_jmessage($tpl, $type = '')
+{
     // Get messages
     if ($type == '') {
         $messages = jMessage::getAll();
@@ -33,7 +38,7 @@ function jtpl_function_html_jmessage($tpl, $type = '') {
             }
         }
     } else {
-        echo '<ul class="jelix-msg-'. $type .'">';
+        echo '<ul class="jelix-msg-'.$type.'">';
         foreach ($messages as $msg) {
             echo '<li class="jelix-msg-item-'.$type.'">'.htmlspecialchars($msg).'</li>';
         }
@@ -45,5 +50,4 @@ function jtpl_function_html_jmessage($tpl, $type = '') {
     } else {
         jMessage::clear($type);
     }
-    
 }

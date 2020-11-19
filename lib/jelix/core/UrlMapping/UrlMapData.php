@@ -1,18 +1,19 @@
 <?php
 /**
-* @author      Laurent Jouanneau
-* @contributor Thibault Piront (nuKs)
-*
-* @copyright   2005-2016 Laurent Jouanneau
-* @copyright   2007 Thibault Piront
-*
-* @link        http://www.jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @author      Laurent Jouanneau
+ * @contributor Thibault Piront (nuKs)
+ *
+ * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2007 Thibault Piront
+ *
+ * @see        http://www.jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
 namespace Jelix\Routing\UrlMapping;
 
 /**
- * Contain informations of an url, readed from the map file
+ * Contain informations of an url, readed from the map file.
  */
 class UrlMapData
 {
@@ -22,6 +23,9 @@ class UrlMapData
     public $isDefault = false;
     public $action = '';
     public $module = '';
+    /**
+     * @var bool|string[]
+     */
     public $actionOverride = false;
     public $requestType = '';
     public $statics = array();
@@ -29,9 +33,9 @@ class UrlMapData
     public $escapes = array();
 
     /**
-     * @param string $rt  entrypoint type
-     * @param string $ep entrypoint name
-     * @param boolean $isHttps indicate if https is requiered
+     * @param string $rt      entrypoint type
+     * @param string $ep      entrypoint name
+     * @param bool   $isHttps indicate if https is requiered
      */
     public function __construct($rt, $ep, $isHttps)
     {
@@ -67,7 +71,7 @@ class UrlMapData
 
     public function setActionOverride($actionoverride)
     {
-        $this->actionOverride = preg_split("/[\s,]+/", $actionoverride);
+        $this->actionOverride = preg_split('/[\\s,]+/', $actionoverride);
         foreach ($this->actionOverride as &$each) {
             if (strpos($each, ':') === false) {
                 $each = 'default:'.$each;

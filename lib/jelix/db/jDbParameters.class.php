@@ -3,10 +3,11 @@
 /**
  * @package     jelix
  * @subpackage  db
+ *
  * @author      Laurent Jouanneau
  * @copyright   2015 Laurent Jouanneau
  *
- * @link        http://jelix.org
+ * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -66,10 +67,12 @@ class jDbParameters
                 $this->parameters['dsn'] == '')) {
             $this->parameters['dsn'] = $this->getPDODsn($this->parameters);
         }
-        $pdooptions = array_diff(array_keys($this->parameters),
-                                 array('driver', 'dsn', 'service', 'host', 'password', 'user', 'port', 'force_encoding',
-                                       'usepdo', 'persistent', 'pdodriver', 'pdoext', 'dbtype', 'phpext',
-                                       'extensions', 'table_prefix', 'database', 'table_prefix', '_name' ));
+        $pdooptions = array_diff(
+            array_keys($this->parameters),
+            array('driver', 'dsn', 'service', 'host', 'password', 'user', 'port', 'force_encoding',
+                'usepdo', 'persistent', 'pdodriver', 'pdoext', 'dbtype', 'phpext',
+                'extensions', 'table_prefix', 'database', 'table_prefix', '_name', )
+        );
         $this->parameters['pdooptions'] = implode(',', $pdooptions);
     }
 
@@ -85,10 +88,12 @@ class jDbParameters
     public function isExtensionActivated()
     {
         if ($this->parameters['usepdo']) {
-            return (extension_loaded('PDO') && extension_loaded($this->parameters['pdoext']));
-        } elseif (isset($this->parameters['phpext'])) {
+            return extension_loaded('PDO') && extension_loaded($this->parameters['pdoext']);
+        }
+        if (isset($this->parameters['phpext'])) {
             return extension_loaded($this->parameters['phpext']);
         }
+
         throw new Exception('Unable to check existance of the extension corresponding to jdb driver '.$this->parameters['driver']);
     }
 
@@ -96,10 +101,12 @@ class jDbParameters
      * it gives the name of the jDb driver and the database type indicated in a profile.
      * (or corresponding to the PDO dsn indicated in the profile).
      *
-     * @param  array $profile 'driver' key is required. It should indicates 'pdo' or a jdb driver.
-     *    if 'pdo', a 'dsn' key is required.
-     * @return array ['database type', 'native extension name', 'pdo extension name', 'jdb driver name', 'pdo driver name']
+     * @param array $profile 'driver' key is required. It should indicates 'pdo' or a jdb driver.
+     *                       if 'pdo', a 'dsn' key is required.
+     *
      * @throws Exception
+     *
+     * @return array ['database type', 'native extension name', 'pdo extension name', 'jdb driver name', 'pdo driver name']
      */
     protected function getDatabaseInfo($profile)
     {
@@ -140,8 +147,8 @@ class jDbParameters
             }
         }
 
-        $info =  array_combine(array('dbtype', 'phpext', 'pdoext',
-                                     'driver', 'pdodriver', ), $info);
+        $info = array_combine(array('dbtype', 'phpext', 'pdoext',
+            'driver', 'pdodriver', ), $info);
 
         $info['usepdo'] = $usepdo;
 
@@ -210,20 +217,22 @@ class jDbParameters
     protected static $pdoNeededDsnInfo = array(
         'mysql' => array('host', 'database'),
         'pgsql' => array(array('host', 'database'), array('service')),
-        'sqlite' =>  array('database'),
-        'sqlite2' =>  array('database'),
-        'oci' =>  array('database'),
-        'sqlsrv' =>  array('host', 'database'),
-        'odbc' =>  array('dsn'),
+        'sqlite' => array('database'),
+        'sqlite2' => array('database'),
+        'oci' => array('database'),
+        'sqlsrv' => array('host', 'database'),
+        'odbc' => array('dsn'),
         'mssql' => array('host', 'database'),
         'sybase' => array('host', 'database'),
     );
 
-    public static function getDriversInfosList() {
+    public static function getDriversInfosList()
+    {
         return self::$driversInfos;
     }
 
-    protected function _checkRequirements($requirements, &$profile) {
+    protected function _checkRequirements($requirements, &$profile)
+    {
         foreach ($requirements as $param) {
             if (!isset($profile[$param])) {
                 throw new Exception('Parameter '.$param.' is required for pdo driver '.$profile['pdodriver']);
@@ -239,21 +248,20 @@ class jDbParameters
         $requirements = self::$pdoNeededDsnInfo[$profile['pdodriver']];
         if (is_array($requirements[0])) {
             $error = null;
-            foreach($requirements as $requirements2) {
+            foreach ($requirements as $requirements2) {
                 try {
                     $this->_checkRequirements($requirements2, $profile);
                     $error = null;
+
                     break;
-                }
-                catch(Exception $e) {
+                } catch (Exception $e) {
                     $error = $e;
                 }
             }
             if ($error) {
                 throw $error;
             }
-        }
-        else {
+        } else {
             $this->_checkRequirements($requirements, $profile);
         }
 
@@ -269,24 +277,30 @@ class jDbParameters
                     }
                 }
                 $dsn .= ';dbname='.$profile['database'];
+
                 break;
             case 'pgsql':
                 if (isset($profile['service']) && $profile['service']) {
                     $dsn = 'pgsql:service='.$profile['service'];
-                }
-                else {
+                } else {
                     $dsn = 'pgsql:host='.$profile['host'];
                     if (isset($profile['port'])) {
                         $dsn .= ';port='.$profile['port'];
                     }
                     $dsn .= ';dbname='.$profile['database'];
+                    if (isset($profile['pg_options']) && $profile['pg_options']) {
+                        $dsn .= ';options='.$profile['pg_options'];
+                    }
                 }
+
                 break;
             case 'sqlite':
                 $dsn = 'sqlite:'.$profile['database'];
+
                 break;
             case 'sqlite2':
                 $dsn = 'sqlite2:'.$profile['database'];
+
                 break;
             case 'oci':
                 $dsn = 'oci:dbname=';
@@ -298,6 +312,7 @@ class jDbParameters
                     $dsn .= '/';
                 }
                 $dsn .= $profile['database'];
+
                 break;
             case 'mssql':
             case 'sybase':
@@ -307,6 +322,7 @@ class jDbParameters
                 if (isset($profile['appname'])) {
                     $dsn .= ';appname='.$profile['appname'];
                 }
+
                 break;
             case 'sqlsrv':
                 $dsn = 'sqlsrv:Server='.$profile['host'];
@@ -314,10 +330,12 @@ class jDbParameters
                     $dsn .= ','.$profile['port'];
                 }
                 $dsn .= ';Database='.$profile['database'];
+
                 break;
             case 'odbc':
             default:
                 throw new Exception('PDO: cannot construct the DSN string');
+
                 break;
         }
 

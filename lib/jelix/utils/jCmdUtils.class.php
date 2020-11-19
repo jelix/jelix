@@ -1,28 +1,34 @@
 <?php
 /**
-* @package    jelix
-* @subpackage utils
-* @author     Loic Mathaud
-* @contributor Laurent Jouanneau
-* @copyright  2006 Loic Mathaud, 2008-2017 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package    jelix
+ * @subpackage utils
+ *
+ * @author     Loic Mathaud
+ * @contributor Laurent Jouanneau
+ *
+ * @copyright  2006 Loic Mathaud, 2008-2020 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
 
 /**
- * utilities functions for command line
+ * utilities functions for command line.
+ *
  * @package    jelix
  * @subpackage utils
  * @static
  */
-class jCmdUtils {
-
-    private function __construct() {}
+class jCmdUtils
+{
+    private function __construct()
+    {
+    }
 
     /**
      * analyze command line parameters and return an array
      * of all options and parameters which correspond to
-     * allowed options and parameters
+     * allowed options and parameters.
      *
      * allowed options should be an array like this :
      * array('-option1'=>bool, '-option2'=>bool, ..)
@@ -39,23 +45,25 @@ class jCmdUtils {
      * array('-option1'=>value, '-option2'=>value, ...)
      * array('param1'=>value, 'param2'=>value...)
      *
-     *
-     * @param array $argv the array of parameters given by php-cli
-     * @param array $sws allowed options
+     * @param array $argv   the array of parameters given by php-cli
+     * @param array $sws    allowed options
      * @param array $params allowed parameters
-     * @return array an array with the array of founded option and
-     *                        an array with founded parameters
+     *
      * @throws jException
+     *
+     * @return array an array with the array of founded option and
+     *               an array with founded parameters
      */
-    public static function getOptionsAndParams($argv, $sws, $params) {
+    public static function getOptionsAndParams($argv, $sws, $params)
+    {
         $switches = array();
         $parameters = array();
 
         //---------- get the switches
-        while (count($argv) && $argv[0]{0} == '-') {
+        while (count($argv) && $argv[0][0] == '-') {
             if (isset($sws[$argv[0]])) {
                 if ($sws[$argv[0]]) {
-                    if (isset($argv[1]) && ($argv[1]{0} != '-' || !isset($sws[$argv[1]]))) {
+                    if (isset($argv[1]) && ($argv[1][0] != '-' || !isset($sws[$argv[1]]))) {
                         $sw = array_shift($argv);
                         $switches[$sw] = array_shift($argv);
                     } else {
@@ -75,20 +83,17 @@ class jCmdUtils {
             if (count($argv) == 0) {
                 if ($needed) {
                     throw new jException('jelix~errors.cli.param.missing', $pname);
-                } else {
-                    break;
                 }
+
+                break;
             }
-            $parameters[$pname]=array_shift($argv);
+            $parameters[$pname] = array_shift($argv);
         }
 
         if (count($argv)) {
             throw new jException('jelix~errors.cli.two.many.parameters');
         }
 
-        return array($switches , $parameters);
+        return array($switches, $parameters);
     }
-
 }
-
-

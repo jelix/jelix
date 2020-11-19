@@ -4,17 +4,18 @@
         <primarytable name="r" realname="jacl2_rights" primarykey="id_aclsbj,id_aclgrp,id_aclres" />
     </datasources>
     <record>
-      <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" required="yes"/>
-      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="string" required="yes"/>
-      <property name="id_aclres" fieldname="id_aclres" datatype="string" required="yes"/>
-      <property name="canceled" fieldname="canceled" datatype="tinyint" required="yes"/>
+      <property name="id_aclsbj" fieldname="id_aclsbj" datatype="string" maxlength="100" required="yes"/>
+      <property name="id_aclgrp" fieldname="id_aclgrp" datatype="string" maxlength="50" required="yes"/>
+      <property name="id_aclres" fieldname="id_aclres" datatype="string" maxlength="100" required="yes"/>
+        <!-- if canceled != 0, it means that the right is forbidden, even if it is set on an other group -->
+      <property name="canceled" fieldname="canceled" datatype="tinyint" required="yes" default="0"/>
     </record>
     <factory>
         <method name="getRight" type="selectfirst">
-            <parameter name="subject" />
+            <parameter name="right" />
             <parameter name="groups" />
             <conditions >
-               <eq property="id_aclsbj" expr="$subject" />
+               <eq property="id_aclsbj" expr="$right" />
                <eq property="id_aclres" value="-"/>
                <in property="id_aclgrp" expr="$groups" />
             </conditions>
@@ -35,19 +36,19 @@
         </method>
         <method name="getResByRightByGroup" type="select">
             <parameter name="group" />
-            <parameter name="subject" />
+            <parameter name="right" />
             <conditions >
-                <eq property="id_aclsbj" expr="$subject" />
+                <eq property="id_aclsbj" expr="$right" />
                 <eq property="id_aclgrp" expr="$group" />
                 <neq property="id_aclres" value="-" />
             </conditions>
         </method>
         <method name="getRightWithRes" type="selectfirst">
-           <parameter name="subject" />
+           <parameter name="right" />
            <parameter name="groups" />
            <parameter name="res" />
            <conditions >
-              <eq property="id_aclsbj" expr="$subject" />
+              <eq property="id_aclsbj" expr="$right" />
               <eq property="id_aclres" expr="$res" />
               <in property="id_aclgrp" expr="$groups" />
            </conditions>
@@ -65,19 +66,32 @@
                <orderitem property="id_aclsbj" way="asc" />
            </order>
         </method>
-        <method name="getAnonymousRight" type="selectfirst">
-            <parameter name="subject" />
+        <!-- @deprecated use getRightSettings -->
+        <method name="getRightsByRole" type="select">
+            <parameter name="right" />
             <conditions >
-                <eq property="id_aclsbj" expr="$subject" />
+                <eq property="id_aclsbj" expr="$right" />
+            </conditions>
+        </method>
+        <method name="getRightSettings" type="select">
+            <parameter name="right" />
+            <conditions >
+                <eq property="id_aclsbj" expr="$right" />
+            </conditions>
+        </method>
+        <method name="getAnonymousRight" type="selectfirst">
+            <parameter name="right" />
+            <conditions >
+                <eq property="id_aclsbj" expr="$right" />
                 <eq property="id_aclres" value="-"/>
                 <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
         </method>
         <method name="getAnonymousRightWithRes" type="selectfirst">
-            <parameter name="subject" />
+            <parameter name="right" />
             <parameter name="res" />
             <conditions >
-                <eq property="id_aclsbj" expr="$subject" />
+                <eq property="id_aclsbj" expr="$right" />
                 <eq property="id_aclres" expr="$res" />
                 <eq property="id_aclgrp" value="__anonymous" />
             </conditions>
@@ -94,20 +108,53 @@
               <eq property="id_aclgrp" expr="$group" />
            </conditions>
         </method>
-        <method name="deleteBySubjRes" type="delete">
-           <parameter name="subject" />
+        <method name="deleteByRightRes" type="delete">
+           <parameter name="right" />
            <parameter name="res" />
            <conditions >
-              <eq property="id_aclsbj" expr="$subject" />
+              <eq property="id_aclsbj" expr="$right" />
               <eq property="id_aclres" expr="$res" />
            </conditions>
         </method>
-        <method name="deleteBySubject" type="delete">
-           <parameter name="subject" />
+        <method name="deleteByRight" type="delete">
+           <parameter name="right" />
            <conditions >
-              <eq property="id_aclsbj" expr="$subject" />
+              <eq property="id_aclsbj" expr="$right" />
            </conditions>
         </method>
+        <!-- @deprecated use deleteByRightRes -->
+        <method name="deleteByRoleRes" type="delete">
+           <parameter name="right" />
+           <parameter name="res" />
+           <conditions >
+              <eq property="id_aclsbj" expr="$right" />
+              <eq property="id_aclres" expr="$res" />
+           </conditions>
+        </method>
+        <!-- @deprecated use deleteByRight -->
+        <method name="deleteByRole" type="delete">
+           <parameter name="right" />
+           <conditions >
+              <eq property="id_aclsbj" expr="$right" />
+           </conditions>
+        </method>
+        <!-- @deprecated use deleteByRightRes -->
+        <method name="deleteBySubjRes" type="delete">
+           <parameter name="right" />
+           <parameter name="res" />
+           <conditions >
+              <eq property="id_aclsbj" expr="$right" />
+              <eq property="id_aclres" expr="$res" />
+           </conditions>
+        </method>
+        <!-- @deprecated use deleteByRight -->
+        <method name="deleteBySubject" type="delete">
+           <parameter name="right" />
+           <conditions >
+              <eq property="id_aclsbj" expr="$right" />
+           </conditions>
+        </method>
+        <!-- @deprecated use deleteByGroupAndRights -->
         <method name="deleteByGroupAndSubjects" type="delete">
            <parameter name="group" />
            <parameter name="subjects" />
@@ -117,12 +164,31 @@
               <eq property="id_aclres" value="-"/>
            </conditions>
         </method>
-        <method name="deleteRightsOnResource" type="delete">
+        <!-- @deprecated use deleteByGroupAndRights -->
+        <method name="deleteByGroupAndRoles" type="delete">
            <parameter name="group" />
-           <parameter name="subjects" />
+           <parameter name="rights" />
            <conditions>
               <eq property="id_aclgrp" expr="$group" />
-              <in property="id_aclsbj" expr="$subjects" />
+              <in property="id_aclsbj" expr="$rights" />
+              <eq property="id_aclres" value="-"/>
+           </conditions>
+        </method>
+        <method name="deleteByGroupAndRights" type="delete">
+            <parameter name="group" />
+            <parameter name="rights" />
+            <conditions>
+                <eq property="id_aclgrp" expr="$group" />
+                <in property="id_aclsbj" expr="$rights" />
+                <eq property="id_aclres" value="-"/>
+            </conditions>
+        </method>
+        <method name="deleteRightsOnResource" type="delete">
+           <parameter name="group" />
+           <parameter name="rights" />
+           <conditions>
+              <eq property="id_aclgrp" expr="$group" />
+              <in property="id_aclsbj" expr="$rights" />
               <neq property="id_aclres" value="-"/>
            </conditions>
         </method>

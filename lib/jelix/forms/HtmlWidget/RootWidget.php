@@ -1,56 +1,76 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  forms
-* @author      Laurent Jouanneau
-* @copyright   2006-2012 Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package     jelix
+ * @subpackage  forms
+ *
+ * @author      Laurent Jouanneau
+ * @copyright   2006-2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+
 namespace jelix\forms\HtmlWidget;
 
-class RootWidget implements ParentWidgetInterface {
-
-    //------ ParentBuilderInterface
+class RootWidget implements ParentWidgetInterface
+{
+    //------ ParentWidgetInterface
 
     protected $js = '';
-    function addJs($js) {
+
+    public function addJs($js)
+    {
         $this->js .= $js;
     }
 
     protected $finalJs = '';
-    function addFinalJs($js) {
+
+    public function addFinalJs($js)
+    {
         $this->finalJs .= $js;
     }
 
-    function controlJsChild() {
+    public function controlJsChild()
+    {
         return false;
     }
 
     //------ Other methods
 
     /**
+     * @var \jelix\forms\Builder\HtmlBuilder
+     *
+     * @deprecated
+     */
+    protected $builder;
+
+    /**
      * @param \jelix\forms\Builder\HtmlBuilder $builder
      */
-    public function outputHeader($builder) {
+    public function outputHeader($builder)
+    {
         $jsVarName = $builder->getjFormsJsVarName();
-        echo '<script type="text/javascript">
-//<![CDATA[
-'.$jsVarName.'.tForm = new jFormsForm(\''.$builder->getName().'\');
-'.$jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator').'());
-'.$jsVarName.'.declareForm(jForms.tForm);
-//]]>
-</script>';
+
+        $js = $jsVarName.'.tForm = new jFormsForm(\''.$builder->getName()."');\n";
+        $js .= $jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator')."())\n";
+        $js .= $jsVarName.".declareForm(jForms.tForm);\n";
+        $this->addJs($js);
+        $this->builder = $builder;
     }
 
-    public function outputFooter() {
-        echo '<script type="text/javascript">
-//<![CDATA[
-(function(){var c, c2;
-'.$this->js.$this->finalJs.'
-})();
-//]]>
-</script>';
+    /**
+     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     */
+    public function outputFooter($builder)
+    {
+        $js = "(function(){var c, c2;\n".$this->js.$this->finalJs.'})();';
+        $container = $builder->getForm()->getContainer();
+        $container->privateData['__jforms_js'] = $js;
+        $formId = $container->formId;
+        $formName = $builder->getForm()->getSelector();
+        echo '<script type="text/javascript" src="'.\jUrl::get(
+            'jelix~jforms:js',
+            array('__form' => $formName, '__fid' => $formId)
+        ).'"></script>';
     }
 }
-

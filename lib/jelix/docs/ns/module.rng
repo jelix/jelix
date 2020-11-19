@@ -36,14 +36,40 @@
                         </optional>
                     </element>
                     <element name="namespace">
-                        <attribute name="name" />
+                        <choice>
+                            <attribute name="name" />
+                            <attribute name="namespace" />
+                        </choice>
+                        <attribute name="dir" />
+                        <optional>
+                            <attribute name="suffix" />
+                        </optional>
+                    </element>
+                    <element name="psr0">
+                        <choice>
+                            <attribute name="name" />
+                            <attribute name="namespace" />
+                        </choice>
                         <attribute name="dir" />
                         <optional>
                             <attribute name="suffix" />
                         </optional>
                     </element>
                     <element name="namespacePathMap">
-                        <attribute name="name" />
+                        <choice>
+                            <attribute name="name" />
+                            <attribute name="namespace" />
+                        </choice>
+                        <attribute name="dir" />
+                        <optional>
+                            <attribute name="suffix" />
+                        </optional>
+                    </element>
+                    <element name="psr4">
+                        <choice>
+                            <attribute name="name" />
+                            <attribute name="namespace" />
+                        </choice>
                         <attribute name="dir" />
                         <optional>
                             <attribute name="suffix" />

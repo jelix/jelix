@@ -1,10 +1,13 @@
 TAGS
 .DS_Store
 _dist/
+_dev/
+_docs/
+_docs.cache/
 *.komodoproject
 .komodotools
 *.kdev4
 .idea
 vendor/
 composer.lock
-.idea
+.php_cs.cache

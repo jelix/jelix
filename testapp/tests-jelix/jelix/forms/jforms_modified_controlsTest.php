@@ -30,9 +30,10 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
     protected $container;
     function setUp() {
         $this->container = new jFormsDataContainer('','');
-        $this->form = new tesMForm('foo',$this->container);
+        $this->form = new tesMForm('foo', $this->container);
 
         $ctrl = new jFormsControlInput('inputctrl');
+        $ctrl->setForm($this->form);
         $ctrl->setData('toto');
         $this->form->addCtrl($ctrl);
         $this->form->setData('inputctrl', 'toto');
@@ -41,17 +42,17 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
         $ctrl->datatype=new jDatatypeBoolean();
         $this->form->addCtrl($ctrl, false);
         $this->form->setData('chckbxctrl', '1');
-        $ctrl= new jFormsControlcheckbox('chckbxctrl1');
+        $ctrl= new jFormsControlCheckbox('chckbxctrl1');
         $ctrl->defaultValue='0';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-        $ctrl= new jFormsControlcheckbox('chckbxctrl2');
+        $ctrl= new jFormsControlCheckbox('chckbxctrl2');
         $ctrl->defaultValue='1';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-        
+
         $ctrl= new jFormsControlListbox('list');
         $ctrl->multiple=true;
         $ctrl->datasource = new jFormsStaticDatasource();
@@ -59,7 +60,7 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
         $this->form->addCtrl($ctrl, false);
         $this->form->setData('list', array('bbb','123'));
     }
-    
+
     function testinitModifiedControlsList() {
         $this->form->initModifiedControlsList();
 
@@ -74,10 +75,10 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
           );
         $this->assertEquals($initForm, $this->form->getContainer()->originalData);
     }
-    
+
     function testModifiedControls1() {
         $this->form->initModifiedControlsList();
-        
+
         $this->form->setData('chckbxctrl', '0');
         $newForm = array (
           'inputctrl' => 'toto',
@@ -247,7 +248,7 @@ class jforms_Modified_ControlsTest extends jUnitTestCaseDb {
         $modifiedControls = array (
            'list' => array());
         $this->assertEquals($modifiedControls, $this->form->getModifiedControls());
-        
+
         $this->form->setData('list', array('123','aaa'));
         $this->form->initModifiedControlsList();
         $this->form->setData('list', array('aaa', '123'));
