@@ -20,9 +20,10 @@ update-locale LC_ALL=fr_FR.UTF-8
 # ------------------- install packages
 apt-get -y update
 apt-get -y install debconf-utils
-apt-get install apache2-mpm-prefork libapache2-mod-fastcgi
+apt-get install apache2 libapache2-mod-fastcgi
 a2enmod rewrite actions fastcgi alias
-
+sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+chown -R travis:travis /var/lib/apache2/fastcgi
 
 # --------------------- configure php-fpm
 
@@ -43,23 +44,15 @@ echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
 $PHP_ROOT/sbin/php-fpm
 
 # PHP 7+ needs to have the LDAP extension manually enabled
-if [ "$TRAVIS_PHP_VERSION" = "7.0" ]; then
-    echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
-fi
-if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
-    apt-get install php7.1-ldap
-fi
+echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
+
 
 cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
 
 # ---------------------- configure apache virtual hosts
 
-rm -f /etc/apache2/sites-enabled/000-default.conf
-rm -f /etc/apache2/sites-available/000-default.conf
-cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/default.conf
-sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default.conf
-ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/default.conf
-cat /etc/apache2/sites-enabled/default.conf
+cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
+sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
 
 chmod +x /home/travis
 
