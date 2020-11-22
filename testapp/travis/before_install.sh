@@ -21,41 +21,32 @@ update-locale LC_ALL=fr_FR.UTF-8
 apt-get -y update
 apt-get -y install debconf-utils
 apt-get install apache2
-a2enmod rewrite actions fastcgi alias proxy proxy_http proxy_fcgi headers
+a2enmod rewrite actions proxy proxy_http proxy_fcgi headers
 sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 
 # --------------------- configure php-fpm
 
 cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
 
+PHP_SOCK=$(cat $PHP_ROOT/etc/php-fpm.conf | grep "^listen *=" | cut -d"=" -f2 | sed -E 's/ //')
+
 # set PHP user
-if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
-    cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
-    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
-    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
-else
-    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.conf
-    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.conf
-fi
+cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
+sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+
 echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
 
 # starts PHP fpm
 $PHP_ROOT/sbin/php-fpm
 
-# PHP 7+ needs to have the LDAP extension manually enabled
-#echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
-
-
 cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
-
-ls -al /var/run/php/
-
 
 # ---------------------- configure apache virtual hosts
 
 cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
-sed -e "s?%PHP_VERSION%?$PHPENV_VERSION_NAME?g" --in-place /etc/apache2/sites-available/000-default.conf
+sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/apache2/sites-available/000-default.conf
 
 chmod +x /home/travis
 
