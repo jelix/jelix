@@ -27,13 +27,16 @@ sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 # --------------------- configure php-fpm
 
 cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
+cat $PHP_ROOT/etc/php-fpm.conf
 
-PHP_SOCK=$(cat $PHP_ROOT/etc/php-fpm.conf | grep "^listen *=" | cut -d"=" -f2 | sed -E 's/ //')
-echo "PHP_SOCK=$PHP_SOCK"
 # set PHP user
 cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
 sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
 sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+
+PHP_SOCK=$(cat $PHP_ROOT/etc/php-fpm.d/www.conf | grep "^listen *=" | cut -d"=" -f2 | sed -E 's/ //')
+echo "PHP_SOCK=$PHP_SOCK"
+
 
 echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
 
