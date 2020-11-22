@@ -29,7 +29,7 @@ sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
 
 PHP_SOCK=$(cat $PHP_ROOT/etc/php-fpm.conf | grep "^listen *=" | cut -d"=" -f2 | sed -E 's/ //')
-
+echo "PHP_SOCK=$PHP_SOCK"
 # set PHP user
 cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
 sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
@@ -48,9 +48,10 @@ cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
 sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/apache2/sites-available/000-default.conf
 
+cat /etc/apache2/sites-available/000-default.conf
 chmod +x /home/travis
 
-service apache2 restart
+systemctl restart apache2
 
 # ----------------------- ldap server
 echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections

@@ -46,3 +46,5 @@ before_script:
 script:
    - ./testapp/travis/script.sh
 
+after_script:
+  - cat /var/log/apache2/error.log
