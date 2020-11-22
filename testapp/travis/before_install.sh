@@ -21,9 +21,8 @@ update-locale LC_ALL=fr_FR.UTF-8
 apt-get -y update
 apt-get -y install debconf-utils
 apt-get install apache2
-a2enmod rewrite actions fastcgi alias
+a2enmod rewrite actions fastcgi alias proxy proxy_http proxy_fcgi headers
 sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
-chown -R travis:travis /var/lib/apache2/fastcgi
 
 # --------------------- configure php-fpm
 
@@ -49,10 +48,14 @@ $PHP_ROOT/sbin/php-fpm
 
 cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
 
+ls -al /var/run/php/
+
+
 # ---------------------- configure apache virtual hosts
 
 cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
+sed -e "s?%PHP_VERSION%?$PHPENV_VERSION_NAME?g" --in-place /etc/apache2/sites-available/000-default.conf
 
 chmod +x /home/travis
 
@@ -64,7 +67,7 @@ echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string testapp.local" | debconf-set-selections
+echo "slapd slapd/domain string tests.jelix" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
