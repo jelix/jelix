@@ -20,7 +20,7 @@ update-locale LC_ALL=fr_FR.UTF-8
 # ------------------- install packages
 apt-get -y update
 apt-get -y install debconf-utils
-apt-get install apache2 libapache2-mod-fastcgi
+apt-get install apache2
 a2enmod rewrite actions fastcgi alias
 sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 chown -R travis:travis /var/lib/apache2/fastcgi
@@ -44,7 +44,7 @@ echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
 $PHP_ROOT/sbin/php-fpm
 
 # PHP 7+ needs to have the LDAP extension manually enabled
-echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
+#echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
 
 
 cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
@@ -68,7 +68,7 @@ echo "slapd slapd/domain string testapp.local" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap_conf.ldif
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap/ldap_conf.ldif
 
 
 # ----------------------- prepare postgresql base
