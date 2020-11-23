@@ -20,50 +20,38 @@ update-locale LC_ALL=fr_FR.UTF-8
 # ------------------- install packages
 apt-get -y update
 apt-get -y install debconf-utils
-apt-get install apache2-mpm-prefork libapache2-mod-fastcgi
-a2enmod rewrite actions fastcgi alias
-
 
 # --------------------- configure php-fpm
 
 cp $PHP_ROOT/etc/php-fpm.conf.default $PHP_ROOT/etc/php-fpm.conf
 
+# additional configuration can be put into # $PHP_ROOT/etc/php-fpm.d/*.conf
+
 # set PHP user
-if [[ ${TRAVIS_PHP_VERSION:0:2} == "7." ]]; then
-    cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
-    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
-    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
-else
-    sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.conf
-    sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.conf
-fi
+cp $PHP_ROOT/etc/php-fpm.d/www.conf.default $PHP_ROOT/etc/php-fpm.d/www.conf
+sed -i "/^user = nobody/c\user = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+sed -i "/^group = nobody/c\group = travis" $PHP_ROOT/etc/php-fpm.d/www.conf
+
+PHP_SOCK=$(cat $PHP_ROOT/etc/php-fpm.d/www.conf | grep "^listen *=" | cut -d"=" -f2 | sed -E 's/ //')
+echo "PHP_SOCK=$PHP_SOCK"
+
 echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
+sed -i "/display_errors = Off/c\display_errors = On" $PHP_ROOT/etc/php.ini
 
 # starts PHP fpm
 $PHP_ROOT/sbin/php-fpm
 
-# PHP 7+ needs to have the LDAP extension manually enabled
-if [ "$TRAVIS_PHP_VERSION" = "7.0" ]; then
-    echo 'extension=ldap.so' >> $PHP_ROOT/etc/conf.d/travis.ini
-fi
-if [ "$TRAVIS_PHP_VERSION" = "7.1" ]; then
-    apt-get install php7.1-ldap
-fi
-
 cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
-
-# ---------------------- configure apache virtual hosts
-
-rm -f /etc/apache2/sites-enabled/000-default.conf
-rm -f /etc/apache2/sites-available/000-default.conf
-cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/default.conf
-sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/default.conf
-ln -s /etc/apache2/sites-available/default.conf /etc/apache2/sites-enabled/default.conf
-cat /etc/apache2/sites-enabled/default.conf
 
 chmod +x /home/travis
 
-service apache2 restart
+# ---------------------- Configure nginx
+apt-get -y install nginx
+cp -f testapp/travis/nginx_vhost.conf /etc/nginx/sites-available/default
+sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/nginx/sites-available/default
+sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/nginx/sites-available/default
+
+service nginx restart
 
 # ----------------------- ldap server
 echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections
@@ -71,11 +59,11 @@ echo "slapd slapd/password1 password passjelix" | debconf-set-selections
 echo "slapd slapd/password2 password passjelix" | debconf-set-selections
 echo "slapd slapd/internal/generated_adminpw password passjelix" | debconf-set-selections
 echo "slapd shared/organization string orgjelix" | debconf-set-selections
-echo "slapd slapd/domain string testapp.local" | debconf-set-selections
+echo "slapd slapd/domain string tests.jelix" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap_conf.ldif
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap/ldap_conf.ldif
 
 
 # ----------------------- prepare postgresql base
