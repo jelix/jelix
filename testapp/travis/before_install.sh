@@ -58,7 +58,7 @@ chmod +x /home/travis
 #systemctl restart apache2
 
 # ---------------------- Configure nginx
-apt-get -y update nginx
+apt-get -y install nginx
 cp -f testapp/travis/nginx_vhost.conf /etc/nginx/sites-available/default
 sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/nginx/sites-available/default
 sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/nginx/sites-available/default
