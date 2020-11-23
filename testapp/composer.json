@@ -29,7 +29,6 @@
         "jelix/php-redis-plugin": "^1.7.6",
         "jelix/sitemap-module": "^1.7.5",
         "guzzlehttp/guzzle": "^6.2.0",
-        "jelix/ldapdao-module": "dev-master",
         "jelix/feeds-module": "^1.7.5",
         "jelix/wikirenderer-plugin": "^1.7.3"
     },
