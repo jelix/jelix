@@ -20,9 +20,9 @@ update-locale LC_ALL=fr_FR.UTF-8
 # ------------------- install packages
 apt-get -y update
 apt-get -y install debconf-utils
-apt-get install apache2
-a2enmod rewrite actions proxy proxy_http proxy_fcgi headers
-sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+#apt-get install apache2
+#a2enmod rewrite actions proxy proxy_http proxy_fcgi headers
+#sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
 
 # --------------------- configure php-fpm
 
@@ -39,6 +39,7 @@ echo "PHP_SOCK=$PHP_SOCK"
 
 
 echo "cgi.fix_pathinfo = 1" >> $PHP_ROOT/etc/php.ini
+sed -i "/display_errors = Off/c\display_errors = On" $PHP_ROOT/etc/php.ini
 
 # starts PHP fpm
 $PHP_ROOT/sbin/php-fpm
@@ -47,14 +48,26 @@ cp -f testapp/travis/phpunit_bootstrap.php /srv/phpunit_bootstrap.php
 
 # ---------------------- configure apache virtual hosts
 
-cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
-sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
-sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/apache2/sites-available/000-default.conf
+#cp -f testapp/travis/vhost.conf /etc/apache2/sites-available/000-default.conf
+#sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/apache2/sites-available/000-default.conf
+#sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/apache2/sites-available/000-default.conf
 
-cat /etc/apache2/sites-available/000-default.conf
+#cat /etc/apache2/sites-available/000-default.conf
 chmod +x /home/travis
 
-systemctl restart apache2
+#systemctl restart apache2
+
+# ---------------------- Configure nginx
+apt-get -y update nginx
+cp -f testapp/travis/nginx_vhost.conf /etc/nginx/sites-available/default
+sed -e "s?%TRAVIS_BUILD_DIR%?$(pwd)?g" --in-place /etc/nginx/sites-available/default
+sed -e "s?%PHP_SOCK%?$PHP_SOCK?g" --in-place /etc/nginx/sites-available/default
+
+ls -al /etc/nginx/sites-enabled/
+
+service nginx restart
+
+ps -ax
 
 # ----------------------- ldap server
 echo "slapd slapd/internal/adminpw password passjelix" | debconf-set-selections
