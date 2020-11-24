@@ -90,9 +90,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * initialize the connection to the database.
-     *
-     * @see lib/jelix/db/jDbConnection#_connect()
+     * @inheritdoc
      */
     protected function _connect()
     {
@@ -118,9 +116,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * 	close the connection to the database.
-     *
-     * @see lib/jelix/db/jDbConnection#_disconnect()
+     * @inheritdoc
      */
     protected function _disconnect()
     {
@@ -128,11 +124,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * 	execute an SQL instruction.
-     *
-     * @see lib/jelix/db/jDbConnection#_doQuery()
-     *
-     * @param mixed $query
+     * @inheritdoc
      */
     protected function _doQuery($query)
     {
@@ -150,7 +142,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @see lib/jelix/db/jDbConnection#_doExec()
+     * @see jDbConnection::_doExec()
      *
      * @param mixed $query
      */
@@ -178,15 +170,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @param string $queryString
-     * @param int    $offset
-     * @param int    $number
-     *
-     * @see lib/jelix/db/jDbConnection#_doLimitQuery()
-     *
-     * @param mixed $queryString
-     * @param mixed $offset
-     * @param mixed $number
+     * @inheritdoc
      */
     protected function _doLimitQuery($queryString, $offset, $number)
     {
@@ -245,7 +229,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @see lib/jelix/db/jDbConnection#lastInsertId()
+     * @see jDbConnection::lastInsertId()
      *
      * @param mixed $fromSequence
      *

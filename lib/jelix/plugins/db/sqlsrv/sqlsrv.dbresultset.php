@@ -8,7 +8,7 @@
  *
  * @copyright  2008 Yann Lecommandoux, 2017-2020 Laurent Jouanneau
  *
- * @see      http:/localhost/
+ * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
