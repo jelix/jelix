@@ -1,18 +1,20 @@
 Changes into Jelix 1.7
 ======================
 
-Jelix 1.7.6 (next)
-------------------
+Jelix 1.7.6
+-----------
 
 * have all bug fixes and improvements from Jelix 1.6.30.
     * Fix basePath in the context of a command line script
-    * Fix an error in the listbox form widget
+    * Fix a PHP error in the listbox form widget
+    * Fix a issue in jAcl2 admin: an administrator could put himself into a group which forbid some admin rights, and so he was not an administrator anymore.
     * new command to test the mailer. To send an email to check mailer parameters, 
       execute `php console.php mailer:test my.email@example.com`
     * jForms: new control jControlTime, and support of a `<time>` element in jforms 
     * New method `jEvent::getParameters()`
     * New method `jAuth::setUserSession()`
-    * jacl2db_admin interface: confirmation on groups delete button
+    * jAcl2 admin interface: confirmation on groups delete button
+    * jAcl2 admin interface: added a separator between groups in users list
     * Fix compat with php 7.4 in jCmdUtils
     * New methods `jServer::getDomainName()`, `jServer::getServerURI()`, 
       `jServer::getPort()`, `jServer::isHttps()`
