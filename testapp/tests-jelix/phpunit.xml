@@ -46,8 +46,5 @@
     <testsuite name="Jelix soap">
       <directory>jelix/soap/</directory>
     </testsuite>
-    <testsuite name="Ldap/dao driver">
-      <directory>../vendor/jelix/ldapdao-module/tests/</directory>
-    </testsuite>
   </testsuites>
 </phpunit>

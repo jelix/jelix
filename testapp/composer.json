@@ -17,8 +17,7 @@
     ],
     "require": {
         "php": ">=5.3.3",
-        "phpunit/phpunit": "4.8.*",
-        "jelix/ldapdao-module": "2.0.x-dev"
+        "phpunit/phpunit": "4.8.*"
     },
     "autoload": {
         "psr-0": { },
