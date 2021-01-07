@@ -3,7 +3,7 @@
 * @package     jelix
 * @subpackage  installer
 * @author      Laurent Jouanneau
-* @copyright   2008-2020 Laurent Jouanneau
+* @copyright   2008-2021 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -200,7 +200,7 @@ abstract class jInstallerComponentBase {
 
         $root = $xmlDescriptor->documentElement;
 
-        if (!preg_match($this->identityNamespace, $root->namespaceURI)) {
+        if (preg_match($this->identityNamespace, $root->namespaceURI)) {
             $xml = simplexml_import_dom($xmlDescriptor);
             if (!isset($xml->info[0]->version[0])) {
                 throw new jInstallerException('module.missing.version', array($this->name));

@@ -26,7 +26,7 @@ class testInstallerComponentModule2 extends jInstallerComponentModule {
 
 class testInstallerComponentForDependencies extends jInstallerComponentBase {
 
-    protected $identityNamespace = 'http://jelix.org/ns/module/1.0';
+    protected $identityNamespace = '!^https?\\://jelix\\.org/ns/module/1\\.0$!';
     protected $rootName = 'module';
     protected $identityFile = 'module.xml';
 
