@@ -518,4 +518,30 @@ class defaultCtrl extends jController
 
         return $rep;
     }
+
+    public function autocomplete()
+    {
+        $rep = $this->getResponse('json');
+        $term = $this->param('term');
+        if (strlen($term) < 2) {
+            $rep->data = array();
+
+            return $rep;
+        }
+
+        $dao = jDao::get($this->dao, $this->dbProfile);
+        $cond = jDao::createConditions();
+        $cond->addItemOrder('login', 'asc');
+        $list = $dao->findBy($cond);
+        $users = array();
+        foreach ($list as $prop) {
+            if (strstr($prop->login, $term) || $term === '') {
+                $users[] = $prop->login;
+            }
+        }
+        $rep->data = $users;
+
+
+        return $rep;
+    }
 }

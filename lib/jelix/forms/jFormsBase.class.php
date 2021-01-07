@@ -8,10 +8,10 @@
  * @contributor Bastien Jaillot, Steven Jehannet
  * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
  *
- * @copyright   2006-2010 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+ * @copyright   2006-2020 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
  * @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
  *
- * @see        http://www.jelix.org
+ * @see         http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require JELIX_LIB_PATH.'forms/jFormsControl.class.php';
@@ -546,14 +546,17 @@ abstract class jFormsBase
 
     /**
      * @param string $name  the name of the control/data
-     * @param string $value the data value
+     * @param string|string[] $value the data value
      *
      * @throws jExceptionForms
      */
     public function setData($name, $value)
     {
         if (!isset($this->controls[$name])) {
-            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+            throw new jExceptionForms(
+                'jelix~formserr.unknown.control2',
+                array($name, $this->sel)
+            );
         }
 
         $this->controls[$name]->setData($value);
@@ -777,6 +780,12 @@ abstract class jFormsBase
         return $this->container->data;
     }
 
+    /**
+     * @param mixed $v1
+     * @param mixed $v2
+     *
+     * @return bool true if the values are not equals
+     */
     protected function _diffValues(&$v1, &$v2)
     {
         if (is_array($v1) && is_array($v2)) {
@@ -784,15 +793,28 @@ abstract class jFormsBase
 
             return !empty($comp);
         }
+
+        if ($v1 === $v2) {
+            return false;
+        }
+
+        if (($v1 === '' && $v2 === null) || ($v1 === null && $v2 === '')) {
+            return false;
+        }
+
+        if (is_numeric($v1) != is_numeric($v2)) {
+            return true;
+        }
+
         if (empty($v1) && empty($v2)) {
             return false;
         }
+
         if (is_array($v1) || is_array($v2)) {
             return true;
         }
 
-        return !($v1 == $v2);
-        //return !($v2== (string)$v1);
+        return ($v1 != $v2);
     }
 
     /**
