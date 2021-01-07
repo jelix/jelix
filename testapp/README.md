@@ -23,9 +23,6 @@ build
 Before launching containers, you have to run these commands:
 
 ```
-cd docker-conf
-./setup.sh
-cd ..
 ./run-docker build
 ```
 
