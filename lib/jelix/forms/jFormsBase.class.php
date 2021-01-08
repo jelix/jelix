@@ -488,7 +488,6 @@ abstract class jFormsBase {
      */
     public function setData($name, $value) {
         if (!isset($this->controls[$name])) {
-            var_export(array_keys($this->controls));
             throw new jExceptionForms(
                 'jelix~formserr.unknown.control2',
                 array($name, $this->sel)
