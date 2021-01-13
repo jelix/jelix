@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Adrien Lagroy de Croutte
  *
- * @copyright   2017-2020 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
+ * @copyright   2017-2021 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -336,7 +336,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
 
     public function testSaveNormalGroupRights()
     {
-        jAuth::login('oneuser', 'pwd', false);
+        jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
         $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
             'admins' => array(
@@ -352,7 +352,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
                 'super.cms.delete' => 'y', // change
             ),
         );
-        $mgr->saveGroupRights($rights, 'oneuser');
+        $mgr->saveGroupRights($rights, 'theadmin');
         $newRights = $mgr->getGroupRights();
         $this->assertEquals(
             array(
@@ -428,7 +428,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             ),
             'users' => array(),
         );
-        $mgr->saveGroupRights($rights);
+        $mgr->saveGroupRights($rights, 'theadmin');
         $newRights = $mgr->getGroupRights();
         $this->assertEquals(
             array(
@@ -723,7 +723,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'admins' => array(),
             'users'  => array(),
         );
-        $mgr->saveGroupRights($rights);
+        $mgr->saveGroupRights($rights, 'theadmin');
     }
 
     /**
@@ -748,7 +748,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
                 'super.cms.update' => 'y',
             ),
         );
-        $mgr->saveGroupRights($rights);
+        $mgr->saveGroupRights($rights, 'theadmin');
     }
 
     /**
@@ -764,9 +764,13 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
             'acl.group.delete' => '', // change, anybody else have this right
         );
-        $mgr->saveUserRights('theadmin', $rights);
+        $mgr->saveUserRights('theadmin', $rights, 'theadmin');
     }
 
+    /**
+     * The non admin user has rights to modify user rights, not group rights
+     * @expectedException \jAcl2DbAdminUIException
+     */
     public function testNonAdminTryingToRemoveRightAdminOfOneOfAdminGroup()
     {
         // add a right admin on users (we want to be sure it is set before
@@ -775,7 +779,49 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $this->insertRecordsIntoTable(
             'jacl2_rights',
             array('id_aclsbj', 'id_aclgrp', 'id_aclres', 'canceled'),
-            array(array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.user.modify',  'id_aclres'=>'-', 'canceled'=>0)),
+            array(
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.user.modify',  'id_aclres'=>'-', 'canceled'=>0),
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.user.view',  'id_aclres'=>'-', 'canceled'=>0)
+            ),
+            false
+        );
+
+        // now let's remove the same right from admins
+        jAuth::login('oneuser', 'pwd', false);
+        $mgr    = new jAcl2DbAdminUIManager();
+        $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
+            'admins' => array(
+                'acl.group.view'   => 'y',
+                'acl.group.modify' => 'y',
+                'acl.user.view'    => 'y',
+                'acl.user.modify'  => '', // change
+                'super.cms.list'   => 'y',
+                'super.cms.update' => 'y',
+            ),
+            'users'  => array(
+                'super.cms.list'   => 'y',
+                'super.cms.update' => 'y',
+                'acl.user.view'    => 'y',
+                'acl.user.modify'  => 'y',
+            ),
+        );
+        $mgr->saveGroupRights($rights, 'oneuser');
+    }
+
+
+
+    public function testNonAdminRemoveRightAdminOfOneOfAdminGroup()
+    {
+        // add a right admin on users (we want to be sure it is set before
+        // saveGroupRights, removing a right from a group and setting it to
+        // another group is an other test)
+        $this->insertRecordsIntoTable(
+            'jacl2_rights',
+            array('id_aclsbj', 'id_aclgrp', 'id_aclres', 'canceled'),
+            array(
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.group.modify',  'id_aclres'=>'-', 'canceled'=>0),
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.group.view',  'id_aclres'=>'-', 'canceled'=>0)
+            ),
             false
         );
 
@@ -784,19 +830,21 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $mgr = new jAcl2DbAdminUIManager();
         $rights = array( // id_aclgrp=> array(idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove))
             'admins' => array(
+                'acl.group.view' => 'y',
+                'acl.group.modify' => '',// change
                 'acl.user.view'    => 'y',
-                'acl.group.modify' => 'y',
-                'acl.user.modify'  => '', // change
+                'acl.user.modify'  => 'y',
                 'super.cms.list'   => 'y',
                 'super.cms.update' => 'y',
             ),
             'users' => array(
                 'super.cms.list'   => 'y',
                 'super.cms.update' => 'y',
-                'acl.user.modify'  => 'y',
+                'acl.group.view'  => 'y',
+                'acl.group.modify'  => 'y',
             ),
         );
-        $mgr->saveGroupRights($rights);
+        $mgr->saveGroupRights($rights, 'oneuser');
 
         $newRights = $mgr->getGroupRights();
         $this->assertEquals(
@@ -808,8 +856,8 @@ class jacl2_managerUITest extends jUnitTestCaseDb
                 ),
                 'acl.group.modify' => array(
                     '__anonymous' => false,
-                    'admins'      => 'y',
-                    'users'       => '',
+                    'admins'      => '',
+                    'users'       => 'y',
                 ),
                 'acl.user.view' => array(
                     '__anonymous' => false,
@@ -818,13 +866,13 @@ class jacl2_managerUITest extends jUnitTestCaseDb
                 ),
                 'acl.user.modify' => array(
                     '__anonymous' => false,
-                    'admins'      => '',
-                    'users'       => 'y',
+                    'admins'      => 'y',
+                    'users'       => '',
                 ),
                 'acl.group.view' => array(
                     '__anonymous' => false,
-                    'admins'      => '',
-                    'users'       => '',
+                    'admins'      => 'y',
+                    'users'       => 'y',
                 ),
                 'super.cms.delete' => array(
                     '__anonymous' => false,
@@ -865,7 +913,12 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $this->insertRecordsIntoTable(
             'jacl2_rights',
             array('id_aclsbj', 'id_aclgrp', 'id_aclres', 'canceled'),
-            array(array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.group.delete',  'id_aclres'=>'-', 'canceled'=>0)),
+            array(
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.group.view',  'id_aclres'=>'-', 'canceled'=>0),
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.group.delete',  'id_aclres'=>'-', 'canceled'=>0),
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.user.view',  'id_aclres'=>'-', 'canceled'=>0),
+                array('id_aclgrp'=>'users', 'id_aclsbj'=>'acl.user.modify',  'id_aclres'=>'-', 'canceled'=>0)
+            ),
             false
         );
 
@@ -875,9 +928,8 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
             'acl.group.view'   => 'y',
             'acl.group.delete' => '', // change
-
         );
-        $mgr->saveUserRights('theadmin', $rights);
+        $mgr->saveUserRights('theadmin', $rights, 'oneuser');
 
         $newRights = $mgr->getUserRights('theadmin');
         $rights = array(
@@ -894,17 +946,17 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'acl.user.view' => array(
                 '__priv_theadmin' => false,
                 'admins'          => 'y',
-                'users'           => '',
+                'users'           => 'y',
             ),
             'acl.user.modify' => array(
                 '__priv_theadmin' => false,
                 'admins'          => 'y',
-                'users'           => '',
+                'users'           => 'y',
             ),
             'acl.group.view' => array(
                 '__priv_theadmin' => 'y',
                 'admins'          => '',
-                'users'           => '',
+                'users'           => 'y',
             ),
             'super.cms.delete' => array(
                 '__priv_theadmin' => false,
@@ -966,7 +1018,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'acl.group.delete' => 'y',
             'acl.group.view'   => 'y',
         );
-        $mgr->saveUserRights('theadmin', $rights);
+        $mgr->saveUserRights('theadmin', $rights, 'theadmin');
     }
 
     public function testAdminTryingToRemoveRightAdminOfOtherAdmin()
@@ -987,7 +1039,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'acl.group.delete' => '', // change
 
         );
-        $mgr->saveUserRights('theadmin', $rights);
+        $mgr->saveUserRights('theadmin', $rights, 'theadmin');
 
         $newRights = $mgr->getUserRights('theadmin');
         $rights = array(
@@ -1043,7 +1095,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
         $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
             'acl.group.view' => '', // change
         );
-        $mgr->saveUserRights('specificadmin', $rights);
+        $mgr->saveUserRights('specificadmin', $rights, 'theadmin');
 
         $newRights = $mgr->getUserRights('specificadmin');
         $rights = array(
@@ -1109,7 +1161,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
                 'acl.user.modify'  => 'y',
             ),
         );
-        $mgr->saveGroupRights($rights);
+        $mgr->saveGroupRights($rights, 'theadmin');
 
         $newRights = $mgr->getGroupRights();
         $this->assertEquals(
@@ -1181,7 +1233,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
     {
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->removeGroup('admins');
+        $mgr->removeGroup('admins', 'theadmin');
     }
 
     /**
@@ -1260,7 +1312,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
 
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->removeGroup('admins2');
+        $mgr->removeGroup('admins2', 'theadmin');
 
         $newRights = $mgr->getGroupRights();
         $this->assertEquals(
@@ -1351,10 +1403,10 @@ class jacl2_managerUITest extends jUnitTestCaseDb
 
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->removeGroup('admins');
+        $mgr->removeGroup('admins', 'theadmin');
     }
 
-    public function testAdminTryingToRemoveAUserFromAdminGroup()
+    public function testAdminRemoveAUserFromAdminGroup()
     {
         // add one user into admins, so there is two admin user
         $usergroups = array(
@@ -1369,18 +1421,18 @@ class jacl2_managerUITest extends jUnitTestCaseDb
 
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->removeUserFromGroup('theadmin', 'admins');
-        $rightsResult = $mgr->getUserRights('theadmin');
+        $mgr->removeUserFromGroup('oneuser', 'admins', 'theadmin');
+        $rightsResult = $mgr->getUserRights('oneuser');
 
         $hisGroup = '<object>
-                            <string property="login" value="theadmin" />
-                            <string property="id_aclgrp" value="__priv_theadmin" />
-                            <string property="name" value="theadmin" />
+                            <string property="login" value="oneuser" />
+                            <string property="id_aclgrp" value="__priv_oneuser" />
+                            <string property="name" value="oneuser" />
                             <string property="grouptype" value="2" />
                         </object>';
         $this->assertComplexIdenticalStr($rightsResult['hisgroup'], $hisGroup);
 
-        $this->assertEquals(array(), $rightsResult['groupsuser']);
+        $this->assertEquals(array('users'), array_keys($rightsResult['groupsuser']));
 
         $groups = '<array>
             <object>
@@ -1398,15 +1450,41 @@ class jacl2_managerUITest extends jUnitTestCaseDb
     }
 
     /**
+     * It should fail because the admins group has no all rights,
+     * (so oneuser has no all rights)
+     * and theadmin has all missing rights in his private group
+     *
+     * @throws jAcl2DbAdminUIException
+     * @expectedException \jAcl2DbAdminUIException
+     */
+    public function testAdminTryingToRemoveTheAdminFromAdminGroup()
+    {
+        // add one user into admins, so there is two admin user
+        $usergroups = array(
+            array('login' => 'oneuser', 'id_aclgrp' => 'admins'),
+        );
+        $this->insertRecordsIntoTable(
+            'jacl2_user_group',
+            array('login', 'id_aclgrp'),
+            $usergroups,
+            false
+        );
+
+        jAuth::login('oneuser', 'pwd', false);
+        $mgr = new jAcl2DbAdminUIManager();
+        $mgr->removeUserFromGroup('theadmin', 'admins', 'oneuser');
+    }
+
+        /**
      * it should fail.
      *
      * @expectedException \jAcl2DbAdminUIException
      */
-    public function testAdminTryingToRemoveAUserFromAdminGroupButItIsTheOnlyOneAdmin()
+    public function testAdminTryingToRemoveAUserFromAdminGroupButHeIsTheOnlyOneAdmin()
     {
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->removeUserFromGroup('theadmin', 'admins');
+        $mgr->removeUserFromGroup('theadmin', 'admins', 'theadmin');
     }
 
     /**
@@ -1417,13 +1495,14 @@ class jacl2_managerUITest extends jUnitTestCaseDb
     public function testAdminTryingToAddHimselfToNonAdminGroup()
     {
         $rights = array(
-            'acl.users.modify'  => 'n',
-            'acl.groups.modify' => 'n',
+            'acl.user.modify'  => 'n',
+            'acl.group.modify' => 'n',
         );
+
         jAuth::login('theadmin', 'pwd', false);
         jAcl2DbManager::setRightsOnGroup('users', $rights);
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->addUserToGroup('theadmin', 'users');
+        $mgr->addUserToGroup('theadmin', 'users', 'theadmin');
     }
 
     /**
@@ -1434,21 +1513,21 @@ class jacl2_managerUITest extends jUnitTestCaseDb
     public function testNonAdminTryingToRemoveAdminRightsByAddingHimselfIntoGroup()
     {
         $usersRights = array(
-            'acl.users.modify'  => 'y',
-            'acl.groups.modify' => 'y',
+            'acl.user.modify'  => 'y',
+            'acl.group.modify' => 'y',
         );
         jAcl2DbManager::setRightsOnGroup('users', $usersRights);
         jAuth::login('oneuser', 'pwd', false);
 
         $NotAdminRights = array(
-            'acl.users.modify'  => 'n',
-            'acl.groups.modify' => 'n',
+            'acl.user.modify'  => 'n',
+            'acl.group.modify' => 'n',
         );
         jAcl2DbUserGroup::createGroup('NotAdmin', 'notAdmin');
         jAcl2DbManager::setRightsOnGroup('notAdmin', $NotAdminRights);
 
         $mgr = new jAcl2DbAdminUIManager();
-        $mgr->addUserToGroup('oneuser', 'notAdmin');
+        $mgr->addUserToGroup('oneuser', 'notAdmin', 'oneuser');
     }
 
     public function testGetUsersList()
@@ -1684,7 +1763,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'super.cms.update' => false, // change
             'super.cms.delete' => 'y', // change
         );
-        $mgr->saveUserRights('oneuser', $rights);
+        $mgr->saveUserRights('oneuser', $rights, 'theadmin');
 
         $rights = array( // idl_aclsbj => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
             'acl.group.modify' => 'y', //change
@@ -1693,7 +1772,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
             'super.cms.list'   => 'y',
             'super.cms.update' => 'n', // change
         );
-        $mgr->saveUserRights('theadmin', $rights);
+        $mgr->saveUserRights('theadmin', $rights, 'theadmin');
 
         $newRights = $mgr->getUserRights('theadmin');
         $rights = array(
