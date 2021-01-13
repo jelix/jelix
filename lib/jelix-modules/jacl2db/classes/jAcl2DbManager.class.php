@@ -507,7 +507,4 @@ class jAcl2DbManager
                                                                $groupInWhichToAddAUser);
     }
 
-
-
-
 }

@@ -1240,7 +1240,7 @@ class jacl2_managerUITest extends jUnitTestCaseDb
      * it should fail.
      *
      * @expectedException \jAcl2DbAdminUIException
-     * @expectedExceptionCode 3
+     * @expectedExceptionCode 2
      */
     public function testAdminTryingToDeleteItsOwnAdminGroup()
     {
