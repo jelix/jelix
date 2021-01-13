@@ -164,16 +164,7 @@ cd testapp/modules/jelix_tests/install
   upgrade_to_1.3RC1.2079_productdate.php
   upgrade_to_1.3RC2.2100_jacl2db.php
 cd testapp/modules/jelix_tests/locales/
-  test_A.properties
-  test_B.properties
-  test_C.properties
-  test_D.properties
-  test_E.properties
-  test_F.properties
-  test_G.properties
-  test_H.properties
-  test_I.properties
-  test_J.properties
+  __ALL__
 cd testapp/modules/jelix_tests/locales/fr_FR
   newoverload.UTF-8.properties
   overload.UTF-8.properties
@@ -186,53 +177,16 @@ cd testapp/modules/jelix_tests/locales/en_US
   testunit.ISO-8859-1.properties
   tests1.UTF-8.properties
 cd testapp/modules/jelix_tests/locales/en_EN
-  tests1.UTF-8.properties
-  tests3.UTF-8.properties
-  tests4.UTF-8.properties
+  __ALL__
 cd testapp/modules/jelix_tests/templates
-  jstest_include.tpl
-  jstest_jforms.tpl
-  jstest_jsonrpc.tpl
-  jstest_jsonrpc2.tpl
-  menu.tpl
-  test_include.tpl
-  test_include_included.tpl
-  test_include_recursive.tpl
-  test_include_recursive2.tpl
-  test_plugin_counter_init_allarg_noexeption.tpl
-  test_plugin_counter_init_exeption.tpl
-  test_plugin_counter_init_noexeption.tpl
-  test_plugin_counter_reset_all.tpl
-  test_plugin_counter_reset.tpl
-  test_plugin_counter.tpl
-  test_plugin_jrooturl.tpl
-  test_plugin_jurl.tpl
-  test_plugin_pagelinks.tpl
-  test_truncate_html.tpl
-  test_tpl_fetch.tpl
-  test_tpl_meta_call.tpl
-  test_zone_cache.tpl
-  test_zone_cache_meta.tpl
-  test_zone_cache_meta_deep2.tpl
+  __ALL__
 cd testapp/modules/jelix_tests/controllers
   urlsig.classic.php
   jstests.classic.php
   jstests.jsonrpc.php
   myrest.classic.php
 cd testapp/modules/jelix_tests/daos
-  products.dao.xml
-  products_events.dao.xml
-  product_tags.dao.xml
-  description.dao.xml
-  labels.dao.xml
-  labels1.dao.xml
-  post.daorecord.php
-  postBlog.daorecord.php
-  postTracker.daorecord.php
-  post_blog.dao.xml
-  post_blog2.dao.xml
-  post_tracker.dao.xml
-  posts.dao.xml
+  __ALL__
 cd testapp/modules/jelix_tests/forms
   product.form.xml
   label.form.xml
@@ -280,62 +234,18 @@ cd testapp/tests-jelix/casperjs/tests
   configdao.js
   hellopage.js
 cd testapp/tests-jelix/jelix/acl/
-  jacl_main_apiTest.php
-  jacl_managerTest.php
-  jacl_users_and_groupsTest.php
-  jacl2_main_apiTest.php
-  jacl2_main_apicacheTest.php
-  jacl2_main_api_pgsqlTest.php
-  jacl2_managerTest.php
-  jacl2_users_groupsTest.php
-  jacl2.lib.php
+  __ALL__
 cd testapp/tests-jelix/jelix/auth/
   ldap_pluginTest.php
 cd testapp/tests-jelix/jelix/cache/
-  jcache.lib.php
-  jcache_dbTest.php
-  jcache_fileTest.php
-  jcache_memcacheTest.php
-  jcache_memcache22Test.php
-  jcache_redisTest.php
-  jcache_redis2Test.php
-  jcache_redis_extTest.php
-  jcache_redis_ext2Test.php
-  httpcacheTest.php
-  jzone_cacheTest.php
-  jcacheTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/core/
-  autoloaderTest.php
-  cliControllerTest.php
-  configautoloaderTest.php
-  configTest.php
-  jAppContextTest.php
-  moduleAutoloadTest.php
-  jLocaleTest.php
-  jLocaleLangCodeTest.php
-  jLogTest.php
-  restcontrollerTest.php
-  requestTest.php
-  selectors_actionTest.php
-  selectors_moduleTest.php
-  urlsParsingTest.php
-  urlsTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/soap/
   soapcontrollerTest.php
   soapclientTest.php
 cd testapp/tests-jelix/jelix/daos
-  jDaoImportTest.php
-  jdao_conditionsTest.php
-  jdao_eventsTest.php
-  jdao_main_apiTest.php
-  jdao_main_api_pdoTest.php
-  jdao_main_api.lib.php
-  jdao_parserTest.php
-  jdao_parser2Test.php
-  jdao_parser_updateTest.php
-  jdao_generatorTest.php
-  jdao_generator_selectTest.php
-  daotests.lib.php
+  __ALL__
 cd testapp/tests-jelix/jelix/events/
   eventsTest.php
 cd testapp/tests-jelix/jelix/installer/
@@ -364,66 +274,15 @@ cd testapp/tests-jelix/jelix/installer/app1/var/config/index/
 cd testapp/tests-jelix/jelix/prefs/
   jPrefTest.php
 cd testapp/tests-jelix/jelix/utils/
-  jClassesTest.php
-  jDatatypeTest.php
-  jDateTimeTest.php
-  jDurationTest.php
-  jFilterTest.php
-  jImageModifierTest.php
-  jIniFileModifierTest.php
-  jMailerTest.php
-  jRootUrlTest.php
-  minifyHTMLResponsePluginTest.php
-  profilesTest.php
-  versionComparatorTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/db/
-  jDb_profilesTest.php
-  jDb_sqliteTest.php
-  jDb_sqlite3Test.php
-  jdb_queriesTest.php
-  jdb_queries_with_pdoTest.php
-  jdb_queries_with_mysqliTest.php
-  jdb.lib.php
-  jdb_mysqlTest.php
-  jdb_mysqliTest.php
-  jdb_pgsqlTest.php
-  jdbschema_mysqlTest.php
-  jdbschema_pgsqlTest.php
-  jdbschema_sqlite3Test.php
-  jdbtoolsTest.php
-  jdbtools_mysqlTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/kvdb/
-  jkvdb_dbaTest.php
-  jkvdb_dbTest.php
-  jkvdb_fileTest.php
-  jkvdb_memcacheTest.php
-  jkvdb_redisTest.php
-  jkvdb_redis2Test.php
-  jkvdb_redis_extTest.php
-  jkvdb_redis_ext2Test.php
-  jkvdb.lib.php
+  __ALL__
 cd testapp/tests-jelix/jelix/forms/
-  jforms_check_dataTest.php
-  jforms_compilerTest.php
-  jforms_compiler_1_1Test.php
-  jforms_datasourcesTest.php
-  jforms_htmlbuilderTest.php
-  jforms_htmlbuilder2Test.php
-  jforms_htmllightbuilderTest.php
-  jforms_htmllightbuilder2Test.php
-  jforms_init_from_requestTest.php
-  jforms_modified_controlsTest.php
-  jforms_newhtmlbuilderTest.php
-  jforms_newhtmlbuilder2Test.php
-  jforms_sessionTest.php
-  jforms_with_daoTest.php
-  jforms_uploadTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix/tpl/
-  jtpl_compilerTest.php
-  jtpl_expressions_parsingTest.php
-  jtpl_fetchTest.php
-  jtpl_pluginsTest.php
-  jtpl_virtualTest.php
+  __ALL__
 cd testapp/tests-jelix/jelix-scripts/
   commandTest.php
 

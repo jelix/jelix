@@ -90,6 +90,7 @@ cd lib/jelix-modules/jacl2db
 * module.xml
   events.xml
 cd lib/jelix-modules/jacl2db/classes
+  jAcl2DbAdminCheckAuthorizations.class.php
   jAcl2DbAdminUIManager.class.php
   jAcl2DbAdminUIException.class.php
 !  jacl2db.listener.php
