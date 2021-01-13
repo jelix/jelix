@@ -30,6 +30,8 @@ services:
       MYSQL_DATABASE: testapp
       MYSQL_USER: test_user
       MYSQL_PASSWORD: jelix
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - default
   openldap:
@@ -85,4 +87,7 @@ services:
 volumes:
   pg_data:
     name: "jelix_${JLXBRANCH}_pg_data"
+  mysql_data:
+    name: "jelix_${JLXBRANCH}_mysql_data"
+
 
