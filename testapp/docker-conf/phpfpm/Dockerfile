@@ -1,14 +1,16 @@
 FROM debian:buster-slim
 
-ARG composer_version=2.0.3
+ARG composer_version=2.0.7
+ARG fpm_user_id=1000
+ARG fpm_group_id=1000
+ARG php_version=7.4
 
-ARG FPM_USER_ID=1000
-ARG FPM_GROUP_ID=1000
-ENV PHP_VERSION=7.4
+ENV PHP_VERSION=${php_version}
+
 
 RUN set -eux; \
 	apt-get update; \
-    apt-get -y install apt-transport-https lsb-release ca-certificates curl wget git; \
+    apt-get -y install apt-utils apt-transport-https lsb-release ca-certificates curl wget git; \
     wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg; \
     sh -c 'echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list'; \
     apt-get update;
@@ -21,7 +23,6 @@ RUN apt-get -y install \
     php${PHP_VERSION}-fpm \
     php${PHP_VERSION}-gd \
     php${PHP_VERSION}-intl \
-    php${PHP_VERSION}-json \
     php${PHP_VERSION}-ldap \
     php${PHP_VERSION}-mbstring \
     php${PHP_VERSION}-mysql \
@@ -30,7 +31,6 @@ RUN apt-get -y install \
     php${PHP_VERSION}-soap \
     php${PHP_VERSION}-sqlite3 \
     php${PHP_VERSION}-xml \
-    php${PHP_VERSION}-xmlrpc \
     php${PHP_VERSION}-zip \
     php-redis \
     ldap-utils \
@@ -42,7 +42,12 @@ RUN apt-get -y install \
     postgresql-client \
     mariadb-client \
     unzip \
-    ; apt-get clean
+    ; if [ "$PHP_VERSION" != "8.0" ]; then apt-get -y install \
+        php${PHP_VERSION}-json \
+        php${PHP_VERSION}-xmlrpc \
+    ; fi \
+    ; \
+    apt-get clean
 
 ## Install Composer
 RUN wget -O /bin/composer https://getcomposer.org/download/$composer_version/composer.phar \
@@ -52,9 +57,9 @@ RUN wget -O /bin/composer https://getcomposer.org/download/$composer_version/com
 RUN set -eux; \
     sed -i "/^display_errors =/c\display_errors = On" /etc/php/${PHP_VERSION}/fpm/php.ini; \
     sed -i "/^display_errors =/c\display_errors = On" /etc/php/${PHP_VERSION}/cli/php.ini; \
-    addgroup --gid $FPM_GROUP_ID grouptest; \
-    adduser --uid $FPM_USER_ID --gid $FPM_GROUP_ID usertest; \
-    ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm7; \
+    addgroup --gid $fpm_group_id grouptest; \
+    adduser --uid $fpm_user_id --gid $fpm_group_id usertest; \
+    ln -s /usr/sbin/php-fpm${PHP_VERSION} /usr/sbin/php-fpm; \
     mkdir -p /run/php/; \
     mkdir -p /etc/openldap/ /etc/ssl/ldap/; \
     chmod 755 /etc/openldap/ /etc/ssl/ldap/;
@@ -70,4 +75,4 @@ RUN chmod 755 /bin/entrypoint.sh /bin/appctl.sh
 
 WORKDIR /jelixapp/testapp/
 ENTRYPOINT ["/bin/entrypoint.sh"]
-CMD ["/usr/sbin/php-fpm7", "-F", "-O"]
+CMD ["/usr/sbin/php-fpm", "-F", "-O"]
