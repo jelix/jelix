@@ -123,7 +123,7 @@ class jCoordinator
             if (strpos($name, '.') !== false) {
                 continue;
             }
-            $conf = $this->getPluginConf($name);
+            $conf = self::getPluginConf($name);
             include_once $config->_pluginsPathList_coord[$name].$name.'.coord.php';
             $class = $name.'CoordPlugin';
             // if the plugin is registered as a replacement of an other plugin
@@ -331,11 +331,12 @@ class jCoordinator
     }
 
     /**
-     * Create a response object to show an HTTP error (404, 403...)
+     * Create a response object to show an HTTP error (404, 403...).
      *
-     * @param integer $httpCode the http code
-     * @param string $httpMessage the http message
+     * @param int    $httpCode     the http code
+     * @param string $httpMessage  the http message
      * @param string $errorDetails reason or details of the error
+     *
      * @return jResponseHtml|jResponseText
      */
     public function getHttpErrorResponse($httpCode, $httpMessage, $errorDetails)
@@ -344,13 +345,13 @@ class jCoordinator
         if (!$this->request->isAjax() && $htmlOk) {
             try {
                 $response = $this->request->getResponse('htmlerror');
-            }
-            catch(\Exception $e) {
+            } catch (\Exception $e) {
                 $response = null;
             }
             if ($response && $response instanceof jResponseHtml) {
                 $response->body->assign('httpErrorDetails', $errorDetails);
                 $response->setHttpStatus($httpCode, $httpMessage);
+
                 return $response;
             }
         }
@@ -359,6 +360,7 @@ class jCoordinator
         $response = new jResponseText();
         $response->content = $httpMessage."\n".$errorDetails;
         $response->setHttpStatus($httpCode, $httpMessage);
+
         return $response;
     }
 
@@ -526,10 +528,16 @@ class jCoordinator
      *
      * @return array the configuration. May be empty if the plugin is unknown
      */
-    protected function getPluginConf($pluginName)
+    public static function getPluginConf($pluginName)
     {
         $config = jApp::config();
         if (!isset($config->coordplugins[$pluginName])) {
+            foreach ($config->coordplugins as $key => $value) {
+                if (preg_match('/(.+)\\.name$/', $key, $m) && $value == $pluginName) {
+                    return self::getPluginConf($m[1]);
+                }
+            }
+
             return array();
         }
 
@@ -553,7 +561,7 @@ class jCoordinator
             // by the config compiler, and is now a relative path to the app
             $pluginConfFile = jApp::appPath($conf);
             if (($pluginConf2 = parse_ini_file($pluginConfFile, true, INI_SCANNER_TYPED)) === false) {
-                throw new Exception("Error in a plugin configuration file -- plugin: ${pluginName}  file: ${pluginConfFile}", 13);
+                throw new Exception("Error in a plugin configuration file -- plugin: {$pluginName}  file: {$pluginConfFile}", 13);
             }
 
             if (isset($config->coordplugins[$pluginName.'.mergeconfig']) &&

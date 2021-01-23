@@ -21,12 +21,12 @@ interface jIAcl2Driver
 {
     /**
      * Says if there is a right on the given right (and on the optional resource)
-     * for the current user
+     * for the current user.
      *
-     * @param string $right  the key of the right
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      *
-     * @return boolean true if the right exists
+     * @return bool true if the right exists
      */
     public function getRight($right, $resource = null);
 

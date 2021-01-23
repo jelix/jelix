@@ -256,7 +256,7 @@ class groupsCtrl extends jController
 
         try {
             $manager = new jAcl2DbAdminUIManager();
-            $manager->removeGroup($this->param('group'));
+            $manager->removeGroup($this->param('group_id'), jAuth::getUserSession()->login);
             jMessage::add(jLocale::get('acl2.message.group.delete.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'group.delete');

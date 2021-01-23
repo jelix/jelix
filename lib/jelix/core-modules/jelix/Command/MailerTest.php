@@ -2,13 +2,14 @@
 /**
  * @package    jelix-modules
  * @subpackage jelix-module
- * @author       Laurent Jouanneau
  *
+ * @author       Laurent Jouanneau
  * @copyright    2020 Laurent Jouanneau
  *
- * @link         https://jelix.org
+ * @see         https://jelix.org
  * @licence      http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
+
 namespace Jelix\JelixModule\Command;
 
 use Symfony\Component\Console\Input\InputArgument;
@@ -16,7 +17,10 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * controller to test email configuration
+ * controller to test email configuration.
+ *
+ * @internal
+ * @coversNothing
  */
 class MailerTest extends \Jelix\Scripts\ModuleCommandAbstract
 {
@@ -69,11 +73,13 @@ class MailerTest extends \Jelix\Scripts\ModuleCommandAbstract
         $body = $tpl->fetch('jelix~email_test');
         $mail->msgHTML($body, '', array($mail, 'html2textKeepLinkSafe'));
         if (!$mail->Send()) {
-            $output->writeln("It seems something goes wrong during the message sending.");
+            $output->writeln('It seems something goes wrong during the message sending.');
+
             return 1;
         }
 
-        $output->writeln("Message has been sent.");
+        $output->writeln('Message has been sent.');
+
         return 0;
     }
 }

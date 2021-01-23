@@ -35,7 +35,7 @@ class pgsqlDbTable extends jDbTable
 
         $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod,
                 FORMAT_TYPE(a.atttypid, a.atttypmod) AS type,
-                $adColName, co.contype AS primary, co.conname
+                {$adColName}, co.contype AS primary, co.conname
             FROM pg_attribute AS a
             JOIN pg_class AS c ON a.attrelid = c.oid
             LEFT OUTER JOIN pg_constraint AS co

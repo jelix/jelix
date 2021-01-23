@@ -72,6 +72,7 @@ class jAcl2DbUserGroup
         $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
         if ($login === null) {
             self::$groups = null;
+
             return array();
         }
 

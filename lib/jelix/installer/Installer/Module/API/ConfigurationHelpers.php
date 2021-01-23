@@ -155,8 +155,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             if (!file_exists(\jApp::scriptsPath($epFile))) {
                 $this->copyFile($entryPointModelFile, \jApp::scriptsPath($epFile));
             }
-        }
-        else {
+        } else {
             if (!file_exists(\jApp::wwwPath($epFile))) {
                 $this->copyFile($entryPointModelFile, \jApp::wwwPath($epFile));
             }

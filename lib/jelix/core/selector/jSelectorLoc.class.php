@@ -82,11 +82,12 @@ class jSelectorLoc extends jSelectorModule
         $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
+            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/locales/'.$this->locale.'/'.$this->resource.$this->_suffix);
             $resolutionCachePath = 'resolved/';
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_where = $resolutionCachePath;
+
                 return;
             }
             jFile::createDir(dirname($resolutionPath));
@@ -98,6 +99,7 @@ class jSelectorLoc extends jSelectorModule
             foreach ($locales as $locale) {
                 if ($this->findPath($locale)) {
                     $found = true;
+
                     break;
                 }
             }
@@ -113,6 +115,7 @@ class jSelectorLoc extends jSelectorModule
                     $l = null;
                     $c = null;
                 }
+
                 throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
             }
         }
@@ -123,7 +126,8 @@ class jSelectorLoc extends jSelectorModule
         }
     }
 
-    protected function findPath($locale) {
+    protected function findPath($locale)
+    {
         // check if the locale has been overloaded in var/
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {
@@ -168,6 +172,7 @@ class jSelectorLoc extends jSelectorModule
 
             return true;
         }
+
         return false;
     }
 

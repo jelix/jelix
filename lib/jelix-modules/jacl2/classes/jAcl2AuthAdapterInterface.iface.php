@@ -11,19 +11,19 @@
  */
 
 /**
- * Interface for authentication adapters for jAcl2
+ * Interface for authentication adapters for jAcl2.
+ *
  * @since 1.7.6
  */
 interface jAcl2AuthAdapterInterface
 {
-
     /**
      * @return bool true if the current user is authenticated
      */
     public function isUserConnected();
 
     /**
-     * @return string|null the login or null if the user is not connected
+     * @return null|string the login or null if the user is not connected
      */
     public function getCurrentUserLogin();
 }

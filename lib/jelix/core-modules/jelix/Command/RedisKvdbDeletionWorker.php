@@ -66,7 +66,7 @@ class RedisKvdbDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract
                 continue;
             }
             if ($output->isVerbose()) {
-                $output->writeln("flush ${prefixKey}");
+                $output->writeln("flush {$prefixKey}");
             }
             $redis->flushByPrefix($prefixKey);
         }

@@ -11,24 +11,26 @@
  */
 
 /**
- * Adapter to jAuth for jAcl2
+ * Adapter to jAuth for jAcl2.
+ *
  * @since 1.7.6
  */
 class jAcl2JAuthAdapter implements jAcl2AuthAdapterInterface
 {
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function getCurrentUserLogin()
     {
         if (jAuth::isConnected()) {
             return jAuth::getUserSession()->login;
         }
+
         return null;
     }
 
     /**
-     * @inheritDoc
+     * {@inheritdoc}
      */
     public function isUserConnected()
     {

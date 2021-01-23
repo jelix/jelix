@@ -1,9 +1,10 @@
 <?php
 /**
- *
  * @author      Adrien Lagroy de Croutte
  * @contributor
+ *
  * @copyright   2020 Adrien Lagroy de Croutte
+ *
  * @see         https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
@@ -15,16 +16,14 @@
  */
 class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
-
-    public function outputMetaContent($resp) {
-
+    public function outputMetaContent($resp)
+    {
         $confTime = &jApp::config()->timepickers;
         $datepicker_default_config = jApp::config()->forms['timepicker'];
 
-        if (isset($this->ctrl->timepickerConfig)  && $this->ctrl->timepickerConfig) {
+        if (isset($this->ctrl->timepickerConfig) && $this->ctrl->timepickerConfig) {
             $config = $this->ctrl->timepickerConfig;
-        }
-        else {
+        } else {
             $config = $datepicker_default_config;
         }
 
@@ -34,7 +33,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         if (isset($confTime[$config.'.js'])) {
             $js = $confTime[$config.'.js'];
-            foreach($js as $file) {
+            foreach ($js as $file) {
                 $file = str_replace('$lang', jLocale::getCurrentLang(), $file);
                 $resp->addJSLink($file);
             }
@@ -45,12 +44,11 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         if (isset($confTime[$config.'.css'])) {
             $css = $confTime[$config.'.css'];
-            foreach($css as $file) {
+            foreach ($css as $file) {
                 $resp->addCSSLink($file);
             }
         }
     }
-
 
     protected function outputJs()
     {

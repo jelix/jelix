@@ -13,9 +13,6 @@
  */
 require_once __DIR__.'/sqlsrv.dbresultset.php';
 
-/**
- *
- */
 class sqlsrvDbConnection extends jDbConnection
 {
     /**
@@ -58,12 +55,14 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * tell sqlsrv to be implicit commit or not
-     * @param boolean $state the state of the autocommit value
-     * @return void
+     * tell sqlsrv to be implicit commit or not.
+     *
+     * @param bool $state the state of the autocommit value
+     *
      *  @see https://docs.microsoft.com/en-us/sql/t-sql/statements/set-implicit-transactions-transact-sql?view=sql-server-ver15
      */
-    protected function _autoCommitNotify ($state){
+    protected function _autoCommitNotify($state)
+    {
         if ($state) {
             // per doc: When OFF, each of the preceding T-SQL statements is
             // bounded by an unseen BEGIN TRANSACTION and an unseen COMMIT
@@ -91,9 +90,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * initialize the connection to the database.
-     *
-     * @see lib/jelix/db/jDbConnection#_connect()
+     * @inheritdoc
      */
     protected function _connect()
     {
@@ -119,9 +116,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * 	close the connection to the database.
-     *
-     * @see lib/jelix/db/jDbConnection#_disconnect()
+     * @inheritdoc
      */
     protected function _disconnect()
     {
@@ -129,13 +124,9 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * 	execute an SQL instruction.
-     *
-     * @see lib/jelix/db/jDbConnection#_doQuery()
-     *
-     * @param mixed $query
+     * @inheritdoc
      */
-    protected function _doQuery ($query)
+    protected function _doQuery($query)
     {
         if (preg_match('/^\s*EXEC\s+/i', $query)) {
             $stmt = sqlsrv_query($this->_connection, $query);
@@ -144,13 +135,14 @@ class sqlsrvDbConnection extends jDbConnection
         }
 
         if ($stmt) {
-            return new sqlsrvDbResultSet ($stmt);
+            return new sqlsrvDbResultSet($stmt);
         }
-        throw new jException('jelix~db.error.query.bad',  $this->_getErrorMsg());
+
+        throw new jException('jelix~db.error.query.bad', $this->_getErrorMsg());
     }
 
     /**
-     * @see lib/jelix/db/jDbConnection#_doExec()
+     * @see jDbConnection::_doExec()
      *
      * @param mixed $query
      */
@@ -166,24 +158,19 @@ class sqlsrvDbConnection extends jDbConnection
         throw new jException('jelix~db.error.query.bad', $this->_getErrorMsg());
     }
 
-    protected function _getErrorMsg() {
+    protected function _getErrorMsg()
+    {
         $errors = sqlsrv_errors();
         $msg = '';
-        foreach($errors as $error) {
-            $msg .= '['.$error[ 'SQLSTATE'].'] '.$error[ 'code'].': '.$error[ 'message']."\n";
+        foreach ($errors as $error) {
+            $msg .= '['.$error['SQLSTATE'].'] '.$error['code'].': '.$error['message']."\n";
         }
+
         return $msg;
     }
 
     /**
-     * @param string $queryString
-     * @param int $offset
-     * @param int $number
-     * @see lib/jelix/db/jDbConnection#_doLimitQuery()
-     *
-     * @param mixed $queryString
-     * @param mixed $offset
-     * @param mixed $number
+     * @inheritdoc
      */
     protected function _doLimitQuery($queryString, $offset, $number)
     {
@@ -242,7 +229,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @see lib/jelix/db/jDbConnection#lastInsertId()
+     * @see jDbConnection::lastInsertId()
      *
      * @param mixed $fromSequence
      *

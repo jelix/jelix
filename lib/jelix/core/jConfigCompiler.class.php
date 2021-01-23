@@ -81,7 +81,7 @@ class jConfigCompiler
         @jelix_read_ini(jApp::mainConfigFile(), $config);
 
         if (!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
-            throw new Exception("Configuration file of the entrypoint is missing -- ${configFile}", 5);
+            throw new Exception("Configuration file of the entrypoint is missing -- {$configFile}", 5);
         }
 
         // read the static configuration specific to the entry point
@@ -92,7 +92,7 @@ class jConfigCompiler
         // read the configuration of the entry point
         if (file_exists($appSystemPath.$configFile)) {
             if (@jelix_read_ini($appSystemPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
-                throw new Exception("Syntax error in the configuration file -- ${configFile}", 6);
+                throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
 
@@ -104,7 +104,7 @@ class jConfigCompiler
         // read the local configuration of the entry point
         if (file_exists($varConfigPath.$configFile)) {
             if (@jelix_read_ini($varConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
-                throw new Exception("Syntax error in the configuration file -- ${configFile}", 6);
+                throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
 
@@ -154,27 +154,29 @@ class jConfigCompiler
     }
 
     /**
-     * return the path of file where to store the cache of the configuration
+     * return the path of file where to store the cache of the configuration.
+     *
      * @param string $configFile the name of the configuration file of the entry
-     * point into var/config/
+     *                           point into var/config/
+     *
      * @return string the full path of the cache
+     *
      * @since 1.6.26
      */
-    static public function getCacheFilename($configFile)
+    public static function getCacheFilename($configFile)
     {
-        $filename = jApp::tempPath().str_replace('/','~',$configFile);
+        $filename = jApp::tempPath().str_replace('/', '~', $configFile);
         if (isset($_SERVER['HTTP_HOST'])) {
             $filename .= '.'.str_replace(':', '-', $_SERVER['HTTP_HOST']);
-        }
-        elseif (isset($_SERVER['SERVER_NAME'])) {
+        } elseif (isset($_SERVER['SERVER_NAME'])) {
             $filename .= '.'.$_SERVER['SERVER_NAME'];
         }
         if (BYTECODE_CACHE_EXISTS) {
             $filename .= '.conf.php';
-        }
-        else {
+        } else {
             $filename .= '.resultini.php';
         }
+
         return $filename;
     }
 
@@ -231,7 +233,7 @@ class jConfigCompiler
                 continue;
             }
             if (!isset($config->_pluginsPathList_coord[$name])) {
-                throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin ${name} is unknown.", 7);
+                throw new Exception("Error in the main configuration. A plugin doesn't exist -- The coord plugin {$name} is unknown.", 7);
             }
             if ($conf) {
                 $coordplugins[$name] = self::getCoordPluginConfValue($name, $conf);
@@ -248,7 +250,7 @@ class jConfigCompiler
             if (!file_exists($confFile)) {
                 $confFile = jApp::varConfigPath($conf);
                 if (!file_exists($confFile)) {
-                    throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin ${name} doesn't exist: '${confFile}'", 8);
+                    throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin {$name} doesn't exist: '{$confFile}'", 8);
                 }
             }
             // let's get relative path to the app
@@ -281,7 +283,12 @@ class jConfigCompiler
         }
 
         // sort plugins by priority
-        usort($plugins, function ($a, $b) { return $a->getPriority() < $b->getPriority(); });
+        usort($plugins, function ($a, $b) {
+            if ($a->getPriority() == $b->getPriority()) {
+                return 0;
+            }
+            return ($a->getPriority() < $b->getPriority()) ? -1 : 1;
+        });
 
         // run plugins
         foreach ($plugins as $plugin) {
@@ -476,9 +483,15 @@ class jConfigCompiler
                 $urlconf['urlScriptPath'] = getcwd().'/'.substr($urlconf['urlScript'], 0, $lastslash).'/';
                 $urlconf['urlScriptName'] = substr($urlconf['urlScript'], $lastslash + 1);
             }
-            $basepath = $urlconf['urlScriptPath'];
+
             $snp = $urlconf['urlScriptName'];
-            $urlconf['urlScript'] = $basepath.$snp;
+            $urlconf['urlScript'] = $urlconf['urlScriptPath'].$snp;
+
+            if ($urlconf['basePath'] == '') {
+                // we should have a basePath when generating url from a command line
+                // script. We cannot guess the url base path so we use a default value
+                $urlconf['basePath'] = '/';
+            }
         } else {
             $lastslash = strrpos($urlconf['urlScript'], '/');
             $urlconf['urlScriptPath'] = substr($urlconf['urlScript'], 0, $lastslash).'/';
@@ -555,7 +568,7 @@ class jConfigCompiler
         $urlconf['urlScriptIdenc'] = rawurlencode($snp);
 
         // fix compatibility with previous name of notFoundAct
-        if(isset($urlconf['notfoundAct'])) {
+        if (isset($urlconf['notfoundAct'])) {
             $urlconf['notFoundAct'] = $urlconf['notfoundAct'];
         }
     }
@@ -568,11 +581,11 @@ class jConfigCompiler
            || $isCli) {
             return 'SCRIPT_NAME';
         }
-         if (isset($_SERVER['REDIRECT_URL'])
+        if (isset($_SERVER['REDIRECT_URL'])
                   && strrpos($_SERVER['REDIRECT_URL'], $ext) === (strlen($_SERVER['REDIRECT_URL']) - $extlen)) {
             return 'REDIRECT_URL';
         }
-         if (isset($_SERVER['ORIG_SCRIPT_NAME'])
+        if (isset($_SERVER['ORIG_SCRIPT_NAME'])
                   && strrpos($_SERVER['ORIG_SCRIPT_NAME'], $ext) === (strlen($_SERVER['ORIG_SCRIPT_NAME']) - $extlen)) {
             return 'ORIG_SCRIPT_NAME';
         }

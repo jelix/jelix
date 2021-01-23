@@ -44,7 +44,7 @@ class UserRegister extends \Jelix\Scripts\ModuleCommandAbstract
         $loginq = $cnx->quote($login);
 
         $sql = 'SELECT * FROM '.$cnx->prefixTable('jacl2_user_group')
-            ." WHERE login = ${loginq}";
+            ." WHERE login = {$loginq}";
         $rs = $cnx->query($sql);
         if ($rec = $rs->fetch()) {
             throw new \Exception('the user is already registered');
@@ -62,7 +62,7 @@ class UserRegister extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($output->isVerbose()) {
-            $output->writeln("user ${login} is added into rights system and has a private group ${groupid}");
+            $output->writeln("user {$login} is added into rights system and has a private group {$groupid}");
         }
     }
 }

@@ -15,6 +15,7 @@
 /**
  * @package    jelix
  * @subpackage db_driver
+ *
  * @deprecated
  */
 class mssqlDbTable extends jDbTable

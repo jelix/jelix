@@ -55,22 +55,22 @@ class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $maxv = $ctrl->datatype->getFacet('maxValue');
         if ($maxv !== null) {
-            $js .= "c.maxValue = '${maxv}';\n";
+            $js .= "c.maxValue = '{$maxv}';\n";
         }
 
         $minv = $ctrl->datatype->getFacet('minValue');
         if ($minv !== null) {
-            $js .= "c.minValue = '${minv}';\n";
+            $js .= "c.minValue = '{$minv}';\n";
         }
 
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if ($maxl !== null) {
-            $js .= "c.maxLength = '${maxl}';\n";
+            $js .= "c.maxLength = '{$maxl}';\n";
         }
 
         $minl = $ctrl->datatype->getFacet('minLength');
         if ($minl !== null) {
-            $js .= "c.minLength = '${minl}';\n";
+            $js .= "c.minLength = '{$minl}';\n";
         }
         $re = $ctrl->datatype->getFacet('pattern');
         if ($re !== null) {

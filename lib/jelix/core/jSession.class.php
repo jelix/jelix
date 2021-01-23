@@ -42,7 +42,7 @@ class jSession
             'path' => '/',
             'secure' => $params['cookieSecure'], // true to send the cookie only on a secure channel
             'httponly' => $params['cookieHttpOnly'],
-            'lifetime' => $params['cookieLifetime']
+            'lifetime' => $params['cookieLifetime'],
         );
 
         if (!$params['shared_session']) {
@@ -52,8 +52,7 @@ class jSession
 
         if (PHP_VERSION_ID < 70300) {
             session_set_cookie_params($cookieOptions['lifetime'], $cookieOptions['path'], '', $cookieOptions['secure'], $cookieOptions['httponly']);
-        }
-        else {
+        } else {
             if ($params['cookieSameSite'] != '') {
                 $cookieOptions['samesite'] = $params['cookieSameSite'];
             }

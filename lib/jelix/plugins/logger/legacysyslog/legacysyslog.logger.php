@@ -21,12 +21,12 @@ class legacysyslogLogger implements jILogger
     public function logMessage($message)
     {
         $type = $message->getCategory();
-        if (jApp::coord()->request) {
+        if (jApp::coord() && jApp::coord()->request) {
             $ip = jApp::coord()->request->getIP();
         } else {
             $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         }
-        error_log(date('Y-m-d H:i:s')."\t".$ip."\t${type}\t".$message->getFormatedMessage(), 0);
+        error_log(date('Y-m-d H:i:s')."\t".$ip."\t{$type}\t".$message->getFormatedMessage(), 0);
     }
 
     public function output($response)

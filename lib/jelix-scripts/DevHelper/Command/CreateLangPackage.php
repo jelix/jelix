@@ -76,7 +76,7 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp
                         && !file_exists($target_dir.$fich)) {
                         copy($source_dir.$fich, $target_dir.$fich);
                         if ($this->verbose()) {
-                            $output->writeln("Copy Locales file ${fich} from ${source_dir} to ${target_dir}.");
+                            $output->writeln("Copy Locales file {$fich} from {$source_dir} to {$target_dir}.");
                         }
                     }
                 }

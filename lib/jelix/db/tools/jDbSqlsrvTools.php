@@ -195,11 +195,11 @@ class jDbSqlsrvTools extends jDbTools
         return 'datepart('.$parametersString.')';
     }
 
-
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
-    public function encloseName ($fieldName) {
+    public function encloseName($fieldName)
+    {
         return '['.$fieldName.']';
     }
 

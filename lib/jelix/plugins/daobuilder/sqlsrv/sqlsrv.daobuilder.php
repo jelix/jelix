@@ -28,5 +28,4 @@ class sqlsrvDaoBuilder extends jDaoGenerator
     {
         return '['.$name.']';
     }
-
 }

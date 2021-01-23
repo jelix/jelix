@@ -50,11 +50,12 @@ class jSelectorForm extends jSelectorModule
         $resolutionInCache = jApp::config()->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/'.$this->_dirname.$this->resource.$this->_suffix);
+            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
             $resolutionCachePath = 'resolved/';
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_where = $resolutionCachePath;
+
                 return;
             }
             jFile::createDir(dirname($resolutionPath));
@@ -69,7 +70,8 @@ class jSelectorForm extends jSelectorModule
         }
     }
 
-    protected function findPath() {
+    protected function findPath()
+    {
 
         // we see if the forms have been redefined in var/
         $overloadedPath = jApp::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);

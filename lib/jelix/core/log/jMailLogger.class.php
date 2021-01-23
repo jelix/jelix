@@ -16,7 +16,7 @@
 class jMailLogger implements jILogger
 {
     /**
-     *  @var array messages to send
+     *  @var jILogMessage[] messages to send
      */
     protected $messages = array();
 
@@ -33,10 +33,6 @@ class jMailLogger implements jILogger
      */
     public function output($response)
     {
-        if (!jApp::coord()->request) {
-            return;
-        }
-
         $email = jApp::config()->mailLogger['email'];
         $headers = str_replace(array('\\r', '\\n'), array("\r", "\n"), jApp::config()->mailLogger['emailHeaders']);
         $message = '';

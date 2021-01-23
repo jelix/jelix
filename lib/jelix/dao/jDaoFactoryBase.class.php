@@ -214,6 +214,7 @@ abstract class jDaoFactoryBase
         /** @var jDaoRecordBase $rec */
         $rec = new $c();
         $rec->setDbProfile($this->_conn->getProfileName());
+
         return $rec;
     }
 
@@ -337,9 +338,8 @@ abstract class jDaoFactoryBase
      * jDaoConditions object.
      * you can limit the number of results by given an offset and a count.
      *
-     * @param jDaoConditions $searchcond
-     * @param int            $limitOffset
-     * @param int            $limitCount
+     * @param int $limitOffset
+     * @param int $limitCount
      *
      * @return jDbResultSet
      */

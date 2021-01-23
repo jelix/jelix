@@ -91,7 +91,7 @@ class jCoordinatorDebug extends jCoordinator
             }
             jLog::dump($pluginparams, 'process: plugin params');
             foreach ($this->plugins as $name => $obj) {
-                jLog::log("process: beforeAction on plugin ${name}");
+                jLog::log("process: beforeAction on plugin {$name}");
                 $result = $this->plugins[$name]->beforeAction($pluginparams);
                 if ($result) {
                     $this->action = $result;

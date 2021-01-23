@@ -689,6 +689,7 @@ class sqlite3DbSchema extends jDbSchema
             }
         } catch (Exception $e) {
             $conn->rollback();
+
             throw $e;
         }
     }
@@ -801,9 +802,12 @@ class sqlite3DbSchema extends jDbSchema
     }
 
     /**
-     * @param jDbColumn $col the column
+     * @param jDbColumn $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
      */
-    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
+    {
         if ($col->autoIncrement && $col->nativeType == 'integer') {
             if ($isPrimaryKey && $isSinglePrimaryKey) {
                 return ' AUTOINCREMENT';
@@ -815,6 +819,7 @@ class sqlite3DbSchema extends jDbSchema
             // if we set AUTOINCREMENT, it also prevents to remove the "PRIMARY KEY"
             // constraint
         }
+
         return '';
     }
 }

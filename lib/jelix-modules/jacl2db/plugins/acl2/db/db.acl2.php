@@ -18,15 +18,12 @@
  */
 class dbAcl2Driver implements jIAcl2Driver2
 {
-    /**
-     *
-     */
     public function __construct()
     {
     }
 
     protected static $aclres = array();
-    protected static $acl =  array();
+    protected static $acl = array();
     protected static $anonaclres = array();
     protected static $anonacl = null;
 
@@ -48,6 +45,7 @@ class dbAcl2Driver implements jIAcl2Driver2
         if ($login === null) {
             return $this->getAnonymousRight($subject, $resource);
         }
+
         return $this->getRightByUser($login, $subject, $resource);
     }
 
@@ -58,11 +56,13 @@ class dbAcl2Driver implements jIAcl2Driver2
      * It means that if you give a specific resource, it will be ignored if there is a positive right
      * with "-". The right on the given resource will be checked if there is no rights for "-".
      *
-     * @param string $subject the key of the subject
+     * @param string $subject  the key of the subject
      * @param string $resource the id of a resource
-     * @return boolean true if the user has the right on the given subject
+     * @param mixed  $login
+     *
+     * @return bool true if the user has the right on the given subject
      */
-    public function getRightByUser($login, $subject, $resource='-')
+    public function getRightByUser($login, $subject, $resource = '-')
     {
         if (empty($resource)) {
             $resource = '-';
@@ -88,7 +88,7 @@ class dbAcl2Driver implements jIAcl2Driver2
                             self::$acl[$login][$rec->id_aclsbj] = false;
                         }
                     } else {
-                        self::$acl[$login][$rec->id_aclsbj] = ($rec->canceled?false:true);
+                        self::$acl[$login][$rec->id_aclsbj] = ($rec->canceled ? false : true);
                     }
                 }
             }
@@ -119,10 +119,12 @@ class dbAcl2Driver implements jIAcl2Driver2
             if (count($groups)) {
                 $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
                 $right = $dao->getRightWithRes($subject, $groups, $resource);
-                self::$aclres[$login][$subject][$resource] = ($right != false ? ($right->canceled?false:true) : false);
+                self::$aclres[$login][$subject][$resource] = ($right != false ? ($right->canceled ? false : true) : false);
             }
+
             return self::$aclres[$login][$subject][$resource];
         }
+
         return true;
     }
 

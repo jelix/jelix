@@ -10,7 +10,6 @@
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
-
 class usersCtrl extends jController
 {
     public $pluginParams = array(
@@ -210,7 +209,7 @@ class usersCtrl extends jController
 
             try {
                 $manager = new jAcl2DbAdminUIManager();
-                $manager->removeUserFromGroup($login, $this->param('grpid'));
+                $manager->removeUserFromGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
             } catch (jAcl2DbAdminUIException $e) {
                 $this->checkException($e, 'removeuserfromgroup');
             }
@@ -232,7 +231,7 @@ class usersCtrl extends jController
 
             try {
                 $manager = new jAcl2DbAdminUIManager();
-                $manager->addUserToGroup($login, $this->param('grpid'));
+                $manager->addUserToGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
             } catch (jAcl2DbAdminUIException $e) {
                 $this->checkException($e, 'addusertogroup');
             }

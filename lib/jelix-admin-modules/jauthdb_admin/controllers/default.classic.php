@@ -4,7 +4,7 @@
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2019 Laurent Jouanneau
+ * @copyright 2009-2021 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -18,18 +18,20 @@ class defaultCtrl extends jController
 {
     public $sensitiveParameters = array('password', 'password_confirm', 'pwd', 'pwd_confirm');
 
-    public $pluginParams = array(
-        'index' => array('jacl2.right' => 'auth.users.list'),
-        'view' => array('jacl2.right' => 'auth.users.view'),
-        'precreate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
-        'create' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
-        'savecreate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
-        'preupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
-        'editupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
-        'saveupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
-        'deleteconfirm' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.delete')),
-        'delete' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.delete')),
+    public $pluginParams=array(
+        'index'        =>array('jacl2.right' => 'auth.users.list'),
+        'autocomplete' =>array('jacl2.right' => 'auth.users.list'),
+        'view'         =>array('jacl2.right' => 'auth.users.view'),
+        'precreate'    =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
+        'create'       =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
+        'savecreate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
+        'preupdate'    =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
+        'editupdate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
+        'saveupdate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
+        'deleteconfirm'=>array('jacl2.rights.and' => array('auth.users.view','auth.users.delete')),
+        'delete'       =>array('jacl2.rights.and' => array('auth.users.view','auth.users.delete')),
     );
+
     /**
      * selector of the dao to use for the crud.
      *
@@ -96,6 +98,7 @@ class defaultCtrl extends jController
         if ($this->form == '') {
             $rep->body->assign('MAIN', 'no form defined in the auth plugin');
             $rep->setHttpStatus(500, 'Internal Server Error');
+
             return $rep;
         }
 
@@ -203,7 +206,7 @@ class defaultCtrl extends jController
         $tpl->assign('otherLinks', array());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminGetViewInfo',
-            array('form'=>$form, 'tpl'=>$tpl, 'himself'=>false)
+            array('form' => $form, 'tpl' => $tpl, 'himself' => false)
         )->getResponse());
         $form->deactivate('password');
         $form->deactivate('password_confirm');
@@ -245,7 +248,8 @@ class defaultCtrl extends jController
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditCreate',
-            array('form' => $form, 'tpl' => $tpl))->getResponse());
+            array('form' => $form, 'tpl' => $tpl)
+        )->getResponse());
 
         $rep->body->assign('MAIN', $tpl->fetch('crud_edit'));
 
@@ -291,7 +295,7 @@ class defaultCtrl extends jController
             $form->saveAllFiles($this->uploadsDirectory);
 
             jAuth::saveNewUser($user);
-            jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user'=>$user));
+            jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user' => $user));
 
             jForms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
@@ -380,7 +384,8 @@ class defaultCtrl extends jController
         $tpl->assign('form', $form);
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditUpdate',
-            array('form' => $form, 'tpl' => $tpl, 'himself' => false))->getResponse());
+            array('form' => $form, 'tpl' => $tpl, 'himself' => false)
+        )->getResponse());
         $form->deactivate('password'); //for security
         $form->deactivate('password_confirm');
         $form->setReadOnly('login');
@@ -512,6 +517,32 @@ class defaultCtrl extends jController
             jMessage::add(jLocale::get('crud.message.delete.notok'), 'error');
             $rep->action = 'default:index';
         }
+
+        return $rep;
+    }
+
+    public function autocomplete()
+    {
+        $rep = $this->getResponse('json');
+        $term = $this->param('term');
+        if (strlen($term) < 2) {
+            $rep->data = array();
+
+            return $rep;
+        }
+
+        $dao = jDao::get($this->dao, $this->dbProfile);
+        $cond = jDao::createConditions();
+        $cond->addItemOrder('login', 'asc');
+        $list = $dao->findBy($cond);
+        $users = array();
+        foreach ($list as $prop) {
+            if (strstr($prop->login, $term) || $term === '') {
+                $users[] = $prop->login;
+            }
+        }
+        $rep->data = $users;
+
 
         return $rep;
     }

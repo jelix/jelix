@@ -30,6 +30,8 @@ services:
       MYSQL_DATABASE: testapp
       MYSQL_USER: test_user
       MYSQL_PASSWORD: jelix
+    volumes:
+      - mysql_data:/var/lib/mysql
     networks:
       - default
   openldap:
@@ -49,12 +51,16 @@ services:
     networks:
       - default
   php:
-    build: ./docker-conf/phpfpm
+    build:
+      context: ./docker-conf/phpfpm
+      args:
+        fpm_user_id: ${JELIX_USER_ID}
+        fpm_group_id: ${JELIX_GROUP_ID}
+        php_version: ${PHP_VERSION}
     container_name: jelix_${JLXBRANCH}_test_php
     environment:
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
       TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
-      PHP_VERSION: "${PHP_VERSION}"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"
@@ -85,4 +91,7 @@ services:
 volumes:
   pg_data:
     name: "jelix_${JLXBRANCH}_pg_data"
+  mysql_data:
+    name: "jelix_${JLXBRANCH}_mysql_data"
+
 

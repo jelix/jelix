@@ -139,7 +139,7 @@ abstract class WidgetBase implements WidgetInterface
     }
 
     public function outputMetaContent($resp)
-    { /* do nothing */
+    { // do nothing
     }
 
     /**
@@ -243,6 +243,7 @@ abstract class WidgetBase implements WidgetInterface
         } else {
             $jsContent .= 'c.errInvalid='.$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
+
         return $jsContent;
     }
 

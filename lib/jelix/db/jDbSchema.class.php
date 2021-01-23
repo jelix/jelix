@@ -222,7 +222,6 @@ abstract class jDbSchema
 
     abstract protected function _getTableInstance($name);
 
-
     /**
      * return the SQL string corresponding to the given column.
      * private method, should be used only by a jDbTable object.
@@ -272,11 +271,13 @@ abstract class jDbSchema
 
     /**
      * @param jDbColumn $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
      */
-    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey) {
+    protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
+    {
         return '';
     }
-
 
     /**
      * fill correctly some properties of the column, depending of its type

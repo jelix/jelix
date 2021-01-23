@@ -289,14 +289,14 @@ class jDbColumn
         $isAutoIncremented = false;
         if ($column->nativeType && $this->nativeType) {
             if ($column->nativeType != $this->nativeType) {
-                $isAutoIncremented =  ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
+                $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
                     ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
                 if (!$isAutoIncremented) {
                     return false;
                 }
             }
         } elseif ($this->type != $column->type) {
-            $isAutoIncremented =  ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
+            $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
                 ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
             if (!$isAutoIncremented) {
                 return false;
@@ -317,25 +317,27 @@ class jDbColumn
             $this->scale == $column->scale &&
             $this->unsigned == $column->unsigned
         ;
-
     }
 
     public function isAutoincrementedColumn()
     {
         if ($this->nativeType) {
-            return (
+            return
                 ($this->autoIncrement && (
-                        $this->nativeType == 'integer' ||
-                        $this->nativeType == 'int')
+                    $this->nativeType == 'integer' ||
+                        $this->nativeType == 'int'
+                )
                 ) ||
                 $this->nativeType == 'serial'
-            );
+            ;
         }
 
         if (
-            ($this->autoIncrement && (
-                    $this->type == 'integer' ||
-                    $this->type == 'int' )
+            (
+                $this->autoIncrement && (
+                $this->type == 'integer' ||
+                    $this->type == 'int'
+            )
             ) ||
             $this->type == 'serial' ||
             $this->type == 'autoincrement'
@@ -349,20 +351,23 @@ class jDbColumn
     public function isBigAutoincrementedColumn()
     {
         if ($this->nativeType) {
-            return (
+            return
                 ($this->autoIncrement && (
-                        $this->nativeType == 'bigint' ||
-                        $this->nativeType == 'numeric')
+                    $this->nativeType == 'bigint' ||
+                        $this->nativeType == 'numeric'
+                )
                 ) ||
                 $this->nativeType == 'bigserial'
-            );
+            ;
         }
 
         if (
-            ($this->autoIncrement && (
-                    $this->type == 'bigint' )
+            (
+                $this->autoIncrement && (
+                $this->type == 'bigint'
+            )
             ) ||
-            $this->type == 'bigserial'  ||
+            $this->type == 'bigserial' ||
             $this->type == 'bigautoincrement'
         ) {
             return true;

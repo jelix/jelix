@@ -149,8 +149,7 @@ class Installer
         if (is_array($modulesChains)) {
             $result = $this->_installModules($modulesChains);
             $this->globalSetup->getInstallerIni()->save();
-        }
-        else {
+        } else {
             $result = false;
         }
         $this->endMessage();

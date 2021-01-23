@@ -98,9 +98,9 @@ class RemoveRight extends AbstractAcl2Cmd
 
         if ($output->isVerbose()) {
             if ($allResource) {
-                $output->writeln("Right ${subject} have been deleted on group ${group} ");
+                $output->writeln("Right {$subject} have been deleted on group {$group} ");
             } else {
-                $output->writeln("Right ${subject} have been deleted on group ${group} and resource ${resource}");
+                $output->writeln("Right {$subject} have been deleted on group {$group} and resource {$resource}");
             }
         }
     }

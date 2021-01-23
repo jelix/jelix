@@ -71,7 +71,8 @@ class WebAssetsSelection
     }
 
     /**
-     * List of url and corresponding attributes for the script element
+     * List of url and corresponding attributes for the script element.
+     *
      * @return array[] list of array(url, attributes)
      */
     public function getJsLinks()
@@ -80,7 +81,8 @@ class WebAssetsSelection
     }
 
     /**
-     * List of url and corresponding attributes for the link element
+     * List of url and corresponding attributes for the link element.
+     *
      * @return array[] list of array(url, attributes)
      */
     public function getCssLinks()
@@ -94,23 +96,22 @@ class WebAssetsSelection
         if ($attributes) {
             $attrs = explode('|', $attributes);
             $attributes = array();
-            foreach($attrs as $attr) {
+            foreach ($attrs as $attr) {
                 $attr = explode('=', $attr);
                 if (count($attr) == 1) {
                     $attributes[$attr[0]] = true;
-                }
-                else {
+                } else {
                     $attributes[$attr[0]] = $attr[1];
                 }
             }
-        }
-        else {
+        } else {
             $attributes = array();
         }
 
         switch ($assetURLType) {
             case 'k': // relative path to base path
                 $url = $this->urlBasePath.$resource;
+
                 break;
             case 'b': // relative path to base path with lang/locale
                 $url = $this->urlBasePath.
@@ -119,14 +120,17 @@ class WebAssetsSelection
                         array($this->variables['$lang'], $this->variables['$locale']),
                         $resource
                     );
+
                 break;
             case 'a': // action
                 $url = \jUrl::get($resource);
+
                 break;
             case 'm': // resource file stored in a module
                 list($module, $src) = explode(':', $resource, 2);
 
                 $url = \jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+
                 break;
             case 't': // theme url with probably  lang/locale
                 $url = str_replace(
@@ -135,6 +139,7 @@ class WebAssetsSelection
                         $this->urlBasePath.$this->variables['$theme'], ),
                     $resource
                 );
+
                 break;
             case 'l': // absolute url with lang/locale/theme/jelix path
                 $url = str_replace(
@@ -142,6 +147,7 @@ class WebAssetsSelection
                     array($this->variables['$lang'], $this->variables['$locale']),
                     $resource
                 );
+
                 break;
             case 'u': // absolute url
             default:

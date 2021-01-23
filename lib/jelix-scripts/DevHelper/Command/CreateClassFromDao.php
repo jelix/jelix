@@ -67,7 +67,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
         $sourceDaoPath .= strtolower($daoname).'.dao.xml';
 
         if (!file_exists($sourceDaoPath)) {
-            throw new \Exception("The file ${sourceDaoPath} doesn't exist");
+            throw new \Exception("The file {$sourceDaoPath} doesn't exist");
         }
 
         $targetClassPath = $modulePath.'classes/';
@@ -85,9 +85,9 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
         }
         if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0') {
             throw new \jException(
-               'jelix~daoxml.namespace.wrong',
-               array($sourceDaoPath, $doc->namespaceURI)
-           );
+                'jelix~daoxml.namespace.wrong',
+                array($sourceDaoPath, $doc->namespaceURI)
+            );
         }
 
         require_once JELIX_LIB_PATH.'dao/jDaoParser.class.php';
@@ -99,7 +99,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
 
         $classContent = '';
         foreach ($properties as $name => $property) {
-            $classContent .= "    public \$${name};\n";
+            $classContent .= "    public \${$name};\n";
         }
         $this->createFile(
             $targetClassPath,

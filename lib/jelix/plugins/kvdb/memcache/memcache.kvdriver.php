@@ -265,7 +265,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) + $incvalue;
             if ($this->_connection->set($key, $val)) {
                 return $val;
@@ -295,7 +295,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) - $decvalue;
             if ($this->_connection->set($key, $val)) {
                 return $val;

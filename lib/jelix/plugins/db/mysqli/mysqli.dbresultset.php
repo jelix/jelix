@@ -112,7 +112,7 @@ class mysqliDbResultSet extends jDbResultSet
             } else {
                 $dataType = 's';
             }
-        } else if ($dataType != 'i'  && $dataType != 's' && $dataType != 'b' ) {
+        } elseif ($dataType != 'i' && $dataType != 's' && $dataType != 'b') {
             $dataType = 's';
         }
         $this->boundParameterTypes[$parameter] = $dataType;
@@ -164,7 +164,7 @@ class mysqliDbResultSet extends jDbResultSet
         $allParams = array('');
         foreach ($this->parameterNames as $k => $name) {
             if (!isset($parameters[$name])) {
-                throw new Exception("Execute: parameter '${name}' is missing from parameters");
+                throw new Exception("Execute: parameter '{$name}' is missing from parameters");
             }
             $allParams[0] .= $types[$name];
             $allParams[] = &$parameters[$name];

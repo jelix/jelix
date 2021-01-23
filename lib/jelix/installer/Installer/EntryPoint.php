@@ -78,11 +78,10 @@ class EntryPoint
     public $legacyInstallerEntryPoint;
 
     /**
-     * @param GlobalSetup $globalSetup
-     * @param string      $configFile  the path of the configuration file, relative
-     *                                 to the app/system directory
-     * @param string      $file        the filename of the entry point
-     * @param string      $type        type of the entry point ('classic', 'cli', 'xmlrpc'....)
+     * @param string $configFile the path of the configuration file, relative
+     *                           to the app/system directory
+     * @param string $file       the filename of the entry point
+     * @param string $type       type of the entry point ('classic', 'cli', 'xmlrpc'....)
      */
     public function __construct(
         GlobalSetup $globalSetup,

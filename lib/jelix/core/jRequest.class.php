@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler
  *
- * @copyright  2005-2017 Laurent Jouanneau, 2010 Yannick Le Guédart, 2016 Julien Issler
+ * @copyright  2005-2020 Laurent Jouanneau, 2010 Yannick Le Guédart, 2016 Julien Issler
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -343,20 +343,10 @@ abstract class jRequest
 
     /**
      * @return bool true if the request is made with HTTPS
-     *
-     * @todo support Forwarded and X-Forwared-Proto headers
      */
     public function isHttps()
     {
-        if (jApp::config()->urlengine['forceProxyProtocol'] == 'https') {
-            if (trim(jApp::config()->forceHTTPSPort) === '') {
-                jApp::config()->forceHTTPSPort = true;
-            }
-
-            return true;
-        }
-
-        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off';
+        return jServer::isHttps();
     }
 
     /**
@@ -400,21 +390,7 @@ abstract class jRequest
      */
     public function getDomainName()
     {
-        if (jApp::config()->domainName != '') {
-            return jApp::config()->domainName;
-        }
-        if (isset($_SERVER['HTTP_HOST'])) {
-            if (($pos = strpos($_SERVER['HTTP_HOST'], ':')) !== false) {
-                return substr($_SERVER['HTTP_HOST'], 0, $pos);
-            }
-
-            return $_SERVER['HTTP_HOST'];
-        }
-        if (isset($_SERVER['SERVER_NAME'])) {
-            return $_SERVER['SERVER_NAME'];
-        }
-
-        return '';
+        return jServer::getDomainName();
     }
 
     /**
@@ -428,16 +404,7 @@ abstract class jRequest
      */
     public function getServerURI($forceHttps = null)
     {
-        if (($forceHttps === null && $this->isHttps()) || $forceHttps) {
-            $uri = 'https://';
-        } else {
-            $uri = 'http://';
-        }
-
-        $uri .= $this->getDomainName();
-        $uri .= $this->getPort($forceHttps);
-
-        return $uri;
+        return jServer::getServerURI($forceHttps);
     }
 
     /**
@@ -451,32 +418,7 @@ abstract class jRequest
      */
     public function getPort($forceHttps = null)
     {
-        $isHttps = $this->isHttps();
-
-        if ($forceHttps === null) {
-            $https = $isHttps;
-        } else {
-            $https = $forceHttps;
-        }
-
-        $forcePort = ($https ? jApp::config()->forceHTTPSPort : jApp::config()->forceHTTPPort);
-        if ($forcePort === true || $forcePort === '1') {
-            return '';
-        }
-        if ($forcePort) { // a number
-            $port = $forcePort;
-        } elseif ($isHttps != $https || !isset($_SERVER['SERVER_PORT'])) {
-            // the asked protocol is different from the current protocol
-            // we use the standard port for the asked protocol
-            return '';
-        } else {
-            $port = $_SERVER['SERVER_PORT'];
-        }
-        if (($port === null) || ($port == '') || ($https && $port == '443') || (!$https && $port == '80')) {
-            return '';
-        }
-
-        return ':'.$port;
+        return jServer::getPort($forceHttps);
     }
 
     protected $_rawBody;

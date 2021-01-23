@@ -32,12 +32,12 @@ class captcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $maxl = $ctrl->datatype->getFacet('maxLength');
         if ($maxl !== null) {
-            $js .= "c.maxLength = '${maxl}';\n";
+            $js .= "c.maxLength = '{$maxl}';\n";
         }
 
         $minl = $ctrl->datatype->getFacet('minLength');
         if ($minl !== null) {
-            $js .= "c.minLength = '${minl}';\n";
+            $js .= "c.minLength = '{$minl}';\n";
         }
         $this->parentWidget->addJs($js);
 
