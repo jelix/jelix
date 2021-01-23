@@ -47,5 +47,8 @@ class masterAdminMenuItem
 
 function masterAdminItemSort($itemA, $itemB)
 {
-    return $itemA->order - $itemB->order;
+    if ($itemA->order == $itemB->order) {
+        return 0;
+    }
+    return ($itemA->order < $itemB->order) ? -1 : 1;
 }
