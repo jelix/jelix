@@ -11,7 +11,7 @@
  * @author      Laurent Jouanneau
  * @contributor Kévin Lepeltier, GeekBay, Julien Issler
  *
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2021 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
  * @copyright   2010-2015 Julien Issler
  *
@@ -28,13 +28,13 @@
  * @author Laurent Jouanneau
  * @contributor Kévin Lepeltier
  *
- * @copyright   2006-2015 Laurent Jouanneau
+ * @copyright   2006-2021 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier
  *
  * @since 1.0b1
  * @see PHPMailer
  */
-class jMailer extends PHPMailer
+class jMailer extends \PHPMailer\PHPMailer\PHPMailer
 {
     const DEBUG_RECEIVER_CONFIG = 1;
     const DEBUG_RECEIVER_USER = 2;
