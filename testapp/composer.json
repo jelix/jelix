@@ -22,14 +22,14 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "^8.5.1",
+        "phpunit/phpunit": "^8.5.14",
         "jelix/jelix-essential" : "@dev",
         "jelix/soap-server-module": "^1.7.9",
         "jelix/minify-module": "^1.7.4",
         "jelix/php-redis-plugin": "^1.7.6",
-        "jelix/sitemap-module": "^1.7.5",
-        "guzzlehttp/guzzle": "^6.2.0",
-        "jelix/feeds-module": "^1.7.5",
+        "jelix/sitemap-module": "^1.7.7",
+        "guzzlehttp/guzzle": "^7.2.0",
+        "jelix/feeds-module": "^1.7.6",
         "jelix/wikirenderer-plugin": "^1.7.3"
     },
     "autoload": {
