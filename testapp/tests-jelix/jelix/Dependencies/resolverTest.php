@@ -790,9 +790,6 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      *
-     * @expectedException \Jelix\Dependencies\ItemException
-     * @expectedExceptionCode 6
-     * @expectedExceptionMessage For item testD, some items are missing: testB
      */
     public function testOptionalDependenciesWithMissingDependency() {
         /*
@@ -820,6 +817,9 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $resolver->addItem($packC);
         $resolver->addItem($packD);
 
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(6);
+        $this->expectExceptionMessage('For item testD, some items are missing: testB');
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 }

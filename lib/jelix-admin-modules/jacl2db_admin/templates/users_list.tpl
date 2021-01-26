@@ -76,7 +76,7 @@
 {/if}
 
 {if $resultsCount > $listPageSize}
-<div class="record-pages-list">{@jacl2db_admin~acl2.pages.links.label@} {pagelinks 'jacl2db_admin~rights:index', array('grpid'=>$grpid, 'filter'=>$filter),  $usersCount, $offset, $listPageSize, 'idx' }</div>
+<div class="record-pages-list">{@jacl2db_admin~acl2.pages.links.label@} {pagelinks 'jacl2db_admin~rights:index', array('grpid'=>$grpid, 'filter'=>$filter),  $resultsCount, $offset, $listPageSize, 'idx' }</div>
 {/if}
 
 

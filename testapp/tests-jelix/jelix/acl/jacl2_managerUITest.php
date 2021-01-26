@@ -379,7 +379,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 ),
                 'acl.group.view' => array(
                     '__anonymous' => false,
-                    'admins'      => '',
+                    'admins'      => 'y', // because acl.group.modify is set
                     'users'       => '',
                 ),
                 'super.cms.delete' => array(
@@ -455,7 +455,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 ),
                 'acl.group.view' => array(
                     '__anonymous' => false,
-                    'admins'      => '',
+                    'admins'      => 'y', // because acl.group.modify is set
                     'users'       => '',
                 ),
                 'super.cms.delete' => array(
@@ -769,7 +769,6 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     /**
      * The non admin user has rights to modify user rights, not group rights
-     * @expectedException \jAcl2DbAdminUIException
      */
     public function testNonAdminTryingToRemoveRightAdminOfOneOfAdminGroup()
     {
@@ -805,6 +804,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 'acl.user.modify'  => 'y',
             ),
         );
+        $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights, 'oneuser');
     }
 
@@ -1177,7 +1177,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 'acl.user.view' => array(
                     '__anonymous' => false,
                     'admins'      => 'y',
-                    'users'       => '',
+                    'users'       => 'y', // because acl.user.modify is set
                 ),
                 'acl.user.modify' => array(
                     '__anonymous' => false,
@@ -1186,7 +1186,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 ),
                 'acl.group.view' => array(
                     '__anonymous' => false,
-                    'admins'      => '',
+                    'admins'      => 'y', // because acl.group.modify is set
                     'users'       => '',
                 ),
                 'super.cms.delete' => array(
@@ -1530,7 +1530,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         $mgr = new jAcl2DbAdminUIManager();
         $list = $mgr->getUsersList(jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS);
 
-        $this->assertEquals(3, $list['usersCount']);
+        $this->assertEquals(3, $list['resultsCount']);
         $verif = '<array>
                 <object >
                     <string property="login" value="oneuser" />
@@ -1569,7 +1569,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     </array>
                 </object>
         </array>';
-        $this->assertComplexIdenticalStr($list['users'], $verif);
+        $this->assertComplexIdenticalStr($list['results'], $verif);
     }
 
     public function testGetUserRights()
