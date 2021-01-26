@@ -7,7 +7,7 @@ Not released yet.
 Features
 --------
 
-* Jelix 1.8 requires PHP 7.2 and above.
+* Jelix 1.8 requires PHP 7.2.5 and above.
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
  `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
 * jForms:
@@ -22,6 +22,7 @@ Features
 Internal changes
 ----------------
 
+* Upgrade Symfony Console to 5.2.1
 * Upgrade PHPUnit to 8.5 for our tests
 * Upgrade PHPMailer to 6.2.0
 * Tests with CasperJs have been removed
