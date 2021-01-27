@@ -274,6 +274,7 @@ cd lib/jelix/db
   jDbPDOConnection.class.php
   jDbPDOConnectionDebug.class.php
   jDbPDOResultSet.class.php
+  jDbPDOResultSet7.class.php
   jDbSchema.class.php
   jDbTable.class.php
   jDbTools.class.php
