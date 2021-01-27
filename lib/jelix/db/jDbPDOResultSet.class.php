@@ -50,7 +50,7 @@ class jDbPDOResultSet extends PDOStatement
      *
      * @return object[] list of object which contain all rows
      */
-    public function fetchAll($fetch_style = null, $fetch_argument = null, $ctor_arg = null)
+    public function fetchAll($fetch_style = null, ...$args)
     {
         // if the user requested to override the style set with setFetchMode, use it
         $final_style = ($fetch_style ?: $this->_fetchMode);
@@ -58,10 +58,10 @@ class jDbPDOResultSet extends PDOStatement
         // Check how many arguments, if available should be given
         if (!$final_style) {
             $records = parent::fetchAll(PDO::FETCH_OBJ);
-        } elseif ($ctor_arg) {
-            $records = parent::fetchAll($final_style, $fetch_argument, $ctor_arg);
-        } elseif ($fetch_argument) {
-            $records = parent::fetchAll($final_style, $fetch_argument);
+        } elseif (isset($args[1])) {
+            $records = parent::fetchAll($final_style, $args[0], $args[1]);
+        } elseif (isset($args[0])) {
+            $records = parent::fetchAll($final_style, $args[0]);
         } else {
             $records = parent::fetchAll($final_style);
         }
@@ -93,20 +93,20 @@ class jDbPDOResultSet extends PDOStatement
      *
      * @return bool true if the fetch mode is ok
      */
-    public function setFetchMode($mode, $arg1 = null, $arg2 = array())
+    public function setFetchMode($mode, ...$args)
     {
         $this->_fetchMode = $mode;
 
         // depending the mode, original setFetchMode throw an error if wrong arguments
         // are given, even if there are null
-        if ($arg1 === null) {
+        if (count($args) === 0) {
             return parent::setFetchMode($mode);
         }
-        if ($arg2 === null || $arg2 == array()) {
-            return parent::setFetchMode($mode, $arg1);
+        if (count($args) === 1 || $args[1] === null || $args[1] == array()) {
+            return parent::setFetchMode($mode, $args[0]);
         }
 
-        return parent::setFetchMode($mode, $arg1, $arg2);
+        return parent::setFetchMode($mode, $args[0], $args[1]);
     }
 
     /**
