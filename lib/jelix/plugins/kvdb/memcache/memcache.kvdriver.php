@@ -6,13 +6,16 @@
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  *
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
+
+use function \Jelix\Utilities\is_resource;
+
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {
     /**
