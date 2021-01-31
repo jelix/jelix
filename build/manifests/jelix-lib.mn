@@ -445,6 +445,7 @@ cd lib/jelix/utils/
   jXmlRpc.class.php
   jZipCreator.class.php
 * jZone.class.php
+  Utilities.php
 
 cd lib/jelix/utils/Version
   Parser.php

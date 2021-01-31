@@ -1,11 +1,14 @@
 <?php
 /**
-* @package    jelix
-* @subpackage kvdb_plugin
-* @author     Laurent Jouanneau
-* @copyright  2010 Laurent Jouanneau
-* @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
-*/
+ * @package    jelix
+ * @subpackage kvdb_plugin
+ *
+ * @author     Laurent Jouanneau
+ * @copyright  2010-2021 Laurent Jouanneau
+ * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+
+use function \Jelix\Utilities\is_resource;
 
 /**
  * Driver for jKVDB, that uses an SQL table to store key/value data.

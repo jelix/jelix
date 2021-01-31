@@ -4,14 +4,17 @@
  * @subpackage  kvdb_plugin
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
- * @copyright   2009 Yannick Le Guédart, 2010-2017 Laurent Jouanneau
+ *
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
+use function \Jelix\Utilities\is_resource;
 
+class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
+{
     protected $key_prefix = '';
 
     /**

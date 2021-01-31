@@ -4,7 +4,7 @@
  * @subpackage  kvdb_plugin
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
- * @copyright   2009 Yannick Le Guédart, 2010-2016 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @link     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -27,6 +27,13 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
      *     and to implement your prefered method to delete all keys.
      */
     protected $key_prefix_flush_method = 'direct';
+
+    protected function isResource($value) {
+        if (function_exists('\\Jelix\\Utilities\\is_resource')) {
+            return \Jelix\Utilities\is_resource($value);
+        }
+        return is_resource($value);
+    }
 
     /**
      * Connects to the redis server
@@ -109,14 +116,14 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function set($key, $value) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
         $res = $this->_connection->set($this->getUsedKey($key), $this->esc($value));
         return ($res === 'OK');
     }
 
     public function insert($key, $value) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
         $key = $this->getUsedKey($key);
         if ($this->_connection->exists($key) == 1)
@@ -126,7 +133,7 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function replace($key, $value) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
         $key = $this->getUsedKey($key);
         if ($this->_connection->exists($key) == 0)
@@ -159,7 +166,7 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function append($key, $value) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
         $key = $this->getUsedKey($key);
         $val = $this->_connection->get($key);
@@ -173,7 +180,7 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
     }
 
     public function prepend($key, $value) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
         $key = $this->getUsedKey($key);
         $val = $this->_connection->get($key);
@@ -218,7 +225,7 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
 
     // jIKVttl -------------------------------------------------------------
     public function setWithTtl($key, $value, $ttl) {
-        if (is_resource($value))
+        if ($this->isResource($value))
             return false;
 
         if ($ttl != 0 && $ttl > 2592000) {

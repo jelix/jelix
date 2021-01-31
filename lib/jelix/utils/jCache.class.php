@@ -1,13 +1,18 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  cache
-* @author      Tahina Ramaroson
-* @contributor Sylvain de Vathaire, Brice Tence, Laurent Jouanneau
-* @copyright   2009 Neov, 2010 Brice Tence, 2011 Laurent Jouanneau
-* @link        http://jelix.org
-* @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
-*/
+ * @package     jelix
+ * @subpackage  cache
+ *
+ * @author      Tahina Ramaroson
+ * @contributor Sylvain de Vathaire, Brice Tence, Laurent Jouanneau
+ *
+ * @copyright   2009 Neov, 2010 Brice Tence, 2011-2021 Laurent Jouanneau
+ *
+ * @see        http://jelix.org
+ * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ */
+
+use function \Jelix\Utilities\is_resource;
 
 /**
 * Interface for cache drivers
