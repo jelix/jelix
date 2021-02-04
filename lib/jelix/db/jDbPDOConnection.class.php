@@ -97,7 +97,12 @@ class jDbPDOConnection extends PDO
 
         parent::__construct($dsn, $user, $password, $pdoOptions);
 
-        $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+        if (version_compare(phpversion(), "8.0") < 0) {
+            $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet7'));
+        }
+        else {
+            $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
+        }
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
         // we cannot launch two queries at the same time with PDO ! except if
