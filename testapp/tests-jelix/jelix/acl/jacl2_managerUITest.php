@@ -1271,7 +1271,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         jAuth::login('theadmin', 'pwd', false);
         $mgr = new jAcl2DbAdminUIManager();
         $this->expectException(jAcl2DbAdminUIException::class);
-        $this->expectExceptionCode(2);
+        $this->expectExceptionCode(3);
         $mgr->removeGroup('admins', 'theadmin');
     }
 
