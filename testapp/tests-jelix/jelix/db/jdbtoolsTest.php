@@ -46,8 +46,8 @@ class jDbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals('12', jDb::floatToStr("12"));
         $this->assertEquals('12.56', jDb::floatToStr("12.56"));
         $this->assertEquals('65.78E6', jDb::floatToStr("65.78E6"));
-        $this->assertEquals('65.78E6', jDb::floatToStr(65.78E6));
-        $this->assertEquals('65.78E42', jDb::floatToStr(65.78E42));
+        $this->assertEquals('65780000.0', jDb::floatToStr(65.78E6));
+        $this->assertEquals('6.578E+43', jDb::floatToStr(65.78E42));
 
         // not very good behavior, but this is the behavior in old stable version of jelix
         $this->assertEquals('65', jDb::floatToStr("65,650.98"));
@@ -164,7 +164,7 @@ class jDbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $result = $tools->escapeValue( 'numeric',5987872320983209098,false);
         $this->assertEquals("5987872320983209098",$result);
         $result = $tools->escapeValue( 'numeric',59878723209832090982,false);
-        $this->assertEquals("59878723209832087552",$result);
+        $this->assertEquals("5.987872320983209E+19",$result);
         //$result = $tools->escapeValue( 'numeric',5987872320983209098238723,false);
         //$this->assertEquals("5987872320983209098238723",$result);
         
@@ -176,10 +176,10 @@ class jDbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals('\'$f\\\'oo\'',$result);
         $result = $tools->escapeValue('double',5.63, false);
         $this->assertEquals('5.63',$result);
-        $result = $tools->escapeValue('float',98084345.637655464, false);
-        $this->assertEquals('98084345.637655464',$result);
+        $result = $tools->escapeValue('float', 98084345.637655464, false);
+        $this->assertEquals('98084345.63765547',$result);
         $result = $tools->escapeValue('decimal',98084345.637655464, false);
-        $this->assertEquals('98084345.637655464',$result);
+        $this->assertEquals('98084345.63765547',$result);
         $result = $tools->escapeValue('numeric','565465465463', false);
         $this->assertEquals('565465465463',$result);
         $result = $tools->escapeValue('numeric','565469876543139798641315465463', false);
