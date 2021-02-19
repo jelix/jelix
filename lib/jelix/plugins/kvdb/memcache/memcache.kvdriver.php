@@ -13,8 +13,6 @@
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
 
-use function \Jelix\Utilities\is_resource;
-
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {
     /**
@@ -144,9 +142,11 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         return $val;
     }
 
-    public function set($key, $value) {
-        if (is_resource($value))
+    public function set($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         return $this->_connection->set(
             $key,
             $value,
@@ -155,9 +155,11 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         );
     }
 
-    public function insert($key, $value) {
-        if (is_resource($value))
+    public function insert($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         return $this->_connection->add(
             $key,
             $value,
@@ -166,9 +168,11 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         );
     }
 
-    public function replace($key, $value) {
-        if (is_resource($value))
+    public function replace($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         return $this->_connection->replace(
             $key,
             $value,
@@ -272,9 +276,11 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
     * @param int    $ttl    data time expiration
     * @return boolean false if failure
     */
-    public function setWithTtl($key, $value, $ttl) {
-        if (is_resource($value))
+    public function setWithTtl($key, $value, $ttl)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         return $this->_connection->set(
             $key,
             $value,

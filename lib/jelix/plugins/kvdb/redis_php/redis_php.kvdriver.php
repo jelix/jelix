@@ -28,13 +28,6 @@ class redis_phpKVDriver extends jKVDriver implements jIKVSet, jIKVttl {
      */
     protected $key_prefix_flush_method = 'direct';
 
-    protected function isResource($value) {
-        if (function_exists('\\Jelix\\Utilities\\is_resource')) {
-            return \Jelix\Utilities\is_resource($value);
-        }
-        return is_resource($value);
-    }
-
     /**
      * Connects to the redis server
      * @return \PhpRedis\Redis object

@@ -8,8 +8,6 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use function \Jelix\Utilities\is_resource;
-
 class dbaKVDriver extends jKVDriver implements jIKVPersistent
 {
     /**
@@ -44,9 +42,11 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      *
      * @return boolean  false if failure, if the value is a resource...
      */
-    public function set($key, $value) {
-        if (is_resource($value))
+    public function set($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         if (dba_exists($key, $this->_connection))
             return dba_replace($key, serialize($value), $this->_connection);
         else
@@ -61,9 +61,11 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      *
      * @return boolean  false if failure
      */
-    public function insert($key, $value){
-        if (is_resource($value))
+    public function insert($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         return dba_insert($key, serialize($value), $this->_connection);
         
     }
@@ -76,9 +78,11 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      *
      * @return boolean  false if failure
      */
-    public function replace($key, $value){
-        if (is_resource($value))
+    public function replace($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         if (dba_exists($key, $this->_connection))
             return dba_replace($key, serialize($value), $this->_connection);
         return false;
@@ -119,9 +123,11 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      * @param string $value  the value to append to the current key value
      * @return string  the new value or false if failure
      */
-    public function append($key, $value) {
-        if (is_resource($value))
+    public function append($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         if (!dba_exists($key, $this->_connection))
             return false;
 
@@ -136,9 +142,11 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      * @param string $value  the value to prepend to the current key value
      * @return string  the new value or false if failure
      */
-    public function prepend($key, $value) {
-        if (is_resource($value))
+    public function prepend($key, $value)
+    {
+        if ($this->isResource($value)) {
             return false;
+        }
         if (!dba_exists($key, $this->_connection))
             return false;
 
