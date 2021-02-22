@@ -4,9 +4,10 @@
  * @subpackage kvdb_plugin
  *
  * @author     Laurent Jouanneau
- * @copyright  2010 Laurent Jouanneau
+ * @copyright  2010-2021 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 
 /**
  * Driver for jKVDB, that uses an SQL table to store key/value data.
@@ -94,9 +95,9 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
         return unserialize($rs->unescapeBin($result->k_value));
     }
 
-    public function set($key, $value)
+    public function set ($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -127,7 +128,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
 
     public function insert($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -147,10 +148,9 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
 
     public function replace($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
-
         $table = $this->_connection->prefixTable($this->table);
         $key = $this->_connection->quote($key);
         $value = $this->_connection->quote2(serialize($value), false, true);
@@ -179,7 +179,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
 
     public function append($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -203,7 +203,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
 
     public function prepend($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -287,7 +287,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
      */
     public function setWithTtl($key, $value, $ttl)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         if ($ttl > 0) {

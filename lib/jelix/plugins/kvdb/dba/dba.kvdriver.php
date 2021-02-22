@@ -4,9 +4,10 @@
  * @subpackage kvdb_plugin
  *
  * @author     Laurent Jouanneau
- * @copyright  2012 Laurent Jouanneau
+ * @copyright  2012-2021 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 class dbaKVDriver extends jKVDriver implements jIKVPersistent
 {
     /**
@@ -46,7 +47,7 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      */
     public function set($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         if (dba_exists($key, $this->_connection)) {
@@ -66,7 +67,7 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      */
     public function insert($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -83,7 +84,7 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      */
     public function replace($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         if (dba_exists($key, $this->_connection)) {
@@ -136,7 +137,7 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      */
     public function append($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         if (!dba_exists($key, $this->_connection)) {
@@ -159,7 +160,7 @@ class dbaKVDriver extends jKVDriver implements jIKVPersistent
      */
     public function prepend($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         if (!dba_exists($key, $this->_connection)) {

@@ -202,8 +202,9 @@ class jDb
      */
     public static function floatToStr($value)
     {
-        if (is_float($value)) {// this is a float
-            return rtrim(rtrim(sprintf('%.20F', $value), '0'), '.'); // %F to not format with the local decimal separator
+        if (is_float($value)) {
+            // we don't use floatval nor sprintf because of rounding errors (12.56 becomes 12.56000000000000049738)
+            return var_export($value, true);
         }
         if (is_integer($value)) {
             return sprintf('%d', $value);

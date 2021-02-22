@@ -6,11 +6,12 @@
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Yannick Le Guédart, 2010-2017 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 {
     protected $key_prefix = '';
@@ -132,7 +133,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 
     public function set($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -141,7 +142,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 
     public function insert($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         $key = $this->getUsedKey($key);
@@ -154,7 +155,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 
     public function replace($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         $key = $this->getUsedKey($key);
@@ -196,7 +197,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 
     public function append($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         $key = $this->getUsedKey($key);
@@ -215,7 +216,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 
     public function prepend($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
         $key = $this->getUsedKey($key);
@@ -281,7 +282,7 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
     // jIKVttl -------------------------------------------------------------
     public function setWithTtl($key, $value, $ttl)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 

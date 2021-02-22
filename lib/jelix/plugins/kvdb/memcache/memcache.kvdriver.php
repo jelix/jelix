@@ -6,13 +6,14 @@
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  *
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
+
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {
     /**
@@ -153,7 +154,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
 
     public function set($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -167,7 +168,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
 
     public function insert($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -181,7 +182,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
 
     public function replace($key, $value)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 
@@ -315,13 +316,12 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
      * @param string $key   key used for storing data
      * @param mixed  $var   data to store
      * @param int    $ttl   data time expiration
-     * @param mixed  $value
      *
      * @return bool false if failure
      */
     public function setWithTtl($key, $value, $ttl)
     {
-        if (is_resource($value)) {
+        if ($this->isResource($value)) {
             return false;
         }
 

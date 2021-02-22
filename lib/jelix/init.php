@@ -65,6 +65,10 @@ require JELIX_LIB_CORE_PATH.'jLog.class.php';
 require JELIX_LIB_CORE_PATH.'jIncluder.class.php';
 require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
+if (version_compare(phpversion(), "5.6") > -1) {
+    require JELIX_LIB_UTILS_PATH.'Utilities.php';
+}
+
 /**
  * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead
  */

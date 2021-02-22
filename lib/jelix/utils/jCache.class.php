@@ -6,7 +6,7 @@
  * @author      Tahina Ramaroson
  * @contributor Sylvain de Vathaire, Brice Tence, Laurent Jouanneau
  *
- * @copyright   2009 Neov, 2010 Brice Tence, 2011 Laurent Jouanneau
+ * @copyright   2009 Neov, 2010 Brice Tence, 2011-2021 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -98,6 +98,14 @@ interface jICacheDriver
  */
 class jCache
 {
+
+    protected static function isResource($value) {
+        if (function_exists('\\Jelix\\Utilities\\is_resource')) {
+            return \Jelix\Utilities\is_resource($value);
+        }
+        return is_resource($value);
+    }
+
     /**
      * retrieve data in the cache.
      *
@@ -141,7 +149,7 @@ class jCache
     {
         $drv = self::getDriver($profile);
 
-        if (!$drv->enabled || is_resource($value)) {
+        if (!$drv->enabled || self::isResource($value)) {
             return false;
         }
 
@@ -219,7 +227,7 @@ class jCache
 
                 $data = self::_doFunctionCall($fn, $fnargs);
 
-                if (!is_resource($data)) {
+                if (!self::isResource($data)) {
                     if (is_null($ttl)) {
                         $ttl = $drv->ttl;
                     } elseif (is_string($ttl)) {
@@ -325,7 +333,7 @@ class jCache
     {
         $drv = self::getDriver($profile);
 
-        if (!$drv->enabled || is_resource($value)) {
+        if (!$drv->enabled || self::isResource($value)) {
             return false;
         }
 
@@ -362,7 +370,7 @@ class jCache
     {
         $drv = self::getDriver($profile);
 
-        if (!$drv->enabled || is_resource($value)) {
+        if (!$drv->enabled || self::isResource($value)) {
             return false;
         }
 
