@@ -5,12 +5,13 @@
  *
  * @author     Laurent Jouanneau
  * @contributor Loic Mathaud, Dominique Papin, Julien Issler
- * @contributor Uriel Corfa (Emotic SARL), Thomas, Olivier Demah
+ * @contributor Uriel Corfa (Emotic SARL), Thomas, Olivier Demah, Adrien Lagroy de Croutte
  *
- * @copyright   2006-2012 Laurent Jouanneau
+ * @copyright   2006-2017 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
  * @copyright   2007 Emotic SARL
  * @copyright   2008-2015 Julien Issler, 2009 Thomas, 2009 Olivier Demah
+ * @copyright   2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -154,7 +155,6 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         return false;
     }
 
-
     protected function generateTime(&$source, $control, &$attributes)
     {
         $this->attrDefaultvalue($source, $attributes);
@@ -164,23 +164,24 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);
         if (isset($attributes['mintime'])) {
-            $source[]='$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mintime'].'\');';
+            $source[] = '$ctrl->datatype->addFacet(\'minValue\',\''.$attributes['mintime'].'\');';
             unset($attributes['mintime']);
         }
         if (isset($attributes['maxtime'])) {
-            $source[]='$ctrl->datatype->addFacet(\'maxValue\',\''.$attributes['maxtime'].'\');';
+            $source[] = '$ctrl->datatype->addFacet(\'maxValue\',\''.$attributes['maxtime'].'\');';
             unset($attributes['maxtime']);
         }
         if (isset($attributes['seconds'])) {
-            if ($attributes['seconds'] == "true") {
-                $source[]='$ctrl->enableSeconds = true;';
+            if ($attributes['seconds'] == 'true') {
+                $source[] = '$ctrl->enableSeconds = true;';
             }
             unset($attributes['seconds']);
         }
         if (isset($attributes['timepicker'])) {
-            $source[]='$ctrl->timepickerConfig = \''.$attributes['timepicker'].'\';';
+            $source[] = '$ctrl->timepickerConfig = \''.$attributes['timepicker'].'\';';
             unset($attributes['timepicker']);
         }
+
         return false;
     }
 
@@ -335,7 +336,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         $this->attrReadOnly($source, $attributes);
         $hasCheckbox = false;
         if (isset($attributes['withcheckbox'])) {
-            if ('true' == $attributes['withcheckbox']) {
+            if ($attributes['withcheckbox'] == 'true') {
                 $hasCheckbox = true;
                 $source[] = '$ctrl->hasCheckbox=true;';
             }
@@ -439,7 +440,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
     protected function readChildControls(&$source, $controltype, $xml, $ignore, $itemname = '')
     {
         if ($itemname != '') {
-            $itemname = ",'${itemname}'";
+            $itemname = ",'{$itemname}'";
         }
         $ctrlcount = 0;
 

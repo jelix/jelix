@@ -310,9 +310,9 @@ class jZone
         $id = md5(serialize($this->getCacheId()));
 
         $path = $id[0].'/'.$id[1].$id[2].'/'.$id.'.php';
-        $rootPath = 'zonecache/'.$module.'/'.str_replace('\\', '__',strtolower(get_class($this)));
+        $rootPath = 'zonecache/'.$module.'/'.str_replace('\\', '__', strtolower(get_class($this)));
         $cacheFiles = array(
-            'content' => jApp::tempPath($rootPath.'/'.$path)
+            'content' => jApp::tempPath($rootPath.'/'.$path),
         );
         if ($forCurrentResponse) {
             //make distinct a cache files for metas according to response type as meta handling is often different for different responses
@@ -331,7 +331,7 @@ class jZone
     }
 
     /**
-     * It should returns a list of values that are used for the cache Id
+     * It should returns a list of values that are used for the cache Id.
      *
      * By default, it returns all zone parameters. But some parameters may have
      * values (like some object properties) that are not used for the zone
@@ -341,11 +341,13 @@ class jZone
      * So you can redefine this method to return only values that should be used
      * as cache ID (I.e. which determines the uniqueness of the zone content)
      *
-     * @return array  list of values that are used for the cache Id
+     * @return array list of values that are used for the cache Id
      */
-    protected function getCacheId() {
+    protected function getCacheId()
+    {
         $ar = $this->_params;
         ksort($ar);
+
         return $ar;
     }
 

@@ -434,7 +434,7 @@ class jResponseHtml extends jResponseBasicHtml
     /**
      * returns all CSS links for IE.
      *
-     * @return array  key = url, value=link attributes + optional parameter _iecondition
+     * @return array key = url, value=link attributes + optional parameter _iecondition
      *
      * @deprecated since 1.7.0
      */
@@ -682,9 +682,8 @@ class jResponseHtml extends jResponseBasicHtml
                 if ($param_value === true) {
                     $params .= $param_name.' ';
                 }
-            }
-            else {
-                $params .= $param_name . '="' . htmlspecialchars($param_value) . '" ';
+            } else {
+                $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
             }
         }
         if (!isset($scriptParams['type'])) {
@@ -704,9 +703,8 @@ class jResponseHtml extends jResponseBasicHtml
                 if ($param_value === true) {
                     $params .= $param_name.' ';
                 }
-            }
-            else {
-                $params .= $param_name . '="' . htmlspecialchars($param_value) . '" ';
+            } else {
+                $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
             }
         }
 

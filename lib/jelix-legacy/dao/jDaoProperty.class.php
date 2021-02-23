@@ -177,8 +177,7 @@ class jDaoProperty
                 $this->sequenceName = $params['sequence'];
                 $this->autoIncrement = true;
             }
-        }
-        else if ($this->autoIncrement) {
+        } elseif ($this->autoIncrement) {
             throw new jDaoXmlException($parser->selector, 'property.autoincrement', array($this->fieldName));
         }
 

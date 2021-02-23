@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -145,8 +145,7 @@ class Installer
         if (is_array($modulesChains)) {
             $result = $this->_installModules($modulesChains);
             $this->globalSetup->getInstallerIni()->save();
-        }
-        else {
+        } else {
             $result = false;
         }
         $this->endMessage();

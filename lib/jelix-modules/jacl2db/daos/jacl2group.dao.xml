@@ -30,12 +30,34 @@
            </order>
         </method>
 
+        <method name="findAnonymousGroup" type="selectfirst">
+           <conditions>
+              <eq property="id_aclgrp" value="__anonymous" />
+           </conditions>
+        </method>
+
         <method name="getPrivateGroup" type="selectfirst">
            <parameter name="login" />
            <conditions>
               <eq property="grouptype" value="2" />
               <eq property="ownerlogin" expr="$login" />
            </conditions>
+        </method>
+
+        <method name="findGroupByFilter" type="select">
+           <parameter name="filter" />
+           <conditions>
+              <neq property="grouptype" value="2" />
+              <neq property="id_aclgrp" value="__anonymous" />
+              <like property="name" expr="$filter" />
+           </conditions>
+        </method>
+
+        <method name="getGroupByName" type="selectfirst">
+          <parameter name="name" />
+          <conditions>
+            <eq property="name" expr="$name"/>
+          </conditions>
         </method>
 
         <!-- deprecated -->

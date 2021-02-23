@@ -120,7 +120,6 @@ class AuthCoordPlugin implements jICoordPlugin
         }
     }
 
-
     public function afterProcess()
     {
     }

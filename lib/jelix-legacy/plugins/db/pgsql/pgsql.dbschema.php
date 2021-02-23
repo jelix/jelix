@@ -4,7 +4,7 @@
  * @subpackage db_driver
  *
  * @author     Laurent Jouanneau
- * @copyright  2010-2018 Laurent Jouanneau
+ * @copyright  2010-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -30,20 +30,27 @@ class pgsqlDbTable extends jDbTable
         $conn = $this->schema->getConn();
         $tools = $conn->tools();
         $version = $conn->getServerMajorVersion();
+
+        $searchPath = $conn->getSearchPath();
+        $schemas = implode(',', array_map(function($schema) use ($conn) {
+            return $conn->quote($schema);
+        }, $searchPath));
+
         // pg_get_expr on adbin, not compatible with pgsql < 9
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
         $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod,
                 FORMAT_TYPE(a.atttypid, a.atttypmod) AS type,
-                $adColName, co.contype AS primary, co.conname
+                {$adColName}, co.contype AS primary, co.conname
             FROM pg_attribute AS a
             JOIN pg_class AS c ON a.attrelid = c.oid
             LEFT OUTER JOIN pg_constraint AS co
                 ON (co.conrelid = c.oid AND a.attnum = ANY(co.conkey) AND co.contype = 'p')
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
-            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name).
-            ' ORDER BY a.attnum';
+            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name) .
+            " AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname IN (".$schemas."))
+            ORDER BY a.attnum";
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             $name = $line->attname;
@@ -374,9 +381,15 @@ class pgsqlDbSchema extends jDbSchema
 
     protected function _getTables()
     {
-        $results = array();
-        $sql = "SELECT tablename FROM pg_tables
-                  WHERE schemaname NOT IN ('pg_catalog', 'information_schema')
+        $searchPath = $this->getConn()->getSearchPath();
+        $c = $this->getConn();
+        $schemas = implode(',', array_map(function($schema) use ($c) {
+            return $c->quote($schema);
+        }, $searchPath));
+
+        $results = array ();
+        $sql = "SELECT tablename, schemaname FROM pg_tables
+                  WHERE schemaname IN (".$schemas.")
                   ORDER BY tablename";
         $rs = $this->getConn()->query($sql);
         while ($line = $rs->fetch()) {

@@ -154,7 +154,6 @@ class CommandConfig
         $this->chmodDirValue = octdec('755');
     }
 
-
     public function initAppPaths($applicationDir)
     {
         $applicationDir = rtrim($applicationDir, '/');
@@ -222,16 +221,17 @@ class CommandConfig
         }
     }
 
-    protected function _parseIniValue($key, $value) {
+    protected function _parseIniValue($key, $value)
+    {
         if ($key == 'infoCopyright' || $key == 'newAppInfoCopyright') {
             $value = str_replace('%YEAR%', date('Y'), $value);
-        }
-        else if ($key == 'chmodFileValue' || $key == 'chmodDirValue') {
+        } elseif ($key == 'chmodFileValue' || $key == 'chmodDirValue') {
             if (!is_string($value)) {
                 $value = (string) $value;
             }
             $value = octdec($value);
         }
+
         return $value;
     }
 

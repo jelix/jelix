@@ -114,7 +114,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         // create the form file
         $options = array('module' => $module,
             'form' => $table,
-            'dao' => $table
+            'dao' => $table,
         );
         if ($profile) {
             $options['--profile'] = $profile;
@@ -129,15 +129,15 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         $acl2rights = '';
         $pluginsParameters = "
                 '*'          =>array('auth.required'=>true),
-                'index'      =>array('jacl2.right'=>'${module}.${ctrlname}.view'),
-                'precreate'  =>array('jacl2.right'=>'${module}.${ctrlname}.create'),
-                'create'     =>array('jacl2.right'=>'${module}.${ctrlname}.create'),
-                'savecreate' =>array('jacl2.right'=>'${module}.${ctrlname}.create'),
-                'preupdate'  =>array('jacl2.right'=>'${module}.${ctrlname}.update'),
-                'editupdate' =>array('jacl2.right'=>'${module}.${ctrlname}.update'),
-                'saveupdate' =>array('jacl2.right'=>'${module}.${ctrlname}.update'),
-                'view'       =>array('jacl2.right'=>'${module}.${ctrlname}.view'),
-                'delete'     =>array('jacl2.right'=>'${module}.${ctrlname}.delete')";
+                'index'      =>array('jacl2.right'=>'{$module}.{$ctrlname}.view'),
+                'precreate'  =>array('jacl2.right'=>'{$module}.{$ctrlname}.create'),
+                'create'     =>array('jacl2.right'=>'{$module}.{$ctrlname}.create'),
+                'savecreate' =>array('jacl2.right'=>'{$module}.{$ctrlname}.create'),
+                'preupdate'  =>array('jacl2.right'=>'{$module}.{$ctrlname}.update'),
+                'editupdate' =>array('jacl2.right'=>'{$module}.{$ctrlname}.update'),
+                'saveupdate' =>array('jacl2.right'=>'{$module}.{$ctrlname}.update'),
+                'view'       =>array('jacl2.right'=>'{$module}.{$ctrlname}.view'),
+                'delete'     =>array('jacl2.right'=>'{$module}.{$ctrlname}.delete')";
         $acl2 = $input->getOption('acl2');
         if ($acl2) {
             $subjects = array('view' => 'View',
@@ -152,13 +152,13 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
             foreach ($subjects as $subject => $label) {
                 $subject = $module.'.'.$ctrlname.'.'.$subject;
                 $labelkey = $sel.'.'.$subject;
-                $options = array('role' => $subject,
+                $options = array('right' => $subject,
                     'labelkey' => $labelkey,
-                    'rolegroup' => 'null',
-                    'rolelabel' => $label.' '.$ctrlname, );
+                    'rightgroup' => 'null',
+                    'rightlabel' => $label.' '.$ctrlname, );
                 $options = array_merge($arguments, $options);
                 $this->executeSubCommand(
-                    'acl2:role-create',
+                    'acl2:right-create',
                     $options,
                     $output
                 );
@@ -185,7 +185,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         if ($input->getOption('masteradmin')) {
             // create a listener for master_admin
             if ($acl2) {
-                $params['checkacl2'] = "if(jAcl2::check('${module}.${ctrlname}.view'))";
+                $params['checkacl2'] = "if(jAcl2::check('{$module}.{$ctrlname}.view'))";
             } else {
                 $params['checkacl2'] = '';
             }
@@ -200,8 +200,8 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
                 $xml->registerXPathNamespace('j', 'http://jelix.org/ns/events/1.0');
                 $listenerPath = "j:listener[@name='".$ctrlname."menu']";
                 $eventPath = "j:event[@name='masteradminGetMenuContent']";
-                if (!$event = $xml->xpath("//${listenerPath}/${eventPath}")) {
-                    if ($listeners = $xml->xpath("//${listenerPath}")) {
+                if (!$event = $xml->xpath("//{$listenerPath}/{$eventPath}")) {
+                    if ($listeners = $xml->xpath("//{$listenerPath}")) {
                         $listener = $listeners[0];
                     } else {
                         $listener = $xml->addChild('listener');
@@ -241,7 +241,7 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         // if the url already exists, let's try an other
         $count = 0;
         $urlXPath = "//j:url[@pathinfo='/".$ctrlname."/']";
-        while ($url = $xml->xpath("//${urlXPath}")) {
+        while ($url = $xml->xpath("//{$urlXPath}")) {
             ++$count;
             $urlXPath = "//j:url[@pathinfo='/".$ctrlname.'-'.$count."/']";
         }

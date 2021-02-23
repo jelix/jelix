@@ -42,32 +42,35 @@
  * {/formcontrols}
  * ```
  */
-class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
-
-    public function outputMetaContent($resp) {
+class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+{
+    public function outputMetaContent($resp)
+    {
         $resp->addAssets('jforms_autocomplete');
     }
 
-    protected function outputJs() {
+    protected function outputJs()
+    {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $this->parentWidget->addJs("c = new ".$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
+        $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
         if ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
-                $this->parentWidget->addJs("c.dependencies = ['".implode("','",$dependentControls)."'];\n");
+                $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");
                 $this->parentWidget->addFinalJs("jFormsJQ.tForm.declareDynamicFill('".$ctrl->ref."');\n");
             }
         }
         $this->commonJs();
         $searchInId = (strpos($this->getCSSClass(), 'autocomplete-search-in-id') !== false);
 
-        $this->parentWidget->addFinalJs('$(\'#'.$this->getId().'_autocomplete\').jAutocomplete({searchInId: '.($searchInId?'true':'false').'})');
+        $this->parentWidget->addFinalJs('$(\'#'.$this->getId().'_autocomplete\').jAutocomplete({searchInId: '.($searchInId ? 'true' : 'false').'})');
     }
 
-    function outputControl() {
+    public function outputControl()
+    {
         $attr = $this->getControlAttributes();
         $value = $this->getValue();
 
@@ -80,7 +83,7 @@ class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
         $attr['class'] .= ' autocomplete-select';
 
         $attrAutoComplete = array(
-            'placeholder'=> jLocale::get('jelix~jforms.autocomplete.placeholder'),
+            'placeholder' => jLocale::get('jelix~jforms.autocomplete.placeholder'),
         );
         if (isset($attr['attr-autocomplete'])) {
             $attrAutoComplete = array_merge($attrAutoComplete, $attr['attr-autocomplete']);
@@ -88,19 +91,15 @@ class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
         }
         if (isset($attrAutoComplete['class'])) {
             $attrAutoComplete['class'] .= ' autocomplete-input';
-        }
-        else {
+        } else {
             $attrAutoComplete['class'] = ' autocomplete-input';
         }
         if (isset($attrAutoComplete['style'])) {
             $attrAutoComplete['style'] .= 'display:none';
-        }
-        else {
+        } else {
             $attrAutoComplete['style'] = 'display:none';
         }
         $attrAutoComplete['id'] = $this->getId().'_autocomplete';
-
-
 
         echo '<div class="autocomplete-box"><input type="text" ';
         $this->_outputAttr($attrAutoComplete);
@@ -110,11 +109,12 @@ class autocomplete_htmlFormWidget  extends \jelix\forms\HtmlWidget\WidgetBase {
         $this->_outputAttr($attr);
         echo ">\n";
 
-        if(is_array($value)){
-            if(isset($value[0]))
+        if (is_array($value)) {
+            if (isset($value[0])) {
                 $value = $value[0];
-            else
-                $value='';
+            } else {
+                $value = '';
+            }
         }
         $value = (string) $value;
         if ($this->ctrl->emptyItemLabel !== null || !$this->ctrl->required) {

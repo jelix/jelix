@@ -125,12 +125,12 @@ class XmlEntryPoint
             }
             $this->appendElement($this->ep, $url);
         } else {
-            if ($urlPathInfo  && $url !== $urlPathInfo) {
+            if ($urlPathInfo && $url !== $urlPathInfo) {
                 $this->removeElement($urlPathInfo);
             }
             if ($parameters !== null && is_array($parameters)) {
                 $list = $url->getElementsByTagName('param');
-                $listP = [];
+                $listP = array();
                 foreach ($list as $p) {
                     // we don't remove yet, as $list is modified at each remove
                     $listP[] = $p;
@@ -141,7 +141,7 @@ class XmlEntryPoint
             }
             if ($statics !== null && is_array($statics)) {
                 $list = $url->getElementsByTagName('static');
-                $listP = [];
+                $listP = array();
                 foreach ($list as $p) {
                     // we don't remove yet, as $list is modified at each remove
                     $listP[] = $p;
@@ -220,7 +220,7 @@ class XmlEntryPoint
             $url->setAttribute('controller', $controller);
             $this->appendElement($this->ep, $url);
         } else {
-            if ($urlPathInfo  && $url !== $urlPathInfo) {
+            if ($urlPathInfo && $url !== $urlPathInfo) {
                 $this->removeElement($urlPathInfo);
             }
             $url->setAttribute('pathinfo', $pathinfo);
@@ -511,9 +511,7 @@ class XmlEntryPoint
     }
 
     /**
-     * @param \DOMElement $parent
-     * @param \DOMElement $child
-     * @param string      $indent
+     * @param string $indent
      */
     protected function appendElement(\DOMElement $parent, \DOMElement $child, $indent = '        ')
     {
@@ -527,7 +525,8 @@ class XmlEntryPoint
         $parent->appendChild($doc->createTextNode("\n".substr($indent, 0, strlen($indent) - 4)));
     }
 
-    protected function removeElement(\DOMElement $child) {
+    protected function removeElement(\DOMElement $child)
+    {
         $parent = $child->parentNode;
         if ($child->previousSibling && $child->previousSibling->nodeType == XML_TEXT_NODE) {
             // remove indentation

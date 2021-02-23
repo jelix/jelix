@@ -1,10 +1,11 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @contributor Julien Issler
+ * @contributor Julien Issler, Adrien Lagroy de Croutte
  *
+ * @copyright   2020 Adrien Lagroy de Croutte
  * @copyright   2008-2017 Laurent Jouanneau
- * @copyright   2009 Julien Issler
+ * @copyright   2009 Julien Issler, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
@@ -12,11 +13,11 @@
 class usersCtrl extends jController
 {
     public $pluginParams = array(
-        'index' => array('jacl2.rights.and' => array('acl.user.view')),
-        'rights' => array('jacl2.rights.and' => array('acl.user.view')),
-        'saverights' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'index'       => array('jacl2.rights.and' => array('acl.user.view')),
+        'rights'      => array('jacl2.rights.and' => array('acl.user.view')),
+        'saverights'  => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
         'removegroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
-        'addgroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'addgroup'    => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
     );
 
     protected function checkException(jAcl2DbAdminUIException $e, $category)
@@ -109,14 +110,14 @@ class usersCtrl extends jController
 
         $tpl = new jTpl();
         $tpl->assign($data);
-        $tpl->assign('nbgrp', count($data['groups']));
+        $tpl->assign('nbgrp', count($data['groupsuser']));
 
         if (jAcl2::check('acl.user.modify')) {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights'));
         } else {
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
-        $rep->body->assign('selectedMenuItem', 'usersrights');
+        $rep->body->assign('selectedMenuItem', 'rights');
 
         return $rep;
     }
@@ -208,7 +209,7 @@ class usersCtrl extends jController
 
             try {
                 $manager = new jAcl2DbAdminUIManager();
-                $manager->removeUserFromGroup($login, $this->param('grpid'));
+                $manager->removeUserFromGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
             } catch (jAcl2DbAdminUIException $e) {
                 $this->checkException($e, 'removeuserfromgroup');
             }
@@ -227,7 +228,13 @@ class usersCtrl extends jController
         if ($login != '') {
             $rep->action = 'jacl2db_admin~users:rights';
             $rep->params = array('user' => $login);
-            jAcl2DbUserGroup::addUserToGroup($login, $this->param('grpid'));
+
+            try {
+                $manager = new jAcl2DbAdminUIManager();
+                $manager->addUserToGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
+            } catch (jAcl2DbAdminUIException $e) {
+                $this->checkException($e, 'addusertogroup');
+            }
         } else {
             $rep->action = 'jacl2db_admin~users:index';
         }

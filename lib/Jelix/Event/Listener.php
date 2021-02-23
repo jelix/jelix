@@ -23,9 +23,10 @@ class Listener
 {
     /**
      * @var string[] mapping between event name and methods to execute
-     *           keys are events, values are method name.
-     *           useful when events name contains characters that are forbidden
-     *           in a method name.
+     *               keys are events, values are method name.
+     *               useful when events name contains characters that are forbidden
+     *               in a method name.
+     *
      * @since 1.7.0
      */
     protected $eventMapping = array();
@@ -40,8 +41,7 @@ class Listener
         $eventName = $event->getName();
         if (isset($this->eventMapping[$eventName])) {
             $methodName = $this->eventMapping[$eventName];
-        }
-        else {
+        } else {
             $methodName = 'on'.$event->getName();
         }
         $this->{$methodName}($event);

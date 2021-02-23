@@ -9,9 +9,16 @@
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights@}</th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.personnal.rights.res@}</th>
         {if $nbgrp}
-        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
+        <th id="group-head" colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
-        <th class="colblank" rowspan="2"></th>
+        <th rowspan="2"><select id="groupSelector">
+        {foreach $groups as $group}
+            {if !isset($groupsuser[$group->id_aclgrp])}
+                <option value="{$group->id_aclgrp}">{$group->name}</option>
+            {/if}
+        {/foreach}
+        </select>
+        <button type="button" onclick="showColumn();">{@jacl2db_admin~acl2.button.display@}</button></th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@}</th>
     </tr>
     <tr>
@@ -19,7 +26,7 @@
         {if isset($groupsuser[$group->id_aclgrp])}
         <th>{$group->name}</th>
         {else}
-        <th class="notingroup">{$group->name}</th>
+        <th class="notingroup {$group->id_aclgrp}" style="display:none;">{$group->name}</th>
         {/if}
     {/foreach}
     </tr>
@@ -28,13 +35,13 @@
 {assign $currentsbjgroup = '---'}
 {foreach $rights as $subject=>$right}
 
-{if $subjects[$subject]['grp'] && $currentsbjgroup != $subjects[$subject]['grp']}
+{if $rightsProperties[$subject]['grp'] && $currentsbjgroup != $rightsProperties[$subject]['grp']}
 <tr class="{cycle array('odd','even')}">
-    <th colspan="{=$nbgrp*2+4}"><h3>{$sbjgroups_localized[$subjects[$subject]['grp']]}</h3></th>
-</tr>{assign $currentsbjgroup = $subjects[$subject]['grp']}
+    <th colspan="{=$nbgrp*2+4}"><h3>{$rightsGroupsLabels[$rightsProperties[$subject]['grp']]}</h3></th>
+</tr>{assign $currentsbjgroup = $rightsProperties[$subject]['grp']}
 {/if}
 <tr class="{cycle array('odd','even')}">
-    <th>{$subjects[$subject]['label']|eschtml}</th>
+    <th>{$rightsProperties[$subject]['label']|eschtml}</th>
     {assign $resultr=''}
     {foreach $right as $group=>$r}
     {if $hisgroup && $group == $hisgroup->id_aclgrp}

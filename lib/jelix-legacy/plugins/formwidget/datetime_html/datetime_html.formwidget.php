@@ -25,9 +25,9 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
-        $config = isset($this->ctrl->datepickerConfig) ?
+        $config = $this->ctrl->datepickerConfig ?
                     $this->ctrl->datepickerConfig :
-                    jApp::config()->forms['datepicker'];
+                    jApp::config()->forms['datetimepicker'];
         $resp->addAssets('jforms_datetimepicker_'.$config);
     }
 
@@ -52,8 +52,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         if ($ctrl instanceof jFormsControlDatetime ||
             get_class($ctrl->datatype) == 'jDatatypeDateTime' ||
-            get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime')
-        {
+            get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime') {
             $config = $ctrl->datepickerConfig != '' ?
                         $ctrl->datepickerConfig :
                         jApp::config()->forms['datetimepicker'];
@@ -89,8 +88,7 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             if (isset($matches[7])) {
                 $v['seconds'] = $matches[7];
             }
-        }
-        else if (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $value, $matches)) {
+        } elseif (preg_match('#^(\d{4})?-(\d{2})?-(\d{2})?($|\\s)#', $value, $matches)) {
             if (isset($matches[1])) {
                 $v['year'] = $matches[1];
             }
@@ -100,9 +98,9 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             if (isset($matches[3])) {
                 $v['day'] = $matches[3];
             }
-            $v['hour'] = "00";
-            $v['minutes'] = "00";
-            $v['seconds'] = "00";
+            $v['hour'] = '00';
+            $v['minutes'] = '00';
+            $v['seconds'] = '00';
         }
         $f = jLocale::get('jelix~format.datetime');
         for ($i = 0; $i < strlen($f); ++$i) {

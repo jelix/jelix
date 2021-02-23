@@ -10,7 +10,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau, 2007-2008 Laurent Raufaste
+ * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007-2008 Laurent Raufaste
  * @copyright  2009 Julien Issler
  * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -158,8 +158,15 @@ class pgsqlDbConnection extends jDbConnection
             $str .= ' options=\''.$this->profile['pg_options'].'\'';
         }
 
+        if (isset($this->profile['force_new']) && $this->profile['force_new']) {
+            $cnx = @$funcconnect ($str, PGSQL_CONNECT_FORCE_NEW);
+        }
+        else {
+            $cnx = @$funcconnect ($str);
+        }
+
         // let's do the connection
-        if ($cnx = @$funcconnect($str)) {
+        if ($cnx) {
             if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
                && isset($this->_charsets[jApp::config()->charset])) {
                 pg_set_client_encoding($cnx, $this->_charsets[jApp::config()->charset]);
@@ -228,7 +235,7 @@ class pgsqlDbConnection extends jDbConnection
 
             return false;
         }
-        $cur = $this->query("select currval('${seqname}') as id");
+        $cur = $this->query("select currval('{$seqname}') as id");
         if ($cur) {
             $res = $cur->fetch();
             if ($res) {
@@ -259,7 +266,7 @@ class pgsqlDbConnection extends jDbConnection
     }
 
     /**
-     * @param integer $id the attribute id
+     * @param int $id the attribute id
      *
      * @return string the attribute value
      *
@@ -270,7 +277,8 @@ class pgsqlDbConnection extends jDbConnection
         switch ($id) {
             case self::ATTR_CLIENT_VERSION:
                 $v = pg_version($this->_connection);
-                return (array_key_exists('client', $v) ? $v['client'] : '');
+
+                return array_key_exists('client', $v) ? $v['client'] : '';
             case self::ATTR_SERVER_VERSION:
                 return pg_parameter_status($this->_connection, 'server_version');
 
@@ -301,6 +309,16 @@ class pgsqlDbConnection extends jDbConnection
                 $this->serverVersion = intval($version[0]);
             }
         }
+
         return $this->serverVersion;
+    }
+
+
+    public function getSearchPath()
+    {
+        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
+            return preg_split('/\s*,\s*/', trim($this->profile['search_path']));
+        }
+        return array('public');
     }
 }

@@ -6,16 +6,14 @@
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau
  *
- * @copyright  2008 Yann Lecommandoux, 2017 Laurent Jouanneau
+ * @copyright  2008 Yann Lecommandoux, 2017-2020 Laurent Jouanneau
  *
- * @see      http:/localhost/
+ * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 /**
  * Layer encapsulation resultset mssql.
- *
- *
  */
 class sqlsrvDbResultSet extends jDbResultSet
 {
@@ -40,7 +38,7 @@ class sqlsrvDbResultSet extends jDbResultSet
 
     public function fetch()
     {
-        if (! $this->_idResult) {
+        if (!$this->_idResult) {
             return false;
         }
         if ($this->_fetchMode == jDbConnection::FETCH_CLASS) {
@@ -145,7 +143,7 @@ class sqlsrvDbResultSet extends jDbResultSet
             $this->parametersReferences = array();
             foreach ($this->parameterNames as $k => $name) {
                 if (!isset($parameters[$name])) {
-                    throw new Exception("Execute: parameter '${name}' is missing from parameters");
+                    throw new Exception("Execute: parameter '{$name}' is missing from parameters");
                 }
                 $this->parametersReferences[] = &$parameters[$name];
             }

@@ -92,7 +92,7 @@ class ModuleStatus
         $this->isEnabled = $config[$name.'.enabled'];
         $this->dbProfile = $config[$name.'.dbprofile'];
         $this->isInstalled = $config[$name.'.installed'];
-        $this->version = (string)$config[$name.'.version'];
+        $this->version = (string) $config[$name.'.version'];
 
         if (isset($config[$name.'.installparam'])) {
             $this->parameters = self::unserializeParameters($config[$name.'.installparam']);
@@ -171,7 +171,9 @@ class ModuleStatus
      *
      * Parameters could be fully serialized into a single string, or
      * could be as an associative array where only values are serialized
-     * @param string|array $parameters
+     *
+     * @param array|string $parameters
+     *
      * @return array
      */
     public static function unserializeParameters($parameters)
@@ -185,21 +187,19 @@ class ModuleStatus
             $params = array();
             foreach (explode(';', $parameters) as $param) {
                 $kp = explode('=', $param);
-                if (count($kp)>1) {
+                if (count($kp) > 1) {
                     $params[$kp[0]] = $kp[1];
-                }
-                else {
+                } else {
                     $params[$kp[0]] = true;
                 }
             }
-        }
-        else {
+        } else {
             $params = $parameters;
         }
 
         foreach ($params as $key => $v) {
-            if (is_string($v) && (strpos($v, ',') !== false || (strlen($v)  && $v[0] == '['))) {
-                $trueParams[$key] = explode(',', trim($v,'[]'));
+            if (is_string($v) && (strpos($v, ',') !== false || (strlen($v) && $v[0] == '['))) {
+                $trueParams[$key] = explode(',', trim($v, '[]'));
             } elseif ($v === 'false') {
                 $trueParams[$key] = false;
             } elseif ($v === 'true') {
@@ -220,6 +220,7 @@ class ModuleStatus
      *
      * @param array $parameters
      * @param array $defaultParameters
+     *
      * @return string
      */
     public static function serializeParametersAsString($parameters, $defaultParameters = array())
@@ -251,11 +252,12 @@ class ModuleStatus
             }
         }
 
-        foreach($defaultParameters as $name => $v) {
+        foreach ($defaultParameters as $name => $v) {
             if ($v === true && !isset($parameters[$name])) {
                 $p[] = $name;
             }
         }
+
         return implode(';', $p);
     }
 
@@ -266,6 +268,7 @@ class ModuleStatus
      *
      * @param array $parameters
      * @param array $defaultParameters
+     *
      * @return array
      */
     public static function serializeParametersAsArray($parameters, $defaultParameters = array())
@@ -297,11 +300,12 @@ class ModuleStatus
             }
         }
 
-        foreach($defaultParameters as $name => $v) {
+        foreach ($defaultParameters as $name => $v) {
             if ($v === true && !isset($parameters[$name])) {
                 $p[$name] = true;
             }
         }
+
         return $p;
     }
 }

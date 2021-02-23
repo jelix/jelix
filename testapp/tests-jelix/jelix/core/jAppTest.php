@@ -66,7 +66,6 @@ class jAppTest extends \PHPUnit\Framework\TestCase {
             jApp::appPath('vendor/jelix/wikirenderer-plugin/plugins/'),
             jApp::appPath('plugins/'),
             LIB_PATH.'jelix-plugins/',
-            jApp::appPath('vendor/jelix/ldapdao-module/ldapdao/plugins/'),
             jApp::appPath('vendor/jelix/minify-module/jminify/plugins/'),
             LIB_PATH.'jelix-modules/jacl/plugins/',
             LIB_PATH.'jelix-modules/jacl2/plugins/',

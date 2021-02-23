@@ -29,9 +29,9 @@ class AddRight extends AbstractAcl2Cmd
                 'group id'
             )
             ->addArgument(
-                'role',
+                'right',
                 InputArgument::REQUIRED,
-                'The name of the role'
+                'The name of the right'
             )
             ->addArgument(
                 'resource',
@@ -49,7 +49,7 @@ class AddRight extends AbstractAcl2Cmd
 
         $group = $cnx->quote($this->_getGrpId($input));
 
-        $subject = $cnx->quote($input->getArgument('role'));
+        $subject = $cnx->quote($input->getArgument('right'));
         $resource = $cnx->quote($input->getArgument('resource'));
 
         $sql = 'SELECT * FROM '.$cnx->prefixTable('jacl2_rights').'
@@ -64,7 +64,7 @@ class AddRight extends AbstractAcl2Cmd
         $sql = 'SELECT * FROM '.$cnx->prefixTable('jacl2_subject').' WHERE id_aclsbj='.$subject;
         $rs = $cnx->query($sql);
         if (!($sbj = $rs->fetch())) {
-            throw new \Exception('role is unknown');
+            throw new \Exception('right is unknown');
         }
 
         $sql = 'INSERT into '.$cnx->prefixTable('jacl2_rights')
@@ -75,7 +75,7 @@ class AddRight extends AbstractAcl2Cmd
 
         $cnx->exec($sql);
         if ($output->isVerbose()) {
-            $output->writeln("Right is added on role ${subject} with group ${group} and resource ${resource}");
+            $output->writeln("Right {$subject} is added on group {$group} and resource {$resource}");
         }
     }
 }

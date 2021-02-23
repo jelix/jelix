@@ -124,7 +124,9 @@ class App
 
     /**
      * @param string $file
+     *
      * @return string
+     *
      * @deprecated
      */
     public static function configPath($file = '')
@@ -245,7 +247,7 @@ class App
 
         $configFileName = self::$_currentApp->appPath.'app/system/mainconfig.ini.php';
         if (!file_exists($configFileName)) {
-            if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
+            if (\jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
                 throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
             }
 

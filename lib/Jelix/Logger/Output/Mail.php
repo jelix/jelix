@@ -18,7 +18,7 @@ namespace Jelix\Logger\Output;
 class Mail implements \Jelix\Logger\OutputInterface
 {
     /**
-     *  @var array messages to send
+     *  @var jILogMessage[] messages to send
      */
     protected $messages = array();
 
@@ -35,10 +35,6 @@ class Mail implements \Jelix\Logger\OutputInterface
      */
     public function output($response)
     {
-        if (!\Jelix\Core\App::router()->request) {
-            return;
-        }
-
         $email = \Jelix\Core\App::config()->mailLogger['email'];
         $headers = str_replace(array('\\r', '\\n'), array("\r", "\n"), \Jelix\Core\App::config()->mailLogger['emailHeaders']);
         $message = '';

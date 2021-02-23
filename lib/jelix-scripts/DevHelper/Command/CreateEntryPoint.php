@@ -102,7 +102,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp
                     file_get_contents(App::appSystemPath($originalConfig))
                 );
                 if ($this->verbose()) {
-                    $output->writeln("Configuration file ${configFile} has been created from the config file ${originalConfig}.");
+                    $output->writeln("Configuration file {$configFile} has been created from the config file {$originalConfig}.");
                 }
             } else {
                 // else we create a new config file

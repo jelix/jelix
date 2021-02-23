@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  *
- * @copyright  2005-2017 Laurent Jouanneau
+ * @copyright  2005-2020 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -261,7 +261,7 @@ class jDbPgsqlTools extends jDbTools
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
         $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum, a.attlen, a.atttypmod,
-        a.atthasdef, $adColName
+        a.atthasdef, {$adColName}
         FROM pg_type t, pg_attribute a LEFT JOIN pg_attrdef d ON (d.adrelid=a.attrelid AND d.adnum=a.attnum)
         WHERE
           a.attnum > 0 AND a.attrelid = ".$table->oid.' AND a.atttypid = t.oid

@@ -1,10 +1,11 @@
 dist: bionic
-sudo: required
+os: linux
 language: php
 php:
   - '7.2'
   - '7.3'
   - '7.4'
+  - '8.0'
 
 branches:
   only:
@@ -15,18 +16,18 @@ branches:
 
 addons:
     hosts:
-        - testapp20.local
+        - testapp.local
 
 cache:
     directories:
     - $HOME/.composer/cache
 
-matrix:
+jobs:
     fast_finish: true
 
 services:
    - memcached
-   - redis-server
+   - redis
    - mysql
    - postgresql
 
@@ -45,16 +46,5 @@ before_script:
 script:
    - ./testapp/travis/script.sh
 
-#after_success:
-    
-#after_failure:
-
-#before_deploy:
-
-#deploy:
-#    skip_cleanup: true
-
-
-#after_deploy:
-    
-#after_script:
+after_script:
+  - sudo cat /var/log/apache2/error.log

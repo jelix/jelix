@@ -3,7 +3,7 @@
  * see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors.
  *
  * @author      Laurent Jouanneau
- * @copyright   2005-2014 Laurent Jouanneau
+ * @copyright   2005-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

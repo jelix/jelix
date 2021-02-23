@@ -33,7 +33,6 @@ class FrameworkInfos
      */
     protected $localEntrypoints = array();
 
-
     /**
      * @var string
      */
@@ -92,7 +91,7 @@ class FrameworkInfos
     }
 
     /**
-     * @param mixed  $id
+     * @param mixed $id
      *
      * @return null|EntryPoint
      */
@@ -114,13 +113,14 @@ class FrameworkInfos
     }
 
     /**
-     *
      * @return null|EntryPoint
      */
-    public function getDefaultEntryPointInfo() {
+    public function getDefaultEntryPointInfo()
+    {
         if ($this->defaultEntryPoint) {
             return $this->getEntryPointInfo($this->defaultEntryPoint);
         }
+
         return null;
     }
 
@@ -174,12 +174,10 @@ class FrameworkInfos
             if (count($this->entrypoints)) {
                 if (isset($this->entrypoints['index'])) {
                     $this->defaultEntryPoint = 'index';
-                }
-                else {
+                } else {
                     $this->defaultEntryPoint = array_keys($this->entrypoints)[0];
                 }
-            }
-            else {
+            } else {
                 $this->defaultEntryPoint = '';
             }
         }
@@ -207,8 +205,7 @@ class FrameworkInfos
             ), 'entrypoint:'.$item->getFile());
             if ($item->getId() == $this->defaultEntryPoint) {
                 $this->iniFile->setValue('default', true, 'entrypoint:'.$item->getFile());
-            }
-            else {
+            } else {
                 $this->iniFile->removeValue('default', 'entrypoint:'.$item->getFile());
             }
         }
@@ -220,8 +217,7 @@ class FrameworkInfos
                 ), 'entrypoint:'.$item->getFile());
                 if ($item->getId() == $this->defaultEntryPoint) {
                     $this->iniLocalFile->setValue('default', true, 'entrypoint:'.$item->getFile());
-                }
-                else {
+                } else {
                     $this->iniLocalFile->removeValue('default', 'entrypoint:'.$item->getFile());
                 }
             }

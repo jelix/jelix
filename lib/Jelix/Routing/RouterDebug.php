@@ -101,7 +101,7 @@ class RouterDebug extends Router
             Log::dump($pluginparams, 'process: plugin params');
 
             foreach ($this->plugins as $name => $obj) {
-                Log::log("process: beforeAction on plugin ${name}");
+                Log::log("process: beforeAction on plugin {$name}");
                 $result = $this->plugins[$name]->beforeAction($pluginparams);
                 if ($result) {
                     $this->action = $result;

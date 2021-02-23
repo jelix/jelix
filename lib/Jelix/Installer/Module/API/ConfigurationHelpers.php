@@ -155,8 +155,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             if (!file_exists(\Jelix\Core\App::scriptsPath($epFile))) {
                 $this->copyFile($entryPointModelFile, \Jelix\Core\App::scriptsPath($epFile));
             }
-        }
-        else {
+        } else {
             if (!file_exists(\Jelix\Core\App::wwwPath($epFile))) {
                 $this->copyFile($entryPointModelFile, \Jelix\Core\App::wwwPath($epFile));
             }

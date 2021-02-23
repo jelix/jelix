@@ -20,8 +20,8 @@ class SubjectGroupList extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:role-group-list')
-            ->setDescription('List of role groups')
+            ->setName('acl2:rights-groups-list')
+            ->setDescription('List of rights groups')
             ->setHelp('')
         ;
         parent::configure();

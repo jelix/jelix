@@ -61,7 +61,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                             jApp::config()->forms['datepicker'];
             if ($config) {
                 $this->parentWidget->addJs(
-                    'jelix_datepicker_' . $config . "(c, jFormsJQ.config);\n"
+                    'jelix_datepicker_'.$config."(c, jFormsJQ.config);\n"
                 );
             }
         }

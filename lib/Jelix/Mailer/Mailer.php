@@ -11,7 +11,7 @@
  * @author      Laurent Jouanneau
  * @contributor Kévin Lepeltier, GeekBay, Julien Issler
  *
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2021 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
  * @copyright   2010-2015 Julien Issler
  *
@@ -29,12 +29,12 @@ use Jelix\Core\Profiles;
  * @author Laurent Jouanneau
  * @contributor Kévin Lepeltier
  *
- * @copyright   2006-2015 Laurent Jouanneau
+ * @copyright   2006-2021 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier
  *
  * @see PHPMailer
  */
-class Mailer extends \PHPMailer
+class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 {
     const DEBUG_RECEIVER_CONFIG = 1;
     const DEBUG_RECEIVER_USER = 2;
@@ -73,7 +73,8 @@ class Mailer extends \PHPMailer
     protected $debugModeEnabled = false;
 
     /**
-     * Debug mode for receivers. If activated, debugReceivers should be filled
+     * Debug mode for receivers. If activated, debugReceivers should be filled.
+     *
      * @var bool
      */
     protected $debugReceiversEnabled = false;
@@ -179,7 +180,6 @@ class Mailer extends \PHPMailer
         $this->filePath = \Jelix\Core\App::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
-
 
         if ($this->debugModeEnabled) {
             $this->debugReceivers = $config->mailer['debugReceivers'];
@@ -467,7 +467,24 @@ class Mailer extends \PHPMailer
 
     protected function getStorageFile()
     {
-        return rtrim($this->filePath, '/').'/mail.'.\Jelix\Core\App::coord()->request->getIP().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        return rtrim($this->filePath, '/').'/mail.'.$this->getUserIp().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+    }
+
+    protected function getUserIp()
+    {
+        $coord = \Jelix\Core\App::coord();
+
+        if ($coord && $coord->request) {
+            return $coord->request->getIP();
+        }
+        if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+        if (isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR']) {
+            return $_SERVER['REMOTE_ADDR'];
+        }
+
+        return 'no-ip';
     }
 
     public function setLanguage($lang_type = 'en', $lang_path = 'language/')
@@ -516,12 +533,7 @@ class Mailer extends \PHPMailer
     protected function copyMail($header, $body)
     {
         $dir = rtrim($this->filePath, '/').'/copy-'.date('Ymd').'/';
-        if (isset(\Jelix\Core\App::coord()->request)) {
-            $ip = \Jelix\Core\App::coord()->request->getIP();
-        } else {
-            $ip = 'no-ip';
-        }
-        $filename = $dir.'mail-'.$ip.'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
+        $filename = $dir.'mail-'.$this->getUserIp().'-'.date('Ymd-His').'-'.uniqid(mt_rand(), true);
         \jFile::write($filename, $header.$body);
     }
 
@@ -566,7 +578,8 @@ class Mailer extends \PHPMailer
         \jLog::log("jMailer error:\n".$this->ErrorInfo, 'error');
     }
 
-    public function debugOutputCallback($msg, $smtpDebugLevel) {
+    public function debugOutputCallback($msg, $smtpDebugLevel)
+    {
         \jLog::log("jMailer debug:\n".$msg);
     }
 }

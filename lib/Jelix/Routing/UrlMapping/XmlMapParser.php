@@ -211,13 +211,14 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * @param \SimpleXMLElement $xml
+     *
      * @throws MapParserException
      */
     protected function parseXml($xml)
     {
         foreach ($xml->children() as $tagname => $tag) {
             if (!preg_match('/^(.*)entrypoint$/', $tagname, $m)) {
-                throw new MapParserException($this->getErrorMsg($tag, "Unknown element ${tagname}"));
+                throw new MapParserException($this->getErrorMsg($tag, "Unknown element {$tagname}"));
             }
             $this->parseEntryPointElement($tag, $m[1]);
         }
@@ -226,8 +227,7 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * extract informations from an <entrypoint> element.
      *
-     * @param \SimpleXMLElement $tag
-     * @param mixed             $type
+     * @param mixed $type
      *
      * @throws MapParserException
      */
@@ -318,9 +318,7 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * extract informations from an <url> element.
      *
-     * @param \SimpleXMLElement $url
-     * @param UrlMapData        $u
-     * @param bool              $optionalTrailingSlash
+     * @param bool $optionalTrailingSlash
      */
     protected function parseUrlElement(
         \SimpleXMLElement $url,
@@ -536,7 +534,8 @@ class XmlMapParser implements \jISimpleCompiler
 
     /**
      * @param \SimpleXMLElement $xml
-     * @param string $message
+     * @param string            $message
+     *
      * @return string
      */
     protected function getErrorMsg($xml, $message)
@@ -653,9 +652,7 @@ class XmlMapParser implements \jISimpleCompiler
     protected $modulesPath = array();
 
     /**
-     * @param UrlMapData        $u
-     * @param \SimpleXmlElement $url
-     * @param mixed             $rootPathInfo
+     * @param mixed $rootPathInfo
      */
     protected function newHandler(
         UrlMapData $u,
@@ -715,7 +712,6 @@ class XmlMapParser implements \jISimpleCompiler
      * extract all dynamic parts of a pathinfo, read <param> elements.
      *
      * @param \SimpleXmlElement $url                   the url element
-     * @param UrlMapData        $u
      * @param bool              $optionalTrailingSlash
      * @param string            $rootPathInfo          the path info prefix
      *
@@ -754,7 +750,6 @@ class XmlMapParser implements \jISimpleCompiler
      *
      * @param \SimpleXmlElement $url      the url element
      * @param string            $path     the path info
-     * @param UrlMapData        $u
      * @param mixed             $pathinfo
      *
      * @return string the corresponding regular expression
@@ -823,7 +818,6 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * @param \SimpleXmlElement $url  the url element
      * @param string            $path the path info
-     * @param UrlMapData        $u
      */
     protected function extractStaticParams(
         \SimpleXmlElement $url,
@@ -850,9 +844,8 @@ class XmlMapParser implements \jISimpleCompiler
     /**
      * register the given url informations.
      *
-     * @param UrlMapData $u
-     * @param string     $path
-     * @param mixed      $secondaryAction
+     * @param string $path
+     * @param mixed  $secondaryAction
      */
     protected function appendUrlInfo(UrlMapData $u, $path, $secondaryAction)
     {
@@ -871,9 +864,7 @@ class XmlMapParser implements \jISimpleCompiler
     }
 
     /**
-     * @param \SimpleXmlElement $url
-     * @param UrlMapData        $uInfo
-     * @param mixed             $file
+     * @param mixed $file
      */
     protected function readInclude(
         \SimpleXmlElement $url,

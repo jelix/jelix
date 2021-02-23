@@ -96,11 +96,12 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         $resolutionInCache = App::config()->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = App::tempPath('resolved/' . $this->module . '/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
+            $resolutionPath = App::tempPath('resolved/'.$this->module.'/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
             $resolutionCachePath = 'resolved/';
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_where = $resolutionCachePath;
+
                 return;
             }
             \jFile::createDir(dirname($resolutionPath));
@@ -112,6 +113,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
             foreach ($locales as $locale) {
                 if ($this->findPath($locale)) {
                     $found = true;
+
                     break;
                 }
             }
@@ -127,6 +129,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
                     $l = null;
                     $c = null;
                 }
+
                 throw new \jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
             }
         }
@@ -137,7 +140,8 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
         }
     }
 
-    protected function findPath($locale) {
+    protected function findPath($locale)
+    {
         // check if the locale has been overloaded in var/
         $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
         if (is_readable($overloadedPath)) {

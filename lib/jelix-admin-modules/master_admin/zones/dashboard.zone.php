@@ -26,7 +26,10 @@ class dashboardZone extends jZone
 
         $widgets = jEvent::notify('masterAdminGetDashboardWidget')->getResponse();
         usort($widgets, function ($itemA, $itemB) {
-            return $itemA->order - $itemB->order;
+            if ($itemA->order == $itemB->order) {
+                return 0;
+            }
+            return ($itemA->order < $itemB->order) ? -1 : 1;
         });
         $this->_tpl->assign('widgets', $widgets);
     }

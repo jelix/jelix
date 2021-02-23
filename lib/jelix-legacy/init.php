@@ -120,6 +120,8 @@ require JELIX_LIB_CORE_PATH.'jUrl.class.php';
 require JELIX_LIB_CORE_PATH.'jController.class.php';
 require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
+require __DIR__.'/../Jelix/Core/Utilities.php';
+
 /**
  * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead
  */

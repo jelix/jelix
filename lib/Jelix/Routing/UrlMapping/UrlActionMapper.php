@@ -74,8 +74,7 @@ class UrlActionMapper
     /**
      * Parse a url from the request.
      *
-     * @param \jRequest $request
-     * @param array     $params  url parameters
+     * @param array $params url parameters
      *
      * @return \jUrlAction
      *

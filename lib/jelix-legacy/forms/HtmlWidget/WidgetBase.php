@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2006-2020 Laurent Jouanneau
  * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
  * @copyright   2012 Claudio Bernardes
  *
@@ -139,7 +139,7 @@ abstract class WidgetBase implements WidgetInterface
     }
 
     public function outputMetaContent($resp)
-    { /* do nothing */
+    { // do nothing
     }
 
     /**
@@ -243,6 +243,7 @@ abstract class WidgetBase implements WidgetInterface
         } else {
             $jsContent .= 'c.errInvalid='.$this->escJsStr(\jLocale::get('jelix~formserr.js.err.invalid', $this->ctrl->label)).";\n";
         }
+
         return $jsContent;
     }
 

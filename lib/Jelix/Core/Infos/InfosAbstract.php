@@ -105,6 +105,7 @@ abstract class InfosAbstract
 
         if (count($this->label)) {
             reset($this->label);
+
             return current($this->label);
         }
 

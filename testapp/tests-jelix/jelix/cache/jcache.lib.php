@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009, 2012 Laurent Jouanneau
+* @copyright   NEOV 2009, 2012-2021 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -81,7 +81,7 @@ abstract class jCacheAPITest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertFalse(jCache::set('expiredKey','data expired',strtotime("-1 day"),$this->profile));
         $this->assertFalse(jCache::get('expiredKey',$this->profile));
 
-        $this->assertTrue(jCache::set('ttlInDateKey',$myObj,'2020-12-31 00:00:00',$this->profile));
+        $this->assertTrue(jCache::set('ttlInDateKey',$myObj,'2030-12-31 00:00:00',$this->profile));
         $this->assertTrue(jCache::get('ttlInDateKey',$this->profile)==$myObj);
 
         $this->assertTrue(jCache::set('ttlInSecondesKey',$myObj,30,$this->profile));
@@ -155,7 +155,7 @@ abstract class jCacheAPITest extends \Jelix\UnitTests\UnitTestCaseDb {
         jCache::set('existentKey',array((object)array('x'=>0,'y'=>0),'a screen point'),$ttl,$this->profile);
         $this->assertFalse(jCache::add('existentKey','add an existing data',$ttl,$this->profile));
         $this->assertTrue(jCache::add('added1Key',111,$ttl,$this->profile));
-        $this->assertTrue(jCache::add('added2Key','some text for example','2020-12-31 00:00:00',$this->profile));
+        $this->assertTrue(jCache::add('added2Key','some text for example','2030-12-31 00:00:00',$this->profile));
         $this->assertTrue(jCache::add('added3Key','for testing ttl',1,$this->profile));
         $data=jCache::get(array('added1Key','added2Key','added3Key'),$this->profile);
         $this->assertTrue(isset($data['added1Key']) && isset($data['added2Key']) && isset($data['added3Key']));

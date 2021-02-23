@@ -9,6 +9,7 @@
 
 namespace Jelix\Scripts;
 
+use Jelix\Routing\Router;
 use Symfony\Component\Console\Application;
 use Jelix\Core\App;
 use Jelix\Core\Config\Compiler;
@@ -35,6 +36,7 @@ class ModulesCommands
 
         $compiler = new Compiler($ep->getConfigFile(), 'console.php', true);
 
+        App::setRouter(new Router());
         App::setConfig($compiler->read(true));
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 

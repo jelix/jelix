@@ -103,7 +103,7 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
 
             foreach ($fields as $fieldname => $prop) {
                 $name = str_replace('-', '_', $fieldname);
-                $properties .= "\n        <property name=\"${name}\" fieldname=\"${fieldname}\"";
+                $properties .= "\n        <property name=\"{$name}\" fieldname=\"{$fieldname}\"";
                 $properties .= ' datatype="'.$prop->type.'"';
                 if ($prop->primary) {
                     if ($primarykeys != '') {

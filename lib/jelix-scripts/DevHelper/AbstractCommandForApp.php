@@ -122,7 +122,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
     {
         $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
         if (!$entrypoint) {
-            throw new \Exception($this->getName().": Entry point ${epId} is unknown");
+            throw new \Exception($this->getName().": Entry point {$epId} is unknown");
         }
 
         $configFile = $entrypoint->getConfigFile();
@@ -148,12 +148,11 @@ abstract class AbstractCommandForApp extends AbstractCommand
         }
 
         if (!isset($config->_modulesPathList[$module])) {
-            throw new \Exception($this->getName().": The module ${module} doesn't exist");
+            throw new \Exception($this->getName().": The module {$module} doesn't exist");
         }
 
         return $config->_modulesPathList[$module];
     }
-
 
     protected function getFrameworkInfos()
     {
@@ -172,7 +171,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
         $ep = $this->getFrameworkInfos()->getEntryPointInfo($name);
 
         if (!$ep) {
-            throw new \Exception($this->getName().": The entry point ${name} doesn't exist");
+            throw new \Exception($this->getName().": The entry point {$name} doesn't exist");
         }
 
         return $ep;

@@ -7,7 +7,7 @@
  * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
  * @contributor geekbay, Brunto, Laurent Jouanneau
  *
- * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2018 Laurent Jouanneau
+ * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2020 Laurent Jouanneau
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -200,9 +200,11 @@ class jImageModifier
                 $srcUri = $basePath.$srcUri;
             }
             $srcPath = jFile::parseJelixPath($config['src_path']);
-        } else {
-            $srcUri = jApp::coord()->request->getServerURI().$basePath;
+        } elseif (jApp::coord()) {
+            $srcUri = jServer::getServerURI().$basePath;
             $srcPath = jApp::wwwPath();
+        } else {
+            throw new Exception('No router and no src_url in parameters. src_url is missing');
         }
 
         if ($config['cache_path'] && $config['cache_url']) {
@@ -211,9 +213,11 @@ class jImageModifier
                 $cacheUri = $basePath.$cacheUri;
             }
             $cachePath = jFile::parseJelixPath($config['cache_path']);
-        } else {
+        } elseif (jApp::coord()) {
             $cachePath = jApp::wwwPath('cache/images/');
-            $cacheUri = jApp::coord()->request->getServerURI().$basePath.'cache/images/';
+            $cacheUri = jServer::getServerURI().$basePath.'cache/images/';
+        } else {
+            throw new Exception('No router and no cache_url in parameters. cache_url is missing');
         }
 
         if ($src && (!isset($config['use_old_cache_path']) || !$config['use_old_cache_path'])) {
@@ -246,25 +250,26 @@ class jImageModifier
 
         // Creating an image
         switch ($mimeType) {
-            case 'image/gif' : $image = imagecreatefromgif($srcFs);
-
-break;
-            case 'image/jpeg': $image = imagecreatefromjpeg($srcFs);
-
-break;
-            case 'image/png': $image = imagecreatefrompng($srcFs);
-
-break;
-            case 'image/vnd.wap.wbmp': $image = imagecreatefromwbmp($srcFs);
-
-break;
-            case 'image/image/x-xbitmap': $image = imagecreatefromxbm($srcFs);
-
-break;
-            case 'image/x-xpixmap': $image = imagecreatefromxpm($srcFs);
-
-break;
-            default: return false;
+            case 'image/gif':
+                $image = imagecreatefromgif($srcFs);
+                break;
+            case 'image/jpeg':
+                $image = imagecreatefromjpeg($srcFs);
+                break;
+            case 'image/png':
+                $image = imagecreatefrompng($srcFs);
+                break;
+            case 'image/vnd.wap.wbmp':
+                $image = imagecreatefromwbmp($srcFs);
+                break;
+            case 'image/image/x-xbitmap':
+                $image = imagecreatefromxbm($srcFs);
+                break;
+            case 'image/x-xpixmap':
+                $image = imagecreatefromxpm($srcFs);
+                break;
+            default:
+                return false;
         }
 
         if ($image === false) {
@@ -490,8 +495,13 @@ break;
                     $suma += $alpha * $coeffs[$flou][$k];
                 }
                 $alpha = 127 - ((127 - ($suma / $sum)) / (100 / $opac));
-                $c = imagecolorallocatealpha($temp2, $rgb[0], $rgb[1], $rgb[2],
-                    $alpha < 0 ? 0 : ($alpha > 127 ? 127 : $alpha));
+                $c = imagecolorallocatealpha(
+                    $temp2,
+                    $rgb[0],
+                    $rgb[1],
+                    $rgb[2],
+                    $alpha < 0 ? 0 : ($alpha > 127 ? 127 : $alpha)
+                );
                 imagesetpixel($temp2, $i + $x1, $j + $y1, $c);
             }
         }

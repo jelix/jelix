@@ -20,13 +20,13 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
     protected function configure()
     {
         $this
-            ->setName('acl2:role-group-create')
-            ->setDescription('Add a role group')
+            ->setName('acl2:rights-group-create')
+            ->setDescription('Add a rights group')
             ->setHelp('')
             ->addArgument(
                 'group',
                 InputArgument::REQUIRED,
-                'Name of the role group'
+                'Name of the rights group'
             )
             ->addArgument(
                 'labelkey',
@@ -36,7 +36,7 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
             ->addArgument(
                 'label',
                 InputArgument::REQUIRED,
-                'The label of the role group if the given selector does not exists'
+                'The label of the rights group if the given selector does not exists'
             )
         ;
         parent::configure();
@@ -54,7 +54,7 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
             .' WHERE id_aclsbjgrp='.$cnx->quote($group);
         $rs = $cnx->query($sql);
         if ($rs->fetch()) {
-            throw new \Exception('This role group already exists');
+            throw new \Exception('This rights group already exists');
         }
 
         $sql = 'INSERT into '.$cnx->prefixTable('jacl2_subject_group').' (id_aclsbjgrp, label_key) VALUES (';
@@ -64,7 +64,7 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
         $cnx->exec($sql);
 
         if ($this->verbose()) {
-            $output->writeln("Rights: group of roles '".$group."' is created");
+            $output->writeln("Rights: group of rights '".$group."' is created");
         }
 
         if ($label &&

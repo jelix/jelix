@@ -1,22 +1,16 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jacl2db
- *
  * @author      Laurent Jouanneau
- * @copyright   2006-2019 Laurent Jouanneau
- *
- * @see        http://www.jelix.org
+ * @contributor Adrien Lagroy de Croutte
+ * @copyright   2006-2021 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
+ * @link        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
- *
  * @since 1.1
  */
 
 /**
  * This class is used to manage rights. Works only with db driver of jAcl2.
  *
- * @package     jelix
- * @subpackage  acl
  * @static
  */
 class jAcl2DbManager
@@ -37,17 +31,16 @@ class jAcl2DbManager
     }
 
     /**
-     * add a right on the given role/group/resource.
+     * add a right on the given users group/resource.
      *
-     * @param string $group    the group id
-     * @param string $role  the key of the role
+     * @param string $group    the users group id
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
-     *
-     * @return bool true if the right is set
+     * @return boolean  true if the right is set
      */
-    public static function addRight($group, $role, $resource = '-')
+    public static function addRight($group, $right, $resource = '-')
     {
-        $sbj = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->get($role);
+        $sbj = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->get($right);
         if (!$sbj) {
             return false;
         }
@@ -58,17 +51,17 @@ class jAcl2DbManager
 
         //  add the new value
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
-        $right = $daoright->get($role, $group, $resource);
-        if (!$right) {
-            $right = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
-            $right->id_aclsbj = $role;
-            $right->id_aclgrp = $group;
-            $right->id_aclres = $resource;
-            $right->canceled = 0;
-            $daoright->insert($right);
-        } elseif ($right->canceled) {
-            $right->canceled = false;
-            $daoright->update($right);
+        $rightset = $daoright->get($right, $group, $resource);
+        if (!$rightset) {
+            $rightset = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
+            $rightset->id_aclsbj = $right;
+            $rightset->id_aclgrp = $group;
+            $rightset->id_aclres = $resource;
+            $rightset->canceled = 0;
+            $daoright->insert($rightset);
+        } elseif ($rightset->canceled) {
+            $rightset->canceled = false;
+            $daoright->update($rightset);
         }
         jAcl2::clearCache();
 
@@ -76,15 +69,16 @@ class jAcl2DbManager
     }
 
     /**
-     * remove a right on the given role/group/resource. The given right for this group will then
-     * inherit from other groups if the user is in multiple groups of users.
+     * remove a right on the given users group/resource. The given right for
+     * this users group will then inherit from other groups if the user is in
+     * multiple groups of users.
      *
-     * @param string $group    the group id
-     * @param string $role  the key of the role
+     * @param string $group    the users group id
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      * @param bool   $canceled true if the removing is to cancel a right, instead of an inheritance
      */
-    public static function removeRight($group, $role, $resource = '-', $canceled = false)
+    public static function removeRight($group, $right, $resource = '-', $canceled = false)
     {
         if (empty($resource)) {
             $resource = '-';
@@ -92,37 +86,38 @@ class jAcl2DbManager
 
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
         if ($canceled) {
-            $right = $daoright->get($role, $group, $resource);
-            if (!$right) {
-                $right = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
-                $right->id_aclsbj = $role;
-                $right->id_aclgrp = $group;
-                $right->id_aclres = $resource;
-                $right->canceled = $canceled;
-                $daoright->insert($right);
-            } elseif ($right->canceled != $canceled) {
-                $right->canceled = $canceled;
-                $daoright->update($right);
+            $rightset = $daoright->get($right, $group, $resource);
+            if (!$rightset) {
+                $rightset = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
+                $rightset->id_aclsbj = $right;
+                $rightset->id_aclgrp = $group;
+                $rightset->id_aclres = $resource;
+                $rightset->canceled = $canceled;
+                $daoright->insert($rightset);
+            } elseif ($rightset->canceled != $canceled) {
+                $rightset->canceled = $canceled;
+                $daoright->update($rightset);
             }
         } else {
-            $daoright->delete($role, $group, $resource);
+            $daoright->delete($right, $group, $resource);
         }
         jAcl2::clearCache();
     }
 
     /**
-     * Set all rights on the given group.
+     * Set all rights on the given users group.
      *
-     * Only rights on given roles are changed.
+     * Only given rights are changed.
      * Existing rights not given in parameters are deleted from the group (i.e: marked as inherited).
      *
      * Rights with resources are not changed.
      *
-     * @param string $group  the group id
-     * @param array  $rights list of rights key=role, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+     * @param string $group  the users group id
+     * @param array  $rights list of rights key=right key, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
      */
     public static function setRightsOnGroup($group, $rights)
     {
+        $subjects = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject()->fetchAll();
         $dao = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
         // retrieve old rights.
@@ -132,16 +127,42 @@ class jAcl2DbManager
             $oldrights[$rec->id_aclsbj] = ($rec->canceled ? 'n' : 'y');
         }
 
+        $roots = array();
+        foreach ($subjects as $subject) {
+            $matches = array();
+            if (preg_match('/(.*)(\.view)$/', $subject->id_aclsbj, $matches)) {
+                $roots[] = $matches[1];
+            }
+        }
+        $alreadyTreatedSbj = array();
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach ($rights as $sbj => $val) {
-            if ($val === '' || $val == false) {
+                if ($val === '' || $val == false || in_array($sbj, $alreadyTreatedSbj)) {
                 // remove
             } elseif ($val === true || $val == 'y') {
+                foreach ($roots as $root) {
+                    if (strpos($sbj, $root) === 0) {
+                        $viewRight = $root.'.view';
+                        self::addRight($group, $viewRight);
+                        if (isset($oldrights[$viewRight])) {
+                            unset($oldrights[$viewRight]);
+                        }
+                    }
+                }
                 self::addRight($group, $sbj);
                 unset($oldrights[$sbj]);
             } elseif ($val == 'n') {
                 // cancel
+                $matches = array();
+                if (preg_match('/(.*)(\.view)$/', $sbj, $matches)) {
+                    foreach ($subjects as $subject) {
+                        if (preg_match('/^('.$matches[1].'.)/', $sbj)) {
+                            self::removeRight($group, $subject->id_aclsbj, '-', true);
+                            $alreadyTreatedSbj[] = $subject->id_aclsbj;
+                        }
+                    }
+                }
                 if (isset($oldrights[$sbj])) {
                     unset($oldrights[$sbj]);
                 }
@@ -151,107 +172,143 @@ class jAcl2DbManager
 
         if (count($oldrights)) {
             // $oldrights contains now rights to remove
-            $dao->deleteByGroupAndRoles($group, array_keys($oldrights));
+            $dao->deleteByGroupAndRights($group, array_keys($oldrights));
         }
-
         jAcl2::clearCache();
     }
 
     /**
-     * remove the right on the given role/resource, for all groups.
+     * remove the right on the given resource, for all users groups.
      *
-     * @param string $role  the key of the role
+     * @param string $right    the key of the right
      * @param string $resource the id of a resource
      */
-    public static function removeResourceRight($role, $resource)
+    public static function removeResourceRight($right, $resource)
     {
         if (empty($resource)) {
             $resource = '-';
         }
-        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteByRoleRes($role, $resource);
+        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteByRightRes($right, $resource);
         jAcl2::clearCache();
     }
 
     /**
-     * create a new role.
+     * create a new right.
      *
-     * @param string $role      the key of the role
-     * @param string $label_key    the key of a locale which represents the label of the role
-     * @param string $subjectGroup the id of the group where the role is attached to
-     * @since 1.7
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
+     * @param string $rightsGroup the id of the rights group where the right is attached to
+     *
+     * @since 1.7.6
      */
-    public static function addRole($role, $label_key, $subjectGroup = null)
+    public static function createRight($right, $label_key, $rightsGroup = null)
     {
         $dao = jDao::get('jacl2db~jacl2subject', 'jacl2_profile');
-        if ($dao->get($role)) {
+        if ($dao->get($right)) {
             return;
         }
         $subj = jDao::createRecord('jacl2db~jacl2subject', 'jacl2_profile');
-        $subj->id_aclsbj = $role;
+        $subj->id_aclsbj = $right;
         $subj->label_key = $label_key;
-        $subj->id_aclsbjgrp = $subjectGroup;
+        $subj->id_aclsbjgrp = $rightsGroup;
         $dao->insert($subj);
         jAcl2::clearCache();
     }
 
     /**
-     * create a new role.
+     * create a new right.
+     *
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
+     * @param string $rightsGroup the id of the rights group where the right is attached to
      *
      * @deprecated
-     * @see addRole()
-     * @param string $role      the key of the role
-     * @param string $label_key    the key of a locale which represents the label of the role
-     * @param string $subjectGroup the id of the group where the role is attached to
+     * @see createRight()
+     * @since 1.7
      */
-    public static function addSubject($role, $label_key, $subjectGroup = null)
+    public static function addRole($right, $label_key, $rightsGroup = null)
     {
-        self::addRole($role, $label_key, $subjectGroup);
+        self::createRight($right, $label_key, $rightsGroup);
     }
 
     /**
-     * Delete the given role.
+     * create a new right.
      *
-     * @param string $role the key of the role
-     * @since 1.7
+     * @deprecated
+     * @see createRight()
+     *
+     * @param string $right       the key of the right
+     * @param string $label_key   the key of a locale which represents the label of the right
+     * @param string $rightsGroup the id of the rights group where the right is attached to
      */
-    public static function removeRole($role)
+    public static function addSubject($right, $label_key, $rightsGroup = null)
     {
-        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteByRole($role);
-        jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->delete($role);
+        self::createRight($right, $label_key, $rightsGroup);
+    }
+
+    /**
+     * Delete the given right.
+     *
+     * It is deleted from the database, so it is not usable anymore.
+     *
+     * @param string $right the key of the right
+     *
+     * @since 1.7.6
+     */
+    public static function deleteRight($right)
+    {
+        jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteByRight($right);
+        jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->delete($right);
         jAcl2::clearCache();
     }
 
     /**
-     * Delete the given role.
+     * Delete the given right.
      *
-     * @param string $role the key of the role
-     * @deprecated see removeRole()
+     * @param string $right the key of the right
+     *
+     * @deprecated
+     * @see deleteRight()
+     * @since 1.7
      */
-    public static function removeSubject($role)
+    public static function removeRole($right)
     {
-        self::removeRole($role);
+        self::deleteRight($right);
     }
 
     /**
-     * set same rights with a specific role, on groups having an other specific role
+     * Delete the given right.
      *
-     * It can be useful when creating a new role.
+     * @param string $right the key of the right
      *
-     * @param string $fromRole      the role of the role
-     * @param string $label_key    the key of a locale which represents the label of the role
-     * @param string $subjectGroup the id of the group where the role is attached to
-     * @since 1.7
+     * @deprecated
+     * @see deleteRight()
      */
-    public static function copyRoleRights($fromRole, $toRole)
+    public static function removeSubject($right)
+    {
+        self::deleteRight($right);
+    }
+
+    /**
+     * Set a right to users groups which have the given right.
+     *
+     * It can be useful when creating a new right.
+     *
+     * @param string $sourceRight the right that users groups have
+     * @param mixed  $targetRight the right to set on users groups having $sourceRight
+     *
+     * @since 1.7.6
+     */
+    public static function copyRightSettings($sourceRight, $targetRight)
     {
         $daoright = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
 
-        $allRights = $daoright->getRightsByRole($fromRole);
+        $allRights = $daoright->getRightSettings($sourceRight);
         foreach ($allRights as $right) {
-            $rightTo = $daoright->get($toRole, $right->id_aclgrp, $right->id_aclres);
+            $rightTo = $daoright->get($targetRight, $right->id_aclgrp, $right->id_aclres);
             if (!$rightTo) {
                 $rightTo = jDao::createRecord('jacl2db~jacl2rights', 'jacl2_profile');
-                $rightTo->id_aclsbj = $toRole;
+                $rightTo->id_aclsbj = $targetRight;
                 $rightTo->id_aclgrp = $right->id_aclgrp;
                 $rightTo->id_aclres = $right->id_aclres;
                 $rightTo->canceled = $right->canceled;
@@ -265,67 +322,109 @@ class jAcl2DbManager
         jAcl2::clearCache();
     }
 
+    /**
+     * Set a right to users groups which have the given right.
+     *
+     * It can be useful when creating a new right.
+     *
+     * @param string $sourceRight the right that users groups have
+     * @param mixed  $targetRight the right to set on users groups having $sourceRight
+     *
+     * @deprecated
+     * @see copyRightSettings()
+     */
+    public static function copyRoleRights($sourceRight, $targetRight)
+    {
+        self::copyRightSettings($sourceRight, $targetRight);
+    }
 
     /**
-     * Create a new role group.
+     * Create a new right group.
      *
-     * @param string $roleGroup the key of the role group
-     * @param string $label_key    the key of a locale which represents the label of the role group
+     * @param string $rightGroup the key of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
      *
-     * @since 1.7
+     * @since 1.7.6
      */
-    public static function addRoleGroup($roleGroup, $label_key)
+    public static function createRightGroup($rightGroup, $label_key)
     {
         $dao = jDao::get('jacl2db~jacl2subjectgroup', 'jacl2_profile');
-        if ($dao->get($roleGroup)) {
+        if ($dao->get($rightGroup)) {
             return;
         }
         $subj = jDao::createRecord('jacl2db~jacl2subjectgroup', 'jacl2_profile');
-        $subj->id_aclsbjgrp = $roleGroup;
+        $subj->id_aclsbjgrp = $rightGroup;
         $subj->label_key = $label_key;
         $dao->insert($subj);
         jAcl2::clearCache();
     }
 
     /**
-     * Create a new role group.
+     * Create a new right group.
      *
-     * @param string $roleGroup the key of the role group
-     * @param string $label_key    the key of a locale which represents the label of the role group
+     * @param string $rightGroup the key of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
      *
-     * @since 1.3
-     * @deprecated see addRoleGroup()
+     * @deprecated see createRightGroup()
+     * @since 1.7
      */
-    public static function addSubjectGroup($roleGroup, $label_key)
+    public static function addRoleGroup($rightGroup, $label_key)
     {
-        self::addRoleGroup($roleGroup, $label_key);
+        self::createRightGroup($rightGroup, $label_key);
     }
 
     /**
-     * Delete the given role.
+     * Create a new right group.
      *
-     * @param string $roleGroup the key of the role group
+     * @param string $rightGroup the key of the right group
+     * @param string $label_key  the key of a locale which represents the label of the right group
+     *
+     * @since 1.3
+     * @deprecated see createRightGroup()
+     */
+    public static function addSubjectGroup($rightGroup, $label_key)
+    {
+        self::createRightGroup($rightGroup, $label_key);
+    }
+
+    /**
+     * Delete the given right group.
+     *
+     * @param string $rightGroup the key of the right group
      *
      * @since 1.7
      */
-    public static function removeRoleGroup($roleGroup)
+    public static function deleteRightGroup($rightGroup)
     {
-        jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->removeSubjectFromGroup($roleGroup);
-        jDao::get('jacl2db~jacl2subjectgroup', 'jacl2_profile')->delete($roleGroup);
+        jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->removeRightsFromRightsGroup($rightGroup);
+        jDao::get('jacl2db~jacl2subjectgroup', 'jacl2_profile')->delete($rightGroup);
         jAcl2::clearCache();
     }
 
     /**
-     * Delete the role subject.
+     * Delete the given right group.
      *
-     * @param string $roleGroup the key of the role group
+     * @param string $rightGroup the key of the right group
+     *
+     * @since 1.7
+     * @deprecated see deleteRightGroup
+     */
+    public static function removeRoleGroup($rightGroup)
+    {
+        self::deleteRightGroup($rightGroup);
+    }
+
+    /**
+     * Delete the right group.
+     *
+     * @param string $rightGroup the key of the right group
      *
      * @since 1.3
-     * @deprecated see removeRoleGroup
+     * @deprecated see deleteRightGroup
      */
-    public static function removeSubjectGroup($roleGroup)
+    public static function removeSubjectGroup($rightGroup)
     {
-        self::removeRoleGroup($roleGroup);
+        self::deleteRightGroup($rightGroup);
     }
 
     const ACL_ADMIN_RIGHTS_STILL_USED = 0;
@@ -333,185 +432,105 @@ class jAcl2DbManager
     const ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM = 2;
 
     /**
-     * Only rights on given roles are considered changed.
-     * Existing rights not given in parameters are considered as deleted.
+     * Checks if given authorizations changes still allow to administrate rights
+     * for at least one user.
      *
-     * Rights with resources are not changed.
+     * For each groups, only authorizations on given rights are considered changed.
+     * Other existing authorizations are considered as deleted.
      *
-     * @param array      $rightsChanges         array(<id_aclgrp> => array( <role> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
-     * @param null|mixed $sessionUser
-     * @param mixed      $setForAllPublicGroups
-     * @param mixed      $setAllRightsInGroups
-     * @param null|mixed $ignoredUser
-     * @param null|mixed $ignoreUserInGroup
+     * Authorizations with resources are not changed.
      *
-     * @return int one of the ACL_ADMIN_RIGHTS_* const
+     * @param array  $authorizationsChanges         array(<id_aclgrp> => array( <id_aclsbj> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
+     * @param string $sessionUser the login name of the user who initiate the change
+     * @param integer $changeType  1 for group rights change, 2 for user rights change
+     *
+     * @return int one of the jAcl2DbAdminCheckAuthorizations::ACL_ADMIN_RIGHTS_* const
      */
-    public static function checkAclAdminRightsChanges(
-        $rightsChanges,
-        $sessionUser = null,
-        $setForAllPublicGroups = true,
-        $setAllRightsInGroups = true,
-        $ignoredUser = null,
-        $ignoreUserInGroup = null
+    public static function checkAclAdminAuthorizationsChanges($authorizationsChanges,
+                                                      $sessionUser,
+                                                      $changeType
     ) {
-        $canceledRoles = array();
-        $assignedRoles = array();
-        $sessionUserGroups = array();
-        $sessionCanceledRoles = array();
-        $sessionAssignedRoles = array();
 
-        $db = jDb::getConnection('jacl2_profile');
-        if ($sessionUser) {
-            $gp = jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile')
-                ->getGroupsUser($sessionUser)
-            ;
-            foreach ($gp as $g) {
-                $sessionUserGroups[$g->id_aclgrp] = true;
-            }
-        }
-
-        // get all acl admin rights, even all those in private groups
-        $sql = 'SELECT id_aclsbj, r.id_aclgrp, canceled, g.grouptype
-            FROM '.$db->prefixTable('jacl2_rights').' r 
-            INNER JOIN '.$db->prefixTable('jacl2_group').' g 
-            ON (r.id_aclgrp = g.id_aclgrp)
-            WHERE id_aclsbj IN ('.implode(',', array_map(function ($role) use ($db) {
-            return $db->quote($role);
-        }, self::$ACL_ADMIN_RIGHTS)).') ';
-        $rs = $db->query($sql);
-        foreach ($rs as $rec) {
-            if ($sessionUser && isset($sessionUserGroups[$rec->id_aclgrp])) {
-                if ($rec->canceled != '0') {
-                    $sessionCanceledRoles[$rec->id_aclsbj] = true;
-                } else {
-                    $sessionAssignedRoles[$rec->id_aclsbj] = true;
-                }
-            }
-            if ($setForAllPublicGroups &&
-                !isset($rightsChanges[$rec->id_aclgrp]) &&
-                $rec->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE
-            ) {
-                continue;
-            }
-            if ($rec->canceled != '0') {
-                $canceledRoles[$rec->id_aclgrp][$rec->id_aclsbj] = true;
-            } else {
-                $assignedRoles[$rec->id_aclgrp][$rec->id_aclsbj] = true;
-            }
-        }
-
-        $rolesStats = array_combine(self::$ACL_ADMIN_RIGHTS, array_fill(0, count(self::$ACL_ADMIN_RIGHTS), 0));
-
-        // now apply changes
-        foreach ($rightsChanges as $groupId => $changes) {
-            if (!isset($assignedRoles[$groupId])) {
-                $assignedRoles[$groupId] = array();
-            }
-            if (!isset($canceledRoles[$groupId])) {
-                $canceledRoles[$groupId] = array();
-            }
-            $unassignedRoles = array_combine(self::$ACL_ADMIN_RIGHTS, array_fill(0, count(self::$ACL_ADMIN_RIGHTS), true));
-            foreach ($changes as $role => $roleAssignation) {
-                if (!isset($rolesStats[$role])) {
-                    continue;
-                }
-                unset($unassignedRoles[$role]);
-                if ($roleAssignation === false || $roleAssignation === '') {
-                    // inherited
-                    if (isset($assignedRoles[$groupId][$role])) {
-                        unset($assignedRoles[$groupId][$role]);
-                    }
-                    if (isset($canceledRoles[$groupId][$role])) {
-                        unset($canceledRoles[$groupId][$role]);
-                    }
-                } elseif ($roleAssignation == 'y' || $roleAssignation === true) {
-                    if (isset($canceledRoles[$groupId][$role])) {
-                        unset($canceledRoles[$groupId][$role]);
-                    }
-                    $assignedRoles[$groupId][$role] = true;
-                } elseif ($roleAssignation == 'n') {
-                    if (isset($assignedRoles[$groupId][$role])) {
-                        unset($assignedRoles[$groupId][$role]);
-                    }
-                    $canceledRoles[$groupId][$role] = true;
-                }
-            }
-            if ($setAllRightsInGroups) {
-                foreach ($unassignedRoles as $role => $ok) {
-                    if (isset($assignedRoles[$groupId][$role])) {
-                        unset($assignedRoles[$groupId][$role]);
-                    }
-                    if (isset($canceledRoles[$groupId][$role])) {
-                        unset($canceledRoles[$groupId][$role]);
-                    }
-                }
-            }
-            if (count($assignedRoles[$groupId]) == 0 && count($canceledRoles[$groupId]) == 0) {
-                unset($assignedRoles[$groupId], $canceledRoles[$groupId]);
-            }
-        }
-
-        // get all users that are in groups having new acl admin rights
-        $allGroups = array_unique(array_merge(array_keys($assignedRoles), array_keys($canceledRoles)));
-        if (count($allGroups) === 0) {
-            return self::ACL_ADMIN_RIGHTS_NOT_ASSIGNED;
-        }
-
-        $sql = 'SELECT login, id_aclgrp FROM '.$db->prefixTable('jacl2_user_group').'
-            WHERE id_aclgrp IN ('.implode(',', array_map(function ($grp) use ($db) {
-            return $db->quote($grp);
-        }, $allGroups)).') ';
-
-        $rs = $db->query($sql);
-        $users = array();
-        foreach ($rs as $rec) {
-            if ($rec->login === $ignoredUser &&
-                ($ignoreUserInGroup === null || $ignoreUserInGroup === $rec->id_aclgrp)) {
-                continue;
-            }
-            if (!isset($users[$rec->login])) {
-                $users[$rec->login] = array('canceled' => array(), 'roles' => array());
-            }
-            if (isset($assignedRoles[$rec->id_aclgrp])) {
-                $users[$rec->login]['roles'] = array_merge($users[$rec->login]['roles'], $assignedRoles[$rec->id_aclgrp]);
-            }
-            if (isset($canceledRoles[$rec->id_aclgrp])) {
-                $users[$rec->login]['canceled'] = array_merge($users[$rec->login]['canceled'], $canceledRoles[$rec->id_aclgrp]);
-            }
-        }
-
-        // gets statistics
-        $newSessionUserRoles = array();
-        foreach ($users as $login => $data) {
-            if (count($data['canceled'])) {
-                $data['roles'] = array_diff_key($data['roles'], $data['canceled']);
-            }
-            if ($login === $sessionUser) {
-                $newSessionUserRoles = $data['roles'];
-            }
-            foreach ($data['roles'] as $role => $ok) {
-                ++$rolesStats[$role];
-            }
-        }
-
-        if ($sessionUser) {
-            foreach ($sessionAssignedRoles as $role => $ok) {
-                if (isset($sessionCanceledRoles[$role])) {
-                    continue;
-                }
-                if (!isset($newSessionUserRoles[$role])) {
-                    return self::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM;
-                }
-            }
-        }
-
-        foreach ($rolesStats as $count) {
-            if ($count == 0) {
-                return self::ACL_ADMIN_RIGHTS_NOT_ASSIGNED;
-            }
-        }
-
-        return self::ACL_ADMIN_RIGHTS_STILL_USED;
+        $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+        return $checker->checkAclAdminAuthorizationsChanges($authorizationsChanges, $changeType);
     }
+
+    /**
+     * check if the removing of the given user still allow to administrate authorizations
+     * for at least one user.
+     *
+     * @param string $userToRemove
+     * @param string $sessionUser the login name of the user who initiate the change
+     *
+     * @return int one of ACL_ADMIN_RIGHTS_* constant
+     */
+    public static function checkAclAdminRightsToRemoveUser(
+        $userToRemove,
+        $sessionUser=null
+    ) {
+        $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+        return $checker->checkAclAdminRightsToRemoveUser($userToRemove);
+    }
+
+    /**
+     * check if the removing of the given user from a the given group still
+     * allows to administrate rights for at least one user.
+     *
+     * @param string $userToRemoveFromTheGroup
+     * @param string $groupFromWhichToRemoveTheUser
+     * @param string $sessionUser the login name of the user who initiate the change
+     *
+     * @return int one of ACL_ADMIN_RIGHTS_* constant
+     */
+    public static function checkAclAdminRightsToRemoveUserFromGroup(
+        $userToRemoveFromTheGroup,
+        $groupFromWhichToRemoveTheUser,
+        $sessionUser)
+    {
+        $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+        return $checker->checkAclAdminRightsToRemoveUserFromGroup($userToRemoveFromTheGroup, $groupFromWhichToRemoveTheUser);
+    }
+
+    /**
+     * check if the removing of the given group still
+     * allows to administrate rights for at least one user.
+     *
+     *
+     * @param string $groupToRemove the group id to remove
+     * @param string $sessionUser the login name of the user who initiate the change
+     *
+     * @return int one of ACL_ADMIN_RIGHTS_* constant
+     */
+    public static function checkAclAdminRightsToRemoveGroup(
+        $groupToRemove,
+        $sessionUser
+    )
+    {
+        $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+        return $checker->checkAclAdminRightsToRemoveGroup($groupToRemove);
+    }
+
+    /**
+     * check if the adding of the given user to the the given group still
+     * allows to administrate rights for at least one user.
+     *
+     * (because the group may forbid to administrate rights.)
+     *
+     * @param string $userToAdd              the user login
+     * @param string $groupInWhichToAddAUser the group id
+     * @param string $sessionUser the login name of the user who initiate the change
+     *
+     * @return int one of ACL_ADMIN_RIGHTS_* constant
+     */
+    public static function checkAclAdminRightsToAddUserIntoGroup(
+        $userToAdd,
+        $groupInWhichToAddAUser,
+        $sessionUser
+    )
+    {
+        $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+        return $checker->checkAclAdminRightsToAddUserIntoGroup($userToAdd,
+                                                               $groupInWhichToAddAUser);
+    }
+
 }

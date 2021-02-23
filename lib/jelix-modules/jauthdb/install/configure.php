@@ -22,9 +22,9 @@ class jauthdbModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $this->parameters['defaultuser'] = $helpers->cli()
             ->askConfirmation(
-                  'Do you want to create an "admin" user in authdb?',
-                  $this->parameters['defaultuser']
-              )
+                'Do you want to create an "admin" user in authdb?',
+                $this->parameters['defaultuser']
+            )
         ;
     }
 }

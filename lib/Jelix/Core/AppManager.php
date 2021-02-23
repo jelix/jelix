@@ -108,7 +108,7 @@ class AppManager
             $message = file_get_contents(App::varConfigPath('CLOSED'));
 
             if (\jServer::isCLI()) {
-                echo 'Application closed.'.($message ? "\n${message}\n" : "\n");
+                echo 'Application closed.'.($message ? "\n{$message}\n" : "\n");
                 exit(1);
             }
 

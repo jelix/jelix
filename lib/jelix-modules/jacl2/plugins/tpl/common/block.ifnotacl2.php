@@ -20,7 +20,7 @@
 /**
  * a special if block to test easily a right value.
  *
- * <pre>{ifnotacl2 'role',54} ..here generated content if the user has NOT the right  {/ifnotacl2}</pre>
+ * <pre>{ifnotacl2 'right',54} ..here generated content if the user has NOT the right  {/ifnotacl2}</pre>
  *
  * @param jTplCompiler $compiler the template compiler
  * @param bool         $begin    true if it is the begin of block, else false

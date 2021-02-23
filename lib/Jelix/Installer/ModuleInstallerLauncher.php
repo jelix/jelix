@@ -46,14 +46,14 @@ class ModuleInstallerLauncher
     public $inError = 0;
 
     /**
-     * informations of the modules from their module.xml
+     * informations of the modules from their module.xml.
      *
      * @var \Jelix\Core\Infos\ModuleInfos
      */
     protected $moduleInfos;
 
     /**
-     * status of modules into the application
+     * status of modules into the application.
      *
      * @var ModuleStatus
      */
@@ -86,10 +86,6 @@ class ModuleInstallerLauncher
 
     protected $upgradersContexts = array();
 
-    /**
-     * @param ModuleStatus $moduleStatus
-     * @param GlobalSetup  $globalSetup
-     */
     public function __construct(ModuleStatus $moduleStatus, GlobalSetup $globalSetup)
     {
         $this->globalSetup = $globalSetup;
@@ -291,6 +287,7 @@ class ModuleInstallerLauncher
      *                                    with the local configuration, else it will be done with the
      *                                    main configuration
      * @param array install parameters
+     * @param null|mixed $installParameters
      *
      * @throws Exception when configurator class not found
      *
@@ -327,7 +324,8 @@ class ModuleInstallerLauncher
         return $this->createConfigurator($installParameters);
     }
 
-    protected function createConfigurator($installParameters = null) {
+    protected function createConfigurator($installParameters = null)
+    {
         // false means that there isn't an installer for the module
         if ($this->moduleConfigurator === false) {
             return null;
@@ -412,8 +410,7 @@ class ModuleInstallerLauncher
         $configurator = $this->createConfigurator();
         if ($configurator) {
             $parameters = $configurator->getParameters();
-        }
-        else {
+        } else {
             $parameters = $this->moduleStatus->parameters;
         }
         $this->moduleInstaller->setParameters($parameters);
@@ -469,8 +466,7 @@ class ModuleInstallerLauncher
         $configurator = $this->createConfigurator();
         if ($configurator) {
             $installParameters = $configurator->getParameters();
-        }
-        else {
+        } else {
             $installParameters = $this->getInstallParameters();
         }
 
@@ -496,8 +492,7 @@ class ModuleInstallerLauncher
         $configurator = $this->createConfigurator();
         if ($configurator) {
             $installParameters = $configurator->getParameters();
-        }
-        else {
+        } else {
             $installParameters = $this->moduleStatus->parameters;
         }
 

@@ -1,23 +1,78 @@
 Changes into Jelix 1.7
 ======================
 
-Jelix 1.7.6 (next)
-------------------
+Jelix 1.7.7
+-----------
+
+* have all bug fixes and improvements from Jelix 1.6.31 and 1.6.32.
+  * Fix various issues with PHP 8.0
+  * Fix some dao locales that have a bad pattern for sprintf
+  * Fix float to string convertion into jDb
+  * Fix pgsql schema: should list only tables from the search_path
+  * Fix comparison of values in the jForms modified check
+  * Fix many issues in the checking of admin rights in administration UI. There were some situation when the checking was badly done, so there were some possibility into the UI to remove completely admin rights.
+  * jauthdb_admin: adding autocomplete to search users
+  * jInstaller, module.xml: allow http:// as well as https:// into the namespace value
+* Fix some issues in the docker stack for tests
+* Upgrade PHPUnit to 8.5.14
+
+Because there is not a version of PHPUnit that is compatible with PHP 5.6, 7.x and 8.0
+at the same time, Jelix 1.7 cannot be tested any more against PHP 5.6 to PHP 7.1.
+So, starting from this version, there is no more guarantee that Jelix 1.7 works 
+well on these old version of PHP. However, bug fixes and minor improvements in this
+branch will not use specific syntax of PHP 7.3+/8.x, so it could not be an issue.
+
+Anyway, it is higly recommanded to migrate to PHP 7.3 or higher, as PHP 7.2 and
+lower are not maintained any more by the PHP team. See https://www.php.net/supported-versions.php.
+
+Jelix 1.7.6
+-----------
 
 * have all bug fixes and improvements from Jelix 1.6.30.
+    * Fix basePath in the context of a command line script
+    * Fix a PHP error in the listbox form widget
+    * Fix a issue in jAcl2 admin: an administrator could put himself into a group which forbid some admin rights, and so he was not an administrator anymore.
     * new command to test the mailer. To send an email to check mailer parameters, 
       execute `php console.php mailer:test my.email@example.com`
     * jForms: new control jControlTime, and support of a `<time>` element in jforms 
     * New method `jEvent::getParameters()`
-    * jacl2db_admin interface: confirmation on groups delete button
+    * New method `jAuth::setUserSession()`
+    * jAcl2 admin interface: confirmation on groups delete button
+    * jAcl2 admin interface: added a separator between groups in users list
     * Fix compat with php 7.4 in jCmdUtils
+    * New methods `jServer::getDomainName()`, `jServer::getServerURI()`, 
+      `jServer::getPort()`, `jServer::isHttps()`
 
 * Fix web assets upgrader with jforms_datepicker and jforms_datetimepicker
+* Fix web assets loading of the datetime widget
+* Fix console: initialize a coordinator so components could work well
+* Fix: some components should check if the coordinator is there or not 
 * Authentication: `checkCookieToken()` does not trigger anymore a 500 error page
   if the cookie token is invalid.
 * jAcl2: adapter system to make the glue to authentication.    
   It allows to use authentication library other than jAuth, like
   the jelix/authentication-module library.
+* jAcl2: reword terms 'role' to 'right'. Rewording 'subject' to 'role' into Jelix 1.7 was a mistake.
+  So some API have been renamed, but old API are still usable, even if deprecated. 
+  - `jAcl2DbManager::addRole()` becomes `createRight()`
+  - `jAcl2DbManager::removeRole()` becomes `deleteRight()`
+  - `jAcl2DbManager::removeRole()` becomes `deleteRight()`
+  - `jAcl2DbManager::copyRoleRights()` becomes `copyRightSettings()`
+  - `jAcl2DbManager::addRoleGroup()` becomes `createRightGroup()`
+  - `jAcl2DbManager::removeRoleGroup()` becomes `deleteRightGroup()`
+  - dao method `jacl2rights::getRightsByRole()` becomes `getRightSettings()`
+  - dao method `jacl2rights::deleteByRoleRes()` becomes `deleteByRightRes()`
+  - dao method `jacl2rights::deleteByRole()` becomes `deleteByRight()`
+  - dao method `jacl2rights::deleteByGroupAndRoles()` becomes `deleteByGroupAndRights()`
+  - dao method `jacl2subject::findAllRoles()` becomes `findAllRights()`
+  - dao method `jacl2subject::removeRolesFromGroup()` becomes `removeRightsFromRightsGroup()`
+  - dao method `jacl2subject::replaceRoleGroup()` becomes `replaceRightsGroup()`
+  - console command `acl2:role-create` becomes `acl2:right-create`
+  - console command `acl2:role-delete` becomes `acl2:right-delete`
+  - console command `acl2:role-group-create` becomes `acl2:rights-group-create`
+  - console command `acl2:role-group-delete` becomes `acl2:rights-group-delete`
+  - console command `acl2:role-group-list` becomes `acl2:rights-groups-list`
+  - console command `acl2:roles-list` becomes `acl2:rights-list`
 * Tests: docker configuration for a test environment, to replace Vagrant.
 
 Jelix 1.7.5

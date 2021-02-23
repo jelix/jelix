@@ -317,7 +317,7 @@ class GlobalSetup
                 }
 
                 $modulesInfos[$moduleName.'.installed'] = 1;
-                $modulesInfos[$moduleName.'.version'] = (string)$this->installerIni->getValue($moduleName.'.version', 'modules');
+                $modulesInfos[$moduleName.'.version'] = (string) $this->installerIni->getValue($moduleName.'.version', 'modules');
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
                 $moduleInfos = new ModuleStatus(
@@ -629,7 +629,7 @@ class GlobalSetup
         }
 
         if ($this->frameworkInfos->getEntryPointInfo($epId)) {
-            throw new \Exception("There is already an entrypoint with the same name but with another type (${epId}, ${epType})");
+            throw new \Exception("There is already an entrypoint with the same name but with another type ({$epId}, {$epType})");
         }
 
         if ($this->forLocalConfiguration()) {
@@ -676,7 +676,6 @@ class GlobalSetup
     /**
      * @param \Jelix\IniFile\IniModifier $config
      * @param string                     $name       the name of webassets
-     * @param array                      $values
      * @param string                     $collection the name of the webassets collection
      * @param bool                       $force
      */
@@ -692,7 +691,7 @@ class GlobalSetup
             $config->getValue($name.'.css', $section) ||
                 $config->getValue($name.'.js', $section) ||
                 $config->getValue($name.'.require', $section)
-            )) {
+        )) {
             return;
         }
 

@@ -44,7 +44,7 @@ case $COMMAND in
        docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh showusers
        ;;
     pgsql)
-       docker exec -it --user postgres -e PGPASSWORD="lizmap1234!" jelix_${JLXBRANCH}_test_pgsql psql --username=lizmap lizmap
+       docker exec -it --user postgres -e PGPASSWORD="jelix" jelix_${JLXBRANCH}_test_pgsql psql --username=test_user testapp
        ;;
     redis)
       docker exec -it jelix_${JLXBRANCH}_test_redis redis-cli

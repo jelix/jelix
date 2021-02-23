@@ -67,9 +67,11 @@ class jPrefItemGroup
             }
 
             return -1;
-        } elseif ($a->order > $b->order) {
+        }
+        if ($a->order > $b->order) {
             return 1;
-        } elseif ($a->order < $b->order) {
+        }
+        if ($a->order < $b->order) {
             return -1;
         }
 

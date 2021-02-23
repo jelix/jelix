@@ -132,15 +132,16 @@ trait FileHelpersTrait
     }
 
     /**
-     * Install web files of a module
+     * Install web files of a module.
      *
      * It supports different way to install : copying files, creating a symbolic link
      *   or do nothing (aka you should create an alias nto the vhost of the web server)
      *
-     * @param string $wwwFilesMode should be 'copy' or '' (files will be copied),
-     *      'symlink' (a sym link is created) or any other value (do nothing/remove copied files)
+     * @param string $wwwFilesMode     should be 'copy' or '' (files will be copied),
+     *                                 'symlink' (a sym link is created) or any other value (do nothing/remove copied files)
      * @param string $wwwDirectoryName the path inside the www path
-     * @param string $sourcePath the path of the directory
+     * @param string $sourcePath       the path of the directory
+     *
      * @throws \jException
      */
     public function setupModuleWebFiles($wwwFilesMode, $wwwDirectoryName, $sourcePath)

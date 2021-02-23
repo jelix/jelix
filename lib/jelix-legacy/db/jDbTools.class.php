@@ -306,7 +306,8 @@ abstract class jDbTools
                     }
 
                     return "\\'".$value."\\'";
-                } elseif ($this->_conn) {
+                }
+                if ($this->_conn) {
                     return $this->_conn->quote($value);
                 }
 
@@ -693,7 +694,7 @@ abstract class jDbTools
         $tableName = $this->_conn->prefixTable($tableName);
 
         if ($options == self::IBD_INSERT_ONLY_IF_TABLE_IS_EMPTY) {
-            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM ${tableName}");
+            $rs = $this->_conn->query("SELECT count(*) as _cnt_ FROM {$tableName}");
             if ($rs) {
                 $rec = $rs->fetch();
                 if (intval($rec->_cnt_) > 0) {
@@ -736,7 +737,7 @@ abstract class jDbTools
         $this->_conn->beginTransaction();
 
         if ($options == self::IBD_EMPTY_TABLE_BEFORE) {
-            $this->_conn->exec("DELETE FROM ${tableName}");
+            $this->_conn->exec("DELETE FROM {$tableName}");
         }
         $recCount = 0;
         foreach ($data as $rk => $row) {
@@ -744,7 +745,7 @@ abstract class jDbTools
             if (count($row) != count($columns)) {
                 $this->_conn->rollback();
 
-                throw new Exception("insertBulkData: row ${rk} does not content right values count");
+                throw new Exception("insertBulkData: row {$rk} does not content right values count");
             }
             $sqlPk = array();
             $sqlUpdateValue = array();
@@ -781,9 +782,9 @@ abstract class jDbTools
                 }
                 $values[] = $val;
                 if ($pkIndexes[$vk] !== false) {
-                    $sqlPk[] = $pkIndexes[$vk]." ${op} ${val}";
+                    $sqlPk[] = $pkIndexes[$vk]." {$op} {$val}";
                 } elseif ($options == self::IBD_UPDATE_IF_EXIST) {
-                    $sqlUpdateValue[] = $sqlColumns[$vk]." = ${val}";
+                    $sqlUpdateValue[] = $sqlColumns[$vk]." = {$val}";
                 }
             }
 

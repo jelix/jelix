@@ -8,10 +8,10 @@
  * @contributor Bastien Jaillot, Steven Jehannet
  * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
  *
- * @copyright   2006-2010 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+ * @copyright   2006-2020 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
  * @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
  *
- * @see        http://www.jelix.org
+ * @see         http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require JELIX_LIB_PATH.'forms/jFormsControl.class.php';
@@ -74,7 +74,7 @@ abstract class jFormsBase
     /**
      * List of uploads controls.
      *
-     * @var jFormsControlUpload[]|jFormsControlUpload2[]
+     * @var jFormsControlUpload2[]|jFormsControlUpload[]
      */
     protected $uploads = array();
 
@@ -262,11 +262,11 @@ abstract class jFormsBase
     /**
      * set form data from a DAO.
      *
-     * @param string|jDaoRecordBase $daoSelector the selector of a dao file or a DAO record
-     * @param string $key         the primary key for the dao. if null, takes
-     *                            the form ID as primary key. Only needed when string
-     *                            dao selector given.
-     * @param string $dbProfile   the jDb profile to use with the dao
+     * @param jDaoRecordBase|string $daoSelector the selector of a dao file or a DAO record
+     * @param string                $key         the primary key for the dao. if null, takes
+     *                                           the form ID as primary key. Only needed when string
+     *                                           dao selector given.
+     * @param string                $dbProfile   the jDb profile to use with the dao
      *
      * @throws jExceptionForms
      *
@@ -280,8 +280,7 @@ abstract class jFormsBase
             $daorec = $daoSelector;
             $daoSelector = $daorec->getSelector();
             $dao = jDao::get($daoSelector, $dbProfile);
-        }
-        else {
+        } else {
             $dao = jDao::create($daoSelector, $dbProfile);
             if ($key === null) {
                 $key = $this->container->formId;
@@ -547,14 +546,17 @@ abstract class jFormsBase
 
     /**
      * @param string $name  the name of the control/data
-     * @param string $value the data value
+     * @param string|string[] $value the data value
      *
      * @throws jExceptionForms
      */
     public function setData($name, $value)
     {
         if (!isset($this->controls[$name])) {
-            throw new jExceptionForms('jelix~formserr.unknown.control2', array($name, $this->sel));
+            throw new jExceptionForms(
+                'jelix~formserr.unknown.control2',
+                array($name, $this->sel)
+            );
         }
 
         $this->controls[$name]->setData($value);
@@ -720,7 +722,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlUpload[]|jFormsControlUpload2[]
+     * @return jFormsControlUpload2[]|jFormsControlUpload[]
      *
      * @since 1.2
      */
@@ -778,6 +780,12 @@ abstract class jFormsBase
         return $this->container->data;
     }
 
+    /**
+     * @param mixed $v1
+     * @param mixed $v2
+     *
+     * @return bool true if the values are not equals
+     */
     protected function _diffValues(&$v1, &$v2)
     {
         if (is_array($v1) && is_array($v2)) {
@@ -785,15 +793,28 @@ abstract class jFormsBase
 
             return !empty($comp);
         }
+
+        if ($v1 === $v2) {
+            return false;
+        }
+
+        if (($v1 === '' && $v2 === null) || ($v1 === null && $v2 === '')) {
+            return false;
+        }
+
+        if (is_numeric($v1) != is_numeric($v2)) {
+            return true;
+        }
+
         if (empty($v1) && empty($v2)) {
             return false;
         }
+
         if (is_array($v1) || is_array($v2)) {
             return true;
         }
 
-        return !($v1 == $v2);
-        //return !($v2== (string)$v1);
+        return ($v1 != $v2);
     }
 
     /**
@@ -1028,10 +1049,10 @@ abstract class jFormsBase
         if ($this->container->token == '') {
             if (is_callable('random_bytes')) {
                 $tok = bin2hex(random_bytes(20));
-            }
-            else {
+            } else {
                 $tok = md5($this->container->formId.time().session_id());
             }
+
             return $this->container->token = $tok;
         }
 
@@ -1039,12 +1060,16 @@ abstract class jFormsBase
     }
 
     /**
-     * Check if the valid token is the token created during the display of the form
+     * Check if the valid token is the token created during the display of the form.
+     *
      * @param string $receivedToken
+     *
      * @return bool
+     *
      * @since 1.7.0
      */
-    public function isValidToken($receivedToken) {
+    public function isValidToken($receivedToken)
+    {
         // TODO we could check also Origin and Referer header
         return  $this->container->token === $receivedToken;
     }

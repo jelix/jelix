@@ -6,13 +6,16 @@
  * @author      Yannick Le Guédart
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Yannick Le Guédart, 2010 Laurent Jouanneau
+ * @copyright   2009 Yannick Le Guédart, 2010-2021 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  *
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
+
+use function \Jelix\Core\is_resource;
+
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {
     /**
@@ -96,7 +99,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         // Case 3 : array of host:port string
         elseif (is_array($this->_profile['host'])) {
             foreach ($this->_profile['host'] as $host_port) {
-                $hp = split(':', $host_port);
+                $hp = explode(':', $host_port);
                 $server = new stdClass();
                 $server->host = $hp[0];
                 $server->port = (int) $hp[1];
@@ -265,7 +268,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) + $incvalue;
             if ($this->_connection->set($key, $val)) {
                 return $val;
@@ -295,7 +298,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) - $decvalue;
             if ($this->_connection->set($key, $val)) {
                 return $val;
@@ -315,7 +318,6 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
      * @param string $key   key used for storing data
      * @param mixed  $var   data to store
      * @param int    $ttl   data time expiration
-     * @param mixed  $value
      *
      * @return bool false if failure
      */

@@ -23,4 +23,14 @@ if [ "$PHP_VERSION" == "" ]; then
   export PHP_VERSION=7.4
 fi
 
+if [ "$CMD" == "build" ]; then
+  if [ ! -f docker-conf/certs/ldap.jelix.crt ]; then
+    (
+    cd docker-conf;
+    ./setup.sh
+    )
+  fi
+fi
+
+
 docker-compose -p jelix-${JLXBRANCH}-tests $CMD

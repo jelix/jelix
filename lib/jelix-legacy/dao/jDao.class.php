@@ -107,6 +107,7 @@ class jDao
         /** @var jDaoRecordBase $rec */
         $rec = new $c();
         $rec->setDbProfile($profile);
+
         return $rec;
     }
 

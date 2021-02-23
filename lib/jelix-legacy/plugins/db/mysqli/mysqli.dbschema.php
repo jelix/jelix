@@ -32,8 +32,7 @@ class mysqliDbTable extends jDbTable
                 $type = 'boolean';
                 $typeInfo = $tools->getTypeInfo($type);
                 $precision = 0;
-            }
-            else if ($tools->unifiedToPHPType($typeInfo[1]) == 'integer') {
+            } elseif ($tools->unifiedToPHPType($typeInfo[1]) == 'integer') {
                 // let's ignore precision type, as in Mysql, the number in `INT(11)`
                 // is not the precision, but the size of display
                 // Note that some PHP driver for Mysql or Mysql/MariaDb version
@@ -67,7 +66,6 @@ class mysqliDbTable extends jDbTable
                 $hasDefault = true;
                 $default = ($line->Default === 'NULL' ? null : $line->Default);
             }
-
 
             if ($hasDefault && $typeInfo[1] == 'boolean') {
                 $default = ($default == '1' || $default === true || strtolower($default) == 'true');
@@ -509,13 +507,16 @@ class mysqliDbSchema extends jDbSchema
     }
 
     /**
-     * @param jDbColumn $col the column
+     * @param jDbColumn $col                the column
+     * @param mixed     $isPrimaryKey
+     * @param mixed     $isSinglePrimaryKey
      */
     protected function _getAutoIncrementKeyWord($col, $isPrimaryKey, $isSinglePrimaryKey)
     {
         if ($col->autoIncrement) {
             return ' AUTO_INCREMENT';
         }
+
         return '';
     }
 }

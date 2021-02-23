@@ -152,7 +152,7 @@ class memcacheCacheDriver implements jICacheDriver
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) + $var;
             if ($this->_memcache->set($key, $val)) {
                 return $val;
@@ -181,7 +181,7 @@ class memcacheCacheDriver implements jICacheDriver
         if (!is_numeric($val)) {
             return false;
         }
-         if (is_float($val)) {
+        if (is_float($val)) {
             $val = ((int) $val) - $var;
             if ($this->_memcache->set($key, $val)) {
                 return $val;

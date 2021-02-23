@@ -35,7 +35,7 @@ class localesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginIn
                     $config->langToLocale['locale'][$m[1]] = $locale;
                 }
             } else {
-                throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '${locale}' is not a locale code");
+                throw new Exception("Error in the main configuration. Bad locale code in available locales -- availableLocales: '{$locale}' is not a locale code");
             }
         }
 
@@ -43,7 +43,7 @@ class localesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginIn
         if (preg_match('/^([a-z]{2,3})_([A-Z]{2,3})$/', $locale, $m)) {
             $config->langToLocale['locale'][$m[1]] = $locale;
         } else {
-            throw new Exception("Error in the main configuration. Bad locale code in default locale -- config->locale: '${locale}' is not a locale code");
+            throw new Exception("Error in the main configuration. Bad locale code in default locale -- config->locale: '{$locale}' is not a locale code");
         }
 
         if (!in_array($locale, $availableLocales)) {

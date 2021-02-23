@@ -11,35 +11,34 @@
  */
 
 /**
- * Makes the glue between jAcl2 and an authentication library
+ * Makes the glue between jAcl2 and an authentication library.
+ *
  * @since 1.7.6
  */
 class jAcl2Authentication
 {
-
     /**
      * @var jAcl2AuthAdapterInterface
      */
     protected static $adapter;
 
     /**
-     * return the object that brings support to the current authentication system
+     * return the object that brings support to the current authentication system.
+     *
+     * @throws Exception
      *
      * @return jAcl2AuthAdapterInterface
-     * @throws Exception
      */
-    public static function getAdapter() {
+    public static function getAdapter()
+    {
         if (!self::$adapter) {
             $class = jApp::config()->acl2['authAdapterClass'];
             if (!class_exists($class)) {
                 throw new Exception('jAcl2: class indicated into authAdapterClass does not exist');
             }
-            self::$adapter = new $class;
+            self::$adapter = new $class();
         }
+
         return self::$adapter;
     }
-
-
-
-
 }

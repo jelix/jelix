@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
- *
  * @author    Laurent Jouanneau
  * @copyright 2008-2012 Laurent Jouanneau
  *
@@ -17,7 +14,7 @@ class jacl2db_adminListener extends jEventListener
     public function onmasteradminGetMenuContent($event)
     {
         if (jAcl2::check('acl.user.view')) {
-            $item = new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~users:index'), 30, 'system');
+            $item = new masterAdminMenuItem('usersrights', jLocale::get('jacl2db_admin~acl2.menu.item.rights'), jUrl::get('jacl2db_admin~rights:index'), 30, 'system');
             $item->icon = jApp::urlJelixWWWPath().'design/images/rights.png';
             $event->add($item);
         }

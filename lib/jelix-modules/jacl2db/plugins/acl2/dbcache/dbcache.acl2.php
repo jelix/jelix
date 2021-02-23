@@ -4,7 +4,7 @@
  * @subpackage  acl_driver
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2016 Laurent Jouanneau
+ * @copyright   2006-2020 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -18,9 +18,6 @@
  */
 class dbcacheAcl2Driver implements jIAcl2Driver2
 {
-    /**
-     *
-     */
     public function __construct()
     {
     }
@@ -48,6 +45,7 @@ class dbcacheAcl2Driver implements jIAcl2Driver2
         if ($login === null) {
             return $this->getAnonymousRight($subject, $resource);
         }
+
         return $this->getRightByUser($login, $subject, $resource);
     }
 
@@ -58,11 +56,13 @@ class dbcacheAcl2Driver implements jIAcl2Driver2
      * It means that if you give a specific resource, it will be ignored if there is a positive right
      * with "-". The right on the given resource will be checked if there is no rights for "-".
      *
-     * @param string $subject the key of the subject
+     * @param string $subject  the key of the subject
      * @param string $resource the id of a resource
-     * @return boolean true if the user has the right on the given subject
+     * @param mixed  $login
+     *
+     * @return bool true if the user has the right on the given subject
      */
-    public function getRightByUser($login, $subject, $resource='-')
+    public function getRightByUser($login, $subject, $resource = '-')
     {
         if ($login === '' || $login === null) {
             return $this->getAnonymousRight($subject, $resource);

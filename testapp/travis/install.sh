@@ -15,7 +15,7 @@ if [ ! -d testapp/adminapp/temp ]; then
 fi
 
 cd testapp
-composer install --prefer-dist --no-suggest --no-interaction
+composer install --prefer-dist --no-interaction
 
 php install/configurator.php --no-interaction
 php install/installer.php

@@ -27,7 +27,7 @@ class jSelectorTpl extends jSelectorModule
     protected $_dirname = 'templates/';
     protected $_suffix = '.tpl';
     protected $_cachePrefix;
-    public $outputType = '';
+    public $outputType = 'html';
     public $trusted = true;
     public $userModifiers = array();
     public $userFunctions = array();
@@ -40,10 +40,12 @@ class jSelectorTpl extends jSelectorModule
     public function __construct($sel, $outputtype = '', $trusted = true)
     {
         if ($outputtype == '') {
-            if (jApp::coord()->response) {
-                $this->outputType = jApp::coord()->response->getFormatType();
-            } else {
-                $this->outputType = jApp::coord()->request->defaultResponseType;
+            if (jApp::coord()) {
+                if (jApp::coord()->response) {
+                    $this->outputType = jApp::coord()->response->getFormatType();
+                } else {
+                    $this->outputType = jApp::coord()->request->defaultResponseType;
+                }
             }
         } else {
             $this->outputType = $outputtype;
@@ -64,21 +66,22 @@ class jSelectorTpl extends jSelectorModule
         }
         $config = jApp::config();
         $locale = $config->locale;
-        $lpath = $locale . '/' . $this->resource;
+        $lpath = $locale.'/'.$this->resource;
         $flpath = '';
         $fallbackLocale = $config->fallbackLocale;
         if ($locale != $fallbackLocale && $fallbackLocale) {
-            $flpath = $fallbackLocale . '/' . $this->resource;
+            $flpath = $fallbackLocale.'/'.$this->resource;
         }
 
         $resolutionInCache = $config->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/' . $this->module . '/' . $this->_dirname. $config->theme . '/' . $lpath . '.tpl');
-            $resolutionCachePath = 'resolved/' . $this->module . '/' . $config->theme . '/' . $lpath;
+            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$config->theme.'/'.$lpath.'.tpl');
+            $resolutionCachePath = 'resolved/'.$this->module.'/'.$config->theme.'/'.$lpath;
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_cachePrefix = $resolutionCachePath;
+
                 return;
             }
             jFile::createDir(dirname($resolutionPath));
@@ -92,8 +95,8 @@ class jSelectorTpl extends jSelectorModule
         }
     }
 
-    protected function findPath($config, $lpath, $flpath) {
-
+    protected function findPath($config, $lpath, $flpath)
+    {
         $mpath = jApp::getModulePath($this->module).$this->_dirname;
         if ($config->theme != 'default') {
             if ($this->checkThemePath($config->theme, $lpath, $flpath, $mpath, $this->resource)) {

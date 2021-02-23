@@ -214,6 +214,7 @@ abstract class jDaoFactoryBase
         /** @var jDaoRecordBase $rec */
         $rec = new $c();
         $rec->setDbProfile($this->_conn->getProfileName());
+
         return $rec;
     }
 
@@ -264,9 +265,13 @@ abstract class jDaoFactoryBase
         if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
         }
-        $keys = @array_combine(static::$_pkFields, $args);
 
-        if ($keys === false) {
+        try {
+            $keys = @array_combine(static::$_pkFields, $args);
+            if ($keys === false) {
+                throw new jException('jelix~dao.error.keys.missing');
+            }
+        } catch (ValueError $e) { // In PHP8+
             throw new jException('jelix~dao.error.keys.missing');
         }
 
@@ -295,10 +300,16 @@ abstract class jDaoFactoryBase
         if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
         }
-        $keys = array_combine(static::$_pkFields, $args);
-        if ($keys === false) {
+
+        try {
+            $keys = @array_combine(static::$_pkFields, $args);
+            if ($keys === false) {
+                throw new jException('jelix~dao.error.keys.missing');
+            }
+        } catch (ValueError $e) { // In PHP8+
             throw new jException('jelix~dao.error.keys.missing');
         }
+
         $q = 'DELETE FROM '.$this->_conn->encloseName($this->_tables[$this->_primaryTable]['realname']).' ';
         $q .= $this->_getPkWhereClauseForNonSelect($keys);
 
@@ -337,9 +348,8 @@ abstract class jDaoFactoryBase
      * jDaoConditions object.
      * you can limit the number of results by given an offset and a count.
      *
-     * @param jDaoConditions $searchcond
-     * @param int            $limitOffset
-     * @param int            $limitCount
+     * @param int $limitOffset
+     * @param int $limitCount
      *
      * @return jDbResultSet
      */

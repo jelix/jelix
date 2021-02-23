@@ -419,8 +419,7 @@ class Configurator
                 } else {
                     if (isset($this->moduleParameters[$component->getName()])) {
                         $parameters = $this->moduleParameters[$resolverItem->getName()];
-                    }
-                    else {
+                    } else {
                         $parameters = null;
                     }
                     $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig, $parameters);
@@ -562,14 +561,14 @@ class Configurator
     }
 
     /**
-     * Unconfigure some modules
+     * Unconfigure some modules.
      *
      * @param array     $modulesList           array of module names
-     * @param string     $dedicatedEntryPointId entry point from which the module is
-     *                                          mainly accessible
-     * @param null|bool $forLocalConfig true if the configuration should be done into
-     *                                  the local configuration instead of app configuration (false).
-     *                                  give null to use the default configuration mode
+     * @param string    $dedicatedEntryPointId entry point from which the module is
+     *                                         mainly accessible
+     * @param null|bool $forLocalConfig        true if the configuration should be done into
+     *                                         the local configuration instead of app configuration (false).
+     *                                         give null to use the default configuration mode
      */
     public function unconfigureModule(
         $modulesList,

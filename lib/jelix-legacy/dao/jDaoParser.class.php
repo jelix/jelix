@@ -245,7 +245,7 @@ class jDaoParser
                 throw new jDaoXmlException($this->selector, 'property.imported.unknown.table', $p->name);
             }
             if ($p->ofPrimaryTable && !$p->isPK) {
-                $countprop++;
+                ++$countprop;
             }
         }
         $this->hasOnlyPrimaryKeys = ($countprop == 0);

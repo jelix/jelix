@@ -58,10 +58,17 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if($this->needPDO)
-            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        else
+        if ($this->needPDO) {
+            if (version_compare(phpversion(), "8.0") < 0) {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
+            }
+            else {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+            }
+        }
+        else {
             $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+        }
 
         $list = array();
         //foreach($resultSet as $res){
@@ -102,10 +109,17 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id, name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if($this->needPDO)
-            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        else
+        if ($this->needPDO) {
+            if (version_compare(phpversion(), "8.0") < 0) {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
+            }
+            else {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+            }
+        }
+        else {
             $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+        }
 
         $resultSet->addModifier(array($this, '_callbackTest'));
 
@@ -140,10 +154,17 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if($this->needPDO)
-            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        else
+        if ($this->needPDO) {
+            if (version_compare(phpversion(), "8.0") < 0) {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
+            }
+            else {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+            }
+        }
+        else {
             $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+        }
 
         $resultSet->setFetchMode(8, 'MyProductContainer');
 
@@ -178,10 +199,17 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if($this->needPDO)
-            $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-        else
+        if ($this->needPDO) {
+            if (version_compare(phpversion(), "8.0") < 0) {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
+            }
+            else {
+                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
+            }
+        }
+        else {
             $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
+        }
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();

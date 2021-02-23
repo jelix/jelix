@@ -43,7 +43,7 @@ abstract class jKVDbTest extends \Jelix\UnitTests\UnitTestCaseDb {
             'content'=>'Lorem ipsum dolor sit amét, conséctetuer adipiscing elit. Donec at odio vitae libero tempus convallis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vestibulum purus mauris, dapibus eu, sagittis quis, sagittis quis, mi. Morbi fringilla massa quis velit. Curabitur metus massa, semper mollis, molestie vel, adipiscing nec, massa. Phasellus vitae felis sed lectus dapibus facilisis. In ultrices sagittis ipsum. In at est. Integer iaculis turpis vel magna. Cras eu est. Integer porttitor ligula a tellus. Curabitur accumsan ipsum a velit. Sed laoreet lectus quis leo. Nulla pellentesque molestie ante. Quisque vestibulum est id justo. Ut pellentesque ante in neque.'
         );
         $myObj=(object)array('property1'=>'string','property2'=>'integer');
-        $img=@imagecreate(100,100);
+        $img = @imagecreate(100,100);
 
         $kv = jKVDb::getConnection($this->profile);
 
@@ -228,5 +228,3 @@ abstract class jKVDbTest extends \Jelix\UnitTests\UnitTestCaseDb {
       */
     }
 }
-
-?>

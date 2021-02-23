@@ -90,5 +90,3 @@ class HttpErrorException extends \Exception
         return $this->reason;
     }
 }
-
-

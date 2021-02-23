@@ -9,43 +9,47 @@
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
-class jDbUtils {
-
+class jDbUtils
+{
     const DB_TYPE_MYSQL = 'mysql';
     const DB_TYPE_SQLITE = 'sqlite';
     const DB_TYPE_PGSQL = 'pgsql';
     const DB_TYPE_SQLSERVER = 'sqlsrv';
     const DB_TYPE_ORACLE = 'oci';
 
-    static public function getTools($dbType, $connection = null) {
-        switch($dbType) {
+    public static function getTools($dbType, $connection = null)
+    {
+        switch ($dbType) {
             case self::DB_TYPE_MYSQL:
-                require_once(__DIR__.'/tools/jDbMysqlTools.php');
+                require_once __DIR__.'/tools/jDbMysqlTools.php';
                 $tools = new jDbMysqlTools($connection);
+
                 break;
             case self::DB_TYPE_SQLITE:
-                require_once(__DIR__.'/tools/jDbSqliteTools.php');
+                require_once __DIR__.'/tools/jDbSqliteTools.php';
                 $tools = new jDbSqliteTools($connection);
+
                 break;
             case self::DB_TYPE_PGSQL:
-                require_once(__DIR__.'/tools/jDbPgsqlTools.php');
+                require_once __DIR__.'/tools/jDbPgsqlTools.php';
                 $tools = new jDbPgsqlTools($connection);
+
                 break;
             case self::DB_TYPE_SQLSERVER:
-                require_once(__DIR__.'/tools/jDbSqlsrvTools.php');
+                require_once __DIR__.'/tools/jDbSqlsrvTools.php';
                 $tools = new jDbSqlsrvTools($connection);
+
                 break;
             case self::DB_TYPE_ORACLE:
-                require_once(__DIR__.'/tools/jDbOciTools.php');
+                require_once __DIR__.'/tools/jDbOciTools.php';
                 $tools = new jDbOciTools($connection);
+
                 break;
             default:
                 // legacy tools
                 $tools = jApp::loadPlugin($dbType, 'db', '.dbtools.php', $dbType.'DbTools', $connection);
         }
+
         return $tools;
     }
-
-
 }

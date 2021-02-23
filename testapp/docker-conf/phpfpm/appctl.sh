@@ -204,7 +204,9 @@ case $COMMAND in
     composer_update)
         composerUpdate;;
     unit-tests)
-        su $APP_USER -c "cd $APPDIR/tests-jelix/ && ../vendor/bin/phpunit  $@";;
+        UTCMD="cd $APPDIR/tests-jelix/ && ../vendor/bin/phpunit  $@"
+        su $APP_USER -c "$UTCMD"
+        ;;
     *)
         echo "wrong command"
         exit 2

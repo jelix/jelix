@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire, Vincent Viaud
  *
- * @copyright  2001-2005 CopixTeam, 2005-2019 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+ * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
  * @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV, 2010 BP2I
  *
  * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
@@ -57,11 +57,15 @@ class jAuth
     {
         if (self::$config === null || $newconfig) {
             if (!$newconfig) {
-                $plugin = jApp::coord()->getPlugin('auth');
-                if ($plugin === null) {
-                    throw new jException('jelix~auth.error.plugin.missing');
+                if (jApp::coord()) {
+                    $plugin = jApp::coord()->getPlugin('auth');
+                    if ($plugin === null) {
+                        throw new jException('jelix~auth.error.plugin.missing');
+                    }
+                    $config = &$plugin->config;
+                } else {
+                    $config = jCoordinator::getPluginConf('auth');
                 }
-                $config = &$plugin->config;
             } else {
                 $config = $newconfig;
             }
@@ -129,8 +133,7 @@ class jAuth
                 if (is_string($config['url_return_external_allowed_domains'])) {
                     $config['url_return_external_allowed_domains'] = array($config['url_return_external_allowed_domains']);
                 }
-            }
-            else {
+            } else {
                 $config['url_return_external_allowed_domains'] = array();
             }
 
@@ -538,6 +541,34 @@ class jAuth
     }
 
     /**
+     * Sets the given user in session without authentication.
+     *
+     * It is useful if you manage a kind of session that is not the PHP session.
+     * For example, in a controller, you call jAuth::login() to verify the
+     * authentication, (and allowing listeners to interact during the authentication).
+     * In other controller, you just call setUserSession() with the login
+     * you retrieve some where, with the help of some request parameters (from
+     * a JWT token for example).
+     * And you could call jAuth::logout() when the user ends its "session".
+     *
+     * @param string $login
+     *
+     * @return object the user data
+     *
+     * @since 1.6.30
+     */
+    public static function setUserSession($login)
+    {
+        $config = self::loadConfig();
+        $user = self::getUser($login);
+        if ($user) {
+            $_SESSION[$config['session_name']] = $user;
+        }
+
+        return $user;
+    }
+
+    /**
      * generate a password with random letters, numbers and special characters.
      *
      * @param int  $length              the length of the generated password
@@ -592,12 +623,13 @@ class jAuth
     }
 
     /**
-     * check the token from the cookie used for persistant session
+     * check the token from the cookie used for persistant session.
      *
      * If the cookie is good, the login  is made
      *
-     * @return bool true if the cookie was ok and login has been succeed
      * @throws jException
+     *
+     * @return bool true if the cookie was ok and login has been succeed
      */
     public static function checkCookieToken()
     {
@@ -618,28 +650,30 @@ class jAuth
                             $_COOKIE[$cookieName],
                             $cryptokey
                         );
-                    }
-                    catch(\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $e) {
+                    } catch (\Defuse\Crypto\Exception\WrongKeyOrModifiedCiphertextException $e) {
                         jLog::log('User not logged with authentication cookie: error during decryption of the cookie. Cookie not encrypted with the current encryption key.', 'notice');
+
                         return false;
-                    }
-                    catch(\Defuse\Crypto\Exception\CryptoException $e) {
+                    } catch (\Defuse\Crypto\Exception\CryptoException $e) {
                         jLog::log('User not logged with authentication cookie: error during decryption of the cookie. Bad encryption key or bad cookie content.', 'warning');
+
                         return false;
                     }
                     $decrypted = json_decode($decrypted, true);
                     if ($decrypted && is_array($decrypted) && count($decrypted) == 2) {
                         list($login, $password) = $decrypted;
+
                         return self::login($login, $password, true);
                     }
                 }
             }
         }
+
         return false;
     }
 
     /**
-     * Generate and set an encrypted cookie with the given login password
+     * Generate and set an encrypted cookie with the given login password.
      *
      * The cookie may not be set if the persistence is disable or if there is
      * an issue with the encryption.
@@ -669,13 +703,14 @@ class jAuth
                 $persistence = 86400; // 24h
             }
             $persistence += time();
+
             try {
                 $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString($config['persistant_encryption_key']);
                 $encrypted = \Defuse\Crypto\Crypto::encrypt(json_encode(array($login, $password)), $cryptokey);
                 setcookie($config['persistant_cookie_name'], $encrypted, $persistence, $config['persistant_cookie_path'], '', false, true);
-            }
-            catch(\Defuse\Crypto\Exception\CryptoException $e) {
+            } catch (\Defuse\Crypto\Exception\CryptoException $e) {
                 jLog::log('Cookie for persistant authentication. Error during encryption of the cookie token for authentication: '.$e->getMessage(), 'warning');
+
                 return false;
             }
         }
@@ -683,13 +718,13 @@ class jAuth
         return $persistence;
     }
 
-
     public static function checkReturnUrl($url)
     {
         if ($url == '') {
             return false;
         }
         $config = self::loadConfig();
+
         return jUrl::isUrlFromApp($url, $config['url_return_external_allowed_domains']);
     }
 }

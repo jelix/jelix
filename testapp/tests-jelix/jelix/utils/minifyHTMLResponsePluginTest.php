@@ -59,7 +59,7 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals(array( 'minify.php?f=testminify/js/s1.js,testminify/js/s2.js' => $minOptions ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/js/s1.js,testminify/js/s2.js' => $minOptions ), $minifyList);
     }
 
     function testRelativeCss () {
@@ -72,7 +72,7 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals(array( 'minify.php?f=testminify/css/style1.css,testminify/css/style2.css' => $minOptions ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/css/style1.css,testminify/css/style2.css' => $minOptions ), $minifyList);
     }
 
 
@@ -90,8 +90,8 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals(array( 'minify.php?f=testminify/js/s1.js' => $minOptions1,
-                                   'minify.php?f=testminify/js/s2.js' => $minOptions2 ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/js/s1.js' => $minOptions1,
+                                   '/minify.php?f=testminify/js/s2.js' => $minOptions2 ), $minifyList);
     }
 
     function testRelativeCssDifferentOptions () {
@@ -106,8 +106,8 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester = new testMinifyHTMLResponsePlugin( $htmlRep );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals(array( 'minify.php?f=testminify/css/style1.css' => $minOptions1,
-                                   'minify.php?f=testminify/css/style2.css' => $minOptions2 ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/css/style1.css' => $minOptions1,
+                                   '/minify.php?f=testminify/css/style2.css' => $minOptions2 ), $minifyList);
     }
 
 
@@ -123,7 +123,7 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester->setExcludeList( array('testminify/js/s1.js'), 'excludeJS' );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeJS' );
-        $this->assertEquals(array( 'testminify/js/s1.js' => $minOptions , 'minify.php?f=testminify/js/s2.js' => $minOptions ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/js/s2.js' => $minOptions, 'testminify/js/s1.js' => $minOptions  ), $minifyList);
     }
 
     function testExcludeCss () {
@@ -137,7 +137,7 @@ class minifyHTMLResponsePluginTest extends \Jelix\UnitTests\UnitTestCase
         $minifyHTMLResponsePluginTester->setExcludeList( array('testminify/css/style1.css'), 'excludeCSS' );
 
         $minifyList = $minifyHTMLResponsePluginTester->testGenerateMinifyList( $inputUrls, 'excludeCSS' );
-        $this->assertEquals(array( 'testminify/css/style1.css' => $minOptions , 'minify.php?f=testminify/css/style2.css' => $minOptions ), $minifyList);
+        $this->assertEquals(array( '/minify.php?f=testminify/css/style2.css' => $minOptions, 'testminify/css/style1.css' => $minOptions ), $minifyList);
     }
 
 
