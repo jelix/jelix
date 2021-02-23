@@ -9,7 +9,8 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 5.6 to PHP 7.4. 
+Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 7.2 to 8.0.
+It may be compatible also with PHP 5.6 and PHP 7.0/7.1 (see below).
 
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
@@ -26,7 +27,7 @@ Create a directory and a composer.json file :
 {
     "name": "...",
     "require": {
-        "php": ">=5.6",
+        "php": ">=7.2",
         "jelix/jelix": "1.7.0-rc.* || ^1.7.0"
     }
 }
@@ -59,3 +60,21 @@ which install all what is needed to run and test Jelix, and launch unit tests. S
 testapp/README.md file in the repository.
 
 Fill issues on Github https://github.com/jelix/jelix/.
+
+Compatibility with some PHP version
+====================================
+
+Until Jelix 1.7.6, unit tests of the framework was running with a version of
+PHPUnit that was compatible with PHP 5.6 to PHP 7.4. Since we fixed
+some issues into Jelix 1.7.7 to be compatible also with PHP 8.0, we had to upgrade PHPUnit.
+Because the new version of PHPunit we are using is not compatible with PHP 7.1-, 
+we cannot test any more the framework against these old PHP versions.
+
+However bug fixes and minor improvements in this branch will not use specific
+syntax of PHP 7.3+/8.x.
+
+So Jelix 1.7.7+ is working well with PHP 7.2 and higher, including PHP 8.0.
+It **may** works well with PHP 7.1 and lower, but we cannot guarantee it. 
+
+Anyway, it is higly recommanded to migrate to PHP 7.3 or higher, as PHP 7.2 and
+lower are not maintained any more by the PHP team. See https://www.php.net/supported-versions.php.
