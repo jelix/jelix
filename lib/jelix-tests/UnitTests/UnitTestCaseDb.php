@@ -260,4 +260,23 @@ abstract class UnitTestCaseDb extends UnitTestCase {
         $db = \jDb::getConnection($this->dbProfile);
         return $db->lastIdInTable($fieldName, $tableName);
     }
+
+    public function showTableContent($table, $fields, $order='')
+    {
+
+        echo "\n** table $table\n";
+        $db = \jDb::getConnection($this->dbProfile);
+        $q = 'SELECT '. implode(',', $fields). ' FROM '.$table;
+        if ($order) {
+            $q .= ' ORDER BY '.$order;
+        }
+        $rs = $db->query($q);
+        foreach ($rs as $record) {
+            echo "- \n";
+            foreach($fields as $f) {
+                echo "  ".$f.":". $record->$f."\n";
+            }
+        }
+    }
+
 }
