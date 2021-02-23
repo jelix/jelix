@@ -99,7 +99,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
         // Case 3 : array of host:port string
         elseif (is_array($this->_profile['host'])) {
             foreach ($this->_profile['host'] as $host_port) {
-                $hp = split(':', $host_port);
+                $hp = explode(':', $host_port);
                 $server = new stdClass();
                 $server->host = $hp[0];
                 $server->port = (int) $hp[1];
@@ -318,7 +318,6 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
      * @param string $key   key used for storing data
      * @param mixed  $var   data to store
      * @param int    $ttl   data time expiration
-     * @param mixed  $value
      *
      * @return bool false if failure
      */

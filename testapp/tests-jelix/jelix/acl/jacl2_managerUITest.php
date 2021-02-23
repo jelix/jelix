@@ -8,12 +8,7 @@
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-require_once LIB_PATH.'jelix-modules/jacl2/classes/jAcl2.class.php';
 
-/**
- * @internal
- * @coversNothing
- */
 class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 {
     protected static $driver = 'db';
@@ -124,7 +119,6 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             unset(jApp::coord()->plugins['auth'], $_SESSION[self::$coordAuthPlugin->config['session_name']]);
         }
     }
-
 
     public static function tearDownAfterClass() : void
     {
@@ -724,6 +718,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             'admins' => array(),
             'users'  => array(),
         );
+
         $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights, 'theadmin');
     }
@@ -748,6 +743,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                 'super.cms.update' => 'y',
             ),
         );
+
         $this->expectException(jAcl2DbAdminUIException::class);
         $mgr->saveGroupRights($rights, 'theadmin');
     }
@@ -1450,7 +1446,6 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
      * (so oneuser has no all rights)
      * and theadmin has all missing rights in his private group
      *
-     * @throws jAcl2DbAdminUIException
      */
     public function testAdminTryingToRemoveTheAdminFromAdminGroup()
     {
@@ -1485,6 +1480,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     /**
      * it should fail.
+     *
      */
     public function testAdminTryingToAddHimselfToNonAdminGroup()
     {
@@ -1502,6 +1498,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     /**
      * it should fail.
+     *
      */
     public function testNonAdminTryingToRemoveAdminRightsByAddingHimselfIntoGroup()
     {

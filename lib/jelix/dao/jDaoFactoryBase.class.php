@@ -300,6 +300,7 @@ abstract class jDaoFactoryBase
         if (count($args) == 1 && is_array($args[0])) {
             $args = $args[0];
         }
+
         try {
             $keys = @array_combine(static::$_pkFields, $args);
             if ($keys === false) {

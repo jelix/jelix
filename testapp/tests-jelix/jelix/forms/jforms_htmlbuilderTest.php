@@ -44,6 +44,7 @@ class testJFormsHtmlBuilder extends htmlJformsBuilder
 
 class jforms_HTMLBuilderTest extends \Jelix\UnitTests\UnitTestCaseDb
 {
+
     protected static $form;
     protected static $container;
     protected static $builder;

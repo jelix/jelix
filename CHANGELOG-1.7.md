@@ -1,6 +1,30 @@
 Changes into Jelix 1.7
 ======================
 
+Jelix 1.7.7
+-----------
+
+* have all bug fixes and improvements from Jelix 1.6.31 and 1.6.32.
+  * Fix various issues with PHP 8.0
+  * Fix some dao locales that have a bad pattern for sprintf
+  * Fix float to string convertion into jDb
+  * Fix pgsql schema: should list only tables from the search_path
+  * Fix comparison of values in the jForms modified check
+  * Fix many issues in the checking of admin rights in administration UI. There were some situation when the checking was badly done, so there were some possibility into the UI to remove completely admin rights.
+  * jauthdb_admin: adding autocomplete to search users
+  * jInstaller, module.xml: allow http:// as well as https:// into the namespace value
+* Fix some issues in the docker stack for tests
+* Upgrade PHPUnit to 8.5.14
+
+Because there is not a version of PHPUnit that is compatible with PHP 5.6, 7.x and 8.0
+at the same time, Jelix 1.7 cannot be tested any more against PHP 5.6 to PHP 7.1.
+So, starting from this version, there is no more guarantee that Jelix 1.7 works 
+well on these old version of PHP. However, bug fixes and minor improvements in this
+branch will not use specific syntax of PHP 7.3+/8.x, so it could not be an issue.
+
+Anyway, it is higly recommanded to migrate to PHP 7.3 or higher, as PHP 7.2 and
+lower are not maintained any more by the PHP team. See https://www.php.net/supported-versions.php.
+
 Jelix 1.7.6
 -----------
 

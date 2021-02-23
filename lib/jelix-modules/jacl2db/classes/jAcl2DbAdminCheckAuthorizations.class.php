@@ -344,9 +344,8 @@ class jAcl2DbAdminCheckAuthorizations
                 // we should record the authorization only if the new authorization
                 // is not "inherited" (null) and if the current authorization
                 // for this user/right is not false (forbidden)
-                if ($authorization !== null
-                    && (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
-                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false)) {
+                if (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
+                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false) {
                     $currentUserItemAuthorizations[$rec->id_aclsbj] = $authorization;
                 }
             }
@@ -409,9 +408,8 @@ class jAcl2DbAdminCheckAuthorizations
                 // we should record the authorization only if the new authorization
                 // is not "inherited" (null) and if the current authorization
                 // for this user/right is not false (forbidden)
-                if ($authorization !== null
-                    && (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
-                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false)) {
+                if (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
+                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false) {
                     $currentUserItemAuthorizations[$rec->id_aclsbj] = $authorization;
                 }
             }
@@ -516,9 +514,8 @@ class jAcl2DbAdminCheckAuthorizations
                 // we should record the authorization only if the new authorization
                 // is not "inherited" (null) and if the current authorization
                 // for this user/right is not false (forbidden)
-                if ($authorization !== null
-                    && (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
-                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false)) {
+                if (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
+                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false) {
                     $currentUserItemAuthorizations[$rec->id_aclsbj] = $authorization;
                 }
             }
@@ -572,7 +569,7 @@ class jAcl2DbAdminCheckAuthorizations
         $currentGroupItem = '';
 
         foreach ($rs as $rec) {
-            if ($rec->login != $currentUserItem) {
+            if ($rec->login != $currentUserItem || $rec->id_aclgrp != $currentGroupItem) {
                 // new user in the list, we process data of the previous user
 
                 // we ignore any authorization from the group we want to remove
@@ -589,9 +586,9 @@ class jAcl2DbAdminCheckAuthorizations
 
                 $currentUserItemAuthorizations = array();
                 $currentUserItem = $rec->login;
+                $currentGroupItem = $rec->id_aclgrp;
             }
 
-            $currentGroupItem = $rec->id_aclgrp;
             if ($rec->id_aclgrp != $groupToRemove && $rec->id_aclsbj) {
                 // we ignore any authorization from the group to remove
 
@@ -600,9 +597,8 @@ class jAcl2DbAdminCheckAuthorizations
                 // we should record the authorization only if the new authorization
                 // is not "inherited" (null) and if the current authorization
                 // for this user/right is not false (forbidden)
-                if ($authorization !== null
-                    && (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
-                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false)) {
+                if (!isset($currentUserItemAuthorizations[$rec->id_aclsbj])
+                        || $currentUserItemAuthorizations[$rec->id_aclsbj] !== false) {
                     $currentUserItemAuthorizations[$rec->id_aclsbj] = $authorization;
                 }
             }
@@ -619,6 +615,6 @@ class jAcl2DbAdminCheckAuthorizations
             }
         }
 
-        return $this->finalChecking(4);
+        return $this->finalChecking(5);
     }
 }

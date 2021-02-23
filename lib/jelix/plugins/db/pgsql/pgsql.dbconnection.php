@@ -158,8 +158,15 @@ class pgsqlDbConnection extends jDbConnection
             $str .= ' options=\''.$this->profile['pg_options'].'\'';
         }
 
+        if (isset($this->profile['force_new']) && $this->profile['force_new']) {
+            $cnx = @$funcconnect ($str, PGSQL_CONNECT_FORCE_NEW);
+        }
+        else {
+            $cnx = @$funcconnect ($str);
+        }
+
         // let's do the connection
-        if ($cnx = @$funcconnect($str)) {
+        if ($cnx) {
             if (isset($this->profile['force_encoding']) && $this->profile['force_encoding'] == true
                && isset($this->_charsets[jApp::config()->charset])) {
                 pg_set_client_encoding($cnx, $this->_charsets[jApp::config()->charset]);
@@ -304,5 +311,14 @@ class pgsqlDbConnection extends jDbConnection
         }
 
         return $this->serverVersion;
+    }
+
+
+    public function getSearchPath()
+    {
+        if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
+            return preg_split('/\s*,\s*/', trim($this->profile['search_path']));
+        }
+        return array('public');
     }
 }
