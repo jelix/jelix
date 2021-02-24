@@ -42,11 +42,11 @@
     <th>{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     <td>
-        {if $r == ''}-{/if}
-        {if $r == 'y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />{/if}
-        {if $r == 'n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{/if}
+        {if $r == ''}{@jacl2db_admin~acl2.group.rights.inherit@}{/if}
+        {if $r == 'y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />{/if}
+        {if $r == 'n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{/if}
     </td>
-    <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}yes{/if}</td>
+    <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}{@jacl2db_admin~acl2.group.rights.yes@}{/if}</td>
     {/foreach}
 </tr>
 {/foreach}

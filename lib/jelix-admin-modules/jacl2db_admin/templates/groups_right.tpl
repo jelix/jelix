@@ -36,13 +36,13 @@
     <th title="{$subject}">{$subjects[$subject]['label']|eschtml}</th>
     {foreach $right as $group=>$r}
     <td><select name="rights[{$group}][{$subject}]">
-        <option value=""  {if $r == ''}selected="selected"{/if}>-</option>
-        <option value="y" {if $r == 'y'}selected="selected"{/if}>yes</option>
-        <option value="n" {if $r == 'n'}selected="selected"{/if}>no</option>
+        <option value=""  {if $r == ''}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.inherit@}</option>
+        <option value="y" {if $r == 'y'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.yes@}</option>
+        <option value="n" {if $r == 'n'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.no@}</option>
         </select>
     </td>
     <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}
-        <a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group)}">yes</a>
+        <a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group)}">{@jacl2db_admin~acl2.group.rights.yes@}</a>
     {/if}</td>
     {/foreach}
 </tr>

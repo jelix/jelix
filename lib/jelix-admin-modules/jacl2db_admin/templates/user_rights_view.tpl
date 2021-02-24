@@ -41,25 +41,25 @@
             {if $r=='y' && $resultr==''}{assign $resultr='y'}{/if}
             {if $r=='n'}{assign $resultr='n'}{/if}
     <td>
-        {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />{if $resultr==''}{assign $resultr='y'}{/if}
-        {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{assign $resultr='n'}{/if}
+        {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />{if $resultr==''}{assign $resultr='y'}{/if}
+        {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{assign $resultr='n'}{/if}
     </td>
-    <td>{if $rightsWithResources[$subject]}yes{/if}</td>
+    <td>{if $rightsWithResources[$subject]}{@jacl2db_admin~acl2.group.rights.yes@}{/if}</td>
     {else}
     <td {if !isset($groupsuser[$group])}class="notingroup">
-            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept_disabled.png" alt="yes" />
-            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel_disabled.png" alt="no" />{/if}
+            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept_disabled.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />
+            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel_disabled.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{/if}
         {else}>
-            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />{if $resultr==''}{assign $resultr='y'}{/if}
-            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{assign $resultr='n'}{/if}
+            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />{if $resultr==''}{assign $resultr='y'}{/if}
+            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{assign $resultr='n'}{/if}
         {/if}
     </td>
     {/if}
     {/foreach}
     <td class="colblank"></td>
     <td>
-        {if $resultr =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />
-        {else}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{/if}
+        {if $resultr =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />
+        {else}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{/if}
     </td>
 </tr>
 {/foreach}
