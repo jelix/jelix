@@ -31,7 +31,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
     {
         $cnx = \jDb::getConnection('jacl2_profile');
 
-        $sql = 'SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
+        $sql = 'SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, r.canceled, s.label_key as subject
                 FROM '.$cnx->prefixTable('jacl2_rights').' r,
                 '.$cnx->prefixTable('jacl2_subject')." s
                 WHERE r.id_aclgrp = '__anonymous' AND r.id_aclsbj=s.id_aclsbj
@@ -44,16 +44,17 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
         foreach ($rs as $rec) {
             $table->addRow(array(
                 'Anonymous',
-                $rec->id_aclsbj,
+                $rec->id_aclsbj.($rec->canceled == '1'?' (forbidden)':''),
                 $rec->id_aclres,
             ));
         }
 
-        $sql = 'SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, name as grp, s.label_key as subject
+        $sql = 'SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, r.canceled, name as grp, s.label_key as subject
                 FROM '.$cnx->prefixTable('jacl2_rights').' r,
                 '.$cnx->prefixTable('jacl2_group').' g,
                 '.$cnx->prefixTable('jacl2_subject').' s
                 WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj
+                 AND r.id_aclgrp <> \'__anonymous\'
                 ORDER BY grp, subject, id_aclres ';
 
         $rs = $cnx->query($sql);
@@ -61,7 +62,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
             $table->addRow(array(
                 $rec->id_aclgrp,
                 $rec->grp,
-                $rec->id_aclsbj,
+                $rec->id_aclsbj.($rec->canceled == '1'?' (forbidden)':''),
                 $rec->id_aclres,
             ));
         }

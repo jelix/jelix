@@ -4,6 +4,7 @@ use Jelix\Acl2Db\Command;
 
 $application->add(new Command\Acl2\RightsList());
 $application->add(new Command\Acl2\AddRight());
+$application->add(new Command\Acl2\ForbidRight());
 $application->add(new Command\Acl2\RemoveRight());
 $application->add(new Command\Acl2\SubjectList());
 $application->add(new Command\Acl2\SubjectCreate());
