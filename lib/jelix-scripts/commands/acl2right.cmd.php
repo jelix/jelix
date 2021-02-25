@@ -103,7 +103,7 @@ ACTION:
 
         $cnx = jDb::getConnection('jacl2_profile');
 
-        $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, s.label_key as subject
+        $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, r.canceled, s.label_key as subject
                 FROM ".$cnx->prefixTable('jacl2_rights')." r,
                 ".$cnx->prefixTable('jacl2_subject')." s
                 WHERE r.id_aclgrp = '__anonymous' AND r.id_aclsbj=s.id_aclsbj
@@ -113,16 +113,16 @@ ACTION:
         foreach($rs as $rec){
             if($sbj !=$rec->id_aclsbj){
                 $sbj = $rec->id_aclsbj;
-                echo "\t",$rec->id_aclsbj,"\n";
+                echo "\t",$rec->id_aclsbj, ($rec->canceled == '1'?' (forbidden)':''),"\n";
             }
             echo "\t\t",$rec->id_aclres,"\n";
         }
 
-        $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, name as grp, s.label_key as subject
+        $sql="SELECT r.id_aclgrp, r.id_aclsbj, r.id_aclres, r.canceled, name as grp, s.label_key as subject
                 FROM ".$cnx->prefixTable('jacl2_rights')." r,
                 ".$cnx->prefixTable('jacl2_group')." g,
                 ".$cnx->prefixTable('jacl2_subject')." s
-                WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj
+                WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj AND r.id_aclgrp <> '__anonymous'
                 ORDER BY grp, subject, id_aclres ";
 
         $rs = $cnx->query($sql);
@@ -137,7 +137,7 @@ ACTION:
 
             if($sbj !=$rec->id_aclsbj){
                 $sbj = $rec->id_aclsbj;
-                echo "\t",$rec->id_aclsbj,"\n";
+                echo "\t",$rec->id_aclsbj, ($rec->canceled == '1'?' (forbidden)':''),"\n";
             }
             echo "\t\t",$rec->id_aclres,"\n";
         }
