@@ -39,12 +39,7 @@
     <tr>
         <td></td>
         <td><input type="submit" value="{@jacl2db_admin~acl2.save.button@}" /></td>
-        <td></td>
-        {if $nbgrp}
-        <td colspan="{$nbgrp}"></td>
-        {/if}
-        <td></td>
-        <td></td>
+        <td colspan="{=$nbgrp+3}"></td>
     </tr>
 </tfoot>
 <tbody>
