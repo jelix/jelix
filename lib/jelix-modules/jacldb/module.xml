@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jacldb@modules.jelix.org" name="jacldb" createdate="2008-01-15">
-        <version date="2020-11-24 17:36">1.7.7-pre</version>
+        <version date="2021-03-07 22:34">1.7.7</version>
         <label lang="en_US">jAclDb</label>
         <description lang="en_US">ressources for the jacl db plugin</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
@@ -10,7 +10,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.4" maxversion="1.7.7"/>
+        <jelix minversion="1.7.0-beta.4" maxversion="1.7.8"/>
         <module name="jacl" minversion="1.6.0" maxversion="1.7.*"/>
     </dependencies>
     <autoload>
