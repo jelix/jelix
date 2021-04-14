@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jpref_admin@jelix.org" name="jpref_admin" createdate="2012-01-21">
-        <version date="2021-03-07 22:34">1.7.8-pre</version>
+        <version date="2021-04-14 22:22">1.7.7-pre</version>
         <label lang="en_US">jPref manager</label>
         <description lang="en_US"/>
         <license URL="http://www.gnu.org/licenses/lgpl.html">GNU Lesser General Public Licence</license>
@@ -11,7 +11,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.4" maxversion="1.7.8"/>
+        <jelix minversion="1.7.0-beta.4" maxversion="1.7.7"/>
         <module name="jacl2db"/>
         <module name="jpref"/>
     </dependencies>
