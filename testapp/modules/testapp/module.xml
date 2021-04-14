@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="testapp@testapp.jelix.org" name="testapp">
-        <version date="2021-04-14 22:22">1.7.7-pre</version>
+        <version date="2021-04-14 23:51">1.7.7</version>
         <label>testapp</label>
         <description>Test application</description>
         <license URL=""/>
@@ -11,7 +11,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.3" maxversion="1.7.7"/>
-        <module name="jelix_tests" minversion="1.7.7-pre" maxversion="1.7.7-pre"/>
+        <jelix minversion="1.7.0-beta.3" maxversion="1.7.8"/>
+        <module name="jelix_tests" minversion="1.7.7" maxversion="1.7.7"/>
     </dependencies>
 </module>
