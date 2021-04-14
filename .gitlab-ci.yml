@@ -1,0 +1,71 @@
+stages:
+  - build
+  - build_ref_doc
+  - deploy_package
+
+variables:
+  JELIX_BRANCH: "jelix-1.6.x"
+
+cache:
+  key: "$CI_COMMIT_REF_SLUG"
+  paths:
+    - build/vendor/
+    - _docs.cache/
+
+build_dev:
+  stage: build
+  script:
+    - make build_unstable
+  artifacts:
+    name: "jelix-${CI_COMMIT_SHA}"
+    paths:
+      - _dist
+  except:
+    - tags
+
+build_release:
+  stage: build
+  script:
+    - make build_release
+  artifacts:
+    name: "jelix-${CI_COMMIT_SHA}"
+    paths:
+      - _dist
+  only:
+    - tags
+
+build_ref_doc:
+  stage: build_ref_doc
+  script:
+    - make docs
+  artifacts:
+    name: "jelix-ref-doc-${CI_COMMIT_SHA}"
+    paths:
+      - _docs
+  only:
+    - tags
+
+deploy_package_dev:
+  stage: deploy_package
+  script:
+    - make deploy_unstable
+  dependencies:
+    - build_dev
+  except:
+    - tags
+
+deploy_package_release:
+  stage: deploy_package
+  script:
+    - make deploy_release
+  dependencies:
+    - build_release
+  only:
+    - tags
+
+deploy_ref_doc:
+  stage: deploy_package
+  script:
+    - make deploy_docs
+  only:
+    - tags
