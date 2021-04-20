@@ -5,11 +5,16 @@
 <form id="rights-edit" action="{formurl 'jacl2db_admin~groups:saverights'}" method="post">
 <fieldset><legend>{@jacl2db_admin~acl2.rights.title@}</legend>
 <div>{formurlparam 'jacl2db_admin~groups:saverights'}</div>
-<table class="records-list jacl2-list">
+<table class="records-list jacl2-list" id="rights-list">
 <thead>
     <tr>
-        <th>{@jacl2db_admin~acl2.table.th.rights@}</th>
-        <th colspan="{$nbgrp}">{@jacl2db_admin~acl2.table.th.groups@}</th>
+        <th rowspan="2">{@jacl2db_admin~acl2.table.th.rights@}</th>
+        <th colspan="{=$nbgrp*2}">{@jacl2db_admin~acl2.table.th.groups@}</th>
+    </tr>
+    <tr>
+    {foreach $groups as $group}
+        <th colspan="2">{$group->name}</th>
+    {/foreach}
     </tr>
     <tr>
     <th></th>
@@ -18,6 +23,15 @@
     {/foreach}
     </tr>
 </thead>
+    <tfoot>
+    <tr>
+        <td></td>
+        {foreach $groups as $group}
+            <th></th>
+            <th><a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group->id_aclgrp)}">{@jacl2db_admin~acl2.group.rights.yes@}</a></th>
+        {/foreach}
+    </tr>
+    </tfoot>
 <tbody>
 {assign $currentsbjgroup = '---'}
 {foreach $rights as $subject=>$right}
@@ -31,9 +45,9 @@
     {foreach $right as $group=>$r}
     {if $group == $groupId}
     <td><select name="rights[{$group}][{$subject}]" id="{$subject|eschtml}">
-        <option value=""  {if $r == ''}selected="selected"{/if}>-</option>
-        <option value="y" {if $r == 'y'}selected="selected"{/if}>{@acl2.group.rights.value.yes@}</option>
-        <option value="n" {if $r == 'n'}selected="selected"{/if}>{@acl2.group.rights.value.no@}</option>
+            <option value=""  {if $r == ''}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.no@}</option>
+            <option value="y" {if $r == 'y'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.yes@}</option>
+            <option value="n" {if $r == 'n'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.forbidden@}</option>
         </select>
     </td>
     {elseif $r == ''}
@@ -42,12 +56,16 @@
     <td>
     {if $r =='y'}
         <input name="rights[{$group}][{$subject}]" value="y" style="display: none;"/>
-        <img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />
+        <img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />
     {elseif $r=='n'}
         <input name="rights[{$group}][{$subject}]" value="n" style="display: none;"/>
-        <img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{/if}
+        <img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{/if}
     </td>
     {/if}
+   {* <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}
+
+    {/if}</td>*}
+
     {/foreach}
 </tr>
 {/foreach}
@@ -55,9 +73,9 @@
 </table>
 <div class="legend">
     <ul>
-        <li>{@jacl2db_admin~acl2.group.help.rights.inherit@}</li>
-        <li><img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" />{@jacl2db_admin~acl2.group.help.rights.yes@}</li>
-        <li><img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" />{@jacl2db_admin~acl2.group.help.rights.no@}</li>
+        <li><img src="{$j_jelixwww}/design/icons/accept.png" alt="yes" /> <span class="right-yes">{@jacl2db_admin~acl2.group.rights.yes@}</span> : {@jacl2db_admin~acl2.group.help.rights.yes@}</li>
+        <li><span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span>: {@jacl2db_admin~acl2.group.help.rights.no@}</li>
+        <li><img src="{$j_jelixwww}/design/icons/cancel.png" alt="no" /> <span class="right-forbidden">{@jacl2db_admin~acl2.group.rights.forbidden@}</span>: {@jacl2db_admin~acl2.group.help.rights.forbidden@}</li>
     </ul>
 </div>
 <input name="group" value="{$groupId}" style="display:none;"/>

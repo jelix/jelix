@@ -7,6 +7,10 @@ PHP=/usr/bin/php
 endif
 
 CURRENT_PATH = $(shell pwd)
+ifndef JELIX_BRANCH
+JELIX_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
+endif
+VERSION=$(shell cat lib/jelix/VERSION)
 
 ifndef DISTPATH
 DISTPATH=$(CURRENT_PATH)/_dist
@@ -32,20 +36,25 @@ ifndef PHPDOC
 PHPDOC="$(CURRENT_PATH)/build/vendor/bin/phpdoc"
 endif
 
-.PHONY: default
+.PHONY: default nightlies deploy_unstable build_unstable build_release deploy_release docs deploy_docs
+
 default:
-	@echo "target:"
-	@echo " nightlies : "
-	@echo "     générations des packages des nightly build"
-	@echo " docs : "
-	@echo "     Génération de la doc"
+	@echo "possible targets:"
+	@echo " build_unstable, build_release, docs, deploy_unstable, deploy_release,"
+	@echo " deploy_docs"
 
-.PHONY: nightlies
-nightlies:
-	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
+build_unstable:
+	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-progress
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) -D IS_NIGHTLY=1 -D ENABLE_DEVELOPER=1 ./build/config/jelix-dist.ini
+	rm -rf $(DISTPATH)/jelix-$(VERSION)
 
-.PHONY: docs
+#deprecated
+nightlies: build_unstable
+
+
+deploy_unstable:
+	jelix_upload_unstable_package.sh $(DISTPATH)/ "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)
+
 docs:
 	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
@@ -55,7 +64,13 @@ docs:
 	(cd $(TESTPATH) && $(PHPDOC) project:run)
 	cp build/phpdoc/template.css $(DOCSTARGETPATH)/css/
 
-.PHONY: release
-release:
+deploy_docs:
+	jelix_publish_apidoc.sh $(DOCSTARGETPATH) "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)
+
+build_release:
 	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
 	$(PHP) build/buildjelix.php -D $(DISTPATHSWITCH) ./build/config/jelix-dist.ini
+	rm -rf $(DISTPATH)/jelix-$(VERSION)
+
+deploy_release:
+	jelix_upload_stable_package.sh $(DISTPATH)/ "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH) $(VERSION)
