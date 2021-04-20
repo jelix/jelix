@@ -15,9 +15,11 @@ class jacl2db_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
             array(
                 'css' => array('$jelix/design/jacl2.css'),
                 'js' => array(
-                    '$jelix/jquery/jquery.min.js',
-                    '$jelix/jquery/ui/jquery-ui.min.js',
-                    '$jelix/js/acl2db_admin.js'
+                    '$jelix/js/acl2db_admin.js',
+                    '$jelix/js/jacl2db_admin.js'
+                ),
+                'require' => array(
+                    'jquery_ui'
                 )
             ),
             'common',
