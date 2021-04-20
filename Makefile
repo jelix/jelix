@@ -10,7 +10,7 @@ CURRENT_PATH = $(shell pwd)
 ifndef JELIX_BRANCH
 JELIX_BRANCH=$(shell git rev-parse --abbrev-ref HEAD)
 endif
-VERSION=$(shell cat lib/jelix/VERSION)
+VERSION=$(shell cat lib/jelix-legacy/VERSION)
 
 ifndef DISTPATH
 DISTPATH=$(CURRENT_PATH)/_dist

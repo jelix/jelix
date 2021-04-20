@@ -68,6 +68,9 @@ cd lib/Jelix/Logger
 cd lib/Jelix/Mailer
   __ALL__
 
+cd lib/Jelix/Scripts
+  __ALL__
+
 cd lib/Jelix/Routing
   __ALL_RECURSIVELY__
 
@@ -198,8 +201,6 @@ cd lib/jelix-legacy/forms
 cd lib/jelix-legacy/kvdb
   __ALL__
 
-cd lib/jelix-legacy/Scripts
-  __ALL__
 
 cd lib/jelix-legacy/tpl/
   __ALL__
