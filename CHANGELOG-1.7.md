@@ -4,7 +4,7 @@ Changes into Jelix 1.7
 Jelix 1.7.7
 -----------
 
-* have all bug fixes and improvements from Jelix 1.6.31 and 1.6.32.
+* have all bug fixes and improvements from Jelix 1.6.31, 1.6.32 and 1.6.33:
   * Fix various issues with PHP 8.0
   * Fix some dao locales that have a bad pattern for sprintf
   * Fix float to string convertion into jDb
@@ -13,6 +13,13 @@ Jelix 1.7.7
   * Fix many issues in the checking of admin rights in administration UI. There were some situation when the checking was badly done, so there were some possibility into the UI to remove completely admin rights.
   * jauthdb_admin: adding autocomplete to search users
   * jInstaller, module.xml: allow http:// as well as https:// into the namespace value
+  * Fix php 7 compat issue in the memcache driver
+  * Fix jacl2db_admin: missing translations
+  * Fix command acl2right: forbidden rights were displayed as authorized rights
+  * Fix acl2right command: subcommand to forbid a right was missing
+  * jacl2db_admin: little improvements in the display of list of rights to be more usable
+  * New option `force_new` in profiles for pgsql to force a new connection
+
 * Fix some issues in the docker stack for tests
 * Upgrade PHPUnit to 8.5.14
 

@@ -21,11 +21,6 @@
     "jelix/version": "1.0.*",
     "phpdocumentor/phpdocumentor": "2.9.*"
   },
-  "config" : {
-    "platform" : {
-        "php": "5.6.0"
-    }
-  },
   "autoload": {
   },
   "minimum-stability": "stable"

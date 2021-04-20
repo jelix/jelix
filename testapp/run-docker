@@ -7,10 +7,6 @@ export JELIX_GROUP_ID=${JELIX_GROUP_ID:-$(id -g)}
 
 CMD=$1
 
-if [ "$CMD" == "" ]; then
-    CMD="up -d"
-fi
-
 if [ "$JLXBRANCH" == "" ]; then
   export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
 fi
@@ -30,6 +26,19 @@ if [ "$CMD" == "build" ]; then
     ./setup.sh
     )
   fi
+fi
+
+if [ "$CMD" == "reset" ]; then
+    # Stop/Remove containers
+    docker-compose -p jelix-${JLXBRANCH}-tests rm -sf || true
+    # Clean db volumes
+    docker volume rm "jelix_${JLXBRANCH}_pg_data" || true
+    docker volume rm "jelix_${JLXBRANCH}_mysql_data" || true
+    exit 0
+elif [ -z "$CMD" ]; then
+    CMD="up"
+else
+    shift
 fi
 
 
