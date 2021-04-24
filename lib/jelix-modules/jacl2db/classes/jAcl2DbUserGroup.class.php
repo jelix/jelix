@@ -361,9 +361,12 @@ class jAcl2DbUserGroup
      *
      * @return jDbResultSet a list of groups object (dao records)
      */
-    public static function getGroupList($login = '')
+    public static function getGroupList($login = '', $withAnonymous = false)
     {
         if ($login === '') {
+            if ($withAnonymous) {
+                return jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAllPublicGroupAndAnonymous();
+            }
             return jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAllPublicGroup();
         }
 

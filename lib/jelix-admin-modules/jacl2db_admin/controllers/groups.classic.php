@@ -51,8 +51,23 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
         $tpl = new jTpl();
 
+
         if (jAcl2::check('acl.group.modify')) {
-            $tpl->assign('groups', array_merge(jAcl2DbUserGroup::getGroupList()->fetchAll(), array(jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup())));
+            if ($this->param('group')) {
+                $tpl->assign('searchMode', true);
+                $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
+                if ($group === null) {
+                    $groups = null;
+                }
+                else {
+                    $groups = array( $group);
+                }
+            }
+            else {
+                $tpl->assign('searchMode', false);
+                $groups = jAcl2DbUserGroup::getGroupList('', true)->fetchAll();
+            }
+            $tpl->assign('groups', $groups);
             $rep->body->assign('MAIN', $tpl->fetch('groups_edit'));
         } else {
             $this->loadGroupRights($tpl);
@@ -270,17 +285,16 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
 
 
-        if ($this->param('group') === 'anonymous') {
+        if ($this->param('group') === '__anonymous') {
             $group = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
             $group->name = jLocale::get('acl2.anonymous.group.name');
         } else {
-            $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
+            $group = jDao::get('jacl2db~jacl2group')->get($this->param('group'));
         }
         if ($group === null) {
             $rep = $this->getResponse('redirect');
             $rep->action = 'jacl2db_admin~groups:index';
-            jMessage::add('Invalid Group', 'error');
-
+            jMessage::add(jLocale::get('acl2.group.unknown'), 'error');
             return $rep;
         }
         $manager = new jAcl2DbAdminUIManager();

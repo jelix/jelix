@@ -1,5 +1,5 @@
 {meta_html assets 'jacl2_admin'}
-<h1>{@jacl2db_admin~acl2.groups.view.title@.' '.$group->name}</h1>
+<h1>{@jacl2db_admin~acl2.group.view.title@.' '.$group->name}</h1>
 
 <table class="jforms-table">
 <tbody>
