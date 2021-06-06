@@ -256,7 +256,7 @@ class groupsCtrl extends jController
 
         $id = $this->param('group_id');
         $name = $this->param('newname');
-        if ($id != '' && $name != '') {
+        if ($id != '' && $name != '' && $id != '__anonymous') {
             jAcl2DbUserGroup::updateGroup($id, $name);
             jMessage::add(jLocale::get('acl2.message.group.rename.ok'), 'ok');
         }
@@ -283,13 +283,13 @@ class groupsCtrl extends jController
     public function view()
     {
         $rep = $this->getResponse('html');
+        $groupName = $this->param('group');
 
-
-        if ($this->param('group') === '__anonymous') {
+        if ($groupName === '__anonymous') {
             $group = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
             $group->name = jLocale::get('acl2.anonymous.group.name');
         } else {
-            $group = jDao::get('jacl2db~jacl2group')->get($this->param('group'));
+            $group = jDao::get('jacl2db~jacl2group')->get($groupName);
         }
         if ($group === null) {
             $rep = $this->getResponse('redirect');
@@ -316,9 +316,14 @@ class groupsCtrl extends jController
             }
         }, $subjects));
 
-        $users = array_map(function ($elem) {
-            return $elem->login;
-        }, jAcl2DbUserGroup::getUsersList($group->id_aclgrp)->fetchAll());
+        if ($groupName === '__anonymous') {
+            $users = null;
+        }
+        else {
+            $users = array_map(function ($elem) {
+                return $elem->login;
+            }, jAcl2DbUserGroup::getUsersList($group->id_aclgrp)->fetchAll());
+        }
 
         $tpl = new jTpl();
         $tpl->assign(array('group' => $group, 'rights' => $groupRights, 'users' => $users));
