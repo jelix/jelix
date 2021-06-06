@@ -210,6 +210,7 @@ class groupsCtrl extends jController
 
     public function newgroup()
     {
+        /** @var jResponseRedirect $rep */
         $rep = $this->getResponse('redirect');
         $rep->action = 'jacl2db_admin~groups:rights';
 
@@ -217,8 +218,19 @@ class groupsCtrl extends jController
         $id = $this->param('id');
         $copyGroup = $this->param('rights-copy');
 
-
-        if (trim($id) == '') {
+        if ($name == '') {
+            $rep->action = 'jacl2db_admin~groups:create';
+            jMessage::add(jLocale::get('acl2.error.groupname.is.missing'), 'error');
+            return $rep;
+        }
+        $id = trim($id);
+        if ($id == '__anonymous') {
+            $rep->action = 'jacl2db_admin~groups:create';
+            $rep->params = array('name'=>$name);
+            jMessage::add(jLocale::get('acl2.error.groupid.invalid'), 'error');
+            return $rep;
+        }
+        if ($id == '') {
             $id = null;
         }
         if ($name != '') {
@@ -243,6 +255,7 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
         $tpl = new jTpl();
 
+        $tpl->assign('groupname', $this->param('name'));
         $tpl->assign('groups', jAcl2DbUserGroup::getGroupList()->fetchAll());
         $rep->body->assign('MAIN', $tpl->fetch('group_create'));
 
