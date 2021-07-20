@@ -12,7 +12,7 @@ timeZone="Europe/Paris"
 theme=default
 
 ; default domain name to use with jfullurl for example.
-; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
+; Let it empty to use $_SERVER values instead.
 domainName=
 
 
