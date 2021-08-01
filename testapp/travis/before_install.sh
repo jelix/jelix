@@ -63,7 +63,7 @@ echo "slapd slapd/domain string tests.jelix" | debconf-set-selections
 
 apt-get -y install slapd ldap-utils
 
-ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/vagrant/ldap/ldap_conf.ldif
+ldapadd -x -D cn=admin,dc=tests,dc=jelix -w passjelix -f testapp/travis/ldap_conf.ldif
 
 
 # ----------------------- prepare postgresql base

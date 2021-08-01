@@ -54,8 +54,8 @@ on our IRC Channel, #jelix, on the irc.freenode.net network.
 Contribution & development
 ===========================
 
-If you want to contribute, you can use the provided Vagrant configuration
-which install all what is needed to run and test Jelix, and launch unit tests. See the
-testapp/README.md file in the repository.
+If you want to contribute, you can use the provided Docker stack which runs all 
+what is needed to test Jelix, and launch unit tests. See the testapp/README.md 
+file in the repository.
 
 Fill issues on Github https://github.com/jelix/jelix/.

@@ -2,9 +2,9 @@
 Testapp is a web application used to test Jelix. It contains some pages where you can try
 some features, and some unit tests.
 
-A Vagrant configuration and a Docker configuration are available to execute testapp 
+A Docker configuration is available to execute testapp 
 in a preconfigured environment with all needed tools. 
-You have to install Docker or VirtualBox and Vagrant on your computer.
+You have to install Docker on your computer.
 
 Sources of testapp
 ==================
@@ -95,12 +95,3 @@ export PHP_VERSION=7.3
 ./run-docker build
 ./run-docker
 ```
-
-
-Testapp with Vagrant
-====================
-
-See testapp/vagrant/README.md.
-
-Note that this way to test Jelix is deprecated and will be removed in futur branches.
-
