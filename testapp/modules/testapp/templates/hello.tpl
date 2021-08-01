@@ -3,7 +3,7 @@
 <p>Say <a href="{jurl 'main:hello',array('person'=>'Bob')}">Hello to Bob</a>.</p>
 
 
-<p><a href="{jurl 'main:index'}">Back to main page</a></p>
+<p><a href="{jfullurl 'main:index'}">Back to main page</a></p>
 
 <!--
 <p>Link to actions:</p>
