@@ -57,7 +57,6 @@
            <parameter name="filter" />
            <conditions>
               <neq property="grouptype" value="2" />
-              <neq property="id_aclgrp" value="__anonymous" />
               <like property="name" expr="$filter" />
            </conditions>
         </method>

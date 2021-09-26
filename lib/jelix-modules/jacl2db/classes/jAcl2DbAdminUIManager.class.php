@@ -329,7 +329,6 @@ class jAcl2DbAdminUIManager
     {
         $filter = '%'.$filter.'%';
         $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findGroupByFilter($filter)->fetchAll();
-        $groups[] = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
         $results = array();
         foreach($groups as $group) {
             $group->type = 'group';
