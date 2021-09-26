@@ -6,7 +6,7 @@ Jelix 1.7.8
 
 * have all bug fixes and improvements from Jelix 1.6.34:
   * Fix the installer during the setup of the module access
-  * Fix @@jResponseHtml::addJsLink@@: possibility to setup the @@type@@ attribute
+  * Fix `jResponseHtml::addJsLink`: possibility to setup the `type` attribute
   * Fix jauthdb_admin user creation: login name should be trimmed
   * Fix automatic domain name and port retrieval. In some Nginx configuration, SERVER_NAME may be initialized with the port, and so jUrl may generate some url with two port.
   * Fix crash in PHP 8 and warning in PHP 7.4 within jDb and the core
