@@ -13,7 +13,7 @@ if [ "$COMMAND" == "" ]; then
     echo "- Into php: reset, rights, clean-temp, install, composer-install,"
     echo "  composer-update, unit-tests"
     echo "- To manage the ldap server: ldap-reset, ldap-users"
-    echo "- To enter into the php container: shell, shellroot"
+    echo "- To enter into the php container: shell, shell-root"
     echo "- to enter into a interactive database shell: pgsql, mysql or redis"
     exit 1;
 fi
