@@ -20,6 +20,8 @@ class rightsCtrl extends jController
     {
         $rep = $this->getResponse('html');
 
+
+        // list of groups when searching users
         $groups = array();
 
         $o = new StdClass();
@@ -48,12 +50,16 @@ class rightsCtrl extends jController
         $tpl = new jTpl();
 
         if ($type === 'user' && is_numeric($grpid) && intval($grpid) < 0) {
+            // when searching a user, in the group list, "all users" or "without group" is selected
             $tpl->assign($manager->getUsersList($grpid, null, $filter, $offset, $listPageSize));
         } elseif ($type === 'user') {
+            // a group is selected when searching a user
             $tpl->assign($manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
         } elseif ($type === 'group') {
+            // search in groups
             $tpl->assign($manager->getGroupByFilter($filter));
         } elseif ($type === 'all') {
+            // search in groups and users
             $usersResults = $manager->getUsersList($grpid, null, $filter, $offset, $listPageSize);
             $groupResults = $manager->getGroupByFilter($filter);
             $results = array(
@@ -62,6 +68,9 @@ class rightsCtrl extends jController
             );
             $tpl->assign($results);
         }
+
+        $tpl->assign('typeUserLabel', jLocale::get('jacl2db_admin~acl2.type.user'));
+        $tpl->assign('typeGroupLabel', jLocale::get('jacl2db_admin~acl2.type.group'));
 
         $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter', 'type'));
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
@@ -73,28 +82,27 @@ class rightsCtrl extends jController
     public function rights()
     {
         $rep = $this->getResponse('redirect');
-        $type = $this->param('type').'s';
-        if ($type === 's') {
+        $type = $this->param('item_type');
+        if ($type === '') {
             $rep = $this->getResponse('redirect');
             $rep->action = 'jacl2db_admin~rights:index';
             jMessage::add('Invalid Entry, select an entry from the autocomplete list.', 'error');
 
             return $rep;
         }
-        $name = $this->param('name');
-        $group = null;
-        if ($type == 'groups') {
-            if ($name == 'anonymous') {
-                $group = '__anonymous';
-            } else {
-                $group = jDao::get('jacl2db~jacl2group')->getGroupByName($name)->id_aclgrp;
-            }
+        $id = $this->param('item_id');
+        if ($type == 'group') {
+            $rep->params = array(
+                'group' => $id,
+            );
+            $rep->action = 'jacl2db_admin~groups:rights';
         }
-        $rep->params = array(
-            'user'  => $name,
-            'group' => $group,
-        );
-        $rep->action = 'jacl2db_admin~'.$type.':rights';
+        else {
+            $rep->params = array(
+                'user'  => $id
+            );
+            $rep->action = 'jacl2db_admin~users:rights';
+        }
 
         return $rep;
     }
@@ -115,24 +123,46 @@ class rightsCtrl extends jController
         $usersResults = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, null, $term);
         $groupResults = $manager->getGroupByFilter($term);
         $resultsObjects = array_merge($usersResults['results'], $groupResults['results']);
+        $labelUserType = jLocale::get('jacl2db_admin~acl2.type.user');
+        $labelGroupType = jLocale::get('jacl2db_admin~acl2.type.group');
         foreach ($resultsObjects as $result) {
-            if ($result->login === 'anonymous') {
+
+            if ($result->type== 'user') {
                 $results[] = array(
-                    'label' => jLocale::get('jacl2db_admin~acl2.anonymous.group.name').' ('.jLocale::get('jacl2db_admin~acl2.type.'.$result->type).')',
-                    'value' => array(
-                        'login' => $result->login,
+                    'label' => $result->login.' ('.$labelUserType.')',
+                    'value' => $result->login,
+                    'infos' => array(
+                        'name' => $result->login,
                         'type'  => $result->type,
+                        'id' => $result->login
+
                     ),
                 );
-                continue ;
             }
-            $results[] = array(
-                'label' => $result->login.' ('.jLocale::get('jacl2db_admin~acl2.type.'.$result->type).')',
-                'value' => array(
-                    'login' => $result->login,
-                    'type'  => $result->type,
-                ),
-            );
+            else {
+                if ($result->login === 'anonymous') {
+                    $label = jLocale::get(
+                            'jacl2db_admin~acl2.anonymous.group.name'
+                        ) . ' (' . jLocale::get(
+                            'jacl2db_admin~acl2.type.' . $result->type
+                        ) . ')';
+                }
+                else {
+                    $label = $result->name.' ('.$labelGroupType.')';
+                }
+                $results[] = array(
+                    'label' => $label,
+                    'value' => $result->name,
+                    'infos' => array(
+                        'name' => $result->name,
+                        'type'  => $result->type,
+                        'id' => $result->id_aclgrp
+                    ),
+                );
+
+            }
+
+
         }
 
         $rep->data = $results;
