@@ -9,15 +9,9 @@
 <thead>
     <tr>
         <th rowspan="2">{@jacl2db_admin~acl2.table.th.rights@}</th>
-        <th colspan="{=$nbgrp*2}">{@jacl2db_admin~acl2.table.th.groups@}</th>
+        <th colspan="{=$nbgrp}">{@jacl2db_admin~acl2.table.th.groups@}</th>
     </tr>
     <tr>
-    {foreach $groups as $group}
-        <th colspan="2">{$group->name}</th>
-    {/foreach}
-    </tr>
-    <tr>
-    <th></th>
     {foreach $groups as $group}
         <th>{$group->name}</th>
     {/foreach}
@@ -25,10 +19,9 @@
 </thead>
     <tfoot>
     <tr>
-        <td></td>
+        <td>{@jacl2db_admin~acl2.group.rightres.title@}</td>
         {foreach $groups as $group}
-            <th></th>
-            <th><a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group->id_aclgrp)}">{@jacl2db_admin~acl2.group.rights.yes@}</a></th>
+            <th><a href="{jurl 'jacl2db_admin~groups:rightres',array('group'=>$group->id_aclgrp)}">{@jacl2db_admin~acl2.special.rights@}</a></th>
         {/foreach}
     </tr>
     </tfoot>
@@ -51,21 +44,17 @@
         </select>
     </td>
     {elseif $r == ''}
-    <td>-</td>
+    <td><span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span></td>
     {else}
     <td>
     {if $r =='y'}
         <input name="rights[{$group}][{$subject}]" value="y" style="display: none;"/>
-        <img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" />
+        <img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" title="{@jacl2db_admin~acl2.group.rights.yes@}" />
     {elseif $r=='n'}
         <input name="rights[{$group}][{$subject}]" value="n" style="display: none;"/>
-        <img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.no@}" />{/if}
+        <img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.forbidden@}"  title="{@jacl2db_admin~acl2.group.rights.forbidden@}"/>{/if}
     </td>
     {/if}
-   {* <td>{if isset($rightsWithResources[$subject][$group]) && $rightsWithResources[$subject][$group]}
-
-    {/if}</td>*}
-
     {/foreach}
 </tr>
 {/foreach}

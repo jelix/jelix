@@ -88,7 +88,7 @@ class groupsCtrl extends jController
         $this->loadGroupRights($tpl);
         $tpl->assign('groupId', $this->param('group'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
-        $rep->body->assign('selectedMenuItem', 'usersgroups');
+        $rep->body->assign('selectedMenuItem', 'usersrights');
 
         return $rep;
     }
@@ -156,7 +156,7 @@ class groupsCtrl extends jController
         } else {
             $rep->body->assign('MAIN', $tpl->fetch('group_rights_res_view'));
         }
-        $rep->body->assign('selectedMenuItem', 'usersgroups');
+        $rep->body->assign('selectedMenuItem', 'usersrights');
 
         return $rep;
     }
