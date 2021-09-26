@@ -370,11 +370,10 @@ class Router
      * @param string $errmsg     error message
      * @param string $filename   filename where the error appears
      * @param int    $linenum    line number where the error appears
-     * @param array  $errcontext
      *
      * @since 1.4
      */
-    public function errorHandler($errno, $errmsg, $filename, $linenum, $errcontext)
+    public function errorHandler($errno, $errmsg, $filename, $linenum)
     {
         if (error_reporting() == 0) {
             return;

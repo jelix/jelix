@@ -6,8 +6,9 @@
     <div>
         <label>{@jacl2db_admin~acl2.user.rights.title@}</label>
         <input name="name" id="search-bar" data-select-on-ac="true" data-link="{jurl 'jacl2db_admin~rights:autocomplete'}"/>
-        <input name="type" id="type-hidden" style="display: none;"/>
-        <button type="submit">{@jacl2db_admin~acl2.show.button@}</button>
+        <input name="item_type" id="item-type" type="hidden"/>
+        <input name="item_id" id="item-id" type="hidden"/>
+        <button type="submit" disabled>{@jacl2db_admin~acl2.show.button@}</button>
     </div>
 </form>
 
@@ -51,13 +52,18 @@
 {assign $line = true}
 {foreach $results as $result}
     <tr class="{if $line}odd{else}even{/if}">
-        {assign $typeLocale = 'jacl2db_admin~acl2.type.'.$result->type}
-        {if $result->login === 'anonymous'}
-        <td>{@acl2.anonymous.group.name@}</td>
+        {if $result->type == 'user'}
+            <td>{$result->login}</td>
+            <td>{$typeUserLabel}</td>
         {else}
-        <td>{$result->login}</td>
+            {if $result->id_aclgrp === '__anonymous'}
+                <td>{@acl2.anonymous.group.name@}</td>
+            {else}
+                <td>{$result->name}</td>
+            {/if}
+            <td>{$typeGroupLabel}</td>
         {/if}
-        <td>{@$typeLocale@}</td>
+
         {if $type !== 'group'}
         <td>{foreach $result->groups as $key => $group} 
             {if $key == $result->last}
@@ -67,7 +73,12 @@
             {/if}
         {/foreach}</td>
         {/if}
-        <td><a href="{jurl 'jacl2db_admin~rights:rights', array('name' => $result->login, 'type' => $result->type)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
+
+        {if $result->type == 'group'}
+            <td><a href="{jurl 'jacl2db_admin~groups:rights', array('group' => $result->id_aclgrp)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
+        {elseif $result->type == 'user'}
+            <td><a href="{jurl 'jacl2db_admin~users:rights', array('user' => $result->login)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
+        {/if}
     </tr>
 {assign $line = !$line}
 {/foreach}

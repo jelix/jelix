@@ -1,21 +1,27 @@
 {meta_html assets 'jacl2_admin'}
-<h1>{@jacl2db_admin~acl2.groups.view.title@.' '.$group->name}</h1>
+<h1>{@jacl2db_admin~acl2.group.view.title@.' '.$group->name}</h1>
 
 <table class="jforms-table">
 <tbody>
     <tr>
         <th> {@jacl2db_admin~acl2.col.groups.name@} </th>
-        <td> {$group->name} <td>
+        <td> {$group->name} </td>
     </tr>
     <tr>
         <th> {@jacl2db_admin~acl2.table.th.rights@} </th>
-        <td> <ul>
+        <td>
+            {if count($rights)}
+            <ul>
         {foreach $rights as $right}
             <li> {$right} </li>
         {/foreach}
-        </ul>
-        <a href="{jurl 'jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)}">{@jacl2db_admin~acl2.groups.change.rights.link@}</a> </td>
+        </ul>{else}
+                <p>{@jacl2db_admin~acl2.no.rights@}.</p>
+        {/if}
+        <a href="{jurl 'jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)}">{@jacl2db_admin~acl2.groups.change.rights.link@}</a>
+        </td>
     </tr>
+    {if $users !== null}
     <tr>
         <th> {@jacl2db_admin~acl2.col.users@} </th>
         <td> <ul>
@@ -24,6 +30,7 @@
         {/foreach}
         </ul> </td>
     </tr>
+    {/if}
 </tbody>
 </table>
 
@@ -33,7 +40,7 @@
 <fieldset><legend>{@jacl2db_admin~acl2.change.name.title@}</legend>
 {formurlparam 'jacl2db_admin~groups:changename'}
     <label for="newname">{@jacl2db_admin~acl2.new.name.label@}</label> <input id="newname" name="newname" />
-    <input name="group_id" value="{$group->id_aclgrp}" style="display:none;"/>
+    <input type="hidden" name="group_id" value="{$group->id_aclgrp}"/>
     <input type="submit" value="{@jacl2db_admin~acl2.rename.button@}" />
 </fieldset>
 </form>
@@ -46,7 +53,7 @@
 <form action="{formurl 'jacl2db_admin~groups:delgroup'}" method="post" onsubmit="return confirm('{@jacl2db_admin~acl2.delete.button.confirm.label@}');">
 {formurlparam 'jacl2db_admin~groups:delgroup'}
 <div>
-    <input type="text" name="group" value="{$group->id_aclgrp}" style="display: none;"/>
+    <input type="hidden" name="group" value="{$group->id_aclgrp}"/>
     <input type="submit" value="{@jacl2db_admin~acl2.delete.group@}"/>
 </div>
 </form>

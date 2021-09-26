@@ -30,6 +30,15 @@
            </order>
         </method>
 
+        <method name="findAllPublicGroupAndAnonymous" type="select">
+            <conditions>
+                <neq property="grouptype" value="2" />
+            </conditions>
+            <order>
+                <orderitem property="name" way="asc" />
+            </order>
+        </method>
+
         <method name="findAnonymousGroup" type="selectfirst">
            <conditions>
               <eq property="id_aclgrp" value="__anonymous" />
@@ -48,7 +57,6 @@
            <parameter name="filter" />
            <conditions>
               <neq property="grouptype" value="2" />
-              <neq property="id_aclgrp" value="__anonymous" />
               <like property="name" expr="$filter" />
            </conditions>
         </method>

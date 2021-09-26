@@ -14,6 +14,7 @@ namespace Jelix\Core\Config;
 
 use Jelix\Core\App as App;
 use Jelix\IniFile\Util as IniFileMgr;
+use jServer;
 
 /**
  * This class merges two ini files in a single array and store it in a temporary file.
@@ -218,11 +219,10 @@ class Compiler
      */
     public static function getCacheFilename($configFile)
     {
-        $filename = App::tempPath().str_replace('/', '~', $configFile);
-        if (isset($_SERVER['HTTP_HOST'])) {
-            $filename .= '.'.str_replace(':', '-', $_SERVER['HTTP_HOST']);
-        } elseif (isset($_SERVER['SERVER_NAME'])) {
-            $filename .= '.'.$_SERVER['SERVER_NAME'];
+        $filename = App::tempPath().str_replace('/','~',$configFile);
+        list($domain, $port) = jServer::getDomainPortFromServer();
+        if ($domain) {
+            $filename.= '.'.$domain.'-'.$port;
         }
         if (BYTECODE_CACHE_EXISTS) {
             $filename .= '.conf.php';
@@ -254,8 +254,20 @@ class Compiler
     {
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
 
-        if ($config->domainName == '' && isset($_SERVER['SERVER_NAME'])) {
-            $config->domainName = $_SERVER['SERVER_NAME'];
+        if ($config->domainName == "") {
+            // as each compiled config is stored in a file based on the domain
+            // name/port, we can store the guessed domain name into the configuration
+            list($domain, $port) = jServer::getDomainPortFromServer();
+            if ($domain) {
+                $config->domainName = $domain;
+                $isHttps = jServer::isHttpsFromServer();
+                if ($config->forceHTTPPort == '' && !$isHttps && $port != '80') {
+                    $config->forceHTTPPort = $port;
+                }
+                else if ($config->forceHTTPSPort == '' && $isHttps && $port != '443') {
+                    $config->forceHTTPSPort = $port;
+                }
+            }
         }
 
         if (!is_string($config->chmodFile)) {
@@ -531,7 +543,7 @@ class Compiler
     }
 
     /**
-     * calculate miscelaneous path, depending of the server configuration and other informations
+     * calculate miscellaneous path, depending of the server configuration and other information
      * in the given array : script path, script name, documentRoot ..
      *
      * @param array  $urlconf          urlengine configuration. scriptNameServerVariable, basePath,

@@ -32,19 +32,21 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
             /** @var \Jelix\IniFile\IniModifier $conf */
             list($conf, $section) = $authConfig;
             if ($section === 0) {
+                // the configuration file is a auth.coord.plugin.ini.php
                 $section_db = 'Db';
             } else {
+                // the configuration file is the main configuration file
                 $section_db = 'auth_db';
             }
             $path = Jelix\FileUtilities\Path::shortestPath(jApp::appPath(), $conf->getFileName());
             if (!isset($confList[$path])) {
                 $confList[$path] = true;
-                $this->setupAuth($helpers, $conf, $section_db, $entryPoint->getConfigObj());
+                $this->setupAuth($helpers, $conf, $section_auth, $section_db, $entryPoint->getConfigObj());
             }
         }
     }
 
-    protected function setupAuth(InstallHelpers $helpers, Jelix\IniFile\IniModifier $conf, $section_db, $epConfig)
+    protected function setupAuth(InstallHelpers $helpers, Jelix\IniFile\IniModifier $conf, $section_auth, $section_db, $epConfig)
     {
 
         // a config for the auth plugin exists, so we can install
@@ -53,16 +55,27 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
         if (isset($epConfig->coordplugin_auth['driver'])) {
             $driver = $epConfig->coordplugin_auth['driver'];
         } else {
-            $driver = $conf->getValue('driver');
+            $driver = $conf->getValue('driver', $section_auth);
         }
+
 
         if ($driver == '') {
             $driver = 'Db';
-            $conf->setValue('driver', $section_db);
+            $conf->setValue('driver', $section_db, $section_auth);
             $conf->setValue('dao', 'jauthdb~jelixuser', $section_db);
             $conf->save();
-        } elseif ($driver != 'Db') {
-            return;
+        } else {
+            if ($section_auth == 0) {
+                $compatibleWithDb = $conf->getValue('compatiblewithdb', $driver);
+            }
+            else {
+                $section_db = 'auth_'.strtolower($driver);
+                $compatibleWithDb = $conf->getValue('compatiblewithdb', $section_db);
+            }
+            if ($driver != 'Db' && !$compatibleWithDb) {
+                return;
+            }
+
         }
 
         $helpers->database()->useDbProfile($conf->getValue('profile', $section_db));
@@ -80,10 +93,9 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
                     require_once JELIX_LIB_PATH.'plugins/auth/db/db.auth.php';
 
                     $arConfig = $conf->getValues();
-                    $arConfig['Db'] = $conf->getValues($section_db);
+                    $arConfig[$driver] = $conf->getValues($section_db);
                     $authConfig = jAuth::loadConfig($arConfig);
-
-                    $driver = new dbAuthDriver($authConfig['Db']);
+                    $driver = new dbAuthDriver($authConfig[$driver]);
                     $passwordHash = $driver->cryptPassword('admin');
                     $cn->exec('INSERT INTO '.$cn->prefixTable('jlx_user')." (usr_login, usr_password, usr_email ) VALUES
                             ('admin', ".$cn->quote($passwordHash)." , 'admin@localhost.localdomain')");

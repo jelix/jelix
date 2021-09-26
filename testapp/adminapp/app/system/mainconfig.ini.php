@@ -12,7 +12,7 @@ timeZone="Europe/Paris"
 theme=default
 
 ; default domain name to use with jfullurl for example.
-; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
+; Let it empty to use $_SERVER values instead.
 domainName=
 
 
@@ -189,5 +189,4 @@ name=admin
 master_admin.css[]="$jelix/design/master_admin.css"
 jacl2_admin.require = jquery_ui
 jacl2_admin.css[]="$jelix/design/jacl2.css"
-jacl2_admin.js[]="$jelix/js/acl2db_admin.js"
 jacl2_admin.js[]="$jelix/js/jacl2db_admin.js"
