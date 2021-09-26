@@ -32,6 +32,8 @@ class groupsCtrl extends jController
         $manager = new jAcl2DbAdminUIManager();
         $data = $manager->getGroupRights();
         $tpl->assign('nbgrp', count($data['groups']));
+        // 'groups', 'rights', 'rightsProperties',
+        // 'rightsGroupsLabels', 'rightsWithResources',
         $tpl->assign($data);
     }
 

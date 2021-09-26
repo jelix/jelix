@@ -26,6 +26,7 @@ class jAcl2DbAdminUIManager
     }
 
     /**
+     * Return all rights of all groups, with labels
      * @return array
      *               'groups' : list of jacl2group objects (id_aclgrp, name, grouptype, ownerlogin)
      *               'rights' : array( <right> => array( <id_aclgrp> => 'y' or 'n' or ''))
@@ -331,7 +332,6 @@ class jAcl2DbAdminUIManager
         $groups[] = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
         $results = array();
         foreach($groups as $group) {
-            $group->login = $group->name;
             $group->type = 'group';
             $group->groups = array();
             $results[] = $group;
