@@ -14,7 +14,10 @@
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once JELIX_LIB_PATH.'dao/jDaoXmlException.class.php';
+
+use Jelix\Database\Schema\SqlToolsInterface;
+
+require_once JELIX_LIB_PATH . 'dao/jDaoXmlException.class.php';
 require_once JELIX_LIB_PATH.'dao/jDaoProperty.class.php';
 require_once JELIX_LIB_PATH.'dao/jDaoMethod.class.php';
 require_once JELIX_LIB_PATH.'dao/jDaoGenerator.class.php';
@@ -116,7 +119,7 @@ class jDaoParser
      * parse a dao xml content.
      *
      * @param SimpleXmlElement $xml
-     * @param jDbTools         $tools
+     * @param SqlToolsInterface $tools
      * @param int              $debug for debug only 0:parse all, 1:parse only datasource+record, 2;parse only datasource
      */
     public function parse($xml, $tools)
@@ -200,7 +203,7 @@ class jDaoParser
 
     /**
      * @param simpleXmlElement $xml
-     * @param jDbTools         $tools
+     * @param SqlToolsInterface         $tools
      *
      * @throws jDaoXmlException
      */

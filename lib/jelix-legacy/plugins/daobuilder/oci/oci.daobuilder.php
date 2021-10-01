@@ -308,7 +308,7 @@ class ociDaoBuilder extends jDaoGenerator
                 $sql .= $this->buildSimpleConditions($pkFields, 'record->', false);
 
                 $src[] = '  $query =\''.$sql.'\';';
-                $src[] = '  $rs  =  $this->_conn->query ($query, jDbConnection::FETCH_INTO, $record);';
+                $src[] = '  $rs  =  $this->_conn->query ($query, \Jelix\Database\ConnectionConstInterface::FETCH_INTO, $record);';
                 $src[] = '  $record =  $rs->fetch ();';
             }
 

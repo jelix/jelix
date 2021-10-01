@@ -10,7 +10,7 @@
 */
 
 
-class queryparseConnection extends jDbConnection {
+class queryparseConnection extends \Jelix\Database\AbstractConnection {
     function __construct($profile) { }
     function parseQuery($sql, $reParam) {
         return $this->findParameters($sql, $reParam);
@@ -19,7 +19,7 @@ class queryparseConnection extends jDbConnection {
      public function beginTransaction () {}
      public function commit () {}
      public function rollback () {}
-     public function prepare ($query) {}
+     public function prepare ($query, $driverOptions = array()) {}
      public function errorInfo() {}
      public function errorCode() {}
      public function lastInsertId($fromSequence='') {}
@@ -31,6 +31,7 @@ class queryparseConnection extends jDbConnection {
      protected function _doQuery ($queryString) {}
      protected function _doExec ($queryString) {}
      protected function _doLimitQuery ($queryString, $offset, $number) {}
+    protected function _getSchema(){}
 }
 
 

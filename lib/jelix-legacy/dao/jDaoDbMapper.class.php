@@ -9,7 +9,10 @@
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once __DIR__.'/jDaoParser.class.php';
+
+use Jelix\Database\Schema\SqlToolsInterface;
+
+require_once __DIR__ . '/jDaoParser.class.php';
 
 /**
  * It allows to create tables corresponding to a dao file.
@@ -88,7 +91,7 @@ class jDaoDbMapper
      * @param string[]  $properties  list of properties for which data are given
      * @param mixed[][] $data        the data. each row is an array of values.
      *                               Values are in the same order as $properties
-     * @param int       $option      one of jDbTools::IBD_* const
+     * @param int       $option      one of \Jelix\Database\Schema\SqlToolsInterface::IBD_* const
      *
      * @return int number of records inserted/updated
      */
@@ -139,8 +142,8 @@ class jDaoDbMapper
             throw new jException('jelix~daoxml.namespace.wrong', array($daoPath, $doc->namespaceURI));
         }
 
-        /** @var jDbTools $tools */
-        $tools = jDbUtils::getTools($selector->dbType);
+        /** @var SqlToolsInterface $tools */
+        $tools = \Jelix\Database\Connection::getTools($selector->dbType);
         if (is_null($tools)) {
             throw new jException('jelix~db.error.driver.notfound', $selector->driver);
         }
@@ -163,7 +166,7 @@ class jDaoDbMapper
             $notNull = $property->required;
         }
 
-        $column = new jDbColumn(
+        $column = new \Jelix\Database\Schema\Column(
             $property->fieldName,
             $property->datatype,
             0,

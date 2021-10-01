@@ -23,6 +23,7 @@
         "jelix/profiles": "~1.1.0",
         "jelix/inifile": "^3.2.4",
         "jelix/properties-file": "^1.2.1",
+        "jelix/database": "dev-master",
         "symfony/console":"~5.2.1",
         "jelix/file-utilities": "^1.8.4",
         "jelix/simplelocalization": "^1.7.1",

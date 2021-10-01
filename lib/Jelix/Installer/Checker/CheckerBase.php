@@ -163,7 +163,7 @@ class CheckerBase
         }
 
         if (count($this->databases)) {
-            $driversInfos = \jDbParameters::getDriversInfosList();
+            $driversInfos = \Jelix\Database\AccessParameters::getDriversInfosList();
             $okdb = false;
 
             array_combine($this->databases, array_fill(0, count($this->databases), false));

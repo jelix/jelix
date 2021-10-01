@@ -17,6 +17,8 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Database\Schema\SqlToolsInterface;
+
 /**
  * Container for properties of a dao property.
  *
@@ -106,7 +108,7 @@ class jDaoProperty
      *
      * @param array      $aAttributes
      * @param jDaoParser $parser      the parser on the dao file
-     * @param jDbTools   $tools
+     * @param SqlToolsInterface   $tools
      *
      * @throws jDaoXmlException
      *

@@ -18,8 +18,10 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         try{
             // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
-            if ($this->getName() == 'testTools')
+            if ($this->getName() == 'testInsert') {
+                // only empty table at the first test
                 $this->emptyTable('product_test');
+            }
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
@@ -32,60 +34,8 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         jApp::popCurrentModule();
     }
 
-    function testTools(){
-        $tools = jDb::getConnection($this->dbProfile)->tools();
-
-        $fields = $tools->getFieldList('products');
-        $structure = '<array>
-    <object key="id" class="jDbFieldProperties">
-        <string property="type" value="int" />
-        <string property="name" value="id" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="true" />
-        <boolean property="autoIncrement" value="true" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="name" class="jDbFieldProperties">
-        <string property="type" value="varchar" />
-        <string property="name" value="name" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="150" />
-    </object>
-    <object key="price" class="jDbFieldProperties">
-        <string property="type" value="float" />
-        <string property="name" value="price" />
-        <boolean property="notNull" value="false" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="0" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="promo" class="jDbFieldProperties">
-        <string property="type" value="bool" />
-        <string property="name" value="promo" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="0" />
-    </object>
-</array>';
-        $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
-    }
-
     protected static $prod1, $prod2, $prod3;
 
-    /**
-     * @depends testTools
-     */
     function testInsert() {
         $dao = jDao::create ('products', $this->dbProfile);
 
@@ -275,7 +225,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function testVersion() {
 
         $cnx = jDb::getConnection($this->dbProfile);
-        $version = $cnx->getAttribute($cnx::ATTR_CLIENT_VERSION);
+        $version = $cnx->getAttribute(\Jelix\Database\ConnectionConstInterface::ATTR_CLIENT_VERSION);
 
         $this->assertNotEquals('', $version);
     }

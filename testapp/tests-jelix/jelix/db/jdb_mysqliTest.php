@@ -78,7 +78,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         //INSERT
         $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (:k, :lg, :lb)');
-        $this->assertTrue($stmt instanceof mysqliDbResultSet);
+        $this->assertTrue($stmt instanceof Jelix\Database\Connector\Mysqli\ResultSet);
 
         $key = 11; $lang = 'fr'; $label = "France";
         $bind = $stmt->bindParam('lg', $lang, 's');
@@ -102,7 +102,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         //SELECT
         $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = :la ORDER BY `key` asc');
-        $this->assertTrue($stmt instanceof mysqliDbResultSet);
+        $this->assertTrue($stmt instanceof Jelix\Database\Connector\Mysqli\ResultSet);
         $lang = 'fr';
         $bind = $stmt->bindParam('la', $lang, 's');
         $this->assertTrue($bind);

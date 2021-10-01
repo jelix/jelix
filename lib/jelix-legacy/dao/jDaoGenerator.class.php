@@ -20,6 +20,8 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Database\Schema\SqlToolsInterface;
+
 /**
  * This is a generator which creates php class from dao xml file.
  *
@@ -58,7 +60,7 @@ class jDaoGenerator
     protected $aliasWord = ' AS ';
 
     /**
-     * @var jDbTools
+     * @var SqlToolsInterface
      */
     protected $tools;
 
@@ -87,7 +89,7 @@ class jDaoGenerator
      * constructor.
      *
      * @param jSelectorDao $selector
-     * @param jDbTools     $tools
+     * @param SqlToolsInterface     $tools
      * @param jDaoParser   $daoParser
      */
     public function __construct($selector, $tools, $daoParser)
@@ -367,7 +369,7 @@ class jDaoGenerator
                 $sql .= $this->buildSimpleConditions($pkFields, 'record->', false);
 
                 $src[] = '  $query =\''.$sql.'\';';
-                $src[] = '  $rs  =  $this->_conn->query ($query, jDbConnection::FETCH_INTO, $record);';
+                $src[] = '  $rs  =  $this->_conn->query ($query, \Jelix\Database\ConnectionConstInterface::FETCH_INTO, $record);';
                 $src[] = '  $record =  $rs->fetch ();';
             }
 
