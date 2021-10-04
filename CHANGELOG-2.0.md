@@ -44,6 +44,8 @@ are gone and replaced by classes of JelixDatabase:
 Plugins for jDb (aka "drivers"), implementing connectors etc, are not supported
 anymore.
 
+All error messages are now only in english. No more `jelix~db.*` locales.
+
 ## changes in jDao
 
 jDao is now relying on [JelixDao](https://github.com/jelix/JelixDao).
@@ -66,6 +68,8 @@ New classes:
 
 
 Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
+
+All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~dao.*` locales.
 
 ## test environment
 
