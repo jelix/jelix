@@ -7,7 +7,7 @@
  * @author     Laurent Jouanneau
  * @contributor Laurent Jouanneau
  *
- * @copyright   2005-2012 Laurent Jouanneau
+ * @copyright   2005-2021 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -18,6 +18,7 @@
  *
  * @package  jelix
  * @subpackage dao
+ * @deprecated
  */
 class jDaoXmlException extends jException
 {

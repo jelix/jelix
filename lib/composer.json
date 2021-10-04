@@ -12,6 +12,7 @@
         "jelix/simplelocalization": "^1.7.1",
         "jelix/properties-file": "^1.2.1",
         "jelix/database": "dev-master",
+        "jelix/dao": "dev-main",
         "symfony/console":"~5.2.1",
         "jelix/file-utilities": "^1.8.4",
         "jelix/version": "^1.1.0",

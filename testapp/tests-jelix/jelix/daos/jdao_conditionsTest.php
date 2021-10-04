@@ -18,14 +18,13 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testConditions() {
 
-        try {
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
 
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="true" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[]</array>
                     <array p="group">[]</array>
@@ -36,13 +35,13 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $this->assertComplexIdenticalStr($cond, $check);
 
 
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
             $cond->addItemOrder('foo', 'DESC');
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">{"foo":"DESC"}</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[]</array>
                     <array p="group">[]</array>
@@ -53,17 +52,17 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $this->assertComplexIdenticalStr($cond, $check);
 
 
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
             $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)');
 
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[
-                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
@@ -71,17 +70,17 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             </object>';
 
 
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
             $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)', false);
 
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[
-                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
@@ -91,17 +90,17 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $this->assertComplexIdenticalStr($cond, $check);
 
 
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
             $cond->addCondition('foo', '=', 'toto', '%s', false);
 
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[
-                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
@@ -116,20 +115,20 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $cond->addCondition('foo1', '>', '0');
             $cond->endGroup ();
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[
-                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"%s","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">
-                        <object p="condition" class="jDaoCondition">
-                            <object p="parent" class="jDaoCondition" />
+                        <object p="condition" class="\Jelix\Dao\DaoCondition">
+                            <object p="parent" class="\Jelix\Dao\DaoCondition" />
                             <array p="conditions">[
-                             {"field_id":"foo1","field_pattern":"%s","value":"100", "operator":"&lt;", "isExpr":false},
-                             {"field_id":"foo1","field_pattern":"%s","value":"0", "operator":"&gt;", "isExpr":false}
+                             {"field_id":"foo1","field_pattern":"%s","value":"100", "operator":"&lt;", "isExpr":false,"dbType":""},
+                             {"field_id":"foo1","field_pattern":"%s","value":"0", "operator":"&gt;", "isExpr":false,"dbType":""}
                              ]</array>
                             <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
@@ -142,18 +141,18 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $this->assertComplexIdenticalStr($cond, $check);
 
 
-            $cond=new jDaoConditions();
+            $cond=new \Jelix\Dao\DaoConditions();
             $cond->addCondition('foo', '=', 'toto', 'LOWER(%s)', false);
 
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">
                     [
-                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">[]</array>
                     <string p="glueOp" value="AND"/>
@@ -168,20 +167,20 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
             $cond->addCondition('foo1', '>', '0', 'CEIL(%s)');
             $cond->endGroup ();
             $check='<?xml version="1.0"?>
-            <object class="jDaoConditions">
+            <object class="\Jelix\Dao\DaoConditions">
                 <array p="order">[]</array>
                 <boolean m="isEmpty()" value="false" />
-                <object p="condition" class="jDaoCondition">
+                <object p="condition" class="\Jelix\Dao\DaoCondition">
                     <null p="parent" />
                     <array p="conditions">[
-                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false}
+                    {"field_id":"foo","field_pattern":"LOWER(%s)","value":"toto", "operator":"=", "isExpr":false,"dbType":""}
                     ]</array>
                     <array p="group">
-                        <object p="condition" class="jDaoCondition">
-                            <object p="parent" class="jDaoCondition" />
+                        <object p="condition" class="\Jelix\Dao\DaoCondition">
+                            <object p="parent" class="\Jelix\Dao\DaoCondition" />
                             <array p="conditions">[
-                                {"field_id":"foo1","field_pattern":"ROUND(%s)","value":"100", "operator":"&lt;", "isExpr":false},
-                                {"field_id":"foo1","field_pattern":"CEIL(%s)","value":"0", "operator":"&gt;", "isExpr":false}
+                                {"field_id":"foo1","field_pattern":"ROUND(%s)","value":"100", "operator":"&lt;", "isExpr":false,"dbType":""},
+                                {"field_id":"foo1","field_pattern":"CEIL(%s)","value":"0", "operator":"&gt;", "isExpr":false,"dbType":""}
                             ]</array>
                             <array p="group">[]</array>
                             <string p="glueOp" value="OR"/>
@@ -193,11 +192,6 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
 
             $this->assertComplexIdenticalStr($cond, $check);
 
-        }catch(jDaoXmlException $e){
-            $this->fail("Exception sur le contenu xml inattendue : ".$e->getMessage().' ('.$e->getLocaleKey().')');
-        }catch(Exception $e){
-            $this->fail("Exception inconnue : ".$e->getMessage());
-        }
     }
 
     function testEmptyRecursive(){

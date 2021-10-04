@@ -4,15 +4,12 @@
  * @subpackage  dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2017-2018 Laurent Jouanneau
+ * @copyright   2017-2021 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use Jelix\Database\Schema\SqlToolsInterface;
-
-require_once __DIR__ . '/jDaoParser.class.php';
 
 /**
  * It allows to create tables corresponding to a dao file.
@@ -22,7 +19,7 @@ require_once __DIR__ . '/jDaoParser.class.php';
 class jDaoDbMapper
 {
     /**
-     * @var jDbConnection
+     * @var \Jelix\Database\ConnectionInterface
      */
     protected $connection;
 
@@ -45,7 +42,7 @@ class jDaoDbMapper
      * @param string $selector    the selector of the DAO file
      * @param mixed  $selectorStr
      *
-     * @return jDbTable
+     * @return \Jelix\Database\Schema\TableInterface
      */
     public function createTableFromDao($selectorStr)
     {
@@ -78,7 +75,7 @@ class jDaoDbMapper
                 continue;
             }
             if (isset($info['fk'])) {
-                $ref = new jDbReference('', $info['fk'], $info['realname'], $info['pk']);
+                $ref = new Jelix\Database\Schema\Reference('', $info['fk'], $info['realname'], $info['pk']);
                 $table->addReference($ref);
             }
         }
@@ -128,32 +125,13 @@ class jDaoDbMapper
 
     protected function getParser(jSelectorDao $selector)
     {
-        $parser = new jDaoParser($selector);
-        $daoPath = $selector->getPath();
-
-        // load the XML file
-        $doc = new DOMDocument();
-
-        if (!$doc->load($daoPath)) {
-            throw new jException('jelix~daoxml.file.unknown', $daoPath);
-        }
-
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0') {
-            throw new jException('jelix~daoxml.namespace.wrong', array($daoPath, $doc->namespaceURI));
-        }
-
-        /** @var SqlToolsInterface $tools */
-        $tools = \Jelix\Database\Connection::getTools($selector->dbType);
-        if (is_null($tools)) {
-            throw new jException('jelix~db.error.driver.notfound', $selector->driver);
-        }
-
-        $parser->parse(simplexml_import_dom($doc), $tools);
-
-        return $parser;
+        $cnt = jDb::getConnection($selector->profile);
+        $context = new jDaoContext($selector->profile, $cnt);
+        $compiler = new \Jelix\Dao\Generator\Compiler();
+        return $compiler->parse($selector, $context);
     }
 
-    protected function createColumnFromProperty(jDaoProperty $property)
+    protected function createColumnFromProperty(\Jelix\Dao\Parser\DaoProperty $property)
     {
         if ($property->autoIncrement) {
             // it should match properties as readed by jDbSchema

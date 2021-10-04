@@ -39,11 +39,33 @@ are gone and replaced by classes of JelixDatabase:
   `jDbColumn`, `jDbTable` are replaced by some classes of the `Jelix\Database\Schema\` namespace.
 - `jDbUtils::getTools()` is deprecated and is replaced by `\Jelix\Database\Connection::getTools()` 
 - `jDbWidget` is deprecated and replaced by `Jelix\Database\Helpers`
-
+- `jDaoDbMapper::createTableFromDao()` returns an object `\Jelix\Database\Schema\TableInterface` instead of `jTable`
 
 Plugins for jDb (aka "drivers"), implementing connectors etc, are not supported
 anymore.
 
+## changes in jDao
+
+jDao is now relying on [JelixDao](https://github.com/jelix/JelixDao).
+The `jDao` class is still the main class to use to load and use Dao.
+Some internal classes are gone.
+
+- `jDaoFactoryBase` is replaced by objects implementing `Jelix\Dao\DaoFactoryInterface`
+- `jDaoRecordBase` is replaced by objects implementing `Jelix\Dao\DaoRecordInterface`
+- `jDaoGenerator` and `jDaoParser` are removed
+- `jDaoMethod` is replaced by `Jelix\Dao\Parser\DaoMethod`
+- `jDaoProperty` is replaced by `Jelix\Dao\Parser\DaoProperty`
+- `jDaoConditions` and `jDaoCondition` are deprecated and replaced by 
+  `\Jelix\Dao\DaoConditions` and `\Jelix\Dao\DaoCondition`.
+- `jDaoXmlException` is deprecated. The parser generates `Jelix\Dao\Parser\ParserException` instead.
+
+New classes:
+
+- `jDaoContext`
+- `jDaoHooks`
+
+
+Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
 
 ## test environment
 

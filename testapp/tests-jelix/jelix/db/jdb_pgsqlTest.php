@@ -45,9 +45,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod1->promo = false;
         $res = $dao->insert(self::$prod1);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod1->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod1->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod1->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod1->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         self::$prod2 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod2->name ='fourchette';
@@ -55,9 +55,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod2->promo = true;
         $res = $dao->insert(self::$prod2);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod2->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod2->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod2->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod2->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         self::$prod3 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod3->name ='verre';
@@ -65,9 +65,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod3->promo = false;
         $res = $dao->insert(self::$prod3);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod3->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod3->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod3->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod3->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         $this->records = array(
             array('id'=>self::$prod1->id,
@@ -95,7 +95,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $prod = $dao->get(self::$prod1->id);
 
-        $this->assertTrue($prod instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod instanceof \Jelix\Dao\DaoRecordInterface, 'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name, 'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price, 'jDao::get : bad price property on record');
@@ -116,7 +116,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $dao->update($prod);
 
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod2 instanceof \Jelix\Dao\DaoRecordInterface,'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
@@ -165,7 +165,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $sess1->data = chr(0).chr(254).chr(1);
 
         $res = $dao->insert($sess1);
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
 
         $sess2 = $dao->get('sess_02939873A32B');
 
