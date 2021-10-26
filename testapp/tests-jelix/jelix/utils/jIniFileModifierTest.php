@@ -385,6 +385,25 @@ foo[]=machine
             ),
         );
         $this->assertEquals($expected, $parser->getContent());
+
+        $parser->setValue('assocarray', array('hello'=>'world', 'james' => 'bond'));
+        $expected=array(
+            0 => array(
+                array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_VALUE, 'foo','button'),
+                array(jIniFileModifier::TK_VALUE, 'example','1'),
+                array(jIniFileModifier::TK_WS,'--'),
+                array(jIniFileModifier::TK_WS, ""),
+                array(jIniFileModifier::TK_WS,'--'),
+                array(jIniFileModifier::TK_ARR_VALUE, 'assocarray','world','hello'),
+                array(jIniFileModifier::TK_ARR_VALUE, 'assocarray','bond','james'),
+            ),
+            'aSection'=>array(
+                array(jIniFileModifier::TK_SECTION, "[aSection]"),
+                array(jIniFileModifier::TK_ARR_VALUE, 'theme','blue',0),
+            ),
+        );
+        $this->assertEquals($expected, $parser->getContent());
     }
     
     
@@ -481,7 +500,6 @@ foo[]=aaa
 foo[]=bbb
 foo[]=ccc
 
-
 ';
         $parser->testParse($content);
         $parser->setValue('isnotvalid', false, 'aSection');
@@ -564,7 +582,6 @@ foo[]=aaa
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $parser->generate());
     }
@@ -629,7 +646,6 @@ foo[]=aaa
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $parser->generate());
 
@@ -660,7 +676,6 @@ string=uuuuu
 
 
 afloatnumber=5.098
-
 
 ';
         $this->assertEquals($result, $parser->generate());
@@ -784,7 +799,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $ini->generate());
 
@@ -906,7 +920,6 @@ isvalid=on
 truc=false
 
 supercar=ferrari
-
 ';
         $this->assertEquals($result, $ini->generate());
 
@@ -971,7 +984,6 @@ supercar=ferrari
 [blob:thesection]
 truc=machin3
 truck=on
-
 
 
 
@@ -1046,7 +1058,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $ini->generate());
 
@@ -1080,7 +1091,6 @@ foo[]=aaa
 ; key comment
 foo[]=bbb
 foo[]=ccc
-
 
 
 ';
@@ -1119,7 +1129,6 @@ foo[]=bbb
 foo[]=ccc
 
 
-
 ';
         $this->assertEquals($result, $ini->generate());
     }
@@ -1153,11 +1162,11 @@ truc=true
 
 ; super section
 [the_section]
-foo[]=aaa
 
 truc=machin
 bidule=1
 truck=on
+foo[]=aaa
 foo[]=bbb
 foo[]=ccc
 ';
