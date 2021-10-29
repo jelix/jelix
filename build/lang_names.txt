@@ -1,0 +1,187 @@
+aa	aar	aar	Afar	Afaraf	Afar
+ab	abk	abk	Abkhaze	Аҧсуа	Abkhazian
+ae	ave	ave	Avestique	Avesta	Avestan
+af	afr	afr	Afrikaans	Afrikaans	Afrikaans
+ak	aka	aka + 2	Akan	Akan	Akan
+am	amh	amh	Amharique	አማርኛ	Amharic
+an	arg	arg	Aragonais	Aragonés	Aragonese
+ar	ara	ara + 30	Arabe	العربية	Arabic
+as	asm	asm	Assamais	অসমীয়া	Assamese
+av	ava	ava	Avar	авар мацӀ ; магӀарул мацӀ	Avaric
+ay	aym	aym + 2	Aymara	Aymar aru	Aymara
+az	aze	aze + 2	Azéri	Azərbaycan dili	Azerbaijani
+ba	bak	bak	Bachkir	башҡорт теле	Bashkir
+be	bel	bel	Biélorusse	Беларуская	Belarusian
+bg	bul	bul	Bulgare	български език	Bulgarian
+bh	bih	--	Bihari	भोजपुरी	Bihari
+bi	bis	bis	Bichelamar	Bislama	Bislama
+bm	bam	bam	Bambara	Bamanankan	Bambara
+bn	ben	ben	Bengali	বাংলা	Bengali
+bo	tib/bod	bod	Tibétain	བོད་ཡིག	Tibetan
+br	bre	bre	Breton	Brezhoneg	Breton
+bs	bos	bos	Bosnien	Bosanski jezik	Bosnian
+ca	cat	cat	Catalan	Català	Catalan
+ce	che	che	Tchétchène	нохчийн мотт	Chechen
+ch	cha	cha	Chamorro	Chamoru	Chamorro
+co	cos	cos	Corse	Corsu ; lingua corsa	Corsican
+cr	cre	cre + 6	Cri	ᓀᐦᐃᔭᐍᐏᐣ	Cree
+cs	cze/ces	ces	Tchèque	Česky ; čeština	Czech
+cu	chu	chu	Vieux-slave	Словѣньскъ	Old Church Slavonic
+cv	chv	chv	Tchouvache	чӑваш чӗлхи	Chuvash
+cy	wel/cym	cym	Gallois	Cymraeg	Welsh
+da	dan	dan	Danois	Dansk	Danish
+de	ger/deu	deu	Allemand	Deutsch	German
+dv	div	div	Maldivien	ދިވެހި	Divehi
+dz	dzo	dzo	Dzongkha	རྫོང་ཁ	Dzongkha
+ee	ewe	ewe	Ewe	Ɛʋɛgbɛ	Ewe
+el	gre/ell	ell	Grec moderne	Ελληνικά	Greek
+en	eng	eng	Anglais	English	English
+eo	epo	epo	Espéranto	Esperanto	Esperanto
+es	spa	spa	Espagnol	Español; castellano	Spanish
+et	est	est	Estonien	Eesti keel	Estonian
+eu	baq/eus	eus	Basque	Euskara	Basque
+fa	per/fas	fas + 2	Persan	فارسی	Persian
+ff	ful	ful + 9	Peul	Fulfulde	Fulah
+fi	fin	fin	Finnois	Suomen kieli	Finnish
+fj	fij	fij	Fidjien	Vosa Vakaviti	Fijian
+fo	fao	fao	Féroïen	Føroyskt	Faroese
+fr	fre/fra	fra	Français	Français ; langue française	French
+fy	fry	fry + 3	Frison occidental	Frysk	Western Frisian
+ga	gle	gle	Irlandais	Gaeilge	Irish
+gd	gla	gla	Écossais	Gàidhlig	Scottish Gaelic
+gl	glg	glg	Galicien	Galego	Galician
+gn	grn	grn + 5	Guarani	Avañe'ẽ	Guarani
+gu	guj	guj	Gujarati	ગુજરાતી	Gujarati
+gv	glv	glv	Mannois	Ghaelg	Manx
+ha	hau	hau	Haoussa	هَوُسَ	Hausa
+he	heb	heb	Hébreu	עברית	Hebrew
+hi	hin	hin	Hindi	हिन्दी ; हिंदी	Hindi
+ho	hmo	hmo	Hiri motu	Hiri Motu	Hiri Motu
+hr	scr/hrv	hrv	Croate	Hrvatski	Croatian
+ht	hat	hat	Créole haïtien	Kreyòl ayisyen	Haitian
+hu	hun	hun	Hongrois	magyar	Hungarian
+hy	arm/hye	hye	Arménien	Հայերեն	Armenian
+hz	her	her	Héréro	Otjiherero	Herero
+ia	ina	ina	Interlingua	Interlingua	Interlingua
+id	ind	ind	Indonésien	Bahasa Indonesia	Indonesian
+ie	ile	ile	Occidental	Interlingue	Interlingue
+ig	ibo	ibo	Igbo	Igbo	Igbo
+ii	iii	iii	Yi	ꆇꉙ	Sichuan Yi
+ik	ipk	ipk + 2	Inupiak	Iñupiaq ; Iñupiatun	Inupiaq
+io	ido	ido	Ido	Ido	Ido
+is	ice/isl	isl	Islandais	Íslenska	Icelandic
+it	ita	ita	Italien	Italiano	Italian
+iu	iku	iku + 2	Inuktitut	ᐃᓄᒃᑎᑐᑦ	Inuktitut
+ja	jpn	jpn	Japonais	日本語 (にほんご)	Japanese
+jv	jav	jav	Javanais	Basa Jawa	Javanese
+ka	geo/kat	kat	Géorgien	ქართული	Georgian
+kg	kon	kon + 3	Kikongo	KiKongo	Kongo
+ki	kik	kik	Kikuyu	Gĩkũyũ	Kikuyu
+kj	kua	kua	Kuanyama	Kuanyama	Kwanyama
+kk	kaz	kaz	Kazakh	Қазақ тілі	Kazakh
+kl	kal	kal	Groenlandais	Kalaallisut ; kalaallit oqaasii	Kalaallisut
+km	khm	khm	Khmer	ភាសាខ្មែរ	Khmer
+kn	kan	kan	Kannada	ಕನ್ನಡ	Kannada
+ko	kor	kor	Coréen	한국어 (韓國語) ; 조선말 (朝鮮語)	Korean
+kr	kau	kau + 3	Kanouri	Kanuri	Kanuri
+ks	kas	kas	Cachemiri	कश्मीरी ; كشميري	Kashmiri
+ku	kur	kur + 3	Kurde	Kurdî ; كوردی	Kurdish
+kv	kom	kom + 2	Komi	коми кыв	Komi
+kw	cor	cor	Cornique	Kernewek	Cornish
+ky	kir	kir	Kirghiz	кыргыз тили	Kirghiz
+la	lat	lat	Latin	Latine ; lingua latina	Latin
+lb	ltz	ltz	Luxembourgeois	Lëtzebuergesch	Luxembourgish
+lg	lug	lug	Ganda	Luganda	Ganda
+li	lim	lim	Limbourgeois	Limburgs	Limburgish
+ln	lin	lin	Lingala	Lingála	Lingala
+lo	lao	lao	Lao	ພາສາລາວ	Lao
+lt	lit	lit	Lituanien	Lietuvių kalba	Lithuanian
+lu	lub	lub	Luba	tshiluba	Luba
+lv	lav	lav	Letton	Latviešu valoda	Latvian
+mg	mlg	mlg + 10	Malgache	Fiteny malagasy	Malagasy
+mh	mah	mah	Marshallais	Kajin M̧ajeļ	Marshallese
+mi	mao/mri	mri	Maori de Nouvelle-Zélande	Te reo Māori	Māori
+mk	mac/mkd	mkd	Macédonien	македонски јазик	Macedonian
+ml	mal	mal	Malayalam	മലയാളം	Malayalam
+mn	mon	mon + 2	Mongol	Монгол	Mongolian
+mo	mol	mol	Moldave	лимба молдовеняскэ	Moldavian
+mr	mar	mar	Marathi	मराठी	Marathi
+ms	may/msa	msa + 13	Malais	Bahasa Melayu ; بهاس ملايو	Malay
+mt	mlt	mlt	Maltais	Malti	Maltese
+my	bur/mya	mya	Birman	ဗမာစာ	Burmese
+na	nau	nau	Nauruan	Ekakairũ Naoero	Nauru
+nb	nob	nob	Norvégien Bokmål	Norsk bokmål	Norwegian Bokmål
+nd	nde	nde	Sindebele	isiNdebele	North Ndebele
+ne	nep	nep	Népalais	नेपाली	Nepali
+ng	ndo	ndo	Ndonga	Owambo	Ndonga
+nl	dut/nld	nld	Néerlandais	Nederlands	Dutch
+nn	nno	nno	Norvégien Nynorsk	Norsk nynorsk	Norwegian Nynorsk
+no	nor	nor + 2	Norvégien	Norsk	Norwegian
+nr	nbl	nbl	Nrebele	Ndébélé	South Ndebele
+nv	nav	nav	Navajo	Diné bizaad ; Dinékʼehǰí	Navajo
+ny	nya	nya	Chichewa	ChiCheŵa ; chinyanja	Chichewa
+oc	oci	oci + 5	Occitan	Occitan	Occitan
+oj	oji	oji + 7	Ojibwé	ᐊᓂᔑᓈᐯᒧᐎᓐ	Ojibwa
+om	orm	orm + 4	Oromo	Afaan Oromoo	Oromo
+or	ori	ori	Oriya	ଓଡ଼ିଆ	Oriya
+os	oss	oss	Ossète	Ирон ӕвзаг	Ossetian
+pa	pan	pan	Pendjabi	ਪੰਜਾਬੀ ; پنجابی	Panjabi
+pi	pli	pli	Pali	पािऴ	Pāli
+pl	pol	pol	Polonais	Polski	Polish
+ps	pus	pus + 3	Pachto	پښتو	Pashto
+pt	por	por	Portugais	Português	Portuguese
+qu	que	que + 44	Quechua	Runa Simi ; Kichwa	Quechua
+rc 	rcf 	rcf 	Créole Réunionnais 	Kréol Rénioné 	Reunionese
+rm	roh	roh	Romanche	Rumantsch grischun	Romansh
+rn	run	run	Kirundi	kiRundi	Kirundi
+ro	rum/ron	ron	Roumain	Română	Romanian
+ru	rus	rus	Russe	русский язык	Russian
+rw	kin	kin	Kinyarwanda	Kinyarwanda	Kinyarwanda
+sa	san	san	Sanskrit	संस्कृतम्	Sanskrit
+sc	srd	srd + 4	Sarde	sardu	Sardinian
+sd	snd	snd	Sindhi	सिन्धी ; سنڌي، سندھی	Sindhi
+se	sme	sme	Same du Nord	Davvisámegiella	Northern Sami
+sg	sag	sag	Sango	Yângâ tî sängö	Sango
+sh		hbs 	Serbo-croate	srpskohrvatski jezik ; српскохрватски језик 	Serbo-Croatian
+si	sin	sin	Cingalais	සිංහල	Sinhalese
+sk	slo/slk	slk	Slovaque	Slovenčina	Slovak
+sl	slv	slv	Slovène	Slovenščina	Slovenian
+sm	smo	smo	Samoan	Gagana fa'a Samoa	Samoan
+sn	sna	sna	Shona	chiShona	Shona
+so	som	som	Somali	Soomaaliga ; af Soomaali	Somali
+sq	alb/sqi	sqi + 4	Albanais	Shqip	Albanian
+sr	scc/srp	srp	Serbe	српски језик	Serbian
+ss	ssw	ssw	Swati	SiSwati	Swati
+st	sot	sot	Sotho du Sud	seSotho	Sotho
+su	sun	sun	Soundanais	Basa Sunda	Sundanese
+sv	swe	swe	Suédois	Svenska	Swedish
+sw	swa	swa + 2	Swahili	Kiswahili	Swahili
+ta	tam	tam	Tamoul	தமிழ்	Tamil
+te	tel	tel	Télougou	తెలుగు	Telugu
+tg	tgk	tgk	Tadjik	тоҷикӣ ; toğikī ; تاجیکی	Tajik
+th	tha	tha	Thaï	ไทย	Thai
+ti	tir	tir	Tigrigna	ትግርኛ	Tigrinya
+tk	tuk	tuk	Turkmène	Türkmen ; Түркмен	Turkmen
+tl	tgl	tgl	Tagalog	Tagalog	Tagalog
+tn	tsn	tsn	Tswana	seTswana	Tswana
+to	ton	ton	Tongien	faka Tonga	Tonga
+tr	tur	tur	Turc	Türkçe	Turkish
+ts	tso	tso	Tsonga	xiTsonga	Tsonga
+tt	tat	tat	Tatar	татарча ; tatarça ; تاتارچا	Tatar
+tw	twi	twi	Twi	Twi	Twi
+ty	tah	tah	Tahitien	Reo Mā`ohi	Tahitian
+ug	uig	uig	Ouïghour	Uyƣurqə ; ئۇيغۇرچ	Uighur
+uk	ukr	ukr	Ukrainien	українська мова	Ukrainian
+ur	urd	urd	Ourdou	اردو	Urdu
+uz	uzb	uzb + 2	Ouzbek	O'zbek ; Ўзбек ; أۇزبېك	Uzbek
+ve	ven	ven	Venda	tshiVenḓa	Venda
+vi	vie	vie	Vietnamien	Tiếng Việt	Viêt Namese
+vo	vol	vol	Volapük	Volapük	Volapük
+wa	wln	wln	Wallon	Walon	Walloon
+wo	wol	wol	Wolof	Wollof	Wolof
+xh	xho	xho	Xhosa	isiXhosa	Xhosa
+yi	yid	yid + 2	Yiddish	ייִדיש	Yiddish
+yo	yor	yor	Yoruba	Yorùbá	Yoruba
+za	zha	zha + 2	Zhuang	Saɯ cueŋƅ ; Saw cuengh	Zhuang
+zh	chi/zho	zho + 13	Chinois	中文, 汉语, 漢語	Chinese
+zu	zul	zul	Zoulou	isiZulu	Zulu
