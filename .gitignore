@@ -13,3 +13,4 @@ composer.lock
 .php_cs.cache
 assets/node_modules/
 .drafts
+.phpunit.result.cache
