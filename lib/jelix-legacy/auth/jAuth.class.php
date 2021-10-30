@@ -126,9 +126,6 @@ class jAuth
             $config['password_hash_method'] = $password_hash_method;
             $config['password_hash_options'] = $password_hash_options;
 
-            $config[$config['driver']]['password_hash_method'] = $password_hash_method;
-            $config[$config['driver']]['password_hash_options'] = $password_hash_options;
-
             if (isset($config['url_return_external_allowed_domains']) && $config['url_return_external_allowed_domains']) {
                 if (is_string($config['url_return_external_allowed_domains'])) {
                     $config['url_return_external_allowed_domains'] = array($config['url_return_external_allowed_domains']);
@@ -153,6 +150,30 @@ class jAuth
         return self::getDriver();
     }
 
+
+    public static function getDriverConfig()
+    {
+        $config = self::loadConfig();
+        $driver = $config['driver'];
+        if (isset($config[$driver]) && is_array($config[$driver])) {
+            $driverConfig =  $config[$driver];
+        }
+        else {
+            $appConfig = jApp::config();
+            $section = 'auth_'.strtolower($driver);
+            if (isset($appConfig[$section]) && is_array($appConfig[$section])) {
+                $driverConfig = $appConfig[$section];
+            }
+            else {
+                return null;
+            }
+        }
+
+        $driverConfig['password_hash_method'] = $config['password_hash_method'];
+        $driverConfig['password_hash_options'] = $config['password_hash_options'];
+        return $driverConfig;
+    }
+
     /**
      * return the auth driver.
      *
@@ -166,16 +187,17 @@ class jAuth
     {
         if (self::$driver === null) {
             $config = self::loadConfig();
-            $db = strtolower($config['driver']);
+            $driverConfig = self::getDriverConfig();
+            $driverName = strtolower($config['driver']);
             $driver = jApp::loadPlugin(
-                $db,
+                $driverName,
                 'auth',
                 '.auth.php',
-                $config['driver'].'AuthDriver',
-                $config[$config['driver']]
+                $driverName.'AuthDriver',
+                $driverConfig
             );
             if (is_null($driver)) {
-                throw new jException('jelix~auth.error.driver.notfound', $db);
+                throw new jException('jelix~auth.error.driver.notfound', $driverName);
             }
             self::$driver = $driver;
         }
@@ -192,8 +214,7 @@ class jAuth
      */
     public static function getDriverParam($paramName)
     {
-        $config = self::loadConfig();
-        $config = $config[$config['driver']];
+        $config = self::getDriverConfig();
         if (isset($config[$paramName])) {
             return $config[$paramName];
         }

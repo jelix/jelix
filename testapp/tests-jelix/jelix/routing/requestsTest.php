@@ -36,7 +36,7 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         jApp::restoreContext();
     }
 
-    protected function initRequest($url, $server, $scriptPath = '/foo/index.php') {
+    protected function initRequest($url, $server, $scriptPath = '/foo/index.php', $scriptNameServerVariable = '') {
         $this->fServer = $server;
         $this->fServer->setHttpRequest($url);
 
@@ -44,6 +44,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
                                                     $scriptPath,
                                                     false);
         $config = $compiler->read(false);
+        if ($scriptNameServerVariable) {
+            $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;
+        }
         $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
         jApp::setCoord($coord);
         $request = new jClassicRequest();
@@ -53,10 +56,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
 
     function testSimpleUrl_MODPHP5_SCRIPT_NAME() {
-        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';//'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         $serverconf = new \Jelix\FakeServerConf\ApacheMod(jApp::wwwPath(), '/foo/index.php');
         $req = $this->initRequest('http://testapp.local/foo/index.php/aaa',
-                                  $serverconf);
+                                  $serverconf, '/foo/index.php', 'SCRIPT_NAME');
         $this->assertEquals('/foo/', $req->urlScriptPath);
         $this->assertEquals('index.php', $req->urlScriptName);
         $this->assertEquals('/aaa', $req->urlPathInfo);
@@ -65,13 +67,12 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
     //  /foo/index.php, CGI cgi.fix_pathinfo=1
     function testSimpleUrl_CGI_1_SCRIPT_NAME() {
-        jApp::config()->urlengine['scriptNameServerVariable'] = 'SCRIPT_NAME';// 'REDIRECT_URL'; 'ORIG_SCRIPT_NAME';
         $serverconf = new \Jelix\FakeServerConf\ApacheCGI(jApp::wwwPath(),
                                                          '/foo/index.php',
                                                          '/usr/lib/cgi-bin/php5',
                                                          '/cgi-bin/php5');
         $req = $this->initRequest('http://testapp.local/foo/index.php/aaa',
-                                  $serverconf);
+                                  $serverconf, '/foo/index.php', 'SCRIPT_NAME');
 
         $this->assertEquals('/foo/', $req->urlScriptPath);
         $this->assertEquals('index.php', $req->urlScriptName);
@@ -89,6 +90,8 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         unset($_SERVER['HTTPS']);
         $_SERVER['SERVER_PORT'] = '80';
 
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '80'), jServer::getDomainPortFromServer(false));
 
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
@@ -198,6 +201,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $config->domainName = 'foo.local';
         unset($_SERVER['HTTPS']);
         $_SERVER['SERVER_PORT'] = '8082';
+
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '8082'), jServer::getDomainPortFromServer(false));
 
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
@@ -311,6 +317,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $_SERVER['SERVER_PORT'] = '443';
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '443'), jServer::getDomainPortFromServer(false));
+
 
         $this->assertEquals('https://foo.local', $request->getServerURI());
         $this->assertEquals('http://foo.local', $request->getServerURI(false));
@@ -421,6 +430,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
+
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '4435'), jServer::getDomainPortFromServer(false));
 
         $this->assertEquals('https://foo.local:4435', $request->getServerURI());
         $this->assertEquals('http://foo.local', $request->getServerURI(false));
@@ -534,6 +546,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
 
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '80'), jServer::getDomainPortFromServer(false));
+
         $this->assertEquals('https://foo.local:80', $request->getServerURI());
         $this->assertEquals('http://foo.local', $request->getServerURI(false));
         $this->assertEquals('https://foo.local:80', $request->getServerURI(true));
@@ -644,6 +659,9 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
         $config->forceHTTPPort = '';
         $config->forceHTTPSPort = '';
+
+        // reset domain cache
+        $this->assertEquals(array('foo.local', '443'), jServer::getDomainPortFromServer(false));
 
         $this->assertEquals('http://foo.local:443', $request->getServerURI());
         $this->assertEquals('http://foo.local:443', $request->getServerURI(false));

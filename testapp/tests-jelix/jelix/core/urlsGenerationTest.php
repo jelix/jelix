@@ -490,10 +490,13 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
 
         $_SERVER['HTTP_HOST'] = TESTAPP_HOST;
         $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
-        $_SERVER['SERVER_PORT'] = '80';
+        $_SERVER['SERVER_PORT'] = TESTAPP_PORT;
 
         // ================= HTTP URL
         unset($_SERVER['HTTPS']);
+
+        // reset domain cache
+        $this->assertEquals(array(TESTAPP_HOST, TESTAPP_PORT), jServer::getDomainPortFromServer(false));
 
         // without given domain name, without domain name in config, without https
         $conf->domainName = '';
@@ -532,6 +535,9 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
 
         $_SERVER['HTTPS'] = 'on';
         $_SERVER['SERVER_PORT'] = '443';
+
+        // reset domain cache
+        $this->assertEquals(array(TESTAPP_HOST, 443), jServer::getDomainPortFromServer(false));
         // without given domain name, without domain name in config, with https
         $conf->domainName = '';
         jUrl::getEngine(true);
@@ -568,12 +574,22 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testGetCurrentUrl() {
+
+        $_SERVER['HTTP_HOST'] = TESTAPP_HOST;
+        $_SERVER['PATH_INFO'] = '/zip/yo/';
+        $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
+        $_SERVER['SERVER_PORT'] = TESTAPP_PORT;
+        unset($_SERVER['HTTPS']);
+        $conf = jApp::config();
+        $conf->forceHTTPPort = '';
+        $conf->forceHTTPSPort = '';
+
+        // reset domain cache
+        $this->assertEquals(array(TESTAPP_HOST, TESTAPP_PORT), jServer::getDomainPortFromServer(false));
+
         $url = jUrl::getCurrentUrl(false, true);
         $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php', $url);
 
-        $_SERVER['PATH_INFO'] = '/zip/yo/';
-        $_SERVER['SERVER_NAME'] = TESTAPP_HOST;
-        $_SERVER['SERVER_PORT'] = '80';
         $conf = jApp::config();
         $conf->domainName = TESTAPP_HOST;
         $conf->urlengine = array(

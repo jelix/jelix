@@ -106,7 +106,7 @@ class loginCtrl extends jController
     {
         $conf = jAuth::loadConfig();
         if (jAuth::isConnected()) {
-            if ($conf['after_login'] != '') {
+            if ($conf['after_login'] != '' && $conf['after_login'] != 'jauth~login:form') {
                 $url_return = $this->param('auth_url_return');
                 if (!($conf['enable_after_login_override'] &&
                     jAuth::checkReturnUrl($url_return))

@@ -122,15 +122,25 @@ class Router
                 continue;
             }
             $conf = self::getPluginConf($name);
-            include_once $config->_pluginsPathList_coord[$name].$name.'.coord.php';
-            $class = $name.'CoordPlugin';
+            $className = $name.'CoordPlugin';
+            if (isset($config->coordplugins[$name.'.class'])) {
+                $className = $config->coordplugins[$name.'.class'];
+            }
+
+            if (preg_match('/(.+)CoordPlugin$/', $className, $m)) {
+                $name2 = $m[1];
+                include_once($config->_pluginsPathList_coord[$name2].$name2.'.coord.php');
+            }
+
             // if the plugin is registered as a replacement of an other plugin
             // we can set the name of the other plugin in a '*.name' option
             if (isset($config->coordplugins[$name.'.name'])) {
                 $name = $config->coordplugins[$name.'.name'];
             }
-            $class = '\\'.$class;
-            $this->plugins[strtolower($name)] = new $class($conf);
+            if ($className[0] !== '\\') {
+                $className = '\\'.$className;
+            }
+            $this->plugins[strtolower($name)] = new $className($conf);
         }
     }
 
