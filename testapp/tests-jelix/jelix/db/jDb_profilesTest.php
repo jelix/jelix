@@ -37,7 +37,9 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'pdoext' => 'pdo_mysql',
             'pdodriver' => 'mysql',
             'table_prefix' => '',
-            'pdooptions' => ''
+            'pdooptions' => '',
+            'charset' => 'UTF-8',
+            'filePathParser' => 'jDb::parseSqlitePath'
         );
 
         $this->assertEquals($expected, $p);
@@ -58,7 +60,9 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'pdoext' => 'pdo_mysql',
             'pdodriver' => 'mysql',
             'table_prefix' => '',
-            'pdooptions' => ''
+            'pdooptions' => '',
+            'charset' => 'UTF-8',
+            'filePathParser' => 'jDb::parseSqlitePath'
         );
 
         $this->assertEquals($expected, $p);
@@ -96,6 +100,8 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
         $profile['force_encoding'] = true;
         $profile['table_prefix'] = '';
         $profile['pdooptions'] = '';
+        $profile['charset'] = 'UTF-8';
+        $profile['filePathParser'] = 'jDb::parseSqlitePath';
 
         $this->assertEquals($profile, $p);
     }

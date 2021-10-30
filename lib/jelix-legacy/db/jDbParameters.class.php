@@ -34,6 +34,9 @@
  *  - timeout: timeout for the connection (pgsql, optional)
  *  - search_path: schema for pgsql (optional)
  *  - table_prefix: prefix to add to database table. Used by jDao (optional)
+ *
+ * @deprecated use \Jelix\Database\AccessParameters instead
+ * @see \Jelix\Database\AccessParameters
  */
 class jDbParameters
 {

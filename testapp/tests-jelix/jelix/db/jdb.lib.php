@@ -9,6 +9,8 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Database\ResultSetInterface;
+
 /**
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
@@ -17,10 +19,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);
         $this->assertNotNull($cnx, 'connection null !');
-        if($this->needPDO)
-            $this->assertTrue($cnx instanceof jDbPDOConnection, 'connection null !');
-        else
-            $this->assertTrue($cnx instanceof jDbConnection, 'connection null !');
+        $this->assertTrue($cnx instanceof \Jelix\Database\ConnectionInterface, 'connection null !');
     }
 
     /**
@@ -58,17 +57,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if ($this->needPDO) {
-            if (version_compare(phpversion(), "8.0") < 0) {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
-            }
-            else {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-            }
-        }
-        else {
-            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
-        }
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
 
         $list = array();
         //foreach($resultSet as $res){
@@ -109,17 +98,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id, name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if ($this->needPDO) {
-            if (version_compare(phpversion(), "8.0") < 0) {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
-            }
-            else {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-            }
-        }
-        else {
-            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
-        }
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
 
         $resultSet->addModifier(array($this, '_callbackTest'));
 
@@ -154,17 +133,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if ($this->needPDO) {
-            if (version_compare(phpversion(), "8.0") < 0) {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
-            }
-            else {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-            }
-        }
-        else {
-            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
-        }
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
 
         $resultSet->setFetchMode(8, 'MyProductContainer');
 
@@ -199,21 +168,11 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        if ($this->needPDO) {
-            if (version_compare(phpversion(), "8.0") < 0) {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet7, 'resultset is not a jDbPDOResultSet');
-            }
-            else {
-                $this->assertTrue($resultSet instanceof jDbPDOResultSet, 'resultset is not a jDbPDOResultSet');
-            }
-        }
-        else {
-            $this->assertTrue($resultSet instanceof jDbResultSet, 'resultset is not a jDbResultSet');
-        }
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
-        $resultSet->setFetchMode(jDbConnection::FETCH_INTO, $obj);
+        $resultSet->setFetchMode(\Jelix\Database\ConnectionConstInterface::FETCH_INTO, $obj);
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
@@ -240,59 +199,6 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
         $this->assertFalse(!!$resultSet->fetch());
     }
-
-    /**
-     * @depends testFetchInto
-     */
-    function testTools(){
-
-        $tools = jDb::getConnection($this->dbProfile)->tools();
-        $fields = $tools->getFieldList('products');
-        $structure = '<array>
-    <object key="id" class="jDbFieldProperties">
-        <string property="type" value="int" />
-        <string property="name" value="id" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="true" />
-        <boolean property="autoIncrement" value="true" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="name" class="jDbFieldProperties">
-        <string property="type" value="varchar" />
-        <string property="name" value="name" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <string property="default" value="" />
-        <integer property="length" value="150" />
-    </object>
-    <object key="price" class="jDbFieldProperties">
-        <string property="type" value="float" />
-        <string property="name" value="price" />
-        <boolean property="notNull" value="false" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="0" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="promo" class="jDbFieldProperties">
-        <string property="type" value="tinyint" />
-        <string property="name" value="promo" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <string property="default" value="" />
-        <integer property="length" value="0" />
-    </object>
-</array>';
-        $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
-    }
-
 
 }
 

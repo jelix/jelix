@@ -18,8 +18,10 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         try{
             // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
-            if ($this->getName() == 'testTools')
+            if ($this->getName() == 'testInsert') {
+                // only empty table at the first test
                 $this->emptyTable('product_test');
+            }
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
@@ -32,60 +34,8 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         jApp::popCurrentModule();
     }
 
-    function testTools(){
-        $tools = jDb::getConnection($this->dbProfile)->tools();
-
-        $fields = $tools->getFieldList('products');
-        $structure = '<array>
-    <object key="id" class="jDbFieldProperties">
-        <string property="type" value="int" />
-        <string property="name" value="id" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="true" />
-        <boolean property="autoIncrement" value="true" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="name" class="jDbFieldProperties">
-        <string property="type" value="varchar" />
-        <string property="name" value="name" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="150" />
-    </object>
-    <object key="price" class="jDbFieldProperties">
-        <string property="type" value="float" />
-        <string property="name" value="price" />
-        <boolean property="notNull" value="false" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="true" />
-        <string property="default" value="0" />
-        <integer property="length" value="0" />
-    </object>
-    <object key="promo" class="jDbFieldProperties">
-        <string property="type" value="bool" />
-        <string property="name" value="promo" />
-        <boolean property="notNull" value="true" />
-        <boolean property="primary" value="false" />
-        <boolean property="autoIncrement" value="false" />
-        <boolean property="hasDefault" value="false" />
-        <null property="default" />
-        <integer property="length" value="0" />
-    </object>
-</array>';
-        $this->assertComplexIdenticalStr($fields, $structure, 'bad results');
-    }
-
     protected static $prod1, $prod2, $prod3;
 
-    /**
-     * @depends testTools
-     */
     function testInsert() {
         $dao = jDao::create ('products', $this->dbProfile);
 
@@ -95,9 +45,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod1->promo = false;
         $res = $dao->insert(self::$prod1);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod1->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod1->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod1->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod1->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         self::$prod2 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod2->name ='fourchette';
@@ -105,9 +55,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod2->promo = true;
         $res = $dao->insert(self::$prod2);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod2->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod2->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod2->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod2->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         self::$prod3 = jDao::createRecord ('products', $this->dbProfile);
         self::$prod3->name ='verre';
@@ -115,9 +65,9 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::$prod3->promo = false;
         $res = $dao->insert(self::$prod3);
 
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
-        $this->assertNotEquals('', self::$prod3->id, 'jDaoBase::insert : id not set');
-        $this->assertNotEquals('', self::$prod3->create_date, 'jDaoBase::insert : create_date not updated');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
+        $this->assertNotEquals('', self::$prod3->id, 'AbstractDaoFactory::insert : id not set');
+        $this->assertNotEquals('', self::$prod3->create_date, 'AbstractDaoFactory::insert : create_date not updated');
 
         $this->records = array(
             array('id'=>self::$prod1->id,
@@ -145,7 +95,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $prod = $dao->get(self::$prod1->id);
 
-        $this->assertTrue($prod instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod instanceof \Jelix\Dao\DaoRecordInterface, 'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name, 'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price, 'jDao::get : bad price property on record');
@@ -166,7 +116,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $dao->update($prod);
 
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertTrue($prod2 instanceof jDaoRecordBase,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod2 instanceof \Jelix\Dao\DaoRecordInterface,'jDao::get doesn\'t return a jDaoRecordBase object');
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
@@ -215,7 +165,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $sess1->data = chr(0).chr(254).chr(1);
 
         $res = $dao->insert($sess1);
-        $this->assertEquals(1, $res, 'jDaoBase::insert does not return 1');
+        $this->assertEquals(1, $res, 'AbstractDaoFactory::insert does not return 1');
 
         $sess2 = $dao->get('sess_02939873A32B');
 
@@ -275,7 +225,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function testVersion() {
 
         $cnx = jDb::getConnection($this->dbProfile);
-        $version = $cnx->getAttribute($cnx::ATTR_CLIENT_VERSION);
+        $version = $cnx->getAttribute(\Jelix\Database\ConnectionConstInterface::ATTR_CLIENT_VERSION);
 
         $this->assertNotEquals('', $version);
     }

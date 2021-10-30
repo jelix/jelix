@@ -17,7 +17,7 @@ persistent= on
 
 ; with the following parameter, you can specify a table prefix which will be
 ; applied to DAOs automatically. For manual jDb requests, please use the method
-; jDbConnection::prefixTable().
+; \Jelix\Database\ConnectionInterface::prefixTable().
 table_prefix = admin_
 
 ; to use pdo

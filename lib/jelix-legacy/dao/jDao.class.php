@@ -4,14 +4,12 @@
  * @subpackage dao
  *
  * @author     Laurent Jouanneau
- * @copyright   2005-2014 Laurent Jouanneau
+ * @copyright  2005-2021 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require_once JELIX_LIB_PATH.'db/jDb.class.php';
-require_once JELIX_LIB_PATH.'dao/jDaoRecordBase.class.php';
-require_once JELIX_LIB_PATH.'dao/jDaoFactoryBase.class.php';
 
 /**
  * Factory to create DAO objects.
@@ -30,7 +28,7 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return jDaoFactoryBase the dao object
+     * @return \Jelix\Dao\DaoFactoryInterface the dao object
      */
     public static function create($DaoId, $profile = '')
     {
@@ -38,13 +36,15 @@ class jDao
             $DaoId = new jSelectorDao($DaoId, $profile);
         }
 
-        $c = $DaoId->getDaoClass();
+        $c = $DaoId->getCompiledFactoryClass();
         if (!class_exists($c, false)) {
-            jIncluder::inc($DaoId);
+            \Jelix\Core\Includer::inc($DaoId);
         }
         $conn = jDb::getConnection($profile);
 
-        return new $c($conn);
+        $dao = new $c($conn);
+        $dao->setHook(new jDaoHooks());
+        return $dao;
     }
 
     protected static $_daoSingleton = array();
@@ -58,11 +58,16 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return jDaoFactoryBase the dao object
+     * @return \Jelix\Dao\DaoFactoryInterface the dao object
      */
     public static function get($DaoId, $profile = '')
     {
-        $sel = new jSelectorDao($DaoId, $profile);
+        if (is_string($DaoId)) {
+            $sel = new jSelectorDao($DaoId, $profile);
+        }
+        else {
+            $sel = $DaoId;
+        }
         $DaoId = $sel->toString().'#'.$profile;
 
         if (!isset(self::$_daoSingleton[$DaoId])) {
@@ -94,20 +99,16 @@ class jDao
      *                        If empty, use the default profile
      * @param mixed  $DaoId
      *
-     * @return jDaoRecordBase a dao record object
+     * @return \Jelix\Dao\DaoRecordInterface a dao record object
      */
     public static function createRecord($DaoId, $profile = '')
     {
         $sel = new jSelectorDao($DaoId, $profile);
-        $c = $sel->getDaoClass();
-        if (!class_exists($c, false)) {
-            jIncluder::inc($sel);
-        }
-        $c = $sel->getDaoRecordClass();
-        /** @var jDaoRecordBase $rec */
+        $factory = self::get($sel, $profile);
+        $c = $sel->getCompiledRecordClass();
+        /** @var \Jelix\Dao\DaoRecordInterface $rec */
         $rec = new $c();
-        $rec->setDbProfile($profile);
-
+        $rec->setFactory($factory);
         return $rec;
     }
 
@@ -117,12 +118,12 @@ class jDao
      *
      * @param string $glueOp value should be AND or OR
      *
-     * @return jDaoConditions
+     * @return \Jelix\Dao\DaoConditions
      *
-     * @see jDaoFactoryBase::findby
+     * @see \Jelix\Dao\DaoFactoryInterface::findby()
      */
     public static function createConditions($glueOp = 'AND')
     {
-        return new jDaoConditions($glueOp);
+        return new \Jelix\Dao\DaoConditions($glueOp);
     }
 }

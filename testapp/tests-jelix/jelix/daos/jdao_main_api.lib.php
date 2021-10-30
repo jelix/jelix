@@ -48,6 +48,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
      * @depends testInstanciation
      */
     function testFindAllEmpty() {
+
         $this->emptyTable('product_test');
         $dao = jDao::create ('products', $this->dbProfile);
         $res = $dao->findAll();
@@ -125,7 +126,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
         $dao = jDao::create ('products', $this->dbProfile);
 
         $prod = $dao->get(self::$prod1->id);
-        $this->assertInstanceOf('jDaoRecordBase', $prod,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertInstanceOf('\Jelix\Dao\AbstractDaoRecord', $prod,'jDao::get doesn\'t return a \Jelix\Dao\AbstractDaoRecord object');
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name,'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price,'jDao::get : bad price property on record');
@@ -146,7 +147,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
         $dao->update($prod);
 
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertInstanceOf('jDaoRecordBase', $prod2,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertInstanceOf('\Jelix\Dao\AbstractDaoRecord', $prod2,'jDao::get doesn\'t return a \Jelix\Dao\AbstractDaoRecord object');
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
@@ -523,7 +524,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $record = jDao::createRecord('products', $this->dbProfile);
         $check = $record->check();
-        $expected = array('name'=>array(jDaoRecordBase::ERROR_REQUIRED));
+        $expected = array('name'=>array(\Jelix\Dao\DaoRecordInterface::ERROR_REQUIRED));
         $this->assertEquals($expected,$check);
 
         $record->name = 'Foo';
@@ -532,12 +533,12 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $record->create_date = 'foo';
         $check = $record->check();
-        $expected = array('create_date'=>array(jDaoRecordBase::ERROR_BAD_FORMAT));
+        $expected = array('create_date'=>array(\Jelix\Dao\DaoRecordInterface::ERROR_BAD_FORMAT));
         $this->assertEquals($expected,$check);
 
         $record->create_date = '2008-02-15';
         $check = $record->check();
-        $expected = array('create_date'=>array(jDaoRecordBase::ERROR_BAD_FORMAT));
+        $expected = array('create_date'=>array(\Jelix\Dao\DaoRecordInterface::ERROR_BAD_FORMAT));
         $this->assertEquals($expected,$check);
 
         $record->create_date = '2008-02-15 12:03:34';
@@ -546,7 +547,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $record->price='foo';
         $check = $record->check();
-        $expected = array('price'=>array(jDaoRecordBase::ERROR_BAD_TYPE));
+        $expected = array('price'=>array(\Jelix\Dao\DaoRecordInterface::ERROR_BAD_TYPE));
         $this->assertEquals($expected,$check);
 
         $record->price=56;

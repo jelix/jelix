@@ -41,32 +41,26 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jDbUtils::getTools($postSel->dbType);
+        $context = new jDaoContext('', jDb::getConnection(''));
+        $compiler = new \Jelix\Dao\Generator\Compiler();
 
-        $postParser = new jDaoParser($postSel);
-        $postXml = new SimpleXMLElement(file_get_contents($postSel->getPath()));
-        $postParser->parse($postXml, $dbtools);
+        $postParser =  $compiler->parse($postSel, $context);
         $this->assertEquals(array('deletebefore'), $postParser->getEvents());
 
-       	$blogParser = new jDaoParser($blogSel);
-       	$blogXml = new SimpleXMLElement(file_get_contents($blogSel->getPath()));
-       	$blogParser->parse($blogXml, $dbtools);
+       	$blogParser = $compiler->parse($blogSel, $context);
         $this->assertEquals(array('deletebefore'), $blogParser->getEvents());
        	
-       	$trackerParser = new jDaoParser($trackerSel);
-       	$trackerXml = new SimpleXMLElement(file_get_contents($trackerSel->getPath()));
-        $trackerParser->parse($trackerXml, $dbtools);
+       	$trackerParser = $compiler->parse($trackerSel, $context);
         $this->assertEquals(array('deletebefore', 'insertbefore', 'updatebefore'), $trackerParser->getEvents());
     }
     
     public function testImportWithRedefinedMethods() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $dbtools = jDbUtils::getTools($postSel->dbType);
+        $context = new jDaoContext('', jDb::getConnection(''));
+        $compiler = new \Jelix\Dao\Generator\Compiler();
 
-        $postTrackerParser = new jDaoParser($postSel);
-        $postTrackerXml = new SimpleXMLElement(file_get_contents($trackerSel->getPath()));
-        $postTrackerParser->parse($postTrackerXml, $dbtools);
+        $postTrackerParser = $compiler->parse($trackerSel, $context);;
 
         $this->assertEquals(
             array(
@@ -80,7 +74,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                             $postTrackerParser->getTables());
         $properties = '<?xml version="1.0"?>
         <array>
-            <object key="id" class="jDaoProperty">
+            <object key="id" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="id"/>
                 <string p="fieldName" value="id"/>
                 <string p="table" value="posts"/>
@@ -101,7 +95,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="title" class="jDaoProperty">
+            <object key="title" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="title"/>
                 <string p="fieldName" value="title"/>
                 <string p="table" value="posts"/>
@@ -122,7 +116,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="author" class="jDaoProperty">
+            <object key="author" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="author"/>
                 <string p="fieldName" value="author"/>
                 <string p="table" value="posts"/>
@@ -143,7 +137,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="content" class="jDaoProperty">
+            <object key="content" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="content"/>
                 <string p="fieldName" value="content"/>
                 <string p="table" value="posts"/>
@@ -164,7 +158,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="type" class="jDaoProperty">
+            <object key="type" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="type"/>
                 <string p="fieldName" value="type"/>
                 <string p="table" value="posts"/>
@@ -185,7 +179,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="status" class="jDaoProperty">
+            <object key="status" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="status"/>
                 <string p="fieldName" value="status"/>
                 <string p="table" value="posts"/>
@@ -206,7 +200,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="date" class="jDaoProperty">
+            <object key="date" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="date"/>
                 <string p="fieldName" value="date"/>
                 <string p="table" value="posts"/>
@@ -234,14 +228,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('posts',
                             $postTrackerParser->getPrimaryTable());
         /*
-             <object key="countOpenPattern" class="jDaoMethod">
+             <object key="countOpenPattern" class="\Jelix\Dao\Parser\DaoMethod">
                 <string p="name" value="countOpenPattern"/>
                 <string p="type" value="count"/>
                 <boolean p="distinct" value="false"/>
                 <boolean p="eventBeforeEnabled" value="false"/>
                 <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
+                <object m="getConditions()" class="\Jelix\Dao\DaoConditions">
+                    <object p="condition" class="\Jelix\Dao\DaoCondition">
                         <null p="parent" />
                         <array p="conditions">
                            <array>{"field_id" : "type",
@@ -270,14 +264,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null m="getBody ()"/>
             </object>
         
-            <object key="findOpenPattern" class="jDaoMethod">
+            <object key="findOpenPattern" class="\Jelix\Dao\Parser\DaoMethod">
                 <string p="name" value="findOpenPattern"/>
                 <string p="type" value="select"/>
                 <boolean p="distinct" value="false"/>
                 <boolean p="eventBeforeEnabled" value="false"/>
                 <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
+                <object m="getConditions()" class="\Jelix\Dao\DaoConditions">
+                    <object p="condition" class="\Jelix\Dao\DaoCondition">
                         <null p="parent" />
                         <array p="conditions">
                            <array>
@@ -309,14 +303,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         */
         $methods = '<?xml version="1.0"?>
         <array>
-            <object key="findAll" class="jDaoMethod">
+            <object key="findAll" class="\Jelix\Dao\Parser\DaoMethod">
                 <string p="name" value="findAll"/>
                 <string p="type" value="select"/>
                 <boolean p="distinct" value="false"/>
                 <boolean p="eventBeforeEnabled" value="false"/>
                 <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
+                <object m="getConditions()" class="\Jelix\Dao\DaoConditions">
+                    <object p="condition" class="\Jelix\Dao\DaoCondition">
                         <null p="parent" />
                         <array p="conditions">
                            <array>
@@ -324,7 +318,8 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                             "value" : "tracker",
                             "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern" : ""}
+                            "field_pattern" : "",
+                            "dbType" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -338,14 +333,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null m="getProcStock ()"/>
                 <null m="getBody ()"/>
             </object>
-            <object key="countOpen" class="jDaoMethod">
+            <object key="countOpen" class="\Jelix\Dao\Parser\DaoMethod">
                 <string p="name" value="countOpen"/>
                 <string p="type" value="count"/>
                 <boolean p="distinct" value="false"/>
                 <boolean p="eventBeforeEnabled" value="false"/>
                 <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
+                <object m="getConditions()" class="\Jelix\Dao\DaoConditions">
+                    <object p="condition" class="\Jelix\Dao\DaoCondition">
                         <null p="parent" />
                         <array p="conditions">
                            <array>
@@ -353,14 +348,16 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                             "value" : "tracker",
                             "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern" : ""}
+                            "field_pattern" : "",
+                            "dbType" : ""}
                             </array>
                            <array>
                             {"field_id" : "status",
                             "value" : "open",
                             "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern" : ""}
+                            "field_pattern" : "",
+                            "dbType" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -375,14 +372,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null m="getBody ()"/>
             </object>
             
-            <object key="findOpen" class="jDaoMethod">
+            <object key="findOpen" class="\Jelix\Dao\Parser\DaoMethod">
                 <string p="name" value="findOpen"/>
                 <string p="type" value="select"/>
                 <boolean p="distinct" value="false"/>
                 <boolean p="eventBeforeEnabled" value="false"/>
                 <boolean p="eventAfterEnabled" value="false"/>
-                <object m="getConditions()" class="jDaoConditions">
-                    <object p="condition" class="jDaoCondition">
+                <object m="getConditions()" class="\Jelix\Dao\DaoConditions">
+                    <object p="condition" class="\Jelix\Dao\DaoCondition">
                         <null p="parent" />
                         <array p="conditions">
                            <array>
@@ -390,14 +387,16 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                             "value" : "tracker",
                             "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern" : ""}
+                            "field_pattern" : "",
+                            "dbType" : ""}
                             </array>
                            <array>{
                             "field_id" : "status",
                             "value" : "open",
                             "operator" : "=",
                             "isExpr" : false,
-                            "field_pattern" : ""}
+                            "field_pattern" : "",
+                            "dbType" : ""}
                             </array>
                         </array>
                         <array p="group">[]</array>
@@ -419,7 +418,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(),
                             $postTrackerParser->getInnerJoins());
         $this->assertEquals('jelix_tests~postTracker',
-                            $postTrackerParser->getUserRecord()->toString());
+                            $postTrackerParser->getCustomRecord()->toString());
         $daos = $postTrackerParser->getImportedDao();
         $this->assertEquals('jelix_tests~posts',
                             $daos[0]->toString());
@@ -437,11 +436,12 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     protected function launchTestImportWithRedefinedProperties($daoName) {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao($daoName, '');
-        $dbtools = jDbUtils::getTools($blogSel->dbType);
 
-        $postBlogParser = new jDaoParser($blogSel);
-        $postBlogXml = new SimpleXMLElement(file_get_contents($blogSel->getPath()));
-        $postBlogParser->parse($postBlogXml, $dbtools);
+
+        $context = new jDaoContext('', jDb::getConnection(''));
+        $compiler = new \Jelix\Dao\Generator\Compiler();
+
+        $postBlogParser = $compiler->parse($blogSel, $context);
         $this->assertEquals(
             array(
                 'posts'=> array(
@@ -454,7 +454,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
             $postBlogParser->getTables());
         $properties = '<?xml version="1.0"?>
         <array>
-            <object key="id" class="jDaoProperty">
+            <object key="id" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="id"/>
                 <string p="fieldName" value="id"/>
                 <string p="table" value="posts"/>
@@ -475,7 +475,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="title" class="jDaoProperty">
+            <object key="title" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="title"/>
                 <string p="fieldName" value="title"/>
                 <string p="table" value="posts"/>
@@ -496,7 +496,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="author" class="jDaoProperty">
+            <object key="author" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="author"/>
                 <string p="fieldName" value="author"/>
                 <string p="table" value="posts"/>
@@ -517,7 +517,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="email" class="jDaoProperty">
+            <object key="email" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="email"/>
                 <string p="fieldName" value="email"/>
                 <string p="table" value="posts"/>
@@ -538,7 +538,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="content" class="jDaoProperty">
+            <object key="content" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="content"/>
                 <string p="fieldName" value="content"/>
                 <string p="table" value="posts"/>
@@ -559,7 +559,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="type" class="jDaoProperty">
+            <object key="type" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="type"/>
                 <string p="fieldName" value="type"/>
                 <string p="table" value="posts"/>
@@ -580,7 +580,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue" />
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="status" class="jDaoProperty">
+            <object key="status" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="status"/>
                 <string p="fieldName" value="status"/>
                 <string p="table" value="posts"/>
@@ -601,7 +601,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                 <null p="defaultValue"/>
                 <boolean p="ofPrimaryTable" value="true" />
             </object>
-            <object key="date" class="jDaoProperty">
+            <object key="date" class="\Jelix\Dao\Parser\DaoProperty">
                 <string p="name" value="date"/>
                 <string p="fieldName" value="date"/>
                 <string p="table" value="posts"/>
@@ -635,7 +635,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(),
                             $postBlogParser->getInnerJoins());
         $this->assertEquals('jelix_tests~postBlog',
-                            $postBlogParser->getUserRecord()->toString());
+                            $postBlogParser->getCustomRecord()->toString());
         $daos = $postBlogParser->getImportedDao();
         $this->assertEquals('jelix_tests~posts',
                             $daos[0]->toString());

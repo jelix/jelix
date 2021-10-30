@@ -60,7 +60,7 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function getDriversList(){
-        $driversInfos = jDbParameters::getDriversInfosList();
+        $driversInfos = \Jelix\Database\AccessParameters::getDriversInfosList();
 
         $drivers = isset($this->config['availabledDrivers'])?$this->config['availabledDrivers']:'mysqli,sqlite3,pgsql';
         $list = preg_split("/ *, */",$drivers);
@@ -177,8 +177,8 @@ class dbprofileWizPage extends installWizardPage {
 
             if (!count($errors)) {
                 $options = $ini->getValues($profile);
-                $dbparam = new jDbParameters($options);
-                $options = $dbparam->getParameters();
+                $dbparam = new \Jelix\Database\AccessParameters($options);
+                $options = $dbparam->getNormalizedParameters();
                 try {
                     if ($usepdo) {
                         $m = 'check_PDO';
@@ -257,8 +257,8 @@ table_prefix=
                 continue;
             $dbprofileslist[] = $profile;
             $options = $ini->getValues($profile);
-            $dbparam = new jDbParameters($options);
-            $options = $dbparam->getParameters();
+            $dbparam = new \Jelix\Database\AccessParameters($options);
+            $options = $dbparam->getNormalizedParameters();
 
             $data['dbtype'][$profile] = $options['dbtype'];
             $driver =$options['driver'];
