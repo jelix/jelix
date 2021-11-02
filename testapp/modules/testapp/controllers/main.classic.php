@@ -20,6 +20,16 @@ class mainCtrl extends jController {
       return $rep;
    }
 
+    function newepindex(){
+
+        $rep = $this->getResponse('html');
+        $rep->title = 'Homepage of TestApp';
+        $rep->body->assign('page_title','Test App');
+        $rep->body->assign('MAIN','<p>Main page of newep entrypoint</p>');
+        return $rep;
+    }
+
+
    function hello(){
 
       if($this->param('output') == 'text'){

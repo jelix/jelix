@@ -13,6 +13,14 @@ PHP_VERSION=$(php -r "echo phpversion();")
 resetJelixMysql testapp test_user jelix
 resetJelixInstall $APPDIR
 
+if [ -d $APPDIR/var/config/newep ]; then
+  rm -rf  $APPDIR/var/config/newep
+fi
+
+if [ -d $APPDIR/www/newep.php ]; then
+  rm -f  $APPDIR/www/newep.php
+fi
+
 if [ -f $APPDIR/var/config/auth_ldap.coord.ini.php.dist ]; then
     cp -a $APPDIR/var/config/auth_ldap.coord.ini.php.dist $APPDIR/var/config/auth_ldap.coord.ini.php
 fi

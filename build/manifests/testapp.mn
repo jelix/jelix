@@ -119,6 +119,9 @@ cd testapp/modules/testapp/install
   upgrade_urlengine.php
   towns.mysql.sql
   upgrade_createtowns.php
+cd testapp/modules/testapp/install/ep/
+  newep.php
+  config.ini.php
 cd testapp/modules/testapp/tests/
   test1.pu.php
 
@@ -303,6 +306,7 @@ cd testapp/var/config
   auth_ldap.coord.ini.php.dist
   mainconfig.ini.php
   localconfig.ini.php.dist
+  localframework.ini.php.dist
   profiles.ini.php5.dist
   profiles.ini.php7.dist
   urls.xml

@@ -225,6 +225,9 @@ function resetJelixInstall() {
     if [ -f $appdir/var/config/installer.ini.php ]; then
         rm -f $appdir/var/config/installer.ini.php
     fi
+    if [ -f $appdir/var/config/localframework.ini.php ]; then
+        rm -f $appdir/var/config/localframework.ini.php
+    fi
     resetJelixTemp $appdir
 }
 

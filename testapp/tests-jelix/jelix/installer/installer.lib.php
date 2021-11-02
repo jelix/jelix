@@ -127,6 +127,7 @@ class testInstallerMain extends jInstaller {
         $this->mainConfig = new jIniFileModifier(jApp::mainConfigFile());
         $this->localConfig = new jIniMultiFilesModifier($this->mainConfig, jApp::configPath('localconfig.ini.php'));
         $this->liveConfig = new jIniFileModifier(jApp::configPath('liveconfig.ini.php'));
+        $this->localFrameworkConfig = new jIniFileModifier(jApp::configPath('localframework.ini.php.dist'));
         $this->messages = new jInstallerMessageProvider('en');
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','junittests','jsoap');
         $config = jApp::config();
