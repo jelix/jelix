@@ -18,7 +18,7 @@ class testappModuleInstaller extends jInstallerModule {
             $this->execSQLScript('towns');
         }
 
-        $this->createEntryPoint('ep/newep.php', 'ep/config.ini.php', $targetConfigDirName= '', $type='classic');
+        $this->createEntryPoint('ep/newep.php', 'ep/config.ini.php', '', 'classic');
 
 
     }
