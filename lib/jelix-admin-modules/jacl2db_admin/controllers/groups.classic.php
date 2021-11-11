@@ -60,8 +60,9 @@ class groupsCtrl extends jController
             $this->loadGroupRights($tpl);
             $rep->body->assign('MAIN', $tpl->fetch('groups_right_view'));
         }
-        $rep->body->assign('selectedMenuItem', 'usersgroups');
 
+        $rep->body->assign('selectedMenuItem', 'usersgroups');
+        $rep->title = jLocale::get('acl2.groups.title');
         return $rep;
     }
 
@@ -72,7 +73,9 @@ class groupsCtrl extends jController
 
         $this->loadGroupRights($tpl);
         $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
+
         $rep->body->assign('selectedMenuItem', 'usersgroups');
+        $rep->title = jLocale::get('acl2.groups.rights.title');
 
         return $rep;
     }

@@ -163,6 +163,7 @@ cd testapp/var/uploads
 cd testapp/var/mails
 cd testapp/var/config
   localconfig.ini.php.dist
+  localframework.ini.php.dist
   profiles.ini.php.dist
 cd testapp/var/overloads/testapp/daos
 cd testapp/var/overloads/testapp/locales

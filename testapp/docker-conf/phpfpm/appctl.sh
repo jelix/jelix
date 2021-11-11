@@ -62,6 +62,16 @@ function resetApp() {
     if [ -f $appdir/var/config/liveconfig.ini.php ]; then
         rm -f $appdir/var/config/liveconfig.ini.php
     fi
+    if [ -f $appdir/var/config/localframework.ini.php ]; then
+        rm -f $appdir/var/config/localframework.ini.php
+    fi
+    if [ -d $appdir/var/config/newep ]; then
+      rm -rf  $appdir/var/config/newep
+    fi
+
+    if [ -d $appdir/www/newep.php ]; then
+      rm -f  $appdir/www/newep.php
+    fi
 
     setRights $appdir
     launchInstaller $appdir

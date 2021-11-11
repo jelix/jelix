@@ -433,6 +433,9 @@ captcha.simple.widgettype=captcha
 captcha.recaptcha.validator=\jelix\forms\Captcha\ReCaptchaValidator
 captcha.recaptcha.widgettype=recaptcha
 
+; deprecated
+flagPrepareObjectFromControlsContactArrayValues = 0
+
 [jforms_builder_html]
 ;control type = plugin name
 

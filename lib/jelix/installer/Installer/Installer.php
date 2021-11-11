@@ -540,6 +540,7 @@ class Installer
                     if ($installer) {
                         if ($installer instanceof \jInstallerModule) {
                             $installer->postInstall();
+                            $this->declareLegacyNewEntryPoint($installer);
                         } else {
                             $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
                             $installer->postInstall($helpers);
@@ -551,6 +552,7 @@ class Installer
                     foreach ($installer as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->postInstall();
+                            $this->declareLegacyNewEntryPoint($upgrader);
                         } else {
                             $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->postInstall($helpers);
@@ -613,6 +615,13 @@ class Installer
         if ($profileIni->isModified()) {
             $profileIni->save();
             \jProfiles::clear();
+        }
+    }
+
+    protected function declareLegacyNewEntryPoint(\jInstallerModule $installer)
+    {
+        foreach($installer->getNewEntrypoints() as $epId => $epInfo) {
+            $this->globalSetup->declareNewEntryPoint($epId, $epInfo['type'], $epInfo['config']);
         }
     }
 

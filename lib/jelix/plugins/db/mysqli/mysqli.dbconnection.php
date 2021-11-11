@@ -243,13 +243,21 @@ class mysqliDbConnection extends jDbConnection
     public function execMulti($queries)
     {
         $query_res = $this->_connection->multi_query($queries);
-        while ($this->_connection->more_results()) {
-            $this->_connection->next_result();
-            if ($discard = $this->_connection->store_result()) {
+        if ($query_res === false) {
+            throw new \Exception("Mysql multi_query error: ".$this->_connection->error);
+        }
+        $nbCmd = 0;
+        while($this->_connection->more_results()) {
+            $nbCmd ++;
+            $query_res = $this->_connection->next_result();
+            if ($query_res === false) {
+                throw new \Exception("Mysql multi_query error: ".$this->_connection->error);
+            }
+
+            if($discard = $this->_connection->store_result()){
                 $discard->free();
             }
         }
-
-        return $query_res;
+        return $nbCmd;
     }
 }

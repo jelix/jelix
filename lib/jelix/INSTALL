@@ -4,7 +4,7 @@ Jelix Installation
 Server configuration
 ---------------------
 
-Jelix works with PHP 5.6 and higher, but PHP 7.3+ is prefered
+Jelix works with PHP 5.6 and higher, but PHP 7.4+ is prefered
 
 This php extensions should be installed : xml, simplexml, pcre, session, spl, json, mbstring et tokenizer.
 
