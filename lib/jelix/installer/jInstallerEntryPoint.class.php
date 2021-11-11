@@ -4,7 +4,7 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2020 Laurent Jouanneau
+ * @copyright   2009-2021 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -131,7 +131,7 @@ class jInstallerEntryPoint
     }
 
     /**
-     * @return string the entry point id
+     * @return string the entry point id (name of the entrypoint without .php)
      */
     public function getEpId()
     {
@@ -147,7 +147,19 @@ class jInstallerEntryPoint
         return $this->config->_allModulesPathList;
     }
 
-    /*
+    /**
+     * @return \Jelix\Installer\ModuleStatus information about a specific module used
+     * by the entry point
+     */
+    function getModule($moduleName) {
+        return new \Jelix\Installer\ModuleStatus(
+            $moduleName,
+            $this->config->_allModulesPathList[$moduleName],
+            $this->config->modules
+        );
+    }
+
+    /**
      * the static entry point config alone (in app/system)
      * @return \Jelix\IniFile\IniModifier
      * @since 1.6.8
@@ -166,7 +178,7 @@ class jInstallerEntryPoint
     }
 
     /**
-     * @return stdObj the config content of the entry point, as seen when
+     * @return object the config content of the entry point, as seen when
      *                calling jApp::config()
      */
     public function getConfigObj()

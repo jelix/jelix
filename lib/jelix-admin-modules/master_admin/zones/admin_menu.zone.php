@@ -27,8 +27,8 @@ class admin_menuZone extends jZone
             $menu['toplinks']->childItems[] = $dashboard;
         }
 
+        $menu['crud'] = new masterAdminMenuItem('crud', jLocale::get('gui.menu.item.crud'), '', 90);
         $menu['refdata'] = new masterAdminMenuItem('refdata', jLocale::get('gui.menu.item.refdata'), '', 80);
-
         $menu['system'] = new masterAdminMenuItem('system', jLocale::get('gui.menu.item.system'), '', 100);
 
         $items = jEvent::notify('masteradminGetMenuContent')->getResponse();

@@ -170,6 +170,12 @@ class jInstallerModule implements jIInstallerComponent
     protected $parameters = array();
 
     /**
+     * list of new entrypoints.
+     * @var array keys are ep id, value are array with 'file', 'config', 'type' keys
+     */
+    private $newEntrypoints = array();
+
+    /**
      * @param string $componentName   name of the component
      * @param string $name            name of the installer
      * @param string $path            the component path
@@ -248,6 +254,7 @@ class jInstallerModule implements jIInstallerComponent
         $this->entryPoint = $ep;
         $this->config = $ep->configIni;
         $this->initDbProfile($dbProfile);
+        $this->newEntrypoints = array();
     }
 
     /**
@@ -567,5 +574,42 @@ class jInstallerModule implements jIInstallerComponent
     public function declarePluginsPath($path)
     {
         // it does nothing
+    }
+
+    /**
+     * @param string $entryPointFile path to the entrypoint file to copy, from the install directory
+     * @param string $configurationFile path to the configuration file of the entrypoint to copy, from the install directory
+     * @param string $targetConfigDirName directory name into var/config where to copy the configuration
+     *  file. by default, the directory name is the entrypoint name.
+     * @param string $type type of the entrypoint
+     *
+     */
+    function createEntryPoint($entryPointFile, $configurationFile, $targetConfigDirName= '', $type='classic')
+    {
+        $entryPointFileName = basename($entryPointFile);
+        $entryPointId =  str_replace('.php', '', $entryPointFileName);
+        $configurationFileName = basename($configurationFile);
+        if ($targetConfigDirName == '') {
+            $targetConfigDirName = $entryPointId;
+        }
+
+        $this->copyFile($entryPointFile, jApp::wwwPath($entryPointFileName), true);
+        $this->copyFile($configurationFile, jApp::varConfigPath($targetConfigDirName.'/'.$configurationFileName), false);
+
+        if ($this->firstExec('ep:'.$entryPointFileName)) {
+            $this->newEntrypoints[$entryPointId] = array(
+                'file'=>$entryPointFileName,
+                'config'=> $targetConfigDirName.'/'.$configurationFileName,
+                'type' => $type
+            );
+        }
+    }
+
+    /**
+     * @return array
+     */
+    function getNewEntrypoints()
+    {
+        return $this->newEntrypoints;
     }
 }

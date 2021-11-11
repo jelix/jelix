@@ -627,9 +627,9 @@ class GlobalSetup
             $epId = substr($epId, 0, -4);
         }
 
-        if ($this->frameworkInfos->getEntryPointInfo($epId)) {
-            throw new \Exception("There is already an entrypoint with the same name but with another type ({$epId}, {$epType})");
-        }
+        //if ($this->frameworkInfos->getEntryPointInfo($epId)) {
+        //    throw new \Exception("There is already an entrypoint with the same name ({$epId}, {$epType})");
+        //}
 
         if ($this->forLocalConfiguration()) {
             $this->frameworkInfos->addLocalEntryPointInfo($epId, $configFileName, $epType);
