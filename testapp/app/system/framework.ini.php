@@ -3,6 +3,7 @@
 [entrypoint:index.php]
 config="index/config.ini.php"
 type=classic
+default=on
 [entrypoint:rest.php]
 config="rest/config.ini.php"
 type=classic
@@ -36,3 +37,7 @@ type=xmlrpc
 [entrypoint:cmdline.php]
 config="cmdline/config.ini.php"
 type=cmdline
+
+[entrypoint:newep.php]
+config="newep/config.ini.php"
+type=classic

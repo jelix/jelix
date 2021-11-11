@@ -594,7 +594,7 @@ class jInstallerModule implements jIInstallerComponent
         }
 
         $this->copyFile($entryPointFile, jApp::wwwPath($entryPointFileName), true);
-        $this->copyFile($configurationFile, jApp::configPath($targetConfigDirName.'/'.$configurationFileName), false);
+        $this->copyFile($configurationFile, jApp::varConfigPath($targetConfigDirName.'/'.$configurationFileName), false);
 
         if ($this->firstExec('ep:'.$entryPointFileName)) {
             $this->newEntrypoints[$entryPointId] = array(

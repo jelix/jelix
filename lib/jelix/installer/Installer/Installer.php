@@ -623,6 +623,8 @@ class Installer
         foreach($installer->getNewEntrypoints() as $epId => $epInfo) {
             $this->globalSetup->declareNewEntryPoint($epId, $epInfo['type'], $epInfo['config']);
         }
+        $this->globalSetup->getUrlModifier()->save();
+        $this->globalSetup->getLocalUrlModifier()->save();
     }
 
     protected function startMessage()

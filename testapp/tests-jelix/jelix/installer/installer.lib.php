@@ -64,7 +64,7 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         $urlLocalXmlFileName = null
     ) {
         foreach(array(
-            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline'
+            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline', 'newep'
                 ) as $epName
         ) {
             $this->configContent[$epName.'/config.ini.php'] = array(
@@ -202,11 +202,11 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
         }
     }
 
-    public function save($chmod=null) {
+    public function save($chmod=null, $format=0) {
         $this->modified = false;
     }
 
-    public function saveAs($filename) {}
+    public function saveAs($filename, $format=0) {}
 }
 
 /**

@@ -246,7 +246,7 @@ class mysqliDbConnection extends jDbConnection
         if ($query_res === false) {
             throw new \Exception("Mysql multi_query error: ".$this->_connection->error);
         }
-        $nbCmd = 0;
+        $nbCmd = 1;
         while($this->_connection->more_results()) {
             $nbCmd ++;
             $query_res = $this->_connection->next_result();
