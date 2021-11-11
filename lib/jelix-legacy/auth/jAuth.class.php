@@ -562,6 +562,29 @@ class jAuth
     }
 
     /**
+     * @deprecated
+     * @see reloadUserSession()
+     */
+    public static function reloadUser()
+    {
+        return self::reloadUserSession();
+    }
+
+    public static function reloadUserSession() {
+        $dr = self::getDriver();
+        $config = self::loadConfig();
+        $user = null;
+        if ((isset($_SESSION[$config['session_name']]) && $_SESSION[$config['session_name']]->login != '')) {
+            $user = $dr->getUser($_SESSION[$config['session_name']]->login);
+        }
+        if (!$user) {
+            $user =  new jAuthDummyUser();
+        }
+        $_SESSION[$config['session_name']] = $user;
+        return $user;
+    }
+
+    /**
      * Sets the given user in session without authentication.
      *
      * It is useful if you manage a kind of session that is not the PHP session.

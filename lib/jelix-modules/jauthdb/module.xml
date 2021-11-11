@@ -5,7 +5,7 @@
         <label lang="en_US">ressources for db driver of jAuth</label>
         <description lang="en_US">It provides a basic dao and install scripts.</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
-        <copyright>2008-2018 Laurent Jouanneau and other contributors</copyright>
+        <copyright>2008-2021 Laurent Jouanneau and other contributors</copyright>
         <author name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>http://jelix.org</homepageURL>
     </info>

@@ -67,7 +67,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $queries .= "INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES ('24', 'en', 'test2');";
 
         $res = $cnx->execMulti($queries);
-        $this->assertTrue($res);
+        $this->assertEquals(2, $res);
         $this->assertTableHasNRecords('labels_test', 2);
     }
 

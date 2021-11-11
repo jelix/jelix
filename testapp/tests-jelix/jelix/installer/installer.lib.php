@@ -68,14 +68,16 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     public $configContent = array();
 
-    function __construct ($frameworkFileName = null,
-                          $mainConfigFileName = null,
-                          $localConfigFileName = null,
-                          $urlXmlFileName = null,
-                          $urlLocalXmlFileName = null
+    function __construct (
+        $frameworkFileName = null,
+        $localFrameworkFileName = null,
+        $mainConfigFileName = null,
+        $localConfigFileName = null,
+        $urlXmlFileName = null,
+        $urlLocalXmlFileName = null
     ) {
         foreach(array(
-            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline'
+            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline', 'newep'
                 ) as $epName
         ) {
             $this->configContent[$epName.'/config.ini.php'] = array(
@@ -108,6 +110,7 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         }
 
         parent::__construct($frameworkFileName,
+            $localFrameworkFileName,
             $mainConfigFileName,
             $localConfigFileName,
             $urlXmlFileName,
@@ -213,11 +216,11 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
         }
     }
 
-    public function save($chmod=null) {
+    public function save($chmod=null, $format=0) {
         $this->modified = false;
     }
 
-    public function saveAs($filename) {}
+    public function saveAs($filename, $format=0) {}
 }
 
 
@@ -239,12 +242,17 @@ class testInstallerMain extends \Jelix\Installer\Installer {
 
     function __construct ($reporter) {
         $this->reporter = $reporter;
+
         $this->messages = new \Jelix\Installer\Checker\Messages('en');
 
         copy (jApp::appSystemPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
-        $this->globalSetup = new testInstallerGlobalSetup(null, null, null, jApp::tempPath('installer_urls.xml'));
+        $this->globalSetup = new testInstallerGlobalSetup(null,
+            jApp::varConfigPath('localframework.ini.php.dist')
+            , null, null,
+            jApp::tempPath('installer_urls.xml'));
 
         $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
+
         $config = jApp::config();
         foreach ($this->globalSetup->configContent as $ep=>$conf) {
             

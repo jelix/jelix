@@ -20,4 +20,5 @@
     <entrypoint name="noep" type="classic"/>
     <entrypoint name="handlermodule" type="classic"/>
     <entrypoint name="news" type="classic"/>
+    <entrypoint name="newep" type="classic"/>
 </urls>
