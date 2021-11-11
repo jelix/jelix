@@ -2,5 +2,5 @@
 
 (
 cd patch
-zip -r ../jelix_1.4.8_patch.zip lib/
+zip -r ../jelix_1.5.8_patch.zip lib/
 )
