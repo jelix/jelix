@@ -125,7 +125,6 @@ cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
-cch dao.UTF-8.properties(dao.%charset%.properties)
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cch format.UTF-8.properties(format.%charset%.properties)
 cch formserr.UTF-8.properties(formserr.%charset%.properties)
@@ -176,8 +175,6 @@ cd lib/jelix-legacy/dao
 cd lib/jelix-legacy/db
   __ALL__
 
-cd lib/jelix-legacy/db/tools
-  __ALL__
 
 #if ENABLE_DEVELOPER
 cd lib/jelix-legacy/docs
@@ -210,12 +207,6 @@ cd lib/jelix-legacy/plugins/configcompiler/
   __ALL_RECURSIVELY__
 
 cd lib/jelix-legacy/plugins/coord/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/daobuilder/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/db/
   __ALL_RECURSIVELY__
 
 cd lib/jelix-legacy/plugins/debugbar/
