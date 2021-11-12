@@ -2,7 +2,7 @@
 
 require_once(__DIR__.'/../application.init.php');
 
-// defines some values. File installed by the environment (docker, travis..)
+// defines some values. File installed by the environment (docker..)
 require_once('/srv/phpunit_bootstrap.php');
 
 ini_set('date.timezone', 'Europe/Paris');

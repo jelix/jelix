@@ -1,6 +1,5 @@
 # Jelix
 
-[![Build Status](https://travis-ci.org/jelix/jelix.svg?branch=master)](https://travis-ci.org/jelix/jelix)
 [![License](https://poser.pugx.org/jelix/jelix/license)](https://packagist.org/packages/jelix/jelix)
 [![Latest Stable Version](https://poser.pugx.org/jelix/jelix/v/stable)](https://packagist.org/packages/jelix/jelix)
 [![Total Downloads](https://poser.pugx.org/jelix/jelix/downloads)](https://packagist.org/packages/jelix/jelix)
