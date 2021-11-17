@@ -140,6 +140,10 @@ $GLOBALS['gLibPath']=array('Config'=>JELIX_LIB_PATH.'core/',
  'Auth'=>JELIX_LIB_PATH.'auth/', 'Installer'=>JELIX_LIB_PATH.'installer/',
  'KV'=>JELIX_LIB_PATH.'kvdb/');
 
+$GLOBALS['gLibClassPath']=array(
+    'jIInstallerComponent' => JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php',
+);
+
 /**
  * function used by php to try to load an unknown class
  */
@@ -172,6 +176,9 @@ function jelix_autoload($class) {
                 require($f);
         }
         return;
+    }
+    elseif (isset($GLOBALS['gLibClassPath'][$class])) {
+        $f = $GLOBALS['gLibClassPath'][$class];
     }else{
         $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
     }
