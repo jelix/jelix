@@ -453,6 +453,9 @@ cd lib/jelix/utils/Version
   Version.php
   VersionComparator.php
 
+cd lib/jelix/utils/FileUtilities
+  Path.php
+
 cd lib/jelix/plugins/auth/ldap
   ldap.auth.php
 cd lib/jelix/plugins/auth/db
