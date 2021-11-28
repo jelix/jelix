@@ -282,14 +282,21 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             ($this->uriAction || $this->baseURI)
         ) {
             if ($this->baseURI) {
-                $url = $this->baseURI.$value;
+                $url = htmlspecialchars($this->baseURI.$value);
             }
             else {
                 $params = $this->uriActionParameters;
                 if ($this->uriActionFileParameter) {
-                    $params[$this->uriActionFileParameter] = $value;
+                    // replace %s by the value into the uri action parameter
+                    $pname = $this->uriActionFileParameter;
+                    if (isset($params[$pname]) && strpos($params[$pname], '%s') !== false) {
+                        $params[$pname] = str_replace('%s', $value, $params[$pname]);
+                    }
+                    else {
+                        $params[$pname] = $value;
+                    }
                 }
-                $url = jUrl::get($this->uriAction, $params);
+                $url = jUrl::get($this->uriAction, $params, jUrl::XMLSTRING);
             }
             $style = '';
             if ($this->imgMaxHeight) {
