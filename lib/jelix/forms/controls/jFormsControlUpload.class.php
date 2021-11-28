@@ -19,12 +19,31 @@ class jFormsControlUpload extends jFormsControl {
 
     public $type='upload';
 
+    /**
+     * Used to verify the file mime type after the file was uploaded
+     *
+     * @var array list of possible mime types
+     */
     public $mimetype=array();
 
     public $maxsize=0;
 
+    /**
+     * list of type mime or case-insensitive filename extension
+     * or one of these types audio/*, video/*, or image/*
+     *
+     * All values should be separated by a comma
+     *
+     * This property is used to fill the accept HTML attribute
+     *
+     * @var string the content of the accept HTML attribute
+     */
     public $accept = '';
 
+    /**
+     *
+     * @var string the content of the capture HTML attribute
+     */
     public $capture = '';
 
     public $fileInfo = array();
