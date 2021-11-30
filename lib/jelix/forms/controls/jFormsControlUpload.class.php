@@ -48,11 +48,15 @@ class jFormsControlUpload extends jFormsControl {
 
     public $fileInfo = array();
 
+
+    protected $modified = false;
+
     function check(){
-        if(isset($_FILES[$this->ref]))
+        if (isset($_FILES[$this->ref])) {
             $this->fileInfo = $_FILES[$this->ref];
-        else
-            $this->fileInfo = array('name'=>'','type'=>'','size'=>0, 'tmp_name'=>'', 'error'=>UPLOAD_ERR_NO_FILE);
+        } else {
+            $this->fileInfo = array('name' => '', 'type' => '', 'size' => 0, 'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE);
+        }
 
         if($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if($this->required)
@@ -88,9 +92,18 @@ class jFormsControlUpload extends jFormsControl {
     function setValueFromRequest($request) {
         if(isset($_FILES[$this->ref])){
             $this->setData($_FILES[$this->ref]['name']);
+            $this->modified = true;
         }else{
             $this->setData('');
         }
+    }
+
+    public function isModified()
+    {
+        if ($this->modified) {
+            return true;
+        }
+        return parent::isModified();
     }
 
     function saveFile($directoryPath, $alternateName='') {
