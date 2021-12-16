@@ -1,30 +1,33 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpdoc>
+<phpdocumentor
+        configVersion="3"
+>
     <title>Jelix 1.6</title>
-    <parser>
-        <target>__PARSER_CACHE__</target>
-        <encoding>utf8</encoding>
-        <markers>
-            <item>TODO</item>
-            <item>FIXME</item>
-        </markers>
-        <extensions>
-            <extension>php</extension>
-        </extensions>
-    </parser>
-    <transformer>
-        <target>__TARGET_PATH__</target>
-    </transformer>
-    <transformations>
-        <template name="responsive-twig"/>
-    </transformations>
-    <files>
-        <directory>lib/jelix/</directory>
-        <ignore>*.ini.php</ignore>
-        <ignore>lib/jelix/checker.php</ignore>
-        <ignore>lib/jelix/tpl/jtpl_standalone_prepend.php</ignore>
-        <ignore>lib/jelix/tpl/tests/</ignore>
-        <ignore>lib/jelix/docs/</ignore>
-        <ignore>lib/jelix/core-modules/jelix/install/*</ignore>
-    </files>
-</phpdoc>
+    <paths>
+        <output>../_docs/</output>
+        <cache>../_docs.cache</cache>
+    </paths>
+    <version number="1.6.35">
+        <api>
+            <source dsn=".">
+                <path>lib/jelix</path>
+            </source>
+            <ignore hidden="true" symlinks="true">
+                <path>*.ini.php</path>
+                <path>lib/jelix/checker.php</path>
+                <path>lib/jelix/tpl/jtpl_standalone_prepend.php</path>
+                <path>lib/jelix/tpl/tests/</path>
+                <path>lib/jelix/docs/</path>
+                <path>lib/jelix/core-modules/jelix/install/*</path>
+            </ignore>
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+            <markers>
+                <marker>TODO</marker>
+                <marker>FIXME</marker>
+            </markers>
+        </api>
+    </version>
+    <template name="__TEMPLATE_PATH__/jelixorg"/>
+</phpdocumentor>

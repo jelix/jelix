@@ -38,10 +38,6 @@ ifndef TESTS_PROFILES
 TESTS_PROFILES=testapp/var/config/profiles.ini.php.dist
 endif
 
-ifndef PHPDOC
-PHPDOC=phpdoc
-endif
-
 ifndef PHPUNIT
 PHPUNIT=phpunit
 endif
@@ -116,14 +112,15 @@ runtests: phpunit simpletest
 tests: preparetestapp runtests
 	echo "Tests complete"
 
-.PHONY: docs
-docs:
+phpdoc:
+	curl -o phpdoc --location https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.1.2/phpDocumentor.phar
+	chmod +x phpdoc
+
+docs: phpdoc
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	cp build/phpdoc/phpdoc.xml $(TESTPATH)
-	sed -i -- s!__PARSER_CACHE__!$(DOCSCACHEPATH)!g $(TESTPATH)/phpdoc.xml
-	sed -i -- s!__TARGET_PATH__!$(DOCSTARGETPATH)!g $(TESTPATH)/phpdoc.xml
-	(cd $(TESTPATH) && $(PHPDOC) project:run)
-	cp build/phpdoc/template.css $(DOCSTARGETPATH)/css/
+	sed -i -- s!__TEMPLATE_PATH__!$(CURRENT_PATH)/build/phpdoc/templates!g $(TESTPATH)/phpdoc.xml
+	(cd $(TESTPATH) && ../phpdoc)
 
 deploy_docs:
 	jelix_publish_apidoc.sh $(DOCSTARGETPATH) "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)

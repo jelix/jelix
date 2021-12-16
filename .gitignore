@@ -10,3 +10,4 @@ _docs.cache/
 .idea
 vendor/
 nbproject/
+/phpdoc
