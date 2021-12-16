@@ -120,6 +120,7 @@ docs: phpdoc
 	$(PHP) build/buildjelix.php -D $(TESTPATHSWITCH) ./build/config/jelix-test.ini
 	cp build/phpdoc/phpdoc.xml $(TESTPATH)
 	sed -i -- s!__TEMPLATE_PATH__!$(CURRENT_PATH)/build/phpdoc/templates!g $(TESTPATH)/phpdoc.xml
+	sed -i -- s!__VERSION__!$(VERSION)!g $(TESTPATH)/phpdoc.xml
 	(cd $(TESTPATH) && ../phpdoc)
 
 deploy_docs:

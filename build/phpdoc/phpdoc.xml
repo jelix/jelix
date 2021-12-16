@@ -2,12 +2,12 @@
 <phpdocumentor
         configVersion="3"
 >
-    <title>Jelix 1.6</title>
+    <title>Jelix __VERSION__</title>
     <paths>
         <output>../_docs/</output>
         <cache>../_docs.cache</cache>
     </paths>
-    <version number="1.6.35">
+    <version number="__VERSION__">
         <api>
             <source dsn=".">
                 <path>lib/jelix</path>
