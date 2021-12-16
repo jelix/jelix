@@ -30,6 +30,11 @@ abstract class jDbResultSet implements Iterator
 
     public function __destruct()
     {
+        $this->free();
+    }
+
+    public function free()
+    {
         if ($this->_idResult) {
             $this->_free();
             $this->_idResult = null;
@@ -156,6 +161,32 @@ abstract class jDbResultSet implements Iterator
     }
 
     /**
+     * fetch a result. The result is returned as an associative array.
+     *
+     * @return array|bool result array or false if there is no more result
+     */
+    public function fetchAssociative()
+    {
+        $result = $this->_fetchAssoc();
+        return $result;
+    }
+
+    /**
+     * Return all results in an array. Each result is an associative array.
+     *
+     * @return array[]
+     */
+    public function fetchAllAssociative()
+    {
+        $result = array();
+        while ($res = $this->fetchAssociative()) {
+            $result[] = $res;
+        }
+
+        return $result;
+    }
+
+    /**
      * Retrieve a statement attribute.
      *
      * @param int $attr
@@ -234,6 +265,13 @@ abstract class jDbResultSet implements Iterator
      * @return bool|object
      */
     abstract protected function _fetch();
+
+    /**
+     * deep implementation of fetchAssociative().
+     *
+     * @return array|false
+     */
+    abstract protected function _fetchAssoc();
 
     /**
      * move the cursor to the first record.

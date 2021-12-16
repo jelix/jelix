@@ -67,6 +67,16 @@ class pgsqlDbResultSet extends jDbResultSet
     {
     }
 
+    public function fetchAssociative()
+    {
+        $res = pg_fetch_assoc($this->_idResult);
+        return $res;
+    }
+
+    protected function _fetchAssoc()
+    {
+    }
+
     protected function _free()
     {
         return pg_free_result($this->_idResult);
@@ -131,8 +141,17 @@ class pgsqlDbResultSet extends jDbResultSet
 
         $params = array();
         foreach ($this->parameterNames as $name) {
-            if (isset($parameters[$name])) {
-                $params[] = &$parameters[$name];
+            if (array_key_exists($name, $parameters)) {
+                if (is_null($parameters[$name])) {
+                    // pg_execute does not like reference to null values on numerical fields...
+                    $params[] = NULL;
+                }
+                else if (is_bool($parameters[$name])) {
+                    $params[] = ($parameters[$name]?'t': 'f');
+                }
+                else {
+                    $params[] = &$parameters[$name];
+                }
             } else {
                 $params[] = '';
             }
