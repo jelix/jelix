@@ -201,10 +201,9 @@ class mssqlDbConnection extends jDbConnection
     }
 
     /**
-     * (non-PHPdoc)
-     * 	return the last inserted ID incremented in database.
+     * return the last inserted ID incremented in database.
      *
-     * @see lib/jelix/db/jDbConnection#lastInsertId()
+     * @see jDbConnection::lastInsertId()
      *
      * @param mixed $fromSequence
      */

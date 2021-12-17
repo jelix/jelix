@@ -13,11 +13,11 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-namespace jelix\forms\Builder;
+namespace Jelix\Forms\Builder;
 
-use jelix\forms\HtmlWidget\ParentWidgetInterface;
-use jelix\forms\HtmlWidget\WidgetBase;
-use jelix\forms\HtmlWidget\WidgetInterface;
+use \Jelix\Forms\HtmlWidget\ParentWidgetInterface;
+use \Jelix\Forms\HtmlWidget\WidgetBase;
+use \Jelix\Forms\HtmlWidget\WidgetInterface;
 
 /**
  * Main HTML form builder.
@@ -113,7 +113,7 @@ class HtmlBuilder extends BuilderBase
      *      <li>"method" => "post" or "get". default is "post"</li>
      *      <li>"plugins" => list of class names for widget. keys are controls refs</li>
      *      <li>"attributes" => list of html attributes to put on the form element</li>
-     *      <li>"widgetAttributes" => list of attributes for each widget. keys are controls refs</li>
+     *      <li>"widgetsAttributes" => list of attributes for each widget. keys are controls refs</li>
      *      </ul>
      */
     public function setOptions($options)

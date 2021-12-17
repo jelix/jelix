@@ -16,7 +16,7 @@
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require JELIX_LIB_PATH.'events/jEventListener.class.php';
+require_once(JELIX_LIB_PATH.'events/jEventListener.class.php');
 
 /**
  * Class which represents an event in the event system.

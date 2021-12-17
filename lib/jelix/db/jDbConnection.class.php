@@ -437,7 +437,7 @@ abstract class jDbConnection
      *
      * @param mixed $queryString
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doQuery($queryString);
 
@@ -446,7 +446,7 @@ abstract class jDbConnection
      *
      * @param mixed $queryString
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doExec($queryString);
 
@@ -457,7 +457,7 @@ abstract class jDbConnection
      * @param mixed $offset
      * @param mixed $number
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doLimitQuery($queryString, $offset, $number);
 

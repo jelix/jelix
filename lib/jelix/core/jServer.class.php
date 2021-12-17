@@ -16,7 +16,7 @@
  * @package    jelix
  * @subpackage core
  *
- * @since Jelix 1.3.2
+ * @since 1.3.2
  */
 class jServer
 {

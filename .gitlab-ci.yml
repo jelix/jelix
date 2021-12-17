@@ -11,6 +11,7 @@ cache:
   paths:
     - build/vendor/
     - _docs.cache/
+    - phpdoc
 
 build_dev:
   stage: build

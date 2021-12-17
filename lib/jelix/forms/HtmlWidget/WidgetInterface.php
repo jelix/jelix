@@ -10,7 +10,7 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-namespace jelix\forms\HtmlWidget;
+namespace Jelix\Forms\HtmlWidget;
 
 /**
  * Interface for HTML widgets plugins.

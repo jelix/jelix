@@ -1,0 +1,4 @@
+{% if node.raw %}
+{% else %}
+<pre><code class="language-{{ node.language }} {{ node.startingLineNumber ? 'line-numbers' }}" {{ node.startingLineNumber ? 'data-start=' ~ node.startingLineNumber }}>{{ node.value }}</code></pre>
+{% endif %}

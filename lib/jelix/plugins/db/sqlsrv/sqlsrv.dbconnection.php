@@ -142,9 +142,8 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @see jDbConnection::_doExec()
      *
-     * @param mixed $query
+     * @inheritDoc
      */
     protected function _doExec($query)
     {
