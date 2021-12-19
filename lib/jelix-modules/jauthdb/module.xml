@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jauthdb@modules.jelix.org" name="jauthdb" createdate="2009-07-15">
-        <version date="2021-07-30 17:38">1.7.9-pre</version>
+        <version date="2021-12-19 22:39">1.7.9</version>
         <label lang="en_US">ressources for db driver of jAuth</label>
         <description lang="en_US">It provides a basic dao and install scripts.</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
@@ -10,6 +10,6 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.4" maxversion="1.7.9"/>
+        <jelix minversion="1.7.0-beta.4" maxversion="1.7.10"/>
     </dependencies>
 </module>
