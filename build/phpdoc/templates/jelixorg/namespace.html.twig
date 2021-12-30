@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% include 'components/breadcrumbs.html.twig' %}
+
+    <article class="phpdocumentor-element -namespace">
+        {{ include('components/namespace-title.html.twig') }}
+        {{ include('components/table-of-contents.html.twig', {'namespaces': node.children}) }}
+        {{ include('components/constants.html.twig') }}
+        {{ include('components/functions.html.twig') }}
+    </article>
+{% endblock %}

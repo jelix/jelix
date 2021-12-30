@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2020 Laurent Jouanneau
+ * @copyright   2005-2021 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -115,7 +115,15 @@ abstract class jDbConnection
         }
     }
 
+    /**
+     * alias of close()
+     */
     public function disconnect()
+    {
+        $this->close();
+    }
+
+    public function close()
     {
         if ($this->_connection !== null) {
             $this->_disconnect();
@@ -429,7 +437,7 @@ abstract class jDbConnection
      *
      * @param mixed $queryString
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doQuery($queryString);
 
@@ -438,7 +446,7 @@ abstract class jDbConnection
      *
      * @param mixed $queryString
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doExec($queryString);
 
@@ -449,7 +457,7 @@ abstract class jDbConnection
      * @param mixed $offset
      * @param mixed $number
      *
-     * @return jDbResultSet/boolean
+     * @return jDbResultSet|boolean
      */
     abstract protected function _doLimitQuery($queryString, $offset, $number);
 
@@ -551,7 +559,7 @@ abstract class jDbConnection
             } elseif ($insideString !== false) {
                 $finalQuery .= $token;
             } else {
-                $finalQuery .= preg_replace_callback('/(\\:)([a-zA-Z0-9_]+)/', array($this, '_replaceParam'), $token);
+                $finalQuery .= preg_replace_callback('/(?<!\\:)(\\:)([a-zA-Z0-9_]+)/', array($this, '_replaceParam'), $token);
             }
         }
 

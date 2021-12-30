@@ -69,6 +69,25 @@ class sqlite3DbResultSet extends jDbResultSet
         return (object) $res;
     }
 
+    protected function _fetchAssoc()
+    {
+        if (count($this->buffer)) {
+            return array_shift($this->buffer);
+        }
+        if ($this->ended) {
+            return false;
+        }
+        $res = $this->_idResult->fetchArray(SQLITE3_ASSOC);
+        if ($res === false) {
+            $this->ended = true;
+
+            return false;
+        }
+        ++$this->numRows;
+
+        return $res;
+    }
+
     protected function _free()
     {
         $this->numRows = 0;

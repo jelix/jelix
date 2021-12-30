@@ -98,6 +98,10 @@ $GLOBALS['gLibPath'] = array(
     'KV' => JELIX_LIB_PATH.'kvdb/',
 );
 
+$GLOBALS['gLibClassPath']=array(
+    'jIInstallerComponent' => JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php',
+);
+
 /**
  * function used by php to try to load an unknown class.
  *
@@ -105,8 +109,20 @@ $GLOBALS['gLibPath'] = array(
  */
 function jelix_autoload($class)
 {
-    if (strpos($class, 'jelix\\') === 0) {
-        $f = LIB_PATH.str_replace('\\', DIRECTORY_SEPARATOR, $class).'.php';
+    if (stripos($class, 'jelix') === 0) {
+        $class = str_replace(
+            array('Jelix', '\\'),
+            array('jelix', DIRECTORY_SEPARATOR),
+            $class);
+        if (strpos($class, '/Forms/') !== false) {
+            $f = LIB_PATH.str_replace( 'Forms', 'forms', $class).'.php';
+        }
+        else if (strpos($class, '/Core/') !== false) {
+            $f = LIB_PATH.str_replace( 'Core', 'core', $class).'.php';
+        }
+        else {
+            $f = LIB_PATH.$class.'.php';
+        }
     } elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Config|Installer|KV).*/i', $class, $m)) {
         $f = $GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
     } elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
@@ -132,6 +148,8 @@ function jelix_autoload($class)
         }
 
         return;
+    } elseif (isset($GLOBALS['gLibClassPath'][$class])) {
+        $f = $GLOBALS['gLibClassPath'][$class];
     } else {
         $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
     }

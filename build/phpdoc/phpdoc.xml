@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<phpdoc>
-    <title>Jelix 1.8</title>
-    <parser>
-        <target>__PARSER_CACHE__</target>
-        <encoding>utf8</encoding>
-        <markers>
-            <item>TODO</item>
-            <item>FIXME</item>
-        </markers>
-        <extensions>
-            <extension>php</extension>
-        </extensions>
-    </parser>
-    <transformer>
-        <target>__TARGET_PATH__</target>
-    </transformer>
-    <transformations>
-        <template name="responsive-twig"/>
-    </transformations>
-    <files>
-        <directory>lib/jelix/</directory>
-        <directory>lib/jelix-modules/jacl2/classes/</directory>
-        <directory>lib/jelix-modules/jacl2db/classes/</directory>
-        <directory>lib/jelix-modules/jpref/classes/</directory>
-        <directory>vendor/jelix/castor/lib/</directory>
-        <directory>vendor/jelix/feeds-module/jfeeds/</directory>
-        <directory>vendor/jelix/file-utilities/lib/</directory>
-        <directory>vendor/jelix/inifile/lib/</directory>
-        <directory>vendor/jelix/simplelocalization/lib/</directory>
-        <directory>vendor/jelix/soap-server-module/jsoap/</directory>
-        <directory>vendor/jelix/version/</directory>
-        <directory>vendor/jelix/webservice-helper/</directory>
-        <file>vendor/phpmailer/phpmailer/class.*</file>
-        <ignore>*.ini.php</ignore>
-        <ignore>lib/jelix/checker.php</ignore>
-        <ignore>lib/jelix/docs/</ignore>
-        <ignore>install/*</ignore>
-    </files>
-</phpdoc>
+<phpdocumentor
+        configVersion="3"
+>
+    <title>Jelix __VERSION__</title>
+    <paths>
+        <output>../_docs/</output>
+        <cache>../_docs.cache</cache>
+    </paths>
+    <version number="__VERSION__">
+        <api>
+            <source dsn=".">
+                <path>lib/jelix</path>
+                <path>lib/jelix/</path>
+                <path>lib/jelix-modules/jacl2/classes/</path>
+                <path>lib/jelix-modules/jacl2db/classes/</path>
+                <path>lib/jelix-modules/jpref/classes/</path>
+                <path>vendor/jelix/castor/lib/</path>
+                <path>vendor/jelix/feeds-module/jfeeds/</path>
+                <path>vendor/jelix/file-utilities/lib/</path>
+                <path>vendor/jelix/inifile/lib/</path>
+                <path>vendor/jelix/simplelocalization/lib/</path>
+                <path>vendor/jelix/soap-server-module/jsoap/</path>
+                <path>vendor/jelix/version/</path>
+                <path>vendor/jelix/webservice-helper/</path>
+                <path>vendor/phpmailer/phpmailer/class.*</path>
+            </source>
+            <ignore hidden="true" symlinks="true">
+                <path>*.ini.php</path>
+                <path>lib/jelix/checker.php</path>
+                <path>lib/jelix/docs/</path>
+                <path>install/*</path>
+            </ignore>
+            <extensions>
+                <extension>php</extension>
+            </extensions>
+            <markers>
+                <marker>TODO</marker>
+                <marker>FIXME</marker>
+            </markers>
+        </api>
+    </version>
+    <template name="__TEMPLATE_PATH__/jelixorg"/>
+</phpdocumentor>
+

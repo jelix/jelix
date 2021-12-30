@@ -36,6 +36,12 @@ class ociDbResultSet extends jDbResultSet
     {
     }
 
+    protected function _fetchAssoc()
+    {
+        $res = oci_fetch_assoc($this->_idResult);
+        return $res;
+    }
+
     protected function _rewind()
     {
     }

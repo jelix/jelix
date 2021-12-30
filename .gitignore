@@ -14,3 +14,4 @@ composer.lock
 assets/node_modules/
 .drafts
 .phpunit.result.cache
+/phpdoc

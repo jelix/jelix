@@ -33,6 +33,8 @@ class jFormsControlUpload2 extends jFormsControl
 
     protected $error;
 
+    protected $modified = false;
+
     public function setForm($form)
     {
         parent::setForm($form);
@@ -94,8 +96,12 @@ class jFormsControlUpload2 extends jFormsControl
      */
     public function setValueFromRequest($request)
     {
-        $action = $request->getParam($this->ref.'_jf_action', '');
+        $action = $request->getParam($this->ref . '_jf_action', '');
+        $this->processUpload($action, isset($_FILES[$this->ref]) ? $_FILES[$this->ref] : null);
+    }
 
+    protected function processUpload($action, $fileInfo)
+    {
         if ($this->isReadOnly()) {
             $action = 'keep';
         }
@@ -106,6 +112,7 @@ class jFormsControlUpload2 extends jFormsControl
                 $this->error = null;
                 $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
 
+                $this->modified = false;
                 break;
             case 'keepnew':
                 if ($this->container->privateData[$this->ref]['newfile'] != '' &&
@@ -116,9 +123,11 @@ class jFormsControlUpload2 extends jFormsControl
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
                 }
 
+                $this->modified = true;
                 break;
             case 'new':
-                $fileName = $this->processNewFile();
+                $fileName = $this->processNewFile($fileInfo);
+                $this->modified = true;
                 if ($fileName) {
                     if ($this->container->privateData[$this->ref]['newfile'] != $fileName) {
                         $this->deleteNewFile();
@@ -128,6 +137,7 @@ class jFormsControlUpload2 extends jFormsControl
                 } elseif ($this->container->privateData[$this->ref]['newfile'] != '') {
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['newfile'];
                 } else {
+                    $this->modified = false;
                     $this->container->privateData[$this->ref]['newfile'] = '';
                     $this->container->data[$this->ref] = $this->container->privateData[$this->ref]['originalfile'];
                 }
@@ -136,30 +146,34 @@ class jFormsControlUpload2 extends jFormsControl
             case 'del':
                 $this->deleteNewFile();
                 if (!$this->required) {
+                    $this->modified = true;
                     $this->container->data[$this->ref] = '';
+                } else {
+                    $this->modified = false;
+                    $this->error = jForms::ERRDATA_REQUIRED;
                 }
-
                 break;
             default:
         }
         $this->container->privateData[$this->ref]['action'] = $action;
     }
 
-    protected function processNewFile()
+    protected function processNewFile($fileInfo)
     {
         $this->error = null;
 
-        if (isset($_FILES[$this->ref])) {
-            $this->fileInfo = $_FILES[$this->ref];
+        if ($fileInfo) {
+            $this->fileInfo = $fileInfo;
         } else {
             $this->fileInfo = array('name' => '', 'type' => '', 'size' => 0,
-                'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, );
+                'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE,);
         }
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if ($this->required) {
                 $this->error = jForms::ERRDATA_REQUIRED;
             }
+            return null;
         } else {
             if ($this->fileInfo['error'] == UPLOAD_ERR_NO_TMP_DIR ||
                 $this->fileInfo['error'] == UPLOAD_ERR_CANT_WRITE
@@ -175,7 +189,7 @@ class jFormsControlUpload2 extends jFormsControl
             }
 
             if ($this->fileInfo['error'] == UPLOAD_ERR_PARTIAL ||
-                !is_uploaded_file($this->fileInfo['tmp_name'])
+                !$this->isUploadedFile($this->fileInfo['tmp_name'])
             ) {
                 $this->error = jForms::ERRDATA_INVALID;
             }
@@ -193,9 +207,9 @@ class jFormsControlUpload2 extends jFormsControl
             }
         }
         if ($this->error === null) {
-            $filePath = $this->getTempFile($_FILES[$this->ref]['name']);
-            if (move_uploaded_file($_FILES[$this->ref]['tmp_name'], $filePath)) {
-                return $_FILES[$this->ref]['name'];
+            $filePath = $this->getTempFile($this->fileInfo['name']);
+            if ($this->moveUploadedFile($this->fileInfo['tmp_name'], $filePath)) {
+                return $this->fileInfo['name'];
             }
             $this->error = jForms::ERRDATA_FILE_UPLOAD_ERROR;
         }
@@ -226,6 +240,14 @@ class jFormsControlUpload2 extends jFormsControl
         }
 
         return null;
+    }
+
+    public function isModified()
+    {
+        if ($this->modified) {
+            return true;
+        }
+        return parent::isModified();
     }
 
     public function getUniqueFileName($directoryPath, $alternateName = '')
@@ -299,6 +321,16 @@ class jFormsControlUpload2 extends jFormsControl
             }
             $this->container->data[$this->ref] = '';
         }
+    }
+
+    protected function isUploadedFile($file)
+    {
+        return is_uploaded_file($file);
+    }
+
+    protected function moveUploadedFile($file, $target)
+    {
+        return move_uploaded_file($file, $target);
     }
 
     public function getWidgetType()

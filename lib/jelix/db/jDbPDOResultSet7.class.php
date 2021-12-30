@@ -110,6 +110,31 @@ class jDbPDOResultSet7 extends PDOStatement
     }
 
     /**
+     * fetch a result. The result is returned as an associative array.
+     *
+     * @return array|bool result array or false if there is no more result
+     */
+    public function fetchAssociative()
+    {
+        return parent::fetch(\PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Return all results in an array. Each result is an associative array.
+     *
+     * @return array[]
+     */
+    public function fetchAllAssociative()
+    {
+        $result = array();
+        while ($res = $this->fetchAssociative()) {
+            $result[] = $res;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param string $text a binary string to unescape
      *
      * @return string the unescaped string

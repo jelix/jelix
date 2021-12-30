@@ -1,0 +1,6 @@
+{% apply spaceless %}
+    <figure{% if node.classesString %} class="{{ node.classesString }}"{% endif %}>
+        {{ uml(node.value) }}
+    {% if node.caption %}<figcaption>test{{ node.caption }}</figcaption>{% endif %}
+    </figure>
+{% endapply %}

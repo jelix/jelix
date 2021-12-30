@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% include('components/breadcrumbs.html.twig') %}
+
+    <article class="phpdocumentor-element -file">
+        {{ include('components/file-title.html.twig') }}
+        {{ include('components/element-header.html.twig') }}
+
+        {{ include('components/constants.html.twig') }}
+        {{ include('components/functions.html.twig') }}
+    </article>
+{% endblock %}

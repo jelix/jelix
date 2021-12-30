@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  *
- * @copyright  2005-2020 Laurent Jouanneau
+ * @copyright  2005-2021 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -317,5 +317,134 @@ class jDbPgsqlTools extends jDbTools
         }
         $sqlQueries = str_replace('%%PREFIX%%', $prefix, file_get_contents($file));
         $this->_conn->query($sqlQueries);
+    }
+
+    public function decodeArrayValue($value)
+    {
+        if (!is_string($value) || $value == '' || $value[0] != '{') {
+            return false;
+        }
+        $tokens = preg_split("/([\\{\\},\"\\\\])/", $value, 0, PREG_SPLIT_DELIM_CAPTURE);
+        $array = '';
+        $inString = false;
+        $value = null;
+        $previousTok = '';
+
+        foreach($tokens as $tok) {
+            if ($tok === '') {
+                continue;
+            }
+            if ($inString) {
+
+                switch($tok) {
+                    case '\\':
+                        $previousTok = $tok;
+                        $value .= $tok;
+                        break;
+                    case '"':
+                        if ($previousTok != '\\') {
+                            $inString = false;
+                            $array .= $value.'"';
+                            $value = null;
+                        }
+                        else {
+                            $value .= $tok;
+                            $previousTok = '';
+                        }
+                        break;
+                    default:
+                        $value .= $tok;
+                        $previousTok = '';
+                }
+            }
+            else if ($tok == '{') {
+                $array .= '[';
+            }
+            elseif($tok == '}') {
+                $array .= ']';
+            }
+            elseif($tok == ',') {
+                $array .= ',';
+            }
+            elseif($tok == '"') {
+                $previousTok = '';
+                $inString = true;
+                $value = '"';
+            }
+            else if (is_numeric($tok)) {
+                $array .= $tok;
+            }
+            else {
+                if ($tok == 'null' && $tok == 'true' && $tok == 'false') {
+                    $array .= $tok;
+                }
+                else {
+                    $array .= '"'.$tok.'"';
+                }
+            }
+        }
+        return json_decode($array);
+    }
+
+
+    const ARRAY_VALUE_TYPE_INT = 'int';
+    const ARRAY_VALUE_TYPE_FLOAT = 'float';
+    const ARRAY_VALUE_TYPE_TEXT = 'text';
+
+    public function encodeArrayValue(array $value, $type)
+    {
+        $str = '{';
+
+        $first = true;
+        foreach($value as $k => $v) {
+            if (is_array($v)) {
+                $valStr = $this->encodeArrayValue($v, $type);
+            }
+            else if (is_numeric($v)) {
+                if ($type == self::ARRAY_VALUE_TYPE_INT || $type == self::ARRAY_VALUE_TYPE_FLOAT) {
+                    $valStr = (string) $v;
+                }
+                else {
+                    $valStr = '"'.((string) $v).'"';
+                }
+            }
+            else if (is_bool($v)) {
+                if ($type == self::ARRAY_VALUE_TYPE_INT || $type == self::ARRAY_VALUE_TYPE_FLOAT) {
+                    $valStr = ($v ? '1':'0');
+                }
+                else {
+                    $valStr = ($v ? '"true"':'"false"');
+                }
+            }
+            else if (is_string($v)) {
+                if ($type == self::ARRAY_VALUE_TYPE_INT) {
+                    $valStr = (string) intval($v);
+                }
+                else if ($type == self::ARRAY_VALUE_TYPE_FLOAT) {
+                    $valStr = (string) floatval($v);
+                }
+                else if (preg_match("/[\\{\\},\"\\\\]/", $v)) {
+                    $valStr = json_encode($v);
+                }
+                else {
+                    $valStr = $v;
+                }
+            }
+            else {
+                // ignore objects an other types?
+                continue;
+            }
+
+            if ($first) {
+                $str .= $valStr;
+            }
+            else {
+                $str .= "," . $valStr;
+            }
+
+            $first = false;
+        }
+
+        return $str.'}';
     }
 }

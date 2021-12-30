@@ -14,9 +14,9 @@
  * @see         http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require JELIX_LIB_PATH.'forms/jFormsControl.class.php';
-require JELIX_LIB_PATH.'forms/jFormsDatasource.class.php';
-require_once JELIX_LIB_UTILS_PATH.'jDatatype.class.php';
+require_once (JELIX_LIB_PATH.'forms/jFormsControl.class.php');
+require_once (JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
+require_once (JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
 
 /**
  * exception for jforms.
@@ -530,7 +530,7 @@ abstract class jFormsBase
      *
      * @return array
      *
-     * @see jFormsBase::check
+     * @see jFormsBase::check()
      */
     public function getErrors()
     {
@@ -676,7 +676,7 @@ abstract class jFormsBase
      *
      * @return jFormsControl
      *
-     * @since jelix 1.0
+     * @since 1.0
      */
     public function getControl($name)
     {
@@ -757,24 +757,19 @@ abstract class jFormsBase
     public function getModifiedControls()
     {
         if (count($this->container->originalData)) {
-
-            // we musn't use array_diff_assoc because it convert array values
-            // to "Array" before comparison, so these values are always equal for it.
-            // We shouldn't use array_udiff_assoc  because it crashes PHP, at least on
-            // some PHP version.
-            // so we have to compare by ourself.
-
             $result = array();
-            $orig = &$this->container->originalData;
-            foreach ($this->container->data as $k => $v1) {
-                if (!array_key_exists($k, $orig)) {
+
+            $orig = & $this->container->originalData;
+
+            foreach($this->controls as $ref => $ctrl) {
+
+                if (!array_key_exists($ref, $orig)) {
                     continue;
                 }
 
-                if ($this->_diffValues($orig[$k], $v1)) {
-                    $result[$k] = $orig[$k];
+                if ($ctrl->isModified()) {
+                    $result[$ref] = $orig[$ref];
 
-                    continue;
                 }
             }
 
@@ -782,43 +777,6 @@ abstract class jFormsBase
         }
 
         return $this->container->data;
-    }
-
-    /**
-     * @param mixed $v1
-     * @param mixed $v2
-     *
-     * @return bool true if the values are not equals
-     */
-    protected function _diffValues(&$v1, &$v2)
-    {
-        if (is_array($v1) && is_array($v2)) {
-            $comp = array_merge(array_diff($v1, $v2), array_diff($v2, $v1));
-
-            return !empty($comp);
-        }
-
-        if ($v1 === $v2) {
-            return false;
-        }
-
-        if (($v1 === '' && $v2 === null) || ($v1 === null && $v2 === '')) {
-            return false;
-        }
-
-        if (is_numeric($v1) != is_numeric($v2)) {
-            return true;
-        }
-
-        if (empty($v1) && empty($v2)) {
-            return false;
-        }
-
-        if (is_array($v1) || is_array($v2)) {
-            return true;
-        }
-
-        return ($v1 != $v2);
     }
 
     /**

@@ -3,8 +3,6 @@
  * @package    jelix
  * @subpackage jtpl_plugin
  *
- * @version    $Id$
- *
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *

@@ -71,6 +71,21 @@ class sqlsrvDbResultSet extends jDbResultSet
     {
     }
 
+    public function fetchAssociative()
+    {
+        if (! $this->_idResult) {
+            return false;
+        }
+        $res = sqlsrv_fetch_array($this->_idResult, SQLSRV_FETCH_ASSOC, $this->nextFetchRow);
+
+        $this->nextFetchRow = SQLSRV_SCROLL_NEXT;
+        return $res;
+    }
+
+    protected function _fetchAssoc()
+    {
+    }
+
     protected function _free()
     {
         return sqlsrv_free_stmt($this->_idResult);

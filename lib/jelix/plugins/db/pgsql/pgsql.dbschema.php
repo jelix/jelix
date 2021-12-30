@@ -40,7 +40,7 @@ class pgsqlDbTable extends jDbTable
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
         $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod,
-                FORMAT_TYPE(a.atttypid, a.atttypmod) AS type,
+                FORMAT_TYPE(a.atttypid, a.atttypmod) AS type, a.attndims,
                 {$adColName}, co.contype AS primary, co.conname
             FROM pg_attribute AS a
             JOIN pg_class AS c ON a.attrelid = c.oid
@@ -104,6 +104,8 @@ class pgsqlDbTable extends jDbTable
                     $this->primaryKey->columns[] = $name;
                 }
             }
+
+            $col->arrayDims = intval($line->attndims);
 
             $this->columns[$name] = $col;
         }
