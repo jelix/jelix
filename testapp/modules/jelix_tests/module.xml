@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jelix_tests@testapp.jelix.org" name="jelix_tests">
-        <version date="2021-12-19 22:39">1.7.9</version>
+        <version date="2021-12-31 00:47">1.7.10-pre</version>
         <label>Jelix tests</label>
         <description>unit tests for jelix</description>
         <license URL=""/>
@@ -12,7 +12,7 @@
     </info>
     <dependencies>
         <jelix minversion="1.7.0-beta.3" maxversion="1.7.10"/>
-        <module name="testurls" minversion="1.7.9" maxversion="1.7.9"/>
+        <module name="testurls" minversion="1.7.10-pre" maxversion="1.7.10-pre"/>
                <module name="jauthdb"/>
                <module name="jacl2db"/>
                <module name="jacldb"/>
