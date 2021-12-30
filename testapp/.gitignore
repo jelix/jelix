@@ -25,3 +25,6 @@ tests-jelix/jelix/installer/app1/var/config/profiles.ini.php
 tests-jelix/.phpunit.result.cache
 docker-conf/certs/*
 !docker-conf/certs/.dummy
+www/newep.php
+var/config/newep
+app/system/newep
