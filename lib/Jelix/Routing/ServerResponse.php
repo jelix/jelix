@@ -253,7 +253,7 @@ abstract class ServerResponse
      * @param mixed $date
      * @param mixed $cleanCacheHeader
      *
-     * @see _normalizeDate
+     * @see jResponse::_normalizeDate()
      */
     public function setExpires($date, $cleanCacheHeader = true)
     {

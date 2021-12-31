@@ -181,7 +181,7 @@ class jImageModifier
      * @param null|mixed $config
      * @param null|mixed $src
      *
-     * @return array. keys are
+     * @return array keys are
      *                src_url, src_path, cache_path, cache_url
      */
     public static function computeUrlFilePath($config = null, $src = null)

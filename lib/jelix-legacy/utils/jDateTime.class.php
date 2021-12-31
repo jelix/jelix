@@ -8,7 +8,7 @@
  * @contributor Loic Mathaud
  * @contributor Florian Hatat
  * @contributor Emmanuel Hesry, Brice G.
- * @contributor Hadrien Lanneau <hadrien@over-blog.com>
+ * @contributor Hadrien Lanneau
  *
  * @copyright   2005-2011 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
@@ -112,7 +112,7 @@ class jDateTime
      * @see http://php.net/manual/fr/function.date.php
      *
      * @param string    $lf  Date string format
-     * @param timestamp $str The timestamp to parse
+     * @param string $str The timestamp to parse
      *
      * @return bool false if the string $str has a bad format
      */
@@ -137,7 +137,7 @@ class jDateTime
      *
      * @return bool
      *
-     * @author Hadrien Lanneau (hadrien at over-blog dot com)
+     * @author Hadrien Lanneau
      */
     public function isNull()
     {
@@ -151,7 +151,7 @@ class jDateTime
      *
      * @return string the string date
      *
-     * @see jDateTime:$defaultFormat
+     * @see jDateTime::$defaultFormat
      */
     public function toString($format = -1)
     {
@@ -251,7 +251,7 @@ class jDateTime
      *
      * @return bool true if the format of $str has been parsed well
      *
-     * @see jDateTime:$defaultFormat
+     * @see jDateTime::$defaultFormat
      */
     public function setFromString($str, $format = -1)
     {
@@ -372,7 +372,7 @@ class jDateTime
      * You can specify the duration in a jDuration object or give each value of
      * the duration.
      *
-     * @param jDuration/int $year   the duration value or a year with 4 digits
+     * @param jDuration|int $year   the duration value or a year with 4 digits
      * @param int           $month  month with 2 digits
      * @param int           $day    day with 2 digits
      * @param int           $hour   hour with 2 digits
@@ -411,7 +411,7 @@ class jDateTime
      * You can specify the duration in a jDuration object or give each value of
      * the duration.
      *
-     * @param jDuration/int $year   the duration value or a year with 4 digits
+     * @param jDuration|int $year   the duration value or a year with 4 digits
      * @param int           $month  month with 2 digits
      * @param int           $day    day with 2 digits
      * @param int           $hour   hour with 2 digits
@@ -514,7 +514,7 @@ class jDateTime
      *
      * @return jDateTime
      *
-     * @author Hadrien Lanneau <hadrien@over-blog.com>
+     * @author Hadrien Lanneau
      *
      * @since 1.2
      */

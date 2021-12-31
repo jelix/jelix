@@ -11,6 +11,7 @@ cache:
   paths:
     - build/vendor/
     - _docs.cache/
+    - phpdoc
 
 build_dev:
   stage: build
@@ -22,6 +23,8 @@ build_dev:
       - _dist
   except:
     - tags
+  tags:
+    - jelix
 
 build_release:
   stage: build
@@ -33,6 +36,8 @@ build_release:
       - _dist
   only:
     - tags
+  tags:
+    - jelix
 
 build_ref_doc:
   stage: build_ref_doc
@@ -44,6 +49,8 @@ build_ref_doc:
       - _docs
   only:
     - tags
+  tags:
+    - jelix
 
 deploy_package_dev:
   stage: deploy_package
@@ -53,6 +60,8 @@ deploy_package_dev:
     - build_dev
   except:
     - tags
+  tags:
+    - jelix
 
 deploy_package_release:
   stage: deploy_package
@@ -62,6 +71,8 @@ deploy_package_release:
     - build_release
   only:
     - tags
+  tags:
+    - jelix
 
 deploy_ref_doc:
   stage: deploy_package
@@ -69,3 +80,5 @@ deploy_ref_doc:
     - make deploy_docs
   only:
     - tags
+  tags:
+    - jelix

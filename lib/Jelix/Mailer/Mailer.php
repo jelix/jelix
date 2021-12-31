@@ -226,7 +226,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
      * @param string $address
      * @param string $kind    One of 'to', 'cc', 'bcc', or 'ReplyTo'
      *
-     * @return array( $name, $address )
+     * @return array  contains $name, $address.
      */
     public function getAddrName($address, $kind = false)
     {
