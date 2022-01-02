@@ -126,6 +126,8 @@ class jAuth
             $config['password_hash_method'] = $password_hash_method;
             $config['password_hash_options'] = $password_hash_options;
 
+            $config[$config['driver']] = self::_buildDriverConfig($config, jApp::config());
+
             if (isset($config['url_return_external_allowed_domains']) && $config['url_return_external_allowed_domains']) {
                 if (is_string($config['url_return_external_allowed_domains'])) {
                     $config['url_return_external_allowed_domains'] = array($config['url_return_external_allowed_domains']);
@@ -150,16 +152,13 @@ class jAuth
         return self::getDriver();
     }
 
-
-    public static function getDriverConfig()
+    protected static function _buildDriverConfig($authConfig, $appConfig)
     {
-        $config = self::loadConfig();
-        $driver = $config['driver'];
-        if (isset($config[$driver]) && is_array($config[$driver])) {
-            $driverConfig =  $config[$driver];
+        $driver = $authConfig['driver'];
+        if (isset($authConfig[$driver]) && is_array($authConfig[$driver])) {
+            $driverConfig =  $authConfig[$driver];
         }
         else {
-            $appConfig = jApp::config();
             $section = 'auth_'.strtolower($driver);
             if (isset($appConfig[$section]) && is_array($appConfig[$section])) {
                 $driverConfig = $appConfig[$section];
@@ -169,9 +168,21 @@ class jAuth
             }
         }
 
-        $driverConfig['password_hash_method'] = $config['password_hash_method'];
-        $driverConfig['password_hash_options'] = $config['password_hash_options'];
+        $driverConfig['password_hash_method'] = $authConfig['password_hash_method'];
+        $driverConfig['password_hash_options'] = $authConfig['password_hash_options'];
         return $driverConfig;
+    }
+
+    /**
+     * @return mixed
+     * @throws jException
+     */
+    public static function getDriverConfig()
+    {
+        $authConfig = self::loadConfig();
+        $driver = $authConfig['driver'];
+
+        return $authConfig[$driver];
     }
 
     /**
