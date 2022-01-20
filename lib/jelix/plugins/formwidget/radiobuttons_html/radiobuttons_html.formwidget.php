@@ -29,7 +29,6 @@ class radiobuttons_htmlFormWidget extends checkboxes_htmlFormWidget
         $attr = $this->getControlAttributes();
         $value = $this->getValue();
 
-        $id = $this->builder->getName().'_'.$this->ctrl->ref.'_'; // FIXME should we use it?
         $attr['name'] = $this->ctrl->ref;
         unset($attr['title']);
         if (is_array($value)) {
@@ -40,8 +39,17 @@ class radiobuttons_htmlFormWidget extends checkboxes_htmlFormWidget
             }
         }
         $value = (string) $value;
-        $span = '<span class="jforms-radio jforms-ctl-'.$this->ctrl->ref.'"><input type="radio"';
-        $this->showRadioCheck($attr, $value, $span);
+        $this->showRadioCheck($attr, $value, '');
         $this->outputJs($this->ctrl->ref);
+    }
+
+    protected function displayRadioCheckbox($attr, $label, $checked)
+    {
+        echo '<span class="jforms-radio jforms-ctl-'.$this->ctrl->ref.'"><input type="radio"';
+        $this->_outputAttr($attr);
+        if ($checked) {
+            echo ' checked';
+        }
+        echo '/>','<label for="',$attr['id'],'">',htmlspecialchars($label),"</label></span> <br/>\n";
     }
 }

@@ -27,13 +27,15 @@
      {
          $attr = $this->getControlAttributes();
 
+         $outputAttr = array(
+             'class' => 'jforms-value '.$attr['class']
+         );
+
          unset($attr['readonly'], $attr['class']);
 
          if (isset($attr['title'])) {
-             $hint = ' title="'.htmlspecialchars($attr['title']).'"';
+             $outputAttr['title'] = $attr['title'];
              unset($attr['title']);
-         } else {
-             $hint = '';
          }
 
          $attr['type'] = 'hidden';
@@ -41,7 +43,14 @@
          echo '<input';
          $this->_outputAttr($attr);
          echo '/>';
-         echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($attr['value']),"</span>\n";
+         $this->displayControl($outputAttr, $attr['value']);
          $this->parentWidget->addJs('c=null;');
+     }
+
+     protected function displayControl($outputAttr, $value)
+     {
+         echo '<span ';
+         $this->_outputAttr($outputAttr);
+         echo '>',htmlspecialchars($value),"</span>\n";
      }
  }

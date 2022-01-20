@@ -90,8 +90,6 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         if ($this->ctrl->hasCheckbox) {
-            echo '<fieldset id="',$attr['id'],'" class="jforms-ctrl-group"><legend>',
-                '<input ';
             $chkattr = $attr;
             $chkattr['class'] = str_replace('jforms-ctrl-group', '', $chkattr['class']);
             $chkattr['type'] = 'checkbox';
@@ -101,14 +99,12 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
             if ($value == $this->ctrl->valueOnCheck) {
                 $chkattr['checked'] = 'true';
             }
-            $this->_outputAttr($chkattr);
-            echo '> <label for="'.$attr['id'].'_checkbox'.'">',htmlspecialchars($this->ctrl->label),"</label></legend>\n";
+            $this->displayStartGroup($attr['id'], $this->ctrl->label, $chkattr);
             $this->jsGroupInternal($this->ctrl);
         } else {
-            echo '<fieldset id="',$attr['id'],'" class="jforms-ctrl-group"><legend>',htmlspecialchars($this->ctrl->label),"</legend>\n";
+            $this->displayStartGroup($attr['id'], $this->ctrl->label);
         }
 
-        echo '<table class="jforms-table-group" border="0">',"\n";
         foreach ($this->ctrl->getChildControls() as $ctrlref => $c) {
             if ($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') {
                 continue;
@@ -117,31 +113,59 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
                 continue;
             }
             $widget = $this->builder->getWidget($c, $this);
-            echo '<tr><th scope="row">';
-            $widget->outputLabel();
-            echo "</th>\n<td>";
-            $widget->outputControl();
-            $widget->outputHelp();
-            echo "</td></tr>\n";
+            $this->displayChildControl($widget);
             if ($this->ctrl->hasCheckbox) {
                 $this->parentWidget->addJs("c2.addControl(c);\n");
             }
         }
-        echo "</table></fieldset>\n";
+        $this->displayEndGroup();
         if ($this->ctrl->hasCheckbox) {
             $this->parentWidget->addJs("c2.showActivate();\n");
         }
+    }
+
+    protected function displayStartGroup($groupId, $label, $checkBoxAttr=array())
+    {
+        if (count($checkBoxAttr) == 0) {
+            echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',htmlspecialchars($label),"</legend>\n";
+        }
+        else {
+            echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',
+            '<input ';
+            $this->_outputAttr($checkBoxAttr);
+            echo '> <label for="'.$checkBoxAttr['id'].'">',htmlspecialchars($label),"</label></legend>\n";
+        }
+        echo '<table class="jforms-table-group" border="0">',"\n";
+    }
+
+    /**
+     * @param \Jelix\Forms\HtmlWidget\WidgetInterface $widget
+     */
+    protected function displayChildControl($widget)
+    {
+        echo '<tr><th scope="row">';
+        $widget->outputLabel();
+        echo "</th>\n<td>";
+        $widget->outputControl();
+        $widget->outputHelp();
+        echo "</td></tr>\n";
+    }
+
+    protected function displayEndGroup()
+    {
+        echo "</table></fieldset>\n";
     }
 
     public function outputControlValue()
     {
         $attr = $this->getValueAttributes();
 
-        echo '<fieldset id="',$attr['id'],'"><legend>',htmlspecialchars($this->ctrl->label),"</legend>\n";
-        if ($this->ctrl->hasCheckbox && $this->getValue() != $this->ctrl->valueOnCheck) {
+        $showChildControl = ($this->ctrl->hasCheckbox && $this->getValue() != $this->ctrl->valueOnCheck);
+        $this->displayStartValueGroup($attr['id'], $this->ctrl->label, $showChildControl);
+
+        if (!$showChildControl) {
             parent::outputControlValue();
         } else {
-            echo '<table class="jforms-table-group" border="0">',"\n";
             foreach ($this->ctrl->getChildControls() as $ctrlref => $c) {
                 if ($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') {
                     continue;
@@ -150,14 +174,51 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
                     continue;
                 }
                 $widget = $this->builder->getWidget($c, $this);
-                echo '<tr><th scope="row">';
-                $widget->outputLabel('', false);
-                echo "</th>\n<td>";
-                $widget->outputControlValue();
-                echo "</td></tr>\n";
+                $this->displayChildControlValue($widget);
             }
-            echo '</table>';
+        }
+        $this->displayEndValueGroup($showChildControl);
+    }
+
+
+    /**
+     * @param $groupId
+     * @param $label
+     * @param boolean $hasChildControlValue true if all values of child controls will be displayed
+     * @return void
+     */
+    protected function displayStartValueGroup($groupId, $label, $hasChildControlValue)
+    {
+
+        echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',htmlspecialchars($label),"</legend>\n";
+        if ($hasChildControlValue) {
+            echo '<table class="jforms-table-group" border="0">',"\n";
+        }
+    }
+
+    /**
+     * @param \Jelix\Forms\HtmlWidget\WidgetInterface $widget
+     */
+    protected function displayChildControlValue($widget)
+    {
+        echo '<tr><th scope="row">';
+        $widget->outputLabel('', false);
+        echo "</th>\n<td>";
+        $widget->outputControlValue();
+        echo "</td></tr>\n";
+    }
+
+    /**
+     * @param boolean $hasChildControlValue true if all values of child controls have been displayed
+     * @return void
+     */
+    protected function displayEndValueGroup($hasChildControlValue)
+    {
+        if ($hasChildControlValue) {
+            echo "</table>\n";
         }
         echo "</fieldset>\n";
     }
+
+
 }

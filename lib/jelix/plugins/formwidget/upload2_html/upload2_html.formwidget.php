@@ -61,14 +61,13 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
      */
     protected function filterUploadAttributes(&$attr)
     {
-        foreach(array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
-                    'baseURI', 'imgMaxWidth', 'imgMaxHeight') as $parameter) {
+        foreach (array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
+            'baseURI', 'imgMaxWidth', 'imgMaxHeight', ) as $parameter) {
             if (isset($attr[$parameter])) {
-                $this->$parameter = $attr[$parameter];
+                $this->{$parameter} = $attr[$parameter];
                 unset($attr[$parameter]);
             }
         }
-
     }
 
     //------ ParentBuilderInterface
@@ -178,87 +177,121 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             }
         }
 
-        if (count($choices) > 1) {
-            echo '<ul class="jforms-choice" >', "\n";
-            $idItem = $this->builder->getName().'_'.$this->ctrl->ref.'_jf_action_';
-            $idChoice = $this->builder->getName().'_'.$this->ctrl->ref;
-            $jFormsJsVarName = $this->builder->getjFormsJsVarName();
-            $attrRadio = ' type="radio" name="'.$this->ctrl->ref.'_jf_action"'.
-                ' onclick="'.$jFormsJsVarName.'.getForm(\''.$this->builder->getName().
-                '\').getControl(\''.$this->ctrl->ref.'_jf_action\').activate(\'';
-            $attrRadioSuffix = '\')"';
-
-            if ($this->ctrl->isReadOnly()) {
-                $attrRadio .= ' readonly';
-            }
-            $this->jsChoiceInternal();
-        } else {
+        if (count($choices) <= 1) {
             $this->outputJs();
+            echo '<input type="hidden" name="'.$this->ctrl->ref.'_jf_action" value="new" />';
+            $this->displayInputFile($attr);
+
+            return;
         }
 
+        $this->displayStartChoice($attr['id'].'_choice_list', '');
+
+        $idItem = $this->builder->getName().'_'.$this->ctrl->ref.'_jf_action_';
+        $idChoice = $this->builder->getName().'_'.$this->ctrl->ref;
+        $jFormsJsVarName = $this->builder->getjFormsJsVarName();
+        $attrRadio = ' type="radio" name="'.$this->ctrl->ref.'_jf_action"'.
+            ' onclick="'.$jFormsJsVarName.'.getForm(\''.$this->builder->getName().
+            '\').getControl(\''.$this->ctrl->ref.'_jf_action\').activate(\'';
+        $attrRadioSuffix = '\')"';
+
+        if ($this->ctrl->isReadOnly()) {
+            $attrRadio .= ' readonly';
+        }
+        $this->jsChoiceInternal();
+
         if (isset($choices['keep'])) {
-            echo '<li id="'.$idItem.'keep_item">',
-                '<label>
-                    <input '.$attrRadio.'keep'.$attrRadioSuffix.'  id="'.$idChoice.'_jf_action_keep" value="keep" '.
-                ($action == 'keep' ? 'checked' : '').'/>';
-            if ($choices['keep'] === '') {
-                echo jLocale::get('jelix~jforms.upload.choice.keep.empty').
-                    '</label> ';
-            } else {
-                echo jLocale::get('jelix~jforms.upload.choice.keep').
-                    '</label> ';
+            $this->displayStartChoiceItem(
+                $idItem.'keep_item',
+                $idChoice.'_jf_action_keep',
+                $attrRadio.'keep'.$attrRadioSuffix.' value="keep"',
+                ($action == 'keep'),
+                (
+                    $choices['keep'] === '' ?
+                    jLocale::get('jelix~jforms.upload.choice.keep.empty')
+                    : jLocale::get('jelix~jforms.upload.choice.keep')
+                )
+            );
+
+            if ($choices['keep'] !== '') {
                 $this->_outputControlValue($choices['keep'], 'original');
             }
-            echo "</li>\n";
+            $this->displayEndChoiceItem();
             $this->parentWidget->addJs("c2.items['keep']=[];\n");
         }
 
         if (isset($choices['keepnew'])) {
-            echo '<li id="'.$idItem.'keepnew_item">',
-                '<label>
-                    <input '.$attrRadio.'keepnew'.$attrRadioSuffix.' id="'.$idChoice.'_jf_action_keepnew" value="keepnew" '.
-                ($action == 'keepnew' ? 'checked' : '').
-                '/> '.
-                jLocale::get('jelix~jforms.upload.choice.keepnew').
-                '</label> ';
+            $this->displayStartChoiceItem(
+                $idItem.'keepnew_item',
+                $idChoice.'_jf_action_keepnew',
+                $attrRadio.'keepnew'.$attrRadioSuffix.' value="keepnew"',
+                ($action == 'keepnew'),
+                jLocale::get('jelix~jforms.upload.choice.keepnew')
+            );
+
             $this->_outputControlValue($choices['keepnew'], 'new');
-            echo "</li>\n";
+            $this->displayEndChoiceItem();
             $this->parentWidget->addJs("c2.items['keepnew']=[];\n");
         }
 
-        if (count($choices) > 1) {
-            echo '<li id="'.$idItem.'new_item">',
-                '<label><input '.$attrRadio.'new'.$attrRadioSuffix.'  id="'.$idChoice.'_jf_action_new" value="new"/> '.
-                jLocale::get('jelix~jforms.upload.choice.new').
-                '</label> ';
-            echo '<input';
-            $this->_outputAttr($attr);
-            echo '/>',
-            "</li>\n";
-            $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
-            $this->parentWidget->addJs($this->commonGetJsConstraints());
-            $this->parentWidget->addJs("c2.addControl(c, 'new');\n");
-        } else {
-            echo '<input type="hidden" name="'.$this->ctrl->ref.'_jf_action" value="new" />';
-            echo '<input';
-            $this->_outputAttr($attr);
-            echo '/>';
-        }
+        $this->displayStartChoiceItem(
+            $idItem.'new_item',
+            $idChoice.'_jf_action_new',
+            $attrRadio.'new'.$attrRadioSuffix.' value="new"',
+            ($action == 'new'),
+            jLocale::get('jelix~jforms.upload.choice.new')
+        );
+        $this->displayInputFile($attr);
+        $this->displayEndChoiceItem();
+
+        $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
+        $this->parentWidget->addJs($this->commonGetJsConstraints());
+        $this->parentWidget->addJs("c2.addControl(c, 'new');\n");
 
         if (isset($choices['del'])) {
-            echo '<li id="'.$idItem.'del_item">',
-                '<label>
-                    <input '.$attrRadio.'del'.$attrRadioSuffix.'  id="'.$idChoice.'_jf_action_del" value="del" '.
-                ($action == 'del' ? 'checked' : '').'/> '.
-                jLocale::get('jelix~jforms.upload.choice.del').
-                '</label>';
-            echo "</li>\n";
+            $this->displayStartChoiceItem(
+                $idItem.'del_item',
+                $idChoice.'_jf_action_del',
+                $attrRadio.'del'.$attrRadioSuffix.' value="del"',
+                ($action == 'del'),
+                jLocale::get('jelix~jforms.upload.choice.del')
+            );
+            $this->displayEndChoiceItem();
             $this->parentWidget->addJs("c2.items['del']=[];\n");
         }
 
-        if (count($choices) > 1) {
-            $this->parentWidget->addJs("c2.activate('".$action."');\n");
-        }
+        $this->parentWidget->addJs("c2.activate('".$action."');\n");
+
+        $this->displayEndChoice();
+    }
+
+    protected function displayStartChoice($blockId, $attrs)
+    {
+        echo '<ul class="jforms-choice" id="'.$blockId.'" '.$attrs.'>', "\n";
+    }
+
+    protected function displayStartChoiceItem($idItem, $idRadio, $attrRadio, $checked, $label)
+    {
+        echo '<li id="'.$idItem.'">',
+            '<label> <input '.$attrRadio.' id="'.$idRadio.'"  '.($checked ? 'checked' : '').'/> ';
+        echo $label.'</label> ';
+    }
+
+    protected function displayInputFile($attr)
+    {
+        echo '<input';
+        $this->_outputAttr($attr);
+        echo '/>';
+    }
+
+    protected function displayEndChoiceItem()
+    {
+        echo "</li>\n";
+    }
+
+    protected function displayEndChoice()
+    {
+        echo "</ul>\n";
     }
 
     public function outputControlValue()
@@ -274,12 +307,10 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         if ($suffixId) {
             $attr['id'] .= $suffixId;
         }
-        echo '<span ';
-        $this->_outputAttr($attr);
-        echo '>';
+
         $mimeType = jFile::getMimeTypeFromFilename($value);
-        if ($suffixId != 'new' && strpos($mimeType, 'image/') === 0 &&
-            ($this->uriAction || $this->baseURI)
+        if ($suffixId != 'new' && strpos($mimeType, 'image/') === 0
+            && ($this->uriAction || $this->baseURI)
         ) {
             if ($this->baseURI) {
                 $url = htmlspecialchars($this->baseURI.$value);
@@ -290,8 +321,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
                     $pname = $this->uriActionFileParameter;
                     if (isset($params[$pname]) && strpos($params[$pname], '%s') !== false) {
                         $params[$pname] = str_replace('%s', $value, $params[$pname]);
-                    }
-                    else {
+                    } else {
                         $params[$pname] = $value;
                     }
                 }
@@ -304,10 +334,29 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
             if ($this->imgMaxWidth) {
                 $style .= 'max-width:'.$this->imgMaxWidth.'px;';
             }
-            echo '<a href="'.$url.'"><img src="'.$url.'" alt="'.$value.($style ? '" style="'.$style.'"' : '"').' /></a>';
+            $this->displayValueAsImage($attr, $url, $value, $style);
         } else {
-            echo htmlspecialchars($value);
+            $this->displayValueAsFilename($attr, $value, $mimeType);
         }
+    }
+
+
+    protected function displayValueAsImage($attr, $url, $filename, $style)
+    {
+        echo '<span ';
+        $this->_outputAttr($attr);
+        echo '>';
+        echo '<a href="'.$url.'"><img src="'.$url.'" alt="'.$filename.'"'.($style ? ' style="'.$style.'"' : '').' /></a>';
         echo '</span>';
     }
+
+    protected function displayValueASFilename($attr, $filename, $mimeType)
+    {
+        echo '<span ';
+        $this->_outputAttr($attr);
+        echo '>';
+        echo htmlspecialchars($filename);
+        echo '</span>';
+    }
+
 }
