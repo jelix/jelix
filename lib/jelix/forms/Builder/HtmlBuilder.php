@@ -158,6 +158,12 @@ class HtmlBuilder extends BuilderBase
                 echo '<tr><td colspan="2">';
                 $this->outputControl($ctrl);
                 echo '</td></tr>';
+            } else if ($ctrl->type == 'checkbox') {
+                echo '<tr><th scope="row">';
+                echo '</th><td>';
+                $this->outputControl($ctrl);
+                $this->outputControlLabel($ctrl);
+                echo "</td></tr>\n";
             } else {
                 echo '<tr><th scope="row">';
                 $this->outputControlLabel($ctrl);

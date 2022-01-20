@@ -156,8 +156,18 @@ class ConfigurationHelpers extends PreConfigurationHelpers
                 $this->copyFile($entryPointModelFile, \jApp::scriptsPath($epFile));
             }
         } else {
-            if (!file_exists(\jApp::wwwPath($epFile))) {
-                $this->copyFile($entryPointModelFile, \jApp::wwwPath($epFile));
+            $newEpPath = \jApp::wwwPath($epFile);
+            if (!file_exists($newEpPath)) {
+                $this->copyFile($entryPointModelFile, $newEpPath);
+
+                // change the path to application.init.php into the entrypoint
+                // depending of the application, the path of www/ is not always at the same place, relatively to
+                // application.init.php
+                $relativePath = \Jelix\FileUtilities\Path::shortestPath(\jApp::wwwPath(), \jApp::appPath());
+
+                $epCode = file_get_contents($newEpPath);
+                $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php[\'"])#m', '\\1'.$relativePath.'/\\3', $epCode);
+                file_put_contents($newEpPath, $epCode);
             }
         }
 

@@ -86,7 +86,7 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             if ((is_array($value) && in_array((string) $v, $value, true)) || ($value === (string) $v)) {
                 echo ' checked="checked"';
             }
-            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span> <br/>\n";
             ++$i;
         }
     }
