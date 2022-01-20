@@ -426,6 +426,26 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         return $this->generateUpload($source, $control, $attributes);
     }
 
+    protected function generateImage(&$source, $control, &$attributes)
+    {
+        $this->readAttrImage($source, $attributes);
+        return $this->generateUpload($source, $control, $attributes);
+    }
+
+    protected function readAttrImage(&$source, &$attributes)
+    {
+        if (isset($attributes['maxWidth'])) {
+            $size = intval($attributes['maxWidth']);
+            $source[] = '$ctrl->maxWidth='.$size.';';
+            unset($attributes['maxWidth']);
+        }
+
+        if (isset($attributes['maxHeight'])) {
+            $size = intval($attributes['maxHeight']);
+            $source[] = '$ctrl->maxHeight='.$size.';';
+            unset($attributes['maxHeight']);
+        }
+    }
     /**
      * @param array            $source
      * @param string           $controltype

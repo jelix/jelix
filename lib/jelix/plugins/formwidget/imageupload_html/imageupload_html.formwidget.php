@@ -42,6 +42,14 @@ class imageupload_htmlFormWidget extends upload2_htmlFormWidget
 
     public function setDefaultAttributes($attr)
     {
+        if ($this->ctrl->maxWidth) {
+            $this->newImgMaxWidth = $this->ctrl->maxWidth;
+        }
+
+        if ($this->ctrl->maxHeight) {
+            $this->newImgMaxHeight = $this->ctrl->maxHeight;
+        }
+
         $this->filterImageAttributes($attr);
         parent::setDefaultAttributes($attr);
     }
