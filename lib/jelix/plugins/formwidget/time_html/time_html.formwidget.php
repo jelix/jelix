@@ -99,7 +99,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'hour';
         if (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {
@@ -120,7 +120,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'minutes';
         if (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.minutes.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {
@@ -143,7 +143,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             echo '<input type="hidden" id="'.$attr['id'].'" name="'.$attr['name'].'" value="'.$value.'"/>';
         } elseif (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text"size="2" maxlength="2"';
+            echo '<input type="text"size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.seconds.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {
