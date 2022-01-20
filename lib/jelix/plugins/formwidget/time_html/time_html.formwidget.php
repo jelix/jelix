@@ -18,7 +18,6 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
-        $confTime = &jApp::config()->timepickers;
         $datepicker_default_config = jApp::config()->forms['timepicker'];
 
         if (isset($this->ctrl->timepickerConfig) && $this->ctrl->timepickerConfig) {
@@ -31,23 +30,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             return;
         }
 
-        if (isset($confTime[$config.'.js'])) {
-            $js = $confTime[$config.'.js'];
-            foreach ($js as $file) {
-                $file = str_replace('$lang', jLocale::getCurrentLang(), $file);
-                $resp->addJSLink($file);
-            }
-        }
-        if (isset($confTime[$config])) {
-            $resp->addJSLink($confTime[$config]);
-        }
-
-        if (isset($confTime[$config.'.css'])) {
-            $css = $confTime[$config.'.css'];
-            foreach ($css as $file) {
-                $resp->addCSSLink($file);
-            }
-        }
+        $resp->addAssets('jforms_timepicker_'.$config);
     }
 
     protected function outputJs()
