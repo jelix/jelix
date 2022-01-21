@@ -40,8 +40,14 @@ class jForms
     {
     }
 
+    /**
+     * @return jFormsSession
+     */
     protected static function getSession()
     {
+        // We store the jFormsSession in the session, just to know when the session is saved, and so to
+        // have the opportunity to save the content of jFormsSession into a cache, instead of the session storage
+        // See jFormsSession
         if (!isset($_SESSION['JFORMS_SESSION'])) {
             $_SESSION['JFORMS_SESSION'] = new jFormsSession();
         }
