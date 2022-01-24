@@ -750,9 +750,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase
             echo $span;
             $this->_outputAttr($attr);
             if ((is_array($value) && in_array((string) $v, $value, true)) || ($value === (string) $v)) {
-                echo ' checked="checked"';
+                echo ' checked';
             }
-            echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+            echo $this->_endt,'<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span> <br/>\n";
             ++$i;
         }
     }
@@ -1079,6 +1079,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase
 
     protected function outputOutput($ctrl, &$attr)
     {
+        $class = 'jforms-value '.$attr['class'];
+
         unset($attr['readonly'], $attr['class']);
 
         if (isset($attr['title'])) {
@@ -1092,7 +1094,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         echo '<input';
         $this->_outputAttr($attr);
         echo $this->_endt;
-        echo '<span class="jforms-value"',$hint,'>',htmlspecialchars($attr['value']),'</span>';
+        echo '<span  class="'.$class.'"',$hint,'>',htmlspecialchars($attr['value']),'</span>';
     }
 
     protected function jsOutput($ctrl)
@@ -1137,7 +1139,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     protected function outputSubmit($ctrl, $attr)
     {
         unset($attr['readonly']);
-        $attr['class'] = 'jforms-submit';
+        $attr['class'] = 'jforms-ctrl-submit jforms-submit';
         $attr['type'] = 'submit';
 
         if ($ctrl->standalone) {
@@ -1167,7 +1169,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     protected function outputReset($ctrl, &$attr)
     {
         unset($attr['readonly']);
-        $attr['class'] = 'jforms-reset';
+        $attr['class'] = 'jforms-ctrl-reset jforms-reset';
         $attr['type'] = 'reset';
         echo '<button';
         $this->_outputAttr($attr);

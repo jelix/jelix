@@ -201,12 +201,11 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
 
     protected function displayStartChoiceItem($idItem, $attrRadio, $checked, $label, $attrLabel)
     {
-        echo '<li id="'.$idItem.'">','<label ';
-        $this->_outputAttr($attrLabel);
-        echo '> <input ';
+        echo '<li id="'.$idItem.'"><input ';
         $this->_outputAttr($attrRadio);
-        echo ' '.($checked ? 'checked' : '').'/> ';
-        echo htmlspecialchars($label).'</label> ';
+        echo ' '.($checked ? 'checked' : '').'/><label for="'.$attrRadio['id'].'"';
+        $this->_outputAttr($attrLabel);
+        echo '>'.htmlspecialchars($label)."</label>\n";
     }
 
     /**
