@@ -160,11 +160,11 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
     {
         $attr = $this->getValueAttributes();
 
-        $showChildControl = (!$this->ctrl->hasCheckbox || ($this->ctrl->hasCheckbox && $this->getValue() != $this->ctrl->valueOnCheck));
+        $showChildControl = (!$this->ctrl->hasCheckbox || ($this->ctrl->hasCheckbox && $this->getValue() == $this->ctrl->valueOnCheck));
         $this->displayStartValueGroup($attr['id'], $this->ctrl->label, $showChildControl);
 
         if (!$showChildControl) {
-            parent::outputControlValue();
+            $this->displayEmptyValue();
         } else {
             foreach ($this->ctrl->getChildControls() as $ctrlref => $c) {
                 if ($c->type == 'submit' || $c->type == 'reset' || $c->type == 'hidden') {
@@ -194,6 +194,11 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         if ($hasChildControlValue) {
             echo '<table class="jforms-table-group" border="0">',"\n";
         }
+    }
+
+    protected function displayEmptyValue()
+    {
+        parent::outputControlValue();
     }
 
     /**
