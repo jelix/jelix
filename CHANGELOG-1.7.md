@@ -23,6 +23,7 @@ Jelix 1.7.11
     that output only Html content, so new widget just has to override these methods to change the generated
     HTML.
   * more documentation into the code of jFormsSession
+  * new template plugin `{ifctrltype}`
 
 
 * all enhancements and bug fixes from Jelix 1.6.36
