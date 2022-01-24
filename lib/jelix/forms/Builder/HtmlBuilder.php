@@ -155,9 +155,9 @@ class HtmlBuilder extends BuilderBase
                 continue;
             }
             if ($ctrl->type == 'group') {
-                echo '<tr><td colspan="2">';
+                echo '<tr><td colspan="2" class="jforms-group">';
                 $this->outputControl($ctrl);
-                echo '</td></tr>';
+                echo "</td></tr>\n";
             } else if ($ctrl->type == 'checkbox') {
                 echo '<tr><th scope="row">';
                 echo '</th><td>';
@@ -187,6 +187,34 @@ class HtmlBuilder extends BuilderBase
             echo ' ';
         }
         echo "</div>\n";
+    }
+
+    public function outputAllControlsValues()
+    {
+        echo '<table class="jforms-table" border="0">';
+        foreach ($this->_form->getRootControls() as $ctrlref => $ctrl) {
+            if ($ctrl->type == 'submit' || $ctrl->type == 'reset' ||
+                $ctrl->type == 'hidden' || $ctrl->type == 'captcha' ||
+                $ctrl->type == 'secretconfirm'
+            ) {
+                continue;
+            }
+            if (!$this->_form->isActivated($ctrlref)) {
+                continue;
+            }
+            if ($ctrl->type == 'group') {
+                echo '<tr><td scope="row" colspan="2" class="jforms-group">';
+                $this->outputControlValue($ctrl);
+                echo "</td></tr>\n";
+            } else {
+                echo '<tr><th scope="row">';
+                $this->outputControlLabel($ctrl);
+                echo '</th><td>';
+                $this->outputControlValue($ctrl);
+                echo "</td></tr>\n";
+            }
+        }
+        echo '</table>';
     }
 
     public function outputMetaContent($t)

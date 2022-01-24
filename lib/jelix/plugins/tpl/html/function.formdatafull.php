@@ -34,9 +34,15 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $option
     if (count($options)) {
         $formfullBuilder->setOptions($options);
     }
-
+    if (method_exists($formfullBuilder, 'outputAllControlsValues')) {
+        $formfullBuilder->outputAllControlsValues();
+        return;
+    }
+    // for builders that don't have the new method outputAllControlsValues
     foreach ($form->getRootControls() as $ctrlref => $ctrl) {
-        if ($ctrl->type == 'submit' || $ctrl->type == 'reset' || $ctrl->type == 'hidden' || $ctrl->type == 'captcha' || $ctrl->type == 'secretconfirm') {
+        if ($ctrl->type == 'submit' || $ctrl->type == 'reset'
+            || $ctrl->type == 'hidden' || $ctrl->type == 'captcha'
+            || $ctrl->type == 'secretconfirm') {
             continue;
         }
         if (!$form->isActivated($ctrlref)) {
@@ -44,7 +50,8 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $option
         }
 
         if ($ctrl->type == 'group') {
-            echo '<tr><td scope="row"'.($ctrl->type == 'group' ? ' colspan="2" class="jforms-group"' : '').'>';
+            echo '<tr><td scope="row"'.
+                ($ctrl->type == 'group' ? ' colspan="2" class="jforms-group"' : '').'>';
             $formfullBuilder->outputControlValue($ctrl);
             echo '</td>';
             echo "</tr>\n";

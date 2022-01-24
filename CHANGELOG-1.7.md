@@ -24,6 +24,7 @@ Jelix 1.7.11
     HTML.
   * more documentation into the code of jFormsSession
   * new template plugin `{ifctrltype}`
+  * backport the method `HtmlBuilder::outputAllControlsValues()` from Jelix 1.8
 
 
 * all enhancements and bug fixes from Jelix 1.6.36
