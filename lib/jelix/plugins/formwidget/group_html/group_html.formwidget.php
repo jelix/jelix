@@ -160,7 +160,7 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
     {
         $attr = $this->getValueAttributes();
 
-        $showChildControl = ($this->ctrl->hasCheckbox && $this->getValue() != $this->ctrl->valueOnCheck);
+        $showChildControl = (!$this->ctrl->hasCheckbox || ($this->ctrl->hasCheckbox && $this->getValue() != $this->ctrl->valueOnCheck));
         $this->displayStartValueGroup($attr['id'], $this->ctrl->label, $showChildControl);
 
         if (!$showChildControl) {

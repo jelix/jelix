@@ -28,7 +28,7 @@
  */
 function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $options = array())
 {
-    echo '<table class="jforms-table" border="0">';
+
 
     $formfullBuilder = $form->getBuilder($builder);
     if (count($options)) {
@@ -38,7 +38,9 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $option
         $formfullBuilder->outputAllControlsValues();
         return;
     }
+
     // for builders that don't have the new method outputAllControlsValues
+    echo '<table class="jforms-table" border="0">';
     foreach ($form->getRootControls() as $ctrlref => $ctrl) {
         if ($ctrl->type == 'submit' || $ctrl->type == 'reset'
             || $ctrl->type == 'hidden' || $ctrl->type == 'captcha'

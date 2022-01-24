@@ -208,7 +208,7 @@ class HtmlBuilder extends BuilderBase
                 echo "</td></tr>\n";
             } else {
                 echo '<tr><th scope="row">';
-                $this->outputControlLabel($ctrl);
+                $this->outputControlLabel($ctrl, '', false);
                 echo '</th><td>';
                 $this->outputControlValue($ctrl);
                 echo "</td></tr>\n";

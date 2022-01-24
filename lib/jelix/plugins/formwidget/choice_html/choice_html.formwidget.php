@@ -178,9 +178,10 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
             return;
         }
 
-        $this->displayValueLabel($value);
         $listctrl = $ctrl->items[$value];
-        if (count($listctrl)) {
+        $hasChildValues = count($listctrl) > 0;
+        $this->displayValueLabel($ctrl->itemsNames[$value], $value, $hasChildValues);
+        if ($hasChildValues) {
             $this->displayValueStartBlock();
             foreach ($listctrl as $ref => $c) {
                 if (!$this->builder->getForm()->isActivated($ref) || $c->type == 'hidden') {
@@ -239,7 +240,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
         echo '>', htmlspecialchars($emptyLabel), '</span>';
     }
 
-    protected function displayValueLabel($label)
+    protected function displayValueLabel($label, $value, $hasChildValues)
     {
         echo '<label>',htmlspecialchars($label),"</label>\n";
     }
