@@ -77,10 +77,11 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
         $content .= '$ctrls_notto_display=null;';
     }
     $_frmctrlInsideForm = $compiler->isInsideBlock('form');
+    $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
     $content .= '
 if (!isset($t->_privateVars[\'__formbuilder\'])) {
     $t->_privateVars[\'__formViewMode\'] = 1;
-    $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\'html\');
+    $t->_privateVars[\'__formbuilder\'] = $t->_privateVars[\'__form\']->getBuilder(\''.$builder.'\');
 }
 if (!isset($t->_privateVars[\'__displayed_ctrl\'])) {
     $t->_privateVars[\'__displayed_ctrl\'] = array();

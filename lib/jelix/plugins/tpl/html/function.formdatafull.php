@@ -26,10 +26,12 @@
  * @param string     $builder the builder type to use
  * @param array      $options options for the builder
  */
-function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $options = array())
+function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = array())
 {
 
-
+    if ($builder == '') {
+        $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
+    }
     $formfullBuilder = $form->getBuilder($builder);
     if (count($options)) {
         $formfullBuilder->setOptions($options);
