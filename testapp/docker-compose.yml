@@ -55,13 +55,14 @@ services:
     build:
       context: ./docker-conf/phpfpm
       args:
-        fpm_user_id: ${JELIX_USER_ID}
-        fpm_group_id: ${JELIX_GROUP_ID}
         php_version: ${PHP_VERSION}
     container_name: jelix_${JLXBRANCH}_test_php
     environment:
+      APP_USER_ID: ${JELIX_USER_ID}
+      APP_GROUP_ID: ${JELIX_GROUP_ID}
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
       TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
+      DISPLAY_ERRORS: "on"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"
