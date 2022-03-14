@@ -7,7 +7,7 @@
  * @contributor Yann, Dominique Papin
  * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
  *
- * @copyright   2005-2019 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+ * @copyright   2005-2022 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
  * @copyright   2008 Warren Seine, Alexis Métaireau
  * @copyright   2009 Julien Issler, Olivier Demah
  * @copyright   2010 Brice Tence
@@ -305,6 +305,38 @@ class jResponseHtml extends jResponseBasicHtml
     }
 
     /**
+     * Append the revision parameter to the given url string.
+     *
+     * @param string $url
+     *
+     * @return string
+     */
+    public function appendRevisionToUrl($url)
+    {
+        $revisionParam = jApp::config()->urlengine['assetsRevQueryUrl'];
+        if ($revisionParam != '') {
+            $url .= (strpos($url, '?') === false) ? '?' : '&';
+            $url .= $revisionParam;
+        }
+
+        return $url;
+    }
+
+    /**
+     * Add the revision parameter to the given list of query parameters.
+     *
+     * @param array $parameters list of query parameters
+     */
+    public function appendRevisionToQueryParameters(&$parameters)
+    {
+        $revision = jApp::config()->urlengine['assetsRevision'];
+        if ($revision != '') {
+            $p = jApp::config()->urlengine['assetsRevisionParameter'];
+            $parameters[$p] = $revision;
+        }
+    }
+
+    /**
      * add a generic link to the head.
      *
      * @param string $href  url of the link
@@ -323,7 +355,7 @@ class jResponseHtml extends jResponseBasicHtml
      * $forIe parameter exists since 1.0b2
      *
      * @param string $src    the link
-     * @param array  $params additionnals attributes for the script tag
+     * @param array  $params additionals attributes for the script tag
      * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
     public function addJSLink($src, $params = array(), $forIE = false)
@@ -336,6 +368,17 @@ class jResponseHtml extends jResponseBasicHtml
                 $this->_JSIELink[$src] = $params;
             }
         } else {
+
+            if (!preg_match('!^https?://!', $src)) {
+                $newSrc = $this->appendRevisionToUrl($src);
+
+                if ($newSrc != $src) {
+                    // if the resource has already been added without the revision let's remove it
+                    unset($this->_JSLink[$src]);
+                    $src = $newSrc;
+                }
+            }
+
             if (!isset($this->_JSLink[$src])) {
                 $this->_JSLink[$src] = $params;
             }
@@ -352,7 +395,9 @@ class jResponseHtml extends jResponseBasicHtml
      */
     public function addJSLinkModule($module, $src, $params = array(), $forIE = false)
     {
-        $src = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+        $jurlParams = array('targetmodule' => $module, 'file' => $src);
+        $this->appendRevisionToQueryParameters($jurlParams);
+        $src = jUrl::get('jelix~www:getfile', $jurlParams);
         if ($forIE) {
             if (!isset($this->_JSIELink[$src])) {
                 if (!is_bool($forIE) && !empty($forIE)) {
@@ -474,6 +519,16 @@ class jResponseHtml extends jResponseBasicHtml
                 $this->_CSSIELink[$src] = $params;
             }
         } else {
+            if (!preg_match('!^https?://!', $src)) {
+                $newSrc = $this->appendRevisionToUrl($src);
+
+                if ($newSrc != $src) {
+                    // if the resource has already been added without the revision let's remove it
+                    unset($this->_CSSLink[$src]);
+                    $src = $newSrc;
+                }
+            }
+
             if (!isset($this->_CSSLink[$src])) {
                 $this->_CSSLink[$src] = $params;
             }
@@ -492,7 +547,9 @@ class jResponseHtml extends jResponseBasicHtml
      */
     public function addCSSLinkModule($module, $src, $params = array(), $forIE = false)
     {
-        $src = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+        $jurlParams = array('targetmodule' => $module, 'file' => $src);
+        $this->appendRevisionToQueryParameters($jurlParams);
+        $src = jUrl::get('jelix~www:getfile', $jurlParams);
         if ($forIE) {
             if (!isset($this->_CSSIELink[$src])) {
                 if (!is_bool($forIE) && !empty($forIE)) {
@@ -519,7 +576,10 @@ class jResponseHtml extends jResponseBasicHtml
      */
     public function addCSSThemeLinkModule($module, $src, $params = array(), $forIE = false)
     {
-        $src = $url = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => 'themes/'.jApp::config()->theme.'/'.$src));
+        $file = 'themes/'.jApp::config()->theme.'/'.$src;
+        $jurlParams = array('targetmodule' => $module, 'file' => $file);
+        $this->appendRevisionToQueryParameters($jurlParams);
+        $src = jUrl::get('jelix~www:getfile', $jurlParams);
         if ($forIE) {
             if (!isset($this->_CSSIELink[$src])) {
                 if (!is_bool($forIE) && !empty($forIE)) {

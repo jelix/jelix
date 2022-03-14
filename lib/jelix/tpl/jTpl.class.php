@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Dominique Papin
  *
- * @copyright   2005-2015 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright   2005-2022 Laurent Jouanneau, 2007 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -32,6 +32,9 @@ class jTpl extends \Jelix\Castor\CastorCore
         $this->_vars['j_locale'] = $config->locale;
         $this->_vars['j_lang'] = jLocale::getCurrentLang();
         $this->_vars['j_country'] = jLocale::getCurrentCountry();
+        $this->_vars['j_assetsRevision'] = $config->urlengine['assetsRevision'];
+        $this->_vars['j_assetsRevQueryUrl'] = $config->urlengine['assetsRevQueryUrl'];
+        $this->_vars['j_assetsRevisionParameter'] = $config->urlengine['assetsRevisionParameter'];
         parent::__construct();
     }
 
