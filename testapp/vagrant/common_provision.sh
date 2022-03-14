@@ -20,7 +20,7 @@ service postgresql restart
 
 source $VAGRANTDIR/setup_ldap.sh
 
-apt-get -y install php-xdebug
+apt-get -y install php${PHP_VERSION}-xdebug
 cp $VAGRANTDIR/xdebug.ini /etc/php/$PHP_VERSION/mods-available/
 service php${PHP_VERSION}-fpm restart
 
