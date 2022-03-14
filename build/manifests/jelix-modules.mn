@@ -125,6 +125,7 @@ cd lib/jelix-modules/jacl2db/install
   upgrade_pluginmoved.php
   upgrade_localesmoved.php
   upgrade_newresdefaultvalue.php
+  upgrade_increaseidaclgrp.php
 
 cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_codegroup_1.mysql.sql
@@ -139,7 +140,9 @@ cd lib/jelix-modules/jacl2db/install/sql/
   upgrade_newresdefaultvalue.pgsql.sql
   upgrade_newresdefaultvalue.sqlite.sql
   upgrade_newresdefaultvalue.oci.sql
-  
+  upgrade_increaseidaclgrp.mysql.sql
+  upgrade_increaseidaclgrp.pgsql.sql
+
 cd lib/jelix-modules/jacl2db/locales/en_EN/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/en_GB/
