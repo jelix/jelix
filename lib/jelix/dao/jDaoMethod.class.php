@@ -125,7 +125,7 @@ class jDaoMethod
             return;
         }
 
-        if (strlen($params['distinct'])) {
+        if ($params['distinct'] != '') {
             if ($this->type == 'select') {
                 $this->distinct = $this->_parser->getBool($params['distinct']);
             } elseif ($this->type == 'count') {
@@ -149,7 +149,7 @@ class jDaoMethod
             }
         }
 
-        if (strlen($params['groupby'])) {
+        if ($params['groupby'] != '') {
             throw new jDaoXmlException($this->_parser->selector, 'forbidden.attr', array('groupby', '<method name="'.$this->name.'"'));
         }
 

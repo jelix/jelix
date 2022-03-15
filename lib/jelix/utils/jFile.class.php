@@ -61,7 +61,9 @@ class jFile
         if (!$chmod && jApp::config()) {
             $chmod = jApp::config()->chmodFile;
         }
-
+        if ($data === null) {
+            $data = '';
+        }
         return File::write($file, $data, $chmod);
     }
 
