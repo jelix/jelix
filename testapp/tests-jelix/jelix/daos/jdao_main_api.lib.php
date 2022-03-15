@@ -14,9 +14,16 @@
  */
 abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
+    static protected $productIdType = 'string';
+    static protected $productPriceType = 'string';
+    static protected $productPromoType = 'string';
+
     function setUp() {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
+        static::$productIdType = 'string';
+        static::$productPriceType = 'string';
+        static::$productPromoType = 'string';
     }
 
     function tearDown() {
@@ -207,22 +214,22 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod1->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <string property="price" value="5.90" />
-        <string property="promo" value="1" />
+        <'.static::$productPriceType.' property="price" value="5.90" />
+        <'.static::$productPromoType.' property="promo" value="1" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
+        <'.static::$productPromoType.' property="promo" value="1" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
-        <string property="promo" value="0" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
+        <'.static::$productPromoType.' property="promo" value="0" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -243,10 +250,10 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
+        <'.static::$productPromoType.' property="promo" value="1" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -261,10 +268,10 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
-        <string property="promo" value="1" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
+        <'.static::$productPromoType.' property="promo" value="1" />
         <string property="dummy" value="started" />
     </object>
 </array>';
@@ -292,19 +299,19 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
         $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod1->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <string property="price" value="5.90" />
+        <'.static::$productPriceType.' property="price" value="5.90" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -332,14 +339,14 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
         $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -359,9 +366,9 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertEquals($list[0]->id, self::$prod2->id);
         $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -375,14 +382,14 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
         $this->assertEquals(2, count($list), 'findBySomeNames doesn\'t return selected products. %s ');
         $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod1->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod1->id.'" />
         <string property="name" value="assiette nouvelle" />
-        <string property="price" value="5.90" />
+        <'.static::$productPriceType.' property="price" value="5.90" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -416,14 +423,14 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod2->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod2->id.'" />
         <string property="name" value="fourchette" />
-        <string property="price" value="1.54" />
+        <'.static::$productPriceType.' property="price" value="1.54" />
     </object>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
@@ -457,9 +464,9 @@ abstract class jdao_main_api_base extends jUnitTestCaseDb {
 
     $verif='<array>
     <object>
-        <string property="id" value="'.self::$prod3->id.'" />
+        <'.static::$productIdType.' property="id" value="'.self::$prod3->id.'" />
         <string property="name" value="verre" />
-        <string property="price" value="2.43" />
+        <'.static::$productPriceType.' property="price" value="2.43" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
