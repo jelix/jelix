@@ -18,18 +18,18 @@
     "require": {
         "php": ">=5.6",
         "jelix/fakeserverconf": "^1.0.0",
-        "jelix/composer-module-setup": "^1.0.0",
+        "jelix/composer-module-setup": "^1.0.5",
         "phpmailer/phpmailer": "^5.2.28",
-        "jelix/castor": "^1.1.0",
-        "jelix/inifile": "^3.2.4",
+        "jelix/castor": "^1.1.1",
+        "jelix/inifile": "^3.3.1",
         "jelix/simplelocalization": "^1.7.1",
-        "jelix/properties-file": "^1.2.1",
-        "symfony/console":"^3.2.14",
+        "jelix/properties-file": "^1.2.2",
+        "symfony/console":"^3.4.47",
         "jelix/file-utilities": "^1.8.4",
-        "jelix/version": "^1.1.0",
-        "defuse/php-encryption": "^2.2.1",
+        "jelix/version": "^1.1.1",
+        "defuse/php-encryption": "^2.3.1",
         "paragonie/random_compat": "<9.99",
-        "google/recaptcha": "^1.1.3"
+        "google/recaptcha": "^1.2.4"
     },
     "archive": {
         "exclude": [ "/build", "/temp", "/testapp", "Makefile"]
