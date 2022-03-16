@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.2",
+        "php": ">=7.2.5",
         "jelix/fakeserverconf": "^1.0.0",
         "jelix/composer-module-setup": "^1.0.5",
         "phpmailer/phpmailer": "^6.2.0",
@@ -24,7 +24,7 @@
         "jelix/inifile": "^3.3.1",
         "jelix/simplelocalization": "^1.7.1",
         "jelix/properties-file": "^1.2.2",
-        "symfony/console":"~5.2.1",
+        "symfony/console":"~5.4.5",
         "jelix/file-utilities": "^1.8.4",
         "jelix/version": "^1.1.1",
         "defuse/php-encryption": "^2.3.1",
