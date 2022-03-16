@@ -226,9 +226,9 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         $id = $this->_name.'_'.$ctrl->ref;
         $idLabel = ' id="'.$id.'_label"';
         if ($ctrl->type == 'output' || $ctrl->type == 'checkboxes' || $ctrl->type == 'radiobuttons' || $ctrl->type == 'date' || $ctrl->type == 'datetime' || $ctrl->type == 'time' || $ctrl->type == 'choice') {
-            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</span>\n";
+            echo '<span class="jforms-label',$required,$inError,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label, ENT_COMPAT | ENT_SUBSTITUTE),$reqhtml,"</span>\n";
         } elseif ($ctrl->type != 'submit' && $ctrl->type != 'reset') {
-            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label),$reqhtml,"</label>\n";
+            echo '<label class="jforms-label',$required,$inError,'" for="',$id,'"',$idLabel,$hint,'>',htmlspecialchars($ctrl->label, ENT_COMPAT | ENT_SUBSTITUTE),$reqhtml,"</label>\n";
         }
     }
 
@@ -295,7 +295,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         if (is_array($value)) {
             $s = '';
             foreach ($value as $v) {
-                $s .= $separator.htmlspecialchars($v);
+                $s .= $separator.htmlspecialchars($v, ENT_COMPAT | ENT_SUBSTITUTE);
             }
             echo substr($s, strlen($separator));
         } elseif ($ctrl->isHtmlContent()) {
@@ -309,7 +309,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     protected function _outputAttr(&$attributes)
     {
         foreach ($attributes as $name => $val) {
-            echo ' '.$name.'="'.htmlspecialchars($val).'"';
+            echo ' '.$name.'="'.htmlspecialchars($val, ENT_COMPAT | ENT_SUBSTITUTE).'"';
         }
     }
 
@@ -891,7 +891,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
         $value = (string) $value;
         if ($ctrl->emptyItemLabel !== null || !$ctrl->required) {
-            echo '<option value=""',($value === '' ? ' selected="selected"' : ''),'>',htmlspecialchars($ctrl->emptyItemLabel),"</option>\n";
+            echo '<option value=""',($value === '' ? ' selected="selected"' : ''),'>',htmlspecialchars((string)$ctrl->emptyItemLabel),"</option>\n";
         }
         $this->fillSelect($ctrl, $value);
         echo '</select>';
@@ -979,7 +979,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
         echo '<textarea';
         $this->_outputAttr($attr);
-        echo '>',htmlspecialchars($this->_form->getData($ctrl->ref)),'</textarea>';
+        echo '>',htmlspecialchars($this->_form->getData($ctrl->ref), ENT_COMPAT | ENT_SUBSTITUTE),'</textarea>';
     }
 
     protected function jsTextarea($ctrl, $withjsobj = true)
@@ -1094,7 +1094,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         echo '<input';
         $this->_outputAttr($attr);
         echo $this->_endt;
-        echo '<span  class="'.$class.'"',$hint,'>',htmlspecialchars($attr['value']),'</span>';
+        echo '<span  class="'.$class.'"',$hint,'>',htmlspecialchars($attr['value'], ENT_COMPAT | ENT_SUBSTITUTE),'</span>';
     }
 
     protected function jsOutput($ctrl)
@@ -1311,7 +1311,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     {
         if ($ctrl->help) {
             // additionnal &nbsp, else background icon is not shown in webkit
-            echo '<span class="jforms-help" id="'.$this->_name.'_'.$ctrl->ref.'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
+            echo '<span class="jforms-help" id="'.$this->_name.'_'.$ctrl->ref.'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help, ENT_COMPAT | ENT_SUBSTITUTE).'</span></span>';
         }
     }
 }

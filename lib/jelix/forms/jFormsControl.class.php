@@ -122,10 +122,11 @@ abstract class jFormsControl
     public function check()
     {
         $value = $this->container->data[$this->ref];
+        $trimedValue = trim($value);
         if (!$this->datatype->allowWhitespace()) {
-            $this->container->data[$this->ref] = $value = trim($value);
+            $this->container->data[$this->ref] = $value = $trimedValue;
         }
-        if (trim($value) == '') {
+        if ($trimedValue == '') {
             if ($this->required) {
                 return $this->container->errors[$this->ref] = jForms::ERRDATA_REQUIRED;
             }
@@ -141,6 +142,9 @@ abstract class jFormsControl
 
     public function setData($value)
     {
+        if ($value === null) {
+            $value = '';
+        }
         $this->container->data[$this->ref] = $value;
     }
 

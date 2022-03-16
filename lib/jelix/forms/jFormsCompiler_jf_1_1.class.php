@@ -376,7 +376,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
         $this->readHelpHintAlert($source, $control);
         $source[] = '$choicectrl = $ctrl;';
         $hasSelected = false;
-        $selectedvalue = null;
+        $selectedvalue = '';
 
         if (isset($attributes['selectedvalue'])) {
             $selectedvalue = (string) $control['selectedvalue'];

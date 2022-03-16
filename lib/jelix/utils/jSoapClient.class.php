@@ -109,6 +109,7 @@ class jLogSoapMessage extends jLogMessage
 
 class SoapClientDebug extends SoapClient
 {
+    #[\ReturnTypeWillChange]
     public function __call($function_name, $arguments)
     {
         $timeExecutionBegin = $this->_microtimeFloat();
@@ -130,6 +131,7 @@ class SoapClientDebug extends SoapClient
         return $result;
     }
 
+    #[\ReturnTypeWillChange]
     public function __soapCall($function_name, $arguments, $options = array(), $input_headers = null, &$output_headers = null)
     {
         $timeExecutionBegin = $this->_microtimeFloat();

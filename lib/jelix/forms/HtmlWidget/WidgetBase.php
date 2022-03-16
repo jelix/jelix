@@ -255,7 +255,7 @@ abstract class WidgetBase implements WidgetInterface
     protected function _outputAttr(&$attributes)
     {
         foreach ($attributes as $name => $val) {
-            echo ' '.$name.'="'.htmlspecialchars($val).'"';
+            echo ' '.$name.'="'.htmlspecialchars($val, ENT_COMPAT | ENT_SUBSTITUTE).'"';
         }
     }
 
@@ -270,7 +270,7 @@ abstract class WidgetBase implements WidgetInterface
         // deprecated. only for compatibility of plugins for jelix 1.6
         elseif ($this->ctrl->help) {
             // additionnal &nbsp, else background icon is not shown in webkit
-            echo '<span class="jforms-help" id="'.$this->getId().'-help">&nbsp;<span>'.htmlspecialchars($this->ctrl->help).'</span></span>';
+            echo '<span class="jforms-help" id="'.$this->getId().'-help">&nbsp;<span>'.htmlspecialchars($this->ctrl->help, ENT_COMPAT | ENT_SUBSTITUTE).'</span></span>';
         }
     }
 
@@ -304,14 +304,14 @@ abstract class WidgetBase implements WidgetInterface
     protected function outputLabelAsFormLabel($label, $attr)
     {
         echo '<label class="',$attr['class'],'" for="',$this->getId(),'"',$attr['idLabel'],$attr['hint'],'>';
-        echo htmlspecialchars($label), $attr['reqHtml'];
+        echo htmlspecialchars($label, ENT_COMPAT | ENT_SUBSTITUTE), $attr['reqHtml'];
         echo "</label>\n";
     }
 
     protected function outputLabelAsTitle($label, $attr)
     {
         echo '<span class="',$attr['class'],'"',$attr['idLabel'],$attr['hint'],'>';
-        echo htmlspecialchars($label), $attr['reqHtml'];
+        echo htmlspecialchars($label, ENT_COMPAT | ENT_SUBSTITUTE), $attr['reqHtml'];
         echo "</span>\n";
     }
 
@@ -328,13 +328,13 @@ abstract class WidgetBase implements WidgetInterface
         if (is_array($value)) {
             $s = '';
             foreach ($value as $v) {
-                $s .= $this->valuesSeparator.htmlspecialchars($v);
+                $s .= $this->valuesSeparator.htmlspecialchars($v, ENT_COMPAT | ENT_SUBSTITUTE);
             }
             echo substr($s, strlen($this->valuesSeparator));
         } elseif ($this->ctrl->isHtmlContent()) {
             echo $value;
         } else {
-            echo htmlspecialchars($value);
+            echo htmlspecialchars($value, ENT_COMPAT | ENT_SUBSTITUTE);
         }
         echo '</span>';
     }
