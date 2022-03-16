@@ -213,6 +213,21 @@ urlScriptId=
 urlScriptIdenc=
 documentRoot=
 
+; this the revision number to add to some url of assets (when calling jResponseHtml::addJSLinkWithRevision()
+; for example). If empty, no revision will be added. If "autoconfig", the revision number
+; will be generated automatically each time the configuration will be compiled. Else
+; a value can be given directly into the configuration, but it is the responsibility
+; to the developer or the administrator to indicate a new one each time the application
+; is deployed for example.
+assetsRevision=
+
+; the url query parameter on which the assetsRevision will be set
+assetsRevisionParameter=_r
+
+; url query parameter with its value, to append to an url.
+; automatically filled. Will contain something like '_r=1234'
+assetsRevQueryUrl=
+
 [logger]
 ; list of loggers for each categories of log messages
 ; available loggers : file, syslog, stderr, stdout, mail, memory. see plugins for others

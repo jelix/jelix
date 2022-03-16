@@ -16,6 +16,17 @@ use Jelix\Database\ResultSetInterface;
  */
 abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
+    static protected $productNameType = 'string';
+    static protected $productPriceType = 'string';
+
+    function setUp() : void
+    {
+        parent::setUp();
+        static::$productNameType = 'string';
+        static::$productPriceType = 'string';
+    }
+
+
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);
         $this->assertNotNull($cnx, 'connection null !');
@@ -68,16 +79,16 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
         $structure = '<array>
     <object>
-        <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.static::$productNameType.' property="name" value="camembert" />
+        <'.static::$productPriceType.' property="price" value="2.31" />
     </object>
     <object>
-        <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.static::$productNameType.' property="name" value="yaourt" />
+        <'.static::$productPriceType.' property="price" value="0.76" />
     </object>
     <object>
-        <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.static::$productNameType.' property="name" value="gloubi-boulga" />
+        <'.static::$productPriceType.' property="price" value="4.9" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
@@ -146,16 +157,16 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
         $structure = '<array>
     <object class="MyProductContainer">
-        <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.static::$productNameType.' property="name" value="camembert" />
+        <'.static::$productPriceType.' property="price" value="2.31" />
     </object>
     <object class="MyProductContainer">
-        <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.static::$productNameType.' property="name" value="yaourt" />
+        <'.static::$productPriceType.' property="price" value="0.76" />
     </object>
     <object class="MyProductContainer">
-        <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.static::$productNameType.' property="name" value="gloubi-boulga" />
+        <'.static::$productPriceType.' property="price" value="4.9" />
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $structure, 'bad results');
@@ -176,24 +187,24 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
-        <string property="name" value="camembert" />
-        <string property="price" value="2.31" />
+        <'.static::$productNameType.' property="name" value="camembert" />
+        <'.static::$productPriceType.' property="price" value="2.31" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
-        <string property="name" value="yaourt" />
-        <string property="price" value="0.76" />
+        <'.static::$productNameType.' property="name" value="yaourt" />
+        <'.static::$productPriceType.' property="price" value="0.76" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
-        <string property="name" value="gloubi-boulga" />
-        <string property="price" value="4.9" />
+        <'.static::$productNameType.' property="name" value="gloubi-boulga" />
+        <'.static::$productPriceType.' property="price" value="4.9" />
         <integer property="token" value="'.$t.'" />
     </object>';
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');

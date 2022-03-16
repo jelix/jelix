@@ -101,14 +101,6 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         }
         $attrAutoComplete['id'] = $this->getId().'_autocomplete';
 
-        echo '<div class="autocomplete-box"><input type="text" ';
-        $this->_outputAttr($attrAutoComplete);
-        echo '> <span class="autocomplete-no-search-results" style="display:none">pas de résultats</span> 
-                <button class="autocomplete-trash btn btn-mini" title="Effacer" type="button"><i class="icon-trash"></i></button> 
-                <select';
-        $this->_outputAttr($attr);
-        echo ">\n";
-
         if (is_array($value)) {
             if (isset($value[0])) {
                 $value = $value[0];
@@ -117,11 +109,47 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             }
         }
         $value = (string) $value;
-        if ($this->ctrl->emptyItemLabel !== null || !$this->ctrl->required) {
-            echo '<option value=""', ($value === '' ? ' selected="selected"' : ''), '>', htmlspecialchars($this->ctrl->emptyItemLabel), "</option>\n";
+        $emptyLabel = $this->ctrl->emptyItemLabel;
+        if (!$this->ctrl->required && $emptyLabel === null) {
+            $emptyLabel = '';
         }
-        $this->fillSelect($this->ctrl, $value);
-        echo "</select></div>\n";
+        $this->displayAutocompleteInput($attrAutoComplete, $attr, $value, $emptyLabel);
         $this->outputJs();
     }
+
+    /**
+     * @param array $attrAutoComplete
+     * @param array $attrSelect
+     * @param string $value
+     * @param string|null $emptyLabel null if an empty item should not be shown
+     */
+    protected function displayAutocompleteInput($attrAutoComplete, $attrSelect, $value, $emptyLabel)
+    {
+        echo '<div class="autocomplete-box">
+               <input type="text" ';
+        $this->_outputAttr($attrAutoComplete);
+        echo '> <span class="autocomplete-no-search-results" style="display:none">'.jLocale::get('jelix~jforms.autocomplete.no.results').'</span> 
+                <button class="autocomplete-trash btn btn-mini" title="'.jLocale::get('jelix~ui.buttons.erase').'" type="button"><i class="icon-trash"></i></button> 
+            ';
+        $this->displaySelectChoices($attrSelect, $value, $emptyLabel);
+        echo "</div>\n";
+    }
+
+    /**
+     * @param array $attrSelect
+     * @param string $value
+     * @param string|null $emptyLabel null if an empty item should not be shown
+     */
+    protected function displaySelectChoices($attrSelect, $value, $emptyLabel)
+    {
+        echo '<select';
+        $this->_outputAttr($attrSelect);
+        echo ">\n";
+        if ($emptyLabel !== null) {
+            echo '<option value=""', ($value === '' ? ' selected="selected"' : ''), '>', htmlspecialchars($emptyLabel), "</option>\n";
+        }
+        $this->fillSelect($this->ctrl, $value);
+        echo "</select>\n";
+    }
+
 }

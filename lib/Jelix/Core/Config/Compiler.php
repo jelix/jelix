@@ -3,7 +3,7 @@
  * @author       Laurent Jouanneau
  * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
  *
- * @copyright    2006-2015 Laurent Jouanneau
+ * @copyright    2006-2022 Laurent Jouanneau
  * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
  *
  * @see         http://www.jelix.org
@@ -641,16 +641,22 @@ class Compiler
 
             $snp = substr($urlconf['urlScript'], strlen($localBasePath));
 
-            if ($localBasePath == '/') {
-                $urlconf['documentRoot'] = App::wwwPath();
-            } elseif (strpos(App::wwwPath(), $localBasePath) === false) {
-                if (isset($_SERVER['DOCUMENT_ROOT'])) {
-                    $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
-                } else {
-                    $urlconf['documentRoot'] = App::wwwPath();
-                }
+            if (isset($_SERVER['DOCUMENT_ROOT'])) {
+                $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
             } else {
-                $urlconf['documentRoot'] = substr(App::wwwPath(), 0, -(strlen($localBasePath)));
+                $urlconf['documentRoot'] = App::wwwPath();
+            }
+
+            if ($localBasePath != '/') {
+                // if wwwPath ends with the base path, we remove the base path from the wwwPath to have
+                // the document root
+                $posBP = strpos(App::wwwPath(), $localBasePath);
+                if ($posBP !== false) {
+                    $lenWP = strlen(App::wwwPath()) - strlen($localBasePath);
+                    if ($posBP == $lenWP) {
+                        $urlconf['documentRoot'] = substr(App::wwwPath(), 0, $lenWP);
+                    }
+                }
             }
         }
 

@@ -152,7 +152,7 @@ trait FileHelpersTrait
             if (is_dir($targetPath)) {
                 $WWWDirExists = true;
             } elseif (is_link($targetPath)) {
-                $WWWDirExists = true;
+                $WWWLinkExists = true;
             }
         }
         if ($wwwFilesMode == 'copy' || $wwwFilesMode == '') {
@@ -163,6 +163,9 @@ trait FileHelpersTrait
         } elseif ($wwwFilesMode == 'symlink' || $wwwFilesMode == 'filelink') {
             if ($WWWDirExists) {
                 \jFile::removeDir($targetPath, true);
+            }
+            if ($WWWLinkExists) {
+                unlink($targetPath);
             }
             symlink($sourcePath, rtrim($targetPath, '/'));
         } elseif ($wwwFilesMode != 'nosetup') {

@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2021 Laurent Jouanneau
+ * @copyright   2006-2022 Laurent Jouanneau
  * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
  *
  * @see        http://www.jelix.org
@@ -155,8 +155,14 @@ class HtmlBuilder extends BuilderBase
                 continue;
             }
             if ($ctrl->type == 'group') {
-                echo '<tr><td  scope="row" colspan="2" class="jforms-group">';
+                echo '<tr><td colspan="2" class="jforms-group">';
                 $this->outputControl($ctrl);
+                echo "</td></tr>\n";
+            } else if ($ctrl->type == 'checkbox') {
+                echo '<tr><th scope="row">';
+                echo '</th><td>';
+                $this->outputControl($ctrl);
+                $this->outputControlLabel($ctrl);
                 echo "</td></tr>\n";
             } else {
                 echo '<tr><th scope="row">';
@@ -202,7 +208,7 @@ class HtmlBuilder extends BuilderBase
                 echo "</td></tr>\n";
             } else {
                 echo '<tr><th scope="row">';
-                $this->outputControlLabel($ctrl);
+                $this->outputControlLabel($ctrl, '', false);
                 echo '</th><td>';
                 $this->outputControlValue($ctrl);
                 echo "</td></tr>\n";
@@ -268,14 +274,14 @@ class HtmlBuilder extends BuilderBase
 
         $hiddens = '';
         foreach ($urlParams as $p_name => $p_value) {
-            $hiddens .= '<input type="hidden" name="'.$p_name.'" value="'.htmlspecialchars($p_value).'"'.$this->_endt."\n";
+            $hiddens .= '<input type="hidden" name="'.$p_name.'" value="'.htmlspecialchars($p_value, ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
         }
 
         foreach ($this->_form->getHiddens() as $ctrl) {
             if (!$this->_form->isActivated($ctrl->ref)) {
                 continue;
             }
-            $hiddens .= '<input type="hidden" name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'.htmlspecialchars($this->_form->getData($ctrl->ref)).'"'.$this->_endt."\n";
+            $hiddens .= '<input type="hidden" name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'.htmlspecialchars($this->_form->getData($ctrl->ref), ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
         }
 
         if ($this->_form->securityLevel) {
@@ -438,13 +444,13 @@ class HtmlBuilder extends BuilderBase
         }
         $widget = $this->getWidget($ctrl, $this->rootWidget);
         // additionnal &nbsp, else background icon is not shown in webkit
-        echo '<span class="jforms-help" id="'.$widget->getId().'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help).'</span></span>';
+        echo '<span class="jforms-help" id="'.$widget->getId().'-help">&nbsp;<span>'.htmlspecialchars($ctrl->help, ENT_COMPAT | ENT_SUBSTITUTE).'</span></span>';
     }
 
     protected function _outputAttr(&$attributes)
     {
         foreach ($attributes as $name => $val) {
-            echo ' '.$name.'="'.htmlspecialchars($val).'"';
+            echo ' '.$name.'="'.htmlspecialchars($val, ENT_COMPAT | ENT_SUBSTITUTE).'"';
         }
     }
 

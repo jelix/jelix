@@ -70,6 +70,7 @@ class jFormsCompiler_jf_1_0
         'htmleditor' => 'jFormsControlHtmlEditor',
         'wikieditor' => 'jFormsControlWikiEditor',
         'secretconfirm' => 'jFormsControlSecretConfirm',
+        'image' => 'jFormsControlImageUpload'
     );
 
     protected function _generatePHPControl(&$source, $controltype, $control)

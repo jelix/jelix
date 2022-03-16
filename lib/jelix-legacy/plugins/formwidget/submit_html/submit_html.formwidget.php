@@ -23,7 +23,7 @@
  */
 class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
-    public function outputControl()
+    protected function getCSSClass()
     {
         if (isset($this->attributes['class'])) {
             $class = $this->attributes['class'].' ';
@@ -31,11 +31,22 @@ class submit_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             $class = '';
         }
 
+        $class .= 'jforms-ctrl-'.$this->ctrl->type;
+
+        $attrClass = $this->ctrl->getAttribute('class');
+        if ($attrClass) {
+            $class .= ' '.$attrClass;
+        }
+
+        return $class.' jforms-submit';
+    }
+
+    public function outputControl()
+    {
         $attr = $this->getControlAttributes();
 
         unset($attr['readonly']);
 
-        $attr['class'] = $class.'jforms-submit';
         $attr['type'] = 'submit';
 
         if ($this->ctrl->standalone) {

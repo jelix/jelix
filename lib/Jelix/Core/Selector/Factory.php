@@ -48,7 +48,7 @@ class Factory
         }
 
         if (preg_match('/^([a-z]{3,5})\\:([\\w~\\/\\.]+)$/', $selstr, $m)) {
-            $cname = 'jSelector'.$m[1];
+            $cname = 'jSelector'.ucfirst($m[1]);
             if (class_exists($cname)) {
                 return new $cname($m[2]);
             }

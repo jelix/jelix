@@ -10,6 +10,7 @@
 namespace Jelix\Installer\Module\API;
 
 use Jelix\Installer\Module\InteractiveConfigurator;
+use Jelix\Core\App;
 
 /**
  * @since 1.7
@@ -152,12 +153,22 @@ class ConfigurationHelpers extends PreConfigurationHelpers
         }
 
         if ($epType == 'cmdline') {
-            if (!file_exists(\Jelix\Core\App::scriptsPath($epFile))) {
-                $this->copyFile($entryPointModelFile, \Jelix\Core\App::scriptsPath($epFile));
+            if (!file_exists(App::scriptsPath($epFile))) {
+                $this->copyFile($entryPointModelFile, App::scriptsPath($epFile));
             }
         } else {
-            if (!file_exists(\Jelix\Core\App::wwwPath($epFile))) {
-                $this->copyFile($entryPointModelFile, \Jelix\Core\App::wwwPath($epFile));
+            $newEpPath = App::wwwPath($epFile);
+            if (!file_exists($newEpPath)) {
+                $this->copyFile($entryPointModelFile, $newEpPath);
+
+                // change the path to application.init.php into the entrypoint
+                // depending of the application, the path of www/ is not always at the same place, relatively to
+                // application.init.php
+                $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), App::appPath());
+
+                $epCode = file_get_contents($newEpPath);
+                $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php[\'"])#m', '\\1'.$relativePath.'/\\3', $epCode);
+                file_put_contents($newEpPath, $epCode);
             }
         }
 

@@ -109,10 +109,13 @@
     <confirm>Type again the password to confirm</confirm>
   </secret>
 
-  <upload ref="image" mimetype="image/gif;image/png;" maxsize="50000">
-     <label>Your photo (gif/png &lt; 50ko)</label>
-     <alert>The file should be a gif or png image, under 50000 octets</alert>
-  </upload>
+  <upload2 ref="file1" maxsize="500000">
+     <label>A document (&lt; 500ko)</label>
+  </upload2>
+
+  <image ref="image" mimetype="image/jpg;image/png;" maxWidth="1024" maxHeight="860">
+     <label>A photo</label>
+  </image>
 
   <input ref="unwanted" required="true" type="datetime">
       <label>This field shouldn't appear, it is deactivated</label>

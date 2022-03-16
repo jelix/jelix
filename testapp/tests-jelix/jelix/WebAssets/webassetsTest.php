@@ -21,6 +21,11 @@ class webassetsTest extends \Jelix\UnitTests\UnitTestCase
         return array(
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
 [webassets]
 useCollection=foo
 
@@ -37,6 +42,11 @@ useCollection=foo
 
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
 [webassets]
 useCollection=foo
 
@@ -57,6 +67,11 @@ a.js = a.js
 
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
 [webassets]
 useCollection=foo
 
@@ -84,6 +99,43 @@ a.js = a.js
 
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=234
+assetsRevQueryUrl="_r=234"
+assetsRevisionParameter="_r"
+[webassets]
+useCollection=foo
+
+[webassets_foo]
+
+b.js = b.js
+b.require = a
+
+a.js = a.js
+',
+              array(
+                  'compiled_webassets_common' => array(
+                      'dependencies_order' => array()
+                  ),
+                  'compiled_webassets_foo' => array(
+                      'dependencies_order' => array('a', 'b'),
+                      'webassets_a.deps' => array(),
+                      'webassets_a.js' => array('k>a.js?_r=234>'),
+                      'webassets_a.css' => array(),
+                      'webassets_b.deps' => array('a'),
+                      'webassets_b.js' => array('k>b.js?_r=234>'),
+                      'webassets_b.css' => array(),
+                  ))
+          ),
+
+          array(
+              '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
 [webassets]
 useCollection=foo
 
@@ -118,6 +170,11 @@ c.require = a
 
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
 [webassets]
 useCollection=foo
 
@@ -159,6 +216,12 @@ c.include = b
 
           array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
+
 [webassets]
 useCollection=foo
 
@@ -214,6 +277,12 @@ c.require = a
           ),
 array(
               '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
+
 [webassets]
 useCollection=foo
 
@@ -383,6 +452,148 @@ r.js = r.js
         $ini = '
 [urlengine]
 jelixWWWPath=/srv/jelix/
+assetsRevision=
+assetsRevQueryUrl=
+assetsRevisionParameter=
+
+[webassets]
+useCollection=foo
+
+[webassets_foo]
+
+a.js = a.js
+a.require = b,c
+a.include = e
+
+b.js = b.js
+b.css = b.css
+
+c.js = "c.js|type=module"
+c.require = k
+c.include = r
+
+d.js = d.js
+
+e.js = e.js
+e.require = g
+
+f.js = f.js,$jelix/f2.js
+f.css = f.css,$theme/f2.css
+f.require = a
+f.include = r
+
+g.js = g.js
+k.js = k.$lang.js
+r.js = r.$locale.js
+
+';
+        $config = (object)parse_ini_string($ini, true);
+        $compiler->compile($config);
+        // order is 'b', 'k', 'c', 'a', 'd', 'g', 'e', 'f', 'r'
+
+
+        $select = new \Jelix\WebAssets\WebAssetsSelection();
+        foreach($selection as $group) {
+            $select->addAssetsGroup($group);
+        }
+        $select->compute($config,'foo', '/srv/', array(
+            '$lang' =>  'fr',
+            '$locale' =>  'fr_FR',
+            '$theme' => 'themes/sun',
+        ));
+
+        $this->assertEquals($jsLinks, $select->getJsLinks());
+        $this->assertEquals($cssLinks, $select->getCssLinks());
+    }
+
+    function getLinksWithRevision() {
+        return array(
+            array(
+                array(),
+                array(),
+                array(),
+            ),
+            array(
+                array('a'),
+                array(['/srv/b.js?_r=123', []], ['/srv/k.fr.js?_r=123', []], ['/srv/c.js?_r=123', ["type"=>"module"]],
+                    ['/srv/a.js?_r=123', []], ['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []], ['/srv/r.fr_FR.js?_r=123', []]),
+                array(['/srv/b.css?_r=123', []]),
+            ),
+            array(
+                array('b'),
+                array(['/srv/b.js?_r=123', []]),
+                array(['/srv/b.css?_r=123', []]),
+            ),
+            array(
+                array('c'),
+                array(['/srv/k.fr.js?_r=123', []], ['/srv/c.js?_r=123', ["type"=>"module"]], ['/srv/r.fr_FR.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('d'),
+                array(['/srv/d.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('e'),
+                array(['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('f'),
+                array(['/srv/b.js?_r=123', []], ['/srv/k.fr.js?_r=123', []], ['/srv/c.js?_r=123', ["type"=>"module"]],
+                    ['/srv/a.js?_r=123', []], ['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []],
+                    ['/srv/f.js?_r=123', []], ['/srv/jelix/f2.js?_r=123', []], ['/srv/r.fr_FR.js?_r=123', []]),
+                array(['/srv/b.css?_r=123', []], ['/srv/f.css?_r=123', []], ['/srv/themes/sun/f2.css?_r=123', []]),
+            ),
+            array(
+                array('g'),
+                array(['/srv/g.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('k'),
+                array(['/srv/k.fr.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('r'),
+                array(['/srv/r.fr_FR.js?_r=123', []]),
+                array(),
+            ),
+            array(
+                array('a', 'e'),
+                array(['/srv/b.js?_r=123', []], ['/srv/k.fr.js?_r=123', []], ['/srv/c.js?_r=123', ["type"=>"module"]],
+                    ['/srv/a.js?_r=123', []], ['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []], ['/srv/r.fr_FR.js?_r=123', []]),
+                array(['/srv/b.css?_r=123', []]),
+            ),
+            array(
+                array('a', 'f'),
+                array(['/srv/b.js?_r=123', []], ['/srv/k.fr.js?_r=123', []], ['/srv/c.js?_r=123', ["type"=>"module"]],
+                    ['/srv/a.js?_r=123', []], ['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []], ['/srv/f.js?_r=123', []],
+                    ['/srv/jelix/f2.js?_r=123', []], ['/srv/r.fr_FR.js?_r=123', []]),
+                array(['/srv/b.css?_r=123', []], ['/srv/f.css?_r=123', []], ['/srv/themes/sun/f2.css?_r=123', []]),
+            ),
+            array(
+                array('g', 'd', 'e'),
+                array(['/srv/d.js?_r=123', []], ['/srv/g.js?_r=123', []], ['/srv/e.js?_r=123', []] ),
+                array(),
+            ),
+        );
+    }
+
+
+    /**
+     * @dataProvider getLinksWithRevision
+     */
+    function testWebAssetsSelectionWithRevision($selection, $jsLinks, $cssLinks) {
+        $compiler = new WebAssetsCompiler();
+        $ini = '
+[urlengine]
+jelixWWWPath=/srv/jelix/
+assetsRevision=123
+assetsRevQueryUrl="_r=123"
+assetsRevisionParameter="_r"
 
 [webassets]
 useCollection=foo

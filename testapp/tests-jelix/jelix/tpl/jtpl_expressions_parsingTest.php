@@ -273,7 +273,7 @@ class jtpl_expressions_parsingTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     protected $varTag = array(
-        '$aaa|escxml' => 'htmlspecialchars($t->_vars[\'aaa\'])',
+        '$aaa|escxml' => 'htmlspecialchars($t->_vars[\'aaa\'], ENT_QUOTES | ENT_SUBSTITUTE, "UTF-8")',
         '$aaa|jdatetime' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'])',
         '$aaa|jdatetime:\'db_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\')',
         '$aaa|jdatetime:\'db_date\':\'lang_date\'' => 'jtpl_modifier_common_jdatetime($t->_vars[\'aaa\'],\'db_date\',\'lang_date\')',
@@ -291,12 +291,12 @@ class jtpl_expressions_parsingTest extends \Jelix\UnitTests\UnitTestCase {
         foreach($this->varTag as $k=>$t){
             try{
                 $res = $compil->testParseVariable($k);
-                $this->assertEquals($t, $res);
             }catch(jException $e){
                 $this->fail("Test '$k', Unknown Jelix Exception: ".$e->getMessage().' ('.$e->getLocaleKey().') - '.$e->getFile(). '-' .$e->getLine());
             }catch(Exception $e){
                 $this->fail("Test '$k', Unknown Exception: ".$e->getMessage().' - '.$e->getFile(). '-' .$e->getLine());
             }
+            $this->assertEquals($t, $res);
         }
     }
 

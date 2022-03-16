@@ -4,7 +4,7 @@
  * @subpackage  WebAssets
  *
  * @author      Laurent Jouanneau
- * @copyright   2019 Laurent Jouanneau
+ * @copyright   2019-2022 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -15,6 +15,12 @@ namespace Jelix\WebAssets;
 class WebAssetsCompiler
 {
     protected $config;
+
+    /**
+     * @var string the assetsRevQueryUrl configuration value, e.g. something like '_r=1234'.
+     *             It may be empty.
+     */
+    protected $revisionQueryUrlParam;
 
     /**
      * WebAssetsCompiler constructor.
@@ -33,6 +39,7 @@ class WebAssetsCompiler
      */
     public function compile($configuration, $storeIntoConfiguration = true)
     {
+        $this->revisionQueryUrlParam = $configuration->urlengine['assetsRevQueryUrl'];
         $this->config = $configuration;
         $this->collections = array('common' => array());
 
@@ -162,6 +169,16 @@ class WebAssetsCompiler
         return $assetsGroups;
     }
 
+    protected function appendRevisionToUrl($url)
+    {
+        if ($this->revisionQueryUrlParam != '') {
+            $url .= (strpos($url, '?') === false) ? '?' : '&';
+            $url .= $this->revisionQueryUrlParam;
+        }
+
+        return $url;
+    }
+
     protected function parseAsset($asset)
     {
         if (strpos($asset, '|') !== false) {
@@ -171,10 +188,15 @@ class WebAssetsCompiler
             $attributes = '>';
         }
 
+        $isHttp = preg_match('!^https?://!', $asset);
+        if(!$isHttp) {
+           $asset = $this->appendRevisionToUrl($asset);
+        }
+
         if (strpos($asset, '$jelix') !== false) {
             $asset = str_replace('$jelix', rtrim($this->config->urlengine['jelixWWWPath'], '/'), $asset);
         }
-        if ($asset[0] == '/' || preg_match('!^https?://!', $asset)) {
+        if ($asset[0] == '/' || $isHttp) {
             if (strpos($asset, '$lang') !== false || strpos($asset, '$locale') !== false) {
                 return 'l>'.$asset.$attributes;
             }

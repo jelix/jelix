@@ -1,6 +1,101 @@
 Changes into Jelix 1.7
 ======================
 
+
+Jelix 1.7.11
+------------
+
+* Fix installer: the setup of the web files of a module, deleted the content of the directory when it was the target of a link. 
+* debugbar: it can now moved to the top center of the page
+* jTpl
+  * upgrade Castor to 1.1.0. New major features in templates :
+    - support of macro
+    - autoescaping  
+  * pagelinks plugin: new display properties for classes. CSS classes can now be set on each elements of a 
+    list of pages.
+* jForms:
+  * fix time widget: use webassets
+  * date, datetime and time widgets: add placeholders
+  * translate strings into autocomplete widgets
+  * fix the possibility to setup CSS class on buttons widgets
+  * Support of the Image control into the XML format
+  * Improve widgets to facilitate the overriding of html content. On some widgets there are new methods 
+    that output only Html content, so new widget just has to override these methods to change the generated
+    HTML.
+  * more documentation into the code of jFormsSession
+  * new template plugin `{ifctrltype}`
+  * backport the method `HtmlBuilder::outputAllControlsValues()` from Jelix 1.8
+
+
+* all enhancements and bug fixes from Jelix 1.6.36
+  * Fix jacl2db: id_aclgrp field should be bigger than login
+  * Fix entrypoint installation: it did not update path when the `require` instruction for `application.init.php`
+    does not use parenthesis.
+  * Fix jauthdb_admin: it should call `jAuth::canChangePassword()` when needed
+  * jForms, formfull widget: display correctly checkboxes
+  * jForms: separate each item of checkboxes/radioboxes by new line
+  * Fix: error pages should not require authentication
+  * Fix the retrieval of the documentRoot when compiling configuration
+
+Jelix 1.7.10
+------------
+
+* fix a regression into jAuth for module installers. `password_hash_method` and `password_hash_options` were 
+  missing for installers which don't use the new method `jAuth::getDriverConfig()`
+
+
+Jelix 1.7.9
+-----------
+
+* New locale to format money value with or without taxes, `jelix~format.format.monetary.wtax` and `jelix~format.format.monetary.wotax`
+* New controller for CRUD with a filters form: `jControllerDaoCrudFilter`
+* New `jAuth::reloadUserSession()`
+* master_admin: new default menu items group for CRUD (id: `crud`)
+* Backport enhancement and bug fix from JelixDatabase
+  * Pgsql tools: new methods to parse en generate pgsql array values
+  * new methods `jDbResultSet::fetchAssociative()` and `jDbResultSet::fetchAllAssociative()`
+  * new method `jDbResultSet::free()`
+  * new method `ConnectionInterface::close()`
+  * Fix the support of query parameters given to the `execute()` method of mysql and postgresql connectors
+  * Fix the parsing of query parameters: `::something` should not be read as parameter
+* all enhancements and bug fixes from Jelix 1.6.35
+  * jForms
+    * support of option `widgetsAttributes` on the form tag. With this option, we can indicate attributes to set on widgets. Useful when you don't have a ctrl_control tag for a specific widget on which you want to set attributes.
+    * Fix control time in `jforms_light.js`: bad month/day values
+    * fix setting of default attributes in upload widgets
+    * fix autoload of `jFormsControlImageUpload`
+    * fix some issues into upload2 and imageupload widgets
+    * fix the algorithm to guess modified controls with uploads
+    * fix a JS error when closing the image editor dialog
+    * fix the label of the cancel button of the image editor dialog
+  * jAuth
+    * Add hooks on the login form template. It allows to other modules to add content on the login form, like buttons to use other authentication methods.
+    * jAuthDb installer should be able to use compatible drivers. If some authentication module have their own driver but are using the same dao/table of jAuthDb, jAuthDb should be able to create default user when needed.
+    * Fix the `jauth~login:form` controller when after_login is `jauth~login:form`
+  * jAcl2
+    * jacl2db_admin: add title on the pages
+    * Fix jacl2db sql upgrade script about `jacl2_group.code`
+    * Fix jacl2db sql upgrade script about rights for anonymous users
+  * jDb
+    * Fix mysqli connector: execMulti did not return errors. When the given sql scripts fails, there was not an exception, contrary as it is expected.
+  * Core
+    * Support of `<name>.class` properties in the `coordplugins` section of the configuration. It allows to specify a class if its name is different from `*CoordPlugin`.
+    * Backport support of localframework.ini.php. It allows for modules installers to declare a new entrypoint. Installers should call the new method `createEntryPoint()`.
+    * Fix jelix upgrade script about `availableLanguageCode`
+  * jTpl
+    * Fix `number_format` modifier with decimal point value, when `''` is given
+  * Utils
+    * Backport some features of `\Jelix\IniFile` into `jIniModifier`
+  * Installer
+    * `jInstallerBase::createEntryPoint()` should set the path to application.init.php
+  * Fix typo in some locales
+  * Fix the load of some classes with some tools like phpstan
+  * Fix the file2 driver for jKvDb
+  * Fix some doc comments
+  * Rename namespace `jelix` by `Jelix`. No consequence on your code, but it helps to generate a better reference documentation
+
+
+
 Jelix 1.7.8
 -----------
 

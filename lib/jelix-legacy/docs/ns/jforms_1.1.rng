@@ -24,6 +24,7 @@
             <ref name="submit" />
             <ref name="choice" />
             <ref name="captcha" />
+            <ref name="image" />
             <!--
             <ref name="range" />
             -->
@@ -42,6 +43,7 @@
     <ref name="secret" />
     <ref name="output" />
     <ref name="upload" />
+    <ref name="upload2" />
     <ref name="checkbox" />
     <ref name="checkboxes" />
     <ref name="listbox" />
@@ -159,7 +161,7 @@
             <choice>
                 <text />
                 <group>
-                    <emtpy/>
+                    <empty/>
                     <attribute name="locale" />
                 </group>
             </choice>
@@ -186,7 +188,31 @@
      </element>
   </define>
 
-  <define name="checkbox">
+    <define name="upload2">
+        <element name="upload2">
+            <ref name="control.common" />
+            <ref name="UI.attr.readonly" />
+            <ref name="UI.attr.required" />
+            <optional><attribute name="mimetype" /></optional>
+            <optional><attribute name="maxsize"><data type="integer" /></attribute></optional>
+            <ref name="emptyvaluelabel" />
+        </element>
+    </define>
+
+    <define name="image">
+        <element name="image">
+            <ref name="control.common" />
+            <ref name="UI.attr.readonly" />
+            <ref name="UI.attr.required" />
+            <optional><attribute name="mimetype" /></optional>
+            <optional><attribute name="maxsize"><data type="integer" /></attribute></optional>
+            <optional><attribute name="maxWidth"><data type="integer" /></attribute></optional>
+            <optional><attribute name="maxHeight"><data type="integer" /></attribute></optional>
+            <ref name="emptyvaluelabel" />
+        </element>
+    </define>
+
+    <define name="checkbox">
      <element name="checkbox">
        <ref name="control.common" />
        <ref name="UI.attr.readonly" />

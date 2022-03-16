@@ -16,6 +16,17 @@ class jDb_queries_with_pdoTest extends jDb_queryBase {
 
     protected $dbProfile ='testapppdo';
     protected $needPDO = true;
+
+    function setUp() : void
+    {
+        parent::setUp();
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            static::$productPriceType = 'float';
+        }
+
+    }
+
+
 }
 
 

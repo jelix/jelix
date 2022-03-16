@@ -209,6 +209,10 @@ jFormsJQForm.prototype={
                     if(emptyitem)
                         select.append(emptyitem);
                     $.each(data, function(i, item){
+                        if (emptyitem && item.value == '') {
+                            // do not add empty item if it already exists.
+                            return;
+                        }
                         if(typeof item.items == 'object'){
                             select.append('<optgroup label="'+item.label+'"/>');
                             var optgroup = select.children('optgroup[label="'+item.label+'"]').eq(0);

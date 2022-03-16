@@ -18,7 +18,6 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
-        $confTime = &jApp::config()->timepickers;
         $datepicker_default_config = jApp::config()->forms['timepicker'];
 
         if (isset($this->ctrl->timepickerConfig) && $this->ctrl->timepickerConfig) {
@@ -31,23 +30,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             return;
         }
 
-        if (isset($confTime[$config.'.js'])) {
-            $js = $confTime[$config.'.js'];
-            foreach ($js as $file) {
-                $file = str_replace('$lang', jLocale::getCurrentLang(), $file);
-                $resp->addJSLink($file);
-            }
-        }
-        if (isset($confTime[$config])) {
-            $resp->addJSLink($confTime[$config]);
-        }
-
-        if (isset($confTime[$config.'.css'])) {
-            $css = $confTime[$config.'.css'];
-            foreach ($css as $file) {
-                $resp->addCSSLink($file);
-            }
-        }
+        $resp->addAssets('jforms_timepicker_'.$config);
     }
 
     protected function outputJs()
@@ -116,7 +99,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'hour';
         if (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.hour.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {
@@ -137,7 +120,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'minutes';
         if (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.minutes.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {
@@ -160,7 +143,7 @@ class time_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
             echo '<input type="hidden" id="'.$attr['id'].'" name="'.$attr['name'].'" value="'.$value.'"/>';
         } elseif (jApp::config()->forms['controls.time.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text"size="2" maxlength="2"';
+            echo '<input type="text"size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.time.seconds.label')).'"';
             $this->_outputAttr($attr);
             echo $this->_endt;
         } else {

@@ -41,17 +41,22 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         if (is_array($value) && count($value) == 1) {
             $value = $value[0];
         }
-        $span = '<span class="jforms-chkbox jforms-ctl-'.$this->ctrl->ref.'"><input type="checkbox"';
 
         if (is_array($value)) {
             $value = array_map(function ($v) { return (string) $v; }, $value);
         } else {
             $value = (string) $value;
         }
-        $this->showRadioCheck($attr, $value, $span);
+        $this->showRadioCheck($attr, $value, '');
         $this->outputJs($this->ctrl->ref.'[]');
     }
 
+    /**
+     * @param $attr
+     * @param $value
+     * @param string $span is deprecated
+     * @return void
+     */
     protected function showRadioCheck(&$attr, &$value, $span)
     {
         $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
@@ -65,9 +70,9 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
                 if ($group === '') {
                     continue;
                 }
-                echo '<fieldset><legend>'.htmlspecialchars($group).'</legend>'."\n";
+                $this->displayStartRadioCheckboxesGroup($group);
                 $this->echoCheckboxes($span, $id, $values, $attr, $value, $i);
-                echo "</fieldset>\n";
+                $this->displayEndRadioCheckboxesGroup();
             }
             echo "\n";
         } else {
@@ -81,13 +86,30 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         foreach ($values as $v => $label) {
             $attr['id'] = $id.$i;
             $attr['value'] = $v;
-            echo $span;
-            $this->_outputAttr($attr);
-            if ((is_array($value) && in_array((string) $v, $value, true)) || ($value === (string) $v)) {
-                echo ' checked="checked"';
-            }
-            echo '/>','<label for="',$id,$i,'">',htmlspecialchars($label),"</label></span>\n";
+            $checked = (is_array($value) && in_array((string) $v, $value, true)) || ($value === (string) $v);
+            $this->displayRadioCheckbox($attr, $label, $checked);
             ++$i;
         }
     }
+
+    protected function displayStartRadioCheckboxesGroup($groupName)
+    {
+        echo '<fieldset><legend>'.htmlspecialchars($groupName).'</legend>'."\n";
+    }
+
+    protected function displayRadioCheckbox($attr, $label, $checked)
+    {
+        echo '<span class="jforms-chkbox jforms-ctl-'.$this->ctrl->ref.'"><input type="checkbox"';
+        $this->_outputAttr($attr);
+        if ($checked) {
+            echo ' checked';
+        }
+        echo '/>','<label for="',$attr['id'],'">',htmlspecialchars($label),"</label></span> <br/>\n";
+    }
+
+    protected function displayEndRadioCheckboxesGroup()
+    {
+        echo "</fieldset>\n";
+    }
+
 }
