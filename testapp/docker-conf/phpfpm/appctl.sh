@@ -1,7 +1,7 @@
 #!/bin/bash
 APPDIR="/jelixapp/testapp"
-APP_USER=usertest
-APP_GROUP=grouptest
+APP_USER=userphp
+APP_GROUP=groupphp
 
 COMMAND="$1"
 shift

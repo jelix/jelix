@@ -166,81 +166,81 @@ class jtpl_pluginsTest extends \Jelix\UnitTests\UnitTestCase {
         $output = $tpl->fetch ('test_plugin_pagelinks'); //, $outputtype='', $trusted = true, $callMeta=true
         $basePath = jApp::urlBasePath();
         $expected = 
-'1: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
-<li class="pagelinks-prev pagelinks-disabled">&lt;</li>
-<li class="pagelinks-current">1</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
+'1: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled"><a href="#">|&lt;</a></li>
+<li class="pagelinks-prev pagelinks-disabled"><a href="#">&lt;</a></li>
+<li class="pagelinks-current"><a href="#">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">&gt;|</a></li>
 </ul>
-2: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
-<li class="pagelinks-prev pagelinks-disabled">&lt;</li>
-<li class="pagelinks-current">1</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
+2: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled"><a href="#">|&lt;</a></li>
+<li class="pagelinks-prev pagelinks-disabled"><a href="#">&lt;</a></li>
+<li class="pagelinks-current"><a href="#">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">&gt;|</a></li>
 </ul>
-3: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
-<li class="pagelinks-prev pagelinks-disabled">&lt;</li>
-<li class="pagelinks-current">1</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
+3: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled"><a href="#">|&lt;</a></li>
+<li class="pagelinks-prev pagelinks-disabled"><a href="#">&lt;</a></li>
+<li class="pagelinks-current"><a href="#">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">&gt;|</a></li>
 </ul>
 4: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">|&lt;</a></li>
 <li class="pagelinks-prev"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">&lt;</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
-<li class="pagelinks-current">2</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
+<li class="pagelinks-current"><a href="#">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=30">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">5</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=20">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=40">&gt;|</a></li>
 </ul>
-5: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled">|&lt;</li>
-<li class="pagelinks-prev pagelinks-disabled">&lt;</li>
-<li class="pagelinks-current">1</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
+5: <ul class="pagelinks"><li class="pagelinks-start pagelinks-disabled"><a href="#">|&lt;</a></li>
+<li class="pagelinks-prev pagelinks-disabled"><a href="#">&lt;</a></li>
+<li class="pagelinks-current"><a href="#">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">&gt;|</a></li>
 </ul>
 6: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">|&lt;</a></li>
 <li class="pagelinks-prev"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">&lt;</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
-<li class="pagelinks-current">2</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
+<li class="pagelinks-current"><a href="#">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">&gt;|</a></li>
 </ul>
 7: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">|&lt;</a></li>
 <li class="pagelinks-prev"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">&lt;</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
-<li class="pagelinks-current">3</li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
+<li class="pagelinks-current"><a href="#">3</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">4</a></li>
 <li class="pagelinks-next"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">&gt;</a></li>
 <li class="pagelinks-end"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=15">&gt;|</a></li>
 </ul>
 8: <ul class="pagelinks"><li class="pagelinks-start"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">|&lt;</a></li>
 <li class="pagelinks-prev"><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">&lt;</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
-<li><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
-<li class="pagelinks-current">4</li>
-<li class="pagelinks-next pagelinks-disabled">&gt;</li>
-<li class="pagelinks-end pagelinks-disabled">&gt;|</li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=0">1</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=5">2</a></li>
+<li class=""><a href="'.$basePath.'index.php/jelix_tests/urlsig/url1?offset=10">3</a></li>
+<li class="pagelinks-current"><a href="#">4</a></li>
+<li class="pagelinks-next pagelinks-disabled"><a href="#">&gt;</a></li>
+<li class="pagelinks-end pagelinks-disabled"><a href="#">&gt;|</a></li>
 </ul>';
         $this->assertEquals($expected, $output);
     }

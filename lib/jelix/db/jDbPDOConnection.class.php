@@ -154,6 +154,7 @@ class jDbPDOConnection extends PDO
      * TODO check if this is still the case in PHP 8.1+
      * @return jDbPDOResultSet|PDOStatement
      */
+    #[\ReturnTypeWillChange]
     public function query($queryString, $fetchmode = PDO::FETCH_OBJ, ...$fetchModeArgs)
     {
 
@@ -261,6 +262,7 @@ class jDbPDOConnection extends PDO
         return 'SELECT TOP '.$limitCount.' * FROM ('.$queryString.') AS outer_tbl '.$orderby;
     }
 
+    #[\ReturnTypeWillChange]
     public function prepare($query, $driverOptions = array())
     {
         $result = parent::prepare($query, $driverOptions);
@@ -410,6 +412,7 @@ class jDbPDOConnection extends PDO
      *
      * @return string
      */
+    #[\ReturnTypeWillChange]
     public function lastInsertId($fromSequence = null)
     {
         if ($this->dbms == 'mssql') {

@@ -24,6 +24,9 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
     function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
+        static::$productIdType = 'string';
+        static::$productPriceType = 'string';
+        static::$productPromoType = 'string';
     }
 
     function tearDown() : void  {

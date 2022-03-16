@@ -6,7 +6,7 @@
  * @author       Laurent Jouanneau
  * @contributor  Dominique Papin, Julien Issler, Brunto, DSDenes
  *
- * @copyright    2007-2020 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright    2007-2022 Laurent Jouanneau, 2007 Dominique Papin
  * @copyright    2008-2010 Julien Issler, 2010 Brunto, 2009 DSDenes
  *
  * @see         http://www.jelix.org
@@ -21,8 +21,12 @@
  * @param string     $builder the builder type to use
  * @param array      $options options for the builder
  */
-function jtpl_function_html_formdatafull($tpl, $form, $builder = 'html', $options = array())
+function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = array())
 {
+    if ($builder == '') {
+        $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
+    }
+
     $formTplController = new \jelix\forms\HtmlWidget\TemplateController($form, $builder, $options);
     $formTplController->startForm();
     $formTplController->outputAllControlsValues();

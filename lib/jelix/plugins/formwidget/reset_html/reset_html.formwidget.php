@@ -23,12 +23,29 @@
  */
 class reset_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
+    protected function getCSSClass()
+    {
+        if (isset($this->attributes['class'])) {
+            $class = $this->attributes['class'].' ';
+        } else {
+            $class = '';
+        }
+
+        $class .= 'jforms-ctrl-'.$this->ctrl->type;
+
+        $attrClass = $this->ctrl->getAttribute('class');
+        if ($attrClass) {
+            $class .= ' '.$attrClass;
+        }
+
+        return $class.' jforms-reset';
+    }
+
     public function outputControl()
     {
         $attr = $this->getControlAttributes();
 
         unset($attr['readonly']);
-        $attr['class'] = 'jforms-reset';
         $attr['type'] = 'reset';
         echo '<button';
         $this->_outputAttr($attr);

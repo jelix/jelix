@@ -161,7 +161,7 @@ class memcacheCacheDriver implements jICacheDriver
             return false;
         }
 
-        return $this->_memcache->increment($key, $var);
+        return $this->_memcache->increment($key, (int)$var);
     }
 
     /**
@@ -182,7 +182,7 @@ class memcacheCacheDriver implements jICacheDriver
             return false;
         }
         if (is_float($val)) {
-            $val = ((int) $val) - $var;
+            $val = ((int) $val) - (int)$var;
             if ($this->_memcache->set($key, $val)) {
                 return $val;
             }
@@ -190,7 +190,7 @@ class memcacheCacheDriver implements jICacheDriver
             return false;
         }
 
-        return $this->_memcache->decrement($key, $var);
+        return $this->_memcache->decrement($key, (int)$var);
     }
 
     /**

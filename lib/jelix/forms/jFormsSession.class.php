@@ -15,10 +15,17 @@
  * containers. It allows to get and store jForms containers data into an
  * external storage using jCache.
  *
- * jFormsSession instances can be stored temporarly in session, in order to have
- * the opportunity, at the end of the request processing, so when the session is
- * saved, to store automatically jForms containers data that have been readed,
- * created or modified.
+ * Containers data can be huge, and we don't need all of them at each HTTP requests.
+ * Storing containers data outside the PHP session allows to save memory and io bandwidth
+ * during the load of session data at each requests.
+ *
+ * However, the moment where PHP session data are saved (at the end of each HTTP requests processing),
+ * is a good time to save containers data used during the HTTP request, because we know that at this
+ * moment we don't need anymore of the containers data.
+ *
+ * This is why jFormsSession instances are stored into PHP Sessions anyway, but without containers data.
+ * Its `__sleep()` methods forbid the PHP session manager to save containers data. Instead, the `__sleep()`
+ * saves itself these data with jCache.
  *
  * A profile for jCache, named 'jforms', may be declared in profiles.ini.php,
  * so you can choose where jforms data are stored. A virtual profile is used
@@ -33,6 +40,12 @@ class jFormsSession
         $this->loadProfile();
     }
 
+    /**
+     * Check or create if needed, that there is a profile for jCache.
+     *
+     * @return void
+     * @throws jException
+     */
     protected function loadProfile()
     {
         // be sure we have a profile for jCache.
@@ -62,10 +75,17 @@ class jFormsSession
     public function __sleep()
     {
         $this->save();
-
+        // returns an empty array, to say that no properties (so no containers data) are serialized
+        // into the PHP session
         return array();
     }
 
+    /**
+     * Saves containers data that have been created or loaded.
+     *
+     * @return void
+     * @throws jException when the cache backend fails
+     */
     public function save()
     {
         foreach ($this->containers as $key => $container) {
@@ -73,6 +93,9 @@ class jFormsSession
         }
     }
 
+    /**
+     * @var jFormsDataContainer[]  keys are cache keys
+     */
     protected $containers = array();
 
     /**

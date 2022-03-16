@@ -62,10 +62,9 @@ cd lib/jelix-modules/jacl2db/Command
 cd lib/jelix-modules/jacl2db/daos
   __ALL__
 cd lib/jelix-modules/jacl2db/install
-  __ALL__
+  __ALL_RECURSIVELY__
 cd lib/jelix-modules/jacl2db/Command
   __ALL_RECURSIVELY__
-
 cd lib/jelix-modules/jacl2db/locales/en_GB/
 cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
 cd lib/jelix-modules/jacl2db/locales/en_US/

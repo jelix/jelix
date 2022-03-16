@@ -17,6 +17,12 @@ require_once __DIR__.'/jFormsControlUpload2.class.php';
  */
 class jFormsControlImageUpload extends jFormsControlUpload2
 {
+    /** @var int max width for images */
+    public $maxWidth = 0;
+
+    /** @var int max width for images */
+    public $maxHeight = 0;
+
     protected function processNewFile($fileInfo)
     {
         $this->error = null;

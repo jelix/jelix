@@ -14,6 +14,8 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Forms\HtmlWidget\WidgetInterface;
+
 /**
  * HTML form builder.
  *
@@ -84,8 +86,9 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
         $value = $this->getValue();
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
-        $class = $this->ctrl->getAttribute('class');
-        echo '<ul class="jforms-choice jforms-ctl-'.$ctrl->ref.($class ? ' '.$class : '').'" >',"\n";
+        $class = 'jforms-choice jforms-ctl-'.$ctrl->ref.' '.$this->ctrl->getAttribute('class');
+        $this->displayStartChoice($attr['id'].'_choice_list', $class, '');
+
         if (is_array($value)) {
             if (isset($value[0])) {
                 $value = $value[0];
@@ -95,15 +98,18 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
         }
         $value = (string) $value;
 
-        $itemLabelClass = (isset($attr['itemLabelClass']) ? ' class="'.$attr['itemLabelClass'].'"' : '');
-        unset($attr['itemLabelClass']);
+        $attrLabel = array();
+        if (isset($attr['itemLabelClass'])) {
+            $attrLabel['class'] = $attr['itemLabelClass'];
+            unset($attr['itemLabelClass']);
+        }
 
         $i = 0;
         $attr['name'] = $ctrl->ref;
         $id = $this->builder->getName().'_'.$ctrl->ref.'_';
         $attr['type'] = 'radio';
         unset($attr['class']);
-        $readonly = (isset($attr['readonly']) && $attr['readonly'] != ''); // FIXME: should be used?
+        //$readonly = (isset($attr['readonly']) && $attr['readonly'] != ''); // FIXME: should be used?
 
         $this->jsChoiceInternal($ctrl);
 
@@ -111,17 +117,21 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
             if (!$ctrl->isItemActivated($itemName)) {
                 continue;
             }
-            echo '<li id="'.$id.$itemName.'_item"><input';
+
             $attr['id'] = $id.$i;
             $attr['value'] = $itemName;
+            $checked = false;
             if ((string) $itemName === $value) {
-                $attr['checked'] = 'checked';
-            } else {
-                unset($attr['checked']);
+                $checked = true;
             }
-            $this->_outputAttr($attr);
-            echo ' onclick="'.$jFormsJsVarName.'.getForm(\'',$this->builder->getName(),'\').getControl(\'',$ctrl->ref,'\').activate(\'',$itemName,'\')"', $this->_endt;
-            echo '<label for="',$attr['id'],'"',$itemLabelClass,'>',htmlspecialchars($ctrl->itemsNames[$itemName]),"</label>\n";
+            $attr['onclick'] = $jFormsJsVarName.'.getForm(\''.$this->builder->getName().'\').getControl(\''.$ctrl->ref.'\').activate(\''.$itemName.'\')';
+            $this->displayStartChoiceItem(
+                $id.$itemName.'_item',
+                $attr,
+                $checked,
+                $ctrl->itemsNames[$itemName],
+                $attrLabel
+            );
 
             $displayedControls = false;
             foreach ($listctrl as $ref => $c) {
@@ -130,22 +140,17 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
                 }
                 $widget = $this->builder->getWidget($c, $this);
                 $displayedControls = true;
-                echo ' <span class="jforms-item-controls">';
-                $widget->outputLabel();
-                echo ' ';
-                $widget->outputControl();
-                $widget->outputHelp();
-                echo "</span>\n";
+                $this->displayControl($widget);
                 $this->parentWidget->addJs('c2.addControl(c, '.$this->escJsStr($itemName).");\n");
             }
             if (!$displayedControls) {
                 $this->parentWidget->addJs('c2.items['.$this->escJsStr($itemName)."]=[];\n");
             }
 
-            echo "</li>\n";
+            $this->displayEndChoiceItem();
             ++$i;
         }
-        echo "</ul>\n\n";
+        $this->displayEndChoice();
         $this->parentWidget->addJs("c2.activate('".$value."');\n");
     }
 
@@ -164,37 +169,104 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
         }
 
         $attr['name'] = $ctrl->ref;
-        $id = $this->builder->getName().'_'.$ctrl->ref.'_'; // FIXME should be used?
-        $attr['type'] = 'radio';
 
         if (!isset($ctrl->items[$value])) {
             if (!$ctrl->isItemActivated($value) || $ctrl->emptyValueLabel === null) {
                 return;
             }
-            echo '<span ';
-            $this->_outputAttr($attr);
-            echo '>', htmlspecialchars($ctrl->emptyValueLabel), '</span>';
-
+            $this->displayEmptyValue($attr, $ctrl->emptyValueLabel);
             return;
         }
 
-        echo '<label>',htmlspecialchars($value),"</label>\n";
         $listctrl = $ctrl->items[$value];
-        if (count($listctrl)) {
-            echo "<ul>\n";
+        $hasChildValues = count($listctrl) > 0;
+        $this->displayValueLabel($ctrl->itemsNames[$value], $value, $hasChildValues);
+        if ($hasChildValues) {
+            $this->displayValueStartBlock();
             foreach ($listctrl as $ref => $c) {
                 if (!$this->builder->getForm()->isActivated($ref) || $c->type == 'hidden') {
                     continue;
                 }
                 $widget = $this->builder->getWidget($c, $this);
-                echo '<li class="jforms-item-controls">';
-                $widget->outputLabel('', false);
-                echo ':';
-                $widget->outputControlValue();
-                echo "</li>\n";
+                $this->displayControlValue($widget);
             }
 
-            echo "</ul>\n";
+            $this->displayValueEndBlock();
         }
     }
+
+    protected function displayStartChoice($blockId, $class, $attrs)
+    {
+        echo '<ul class="'.$class.'" id="'.$blockId.'" '.$attrs.'>', "\n";
+    }
+
+    protected function displayStartChoiceItem($idItem, $attrRadio, $checked, $label, $attrLabel)
+    {
+        echo '<li id="'.$idItem.'"><input ';
+        $this->_outputAttr($attrRadio);
+        echo ' '.($checked ? 'checked' : '').'/><label for="'.$attrRadio['id'].'"';
+        $this->_outputAttr($attrLabel);
+        echo '>'.htmlspecialchars($label)."</label>\n";
+    }
+
+    /**
+     * @param WidgetInterface $widget
+     */
+    protected function displayControl($widget)
+    {
+        echo ' <span class="jforms-item-controls">';
+        $widget->outputLabel();
+        echo ' ';
+        $widget->outputControl();
+        $widget->outputHelp();
+        echo "</span>\n";
+    }
+
+    protected function displayEndChoiceItem()
+    {
+        echo "</li>\n";
+    }
+
+    protected function displayEndChoice()
+    {
+        echo "</ul>\n\n";
+    }
+
+
+    protected function displayEmptyValue($attr, $emptyLabel)
+    {
+        echo '<span ';
+        $this->_outputAttr($attr);
+        echo '>', htmlspecialchars($emptyLabel), '</span>';
+    }
+
+    protected function displayValueLabel($label, $value, $hasChildValues)
+    {
+        echo '<label>',htmlspecialchars($label),"</label>\n";
+    }
+
+    protected function displayValueStartBlock()
+    {
+        echo "<ul>\n";
+    }
+
+    /**
+     * @param WidgetInterface $widget
+     * @return void
+     */
+    protected function displayControlValue($widget)
+    {
+        echo '<li class="jforms-item-controls">';
+        $widget->outputLabel('', false);
+        echo ':';
+        $widget->outputControlValue();
+        echo "</li>\n";
+    }
+
+    protected function displayValueEndBlock()
+    {
+        echo "</ul>\n";
+    }
+
+
 }

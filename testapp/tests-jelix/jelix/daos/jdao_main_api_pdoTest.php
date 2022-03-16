@@ -14,10 +14,16 @@ require_once(__DIR__.'/jdao_main_api.lib.php');
  * same tests as jdao_main_api_pdo, but with a pdo connection
  */
 class jdao_main_api_pdoTest extends jdao_main_api_base {
+
     function setUp() : void  {
         parent::setUp();
         $this->dbProfile ='testapppdo';
         $this->needPDO =  true;
+        if (version_compare(PHP_VERSION, '8.1', '>=')) {
+            static::$productIdType = 'integer';
+            static::$productPriceType = 'float';
+            static::$productPromoType = 'integer';
+        }
     }
 }
 

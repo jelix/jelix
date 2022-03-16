@@ -23,12 +23,29 @@
  */
 class button_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 {
+    protected function getCSSClass()
+    {
+        if (isset($this->attributes['class'])) {
+            $class = $this->attributes['class'].' ';
+        } else {
+            $class = '';
+        }
+
+        $class .= 'jforms-ctrl-'.$this->ctrl->type;
+
+        $attrClass = $this->ctrl->getAttribute('class');
+        if ($attrClass) {
+            $class .= ' '.$attrClass;
+        }
+
+        return $class;
+    }
+
     public function outputControl()
     {
         $attr = $this->getControlAttributes();
 
-        unset($attr['readonly'], $attr['class']); //readonly is useless on button
-        //no class on button
+        unset($attr['readonly']); //readonly is useless on button
 
         $attr['value'] = $this->getValue();
         echo '<button ';

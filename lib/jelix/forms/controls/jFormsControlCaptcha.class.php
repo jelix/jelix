@@ -51,6 +51,10 @@ class jFormsControlCaptcha extends jFormsControl
         return $this->type;
     }
 
+    /**
+     * @return \Jelix\Forms\Captcha\CaptchaValidatorInterface
+     * @throws Exception
+     */
     protected function getCaptcha()
     {
         $className = '';

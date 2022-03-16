@@ -108,7 +108,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'day';
         if (jApp::config()->forms['controls.datetime.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.date.day.label')).'"';
             $this->_outputAttr($attr);
             echo '/>';
         } else {
@@ -129,7 +129,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'month';
         if (jApp::config()->forms['controls.datetime.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="2" maxlength="2"';
+            echo '<input type="text" size="2" maxlength="2" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.date.month.label')).'"';
             $this->_outputAttr($attr);
             echo '/>';
         } else {
@@ -158,7 +158,7 @@ class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $attr['id'] .= 'year';
         if (jApp::config()->forms['controls.datetime.input'] == 'textboxes') {
             $attr['value'] = $value;
-            echo '<input type="text" size="4" maxlength="4"';
+            echo '<input type="text" size="4" maxlength="4" placeholder="'.htmlspecialchars(jLocale::get('jelix~jforms.date.year.label')).'"';
             $this->_outputAttr($attr);
             echo '/>';
         } else {

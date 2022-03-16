@@ -120,6 +120,9 @@ class jDatatypeString extends jDatatype
     public function check($value)
     {
         if ($this->hasFacets) {
+            if ($value === null) {
+                $value = '';
+            }
             $len = iconv_strlen(
                 trim(preg_replace('@\s+@', ' ', $value)),
                 jApp::config()->charset

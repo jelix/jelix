@@ -35,14 +35,14 @@ class MapperConfig
      *
      * @var string
      */
-    protected $mapFile;
+    protected $mapFile = '';
 
     /**
      * file that contains the url mapping, into var/config.
      *
      * @var string
      */
-    protected $localMapFile;
+    protected $localMapFile = '';
 
     public function __construct(array $options = array())
     {

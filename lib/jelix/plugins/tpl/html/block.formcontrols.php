@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin, F. Fernandez, Dominique Papin, Alexis Métaireau
  *
- * @copyright   2007-2020 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
+ * @copyright   2007-2022 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -75,10 +75,11 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
         $content .= '$ctrls_notto_display=null;';
     }
     $_frmctrlInsideForm = $compiler->isInsideBlock('form');
+    $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
     $content .= '
 if (!isset($t->_privateVars[\'__formTplController\'])) {
     if ($form === null) { throw new \Exception("Error: form is missing to process formcontrols"); }
-    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,"html");
+    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,\''.$builder.'\');
 }
 ';
 

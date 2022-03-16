@@ -94,8 +94,6 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
                     require_once JELIX_LIB_PATH.'auth/jAuth.class.php';
                     require_once JELIX_LIB_PATH.'plugins/auth/db/db.auth.php';
 
-                    $arConfig = $conf->getValues($section_auth);
-                    $arConfig[$driver] = $conf->getValues($section_driver);
                     $driverConfig = jAuth::getDriverConfig();
                     $driver = new dbAuthDriver($driverConfig);
                     $passwordHash = $driver->cryptPassword('admin');

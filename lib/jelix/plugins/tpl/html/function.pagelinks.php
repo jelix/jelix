@@ -4,7 +4,7 @@
  * @subpackage jtpl_plugin
  *
  * @author     Laurent Jouanneau
- * @copyright  2007-2019 Laurent Jouanneau
+ * @copyright  2007-2022 Laurent Jouanneau
  * @contributor Christian Tritten (christian.tritten@laposte.net)
  *
  * @copyright  2007 Christian Tritten
@@ -62,11 +62,21 @@ function jtpl_function_html_pagelinks(
 
         $urlaction = jUrl::get($action, $actionParams, jUrl::JURLACTION);
 
-        $defaultDisplayProperties = array('start-label' => '|&lt;',
+        $defaultDisplayProperties = array(
+            'start-label' => '|&lt;',
+            'start-class' => 'pagelinks-start',
             'prev-label' => '&lt;',
+            'prev-class' => 'pagelinks-prev',
             'next-label' => '&gt;',
+            'next-class' => 'pagelinks-next',
             'end-label' => '&gt;|',
-            'area-size' => 0, );
+            'end-class' => 'pagelinks-end',
+            'area-size' => 0,
+            'list-class' => 'pagelinks',
+            'current-page-class' => 'pagelinks-current',
+            'page-class' => '',
+            'disabled-class' => 'pagelinks-disabled'
+        );
 
         if (is_array($displayProperties) && count($displayProperties) > 0) {
             $displayProperties = array_merge($defaultDisplayProperties, $displayProperties);
@@ -87,14 +97,14 @@ function jtpl_function_html_pagelinks(
         // Generates list of page offsets
         for ($curidx = 0; $curidx < $itemsTotal; $curidx += $pageSize) {
             if ($offset >= $curidx && $offset < $curidx + $pageSize) {
-                $pages[$numpage] = '<li class="pagelinks-current">'.$numpage.'</li>';
+                $pages[$numpage] = '<li class="'.$displayProperties['current-page-class'].'"><a href="#">'.$numpage.'</a></li>';
                 $prevBound = $curidx - $pageSize;
                 $nextBound = $curidx + $pageSize;
                 $currentPage = $numpage;
             } else {
                 $urlaction->params[$paramName] = $curidx;
                 $url = $jUrlEngine->create($urlaction);
-                $pages[$numpage] = '<li><a href="'.$url->toString(true).'">'.$numpage.'</a></li>';
+                $pages[$numpage] = '<li class="'.$displayProperties['page-class'].'"><a href="'.$url->toString(true).'">'.$numpage.'</a></li>';
             }
             ++$numpage;
         }
@@ -116,26 +126,26 @@ function jtpl_function_html_pagelinks(
         $urlEndPage = $jUrlEngine->create($urlaction);
 
         // Links display
-        echo '<ul class="pagelinks">';
+        echo '<ul class="'.$displayProperties['list-class'].'">';
 
         // Start link
         if (!empty($displayProperties['start-label'])) {
-            echo '<li class="pagelinks-start';
+            echo '<li class="'.$displayProperties['start-class'];
             if ($prevBound >= 0) {
                 echo '"><a href="', $urlStartPage->toString(true), '">', $displayProperties['start-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['start-label'];
+                echo ' '.$displayProperties['disabled-class'].'"><a href="#">',$displayProperties['start-label'], '</a>';
             }
             echo '</li>', "\n";
         }
 
         // Previous link
         if (!empty($displayProperties['prev-label'])) {
-            echo '<li class="pagelinks-prev';
+            echo '<li class="'.$displayProperties['prev-class'];
             if ($prevBound >= 0) {
                 echo '"><a href="', $urlPrevPage->toString(true), '">', $displayProperties['prev-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['prev-label'];
+                echo ' '.$displayProperties['disabled-class'].'"><a href="#">',$displayProperties['prev-label'], '</a>';
             }
             echo '</li>', "\n";
         }
@@ -166,28 +176,28 @@ function jtpl_function_html_pagelinks(
 
         // Next link
         if (!empty($displayProperties['next-label'])) {
-            echo '<li class="pagelinks-next';
+            echo '<li class="'.$displayProperties['next-class'];
             if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlNextPage->toString(true), '">', $displayProperties['next-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['next-label'];
+                echo ' '.$displayProperties['disabled-class'].'"><a href="#">',$displayProperties['next-label'], '</a>';
             }
             echo '</li>', "\n";
         }
 
         // End link
         if (!empty($displayProperties['end-label'])) {
-            echo '<li class="pagelinks-end';
+            echo '<li class="'.$displayProperties['end-class'];
             if ($nextBound < $itemsTotal) {
                 echo '"><a href="', $urlEndPage->toString(true), '">', $displayProperties['end-label'], '</a>';
             } else {
-                echo ' pagelinks-disabled">',$displayProperties['end-label'];
+                echo ' '.$displayProperties['disabled-class'].'"><a href="#">',$displayProperties['end-label'], '</a>';
             }
             echo '</li>', "\n";
         }
 
         echo '</ul>';
     } else {
-        echo '<ul class="pagelinks"><li class="pagelinks-current">1</li></ul>';
+        echo '<ul class="'.$displayProperties['list-class'].'"><li class="'.$displayProperties['current-page-class'].'">1</li></ul>';
     }
 }

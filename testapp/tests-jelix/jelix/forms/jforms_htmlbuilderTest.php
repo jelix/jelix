@@ -168,7 +168,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
      */
     public function testOutputInput()
     {
-        $ctrl= new jFormsControlinput('input1');
+        $ctrl= new jFormsControlInput('input1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -462,7 +462,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputCheckboxes()
     {
-        $ctrl= new jFormsControlcheckboxes('choixsimple');
+        $ctrl= new jFormsControlCheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -483,9 +483,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
 c.errRequired=\'"Vos choix" field is required\';
@@ -498,9 +498,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
 c.errRequired=\'"Vos choix" field is required\';
@@ -519,10 +519,10 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'."\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixsimple_0">foo</label></span>'." <br/>\n";
         $result.="<fieldset><legend>toto</legend>\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'."\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_1" class="jforms-ctrl-checkboxes" value="11" checked/><label for="'.self::$formname.'_choixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixsimple"><input type="checkbox" name="choixsimple[]" id="'.self::$formname.'_choixsimple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixsimple_2">baz</label></span>'." <br/>\n";
         $result.="</fieldset>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixsimple[]\', \'Vos choix\');
@@ -551,9 +551,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errRequired=\'"Vos choix" field is required\';
@@ -566,9 +566,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11" checked="checked"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11" checked/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errRequired=\'"Vos choix" field is required\';
@@ -581,9 +581,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10" checked="checked"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23" checked="checked"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" class="jforms-ctrl-checkboxes" value="10" checked/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" class="jforms-ctrl-checkboxes" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" class="jforms-ctrl-checkboxes" value="23" checked/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
 c.errRequired=\'"Vos choix" field is required\';
@@ -602,9 +602,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="10" checked="checked"/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="23" checked="checked"/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_0" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="10" checked/><label for="'.self::$formname.'_choixmultiple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_1" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="11"/><label for="'.self::$formname.'_choixmultiple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-chkbox jforms-ctl-choixmultiple"><input type="checkbox" name="choixmultiple[]" id="'.self::$formname.'_choixmultiple_2" readonly="readonly" class="jforms-ctrl-checkboxes jforms-readonly" value="23" checked/><label for="'.self::$formname.'_choixmultiple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'choixmultiple[]\', \'Vos choix\');
 c.readOnly = true;
@@ -619,7 +619,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputRadiobuttons()
     {
-        $ctrl= new jFormsControlradiobuttons('rbchoixsimple');
+        $ctrl= new jFormsControlRadiobuttons('rbchoixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -633,9 +633,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errRequired=\'"Votre choix" field is required\';
@@ -649,9 +649,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked="checked"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errRequired=\'"Votre choix" field is required\';
@@ -670,9 +670,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked="checked"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11" checked/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errRequired=\'"Votre choix" field is required\';
@@ -685,9 +685,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23" checked="checked"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" class="jforms-ctrl-radiobuttons" value="23" checked/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
 c.errRequired=\'"Votre choix" field is required\';
@@ -705,9 +705,9 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="23" checked="checked"/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="10"/><label for="'.self::$formname.'_rbchoixsimple_0">foo</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="11"/><label for="'.self::$formname.'_rbchoixsimple_1">bar</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_2" readonly="readonly" class="jforms-ctrl-radiobuttons jforms-readonly" value="23" checked/><label for="'.self::$formname.'_rbchoixsimple_2">baz</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
         $this->assertEquals('c = new jFormsJQControlString(\'rbchoixsimple\', \'Votre choix\');
 c.readOnly = true;
@@ -725,16 +725,16 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.self::$formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0"/><label for="'.self::$formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.self::$formname.'_rbchoixsimple_0">Yes</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0"/><label for="'.self::$formname.'_rbchoixsimple_1">No</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
 
         self::$form->setData('rbchoixsimple', 0);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.self::$formname.'_rbchoixsimple_0">Yes</label></span>'."\n";
-        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0" checked="checked"/><label for="'.self::$formname.'_rbchoixsimple_1">No</label></span>'."\n\n";
+        $result='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_0" class="jforms-ctrl-radiobuttons" value="1"/><label for="'.self::$formname.'_rbchoixsimple_0">Yes</label></span>'." <br/>\n";
+        $result.='<span class="jforms-radio jforms-ctl-rbchoixsimple"><input type="radio" name="rbchoixsimple" id="'.self::$formname.'_rbchoixsimple_1" class="jforms-ctrl-radiobuttons" value="0" checked/><label for="'.self::$formname.'_rbchoixsimple_1">No</label></span>'." <br/>\n\n";
         $this->assertEquals($result, $out);
 
         self::$builder->clearJs();
@@ -745,7 +745,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputMenulist()
     {
-        $ctrl= new jFormsControlmenulist('menulist1');
+        $ctrl= new jFormsControlMenulist('menulist1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1177,7 +1177,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputListbox()
     {
-        $ctrl= new jFormsControllistbox('listbox1');
+        $ctrl= new jFormsControlListbox('listbox1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1397,7 +1397,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputListboxClassDatasource()
     {
-        $ctrl= new jFormsControllistbox('listboxclass');
+        $ctrl= new jFormsControlListbox('listboxclass');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         jClasses::inc('mydatasource');
@@ -1427,7 +1427,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputTextarea()
     {
-        $ctrl= new jFormsControltextarea('textarea1');
+        $ctrl= new jFormsControlTextarea('textarea1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -1681,7 +1681,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value=""/><span class="jforms-value"></span>'."\n", $out);
+        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value=""/><span  class="jforms-value jforms-ctrl-output"></span>'."\n", $out);
         $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
@@ -1689,7 +1689,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
+        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span  class="jforms-value jforms-ctrl-output">laurent</span>'."\n", $out);
         $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
@@ -1697,7 +1697,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value">laurent</span>'."\n", $out);
+        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span  class="jforms-value jforms-ctrl-output jforms-readonly">laurent</span>'."\n", $out);
         $this->assertEquals('c=null;', self::$builder->getJsContent());
 
 
@@ -1710,7 +1710,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span class="jforms-value" title="ceci est un tooltip">laurent</span>'."\n", $out);
+        $this->assertEquals('<input name="output1" id="'.self::$formname.'_output1" type="hidden" value="laurent"/><span  class="jforms-value jforms-ctrl-output jforms-readonly" title="ceci est un tooltip">laurent</span>'."\n", $out);
         $this->assertEquals('c=null;', self::$builder->getJsContent());
     }
 
@@ -1800,7 +1800,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
+        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" class="jforms-ctrl-submit jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
 
 
@@ -1808,7 +1808,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
+        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" class="jforms-ctrl-submit jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
 
 
@@ -1816,7 +1816,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Ok"/>'."\n", $out);
+        $this->assertEquals('<input name="submit1" id="'.self::$formname.'_submit1" title="ceci est un tooltip" class="jforms-ctrl-submit jforms-submit" type="submit" value="Ok"/>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
 
 
@@ -1827,8 +1827,8 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $output = ' <input name="submit1" id="'.self::$formname.'_submit1_svg" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Sauvegarde"/>';
-        $output .= ' <input name="submit1" id="'.self::$formname.'_submit1_prev" title="ceci est un tooltip" class="jforms-submit" type="submit" value="Preview"/>'."\n";
+        $output = ' <input name="submit1" id="'.self::$formname.'_submit1_svg" title="ceci est un tooltip" class="jforms-ctrl-submit jforms-submit" type="submit" value="Sauvegarde"/>';
+        $output .= ' <input name="submit1" id="'.self::$formname.'_submit1_prev" title="ceci est un tooltip" class="jforms-ctrl-submit jforms-submit" type="submit" value="Preview"/>'."\n";
         $this->assertEquals($output, $out);
         $this->assertEquals('', self::$builder->getJsContent());
     }
@@ -1850,14 +1850,14 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
+        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" class="jforms-ctrl-reset jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
 
         $ctrl->setReadOnly(true);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
+        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" class="jforms-ctrl-reset jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
 
 
@@ -1865,7 +1865,7 @@ jFormsJQ.tForm.addControl(c);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
-        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" title="ceci est un tooltip" class="jforms-reset" type="reset">Effacer</button>'."\n", $out);
+        $this->assertEquals('<button name="reset1" id="'.self::$formname.'_reset1" title="ceci est un tooltip" class="jforms-ctrl-reset jforms-reset" type="reset">Effacer</button>'."\n", $out);
         $this->assertEquals('', self::$builder->getJsContent());
     }
     /**
@@ -1921,7 +1921,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputCaptcha()
     {
-        $ctrl= new jFormsControlcaptcha('cap');
+        $ctrl= new jFormsControlCaptcha('cap');
         $ctrl->label='captcha for security';
         self::$form->addControl($ctrl);
 
@@ -2002,7 +2002,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputHtmleditor()
     {
-        $ctrl= new jFormsControlhtmleditor('contenu');
+        $ctrl= new jFormsControlHtmlEditor('contenu');
         $ctrl->label='Texte';
         self::$form->addControl($ctrl);
 
