@@ -309,6 +309,7 @@ cd testapp/var/config
   localframework.ini.php.dist
   profiles.ini.php5.dist
   profiles.ini.php7.dist
+  profiles.ini.php8.dist
   urls.xml
   urls_rest.xml
   urls_old.xml
