@@ -148,6 +148,9 @@ abstract class jFormsControl
 
     public function setData($value)
     {
+        if ($value === null) {
+            $value = '';
+        }
         $this->container->data[$this->ref] = $value;
     }
 

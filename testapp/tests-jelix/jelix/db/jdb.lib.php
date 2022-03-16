@@ -17,7 +17,7 @@ abstract class jDb_queryBase extends jUnitTestCase {
     static protected $productNameType = 'string';
     static protected $productPriceType = 'string';
 
-    function setUp() : void
+    function setUp()
     {
         parent::setUp();
         static::$productNameType = 'string';
