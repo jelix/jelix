@@ -90,18 +90,22 @@ trait FileHelpersTrait
                     $path = str_replace('www:', \jApp::wwwPath(), $path);
 
                     break;
+
                 case 'varconfig':
                     $path = str_replace('varconfig:', \jApp::varConfigPath(), $path);
 
                     break;
+
                 case 'appconfig':
                     $path = str_replace('appconfig:', \jApp::appSystemPath(), $path);
 
                     break;
+
                 case 'appsystem':
                     $path = str_replace('appsystem:', \jApp::appSystemPath(), $path);
 
                     break;
+
                 case 'config':
                     if ($this->globalSetup->forLocalConfiguration()) {
                         $path = str_replace('config:', \jApp::varConfigPath(), $path);
@@ -110,18 +114,22 @@ trait FileHelpersTrait
                     }
 
                     break;
+
                 case 'var':
                     $path = str_replace('var:', \jApp::varPath(), $path);
 
                     break;
+
                 case 'temp':
                     $path = str_replace('temp:', \jApp::tempPath(), $path);
 
                     break;
+
                 case 'log':
                     $path = str_replace('log:', \jApp::logPath(), $path);
 
                     break;
+
                 default:
                     throw new \InvalidArgumentException($m[1].' is an invalid shortcut');
             }

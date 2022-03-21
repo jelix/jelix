@@ -214,8 +214,8 @@ class ModuleInstallerLauncher
      */
     public function saveModuleStatus()
     {
-        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL ||
-            $this->globalSetup->forLocalConfiguration()
+        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL
+            || $this->globalSetup->forLocalConfiguration()
         ) {
             $conf = $this->globalSetup->getSystemConfigIni(true);
             $conf['local'] = $this->globalSetup->getLocalConfigIni();
@@ -332,8 +332,8 @@ class ModuleInstallerLauncher
         }
 
         if ($this->moduleConfigurator === null) {
-            if (!file_exists($this->moduleStatus->getPath().'install/configure.php') ||
-                $this->moduleStatus->skipInstaller
+            if (!file_exists($this->moduleStatus->getPath().'install/configure.php')
+                || $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleConfigurator = false;
 
@@ -383,8 +383,8 @@ class ModuleInstallerLauncher
         }
 
         if ($this->moduleInstaller === null) {
-            if (!file_exists($this->moduleStatus->getPath().'install/install.php') ||
-                $this->moduleStatus->skipInstaller
+            if (!file_exists($this->moduleStatus->getPath().'install/install.php')
+                || $this->moduleStatus->skipInstaller
             ) {
                 $this->moduleInstaller = false;
 

@@ -13,7 +13,6 @@
  *
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
-
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {
     /**
@@ -73,8 +72,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
             // Case 1 : if there's a port value and no ':' in the host string
 
             if (isset($this->_profile['port'])
-                and
-                strpos($this->_profile['host'], ':') === false) {
+                and strpos($this->_profile['host'], ':') === false) {
                 $server = new stdClass();
                 $server->host = $this->_profile['host'];
                 $server->port = (int) $this->_profile['port'];
@@ -275,7 +273,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
             return false;
         }
 
-        return $this->_connection->increment($key, (int)$incvalue);
+        return $this->_connection->increment($key, (int) $incvalue);
     }
 
     /**
@@ -305,7 +303,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
             return false;
         }
 
-        return $this->_connection->decrement($key, (int)$decvalue);
+        return $this->_connection->decrement($key, (int) $decvalue);
     }
 
     // ----------------------------------- jIKVttl
@@ -316,6 +314,7 @@ class memcacheKVDriver extends jKVDriver implements jIKVttl
      * @param string $key   key used for storing data
      * @param mixed  $var   data to store
      * @param int    $ttl   data time expiration
+     * @param mixed  $value
      *
      * @return bool false if failure
      */

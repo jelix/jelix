@@ -22,7 +22,7 @@ class jFormsControlUpload extends jFormsControl
     public $type = 'upload';
 
     /**
-     * Used to verify the file mime type after the file was uploaded
+     * Used to verify the file mime type after the file was uploaded.
      *
      * @var array list of possible mime types
      */
@@ -32,7 +32,7 @@ class jFormsControlUpload extends jFormsControl
 
     /**
      * list of type mime or case-insensitive filename extension
-     * or one of these types audio/*, video/*, or image/*
+     * or one of these types audio/*, video/*, or image/*.
      *
      * All values should be separated by a comma
      *
@@ -43,7 +43,6 @@ class jFormsControlUpload extends jFormsControl
     public $accept = '';
 
     /**
-     *
      * @var string the content of the capture HTML attribute
      */
     public $capture = '';
@@ -112,6 +111,7 @@ class jFormsControlUpload extends jFormsControl
         if ($this->modified) {
             return true;
         }
+
         return parent::isModified();
     }
 

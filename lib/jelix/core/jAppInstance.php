@@ -172,9 +172,9 @@ class jAppInstance
      *
      * This method must be called before loading the configuration with `jApp::loadConfig()`
      *
-     * @param array|string $basePath the directory path containing modules that can be used
-     * @param null|string[] $modules list of module name to declare, from the directory. By default: all sub-directories (null).
-     *                               parameter used only if $basePath is a string
+     * @param array|string  $basePath the directory path containing modules that can be used
+     * @param null|string[] $modules  list of module name to declare, from the directory. By default: all sub-directories (null).
+     *                                parameter used only if $basePath is a string
      */
     public function declareModulesDir($basePath, $modules = null)
     {
@@ -227,7 +227,7 @@ class jAppInstance
     }
 
     /**
-     * Read all modules path declared into the configuration
+     * Read all modules path declared into the configuration.
      *
      * Method reserved to the configuration compiler.
      *
@@ -243,10 +243,10 @@ class jAppInstance
                 }
                 $p = jFile::parseJelixPath($path);
                 if (!file_exists($p)) {
-                    throw new Exception('Error in the configuration file -- The path, ' . $path . ', given in the configuration, doesn\'t exist', 10);
+                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, doesn\'t exist', 10);
                 }
                 if (!is_dir($p)) {
-                    throw new Exception('Error in the configuration file -- The path, ' . $path . ', given in the configuration, is not a directory', 10);
+                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, is not a directory', 10);
                 }
                 $this->_modulesPath[] = rtrim($p, '/');
             }
@@ -354,9 +354,9 @@ class jAppInstance
 
             foreach ($this->getAllModulesPath() as $name => $path) {
                 $p = $path.'plugins'.DIRECTORY_SEPARATOR;
-                if (file_exists($p) &&
-                    is_dir($p) &&
-                    !in_array($p, $this->_allPluginsPath)) {
+                if (file_exists($p)
+                    && is_dir($p)
+                    && !in_array($p, $this->_allPluginsPath)) {
                     $this->_allPluginsPath[] = $p;
                 }
             }
@@ -415,6 +415,7 @@ class jAppInstance
                 || !file_exists($opt[$name].$name.$suffix)) {
                 return false;
             }
+
             require_once $opt[$name].$name.$suffix;
         }
 

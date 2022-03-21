@@ -173,14 +173,13 @@ class redis_extCacheDriver implements jICacheDriver
     public function set($key, $value, $ttl = 0)
     {
         if (function_exists('\\Jelix\\Utilities\\is_resource')) {
-            if (\Jelix\Utilities\is_resource($value))  {
+            if (\Jelix\Utilities\is_resource($value)) {
                 return false;
             }
-        }
-        else if (is_resource($value)) {
+        } elseif (is_resource($value)) {
             return false;
         }
-        
+
         $used_key = $this->getUsedKey($key);
 
         $res = $this->redis->set($used_key, $this->esc($value));
@@ -323,16 +322,19 @@ class redis_extCacheDriver implements jICacheDriver
         if (!$this->key_prefix) {
             return $this->redis->flushDb();
         }
+
         switch ($this->key_prefix_flush_method) {
             case 'direct':
                 $this->redis->flushByPrefix($this->key_prefix);
 
                 return true;
+
             case 'event':
                 jEvent::notify('jCacheRedisFlushKeyPrefix', array('prefix' => $this->key_prefix,
                     'profile' => $this->profileName, ));
 
                 return true;
+
             case 'jcacheredisworker':
                 $this->redis->rPush('jcacheredisdelkeys', $this->key_prefix);
 

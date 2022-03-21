@@ -83,7 +83,7 @@ abstract class BuilderBase
 
     public function getName()
     {
-        return  $this->_name;
+        return $this->_name;
     }
 
     public function getForm()

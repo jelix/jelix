@@ -645,11 +645,13 @@ abstract class jDaoFactoryBase
         switch (strtolower($fieldType)) {
             case 'integer':
                 return intval($value);
+
             case 'double':
             case 'float':
             case 'numeric':
             case 'decimal':
                 return jDb::floatToStr($value);
+
             case 'boolean':
                 if ($value === true || strtolower($value) == 'true' || intval($value) === 1 || $value === 't' || $value === 'on') {
                     return $this->trueValue;
@@ -658,6 +660,7 @@ abstract class jDaoFactoryBase
                     return $this->falseValue;
 
                 break;
+
             default:
                 return $this->_conn->quote2($value, true, ($fieldType == 'binary'));
         }

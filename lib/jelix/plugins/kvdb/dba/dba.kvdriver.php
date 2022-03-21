@@ -7,7 +7,6 @@
  * @copyright  2012-2021 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
 class dbaKVDriver extends jKVDriver implements jIKVPersistent
 {
     /**

@@ -305,6 +305,7 @@ class jDbMysqlTools extends jDbTools
                 // 0 : statement
                 case 0:
                     $previousToken = $token;
+
                     switch ($token) {
                         case $currentDelimiter:
                             if (preg_replace('/\\s/', '', $query) != '') {
@@ -313,37 +314,44 @@ class jDbMysqlTools extends jDbTools
                             $query = '';
 
                             break;
+
                         case '\'':
                             $context = 1;
                             $previousToken = '';
                             $query .= $token;
 
                             break;
+
                         case '"':
                             $context = 2;
                             $previousToken = '';
                             $query .= $token;
 
                             break;
+
                         case '`':
                             $context = 3;
                             $query .= $token;
                             $previousToken = '';
 
                             break;
+
                         case 'DELIMITER ':
                             $context = 6;
 
                             break;
+
                         case '#':
                         case '--':
                             $context = 4;
 
                             break;
+
                         case '/*':
                             $context = 5;
 
                             break;
+
                         case "\n":
                         default:
                             $query .= $token;

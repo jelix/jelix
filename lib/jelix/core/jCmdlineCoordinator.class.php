@@ -50,6 +50,7 @@ class jCmdlineCoordinator extends jCoordinator
     public function process($request = null)
     {
         parent::process($request);
+
         exit($this->response->getExitCode());
     }
 
@@ -93,6 +94,7 @@ class jCmdlineCoordinator extends jCoordinator
         }
         $resp->outputErrors();
         jSession::end();
+
         exit(1);
     }
 }

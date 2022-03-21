@@ -27,8 +27,8 @@ class jelixModuleInstaller extends \Jelix\Installer\Module\Installer
         //$sessionProfile = $this->getLocalConfigIni->getValue("dao_db_profile", "sessions");
 
         $database = $helpers->database();
-        if ($sessionStorage == 'dao' &&
-            $sessionDao == 'jelix~jsession') {
+        if ($sessionStorage == 'dao'
+            && $sessionDao == 'jelix~jsession') {
             $database->execSQLScript('sql/install_jsession.schema');
         }
 
@@ -44,9 +44,9 @@ class jelixModuleInstaller extends \Jelix\Installer\Module\Installer
             $dao = $ini->getValue('dao', $section);
             $dbProfile = $ini->getValue('dbprofile', $section);
 
-            if ($driver == 'db' &&
-                $dao == 'jelix~jcache' &&
-                !isset($dbProfileDone[$dbProfile])
+            if ($driver == 'db'
+                && $dao == 'jelix~jcache'
+                && !isset($dbProfileDone[$dbProfile])
             ) {
                 $database->useDbProfile($dbProfile);
                 $database->execSQLScript('sql/install_jcache.schema');

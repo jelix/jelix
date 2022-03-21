@@ -95,8 +95,8 @@ class Resolver
 
         // get conflict constraint from installed components
         foreach ($this->items as $itemName => $item) {
-            if (($item->getAction() == self::ACTION_NONE && $item->isInstalled()) ||
-                $item->getAction() == self::ACTION_INSTALL
+            if (($item->getAction() == self::ACTION_NONE && $item->isInstalled())
+                || $item->getAction() == self::ACTION_INSTALL
             ) {
                 foreach ($item->getIncompatibilities() as $forbiddenComponent => $version) {
                     $incompatibilities[] = array(

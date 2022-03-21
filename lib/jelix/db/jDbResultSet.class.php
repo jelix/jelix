@@ -167,8 +167,7 @@ abstract class jDbResultSet implements Iterator
      */
     public function fetchAssociative()
     {
-        $result = $this->_fetchAssoc();
-        return $result;
+        return $this->_fetchAssoc();
     }
 
     /**

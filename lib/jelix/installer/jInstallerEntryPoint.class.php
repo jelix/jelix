@@ -148,10 +148,13 @@ class jInstallerEntryPoint
     }
 
     /**
+     * @param mixed $moduleName
+     *
      * @return \Jelix\Installer\ModuleStatus information about a specific module used
-     * by the entry point
+     *                                       by the entry point
      */
-    function getModule($moduleName) {
+    public function getModule($moduleName)
+    {
         return new \Jelix\Installer\ModuleStatus(
             $moduleName,
             $this->config->_allModulesPathList[$moduleName],
@@ -160,8 +163,10 @@ class jInstallerEntryPoint
     }
 
     /**
-     * the static entry point config alone (in app/system)
+     * the static entry point config alone (in app/system).
+     *
      * @return \Jelix\IniFile\IniModifier
+     *
      * @since 1.6.8
      */
     public function getEpConfigIni()

@@ -277,6 +277,7 @@ class jResponseBasicHtml extends jResponse
         $BODYBOTTOM .= ob_get_clean();
 
         $this->sendHttpHeaders();
+
         include $this->htmlFile;
 
         return true;
@@ -323,6 +324,7 @@ class jResponseBasicHtml extends jResponse
 
         header("HTTP/{$this->httpVersion} 500 Internal jelix error");
         header('Content-Type: text/html;charset='.$this->_charset);
+
         include $file;
     }
 

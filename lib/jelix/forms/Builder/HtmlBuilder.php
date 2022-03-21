@@ -15,9 +15,9 @@
 
 namespace Jelix\Forms\Builder;
 
-use \Jelix\Forms\HtmlWidget\ParentWidgetInterface;
-use \Jelix\Forms\HtmlWidget\WidgetBase;
-use \Jelix\Forms\HtmlWidget\WidgetInterface;
+use Jelix\Forms\HtmlWidget\ParentWidgetInterface;
+use Jelix\Forms\HtmlWidget\WidgetBase;
+use Jelix\Forms\HtmlWidget\WidgetInterface;
 
 /**
  * Main HTML form builder.
@@ -109,12 +109,12 @@ class HtmlBuilder extends BuilderBase
      * set options.
      *
      * @param array $options some parameters <ul>
-     *      <li>"errDecorator"=>"name of your javascript object for error listener"</li>
-     *      <li>"method" => "post" or "get". default is "post"</li>
-     *      <li>"plugins" => list of class names for widget. keys are controls refs</li>
-     *      <li>"attributes" => list of html attributes to put on the form element</li>
-     *      <li>"widgetsAttributes" => list of attributes for each widget. keys are controls refs</li>
-     *      </ul>
+     *                       <li>"errDecorator"=>"name of your javascript object for error listener"</li>
+     *                       <li>"method" => "post" or "get". default is "post"</li>
+     *                       <li>"plugins" => list of class names for widget. keys are controls refs</li>
+     *                       <li>"attributes" => list of html attributes to put on the form element</li>
+     *                       <li>"widgetsAttributes" => list of attributes for each widget. keys are controls refs</li>
+     *                       </ul>
      */
     public function setOptions($options)
     {
@@ -158,7 +158,7 @@ class HtmlBuilder extends BuilderBase
                 echo '<tr><td colspan="2" class="jforms-group">';
                 $this->outputControl($ctrl);
                 echo "</td></tr>\n";
-            } else if ($ctrl->type == 'checkbox') {
+            } elseif ($ctrl->type == 'checkbox') {
                 echo '<tr><th scope="row">';
                 echo '</th><td>';
                 $this->outputControl($ctrl);
@@ -193,9 +193,9 @@ class HtmlBuilder extends BuilderBase
     {
         echo '<table class="jforms-table" border="0">';
         foreach ($this->_form->getRootControls() as $ctrlref => $ctrl) {
-            if ($ctrl->type == 'submit' || $ctrl->type == 'reset' ||
-                $ctrl->type == 'hidden' || $ctrl->type == 'captcha' ||
-                $ctrl->type == 'secretconfirm'
+            if ($ctrl->type == 'submit' || $ctrl->type == 'reset'
+                || $ctrl->type == 'hidden' || $ctrl->type == 'captcha'
+                || $ctrl->type == 'secretconfirm'
             ) {
                 continue;
             }
@@ -371,7 +371,7 @@ class HtmlBuilder extends BuilderBase
         }
 
         // now we have its name, let's create the widget instance
-        $className = $pluginName . 'FormWidget';
+        $className = $pluginName.'FormWidget';
         /** @var WidgetBase $plugin */
         $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin) {
@@ -384,12 +384,13 @@ class HtmlBuilder extends BuilderBase
             $defaultAttributes = $this->htmlWidgetsAttributes[$ctrl->getWidgetType()];
         }
 
-        if (isset($this->options['widgetsAttributes'][$ctrl->ref]) &&
-            is_array($this->options['widgetsAttributes'][$ctrl->ref])
+        if (isset($this->options['widgetsAttributes'][$ctrl->ref])
+            && is_array($this->options['widgetsAttributes'][$ctrl->ref])
         ) {
             $defaultAttributes = array_merge($defaultAttributes, $this->options['widgetsAttributes'][$ctrl->ref]);
         }
         $plugin->setDefaultAttributes($defaultAttributes);
+
         return $plugin;
     }
 

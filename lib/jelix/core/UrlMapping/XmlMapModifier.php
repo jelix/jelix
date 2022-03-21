@@ -123,8 +123,8 @@ class XmlMapModifier
                 continue;
             }
 
-            if (preg_match('/^.*entrypoint$/', $item->localName) &&
-                $item->getAttribute('name') == $name) {
+            if (preg_match('/^.*entrypoint$/', $item->localName)
+                && $item->getAttribute('name') == $name) {
                 return new XmlEntryPoint($this, $item);
             }
         }

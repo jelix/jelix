@@ -23,16 +23,15 @@ class jDbPDOConnectionDebug extends jDbPDOConnection
         $log = new jSQLLogMessage($queryString);
         if (count($fetchModeArgs) === 0) {
             $rs = parent::query($queryString, $fetchmode);
-        }
-        else if (count($fetchModeArgs) === 1 || $fetchModeArgs[1] === array()) {
+        } elseif (count($fetchModeArgs) === 1 || $fetchModeArgs[1] === array()) {
             $rs = parent::query($queryString, $fetchmode, $fetchModeArgs[0]);
-        }
-        else {
+        } else {
             $rs = parent::query($queryString, $fetchmode, $fetchModeArgs[0], $fetchModeArgs[1]);
         }
 
         $log->endQuery();
         jLog::log($log, 'sql');
+
         return $rs;
     }
 

@@ -8,7 +8,7 @@
  */
 class jFramework
 {
-    protected static $_version = null;
+    protected static $_version;
 
     public static function version()
     {

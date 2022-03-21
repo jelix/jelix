@@ -232,8 +232,8 @@ class jControllerDaoCrudDfk extends jController
             if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
                 $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
             }
-            if (($lo = $this->param('listorder')) &&
-                (array_key_exists($lo, $this->propertiesForRecordsOrder))) {
+            if (($lo = $this->param('listorder'))
+                && (array_key_exists($lo, $this->propertiesForRecordsOrder))) {
                 $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
                 if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                     $listOrder[$lo] = 'desc';

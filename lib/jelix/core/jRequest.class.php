@@ -213,7 +213,7 @@ abstract class jRequest
      */
     public function isAllowedResponse($response)
     {
-        return  ($response instanceof $this->authorizedResponseClass)
+        return ($response instanceof $this->authorizedResponseClass)
                 || ($c = get_class($response)) == 'jResponseRedirect'
                 || $c == 'jResponseRedirectUrl'
                 ;
@@ -323,7 +323,7 @@ abstract class jRequest
         }
 
         if (isset($_SERVER['HTTP_CLIENT_IP']) && $_SERVER['HTTP_CLIENT_IP']) {
-            return  $_SERVER['HTTP_CLIENT_IP'];
+            return $_SERVER['HTTP_CLIENT_IP'];
         }
 
         return $_SERVER['REMOTE_ADDR'];

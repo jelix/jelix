@@ -275,6 +275,7 @@ class InteractiveConfigurator
 
             return true;
         }
+
         switch ($property) {
             case 'host':
                 $host = $this->inputHelpers->askInformation('Host of the database server?', $defaultValue, array('localhost'));
@@ -369,6 +370,7 @@ class InteractiveConfigurator
                     return false;
 
                 break;
+
             case 'timeout':
                 $timeout = $this->inputHelpers->askInformation('Connection timeout', $defaultValue);
                 if ($timeout) {
@@ -416,6 +418,7 @@ class InteractiveConfigurator
                 }
 
                 break;
+
             default:
                 return false;
         }

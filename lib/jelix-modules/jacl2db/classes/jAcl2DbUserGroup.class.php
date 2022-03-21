@@ -65,7 +65,7 @@ class jAcl2DbUserGroup
     /**
      * @var null|string[] list of groups of the current user
      */
-    protected static $groups = null;
+    protected static $groups;
 
     /**
      * Retrieve the list of group the current user is member of.

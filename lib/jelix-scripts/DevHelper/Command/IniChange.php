@@ -7,7 +7,7 @@
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
  */
 
-namespace  Jelix\DevHelper\Command;
+namespace Jelix\DevHelper\Command;
 
 use Jelix\IniFile\IniModifier;
 use Symfony\Component\Console\Input\InputArgument;
@@ -90,8 +90,7 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand
 
         if ($input->getOption('del-section')) {
             $ini->removeSection($param);
-        }
-        else if ($todel) {
+        } elseif ($todel) {
             $ini->removeValue($param, $section);
         } else {
             if ($value === null) {

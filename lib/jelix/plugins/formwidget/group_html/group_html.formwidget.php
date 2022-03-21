@@ -124,12 +124,11 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         }
     }
 
-    protected function displayStartGroup($groupId, $label, $checkBoxAttr=array())
+    protected function displayStartGroup($groupId, $label, $checkBoxAttr = array())
     {
         if (count($checkBoxAttr) == 0) {
             echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',htmlspecialchars($label),"</legend>\n";
-        }
-        else {
+        } else {
             echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',
             '<input ';
             $this->_outputAttr($checkBoxAttr);
@@ -180,16 +179,13 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         $this->displayEndValueGroup($showChildControl);
     }
 
-
     /**
      * @param $groupId
      * @param $label
-     * @param boolean $hasChildControlValue true if all values of child controls will be displayed
-     * @return void
+     * @param bool $hasChildControlValue true if all values of child controls will be displayed
      */
     protected function displayStartValueGroup($groupId, $label, $hasChildControlValue)
     {
-
         echo '<fieldset id="',$groupId,'" class="jforms-ctrl-group"><legend>',htmlspecialchars($label),"</legend>\n";
         if ($hasChildControlValue) {
             echo '<table class="jforms-table-group" border="0">',"\n";
@@ -214,8 +210,7 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
     }
 
     /**
-     * @param boolean $hasChildControlValue true if all values of child controls have been displayed
-     * @return void
+     * @param bool $hasChildControlValue true if all values of child controls have been displayed
      */
     protected function displayEndValueGroup($hasChildControlValue)
     {
@@ -224,6 +219,4 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         }
         echo "</fieldset>\n";
     }
-
-
 }

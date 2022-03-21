@@ -28,7 +28,6 @@
  */
 function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = array())
 {
-
     if ($builder == '') {
         $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
     }
@@ -38,6 +37,7 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = 
     }
     if (method_exists($formfullBuilder, 'outputAllControlsValues')) {
         $formfullBuilder->outputAllControlsValues();
+
         return;
     }
 

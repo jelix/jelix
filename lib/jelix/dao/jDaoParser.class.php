@@ -15,8 +15,11 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require_once JELIX_LIB_PATH.'dao/jDaoXmlException.class.php';
+
 require_once JELIX_LIB_PATH.'dao/jDaoProperty.class.php';
+
 require_once JELIX_LIB_PATH.'dao/jDaoMethod.class.php';
+
 require_once JELIX_LIB_PATH.'dao/jDaoGenerator.class.php';
 
 /**
@@ -366,12 +369,13 @@ class jDaoParser
         if (is_string($value)) {
             return in_array(trim($value), array('true', '1', 'yes'));
         }
-        else if (is_bool($value)) {
+        if (is_bool($value)) {
             return $value;
         }
-        else if ($value === 1) {
+        if ($value === 1) {
             return true;
         }
+
         return false;
     }
 

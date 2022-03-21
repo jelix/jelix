@@ -98,11 +98,12 @@ interface jICacheDriver
  */
 class jCache
 {
-
-    protected static function isResource($value) {
+    protected static function isResource($value)
+    {
         if (function_exists('\\Jelix\\Utilities\\is_resource')) {
             return \Jelix\Utilities\is_resource($value);
         }
+
         return is_resource($value);
     }
 

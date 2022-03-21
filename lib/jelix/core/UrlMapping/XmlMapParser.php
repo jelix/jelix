@@ -417,9 +417,9 @@ class XmlMapParser implements \jISimpleCompiler
 
         if ($path == '' || $path == '/') {
             $u->isDefault = true;
-            if ($this->parseInfos[0]['startModule'] != '' &&
-                 ($this->parseInfos[0]['startModule'] != $u->module ||
-                  $this->parseInfos[0]['startAction'] != $u->action)
+            if ($this->parseInfos[0]['startModule'] != ''
+                 && ($this->parseInfos[0]['startModule'] != $u->module
+                  || $this->parseInfos[0]['startAction'] != $u->action)
             ) {
                 throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
             }
@@ -497,8 +497,8 @@ class XmlMapParser implements \jISimpleCompiler
             }
 
             // check if there is a default url
-            if ($parseInfos[0]['startModule'] == '' &&
-                !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
+            if ($parseInfos[0]['startModule'] == ''
+                && !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
                 if (count($parseInfos[0]['dedicatedModules']) == 1) {
                     foreach ($parseInfos[0]['dedicatedModules'] as $module => $isHttps) {
                         $parseInfos[0]['startModule'] = $module;
@@ -828,9 +828,11 @@ class XmlMapParser implements \jISimpleCompiler
                     case 'lang': $t = '$l';
 
                         break;
+
                     case 'locale': $t = '$L';
 
                         break;
+
                     default:
                         throw new MapParserException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }

@@ -32,7 +32,7 @@ class pgsqlDbTable extends jDbTable
         $version = $conn->getServerMajorVersion();
 
         $searchPath = $conn->getSearchPath();
-        $schemas = implode(',', array_map(function($schema) use ($conn) {
+        $schemas = implode(',', array_map(function ($schema) use ($conn) {
             return $conn->quote($schema);
         }, $searchPath));
 
@@ -48,9 +48,9 @@ class pgsqlDbTable extends jDbTable
                 ON (co.conrelid = c.oid AND a.attnum = ANY(co.conkey) AND co.contype = 'p')
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
-            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name) .
-            " AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname IN (".$schemas."))
-            ORDER BY a.attnum";
+            WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name).
+            ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname IN ('.$schemas.'))
+            ORDER BY a.attnum';
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
             $name = $line->attname;
@@ -124,10 +124,10 @@ class pgsqlDbTable extends jDbTable
                 ' TO '.$conn->encloseName($new->name));
         }
 
-        if ($new->type != $old->type ||
-            $new->precision != $old->precision ||
-            $new->scale != $old->scale ||
-            $new->length != $old->length
+        if ($new->type != $old->type
+            || $new->precision != $old->precision
+            || $new->scale != $old->scale
+            || $new->length != $old->length
         ) {
             $typeInfo = $tools->getTypeInfo($new->type);
 
@@ -289,6 +289,7 @@ class pgsqlDbTable extends jDbTable
                     }
 
                     break;
+
                 case 'UNIQUE':
                     if (!isset($this->uniqueKeys[$constraint->constraint_name])) {
                         $unique = new jDbUniqueKey(
@@ -301,6 +302,7 @@ class pgsqlDbTable extends jDbTable
                     }
 
                     break;
+
                 case 'FOREIGN KEY':
                     if (!isset($this->references[$constraint->constraint_name])) {
                         $fk = new jDbReference(
@@ -385,14 +387,14 @@ class pgsqlDbSchema extends jDbSchema
     {
         $searchPath = $this->getConn()->getSearchPath();
         $c = $this->getConn();
-        $schemas = implode(',', array_map(function($schema) use ($c) {
+        $schemas = implode(',', array_map(function ($schema) use ($c) {
             return $c->quote($schema);
         }, $searchPath));
 
-        $results = array ();
-        $sql = "SELECT tablename, schemaname FROM pg_tables
-                  WHERE schemaname IN (".$schemas.")
-                  ORDER BY tablename";
+        $results = array();
+        $sql = 'SELECT tablename, schemaname FROM pg_tables
+                  WHERE schemaname IN ('.$schemas.')
+                  ORDER BY tablename';
         $rs = $this->getConn()->query($sql);
         while ($line = $rs->fetch()) {
             $unpName = $this->conn->unprefixTable($line->tablename);

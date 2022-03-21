@@ -50,9 +50,9 @@ class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->parentWidget->addJs($js);
         $this->commonJs();
 
-        if ($ctrl instanceof jFormsControlDatetime ||
-            get_class($ctrl->datatype) == 'jDatatypeDateTime' ||
-            get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime') {
+        if ($ctrl instanceof jFormsControlDatetime
+            || get_class($ctrl->datatype) == 'jDatatypeDateTime'
+            || get_class($ctrl->datatype) == 'jDatatypeLocaleDateTime') {
             $config = $ctrl->datepickerConfig != '' ?
                         $ctrl->datepickerConfig :
                         jApp::config()->forms['datetimepicker'];

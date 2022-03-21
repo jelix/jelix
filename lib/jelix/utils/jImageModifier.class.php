@@ -182,7 +182,7 @@ class jImageModifier
      * @param null|mixed $src
      *
      * @return array keys are
-     *                src_url, src_path, cache_path, cache_url
+     *               src_url, src_path, cache_path, cache_url
      */
     public static function computeUrlFilePath($config = null, $src = null)
     {
@@ -252,22 +252,34 @@ class jImageModifier
         switch ($mimeType) {
             case 'image/gif':
                 $image = imagecreatefromgif($srcFs);
+
                 break;
+
             case 'image/jpeg':
                 $image = imagecreatefromjpeg($srcFs);
+
                 break;
+
             case 'image/png':
                 $image = imagecreatefrompng($srcFs);
+
                 break;
+
             case 'image/vnd.wap.wbmp':
                 $image = imagecreatefromwbmp($srcFs);
+
                 break;
+
             case 'image/image/x-xbitmap':
                 $image = imagecreatefromxbm($srcFs);
+
                 break;
+
             case 'image/x-xpixmap':
                 $image = imagecreatefromxpm($srcFs);
+
                 break;
+
             default:
                 return false;
         }
@@ -305,14 +317,14 @@ class jImageModifier
             $resamplewidth = imagesx($ancienimage);
 
             if (empty($params['width'])) {
-                $finalheight = (int)$params['height'];
+                $finalheight = (int) $params['height'];
                 $finalwidth = floor($finalheight * imagesx($ancienimage) / imagesy($ancienimage));
             } elseif (empty($params['height'])) {
-                $finalwidth = (int)$params['width'];
+                $finalwidth = (int) $params['width'];
                 $finalheight = floor($finalwidth * imagesy($ancienimage) / imagesx($ancienimage));
             } else {
-                $finalwidth = (int)$params['width'];
-                $finalheight = (int)$params['height'];
+                $finalwidth = (int) $params['width'];
+                $finalheight = (int) $params['height'];
                 if (!empty($params['omo']) && $params['omo'] == 'true') {
                     if ($params['width'] >= $params['height']) {
                         $resampleheight = floor(($resamplewidth * $params['height']) / $params['width']);
@@ -353,7 +365,7 @@ class jImageModifier
             $image = imagecreatetruecolor($finalwidth, $finalheight);
             imagesavealpha($image, true);
             $tp = imagecolorallocatealpha($image, 0, 0, 0, 127);
-            imagecopyresampled($image, $ancienimage, 0, 0, (int)$posx, (int)$posy, imagesx($image), imagesy($image), $resamplewidth, $resampleheight);
+            imagecopyresampled($image, $ancienimage, 0, 0, (int) $posx, (int) $posy, imagesx($image), imagesy($image), $resamplewidth, $resampleheight);
             imagefill($image, 0, 0, $tp); // Because of a strange behavior (ticket #1486), we must fill the background AFTER imagecopyresampled
         }
 
@@ -382,10 +394,14 @@ class jImageModifier
         switch ($mimeType) {
             case 'image/gif':
                 imagegif($image, $filename);
+
                 break;
+
             case 'image/jpeg':
                 imagejpeg($image, $filename, $quality);
+
                 break;
+
             default:
                 imagepng($image, $filename);
         }
@@ -393,6 +409,7 @@ class jImageModifier
 
         // Destruction
         @imagedestroy($image);
+
         return true;
     }
 

@@ -214,10 +214,12 @@ class mysqliDbConnection extends jDbConnection
         switch ($id) {
             case self::ATTR_CLIENT_VERSION:
                 return $this->_connection->get_client_info();
+
             case self::ATTR_SERVER_VERSION:
                 return $this->_connection->server_info;
 
                 break;
+
             case self::ATTR_SERVER_INFO:
                 return $this->_connection->host_info;
         }
@@ -244,20 +246,21 @@ class mysqliDbConnection extends jDbConnection
     {
         $query_res = $this->_connection->multi_query($queries);
         if ($query_res === false) {
-            throw new \Exception("Mysql multi_query error: ".$this->_connection->error);
+            throw new \Exception('Mysql multi_query error: '.$this->_connection->error);
         }
         $nbCmd = 1;
-        while($this->_connection->more_results()) {
-            $nbCmd ++;
+        while ($this->_connection->more_results()) {
+            ++$nbCmd;
             $query_res = $this->_connection->next_result();
             if ($query_res === false) {
-                throw new \Exception("Mysql multi_query error: ".$this->_connection->error);
+                throw new \Exception('Mysql multi_query error: '.$this->_connection->error);
             }
 
-            if($discard = $this->_connection->store_result()){
+            if ($discard = $this->_connection->store_result()) {
                 $discard->free();
             }
         }
+
         return $nbCmd;
     }
 }

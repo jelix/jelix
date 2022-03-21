@@ -226,7 +226,7 @@ abstract class jFormsControl
 
     public function isModified()
     {
-        $orig = & $this->container->originalData;
+        $orig = &$this->container->originalData;
         $value = $this->container->data[$this->ref];
 
         if (!array_key_exists($this->ref, $orig)) {
@@ -237,16 +237,17 @@ abstract class jFormsControl
         return $this->_diffValues($orig[$this->ref], $value);
     }
 
-
     /**
      * @param mixed $v1
      * @param mixed $v2
      *
      * @return bool true if the values are not equals
      */
-    protected function _diffValues(&$v1, &$v2) {
+    protected function _diffValues(&$v1, &$v2)
+    {
         if (is_array($v1) && is_array($v2)) {
-            $comp = array_merge(array_diff($v1, $v2),array_diff($v2, $v1));
+            $comp = array_merge(array_diff($v1, $v2), array_diff($v2, $v1));
+
             return !empty($comp);
         }
 
@@ -270,6 +271,6 @@ abstract class jFormsControl
             return true;
         }
 
-        return ($v1 != $v2);
+        return $v1 != $v2;
     }
 }

@@ -10,7 +10,9 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require_once JELIX_LIB_PATH.'db/jDb.class.php';
+
 require_once JELIX_LIB_PATH.'dao/jDaoRecordBase.class.php';
+
 require_once JELIX_LIB_PATH.'dao/jDaoFactoryBase.class.php';
 
 /**

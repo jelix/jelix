@@ -2,9 +2,11 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
+ *
  * @copyright   2008-2021 Laurent Jouanneau
  * @copyright   2009 Julien Issler, 2010 Olivier Demah, 2020 Adrien Lagroy de Croutte
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
 class jAcl2DbAdminUIManager
@@ -124,7 +126,7 @@ class jAcl2DbAdminUIManager
             'rightsProperties',
             'rightsGroupsLabels',
             'rightsWithResources',
-            /* @deprecated: */
+            // @deprecated
             'subjects',
             'roles',
             'sbjgroups_localized',
@@ -171,14 +173,14 @@ class jAcl2DbAdminUIManager
             'rightsLabels',
             'rightsWithResources',
             'hasRightsOnResources',
-            /* @deprecated: */
+            // @deprecated
             'roles_localized',
             'subjects_localized'
         );
     }
 
     /**
-     * Save authorizations for all groups
+     * Save authorizations for all groups.
      *
      * Only authorizations on given subjects are changed.
      * Existing authorizations not given in parameters are deleted from the
@@ -188,7 +190,7 @@ class jAcl2DbAdminUIManager
      * this group are deleted.
      *
      * @param array  $rights
-     *                array(<id_aclgrp> => array( <id_aclsbj> => (bool, 'y', 'n' or '')))
+     *                            array(<id_aclgrp> => array( <id_aclsbj> => (bool, 'y', 'n' or '')))
      * @param string $sessionUser the user login who initiates the change.
      *                            It is mandatory although null is accepted for
      *                            API compatibility. Null value is deprecated
@@ -400,9 +402,8 @@ class jAcl2DbAdminUIManager
         );
     }
 
-
     /**
-     * Save rights of the given user
+     * Save rights of the given user.
      *
      * Only rights on given subjects are changed.
      * Existing rights not given in parameters are deleted from the
@@ -410,11 +411,11 @@ class jAcl2DbAdminUIManager
      *
      * Rights with resources are not changed.
      *
-     * @param string $login     the login of the user on who rights will be changed
-     * @param array $userRights list of rights key=subject, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
-     * @param null|string  $sessionUser the login name of the user who initiate the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login       the login of the user on who rights will be changed
+     * @param array       $userRights  list of rights key=subject, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+     * @param null|string $sessionUser the login name of the user who initiate the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -434,7 +435,6 @@ class jAcl2DbAdminUIManager
         }
 
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $userRights);
-
     }
 
     public function getUserRessourceRights($user)
@@ -471,7 +471,7 @@ class jAcl2DbAdminUIManager
             'rightsLabels',
             'rightsWithResources',
             'hasRightsOnResources',
-            /* @deprecated  */
+            // @deprecated
             'subjects_localized',
             'roles_localized'
         );
@@ -480,6 +480,7 @@ class jAcl2DbAdminUIManager
     /**
      * @param $user
      * @param array $subjects <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+     * @param mixed $rights
      */
     public function removeUserRessourceRights($user, $rights)
     {
@@ -502,12 +503,12 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * delete a group of user
+     * delete a group of user.
      *
-     * @param string $groupId the id of the group to remove
-     * @param null|string  $sessionUser the login name of the user who initiate the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $groupId     the id of the group to remove
+     * @param null|string $sessionUser the login name of the user who initiate the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -525,11 +526,12 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * @param string $login the login of the user to remove from the given group
-     * @param string $groupId the group name from which the user should be removed
-     * @param null|string  $sessionUser the login name of the user who initiates the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login       the login of the user to remove from the given group
+     * @param string      $groupId     the group name from which the user should be removed
+     * @param null|string $sessionUser the login name of the user who initiates the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
+     *
      * @throws jAcl2DbAdminUIException
      */
     public function removeUserFromGroup($login, $groupId, $sessionUser = null)
@@ -546,11 +548,11 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * @param string $login
-     * @param string $groupId
-     * @param null|string  $sessionUser the login name of the user who initiates the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login
+     * @param string      $groupId
+     * @param null|string $sessionUser the login name of the user who initiates the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -575,7 +577,7 @@ class jAcl2DbAdminUIManager
     public function canRemoveUser($login)
     {
         $checking = jAcl2DbManager::checkAclAdminRightsToRemoveUser($login, null);
-        return ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_STILL_USED);
-    }
 
+        return $checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_STILL_USED;
+    }
 }

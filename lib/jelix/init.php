@@ -15,7 +15,7 @@
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-/**
+/*
  * Version number of Jelix.
  *
  * @name  JELIX_VERSION
@@ -41,31 +41,54 @@ define('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') || funct
 error_reporting(E_ALL | E_STRICT);
 
 require JELIX_LIB_CORE_PATH.'jApp.class.php';
+
 require JELIX_LIB_CORE_PATH.'jAppInstance.php';
+
 require JELIX_LIB_CORE_PATH.'jFramework.class.php';
+
 require JELIX_LIB_CORE_PATH.'jelix_api.php';
+
 require JELIX_LIB_CORE_PATH.'jICoordPlugin.iface.php';
+
 require JELIX_LIB_CORE_PATH.'jISelector.iface.php';
+
 require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
+
 require JELIX_LIB_CORE_PATH.'jException.class.php';
+
 require JELIX_LIB_CORE_PATH.'jHttpErrorException.class.php';
+
 require JELIX_LIB_CORE_PATH.'jConfig.class.php';
+
 require JELIX_LIB_CORE_PATH.'jSelector.class.php';
+
 require JELIX_LIB_CORE_PATH.'jServer.class.php';
+
 require JELIX_LIB_CORE_PATH.'jUrlBase.class.php';
+
 require JELIX_LIB_CORE_PATH.'jUrlAction.class.php';
+
 require JELIX_LIB_CORE_PATH.'jUrl.class.php';
+
 require JELIX_LIB_CORE_PATH.'jCoordinator.class.php';
+
 require JELIX_LIB_CORE_PATH.'jController.class.php';
+
 require JELIX_LIB_CORE_PATH.'jRequest.class.php';
+
 require JELIX_LIB_CORE_PATH.'jResponse.class.php';
+
 require JELIX_LIB_CORE_PATH.'jBundle.class.php';
+
 require JELIX_LIB_CORE_PATH.'jLocale.class.php';
+
 require JELIX_LIB_CORE_PATH.'jLog.class.php';
+
 require JELIX_LIB_CORE_PATH.'jIncluder.class.php';
+
 require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
-if (version_compare(phpversion(), "5.6") > -1) {
+if (version_compare(phpversion(), '5.6') > -1) {
     require JELIX_LIB_UTILS_PATH.'Utilities.php';
 }
 
@@ -100,7 +123,7 @@ $GLOBALS['gLibPath'] = array(
     'KV' => JELIX_LIB_PATH.'kvdb/',
 );
 
-$GLOBALS['gLibClassPath']=array(
+$GLOBALS['gLibClassPath'] = array(
     'jIInstallerComponent' => JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php',
 );
 
@@ -115,14 +138,13 @@ function jelix_autoload($class)
         $class = str_replace(
             array('Jelix', '\\'),
             array('jelix', DIRECTORY_SEPARATOR),
-            $class);
+            $class
+        );
         if (strpos($class, '/Forms/') !== false) {
-            $f = LIB_PATH.str_replace( 'Forms', 'forms', $class).'.php';
-        }
-        else if (strpos($class, '/Core/') !== false) {
-            $f = LIB_PATH.str_replace( 'Core', 'core', $class).'.php';
-        }
-        else {
+            $f = LIB_PATH.str_replace('Forms', 'forms', $class).'.php';
+        } elseif (strpos($class, '/Core/') !== false) {
+            $f = LIB_PATH.str_replace('Core', 'core', $class).'.php';
+        } else {
             $f = LIB_PATH.$class.'.php';
         }
     } elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Config|Installer|KV).*/i', $class, $m)) {
@@ -178,6 +200,7 @@ function checkAppOpened()
         header('HTTP/1.1 500 Internal Server Error');
         header('Content-type: text/html');
         echo 'checkAppOpened: jApp is not initialized!';
+
         exit(1);
     }
     if (file_exists(jApp::varConfigPath('CLOSED'))) {
@@ -185,6 +208,7 @@ function checkAppOpened()
 
         if (jServer::isCLI()) {
             echo 'Application closed.'.($message ? "\n{$message}\n" : "\n");
+
             exit(1);
         }
 
@@ -197,6 +221,7 @@ function checkAppOpened()
         header('HTTP/1.1 503 Application not available');
         header('Content-type: text/html');
         echo str_replace('%message%', $message, file_get_contents($file));
+
         exit(1);
     }
 }
@@ -219,6 +244,7 @@ function checkAppNotInstalled()
             header('Content-type: text/plain');
             echo "Application is installed. The script cannot be runned.\n";
         }
+
         exit(1);
     }
 }

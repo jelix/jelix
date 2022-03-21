@@ -41,6 +41,7 @@ class jClasses
     public static function create($selector)
     {
         $sel = new jSelectorClass($selector);
+
         require_once $sel->getPath();
         $class = $sel->className;
 
@@ -154,6 +155,7 @@ class jClasses
     public static function inc($selector)
     {
         $sel = new jSelectorClass($selector);
+
         require_once $sel->getPath();
     }
 
@@ -167,6 +169,7 @@ class jClasses
     public static function incIface($selector)
     {
         $sel = new jSelectorIface($selector);
+
         require_once $sel->getPath();
     }
 }

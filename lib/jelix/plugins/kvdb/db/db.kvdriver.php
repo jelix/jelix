@@ -8,7 +8,6 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-
 /**
  * Driver for jKVDB, that uses an SQL table to store key/value data.
  */
@@ -95,7 +94,7 @@ class dbKVDriver extends jKVDriver implements jIKVttl, jIKVPersistent
         return unserialize($rs->unescapeBin($result->k_value));
     }
 
-    public function set ($key, $value)
+    public function set($key, $value)
     {
         if ($this->isResource($value)) {
             return false;

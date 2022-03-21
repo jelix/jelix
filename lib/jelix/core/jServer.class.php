@@ -68,6 +68,7 @@ class jServer
             return jApp::config()->domainName;
         }
         list($domain, $port) = self::getDomainPortFromServer();
+
         return $domain;
     }
 
@@ -119,8 +120,7 @@ class jServer
         }
         if ($forcePort) { // a number
             $port = $forcePort;
-        }
-        else if($isHttps != $https) {
+        } elseif ($isHttps != $https) {
             // the asked protocol is different from the current protocol
             // we use the standard port for the asked protocol
             return '';
@@ -136,13 +136,15 @@ class jServer
     }
 
     /**
-     * Indicate if the request is done or should be done with HTTPS,
+     * Indicate if the request is done or should be done with HTTPS,.
      *
      * It takes care about the Jelix configuration, else from the server
      * parameters.
      *
      * @return bool true if the request is done or should be done with HTTPS
+     *
      * @todo support Forwarded and X-Forwarded-Proto headers
+     *
      * @since 1.6.30
      */
     public static function isHttps()
@@ -170,17 +172,18 @@ class jServer
         return self::isHttps() ? 'https://' : 'http://';
     }
 
-
-    static protected $domainPortCache = null;
+    protected static $domainPortCache;
 
     /**
-     * Return the domain and the port from the server parameters
+     * Return the domain and the port from the server parameters.
      *
-     * @param boolean $cache
+     * @param bool $cache
+     *
      * @return array the domain and the port number
+     *
      * @since 1.6.34
      */
-    static function getDomainPortFromServer($cache=true)
+    public static function getDomainPortFromServer($cache = true)
     {
         if ($cache && self::$domainPortCache !== null) {
             return self::$domainPortCache;
@@ -189,38 +192,35 @@ class jServer
         $domain = $port = '';
         if (isset($_SERVER['HTTP_HOST']) && $_SERVER['HTTP_HOST']) {
             list($domain, $port) = explode(':', $_SERVER['HTTP_HOST'].':');
-        }
-        elseif (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME']) {
+        } elseif (isset($_SERVER['SERVER_NAME']) && $_SERVER['SERVER_NAME']) {
             list($domain, $port) = explode(':', $_SERVER['SERVER_NAME'].':');
-        }
-        elseif (function_exists('gethostname') && gethostname() !== false) {
+        } elseif (function_exists('gethostname') && gethostname() !== false) {
             $domain = gethostname();
-        }
-        elseif (php_uname('n') !== false) {
+        } elseif (php_uname('n') !== false) {
             $domain = php_uname('n');
         }
 
         if ($port == '') {
             if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT']) {
                 $port = $_SERVER['SERVER_PORT'];
-            }
-            else if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off') {
+            } elseif (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off') {
                 $port = '443';
-            }
-            else {
+            } else {
                 $port = '80';
             }
         }
         self::$domainPortCache = array($domain, $port);
+
         return self::$domainPortCache;
     }
 
     /**
-     * Indicate if the request is done with HTTPS, as indicated by the server parameters
+     * Indicate if the request is done with HTTPS, as indicated by the server parameters.
+     *
      * @since 1.6.34
      */
-    static function isHttpsFromServer()
+    public static function isHttpsFromServer()
     {
-        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off');
+        return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off';
     }
 }

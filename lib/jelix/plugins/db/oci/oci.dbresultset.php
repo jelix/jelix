@@ -38,8 +38,7 @@ class ociDbResultSet extends jDbResultSet
 
     protected function _fetchAssoc()
     {
-        $res = oci_fetch_assoc($this->_idResult);
-        return $res;
+        return oci_fetch_assoc($this->_idResult);
     }
 
     protected function _rewind()

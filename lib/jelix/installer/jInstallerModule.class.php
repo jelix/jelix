@@ -171,6 +171,7 @@ class jInstallerModule implements jIInstallerComponent
 
     /**
      * list of new entrypoints.
+     *
      * @var array keys are ep id, value are array with 'file', 'config', 'type' keys
      */
     private $newEntrypoints = array();
@@ -577,17 +578,16 @@ class jInstallerModule implements jIInstallerComponent
     }
 
     /**
-     * @param string $entryPointFile path to the entrypoint file to copy, from the install directory
-     * @param string $configurationFile path to the configuration file of the entrypoint to copy, from the install directory
+     * @param string $entryPointFile      path to the entrypoint file to copy, from the install directory
+     * @param string $configurationFile   path to the configuration file of the entrypoint to copy, from the install directory
      * @param string $targetConfigDirName directory name into var/config where to copy the configuration
-     *  file. by default, the directory name is the entrypoint name.
-     * @param string $type type of the entrypoint
-     *
+     *                                    file. by default, the directory name is the entrypoint name.
+     * @param string $type                type of the entrypoint
      */
-    function createEntryPoint($entryPointFile, $configurationFile, $targetConfigDirName= '', $type='classic')
+    public function createEntryPoint($entryPointFile, $configurationFile, $targetConfigDirName = '', $type = 'classic')
     {
         $entryPointFileName = basename($entryPointFile);
-        $entryPointId =  str_replace('.php', '', $entryPointFileName);
+        $entryPointId = str_replace('.php', '', $entryPointFileName);
         $configurationFileName = basename($configurationFile);
         if ($targetConfigDirName == '') {
             $targetConfigDirName = $entryPointId;
@@ -602,9 +602,9 @@ class jInstallerModule implements jIInstallerComponent
             $this->copyFile($configurationFile, jApp::varConfigPath($targetConfigDirName.'/'.$configurationFileName), false);
 
             $this->newEntrypoints[$entryPointId] = array(
-                'file'=>$entryPointFileName,
-                'config'=> $targetConfigDirName.'/'.$configurationFileName,
-                'type' => $type
+                'file' => $entryPointFileName,
+                'config' => $targetConfigDirName.'/'.$configurationFileName,
+                'type' => $type,
             );
 
             // change the path to application.init.php into the entrypoint
@@ -621,7 +621,7 @@ class jInstallerModule implements jIInstallerComponent
     /**
      * @return array
      */
-    function getNewEntrypoints()
+    public function getNewEntrypoints()
     {
         return $this->newEntrypoints;
     }

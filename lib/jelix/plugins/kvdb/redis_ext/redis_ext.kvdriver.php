@@ -11,7 +11,6 @@
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
 class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 {
     protected $key_prefix = '';
@@ -176,16 +175,19 @@ class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
         if (!$this->key_prefix) {
             return $this->_connection->flushDb();
         }
+
         switch ($this->key_prefix_flush_method) {
             case 'direct':
                 $this->_connection->flushByPrefix($this->key_prefix);
 
                 return true;
+
             case 'event':
                 jEvent::notify('jKvDbRedisFlushKeyPrefix', array('prefix' => $this->key_prefix,
                     'profile' => $this->_profile['_name'], ));
 
                 return true;
+
             case 'jkvdbredisworker':
                 $this->_connection->rPush('jkvdbredisdelkeys', $this->key_prefix);
 

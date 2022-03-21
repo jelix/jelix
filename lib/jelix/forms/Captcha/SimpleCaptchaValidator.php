@@ -49,10 +49,10 @@ class SimpleCaptchaValidator implements CaptchaValidatorInterface
         if (trim($value) == '') {
             return \jForms::ERRDATA_REQUIRED;
         }
-        if (!$internalData ||
-                !is_array($internalData) ||
-                !isset($internalData['expectedresponse']) ||
-                $value != $internalData['expectedresponse']) {
+        if (!$internalData
+                || !is_array($internalData)
+                || !isset($internalData['expectedresponse'])
+                || $value != $internalData['expectedresponse']) {
             return \jForms::ERRDATA_INVALID;
         }
 

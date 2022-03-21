@@ -15,7 +15,7 @@
  */
 
 /**
- * a resultset based on PDOStatement, for PHP < 8.0
+ * a resultset based on PDOStatement, for PHP < 8.0.
  *
  * @package  jelix
  * @subpackage db

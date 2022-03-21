@@ -1,4 +1,4 @@
-;<?php die(''); ?>
+;<?php exit(''); ?>
 ;for security reasons , don't remove or modify the first line
 
 ; the default locale used in the application

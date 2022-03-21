@@ -131,7 +131,8 @@ class jCoordinator
 
             if (preg_match('/(.+)CoordPlugin$/', $className, $m)) {
                 $name2 = $m[1];
-                include_once($config->_pluginsPathList_coord[$name2].$name2.'.coord.php');
+
+                include_once $config->_pluginsPathList_coord[$name2].$name2.'.coord.php';
             }
 
             // if the plugin is registered as a replacement of an other plugin
@@ -305,6 +306,7 @@ class jCoordinator
         if (!file_exists($ctrlpath)) {
             throw new jException('jelix~errors.ad.controller.file.unknown', array($this->actionName, $ctrlpath.$referer));
         }
+
         require_once $ctrlpath;
         $class = $selector->getClass();
         if (!class_exists($class, false)) {
@@ -376,10 +378,10 @@ class jCoordinator
      * Error handler using a response object to return the error.
      * Replace the default PHP error handler.
      *
-     * @param int    $errno      error code
-     * @param string $errmsg     error message
-     * @param string $filename   filename where the error appears
-     * @param int    $linenum    line number where the error appears
+     * @param int    $errno    error code
+     * @param string $errmsg   error message
+     * @param string $filename filename where the error appears
+     * @param int    $linenum  line number where the error appears
      *
      * @since 1.4
      */
@@ -571,9 +573,9 @@ class jCoordinator
                 throw new Exception("Error in a plugin configuration file -- plugin: {$pluginName}  file: {$pluginConfFile}", 13);
             }
 
-            if (isset($config->coordplugins[$pluginName.'.mergeconfig']) &&
-                $config->coordplugins[$pluginName.'.mergeconfig'] &&
-                count($pluginConf)
+            if (isset($config->coordplugins[$pluginName.'.mergeconfig'])
+                && $config->coordplugins[$pluginName.'.mergeconfig']
+                && count($pluginConf)
             ) {
                 // we merge config content from the dedicated file with
                 // the content of the coordplugin_ section from the application

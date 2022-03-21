@@ -38,71 +38,86 @@ function jtpl_meta_html_html($tpl, $method, $param = null, $params = array())
     if ($resp->getType() != 'html') {
         return;
     }
+
     switch ($method) {
         case 'assets':
             $resp->addAssets($param);
 
             break;
+
         case 'title':
             $resp->setTitle($param);
 
             break;
+
         case 'js':
             $resp->addJSLink($param, $params);
 
             break;
+
         case 'css':
             $resp->addCSSLink($param, $params);
 
             break;
+
         case 'jsie':
             $resp->addJSLink($param, $params, true);
 
             break;
+
         case 'jsie7':
             $resp->addJSLink($param, $params, 'IE 7');
 
             break;
+
         case 'jsltie7':
             $resp->addJSLink($param, $params, 'lt IE 7');
 
             break;
+
         case 'cssie':
             $resp->addCSSLink($param, $params, true);
 
             break;
+
         case 'cssie7':
         case 'cssie8':
         case 'cssie9':
             $resp->addCSSLink($param, $params, 'IE '.substr($method, -1, 1));
 
             break;
+
         case 'cssltie7':
         case 'cssltie8':
         case 'cssltie9':
             $resp->addCSSLink($param, $params, 'lt IE '.substr($method, -1, 1));
 
             break;
+
         case 'csstheme':
             $resp->addCSSLink(jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$param, $params);
 
             break;
+
         case 'cssthemeie':
             $resp->addCSSLink(jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$param, $params, true);
 
             break;
+
         case 'cssthemeie7':
         case 'cssthemeie8':
         case 'cssthemeie9':
             $resp->addCSSLink(jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$param, $params, 'IE '.substr($method, -1, 1));
 
             break;
+
         case 'cssthemeltie7':
         case 'cssthemeltie8':
         case 'cssthemeltie9':
             $resp->addCSSLink(jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$param, $params, 'lt IE '.substr($method, -1, 1));
 
             break;
+
         case 'style':
             if (is_array($param)) {
                 foreach ($param as $p1 => $p2) {
@@ -111,44 +126,54 @@ function jtpl_meta_html_html($tpl, $method, $param = null, $params = array())
             }
 
             break;
+
         case 'bodyattr':
             if (is_array($param)) {
                 $resp->setBodyAttributes($param);
             }
 
             break;
+
         case 'keywords':
             $resp->addMetaKeywords($param);
 
             break;
+
         case 'description':
             $resp->addMetaDescription($param);
 
             break;
+
         case 'others':
             $resp->addHeadContent($param);
 
             break;
+
         case 'author':
             $resp->addMetaAuthor($param);
 
             break;
+
         case 'generator':
             $resp->addMetaGenerator($param);
 
             break;
+
         case 'jquery':
             $resp->addAssets('jquery');
 
             break;
+
         case 'jquery_ui':
             $resp->addAssets('jquery');
             $base = jApp::config()->urlengine['jqueryPath'];
+
             switch ($param) {
                 case 'default':
                     $resp->addAssets('jquery_ui');
 
                     break;
+
                 case 'components':  // deprecated
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     foreach ($params as $f) {
@@ -156,6 +181,7 @@ function jtpl_meta_html_html($tpl, $method, $param = null, $params = array())
                     }
 
                     break;
+
                 case 'effects': // deprecated
                     $resp->addJSLink($base.'ui/jquery.ui.core.min.js');
                     $resp->addJSLink($base.'ui/jquery.ui.effect.min.js');
@@ -164,6 +190,7 @@ function jtpl_meta_html_html($tpl, $method, $param = null, $params = array())
                     }
 
                     break;
+
                 case 'theme': // deprecated
                     $resp->addAssets('jquery_ui');
 

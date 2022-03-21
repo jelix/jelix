@@ -429,6 +429,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
     protected function generateImage(&$source, $control, &$attributes)
     {
         $this->readAttrImage($source, $attributes);
+
         return $this->generateUpload($source, $control, $attributes);
     }
 
@@ -446,6 +447,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
             unset($attributes['maxHeight']);
         }
     }
+
     /**
      * @param array            $source
      * @param string           $controltype
@@ -605,8 +607,8 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
             }
 
             if (count($selectedvalues)) {
-                if (count($selectedvalues) > 1 &&
-                        (($controltype == 'listbox' && isset($control['multiple']) && (string) $control['multiple'] != 'true')
+                if (count($selectedvalues) > 1
+                        && (($controltype == 'listbox' && isset($control['multiple']) && (string) $control['multiple'] != 'true')
                         || $controltype == 'radiobuttons' || $controltype == 'menulist')) {
                     throw new jException('jelix~formserr.multiple.selected.not.allowed', $this->sourceFile);
                 }

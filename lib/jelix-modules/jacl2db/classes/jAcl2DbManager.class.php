@@ -2,9 +2,12 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Adrien Lagroy de Croutte
+ *
  * @copyright   2006-2021 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
- * @link        http://www.jelix.org
+ *
+ * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ *
  * @since 1.1
  */
 
@@ -36,7 +39,8 @@ class jAcl2DbManager
      * @param string $group    the users group id
      * @param string $right    the key of the right
      * @param string $resource the id of a resource
-     * @return boolean  true if the right is set
+     *
+     * @return bool true if the right is set
      */
     public static function addRight($group, $right, $resource = '-')
     {
@@ -414,18 +418,19 @@ class jAcl2DbManager
      *
      * Authorizations with resources are not changed.
      *
-     * @param array  $authorizationsChanges         array(<id_aclgrp> => array( <id_aclsbj> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
-     * @param string $sessionUser the login name of the user who initiate the change
-     * @param integer $changeType  1 for group rights change, 2 for user rights change
+     * @param array  $authorizationsChanges array(<id_aclgrp> => array( <id_aclsbj> => false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)))
+     * @param string $sessionUser           the login name of the user who initiate the change
+     * @param int    $changeType            1 for group rights change, 2 for user rights change
      *
      * @return int one of the jAcl2DbAdminCheckAuthorizations::ACL_ADMIN_RIGHTS_* const
      */
-    public static function checkAclAdminAuthorizationsChanges($authorizationsChanges,
-                                                      $sessionUser,
-                                                      $changeType
+    public static function checkAclAdminAuthorizationsChanges(
+        $authorizationsChanges,
+        $sessionUser,
+        $changeType
     ) {
-
         $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+
         return $checker->checkAclAdminAuthorizationsChanges($authorizationsChanges, $changeType);
     }
 
@@ -434,15 +439,16 @@ class jAcl2DbManager
      * for at least one user.
      *
      * @param string $userToRemove
-     * @param string $sessionUser the login name of the user who initiate the change
+     * @param string $sessionUser  the login name of the user who initiate the change
      *
      * @return int one of ACL_ADMIN_RIGHTS_* constant
      */
     public static function checkAclAdminRightsToRemoveUser(
         $userToRemove,
-        $sessionUser=null
+        $sessionUser = null
     ) {
         $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+
         return $checker->checkAclAdminRightsToRemoveUser($userToRemove);
     }
 
@@ -452,16 +458,18 @@ class jAcl2DbManager
      *
      * @param string $userToRemoveFromTheGroup
      * @param string $groupFromWhichToRemoveTheUser
-     * @param string $sessionUser the login name of the user who initiate the change
+     * @param string $sessionUser                   the login name of the user who initiate the change
      *
      * @return int one of ACL_ADMIN_RIGHTS_* constant
      */
     public static function checkAclAdminRightsToRemoveUserFromGroup(
         $userToRemoveFromTheGroup,
         $groupFromWhichToRemoveTheUser,
-        $sessionUser)
+        $sessionUser
+    )
     {
         $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+
         return $checker->checkAclAdminRightsToRemoveUserFromGroup($userToRemoveFromTheGroup, $groupFromWhichToRemoveTheUser);
     }
 
@@ -469,18 +477,17 @@ class jAcl2DbManager
      * check if the removing of the given group still
      * allows to administrate rights for at least one user.
      *
-     *
      * @param string $groupToRemove the group id to remove
-     * @param string $sessionUser the login name of the user who initiate the change
+     * @param string $sessionUser   the login name of the user who initiate the change
      *
      * @return int one of ACL_ADMIN_RIGHTS_* constant
      */
     public static function checkAclAdminRightsToRemoveGroup(
         $groupToRemove,
         $sessionUser
-    )
-    {
+    ) {
         $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
+
         return $checker->checkAclAdminRightsToRemoveGroup($groupToRemove);
     }
 
@@ -492,7 +499,7 @@ class jAcl2DbManager
      *
      * @param string $userToAdd              the user login
      * @param string $groupInWhichToAddAUser the group id
-     * @param string $sessionUser the login name of the user who initiate the change
+     * @param string $sessionUser            the login name of the user who initiate the change
      *
      * @return int one of ACL_ADMIN_RIGHTS_* constant
      */
@@ -500,11 +507,12 @@ class jAcl2DbManager
         $userToAdd,
         $groupInWhichToAddAUser,
         $sessionUser
-    )
-    {
+    ) {
         $checker = new jAcl2DbAdminCheckAuthorizations($sessionUser);
-        return $checker->checkAclAdminRightsToAddUserIntoGroup($userToAdd,
-                                                               $groupInWhichToAddAUser);
-    }
 
+        return $checker->checkAclAdminRightsToAddUserIntoGroup(
+            $userToAdd,
+            $groupInWhichToAddAUser
+        );
+    }
 }

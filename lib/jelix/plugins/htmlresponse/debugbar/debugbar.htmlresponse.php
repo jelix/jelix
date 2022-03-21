@@ -154,6 +154,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
             $js .= $plugin->getJavascript();
         }
         echo "<style type=\"text/css\">\n";
+
         require __DIR__.'/debugbar.css';
         $LOGOBULLETPLUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_plus.png'));
         $LOGOBULLETMINUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_minus.png'));
@@ -162,6 +163,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
         echo $css."\n</style>\n";
 
         echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
+
         require __DIR__.'/debugbar.js';
         echo $js."\n//]]>\n</script>";
 

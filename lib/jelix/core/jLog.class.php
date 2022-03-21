@@ -42,6 +42,7 @@ interface jILogMessage
 }
 
 require JELIX_LIB_CORE_PATH.'log/jLogMessage.class.php';
+
 require JELIX_LIB_CORE_PATH.'log/jLogErrorMessage.class.php';
 
 /**

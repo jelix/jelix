@@ -324,68 +324,63 @@ class jDbPgsqlTools extends jDbTools
         if (!is_string($value) || $value == '' || $value[0] != '{') {
             return false;
         }
-        $tokens = preg_split("/([\\{\\},\"\\\\])/", $value, 0, PREG_SPLIT_DELIM_CAPTURE);
+        $tokens = preg_split('/([\\{\\},"\\\\])/', $value, 0, PREG_SPLIT_DELIM_CAPTURE);
         $array = '';
         $inString = false;
         $value = null;
         $previousTok = '';
 
-        foreach($tokens as $tok) {
+        foreach ($tokens as $tok) {
             if ($tok === '') {
                 continue;
             }
             if ($inString) {
-
-                switch($tok) {
+                switch ($tok) {
                     case '\\':
                         $previousTok = $tok;
                         $value .= $tok;
+
                         break;
+
                     case '"':
                         if ($previousTok != '\\') {
                             $inString = false;
                             $array .= $value.'"';
                             $value = null;
-                        }
-                        else {
+                        } else {
                             $value .= $tok;
                             $previousTok = '';
                         }
+
                         break;
+
                     default:
                         $value .= $tok;
                         $previousTok = '';
                 }
-            }
-            else if ($tok == '{') {
+            } elseif ($tok == '{') {
                 $array .= '[';
-            }
-            elseif($tok == '}') {
+            } elseif ($tok == '}') {
                 $array .= ']';
-            }
-            elseif($tok == ',') {
+            } elseif ($tok == ',') {
                 $array .= ',';
-            }
-            elseif($tok == '"') {
+            } elseif ($tok == '"') {
                 $previousTok = '';
                 $inString = true;
                 $value = '"';
-            }
-            else if (is_numeric($tok)) {
+            } elseif (is_numeric($tok)) {
                 $array .= $tok;
-            }
-            else {
+            } else {
                 if ($tok == 'null' && $tok == 'true' && $tok == 'false') {
                     $array .= $tok;
-                }
-                else {
+                } else {
                     $array .= '"'.$tok.'"';
                 }
             }
         }
+
         return json_decode($array);
     }
-
 
     const ARRAY_VALUE_TYPE_INT = 'int';
     const ARRAY_VALUE_TYPE_FLOAT = 'float';
@@ -396,50 +391,40 @@ class jDbPgsqlTools extends jDbTools
         $str = '{';
 
         $first = true;
-        foreach($value as $k => $v) {
+        foreach ($value as $k => $v) {
             if (is_array($v)) {
                 $valStr = $this->encodeArrayValue($v, $type);
-            }
-            else if (is_numeric($v)) {
+            } elseif (is_numeric($v)) {
                 if ($type == self::ARRAY_VALUE_TYPE_INT || $type == self::ARRAY_VALUE_TYPE_FLOAT) {
                     $valStr = (string) $v;
-                }
-                else {
+                } else {
                     $valStr = '"'.((string) $v).'"';
                 }
-            }
-            else if (is_bool($v)) {
+            } elseif (is_bool($v)) {
                 if ($type == self::ARRAY_VALUE_TYPE_INT || $type == self::ARRAY_VALUE_TYPE_FLOAT) {
-                    $valStr = ($v ? '1':'0');
+                    $valStr = ($v ? '1' : '0');
+                } else {
+                    $valStr = ($v ? '"true"' : '"false"');
                 }
-                else {
-                    $valStr = ($v ? '"true"':'"false"');
-                }
-            }
-            else if (is_string($v)) {
+            } elseif (is_string($v)) {
                 if ($type == self::ARRAY_VALUE_TYPE_INT) {
                     $valStr = (string) intval($v);
-                }
-                else if ($type == self::ARRAY_VALUE_TYPE_FLOAT) {
+                } elseif ($type == self::ARRAY_VALUE_TYPE_FLOAT) {
                     $valStr = (string) floatval($v);
-                }
-                else if (preg_match("/[\\{\\},\"\\\\]/", $v)) {
+                } elseif (preg_match('/[\\{\\},"\\\\]/', $v)) {
                     $valStr = json_encode($v);
-                }
-                else {
+                } else {
                     $valStr = $v;
                 }
-            }
-            else {
+            } else {
                 // ignore objects an other types?
                 continue;
             }
 
             if ($first) {
                 $str .= $valStr;
-            }
-            else {
-                $str .= "," . $valStr;
+            } else {
+                $str .= ','.$valStr;
             }
 
             $first = false;

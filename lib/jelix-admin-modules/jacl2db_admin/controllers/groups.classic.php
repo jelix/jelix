@@ -63,6 +63,7 @@ class groupsCtrl extends jController
 
         $rep->body->assign('selectedMenuItem', 'usersgroups');
         $rep->title = jLocale::get('acl2.groups.title');
+
         return $rep;
     }
 

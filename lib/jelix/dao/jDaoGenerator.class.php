@@ -383,6 +383,7 @@ class jDaoGenerator
         }
 
         $src[] = ' }'; //ends the update function
+
         return implode("\n", $src);
     }
 
@@ -424,10 +425,12 @@ class jDaoGenerator
                     $this->buildDeleteUserQuery($method, $src, $primaryFields);
 
                     break;
+
                 case 'update':
                     $this->buildUpdateUserQuery($method, $src, $primaryFields);
 
                     break;
+
                 case 'php':
                     $src[] = $method->getBody();
                     $src[] = '}';
@@ -438,6 +441,7 @@ class jDaoGenerator
                     $this->buildCountUserQuery($method, $src, $allField);
 
                     break;
+
                 case 'selectfirst':
                 case 'select':
                 default:
@@ -471,18 +475,21 @@ class jDaoGenerator
                     }
 
                     break;
+
                 case 'count':
                     $src[] = '    $__rs = $this->_conn->query($__query);';
                     $src[] = '    $__res = $__rs->fetch();';
                     $src[] = '    return intval($__res->c);';
 
                     break;
+
                 case 'selectfirst':
                     $src[] = '    $__rs = $this->_conn->limitQuery($__query,0,1);';
                     $src[] = '    $this->finishInitResultSet($__rs);';
                     $src[] = '    return $__rs->fetch();';
 
                     break;
+
                 case 'select':
                 default:
                     if ($limit) {
@@ -1154,6 +1161,7 @@ class jDaoGenerator
                 }
 
                 break;
+
             case 'double':
             case 'float':
             case 'numeric':
@@ -1165,6 +1173,7 @@ class jDaoGenerator
                 }
 
                 break;
+
             case 'boolean':
                 if ($checknull) {
                     $expr = '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_prepareValue('.$expr.', "boolean", true))';
@@ -1173,6 +1182,7 @@ class jDaoGenerator
                 }
 
                 break;
+
             default:
                 if ($type == 'varbinary' || $type == 'binary') {
                     $qparam = ',true';
@@ -1193,16 +1203,20 @@ class jDaoGenerator
     protected function _preparePHPCallbackExpr($field)
     {
         $type = strtolower($field->unifiedType);
+
         switch ($type) {
             case 'integer':
                 return 'function($__e){return intval($__e);}';
+
             case 'double':
             case 'float':
             case 'numeric':
             case 'decimal':
                 return 'function($__e){return jDb::floatToStr($__e);}';
+
             case 'boolean':
                 return 'array($this, \'_callbackBool\')';
+
             default:
                 if ($type == 'varbinary' || $type == 'binary') {
                     return 'array($this, \'_callbackQuoteBin\')';

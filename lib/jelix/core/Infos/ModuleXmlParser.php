@@ -109,7 +109,6 @@ class ModuleXmlParser extends XmlParserAbstract
     }
 
     /**
-     *
      * @return array
      */
     protected function readComponentDependencyInfo(\XMLReader $xml)
@@ -187,21 +186,25 @@ class ModuleXmlParser extends XmlParserAbstract
                 if (isset($attr['dir'])) {
                     $dir = array($attr['dir'], $suffix);
                 }
+
                 switch ($name) {
                     case 'autoloader':
                         $object->autoloaders[] = $attr['file'];
 
                         break;
+
                     case 'class':
                         $object->autoloadClasses[$attr['name']] = $attr['file'];
 
                         break;
+
                     case 'classPattern':
                         if ($dir != '') {
                             $object->autoloadClassPatterns[$attr['pattern']] = $dir;
                         }
 
                         break;
+
                     case 'namespace':
                     case 'psr0':
                         if ($dir == '') {
@@ -219,6 +222,7 @@ class ModuleXmlParser extends XmlParserAbstract
                         }
 
                         break;
+
                     case 'namespacePathMap':
                     case 'psr4':
                         if ($dir == '') {
@@ -236,6 +240,7 @@ class ModuleXmlParser extends XmlParserAbstract
                         }
 
                         break;
+
                     case 'includePath':
                         if ($dir != '') {
                             $object->autoloadIncludePath[] = $dir;

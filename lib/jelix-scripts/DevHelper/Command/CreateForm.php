@@ -160,34 +160,41 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
 
             $datatype = '';
             $tag = 'input';
+
             switch ($property->unifiedType) {
                 case 'integer':
                 case 'numeric':
                     $datatype = 'integer';
 
                     break;
+
                 case 'datetime':
                     $datatype = 'datetime';
 
                     break;
+
                 case 'time':
                     $datatype = 'time';
 
                     break;
+
                 case 'date':
                     $datatype = 'date';
 
                     break;
+
                 case 'double':
                 case 'float':
                     $datatype = 'decimal';
 
                     break;
+
                 case 'text':
                 case 'blob':
                     $tag = 'textarea';
 
                     break;
+
                 case 'boolean':
                     $tag = 'checkbox';
 

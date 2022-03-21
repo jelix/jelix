@@ -85,10 +85,10 @@ class jDbPDOConnection extends PDO
         $initsql = '';
         if ($profile['force_encoding']) {
             $charset = jApp::config()->charset;
-            if ($profile['pdodriver'] == 'mysql' ||
-                $profile['pdodriver'] == 'mssql' ||
-                $profile['pdodriver'] == 'sybase' ||
-                $profile['pdodriver'] == 'oci') {
+            if ($profile['pdodriver'] == 'mysql'
+                || $profile['pdodriver'] == 'mssql'
+                || $profile['pdodriver'] == 'sybase'
+                || $profile['pdodriver'] == 'oci') {
                 $dsn .= ';charset='.$charset;
             } elseif ($this->dbms == 'pgsql' && isset($this->_pgsqlCharsets[$charset])) {
                 $initsql = "SET client_encoding to '".$this->_pgsqlCharsets[$charset]."'";
@@ -97,10 +97,9 @@ class jDbPDOConnection extends PDO
 
         parent::__construct($dsn, $user, $password, $pdoOptions);
 
-        if (version_compare(phpversion(), "8.0") < 0) {
+        if (version_compare(phpversion(), '8.0') < 0) {
             $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet7'));
-        }
-        else {
+        } else {
             $this->setAttribute(PDO::ATTR_STATEMENT_CLASS, array('jDbPDOResultSet'));
         }
         $this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -128,8 +127,8 @@ class jDbPDOConnection extends PDO
         if (preg_match('/^(app|lib|var|temp|www)\:/', $path, $m)) {
             return jFile::parseJelixPath($path);
         }
-        if (preg_match('!^[a-z]\\:(\\\\|/)[a-z]!i', $path) || // windows path
-                 $path[0] == '/' // *nix path
+        if (preg_match('!^[a-z]\\:(\\\\|/)[a-z]!i', $path) // windows path
+                 || $path[0] == '/' // *nix path
                 ) {
             if (file_exists($path) || file_exists(dirname($path))) {
                 return $path;
@@ -152,21 +151,23 @@ class jDbPDOConnection extends PDO
      * so, we cannot indicate to fetch object directly in jDbPDOResultSet::fetch().
      * So we overload query() to do it.
      * TODO check if this is still the case in PHP 8.1+
+     *
      * @return jDbPDOResultSet|PDOStatement
      */
     #[\ReturnTypeWillChange]
     public function query($queryString, $fetchmode = PDO::FETCH_OBJ, ...$fetchModeArgs)
     {
-
         if (count($fetchModeArgs) === 0) {
             $rs = parent::query($queryString);
             $rs->setFetchMode($fetchmode);
+
             return $rs;
         }
 
         if (count($fetchModeArgs) === 1 || $fetchModeArgs[1] === array()) {
             return parent::query($queryString, $fetchmode, $fetchModeArgs[0]);
         }
+
         return parent::query($queryString, $fetchmode, $fetchModeArgs[0], $fetchModeArgs[1]);
     }
 
@@ -346,7 +347,9 @@ class jDbPDOConnection extends PDO
     {
         switch ($this->dbms) {
             case 'mysql': return '`'.$fieldName.'`';
+
             case 'pgsql': return '"'.$fieldName.'"';
+
             default: return $fieldName;
         }
     }

@@ -216,13 +216,17 @@ abstract class jDbTools
         if ($checkNull && ($value === null || strtolower($value) == 'null')) {
             return null;
         }
+
         switch ($this->unifiedToPHPType($unifiedType)) {
             case 'boolean':
                 return $this->getBooleanValue($value) == $this->trueValue;
+
             case 'integer':
                 return intval($value);
+
             case 'float':
                 return floatval($value);
+
             case 'numeric':
             case 'decimal':
                 if (is_numeric($value)) {
@@ -230,6 +234,7 @@ abstract class jDbTools
                 }
 
                     return floatval($value);
+
             default:
                 return $value;
         }
@@ -287,15 +292,19 @@ abstract class jDbTools
         if ($checkNull && ($value === null || strtolower($value) == 'null')) {
             return 'NULL';
         }
+
         switch ($this->unifiedToPHPType($unifiedType)) {
             case 'boolean':
                 return $this->getBooleanValue($value);
+
             case 'integer':
                 return (string) intval($value);
+
             case 'float':
             case 'numeric':
             case 'decimal':
                return jDb::floatToStr($value);
+
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
@@ -706,18 +715,18 @@ abstract class jDbTools
             $primaryKey = array($primaryKey);
         }
 
-        $checkExist = ($primaryKey &&
-            ($options == self::IBD_IGNORE_IF_EXIST ||
-                $options == self::IBD_UPDATE_IF_EXIST));
+        $checkExist = ($primaryKey
+            && ($options == self::IBD_IGNORE_IF_EXIST
+                || $options == self::IBD_UPDATE_IF_EXIST));
 
         $sqlColumns = array();
         $pki = 0;
         $pkIndexes = array();
         $sqlPk = array();
         foreach ($columns as $k => $col) {
-            if ($checkExist &&
-                count($primaryKey) > $pki &&
-                $primaryKey[$pki] == $col
+            if ($checkExist
+                && count($primaryKey) > $pki
+                && $primaryKey[$pki] == $col
             ) {
                 $pkIndexes[$k] = $this->_conn->encloseName($col);
                 $sqlPk[] = $pkIndexes[$k];
@@ -751,28 +760,34 @@ abstract class jDbTools
             $sqlUpdateValue = array();
             foreach ($row as $vk => $value) {
                 $op = '=';
+
                 switch (gettype($value)) {
                     case 'boolean':
                         $val = $this->getBooleanValue($value);
 
                         break;
+
                     case 'integer':
                         $val = (string) $value;
 
                         break;
+
                     case 'double':
                         $val = jDb::floatToStr($value);
 
                         break;
+
                     case 'string':
                         $val = $this->_conn->quote($value);
 
                         break;
+
                     case 'NULL':
                         $val = 'NULL';
                         $op = 'IS';
 
                         break;
+
                     default:
                         $this->_conn->rollback();
 

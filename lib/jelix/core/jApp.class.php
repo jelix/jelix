@@ -34,7 +34,7 @@ class jApp
     /**
      * @var jAppInstance
      */
-    protected static $_currentApp = null;
+    protected static $_currentApp;
 
     /**
      * initialize the application paths.
@@ -234,7 +234,7 @@ class jApp
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
 
-    protected static $_mainConfigFile = null;
+    protected static $_mainConfigFile;
 
     /**
      * Main config file path.

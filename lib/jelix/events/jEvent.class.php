@@ -16,7 +16,7 @@
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once(JELIX_LIB_PATH.'events/jEventListener.class.php');
+require_once JELIX_LIB_PATH.'events/jEventListener.class.php';
 
 /**
  * Class which represents an event in the event system.
@@ -154,9 +154,9 @@ class jEvent
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey]) &&
-                $listenerResponse[$responseKey] == $value
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
+                && $listenerResponse[$responseKey] == $value
             ) {
                 $founded = true;
                 $response[] = &$this->_responses[$key];
@@ -180,8 +180,8 @@ class jEvent
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey])
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
             ) {
                 $response[] = &$listenerResponse[$responseKey];
             }
@@ -215,8 +215,8 @@ class jEvent
         $response = null;
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey])
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
             ) {
                 $value = (bool) $listenerResponse[$responseKey];
                 if ($response === null) {

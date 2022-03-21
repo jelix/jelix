@@ -265,12 +265,14 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
                     $entries['mail'] = $user->email;
 
                     break;
+
                 case $this->_params['uidProperty']:
                     if (!$update) {
                         $entries[$this->_params['uidProperty']] = $user->login;
                     }
 
                     break;
+
                 default:
                     if (isset($user->{$attribute}) && $user->{$attribute} != '') {
                         $entries[$attribute] = $user->{$attribute};
@@ -296,15 +298,18 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
                 } else {
                     $val = $attr[0];
                 }
+
                 switch (strtolower($attribute)) {
                     case 'mail':
                         $user->email = $val;
 
                         break;
+
                     case $this->_params['uidProperty']:
                         $user->login = $val;
 
                         break;
+
                     default:
                         $user->{$attribute} = $val;
 

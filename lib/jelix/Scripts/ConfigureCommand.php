@@ -140,7 +140,7 @@ class ConfigureCommand extends Command
             return $ep;
         }
 
-        return  substr($ep, 0, $p);
+        return substr($ep, 0, $p);
     }
 
     protected function setUpOutput(OutputInterface $output)

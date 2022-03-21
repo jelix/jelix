@@ -51,8 +51,7 @@ class mysqliDbResultSet extends jDbResultSet
 
     protected function _fetchAssoc()
     {
-        $ret = $this->_idResult->fetch_assoc();
-        return $ret;
+        return $this->_idResult->fetch_assoc();
     }
 
     protected function _free()
@@ -159,8 +158,8 @@ class mysqliDbResultSet extends jDbResultSet
         $types = $this->boundParameterTypes;
         if ($parameters !== null) {
             $types = array_combine(
-                    array_keys($parameters),
-                    array_fill(0, count($parameters), 's')
+                array_keys($parameters),
+                array_fill(0, count($parameters), 's')
             );
         } elseif (count($this->boundParameters)) {
             $parameters = &$this->boundParameters;

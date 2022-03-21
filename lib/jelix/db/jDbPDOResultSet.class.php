@@ -15,7 +15,7 @@
  */
 
 /**
- * a resultset based on PDOStatement for PHP >= 8.0
+ * a resultset based on PDOStatement for PHP >= 8.0.
  *
  * @package  jelix
  * @subpackage db
@@ -135,7 +135,6 @@ class jDbPDOResultSet extends PDOStatement
 
         return $result;
     }
-
 
     /**
      * @param string $text a binary string to unescape
