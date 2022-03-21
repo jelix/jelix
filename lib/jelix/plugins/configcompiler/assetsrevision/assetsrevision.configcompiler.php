@@ -11,7 +11,7 @@
  */
 
 
-class assetsrevisionConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface {
+class assetsrevisionConfigCompilerPlugin implements \Jelix\Core\ConfigCompilerPluginInterface {
 
     function getPriority()
     {
