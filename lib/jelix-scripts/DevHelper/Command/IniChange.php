@@ -31,7 +31,7 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand
             ->addArgument(
                 'param',
                 InputArgument::REQUIRED,
-                'the parameter name into the ini file'
+                'the parameter name into the ini file to change, or the section name to delete (--del-section option)'
             )
             ->addArgument(
                 'value',
@@ -50,6 +50,12 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand
                 null,
                 InputOption::VALUE_NONE,
                 'delete the parameter instead of setting it'
+            )
+            ->addOption(
+                'del-section',
+                null,
+                InputOption::VALUE_NONE,
+                'delete the section given as parameter name'
             )
             ->addOption(
                 'create-file',
@@ -82,7 +88,10 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand
 
         $ini = new IniModifier($file);
 
-        if ($todel) {
+        if ($input->getOption('del-section')) {
+            $ini->removeSection($param);
+        }
+        else if ($todel) {
             $ini->removeValue($param, $section);
         } else {
             if ($value === null) {
