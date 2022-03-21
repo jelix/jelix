@@ -64,16 +64,18 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $this->migrateLocal($helpers);
         $cli = $helpers->cli();
-        if ($cli->askConfirmation('Do you want to configure the default access to the database?')) {
-            $profilesIni = $helpers->getProfilesIni();
-            $profile = null;
-            $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
-            if ($defaultAliasProfile) {
-                $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
-            } else {
-                $profile = $profilesIni->getValues('jdb:default');
-            }
 
+        $profilesIni = $helpers->getProfilesIni();
+        $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
+        if ($defaultAliasProfile) {
+            $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
+        } else {
+            $profile = $profilesIni->getValues('jdb:default');
+        }
+
+        if ((!$profile || !isset($profile['driver']) || $profile['driver'] == '' || !isset($profile['database']) || $profile['database'] == '' )
+            && $cli->askConfirmation('Do you want to configure the default access to the database?')
+        ) {
             $profile = $cli->askDbProfile($profile);
             if ($defaultAliasProfile) {
                 $helpers->declareDbProfile($defaultAliasProfile, $profile, true);
