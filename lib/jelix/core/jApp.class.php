@@ -4,7 +4,7 @@
  * @author     Laurent Jouanneau
  * @contributor  Olivier Demah
  *
- * @copyright  2011-2015 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2022 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -15,6 +15,7 @@
  * @method static declareModulesDir($basePath, $modules = null)
  * @method static getDeclaredModulesDir()
  * @method static declareModule($modulePath)
+ * @method static declareModulesFromConfig($config)
  * @method static clearModulesPluginsPath()
  * @method static declarePluginsDir($basePath)
  * @method static getAllModulesPath()

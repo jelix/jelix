@@ -348,6 +348,8 @@ class jConfigCompiler
             $installation['modules'] = array();
         }
 
+        jApp::declareModulesFromConfig($config);
+
         if ($config->compilation['checkCacheFiletime']) {
             $config->_allBasePath = jApp::getDeclaredModulesDir();
         } else {
