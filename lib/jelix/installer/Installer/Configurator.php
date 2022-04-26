@@ -423,7 +423,7 @@ class Configurator
                     $configurator = null;
                 } else {
                     if (isset($this->moduleParameters[$component->getName()])) {
-                        $parameters = $this->moduleParameters[$resolverItem->getName()];
+                        $parameters = $this->moduleParameters[$component->getName()];
                     } else {
                         $parameters = null;
                     }

@@ -612,7 +612,6 @@ class XmlMapParser implements \jISimpleCompiler
             $u->action = 'default:index';
             $this->appendUrlInfo($u, '/', false);
             $u->action = '';
-            $pathinfo = '';
         } elseif ($pathinfo != '/' && $pathinfo != '') {
             $pathinfo = '/'.trim($pathinfo, '/');
             $this->parseInfos[] = array($u->module, '',
@@ -784,17 +783,18 @@ class XmlMapParser implements \jISimpleCompiler
                     $regexp = $this->typeparam['string'];
                 }
 
-                $u->escapes[$k] = 0;
+                $u->escapes[$k] = UrlActionMapper::ESCAPE_URLENCODE;
                 if ($type == 'path') {
-                    $u->escapes[$k] = 1;
+                    $u->escapes[$k] = UrlActionMapper::ESCAPE_SLASH;
                 } elseif (isset($var['escape'])) {
-                    $u->escapes[$k] = (((string) $var['escape']) == 'true' ? 2 : 0);
+                    $u->escapes[$k] = (((string) $var['escape']) == 'true' ?
+                        UrlActionMapper::ESCAPE_NON_ASCII : UrlActionMapper::ESCAPE_URLENCODE);
                 }
 
                 if ($type == 'lang') {
-                    $u->escapes[$k] |= 4;
+                    $u->escapes[$k] |= UrlActionMapper::ESCAPE_LANG;
                 } elseif ($type == 'locale') {
-                    $u->escapes[$k] |= 8;
+                    $u->escapes[$k] |= UrlActionMapper::ESCAPE_LOCALE;
                 }
 
                 $regexppath = str_replace('\:'.$name, $regexp, $regexppath);
@@ -805,7 +805,7 @@ class XmlMapParser implements \jISimpleCompiler
                 if (isset($u->escapes[$k])) {
                     continue;
                 }
-                $u->escapes[$k] = 0;
+                $u->escapes[$k] = UrlActionMapper::ESCAPE_URLENCODE;
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }

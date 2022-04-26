@@ -97,7 +97,7 @@ class XmlMapModifier
             }
         }
         if (count($entrypoints) == 1) {
-            return $entrypoints[0];
+            return new XmlEntryPoint($this, $entrypoints[0]);
         }
 
         return null;

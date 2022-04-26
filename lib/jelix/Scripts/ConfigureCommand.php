@@ -117,7 +117,6 @@ class ConfigureCommand extends Command
         // check entry point
 
         if ($ep) {
-            $this->allEntryPoint = false;
 
             if ($allowList) {
                 $list = preg_split('/\s*,\s*/', $ep);

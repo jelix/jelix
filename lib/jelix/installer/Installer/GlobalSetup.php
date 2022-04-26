@@ -48,12 +48,12 @@ class GlobalSetup
     protected $liveConfigIni;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
      */
     protected $urlMapModifier;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
      */
     protected $urlLocalMapModifier;
 
