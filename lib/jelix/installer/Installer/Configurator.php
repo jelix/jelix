@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -504,6 +504,17 @@ class Configurator
     {
         $configurator->configure($configHelpers);
 
+        $newEntryPoints = $configurator->getEntryPointsToCreate();
+        foreach($newEntryPoints as $newEP) {
+            $configHelpers->createEntryPoint(
+                $newEP->getEntryPointFileToCopy(),
+                $newEP->getId(),
+                $newEP->getConfigFile(),
+                $newEP->getType(),
+                $newEP->getConfigFileToCopy()
+            );
+        }
+
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
             if (is_dir($prefix.$source)) {
@@ -516,6 +527,15 @@ class Configurator
 
     protected function execModuleUnconfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers)
     {
+        $newEntryPoints = $configurator->getEntryPointsToCreate();
+        foreach($newEntryPoints as $newEP) {
+            $configHelpers->removeEntryPoint(
+                $newEP->getId(),
+                $newEP->getConfigFile(),
+                $newEP->getType(),
+            );
+        }
+
         $configurator->unconfigure($configHelpers);
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {

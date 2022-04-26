@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -64,6 +64,23 @@ class Configurator implements ConfiguratorInterface
      *                  - values are target path. Shortcut allowed ('www:', 'config:', 'var:', 'temp:', 'log:')
      */
     public function getFilesToCopy()
+    {
+        return array();
+    }
+
+    /**
+     * List of entrypoint to create
+     *
+     * Return the list of entrypoint that your module need to install.
+     * No need to call yourself ConfigurationHelpers::createEntryPoint()
+     * and ConfigurationHelpers::removeEntryPoint().
+     * These entrypoints will be removed automatically when you will
+     * deconfigure the module.
+     *
+     * @return EntryPointToInstall[]
+     * @since 1.7.11
+     */
+    public function getEntryPointsToCreate()
     {
         return array();
     }

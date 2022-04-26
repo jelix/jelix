@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -46,8 +46,8 @@ class XmlMapModifier
      *                       https=true/(false)
      *                       noentrypoint=true/(false)
      *                       optionalTrailingSlash=true/(false)
-     * @param mixed $name
-     * @param mixed $type
+     * @param string $name
+     * @param string $type
      *
      * @return XmlEntryPoint
      */
@@ -68,6 +68,25 @@ class XmlMapModifier
         $ep->setOptions($options);
 
         return $ep;
+    }
+
+    /**
+     * @param string $name
+     * @since 1.7.11
+     */
+    public function removeEntryPoint($name)
+    {
+        $ep = $this->getEntryPoint($name);
+        if ($ep) {
+
+            $xmlEp = $ep->getDomElement();
+            $parent = $xmlEp->parentNode;
+            if ($xmlEp->previousSibling && $xmlEp->previousSibling->nodeType == XML_TEXT_NODE) {
+                // remove indentation
+                $parent->removeChild($xmlEp->previousSibling);
+            }
+            $parent->removeChild($xmlEp);
+        }
     }
 
     public function setNewDefaultEntryPoint($name, $type)

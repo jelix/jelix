@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017-2018 Laurent Jouanneau
+ * @copyright   2017-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -646,6 +646,28 @@ class GlobalSetup
         } else {
             $this->urlMapModifier->addEntryPoint($epId, $epType);
         }
+    }
+
+    /**
+     * Undeclare an entry point.
+     *
+     * @param string $epId
+     * @param string $epType
+     * @param string $configFileName
+     *
+     * @throws \Exception
+     */
+    public function undeclareEntryPoint($epId)
+    {
+        if (strpos($epId, '.php') !== false) {
+            $epId = substr($epId, 0, -4);
+        }
+
+        $this->frameworkInfos->removeEntryPointInfo($epId);
+        $this->frameworkInfos->save();
+
+        $this->urlLocalMapModifier->removeEntryPoint($epId);
+        $this->urlMapModifier->removeEntryPoint($epId);
     }
 
     protected $installerContexts = array();
