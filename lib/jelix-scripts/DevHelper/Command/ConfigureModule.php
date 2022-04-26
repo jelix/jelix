@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -30,8 +30,8 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
             ->addOption(
                 'parameters',
                 'p',
-                InputOption::VALUE_REQUIRED,
-                'parameters for the installer of the first module: -p "param1;param2=value;..."'
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'parameters for the installer of the first module: -p param1 -p param2=value etc'
             )
             ->addOption(
                 'force',
@@ -62,8 +62,14 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         $modules = $input->getArgument('modules');
         $parameters = $input->getOption('parameters');
 
+        $parsedParameters = array();
         if ($parameters) {
-            $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
+            foreach($parameters as $param) {
+                $result = \Jelix\Installer\ModuleStatus::unserializeParameters($param);
+                if ($result) {
+                    $parsedParameters = array_merge($parsedParameters, $result);
+                }
+            }
         }
 
         $reporter = new \Jelix\Installer\Reporter\Console(
@@ -74,8 +80,8 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
         $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
-        if ($parameters) {
-            $configurator->setModuleParameters($modules[0], $parameters);
+        if ($parsedParameters) {
+            $configurator->setModuleParameters($modules[0], $parsedParameters);
         }
 
         $localConfig = $input->getOption('local') ? true : ($input->getOption('no-local') ? false : null);
