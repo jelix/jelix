@@ -610,10 +610,11 @@ class jInstallerModule implements jIInstallerComponent
             // change the path to application.init.php into the entrypoint
             // depending of the application, the path of www/ is not always at the same place, relatively to
             // application.init.php
-            $relativePath = \Jelix\FileUtilities\Path::shortestPath(jApp::wwwPath(), jApp::appPath());
+            $appInitFile = jApp::applicationInitFile();
+            $relativePath = \Jelix\FileUtilities\Path::shortestPath(jApp::wwwPath(), dirname($appInitFile));
 
             $epCode = file_get_contents($newEpPath);
-            $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php[\'"])#m', '\\1'.$relativePath.'/\\3', $epCode);
+            $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php)([\'"])#m', '\\1'.$relativePath.'/'.basename($appInitFile).'\\4', $epCode);
             file_put_contents($newEpPath, $epCode);
         }
     }

@@ -53,6 +53,8 @@ class jAppInstance
 
     protected $_modulesContext = array();
 
+    public $applicationInitFile = '';
+
     /**
      * initialize the application paths.
      *
@@ -93,6 +95,7 @@ class jAppInstance
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
         $this->configPath = (is_null($configPath) ? $this->varPath.'config/' : $configPath);
         $this->scriptPath = (is_null($scriptPath) ? $appPath.'scripts/' : $scriptPath);
+        $this->applicationInitFile = $appPath.'application.init.php';
     }
 
     public function __destruct()
@@ -140,6 +143,18 @@ class jAppInstance
     public function onRestoringAsContext()
     {
         $this->registerAutoload();
+    }
+
+    /**
+     * Sometimes, the application.init.php may not be into the appPath, this method allows to indicate
+     * the path to the application.init.php.
+     *
+     * @param string $path the full path to the application.init.php
+     * @return void
+     */
+    public function setApplicationInitFile($path)
+    {
+        $this->applicationInitFile = $path;
     }
 
     /**

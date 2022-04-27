@@ -95,6 +95,11 @@ class jApp
         return self::$_currentApp->appPath.$file;
     }
 
+    public static function applicationInitFile()
+    {
+        return self::$_currentApp->applicationInitFile;
+    }
+
     /**
      * @deprecated
      *
