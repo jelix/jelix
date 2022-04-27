@@ -70,7 +70,7 @@ class jFormsCompiler_jf_1_0
         'htmleditor' => 'jFormsControlHtmlEditor',
         'wikieditor' => 'jFormsControlWikiEditor',
         'secretconfirm' => 'jFormsControlSecretConfirm',
-        'image' => 'jFormsControlImageUpload'
+        'image' => 'jFormsControlImageUpload',
     );
 
     protected function _generatePHPControl(&$source, $controltype, $control)
@@ -640,8 +640,8 @@ class jFormsCompiler_jf_1_0
             }
             $source[] = ');';
             if (count($selectedvalues)) {
-                if (count($selectedvalues) > 1 &&
-                        (($controltype == 'listbox' && isset($control['multiple']) && (string) $control['multiple'] != 'true')
+                if (count($selectedvalues) > 1
+                        && (($controltype == 'listbox' && isset($control['multiple']) && (string) $control['multiple'] != 'true')
                         || $controltype == 'radiobuttons' || $controltype == 'menulist')) {
                     throw new jException('jelix~formserr.multiple.selected.not.allowed', $this->sourceFile);
                 }

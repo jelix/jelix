@@ -38,6 +38,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
             } else {
                 $suffix = '|.php';
             }
+
             switch ($type) {
                 case 'class':
                     $p = $path.((string) $element['file']);
@@ -47,6 +48,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_class[(string) $element['name']] = $p;
 
                     break;
+
                 case 'classPattern':
                     $p = $path.((string) $element['dir']);
                     if (!file_exists($p)) {
@@ -60,6 +62,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_classpattern['path'][] = $p.$suffix;
 
                     break;
+
                 case 'namespace':
                 case 'psr0':
                     $p = $path.((string) $element['dir']);
@@ -75,6 +78,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_namespace[$namespace] = $p.$suffix;
 
                     break;
+
                 case 'namespacePathMap':
                 case 'psr4':
                     $p = $path.((string) $element['dir']);
@@ -90,6 +94,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_namespacepathmap[$namespace] = $p.$suffix;
 
                     break;
+
                 case 'includePath':
                     $p = $path.((string) $element['dir']);
                     if (!file_exists($p)) {
@@ -101,6 +106,7 @@ class nsautoloaderConfigCompilerPlugin implements \jelix\core\ConfigCompilerPlug
                     $config->_autoload_includepath['path'][] = $p.$suffix;
 
                     break;
+
                 case 'autoloader':
                     $p = $path.((string) $element['file']);
                     if (!file_exists($p)) {

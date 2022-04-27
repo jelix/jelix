@@ -394,9 +394,9 @@ class XmlEntryPoint
         /** @var \DOMElement $item */
         foreach ($list as $item) {
             if ($item->getAttribute('module') == $module) {
-                if ($item->getAttribute('action') == '' &&
-                    $item->getAttribute('include') == '' &&
-                    $item->getAttribute('handler') == '') {
+                if ($item->getAttribute('action') == ''
+                    && $item->getAttribute('include') == ''
+                    && $item->getAttribute('handler') == '') {
                     return $item;
                 }
             }
@@ -421,8 +421,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('handler') == $handler) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('handler') == $handler) {
                 return $item;
             }
         }
@@ -446,8 +446,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('include') == $include) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('include') == $include) {
                 return $item;
             }
         }
@@ -471,8 +471,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('action') == $action) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('action') == $action) {
                 return $item;
             }
         }
@@ -496,8 +496,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('controller') == $controller) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('controller') == $controller) {
                 return $item;
             }
         }

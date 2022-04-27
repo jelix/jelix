@@ -129,8 +129,8 @@ class jDaoConditions
      */
     public function isEmpty()
     {
-        return $this->condition->isEmpty() &&
-        (count($this->order) == 0);
+        return $this->condition->isEmpty()
+        && (count($this->order) == 0);
     }
 
     /**
@@ -189,8 +189,8 @@ class jDaoConditions
     public function addCondition($field_id, $operator, $value, $field_pattern = '%s', $foo = false)
     {
         $operator = trim(strtoupper($operator));
-        if (preg_match('/^[^\w\d\s;\(\)]+$/', $operator) ||
-           in_array($operator, array('LIKE', 'NOT LIKE', 'ILIKE', 'IN', 'NOT IN',
+        if (preg_match('/^[^\w\d\s;\(\)]+$/', $operator)
+           || in_array($operator, array('LIKE', 'NOT LIKE', 'ILIKE', 'IN', 'NOT IN',
                'IS', 'IS NOT', 'IS NULL', 'IS NOT NULL', 'MATCH', 'REGEXP',
                'NOT REGEXP', '~', '!~', '~*', '!~*', 'RLIKE', 'SOUNDS LIKE',
                'BETWEEN', ))

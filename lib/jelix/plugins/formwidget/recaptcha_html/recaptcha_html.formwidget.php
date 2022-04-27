@@ -81,8 +81,8 @@ class recaptcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         }
 
         foreach (array('theme', 'type', 'size', 'tabindex') as $param) {
-            if ((!isset($attr['data-'.$param]) || $attr['data-'.$param] == '') &&
-                isset($config[$param]) && $config[$param] != '') {
+            if ((!isset($attr['data-'.$param]) || $attr['data-'.$param] == '')
+                && isset($config[$param]) && $config[$param] != '') {
                 $attr['data-'.$param] = $config[$param];
             }
         }

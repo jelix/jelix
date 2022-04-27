@@ -119,14 +119,13 @@ class autocompleteajax_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         $source = isset($attrAutoComplete['source']) ? $attrAutoComplete['source'] : '';
 
-        $this-> displayAutocompleteInput($attrAutoComplete, $attr);
+        $this->displayAutocompleteInput($attrAutoComplete, $attr);
         $this->outputJs($source);
     }
 
-
     /**
      * @param array $attrAutoComplete
-     * @param array $attrHidden attributes for the hidden input that will contain the selected value
+     * @param array $attrHidden       attributes for the hidden input that will contain the selected value
      */
     protected function displayAutocompleteInput($attrAutoComplete, $attrHidden)
     {
@@ -140,7 +139,4 @@ class autocompleteajax_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
 
         echo "</div>\n";
     }
-
-
-
 }

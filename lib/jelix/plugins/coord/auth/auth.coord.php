@@ -18,6 +18,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require JELIX_LIB_PATH.'auth/jAuth.class.php';
+
 require JELIX_LIB_PATH.'auth/jAuthDummyUser.class.php';
 
 /**
@@ -88,8 +89,8 @@ class AuthCoordPlugin implements jICoordPlugin
         $needAuth = isset($params['auth.required']) ? ($params['auth.required'] == true) : $this->config['auth_required'];
 
         if ($needAuth && $notLogged) {
-            if ($this->config['on_error'] == 1 ||
-                !jApp::coord()->request->isAllowedResponse('jResponseRedirect')) {
+            if ($this->config['on_error'] == 1
+                || !jApp::coord()->request->isAllowedResponse('jResponseRedirect')) {
                 throw new jException($this->config['error_message']);
             }
             if (jApp::coord()->request->isAjax() && !$badip) {

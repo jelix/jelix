@@ -55,7 +55,6 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
      * @param $attr
      * @param $value
      * @param string $span is deprecated
-     * @return void
      */
     protected function showRadioCheck(&$attr, &$value, $span)
     {
@@ -111,5 +110,4 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
     {
         echo "</fieldset>\n";
     }
-
 }

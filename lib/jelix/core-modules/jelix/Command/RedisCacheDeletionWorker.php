@@ -33,8 +33,8 @@ class RedisCacheDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract
     {
         $redisPlugin = \jCache::getDriver($input->getArgument('profile'));
 
-        if (get_class($redisPlugin) != 'redis_phpCacheDriver' &&
-            get_class($redisPlugin) != 'redis_extCacheDriver') {
+        if (get_class($redisPlugin) != 'redis_phpCacheDriver'
+            && get_class($redisPlugin) != 'redis_extCacheDriver') {
             $output->writeln('<error>Error, wrong profile. It does not use a redis driver</error>');
 
             return 1;

@@ -75,7 +75,7 @@ function jtpl_function_html_pagelinks(
             'list-class' => 'pagelinks',
             'current-page-class' => 'pagelinks-current',
             'page-class' => '',
-            'disabled-class' => 'pagelinks-disabled'
+            'disabled-class' => 'pagelinks-disabled',
         );
 
         if (is_array($displayProperties) && count($displayProperties) > 0) {

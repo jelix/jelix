@@ -16,8 +16,9 @@
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once (JELIX_LIB_PATH.'db/jDbConnection.class.php');
-require_once (JELIX_LIB_PATH.'db/jDbResultSet.class.php');
+require_once JELIX_LIB_PATH.'db/jDbConnection.class.php';
+
+require_once JELIX_LIB_PATH.'db/jDbResultSet.class.php';
 
 /**
  * class that handles a sql query for a logger.

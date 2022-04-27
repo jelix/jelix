@@ -25,26 +25,31 @@ class jDbUtils
                 $tools = new jDbMysqlTools($connection);
 
                 break;
+
             case self::DB_TYPE_SQLITE:
                 require_once __DIR__.'/tools/jDbSqliteTools.php';
                 $tools = new jDbSqliteTools($connection);
 
                 break;
+
             case self::DB_TYPE_PGSQL:
                 require_once __DIR__.'/tools/jDbPgsqlTools.php';
                 $tools = new jDbPgsqlTools($connection);
 
                 break;
+
             case self::DB_TYPE_SQLSERVER:
                 require_once __DIR__.'/tools/jDbSqlsrvTools.php';
                 $tools = new jDbSqlsrvTools($connection);
 
                 break;
+
             case self::DB_TYPE_ORACLE:
                 require_once __DIR__.'/tools/jDbOciTools.php';
                 $tools = new jDbOciTools($connection);
 
                 break;
+
             default:
                 // legacy tools
                 $tools = jApp::loadPlugin($dbType, 'db', '.dbtools.php', $dbType.'DbTools', $connection);

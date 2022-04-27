@@ -25,7 +25,7 @@ class jProfiles
      *
      * @var array
      */
-    protected static $_profiles = null;
+    protected static $_profiles;
 
     /**
      * pool of objects loaded for profiles.

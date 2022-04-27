@@ -250,8 +250,8 @@ class Jelix17
             // move jSoapClient classmap files
             if (strpos($name, 'jsoapclient:') === 0) {
                 $classmapFile = $profilesini->getValue('classmap_file', $name);
-                if ($classmapFile != '' &&
-                    file_exists(\jApp::varConfigPath($classmapFile))
+                if ($classmapFile != ''
+                    && file_exists(\jApp::varConfigPath($classmapFile))
                 ) {
                     if (!file_exists(\jApp::appSystemPath($classmapFile))) {
                         $this->reporter->message('Move '.$classmapFile.' to app/system/', 'notice');
@@ -400,9 +400,9 @@ class Jelix17
 
                 foreach ($modules as $module => $params) {
                     if (
-                        isset($allModules[$module]) ||
-                        !isset($params['installed']) ||
-                        $params['installed'] == 0
+                        isset($allModules[$module])
+                        || !isset($params['installed'])
+                        || $params['installed'] == 0
                     ) {
                         continue;
                     }

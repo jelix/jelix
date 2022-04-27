@@ -66,6 +66,7 @@ abstract class jSelectorModule implements jISelector
             return null;
         }
         $n = $this->_compiler;
+
         require_once $this->_compilerPath;
         $o = new $n();
 

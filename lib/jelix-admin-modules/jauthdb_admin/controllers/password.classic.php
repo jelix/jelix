@@ -20,7 +20,7 @@ class passwordCtrl extends jController
 
     protected function isPersonalView()
     {
-        return  !jAcl2::check('auth.users.change.password');
+        return !jAcl2::check('auth.users.change.password');
     }
 
     public function index()

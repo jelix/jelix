@@ -271,16 +271,16 @@ class jDbColumn
     public function isEqualTo($column)
     {
         return
-            $this->name == $column->name &&
-            $this->_isEqualToExceptName($column)
+            $this->name == $column->name
+            && $this->_isEqualToExceptName($column)
         ;
     }
 
     public function hasOnlyDifferentName($otherColumn)
     {
         return
-            $this->name != $otherColumn->name &&
-            $this->_isEqualToExceptName($otherColumn)
+            $this->name != $otherColumn->name
+            && $this->_isEqualToExceptName($otherColumn)
         ;
     }
 
@@ -289,33 +289,33 @@ class jDbColumn
         $isAutoIncremented = false;
         if ($column->nativeType && $this->nativeType) {
             if ($column->nativeType != $this->nativeType) {
-                $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
-                    ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
+                $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn())
+                    || ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
                 if (!$isAutoIncremented) {
                     return false;
                 }
             }
         } elseif ($this->type != $column->type) {
-            $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn()) ||
-                ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
+            $isAutoIncremented = ($this->isAutoincrementedColumn() && $column->isAutoincrementedColumn())
+                || ($this->isBigAutoincrementedColumn() && $column->isBigAutoincrementedColumn());
             if (!$isAutoIncremented) {
                 return false;
             }
         }
 
-        if (!$isAutoIncremented && ($this->sequence || $column->sequence) &&
-            $this->sequence != $column->sequence) {
+        if (!$isAutoIncremented && ($this->sequence || $column->sequence)
+            && $this->sequence != $column->sequence) {
             return false;
         }
 
         return
-            $this->notNull == $column->notNull &&
-            $this->autoIncrement == $column->autoIncrement &&
-            $this->default == $column->default &&
-            $this->hasDefault == $column->hasDefault &&
-            $this->length == $column->length &&
-            $this->scale == $column->scale &&
-            $this->unsigned == $column->unsigned
+            $this->notNull == $column->notNull
+            && $this->autoIncrement == $column->autoIncrement
+            && $this->default == $column->default
+            && $this->hasDefault == $column->hasDefault
+            && $this->length == $column->length
+            && $this->scale == $column->scale
+            && $this->unsigned == $column->unsigned
         ;
     }
 
@@ -324,23 +324,23 @@ class jDbColumn
         if ($this->nativeType) {
             return
                 ($this->autoIncrement && (
-                    $this->nativeType == 'integer' ||
-                        $this->nativeType == 'int'
+                    $this->nativeType == 'integer'
+                        || $this->nativeType == 'int'
                 )
-                ) ||
-                $this->nativeType == 'serial'
+                )
+                || $this->nativeType == 'serial'
             ;
         }
 
         if (
             (
                 $this->autoIncrement && (
-                $this->type == 'integer' ||
-                    $this->type == 'int'
+                    $this->type == 'integer'
+                    || $this->type == 'int'
+                )
             )
-            ) ||
-            $this->type == 'serial' ||
-            $this->type == 'autoincrement'
+            || $this->type == 'serial'
+            || $this->type == 'autoincrement'
         ) {
             return true;
         }
@@ -353,22 +353,22 @@ class jDbColumn
         if ($this->nativeType) {
             return
                 ($this->autoIncrement && (
-                    $this->nativeType == 'bigint' ||
-                        $this->nativeType == 'numeric'
+                    $this->nativeType == 'bigint'
+                        || $this->nativeType == 'numeric'
                 )
-                ) ||
-                $this->nativeType == 'bigserial'
+                )
+                || $this->nativeType == 'bigserial'
             ;
         }
 
         if (
             (
                 $this->autoIncrement && (
-                $this->type == 'bigint'
+                    $this->type == 'bigint'
+                )
             )
-            ) ||
-            $this->type == 'bigserial' ||
-            $this->type == 'bigautoincrement'
+            || $this->type == 'bigserial'
+            || $this->type == 'bigautoincrement'
         ) {
             return true;
         }

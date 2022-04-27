@@ -21,6 +21,7 @@ function masterAdminDashboardWidgetSort($itemA, $itemB)
     if ($itemA->order == $itemB->order) {
         return 0;
     }
+
     return ($itemA->order < $itemB->order) ? -1 : 1;
 }
 

@@ -206,8 +206,8 @@ class jDbSqliteTools extends jDbTools
 
     protected function extractDateConverter($parametersString)
     {
-        if (preg_match("/^'?([a-z]+)'?(?:\\s*,\\s*|\\s+FROM(?: TIMESTAMP)?\\s+|\\s+)(.*)$/i", $parametersString, $p) &&
-            isset($this->literalFilterToSubstitions[strtolower($p[1])])
+        if (preg_match("/^'?([a-z]+)'?(?:\\s*,\\s*|\\s+FROM(?: TIMESTAMP)?\\s+|\\s+)(.*)$/i", $parametersString, $p)
+            && isset($this->literalFilterToSubstitions[strtolower($p[1])])
         ) {
             $param2 = $this->parseSQLFunctionAndConvert(strtolower($p[2]));
 

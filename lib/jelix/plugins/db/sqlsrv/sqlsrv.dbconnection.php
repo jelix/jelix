@@ -90,7 +90,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _connect()
     {
@@ -116,7 +116,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _disconnect()
     {
@@ -124,7 +124,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _doQuery($query)
     {
@@ -142,8 +142,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     *
-     * @inheritDoc
+     * {@inheritDoc}
      */
     protected function _doExec($query)
     {
@@ -169,7 +168,7 @@ class sqlsrvDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _doLimitQuery($queryString, $offset, $number)
     {

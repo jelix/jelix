@@ -64,6 +64,7 @@ class jFile
         if ($data === null) {
             $data = '';
         }
+
         return File::write($file, $data, $chmod);
     }
 
@@ -151,12 +152,12 @@ class jFile
      */
     public static function getMimeTypeFromFilename($fileName)
     {
-        if (jApp::config() &&
-            !property_exists(jApp::config(), 'FileMimeTypeRegistered')
+        if (jApp::config()
+            && !property_exists(jApp::config(), 'FileMimeTypeRegistered')
         ) {
             jApp::config()->FileMimeTypeRegistered = true;
-            if (property_exists(jApp::config(), 'mimeTypes') &&
-                is_array(jApp::config()->mimeTypes)
+            if (property_exists(jApp::config(), 'mimeTypes')
+                && is_array(jApp::config()->mimeTypes)
             ) {
                 File::registerMimeTypes(jApp::config()->mimeTypes);
             }

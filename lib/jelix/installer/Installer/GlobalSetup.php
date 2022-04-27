@@ -48,12 +48,12 @@ class GlobalSetup
     protected $liveConfigIni;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
      */
     protected $urlMapModifier;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\XmlMapModifier
+     * @var \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier
      */
     protected $urlLocalMapModifier;
 
@@ -308,9 +308,9 @@ class GlobalSetup
                 $moduleName = $dirContent->getFilename();
 
                 if (
-                    isset($this->modules[$moduleName]) ||
-                    !$this->installerIni->getValue($moduleName.'.installed', 'modules') ||
-                    !isset($modulesInfos[$moduleName.'.enabled'])
+                    isset($this->modules[$moduleName])
+                    || !$this->installerIni->getValue($moduleName.'.installed', 'modules')
+                    || !isset($modulesInfos[$moduleName.'.enabled'])
                 ) {
                     continue;
                 }
@@ -687,9 +687,9 @@ class GlobalSetup
     ) {
         $section = 'webassets_'.$collection;
         if (!$force && (
-            $config->getValue($name.'.css', $section) ||
-                $config->getValue($name.'.js', $section) ||
-                $config->getValue($name.'.require', $section)
+            $config->getValue($name.'.css', $section)
+                || $config->getValue($name.'.js', $section)
+                || $config->getValue($name.'.require', $section)
         )) {
             return;
         }

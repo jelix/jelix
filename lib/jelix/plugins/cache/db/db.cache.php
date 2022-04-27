@@ -165,17 +165,20 @@ class dbCacheDriver implements jICacheDriver
         }
 
         $dao = jDao::get($this->_dao, $this->_dbprofile);
+
         switch ($ttl) {
             case -1:
                 $date = -1;
                 $n = $dao->updateData($key, $var);
 
                 break;
+
             case 0:
                 $date = null;
                 $n = $dao->updateFullData($key, $var, $date);
 
                 break;
+
             default:
                 if ($ttl <= 2592000) {
                     $ttl += time();
@@ -228,7 +231,7 @@ class dbCacheDriver implements jICacheDriver
                 return false;
             }
 
-            return  $this->set($key, (int) $data, -1) ? (int) $data : false;
+            return $this->set($key, (int) $data, -1) ? (int) $data : false;
         }
 
         return false;
@@ -253,7 +256,7 @@ class dbCacheDriver implements jICacheDriver
                 return false;
             }
 
-            return  $this->set($key, (int) $data, -1) ? (int) $data : false;
+            return $this->set($key, (int) $data, -1) ? (int) $data : false;
         }
 
         return false;

@@ -197,9 +197,9 @@ class DatabaseHelpers
         $daoMapper = new \jDaoDbMapper($this->dbProfile);
         $count = 0;
         foreach ($dataToInsert as $daoData) {
-            if (!isset($daoData['dao']) ||
-                !isset($daoData['properties']) ||
-                !isset($daoData['data'])
+            if (!isset($daoData['dao'])
+                || !isset($daoData['properties'])
+                || !isset($daoData['data'])
             ) {
                 throw new \Exception('Bad format for dao data file.');
             }

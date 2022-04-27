@@ -271,6 +271,7 @@ class ociDaoBuilder extends jDaoGenerator
                             $sqlSet .= ', '.$fieldData->fieldName.'= :'.$fieldData->fieldName;
 
                         break;
+
                         default:
                             $sqlSet .= ', '.$fieldData->fieldName.'= '.$values[$k];
                     }
@@ -324,6 +325,7 @@ class ociDaoBuilder extends jDaoGenerator
         }
 
         $src[] = ' }'; //ends the update function
+
         return implode("\n", $src);
     }
 }

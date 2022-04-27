@@ -79,7 +79,7 @@ class mssqlDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _connect()
     {
@@ -96,7 +96,7 @@ class mssqlDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _disconnect()
     {
@@ -104,7 +104,7 @@ class mssqlDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _doQuery($query)
     {
@@ -142,7 +142,7 @@ class mssqlDbConnection extends jDbConnection
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     protected function _doLimitQuery($queryString, $offset, $number)
     {

@@ -231,5 +231,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $reporter = new \Jelix\Installer\Reporter\Console($output, ($output->isVerbose() ? 'notice' : 'warning'));
         $installer = new \Jelix\Installer\Installer($reporter, $globalSetup);
         $installer->installApplication();
+        return 0;
     }
 }

@@ -4,7 +4,7 @@
  * @author     Laurent Jouanneau
  * @contributor  Olivier Demah
  *
- * @copyright  2011-2015 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2022 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -15,6 +15,7 @@
  * @method static declareModulesDir($basePath, $modules = null)
  * @method static getDeclaredModulesDir()
  * @method static declareModule($modulePath)
+ * @method static declareModulesFromConfig($config)
  * @method static clearModulesPluginsPath()
  * @method static declarePluginsDir($basePath)
  * @method static getAllModulesPath()
@@ -33,7 +34,7 @@ class jApp
     /**
      * @var jAppInstance
      */
-    protected static $_currentApp = null;
+    protected static $_currentApp;
 
     /**
      * initialize the application paths.
@@ -92,6 +93,11 @@ class jApp
     public static function appPath($file = '')
     {
         return self::$_currentApp->appPath.$file;
+    }
+
+    public static function applicationInitFile()
+    {
+        return self::$_currentApp->applicationInitFile;
     }
 
     /**
@@ -233,7 +239,7 @@ class jApp
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
 
-    protected static $_mainConfigFile = null;
+    protected static $_mainConfigFile;
 
     /**
      * Main config file path.

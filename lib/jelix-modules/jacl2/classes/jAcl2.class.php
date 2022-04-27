@@ -12,6 +12,7 @@
  * @since 1.1
  */
 require __DIR__.'/jIAcl2Driver.iface.php';
+
 require __DIR__.'/jIAcl2Driver2.iface.php';
 
 /**
@@ -29,7 +30,7 @@ class jAcl2
     /**
      * @var null|jIAcl2Driver|jIAcl2Driver2
      */
-    protected static $driver = null;
+    protected static $driver;
 
     /**
      * @internal The constructor is private, because all methods are static

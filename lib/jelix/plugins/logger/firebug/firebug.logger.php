@@ -48,14 +48,17 @@ if(console){';
                 $src .= 'console.warn("';
 
                 break;
+
             case 'error':
                 $src .= 'console.error("';
 
                 break;
+
             case 'notice':
                 $src .= 'console.debug("';
 
                 break;
+
             default:
                 $src .= 'console.info("';
 

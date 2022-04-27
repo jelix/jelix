@@ -52,6 +52,7 @@ class file2KVDriver extends jKVDriver
         if ($val !== false) {
             return false;
         }
+
         return $this->_connection->set(
             $key,
             $value
@@ -64,6 +65,7 @@ class file2KVDriver extends jKVDriver
         if ($val === false) {
             return false;
         }
+
         return $this->_connection->set(
             $key,
             $value
@@ -95,6 +97,7 @@ class file2KVDriver extends jKVDriver
         )) {
             return $val;
         }
+
         return false;
     }
 
@@ -113,6 +116,7 @@ class file2KVDriver extends jKVDriver
         )) {
             return $val;
         }
+
         return false;
     }
 
@@ -131,6 +135,7 @@ class file2KVDriver extends jKVDriver
         )) {
             return $val;
         }
+
         return false;
     }
 
@@ -149,9 +154,9 @@ class file2KVDriver extends jKVDriver
         )) {
             return $val;
         }
+
         return false;
     }
-
 }
 
 class fileServer
@@ -163,7 +168,7 @@ class fileServer
         $this->dir = $directory;
         // Create temp kvFile directory if necessary
 
-        if (! file_exists($this->dir)) {
+        if (!file_exists($this->dir)) {
             jFile::createDir($this->dir);
         }
     }
@@ -206,7 +211,6 @@ class fileServer
                     $r = @rename("{$fn}.tmp", $fn);
 
                     chmod($fn, jApp::config()->chmodFile);
-
                 }
 
                 // end of mutex zone
@@ -222,7 +226,7 @@ class fileServer
      *
      * @param string $key the key (unique name) that identify the cached info
      *
-     * @return mixed|false false if the cached info does not exist or has expired
+     * @return false|mixed false if the cached info does not exist or has expired
      *                     or the data if the info exists and is valid
      */
     public function get($key)

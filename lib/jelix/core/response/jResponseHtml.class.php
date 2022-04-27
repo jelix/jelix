@@ -17,6 +17,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 require_once __DIR__.'/jResponseBasicHtml.class.php';
+
 require_once JELIX_LIB_PATH.'tpl/jTpl.class.php';
 
 /**
@@ -368,7 +369,6 @@ class jResponseHtml extends jResponseBasicHtml
                 $this->_JSIELink[$src] = $params;
             }
         } else {
-
             if (!preg_match('!^https?://!', $src)) {
                 $newSrc = $this->appendRevisionToUrl($src);
 

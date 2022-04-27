@@ -111,7 +111,7 @@ class jDateTime
      *
      * @see http://php.net/manual/fr/function.date.php
      *
-     * @param string    $lf  Date string format
+     * @param string $lf  Date string format
      * @param string $str The timestamp to parse
      *
      * @return bool false if the string $str has a bad format
@@ -160,6 +160,7 @@ class jDateTime
         }
 
         $str = '';
+
         switch ($format) {
            case self::LANG_DFORMAT:
                $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
@@ -167,50 +168,60 @@ class jDateTime
                $str = date($lf, $t);
 
                break;
+
            case self::LANG_DTFORMAT:
                $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
                $lf = jLocale::get('jelix~format.datetime');
                $str = date($lf, $t);
 
                break;
+
            case self::LANG_TFORMAT:
                $t = mktime($this->hour, $this->minute, $this->second, 0, 0, 0);
                $lf = jLocale::get('jelix~format.time');
                $str = date($lf, $t);
 
                break;
+
            case self::LANG_SHORT_DTFORMAT:
                $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
                $lf = jLocale::get('jelix~format.short_datetime');
                $str = date($lf, $t);
 
                break;
+
            case self::LANG_SHORT_TFORMAT:
                $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
                $lf = jLocale::get('jelix~format.short_time');
                $str = date($lf, $t);
 
                break;
+
            case self::DB_DFORMAT:
                $str = sprintf('%04d-%02d-%02d', $this->year, $this->month, $this->day);
 
                break;
+
            case self::DB_DTFORMAT:
                $str = sprintf('%04d-%02d-%02d %02d:%02d:%02d', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
 
                break;
+
            case self::DB_TFORMAT:
                $str = sprintf('%02d:%02d:%02d', $this->hour, $this->minute, $this->second);
 
                break;
+
            case self::ISO8601_FORMAT:
                $str = sprintf('%04d-%02d-%02dT%02d:%02d:%02dZ', $this->year, $this->month, $this->day, $this->hour, $this->minute, $this->second);
 
                break;
+
            case self::TIMESTAMP_FORMAT:
                $str = (string) mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
 
                break;
+
            case self::RFC822_FORMAT:
            case self::RFC2822_FORMAT:
                 $dt = new DateTime('now', new DateTimeZone('UTC'));
@@ -219,6 +230,7 @@ class jDateTime
                 $str = $dt->format('r');
 
                 break;
+
            case self::FULL_LANG_DATE:
                $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
                // month translation
@@ -233,6 +245,7 @@ class jDateTime
                $str = sprintf($lf, $day, $this->day, $ordinal, $month, $this->year);
 
                break;
+
             default:
                 if (is_string($format)) {
                     $t = mktime($this->hour, $this->minute, $this->second, $this->month, $this->day, $this->year);
@@ -272,38 +285,46 @@ class jDateTime
                 $ok = $this->_createDateFromFormat($lf, $str);
 
                 break;
+
             case self::LANG_DTFORMAT:
                 $lf = jLocale::get('jelix~format.datetime');
                 $ok = $this->_createDateFromFormat($lf, $str);
 
                 break;
+
             case self::LANG_TFORMAT:
                 $lf = jLocale::get('jelix~format.time');
                 $ok = $this->_createDateFromFormat($lf, $str);
 
                 break;
+
             case self::LANG_SHORT_TFORMAT:
                 $lf = jLocale::get('jelix~format.short_time');
                 $ok = $this->_createDateFromFormat($lf, $str);
 
                 break;
+
             case self::LANG_SHORT_DTFORMAT:
                 $lf = jLocale::get('jelix~format.short_datetime');
                 $ok = $this->_createDateFromFormat($lf, $str);
 
                 break;
+
             case self::DB_DFORMAT:
                 $ok = $this->_createDateFromFormat('Y-m-d', $str);
 
                 break;
+
             case self::DB_DTFORMAT:
                 $ok = $this->_createDateFromFormat('Y-m-d H:i:s', $str);
 
                 break;
+
             case self::DB_TFORMAT:
                 $ok = $this->_createDateFromFormat('H:i:s', $str);
 
                 break;
+
            case self::ISO8601_FORMAT:
                if ($ok = preg_match('/^(\d{4})(?:\-(\d{2})(?:\-(\d{2})(?:T(\d{2}):(\d{2})(?::(\d{2})(?:\.(\d{2,3}))?)?(Z|([+\-])(\d{2}):(\d{2})))?)?)?$/', $str, $match)) {
                    $c = count($match) - 1;
@@ -335,6 +356,7 @@ class jDateTime
                }
 
                break;
+
            case self::TIMESTAMP_FORMAT:
                $ok = true;
                $t = getdate(intval($str));
@@ -346,6 +368,7 @@ class jDateTime
                $this->second = $t['seconds'];
 
                break;
+
            case self::RFC822_FORMAT:
            case self::RFC2822_FORMAT:
                 $dt = new DateTime($str);
@@ -358,6 +381,7 @@ class jDateTime
                 $this->second = intval($dt->format('s'));
 
                 break;
+
             default:
                 if (is_string($format)) {
                     $ok = $this->_createDateFromFormat($format, $str);
@@ -372,7 +396,7 @@ class jDateTime
      * You can specify the duration in a jDuration object or give each value of
      * the duration.
      *
-     * @param jDuration|int $year   the duration value or a year with 4 digits
+     * @param int|jDuration $year   the duration value or a year with 4 digits
      * @param int           $month  month with 2 digits
      * @param int           $day    day with 2 digits
      * @param int           $hour   hour with 2 digits
@@ -411,7 +435,7 @@ class jDateTime
      * You can specify the duration in a jDuration object or give each value of
      * the duration.
      *
-     * @param jDuration|int $year   the duration value or a year with 4 digits
+     * @param int|jDuration $year   the duration value or a year with 4 digits
      * @param int           $month  month with 2 digits
      * @param int           $day    day with 2 digits
      * @param int           $hour   hour with 2 digits
@@ -545,10 +569,12 @@ class jDateTime
                         $sub = 60;
 
                         break;
+
                     case 'hour':
                         $sub = 24;
 
                         break;
+
                     case 'day':
                         switch ($this->month) {
                             // Month with 31 days
@@ -572,10 +598,10 @@ class jDateTime
                                 break;
                             // February
                             case 2:
-                                if ($this->year % 4 == 0 and
-                                        !(
-                                            $this->year % 100 == 0 and
-                                                $this->year % 400 != 0
+                                if ($this->year % 4 == 0
+                                        and !(
+                                            $this->year % 100 == 0
+                                                and $this->year % 400 != 0
                                         )) {
                                     // Bissextile
                                     $sub = 29;
@@ -587,10 +613,12 @@ class jDateTime
                         }
 
                         break;
+
                     case 'month':
                         $sub = 12;
 
                         break;
+
                     default:
                         $sub = 0;
                 }

@@ -142,6 +142,7 @@ class jIncluder
         } elseif (function_exists('apc_delete_file')) {
             apc_delete_file($cachefile);
         }
+
         require $cachefile;
         jIncluder::$_includedFiles[$cachefile] = true;
     }
@@ -203,6 +204,7 @@ class jIncluder
                 } elseif (function_exists('apc_delete_file')) {
                     apc_delete_file($cachefile);
                 }
+
                 require $cachefile;
                 jIncluder::$_includedFiles[$cachefile] = true;
             }

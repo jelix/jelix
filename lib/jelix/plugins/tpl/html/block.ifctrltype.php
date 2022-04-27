@@ -10,6 +10,10 @@
  *
  * @see        https://jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @param mixed $compiler
+ * @param mixed $begin
+ * @param mixed $params
  */
 
 /**

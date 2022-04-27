@@ -2,7 +2,7 @@
 
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015 Laurent Jouanneau
+ * @copyright  2015-2022 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -53,6 +53,8 @@ class jAppInstance
 
     protected $_modulesContext = array();
 
+    public $applicationInitFile = '';
+
     /**
      * initialize the application paths.
      *
@@ -93,6 +95,7 @@ class jAppInstance
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
         $this->configPath = (is_null($configPath) ? $this->varPath.'config/' : $configPath);
         $this->scriptPath = (is_null($scriptPath) ? $appPath.'scripts/' : $scriptPath);
+        $this->applicationInitFile = $appPath.'application.init.php';
     }
 
     public function __destruct()
@@ -143,7 +146,21 @@ class jAppInstance
     }
 
     /**
+     * Sometimes, the application.init.php may not be into the appPath, this method allows to indicate
+     * the path to the application.init.php.
+     *
+     * @param string $path the full path to the application.init.php
+     * @return void
+     */
+    public function setApplicationInitFile($path)
+    {
+        $this->applicationInitFile = $path;
+    }
+
+    /**
      * return the version of the application containing into a VERSION file
+     * stored at the root of the application.
+     *
      * It doesn't read the version from project.xml or composer.json.
      *
      * @return string
@@ -168,10 +185,11 @@ class jAppInstance
     /**
      * Declare a list of modules.
      *
-     * @param array|string $basePath the directory path containing modules that can be used
-     * @param null|string[]  list of module name to declare, from the directory. By default: all sub-directories (null).
-     *                               parameter used only if $basePath is a string
-     * @param null|mixed $modules
+     * This method must be called before loading the configuration with `jApp::loadConfig()`
+     *
+     * @param array|string  $basePath the directory path containing modules that can be used
+     * @param null|string[] $modules  list of module name to declare, from the directory. By default: all sub-directories (null).
+     *                                parameter used only if $basePath is a string
      */
     public function declareModulesDir($basePath, $modules = null)
     {
@@ -202,6 +220,8 @@ class jAppInstance
     /**
      * declare a module.
      *
+     * This method must be called before loading the configuration with `jApp::loadConfig()`
+     *
      * @param array|string $path       the path of the module directory
      * @param mixed        $modulePath
      */
@@ -221,6 +241,33 @@ class jAppInstance
         }
     }
 
+    /**
+     * Read all modules path declared into the configuration.
+     *
+     * Method reserved to the configuration compiler.
+     *
+     * @param object $config
+     */
+    public function declareModulesFromConfig($config)
+    {
+        // -- read all *.path into [modules]
+        if (property_exists($config, 'modules')) {
+            foreach ($config->modules as $key => $path) {
+                if (!preg_match('/^([a-zA-Z_0-9]+)\\.path$/', $key, $m) || $path == '') {
+                    continue;
+                }
+                $p = jFile::parseJelixPath($path);
+                if (!file_exists($p)) {
+                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, doesn\'t exist', 10);
+                }
+                if (!is_dir($p)) {
+                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, is not a directory', 10);
+                }
+                $this->_modulesPath[] = rtrim($p, '/');
+            }
+        }
+    }
+
     public function clearModulesPluginsPath()
     {
         $this->_modulesPath = array();
@@ -231,9 +278,12 @@ class jAppInstance
     }
 
     /**
-     * Declare a directory containing some plugins. Note that it does not
-     * need to declare 'plugins/' inside modules, as there are declared automatically
+     * Declare a directory containing some plugins.
+     *
+     * Note that it does not need to declare 'plugins/' inside modules, as they are declared automatically
      * when you declare modules.
+     *
+     * This method must be called before loading the configuration with `jApp::loadConfig()`
      *
      * @param string|string[] $basePath the directory path containing plugins that can be used
      */
@@ -252,6 +302,13 @@ class jAppInstance
         }
     }
 
+    /**
+     * returns the list of enabled module.
+     *
+     * Must be called after the call of `jApp::loadConfig()`.
+     *
+     * @return array
+     */
     public function getEnabledModulesPaths()
     {
         return $this->config->_modulesPathList;
@@ -266,7 +323,10 @@ class jAppInstance
     {
         if ($this->_allModulesPath === null) {
             $this->_allModulesPath = array();
-            $this->_allModulesPath['jelix'] = realpath(__DIR__.'/../core-modules/jelix/').DIRECTORY_SEPARATOR;
+
+            if ($this->config) {
+                $this->declareModulesFromConfig($this->config);
+            }
 
             foreach ($this->_modulesPath as $modulePath) {
                 $this->_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;
@@ -309,9 +369,9 @@ class jAppInstance
 
             foreach ($this->getAllModulesPath() as $name => $path) {
                 $p = $path.'plugins'.DIRECTORY_SEPARATOR;
-                if (file_exists($p) &&
-                    is_dir($p) &&
-                    !in_array($p, $this->_allPluginsPath)) {
+                if (file_exists($p)
+                    && is_dir($p)
+                    && !in_array($p, $this->_allPluginsPath)) {
                     $this->_allPluginsPath[] = $p;
                 }
             }
@@ -370,6 +430,7 @@ class jAppInstance
                 || !file_exists($opt[$name].$name.$suffix)) {
                 return false;
             }
+
             require_once $opt[$name].$name.$suffix;
         }
 

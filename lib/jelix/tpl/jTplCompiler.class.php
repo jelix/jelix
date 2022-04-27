@@ -22,7 +22,7 @@
  */
 class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompiler
 {
-    protected static $castorPluginsPath = null;
+    protected static $castorPluginsPath;
 
     public function __construct()
     {

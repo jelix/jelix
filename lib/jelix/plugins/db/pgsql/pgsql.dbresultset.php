@@ -69,8 +69,7 @@ class pgsqlDbResultSet extends jDbResultSet
 
     public function fetchAssociative()
     {
-        $res = pg_fetch_assoc($this->_idResult);
-        return $res;
+        return pg_fetch_assoc($this->_idResult);
     }
 
     protected function _fetchAssoc()
@@ -144,12 +143,10 @@ class pgsqlDbResultSet extends jDbResultSet
             if (array_key_exists($name, $parameters)) {
                 if (is_null($parameters[$name])) {
                     // pg_execute does not like reference to null values on numerical fields...
-                    $params[] = NULL;
-                }
-                else if (is_bool($parameters[$name])) {
-                    $params[] = ($parameters[$name]?'t': 'f');
-                }
-                else {
+                    $params[] = null;
+                } elseif (is_bool($parameters[$name])) {
+                    $params[] = ($parameters[$name] ? 't' : 'f');
+                } else {
                     $params[] = &$parameters[$name];
                 }
             } else {

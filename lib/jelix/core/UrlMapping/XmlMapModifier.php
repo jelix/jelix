@@ -97,7 +97,7 @@ class XmlMapModifier
             }
         }
         if (count($entrypoints) == 1) {
-            return $entrypoints[0];
+            return new XmlEntryPoint($this, $entrypoints[0]);
         }
 
         return null;
@@ -123,8 +123,8 @@ class XmlMapModifier
                 continue;
             }
 
-            if (preg_match('/^.*entrypoint$/', $item->localName) &&
-                $item->getAttribute('name') == $name) {
+            if (preg_match('/^.*entrypoint$/', $item->localName)
+                && $item->getAttribute('name') == $name) {
                 return new XmlEntryPoint($this, $item);
             }
         }

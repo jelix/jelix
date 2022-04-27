@@ -183,7 +183,7 @@ class jTpl extends \Jelix\Castor\CastorCore
 
     protected function getCachePath()
     {
-        return  jApp::tempPath('compiled/templates/');
+        return jApp::tempPath('compiled/templates/');
     }
 
     protected function getCompiler()

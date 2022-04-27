@@ -90,8 +90,8 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         $resp->addAssets('jforms_html_light');
 
         foreach ($t->_vars as $k => $v) {
-            if ($v instanceof jFormsBase &&
-                count($edlist = $v->getHtmlEditors())) {
+            if ($v instanceof jFormsBase
+                && count($edlist = $v->getHtmlEditors())) {
                 foreach ($edlist as $ed) {
                     $resp->addAssets('jforms_htmleditor_'.$ed->config);
                     $resp->addAssets('jforms_htmleditor_'.$ed->config.'.skin.'.$ed->skin);
@@ -913,7 +913,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         }
         $value = (string) $value;
         if ($ctrl->emptyItemLabel !== null || !$ctrl->required) {
-            echo '<option value=""',($value === '' ? ' selected="selected"' : ''),'>',htmlspecialchars((string)$ctrl->emptyItemLabel),"</option>\n";
+            echo '<option value=""',($value === '' ? ' selected="selected"' : ''),'>',htmlspecialchars((string) $ctrl->emptyItemLabel),"</option>\n";
         }
         $this->fillSelect($ctrl, $value);
         echo '</select>';

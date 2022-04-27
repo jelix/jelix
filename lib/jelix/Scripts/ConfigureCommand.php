@@ -117,7 +117,6 @@ class ConfigureCommand extends Command
         // check entry point
 
         if ($ep) {
-            $this->allEntryPoint = false;
 
             if ($allowList) {
                 $list = preg_split('/\s*,\s*/', $ep);
@@ -140,7 +139,7 @@ class ConfigureCommand extends Command
             return $ep;
         }
 
-        return  substr($ep, 0, $p);
+        return substr($ep, 0, $p);
     }
 
     protected function setUpOutput(OutputInterface $output)

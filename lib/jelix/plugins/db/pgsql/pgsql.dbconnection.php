@@ -159,10 +159,9 @@ class pgsqlDbConnection extends jDbConnection
         }
 
         if (isset($this->profile['force_new']) && $this->profile['force_new']) {
-            $cnx = @$funcconnect ($str, PGSQL_CONNECT_FORCE_NEW);
-        }
-        else {
-            $cnx = @$funcconnect ($str);
+            $cnx = @$funcconnect($str, PGSQL_CONNECT_FORCE_NEW);
+        } else {
+            $cnx = @$funcconnect($str);
         }
 
         // let's do the connection
@@ -279,6 +278,7 @@ class pgsqlDbConnection extends jDbConnection
                 $v = pg_version($this->_connection);
 
                 return array_key_exists('client', $v) ? $v['client'] : '';
+
             case self::ATTR_SERVER_VERSION:
                 return pg_parameter_status($this->_connection, 'server_version');
 
@@ -313,12 +313,12 @@ class pgsqlDbConnection extends jDbConnection
         return $this->serverVersion;
     }
 
-
     public function getSearchPath()
     {
         if (isset($this->profile['search_path']) && trim($this->profile['search_path']) != '') {
             return preg_split('/\s*,\s*/', trim($this->profile['search_path']));
         }
+
         return array('public');
     }
 }

@@ -9,8 +9,8 @@
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-namespace Jelix\Forms\HtmlWidget;
 
+namespace Jelix\Forms\HtmlWidget;
 
 class RootWidget implements ParentWidgetInterface
 {

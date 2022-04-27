@@ -44,7 +44,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
         foreach ($rs as $rec) {
             $table->addRow(array(
                 'Anonymous',
-                $rec->id_aclsbj.($rec->canceled == '1'?' (forbidden)':''),
+                $rec->id_aclsbj.($rec->canceled == '1' ? ' (forbidden)' : ''),
                 $rec->id_aclres,
             ));
         }
@@ -62,7 +62,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
             $table->addRow(array(
                 $rec->id_aclgrp,
                 $rec->grp,
-                $rec->id_aclsbj.($rec->canceled == '1'?' (forbidden)':''),
+                $rec->id_aclsbj.($rec->canceled == '1' ? ' (forbidden)' : ''),
                 $rec->id_aclres,
             ));
         }

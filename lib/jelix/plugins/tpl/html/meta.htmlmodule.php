@@ -41,61 +41,73 @@ function jtpl_meta_html_htmlmodule($tpl, $method, $module, $path, $params = arra
     }
     if (strpos($method, 'csstheme') === 0) {
         $url = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => 'themes/'.jApp::config()->theme.'/'.$path));
+
         switch ($method) {
             case 'csstheme':
                 $resp->addCSSLink($url, $params);
 
                 break;
+
             case 'cssthemeie':
                 $resp->addCSSLink($url, $params, true);
 
                 break;
+
             case 'cssthemeie7':
             case 'cssthemeie8':
             case 'cssthemeie9':
                 $resp->addCSSLink($url, $params, 'IE '.substr($method, -1, 1));
 
                 break;
+
             case 'cssthemeltie7':
             case 'cssthemeltie8':
             case 'cssthemeltie9':
                 $resp->addCSSLink($url, $params, 'lt IE '.substr($method, -1, 1));
 
                 break;
+
             default:
                 trigger_error('Unknown resource type in meta_htmlmodule', E_USER_WARNING);
         }
     } else {
         $url = jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $path));
+
         switch ($method) {
             case 'js':
                 $resp->addJSLink($url, $params);
 
                 break;
+
             case 'css':
                 $resp->addCSSLink($url, $params);
 
                 break;
+
             case 'jsie':
                 $resp->addJSLink($url, $params, true);
 
                 break;
+
             case 'cssie':
                 $resp->addCSSLink($url, $params, true);
 
                 break;
+
             case 'cssie7':
             case 'cssie8':
             case 'cssie9':
                 $resp->addCSSLink($url, $params, 'IE '.substr($method, -1, 1));
 
                 break;
+
             case 'cssltie7':
             case 'cssltie8':
             case 'cssltie9':
                 $resp->addCSSLink($url, $params, 'lt IE '.substr($method, -1, 1));
 
                 break;
+
             default:
                 trigger_error('Unknown resource type in meta_htmlmodule', E_USER_WARNING);
         }

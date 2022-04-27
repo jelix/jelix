@@ -191,9 +191,9 @@ class mysqliDbTable extends jDbTable
         while ($idx = $rs->fetch()) {
             if ($key_column_usageSupport) {
                 $name = $idx->Key_name;
-                if (!isset($this->references[$name]) &&
-                    !isset($this->uniqueKeys[$name]) &&
-                    $name != 'PRIMARY'
+                if (!isset($this->references[$name])
+                    && !isset($this->uniqueKeys[$name])
+                    && $name != 'PRIMARY'
                 ) {
                     if (!isset($this->indexes[$name])) {
                         $this->indexes[$name] = new jDbIndex($name, $idx->Index_type);

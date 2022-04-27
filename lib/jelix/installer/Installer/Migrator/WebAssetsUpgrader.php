@@ -56,18 +56,18 @@ class WebAssetsUpgrader
         }
 
         $jqueryJs = $config->getValue('jqueryui.js', 'jquery');
-        if ($jqueryJs &&
-            $jqueryJs != array('$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js') &&
-            $jqueryJs != '$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js'
+        if ($jqueryJs
+            && $jqueryJs != array('$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js')
+            && $jqueryJs != '$jqueryPath/ui/jquery-ui-core-widg-mous-posi.custom.min.js'
         ) {
             $targetConfig->setValue('useCollection', 'main', 'webassets');
             $targetConfig->setValue('jqueryui.js', str_replace('$jqueryPath', $jqueryPathPattern, $jqueryJs), 'webassets_main');
         }
 
         $jqueryCss = $config->getValue('jqueryui.css', 'jquery');
-        if ($jqueryCss &&
-            $jqueryCss != array('$jqueryPath/themes/base/jquery.ui.all.css') &&
-            $jqueryCss != '$jqueryPath/themes/base/jquery.ui.all.css'
+        if ($jqueryCss
+            && $jqueryCss != array('$jqueryPath/themes/base/jquery.ui.all.css')
+            && $jqueryCss != '$jqueryPath/themes/base/jquery.ui.all.css'
         ) {
             $targetConfig->setValue('useCollection', 'main', 'webassets');
             $targetConfig->setValue('jqueryui.css', str_replace('$jqueryPath', $jqueryPathPattern, $jqueryCss), 'webassets_main');

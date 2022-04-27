@@ -14,9 +14,11 @@
  * @see         http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once (JELIX_LIB_PATH.'forms/jFormsControl.class.php');
-require_once (JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
-require_once (JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
+require_once JELIX_LIB_PATH.'forms/jFormsControl.class.php';
+
+require_once JELIX_LIB_PATH.'forms/jFormsDatasource.class.php';
+
+require_once JELIX_LIB_UTILS_PATH.'jDatatype.class.php';
 
 /**
  * exception for jforms.
@@ -549,7 +551,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @param string $name  the name of the control/data
+     * @param string          $name  the name of the control/data
      * @param string|string[] $value the data value
      *
      * @throws jExceptionForms
@@ -569,7 +571,7 @@ abstract class jFormsBase
     /**
      * @param string $name the name of the  control/data
      *
-     * @return string|array the data value
+     * @return array|string the data value
      */
     public function getData($name)
     {
@@ -583,7 +585,7 @@ abstract class jFormsBase
     /**
      * @param string $name the name of the  control/data
      *
-     * @return boolean true if there is a data with this name
+     * @return bool true if there is a data with this name
      */
     public function hasData($name)
     {
@@ -769,17 +771,15 @@ abstract class jFormsBase
         if (count($this->container->originalData)) {
             $result = array();
 
-            $orig = & $this->container->originalData;
+            $orig = &$this->container->originalData;
 
-            foreach($this->controls as $ref => $ctrl) {
-
+            foreach ($this->controls as $ref => $ctrl) {
                 if (!array_key_exists($ref, $orig)) {
                     continue;
                 }
 
                 if ($ctrl->isModified()) {
                     $result[$ref] = $orig[$ref];
-
                 }
             }
 
@@ -962,27 +962,33 @@ abstract class jFormsBase
     public function addChildControl($control)
     {
         $this->controls[$control->ref] = $control;
+
         switch ($control->type) {
             case 'submit':
                 $this->submits[$control->ref] = $control;
 
                 break;
+
             case 'reset':
                 $this->reset = $control;
 
                 break;
+
             case 'upload':
                 $this->uploads[$control->ref] = $control;
 
                 break;
+
             case 'hidden':
                 $this->hiddens[$control->ref] = $control;
 
                 break;
+
             case 'htmleditor':
                 $this->htmleditors[$control->ref] = $control;
 
                 break;
+
             case 'wikieditor':
                 $this->wikieditors[$control->ref] = $control;
 
@@ -1043,6 +1049,6 @@ abstract class jFormsBase
     public function isValidToken($receivedToken)
     {
         // TODO we could check also Origin and Referer header
-        return  $this->container->token === $receivedToken;
+        return $this->container->token === $receivedToken;
     }
 }

@@ -52,8 +52,9 @@ class jFormsControlCaptcha extends jFormsControl
     }
 
     /**
-     * @return \Jelix\Forms\Captcha\CaptchaValidatorInterface
      * @throws Exception
+     *
+     * @return \Jelix\Forms\Captcha\CaptchaValidatorInterface
      */
     protected function getCaptcha()
     {

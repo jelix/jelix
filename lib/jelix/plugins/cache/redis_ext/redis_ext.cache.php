@@ -318,16 +318,19 @@ class redis_extCacheDriver implements jICacheDriver
         if (!$this->key_prefix) {
             return $this->redis->flushDb();
         }
+
         switch ($this->key_prefix_flush_method) {
             case 'direct':
                 $this->redis->flushByPrefix($this->key_prefix);
 
                 return true;
+
             case 'event':
                 jEvent::notify('jCacheRedisFlushKeyPrefix', array('prefix' => $this->key_prefix,
                     'profile' => $this->profileName, ));
 
                 return true;
+
             case 'jcacheredisworker':
                 $this->redis->rPush('jcacheredisdelkeys', $this->key_prefix);
 

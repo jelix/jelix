@@ -366,6 +366,7 @@ class jZone
         jApp::pushCurrentModule($sel->module);
 
         $fileName = $sel->getPath();
+
         require_once $fileName;
         $className = $sel->resource.'Zone';
         $zone = new $className($params);

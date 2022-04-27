@@ -32,8 +32,8 @@ class soapfileLogger implements jILogger
 
         if ($appConf && isset($appConf->soapfileLoggerMethods)) {
             $conf = &$appConf->soapfileLoggerMethods;
-            if (isset($conf[$message->getFunctionName()]) &&
-                !$conf[$message->getFunctionName()]
+            if (isset($conf[$message->getFunctionName()])
+                && !$conf[$message->getFunctionName()]
             ) {
                 return;
             }

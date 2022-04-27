@@ -119,7 +119,8 @@ class usersCtrl extends jController
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
         $rep->body->assign('selectedMenuItem', 'rights');
-        $rep->title = jLocale::get('acl2.user.rights.title'). ' '. $user;
+        $rep->title = jLocale::get('acl2.user.rights.title').' '.$user;
+
         return $rep;
     }
 
