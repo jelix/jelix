@@ -17,6 +17,7 @@ use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
 use Jelix\Installer\Module\InteractiveConfigurator;
+use Jelix\Routing\UrlMapping\EntryPointUrlModifier;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -515,6 +516,17 @@ class Configurator
             );
         }
 
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $mapModifier = $this->globalSetup->getLocalUrlModifier();
+        }
+        else {
+            $mapModifier = $this->globalSetup->getUrlModifier();
+        }
+
+        $epModifier = new EntryPointUrlModifier($mapModifier, $configurator->getModuleName());
+        $mapModifier->removeAllUrlOfModule($configurator->getModuleName());
+        $configurator->declareUrls($epModifier);
+
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
             if (is_dir($prefix.$source)) {
@@ -532,9 +544,12 @@ class Configurator
             $configHelpers->removeEntryPoint(
                 $newEP->getId(),
                 $newEP->getConfigFile(),
-                $newEP->getType(),
+                $newEP->getType()
             );
         }
+
+        $this->globalSetup->getLocalUrlModifier()->removeAllUrlOfModule($configurator->getModuleName());
+        $this->globalSetup->getUrlModifier()->removeAllUrlOfModule($configurator->getModuleName());
 
         $configurator->unconfigure($configHelpers);
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';

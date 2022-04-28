@@ -17,7 +17,10 @@ Features
 * jAcl2Db admin UI: the user interface has been reworked to be more usable
 * jAcl2Db admin UI: possibility to hide some rights (`hiddenRights` in the `jacl2ui` configuration section)
 * jAcl2Db: rights are now dependent of the `view` right of the same branch.
-
+* The configurator is now able to declare automatically modules urls, and to remove
+  all Urls of a module when it is uninstalled.
+* Module configurators can indicate a list of url to declare into the urls mapping 
+* more methods on XmlMapModifier to remove urls
 
 Internal changes
 ----------------

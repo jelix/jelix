@@ -12,6 +12,9 @@ namespace Jelix\Installer\Module;
 use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
+use Jelix\Routing\UrlMapping\EntryPointUrlModifier;
+use Jelix\Routing\UrlMapping\MapEntry\MapInclude;
+use Jelix\Routing\UrlMapping\MapEntry\ModuleUrl;
 
 /**
  * Base class for classes which configure a module.
@@ -83,6 +86,39 @@ class Configurator implements ConfiguratorInterface
     public function getEntryPointsToCreate()
     {
         return array();
+    }
+
+    /**
+     * List of Url to declare on entrypoints.
+     *
+     * By default, it searches an urls.xml file in the module, and if there is
+     * one, it attach it on the main entrypoint with the module name as path info.
+     * Else it declares the module on the main entrypoint, to have automatic
+     * urls.
+     * If you want to setup urls on specific entrypoints, you must override
+     * this method.
+     *
+     * @param EntryPointUrlModifier $registerOnEntryPoint
+     * @return void
+     */
+    public function declareUrls(EntryPointUrlModifier $registerOnEntryPoint)
+    {
+        if (file_exists($this->path.'urls.xml')) {
+            $registerOnEntryPoint->havingName(
+                'index',
+                array(
+                    new MapInclude('/'.$this->componentName, 'urls.xml'),
+                )
+            );
+        }
+        else {
+            $registerOnEntryPoint->havingName(
+                'index',
+                array(
+                    new ModuleUrl('/'.$this->componentName),
+                )
+            );
+        }
     }
 
     /**

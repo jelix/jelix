@@ -332,12 +332,23 @@ class ModuleInstallerLauncher
         }
 
         if ($this->moduleConfigurator === null) {
-            if (!file_exists($this->moduleStatus->getPath().'install/configure.php')
-                || $this->moduleStatus->skipInstaller
-            ) {
+            if ($this->moduleStatus->skipInstaller) {
                 $this->moduleConfigurator = false;
 
                 return null;
+            }
+
+            if (!file_exists($this->moduleStatus->getPath().'install/configure.php')) {
+                // use a common configurator, so things like URL or else will be
+                // configured at least.
+                $this->moduleConfigurator =  new \Jelix\Installer\Module\Configurator(
+                    $this->name,
+                    $this->name,
+                    $this->moduleStatus->getPath(),
+                    $this->moduleInfos->version
+                );
+
+                return $this->moduleConfigurator;
             }
 
             require_once $this->moduleStatus->getPath().'install/configure.php';
