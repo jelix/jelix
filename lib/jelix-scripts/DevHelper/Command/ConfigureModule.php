@@ -94,5 +94,6 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         );
 
         \jAppManager::open();
+        return 0;
     }
 }

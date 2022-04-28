@@ -108,5 +108,6 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
                 'name' => $classname, ),
             'Class'
         );
+        return 0;
     }
 }

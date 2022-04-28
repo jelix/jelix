@@ -32,7 +32,10 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $code = parent::execute($input, $output);
+        if ($code) {
+            return $code;
+        }
 
         require_once JELIX_LIB_PATH.'installer/jInstaller.class.php';
 
@@ -45,5 +48,6 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand
         // launch the low-level migration
         $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrate();
+        return 0;
     }
 }

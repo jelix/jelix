@@ -78,5 +78,6 @@ class CreateZone extends \Jelix\DevHelper\AbstractCommandForApp
             $param['template'] = '';
         }
         $this->createFile($dirname.$filename, 'module/zone.tpl', $param, 'Zone');
+        return 0;
     }
 }

@@ -64,7 +64,10 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $code = parent::execute($input, $output);
+        if ($code) {
+            return $code;
+        }
         if ($this->epOptionName) {
             $this->selectedEntryPointId = $this->getSelectedEntryPoint($this->epOptionName, $input);
         } elseif ($this->epListOptionName) {

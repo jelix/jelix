@@ -99,5 +99,6 @@ class IniChange extends \Jelix\DevHelper\AbstractCommand
             $ini->setValue($param, $value, $section);
         }
         $ini->save();
+        return 0;
     }
 }

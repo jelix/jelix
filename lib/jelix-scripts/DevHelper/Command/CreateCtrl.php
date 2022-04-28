@@ -80,5 +80,6 @@ class CreateCtrl extends \Jelix\DevHelper\AbstractCommandForApp
             $tplname = 'module/controller.tpl';
         }
         $this->createFile($agfilename, $tplname, $param, 'Controller');
+        return 0;
     }
 }
