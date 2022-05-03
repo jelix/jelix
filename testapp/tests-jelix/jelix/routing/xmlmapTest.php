@@ -103,13 +103,19 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
         $epUrlMod->havingName('index',
             array(
-                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('/my-include', 'urls-my-include.xml'),
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-my-include.xml', '/my-include'),
                 new \Jelix\Routing\UrlMapping\MapEntry\ModuleUrl('/my-foo-module'),
+            )
+        );
+        $epUrlMod->havingName('news',
+            array(
+                // its pathinfo should be renamed by /mynews2 during tests
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-my-news.xml', '/mynews/'),
             )
         );
         $epUrlMod->havingType('soap',
             array(
-                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('/my-soap-include', 'urls-soap.xml'),
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-soap.xml', '/my-soap-include'),
                 new \Jelix\Routing\UrlMapping\MapEntry\ModuleUrl('/my-soap-module'),
             )
         );

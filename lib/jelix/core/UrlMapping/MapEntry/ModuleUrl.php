@@ -14,22 +14,19 @@ use Jelix\Routing\UrlMapping\XmlEntryPoint;
 
 class ModuleUrl extends AbstractEntry
 {
-    public function __construct($pathInfo)
-    {
-        parent::__construct($pathInfo);
-    }
 
     /**
      * {@inheritDoc}
      */
     public function addToEntryPoint(XmlEntryPoint $ep, $module)
     {
-        $ep->addUrlModule($this->pathInfo, $module,
+        $pathInfo = ($this->pathInfo ?: '/'.$module);
+        $ep->addUrlModule($pathInfo, $module,
             array(
                  'default' => $this->isDefault(),
                  'https' => $this->isForHttpsOnly(),
                 //noentrypoint
-            ));
+            ), false);
     }
 
     /**

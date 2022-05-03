@@ -14,7 +14,7 @@
             <param name="world" type="year"/>
             <static name="static1" value="statval"/>
         </url>
-        <url pathinfo="/news" module="news"/>
+        <url module="news" pathinfo="/news"/>
         <url handler="superhandler" pathinfo="/articles" module="cms"/>
         <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl"/>
     </entrypoint>

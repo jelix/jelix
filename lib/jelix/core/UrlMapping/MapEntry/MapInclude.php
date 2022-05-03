@@ -19,7 +19,7 @@ class MapInclude extends AbstractEntry
      */
     protected $includedFile;
 
-    public function __construct($pathInfo, $includedFile)
+    public function __construct($includedFile, $pathInfo = '')
     {
         parent::__construct($pathInfo);
         $this->includedFile = $includedFile;
@@ -43,11 +43,12 @@ class MapInclude extends AbstractEntry
      */
     public function addToEntryPoint(XmlEntryPoint $ep, $module)
     {
-        $ep->addUrlInclude($this->pathInfo, $module, $this->includedFile,
+        $pathInfo = ($this->pathInfo ?: '/'.$module);
+        $ep->addUrlInclude($pathInfo, $module, $this->includedFile,
             array(
                 'https' => $this->isForHttpsOnly(),
                 //noentrypoint
-            ));
+            ), false);
     }
 
     /**

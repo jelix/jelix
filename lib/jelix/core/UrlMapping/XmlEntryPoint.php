@@ -273,25 +273,40 @@ class XmlEntryPoint
      *                         https => true/(false)
      *                         noentrypoint => true/(false)
      */
-    public function addUrlModule($pathinfo, $module, $options = null)
+    public function addUrlModule($pathinfo, $module, $options = null, $doReplace = true)
     {
+        $urlPathInfo = null;
+        if ($pathinfo) {
+            $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
+        }
+
         $url = $this->getUrlByDedicatedModule($module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
+            $url->setAttribute('module', $module);
+
             if ($pathinfo) {
-                $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
                 if ($urlPathInfo) {
-                    $this->removeElement($urlPathInfo);
+                    if ($doReplace) {
+                        $this->removeElement($urlPathInfo);
+                    }
+                    else {
+                        $pathinfo = $this->getUniquePathInfo($pathinfo);
+                    }
                 }
                 $url->setAttribute('pathinfo', $pathinfo);
             }
-            $url->setAttribute('module', $module);
+
             $this->appendElement($this->ep, $url);
             $this->map->removeUrlModuleInOtherEntryPoint($module, $this);
         } elseif ($pathinfo) {
-            $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
-            if ($urlPathInfo && $urlPathInfo !== $url) {
-                $this->removeElement($urlPathInfo);
+            if ($doReplace) {
+                if ($urlPathInfo && $urlPathInfo !== $url) {
+                    $this->removeElement($urlPathInfo);
+                }
+            }
+            else {
+                $pathinfo = $this->getUniquePathInfo($pathinfo);
             }
             $url->setAttribute('pathinfo', $pathinfo);
         } else {
@@ -384,26 +399,54 @@ class XmlEntryPoint
      *                         https => true/(false)
      *                         noentrypoint => true/(false)
      */
-    public function addUrlInclude($pathinfo, $module, $include, $options = null)
+    public function addUrlInclude($pathinfo, $module, $include, $options = null, $doReplace = true)
     {
         $url = $this->getUrlByInclude($include, $module);
         $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
             if ($urlPathInfo) {
-                $this->removeElement($urlPathInfo);
+                if ($doReplace) {
+                    $this->removeElement($urlPathInfo);
+                }
+                else {
+                    $pathinfo = $this->getUniquePathInfo($pathinfo);
+                }
             }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('include', $include);
-            $url->setAttribute('pathinfo', $pathinfo);
             $url->setAttribute('module', $module);
             $this->appendElement($this->ep, $url);
-        } else {
+        }
+        else if ($doReplace) {
             if ($urlPathInfo && $urlPathInfo !== $url) {
                 $this->removeElement($urlPathInfo);
             }
-            $url->setAttribute('pathinfo', $pathinfo);
         }
+        else {
+            $pathinfo = $this->getUniquePathInfo($pathinfo);
+        }
+        $url->setAttribute('pathinfo', $pathinfo);
         $this->setElementOptions($url, $options, array('https', 'noentrypoint'));
+    }
+
+    /**
+     * search an unused path info
+     * @param string $pathInfo the original path info
+     * @return string the unique path info
+     */
+    protected function getUniquePathInfo($pathInfo)
+    {
+        $pathInfo = rtrim($pathInfo, '/');
+        $x = 1;
+        do {
+            $urlPathInfo = $this->getUrlByPathinfo($pathInfo.$x);
+            $x++;
+            if (!$urlPathInfo) {
+                $pathInfo .= $x;
+            }
+        }
+        while ($urlPathInfo);
+        return $pathInfo;
     }
 
     /**
@@ -449,9 +492,12 @@ class XmlEntryPoint
     protected function getUrlByPathinfo($pathinfo)
     {
         $list = $this->ep->getElementsByTagName('url');
+
+        $searchedPathInfo = trim($pathinfo, '/');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('pathinfo') == $pathinfo) {
+            $path = trim($item->getAttribute('pathinfo'), '/');
+            if ($path == $searchedPathInfo && $path != '') {
                 return $item;
             }
         }
@@ -476,15 +522,22 @@ class XmlEntryPoint
         /** @var \DOMElement $item */
         foreach ($list as $item) {
             if ($item->getAttribute('module') == $module) {
-                if ($item->getAttribute('action') == ''
-                    && $item->getAttribute('include') == ''
-                    && $item->getAttribute('handler') == '') {
+                if ($this->isUrlByDedicatedModule($item)) {
                     return $item;
                 }
             }
         }
 
         return null;
+    }
+
+    protected function isUrlByDedicatedModule($url)
+    {
+        return $url->getAttribute('module') != ''
+            && $url->getAttribute('action') == ''
+            && $url->getAttribute('include') == ''
+            && $url->getAttribute('handler') == ''
+            && $url->getAttribute('controller') == '';
     }
 
     public function hasUrlByDedicatedModule($module)

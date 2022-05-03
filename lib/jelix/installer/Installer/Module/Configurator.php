@@ -107,7 +107,7 @@ class Configurator implements ConfiguratorInterface
             $registerOnEntryPoint->havingName(
                 'index',
                 array(
-                    new MapInclude('/'.$this->componentName, 'urls.xml'),
+                    new MapInclude('urls.xml', '/'.$this->componentName),
                 )
             );
         }

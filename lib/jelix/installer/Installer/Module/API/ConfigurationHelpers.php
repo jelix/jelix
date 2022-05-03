@@ -199,7 +199,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
     public function removeEntryPoint(
         $entryPointWebPath,
         $configFileName,
-        $epType = 'classic',
+        $epType = 'classic'
     ) {
 
         if (substr($entryPointWebPath, -4) == '.php') {

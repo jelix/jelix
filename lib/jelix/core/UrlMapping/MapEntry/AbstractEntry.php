@@ -21,7 +21,10 @@ abstract class AbstractEntry
 
     protected $defaultUrl = false;
 
-    public function __construct($pathInfo)
+    /**
+     * @param string $pathInfo if empty, it will be the module name by default
+     */
+    public function __construct($pathInfo = '')
     {
         $this->pathInfo = $pathInfo;
     }
