@@ -33,6 +33,7 @@ services:
       MYSQL_PASSWORD: jelix
     volumes:
       - mysql_data:/var/lib/mysql
+      - "../:/jelixapp/"
     networks:
       - default
   openldap:
