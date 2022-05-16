@@ -15,9 +15,16 @@ class groupsCtrl extends jController
 {
     public $pluginParams = array(
         'index'      => array('jacl2.right' => 'acl.group.view'),
+        'index2'      => array('jacl2.right' => 'acl.group.view'),
+        'groupsList'      => array('jacl2.right' => 'acl.group.view'),
+        'view'      => array('jacl2.right' => 'acl.group.view'),
+        'autocomplete'      => array('jacl2.right' => 'acl.group.view'),
         'rights'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'rightres'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'saverightres' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'newgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
+        'create'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
         'changename' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'delgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.delete')),
         'setdefault' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
@@ -79,6 +86,79 @@ class groupsCtrl extends jController
         $rep->body->assign('selectedMenuItem', 'usersgroups');
         $rep->title = jLocale::get('acl2.groups.title');
 
+        return $rep;
+    }
+
+
+    public function index2()
+    {
+        $rep = $this->getResponse('html');
+        $listPageSize = 15;
+        $offset = $this->param('idx', 0, true);
+        $filter = trim($this->param('filter'));
+        $tpl = new jTpl();
+        $tpl->assign(compact('offset', 'listPageSize', 'filter'));
+        $rep->body->assign('MAIN', $tpl->fetch('groups_list'));
+        $rep->body->assign('selectedMenuItem', 'usersrights');
+
+        return $rep;
+    }
+
+    public function groupsList()
+    {
+        /** @var jResponseJson $rep */
+        $rep = $this->getResponse('json');
+
+        $stringToSearch = '';
+        $draw = $this->intParam('draw');
+        $offset = $this->intParam('start', 0, true);
+        $length = $this->intParam('length', 20, true); // -1 == all
+
+        $searchP = $this->param('search');
+        if ($searchP && is_array($searchP) && (!isset($searchP['regexp']) || $searchP['regexp'] == 'false')) {
+            $stringToSearch = $searchP['value'];
+        }
+
+        $orderData = $this->param('order');
+
+        $data = array();
+        $manager = new jAcl2DbAdminUIManager();
+
+        $order = $manager::ORDER_BY_NAME;
+
+        if (isset($orderData[0]['column'])) {
+            if ($orderData[0]['column'] == 0) {
+                $order = $manager::ORDER_BY_NAME;
+            }
+        }
+        if (isset($orderData[0]['dir'])) {
+            if ($orderData[0]['dir'] == 'desc') {
+                $order |= $manager::ORDER_DIRECTION_DESC;
+            }
+        }
+
+
+        $allGroups = $manager->getGroupByFilter($stringToSearch, $offset, $length, $order);
+        foreach($allGroups['results'] as $group)
+        {
+            $data[] = array(
+                "DT_RowId" => 'grp-'.$group->id_aclgrp,
+                "DT_RowData" => [
+                    "id_aclgrp" => $group->id_aclgrp
+                ],
+                'name' => $group->name,
+                'links' => '<a href="'.jUrl::get('jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)).'">rights</a>'
+            );
+        }
+
+        $rep->data = array(
+            'draw' => $draw,
+            'recordsTotal' => $manager->getGroupsCount(),
+            'recordsFiltered' => $allGroups['resultsCount'],
+            'data' => $data,
+        );
+
+        //$rep->data = array( 'draw' => $draw, 'error' => $error);
         return $rep;
     }
 

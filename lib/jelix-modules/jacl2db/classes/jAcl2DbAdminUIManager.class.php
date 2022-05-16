@@ -15,6 +15,11 @@ class jAcl2DbAdminUIManager
     const FILTER_USERS_NO_IN_GROUP = -1;
     const FILTER_BY_GROUP = 0;
 
+    const ORDER_DIRECTION_ASC=0;
+    const ORDER_DIRECTION_DESC=1;
+    const ORDER_BY_NAME = 2;
+
+
     protected function getLabel($id, $labelKey)
     {
         if ($labelKey) {
@@ -259,13 +264,26 @@ class jAcl2DbAdminUIManager
      * @param string   $userFilter
      * @param int      $offset
      * @param int      $listPageSize
+     * @param int      $orderFlag combination of ORDER_* const
      *
      * @return array 'users': list of objects representing users ( login, and his groups in groups)
      *               'usersCount': total number of users
      */
-    public function getUsersList($groupFilter, $groupId = null, $userFilter = '', $offset = 0, $listPageSize = 15)
+    public function getUsersList($groupFilter, $groupId = null, $userFilter = '',
+                                 $offset = 0, $listPageSize = 15, $orderFlag=2
+    )
     {
         $p = 'jacl2_profile';
+
+
+        if ($orderFlag & self::ORDER_BY_NAME) {
+            $orderField = 'login';
+            $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
+        }
+        else {
+            $orderField = 'login';
+            $orderDir = 'ASC';
+        }
 
         // get the number of users and the recordset to retrieve users
         if ($groupFilter == self::FILTER_GROUP_ALL_USERS) {
@@ -276,7 +294,7 @@ class jAcl2DbAdminUIManager
             if ($userFilter) {
                 $cond->addCondition('login', 'LIKE', '%'.$userFilter.'%');
             }
-            $cond->addItemOrder('login', 'asc');
+            $cond->addItemOrder($orderField, $orderDir);
             $rs = $dao->findBy($cond, $offset, $listPageSize);
             $resultsCount = $dao->countBy($cond);
         } elseif ($groupFilter == self::FILTER_USERS_NO_IN_GROUP) {
@@ -289,11 +307,12 @@ class jAcl2DbAdminUIManager
 
             if ($cnx->dbms != 'pgsql') {
                 // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
-                $sql .= ' GROUP BY login HAVING nbgrp < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING nbgrp < 2';
             } else {
                 // But PgSQL doesn't support the HAVING structure with an alias.
-                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2';
             }
+            $sql .= ' ORDER BY '.$orderField.' '.$orderDir;
 
             $rs = $cnx->query($sql);
             $resultsCount = $rs->rowCount();
@@ -301,10 +320,21 @@ class jAcl2DbAdminUIManager
             //in a specific group
             $dao = jDao::get('jacl2db~jacl2usergroup', $p);
             if ($userFilter) {
-                $rs = $dao->getUsersGroupLimitAndFilter($groupId, '%'.$userFilter.'%', $offset, $listPageSize);
+                $rs = $dao->getUsersGroupLimitAndFilter(
+                    $groupId,
+                    '%'.$userFilter.'%',
+                    $offset,
+                    $listPageSize,
+                    $orderDir,
+                    $orderField
+                );
                 $resultsCount = $dao->getUsersGroupCountAndFilter($groupId, '%'.$userFilter.'%');
             } else {
-                $rs = $dao->getUsersGroupLimit($groupId, $offset, $listPageSize);
+                $rs = $dao->getUsersGroupLimit($groupId,
+                    $offset,
+                    $listPageSize,
+                    $orderDir,
+                    $orderField);
                 $resultsCount = $dao->getUsersGroupCount($groupId);
             }
         }
@@ -317,29 +347,62 @@ class jAcl2DbAdminUIManager
             $gl = $dao2->getGroupsUser($u->login);
             foreach ($gl as $g) {
                 if ($g->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE) {
-                    $u->groups[] = $g;
+                    $u->groups[] = $g->name;
                 }
             }
-            $u->last = count($u->groups) - 1;
             $results[] = $u;
         }
 
         return compact('results', 'resultsCount');
     }
 
-    public function getGroupByFilter($filter)
+    public function getUsersCount($groupId = null)
     {
+        $p = 'jacl2_profile';
+
+        // get the number of users and the recordset to retrieve users
+        if ($groupId < 0) {
+            //all users
+            $dao = jDao::get('jacl2db~jacl2usergroup', $p);
+            return $dao->countAll();
+        } else {
+            //in a specific group
+            $dao = jDao::get('jacl2db~jacl2usergroup', $p);
+            return $dao->getUsersGroupCount($groupId);
+        }
+    }
+
+    public function getGroupByFilter($filter, $offset, $listPageSize, $orderFlag = 2)
+    {
+
+        if ($orderFlag & self::ORDER_BY_NAME) {
+            $orderField = 'name';
+            $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
+        }
+        else {
+            $orderField = 'name';
+            $orderDir = 'ASC';
+        }
+
         $filter = '%'.$filter.'%';
-        $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findGroupByFilter($filter)->fetchAll();
+        $groupDao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        $groups = $groupDao
+            ->findGroupByFilter($filter, $offset, $listPageSize, $orderField, $orderDir);
         $results = array();
         foreach($groups as $group) {
             $group->type = 'group';
             $group->groups = array();
             $results[] = $group;
         }
-        $resultsCount = count($results);
+        $resultsCount = $groupDao->countGroupByFilter($filter);
 
         return compact('results', 'resultsCount');
+    }
+
+    public function getGroupsCount()
+    {
+        $groupDao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        return $groupDao->countAllPublicGroupAndAnonymous();
     }
 
     /**

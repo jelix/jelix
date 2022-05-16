@@ -27,5 +27,12 @@
                 <eq property="grouptype" value="2" />
             </conditions>
         </method>
+        <method name="getUsersCount" type="count">
+            <parameter name="login" />
+            <conditions>
+                <eq property="login" expr="$login" />
+            </conditions>
+        </method>
+
     </factory>
 </dao>

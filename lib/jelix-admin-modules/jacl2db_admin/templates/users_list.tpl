@@ -1,94 +1,57 @@
 {meta_html assets 'jacl2_admin'}
+{meta_html assets 'datatables'}
 
-<h1>{@jacl2db_admin~acl2.users.title@}</h1>
+<h1>{@jacl2db_admin~acl2.rights.management.title@}</h1>
 
-<form action="{formurl 'jacl2db_admin~rights:rights'}" method="get" class="form-inline">
-    <div>
-        <label>{@jacl2db_admin~acl2.user.rights.title@}</label>
-        <input name="name" id="search-bar" data-select-on-ac="true" data-link="{jurl 'jacl2db_admin~rights:autocomplete'}"/>
-        <input name="item_type" id="item-type" type="hidden"/>
-        <input name="item_id" id="item-id" type="hidden"/>
-        <button type="submit" disabled>{@jacl2db_admin~acl2.show.button@}</button>
+
+
+<div id="rights-tabs" class="ui-tabs ui-corner-all ui-widget ui-widget-content">
+    <ul role="tablist" class="ui-tabs-nav ui-corner-all ui-helper-reset ui-helper-clearfix ui-widget-header">
+        <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
+            aria-labelledby="ui-id-1"
+            aria-selected="false" aria-expanded="false">
+            <a href="{jurl 'jacl2db_admin~groups:index2'}"  role="presentation"
+               tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">
+                <span>{@jacl2db_admin~acl2.groups.tab@}</span></a></li>
+        <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
+            aria-controls="users-panel" aria-labelledby="ui-id-2"
+            aria-selected="true" aria-expanded="true"
+            >
+            <a href="#users-panel"  role="presentation" tabindex="-1"
+               class="ui-tabs-anchor" id="ui-id-2">
+                <span>{@jacl2db_admin~acl2.users.tab@}</span></a></li>
+    </ul>
+    <div id="users-panel"  aria-labelledby="ui-id-2" role="tabpanel"
+         class="ui-tabs-panel ui-corner-bottom ui-widget-content"
+         aria-hidden="false">
+
+        <div class="list-filter-form">
+            <label for="user-list-group">{@jacl2db_admin~acl2.filter.group@}</label>
+            <select name="grpid" id="user-list-group">
+                {foreach $groups as $group}
+                    <option value="{$group->id_aclgrp}" {if $group->id_aclgrp == $grpid}selected="selected"{/if}>{$group->name}</option>
+                {/foreach}
+            </select>
+        </div>
+
+        <table id="users-list"
+               data-processing="true"
+               data-server-side="true"
+               data-page-length="20"
+               data-length-menu="[ 10, 20, 50, 80, 100 ]"
+               data-jelix-url="{jurl 'jacl2db_admin~users:usersList' }">
+            <thead>
+            <tr>
+                <th data-searchable="true" data-data="name">{@jacl2db_admin~acl2.col.users.name@}</th>
+                <th data-orderable="false" data-data="groups">{@jacl2db_admin~acl2.col.groups@}</th>
+                <th data-data="links" data-orderable="false" data-type="html"></th>
+            </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
     </div>
-</form>
-
-<form action="{formurl 'jacl2db_admin~rights:index'}" method="get" name="filterForm">
-<fieldset><legend>{@jacl2db_admin~acl2.filter.title@}</legend>
-{formurlparam 'jacl2db_admin~rights:index'}
-    <label for="type-list">{@jacl2db_admin~acl2.filter.type@}</label>
-    <select name="typeName" id="type-list" onchange="hideSelect();">
-        <option value="user" {if $type == "user"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.user@}</option>
-        <option value="group" {if $type == "group"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.group@}</option>
-        <option value="all" {if $type == "all"}selected="selected"{/if}>{@jacl2db_admin~acl2.type.all@}</option>
-    </select><br/>
-    <div id="hideField" style="display: {if $type == 'user'} inline;{else} none;{/if}">
-    <label for="user-list-group">{@jacl2db_admin~acl2.filter.group@}</label>
-    <select name="grpid" id="user-list-group">
-    {foreach $groups as $group}
-        <option value="{$group->id_aclgrp}" {if $group->id_aclgrp == $grpid}selected="selected"{/if}>{$group->name}</option>
-    {/foreach}
-     </select>
-    - 
-    </div>
-    <label for="user-list-filter">{@jacl2db_admin~acl2.filter.word@}</label>
-    <input type="text" name="filter" value="{$filter|eschtml}" id="user-list-filter" />
-    <br/><input type="submit" value="{@jacl2db_admin~acl2.show.button@}" />
-</fieldset>
-</form>
-
-{if $resultsCount == 0}
-<p>{@jacl2db_admin~acl2.no.result.message@}</p>
-{else}
-<table class="records-list">
-<thead>
-    <tr>
-        <th>{@jacl2db_admin~acl2.col.groups.name@}</th>
-        <th>{@jacl2db_admin~acl2.col.type@}</th>
-        {if $type !== 'group'}<th>{@jacl2db_admin~acl2.col.groups@}</th>{/if}
-        <th></th>
-    </tr>
-</thead>
-<tbody>
-{assign $line = true}
-{foreach $results as $result}
-    <tr class="{if $line}odd{else}even{/if}">
-        {if $result->type == 'user'}
-            <td>{$result->login}</td>
-            <td>{$typeUserLabel}</td>
-        {else}
-            {if $result->id_aclgrp === '__anonymous'}
-                <td>{@acl2.anonymous.group.name@}</td>
-            {else}
-                <td>{$result->name}</td>
-            {/if}
-            <td>{$typeGroupLabel}</td>
-        {/if}
-
-        {if $type !== 'group'}
-        <td>{foreach $result->groups as $key => $group} 
-            {if $key == $result->last}
-                {$group->name}
-            {else}
-                {$group->name.', '}
-            {/if}
-        {/foreach}</td>
-        {/if}
-
-        {if $result->type == 'group'}
-            <td><a href="{jurl 'jacl2db_admin~groups:rights', array('group' => $result->id_aclgrp)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
-        {elseif $result->type == 'user'}
-            <td><a href="{jurl 'jacl2db_admin~users:rights', array('user' => $result->login)}">{@jacl2db_admin~acl2.rights.link@}</a></td>
-        {/if}
-    </tr>
-{assign $line = !$line}
-{/foreach}
-</tbody>
-</table>
-{/if}
-
-{if $resultsCount > $listPageSize}
-<div class="record-pages-list">{@jacl2db_admin~acl2.pages.links.label@} {pagelinks 'jacl2db_admin~rights:index', array('grpid'=>$grpid, 'filter'=>$filter),  $resultsCount, $offset, $listPageSize, 'idx' }</div>
-{/if}
-
+</div>
 
 

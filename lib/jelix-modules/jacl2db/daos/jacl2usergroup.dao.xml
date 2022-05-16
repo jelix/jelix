@@ -29,12 +29,13 @@
             <parameter name="grp" />
             <parameter name="offset" />
             <parameter name="count" />
-            <parameter name="ordre" default="asc" />
+            <parameter name="orderDir" default="asc" />
+            <parameter name="order" default="login" />
             <conditions>
                 <eq property="id_aclgrp" expr="$grp" />
             </conditions>
             <order>
-                <orderitem property="login" way="$ordre" />
+                <orderitem property="$order" way="$orderDir" />
             </order>
             <limit offset="$offset" count="$count" />
         </method>
@@ -49,13 +50,14 @@
             <parameter name="login" />
             <parameter name="offset" />
             <parameter name="count" />
-            <parameter name="ordre" default="asc" />
+            <parameter name="orderDir" default="asc" />
+            <parameter name="order" default="login" />
             <conditions>
                 <eq property="id_aclgrp" expr="$grp" />
                 <like property="login" expr="$login"/>
             </conditions>
             <order>
-                <orderitem property="login" way="$ordre" />
+                <orderitem property="$order" way="$orderDir" />
             </order>
             <limit offset="$offset" count="$count" />
         </method>

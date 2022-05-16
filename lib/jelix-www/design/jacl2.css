@@ -29,3 +29,8 @@ select.right-yes, span.right-yes {
    color: green;
    font-weight: bold;
 }
+
+
+.list-filter-form {
+    margin:1em;
+}
