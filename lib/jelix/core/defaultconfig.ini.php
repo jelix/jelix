@@ -538,6 +538,10 @@ jforms_autocompleteajax.require=jquery_ui
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery
 
+datatables.js[]="$jelix/datatables/datatables.min.js"
+datatables.css[]="$jelix/datatables/datatables.min.css"
+
+
 [zones]
 ; disable zone caching
 disableCache=off
