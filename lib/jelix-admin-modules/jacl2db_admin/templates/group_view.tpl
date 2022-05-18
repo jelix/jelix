@@ -33,29 +33,3 @@
     {/if}
 </tbody>
 </table>
-
-{ifacl2 'acl.group.modify'}
-{if $group->id_aclgrp !== '__anonymous'}
-<form id="rename-form" action="{formurl 'jacl2db_admin~groups:changename'}" method="post">
-<fieldset><legend>{@jacl2db_admin~acl2.change.name.title@}</legend>
-{formurlparam 'jacl2db_admin~groups:changename'}
-    <label for="newname">{@jacl2db_admin~acl2.new.name.label@}</label> <input id="newname" name="newname" />
-    <input type="hidden" name="group_id" value="{$group->id_aclgrp}"/>
-    <input type="submit" value="{@jacl2db_admin~acl2.rename.button@}" />
-</fieldset>
-</form>
-<br/>
-{/if}
-{/ifacl2}
-
-{ifacl2 'acl.group.delete'}
-{if $group->id_aclgrp !== '__anonymous'}
-<form action="{formurl 'jacl2db_admin~groups:delgroup'}" method="post" onsubmit="return confirm('{@jacl2db_admin~acl2.delete.button.confirm.label@}');">
-{formurlparam 'jacl2db_admin~groups:delgroup'}
-<div>
-    <input type="hidden" name="group" value="{$group->id_aclgrp}"/>
-    <input type="submit" value="{@jacl2db_admin~acl2.delete.group@}"/>
-</div>
-</form>
-{/if}
-{/ifacl2}

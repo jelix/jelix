@@ -82,7 +82,7 @@ fieldset {
 
 
 
-#main a { color:#3f6f7a; text-decoration:underline; }
+#main a:not(.ui-button, .ui-tabs-anchor) { color:#3f6f7a; text-decoration:underline; }
 #main a:visited {  color : #002830;}
 #main a:hover { color: #0f82af; background-color: #d7e7eb; }
 

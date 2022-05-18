@@ -20,15 +20,77 @@
     <div id="groups-panel"  aria-labelledby="ui-id-1" role="tabpanel"
          class="ui-tabs-panel ui-corner-bottom ui-widget-content"
          aria-hidden="false">
+
+    {ifacl2 'acl.group.create'}
+        <p>
+            <a class="ui-button ui-state-default" href="{jurl 'jacl2db_admin~groups:create'}">{@jacl2db_admin~acl2.create.group@}</a>
+        </p>
+    {/ifacl2}
+
+        {ifacl2 'acl.group.modify'}
+        <template id="form-edit-name">
+            <div class="cell-view">
+                <span class="cell-value"></span>
+                <button class="cell-btn-edit-name cell-btn-edit ui-icon ui-icon-pencil"></button>
+            </div>
+            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:changename'}">
+                <input type="hidden" name="id"  class="cell-id"/>
+                <input type="text" class="cell-input" name="name">
+                <button class="cell-save">save</button>
+                <button class="cell-cancel" type="button">cancel</button>
+            </form>
+        </template>
+
+        <template id="form-edit-type">
+            <div class="cell-view">
+                <span class="cell-value" data-check-label="{@jacl2db_admin~acl2.group.rights.yes@}" data-uncheck-label=""></span>
+                <button class="cell-btn-edit-type cell-btn-edit ui-icon ui-icon-pencil"></button>
+            </div>
+            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:setdefault'}">
+                <input type="hidden" name="id"  class="cell-id"/>
+                <input type="checkbox" class="cell-input" name="isdefault">
+                <button class="cell-save">save</button>
+                <button class="cell-cancel" type="button">cancel</button>
+            </form>
+        </template>
+            <template id="group-item-links">
+                <a href="" class="group-rights-link ui-button">{@jacl2db_admin~acl2.rights.link@}</a>
+                {ifacl2 'acl.group.delete'}
+                <button type="button" class="group-delete-link ui-button"
+                        data-confirm-message="{@jacl2db_admin~acl2.delete.button.confirm.label@}"
+                >{@jacl2db_admin~acl2.delete.button@}</button>
+                {/ifacl2}
+            </template>
+        {else}
+            <template id="form-edit-name">
+                <div class="cell-view">
+                    <span class="cell-value"></span>
+                </div>
+            </template>
+            <template id="form-edit-type">
+                <div class="cell-view">
+                    <span class="cell-value" data-check-label="{@jacl2db_admin~acl2.group.rights.yes@}" data-uncheck-label=""></span>
+                </div>
+            </template>
+            <template id="group-item-links">
+                <a href="" class="rights-link">{@jacl2db_admin~acl2.rights.link@}</a>
+            </template>
+        {/ifacl2}
+
+
         <table id="groups-list"
                data-processing="true"
                data-server-side="true"
-               data-page-length="20"
-               data-length-menu="[ 10, 20, 50, 80, 100 ]"
+               data-page-length="15"
+               data-length-menu="[ 10, 15, 20, 50, 80, 100 ]"
                data-jelix-url="{jurl 'jacl2db_admin~groups:groupsList' }">
             <thead>
             <tr>
+                <!--<th data-searchable="false" data-data="details" data-orderable="false" data-type="html"></th>-->
+                <th data-searchable="true" data-data="id">{@jacl2db_admin~acl2.col.groups.id@}</th>
                 <th data-searchable="true" data-data="name">{@jacl2db_admin~acl2.col.groups.name@}</th>
+                <th data-searchable="false" data-data="nb_users">{@jacl2db_admin~acl2.col.groups.users_number@}</th>
+                <th data-searchable="false" data-data="grouptype">{@jacl2db_admin~acl2.col.groups.default@}</th>
                 <th data-data="links" data-orderable="false" data-type="html"></th>
             </tr>
             </thead>
@@ -36,6 +98,8 @@
 
             </tbody>
         </table>
+        <p>{@jacl2db_admin~acl2.group.setdefault.help@}</p>
+
     </div>
     <div
 </div>

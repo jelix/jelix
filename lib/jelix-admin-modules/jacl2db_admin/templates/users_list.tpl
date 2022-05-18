@@ -10,7 +10,7 @@
         <li role="tab" tabindex="0" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab"
             aria-labelledby="ui-id-1"
             aria-selected="false" aria-expanded="false">
-            <a href="{jurl 'jacl2db_admin~groups:index2'}"  role="presentation"
+            <a href="{jurl 'jacl2db_admin~groups:index'}"  role="presentation"
                tabindex="-1" class="ui-tabs-anchor" id="ui-id-1">
                 <span>{@jacl2db_admin~acl2.groups.tab@}</span></a></li>
         <li role="tab" tabindex="-1" class="ui-tabs-tab ui-corner-top ui-state-default ui-tab ui-tabs-active ui-state-active"
@@ -25,20 +25,22 @@
          class="ui-tabs-panel ui-corner-bottom ui-widget-content"
          aria-hidden="false">
 
-        <div class="list-filter-form">
+        <template id="user-group-selector">
+            <div class="list-filter-form">
             <label for="user-list-group">{@jacl2db_admin~acl2.filter.group@}</label>
-            <select name="grpid" id="user-list-group">
+            <select name="grpid" id="user-list-group" class="user-list-group">
                 {foreach $groups as $group}
                     <option value="{$group->id_aclgrp}" {if $group->id_aclgrp == $grpid}selected="selected"{/if}>{$group->name}</option>
                 {/foreach}
             </select>
-        </div>
+            </div>
+        </template>
 
         <table id="users-list"
                data-processing="true"
                data-server-side="true"
-               data-page-length="20"
-               data-length-menu="[ 10, 20, 50, 80, 100 ]"
+               data-page-length="15"
+               data-length-menu="[ 10, 15, 20, 50, 80, 100 ]"
                data-jelix-url="{jurl 'jacl2db_admin~users:usersList' }">
             <thead>
             <tr>

@@ -281,8 +281,11 @@ class jAcl2DbUserGroup
     public static function createGroup($name, $id_aclgrp = null)
     {
         if ($id_aclgrp === null) {
-            $id_aclgrp = strtolower(str_replace(' ', '_', $name));
+            $id_aclgrp = $name;
         }
+        $id_aclgrp = strtolower(str_replace(' ', '_', $id_aclgrp));
+        $id_aclgrp = preg_replace('/[^a-zA-Z0-9_]/', '', $id_aclgrp);
+
         $dao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         $group = $dao->get($id_aclgrp);
         if (!$group) {

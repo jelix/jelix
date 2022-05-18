@@ -15,7 +15,6 @@ class groupsCtrl extends jController
 {
     public $pluginParams = array(
         'index'      => array('jacl2.right' => 'acl.group.view'),
-        'index2'      => array('jacl2.right' => 'acl.group.view'),
         'groupsList'      => array('jacl2.right' => 'acl.group.view'),
         'view'      => array('jacl2.right' => 'acl.group.view'),
         'autocomplete'      => array('jacl2.right' => 'acl.group.view'),
@@ -44,53 +43,27 @@ class groupsCtrl extends jController
         $tpl->assign($data);
     }
 
-    protected function checkException(jAcl2DbAdminUIException $e, $category)
+    protected function getExceptionMessage(jAcl2DbAdminUIException $e, $category)
     {
         if ($e->getCode() == 1) {
-            jMessage::add(jLocale::get('acl2.error.invalid.user'), 'error');
+            return jLocale::get('acl2.error.invalid.user');
         } elseif ($e->getCode() == 2) {
-            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.anybody'), 'error');
+            return jLocale::get('acl2.message.'.$category.'.error.noacl.anybody');
         } elseif ($e->getCode() == 3) {
-            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.yourself'), 'error');
+            return jLocale::get('acl2.message.'.$category.'.error.noacl.yourself');
+        }
+        return '';
+    }
+
+    protected function checkException(jAcl2DbAdminUIException $e, $category)
+    {
+        $msg = $this->getExceptionMessage($e, $category);
+        if ($msg) {
+            jMessage::add($msg);
         }
     }
 
     public function index()
-    {
-        $rep = $this->getResponse('html');
-        $tpl = new jTpl();
-
-
-        if (jAcl2::check('acl.group.modify')) {
-            if ($this->param('group')) {
-                $tpl->assign('searchMode', true);
-                $group = jDao::get('jacl2db~jacl2group')->getGroupByName($this->param('group'));
-                if ($group === null) {
-                    $groups = null;
-                }
-                else {
-                    $groups = array( $group);
-                }
-            }
-            else {
-                $tpl->assign('searchMode', false);
-                $groups = jAcl2DbUserGroup::getGroupList('', true)->fetchAll();
-            }
-            $tpl->assign('groups', $groups);
-            $rep->body->assign('MAIN', $tpl->fetch('groups_edit'));
-        } else {
-            $this->loadGroupRights($tpl);
-            $rep->body->assign('MAIN', $tpl->fetch('groups_right_view'));
-        }
-
-        $rep->body->assign('selectedMenuItem', 'usersgroups');
-        $rep->title = jLocale::get('acl2.groups.title');
-
-        return $rep;
-    }
-
-
-    public function index2()
     {
         $rep = $this->getResponse('html');
         $listPageSize = 15;
@@ -128,7 +101,16 @@ class groupsCtrl extends jController
 
         if (isset($orderData[0]['column'])) {
             if ($orderData[0]['column'] == 0) {
+                $order = $manager::ORDER_BY_ID;
+            }
+            else if ($orderData[0]['column'] == 1) {
                 $order = $manager::ORDER_BY_NAME;
+            }
+            else if ($orderData[0]['column'] == 2) {
+                $order = $manager::ORDER_BY_USERS;
+            }
+            else if ($orderData[0]['column'] == 3) {
+                $order = $manager::ORDER_BY_GROUPTYPE;
             }
         }
         if (isset($orderData[0]['dir'])) {
@@ -136,7 +118,6 @@ class groupsCtrl extends jController
                 $order |= $manager::ORDER_DIRECTION_DESC;
             }
         }
-
 
         $allGroups = $manager->getGroupByFilter($stringToSearch, $offset, $length, $order);
         foreach($allGroups['results'] as $group)
@@ -146,8 +127,14 @@ class groupsCtrl extends jController
                 "DT_RowData" => [
                     "id_aclgrp" => $group->id_aclgrp
                 ],
+                'id' => $group->id_aclgrp,
                 'name' => $group->name,
-                'links' => '<a href="'.jUrl::get('jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)).'">rights</a>'
+                'nb_users' => $group->nb_users,
+                'grouptype' => $group->grouptype,
+                'links' => [
+                    'rights' => jUrl::get('jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)),
+                    'delete' => jUrl::get('jacl2db_admin~groups:delgroup', array('group_id' => $group->id_aclgrp))
+                ]
             );
         }
 
@@ -277,7 +264,7 @@ class groupsCtrl extends jController
         return $rep;
     }
 
-    public function setdefault()
+    public function setalldefault()
     {
         $rep = $this->getResponse('redirect');
         $groups = $this->param('groups', array());
@@ -293,11 +280,33 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    public function setdefault()
+    {
+        $rep = $this->getResponse('json');
+        $id = $this->param('id');
+        $default = $this->param('isdefault') != '';
+        if ($id != '' && $id != '__anonymous') {
+            jAcl2DbUserGroup::setDefaultGroup($id, $default);
+            $rep->data = [
+                'result' => 'ok',
+                'message' => jLocale::get('acl2.message.group.setdefault.ok')
+            ];
+        }
+        else {
+            $rep->data = [
+                'result' => 'ok',
+                'message' => ''
+            ];
+        }
+
+        return $rep;
+    }
+
     public function newgroup()
     {
         /** @var jResponseRedirect $rep */
         $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:rights';
+        $rep->action = 'jacl2db_admin~groups:index';
 
         $name = $this->param('name');
         $id = $this->param('id');
@@ -349,30 +358,44 @@ class groupsCtrl extends jController
 
     public function changename()
     {
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:index';
-
-        $id = $this->param('group_id');
-        $name = $this->param('newname');
+        $rep = $this->getResponse('json');
+        $id = $this->param('id');
+        $name = $this->param('name');
         if ($id != '' && $name != '' && $id != '__anonymous') {
             jAcl2DbUserGroup::updateGroup($id, $name);
-            jMessage::add(jLocale::get('acl2.message.group.rename.ok'), 'ok');
+            $rep->data = [
+                'result' => 'ok',
+                'message' => jLocale::get('acl2.message.group.rename.ok')
+            ];
+        }
+        else {
+            $rep->data = [
+                'result' => 'ok',
+                'message' => jLocale::get('acl2.message.group.rename.ok')
+            ];
         }
 
         return $rep;
     }
 
+
     public function delgroup()
     {
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:index';
-
+        $rep = $this->getResponse('json');
         try {
             $manager = new jAcl2DbAdminUIManager();
             $manager->removeGroup($this->param('group_id'), jAuth::getUserSession()->login);
-            jMessage::add(jLocale::get('acl2.message.group.delete.ok'), 'ok');
+
+            $rep->data = [
+                'result' => 'ok',
+                'message' => jLocale::get('acl2.message.group.delete.ok')
+            ];
         } catch (jAcl2DbAdminUIException $e) {
-            $this->checkException($e, 'group.delete');
+            $msg = $this->getExceptionMessage($e, 'group.delete');
+            $rep->data = [
+                'result' => 'error',
+                'message' => $msg ?: $e->getMessage()
+            ];
         }
 
         return $rep;
@@ -441,7 +464,7 @@ class groupsCtrl extends jController
             return $rep;
         }
         $manager = new jAcl2DbAdminUIManager();
-        $filteredGroupObjects = $manager->getGroupByFilter($term);
+        $filteredGroupObjects = $manager->getGroupByFilter($term, 0, 150, $manager::ORDER_BY_NAME, false);
         $rep->data = array_map(function ($elem) {
             return $elem->name;
         }, $filteredGroupObjects['results']);

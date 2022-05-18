@@ -18,6 +18,9 @@ class jAcl2DbAdminUIManager
     const ORDER_DIRECTION_ASC=0;
     const ORDER_DIRECTION_DESC=1;
     const ORDER_BY_NAME = 2;
+    const ORDER_BY_GROUPTYPE = 4;
+    const ORDER_BY_ID = 8;
+    const ORDER_BY_USERS = 16;
 
 
     protected function getLabel($id, $labelKey)
@@ -372,28 +375,50 @@ class jAcl2DbAdminUIManager
         }
     }
 
-    public function getGroupByFilter($filter, $offset, $listPageSize, $orderFlag = 2)
+    public function getGroupByFilter($filter, $offset, $listPageSize, $orderFlag = 2, $withUsers = true)
     {
+
+        $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
 
         if ($orderFlag & self::ORDER_BY_NAME) {
             $orderField = 'name';
-            $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
+        }
+        else if ($orderFlag & self::ORDER_BY_GROUPTYPE) {
+            $orderField = 'grouptype';
+        }
+        else if ($orderFlag & self::ORDER_BY_ID) {
+            $orderField = 'id_aclgrp';
+        }
+        else if ($orderFlag & self::ORDER_BY_USERS) {
+            $orderField = 'nb_users';
         }
         else {
             $orderField = 'name';
-            $orderDir = 'ASC';
         }
 
-        $filter = '%'.$filter.'%';
         $groupDao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
-        $groups = $groupDao
-            ->findGroupByFilter($filter, $offset, $listPageSize, $orderField, $orderDir);
-        $results = array();
-        foreach($groups as $group) {
-            $group->type = 'group';
-            $group->groups = array();
-            $results[] = $group;
+        $filter = '%' . $filter . '%';
+
+        if ($withUsers) {
+            $db = jDb::getConnection('jacl2_profile');
+            $filterQuote = $db->quote('%' . $filter . '%');
+
+            $sql = "SELECT g.id_aclgrp, name, grouptype, count(login) as nb_users 
+            FROM ".$db->prefixTable('jacl2_group')." g
+            LEFT JOIN ".$db->prefixTable('jacl2_user_group')." ug ON (g.id_aclgrp = ug.id_aclgrp) 
+            WHERE grouptype <> 2 AND (name LIKE $filterQuote OR g.id_aclgrp LIKE $filterQuote )
+            GROUP BY g.id_aclgrp, name, grouptype
+            ORDER BY $orderField $orderDir
+            ";
+            jLog::log($sql);
+            $groups = $db->limitQuery($sql, $offset, $listPageSize);
         }
+        else {
+            $groups = $groupDao
+                ->findGroupByFilter($filter, $offset, $listPageSize, $orderField, $orderDir);
+        }
+
+        $results = $groups->fetchAll();
         $resultsCount = $groupDao->countGroupByFilter($filter);
 
         return compact('results', 'resultsCount');
