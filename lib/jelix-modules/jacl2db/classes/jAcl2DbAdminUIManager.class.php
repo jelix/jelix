@@ -366,8 +366,11 @@ class jAcl2DbAdminUIManager
         // get the number of users and the recordset to retrieve users
         if ($groupId < 0) {
             //all users
-            $dao = jDao::get('jacl2db~jacl2usergroup', $p);
-            return $dao->countAll();
+            $db = jDb::getConnection($p);
+            $sql = 'SELECT COUNT(DISTINCT login) as c 
+            FROM '.$db->prefixTable('jacl2_user_group');
+            $rs = $db->query($sql);
+            return $rs->fetch()->c;
         } else {
             //in a specific group
             $dao = jDao::get('jacl2db~jacl2usergroup', $p);

@@ -103,10 +103,10 @@ class usersCtrl extends jController
         $data = array();
 
         if (is_numeric($grpid) && intval($grpid) < 0) {
-            // users in all groups
+            // users in all groups or not in groups
             $usersList = $manager->getUsersList($grpid, null, $stringToSearch, $offset, $length, $order);
         } else {
-            // users in a specific groups
+            // users in a specific group
             $usersList = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $stringToSearch, $offset, $length, $order);
         }
 
