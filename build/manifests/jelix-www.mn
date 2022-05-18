@@ -21,6 +21,9 @@ cd lib/jelix-www/js/jforms/htmleditors/
 cd lib/jelix-www/ckeditor5
   __ALL_RECURSIVELY__
 
+cd lib/jelix-www/datatables
+  __ALL_RECURSIVELY__
+
 cd lib/jelix-www/jquery
   MIT-LICENSE.txt
 ! jquery.min.js

@@ -3,7 +3,7 @@
 ;this file doesn't list all possible properties. See lib/jelix/core/defaultconfig.ini.php for that
 
 locale=en_US
-availableLocales=en_US
+availableLocales=en_US,fr_FR
 charset=UTF-8
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
@@ -15,6 +15,10 @@ theme=default
 ; Let it empty to use $_SERVER values instead.
 domainName=
 
+[autolocale]
+enableUrlDetection=on
+urlParamNameLanguage=lang
+useDefaultLanguageBrowser = off
 
 [modules]
 jauthdb.installparam=defaultuser
@@ -37,6 +41,7 @@ jpref.enabled=on
 jpref_admin.enabled=on
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
+autolocale=1
 
 [tplplugins]
 defaultJformsBuilder=html
