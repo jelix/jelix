@@ -333,6 +333,25 @@ class jAuth {
     }
 
     /**
+     * If the password cannot be changed, this method gives the reason.
+     *
+     * It may returns a reason only after a call of the canChangePassword()
+     * method.
+     *
+     * @return string
+     * @throws jException
+     * @since 1.6.37
+     */
+    public static function getReasonToForbiddenPasswordChange()
+    {
+        $dr = self::getDriver();
+        if ($dr instanceof jIAuthDriver3) {
+            return $dr->getReasonToForbiddenPasswordChange();
+        }
+        return '';
+    }
+
+    /**
      * change a user password
      *
      * @param string $login the login of the user

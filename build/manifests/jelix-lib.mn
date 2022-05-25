@@ -19,6 +19,7 @@ cd lib/jelix/auth
   jAuthUserLDAP.class.php
   jIAuthDriver.iface.php
   jIAuthDriver2.iface.php
+  jIAuthDriver3.iface.php
 #ifnot ENABLE_OPTIMIZED_SOURCE
   jAuthDriverBase.class.php
 #endif
