@@ -16,10 +16,12 @@
 #if ENABLE_OPTIMIZED_SOURCE
 #includephp jIAuthDriver.iface.php
 #includephp jIAuthDriver2.iface.php
+#includephp jIAuthDriver3.iface.php
 #includephp jAuthDriverBase.class.php
 #else
 require(JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php');
 require(JELIX_LIB_PATH.'auth/jIAuthDriver2.iface.php');
+require(JELIX_LIB_PATH.'auth/jIAuthDriver3.iface.php');
 require(JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php');
 #endif
 
