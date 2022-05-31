@@ -61,9 +61,10 @@ docs: phpdoc
 	sed -i -- s!__TEMPLATE_PATH__!$(CURRENT_PATH)/build/phpdoc/templates!g $(TESTPATH)/phpdoc.xml
 	sed -i -- s!__VERSION__!$(VERSION)!g $(TESTPATH)/phpdoc.xml
 	(cd $(TESTPATH) && ../phpdoc)
+	(cd $(DOCSTARGETPATH) && zip -r jelix-$(VERSION)-apidoc_html.zip jelix-$(VERSION)-apidoc_html)
 
 deploy_docs:
-	jelix_publish_apidoc.sh $(DOCSTARGETPATH) "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)
+	jelix_publish_apidoc.sh $(DOCSTARGETPATH)/jelix-$(VERSION)-apidoc_html "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)
 
 build_release:
 	composer update --working-dir=build/ --prefer-dist --no-ansi --no-interaction --ignore-platform-reqs --no-suggest --no-progress
@@ -71,4 +72,5 @@ build_release:
 	rm -rf $(DISTPATH)/jelix-$(VERSION)
 
 deploy_release:
+	mv $(DOCSTARGETPATH)/*.zip $(DISTPATH)/
 	jelix_upload_stable_package.sh $(DISTPATH)/ "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH) $(VERSION)
