@@ -18,6 +18,8 @@ require JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php';
 
 require JELIX_LIB_PATH.'auth/jIAuthDriver2.iface.php';
 
+require JELIX_LIB_PATH.'auth/jIAuthDriver3.iface.php';
+
 require JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php';
 
 /**
@@ -408,7 +410,26 @@ class jAuth
     }
 
     /**
-     * change a user password.
+     * If the password cannot be changed, this method gives the reason.
+     *
+     * It may returns a reason only after a call of the canChangePassword()
+     * method.
+     *
+     * @return string
+     * @throws jException
+     * @since 1.6.37
+     */
+    public static function getReasonToForbiddenPasswordChange()
+    {
+        $dr = self::getDriver();
+        if ($dr instanceof jIAuthDriver3) {
+            return $dr->getReasonToForbiddenPasswordChange();
+        }
+        return '';
+    }
+
+    /**
+     * change a user password
      *
      * @param string $login       the login of the user
      * @param string $newpassword the new password (not encrypted)
@@ -539,7 +560,7 @@ class jAuth
 
         if (isset($config['persistant_enable']) && $config['persistant_enable']) {
             if (isset($config['persistant_cookie_name'])) {
-                setcookie($config['persistant_cookie_name'].'[auth]', '', time() - 3600, $config['persistant_cookie_path'], '', false, true);
+                setcookie($config['persistant_cookie_name'], '', time() - 3600, $config['persistant_cookie_path'], '', false, true);
             } else {
                 jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig', 'persistant_cookie_name'), 'error');
             }

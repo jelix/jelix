@@ -69,6 +69,7 @@ deploy_package_release:
     - make deploy_release
   dependencies:
     - build_release
+    - build_ref_doc
   only:
     - tags
   tags:

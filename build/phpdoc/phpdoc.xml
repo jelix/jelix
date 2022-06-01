@@ -4,7 +4,7 @@
 >
     <title>Jelix __VERSION__</title>
     <paths>
-        <output>../_docs/</output>
+        <output>../_docs/jelix-__VERSION__-apidoc_html/</output>
         <cache>../_docs.cache</cache>
     </paths>
     <version number="__VERSION__">
