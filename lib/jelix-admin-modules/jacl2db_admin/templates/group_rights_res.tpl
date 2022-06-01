@@ -43,5 +43,5 @@
 </fieldset>
 </form>
 
-<p><a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.link.return.to.rights@}</a>.</p>
+<p><a href="{jurl 'jacl2db_admin~groups:rights', array('group'=>$groupid)}">{@jacl2db_admin~acl2.link.return.to.rights@}</a>.</p>
 

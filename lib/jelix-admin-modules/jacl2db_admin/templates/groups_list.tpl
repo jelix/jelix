@@ -24,6 +24,13 @@
     {ifacl2 'acl.group.create'}
         <p>
             <a class="ui-button ui-state-default" href="{jurl 'jacl2db_admin~groups:create'}">{@jacl2db_admin~acl2.create.group@}</a>
+
+            <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
+
+        </p>
+    {else}
+        <p>
+            <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
         </p>
     {/ifacl2}
 

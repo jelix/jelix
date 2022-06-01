@@ -142,7 +142,7 @@ class jAcl2DbManager
         // set new rights.  we modify $oldrights in order to have
         // only deprecated rights in $oldrights
         foreach ($rights as $sbj => $val) {
-                if ($val === '' || $val == false || in_array($sbj, $alreadyTreatedSbj)) {
+            if ($val === '' || $val == false || in_array($sbj, $alreadyTreatedSbj)) {
                 // remove
             } elseif ($val === true || $val == 'y') {
                 foreach ($roots as $root) {

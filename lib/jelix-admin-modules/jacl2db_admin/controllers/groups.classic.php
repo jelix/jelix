@@ -29,20 +29,6 @@ class groupsCtrl extends jController
         'setdefault' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
     );
 
-    /**
-     * @param jTpl $tpl
-     */
-    protected function loadGroupRights($tpl)
-    {
-        /** @var jAcl2DbAdminUIManager $manager */
-        $manager = new jAcl2DbAdminUIManager();
-        $data = $manager->getGroupRights();
-        $tpl->assign('nbgrp', count($data['groups']));
-        // 'groups', 'rights', 'rightsProperties',
-        // 'rightsGroupsLabels', 'rightsWithResources',
-        $tpl->assign($data);
-    }
-
     protected function getExceptionMessage(jAcl2DbAdminUIException $e, $category)
     {
         if ($e->getCode() == 1) {
@@ -59,7 +45,7 @@ class groupsCtrl extends jController
     {
         $msg = $this->getExceptionMessage($e, $category);
         if ($msg) {
-            jMessage::add($msg);
+            jMessage::add($msg, 'error');
         }
     }
 
@@ -72,7 +58,7 @@ class groupsCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign(compact('offset', 'listPageSize', 'filter'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_list'));
-        $rep->body->assign('selectedMenuItem', 'usersrights');
+        $rep->body->assign('selectedMenuItem', 'rights');
 
         return $rep;
     }
@@ -152,19 +138,36 @@ class groupsCtrl extends jController
     public function rights()
     {
         $rep = $this->getResponse('html');
-        $tpl = new jTpl();
 
-        $this->loadGroupRights($tpl);
-        $tpl->assign('groupId', $this->param('group'));
-        $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
-        $rep->body->assign('selectedMenuItem', 'usersrights');
+        $grpId = $this->param('group');
+        $tpl = new jTpl();
+        $tpl->assign('groupId', $grpId);
+
+        $manager = new jAcl2DbAdminUIManager();
+
+        if ($grpId) {
+            $data = $manager->getRightsOfGroup($grpId);
+            $tpl->assign($data);
+            $daoGroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+            $tpl->assign('group', $daoGroup->get($grpId));
+            $tplName = 'group_right';
+        }
+        else {
+            $data = $manager->getGroupRights();
+            $tpl->assign($data);
+            $tpl->assign('nbgrp', count($data['groups']));
+            $tplName = 'groups_right';
+        }
+
+        $rep->body->assign('MAIN', $tpl->fetch($tplName));
+        $rep->body->assign('selectedMenuItem', 'rights');
         $rep->title = jLocale::get('acl2.groups.rights.title');
 
         return $rep;
     }
 
     /**
-     * save rights of all groups.
+     * save rights of a group.
      *
      * @return jResponse
      */
@@ -172,10 +175,15 @@ class groupsCtrl extends jController
     {
         $rep = $this->getResponse('redirect');
         $rights = $this->param('rights', array());
+        $grpId = $this->param('group');
+        if (!$grpId) {
+            $rep->action = 'jacl2db_admin~groups:index';
+            return $rep;
+        }
 
         try {
             $manager = new jAcl2DbAdminUIManager();
-            $manager->saveGroupRights($rights, jAuth::getUserSession()->login);
+            $manager->setRightsOnGroup($rights, $grpId, jAuth::getUserSession()->login);
             jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'savegrouprights');
@@ -226,7 +234,7 @@ class groupsCtrl extends jController
         } else {
             $rep->body->assign('MAIN', $tpl->fetch('group_rights_res_view'));
         }
-        $rep->body->assign('selectedMenuItem', 'usersrights');
+        $rep->body->assign('selectedMenuItem', 'rights');
 
         return $rep;
     }
@@ -419,23 +427,16 @@ class groupsCtrl extends jController
             return $rep;
         }
         $manager = new jAcl2DbAdminUIManager();
-        $rights = $manager->getGroupRights()['rights'];
-
-        $groupRights = array_keys(array_filter($rights, function ($elem) use ($group) {
-            if ($elem[$group->id_aclgrp] === 'y') {
-                return true;
-            }
-        }));
-        $subjects = jDao::get('jacl2db~jacl2subject')->findAllSubject()->fetchAll();
+        $rightsInfo = $manager->getRightsOfGroup($group->id_aclgrp);
         $hiddenRights = $manager->getHiddenRights();
-        $subjects = array_filter($subjects, function ($elem) use ($hiddenRights) {
-            return !in_array($elem, $hiddenRights);
-        });
-        $groupRights = array_filter(array_map(function ($elem) use ($groupRights) {
-            if (in_array($elem->id_aclsbj, $groupRights)) {
-                return jLocale::get($elem->label_key);
+
+        $groupRights = array();
+        foreach ($rightsInfo['rights'] as $sbj => $r) {
+            if ($r != 'y' || in_array($sbj, $hiddenRights)) {
+                continue;
             }
-        }, $subjects));
+            $groupRights[] = $rightsInfo['rightsProperties'][$sbj]['label'];
+        }
 
         if ($groupName === '__anonymous') {
             $users = null;
@@ -447,7 +448,11 @@ class groupsCtrl extends jController
         }
 
         $tpl = new jTpl();
-        $tpl->assign(array('group' => $group, 'rights' => $groupRights, 'users' => $users));
+        $tpl->assign(array(
+            'group' => $group,
+            'rights' => $groupRights,
+            'users' => $users
+        ));
         $rep->body->assign('MAIN', $tpl->fetch('group_view'));
 
         return $rep;

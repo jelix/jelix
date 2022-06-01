@@ -155,6 +155,72 @@ class jAcl2DbAdminUIManager
     }
 
     /**
+     * Return all rights of a group, with labels
+     * @return array
+     *               'rights' : array( <right> => 'y' or 'n' or '')
+     *               'rightsProperties' : array( <right> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
+     *               'rightsGroupsLabels' : list of labels of each rights groups
+     *               'rightsWithResources':  array(<right> => <number of rights>)
+     */
+    public function getRightsOfGroup($groupId)
+    {
+
+        $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+        $rightsWithResources = array();
+        $hiddenRights = $this->getHiddenRights();
+
+        // retrieve the number of existing rights with resources
+        $rs = $daorights->getRightsHavingRes($groupId);
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            if (!isset($rightsWithResources[$rec->id_aclsbj])) {
+                $rightsWithResources[$rec->id_aclsbj] = 0;
+            }
+            ++$rightsWithResources[$rec->id_aclsbj];
+        }
+
+        // create the list of subjects and their labels
+        $rights = array();
+        $rightsGroupsLabels = array();
+        $rightsProperties = array();
+        $rs = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject();
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            $rights[$rec->id_aclsbj] = '';
+            $rightsProperties[$rec->id_aclsbj] = array(
+                'grp' => $rec->id_aclsbjgrp,
+                'label' => $this->getLabel($rec->id_aclsbj, $rec->label_key),
+            );
+            if ($rec->id_aclsbjgrp && !isset($rightsGroupsLabels[$rec->id_aclsbjgrp])) {
+                $rightsGroupsLabels[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+            }
+            if (!isset($rightsWithResources[$rec->id_aclsbj])) {
+                $rightsWithResources[$rec->id_aclsbj] = 0;
+            }
+        }
+
+        // retrieve existing rights
+        $rs = $daorights->getRightsByGroup($groupId);
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            $rights[$rec->id_aclsbj] = ($rec->canceled ? 'n' : 'y');
+        }
+
+        return compact(
+            'rights',
+            'rightsProperties',
+            'rightsGroupsLabels',
+            'rightsWithResources'
+        );
+    }
+
+    /**
      * @param mixed $groupid
      *
      * @return array
@@ -224,6 +290,15 @@ class jAcl2DbAdminUIManager
     public function saveGroupRights($rights, $sessionUser = null)
     {
         $rights = $this->addHiddenRightsValues($rights);
+        $groups = array();
+        // adds missing groups
+        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
+            $groups[] = $grp->id_aclgrp;
+            if (!isset($rights[$grp->id_aclgrp])) {
+                $rights[$grp->id_aclgrp] = array();
+            }
+        }
+
         $checking = jAcl2DbManager::checkAclAdminAuthorizationsChanges($rights, $sessionUser, 1);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
             throw new jAcl2DbAdminUIException("Changes cannot be applied else you won't be able to change some rights", 3);
@@ -232,12 +307,41 @@ class jAcl2DbAdminUIManager
             throw new jAcl2DbAdminUIException('Changes cannot be applied else nobody will be able to change some rights', 2);
         }
 
-        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
-            $id = $grp->id_aclgrp;
+        foreach ($groups as $id) {
             jAcl2DbManager::setRightsOnGroup($id, (isset($rights[$id]) ? $rights[$id] : array()));
         }
 
         jAcl2DbManager::setRightsOnGroup('__anonymous', (isset($rights['__anonymous']) ? $rights['__anonymous'] : array()));
+    }
+
+    /**
+     * Save authorizations of a specific group.
+     *
+     * Only authorizations on given subjects are changed.
+     * Existing authorizations not given in parameters are deleted from the
+     * corresponding group (i.e: marked as inherited).
+
+     * @param array  $rights      array( <id_aclsbj> => (bool, 'y', 'n' or ''))
+     * @param string $groupId
+     * @param string $sessionUser the user login who initiates the change.
+     *                            It is mandatory although null is accepted for
+     *                            API compatibility. Null value is deprecated
+     *
+     * @see jAcl2DbManager::setRightsOnGroup()
+     */
+    public function setRightsOnGroup($rights, $groupId, $sessionUser = null)
+    {
+        $rights = array($groupId => $rights);
+        $rights = $this->addHiddenRightsValues($rights);
+        $checking = jAcl2DbManager::checkAclAdminAuthorizationsChanges($rights, $sessionUser, 1);
+        if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
+            throw new jAcl2DbAdminUIException("Changes cannot be applied else you won't be able to change some rights", 3);
+        }
+        if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
+            throw new jAcl2DbAdminUIException('Changes cannot be applied else nobody will be able to change some rights', 2);
+        }
+
+        jAcl2DbManager::setRightsOnGroup($groupId, $rights[$groupId]);
     }
 
     /**
@@ -413,7 +517,6 @@ class jAcl2DbAdminUIManager
             GROUP BY g.id_aclgrp, name, grouptype
             ORDER BY $orderField $orderDir
             ";
-            jLog::log($sql);
             $groups = $db->limitQuery($sql, $offset, $listPageSize);
         }
         else {

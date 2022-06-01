@@ -146,7 +146,7 @@ class jAcl2DbUserGroup
      *
      * @param string $code The code
      *
-     * @return false|jacl2group the dao object r false if it doesn't exist
+     * @return false|jDaoRecordBase the dao object r false if it doesn't exist
      *
      * @since 1.2
      */
@@ -160,7 +160,7 @@ class jAcl2DbUserGroup
      *
      * @param string $groupid id of the user group
      *
-     * @return array a list of users object (dao records)
+     * @return object[] a list of users object (dao records)
      */
     public static function getUsersList($groupid)
     {
