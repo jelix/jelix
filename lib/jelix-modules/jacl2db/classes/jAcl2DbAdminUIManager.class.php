@@ -824,11 +824,11 @@ class jAcl2DbAdminUIManager
     public function getHiddenRights() {
         $config = jApp::config();
 
-        if (!$config->jacl2['hideRights']) {
+        if (!$config->acl2['hideRights']) {
             return array();
         }
 
-        $hiddenRights = $config->jacl2['hiddenRights'];
+        $hiddenRights = $config->acl2['hiddenRights'];
 
         if (!is_array($hiddenRights)) {
             return array($hiddenRights);
