@@ -18,7 +18,8 @@
             {/if}
         {/foreach}
         </select>
-        <button type="button" onclick="showColumn();">{@jacl2db_admin~acl2.button.display@}</button></th>
+        <button type="button"  id="add-user-to-group">{@jacl2db_admin~acl2.button.display@}</button>
+        </th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@} {$user}</th>
     </tr>
     <tr>

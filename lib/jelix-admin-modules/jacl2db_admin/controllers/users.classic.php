@@ -117,9 +117,11 @@ class usersCtrl extends jController
                 "DT_RowData" => [
                     "login" => $user->login
                 ],
-                'name' => $user->login,
+                'login' => $user->login,
                 'groups' => implode(', ', $user->groups),
-                'links' => '<a href="'.jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login)).'">rights</a>'
+                'links' => [
+                    'rights' => jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login))
+                 ]
             );
         }
 

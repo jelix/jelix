@@ -80,7 +80,7 @@
                 </div>
             </template>
             <template id="group-item-links">
-                <a href="" class="rights-link">{@jacl2db_admin~acl2.rights.link@}</a>
+                <a href="" class="group-rights-link ui-button">{@jacl2db_admin~acl2.rights.link@}</a>
             </template>
         {/ifacl2}
 

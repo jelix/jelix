@@ -27,7 +27,7 @@
 {/if}
 <tr class="{cycle array('odd','even')}">
     <th title="{$subject}">{$rightsProperties[$subject]['label']|eschtml}</th>
-    <td><select name="rights[{$subject}]" id="{$subject|eschtml}">
+    <td><select name="rights[{$subject}]" id="{$subject|eschtml}" class="right">
             <option value=""  {if $rights[$subject] == ''}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.no@}</option>
             <option value="y" {if $rights[$subject] == 'y'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.yes@}</option>
             <option value="n" {if $rights[$subject] == 'n'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.forbidden@}</option>

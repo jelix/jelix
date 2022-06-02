@@ -35,7 +35,9 @@
             </select>
             </div>
         </template>
-
+        <template id="user-item-links">
+            <a href="" class="user-rights-link  ui-button">{@jacl2db_admin~acl2.rights.link@}</a>
+        </template>
         <table id="users-list"
                data-processing="true"
                data-server-side="true"
@@ -44,7 +46,7 @@
                data-jelix-url="{jurl 'jacl2db_admin~users:usersList' }">
             <thead>
             <tr>
-                <th data-searchable="true" data-data="name">{@jacl2db_admin~acl2.col.users.name@}</th>
+                <th data-searchable="true" data-data="login">{@jacl2db_admin~acl2.col.users.login@}</th>
                 <th data-orderable="false" data-data="groups">{@jacl2db_admin~acl2.col.groups@}</th>
                 <th data-data="links" data-orderable="false" data-type="html"></th>
             </tr>
