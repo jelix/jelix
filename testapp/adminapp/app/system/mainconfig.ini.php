@@ -198,3 +198,7 @@ master_admin.css[]="$jelix/design/master_admin.css"
 jacl2_admin.require = jquery_ui
 jacl2_admin.css[]="$jelix/design/jacl2.css"
 jacl2_admin.js[]="$jelix/js/jacl2db_admin.js"
+
+jauthdb_admin.require = jquery_ui
+;jauthdb_admin.css[]="$jelix/design/jauthdb_admin.css"
+jauthdb_admin.js[]="$jelix/js/authdb_admin.js"
