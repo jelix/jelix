@@ -4,7 +4,7 @@
  * @contributor Julien Issler, Adrien Lagroy de Croutte
  *
  * @copyright   2020 Adrien Lagroy de Croutte
- * @copyright   2008-2017 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://jelix.org
@@ -34,6 +34,11 @@ class usersCtrl extends jController
         }
     }
 
+    /**
+     * Page to list all users
+     * @return jResponseHtml
+     * @throws jExceptionSelector
+     */
     public function index()
     {
         $rep = $this->getResponse('html');
@@ -68,6 +73,10 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * list of users
+     * @return jResponseJson
+     */
     public function usersList()
     {
         /** @var jResponseJson $rep */
@@ -148,6 +157,11 @@ class usersCtrl extends jController
         return $id;
     }
 
+    /**
+     * Page showing rights of a user and his groups
+     * @return jResponseHtml
+     * @throws jExceptionSelector
+     */
     public function rights()
     {
         $rep = $this->getResponse('html');
@@ -183,6 +197,12 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Save rights
+     *
+     * @return jResponseRedirect
+     * @throws jExceptionSelector
+     */
     public function saverights()
     {
         $rep = $this->getResponse('redirect');
@@ -209,6 +229,12 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Show a page with the list of rights on resources for the user
+     *
+     * @return jResponseHtml
+     * @throws Exception
+     */
     public function rightres()
     {
         $rep = $this->getResponse('html');
@@ -236,6 +262,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Save rights on resources for the user
+     * @return jResponseRedirect
+     * @throws jExceptionSelector
+     */
     public function saverightres()
     {
         $rep = $this->getResponse('redirect');
@@ -259,6 +290,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Remove a user from a group
+     *
+     * @return jResponseRedirect
+     */
     public function removegroup()
     {
         $rep = $this->getResponse('redirect');
@@ -281,6 +317,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Add a user into a group
+     *
+     * @return jResponseRedirect
+     */
     public function addgroup()
     {
         $rep = $this->getResponse('redirect');

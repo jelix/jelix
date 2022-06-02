@@ -4,7 +4,7 @@
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
  *
  * @copyright   2020 Adrien Lagroy de Croutte
- * @copyright   2008-2017 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  * @copyright   2010 Olivier Demah
  *
@@ -16,7 +16,6 @@ class groupsCtrl extends jController
     public $pluginParams = array(
         'index'      => array('jacl2.right' => 'acl.group.view'),
         'groupsList'      => array('jacl2.right' => 'acl.group.view'),
-        'view'      => array('jacl2.right' => 'acl.group.view'),
         'autocomplete'      => array('jacl2.right' => 'acl.group.view'),
         'rights'     => array('jacl2.rights.and' => array('acl.group.view')),
         'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
@@ -49,6 +48,11 @@ class groupsCtrl extends jController
         }
     }
 
+    /**
+     * Page to list all groups
+     * @return jResponseJson
+     * @throws Exception
+     */
     public function index()
     {
         $rep = $this->getResponse('html');
@@ -63,6 +67,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * list of groups
+     *
+     * @return jResponseJson
+     */
     public function groupsList()
     {
         /** @var jResponseJson $rep */
@@ -135,6 +144,13 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Page to change rights of a group
+     *
+     * @return jResponseHtml
+     * @throws jException
+     * @throws jExceptionSelector
+     */
     public function rights()
     {
         $rep = $this->getResponse('html');
@@ -174,7 +190,7 @@ class groupsCtrl extends jController
     /**
      * save rights of a group.
      *
-     * @return jResponse
+     * @return jResponseRedirect
      */
     public function saverights()
     {
@@ -198,6 +214,13 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Show rights on ressources of a group
+     *
+     * @return jResponseHtml
+     * @throws jException
+     * @throws jExceptionSelector
+     */
     public function rightres()
     {
         $rep = $this->getResponse('html');
@@ -244,6 +267,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * save rights on ressources of a group.
+     *
+     * @return jResponseRedirect
+     */
     public function saverightres()
     {
         $rep = $this->getResponse('redirect');
@@ -277,22 +305,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
-    public function setalldefault()
-    {
-        $rep = $this->getResponse('redirect');
-        $groups = $this->param('groups', array());
-
-        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
-            $default = in_array($grp->id_aclgrp, $groups);
-            jAcl2DbUserGroup::setDefaultGroup($grp->id_aclgrp, $default);
-        }
-        jMessage::add(jLocale::get('acl2.message.groups.setdefault.ok'), 'ok');
-
-        $rep->action = 'jacl2db_admin~groups:index';
-
-        return $rep;
-    }
-
+    /**
+     * Set or unset a group as a default group
+     * @return jResponseJson
+     * @throws jExceptionSelector
+     */
     public function setdefault()
     {
         $rep = $this->getResponse('json');
@@ -315,6 +332,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Create a group
+     * @return jResponseRedirect
+     * @throws jExceptionSelector
+     */
     public function newgroup()
     {
         /** @var jResponseRedirect $rep */
@@ -351,12 +373,19 @@ class groupsCtrl extends jController
                 jAcl2DbManager::setRightsOnGroup($grpId, $rights);
             }
             jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
+            $rep->action = 'jacl2db_admin~groups:rights';
             $rep->params = array('group' => $grpId);
         }
 
         return $rep;
     }
 
+    /**
+     * Form to create group
+     *
+     * @return jResponseHtml
+     * @throws Exception
+     */
     public function create()
     {
         $rep = $this->getResponse('html');
@@ -369,6 +398,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Change the name of a group
+     * @return jResponseJson
+     * @throws jExceptionSelector
+     */
     public function changename()
     {
         $rep = $this->getResponse('json');
@@ -391,7 +425,11 @@ class groupsCtrl extends jController
         return $rep;
     }
 
-
+    /**
+     * delete a group
+     * @return jResponseJson
+     * @throws jExceptionSelector
+     */
     public function delgroup()
     {
         $rep = $this->getResponse('json');
@@ -410,55 +448,6 @@ class groupsCtrl extends jController
                 'message' => $msg ?: $e->getMessage()
             ];
         }
-
-        return $rep;
-    }
-
-    public function view()
-    {
-        $rep = $this->getResponse('html');
-        $groupName = $this->param('group');
-
-        if ($groupName === '__anonymous') {
-            $group = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findAnonymousGroup();
-            $group->name = jLocale::get('acl2.anonymous.group.name');
-        } else {
-            $group = jDao::get('jacl2db~jacl2group')->get($groupName);
-        }
-        if ($group === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'jacl2db_admin~groups:index';
-            jMessage::add(jLocale::get('acl2.group.unknown'), 'error');
-            return $rep;
-        }
-        $manager = new jAcl2DbAdminUIManager();
-        $rightsInfo = $manager->getRightsOfGroup($group->id_aclgrp);
-        $hiddenRights = $manager->getHiddenRights();
-
-        $groupRights = array();
-        foreach ($rightsInfo['rights'] as $sbj => $r) {
-            if ($r != 'y' || in_array($sbj, $hiddenRights)) {
-                continue;
-            }
-            $groupRights[] = $rightsInfo['rightsProperties'][$sbj]['label'];
-        }
-
-        if ($groupName === '__anonymous') {
-            $users = null;
-        }
-        else {
-            $users = array_map(function ($elem) {
-                return $elem->login;
-            }, jAcl2DbUserGroup::getUsersList($group->id_aclgrp)->fetchAll());
-        }
-
-        $tpl = new jTpl();
-        $tpl->assign(array(
-            'group' => $group,
-            'rights' => $groupRights,
-            'users' => $users
-        ));
-        $rep->body->assign('MAIN', $tpl->fetch('group_view'));
 
         return $rep;
     }

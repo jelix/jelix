@@ -109,6 +109,9 @@ driver=db
 
 [acl2]
 driver=db
+hiddenRights=
+hideRights=off
+authAdapterClass=jAcl2JAuthAdapter
 
 [rootUrls]
 /themes = "http://themes.junittest.com/"

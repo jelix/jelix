@@ -157,6 +157,9 @@ smtpTimeout=10
 [acl2]
 ; example of driver: "db"
 driver=db
+hiddenRights=
+hideRights=off
+authAdapterClass=jAcl2JAuthAdapter
 
 [sessions]
 ; If several applications are installed in the same documentRoot but with

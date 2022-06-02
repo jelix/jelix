@@ -52,7 +52,7 @@
 <tfoot>
     <tr>
         <td></td>
-        <td><input type="submit" value="{@jacl2db_admin~acl2.save.button@}" /></td>
+        <td><input type="submit" value="{@jelix~ui.buttons.save@}" /></td>
         <td></td>
         <td id="group-foot" colspan="{$nbgrp}"></td>
         <td></td>

@@ -45,7 +45,7 @@
     </ul>
 </div>
 <input name="group" value="{$groupId}" type="hidden"/>
-<div><input type="submit" value="{@jacl2db_admin~acl2.save.button@}" />
+<div><input type="submit" value="{@jelix~ui.buttons.save@}" />
     <br/>
     <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.back.to.rights.list@}</a>
     <br/>
