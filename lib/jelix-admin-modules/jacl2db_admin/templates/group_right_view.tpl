@@ -43,7 +43,7 @@
 </div>
 <div>
     <br/>
-    <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.back.to.rights.list@}</a>
+    <a href="{jurl 'jacl2db_admin~groups:allrights'}">{@jacl2db_admin~acl2.groups.back.to.rights.list@}</a>
     <br/>
     <a href="{jurl 'jacl2db_admin~groups:index'}">{@jacl2db_admin~acl2.groups.back.to.list@}</a>
 </div>

@@ -128,7 +128,7 @@ class groupsCtrl extends jController
                 'grouptype' => $group->grouptype,
                 'links' => [
                     'rights' => jUrl::get('jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)),
-                    'delete' => jUrl::get('jacl2db_admin~groups:delgroup', array('group_id' => $group->id_aclgrp))
+                    'delete' => jUrl::get('jacl2db_admin~groups:delgroup', array('group' => $group->id_aclgrp))
                 ]
             );
         }
@@ -145,6 +145,31 @@ class groupsCtrl extends jController
     }
 
     /**
+     * Page to see rights of all groups
+     *
+     * @return jResponseHtml
+     * @throws jException
+     * @throws jExceptionSelector
+     */
+    public function allrights()
+    {
+        $rep = $this->getResponse('html');
+
+        $tpl = new jTpl();
+        $manager = new jAcl2DbAdminUIManager();
+
+        $data = $manager->getGroupRights();
+        $tpl->assign($data);
+        $tpl->assign('nbgrp', count($data['groups']));
+
+        $rep->body->assign('MAIN', $tpl->fetch('groups_right'));
+        $rep->body->assign('selectedMenuItem', 'rights');
+        $rep->title = jLocale::get('acl2.groups.rights.title');
+
+        return $rep;
+    }
+
+    /**
      * Page to change rights of a group
      *
      * @return jResponseHtml
@@ -153,31 +178,29 @@ class groupsCtrl extends jController
      */
     public function rights()
     {
+        $grpId = $this->param('group');
+        if (!$grpId) {
+            $rep = $this->getResponse('redirect');
+            $rep->action = 'groups:allrights';
+            return $rep;
+        }
+
         $rep = $this->getResponse('html');
 
-        $grpId = $this->param('group');
         $tpl = new jTpl();
         $tpl->assign('groupId', $grpId);
 
         $manager = new jAcl2DbAdminUIManager();
 
-        if ($grpId) {
-            $data = $manager->getRightsOfGroup($grpId);
-            $tpl->assign($data);
-            $daoGroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
-            $tpl->assign('group', $daoGroup->get($grpId));
-            if (jAcl2::check('acl.group.modify')) {
-                $tplName = 'group_right';
-            }
-            else {
-                $tplName = 'group_right_view';
-            }
+        $data = $manager->getRightsOfGroup($grpId);
+        $tpl->assign($data);
+        $daoGroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        $tpl->assign('group', $daoGroup->get($grpId));
+        if (jAcl2::check('acl.group.modify')) {
+            $tplName = 'group_right';
         }
         else {
-            $data = $manager->getGroupRights();
-            $tpl->assign($data);
-            $tpl->assign('nbgrp', count($data['groups']));
-            $tplName = 'groups_right';
+            $tplName = 'group_right_view';
         }
 
         $rep->body->assign('MAIN', $tpl->fetch($tplName));
@@ -281,7 +304,7 @@ class groupsCtrl extends jController
 
         $groupid = $this->param('group', null);
         if ($groupid === null || $groupid == '') {
-            $rep->action = 'jacl2db_admin~groups:rights';
+            $rep->action = 'jacl2db_admin~groups:allrights';
 
             return $rep;
         }
@@ -290,7 +313,7 @@ class groupsCtrl extends jController
         if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
-                $rep->action = 'jacl2db_admin~groups:rights';
+                $rep->action = 'jacl2db_admin~groups:allrights';
 
                 return $rep;
             }
@@ -313,7 +336,7 @@ class groupsCtrl extends jController
     public function setdefault()
     {
         $rep = $this->getResponse('json');
-        $id = $this->param('id');
+        $id = $this->param('group');
         $default = $this->param('isdefault') != '';
         if ($id != '' && $id != '__anonymous') {
             jAcl2DbUserGroup::setDefaultGroup($id, $default);
@@ -406,7 +429,7 @@ class groupsCtrl extends jController
     public function changename()
     {
         $rep = $this->getResponse('json');
-        $id = $this->param('id');
+        $id = $this->param('group');
         $name = $this->param('name');
         if ($id != '' && $name != '' && $id != '__anonymous') {
             jAcl2DbUserGroup::updateGroup($id, $name);
@@ -435,7 +458,7 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('json');
         try {
             $manager = new jAcl2DbAdminUIManager();
-            $manager->removeGroup($this->param('group_id'), jAuth::getUserSession()->login);
+            $manager->removeGroup($this->param('group'), jAuth::getUserSession()->login);
 
             $rep->data = [
                 'result' => 'ok',

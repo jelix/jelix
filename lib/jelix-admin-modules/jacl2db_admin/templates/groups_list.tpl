@@ -25,12 +25,12 @@
         <p>
             <a class="ui-button ui-state-default" href="{jurl 'jacl2db_admin~groups:create'}">{@jacl2db_admin~acl2.create.group@}</a>
 
-            <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
+            <a href="{jurl 'jacl2db_admin~groups:allrights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
 
         </p>
     {else}
         <p>
-            <a href="{jurl 'jacl2db_admin~groups:rights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
+            <a href="{jurl 'jacl2db_admin~groups:allrights'}">{@jacl2db_admin~acl2.groups.rights.view.list@}</a>
         </p>
     {/ifacl2}
 
@@ -40,8 +40,7 @@
                 <span class="cell-value"></span>
                 <button class="cell-btn-edit-name cell-btn-edit ui-icon ui-icon-pencil"></button>
             </div>
-            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:changename'}">
-                <input type="hidden" name="id"  class="cell-id"/>
+            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:changename', array('group'=>'--group--')}">
                 <input type="text" class="cell-input" name="name">
                 <button class="cell-save">save</button>
                 <button class="cell-cancel" type="button">cancel</button>
@@ -53,8 +52,7 @@
                 <span class="cell-value" data-check-label="{@jacl2db_admin~acl2.group.rights.yes@}" data-uncheck-label=""></span>
                 <button class="cell-btn-edit-type cell-btn-edit ui-icon ui-icon-pencil"></button>
             </div>
-            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:setdefault'}">
-                <input type="hidden" name="id"  class="cell-id"/>
+            <form class="cell-form" action="{jurl 'jacl2db_admin~groups:setdefault', array('group'=>'--group--')}">
                 <input type="checkbox" class="cell-input" name="isdefault">
                 <button class="cell-save">save</button>
                 <button class="cell-cancel" type="button">cancel</button>

@@ -2,5 +2,6 @@
 <urls xmlns="http://jelix.org/ns/urls/1.0">
     <entrypoint name="index" default="true">
         <url module="master_admin" default="true"/>
+        <url module="jacl2db_admin" include="urls.xml" />
     </entrypoint>
 </urls>
