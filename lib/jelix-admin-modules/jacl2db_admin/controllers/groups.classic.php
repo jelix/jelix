@@ -18,9 +18,9 @@ class groupsCtrl extends jController
         'groupsList'      => array('jacl2.right' => 'acl.group.view'),
         'view'      => array('jacl2.right' => 'acl.group.view'),
         'autocomplete'      => array('jacl2.right' => 'acl.group.view'),
-        'rights'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'rights'     => array('jacl2.rights.and' => array('acl.group.view')),
         'saverights' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
-        'rightres'     => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
+        'rightres'     => array('jacl2.rights.and' => array('acl.group.view')),
         'saverightres' => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.modify')),
         'newgroup'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
         'create'   => array('jacl2.rights.and' => array('acl.group.view', 'acl.group.create')),
@@ -150,7 +150,12 @@ class groupsCtrl extends jController
             $tpl->assign($data);
             $daoGroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
             $tpl->assign('group', $daoGroup->get($grpId));
-            $tplName = 'group_right';
+            if (jAcl2::check('acl.group.modify')) {
+                $tplName = 'group_right';
+            }
+            else {
+                $tplName = 'group_right_view';
+            }
         }
         else {
             $data = $manager->getGroupRights();

@@ -2,7 +2,11 @@
 
 <h1>{@jacl2db_admin~acl2.user.rights.title@} {$user}</h1>
 
-<table class="records-list jacl2-list-user jacl2-list-sticky-heads">
+<table class="records-list jacl2-list-user jacl2-list-sticky-heads" id="rights-list"
+       data-yes-img="{$j_jelixwww}/design/icons/accept.png"
+       data-yes-title="{@jacl2db_admin~acl2.group.rights.yes@}"
+       data-no-img="{$j_jelixwww}/design/icons/cancel.png"
+       data-no-title="{@jacl2db_admin~acl2.group.rights.forbidden@}">
 <thead>
     <tr>
         <th rowspan="2"></th>
@@ -11,26 +15,17 @@
         {if $nbgrp}
         <th id="group-head" colspan="{$nbgrp}">{@jacl2db_admin~acl2.col.groups@}</th>
         {/if}
-        <th rowspan="2"><select id="groupSelector">
-        {foreach $groups as $group}
-            {if !isset($groupsuser[$group->id_aclgrp])}
-                <option value="{$group->id_aclgrp}">{$group->name}</option>
-            {/if}
-        {/foreach}
-        </select>
-        <button type="button"  id="add-user-to-group">{@jacl2db_admin~acl2.button.display@}</button>
-        </th>
         <th class="colreduced" rowspan="2">{@jacl2db_admin~acl2.col.resulting@} {$user}</th>
     </tr>
-    <tr>
+    {if $nbgrp}
+    <tr id="user-group-list-head">
     {foreach $groups as $group}
         {if isset($groupsuser[$group->id_aclgrp])}
         <th>{$group->name}</th>
-        {else}
-        <th class="notingroup {$group->id_aclgrp}" style="display:none;">{$group->name}</th>
         {/if}
     {/foreach}
     </tr>
+    {/if}
 </thead>
 <tbody>
 {assign $currentsbjgroup = '---'}
@@ -38,7 +33,7 @@
 
 {if $rightsProperties[$subject]['grp'] && $currentsbjgroup != $rightsProperties[$subject]['grp']}
 <tr class="{cycle array('odd','even')}">
-    <th colspan="{=$nbgrp*2+4}"><h3>{$rightsGroupsLabels[$rightsProperties[$subject]['grp']]}</h3></th>
+    <th colspan="{=$nbgrp+4}"><h3>{$rightsGroupsLabels[$rightsProperties[$subject]['grp']]}</h3></th>
 </tr>{assign $currentsbjgroup = $rightsProperties[$subject]['grp']}
 {/if}
 <tr class="{cycle array('odd','even')}">
@@ -54,19 +49,14 @@
     </td>
     <td>{if $rightsWithResources[$subject]}{@jacl2db_admin~acl2.group.rights.yes@}{/if}</td>
     {else}
-    <td {if !isset($groupsuser[$group])}class="notingroup">
-            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept_disabled.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}"  title="{@jacl2db_admin~acl2.group.rights.yes@}"/>
-            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel_disabled.png" alt="{@jacl2db_admin~acl2.group.rights.forbidden@}" title="{@jacl2db_admin~acl2.group.rights.forbidden@}" />
-            {else} <span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span>{/if}
-        {else}>
-            {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" title="{@jacl2db_admin~acl2.group.rights.yes@}" />{if $resultr==''}{assign $resultr='y'}{/if}
-            {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.forbidden@}" title="{@jacl2db_admin~acl2.group.rights.forbidden@}" />{assign $resultr='n'}
-            {else} <span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span>{/if}
-        {/if}
-    </td>
+        {if isset($groupsuser[$group])}
+    <td>
+        {if $r =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" title="{@jacl2db_admin~acl2.group.rights.yes@}" />{if $resultr==''}{assign $resultr='y'}{/if}
+        {elseif $r=='n'}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.forbidden@}" title="{@jacl2db_admin~acl2.group.rights.forbidden@}" />{assign $resultr='n'}
+        {else} <span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span>{/if}
+    </td>{/if}
     {/if}
     {/foreach}
-    <td class="colblank"></td>
     <td>
         {if $resultr =='y'}<img src="{$j_jelixwww}/design/icons/accept.png" alt="{@jacl2db_admin~acl2.group.rights.yes@}" title="{@jacl2db_admin~acl2.group.rights.yes@}" />
         {else}<img src="{$j_jelixwww}/design/icons/cancel.png" alt="{@jacl2db_admin~acl2.group.rights.forbidden@}" title="{@jacl2db_admin~acl2.group.rights.forbidden@}" />{/if}

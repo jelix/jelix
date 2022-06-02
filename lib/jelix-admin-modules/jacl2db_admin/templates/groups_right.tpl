@@ -15,12 +15,14 @@
     </tr>
 </thead>
     <tfoot>
+    {ifacl2 'acl.group.modify'}
     <tr>
         <td>{@jacl2db_admin~acl2.groups.change.rights.link@}</td>
         {foreach $groups as $group}
             <th><a href="{jurl 'jacl2db_admin~groups:rights',array('group'=>$group->id_aclgrp)}">{@jelix~ui.buttons.update@}</a></th>
         {/foreach}
     </tr>
+    {/ifacl2}
     </tfoot>
 <tbody>
 {assign $currentsbjgroup = '---'}
