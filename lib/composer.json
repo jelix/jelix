@@ -4,7 +4,7 @@
     "description": "used to declare jelix dependencies for testapp or other packages",
     "license": "LGPL-2.1-or-later",
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=7.4",
         "jelix/fakeserverconf": "^1.0.0",
         "jelix/composer-module-setup": "^1.0.5",
         "phpmailer/phpmailer": "^6.2.0",

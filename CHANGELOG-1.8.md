@@ -7,17 +7,19 @@ Not released yet.
 Features
 --------
 
-* Jelix 1.8 requires PHP 7.2.5 and above.
+* Jelix 1.8 requires PHP 7.4 and above.
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
  `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
 * jForms:
-  * new method BuilderBase::outputAllControlsValues()
-  * new method BuilderBase::outputControlRawValue()
-  * new method WidgetInterface::outputControlRawValue()
-* jAcl2Db admin UI: the user interface has been reworked to be more usable
-* jAcl2Db admin UI: possibility to hide some rights (`hiddenRights` in 
-  the `acl2` configuration section)
-* jAcl2Db: rights are now dependent of the `view` right of the same branch.
+  * new method `BuilderBase::outputAllControlsValues()`
+  * new method `BuilderBase::outputControlRawValue()`
+  * new method `WidgetInterface::outputControlRawValue()`
+* jAcl2Db admin UI: 
+  * the user interface has been reworked to be more usable
+  * possibility to hide some rights (`hiddenRights` in 
+    the `acl2` configuration section)
+  * It is not possible to set some rights on the anonymous group (acl, or related to users)
+  * rights are now dependent of the `view` right of the same branch.
 * The configurator is now able to declare automatically modules urls, and to remove
   all Urls of a module when it is uninstalled.
 * Module configurators can indicate a list of url to declare into the urls mapping 
