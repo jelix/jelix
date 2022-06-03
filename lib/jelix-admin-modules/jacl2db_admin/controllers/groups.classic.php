@@ -128,7 +128,7 @@ class groupsCtrl extends jController
                 'grouptype' => $group->grouptype,
                 'links' => [
                     'rights' => jUrl::get('jacl2db_admin~groups:rights', array('group' => $group->id_aclgrp)),
-                    'delete' => jUrl::get('jacl2db_admin~groups:delgroup', array('group' => $group->id_aclgrp))
+                    'delete' => ($group->id_aclgrp != '__anonymous' ? jUrl::get('jacl2db_admin~groups:delgroup', array('group' => $group->id_aclgrp)) : '')
                 ]
             );
         }

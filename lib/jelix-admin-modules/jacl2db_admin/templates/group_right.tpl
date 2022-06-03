@@ -2,6 +2,12 @@
 
 <h1>{@jacl2db_admin~acl2.group.rights.label@} {$group->name}</h1>
 
+{if $group->id_aclgrp == '__anonymous'}
+    <p>{@jacl2db_admin~acl2.anonymous.group.help@}</p>
+
+{/if}
+
+
 <form id="rights-edit" action="{formurl 'jacl2db_admin~groups:saverights', array('group'=>$group->id_aclgrp)}" method="post">
 <div>{formurlparam 'jacl2db_admin~groups:saverights', array('group'=>$group->id_aclgrp)}</div>
 <table class="records-list jacl2-list" id="rights-list">
@@ -27,11 +33,16 @@
 {/if}
 <tr class="{cycle array('odd','even')}">
     <th title="{$subject}">{$rightsProperties[$subject]['label']|eschtml}</th>
-    <td><select name="rights[{$subject}]" id="{$subject|eschtml}" class="right">
+    <td>
+        {if $group->id_aclgrp == '__anonymous' && (substr($subject, 0 , 4) == 'acl.' || in_array($subject, array('auth.user.change.password', 'auth.users.create', 'auth.users.delete', 'auth.users.modify', 'auth.user.modify', 'auth.users.change.password'))) }
+            <span class="right-no">{@jacl2db_admin~acl2.group.rights.no@}</span>
+        {else}
+        <select name="rights[{$subject}]" id="{$subject|eschtml}" class="right">
             <option value=""  {if $rights[$subject] == ''}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.no@}</option>
             <option value="y" {if $rights[$subject] == 'y'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.yes@}</option>
             <option value="n" {if $rights[$subject] == 'n'}selected="selected"{/if}>{@jacl2db_admin~acl2.group.rights.forbidden@}</option>
         </select>
+        {/if}
     </td>
 </tr>
 {/foreach}
