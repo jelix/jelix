@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2021 Laurent Jouanneau
+ * @copyright   2005-2022 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -559,6 +559,7 @@ abstract class jDbConnection
             } elseif ($insideString !== false) {
                 $finalQuery .= $token;
             } else {
+                $token = preg_replace_callback('/(\\$)([0-9]+)/', array($this, '_replaceParam'), $token);
                 $finalQuery .= preg_replace_callback('/(?<!\\:)(\\:)([a-zA-Z0-9_]+)/', array($this, '_replaceParam'), $token);
             }
         }
