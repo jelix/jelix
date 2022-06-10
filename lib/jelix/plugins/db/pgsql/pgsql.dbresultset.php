@@ -6,7 +6,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau
  * This class was get originally from the Copix project (CopixDBResultSetPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
  * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -140,6 +140,12 @@ class pgsqlDbResultSet extends jDbResultSet
 
         $params = array();
         foreach ($this->parameterNames as $name) {
+            if (is_numeric($name)) {
+                $name = intval($name);
+                if ($name != 0) {
+                    $name--;
+                }
+            }
             if (array_key_exists($name, $parameters)) {
                 if (is_null($parameters[$name])) {
                     // pg_execute does not like reference to null values on numerical fields...

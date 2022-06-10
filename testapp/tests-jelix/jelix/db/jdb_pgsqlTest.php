@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2009 Laurent Jouanneau
+* @copyright   2007-2022 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -268,6 +268,35 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
             'name'=>'verres',
             'price'=>2.43,
             'promo'=>'f'),
+        );
+        $this->assertTableContainsRecords('product_test', $this->records);
+    }
+
+    /**
+     * @depends testPreparedQueries
+     */
+    function testPreparedQueries2() {
+        $this->emptyTable('product_test');
+        $cnx = jDb::getConnection($this->dbProfile);
+
+        $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES($1, $2, $3, $4)');
+        $stmt->execute(array(
+            1, 'assiettes' , 3.87, 'f'
+        ));
+
+        $stmt->execute(array(
+            2, 'fourchettes' , 1.54, 't'
+        ));
+
+        $this->records = array(
+            array('id'=>1,
+            'name'=>'assiettes',
+            'price'=>3.87,
+            'promo'=>'f'),
+            array('id'=>2,
+            'name'=>'fourchettes',
+            'price'=>1.54,
+            'promo'=>'t'),
         );
         $this->assertTableContainsRecords('product_test', $this->records);
     }
