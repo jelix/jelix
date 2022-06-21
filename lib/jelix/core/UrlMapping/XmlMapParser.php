@@ -18,21 +18,21 @@ namespace Jelix\Routing\UrlMapping;
 class XmlMapParser implements \jISimpleCompiler
 {
     protected $parseInfos;
-    protected $createUrlInfos;
-    protected $createUrlContent;
-    protected $createUrlContentInc;
+    protected $createUrlInfos = array();
+    protected $createUrlContent = '';
+    protected $createUrlContentInc = '';
 
     protected $createUrlInfosDedicatedModules;
 
     /**
      * contains, for each entrypoint type, the list of modules that don't appear
      * in any url definitions of any entrypoint of the same type
-     * theses modules will then be attached to the default entrypoint of the
+     * these modules will then be attached to the default entrypoint of the
      * corresponding entrypoint type.
      *
      * @var array key = entrypoint type, value = list of modules
      */
-    protected $modulesDedicatedToDefaultEp;
+    protected $modulesDedicatedToDefaultEp = array();
 
     /**
      * contain the UrlMapData object corresponding of the default
@@ -903,6 +903,11 @@ class XmlMapParser implements \jISimpleCompiler
 
         $mainXmlFile = $this->xmlfile;
         $this->xmlfile = $uInfo->module.'/'.$file;
+
+        if (!isset($xml->url)) {
+            $this->newDedicatedModule($uInfo, $url);
+            return;
+        }
 
         foreach ($xml->url as $url) {
             $u = clone $uInfo;
