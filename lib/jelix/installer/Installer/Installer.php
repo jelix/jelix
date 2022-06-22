@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -312,7 +312,8 @@ class Installer
         $componentsToInstall = array();
         $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
 
-        $helpers = new Module\API\PreInstallHelpers($this->globalSetup);
+        $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
+        $helpers = new Module\API\PreInstallHelpers($this->globalSetup, $databaseHelpers);
 
         foreach ($moduleschain as $resolverItem) {
             /** @var \Jelix\Installer\ModuleInstallerLauncher $component */

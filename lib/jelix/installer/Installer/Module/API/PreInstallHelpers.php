@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -16,6 +16,8 @@ use Jelix\IniFile\IniReaderInterface;
  */
 class PreInstallHelpers
 {
+    use DbProfileHelpersTrait;
+
     /**
      * global setup.
      *
@@ -23,9 +25,23 @@ class PreInstallHelpers
      */
     protected $globalSetup;
 
-    public function __construct(\Jelix\Installer\GlobalSetup $setup)
+    /**
+     * @var DatabaseHelpers
+     */
+    protected $databaseHelpers;
+
+    public function __construct(\Jelix\Installer\GlobalSetup $setup, DatabaseHelpers $database)
     {
         $this->globalSetup = $setup;
+        $this->databaseHelpers = $database;
+    }
+
+    /**
+     * @return DatabaseHelpers
+     */
+    public function database()
+    {
+        return $this->databaseHelpers;
     }
 
     /**

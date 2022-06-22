@@ -18,12 +18,17 @@ Features
   * the user interface has been reworked to be more usable
   * possibility to hide some rights (`hiddenRights` in 
     the `acl2` configuration section)
-  * It is not possible to set some rights on the anonymous group (acl, or related to users)
+  * It is not possible anymore to set some rights on the anonymous group (acl, or related to users)
   * rights are now dependent of the `view` right of the same branch.
-* The configurator is now able to declare automatically modules urls, and to remove
-  all Urls of a module when it is uninstalled.
-* Module configurators can indicate a list of url to declare into the urls mapping 
-* more methods on XmlMapModifier to remove urls
+* Configurator:
+  * The configurator is now able to declare automatically modules urls, and to remove
+    all Urls of a module when it is uninstalled.
+  * Module configurators can indicate a list of url to declare into the urls mapping 
+  * more methods on XmlMapModifier to remove urls
+* Installer:
+  * The PreInstallHelpers class has now the database API to allows to check the
+    the content of the database before allowing the installation
+
 
 Internal changes
 ----------------
