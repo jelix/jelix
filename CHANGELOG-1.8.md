@@ -25,9 +25,11 @@ Features
     all Urls of a module when it is uninstalled.
   * Module configurators can indicate a list of url to declare into the urls mapping 
   * more methods on XmlMapModifier to remove urls
+  * new method `findProfile()` on helpers
 * Installer:
   * The PreInstallHelpers class has now the database API to allows to check the
     the content of the database before allowing the installation
+  * new method `findProfile()` on helpers
 
 
 Internal changes
