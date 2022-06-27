@@ -1,6 +1,13 @@
 Changes into Jelix 1.7
 ======================
 
+Jelix 1.7.12 (not release yet)
+------------
+
+* jDb:
+  * reintroduce the support of placeholders `$1`, `$2` etc into prepared queries, like in Jelix 1.6
+* jAuth: fix support of driver configuration stored into a `auth_<driver>` section 
+
 
 Jelix 1.7.11
 ------------

@@ -156,6 +156,11 @@ class jAuth
         return self::getDriver();
     }
 
+    /**
+     * @param array $authConfig
+     * @param object $appConfig
+     * @return array|null
+     */
     protected static function _buildDriverConfig($authConfig, $appConfig)
     {
         $driver = $authConfig['driver'];
@@ -163,8 +168,8 @@ class jAuth
             $driverConfig = $authConfig[$driver];
         } else {
             $section = 'auth_'.strtolower($driver);
-            if (isset($appConfig[$section]) && is_array($appConfig[$section])) {
-                $driverConfig = $appConfig[$section];
+            if (isset($appConfig->$section) && is_array($appConfig->$section)) {
+                $driverConfig = $appConfig->$section;
             } else {
                 return null;
             }
