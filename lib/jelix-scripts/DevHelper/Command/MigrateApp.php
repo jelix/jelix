@@ -45,5 +45,6 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand
         // launch the low-level migration
         $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrate();
+        return 0;
     }
 }
