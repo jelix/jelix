@@ -24,7 +24,7 @@
         "jelix/inifile": "^3.3.1",
         "jelix/simplelocalization": "^1.7.1",
         "jelix/properties-file": "^1.2.2",
-        "symfony/console":"^3.4.47",
+        "symfony/console":"^5.4.10",
         "jelix/file-utilities": "^1.8.4",
         "jelix/version": "^1.1.1",
         "defuse/php-encryption": "^2.3.1",

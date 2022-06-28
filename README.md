@@ -66,14 +66,17 @@ Compatibility with some PHP version
 Until Jelix 1.7.6, unit tests of the framework was running with a version of
 PHPUnit that was compatible with PHP 5.6 to PHP 7.4. Since we fixed
 some issues into Jelix 1.7.7 to be compatible also with PHP 8.0, we had to upgrade PHPUnit.
-Because the new version of PHPunit we are using is not compatible with PHP 7.1-, 
-we cannot test any more the framework against these old PHP versions.
+Because the new version of PHPunit we are using is not compatible with PHP 7.1 and lower, 
+we cannot test anymore the framework against these old PHP versions.
 
 However bug fixes and minor improvements in this branch will not use specific
 syntax of PHP 7.3+/8.x.
 
-So Jelix 1.7.7+ is working well with PHP 7.2 and higher, including PHP 8.0.
-It **may** works well with PHP 7.1 and lower, but we cannot guarantee it. 
+So Jelix 1.7.7+ is working well with PHP 7.2 and higher, including PHP 8.0 and 8.1.
+It **may** works well with PHP 7.1 and lower, but we cannot guarantee it.
+Command line (`console.php` and `dev.php`) may not work with PHP 7.1 and lower, as
+we have to upgrade `Symfony/Console` to a version that is compatible with PHP 8,
+and that is unfortunately incompatible with PHP 7.1 and lower. 
 
 Anyway, it is higly recommanded to migrate to PHP 7.3 or higher, as PHP 7.2 and
 lower are not maintained any more by the PHP team. See https://www.php.net/supported-versions.php.
