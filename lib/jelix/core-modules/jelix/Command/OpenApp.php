@@ -29,5 +29,6 @@ class OpenApp extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln('Application is opened.');
         }
+        return 0;
     }
 }

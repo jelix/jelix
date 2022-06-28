@@ -77,5 +77,6 @@ class ForbidRight extends AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("Right {$subject} is forbidden for group {$group} and resource {$resource}");
         }
+        return 0;
     }
 }

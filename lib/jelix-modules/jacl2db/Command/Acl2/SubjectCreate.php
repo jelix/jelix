@@ -92,5 +92,6 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
                 $output->writeln('locale string '.$m[3].' is created into '.$file);
             }
         }
+        return 0;
     }
 }

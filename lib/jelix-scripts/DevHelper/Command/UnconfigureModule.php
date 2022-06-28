@@ -48,5 +48,6 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         $configurator->unconfigureModule($modules, $this->selectedEntryPointId);
 
         \jAppManager::open();
+        return 0;
     }
 }

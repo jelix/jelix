@@ -70,5 +70,6 @@ class UserAddGroup extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("User '".$login."' is added into group '".$group."'");
         }
+        return 0;
     }
 }

@@ -52,7 +52,7 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
-                return;
+                return 1;
             }
         }
 
@@ -74,5 +74,6 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln('The right '.$subject.' is deleted');
         }
+        return 0;
     }
 }

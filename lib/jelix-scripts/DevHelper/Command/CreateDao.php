@@ -144,5 +144,6 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
             $param['primarykeys'] = $primarykeys;
             $this->createFile($filename, 'module/dao.xml.tpl', $param, 'DAO');
         }
+        return 0;
     }
 }

@@ -306,5 +306,6 @@ class CreateDaoCrud extends \Jelix\DevHelper\AbstractCommandForApp
         } elseif (!$result) {
             $output->writeln("Warning: urls.xml in module '".$module."' cannot be updated, check permissions or add the urls manually.");
         }
+        return 0;
     }
 }

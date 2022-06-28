@@ -76,5 +76,6 @@ class GroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is created");
         }
+        return 0;
     }
 }

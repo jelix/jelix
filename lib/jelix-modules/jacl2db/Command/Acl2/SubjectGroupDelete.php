@@ -50,7 +50,7 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
-                return;
+                return 1;
             }
         }
 
@@ -74,5 +74,6 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln("Rights: group of rights '".$group."' is deleted.");
         }
+        return 0;
     }
 }

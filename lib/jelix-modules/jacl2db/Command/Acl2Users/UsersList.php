@@ -73,5 +73,6 @@ class UsersList extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
             }
         }
         $table->render();
+        return 0;
     }
 }

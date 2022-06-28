@@ -243,6 +243,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
                 $output->writeln('However the application has been created');
             }
         }
+        return 0;
     }
 
     protected function askAppInfos(InputInterface $input, OutputInterface $output)
