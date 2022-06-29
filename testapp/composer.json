@@ -28,7 +28,7 @@
         "jelix/minify-module": "^1.7.4",
         "jelix/php-redis-plugin": "^1.7.7",
         "jelix/sitemap-module": "^1.7.7",
-        "guzzlehttp/guzzle": "^7.2.0",
+        "guzzlehttp/guzzle": "^7.4.5",
         "jelix/feeds-module": "^1.7.6",
         "jelix/wikirenderer-plugin": "^1.7.3"
     },

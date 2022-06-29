@@ -43,5 +43,6 @@ class SubjectGroupList extends \Jelix\Scripts\ModuleCommandAbstract
             ));
         }
         $table->render();
+        return 0;
     }
 }

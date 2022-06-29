@@ -56,5 +56,6 @@ class GroupDefault extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is ".($def ? ' now a default group' : ' no more a default group'));
         }
+        return 0;
     }
 }

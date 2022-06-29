@@ -146,5 +146,6 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
+        return 0;
     }
 }

@@ -53,7 +53,7 @@ class UserUnregister extends \Jelix\Scripts\ModuleCommandAbstract
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
-                return;
+                return 1;
             }
         }
 
@@ -70,5 +70,6 @@ class UserUnregister extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln("User '".$login."' is unregistered from rights system.");
         }
+        return 0;
     }
 }

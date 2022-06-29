@@ -103,7 +103,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
             }
             $this->createFile($formdir.$formfile, 'module/form.xml.tpl', array('content' => '<!-- add control declaration here -->'.$submit), 'Form');
 
-            return;
+            return 0;
         }
 
         \jApp::pushCurrentModule($module);

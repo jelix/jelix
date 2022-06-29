@@ -55,5 +55,6 @@ class UserRemoveGroup extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("User '".$login."' is removed from group '".$group."'");
         }
+        return 0;
     }
 }

@@ -55,5 +55,6 @@ class GroupsList extends \Jelix\Scripts\ModuleCommandAbstract
             ));
         }
         $table->render();
+        return 0;
     }
 }

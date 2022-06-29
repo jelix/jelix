@@ -491,7 +491,7 @@ class fileCacheDriver implements jICacheDriver
                 }
             }
             closedir($handle);
-            if ($deleteParent) {
+            if ($deleteParent && $all) {
                 @rmdir($dir);
             }
         }

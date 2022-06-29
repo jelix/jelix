@@ -48,6 +48,7 @@ class FilesRights extends \Jelix\Scripts\ModuleCommandAbstract
         foreach ($paths as $path) {
             $this->setRights($path, $owner, $group);
         }
+        return 0;
     }
 
     protected function setRights($path, $owner, $group)

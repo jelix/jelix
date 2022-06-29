@@ -145,5 +145,6 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
             $this->createFile($filename, 'module/dao.xml.tpl', $param, 'DAO');
             return 0;
         }
+        return 0;
     }
 }
