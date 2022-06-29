@@ -624,6 +624,13 @@ class Installer
             \jApp::setConfig($entryPoint->getConfigObj());
         }
 
+        foreach($this->globalSetup->getEntryPointsList() as $ep) {
+            $conf = $ep->getConfigIni();
+            if ($conf->isModified()) {
+                $conf->save();
+            }
+        }
+
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();
