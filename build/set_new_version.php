@@ -91,6 +91,7 @@ class BumpVersion  extends Command {
                 $this->commitChange("Bumped version to  $strNextVersion");
             }
         }
+        return 0;
     }
 
     protected function commitChange($message, $tag ='') {
