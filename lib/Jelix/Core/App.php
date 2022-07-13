@@ -12,22 +12,22 @@
 namespace Jelix\Core;
 
 /**
- * @method static setConfig($config)
- * @method static declareModulesDir($basePath, $modules = null)
- * @method static getDeclaredModulesDir()
- * @method static declareModule($modulePath)
- * @method static clearModulesPluginsPath()
- * @method static declarePluginsDir($basePath)
- * @method static getAllModulesPath()
- * @method static getAllPluginsPath()
- * @method static loadPlugin($name, $type, $suffix, $classname, $args = null)
- * @method static includePlugin($name, $type, $suffix, $classname)
- * @method static isModuleEnabled($moduleName, $includingExternal = false)
- * @method static getModulePath($module, $includingExternal = false)
- * @method static pushCurrentModule($module)
- * @method static popCurrentModule()
- * @method static getCurrentModule()
- * @method static getEnabledModulesPaths()
+ * @method static void                  setConfig($config)
+ * @method static null|mixed            declareModulesDir($basePath, $modules = null)
+ * @method static string[]              getDeclaredModulesDir()
+ * @method static mixed                 declareModule($modulePath)
+ * @method static void                  clearModulesPluginsPath()
+ * @method static string|string[]       declarePluginsDir($basePath)
+ * @method static string[]              getAllModulesPath()
+ * @method static string[]              getAllPluginsPath()
+ * @method static null|object           loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method static bool                  includePlugin($name, $type, $suffix, $classname)
+ * @method static bool                  isModuleEnabled($moduleName, $includingExternal = false)
+ * @method static string                getModulePath($module, $includingExternal = false)
+ * @method static string                pushCurrentModule($module)
+ * @method static string                popCurrentModule()
+ * @method static string                getCurrentModule()
+ * @method static array<string, string> getEnabledModulesPaths()
  */
 class App
 {
