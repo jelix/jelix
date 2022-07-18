@@ -155,7 +155,7 @@ class EntryPoint
     }
 
     /**
-     * @return array[string] the list of all available modules (installed or not)
+     * @return string[] the list of all available modules (installed or not)
      *                       and their path, as stored in the compiled configuration file
      */
     public function getModulesList()

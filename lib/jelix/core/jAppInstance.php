@@ -488,7 +488,7 @@ class jAppInstance
     /**
      * cancel the current context and set the context to the previous module.
      *
-     * @return string the obsolet module name
+     * @return string the module name of the canceled context
      */
     public function popCurrentModule()
     {
