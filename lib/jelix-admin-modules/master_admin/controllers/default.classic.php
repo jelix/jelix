@@ -22,8 +22,8 @@ class defaultCtrl extends jController
         $resp->body->assignZone('MAIN', 'dashboard');
         $user = jAuth::getUserSession();
         $driver = jAuth::getDriver();
-        if (method_exists($driver, 'checkPassword') &&
-            $driver->checkPassword($user->login, $user->password)
+        if (method_exists($driver, 'checkPassword')
+            && $driver->checkPassword($user->login, $user->password)
         ) {
             jMessage::add(jLocale::get('gui.message.admin.password'), 'error');
         }

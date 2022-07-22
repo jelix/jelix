@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -157,6 +157,20 @@ class XmlEntryPoint
         $this->setUrlParametersStatics($url, $parameters, $statics);
     }
 
+    /**
+     * remove an url action.
+     *
+     * @param string $module
+     * @param string $action
+     */
+    public function removeUrlAction($module, $action)
+    {
+        $url = $this->getUrlByModuleAction($module, $action);
+        if ($url) {
+            $this->removeElement($url);
+        }
+    }
+
     protected function setUrlParametersStatics(
         \DOMElement $url,
         $parameters = null,
@@ -230,6 +244,20 @@ class XmlEntryPoint
     }
 
     /**
+     * remove an url controller.
+     *
+     * @param string $module
+     * @param string $controller
+     */
+    public function removeUrlController($module, $controller)
+    {
+        $url = $this->getUrlByModuleController($module, $controller);
+        if ($url) {
+            $this->removeElement($url);
+        }
+    }
+
+    /**
      * add an url module.
      *
      * the entrypoint is dedicated to this module and url are automatic
@@ -245,25 +273,40 @@ class XmlEntryPoint
      *                         https => true/(false)
      *                         noentrypoint => true/(false)
      */
-    public function addUrlModule($pathinfo, $module, $options = null)
+    public function addUrlModule($pathinfo, $module, $options = null, $doReplace = true)
     {
+        $urlPathInfo = null;
+        if ($pathinfo) {
+            $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
+        }
+
         $url = $this->getUrlByDedicatedModule($module);
         if (!$url) {
             $url = $this->ep->ownerDocument->createElement('url');
+            $url->setAttribute('module', $module);
+
             if ($pathinfo) {
-                $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
                 if ($urlPathInfo) {
-                    $this->removeElement($urlPathInfo);
+                    if ($doReplace) {
+                        $this->removeElement($urlPathInfo);
+                    }
+                    else {
+                        $pathinfo = $this->getUniquePathInfo($pathinfo);
+                    }
                 }
                 $url->setAttribute('pathinfo', $pathinfo);
             }
-            $url->setAttribute('module', $module);
+
             $this->appendElement($this->ep, $url);
             $this->map->removeUrlModuleInOtherEntryPoint($module, $this);
         } elseif ($pathinfo) {
-            $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
-            if ($urlPathInfo && $urlPathInfo !== $url) {
-                $this->removeElement($urlPathInfo);
+            if ($doReplace) {
+                if ($urlPathInfo && $urlPathInfo !== $url) {
+                    $this->removeElement($urlPathInfo);
+                }
+            }
+            else {
+                $pathinfo = $this->getUniquePathInfo($pathinfo);
             }
             $url->setAttribute('pathinfo', $pathinfo);
         } else {
@@ -273,6 +316,11 @@ class XmlEntryPoint
         $this->setElementOptions($url, $options, array('default', 'https', 'noentrypoint'));
     }
 
+    /**
+     * Remove an url dedicated to a module
+     * @param string $module
+     * @return void
+     */
     public function removeUrlModule($module)
     {
         $url = $this->getUrlByDedicatedModule($module);
@@ -299,7 +347,7 @@ class XmlEntryPoint
      */
     public function addUrlHandler($pathinfo, $module, $handler, $action = '', $options = null)
     {
-        $url = $this->getUrlByHandler($handler, $module);
+        $url = $this->getUrlByHandler($handler, $module, $action);
         $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
             if ($urlPathInfo) {
@@ -324,39 +372,116 @@ class XmlEntryPoint
     }
 
     /**
-     * add an url handler.
+     * remove an url handler.
+     *
+     * @param string $handler
+     * @param string $module
+     * @param string $action
+     */
+    public function removeUrlHandler($module, $handler, $action = '')
+    {
+        $url = $this->getUrlByHandler($handler, $module, $action);
+        if ($url) {
+            $this->removeElement($url);
+        }
+    }
+
+    /**
+     * add an url include.
      *
      * It if already exists, and if $options is not null, existing options will
      * be changed.
      *
      * @param string $pathinfo
      * @param string $module
-     * @param string $action
+     * @param string $include
      * @param array  $options  options are :
      *                         https => true/(false)
      *                         noentrypoint => true/(false)
-     * @param mixed  $include
      */
-    public function addUrlInclude($pathinfo, $module, $include, $options = null)
+    public function addUrlInclude($pathinfo, $module, $include, $options = null, $doReplace = true)
     {
         $url = $this->getUrlByInclude($include, $module);
         $urlPathInfo = $this->getUrlByPathinfo($pathinfo);
         if (!$url) {
             if ($urlPathInfo) {
-                $this->removeElement($urlPathInfo);
+                if ($doReplace) {
+                    $this->removeElement($urlPathInfo);
+                }
+                else {
+                    $pathinfo = $this->getUniquePathInfo($pathinfo);
+                }
             }
             $url = $this->ep->ownerDocument->createElement('url');
             $url->setAttribute('include', $include);
-            $url->setAttribute('pathinfo', $pathinfo);
             $url->setAttribute('module', $module);
             $this->appendElement($this->ep, $url);
-        } else {
+        }
+        else if ($doReplace) {
             if ($urlPathInfo && $urlPathInfo !== $url) {
                 $this->removeElement($urlPathInfo);
             }
-            $url->setAttribute('pathinfo', $pathinfo);
         }
+        else {
+            $pathinfo = $this->getUniquePathInfo($pathinfo);
+        }
+        $url->setAttribute('pathinfo', $pathinfo);
         $this->setElementOptions($url, $options, array('https', 'noentrypoint'));
+    }
+
+    /**
+     * search an unused path info
+     * @param string $pathInfo the original path info
+     * @return string the unique path info
+     */
+    protected function getUniquePathInfo($pathInfo)
+    {
+        $pathInfo = rtrim($pathInfo, '/');
+        $x = 1;
+        do {
+            $urlPathInfo = $this->getUrlByPathinfo($pathInfo.$x);
+            $x++;
+            if (!$urlPathInfo) {
+                $pathInfo .= $x;
+            }
+        }
+        while ($urlPathInfo);
+        return $pathInfo;
+    }
+
+    /**
+     * remove an url include.
+     *
+     * @param string $module
+     * @param mixed  $include
+     */
+    public function removeUrlInclude($module, $include)
+    {
+        $url = $this->getUrlByInclude($include, $module);
+        if ($url) {
+            $this->removeElement($url);
+        }
+    }
+
+    /**
+     * Remove all url targeting a module
+     * @param string $module
+     * @return void
+     */
+    public function removeAllUrlsOfModule($module)
+    {
+        /** @var \DOMNodeList $list */
+        $list = $this->ep->getElementsByTagName('url');
+        $results = [];
+        /** @var \DOMElement $item */
+        foreach ($list as $item) {
+            if ($item->getAttribute('module') == $module) {
+                $results[] = $item;
+            }
+        }
+        foreach($results as $item) {
+            $this->removeElement($item);
+        }
     }
 
     /**
@@ -367,9 +492,12 @@ class XmlEntryPoint
     protected function getUrlByPathinfo($pathinfo)
     {
         $list = $this->ep->getElementsByTagName('url');
+
+        $searchedPathInfo = trim($pathinfo, '/');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('pathinfo') == $pathinfo) {
+            $path = trim($item->getAttribute('pathinfo'), '/');
+            if ($path == $searchedPathInfo && $path != '') {
                 return $item;
             }
         }
@@ -394,15 +522,22 @@ class XmlEntryPoint
         /** @var \DOMElement $item */
         foreach ($list as $item) {
             if ($item->getAttribute('module') == $module) {
-                if ($item->getAttribute('action') == '' &&
-                    $item->getAttribute('include') == '' &&
-                    $item->getAttribute('handler') == '') {
+                if ($this->isUrlByDedicatedModule($item)) {
                     return $item;
                 }
             }
         }
 
         return null;
+    }
+
+    protected function isUrlByDedicatedModule($url)
+    {
+        return $url->getAttribute('module') != ''
+            && $url->getAttribute('action') == ''
+            && $url->getAttribute('include') == ''
+            && $url->getAttribute('handler') == ''
+            && $url->getAttribute('controller') == '';
     }
 
     public function hasUrlByDedicatedModule($module)
@@ -413,26 +548,38 @@ class XmlEntryPoint
     /**
      * @param string $handler
      * @param string $module
+     * @param string $action
      *
      * @return null|\DOMElement
      */
-    protected function getUrlByHandler($handler, $module)
+    protected function getUrlByHandler($handler, $module, $action='')
     {
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('handler') == $handler) {
-                return $item;
+            if ($item->getAttribute('module') != $module
+                || $item->getAttribute('handler') != $handler) {
+                continue;
             }
+            $attrAction = $item->getAttribute('action');
+            if ($attrAction != $action) {
+                continue;
+            }
+            return $item;
         }
 
         return null;
     }
 
-    public function hasUrlByHandler($handler, $module)
+    /**
+     * @param string $include
+     * @param string $module
+     * @param string $action
+     * @return bool
+     */
+    public function hasUrlByHandler($handler, $module, $action = '')
     {
-        return $this->getUrlByHandler($handler, $module) !== null;
+        return $this->getUrlByHandler($handler, $module, $action) !== null;
     }
 
     /**
@@ -446,8 +593,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('include') == $include) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('include') == $include) {
                 return $item;
             }
         }
@@ -471,8 +618,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('action') == $action) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('action') == $action) {
                 return $item;
             }
         }
@@ -496,8 +643,8 @@ class XmlEntryPoint
         $list = $this->ep->getElementsByTagName('url');
         /** @var \DOMElement $item */
         foreach ($list as $item) {
-            if ($item->getAttribute('module') == $module &&
-                $item->getAttribute('controller') == $controller) {
+            if ($item->getAttribute('module') == $module
+                && $item->getAttribute('controller') == $controller) {
                 return $item;
             }
         }

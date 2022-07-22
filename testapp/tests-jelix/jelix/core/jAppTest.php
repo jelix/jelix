@@ -59,6 +59,35 @@ class jAppTest extends \PHPUnit\Framework\TestCase {
         jApp::restoreContext();
     }
 
+    function testModuleConfigPath()
+    {
+        jApp::saveContext();
+        jApp::clearModulesPluginsPath();
+
+        // verify that we have only jelix as modules
+        $this->assertEquals(array('jelix'=> JELIX_LIB_PATH.'core-modules/jelix/'), jApp::getAllModulesPath());
+
+        jApp::declareModulesFromConfig((object) array(
+            'modules' => array(
+                'aaa.path' => 'app:tests-jelix/jelix/installer/app1/modules/aaa',
+                'aaa.enabled' => true
+            )
+        ));
+
+        jApp::declareModule(jApp::appPath('modules/testapp'));
+
+        $this->assertEquals(
+            array(
+                 'jelix'=> JELIX_LIB_PATH.'core-modules/jelix/',
+                 'aaa'=>realpath(__DIR__.'/../installer/app1/modules/aaa/').'/',
+                'testapp'=>realpath(jApp::appPath('modules/testapp')).'/'
+            ),
+            jApp::getAllModulesPath());
+
+        // pop the first save, we should be with initial paths
+        jApp::restoreContext();
+    }
+
     function testPluginPath() {
         $expected = array(
             JELIX_LIB_PATH.'plugins/',

@@ -30,15 +30,18 @@ function jtpl_meta_xml_xml($tpl, $method, $param)
     if ($resp->getFormatType() != 'xml') {
         return;
     }
+
     switch ($method) {
         case 'xsl':
             $resp->addXSLStyleSheet($param);
 
             break;
+
         case 'css':
             $resp->addCSSLink($param);
 
             break;
+
         case 'csstheme':
             $resp->addCSSLink(jApp::urlBasePath().'themes/'.jApp::config()->theme.'/'.$param);
 

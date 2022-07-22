@@ -1,41 +1,58 @@
 Changes into Jelix 1.7
 ======================
 
+Jelix 1.7.12 (not release yet)
+------------
+
+* jDb:
+  * reintroduce the support of placeholders `$1`, `$2` etc into prepared queries, like in Jelix 1.6
+* jAuth: fix support of driver configuration stored into a `auth_<driver>` section 
+* jCache: fix the garbage API of the file plugin. It tried to remove non-empty directories
 
 Jelix 1.7.11
 ------------
 
-* Fix installer: the setup of the web files of a module, deleted the content of the directory when it was the target of a link. 
+* Fix compatibility issues with PHP 8
+* fix logout into jAuth: the persistant cookie was not deleted correctly
+* Installer:
+  * Fix the setup of the web files of a module, deleted the content of the directory when it was the target of a link.
+  * Configurator of jelix module: configure database access only if needed
+  * Restore the support of `<module>.path` into the configuration. It eases migration from jelix 1.6.x and is useful to declare a module with a configuration script
+* new support of revision number on JS/CSS links for cache:  A revision parameter can be added on JS/CSS links automatically, in order to bypass the browser cache on JS/CSS
 * debugbar: it can now moved to the top center of the page
 * jTpl
   * upgrade Castor to 1.1.0. New major features in templates :
     - support of macro
-    - autoescaping  
-  * pagelinks plugin: new display properties for classes. CSS classes can now be set on each elements of a 
-    list of pages.
+    - autoescaping
+  * pagelinks plugin: new display properties for classes. CSS classes can now be set on each elements of a list of pages.
 * jForms:
   * fix time widget: use webassets
   * date, datetime and time widgets: add placeholders
   * translate strings into autocomplete widgets
   * fix the possibility to setup CSS class on buttons widgets
   * Support of the Image control into the XML format
-  * Improve widgets to facilitate the overriding of html content. On some widgets there are new methods 
-    that output only Html content, so new widget just has to override these methods to change the generated
-    HTML.
+  * Improve widgets to facilitate the overriding of html content. On some widgets there are new methods that output only Html content, so new widget just has to override these methods to change the generated HTML.
   * more documentation into the code of jFormsSession
   * new template plugin `{ifctrltype}`
   * backport the method `HtmlBuilder::outputAllControlsValues()` from Jelix 1.8
-
-
+* Jelix commands:
+  * fix some comments and bad returned values
+  * `app:ini-change` command: support of section deletion
+* all enhancements and bug fixes from Jelix 1.6.37
+  * jforms, image selector: support of "auto" for width and height of the dialog
+  * New `jApp::setApplicationInitFile()` to indicate an application.init.php file
+  * Fix jforms javascript: selection was loose when reloading a menulist via XHR
+  * jacl2db_admin: fix CSS to stick headers of the rights table
+  * new method `jAuth::getReasonToForbiddenPasswordChange()` and new interface `jIAuthDriver3`
 * all enhancements and bug fixes from Jelix 1.6.36
   * Fix jacl2db: id_aclgrp field should be bigger than login
-  * Fix entrypoint installation: it did not update path when the `require` instruction for `application.init.php`
-    does not use parenthesis.
+  * Fix entrypoint installation: it did not update path when the `require` instruction for `application.init.php` does not use parenthesis.
   * Fix jauthdb_admin: it should call `jAuth::canChangePassword()` when needed
   * jForms, formfull widget: display correctly checkboxes
   * jForms: separate each item of checkboxes/radioboxes by new line
   * Fix: error pages should not require authentication
   * Fix the retrieval of the documentRoot when compiling configuration
+
 
 Jelix 1.7.10
 ------------

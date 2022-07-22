@@ -224,5 +224,6 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             file_put_contents($path.'locales/en_US/interface.UTF-8.properties', 'menu.item='.$module);
             file_put_contents($path.'locales/fr_FR/interface.UTF-8.properties', 'menu.item='.$module);
         }
+        return 0;
     }
 }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -53,18 +53,21 @@ class XmlRedefinedMapModifier extends XmlMapModifier
         return null;
     }
 
-    protected function getEntryPointsOfType($type = 'classic')
+    /**
+     * {@inheritDoc}
+     */
+    protected function getXMLEntryPointsOfType($type = 'classic')
     {
-        $list = parent::getEntryPointsOfType($type);
+        $list = parent::getXMLEntryPointsOfType($type);
         $hashedList = array();
         foreach ($list as $domEp) {
             $hashedList[$domEp->getAttribute('name')] = $domEp;
         }
-        $listOrig = $this->originalMap->getEntryPointsOfType($type);
+        $listOrig = $this->originalMap->getXMLEntryPointsOfType($type);
         foreach ($listOrig as $domEp) {
             if (!isset($hashedList[$domEp->getAttribute('name')])) {
                 $domEp = $domEp->cloneNode(false);
-                $domEp = $this->document->importNode($domEp);
+                $domEp = $this->document->importNode($domEp, false);
                 $sep = $this->document->createTextNode('    ');
                 $sep2 = $this->document->createTextNode("\n");
                 $this->document->documentElement->appendChild($sep);

@@ -24,7 +24,7 @@ class dashboardZone extends jZone
     {
         $this->_tpl->assignIfNone('foo', 'bar');
 
-        $widgets = jEvent::notify('masterAdminGetDashboardWidget')->getResponse();
+        $widgets = \Jelix\Event\Event::notify('masterAdminGetDashboardWidget')->getResponse();
         usort($widgets, function ($itemA, $itemB) {
             if ($itemA->order == $itemB->order) {
                 return 0;

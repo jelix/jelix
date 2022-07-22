@@ -167,7 +167,10 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
             throw new \UnexpectedValueException('Invalid value for composer-mode option');
         }
 
-        parent::execute($input, $output);
+        $code = parent::execute($input, $output);
+        if ($code) {
+            return $code;
+        }
 
         $this->config = \Jelix\DevHelper\JelixScript::loadConfig($appName);
 
@@ -244,6 +247,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
                 $output->writeln('However the application has been created');
             }
         }
+        return 0;
     }
 
     protected function askAppInfos(InputInterface $input, OutputInterface $output)

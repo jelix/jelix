@@ -43,7 +43,6 @@ class jFormsSession
     /**
      * Check or create if needed, that there is a profile for jCache.
      *
-     * @return void
      * @throws jException
      */
     protected function loadProfile()
@@ -83,7 +82,6 @@ class jFormsSession
     /**
      * Saves containers data that have been created or loaded.
      *
-     * @return void
      * @throws jException when the cache backend fails
      */
     public function save()
@@ -94,7 +92,7 @@ class jFormsSession
     }
 
     /**
-     * @var jFormsDataContainer[]  keys are cache keys
+     * @var jFormsDataContainer[] keys are cache keys
      */
     protected $containers = array();
 

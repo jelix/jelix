@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2015 Laurent Jouanneau
+* @copyright   2015-2022 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -46,54 +46,74 @@ class jdbQueryParseTest  extends \Jelix\UnitTests\UnitTestCase
         //parent::tearDown();
     }
 */
-    function testQuestionMarker() {
+    function testQuestionMarkerInResult() {
         $cn = new queryparseConnection('');
         
         $res = $cn->parseQuery('select * from c WHERE id= :id and foo= :bar','?');
-        $this->assertEquals($res[0], 'select * from c WHERE id= ? and foo= ?');
-        $this->assertEquals($res[1], array('id','bar'));
+        $this->assertEquals('select * from c WHERE id= ? and foo= ?', $res[0]);
+        $this->assertEquals(array('id','bar'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and foo= :bar and u=:id','?');
-        $this->assertEquals($res[0], 'select * from c WHERE id= ? and foo= ? and u=?');
-        $this->assertEquals($res[1], array('id','bar', 'id'));
+        $this->assertEquals('select * from c WHERE id= ? and foo= ? and u=?', $res[0]);
+        $this->assertEquals(array('id','bar', 'id'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and t = ":popo" AND foo= :bar','?');
-        $this->assertEquals($res[0], 'select * from c WHERE id= ? and t = ":popo" AND foo= ?');
-        $this->assertEquals($res[1], array('id','bar'));
+        $this->assertEquals('select * from c WHERE id= ? and t = ":popo" AND foo= ?', $res[0]);
+        $this->assertEquals(array('id','bar'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and
                                t = ":po\\"p\'o" AND u=\'\\\' :ui zer\'
                                foo= :bar2','?');
-        $this->assertEquals($res[0], 'select * from c WHERE id= ? and
+        $this->assertEquals('select * from c WHERE id= ? and
                                t = ":po\\"p\'o" AND u=\'\\\' :ui zer\'
-                               foo= ?','?');
-        $this->assertEquals($res[1], array('id','bar2'));
+                               foo= ?', $res[0]);
+        $this->assertEquals(array('id','bar2'), $res[1]);
 
     }
 
-    function testNumericalMarker() {
+    function testNumericalMarkerInResult() {
         $cn = new queryparseConnection('');
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and foo= :bar','$%');
-        $this->assertEquals($res[0], 'select * from c WHERE id= $1 and foo= $2');
-        $this->assertEquals($res[1], array('id','bar'));
+        $this->assertEquals('select * from c WHERE id= $1 and foo= $2', $res[0]);
+        $this->assertEquals(array('id','bar'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and foo= :bar and u=:id','$%');
-        $this->assertEquals($res[0], 'select * from c WHERE id= $1 and foo= $2 and u=$1');
-        $this->assertEquals($res[1], array('id','bar'));
+        $this->assertEquals('select * from c WHERE id= $1 and foo= $2 and u=$1', $res[0]);
+        $this->assertEquals(array('id','bar'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and t = ":popo" AND foo= :bar','$%');
-        $this->assertEquals($res[0], 'select * from c WHERE id= $1 and t = ":popo" AND foo= $2');
-        $this->assertEquals($res[1], array('id','bar'));
+        $this->assertEquals('select * from c WHERE id= $1 and t = ":popo" AND foo= $2', $res[0]);
+        $this->assertEquals(array('id','bar'), $res[1]);
 
         $res = $cn->parseQuery('select * from c WHERE id= :id and
                                t = ":po\\"p\'o" AND u=\'\\\' :ui zer\'
                                foo= :bar2','$%');
-        $this->assertEquals($res[0], 'select * from c WHERE id= $1 and
+        $this->assertEquals('select * from c WHERE id= $1 and
                                t = ":po\\"p\'o" AND u=\'\\\' :ui zer\'
-                               foo= $2');
-        $this->assertEquals($res[1], array('id','bar2'));
+                               foo= $2', $res[0]);
+        $this->assertEquals(array('id','bar2'), $res[1]);
 
+    }
+
+    function testNumericalMarkerInQuery() {
+        $cn = new queryparseConnection('');
+
+        $res = $cn->parseQuery('select * from c WHERE id= $1 and foo= $2','$%');
+        $this->assertEquals('select * from c WHERE id= $1 and foo= $2', $res[0]);
+        $this->assertEquals(array('1','2'), $res[1]);
+
+        $res = $cn->parseQuery('select * from c WHERE id= $1 and foo= $2 and u=$1','$%');
+        $this->assertEquals('select * from c WHERE id= $1 and foo= $2 and u=$1', $res[0]);
+        $this->assertEquals(array('1','2'), $res[1]);
+
+        $res = $cn->parseQuery('select * from c WHERE id= $1 and t = ":popo" AND foo= $2','$%');
+        $this->assertEquals('select * from c WHERE id= $1 and t = ":popo" AND foo= $2', $res[0]);
+        $this->assertEquals(array('1','2'), $res[1]);
+
+        $res = $cn->parseQuery('select * from c WHERE id= $1 and t = "$99" AND foo= $2','$%');
+        $this->assertEquals('select * from c WHERE id= $1 and t = "$99" AND foo= $2', $res[0]);
+        $this->assertEquals(array('1','2'), $res[1]);
     }
 
 }

@@ -15,6 +15,7 @@ if [ "$COMMAND" == "" ]; then
     echo "- To manage the ldap server: ldap-reset, ldap-users"
     echo "- To enter into the php container: shell, shell-root"
     echo "- to enter into a interactive database shell: pgsql, mysql or redis"
+    echo "- other: mysql-root"
     exit 1;
 fi
 
@@ -51,6 +52,9 @@ case $COMMAND in
       ;;
     mysql)
       docker exec -it jelix_${JLXBRANCH}_test_mysql mysql -u test_user -pjelix testapp
+      ;;
+    mysql-root)
+      docker exec -it jelix_${JLXBRANCH}_test_mysql /bin/bash  -l
       ;;
     *)
         echo "wrong command"

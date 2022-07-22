@@ -95,5 +95,107 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
     }
 
-    
+    function testEntryPointUrlModifier()
+    {
+
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
+        $epUrlMod = new \Jelix\Routing\UrlMapping\EntryPointUrlModifier($modifier, 'foo');
+
+        $epUrlMod->havingName('index',
+            array(
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-my-include.xml', '/my-include'),
+                new \Jelix\Routing\UrlMapping\MapEntry\ModuleUrl('/my-foo-module'),
+            )
+        );
+        $epUrlMod->havingName('news',
+            array(
+                // its pathinfo should be renamed by /mynews2 during tests
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-my-news.xml', '/mynews/'),
+            )
+        );
+        $epUrlMod->havingType('soap',
+            array(
+                new \Jelix\Routing\UrlMapping\MapEntry\MapInclude('urls-soap.xml', '/my-soap-include'),
+                new \Jelix\Routing\UrlMapping\MapEntry\ModuleUrl('/my-soap-module'),
+            )
+        );
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/res_urls_entrypointurlmodifier.xml'),
+                            file_get_contents(jApp::tempPath('urls.xml')));
+    }
+
+    function testRemoveAllUrlOfAModule()
+    {
+        copy(__DIR__.'/urls/res_urls_entrypointurlmodifier.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $modifier->removeAllUrlOfModule('foo');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_without_foo.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+    }
+
+    function testRemoveHandler()
+    {
+        copy(__DIR__.'/urls/urls_many.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $index = $modifier->getEntryPoint('index');
+
+        $index->removeUrlHandler('cms', 'superhandler');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_remove_handler.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+
+
+    }
+
+    function testRemoveController()
+    {
+        copy(__DIR__.'/urls/urls_many.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $index = $modifier->getEntryPoint('index');
+
+        $index->removeUrlController('firstmodule', 'myctrl');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_remove_controller.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+
+    }
+
+    function testRemoveAction()
+    {
+        copy(__DIR__.'/urls/urls_many.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $index = $modifier->getEntryPoint('index');
+
+        $index->removeUrlAction('firstmodule','foo3:bar');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_remove_action.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+    }
+
+    function testRemoveInclude()
+    {
+        copy(__DIR__.'/urls/urls_many.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $index = $modifier->getEntryPoint('index');
+
+        $index->removeUrlInclude('foo', 'urls-my-include.xml');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_remove_include.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+
+    }
+
+    function testRemoveUrlModule()
+    {
+        copy(__DIR__.'/urls/urls_many.xml', jApp::tempPath('urls3.xml'));
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls3.xml'));
+        $ep = $modifier->getEntryPoint('news');
+
+        $ep->removeUrlModule('articles');
+        $modifier->save();
+        $this->assertEquals(file_get_contents(__DIR__.'/urls/urls_remove_module_url.xml'),
+            file_get_contents(jApp::tempPath('urls3.xml')));
+
+    }
 }

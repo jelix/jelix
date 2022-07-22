@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <entrypoint name="index" default="true">
+        <url module="testapp" default="true"/>
+        <url include="urls-my-include.xml" module="foo" pathinfo="/my-include"/>
+        <url module="foo" pathinfo="/my-foo-module"/>
+    </entrypoint>
+    <entrypoint type="soap" name="mysoap">
+        <url include="urls-soap.xml" module="foo" pathinfo="/my-soap-include"/>
+        <url module="foo" pathinfo="/my-soap-module"/>
+    </entrypoint>
+    <classicentrypoint name="news">
+        <url module="news" default="true"/>
+        <url module="articles" pathinfo="/mynews/"/>
+        <url include="urls-my-news.xml" module="foo" pathinfo="/mynews2"/>
+    </classicentrypoint>
+    <entrypoint name="bar" type="classic"/>
+</urls>

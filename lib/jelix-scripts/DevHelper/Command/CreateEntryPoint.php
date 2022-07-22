@@ -142,9 +142,11 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp
         if ($this->verbose()) {
             $output->writeln('Project.xml has been updated');
         }
+        return 0;
     }
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
+        return 0;
     }
 }

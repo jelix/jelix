@@ -38,6 +38,7 @@ class ModuleClass
     public static function create($selector)
     {
         $sel = new Selector\ClassSelector($selector);
+
         require_once $sel->getPath();
         $class = $sel->className;
 
@@ -151,6 +152,7 @@ class ModuleClass
     public static function inc($selector)
     {
         $sel = new Selector\ClassSelector($selector);
+
         require_once $sel->getPath();
     }
 
@@ -164,6 +166,7 @@ class ModuleClass
     public static function incIface($selector)
     {
         $sel = new Selector\InterfaceSelector($selector);
+
         require_once $sel->getPath();
     }
 }

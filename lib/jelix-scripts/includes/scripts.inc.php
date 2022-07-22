@@ -16,10 +16,12 @@ define('JELIX_SCRIPTS_PATH', __DIR__.'/../');
 
 if (!\jServer::isCLI()) {
     echo "Error: you're not allowed to execute this script outside a command line shell.\n";
+
     exit(1);
 }
 
 if (\Jelix\Core\App::isInit()) {
     echo "Error: shouldn't run within an application\n";
+
     exit(1);
 }

@@ -14,10 +14,10 @@
  * Error handlers for the framework.
  * Replace the default PHP error handler.
  *
- * @param int    $errno      error code
- * @param string $errmsg     error message
- * @param string $filename   filename where the error appears
- * @param int    $linenum    line number where the error appears
+ * @param int    $errno    error code
+ * @param string $errmsg   error message
+ * @param string $filename filename where the error appears
+ * @param int    $linenum  line number where the error appears
  */
 class jBasicErrorHandler
 {
@@ -44,10 +44,10 @@ class jBasicErrorHandler
      * Error handler showing a simple error page
      * Replace the default PHP error handler.
      *
-     * @param int    $errno      error code
-     * @param string $errmsg     error message
-     * @param string $filename   filename where the error appears
-     * @param int    $linenum    line number where the error appears
+     * @param int    $errno    error code
+     * @param string $errmsg   error message
+     * @param string $filename filename where the error appears
+     * @param int    $linenum  line number where the error appears
      */
     public static function errorHandler($errno, $errmsg, $filename, $linenum)
     {
@@ -151,6 +151,7 @@ class jBasicErrorHandler
                 }
                 header('HTTP/1.1 500 Internal jelix error');
                 header('Content-type: text/html');
+
                 include $file;
             } else {
                 // output text response
@@ -159,6 +160,7 @@ class jBasicErrorHandler
                 echo 'Error during initialization. '.$msg;
             }
         }
+
         exit(1);
     }
 }

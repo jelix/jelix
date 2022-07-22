@@ -1,15 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suburls xmlns="http://jelix.org/ns/suburls/1.0">
     <url pathinfo="/groups"                         action="groups:index"/>
-    <url pathinfo="/groups/rights"                  action="groups:rights"/>
-    <url pathinfo="/groups/saverights"              action="groups:saverights"/>
-    <url pathinfo="/groups/resource-rights"         action="groups:rightres"/>
-    <url pathinfo="/groups/save-resource-rights"    action="groups:saverightres"/>
-    <url pathinfo="/groups/new"                     action="groups:newgroup"/>
-    <url pathinfo="/groups/rename"                  action="groups:changename"/>
-    <url pathinfo="/groups/delete"                  action="groups:delgroup"/>
-    <url pathinfo="/groups/setdefault"              action="groups:setdefault"/>
+    <url pathinfo="/groups/list.json"               action="groups:groupsList"/>
+    <url pathinfo="/groups/rights"                  action="groups:allrights"/>
+    <url pathinfo="/groups/g/:group/rights"           action="groups:rights">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/saverights"       action="groups:saverights">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/resource-rights"         action="groups:rightres">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/save-resource-rights"    action="groups:saverightres">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/setdefault"              action="groups:setdefault">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/rename"                  action="groups:changename">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/g/:group/delete"                  action="groups:delgroup">
+        <param name="group"/>
+    </url>
+    <url pathinfo="/groups/new"                          action="groups:create"/>
+    <url pathinfo="/groups/save-new"                     action="groups:newgroup"/>
+    <url pathinfo="/groups/autocomplete"                 action="groups:autocomplete"/>
+
     <url pathinfo="/users"                          action="users:index"/>
-    <url pathinfo="/users/:user"                    action="users:rights"
-        actionoverride="users:removegroup,users:addgroup,users:saverights,users:rightres,users:saverightres"/>
+    <url pathinfo="/users/list.json"                action="users:usersList"/>
+
+    <url pathinfo="/users/u/:user"                     action="users:rights">
+        <param name="user" />
+    </url>
+
+    <url pathinfo="/users/u/:user/save"                 action="users:saverights">
+        <param name="user" />
+    </url>
+    <url pathinfo="/users/u/:user/resource-rights"      action="users:rightres">
+        <param name="user" />
+    </url>
+    <url pathinfo="/users/u/:user/save-resource-rights" action="users:saverightres">
+        <param name="user" />
+    </url>
+    <url pathinfo="/users/u/:user/remove-from-group"    action="users:removegroup">
+        <param name="user" />
+    </url>
+    <url pathinfo="/users/u/:user/add-to-group"         action="users:addgroup">
+        <param name="user" />
+    </url>
+
 </suburls>

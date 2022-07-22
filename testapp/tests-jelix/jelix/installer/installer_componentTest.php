@@ -199,7 +199,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             $installer = $component->getInstaller();
             $this->assertNull($installer);
             $configurator = $component->getConfigurator(true);
-            $this->assertNull($configurator);
+            $this->assertNotNull($configurator);
         }
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");

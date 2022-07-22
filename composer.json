@@ -16,7 +16,7 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4.0",
         "jelix/composer-module-setup": "^1.0.5",
         "phpmailer/phpmailer": "^6.2.0",
         "jelix/castor": "^1.1.1",
@@ -25,7 +25,7 @@
         "jelix/properties-file": "^1.2.2",
         "jelix/database": "dev-master",
         "jelix/dao": "dev-main",
-        "symfony/console":"~5.4.5",
+        "symfony/console":"~5.4.10",
         "jelix/file-utilities": "^1.8.4",
         "jelix/simplelocalization": "^1.7.1",
         "jelix/version": "^1.1.1",

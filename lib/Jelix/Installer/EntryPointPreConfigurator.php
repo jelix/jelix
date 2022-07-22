@@ -14,17 +14,17 @@ use Jelix\Routing\UrlMapping\XmlEntryPoint;
 /**
  * entry points properties for configurators.
  *
- * @method getType()
- * @method getScriptName()
- * @method getFileName()
- * @method isCliScript()
- * @method getEpId()
- * @method getModulesList()
- * @method getConfigIni()
- * @method getSingleConfigIni()
- * @method getConfigFileName()
- * @method getConfigObj()
- * @method getCoordPluginConfig($pluginName)
+ * @method string getType()
+ * @method string getScriptName()
+ * @method string getFileName()
+ * @method bool isCliScript()
+ * @method string getEpId()
+ * @method string[] getModulesList()
+ * @method \Jelix\IniFile\IniModifierArray getConfigIni()
+ * @method \Jelix\IniFile\IniModifier|\Jelix\IniFile\IniModifierReadOnly getSingleConfigIni()
+ * @method string getConfigFileName()
+ * @method object getConfigObj()
+ * @method null|array getCoordPluginConfig($pluginName)
  *
  * @since 1.7
  */

@@ -1,4 +1,4 @@
-;<?php die(''); ?>
+;<?php exit(''); ?>
 ;for security reasons , don't remove or modify the first line
 
 ; the default locale used in the application
@@ -367,15 +367,6 @@ debugSmtpLevel = 0
 ; exemple of driver: "db".
 driver=
 
-[acl2]
-; exemple of driver: "db"
-driver=
-authAdapterClass="jAcl2JAuthAdapter"
-
-[jacl2]
-hiddenRights=
-hideRights = off
-
 [sessions]
 ; to disable sessions, set the following parameter to 0
 start=1
@@ -537,6 +528,11 @@ jforms_autocompleteajax.require=jquery_ui
 
 swjs.js = "$jelix/jquery/flash/jquery.flash.js"
 swjs.require = jquery
+
+datatables.js[]="$jelix/datatables/datatables.min.js"
+datatables.js[]="$jelix/datatables/i18n/$locale.js"
+datatables.css[]="$jelix/datatables/datatables.min.css"
+
 
 [zones]
 ; disable zone caching

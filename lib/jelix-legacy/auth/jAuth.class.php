@@ -15,7 +15,11 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require JELIX_LIB_PATH.'auth/jIAuthDriver.iface.php';
+
 require JELIX_LIB_PATH.'auth/jIAuthDriver2.iface.php';
+
+require JELIX_LIB_PATH.'auth/jIAuthDriver3.iface.php';
+
 require JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php';
 
 /**
@@ -35,12 +39,12 @@ class jAuth
         return self::loadConfig();
     }
 
-    protected static $config = null;
+    protected static $config;
 
     /**
      * @var jIAuthDriver
      */
-    protected static $driver = null;
+    protected static $driver;
 
     /**
      * Load the configuration of authentification, stored in the auth plugin config.
@@ -152,30 +156,35 @@ class jAuth
         return self::getDriver();
     }
 
+    /**
+     * @param array $authConfig
+     * @param object $appConfig
+     * @return array|null
+     */
     protected static function _buildDriverConfig($authConfig, $appConfig)
     {
         $driver = $authConfig['driver'];
         if (isset($authConfig[$driver]) && is_array($authConfig[$driver])) {
-            $driverConfig =  $authConfig[$driver];
-        }
-        else {
+            $driverConfig = $authConfig[$driver];
+        } else {
             $section = 'auth_'.strtolower($driver);
-            if (isset($appConfig[$section]) && is_array($appConfig[$section])) {
-                $driverConfig = $appConfig[$section];
-            }
-            else {
+            if (isset($appConfig->$section) && is_array($appConfig->$section)) {
+                $driverConfig = $appConfig->$section;
+            } else {
                 return null;
             }
         }
 
         $driverConfig['password_hash_method'] = $authConfig['password_hash_method'];
         $driverConfig['password_hash_options'] = $authConfig['password_hash_options'];
+
         return $driverConfig;
     }
 
     /**
-     * @return mixed
      * @throws jException
+     *
+     * @return mixed
      */
     public static function getDriverConfig()
     {
@@ -406,7 +415,26 @@ class jAuth
     }
 
     /**
-     * change a user password.
+     * If the password cannot be changed, this method gives the reason.
+     *
+     * It may returns a reason only after a call of the canChangePassword()
+     * method.
+     *
+     * @return string
+     * @throws jException
+     * @since 1.6.37
+     */
+    public static function getReasonToForbiddenPasswordChange()
+    {
+        $dr = self::getDriver();
+        if ($dr instanceof jIAuthDriver3) {
+            return $dr->getReasonToForbiddenPasswordChange();
+        }
+        return '';
+    }
+
+    /**
+     * change a user password
      *
      * @param string $login       the login of the user
      * @param string $newpassword the new password (not encrypted)
@@ -537,7 +565,7 @@ class jAuth
 
         if (isset($config['persistant_enable']) && $config['persistant_enable']) {
             if (isset($config['persistant_cookie_name'])) {
-                setcookie($config['persistant_cookie_name'].'[auth]', '', time() - 3600, $config['persistant_cookie_path'], '', false, true);
+                setcookie($config['persistant_cookie_name'], '', time() - 3600, $config['persistant_cookie_path'], '', false, true);
             } else {
                 jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig', 'persistant_cookie_name'), 'error');
             }
@@ -564,8 +592,8 @@ class jAuth
     public static function getUserSession()
     {
         $config = self::loadConfig();
-        if (!isset($_SESSION[$config['session_name']]) ||
-            !$_SESSION[$config['session_name']]) {
+        if (!isset($_SESSION[$config['session_name']])
+            || !$_SESSION[$config['session_name']]) {
             $_SESSION[$config['session_name']] = new jAuthDummyUser();
         }
 
@@ -581,7 +609,8 @@ class jAuth
         return self::reloadUserSession();
     }
 
-    public static function reloadUserSession() {
+    public static function reloadUserSession()
+    {
         $dr = self::getDriver();
         $config = self::loadConfig();
         $user = null;
@@ -589,9 +618,10 @@ class jAuth
             $user = $dr->getUser($_SESSION[$config['session_name']]->login);
         }
         if (!$user) {
-            $user =  new jAuthDummyUser();
+            $user = new jAuthDummyUser();
         }
         $_SESSION[$config['session_name']] = $user;
+
         return $user;
     }
 
@@ -690,13 +720,13 @@ class jAuth
     {
         $config = self::loadConfig();
         if (isset($config['persistant_enable']) && $config['persistant_enable'] && !self::isConnected()) {
-            if (trim($config['persistant_cookie_name']) != '' &&
-                trim($config['persistant_encryption_key']) != ''
+            if (trim($config['persistant_cookie_name']) != ''
+                && trim($config['persistant_encryption_key']) != ''
                 ) {
                 $cookieName = $config['persistant_cookie_name'];
-                if (isset($_COOKIE[$cookieName]) &&
-                    is_string($_COOKIE[$cookieName]) &&
-                    strlen($_COOKIE[$cookieName])) {
+                if (isset($_COOKIE[$cookieName])
+                    && is_string($_COOKIE[$cookieName])
+                    && strlen($_COOKIE[$cookieName])) {
                     try {
                         $cryptokey = \Defuse\Crypto\Key::loadFromAsciiSafeString(
                             $config['persistant_encryption_key']
@@ -745,8 +775,8 @@ class jAuth
 
         // Add a cookie for session persistance, if enabled
         if (isset($config['persistant_enable']) && $config['persistant_enable']) {
-            if (trim($config['persistant_encryption_key']) == '' ||
-                trim($config['persistant_cookie_name']) == '') {
+            if (trim($config['persistant_encryption_key']) == ''
+                || trim($config['persistant_cookie_name']) == '') {
                 jLog::log(jLocale::get('jelix~auth.error.persistant.incorrectconfig', 'persistant_cookie_name, persistant_encryption_key'), 'error');
 
                 return 0;

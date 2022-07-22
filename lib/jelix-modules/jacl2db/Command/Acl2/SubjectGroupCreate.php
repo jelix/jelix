@@ -67,8 +67,8 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
             $output->writeln("Rights: group of rights '".$group."' is created");
         }
 
-        if ($label &&
-            preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_\\.]+)$/', $labelkey, $m)) {
+        if ($label
+            && preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_\\.]+)$/', $labelkey, $m)) {
             $localestring = "\n".$m[3].'='.$label;
             $path = \jApp::getModulePath($m[1]);
             $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.'.
@@ -81,5 +81,6 @@ class SubjectGroupCreate extends \Jelix\Scripts\ModuleCommandAbstract
                 $output->writeln('locale string '.$m[3].' is created into '.$file);
             }
         }
+        return 0;
     }
 }

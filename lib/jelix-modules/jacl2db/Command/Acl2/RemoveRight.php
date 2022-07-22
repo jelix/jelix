@@ -72,7 +72,7 @@ class RemoveRight extends AbstractAcl2Cmd
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
-                return;
+                return 1;
             }
         }
 
@@ -103,5 +103,6 @@ class RemoveRight extends AbstractAcl2Cmd
                 $output->writeln("Right {$subject} have been deleted on group {$group} and resource {$resource}");
             }
         }
+        return 0;
     }
 }

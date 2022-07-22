@@ -87,6 +87,7 @@ class Includer
         } elseif (function_exists('apc_delete_file')) {
             apc_delete_file($cachefile);
         }
+
         require $cachefile;
         self::$_includedFiles[$cachefile] = true;
     }

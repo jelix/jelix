@@ -84,5 +84,6 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp
                 closedir($dir_r);
             }
         }
+        return 0;
     }
 }

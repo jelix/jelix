@@ -14,7 +14,7 @@
         "jelix/properties-file": "^1.2.2",
         "jelix/database": "dev-master",
         "jelix/dao": "dev-main",
-        "symfony/console":"~5.4.5",
+        "symfony/console":"~5.4.10",
         "jelix/file-utilities": "^1.8.4",
         "jelix/version": "^1.1.1",
         "jelix/fakeserverconf": "^1.0.0",

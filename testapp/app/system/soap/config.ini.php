@@ -10,7 +10,7 @@ jacl=1
 [responses]
 soap="jsoap~jResponseSoap"
 
-[coordplugin_jacl2]
+[jacl2]
 on_error=1
 
 [coordplugin_jacl]

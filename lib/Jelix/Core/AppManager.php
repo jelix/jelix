@@ -3,13 +3,15 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2010-2014 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2010-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace Jelix\Core;
+
+use Jelix\Core\Config\Compiler;
 
 /**
  * utilities to manage a jelix application.
@@ -112,15 +114,51 @@ class AppManager
                 exit(1);
             }
 
-            if (file_exists(App::appPath('install/closed.html'))) {
+            // note: we are not supposed to have the configuration loaded here
+            // so we cannot use the selected theme or any other configuration parameters
+            // like calculated basePath. We mimic what it is done into the configuration compiler
+            $basePath = App::urlBasePath();
+            if ($basePath == null) {
+                try {
+                    $urlScript = $_SERVER[Compiler::findServerName()];
+                    $basePath = substr($urlScript, 0, strrpos($urlScript, '/')) . '/';
+                } catch (\Exception $e) {
+                    $basePath = '/';
+                }
+                $themePath = 'themes/default/';
+            }
+            else {
+                $themePath = 'themes/'.App::config()->theme.'/';
+            }
+
+            // html file installed for the current instance of the application
+            if (file_exists(App::varPath($themePath.'closed.html'))) {
+                $file = App::varPath($themePath.'closed.html');
+            }
+            else if (file_exists(App::varPath('themes/closed.html'))) {
+                $file = App::varPath('themes/closed.html');
+            }
+            // html file provided by the application
+            elseif (file_exists(App::appPath('install/closed.html'))) {
                 $file = App::appPath('install/closed.html');
-            } else {
+            }
+            // default html file
+            else {
                 $file = __DIR__.'/closed.html';
             }
 
             header('HTTP/1.1 503 Application not available');
             header('Content-type: text/html');
-            echo str_replace('%message%', $message, file_get_contents($file));
+            echo str_replace(array(
+                '%message%',
+                '%basePath%',
+                '%themePath%',
+            ), array(
+                $message,
+                $basePath,
+                $themePath
+            ), file_get_contents($file));
+
             exit(1);
         }
     }

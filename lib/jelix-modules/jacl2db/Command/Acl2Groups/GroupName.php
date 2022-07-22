@@ -54,5 +54,6 @@ class GroupName extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("Group '".$group."' is renamed to {$name}");
         }
+        return 0;
     }
 }

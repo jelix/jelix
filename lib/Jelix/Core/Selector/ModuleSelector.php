@@ -80,6 +80,7 @@ abstract class ModuleSelector implements SelectorInterface
             return null;
         }
         $n = $this->_compiler;
+
         require_once $this->_compilerPath;
         $o = new $n();
 

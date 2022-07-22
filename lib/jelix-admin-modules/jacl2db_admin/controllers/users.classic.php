@@ -4,7 +4,7 @@
  * @contributor Julien Issler, Adrien Lagroy de Croutte
  *
  * @copyright   2020 Adrien Lagroy de Croutte
- * @copyright   2008-2017 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://jelix.org
@@ -14,8 +14,11 @@ class usersCtrl extends jController
 {
     public $pluginParams = array(
         'index'       => array('jacl2.rights.and' => array('acl.user.view')),
+        'usersList'       => array('jacl2.rights.and' => array('acl.user.view')),
         'rights'      => array('jacl2.rights.and' => array('acl.user.view')),
         'saverights'  => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
+        'rightres'      => array('jacl2.rights.and' => array('acl.user.view')),
+        'saverightres'  => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
         'removegroup' => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
         'addgroup'    => array('jacl2.rights.and' => array('acl.user.view', 'acl.user.modify')),
     );
@@ -31,6 +34,11 @@ class usersCtrl extends jController
         }
     }
 
+    /**
+     * Page to list all users
+     * @return jResponseHtml
+     * @throws jExceptionSelector
+     */
     public function index()
     {
         $rep = $this->getResponse('html');
@@ -54,26 +62,86 @@ class usersCtrl extends jController
             $groups[] = $grp;
         }
 
-        $manager = new jAcl2DbAdminUIManager();
-        $listPageSize = 15;
-
-        $offset = $this->param('idx', 0, true);
         $grpid = $this->param('grpid', jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, true);
-        $filter = trim($this->param('filter'));
-        $last = count($groups) - 3;
+
         $tpl = new jTpl();
-
-        if (is_numeric($grpid) && intval($grpid) < 0) {
-            $tpl->assign($manager->getUsersList($grpid, null, $filter, $offset, $listPageSize));
-        } else {
-            $tpl->assign($manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $filter, $offset, $listPageSize));
-        }
-
-        $tpl->assign(compact('offset', 'grpid', 'listPageSize', 'groups', 'filter', 'last'));
+        $tpl->assign(compact('grpid', 'groups'));
         $rep->title = jLocale::get('acl2.users.title');
         $rep->body->assign('MAIN', $tpl->fetch('users_list'));
         $rep->body->assign('selectedMenuItem', 'usersrights');
 
+        return $rep;
+    }
+
+    /**
+     * list of users
+     * @return jResponseJson
+     */
+    public function usersList()
+    {
+        /** @var jResponseJson $rep */
+        $rep = $this->getResponse('json');
+
+        $stringToSearch = '';
+        $draw = $this->intParam('draw');
+        $offset = $this->intParam('start', 0, true);
+        $length = $this->intParam('length', 20, true); // -1 == all
+        $grpid = $this->param('grpid', jAcl2DbAdminUIManager::FILTER_GROUP_ALL_USERS, true);
+
+        $searchP = $this->param('search');
+        if ($searchP && is_array($searchP) && (!isset($searchP['regexp']) || $searchP['regexp'] == 'false')) {
+            $stringToSearch = $searchP['value'];
+        }
+
+        $orderData = $this->param('order');
+
+        $manager = new jAcl2DbAdminUIManager();
+        $order = $manager::ORDER_BY_NAME;
+
+        if (isset($orderData[0]['column'])) {
+            if ($orderData[0]['column'] == 0) {
+                $order = $manager::ORDER_BY_NAME;
+            }
+        }
+        if (isset($orderData[0]['dir'])) {
+            if ($orderData[0]['dir'] == 'desc') {
+                $order |= $manager::ORDER_DIRECTION_DESC;
+            }
+        }
+
+        $data = array();
+
+        if (is_numeric($grpid) && intval($grpid) < 0) {
+            // users in all groups or not in groups
+            $usersList = $manager->getUsersList($grpid, null, $stringToSearch, $offset, $length, $order);
+        } else {
+            // users in a specific group
+            $usersList = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $stringToSearch, $offset, $length, $order);
+        }
+
+        foreach($usersList['results'] as $user)
+        {
+            $data[] = array(
+                "DT_RowId" => 'usr-'.$user->login,
+                "DT_RowData" => [
+                    "login" => $user->login
+                ],
+                'login' => $user->login,
+                'groups' => implode(', ', $user->groups),
+                'links' => [
+                    'rights' => jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login))
+                 ]
+            );
+        }
+
+        $rep->data = array(
+            'draw' => $draw,
+            'recordsTotal' => $manager->getUsersCount($grpid),
+            'recordsFiltered' => $usersList['resultsCount'],
+            'data' => $data,
+        );
+
+        //$rep->data = array( 'draw' => $draw, 'error' => $error);
         return $rep;
     }
 
@@ -89,6 +157,11 @@ class usersCtrl extends jController
         return $id;
     }
 
+    /**
+     * Page showing rights of a user and his groups
+     * @return jResponseHtml
+     * @throws jExceptionSelector
+     */
     public function rights()
     {
         $rep = $this->getResponse('html');
@@ -119,10 +192,17 @@ class usersCtrl extends jController
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
         $rep->body->assign('selectedMenuItem', 'rights');
-        $rep->title = jLocale::get('acl2.user.rights.title'). ' '. $user;
+        $rep->title = jLocale::get('acl2.user.rights.title').' '.$user;
+
         return $rep;
     }
 
+    /**
+     * Save rights
+     *
+     * @return jResponseRedirect
+     * @throws jExceptionSelector
+     */
     public function saverights()
     {
         $rep = $this->getResponse('redirect');
@@ -149,6 +229,12 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Show a page with the list of rights on resources for the user
+     *
+     * @return jResponseHtml
+     * @throws Exception
+     */
     public function rightres()
     {
         $rep = $this->getResponse('html');
@@ -176,6 +262,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Save rights on resources for the user
+     * @return jResponseRedirect
+     * @throws jExceptionSelector
+     */
     public function saverightres()
     {
         $rep = $this->getResponse('redirect');
@@ -199,6 +290,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Remove a user from a group
+     *
+     * @return jResponseRedirect
+     */
     public function removegroup()
     {
         $rep = $this->getResponse('redirect');
@@ -221,6 +317,11 @@ class usersCtrl extends jController
         return $rep;
     }
 
+    /**
+     * Add a user into a group
+     *
+     * @return jResponseRedirect
+     */
     public function addgroup()
     {
         $rep = $this->getResponse('redirect');

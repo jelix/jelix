@@ -48,15 +48,18 @@ class UrlEngineUpgrader
     public function upgrade()
     {
         $engine = $this->fullConfig->getValue('engine', 'urlengine');
+
         switch ($engine) {
             case 'simple':
                 $this->migrateSimple();
 
                 break;
+
             case 'significant':
                 $this->migrateSignificant();
 
                 break;
+
             case 'basic_significant':
             default:
                 $this->migrateBasicSignificant();
@@ -117,8 +120,8 @@ class UrlEngineUpgrader
             // if the entry point is not in this section, or value is off
             // add an attribute noentrypoint=true
             $addEntryPoints = $this->fullConfig->getValues('basic_significant_urlengine_entrypoints');
-            if (!isset($addEntryPoints[$this->epId]) ||
-                !$addEntryPoints[$this->epId]) {
+            if (!isset($addEntryPoints[$this->epId])
+                || !$addEntryPoints[$this->epId]) {
                 $this->xmlMapEntryPoint->setOptions(array('noentrypoint' => true));
             }
         }
@@ -135,8 +138,8 @@ class UrlEngineUpgrader
     {
         $startModule = $this->fullConfig->getValue('startModule');
         $startAction = $this->fullConfig->getValue('startAction');
-        if ($startModule != $this->mainConfig->getValue('startModule') ||
-            $startAction != $this->mainConfig->getValue('startAction')) {
+        if ($startModule != $this->mainConfig->getValue('startModule')
+            || $startAction != $this->mainConfig->getValue('startAction')) {
             $this->xmlMapEntryPoint->addUrlAction('/', $startModule, $startAction, null, null, array('default' => true));
             $this->xmlMapEntryPoint->addUrlModule('', $startModule);
         }

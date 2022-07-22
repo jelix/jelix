@@ -8,7 +8,7 @@ soap="jsoap~jResponseSoap"
 jacl2=1
 jacl=1
 
-[coordplugin_jacl2]
+[jacl2]
 on_error=1
 error_message="jacl2~errors.action.right.needed"
 on_error_action="jelix~error:badright"

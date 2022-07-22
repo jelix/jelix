@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -46,8 +46,8 @@ class XmlMapModifier
      *                       https=true/(false)
      *                       noentrypoint=true/(false)
      *                       optionalTrailingSlash=true/(false)
-     * @param mixed $name
-     * @param mixed $type
+     * @param string $name
+     * @param string $type
      *
      * @return XmlEntryPoint
      */
@@ -70,9 +70,28 @@ class XmlMapModifier
         return $ep;
     }
 
+    /**
+     * @param string $name
+     * @since 1.7.11
+     */
+    public function removeEntryPoint($name)
+    {
+        $ep = $this->getEntryPoint($name);
+        if ($ep) {
+
+            $xmlEp = $ep->getDomElement();
+            $parent = $xmlEp->parentNode;
+            if ($xmlEp->previousSibling && $xmlEp->previousSibling->nodeType == XML_TEXT_NODE) {
+                // remove indentation
+                $parent->removeChild($xmlEp->previousSibling);
+            }
+            $parent->removeChild($xmlEp);
+        }
+    }
+
     public function setNewDefaultEntryPoint($name, $type)
     {
-        $entrypoints = $this->getEntryPointsOfType($type);
+        $entrypoints = $this->getXMLEntryPointsOfType($type);
         foreach ($entrypoints as $ep2) {
             if ($name == $ep2->getAttribute('name')) {
                 $ep2->setAttribute('default', 'true');
@@ -90,14 +109,14 @@ class XmlMapModifier
      */
     public function getDefaultEntryPoint($type)
     {
-        $entrypoints = $this->getEntryPointsOfType($type);
+        $entrypoints = $this->getXMLEntryPointsOfType($type);
         foreach ($entrypoints as $ep2) {
             if ($ep2->getAttribute('default') == 'true') {
                 return new XmlEntryPoint($this, $ep2);
             }
         }
         if (count($entrypoints) == 1) {
-            return $entrypoints[0];
+            return new XmlEntryPoint($this, $entrypoints[0]);
         }
 
         return null;
@@ -123,8 +142,8 @@ class XmlMapModifier
                 continue;
             }
 
-            if (preg_match('/^.*entrypoint$/', $item->localName) &&
-                $item->getAttribute('name') == $name) {
+            if (preg_match('/^.*entrypoint$/', $item->localName)
+                && $item->getAttribute('name') == $name) {
                 return new XmlEntryPoint($this, $item);
             }
         }
@@ -137,7 +156,7 @@ class XmlMapModifier
      *
      * @return \DomElement[]
      */
-    protected function getEntryPointsOfType($type = 'classic')
+    protected function getXMLEntryPointsOfType($type = 'classic')
     {
         $results = array();
         $list = $this->document->getElementsByTagName('entrypoint');
@@ -158,9 +177,23 @@ class XmlMapModifier
         return $results;
     }
 
+    /**
+     * Return the list of entrypoints having the given type
+     * @param string $type
+     * @return XmlEntryPoint[]
+     */
+    public function getEntryPointsOfType($type = 'classic')
+    {
+        $list = $this->getXMLEntryPointsOfType($type);
+        $mm = $this;
+        return array_map(function($elem) use($mm) {
+            return new XmlEntryPoint($mm, $elem);
+        }, $list);
+    }
+
     public function removeUrlModuleInOtherEntryPoint($module, XmlEntryPoint $except)
     {
-        $list = $this->getEntryPointsOfType($except->getType());
+        $list = $this->getXMLEntryPointsOfType($except->getType());
         foreach ($list as $ep) {
             if ($ep->getAttribute('name') == $except->getName()) {
                 continue;
@@ -169,4 +202,19 @@ class XmlMapModifier
             $xmlEp->removeUrlModule($module);
         }
     }
+
+    public function removeAllUrlOfModule($module)
+    {
+        foreach ($this->document->documentElement->childNodes as $item) {
+            if ($item->nodeType != XML_ELEMENT_NODE) {
+                continue;
+            }
+
+            if (preg_match('/^.*entrypoint$/', $item->localName)) {
+                $ep = new XmlEntryPoint($this, $item);
+                $ep->removeAllUrlsOfModule($module);
+            }
+        }
+    }
+
 }

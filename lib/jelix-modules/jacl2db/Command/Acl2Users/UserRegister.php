@@ -64,5 +64,6 @@ class UserRegister extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln("user {$login} is added into rights system and has a private group {$groupid}");
         }
+        return 0;
     }
 }

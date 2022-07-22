@@ -65,9 +65,9 @@ class jDbParameters
         $info = $this->getDatabaseInfo($this->parameters);
         $this->parameters = array_merge($this->parameters, $info);
 
-        if ($this->parameters['usepdo'] &&
-            (!isset($this->parameters['dsn']) ||
-                $this->parameters['dsn'] == '')) {
+        if ($this->parameters['usepdo']
+            && (!isset($this->parameters['dsn'])
+                || $this->parameters['dsn'] == '')) {
             $this->parameters['dsn'] = $this->getPDODsn($this->parameters);
         }
         $pdooptions = array_diff(
@@ -163,10 +163,10 @@ class jDbParameters
         if (!isset($profile[$param])) {
             $profile[$param] = false;
         } elseif (!is_bool($profile[$param])) {
-            if ($profile[$param] === '1' ||
-                $profile[$param] === 1 ||
-                $profile[$param] === 'on' ||
-                $profile[$param] === 'true') {
+            if ($profile[$param] === '1'
+                || $profile[$param] === 1
+                || $profile[$param] === 'on'
+                || $profile[$param] === 'true') {
                 $profile[$param] = true;
             } else {
                 $profile[$param] = false;
@@ -282,6 +282,7 @@ class jDbParameters
                 $dsn .= ';dbname='.$profile['database'];
 
                 break;
+
             case 'pgsql':
                 if (isset($profile['service']) && $profile['service']) {
                     $dsn = 'pgsql:service='.$profile['service'];
@@ -297,14 +298,17 @@ class jDbParameters
                 }
 
                 break;
+
             case 'sqlite':
                 $dsn = 'sqlite:'.$profile['database'];
 
                 break;
+
             case 'sqlite2':
                 $dsn = 'sqlite2:'.$profile['database'];
 
                 break;
+
             case 'oci':
                 $dsn = 'oci:dbname=';
                 if (isset($profile['host'])) {
@@ -317,6 +321,7 @@ class jDbParameters
                 $dsn .= $profile['database'];
 
                 break;
+
             case 'mssql':
             case 'sybase':
                 $dsn = $profile['pdodriver'].':';
@@ -327,6 +332,7 @@ class jDbParameters
                 }
 
                 break;
+
             case 'sqlsrv':
                 $dsn = 'sqlsrv:Server='.$profile['host'];
                 if (isset($profile['port'])) {
@@ -335,6 +341,7 @@ class jDbParameters
                 $dsn .= ';Database='.$profile['database'];
 
                 break;
+
             case 'odbc':
             default:
                 throw new Exception('PDO: cannot construct the DSN string');

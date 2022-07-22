@@ -44,6 +44,7 @@ class jFormsCompiler implements jISimpleCompiler
             if ($doc->documentElement->localName != 'form') {
                 throw new jException('jelix~formserr.bad.root.tag', array($doc->documentElement->localName, $this->sourceFile));
             }
+
             require_once JELIX_LIB_PATH.'forms/jFormsCompiler_jf_1_1.class.php';
             $compiler = new jFormsCompiler_jf_1_1($this->sourceFile);
         } else {

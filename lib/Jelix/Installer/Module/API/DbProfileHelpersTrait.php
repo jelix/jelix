@@ -31,7 +31,7 @@ trait DbProfileHelpersTrait
      */
     public function declareDbProfile($name, $sectionContent = null, $force = true)
     {
-        $profiles = $this->globalSetup->getProfilesIni();
+        $profiles = $this->getProfilesIni();
         if ($sectionContent == null) {
             if (!$profiles->isSection('jdb:'.$name)) {
                 // no section
@@ -106,4 +106,35 @@ trait DbProfileHelpersTrait
             $profiles->removeValue(null, 'jdb:'.$name);
         }
     }
+
+    /**
+     * @param $name
+     * @return array  the first item is the profile content as an array (which
+     *                may be empty if the profile does not exist), the second item
+     *                is the real profile name in case $name is an alias.
+     */
+    public function findDbProfile($name)
+    {
+        $profiles = $this->getProfilesIni();
+
+        // search the real profile name in case of the profile name is an alias
+        $aliasProfile = $name;
+        $foundRealProfile = '';
+        while ($aliasProfile != '') {
+            $aliasProfile = $profiles->getValue($aliasProfile, 'jdb');
+            if ($aliasProfile) {
+                $foundRealProfile = $aliasProfile;
+            }
+        }
+        if ($foundRealProfile) {
+            $profile = $profiles->getValues('jdb:'.$foundRealProfile);
+        }
+        else {
+            $profile = $profiles->getValues('jdb:'.$name);
+            $foundRealProfile = $name;
+        }
+        return array($profile, $foundRealProfile);
+    }
+
+
 }

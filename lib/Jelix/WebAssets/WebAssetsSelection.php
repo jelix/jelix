@@ -113,6 +113,7 @@ class WebAssetsSelection
                 $url = $this->urlBasePath.$resource;
 
                 break;
+
             case 'b': // relative path to base path with lang/locale
                 $url = $this->urlBasePath.
                     str_replace(
@@ -122,16 +123,19 @@ class WebAssetsSelection
                     );
 
                 break;
+
             case 'a': // action
                 $url = \jUrl::get($resource);
 
                 break;
+
             case 'm': // resource file stored in a module
                 list($module, $src) = explode(':', $resource, 2);
 
                 $url = \jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
 
                 break;
+
             case 't': // theme url with probably  lang/locale
                 $url = str_replace(
                     array('$lang', '$locale', '$theme'),
@@ -141,6 +145,7 @@ class WebAssetsSelection
                 );
 
                 break;
+
             case 'l': // absolute url with lang/locale/theme/jelix path
                 $url = str_replace(
                     array('$lang', '$locale'),
@@ -149,6 +154,7 @@ class WebAssetsSelection
                 );
 
                 break;
+
             case 'u': // absolute url
             default:
                 $url = $resource;

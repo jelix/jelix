@@ -13,7 +13,7 @@
             <static name="static1" value="statval"/>
         </url>
         <url pathinfo="/first" module="othermodule" action="foo:bar"/>
-        <url pathinfo="/news" module="news2"/>
+        <url module="news2" pathinfo="/news"/>
         <url handler="superhandler2" pathinfo="/articles" module="cms"/>
         <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl2"/>
     </entrypoint>

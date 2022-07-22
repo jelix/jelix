@@ -78,8 +78,8 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
             $output->writeln('Right '.$subject.' is created');
         }
 
-        if ($subjectlabel &&
-            preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_\\.]+)$/', $labelkey, $m)) {
+        if ($subjectlabel
+            && preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_\\.]+)$/', $labelkey, $m)) {
             $localestring = "\n".$m[3].'='.$subjectlabel;
             $path = \jApp::getModulePath($m[1]);
             $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.'.
@@ -92,5 +92,6 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
                 $output->writeln('locale string '.$m[3].' is created into '.$file);
             }
         }
+        return 0;
     }
 }

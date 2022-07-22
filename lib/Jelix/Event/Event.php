@@ -152,9 +152,9 @@ class Event
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey]) &&
-                $listenerResponse[$responseKey] == $value
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
+                && $listenerResponse[$responseKey] == $value
             ) {
                 $founded = true;
                 $response[] = &$this->_responses[$key];
@@ -178,8 +178,8 @@ class Event
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey])
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
             ) {
                 $response[] = &$listenerResponse[$responseKey];
             }
@@ -213,8 +213,8 @@ class Event
         $response = null;
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse) &&
-                isset($listenerResponse[$responseKey])
+            if (is_array($listenerResponse)
+                && isset($listenerResponse[$responseKey])
             ) {
                 $value = (bool) $listenerResponse[$responseKey];
                 if ($response === null) {

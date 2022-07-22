@@ -3,7 +3,7 @@
  * @author     Laurent Jouanneau
  * @contributor  Olivier Demah
  *
- * @copyright  2011-2015 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2022 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,29 +12,30 @@
 namespace Jelix\Core;
 
 /**
- * @method static void                  setConfig($config)
- * @method static null|mixed            declareModulesDir($basePath, $modules = null)
- * @method static string[]              getDeclaredModulesDir()
- * @method static mixed                 declareModule($modulePath)
- * @method static void                  clearModulesPluginsPath()
- * @method static string|string[]       declarePluginsDir($basePath)
- * @method static string[]              getAllModulesPath()
- * @method static string[]              getAllPluginsPath()
- * @method static null|object           loadPlugin($name, $type, $suffix, $classname, $args = null)
- * @method static bool                  includePlugin($name, $type, $suffix, $classname)
- * @method static bool                  isModuleEnabled($moduleName, $includingExternal = false)
- * @method static string                getModulePath($module, $includingExternal = false)
- * @method static string                pushCurrentModule($module)
- * @method static string                popCurrentModule()
- * @method static string                getCurrentModule()
- * @method static array<string, string> getEnabledModulesPaths()
+ * @method static void setConfig($config)
+ * @method static void declareModulesDir($basePath, $modules = null)
+ * @method static string[] getDeclaredModulesDir()
+ * @method static void declareModule($modulePath)
+ * @method static void declareModulesFromConfig($config)
+ * @method static void clearModulesPluginsPath()
+ * @method static void declarePluginsDir($basePath)
+ * @method static string[] getEnabledModulesPaths()
+ * @method static string[] getAllModulesPath()
+ * @method static string[] getAllPluginsPath()
+ * @method static null|object loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method static bool includePlugin($name, $type, $suffix, $classname)
+ * @method static bool isModuleEnabled($moduleName, $includingExternal = false)
+ * @method static string getModulePath($module, $includingExternal = false)
+ * @method static void pushCurrentModule($module)
+ * @method static string popCurrentModule()
+ * @method static string getCurrentModule()
  */
 class App
 {
     /**
      * @var AppInstance
      */
-    protected static $_currentApp = null;
+    protected static $_currentApp;
 
     /**
      * initialize the application paths.
@@ -93,6 +94,11 @@ class App
     public static function appPath($file = '')
     {
         return self::$_currentApp->appPath.$file;
+    }
+
+    public static function applicationInitFile()
+    {
+        return self::$_currentApp->applicationInitFile;
     }
 
     /**
@@ -234,7 +240,7 @@ class App
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
 
-    protected static $_mainConfigFile = null;
+    protected static $_mainConfigFile;
 
     /**
      * Main config file path.

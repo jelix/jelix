@@ -35,5 +35,6 @@ class CloseApp extends \Jelix\Scripts\ModuleCommandAbstract
         if ($output->isVerbose()) {
             $output->writeln('Application is closed.');
         }
+        return 0;
     }
 }

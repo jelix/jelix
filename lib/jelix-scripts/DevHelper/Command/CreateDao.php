@@ -131,7 +131,7 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
                 }
                 // form generator use this feature
                 if ($prop->comment) {
-                    $properties .= ' comment="'.htmlspecialchars(utf8_encode($prop->comment)).'"';
+                    $properties .= ' comment="'.htmlspecialchars($prop->comment).'"';
                 }
                 $properties .= '/>';
             }
@@ -143,6 +143,8 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
             $param['properties'] = $properties;
             $param['primarykeys'] = $primarykeys;
             $this->createFile($filename, 'module/dao.xml.tpl', $param, 'DAO');
+            return 0;
         }
+        return 0;
     }
 }

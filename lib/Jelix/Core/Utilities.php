@@ -12,7 +12,6 @@
 
 namespace Jelix\Core;
 
-
 /**
  * Check if the given value is a resource or not.
  *
@@ -25,7 +24,6 @@ namespace Jelix\Core;
  */
 function is_resource($value)
 {
-
     if (\is_resource($value)) {
         return true;
     }
@@ -35,11 +33,11 @@ function is_resource($value)
     }
 
     $o = new \ReflectionObject($value);
-    if ($o->getConstructor() === null &&
-        count($o->getMethods()) === 0 &&
-        $o->isInternal() &&
-        $o->isFinal()&&
-        !$o->isCloneable()
+    if ($o->getConstructor() === null
+        && count($o->getMethods()) === 0
+        && $o->isInternal()
+        && $o->isFinal()
+        && !$o->isCloneable()
     ) {
         return true;
     }

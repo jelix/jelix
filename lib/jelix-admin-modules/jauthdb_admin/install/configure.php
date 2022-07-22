@@ -15,6 +15,22 @@ class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
 {
     public function configure(ConfigurationHelpers $helpers)
     {
+        $helpers->declareGlobalWebAssets(
+            'jauthdb_admin',
+            array(
+                //'css' => array('$jelix/design/jauthdb_admin.css'),
+                'js' => array(
+                    '$jelix/js/authdb_admin.js'
+                ),
+                'require' => array(
+                    'jquery_ui'
+                )
+            ),
+            'common',
+            false
+        );
+
+
         foreach ($helpers->getEntryPointsList() as $entrypoint) {
             if ($this->setEpConf($entrypoint)) {
                 break;

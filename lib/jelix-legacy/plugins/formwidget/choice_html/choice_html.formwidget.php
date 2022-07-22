@@ -175,6 +175,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
                 return;
             }
             $this->displayEmptyValue($attr, $ctrl->emptyValueLabel);
+
             return;
         }
 
@@ -232,7 +233,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
         echo "</ul>\n\n";
     }
 
-
     protected function displayEmptyValue($attr, $emptyLabel)
     {
         echo '<span ';
@@ -252,7 +252,6 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
 
     /**
      * @param WidgetInterface $widget
-     * @return void
      */
     protected function displayControlValue($widget)
     {
@@ -267,6 +266,4 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
     {
         echo "</ul>\n";
     }
-
-
 }

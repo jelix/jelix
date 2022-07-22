@@ -3,7 +3,7 @@
  * @package     jelix-scripts
  *
  * @author Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -36,8 +36,8 @@ class ConfigureCommand extends Command
             ->addOption(
                 'parameters',
                 'p',
-                InputOption::VALUE_REQUIRED,
-                'parameters for the installer of the module: -p "param1;param2=value;..."'
+                InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
+                'parameters for the installer of the module:  -p param1 -p param2=value etc'
             )
             ->addOption(
                 'force',
@@ -87,16 +87,21 @@ class ConfigureCommand extends Command
         $module = $input->getArgument('module');
         if ($module) {
             $parameters = $input->getOption('parameters');
+            $parsedParameters = array();
             if ($parameters) {
-                $parameters = \Jelix\Installer\ModuleStatus::unserializeParameters($parameters);
+                foreach($parameters as $param) {
+                    $result = \Jelix\Installer\ModuleStatus::unserializeParameters($param);
+                    if ($result) {
+                        $parsedParameters = array_merge($parsedParameters, $result);
+                    }
+                }
             }
-
             $selectedEntryPointId = $globalSetup->getMainEntryPoint()->getEpId();
             $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
             if (count($selectedEntryPointsIdList)) {
                 $selectedEntryPointId = $selectedEntryPointsIdList[0];
             }
-            $configurator->setModuleParameters($module, $parameters);
+            $configurator->setModuleParameters($module, $parsedParameters);
             $configurator->configureModules(
                 array($module),
                 $selectedEntryPointId,
@@ -117,7 +122,6 @@ class ConfigureCommand extends Command
         // check entry point
 
         if ($ep) {
-            $this->allEntryPoint = false;
 
             if ($allowList) {
                 $list = preg_split('/\s*,\s*/', $ep);
@@ -140,7 +144,7 @@ class ConfigureCommand extends Command
             return $ep;
         }
 
-        return  substr($ep, 0, $p);
+        return substr($ep, 0, $p);
     }
 
     protected function setUpOutput(OutputInterface $output)

@@ -1,4 +1,5 @@
-{meta_html js $j_jelixwww.'js/authdb_admin.js'}
+{meta_html assets 'jauthdb_admin'}
+
 <h1>{@jauthdb_admin~crud.title.list@}</h1>
 
 {if $showfilter}

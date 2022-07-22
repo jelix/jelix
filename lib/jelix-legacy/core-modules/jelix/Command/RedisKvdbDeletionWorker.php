@@ -33,8 +33,8 @@ class RedisKvdbDeletionWorker extends \Jelix\Scripts\ModuleCommandAbstract
     {
         $redisDriver = \jKvDb::getConnection($input->getArgument('profile'));
 
-        if (get_class($redisDriver) != 'redis_phpKVDriver' &&
-            get_class($redisDriver) != 'redis_extKVDriver') {
+        if (get_class($redisDriver) != 'redis_phpKVDriver'
+            && get_class($redisDriver) != 'redis_extKVDriver') {
             $output->writeln('<error>Error, wrong profile. It does not use a redis driver</error>');
 
             return 1;

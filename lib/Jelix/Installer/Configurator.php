@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -21,6 +21,7 @@ use Jelix\Installer\Module\API\ConfigurationHelpers;
 use Jelix\Installer\Module\API\LocalConfigurationHelpers;
 use Jelix\Installer\Module\API\PreConfigurationHelpers;
 use Jelix\Installer\Module\InteractiveConfigurator;
+use Jelix\Routing\UrlMapping\EntryPointUrlModifier;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -68,7 +69,7 @@ class Configurator
     protected $reporter;
 
     /**
-     * @var \JInstallerMessageProvider
+     * @var \Jelix\Installer\Checker\Messages
      */
     protected $messages;
 
@@ -323,6 +324,7 @@ class Configurator
                     $this->error('module.circular.dependency', $component->getName());
 
                     break;
+
                 case ItemException::ERROR_BAD_ITEM_VERSION:
                     $depName = $e->getRelatedData()->getName();
                     $maxVersion = $minVersion = 0;
@@ -335,41 +337,49 @@ class Configurator
                     $this->error('module.bad.dependency.version', array($component->getName(), $depName, $minVersion, $maxVersion));
 
                     break;
+
                 case ItemException::ERROR_REMOVED_ITEM_IS_NEEDED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.delete.dependency', array($depName, $component->getName()));
 
                     break;
+
                 case ItemException::ERROR_ITEM_TO_INSTALL_SHOULD_BE_REMOVED:
                     $depName = $e->getRelatedData()->getName();
                     $this->error('install.error.install.dependency', array($depName, $component->getName()));
 
                     break;
+
                 case ItemException::ERROR_DEPENDENCY_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.needed', array($component->getName(), implode(',', $e->getRelatedData())));
 
                     break;
+
                 case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
+
                 case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                     $component->inError = self::INSTALL_ERROR_CONFLICT;
                     $this->error('module.forbidden', array($component->getName(), $e->getRelatedData()->getName()));
 
                     break;
+
                 case ItemException::ERROR_CHOICE_MISSING_ITEM:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.choice.unknown', array($component->getName(), implode(',', $e->getRelatedData())));
 
                     break;
+
                 case ItemException::ERROR_CHOICE_AMBIGUOUS:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $this->error('module.choice.ambiguous', array($component->getName(), implode(',', $e->getRelatedData())));
 
                     break;
+
                 case ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED:
                     $component->inError = self::INSTALL_ERROR_MISSING_DEPENDENCIES;
                     $depName = $e->getRelatedData()->getName();
@@ -418,7 +428,7 @@ class Configurator
                     $configurator = null;
                 } else {
                     if (isset($this->moduleParameters[$component->getName()])) {
-                        $parameters = $this->moduleParameters[$resolverItem->getName()];
+                        $parameters = $this->moduleParameters[$component->getName()];
                     } else {
                         $parameters = null;
                     }
@@ -499,6 +509,28 @@ class Configurator
     {
         $configurator->configure($configHelpers);
 
+        $newEntryPoints = $configurator->getEntryPointsToCreate();
+        foreach($newEntryPoints as $newEP) {
+            $configHelpers->createEntryPoint(
+                $newEP->getEntryPointFileToCopy(),
+                $newEP->getId(),
+                $newEP->getConfigFile(),
+                $newEP->getType(),
+                $newEP->getConfigFileToCopy()
+            );
+        }
+
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $mapModifier = $this->globalSetup->getLocalUrlModifier();
+        }
+        else {
+            $mapModifier = $this->globalSetup->getUrlModifier();
+        }
+
+        $epModifier = new EntryPointUrlModifier($mapModifier, $configurator->getModuleName());
+        $mapModifier->removeAllUrlOfModule($configurator->getModuleName());
+        $configurator->declareUrls($epModifier);
+
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
             if (is_dir($prefix.$source)) {
@@ -511,6 +543,18 @@ class Configurator
 
     protected function execModuleUnconfigure(Module\Configurator $configurator, ConfigurationHelpers $configHelpers)
     {
+        $newEntryPoints = $configurator->getEntryPointsToCreate();
+        foreach($newEntryPoints as $newEP) {
+            $configHelpers->removeEntryPoint(
+                $newEP->getId(),
+                $newEP->getConfigFile(),
+                $newEP->getType()
+            );
+        }
+
+        $this->globalSetup->getLocalUrlModifier()->removeAllUrlOfModule($configurator->getModuleName());
+        $this->globalSetup->getUrlModifier()->removeAllUrlOfModule($configurator->getModuleName());
+
         $configurator->unconfigure($configHelpers);
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {

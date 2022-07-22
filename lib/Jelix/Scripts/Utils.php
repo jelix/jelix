@@ -15,11 +15,13 @@ class Utils
     {
         if (!\jServer::isCLI()) {
             echo "Error: you're not allowed to execute this script outside a command line shell.\n";
+
             exit(1);
         }
 
         if (!\Jelix\Core\App::isInit()) {
             echo "Error: should run within an application\n";
+
             exit(1);
         }
     }

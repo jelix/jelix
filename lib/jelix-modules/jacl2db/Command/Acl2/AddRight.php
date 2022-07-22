@@ -77,5 +77,6 @@ class AddRight extends AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("Right {$subject} is added on group {$group} and resource {$resource}");
         }
+        return 0;
     }
 }

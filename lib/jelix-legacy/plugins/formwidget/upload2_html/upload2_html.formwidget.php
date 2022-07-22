@@ -340,7 +340,6 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         }
     }
 
-
     protected function displayValueAsImage($attr, $url, $filename, $style)
     {
         echo '<span ';
@@ -358,5 +357,4 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         echo htmlspecialchars($filename);
         echo '</span>';
     }
-
 }

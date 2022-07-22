@@ -47,5 +47,6 @@ class SubjectList extends \Jelix\Scripts\ModuleCommandAbstract
             ));
         }
         $table->render();
+        return 0;
     }
 }

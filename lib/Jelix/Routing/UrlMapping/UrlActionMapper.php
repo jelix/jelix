@@ -536,6 +536,7 @@ class UrlActionMapper
 
         // load the handler
         $s = new SelectorUrlHandler($selectorHandler);
+
         include_once $s->getPath();
         $c = $s->className.'UrlsHandler';
         $handler = new $c();

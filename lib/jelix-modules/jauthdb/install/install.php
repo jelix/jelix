@@ -41,10 +41,10 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
     }
 
     /**
-     * @param InstallHelpers $helpers
-     * @param \Jelix\IniFile\IniModifier $conf auth.coord.plugin.ini.php or main configuration
-     * @param string $section_auth section name containing the configuration of the auth plugin in $conf
-     * @param object $epConfig configuration of the entrypoint
+     * @param \Jelix\IniFile\IniModifier $conf         auth.coord.plugin.ini.php or main configuration
+     * @param string                     $section_auth section name containing the configuration of the auth plugin in $conf
+     * @param object                     $epConfig     configuration of the entrypoint
+     *
      * @throws \Jelix\IniFile\IniException
      * @throws jException
      */
@@ -92,6 +92,7 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
                 $rs = $cn->query('SELECT usr_login FROM '.$cn->prefixTable('jlx_user')." WHERE usr_login = 'admin'");
                 if (!$rs->fetch()) {
                     require_once JELIX_LIB_PATH.'auth/jAuth.class.php';
+
                     require_once JELIX_LIB_PATH.'plugins/auth/db/db.auth.php';
 
                     $driverConfig = jAuth::getDriverConfig();

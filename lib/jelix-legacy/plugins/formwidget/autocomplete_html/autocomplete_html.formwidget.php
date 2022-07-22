@@ -118,10 +118,10 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
     }
 
     /**
-     * @param array $attrAutoComplete
-     * @param array $attrSelect
-     * @param string $value
-     * @param string|null $emptyLabel null if an empty item should not be shown
+     * @param array       $attrAutoComplete
+     * @param array       $attrSelect
+     * @param string      $value
+     * @param null|string $emptyLabel       null if an empty item should not be shown
      */
     protected function displayAutocompleteInput($attrAutoComplete, $attrSelect, $value, $emptyLabel)
     {
@@ -136,9 +136,9 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
     }
 
     /**
-     * @param array $attrSelect
-     * @param string $value
-     * @param string|null $emptyLabel null if an empty item should not be shown
+     * @param array       $attrSelect
+     * @param string      $value
+     * @param null|string $emptyLabel null if an empty item should not be shown
      */
     protected function displaySelectChoices($attrSelect, $value, $emptyLabel)
     {
@@ -151,5 +151,4 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $this->fillSelect($this->ctrl, $value);
         echo "</select>\n";
     }
-
 }

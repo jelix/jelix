@@ -48,5 +48,6 @@ class ClearTemp extends \Jelix\Scripts\ModuleCommandAbstract
 
             return 2;
         }
+        return 0;
     }
 }

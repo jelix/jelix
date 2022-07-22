@@ -41,6 +41,7 @@ abstract class AbstractCommand extends Command
         }
         $this->output = $output;
         $this->setUpOutput($output);
+        return 0;
     }
 
     protected function verbose()

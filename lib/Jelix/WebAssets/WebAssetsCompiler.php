@@ -189,8 +189,8 @@ class WebAssetsCompiler
         }
 
         $isHttp = preg_match('!^https?://!', $asset);
-        if(!$isHttp) {
-           $asset = $this->appendRevisionToUrl($asset);
+        if (!$isHttp) {
+            $asset = $this->appendRevisionToUrl($asset);
         }
 
         if (strpos($asset, '$jelix') !== false) {

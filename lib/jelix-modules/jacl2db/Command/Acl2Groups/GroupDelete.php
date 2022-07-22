@@ -53,7 +53,7 @@ class GroupDelete extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('command canceled');
 
-                return;
+                return 1;
             }
         }
 
@@ -71,5 +71,6 @@ class GroupDelete extends \Jelix\Acl2Db\Command\Acl2\AbstractAcl2Cmd
         if ($output->isVerbose()) {
             $output->writeln("Rights: group '".$id."' and all corresponding rights have been deleted.");
         }
+        return 0;
     }
 }

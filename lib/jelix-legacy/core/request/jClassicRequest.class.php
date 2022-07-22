@@ -38,9 +38,9 @@ class jClassicRequest extends jRequest
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // when no content type or for known content-type,
             // let's get parameters from $_POST
-            if (!isset($_SERVER['CONTENT_TYPE']) ||
-                strpos($_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded') === 0 ||
-                strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0
+            if (!isset($_SERVER['CONTENT_TYPE'])
+                || strpos($_SERVER['CONTENT_TYPE'], 'application/x-www-form-urlencoded') === 0
+                || strpos($_SERVER['CONTENT_TYPE'], 'multipart/form-data') === 0
             ) {
                 $this->params = array_merge($this->params, $_POST);
 

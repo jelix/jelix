@@ -250,7 +250,7 @@ class Locale
     /**
      * @var array content of the lang_to_locale.ini.php
      */
-    protected static $langToLocale = null;
+    protected static $langToLocale;
 
     /**
      * returns the locale corresponding to a lang.

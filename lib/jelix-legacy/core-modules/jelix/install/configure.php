@@ -64,16 +64,18 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $this->migrateLocal($helpers);
         $cli = $helpers->cli();
-        if ($cli->askConfirmation('Do you want to configure the default access to the database?')) {
-            $profilesIni = $helpers->getProfilesIni();
-            $profile = null;
-            $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
-            if ($defaultAliasProfile) {
-                $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
-            } else {
-                $profile = $profilesIni->getValues('jdb:default');
-            }
 
+        $profilesIni = $helpers->getProfilesIni();
+        $defaultAliasProfile = $profilesIni->getValue('default', 'jdb');
+        if ($defaultAliasProfile) {
+            $profile = $profilesIni->getValues('jdb:'.$defaultAliasProfile);
+        } else {
+            $profile = $profilesIni->getValues('jdb:default');
+        }
+
+        if ((!$profile || !isset($profile['driver']) || $profile['driver'] == '' || !isset($profile['database']) || $profile['database'] == '' )
+            && $cli->askConfirmation('Do you want to configure the default access to the database?')
+        ) {
             $profile = $cli->askDbProfile($profile);
             if ($defaultAliasProfile) {
                 $helpers->declareDbProfile($defaultAliasProfile, $profile, true);
@@ -100,15 +102,15 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
             foreach ($ini->getSectionList() as $section) {
                 if (strpos($section, 'jkvdb:') === 0) {
                     $driver = $ini->getValue('driver', $section);
-                    if ($driver == 'redis' &&
-                        isset($entryPoint->getConfigObj()->_pluginsPathList_kvdb['redis_php'])
+                    if ($driver == 'redis'
+                        && isset($entryPoint->getConfigObj()->_pluginsPathList_kvdb['redis_php'])
                     ) {
                         $ini->setValue('driver', 'redis_php', $section);
                     }
                 } elseif (strpos($section, 'jcache:') === 0) {
                     $driver = $ini->getValue('driver', $section);
-                    if ($driver == 'redis' &&
-                        isset($entryPoint->getConfigObj()->_pluginsPathList_cache['redis_php'])
+                    if ($driver == 'redis'
+                        && isset($entryPoint->getConfigObj()->_pluginsPathList_cache['redis_php'])
                     ) {
                         $ini->setValue('driver', 'redis_php', $section);
                     }

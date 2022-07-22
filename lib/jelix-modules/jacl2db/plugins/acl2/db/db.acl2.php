@@ -25,7 +25,7 @@ class dbAcl2Driver implements jIAcl2Driver2
     protected static $aclres = array();
     protected static $acl = array();
     protected static $anonaclres = array();
-    protected static $anonacl = null;
+    protected static $anonacl;
 
     /**
      * return the value of the right on the given subject (and on the optional resource).

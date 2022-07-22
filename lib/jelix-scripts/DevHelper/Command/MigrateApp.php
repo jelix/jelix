@@ -32,7 +32,11 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $code = parent::execute($input, $output);
+        if ($code) {
+            return $code;
+        }
+
 
         if ($this->verbose()) {
             $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Low-level migration');
@@ -43,5 +47,6 @@ class MigrateApp extends \Jelix\DevHelper\AbstractCommand
         // launch the low-level migration
         $migrator = new \Jelix\Installer\Migration($reporter);
         $migrator->migrate();
+        return 0;
     }
 }

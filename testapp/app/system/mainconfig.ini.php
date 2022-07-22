@@ -37,7 +37,7 @@ jelix.installparam[wwwfiles]=vhost
 [coordplugins]
 auth=auth.coord.ini.php
 
-[coordplugin_jacl2]
+[jacl2]
 on_error=2
 error_message="jacl2~errors.action.right.needed"
 on_error_action="jelix~error:badright"
@@ -108,6 +108,9 @@ driver=db
 
 [acl2]
 driver=db
+hiddenRights=
+hideRights=off
+authAdapterClass=jAcl2JAuthAdapter
 
 [rootUrls]
 /themes = "http://themes.junittest.com/"

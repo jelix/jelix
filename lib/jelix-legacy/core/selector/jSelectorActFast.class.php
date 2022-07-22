@@ -92,10 +92,10 @@ class jSelectorActFast extends jSelectorModule
 
     public function isEqualTo(jSelectorActFast $otherAction)
     {
-        return $this->module == $otherAction->module &&
-                $this->controller == $otherAction->controller &&
-                $this->method == $otherAction->method &&
-                $this->request == $otherAction->request
+        return $this->module == $otherAction->module
+                && $this->controller == $otherAction->controller
+                && $this->method == $otherAction->method
+                && $this->request == $otherAction->request
                 ;
     }
 }

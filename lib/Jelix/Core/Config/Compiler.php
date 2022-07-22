@@ -222,7 +222,7 @@ class Compiler
         $filename = App::tempPath().str_replace('/','~',$configFile);
         list($domain, $port) = jServer::getDomainPortFromServer();
         if ($domain) {
-            $filename.= '.'.$domain.'-'.$port;
+            $filename .= '.'.$domain.'-'.$port;
         }
         if (BYTECODE_CACHE_EXISTS) {
             $filename .= '.conf.php';
@@ -254,7 +254,7 @@ class Compiler
     {
         $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
 
-        if ($config->domainName == "") {
+        if ($config->domainName == '') {
             // as each compiled config is stored in a file based on the domain
             // name/port, we can store the guessed domain name into the configuration
             list($domain, $port) = jServer::getDomainPortFromServer();
@@ -263,8 +263,7 @@ class Compiler
                 $isHttps = jServer::isHttpsFromServer();
                 if ($config->forceHTTPPort == '' && !$isHttps && $port != '80') {
                     $config->forceHTTPPort = $port;
-                }
-                else if ($config->forceHTTPSPort == '' && $isHttps && $port != '443') {
+                } elseif ($config->forceHTTPSPort == '' && $isHttps && $port != '443') {
                     $config->forceHTTPSPort = $port;
                 }
             }
@@ -352,6 +351,7 @@ class Compiler
             if ($a->getPriority() == $b->getPriority()) {
                 return 0;
             }
+
             return ($a->getPriority() < $b->getPriority()) ? -1 : 1;
         });
 
@@ -402,6 +402,8 @@ class Compiler
         if (!isset($installation['modules'])) {
             $installation['modules'] = array();
         }
+
+        App::declareModulesFromConfig($config);
 
         if ($config->compilation['checkCacheFiletime']) {
             $config->_allBasePath = App::getDeclaredModulesDir();

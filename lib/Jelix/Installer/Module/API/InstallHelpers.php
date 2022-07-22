@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -15,26 +15,7 @@ namespace Jelix\Installer\Module\API;
 class InstallHelpers extends PreInstallHelpers
 {
     use FileHelpersTrait;
-    use DbProfileHelpersTrait;
 
-    /**
-     * @var DatabaseHelpers
-     */
-    protected $databaseHelpers;
-
-    public function __construct(\Jelix\Installer\GlobalSetup $setup, DatabaseHelpers $database)
-    {
-        parent::__construct($setup);
-        $this->databaseHelpers = $database;
-    }
-
-    /**
-     * @return DatabaseHelpers
-     */
-    public function database()
-    {
-        return $this->databaseHelpers;
-    }
 
     /**
      * default config, main config combined with local config (RW) and live config (RW).

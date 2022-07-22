@@ -36,19 +36,33 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
     protected function configureEntryPoint($epId, ConfigurationHelpers $helpers)
     {
         $entryPoint = $helpers->getEntryPointsById($epId);
+        if ($entryPoint->getType() == 'cmdline') {
+            return;
+        }
         /** @var \Jelix\IniFile\IniModifierArray $conf */
         $conf = $entryPoint->getConfigIni();
-        if ($conf->getValue('jacl2', 'coordplugins') == null && $entryPoint->getType() != 'cmdline') {
+        if ($conf->getValue('jacl2', 'coordplugins') == null) {
             $conf->setValue('jacl2', '1', 'coordplugins');
             if ($entryPoint->getType() != 'classic') {
                 $onerror = 1;
             } else {
                 $onerror = 2;
             }
-            $conf->setValue('on_error', $onerror, 'coordplugin_jacl2');
-            $conf->setValue('error_message', 'jacl2~errors.action.right.needed', 'coordplugin_jacl2');
-            $conf->setValue('on_error_action', 'jelix~error:badright', 'coordplugin_jacl2');
+            $conf->setValue('on_error', $onerror, 'jacl2');
+            $conf->setValue('error_message', 'jacl2~errors.action.right.needed', 'jacl2');
+            $conf->setValue('on_error_action', 'jelix~error:badright', 'jacl2');
             $conf->save();
+        }
+
+        $acl2ConfOrig = $conf->getValues('acl2');
+        $acl2Conf = array_merge( array(
+            'hiddenRights' => '',
+            'hideRights' => false,
+            'driver' => '',
+            'authAdapterClass' => 'jAcl2JAuthAdapter'
+        ), $acl2ConfOrig);
+        if ($acl2ConfOrig != $acl2Conf) {
+            $conf->setValues($acl2Conf, 'acl2');
         }
     }
 }

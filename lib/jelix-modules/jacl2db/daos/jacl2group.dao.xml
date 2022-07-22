@@ -39,6 +39,12 @@
             </order>
         </method>
 
+        <method name="countAllPublicGroupAndAnonymous" type="count">
+            <conditions>
+                <neq property="grouptype" value="2" />
+            </conditions>
+        </method>
+
         <method name="findAnonymousGroup" type="selectfirst">
            <conditions>
               <eq property="id_aclgrp" value="__anonymous" />
@@ -55,9 +61,31 @@
 
         <method name="findGroupByFilter" type="select">
            <parameter name="filter" />
+            <parameter name="offset" />
+            <parameter name="count" />
+            <parameter name="order" default="name"/>
+            <parameter name="orderDir" default="asc"/>
+           <conditions>
+               <neq property="grouptype" value="2" />
+               <conditions logic="or">
+                   <like property="name" expr="$filter" />
+                   <like property="id_aclgrp" expr="$filter" />
+               </conditions>
+           </conditions>
+            <order>
+                <orderitem property="$order" way="$orderDir" />
+            </order>
+            <limit offset="$offset" count="$count" />
+        </method>
+
+        <method name="countGroupByFilter" type="count">
+           <parameter name="filter" />
            <conditions>
               <neq property="grouptype" value="2" />
-              <like property="name" expr="$filter" />
+               <conditions logic="or">
+                   <like property="name" expr="$filter" />
+                   <like property="id_aclgrp" expr="$filter" />
+               </conditions>
            </conditions>
         </method>
 

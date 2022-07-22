@@ -26,7 +26,7 @@ class Profiles
      *
      * @var ProfilesContainer
      */
-    protected static $_profiles = null;
+    protected static $_profiles;
 
     /**
      * @var \Jelix\Profiles\ReaderPlugin[]

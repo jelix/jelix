@@ -18,18 +18,18 @@ class defaultCtrl extends jController
 {
     public $sensitiveParameters = array('password', 'password_confirm', 'pwd', 'pwd_confirm');
 
-    public $pluginParams=array(
-        'index'        =>array('jacl2.right' => 'auth.users.list'),
-        'autocomplete' =>array('jacl2.right' => 'auth.users.list'),
-        'view'         =>array('jacl2.right' => 'auth.users.view'),
-        'precreate'    =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
-        'create'       =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
-        'savecreate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.create')),
-        'preupdate'    =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
-        'editupdate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
-        'saveupdate'   =>array('jacl2.rights.and' => array('auth.users.view','auth.users.modify')),
-        'deleteconfirm'=>array('jacl2.rights.and' => array('auth.users.view','auth.users.delete')),
-        'delete'       =>array('jacl2.rights.and' => array('auth.users.view','auth.users.delete')),
+    public $pluginParams = array(
+        'index' => array('jacl2.right' => 'auth.users.list'),
+        'autocomplete' => array('jacl2.right' => 'auth.users.list'),
+        'view' => array('jacl2.right' => 'auth.users.view'),
+        'precreate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
+        'create' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
+        'savecreate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.create')),
+        'preupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
+        'editupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
+        'saveupdate' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.modify')),
+        'deleteconfirm' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.delete')),
+        'delete' => array('jacl2.rights.and' => array('auth.users.view', 'auth.users.delete')),
     );
 
     /**
@@ -112,8 +112,8 @@ class defaultCtrl extends jController
             $listOrder = array('login' => 'asc');
         }
 
-        if (($lo = $this->param('listorder')) &&
-            (in_array($lo, $this->propertiesForList))) {
+        if (($lo = $this->param('listorder'))
+            && (in_array($lo, $this->propertiesForList))) {
             if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                 $listOrder[$lo] = 'desc';
             } elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
@@ -198,11 +198,11 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
-        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $login) &&
-            jAcl2::check('auth.users.delete'));
+        $tpl->assign('canDelete', (jAuth::getUserSession()->login != $login)
+            && jAcl2::check('auth.users.delete'));
         $tpl->assign('canUpdate', jAcl2::check('auth.users.modify'));
-        $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password') &&
-            jAuth::canChangePassword($login));
+        $tpl->assign('canChangePass', jAcl2::check('auth.users.change.password')
+            && jAuth::canChangePassword($login));
         $tpl->assign('otherLinks', array());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminGetViewInfo',
@@ -282,8 +282,8 @@ class defaultCtrl extends jController
         }
 
         $evresp = array();
-        if ($form->check() &&
-            !jEvent::notify('jauthdbAdminCheckCreateForm', array('form' => $form))
+        if ($form->check()
+            && !jEvent::notify('jauthdbAdminCheckCreateForm', array('form' => $form))
                 ->inResponse('check', false, $evresp)
         ) {
             $props = jDao::createRecord($this->dao, $this->dbProfile)->getProperties();
@@ -434,8 +434,8 @@ class defaultCtrl extends jController
         $form->initFromRequest();
 
         $evresp = array();
-        if ($form->check() &&
-            !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form' => $form, 'himself' => false))
+        if ($form->check()
+            && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form' => $form, 'himself' => false))
                 ->inResponse('check', false, $evresp)
         ) {
             $form->prepareObjectFromControls($daoUser, $daoUser->getProperties());
@@ -542,7 +542,6 @@ class defaultCtrl extends jController
             }
         }
         $rep->data = $users;
-
 
         return $rep;
     }

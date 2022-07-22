@@ -247,6 +247,7 @@ class jXmlRpc
                     $response .= '<dateTime.iso8601>'.$value->toString(jDateTime::ISO8601_FORMAT).'</dateTime.iso8601>';
 
                     break;
+
                 case 'jbinarydata':
                     $response .= '<base64>'.$value->toBase64String().'</base64>';
 

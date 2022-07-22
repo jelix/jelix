@@ -103,7 +103,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
             }
             $this->createFile($formdir.$formfile, 'module/form.xml.tpl', array('content' => '<!-- add control declaration here -->'.$submit), 'Form');
 
-            return;
+            return 0;
         }
 
         \Jelix\Core\App::config()->startModule = $module;
@@ -150,34 +150,41 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
 
             $datatype = '';
             $tag = 'input';
+
             switch ($property->unifiedType) {
                 case 'integer':
                 case 'numeric':
                     $datatype = 'integer';
 
                     break;
+
                 case 'datetime':
                     $datatype = 'datetime';
 
                     break;
+
                 case 'time':
                     $datatype = 'time';
 
                     break;
+
                 case 'date':
                     $datatype = 'date';
 
                     break;
+
                 case 'double':
                 case 'float':
                     $datatype = 'decimal';
 
                     break;
+
                 case 'text':
                 case 'blob':
                     $tag = 'textarea';
 
                     break;
+
                 case 'boolean':
                     $tag = 'checkbox';
 
@@ -191,7 +198,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
             if ($property->comment != '' && $input->getOption('use-comments')) {
                 if ($input->getOption('create-locales')) {
                     // replace special chars by dot
-                    $locale_content .= 'form.'.$name.'='.htmlspecialchars(utf8_decode($property->comment))."\n";
+                    $locale_content .= 'form.'.$name.'='.htmlspecialchars($property->comment)."\n";
                     $content .= "\n\n<{$tag} ref=\"{$name}\"{$attr}>\n\t<label locale='".$locale_base.$name."' />\n</{$tag}>";
                 } else {
                     // encoding special chars
@@ -214,5 +221,6 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         }
 
         $this->createFile($formdir.$formfile, 'module/form.xml.tpl', array('content' => $content.$submit), 'Form file');
+        return 0;
     }
 }

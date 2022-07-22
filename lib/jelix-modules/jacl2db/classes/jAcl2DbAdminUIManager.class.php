@@ -2,9 +2,11 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
+ *
  * @copyright   2008-2021 Laurent Jouanneau
  * @copyright   2009 Julien Issler, 2010 Olivier Demah, 2020 Adrien Lagroy de Croutte
- * @link        http://jelix.org
+ *
+ * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU General Public Licence, see LICENCE file
  */
 class jAcl2DbAdminUIManager
@@ -12,6 +14,14 @@ class jAcl2DbAdminUIManager
     const FILTER_GROUP_ALL_USERS = -2;
     const FILTER_USERS_NO_IN_GROUP = -1;
     const FILTER_BY_GROUP = 0;
+
+    const ORDER_DIRECTION_ASC=0;
+    const ORDER_DIRECTION_DESC=1;
+    const ORDER_BY_NAME = 2;
+    const ORDER_BY_GROUPTYPE = 4;
+    const ORDER_BY_ID = 8;
+    const ORDER_BY_USERS = 16;
+
 
     protected function getLabel($id, $labelKey)
     {
@@ -136,11 +146,77 @@ class jAcl2DbAdminUIManager
             'rightsProperties',
             'rightsGroupsLabels',
             'rightsWithResources',
-            /* @deprecated: */
+            // @deprecated
             'subjects',
             'roles',
             'sbjgroups_localized',
             'rolegroups_localized'
+        );
+    }
+
+    /**
+     * Return all rights of a group, with labels
+     * @return array
+     *               'rights' : array( <right> => 'y' or 'n' or '')
+     *               'rightsProperties' : array( <right> => array( 'grp' => <id_aclsbjgrp>, 'label' => <label>))
+     *               'rightsGroupsLabels' : list of labels of each rights groups
+     *               'rightsWithResources':  array(<right> => <number of rights>)
+     */
+    public function getRightsOfGroup($groupId)
+    {
+
+        $daorights = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+        $rightsWithResources = array();
+        $hiddenRights = $this->getHiddenRights();
+
+        // retrieve the number of existing rights with resources
+        $rs = $daorights->getRightsHavingRes($groupId);
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            if (!isset($rightsWithResources[$rec->id_aclsbj])) {
+                $rightsWithResources[$rec->id_aclsbj] = 0;
+            }
+            ++$rightsWithResources[$rec->id_aclsbj];
+        }
+
+        // create the list of subjects and their labels
+        $rights = array();
+        $rightsGroupsLabels = array();
+        $rightsProperties = array();
+        $rs = jDao::get('jacl2db~jacl2subject', 'jacl2_profile')->findAllSubject();
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            $rights[$rec->id_aclsbj] = '';
+            $rightsProperties[$rec->id_aclsbj] = array(
+                'grp' => $rec->id_aclsbjgrp,
+                'label' => $this->getLabel($rec->id_aclsbj, $rec->label_key),
+            );
+            if ($rec->id_aclsbjgrp && !isset($rightsGroupsLabels[$rec->id_aclsbjgrp])) {
+                $rightsGroupsLabels[$rec->id_aclsbjgrp] = $this->getLabel($rec->id_aclsbjgrp, $rec->label_group_key);
+            }
+            if (!isset($rightsWithResources[$rec->id_aclsbj])) {
+                $rightsWithResources[$rec->id_aclsbj] = 0;
+            }
+        }
+
+        // retrieve existing rights
+        $rs = $daorights->getRightsByGroup($groupId);
+        foreach ($rs as $rec) {
+            if (in_array($rec->id_aclsbj, $hiddenRights)) {
+                continue ;
+            }
+            $rights[$rec->id_aclsbj] = ($rec->canceled ? 'n' : 'y');
+        }
+
+        return compact(
+            'rights',
+            'rightsProperties',
+            'rightsGroupsLabels',
+            'rightsWithResources'
         );
     }
 
@@ -187,14 +263,14 @@ class jAcl2DbAdminUIManager
             'rightsLabels',
             'rightsWithResources',
             'hasRightsOnResources',
-            /* @deprecated: */
+            // @deprecated
             'roles_localized',
             'subjects_localized'
         );
     }
 
     /**
-     * Save authorizations for all groups
+     * Save authorizations for all groups.
      *
      * Only authorizations on given subjects are changed.
      * Existing authorizations not given in parameters are deleted from the
@@ -204,7 +280,7 @@ class jAcl2DbAdminUIManager
      * this group are deleted.
      *
      * @param array  $rights
-     *                array(<id_aclgrp> => array( <id_aclsbj> => (bool, 'y', 'n' or '')))
+     *                            array(<id_aclgrp> => array( <id_aclsbj> => (bool, 'y', 'n' or '')))
      * @param string $sessionUser the user login who initiates the change.
      *                            It is mandatory although null is accepted for
      *                            API compatibility. Null value is deprecated
@@ -214,6 +290,15 @@ class jAcl2DbAdminUIManager
     public function saveGroupRights($rights, $sessionUser = null)
     {
         $rights = $this->addHiddenRightsValues($rights);
+        $groups = array();
+        // adds missing groups
+        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
+            $groups[] = $grp->id_aclgrp;
+            if (!isset($rights[$grp->id_aclgrp])) {
+                $rights[$grp->id_aclgrp] = array();
+            }
+        }
+
         $checking = jAcl2DbManager::checkAclAdminAuthorizationsChanges($rights, $sessionUser, 1);
         if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
             throw new jAcl2DbAdminUIException("Changes cannot be applied else you won't be able to change some rights", 3);
@@ -222,12 +307,41 @@ class jAcl2DbAdminUIManager
             throw new jAcl2DbAdminUIException('Changes cannot be applied else nobody will be able to change some rights', 2);
         }
 
-        foreach (jAcl2DbUserGroup::getGroupList() as $grp) {
-            $id = $grp->id_aclgrp;
+        foreach ($groups as $id) {
             jAcl2DbManager::setRightsOnGroup($id, (isset($rights[$id]) ? $rights[$id] : array()));
         }
 
         jAcl2DbManager::setRightsOnGroup('__anonymous', (isset($rights['__anonymous']) ? $rights['__anonymous'] : array()));
+    }
+
+    /**
+     * Save authorizations of a specific group.
+     *
+     * Only authorizations on given subjects are changed.
+     * Existing authorizations not given in parameters are deleted from the
+     * corresponding group (i.e: marked as inherited).
+
+     * @param array  $rights      array( <id_aclsbj> => (bool, 'y', 'n' or ''))
+     * @param string $groupId
+     * @param string $sessionUser the user login who initiates the change.
+     *                            It is mandatory although null is accepted for
+     *                            API compatibility. Null value is deprecated
+     *
+     * @see jAcl2DbManager::setRightsOnGroup()
+     */
+    public function setRightsOnGroup($rights, $groupId, $sessionUser = null)
+    {
+        $rights = array($groupId => $rights);
+        $rights = $this->addHiddenRightsValues($rights);
+        $checking = jAcl2DbManager::checkAclAdminAuthorizationsChanges($rights, $sessionUser, 1);
+        if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_SESSION_USER_LOOSE_THEM) {
+            throw new jAcl2DbAdminUIException("Changes cannot be applied else you won't be able to change some rights", 3);
+        }
+        if ($checking === jAcl2DbManager::ACL_ADMIN_RIGHTS_NOT_ASSIGNED) {
+            throw new jAcl2DbAdminUIException('Changes cannot be applied else nobody will be able to change some rights', 2);
+        }
+
+        jAcl2DbManager::setRightsOnGroup($groupId, $rights[$groupId]);
     }
 
     /**
@@ -257,13 +371,26 @@ class jAcl2DbAdminUIManager
      * @param string   $userFilter
      * @param int      $offset
      * @param int      $listPageSize
+     * @param int      $orderFlag combination of ORDER_* const
      *
      * @return array 'users': list of objects representing users ( login, and his groups in groups)
      *               'usersCount': total number of users
      */
-    public function getUsersList($groupFilter, $groupId = null, $userFilter = '', $offset = 0, $listPageSize = 15)
+    public function getUsersList($groupFilter, $groupId = null, $userFilter = '',
+                                 $offset = 0, $listPageSize = 15, $orderFlag=2
+    )
     {
         $p = 'jacl2_profile';
+
+
+        if ($orderFlag & self::ORDER_BY_NAME) {
+            $orderField = 'login';
+            $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
+        }
+        else {
+            $orderField = 'login';
+            $orderDir = 'ASC';
+        }
 
         // get the number of users and the recordset to retrieve users
         if ($groupFilter == self::FILTER_GROUP_ALL_USERS) {
@@ -274,7 +401,7 @@ class jAcl2DbAdminUIManager
             if ($userFilter) {
                 $cond->addCondition('login', 'LIKE', '%'.$userFilter.'%');
             }
-            $cond->addItemOrder('login', 'asc');
+            $cond->addItemOrder($orderField, $orderDir);
             $rs = $dao->findBy($cond, $offset, $listPageSize);
             $resultsCount = $dao->countBy($cond);
         } elseif ($groupFilter == self::FILTER_USERS_NO_IN_GROUP) {
@@ -287,11 +414,12 @@ class jAcl2DbAdminUIManager
 
             if ($cnx->dbms != 'pgsql') {
                 // with MYSQL 4.0.12, you must use an alias with the count to use it with HAVING
-                $sql .= ' GROUP BY login HAVING nbgrp < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING nbgrp < 2';
             } else {
                 // But PgSQL doesn't support the HAVING structure with an alias.
-                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2 ORDER BY login';
+                $sql .= ' GROUP BY login HAVING count(id_aclgrp) < 2';
             }
+            $sql .= ' ORDER BY '.$orderField.' '.$orderDir;
 
             $rs = $cnx->query($sql);
             $resultsCount = $rs->rowCount();
@@ -299,10 +427,21 @@ class jAcl2DbAdminUIManager
             //in a specific group
             $dao = jDao::get('jacl2db~jacl2usergroup', $p);
             if ($userFilter) {
-                $rs = $dao->getUsersGroupLimitAndFilter($groupId, '%'.$userFilter.'%', $offset, $listPageSize);
+                $rs = $dao->getUsersGroupLimitAndFilter(
+                    $groupId,
+                    '%'.$userFilter.'%',
+                    $offset,
+                    $listPageSize,
+                    $orderDir,
+                    $orderField
+                );
                 $resultsCount = $dao->getUsersGroupCountAndFilter($groupId, '%'.$userFilter.'%');
             } else {
-                $rs = $dao->getUsersGroupLimit($groupId, $offset, $listPageSize);
+                $rs = $dao->getUsersGroupLimit($groupId,
+                    $offset,
+                    $listPageSize,
+                    $orderDir,
+                    $orderField);
                 $resultsCount = $dao->getUsersGroupCount($groupId);
             }
         }
@@ -315,29 +454,86 @@ class jAcl2DbAdminUIManager
             $gl = $dao2->getGroupsUser($u->login);
             foreach ($gl as $g) {
                 if ($g->grouptype != jAcl2DbUserGroup::GROUPTYPE_PRIVATE) {
-                    $u->groups[] = $g;
+                    $u->groups[] = $g->name;
                 }
             }
-            $u->last = count($u->groups) - 1;
             $results[] = $u;
         }
 
         return compact('results', 'resultsCount');
     }
 
-    public function getGroupByFilter($filter)
+    public function getUsersCount($groupId = null)
     {
-        $filter = '%'.$filter.'%';
-        $groups = jDao::get('jacl2db~jacl2group', 'jacl2_profile')->findGroupByFilter($filter)->fetchAll();
-        $results = array();
-        foreach($groups as $group) {
-            $group->type = 'group';
-            $group->groups = array();
-            $results[] = $group;
+        $p = 'jacl2_profile';
+
+        // get the number of users and the recordset to retrieve users
+        if ($groupId < 0) {
+            //all users
+            $db = jDb::getConnection($p);
+            $sql = 'SELECT COUNT(DISTINCT login) as c 
+            FROM '.$db->prefixTable('jacl2_user_group');
+            $rs = $db->query($sql);
+            return $rs->fetch()->c;
+        } else {
+            //in a specific group
+            $dao = jDao::get('jacl2db~jacl2usergroup', $p);
+            return $dao->getUsersGroupCount($groupId);
         }
-        $resultsCount = count($results);
+    }
+
+    public function getGroupByFilter($filter, $offset, $listPageSize, $orderFlag = 2, $withUsers = true)
+    {
+
+        $orderDir = ($orderFlag & self::ORDER_DIRECTION_DESC ? 'desc': 'asc');
+
+        if ($orderFlag & self::ORDER_BY_NAME) {
+            $orderField = 'name';
+        }
+        else if ($orderFlag & self::ORDER_BY_GROUPTYPE) {
+            $orderField = 'grouptype';
+        }
+        else if ($orderFlag & self::ORDER_BY_ID) {
+            $orderField = 'id_aclgrp';
+        }
+        else if ($orderFlag & self::ORDER_BY_USERS) {
+            $orderField = 'nb_users';
+        }
+        else {
+            $orderField = 'name';
+        }
+
+        $groupDao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        $filter = '%' . $filter . '%';
+
+        if ($withUsers) {
+            $db = jDb::getConnection('jacl2_profile');
+            $filterQuote = $db->quote('%' . $filter . '%');
+
+            $sql = "SELECT g.id_aclgrp, name, grouptype, count(login) as nb_users 
+            FROM ".$db->prefixTable('jacl2_group')." g
+            LEFT JOIN ".$db->prefixTable('jacl2_user_group')." ug ON (g.id_aclgrp = ug.id_aclgrp) 
+            WHERE grouptype <> 2 AND (name LIKE $filterQuote OR g.id_aclgrp LIKE $filterQuote )
+            GROUP BY g.id_aclgrp, name, grouptype
+            ORDER BY $orderField $orderDir
+            ";
+            $groups = $db->limitQuery($sql, $offset, $listPageSize);
+        }
+        else {
+            $groups = $groupDao
+                ->findGroupByFilter($filter, $offset, $listPageSize, $orderField, $orderDir);
+        }
+
+        $results = $groups->fetchAll();
+        $resultsCount = $groupDao->countGroupByFilter($filter);
 
         return compact('results', 'resultsCount');
+    }
+
+    public function getGroupsCount()
+    {
+        $groupDao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        return $groupDao->countAllPublicGroupAndAnonymous();
     }
 
     /**
@@ -442,9 +638,8 @@ class jAcl2DbAdminUIManager
         );
     }
 
-
     /**
-     * Save rights of the given user
+     * Save rights of the given user.
      *
      * Only rights on given subjects are changed.
      * Existing rights not given in parameters are deleted from the
@@ -452,11 +647,11 @@ class jAcl2DbAdminUIManager
      *
      * Rights with resources are not changed.
      *
-     * @param string $login     the login of the user on who rights will be changed
-     * @param array $userRights list of rights key=subject, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
-     * @param null|string  $sessionUser the login name of the user who initiate the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login       the login of the user on who rights will be changed
+     * @param array       $userRights  list of rights key=subject, value=false(inherit)/''(inherit)/true(add)/'y'(add)/'n'(remove)
+     * @param null|string $sessionUser the login name of the user who initiate the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -477,7 +672,6 @@ class jAcl2DbAdminUIManager
         }
         $userRights = $rights[$grp->id_aclgrp];
         jAcl2DbManager::setRightsOnGroup($grp->id_aclgrp, $userRights);
-
     }
 
     public function getUserRessourceRights($user)
@@ -518,7 +712,7 @@ class jAcl2DbAdminUIManager
             'rightsLabels',
             'rightsWithResources',
             'hasRightsOnResources',
-            /* @deprecated  */
+            // @deprecated
             'subjects_localized',
             'roles_localized'
         );
@@ -527,6 +721,7 @@ class jAcl2DbAdminUIManager
     /**
      * @param $user
      * @param array $subjects <id_aclsbj> => (true (remove), 'on'(remove) or '' (not touch)
+     * @param mixed $rights
      */
     public function removeUserRessourceRights($user, $rights)
     {
@@ -549,12 +744,12 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * delete a group of user
+     * delete a group of user.
      *
-     * @param string $groupId the id of the group to remove
-     * @param null|string  $sessionUser the login name of the user who initiate the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $groupId     the id of the group to remove
+     * @param null|string $sessionUser the login name of the user who initiate the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -572,11 +767,12 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * @param string $login the login of the user to remove from the given group
-     * @param string $groupId the group name from which the user should be removed
-     * @param null|string  $sessionUser the login name of the user who initiates the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login       the login of the user to remove from the given group
+     * @param string      $groupId     the group name from which the user should be removed
+     * @param null|string $sessionUser the login name of the user who initiates the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
+     *
      * @throws jAcl2DbAdminUIException
      */
     public function removeUserFromGroup($login, $groupId, $sessionUser = null)
@@ -593,11 +789,11 @@ class jAcl2DbAdminUIManager
     }
 
     /**
-     * @param string $login
-     * @param string $groupId
-     * @param null|string  $sessionUser the login name of the user who initiates the change
-     *                            It is mandatory although null is accepted for
-     *                            API compatibility. Null value is deprecated.
+     * @param string      $login
+     * @param string      $groupId
+     * @param null|string $sessionUser the login name of the user who initiates the change
+     *                                 It is mandatory although null is accepted for
+     *                                 API compatibility. Null value is deprecated.
      *
      * @throws jAcl2DbAdminUIException
      */
@@ -628,11 +824,11 @@ class jAcl2DbAdminUIManager
     public function getHiddenRights() {
         $config = jApp::config();
 
-        if (!$config->jacl2['hideRights']) {
+        if (!$config->acl2['hideRights']) {
             return array();
         }
 
-        $hiddenRights = $config->jacl2['hiddenRights'];
+        $hiddenRights = $config->acl2['hiddenRights'];
 
         if (!is_array($hiddenRights)) {
             return array($hiddenRights);

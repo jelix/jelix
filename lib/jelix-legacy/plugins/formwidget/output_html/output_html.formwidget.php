@@ -28,7 +28,7 @@
          $attr = $this->getControlAttributes();
 
          $outputAttr = array(
-             'class' => 'jforms-value '.$attr['class']
+             'class' => 'jforms-value '.$attr['class'],
          );
 
          unset($attr['readonly'], $attr['class']);

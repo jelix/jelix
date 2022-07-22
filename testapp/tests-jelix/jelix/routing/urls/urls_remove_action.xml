@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<urls xmlns="http://jelix.org/ns/urls/1.0">
+    <entrypoint name="index" default="true">
+        <url module="testapp" default="true"/>
+        <url pathinfo="/first" module="firstmodule" action="foo:bar"/>
+        <url pathinfo="/first/what" module="firstmodule" action="foo2:bar" noentrypoint="true"/>
+        <url pathinfo="/withparamstatic/:hello/:world" module="firstmodule" action="foo4:bar">
+            <param name="hello"/>
+            <param name="world" type="year"/>
+            <static name="static1" value="statval"/>
+        </url>
+        <url pathinfo="/news" module="news"/>
+        <url handler="superhandler" pathinfo="/articles" module="cms"/>
+        <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl"/>
+        <url include="urls-my-include.xml" pathinfo="/my-include" module="foo"/>
+    </entrypoint>
+    <entrypoint type="soap" name="mysoap"/>
+    <classicentrypoint name="news">
+        <url module="news" default="true"/>
+        <url module="articles" pathinfo="/mynews/"/>
+    </classicentrypoint>
+    <entrypoint name="bar" type="classic"/>
+</urls>

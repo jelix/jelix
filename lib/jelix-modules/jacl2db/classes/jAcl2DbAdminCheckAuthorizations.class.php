@@ -398,8 +398,8 @@ class jAcl2DbAdminCheckAuthorizations
                 $currentUserItem = $rec->login;
             }
 
-            $processRecord = !($currentUserItem == $userToRemoveFromTheGroup &&
-                               $rec->id_aclgrp == $groupFromWhichToRemoveTheUser);
+            $processRecord = !($currentUserItem == $userToRemoveFromTheGroup
+                               && $rec->id_aclgrp == $groupFromWhichToRemoveTheUser);
             if ($processRecord && $rec->id_aclsbj) {
                 // we ignore any authorization from the user to remove from the given group
 
@@ -553,7 +553,6 @@ class jAcl2DbAdminCheckAuthorizations
     /**
      * check if the removing of the given group still
      * allows to administrate rights for at least one user.
-     *
      *
      * @param string $groupToRemove the group id to remove
      *

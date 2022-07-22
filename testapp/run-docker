@@ -26,6 +26,9 @@ if [ "$CMD" == "build" ]; then
     ./setup.sh
     )
   fi
+
+  # be sure to have the latest image
+  docker pull 3liz/liz-php-fpm:$PHP_VERSION
 fi
 
 if [ "$CMD" == "reset" ]; then

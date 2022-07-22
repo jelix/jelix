@@ -138,8 +138,8 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
             if ($this->debugModeEnabled) {
                 $this->SMTPDebug = $config->mailer['debugSmtpLevel'];
             }
-            if (isset($config->mailer['smtpProfile']) &&
-                $config->mailer['smtpProfile'] != ''
+            if (isset($config->mailer['smtpProfile'])
+                && $config->mailer['smtpProfile'] != ''
             ) {
                 $smtp = Profiles::get('smtp', $config->mailer['smtpProfile']);
                 $smtp = array_merge(array(
@@ -226,7 +226,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
      * @param string $address
      * @param string $kind    One of 'to', 'cc', 'bcc', or 'ReplyTo'
      *
-     * @return array  contains $name, $address.
+     * @return array contains $name, $address
      */
     public function getAddrName($address, $kind = false)
     {
@@ -388,10 +388,10 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
             // we replace the "to" field only if it is empty (original not in white list)
             $who = $this->debugReceiversType;
             if ($who & self::DEBUG_RECEIVER_USER) {
-                if (class_exists('jAuth', false) &&
-                    jAuth::isConnected() &&
-                    jAuth::getUserSession() &&
-                    !empty(jAuth::getUserSession()->login)
+                if (class_exists('jAuth', false)
+                    && jAuth::isConnected()
+                    && jAuth::getUserSession()
+                    && !empty(jAuth::getUserSession()->login)
                 ) {
                     $this->getAddrName(jAuth::getUserSession()->login, 'to');
                 } else {

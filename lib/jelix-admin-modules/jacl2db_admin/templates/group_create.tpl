@@ -1,7 +1,7 @@
 {meta_html assets 'jacl2_admin'}
 
 <h1>{@acl2.create.group@}</h1>
-<form action="{formurl 'jacl2db_admin~groups:newgroup'}" method="post">
+<form action="{formurl 'jacl2db_admin~groups:newgroup'}" method="post" id="create-group">
 <table>
     <tr>
         <td><label for="grp_name">{@acl2.group.name.label@}</label></td>

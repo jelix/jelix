@@ -14,11 +14,12 @@
     }
   ],
   "require": {
-    "jelix/buildtools": "^2.1.0",
-    "jelix/inifile": "^2.5.0",
+    "jelix/buildtools": "2.1.*",
+    "jelix/inifile": "^3.3.1",
     "jelix/simplelocalization": "1.7.1",
     "jelix/file-utilities": "^1.8.3",
-    "jelix/version": "1.0.*"
+    "jelix/version": "1.1.*",
+    "symfony/console":"^5.4.10"
   },
   "autoload": {
   },

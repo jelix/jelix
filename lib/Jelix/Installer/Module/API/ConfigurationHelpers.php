@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -164,10 +164,11 @@ class ConfigurationHelpers extends PreConfigurationHelpers
                 // change the path to application.init.php into the entrypoint
                 // depending of the application, the path of www/ is not always at the same place, relatively to
                 // application.init.php
-                $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), App::appPath());
+                $appInitFile = App::applicationInitFile();
+                $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), dirname($appInitFile).'/');
 
                 $epCode = file_get_contents($newEpPath);
-                $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php[\'"])#m', '\\1'.$relativePath.'/\\3', $epCode);
+                $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php)([\'"])#m', '\\1'.$relativePath.'/'.basename($appInitFile).'\\4', $epCode);
                 file_put_contents($newEpPath, $epCode);
             }
         }
@@ -184,5 +185,50 @@ class ConfigurationHelpers extends PreConfigurationHelpers
 
         // declare the entry point
         $this->globalSetup->declareNewEntryPoint($epId, $epType, $configFileName);
+    }
+
+    /**
+     * Remove an entry point that was installed by a module
+     *
+     * @param string $entryPointWebPath   the path of the entrypoint to create into the www directory
+     * @param string $configFileName      name of the configuration file. path relative to app/system or var/config
+     * @param string $epType              type of the entry point (classic)
+     *
+     * @throws \Exception
+     * @since 1.7.11
+     */
+    public function removeEntryPoint(
+        $entryPointWebPath,
+        $configFileName,
+        $epType = 'classic'
+    ) {
+
+        if (substr($entryPointWebPath, -4) == '.php') {
+            $epFile = $entryPointWebPath;
+            $epId = substr($entryPointWebPath, 0, -4);
+        } else {
+            $epFile = $entryPointWebPath.'.php';
+            $epId = $entryPointWebPath;
+        }
+
+        if ($epType == 'cmdline') {
+            if (file_exists(App::scriptsPath($epFile))) {
+                unlink(App::scriptsPath($epFile));
+            }
+        } else {
+            $newEpPath = App::wwwPath($epFile);
+            if (file_exists($newEpPath)) {
+                unlink($newEpPath);
+            }
+        }
+
+        // remove the configuration file
+        $configFilePath = $this->configFilePath($configFileName);
+        if (file_exists($configFilePath)) {
+            unlink($configFilePath);
+        }
+
+        // undeclare the entry point
+        $this->globalSetup->undeclareEntryPoint($epId);
     }
 }

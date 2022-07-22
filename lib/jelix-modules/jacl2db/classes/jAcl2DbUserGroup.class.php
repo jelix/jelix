@@ -60,7 +60,7 @@ class jAcl2DbUserGroup
     /**
      * @var null|string[] list of groups of the current user
      */
-    protected static $groups = null;
+    protected static $groups;
 
     /**
      * Retrieve the list of group the current user is member of.
@@ -146,7 +146,7 @@ class jAcl2DbUserGroup
      *
      * @param string $code The code
      *
-     * @return false|jacl2group the dao object r false if it doesn't exist
+     * @return false|jDaoRecordBase the dao object r false if it doesn't exist
      *
      * @since 1.2
      */
@@ -160,7 +160,7 @@ class jAcl2DbUserGroup
      *
      * @param string $groupid id of the user group
      *
-     * @return array a list of users object (dao records)
+     * @return object[] a list of users object (dao records)
      */
     public static function getUsersList($groupid)
     {
@@ -281,8 +281,11 @@ class jAcl2DbUserGroup
     public static function createGroup($name, $id_aclgrp = null)
     {
         if ($id_aclgrp === null) {
-            $id_aclgrp = strtolower(str_replace(' ', '_', $name));
+            $id_aclgrp = $name;
         }
+        $id_aclgrp = strtolower(str_replace(' ', '_', $id_aclgrp));
+        $id_aclgrp = preg_replace('/[^a-zA-Z0-9_]/', '', $id_aclgrp);
+
         $dao = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         $group = $dao->get($id_aclgrp);
         if (!$group) {

@@ -20,21 +20,21 @@ use Jelix\Core\App;
 class XmlMapParser implements \jISimpleCompiler
 {
     protected $parseInfos;
-    protected $createUrlInfos;
-    protected $createUrlContent;
-    protected $createUrlContentInc;
+    protected $createUrlInfos = array();
+    protected $createUrlContent = '';
+    protected $createUrlContentInc = '';
 
     protected $createUrlInfosDedicatedModules;
 
     /**
      * contains, for each entrypoint type, the list of modules that don't appear
      * in any url definitions of any entrypoint of the same type
-     * theses modules will then be attached to the default entrypoint of the
+     * these modules will then be attached to the default entrypoint of the
      * corresponding entrypoint type.
      *
      * @var array key = entrypoint type, value = list of modules
      */
-    protected $modulesDedicatedToDefaultEp;
+    protected $modulesDedicatedToDefaultEp = array();
 
     /**
      * contain the UrlMapData object corresponding of the default
@@ -419,9 +419,9 @@ class XmlMapParser implements \jISimpleCompiler
 
         if ($path == '' || $path == '/') {
             $u->isDefault = true;
-            if ($this->parseInfos[0]['startModule'] != '' &&
-                 ($this->parseInfos[0]['startModule'] != $u->module ||
-                  $this->parseInfos[0]['startAction'] != $u->action)
+            if ($this->parseInfos[0]['startModule'] != ''
+                 && ($this->parseInfos[0]['startModule'] != $u->module
+                  || $this->parseInfos[0]['startAction'] != $u->action)
             ) {
                 throw new MapParserException($this->getErrorMsg($url, 'There is already a default url for this entrypoint'));
             }
@@ -499,8 +499,8 @@ class XmlMapParser implements \jISimpleCompiler
             }
 
             // check if there is a default url
-            if ($parseInfos[0]['startModule'] == '' &&
-                !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
+            if ($parseInfos[0]['startModule'] == ''
+                && !in_array($urlModel->requestType, $this->entryPointTypeHavingActionInBody)) {
                 if (count($parseInfos[0]['dedicatedModules']) == 1) {
                     foreach ($parseInfos[0]['dedicatedModules'] as $module => $isHttps) {
                         $parseInfos[0]['startModule'] = $module;
@@ -614,7 +614,6 @@ class XmlMapParser implements \jISimpleCompiler
             $u->action = 'default:index';
             $this->appendUrlInfo($u, '/', false);
             $u->action = '';
-            $pathinfo = '';
         } elseif ($pathinfo != '/' && $pathinfo != '') {
             $pathinfo = '/'.trim($pathinfo, '/');
             $this->parseInfos[] = array($u->module, '',
@@ -786,17 +785,18 @@ class XmlMapParser implements \jISimpleCompiler
                     $regexp = $this->typeparam['string'];
                 }
 
-                $u->escapes[$k] = 0;
+                $u->escapes[$k] = UrlActionMapper::ESCAPE_URLENCODE;
                 if ($type == 'path') {
-                    $u->escapes[$k] = 1;
+                    $u->escapes[$k] = UrlActionMapper::ESCAPE_SLASH;
                 } elseif (isset($var['escape'])) {
-                    $u->escapes[$k] = (((string) $var['escape']) == 'true' ? 2 : 0);
+                    $u->escapes[$k] = (((string) $var['escape']) == 'true' ?
+                        UrlActionMapper::ESCAPE_NON_ASCII : UrlActionMapper::ESCAPE_URLENCODE);
                 }
 
                 if ($type == 'lang') {
-                    $u->escapes[$k] |= 4;
+                    $u->escapes[$k] |= UrlActionMapper::ESCAPE_LANG;
                 } elseif ($type == 'locale') {
-                    $u->escapes[$k] |= 8;
+                    $u->escapes[$k] |= UrlActionMapper::ESCAPE_LOCALE;
                 }
 
                 $regexppath = str_replace('\:'.$name, $regexp, $regexppath);
@@ -807,7 +807,7 @@ class XmlMapParser implements \jISimpleCompiler
                 if (isset($u->escapes[$k])) {
                     continue;
                 }
-                $u->escapes[$k] = 0;
+                $u->escapes[$k] = UrlActionMapper::ESCAPE_URLENCODE;
                 $regexppath = str_replace('\:'.$name, '([^\/]+)', $regexppath);
             }
         }
@@ -830,9 +830,11 @@ class XmlMapParser implements \jISimpleCompiler
                     case 'lang': $t = '$l';
 
                         break;
+
                     case 'locale': $t = '$L';
 
                         break;
+
                     default:
                         throw new MapParserException($this->getErrorMsg($var, 'invalid type on a <static> element'));
                 }
@@ -903,6 +905,11 @@ class XmlMapParser implements \jISimpleCompiler
 
         $mainXmlFile = $this->xmlfile;
         $this->xmlfile = $uInfo->module.'/'.$file;
+
+        if (!isset($xml->url)) {
+            $this->newDedicatedModule($uInfo, $url);
+            return;
+        }
 
         foreach ($xml->url as $url) {
             $u = clone $uInfo;
