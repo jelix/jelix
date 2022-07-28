@@ -58,8 +58,11 @@ class jFile
      */
     public static function write($file, $data, $chmod = null)
     {
-        if (!$chmod && jApp::config()) {
-            $chmod = jApp::config()->chmodFile;
+        if (jApp::config()) {
+            if (!$chmod) {
+                $chmod = jApp::config()->chmodFile;
+            }
+            Directory::$defaultChmod = jApp::config()->chmodDir;
         }
         if ($data === null) {
             $data = '';
@@ -121,6 +124,9 @@ class jFile
      */
     public static function copyDirectoryContent($sourcePath, $targetPath, $overwrite = false)
     {
+        if (jApp::config()) {
+            Directory::$defaultChmod = jApp::config()->chmodDir;
+        }
         Directory::copy($sourcePath, $targetPath, $overwrite);
     }
 
