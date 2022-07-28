@@ -81,6 +81,7 @@ class XmlEntryPoint
                 } else {
                     $element->removeAttribute($opt);
                 }
+                $this->map->setAsModified();
             }
         }
     }
@@ -670,6 +671,7 @@ class XmlEntryPoint
         }
         $parent->appendChild($child);
         $parent->appendChild($doc->createTextNode("\n".substr($indent, 0, strlen($indent) - 4)));
+        $this->map->setAsModified();
     }
 
     protected function removeElement(\DOMElement $child)
@@ -680,5 +682,6 @@ class XmlEntryPoint
             $parent->removeChild($child->previousSibling);
         }
         $parent->removeChild($child);
+        $this->map->setAsModified();
     }
 }
