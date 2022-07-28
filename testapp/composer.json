@@ -34,6 +34,11 @@
     },
     "autoload": {
     },
+    "config": {
+      "allow-plugins": {
+        "jelix/composer-module-setup": true
+      }
+    },
     "extra" : {
         "jelix": {
             "modules-dir" : [
