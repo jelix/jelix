@@ -58,7 +58,7 @@ class groupsCtrl extends jController
         $rep = $this->getResponse('html');
         $listPageSize = 15;
         $offset = $this->param('idx', 0, true);
-        $filter = trim($this->param('filter'));
+        $filter = trim($this->param('filter', '', true));
         $tpl = new jTpl();
         $tpl->assign(compact('offset', 'listPageSize', 'filter'));
         $rep->body->assign('MAIN', $tpl->fetch('groups_list'));
@@ -123,7 +123,7 @@ class groupsCtrl extends jController
                     "id_aclgrp" => $group->id_aclgrp
                 ],
                 'id' => $group->id_aclgrp,
-                'name' => $group->name,
+                'name' => $group->id_aclgrp != '__anonymous'?$group->name: jLocale::get('jacl2db_admin~acl2.anonymous.group.name'),
                 'nb_users' => $group->nb_users,
                 'grouptype' => $group->grouptype,
                 'links' => [
