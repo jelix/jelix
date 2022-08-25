@@ -1,10 +1,12 @@
 <?php
+
 /**
  * @package     jelix_admin_modules
  * @subpackage  jpref_admin
  *
  * @author    Florian Lonqueu-Brochard
- * @copyright 2012 Florian Lonqueu-Brochard
+ * @contributor Laurent Jouanneau
+ * @copyright 2012 Florian Lonqueu-Brochard, 2012-2022 Laurent Jouanneau
  *
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -35,18 +37,14 @@ class prefsCtrl extends jController
         $pref = jPrefManager::getPref($id);
 
         if (!$pref) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'jpref_admin~prefs:index';
 
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:index');
         }
 
         if (!$pref->isWritable()) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'jpref_admin~prefs:index';
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
 
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:index');
         }
 
         $form = jForms::create('jpref_admin~pref', $id);
@@ -61,7 +59,7 @@ class prefsCtrl extends jController
         $control = $form->getControl($pref->type);
         $control->label = $label;
         if ($pref->type != 'boolean') {
-            $control->help = jLocale::get('jpref_admin~admin.help.'.$pref->type);
+            $control->help = jLocale::get('jpref_admin~admin.help.' . $pref->type);
         }
         if (!empty($pref->value)) {
             $form->setData($pref->type, $pref->value);
@@ -80,23 +78,18 @@ class prefsCtrl extends jController
 
     public function saveedit()
     {
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jpref_admin~prefs:index';
-
         $id = $this->param('id', 0);
         $field = $this->param('field');
 
         $form = jForms::fill('jpref_admin~pref', $id);
         if (!$form || !$id || !$field) {
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:index');
         }
 
         if (!$form->check()) {
             $form->setErrorOn($field, 'jpref_admin~admin.field.error');
-            $rep->action = 'jpref_admin~prefs:edit';
-            $rep->params = array('id' => $id);
 
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:edit', array('id' => $id));
         }
 
         $data = $form->getData($field);
@@ -116,25 +109,22 @@ class prefsCtrl extends jController
 
         jMessage::add(jLocale::get('jpref_admin~admin.message.pref.updated'), 'notice');
 
-        return $rep;
+        return $this->redirect('jpref_admin~prefs:index');
     }
 
     public function reset()
     {
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jpref_admin~prefs:index';
-
         $id = $this->param('id', 0);
 
         $pref = jPrefManager::getPref($id);
         if (!$id || !$pref || (empty($pref->default_value) && $pref->type != 'boolean')) {
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:index');
         }
 
         if (!$pref->isWritable()) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
 
-            return $rep;
+            return $this->redirect('jpref_admin~prefs:index');
         }
 
         $dvalue = $pref->default_value;
@@ -154,6 +144,6 @@ class prefsCtrl extends jController
 
         jMessage::add(jLocale::get('jpref_admin~admin.message.pref.reseted'), 'notice');
 
-        return $rep;
+        return $this->redirect('jpref_admin~prefs:index');
     }
 }

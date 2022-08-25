@@ -10,6 +10,8 @@ Features
 * Jelix 1.8 requires PHP 7.4 and above.
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
  `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
+* Controllers:
+  * new methods `redirect()` and `redirectUrl()` that are shortcuts to the creation of a redirection object
 * jForms:
   * new method `BuilderBase::outputAllControlsValues()`
   * new method `BuilderBase::outputControlRawValue()`

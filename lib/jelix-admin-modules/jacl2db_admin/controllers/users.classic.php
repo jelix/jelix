@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Adrien Lagroy de Croutte
@@ -28,9 +29,9 @@ class usersCtrl extends jController
         if ($e->getCode() == 1) {
             jMessage::add(jLocale::get('acl2.error.invalid.user'), 'error');
         } elseif ($e->getCode() == 2) {
-            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.anybody'), 'error');
+            jMessage::add(jLocale::get('acl2.message.' . $category . '.error.noacl.anybody'), 'error');
         } elseif ($e->getCode() == 3) {
-            jMessage::add(jLocale::get('acl2.message.'.$category.'.error.noacl.yourself'), 'error');
+            jMessage::add(jLocale::get('acl2.message.' . $category . '.error.noacl.yourself'), 'error');
         }
     }
 
@@ -119,10 +120,9 @@ class usersCtrl extends jController
             $usersList = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $stringToSearch, $offset, $length, $order);
         }
 
-        foreach($usersList['results'] as $user)
-        {
+        foreach ($usersList['results'] as $user) {
             $data[] = array(
-                "DT_RowId" => 'usr-'.$user->login,
+                "DT_RowId" => 'usr-' . $user->login,
                 "DT_RowData" => [
                     "login" => $user->login
                 ],
@@ -130,7 +130,7 @@ class usersCtrl extends jController
                 'groups' => implode(', ', $user->groups),
                 'links' => [
                     'rights' => jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login))
-                 ]
+                ]
             );
         }
 
@@ -177,7 +177,7 @@ class usersCtrl extends jController
             $manager = new jAcl2DbAdminUIManager();
             $data = $manager->getUserRights($user);
         } catch (jAcl2DbAdminUIException $e) {
-            $rep->body->assign('MAIN', '<p>'.$e->getMessage().'</p>');
+            $rep->body->assign('MAIN', '<p>' . $e->getMessage() . '</p>');
 
             return $rep;
         }
@@ -192,7 +192,7 @@ class usersCtrl extends jController
             $rep->body->assign('MAIN', $tpl->fetch('user_rights_view'));
         }
         $rep->body->assign('selectedMenuItem', 'rights');
-        $rep->title = jLocale::get('acl2.user.rights.title').' '.$user;
+        $rep->title = jLocale::get('acl2.user.rights.title') . ' ' . $user;
 
         return $rep;
     }
@@ -205,18 +205,12 @@ class usersCtrl extends jController
      */
     public function saverights()
     {
-        $rep = $this->getResponse('redirect');
         $login = $this->param('user');
         $rights = $this->param('rights', array());
 
         if ($login == '') {
-            $rep->action = 'jacl2db_admin~users:index';
-
-            return $rep;
+            return $this->redirect('jacl2db_admin~users:index');
         }
-
-        $rep->action = 'jacl2db_admin~users:rights';
-        $rep->params = array('user' => $login);
 
         try {
             $manager = new jAcl2DbAdminUIManager();
@@ -226,7 +220,7 @@ class usersCtrl extends jController
             $this->checkException($e, 'saveuserrights');
         }
 
-        return $rep;
+        return $this->redirect('jacl2db_admin~users:rights', array('user' => $login));
     }
 
     /**
@@ -269,25 +263,21 @@ class usersCtrl extends jController
      */
     public function saverightres()
     {
-        $rep = $this->getResponse('redirect');
         $login = $this->param('user');
         $subjects = $this->param('subjects', array());
 
         if ($login == '') {
-            $rep->action = 'jacl2db_admin~users:index';
 
-            return $rep;
+            return $this->redirect('jacl2db_admin~users:index');
         }
 
-        $rep->action = 'jacl2db_admin~users:rightres';
-        $rep->params = array('user' => $login);
 
         $manager = new jAcl2DbAdminUIManager();
         $manager->removeUserRessourceRights($login, $subjects);
 
         jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
 
-        return $rep;
+        return $this->redirect('jacl2db_admin~users:rightres', array('user' => $login));
     }
 
     /**
@@ -297,24 +287,19 @@ class usersCtrl extends jController
      */
     public function removegroup()
     {
-        $rep = $this->getResponse('redirect');
-
         $login = $this->param('user');
-        if ($login != '') {
-            $rep->action = 'jacl2db_admin~users:rights';
-            $rep->params = array('user' => $login);
-
-            try {
-                $manager = new jAcl2DbAdminUIManager();
-                $manager->removeUserFromGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
-            } catch (jAcl2DbAdminUIException $e) {
-                $this->checkException($e, 'removeuserfromgroup');
-            }
-        } else {
-            $rep->action = 'jacl2db_admin~users:index';
+        if ($login == '') {
+            return $this->redirect('jacl2db_admin~users:index');
         }
 
-        return $rep;
+        try {
+            $manager = new jAcl2DbAdminUIManager();
+            $manager->removeUserFromGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
+        } catch (jAcl2DbAdminUIException $e) {
+            $this->checkException($e, 'removeuserfromgroup');
+        }
+
+        return $this->redirect('jacl2db_admin~users:rights', array('user' => $login));
     }
 
     /**
@@ -324,23 +309,18 @@ class usersCtrl extends jController
      */
     public function addgroup()
     {
-        $rep = $this->getResponse('redirect');
-
         $login = $this->param('user');
-        if ($login != '') {
-            $rep->action = 'jacl2db_admin~users:rights';
-            $rep->params = array('user' => $login);
-
-            try {
-                $manager = new jAcl2DbAdminUIManager();
-                $manager->addUserToGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
-            } catch (jAcl2DbAdminUIException $e) {
-                $this->checkException($e, 'addusertogroup');
-            }
-        } else {
-            $rep->action = 'jacl2db_admin~users:index';
+        if ($login == '') {
+            return $this->redirect('jacl2db_admin~users:index');
         }
 
-        return $rep;
+        try {
+            $manager = new jAcl2DbAdminUIManager();
+            $manager->addUserToGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
+        } catch (jAcl2DbAdminUIException $e) {
+            $this->checkException($e, 'addusertogroup');
+        }
+
+        return $this->redirect('jacl2db_admin~users:rights', array('user' => $login));
     }
 }

@@ -8,6 +8,7 @@ _docs.cache/
 .komodotools
 *.kdev4
 .idea
+.vscode
 vendor/
 composer.lock
 .php_cs.cache

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
@@ -33,9 +34,9 @@ class groupsCtrl extends jController
         if ($e->getCode() == 1) {
             return jLocale::get('acl2.error.invalid.user');
         } elseif ($e->getCode() == 2) {
-            return jLocale::get('acl2.message.'.$category.'.error.noacl.anybody');
+            return jLocale::get('acl2.message.' . $category . '.error.noacl.anybody');
         } elseif ($e->getCode() == 3) {
-            return jLocale::get('acl2.message.'.$category.'.error.noacl.yourself');
+            return jLocale::get('acl2.message.' . $category . '.error.noacl.yourself');
         }
         return '';
     }
@@ -97,14 +98,11 @@ class groupsCtrl extends jController
         if (isset($orderData[0]['column'])) {
             if ($orderData[0]['column'] == 0) {
                 $order = $manager::ORDER_BY_ID;
-            }
-            else if ($orderData[0]['column'] == 1) {
+            } else if ($orderData[0]['column'] == 1) {
                 $order = $manager::ORDER_BY_NAME;
-            }
-            else if ($orderData[0]['column'] == 2) {
+            } else if ($orderData[0]['column'] == 2) {
                 $order = $manager::ORDER_BY_USERS;
-            }
-            else if ($orderData[0]['column'] == 3) {
+            } else if ($orderData[0]['column'] == 3) {
                 $order = $manager::ORDER_BY_GROUPTYPE;
             }
         }
@@ -115,15 +113,14 @@ class groupsCtrl extends jController
         }
 
         $allGroups = $manager->getGroupByFilter($stringToSearch, $offset, $length, $order);
-        foreach($allGroups['results'] as $group)
-        {
+        foreach ($allGroups['results'] as $group) {
             $data[] = array(
-                "DT_RowId" => 'grp-'.$group->id_aclgrp,
+                "DT_RowId" => 'grp-' . $group->id_aclgrp,
                 "DT_RowData" => [
                     "id_aclgrp" => $group->id_aclgrp
                 ],
                 'id' => $group->id_aclgrp,
-                'name' => $group->id_aclgrp != '__anonymous'?$group->name: jLocale::get('jacl2db_admin~acl2.anonymous.group.name'),
+                'name' => $group->id_aclgrp != '__anonymous' ? $group->name : jLocale::get('jacl2db_admin~acl2.anonymous.group.name'),
                 'nb_users' => $group->nb_users,
                 'grouptype' => $group->grouptype,
                 'links' => [
@@ -180,9 +177,7 @@ class groupsCtrl extends jController
     {
         $grpId = $this->param('group');
         if (!$grpId) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'groups:allrights';
-            return $rep;
+            return $this->redirect('groups:allrights');
         }
 
         $rep = $this->getResponse('html');
@@ -198,8 +193,7 @@ class groupsCtrl extends jController
         $tpl->assign('group', $daoGroup->get($grpId));
         if (jAcl2::check('acl.group.modify')) {
             $tplName = 'group_right';
-        }
-        else {
+        } else {
             $tplName = 'group_right_view';
         }
 
@@ -217,12 +211,10 @@ class groupsCtrl extends jController
      */
     public function saverights()
     {
-        $rep = $this->getResponse('redirect');
         $rights = $this->param('rights', array());
         $grpId = $this->param('group');
         if (!$grpId) {
-            $rep->action = 'jacl2db_admin~groups:index';
-            return $rep;
+            return $this->redirect('jacl2db_admin~groups:index');
         }
 
         try {
@@ -232,9 +224,10 @@ class groupsCtrl extends jController
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'savegrouprights');
         }
-        $rep->action = 'jacl2db_admin~groups:rights';
-        $rep->params = array('group' => $this->param('group'));
-        return $rep;
+        return $this->redirect(
+            'jacl2db_admin~groups:rights',
+            array('group' => $this->param('group'))
+        );
     }
 
     /**
@@ -251,22 +244,18 @@ class groupsCtrl extends jController
         $groupid = $this->param('group', null);
 
         if ($groupid === null || $groupid == '') {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'jacldb_admin~groups:index';
             jMessage::add('Invalid Group', 'error');
 
-            return $rep;
+            return $this->redirect('jacldb_admin~groups:index');
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
-                $rep = $this->getResponse('redirect');
-                $rep->action = 'jacldb_admin~groups:index';
                 jMessage::add('Invalid Group', 'error');
 
-                return $rep;
+                return $this->redirect('jacldb_admin~groups:index');
             }
             $groupname = $group->name;
         } else {
@@ -297,35 +286,30 @@ class groupsCtrl extends jController
      */
     public function saverightres()
     {
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:rightres';
 
         $subjects = $this->param('subjects', array());
 
         $groupid = $this->param('group', null);
         if ($groupid === null || $groupid == '') {
-            $rep->action = 'jacl2db_admin~groups:allrights';
 
-            return $rep;
+            return $this->redirect('jacldb_admin~groups:allrights');
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
         if ($groupid != '__anonymous') {
             $group = $daogroup->get($groupid);
             if (!$group) {
-                $rep->action = 'jacl2db_admin~groups:allrights';
 
-                return $rep;
+                return $this->redirect('jacldb_admin~groups:allrights');
             }
         }
 
-        $rep->params = array('group' => $groupid);
         $manager = new jAcl2DbAdminUIManager();
         $manager->removeGroupRightsWithResources($groupid, $subjects);
 
         jMessage::add(jLocale::get('jacl2db_admin~acl2.message.group.rights.ok'), 'ok');
 
-        return $rep;
+        return $this->redirect('jacldb_admin~groups:rightres', array('group' => $groupid));
     }
 
     /**
@@ -344,8 +328,7 @@ class groupsCtrl extends jController
                 'result' => 'ok',
                 'message' => jLocale::get('acl2.message.group.setdefault.ok')
             ];
-        }
-        else {
+        } else {
             $rep->data = [
                 'result' => 'ok',
                 'message' => ''
@@ -362,45 +345,40 @@ class groupsCtrl extends jController
      */
     public function newgroup()
     {
-        /** @var jResponseRedirect $rep */
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'jacl2db_admin~groups:index';
-
         $name = $this->param('name');
         $id = $this->param('id');
         $copyGroup = $this->param('rights-copy');
 
         if ($name == '') {
-            $rep->action = 'jacl2db_admin~groups:create';
             jMessage::add(jLocale::get('acl2.error.groupname.is.missing'), 'error');
-            return $rep;
+            return $this->redirect('jacl2db_admin~groups:create');
         }
+
         $id = trim($id);
         if ($id == '__anonymous') {
-            $rep->action = 'jacl2db_admin~groups:create';
-            $rep->params = array('name'=>$name);
             jMessage::add(jLocale::get('acl2.error.groupid.invalid'), 'error');
-            return $rep;
+            return $this->redirect('jacl2db_admin~groups:create', array('name' => $name));
         }
+
         if ($id == '') {
             $id = null;
         }
-        if ($name != '') {
-            $grpId = jAcl2DbUserGroup::createGroup($name, $id);
-            if ($copyGroup) {
-                $groupRights = jDao::get('jacl2db~jacl2rights')->getRightsByGroup($copyGroup);
-                $rights = array();
-                foreach($groupRights as $groupRight) {
-                    $rights[$groupRight->id_aclsbj] = $groupRight->canceled ? 'n' : 'y';
-                }
-                jAcl2DbManager::setRightsOnGroup($grpId, $rights);
-            }
-            jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
-            $rep->action = 'jacl2db_admin~groups:rights';
-            $rep->params = array('group' => $grpId);
+
+        if ($name == '') {
+            return $this->redirect('jacl2db_admin~groups:index');
         }
 
-        return $rep;
+        $grpId = jAcl2DbUserGroup::createGroup($name, $id);
+        if ($copyGroup) {
+            $groupRights = jDao::get('jacl2db~jacl2rights')->getRightsByGroup($copyGroup);
+            $rights = array();
+            foreach ($groupRights as $groupRight) {
+                $rights[$groupRight->id_aclsbj] = $groupRight->canceled ? 'n' : 'y';
+            }
+            jAcl2DbManager::setRightsOnGroup($grpId, $rights);
+        }
+        jMessage::add(jLocale::get('acl2.message.group.create.ok'), 'ok');
+        return $this->redirect('jacl2db_admin~groups:rights', array('group' => $grpId));
     }
 
     /**
@@ -437,8 +415,7 @@ class groupsCtrl extends jController
                 'result' => 'ok',
                 'message' => jLocale::get('acl2.message.group.rename.ok')
             ];
-        }
-        else {
+        } else {
             $rep->data = [
                 'result' => 'ok',
                 'message' => jLocale::get('acl2.message.group.rename.ok')

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package      jelix
  * @subpackage   controllers
@@ -9,7 +10,7 @@
  * @contributor  Mickael Fradin, Bruno Perles
  * @contributor  Vincent Morel
  *
- * @copyright    2007-2018 Laurent Jouanneau
+ * @copyright    2007-2022 Laurent Jouanneau
  * @copyright    2007 Thibault Piront
  * @copyright    2007,2008 Bastien Jaillot
  * @copyright    2009 Mickael Fradin, 2011 Bruno Perles
@@ -204,7 +205,7 @@ class jControllerDaoCrud extends jController
     {
         $act = jApp::coord()->action;
 
-        return $act->module.'~'.$act->controller.':'.$method;
+        return $act->module . '~' . $act->controller . ':' . $method;
     }
 
     /**
@@ -239,7 +240,8 @@ class jControllerDaoCrud extends jController
                 $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
             }
             if (($lo = $this->param('listorder'))
-                && (array_key_exists($lo, $this->propertiesForRecordsOrder))) {
+                && (array_key_exists($lo, $this->propertiesForRecordsOrder))
+            ) {
                 $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
                 if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                     $listOrder[$lo] = 'desc';
@@ -274,8 +276,8 @@ class jControllerDaoCrud extends jController
         $tpl->assign('propertiesForListOrder', $this->propertiesForRecordsOrder);
         $tpl->assign('showPropertiesOrderLinks', $this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder));
         $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]) ?
-                                                $_SESSION['CRUD_LISTORDER'][$keyActionDao] :
-                                                $this->propertiesForRecordsOrder);
+            $_SESSION['CRUD_LISTORDER'][$keyActionDao] :
+            $this->propertiesForRecordsOrder);
         $tpl->assign('properties', $prop);
         $tpl->assign('controls', $form->getControls());
         $tpl->assign('editAction', $this->_getAction('preupdate'));
@@ -341,10 +343,8 @@ class jControllerDaoCrud extends jController
         // errors or already filled field. see ticket #292
         $form = $this->_createForm();
         $this->_preCreate($form);
-        $rep = $this->getResponse('redirect');
-        $rep->action = $this->_getAction('create');
 
-        return $rep;
+        return $this->redirect($this->_getAction('create'));
     }
 
     /**
@@ -413,11 +413,8 @@ class jControllerDaoCrud extends jController
     public function savecreate()
     {
         $form = $this->_getForm();
-        $rep = $this->getResponse('redirect');
         if ($form == null) {
-            $rep->action = $this->_getAction('index');
-
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
         $form->initFromRequest();
 
@@ -430,9 +427,10 @@ class jControllerDaoCrud extends jController
             extract($results, EXTR_PREFIX_ALL, 'form'); //use a temp variable to avoid notices
             $this->_beforeSaveCreate($form, $form_daorec);
             $form_dao->insert($form_daorec);
+
             $id = $form_daorec->getPk();
-            $rep->action = $this->_getAction('view');
-            $rep->params['id'] = $id;
+            $rep = $this->redirect($this->_getAction('view'), ['id' => $id]);
+
             $this->_afterCreate($form, $id, $rep);
             if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
@@ -441,9 +439,8 @@ class jControllerDaoCrud extends jController
 
             return $rep;
         }
-        $rep->action = $this->_getAction('create');
 
-        return $rep;
+        return $this->redirect($this->_getAction('create'));
     }
 
     /**
@@ -467,12 +464,10 @@ class jControllerDaoCrud extends jController
     {
         $id = $this->param('id');
         $page = $this->param($this->offsetParameterName);
-        $rep = $this->getResponse('redirect');
 
         if ($id === null) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
 
         $form = $this->_createForm($id);
@@ -486,17 +481,15 @@ class jControllerDaoCrud extends jController
                 }
             }
         } catch (Exception $e) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
         $this->_preUpdate($form);
 
-        $rep->action = $this->_getAction('editupdate');
-        $rep->params['id'] = $id;
-        $rep->params[$this->offsetParameterName] = $page;
-
-        return $rep;
+        return $this->redirect(
+            $this->_getAction('editupdate'),
+            ['id' => $id, $this->offsetParameterName => $page]
+        );
     }
 
     /**
@@ -521,10 +514,8 @@ class jControllerDaoCrud extends jController
         $page = $this->param($this->offsetParameterName);
         $form = $this->_getForm($id);
         if ($form === null || $id === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
         $rep = $this->_getResponse();
 
@@ -573,18 +564,20 @@ class jControllerDaoCrud extends jController
      */
     public function saveupdate()
     {
-        $rep = $this->getResponse('redirect');
         $id = $this->param('id');
         $page = $this->param($this->offsetParameterName);
         $form = $this->_getForm($id);
         if ($form === null || $id === null) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
         $form->initFromRequest();
 
-        $rep->params[$this->offsetParameterName] = $page;
+        $repParams = [
+            'id' => $id,
+            $this->offsetParameterName => $page
+        ];
+
         if ($form->check() && $this->_checkData($form, true)) {
             $results = $form->prepareDaoFromControls($this->dao, $id, $this->dbProfile);
             /* @var \jDaoRecordBase $form_daorec
@@ -594,19 +587,19 @@ class jControllerDaoCrud extends jController
             extract($results, EXTR_PREFIX_ALL, 'form'); //use a temp variable to avoid notices
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
-            $rep->action = $this->_getAction('view');
-            $rep->params['id'] = $id;
+
+            $rep = $this->redirect($this->_getAction('view'), $repParams);
+
             $this->_afterUpdate($form, $id, $rep);
             if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
             }
+
             jForms::destroy($this->form, $id);
-        } else {
-            $rep->action = $this->_getAction('editupdate');
-            $rep->params['id'] = $id;
+            return $rep;
         }
 
-        return $rep;
+        return  $this->redirect($this->_getAction('editupdate'), $repParams);
     }
 
     /**
@@ -631,10 +624,8 @@ class jControllerDaoCrud extends jController
         $id = $this->param('id');
         $page = $this->param($this->offsetParameterName);
         if ($id === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'));
         }
         $rep = $this->_getResponse();
         $tpl = new jTpl();
@@ -690,9 +681,11 @@ class jControllerDaoCrud extends jController
     {
         $id = $this->param('id');
         $page = $this->param($this->offsetParameterName);
-        $rep = $this->getResponse('redirect');
-        $rep->params = array($this->offsetParameterName => $page);
-        $rep->action = $this->_getAction('index');
+        $rep = $this->redirect(
+            $this->_getAction('index'),
+            array($this->offsetParameterName => $page)
+        );
+
         if ($id !== null && $this->_delete($id, $rep)) {
             $dao = jDao::get($this->dao, $this->dbProfile);
             $dao->delete($id);
