@@ -525,10 +525,6 @@ jforms_autocomplete.require=jquery_ui
 jforms_autocompleteajax.js[]="$jelix/js/jforms/jAutocompleteAjax.jqueryui.js"
 jforms_autocompleteajax.require=jquery_ui
 
-
-swjs.js = "$jelix/jquery/flash/jquery.flash.js"
-swjs.require = jquery
-
 datatables.js[]="$jelix/datatables/datatables.min.js"
 datatables.js[]="$jelix/datatables/i18n/$locale.js"
 datatables.css[]="$jelix/datatables/datatables.min.css"

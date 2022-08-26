@@ -32,9 +32,6 @@ cd lib/jelix-www/jquery
   jquery-ui-timepicker-addon.js
   VERSION
 
-cd lib/jelix-www/jquery/flash
-  jquery.flash.js
-
 cd lib/jelix-www/jquery/include
   jquery.include.js
 

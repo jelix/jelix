@@ -33,6 +33,11 @@ Features
     the content of the database before allowing the installation
   * new method `findProfile()` on helpers
 
+Removes
+-------
+
+* the template plugins `swfjs`, `swfbiscuit` and the script `jquery.flash.js`. Flash is dead, so no reason to keep these files.
+
 
 Internal changes
 ----------------
