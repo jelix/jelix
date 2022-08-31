@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     jelix
  * @subpackage  events
@@ -6,7 +7,7 @@
  * @author      Gérald Croes, Patrice Ferlet
  * @contributor Laurent Jouanneau, Dominique Papin, Steven Jehannet
  *
- * @copyright 2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2009 Dominique Papin
+ * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau, 2009 Dominique Papin
  * This classes were get originally from the Copix project
  * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
  * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -16,7 +17,7 @@
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once JELIX_LIB_PATH.'events/jEventListener.class.php';
+require_once JELIX_LIB_PATH . 'events/jEventListener.class.php';
 
 /**
  * Class which represents an event in the event system.
@@ -154,7 +155,8 @@ class jEvent
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse)
+            if (
+                is_array($listenerResponse)
                 && isset($listenerResponse[$responseKey])
                 && $listenerResponse[$responseKey] == $value
             ) {
@@ -180,7 +182,8 @@ class jEvent
         $response = array();
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse)
+            if (
+                is_array($listenerResponse)
                 && isset($listenerResponse[$responseKey])
             ) {
                 $response[] = &$listenerResponse[$responseKey];
@@ -215,7 +218,8 @@ class jEvent
         $response = null;
 
         foreach ($this->_responses as $key => $listenerResponse) {
-            if (is_array($listenerResponse)
+            if (
+                is_array($listenerResponse)
                 && isset($listenerResponse[$responseKey])
             ) {
                 $value = (bool) $listenerResponse[$responseKey];
@@ -278,23 +282,31 @@ class jEvent
     //------------------------------------- static methods
 
     /**
-     * send a notification to all modules.
+     * Send a notification to all modules.
+     * 
+     * Possibility to use your own event object, derived from jEvent, and having
+     * its own methods and properties. It allows to listeners to give returned data
+     * in a better way than using the `add` method.
      *
-     * @param string $event     the event name
-     * @param mixed  $eventname
+     * @param string|jEvent $eventName     the event name or an event object
      * @param mixed  $params
      *
      * @return jEvent
      */
-    public static function notify($eventname, $params = array())
+    public static function notify($eventName, $params = array())
     {
-        $event = new jEvent($eventname, $params);
-
-        if (!isset(self::$hashListened[$eventname])) {
-            self::loadListenersFor($eventname);
+        if (is_object($eventName)) {
+            $event = $eventName;
+            $eventName = $event->getName();
+        } else {
+            $event = new jEvent($eventName, $params);
         }
 
-        $list = &self::$hashListened[$eventname];
+        if (!isset(self::$hashListened[$eventName])) {
+            self::loadListenersFor($eventName);
+        }
+
+        $list = &self::$hashListened[$eventName];
         foreach (array_keys($list) as $key) {
             $list[$key]->performEvent($event);
         }
@@ -302,7 +314,8 @@ class jEvent
         return $event;
     }
 
-    protected static $compilerData = array('jEventCompiler',
+    protected static $compilerData = array(
+        'jEventCompiler',
         'events/jEventCompiler.class.php',
         'events.xml',
         'events.php',
@@ -334,7 +347,7 @@ class jEvent
     {
         if (!isset($GLOBALS['JELIX_EVENTS'])) {
             $compilerData = self::$compilerData;
-            $compilerData[3] = jApp::config()->urlengine['urlScriptId'].'.'.$compilerData[3];
+            $compilerData[3] = jApp::config()->urlengine['urlScriptId'] . '.' . $compilerData[3];
             jIncluder::incAll($compilerData, true);
         }
 
@@ -348,8 +361,8 @@ class jEvent
                     continue;
                 }
                 if (!isset(self::$listenersSingleton[$module][$listenerName])) {
-                    require_once $modules[$module].'classes/'.$listenerName.'.listener.php';
-                    $className = $listenerName.'Listener';
+                    require_once $modules[$module] . 'classes/' . $listenerName . '.listener.php';
+                    $className = $listenerName . 'Listener';
                     self::$listenersSingleton[$module][$listenerName] = new $className();
                 }
                 self::$hashListened[$eventName][] = self::$listenersSingleton[$module][$listenerName];

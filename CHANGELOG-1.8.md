@@ -22,6 +22,9 @@ Features
     the `acl2` configuration section)
   * It is not possible anymore to set some rights on the anonymous group (acl, or related to users)
   * rights are now dependent of the `view` right of the same branch.
+* jEvent:
+  * possibility to give an event object to `jEvent::notify()`. So you can have events having their own methods to manipulate
+    informations for the event. 
 * Configurator:
   * The configurator is now able to declare automatically modules urls, and to remove
     all Urls of a module when it is uninstalled.
