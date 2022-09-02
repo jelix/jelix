@@ -10,11 +10,7 @@
 */
 
 require_once(JELIX_LIB_PATH.'core/request/jClassicRequest.class.php');
-require_once(JELIX_LIB_PATH.'forms/jFormsBase.class.php');
-require_once(JELIX_LIB_PATH.'forms/jFormsControl.class.php');
-require_once(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
 require_once(JELIX_LIB_UTILS_PATH.'jDatatype.class.php');
-require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 
 class testIFRForm extends jFormsBase {
     function addCtrl($control, $reset=true){
