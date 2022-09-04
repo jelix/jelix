@@ -11,3 +11,4 @@ _docs.cache/
 vendor/
 nbproject/
 /phpdoc
+.drafts
