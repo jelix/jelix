@@ -9,7 +9,6 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class tesMFormUpload extends jFormsBase {
     function addCtrl($control, $reset=true){
