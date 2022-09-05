@@ -550,9 +550,9 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
                 $class = new jSelectorClass($attrs['class']);
                 $source[] = 'jClasses::inc(\''.$attrs['class'].'\');';
                 $source[] = '$datasource = new '.$class->className.'($this->id());';
-                $source[] = 'if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;';
+                $source[] = 'if ($datasource instanceof jFormsDatasource){$ctrl->datasource=$datasource;';
                 if (isset($attrs['criteriafrom'])) {
-                    $source[] = 'if($datasource instanceof jIFormsDynamicDatasource) $datasource->setCriteriaControls(array(\''.join('\',\'', preg_split('/[\s,]+/', $attrs['criteriafrom'])).'\'));';
+                    $source[] = 'if($datasource instanceof jFormsDynamicDatasourceInterface) $datasource->setCriteriaControls(array(\''.join('\',\'', preg_split('/[\s,]+/', $attrs['criteriafrom'])).'\'));';
                 }
                 $source[] = '}';
                 $source[] = 'else{$ctrl->datasource=new jFormsStaticDatasource();}';

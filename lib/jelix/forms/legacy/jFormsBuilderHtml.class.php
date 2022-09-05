@@ -784,7 +784,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
         $id = $this->_name.'_'.$ctrl->ref.'_';
         $i = 0;
         $data = $ctrl->datasource->getData($this->_form);
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof jFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
             }
@@ -854,7 +854,7 @@ class jFormsBuilderHtml extends jFormsBuilderBase
     protected function fillSelect($ctrl, $value)
     {
         $data = $ctrl->datasource->getData($this->_form);
-        if ($ctrl->datasource instanceof jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof jFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 foreach ($data[''] as $v => $label) {
                     if (is_array($value)) {

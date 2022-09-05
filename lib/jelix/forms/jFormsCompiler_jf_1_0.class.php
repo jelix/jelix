@@ -606,7 +606,7 @@ class jFormsCompiler_jf_1_0
             $class = new jSelectorClass($dsclass);
             $source[] = 'jClasses::inc(\''.$dsclass.'\');';
             $source[] = '$datasource = new '.$class->className.'($this->id());';
-            $source[] = 'if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;}';
+            $source[] = 'if ($datasource instanceof jFormsDatasource){$ctrl->datasource=$datasource;}';
             $source[] = 'else{$ctrl->datasource=new jFormsStaticDatasource();}';
             if ($controltype == 'submit') {
                 $source[] = '$ctrl->standalone=false;';

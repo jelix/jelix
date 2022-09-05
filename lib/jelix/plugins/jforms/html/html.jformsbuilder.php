@@ -146,7 +146,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
     {
         $this->jsContent .= "c = new jFormsJQControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+            && $ctrl->datasource instanceof jFormsDynamicDatasourceInterface) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->jsContent .= "c.dependencies = ['".implode("','", $dependentControls)."'];\n";
@@ -167,7 +167,7 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
         }
 
         if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+            && $ctrl->datasource instanceof jFormsDynamicDatasourceInterface) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->jsContent .= "c.dependencies = ['".implode("','", $dependentControls)."'];\n";

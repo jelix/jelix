@@ -21,7 +21,7 @@ abstract class jFormsControlDatasource extends jFormsControl
     public $type = 'datasource';
 
     /**
-     * @var jIFormsDatasource
+     * @var jFormsDatasource
      */
     public $datasource;
     public $defaultValue = array();
@@ -50,7 +50,7 @@ abstract class jFormsControlDatasource extends jFormsControl
 
     protected function _getLabel($value)
     {
-        if ($this->datasource instanceof jIFormsDatasource2) {
+        if ($this->datasource instanceof jFormsDatasource2) {
             return $this->datasource->getLabel2($value, $this->form);
         }
 

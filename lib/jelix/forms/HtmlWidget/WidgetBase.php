@@ -358,7 +358,7 @@ abstract class WidgetBase implements WidgetInterface
     protected function fillSelect($ctrl, $value)
     {
         $data = $ctrl->datasource->getData($this->builder->getForm());
-        if ($ctrl->datasource instanceof \jIFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
+        if ($ctrl->datasource instanceof \jFormsDatasource2 && $ctrl->datasource->hasGroupedData()) {
             if (isset($data[''])) {
                 foreach ($data[''] as $v => $label) {
                     if (is_array($value)) {
