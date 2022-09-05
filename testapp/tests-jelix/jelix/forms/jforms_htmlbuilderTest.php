@@ -13,7 +13,6 @@
 
 require_once(JELIX_LIB_PATH.'forms/legacy/jFormsBuilderBase.class.php');
 include_once(JELIX_LIB_PATH.'forms/legacy/jFormsBuilderHtml.class.php');
-require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/jforms/html/html.jformsbuilder.php');
 
 class testHMLForm extends jFormsBase
