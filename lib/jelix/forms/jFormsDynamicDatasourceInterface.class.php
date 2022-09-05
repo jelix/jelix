@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * @package     jelix
  * @subpackage  forms
@@ -21,26 +21,19 @@
  * @package     jelix
  * @subpackage  forms
  */
-interface jFormsDatasource
+interface jFormsDynamicDatasourceInterface extends jFormsDatasource2
 {
     /**
-     * load and returns data to fill a control. The returned array should be
-     * an associative array  key => label.
+     * Return the list of controls name that provide criterion values.
      *
-     * @param jFormsBase $form the form
-     *
-     * @return array the data
+     * @return string[]
      */
-    public function getData($form);
+    public function getCriteriaControls();
 
     /**
-     * Return the label corresponding to the given key
-     * if the class implements also jFormsDatasource2,
-     * you must not call getLabel but getLabel2.
+     * set the list of controls name that provide criterion values.
      *
-     * @param string $key the key
-     *
-     * @return string the label
+     * @param string[] $criteriaFrom
      */
-    public function getLabel($key);
+    public function setCriteriaControls($criteriaFrom = null);
 }
