@@ -1,6 +1,6 @@
 <?php
 
-class mydatasource implements jIFormsDatasource {
+class mydatasource implements jFormsDatasource {
 
     protected $datas = array(
         'aaa'=>'label for aaa',
