@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
  *
- * @copyright   2008-2021 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler, 2010 Olivier Demah, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://jelix.org
@@ -494,9 +494,9 @@ class jAcl2DbAdminUIManager
             $orderField = 'grouptype';
         }
         else if ($orderFlag & self::ORDER_BY_ID) {
-            $orderField = 'id_aclgrp';
+            $orderField = 'grp.id_aclgrp';
         }
-        else if ($orderFlag & self::ORDER_BY_USERS) {
+        else if ($orderFlag & self::ORDER_BY_USERS && $withUsers) {
             $orderField = 'nb_users';
         }
         else {
@@ -508,13 +508,12 @@ class jAcl2DbAdminUIManager
 
         if ($withUsers) {
             $db = jDb::getConnection('jacl2_profile');
-            $filterQuote = $db->quote('%' . $filter . '%');
-
-            $sql = "SELECT g.id_aclgrp, name, grouptype, count(login) as nb_users 
-            FROM ".$db->prefixTable('jacl2_group')." g
-            LEFT JOIN ".$db->prefixTable('jacl2_user_group')." ug ON (g.id_aclgrp = ug.id_aclgrp) 
-            WHERE grouptype <> 2 AND (name LIKE $filterQuote OR g.id_aclgrp LIKE $filterQuote )
-            GROUP BY g.id_aclgrp, name, grouptype
+            $filterQuote = $db->quote($filter);
+            $sql = "SELECT grp.id_aclgrp, name, grouptype, count(login) as nb_users 
+            FROM ".$db->prefixTable('jacl2_group')." grp
+            LEFT JOIN ".$db->prefixTable('jacl2_user_group')." ug ON (grp.id_aclgrp = ug.id_aclgrp) 
+            WHERE grouptype <> 2 AND (name LIKE $filterQuote OR grp.id_aclgrp LIKE $filterQuote )
+            GROUP BY grp.id_aclgrp, name, grouptype
             ORDER BY $orderField $orderDir
             ";
             $groups = $db->limitQuery($sql, $offset, $listPageSize);

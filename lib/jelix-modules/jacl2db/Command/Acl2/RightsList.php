@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2007-2016 Laurent Jouanneau, 2008 Loic Mathaud
+ * @copyright   2007-2022 Laurent Jouanneau, 2008 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -35,7 +35,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
                 FROM '.$cnx->prefixTable('jacl2_rights').' r,
                 '.$cnx->prefixTable('jacl2_subject')." s
                 WHERE r.id_aclgrp = '__anonymous' AND r.id_aclsbj=s.id_aclsbj
-                ORDER BY subject, id_aclres ";
+                ORDER BY subject, r.id_aclres ";
         $rs = $cnx->query($sql);
 
         $table = new Table($output);
@@ -55,7 +55,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
                 '.$cnx->prefixTable('jacl2_subject').' s
                 WHERE r.id_aclgrp = g.id_aclgrp AND r.id_aclsbj=s.id_aclsbj
                  AND r.id_aclgrp <> \'__anonymous\'
-                ORDER BY grp, subject, id_aclres ';
+                ORDER BY grp, subject, r.id_aclres ';
 
         $rs = $cnx->query($sql);
         foreach ($rs as $rec) {
