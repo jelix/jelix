@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jauthdb_admin@jelix.org" name="jauthdb_admin" createdate="2009-01-04">
-        <version date="2022-09-14 15:23">1.8.0-alpha.2</version>
+        <version date="2022-09-14 15:23">1.8.0-alpha.3</version>
         <label lang="en_US">jauthdb_admin</label>
         <description lang="en_US"/>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GNU Public Licence</license>
