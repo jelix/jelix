@@ -280,7 +280,16 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $db->exec('DROP TABLE IF EXISTS country');
         $schema = $db->schema();
 
-        $goodList = array('jsessions', 'products', 'product_test');
+        $goodList = array(
+            'jsessions',
+            'products',
+            'product_test',
+            'jacl2_group',
+            'jacl2_rights',
+            'jacl2_subject',
+            'jacl2_subject_group',
+            'jacl2_user_group'
+        );
 
         $list = $schema->getTables();
         $tables = array();
@@ -620,6 +629,11 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
             'products',
             'sqlite_sequence',
             'test_prod',
+            'jacl2_group',
+            'jacl2_rights',
+            'jacl2_subject',
+            'jacl2_subject_group',
+            'jacl2_user_group'
         );
 
         $list = $schema->getTables();
@@ -784,7 +798,12 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
             'products',
             'sqlite_sequence',
             'test_prod',
-            'jsessions'
+            'jsessions',
+            'jacl2_group',
+            'jacl2_rights',
+            'jacl2_subject',
+            'jacl2_subject_group',
+            'jacl2_user_group'
         );
 
         $list = $schema->getTables();
