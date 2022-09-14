@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Hadrien Lanneau
  *
- * @copyright   2006-2014 Laurent Jouanneau
+ * @copyright   2006-2022 Laurent Jouanneau
  * @copyright   2008 Julien Issler, 2011 Hadrien Lanneau
  *
  * @see        http://www.jelix.org
@@ -104,18 +104,19 @@ abstract class jDatatype
 /**
  * Datatype String.
  *
- * Possible facets are: 'length','minLength','maxLength', 'pattern'
+ * Possible facets are: 'length','minLength','maxLength', 'pattern', 'filterHtml'
  *
  * @package     jelix
  * @subpackage  datatypes
  */
-class jDatatypeString extends jDatatype
+class jDatatypeString extends jDatatype implements jIFilteredDatatype
 {
     protected $length;
     protected $minLength;
     protected $maxLength;
     protected $pattern;
-    protected $facets = array('length', 'minLength', 'maxLength', 'pattern');
+    protected $filterHtml = false;
+    protected $facets = array('length', 'minLength', 'maxLength', 'pattern', 'filterHtml');
 
     public function check($value)
     {
@@ -123,10 +124,16 @@ class jDatatypeString extends jDatatype
             if ($value === null) {
                 $value = '';
             }
-            $len = iconv_strlen(
-                trim(preg_replace('@\s+@', ' ', $value)),
-                jApp::config()->charset
-            );
+
+            $this->filteredValue = $value;
+            $value = trim(preg_replace('@\s+@', ' ', $value));
+            if ($this->filterHtml) {
+                $value = preg_replace('/<\/?[a-zA-Z0-9]+[^>]*>/', '', $value);
+                $this->filteredValue = $value;
+            }
+
+            $len = iconv_strlen($value, jApp::config()->charset);
+
             if ($this->length !== null && $len != $this->length) {
                 return false;
             }
@@ -140,7 +147,16 @@ class jDatatypeString extends jDatatype
                 return false;
             }
         }
+        return true;
+    }
 
+    public function getFilteredValue()
+    {
+        return $this->filteredValue;
+    }
+
+    public function allowWhitespace()
+    {
         return true;
     }
 }
