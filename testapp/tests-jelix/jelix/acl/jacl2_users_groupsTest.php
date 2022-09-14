@@ -298,4 +298,21 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         unset(self::$groups[2]);
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
     }
+
+
+    public function testCreateGroupUtf8()
+    {
+
+        $id = jAcl2DbUserGroup::createGroup('Friedhof Schüpfheim');
+        $this->assertEquals('friedhof_schpfheim', $id);
+
+        $records = array(
+            array('id_aclgrp'=> $id,
+            'name'=>'Friedhof Schüpfheim',
+            'grouptype'=>0,
+            'ownerlogin'=>null)
+        );
+        $this->assertTableContainsRecords('jacl2_group', $records, false);
+
+    }
 }
