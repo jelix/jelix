@@ -123,6 +123,9 @@ $GLOBALS['gLibPath'] = array(
 
 $GLOBALS['gLibClassPath'] = array(
     'jIInstallerComponent' => JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php',
+    'jIFormsDatasource' => JELIX_LIB_PATH.'forms/jIFormsDatasource.iface.php',
+    'jIFormsDatasource2' => JELIX_LIB_PATH.'forms/jIFormsDatasource2.iface.php',
+    'jIFormsDynamicDatasource' => JELIX_LIB_PATH.'forms/jIFormsDynamicDatasource.iface.php',
 );
 
 /**

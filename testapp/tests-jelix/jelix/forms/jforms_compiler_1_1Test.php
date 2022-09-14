@@ -11,8 +11,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'forms/jFormsDatasource.class.php');
-
 class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
 
     public function __construct() {
