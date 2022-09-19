@@ -116,6 +116,7 @@ class jDatatypeString extends jDatatype implements jIFilteredDatatype
     protected $maxLength;
     protected $pattern;
     protected $filterHtml = false;
+    protected $filteredValue = '';
     protected $facets = array('length', 'minLength', 'maxLength', 'pattern', 'filterHtml');
 
     public function check($value)
