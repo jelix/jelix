@@ -5,7 +5,7 @@
  * @subpackage  unittest module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2007-2012 Laurent Jouanneau
+ * @copyright   2007-2022 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -20,6 +20,7 @@ class jDatatypeTest extends \PHPUnit\Framework\TestCase
         $dt = new jDatatypeString();
 
         $this->assertTrue($dt->check('aaa'));
+        $this->assertEquals('aaa', $dt->getFilteredValue());
         $this->assertTrue($dt->check(''));
         $this->assertTrue($dt->check(null));
 
@@ -29,6 +30,8 @@ class jDatatypeTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($dt->check('a'));
         $this->assertFalse($dt->check('aa'));
         $this->assertTrue($dt->check('aaa'));
+        $this->assertEquals('aaa', $dt->getFilteredValue());
+
         $this->assertFalse($dt->check('aaaa'));
         $this->assertFalse($dt->check('aaaaa'));
 
