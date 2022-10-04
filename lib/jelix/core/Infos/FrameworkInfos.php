@@ -199,28 +199,46 @@ class FrameworkInfos
     protected function updateIni()
     {
         foreach ($this->entrypoints as $item) {
-            $this->iniFile->setValues(array(
-                'config' => $item->getConfigFile(),
-                'type' => $item->getType(),
-            ), 'entrypoint:'.$item->getFile());
-            if ($item->getId() == $this->defaultEntryPoint) {
-                $this->iniFile->setValue('default', true, 'entrypoint:'.$item->getFile());
-            } else {
-                $this->iniFile->removeValue('default', 'entrypoint:'.$item->getFile());
-            }
+            $this->updateFrameworkIniSection($this->iniFile, $item);
         }
         if ($this->iniLocalFile) {
             foreach ($this->localEntrypoints as $item) {
-                $this->iniLocalFile->setValues(array(
-                    'config' => $item->getConfigFile(),
-                    'type' => $item->getType(),
-                ), 'entrypoint:'.$item->getFile());
-                if ($item->getId() == $this->defaultEntryPoint) {
-                    $this->iniLocalFile->setValue('default', true, 'entrypoint:'.$item->getFile());
-                } else {
-                    $this->iniLocalFile->removeValue('default', 'entrypoint:'.$item->getFile());
-                }
+                $this->updateFrameworkIniSection($this->iniLocalFile, $item);
             }
+        }
+    }
+
+    /**
+     * @param IniModifier $ini
+     * @param EntryPoint $ep
+     * @return void
+     */
+    protected function updateFrameworkIniSection($ini, $ep)
+    {
+        $sectionName = 'entrypoint:'.$ep->getFile();
+        $values = array(
+            'config' => $ep->getConfigFile(),
+            'type' => $ep->getType(),
+        );
+        $previous = $ini->getValues($sectionName);
+
+        if ($ep->getId() == $this->defaultEntryPoint) {
+            $values['default'] = true;
+            $defaultChanged = !$previous || !isset($previous['default']) || !$previous['default'];
+        } else {
+            unset($values['default']);
+            $defaultChanged = !$previous || (isset($previous['default']) && $previous['default']);
+        }
+
+        // if the section is already there, we should not do a setValues, else
+        // the file will be marked as "modified" and will be rewritten.
+        // we don't want that for framework.ini.php if we are in a local mode.
+        if (!$previous ||
+            $defaultChanged ||
+            $values['config'] != $previous['config'] ||
+            $values['type'] != $previous['type'])
+        {
+            $ini->setValues($values, $sectionName);
         }
     }
 
