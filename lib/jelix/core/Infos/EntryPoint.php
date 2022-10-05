@@ -17,6 +17,8 @@ class EntryPoint
 
     protected $configFile;
 
+    protected $local = false;
+
     public function __construct($id, $configFile, $type = 'classic')
     {
         $this->id = $id;
@@ -47,5 +49,15 @@ class EntryPoint
     public function setConfigFile($file)
     {
         $this->configFile = $file;
+    }
+
+    public function setAsLocal($asLocal = true)
+    {
+        $this->local = $asLocal;
+    }
+
+    public function isLocal()
+    {
+        return $this->local;
     }
 }

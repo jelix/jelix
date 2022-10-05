@@ -156,7 +156,7 @@ class FrameworkInfos
         }
 
         $this->localEntrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
-
+        $this->localEntrypoints[$fileName]->setAsLocal();
         return $this->localEntrypoints[$fileName];
     }
 
