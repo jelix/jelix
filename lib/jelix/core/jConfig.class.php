@@ -65,9 +65,12 @@ class jConfig
             $dc = jApp::mainConfigFile();
             $lc = jApp::varConfigPath('localconfig.ini.php');
             $lvc = jApp::varConfigPath('liveconfig.ini.php');
+            $appEpConfig = jApp::appSystemPath($configFile);
+            $varEpConfig = jApp::varConfigPath($configFile);
 
             if ((file_exists($dc) && filemtime($dc) > $t)
-                || filemtime(jApp::appSystemPath($configFile)) > $t
+                || (file_exists($appEpConfig) && filemtime($appEpConfig) > $t)
+                || (file_exists($varEpConfig) && filemtime($varEpConfig) > $t)
                 || (file_exists($lc) && filemtime($lc) > $t)
                 || (file_exists($lvc) && filemtime($lvc) > $t)
             ) {
