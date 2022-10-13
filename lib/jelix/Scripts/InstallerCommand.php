@@ -3,7 +3,7 @@
  * @package     jelix-scripts
  *
  * @author Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -14,6 +14,7 @@ namespace Jelix\Scripts;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class InstallerCommand extends Command
@@ -24,6 +25,12 @@ class InstallerCommand extends Command
             ->setName('installer')
             ->setDescription('Launch installers of the application')
             ->setHelp('')
+            ->addOption(
+                'no-clean-temp',
+                '',
+                InputOption::VALUE_NONE,
+                'Do not delete files from temp directory.'
+            )
         ;
     }
 
@@ -43,13 +50,29 @@ class InstallerCommand extends Command
             return 1;
         }
 
+        if ($input->getOption('no-clean-temp')) {
+            \jAppManager::open();
+            return 0;
+        }
+
         try {
             \jAppManager::clearTemp();
         } catch (\Exception $e) {
-            $output->writeln('<comment>WARNING: temporary files cannot be deleted because of this error: '.$e->getMessage().'</comment>');
-            $output->writeln('<comment>WARNING: Delete temp files by hand immediately, then run the command</comment> <fg=cyan>console.php app:open</>');
-
-            return 1;
+            $output->writeln('<error>Content of the temp directory cannot be removed because of this error:</error>');
+            $output->writeln('<error>'.$e->getMessage().'</error>');
+            $code = $e->getCode();
+            $output->writeln('<comment>You MUST delete files into '.\jApp::tempBasePath().'</comment>');
+            if ($code == 4 || $code == 5) {
+                $output->writeln('Fix rights on directories, then run:');
+                $output->writeln('   php console.php app:cleartemp');
+                $output->writeln('Or probably you cloud use sudo directly:');
+                $output->writeln('   sudo php console.php app:cleartemp');
+            }
+            else {
+                $output->writeln('Fix the error if needed, then run (possibly with sudo):');
+                $output->writeln('   php console.php app:cleartemp');
+            }
+            $output->writeln('Or delete files by hand.');
         }
         \jAppManager::open();
 

@@ -37,6 +37,8 @@ Features
   * The PreInstallHelpers class has now the database API to allows to check the
     content of the database before allowing the installation
   * new method `findProfile()` on helpers
+  * new option to the installer command: `--no-clean-temp`. And the command verifies now that
+    all content of the temp directory can be deleted.
 
 Removes
 -------

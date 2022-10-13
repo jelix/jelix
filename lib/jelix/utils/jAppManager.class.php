@@ -6,7 +6,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2010-2011 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2010-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -67,6 +67,10 @@ class jAppManager
         return !file_exists(jApp::varConfigPath('CLOSED'));
     }
 
+    /**
+     * @param string $path alternative path to the temp path
+     * @return bool true if all the content has been removed
+     */
     public static function clearTemp($path = '')
     {
         if ($path == '') {
@@ -77,18 +81,28 @@ class jAppManager
         }
 
         if ($path == DIRECTORY_SEPARATOR || $path == '' || $path == '/') {
-            throw new Exception('given temp path is invalid', 2);
+            throw new Exception('The temp path is invalid. The path set into the application.init.php is not correct', 2);
         }
         if (!file_exists($path)) {
-            throw new Exception('given temp path does not exists', 3);
+            throw new Exception('The temp path does not exists', 3);
         }
 
-        if (!is_writeable($path)) {
-            throw new Exception('given temp path does not exists', 4);
+        if (!is_writable($path)) {
+            throw new Exception('The temp directory is not writable', 4);
+        }
+        // check if subdirectories are writable
+        $dir = new \DirectoryIterator($path);
+        foreach ($dir as $dirContent) {
+            if (!$dirContent->isDot()) {
+                if( !$dir->isWritable()) {
+                    unset($dir);
+                    throw new Exception('Cannot delete content of temp path because of lack of rights (not writable)', 5);
+                }
+            }
         }
 
         // do not erase .empty or .dummy files that are into the temp directory
         // for source code repositories
-        jFile::removeDir($path, false, array('.dummy', '.empty', '.svn'));
+        return jFile::removeDir($path, false, array('.dummy', '.empty', '.svn'));
     }
 }
