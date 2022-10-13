@@ -30,7 +30,8 @@
         "jelix/sitemap-module": "^1.7.7",
         "guzzlehttp/guzzle": "^7.4.5",
         "jelix/feeds-module": "^1.7.6",
-        "jelix/wikirenderer-plugin": "^1.7.3"
+        "jelix/wikirenderer-plugin": "^1.7.3",
+        "jelix/helloworld-module": "1.0.*"
     },
     "autoload": {
     },
