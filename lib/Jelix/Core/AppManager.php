@@ -64,6 +64,10 @@ class AppManager
         return !file_exists(App::varConfigPath('CLOSED'));
     }
 
+    /**
+     * @param string $path alternative path to the temp path
+     * @return bool true if all the content has been removed
+     */
     public static function clearTemp($path = '')
     {
         if ($path == '') {
@@ -80,13 +84,24 @@ class AppManager
             throw new \Exception('given temp path does not exists', 3);
         }
 
-        if (!is_writeable($path)) {
+        if (!is_writable($path)) {
             throw new \Exception('given temp path does not exists', 4);
+        }
+
+        // check if subdirectories are writable
+        $dir = new \DirectoryIterator($path);
+        foreach ($dir as $dirContent) {
+            if (!$dirContent->isDot()) {
+                if( !$dir->isWritable()) {
+                    unset($dir);
+                    throw new \Exception('Cannot delete content of temp path because of lack of rights (not writable)', 5);
+                }
+            }
         }
 
         // do not erase .empty or .dummy files that are into the temp directory
         // for source code repositories
-        \jFile::removeDir($path, false, array('.dummy', '.empty', '.svn'));
+        return \jFile::removeDir($path, false, array('.dummy', '.empty', '.svn'));
     }
 
     /**

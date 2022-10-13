@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @package   admin
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2021 Laurent Jouanneau
+ * @copyright 2009-2022 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -113,7 +114,8 @@ class defaultCtrl extends jController
         }
 
         if (($lo = $this->param('listorder'))
-            && (in_array($lo, $this->propertiesForList))) {
+            && (in_array($lo, $this->propertiesForList))
+        ) {
             if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                 $listOrder[$lo] = 'desc';
             } elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
@@ -132,11 +134,11 @@ class defaultCtrl extends jController
         $filter = trim($this->param('filter'));
         if ($filter && count($this->filteredProperties)) {
             if (count($this->filteredProperties) == 1) {
-                $cond->addCondition($this->filteredProperties[0], 'LIKE', '%'.$filter.'%');
+                $cond->addCondition($this->filteredProperties[0], 'LIKE', '%' . $filter . '%');
             } else {
                 $cond->startGroup('OR');
                 foreach ($this->filteredProperties as $prop) {
-                    $cond->addCondition($prop, 'LIKE', '%'.$filter.'%');
+                    $cond->addCondition($prop, 'LIKE', '%' . $filter . '%');
                 }
                 $cond->endGroup();
             }
@@ -172,20 +174,16 @@ class defaultCtrl extends jController
     {
         $login = $this->param('j_user_login');
         if ($login === null) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', 'null'), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
         $dao = jDao::create($this->dao, $this->dbProfile);
         $daorec = $dao->getByLogin($login);
         if (!$daorec) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $rep = $this->getResponse('html');
@@ -225,10 +223,7 @@ class defaultCtrl extends jController
         $form->deactivate('password_confirm', false);
         jEvent::notify('jauthdbAdminPrepareCreate', array('form' => $form));
 
-        $rep = $this->getResponse('redirect');
-        $rep->action = 'default:create';
-
-        return $rep;
+        return $this->redirect('default:create');
     }
 
     /**
@@ -262,13 +257,12 @@ class defaultCtrl extends jController
     public function savecreate()
     {
         $form = jForms::get($this->form);
-        $rep = $this->getResponse('redirect');
         if ($form == null) {
             jMessage::add(jLocale::get('crud.message.bad.form'), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
+
         jEvent::notify('jauthdbAdminBeforeCheckCreateForm', array('form' => $form));
 
         $form->initFromRequest();
@@ -276,13 +270,13 @@ class defaultCtrl extends jController
         $login = trim($form->getData('login'));
         if (jAuth::getUser($login)) {
             $form->setErrorOn('login', jLocale::get('crud.message.create.existing.user', $login));
-            $rep->action = 'default:create';
 
-            return $rep;
+            return $this->redirect('default:create');
         }
 
         $evresp = array();
-        if ($form->check()
+        if (
+            $form->check()
             && !jEvent::notify('jauthdbAdminCheckCreateForm', array('form' => $form))
                 ->inResponse('check', false, $evresp)
         ) {
@@ -299,14 +293,11 @@ class defaultCtrl extends jController
 
             jForms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
-            $rep->action = 'default:view';
-            $rep->params['j_user_login'] = $user->login;
 
-            return $rep;
+            return $this->redirect('default:view', ['j_user_login' => $user->login]);
         }
-        $rep->action = 'default:create';
 
-        return $rep;
+        return $this->redirect('default:create');
     }
 
     /**
@@ -315,26 +306,20 @@ class defaultCtrl extends jController
     public function preupdate()
     {
         $login = $this->param('j_user_login');
-        $rep = $this->getResponse('redirect');
 
         if ($login === null) {
             jMessage::add(jLocale::get('crud.message.bad.id', 'null'), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
-
-        $rep->params['j_user_login'] = $login;
 
         $form = jForms::create($this->form, $login);
 
@@ -347,18 +332,16 @@ class defaultCtrl extends jController
                 }
             }
         } catch (Exception $e) {
-            $rep->action = 'default:view';
 
-            return $rep;
+            return $this->redirect('default:view', ['j_user_login' => $login]);
         }
 
         jEvent::notify('jauthdbAdminPrepareUpdate', array('form' => $form, 'himself' => false));
         $form->setReadOnly('login');
         $form->deactivate('password');
         $form->deactivate('password_confirm');
-        $rep->action = 'default:editupdate';
 
-        return $rep;
+        return $this->redirect('default:editupdate', ['j_user_login' => $login]);
     }
 
     /**
@@ -371,11 +354,9 @@ class defaultCtrl extends jController
         $login = $this->param('j_user_login');
         $form = jForms::get($this->form, $login);
         if ($form === null || $login === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'default:index';
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
 
-            return $rep;
+            return $this->redirect('default:index');
         }
         $rep = $this->getResponse('html');
 
@@ -399,34 +380,29 @@ class defaultCtrl extends jController
      */
     public function saveupdate()
     {
-        $rep = $this->getResponse('redirect');
         $login = $this->param('j_user_login');
 
         if ($login === null) {
             jMessage::add(jLocale::get('crud.message.bad.id', 'null'), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         /** @var jDaoRecordBase $daoUser */
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $form = jForms::get($this->form, $login);
 
         if ($form === null) {
             jMessage::add(jLocale::get('crud.message.bad.form'), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         jEvent::notify('jauthdbAdminBeforeCheckUpdateForm', array('form' => $form, 'himself' => false));
@@ -434,7 +410,8 @@ class defaultCtrl extends jController
         $form->initFromRequest();
 
         $evresp = array();
-        if ($form->check()
+        if (
+            $form->check()
             && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form' => $form, 'himself' => false))
                 ->inResponse('check', false, $evresp)
         ) {
@@ -445,15 +422,13 @@ class defaultCtrl extends jController
             jAuth::updateUser($daoUser);
 
             $form->saveAllFiles($this->uploadsDirectory);
-            $rep->action = 'default:view';
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
             jForms::destroy($this->form, $login);
-        } else {
-            $rep->action = 'default:editupdate';
-        }
-        $rep->params['j_user_login'] = $login;
 
-        return $rep;
+            return $this->redirect('default:view', ['j_user_login' => $login]);
+        }
+
+        return $this->redirect('default:editupdate', ['j_user_login' => $login]);
     }
 
     public function confirmdelete()
@@ -461,21 +436,17 @@ class defaultCtrl extends jController
         $login = $this->param('j_user_login');
         if ($login === null) {
             jMessage::add(jLocale::get('crud.message.bad.id', 'null'), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         /** @var jDaoRecordBase $daoUser */
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep->action = 'default:index';
 
-            return $rep;
+            return $this->redirect('default:index');
         }
 
         $rep = $this->getResponse('html');
@@ -494,31 +465,25 @@ class defaultCtrl extends jController
     {
         $login = $this->param('j_user_login');
         $pwd = $this->param('pwd_confirm');
-        $rep = $this->getResponse('redirect');
 
         if (jAuth::verifyPassword(jAuth::getUserSession()->login, $pwd) == false) {
             jMessage::add(jLocale::get('crud.message.delete.invalid.pwd'), 'error');
-            $rep->action = 'default:confirmdelete';
-            $rep->params['j_user_login'] = $login;
 
-            return $rep;
+            return $this->redirect('default:confirmdelete', ['j_user_login' => $login]);
         }
 
         if ($login !== null && jAuth::getUserSession()->login != $login) {
             if (jAuth::removeUser($login)) {
                 jMessage::add(jLocale::get('crud.message.delete.ok', $login), 'notice');
-                $rep->action = 'default:index';
             } else {
                 jMessage::add(jLocale::get('crud.message.delete.notok'), 'error');
-                $rep->action = 'default:view';
-                $rep->params['j_user_login'] = $login;
+                return $this->redirect('default:view', ['j_user_login' => $login]);
             }
         } else {
             jMessage::add(jLocale::get('crud.message.delete.notok'), 'error');
-            $rep->action = 'default:index';
         }
 
-        return $rep;
+        return $this->redirect('default:index');
     }
 
     public function autocomplete()

@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @package   admin
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2013 Laurent Jouanneau
+ * @copyright 2009-2022 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -28,9 +29,8 @@ class passwordCtrl extends jController
         $login = $this->param('j_user_login');
         if ($login === null) {
             $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $personalView = $this->isPersonalView();
@@ -38,10 +38,8 @@ class passwordCtrl extends jController
             || !jAuth::canChangePassword($login)
         ) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $rep = $this->getResponse('html');
@@ -65,42 +63,33 @@ class passwordCtrl extends jController
         $login = $this->param('j_user_login');
         $pwd = $this->param('pwd');
         $pwdconf = $this->param('pwd_confirm');
-        $rep = $this->getResponse('redirect');
 
         $personalView = $this->isPersonalView();
         if (($personalView && $login != jAuth::getUserSession()->login)
             || !jAuth::canChangePassword($login)
         ) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         if (trim($pwd) == '' || $pwd != $pwdconf) {
             jMessage::add(jLocale::get('crud.message.bad.password'), 'error');
-            $rep->action = 'password:index';
-            $rep->params['j_user_login'] = $login;
 
-            return $rep;
+            return $this->redirect('password:index', ['j_user_login' => $login]);
         }
 
         if (jAuth::changePassword($login, $pwd)) {
             jMessage::add(jLocale::get('crud.message.change.password.ok', $login), 'notice');
             if ($personalView) {
-                $rep->action = 'user:index';
+                return $this->redirect('user:index', ['j_user_login' => $login]);
             } else {
-                $rep->action = 'default:view';
+                return $this->redirect('default:view', ['j_user_login' => $login]);
             }
-            $rep->params['j_user_login'] = $login;
-
-            return $rep;
         }
 
         jMessage::add(jLocale::get('crud.message.change.password.notok'), 'error');
-        $rep->action = 'password:index';
-        $rep->params['j_user_login'] = $login;
 
-        return $rep;
+        return $this->redirect('password:index', ['j_user_login' => $login]);
     }
 }

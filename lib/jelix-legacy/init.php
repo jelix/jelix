@@ -47,6 +47,8 @@ class LegacyJelixAutoloader
 {
     public static $libPath;
 
+    public static $filePath;
+
     public static function loadClass($class)
     {
         if (stripos($class, 'jelix') === 0) {
@@ -88,6 +90,8 @@ class LegacyJelixAutoloader
             }
 
             return;
+        } elseif (isset(self::$filePath[$class])) {
+            $f = self::$filePath[$class];
         } else {
             $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
         }
@@ -111,6 +115,12 @@ LegacyJelixAutoloader::$libPath = array(
     'Auth' => JELIX_LIB_PATH.'auth/',
     'Installer' => JELIX_LIB_PATH.'installer/',
     'KV' => JELIX_LIB_PATH.'kvdb/',
+);
+
+LegacyJelixAutoloader::$filePath = array(
+    'jIFormsDatasource' => JELIX_LIB_PATH.'forms/jIFormsDatasource.iface.php',
+    'jIFormsDatasource2' => JELIX_LIB_PATH.'forms/jIFormsDatasource2.iface.php',
+    'jIFormsDynamicDatasource' => JELIX_LIB_PATH.'forms/jIFormsDynamicDatasource.iface.php',
 );
 
 spl_autoload_register('LegacyJelixAutoloader::loadClass');

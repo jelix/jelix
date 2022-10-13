@@ -78,6 +78,10 @@ class htmlJformsBuilder extends jFormsBuilderHtml
         $conf = jApp::config()->urlengine;
         $collection = jApp::config()->webassets['useCollection'];
         $jquery = jApp::config()->{'webassets_'.$collection}['jquery.js'];
+        if (is_array($jquery)) {
+            // we assume that the first js file is jquery itself
+            $jquery = $jquery[0];
+        }
         // no scope into an anonymous js function, because jFormsJQ.tForm is used by other generated source code
         echo '<script type="text/javascript">
 //<![CDATA[

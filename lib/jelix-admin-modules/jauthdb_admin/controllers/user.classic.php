@@ -1,10 +1,11 @@
 <?php
+
 /**
  * @package   admin
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2019 Laurent Jouanneau
+ * @copyright 2009-2022 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -68,28 +69,22 @@ class userCtrl extends jController
     {
         $login = $this->param('j_user_login');
         if ($login === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         if ($login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $rep = $this->getResponse('html');
@@ -119,32 +114,25 @@ class userCtrl extends jController
     public function preupdate()
     {
         $login = $this->param('j_user_login');
-        $rep = $this->getResponse('redirect');
 
         if ($login === null) {
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         if ($login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
-
-        $rep->params['j_user_login'] = $login;
 
         $form = jForms::create($this->form, $login);
 
@@ -157,18 +145,16 @@ class userCtrl extends jController
                 }
             }
         } catch (Exception $e) {
-            $rep->action = 'default:view';
 
-            return $rep;
+            return $this->redirect('default:view', ['j_user_login' => $login]);
         }
 
         jEvent::notify('jauthdbAdminPrepareUpdate', array('form' => $form, 'himself' => true));
         $form->setReadOnly('login');
         $form->deactivate('password');
         $form->deactivate('password_confirm');
-        $rep->action = 'user:editupdate';
 
-        return $rep;
+        return $this->redirect('user:editupdate', ['j_user_login' => $login]);
     }
 
     /**
@@ -181,18 +167,14 @@ class userCtrl extends jController
         $login = $this->param('j_user_login');
         $form = jForms::get($this->form, $login);
         if ($form === null || $login === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         if ($login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $rep = $this->getResponse('html');
@@ -216,34 +198,28 @@ class userCtrl extends jController
      */
     public function saveupdate()
     {
-        $rep = $this->getResponse('redirect');
         $login = $this->param('j_user_login');
 
         if ($login != jAuth::getUserSession()->login) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
-            $rep = $this->getResponse('redirect');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
         /** @var jDaoRecordBase $daoUser */
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
-            $rep = $this->getResponse('redirect');
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         $form = jForms::get($this->form, $login);
 
         if ($form === null || $login === null) {
-            $rep->action = 'master_admin~default:index';
 
-            return $rep;
+            return $this->redirect('master_admin~default:index');
         }
 
         jEvent::notify(
@@ -262,14 +238,12 @@ class userCtrl extends jController
             jAuth::updateUser($daoUser);
 
             $form->saveAllFiles($this->uploadsDirectory);
-            $rep->action = 'user:index';
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
             jForms::destroy($this->form, $login);
-        } else {
-            $rep->action = 'user:editupdate';
-        }
-        $rep->params['j_user_login'] = $login;
 
-        return $rep;
+            return $this->redirect('user:index', ['j_user_login' => $login]);
+        }
+
+        return $this->redirect('user:editupdate', ['j_user_login' => $login]);
     }
 }

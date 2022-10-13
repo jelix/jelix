@@ -48,6 +48,7 @@ class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
             $helpers->database()->useDbProfile('testapp_sqlite3');
             $helpers->database()->execSQLScript('install');
             $helpers->database()->execSQLScript('sql/install_jsession.schema', 'jelix');
+            $helpers->database()->execSQLScript('install_jacl2.schema', 'jacl2db');
         }
     }
 }

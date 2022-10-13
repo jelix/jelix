@@ -62,9 +62,13 @@ class Config
             $dc = App::mainConfigFile();
             $lc = App::varConfigPath('localconfig.ini.php');
             $lvc = App::varConfigPath('liveconfig.ini.php');
+            $appEpConfig = App::appSystemPath($configFile);
+            $varEpConfig = App::varConfigPath($configFile);
 
             if ((file_exists($dc) && filemtime($dc) > $t)
                 || filemtime(App::appSystemPath($configFile)) > $t
+                || (file_exists($appEpConfig) && filemtime($appEpConfig) > $t)
+                || (file_exists($varEpConfig) && filemtime($varEpConfig) > $t)
                 || (file_exists($lc) && filemtime($lc) > $t)
                 || (file_exists($lvc) && filemtime($lvc) > $t)
             ) {

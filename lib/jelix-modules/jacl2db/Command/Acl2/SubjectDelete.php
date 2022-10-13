@@ -23,7 +23,7 @@ class SubjectDelete extends \Jelix\Scripts\ModuleCommandAbstract
     {
         $this
             ->setName('acl2:right-delete')
-            ->setDescription('Delete a right"')
+            ->setDescription('Delete a right')
             ->setHelp('')
             ->addArgument(
                 'right',

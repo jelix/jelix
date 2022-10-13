@@ -180,6 +180,11 @@ class jApp
         \Jelix\Core\App::declareModule($modulePath);
     }
 
+    public static function declareModulesFromConfig($config)
+    {
+        \Jelix\Core\App::declareModulesFromConfig($config);
+    }
+
     public static function clearModulesPluginsPath()
     {
         \Jelix\Core\App::clearModulesPluginsPath();

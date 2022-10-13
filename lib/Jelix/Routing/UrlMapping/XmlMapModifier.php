@@ -15,10 +15,30 @@ namespace Jelix\Routing\UrlMapping;
 class XmlMapModifier
 {
     /**
+     * @var string the filename
+     */
+    protected $file;
+
+    /**
+     * @var \DOMDocument the DOM document representing the file
+     */
+    protected $document;
+
+    /**
      * @var XmlEntryPoint
      */
     protected $currentEntryPoint;
 
+    /**
+     * @var bool indicate if the content is modified, to save or not the file.
+     */
+    protected $modified = false;
+
+    /**
+     * @param string $file
+     * @param boolean $createIfNotExists
+     * @throws \Exception
+     */
     public function __construct($file, $createIfNotExists = false)
     {
         $this->file = $file;
@@ -27,6 +47,7 @@ class XmlMapModifier
             if (!$createIfNotExists) {
                 throw new \Exception('Url mapping file does not exists -- '.$file);
             }
+            $this->modified = true;
             $this->document->loadXML('<'.'?xml version="1.0" encoding="utf-8"?>'."\n".
                     '<urls xmlns="http://jelix.org/ns/urls/1.0">'."\n</urls>");
         } else {
@@ -35,9 +56,16 @@ class XmlMapModifier
         $this->currentEntryPoint = $this->getEntryPoint('index');
     }
 
+    public function setAsModified()
+    {
+        $this->modified = true;
+    }
+
     public function save()
     {
-        $this->document->save($this->file);
+        if ($this->modified) {
+            $this->document->save($this->file);
+        }
     }
 
     /**
@@ -64,6 +92,7 @@ class XmlMapModifier
             $this->document->documentElement->appendChild($xmlep);
             $this->document->documentElement->appendChild($sep2);
             $ep = new XmlEntryPoint($this, $xmlep);
+            $this->modified = true;
         }
         $ep->setOptions($options);
 
@@ -86,6 +115,7 @@ class XmlMapModifier
                 $parent->removeChild($xmlEp->previousSibling);
             }
             $parent->removeChild($xmlEp);
+            $this->modified = true;
         }
     }
 
@@ -100,6 +130,7 @@ class XmlMapModifier
             }
             $ep2->removeAttribute('default');
         }
+        $this->modified = true;
     }
 
     /**

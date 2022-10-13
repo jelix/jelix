@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package     jelix-modules
  * @subpackage  jauth
@@ -6,7 +7,7 @@
  * @author      Laurent Jouanneau
  * @contributor Antoine Detante, Bastien Jaillot, Loic Mathaud, Vincent Viaud, Julien Issler
  *
- * @copyright   2005-2020 Laurent Jouanneau, 2007 Antoine Detante, 2008 Bastien Jaillot
+ * @copyright   2005-2022 Laurent Jouanneau, 2007 Antoine Detante, 2008 Bastien Jaillot
  * @copyright   2008 Loic Mathaud, 2011 Vincent Viaud, 2015 Julien Issler
  *
  * @see        http://www.jelix.org
@@ -109,14 +110,11 @@ class loginCtrl extends jController
             if ($conf['after_login'] != '' && $conf['after_login'] != 'jauth~login:form') {
                 $url_return = $this->param('auth_url_return');
                 if (!($conf['enable_after_login_override']
-                    && jAuth::checkReturnUrl($url_return))
-                ) {
+                    && jAuth::checkReturnUrl($url_return))) {
                     $url_return = jUrl::get($conf['after_login']);
                 }
-                $rep = $this->getResponse('redirectUrl');
-                $rep->url = $url_return;
 
-                return $rep;
+                return $this->redirectToUrl($url_return);
             }
         }
 
@@ -124,9 +122,11 @@ class loginCtrl extends jController
         $rep->title = jLocale::get('auth.titlePage.login');
         $rep->bodyTpl = 'jauth~index';
 
-        $zp = array('login' => $this->param('login'),
+        $zp = array(
+            'login' => $this->param('login'),
             'failed' => $this->param('failed'),
-            'showRememberMe' => jAuth::isPersistant(), );
+            'showRememberMe' => jAuth::isPersistant(),
+        );
 
         if ($conf['enable_after_login_override']) {
             $url_return = $this->param('auth_url_return');

@@ -15,6 +15,8 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
     protected static $coordAuthPlugin = null;
     protected $oldAuthPlugin;
 
+    protected $numberAs = "string";
+
     public function setUp() : void
     {
         $this->dbProfile = 'jacl2_profile';
@@ -31,6 +33,9 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
         // prepare data
         $this->emptyTable('jacl2_rights');
+        $this->emptyTable('jacl2_subject');
+        $this->emptyTable('jacl2_user_group');
+        $this->emptyTable('jacl2_group');
 
         $groups = array(
             array('id_aclgrp'=>'admins', 'name'=>'Admins', 'grouptype'=>0, 'ownerlogin'=>null),
@@ -141,13 +146,13 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
     <object>
         <string property="id_aclgrp" value="admins" />
         <string property="name" value="Admins" />
-        <string property="grouptype" value="0" />
+        <'.$this->numberAs.' property="grouptype" value="0" />
         <null property="ownerlogin"/>
     </object>
     <object>
         <string property="id_aclgrp" value="users" />
         <string property="name" value="Users" />
-        <string property="grouptype" value="0" />
+        <'.$this->numberAs.' property="grouptype" value="0" />
         <null property="ownerlogin"/>
     </object>
 </array>';
@@ -287,13 +292,13 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="123" />
-                    <string property="canceled" value="0"/>
+                    <'.$this->numberAs.' property="canceled" value="0"/>
                 </object>
                 <object >
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="456" />
-                    <string property="canceled" value="1"/>
+                    <'.$this->numberAs.' property="canceled" value="1"/>
                 </object>
             </array>
         </array>';
@@ -823,13 +828,13 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="123" />
-                    <string property="canceled" value="0"/>
+                    <'.$this->numberAs.' property="canceled" value="0"/>
                 </object>
                 <object >
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="456" />
-                    <string property="canceled" value="1"/>
+                    <'.$this->numberAs.' property="canceled" value="1"/>
                 </object>
             </array>
         </array>';
@@ -1806,7 +1811,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                             <string property="login" value="oneuser" />
                             <string property="id_aclgrp" value="__priv_oneuser" />
                             <string property="name" value="oneuser" />
-                            <string property="grouptype" value="2" />
+                            <'.$this->numberAs.' property="grouptype" value="2" />
                         </object>';
         $this->assertComplexIdenticalStr($rightsResult['hisgroup'], $hisGroup);
 
@@ -1816,12 +1821,12 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             <object>
                 <string property="id_aclgrp" value="admins" />
                 <string property="name" value="Admins" />
-                <string property="grouptype" value="0" />
+                <'.$this->numberAs.' property="grouptype" value="0" />
             </object>
             <object>
                 <string property="id_aclgrp" value="users" />
                 <string property="name" value="Users" />
-                <string property="grouptype" value="0" />
+                <'.$this->numberAs.' property="grouptype" value="0" />
             </object>
         </array>';
         $this->assertComplexIdenticalStr($rightsResult['groups'], $groups);
@@ -1900,11 +1905,11 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             'acl.group.modify' => 'n',
         );
         jAcl2DbUserGroup::createGroup('NotAdmin', 'notAdmin');
-        jAcl2DbManager::setRightsOnGroup('notAdmin', $NotAdminRights);
+        jAcl2DbManager::setRightsOnGroup('notadmin', $NotAdminRights);
 
         $mgr = new jAcl2DbAdminUIManager();
         $this->expectException(jAcl2DbAdminUIException::class);
-        $mgr->addUserToGroup('oneuser', 'notAdmin', 'oneuser');
+        $mgr->addUserToGroup('oneuser', 'notadmin', 'oneuser');
     }
 
     public function testGetUsersList()
@@ -1950,7 +1955,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                             <string property="login" value="theadmin" />
                             <string property="id_aclgrp" value="__priv_theadmin" />
                             <string property="name" value="theadmin" />
-                            <string property="grouptype" value="2" />
+                            <'.$this->numberAs.' property="grouptype" value="2" />
                         </object>';
         $this->assertComplexIdenticalStr($rightsResult['hisgroup'], $hisGroup);
 
@@ -1959,7 +1964,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                             <string property="login" value="theadmin" />
                             <string property="id_aclgrp" value="admins" />
                             <string property="name" value="Admins" />
-                            <string property="grouptype" value="0" />
+                            <'.$this->numberAs.' property="grouptype" value="0" />
                         </object>
                     </array>
         ';
@@ -1969,12 +1974,12 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             <object>
                 <string property="id_aclgrp" value="admins" />
                 <string property="name" value="Admins" />
-                <string property="grouptype" value="0" />
+                <'.$this->numberAs.' property="grouptype" value="0" />
             </object>
             <object>
                 <string property="id_aclgrp" value="users" />
                 <string property="name" value="Users" />
-                <string property="grouptype" value="0" />
+                <'.$this->numberAs.' property="grouptype" value="0" />
             </object>
         </array>';
         $this->assertComplexIdenticalStr($rightsResult['groups'], $groups);
@@ -2096,13 +2101,13 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="123" />
-                    <string property="canceled" value="0"/>
+                    <'.$this->numberAs.' property="canceled" value="0"/>
                 </object>
                 <object >
                     <string property="id_aclsbj" value="super.cms.delete" />
                     <string property="id_aclgrp" value="__priv_oneuser" />
                     <string property="id_aclres" value="456" />
-                    <string property="canceled" value="1"/>
+                    <'.$this->numberAs.' property="canceled" value="1"/>
                 </object>
             </array>
         </array>';
@@ -2319,4 +2324,126 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             $newRights['rightsWithResources']
         );
     }
+
+    public function testGetGroupsListByFilterByAllId()
+    {
+        jAuth::login('theadmin', 'foo', false);
+        $mgr = new jAcl2DbAdminUIManager();
+        $results = $mgr->getGroupByFilter('', 0, 20, $mgr::ORDER_BY_ID);
+        $this->assertEquals(2, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="nb_users" value="1" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                </object>
+                <object >
+                    <string property="id_aclgrp" value="users" />
+                    <string property="name" value="Users" />
+                    <'.$this->numberAs.' property="nb_users" value="2" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+        $results = $mgr->getGroupByFilter('', 0, 20, $mgr::ORDER_BY_ID, false);
+        $this->assertEquals(2, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                    <null property="ownerlogin" />
+                </object>
+                <object >
+                    <string property="id_aclgrp" value="users" />
+                    <string property="name" value="Users" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                    <null property="ownerlogin" />
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+    }
+    public function testGetGroupsListByFilterById()
+    {
+        jAuth::login('theadmin', 'foo', false);
+        $mgr = new jAcl2DbAdminUIManager();
+        $results = $mgr->getGroupByFilter('adm', 0, 20, $mgr::ORDER_BY_ID);
+        $this->assertEquals(1, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="nb_users" value="1" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+        $results = $mgr->getGroupByFilter('adm', 0, 20, $mgr::ORDER_BY_ID, false);
+        $this->assertEquals(1, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                    <null property="ownerlogin" />
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+    }
+
+    public function testGetGroupsListByFilterByNbUsers()
+    {
+        jAuth::login('theadmin', 'foo', false);
+        $mgr = new jAcl2DbAdminUIManager();
+        $results = $mgr->getGroupByFilter('', 0, 20, $mgr::ORDER_BY_USERS | $mgr::ORDER_DIRECTION_DESC);
+        $this->assertEquals(2, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="users" />
+                    <string property="name" value="Users" />
+                    <'.$this->numberAs.' property="nb_users" value="2" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                </object>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="nb_users" value="1" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+        $results = $mgr->getGroupByFilter('', 0, 20, $mgr::ORDER_BY_USERS | $mgr::ORDER_DIRECTION_DESC, false);
+        // ORDER_BY_USERS is not compatible with the $withUser filer, so we should have
+        // an order by name.
+        $this->assertEquals(2, $results['resultsCount']);
+        $verif = '<array>
+                <object >
+                    <string property="id_aclgrp" value="users" />
+                    <string property="name" value="Users" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                    <null property="ownerlogin" />
+                </object>
+                <object >
+                    <string property="id_aclgrp" value="admins" />
+                    <string property="name" value="Admins" />
+                    <'.$this->numberAs.' property="grouptype" value="0"/>
+                    <null property="ownerlogin" />
+                </object>
+        </array>';
+
+        $this->assertComplexIdenticalStr($results['results'], $verif);
+
+    }
+
 }

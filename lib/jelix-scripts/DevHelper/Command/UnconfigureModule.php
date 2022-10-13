@@ -43,7 +43,13 @@ class UnconfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         );
 
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());
-        $configurator = new \Jelix\Installer\Configurator($reporter, $globalSetup, $this->getHelper('question'), $input, $output);
+        $configurator = new \Jelix\Installer\Configurator(
+            $reporter,
+            $globalSetup,
+            $this->getHelper('question'),
+            $input,
+            $output
+        );
 
         $configurator->unconfigureModule($modules, $this->selectedEntryPointId);
 

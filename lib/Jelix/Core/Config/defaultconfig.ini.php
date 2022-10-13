@@ -49,7 +49,7 @@ enableAllModules=off
 
 [modules]
 jelix.enabled=off
-jelix.path="lib:jelix/core-modules/jelix"
+jelix.path="lib:jelix-legacy/core-modules/jelix"
 
 ; jacldb is deprecated. keep it uninstall if possible
 jacldb.enabled=off
@@ -68,6 +68,7 @@ basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
 binary=jResponseBinary
+streamed=jResponseStreamed
 text=jResponseText
 cmdline=jResponseCmdline
 jsonrpc=jResponseJsonrpc
@@ -86,6 +87,7 @@ basichtml=jResponseBasicHtml
 redirect=jResponseRedirect
 redirectUrl=jResponseRedirectUrl
 binary=jResponseBinary
+streamed=jResponseStreamed
 text=jResponseText
 cmdline=jResponseCmdline
 jsonrpc=jResponseJsonrpc
@@ -524,10 +526,6 @@ jforms_autocomplete.require=jquery_ui
 
 jforms_autocompleteajax.js[]="$jelix/js/jforms/jAutocompleteAjax.jqueryui.js"
 jforms_autocompleteajax.require=jquery_ui
-
-
-swjs.js = "$jelix/jquery/flash/jquery.flash.js"
-swjs.require = jquery
 
 datatables.js[]="$jelix/datatables/datatables.min.js"
 datatables.js[]="$jelix/datatables/i18n/$locale.js"

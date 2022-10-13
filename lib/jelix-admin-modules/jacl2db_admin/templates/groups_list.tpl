@@ -106,6 +106,5 @@
         <p>{@jacl2db_admin~acl2.group.setdefault.help@}</p>
 
     </div>
-    <div
 </div>
 

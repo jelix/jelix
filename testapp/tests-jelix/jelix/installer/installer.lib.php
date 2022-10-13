@@ -123,9 +123,9 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         $this->installerIni = $installerIni;
     }
 
-    protected function createEntryPointObject($configFile, $file, $type) {
+    protected function createEntryPointObject($configFile, $file, $type, $isLocalEp) {
         return new testInstallerEntryPoint($this,
-            $configFile, $file, $type,
+            $configFile, $file, $type, $isLocalEp,
             (object) $this->configContent[$configFile]);
     }
 
@@ -151,13 +151,14 @@ class testInstallerComponentModule extends \Jelix\Installer\ModuleInstallerLaunc
 class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
 
     function __construct(\Jelix\Installer\GlobalSetup $globalSetup,
-                         $configFile, $file, $type, $configContent) {
+                         $configFile, $file, $type, $isLocalEp, $configContent) {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
         $this->configFileName = $configFile;
         $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
+        $this->isLocalEp = $isLocalEp;
 
         $appSystemPath = \Jelix\Core\App::appSystemPath($configFile);
         if (!file_exists($appSystemPath)) {

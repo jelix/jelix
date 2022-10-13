@@ -10,6 +10,10 @@ Features
 * Jelix 1.8 requires PHP 7.4 and above.
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
  `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
+* Core: 
+  * new response Object  `jResponseStreamed`
+* Controllers:
+  * new methods `redirect()` and `redirectUrl()` that are shortcuts to the creation of a redirection object
 * jForms:
   * new method `BuilderBase::outputAllControlsValues()`
   * new method `BuilderBase::outputControlRawValue()`
@@ -20,6 +24,9 @@ Features
     the `acl2` configuration section)
   * It is not possible anymore to set some rights on the anonymous group (acl, or related to users)
   * rights are now dependent of the `view` right of the same branch.
+* jEvent:
+  * possibility to give an event object to `jEvent::notify()`. So you can have events having their own methods to manipulate
+    information for the event. 
 * Configurator:
   * The configurator is now able to declare automatically modules urls, and to remove
     all Urls of a module when it is uninstalled.
@@ -28,8 +35,15 @@ Features
   * new method `findProfile()` on helpers
 * Installer:
   * The PreInstallHelpers class has now the database API to allows to check the
-    the content of the database before allowing the installation
+    content of the database before allowing the installation
   * new method `findProfile()` on helpers
+  * new option to the installer command: `--no-clean-temp`. And the command verifies now that
+    all content of the temp directory can be deleted.
+
+Removes
+-------
+
+* the template plugins `swfjs`, `swfbiscuit` and the script `jquery.flash.js`. Flash is dead, so no reason to keep these files.
 
 
 Internal changes

@@ -11,7 +11,7 @@
  * @contributor Cedric (fix bug ticket 56)
  * @contributor Julien Issler
  *
- * @copyright   2005-2019 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+ * @copyright   2005-2022 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -58,8 +58,11 @@ class jFile
      */
     public static function write($file, $data, $chmod = null)
     {
-        if (!$chmod && jApp::config()) {
-            $chmod = jApp::config()->chmodFile;
+        if (jApp::config()) {
+            if (!$chmod) {
+                $chmod = jApp::config()->chmodFile;
+            }
+            Directory::$defaultChmod = jApp::config()->chmodDir;
         }
         if ($data === null) {
             $data = '';
@@ -91,7 +94,7 @@ class jFile
      * @param bool   $deleteParent If the path must be deleted too
      * @param array  $except       filenames and suffix of filename, for files to NOT delete
      *
-     * @throws jException
+     * @throws Exception
      *
      * @return bool true if all the content has been removed
      *
@@ -121,6 +124,9 @@ class jFile
      */
     public static function copyDirectoryContent($sourcePath, $targetPath, $overwrite = false)
     {
+        if (jApp::config()) {
+            Directory::$defaultChmod = jApp::config()->chmodDir;
+        }
         Directory::copy($sourcePath, $targetPath, $overwrite);
     }
 

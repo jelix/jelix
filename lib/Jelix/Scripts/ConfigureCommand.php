@@ -27,7 +27,7 @@ class ConfigureCommand extends Command
     {
         $this
             ->setName('configure')
-            ->setDescription('Launch configuration of the application')
+            ->setDescription('Launch configuration of the application or of a module')
             ->addArgument(
                 'module',
                 InputArgument::OPTIONAL,
@@ -38,6 +38,12 @@ class ConfigureCommand extends Command
                 'p',
                 InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY,
                 'parameters for the installer of the module:  -p param1 -p param2=value etc'
+            )
+            ->addOption(
+                'remove',
+                'r',
+                InputOption::VALUE_NONE,
+                'Unconfigure the given module, in order to remove it'
             )
             ->addOption(
                 'force',
@@ -84,8 +90,14 @@ class ConfigureCommand extends Command
             $output
         );
 
+        $selectedEntryPointId = $globalSetup->getMainEntryPoint()->getEpId();
+        $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
+        if (count($selectedEntryPointsIdList)) {
+            $selectedEntryPointId = $selectedEntryPointsIdList[0];
+        }
+
         $module = $input->getArgument('module');
-        if ($module) {
+        if ($module && !$input->getOption('remove')) {
             $parameters = $input->getOption('parameters');
             $parsedParameters = array();
             if ($parameters) {
@@ -96,17 +108,18 @@ class ConfigureCommand extends Command
                     }
                 }
             }
-            $selectedEntryPointId = $globalSetup->getMainEntryPoint()->getEpId();
-            $selectedEntryPointsIdList = $this->getSelectedEntryPoint($input->getOption('entry-points'), true);
-            if (count($selectedEntryPointsIdList)) {
-                $selectedEntryPointId = $selectedEntryPointsIdList[0];
-            }
             $configurator->setModuleParameters($module, $parsedParameters);
             $configurator->configureModules(
                 array($module),
                 $selectedEntryPointId,
                 true,
                 $input->getOption('force')
+            );
+        } else if ($module && $input->getOption('remove')) {
+            $configurator->unconfigureModule(
+                array($module),
+                $selectedEntryPointId,
+                true
             );
         } else {
             $configurator->localConfigureEnabledModules();

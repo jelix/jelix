@@ -162,7 +162,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
                 $this->copyFile($entryPointModelFile, $newEpPath);
 
                 // change the path to application.init.php into the entrypoint
-                // depending of the application, the path of www/ is not always at the same place, relatively to
+                // depending on the application, the path of www/ is not always at the same place, relatively to
                 // application.init.php
                 $appInitFile = App::applicationInitFile();
                 $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), dirname($appInitFile).'/');
@@ -179,6 +179,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             if ($configFileModel) {
                 $this->copyFile($configFileModel, $configFilePath);
             } else {
+                \jFile::createDir(dirname($configFilePath));
                 file_put_contents($configFilePath, ';<'.'?php die(\'\');?'.'>');
             }
         }

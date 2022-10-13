@@ -125,7 +125,6 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
         $config = \Jelix\Core\App::config();
         $this->defaultLang = $config->locale;
         $this->CharSet = $config->charset;
-        $this->Mailer = $config->mailer['mailerType'];
         if ($config->mailer['mailerType']) {
             $this->Mailer = $config->mailer['mailerType'];
         }

@@ -261,7 +261,8 @@ class GlobalSetup
             $ep = $this->createEntryPointObject(
                 $entrypoint->getConfigFile(),
                 $entrypoint->getFile(),
-                $entrypoint->getType()
+                $entrypoint->getType(),
+                $entrypoint->isLocal()
             );
             $epId = $ep->getEpId();
 
@@ -280,9 +281,9 @@ class GlobalSetup
      * @param mixed $file
      * @param mixed $type
      */
-    protected function createEntryPointObject($configFile, $file, $type)
+    protected function createEntryPointObject($configFile, $file, $type, $isLocalEp)
     {
-        return new EntryPoint($this, $configFile, $file, $type);
+        return new EntryPoint($this, $configFile, $file, $type, $isLocalEp);
     }
 
     protected function readModuleInfos()
@@ -639,7 +640,7 @@ class GlobalSetup
         }
         $this->frameworkInfos->save();
 
-        $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType);
+        $ep = $this->createEntryPointObject($configFileName, $epId.'.php', $epType, $this->forLocalConfiguration());
         $this->entryPoints[$epId] = $ep;
 
         if ($this->forLocalConfiguration()) {

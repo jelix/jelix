@@ -21,11 +21,13 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
         $this->migrate($helpers);
         $cli = $helpers->cli();
         $this->parameters['wwwfiles'] = $cli->askInChoice(
-            'How to install jelix-www files?'.
+            'How to install the web assets of Jelix, (the jelix-www files)?'.
             "\n   copy: will be copied into the www/ directory".
             "\n   symlink: a symbolic link into the www/ directory will point to the lib/jelix-www directory".
-            "\n   vhost: you will configure your web server to set an alias to the lib/jelix-www directory",
-            array('copy', 'vhost', 'symlink'),
+            "\n   vhost: you have to configure your web server to set an alias to the lib/jelix-www directory".
+            "\n          and the installer will remove symlink or existing assets directory".
+            "\n   nosetup: nothing will be done, you have to install assets yourself as you want.",
+            array('copy', 'vhost', 'symlink', 'nosetup'),
             $this->parameters['wwwfiles']
         );
 

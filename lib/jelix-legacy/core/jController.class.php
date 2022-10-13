@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package    jelix
  * @subpackage core
@@ -6,7 +7,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2014 Laurent Jouanneau, 2006 Loic Mathaud
+ * @copyright   2005-2022 Laurent Jouanneau, 2006 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -175,5 +176,38 @@ abstract class jController
     protected function getResponse($name = '', $useOriginal = false)
     {
         return $this->request->getResponse($name, $useOriginal);
+    }
+
+    /**
+     * get a jReponseRedirectUrl object
+     * @param string $url  the url
+     * @return \jResponseRedirectUrl
+     */
+    protected function redirectToUrl($url, $temporary = true)
+    {
+        /** @var \jResponseRedirectUrl */
+        $response = $this->request->getResponse('redirectUrl');
+        $response->url = $url;
+        $response->temporary = $temporary;
+        return $response;
+    }
+
+    /**
+     * get a jReponseRedirect object
+     * @param string $action  the action selector, like "mymodule~myctrl:mymethod"
+     * @param array $parameters  parameters of the action
+     * @param bool $temporary temporary redirection (true) or permanent redirection (false)
+     * @param string $anchor  url anchor
+     * @return \jResponseRedirect
+     */
+    protected function redirect($action, $parameters = [], $anchor = '', $temporary = true)
+    {
+        /** @var \jResponseRedirect */
+        $response = $this->request->getResponse('redirect');
+        $response->action = $action;
+        $response->params = $parameters;
+        $response->temporary = $temporary;
+        $response->anchor = $anchor;
+        return $response;
     }
 }

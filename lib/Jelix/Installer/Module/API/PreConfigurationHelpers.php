@@ -154,7 +154,7 @@ class PreConfigurationHelpers
     /**
      * Path to the configuration directory.
      *
-     * It gives the path to app/system or local/config, depending if the
+     * It gives the path to app/system or local/config, depending on if the
      * configuration is for the application or for the instance
      *
      * @param string $file
@@ -163,7 +163,7 @@ class PreConfigurationHelpers
      */
     public function configFilePath($file = '')
     {
-        if ($this->globalSetup->forLocalConfiguration()) {
+        if (! $this->globalSetup->forLocalConfiguration()) {
             return \Jelix\Core\App::appSystemPath($file);
         }
 

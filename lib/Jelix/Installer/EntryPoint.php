@@ -74,6 +74,11 @@ class EntryPoint
     protected $globalSetup;
 
     /**
+     * @var bool true if the entrypoint is a local entrypoint
+     */
+    protected $isLocalEp = false;
+
+    /**
      * @param GlobalSetup $globalSetup
      * @param string      $configFile  the path of the configuration file, relative
      *                                 to the app/system directory
@@ -84,7 +89,8 @@ class EntryPoint
         GlobalSetup $globalSetup,
         $configFile,
         $file,
-        $type
+        $type,
+        $isLocalEp
     ) {
         $this->type = $type;
         $this->_isCliScript = ($type == 'cmdline');
@@ -92,15 +98,17 @@ class EntryPoint
         $this->scriptName = ($this->_isCliScript ? $file : '/'.$file);
         $this->file = $file;
         $this->globalSetup = $globalSetup;
+        $this->isLocalEp = $isLocalEp;
 
         $appSystemPath = \Jelix\Core\App::appSystemPath($configFile);
-        if (!file_exists($appSystemPath)) {
-            \jFile::createDir(dirname($appSystemPath));
-            file_put_contents($appSystemPath, ';<'.'?php die(\'\');?'.'>');
-        }
         $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
 
-        $this->appEpConfigIni = new IniModifier($appSystemPath);
+        if ( !$isLocalEp && !file_exists($appSystemPath)) {
+            \jFile::createDir(dirname($appSystemPath));
+            file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
+        }
+
+        $this->appEpConfigIni = new IniModifier($appSystemPath, ';<'.'?php die(\'\');?'.'>');
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
         $compiler = new Compiler($configFile,
@@ -181,10 +189,12 @@ class EntryPoint
      */
     public function getConfigIni()
     {
-        if ($this->globalSetup->isReadWriteConfigMode()) {
-            $appCf = $this->appEpConfigIni;
-        } else {
+
+        if (!$this->globalSetup->isReadWriteConfigMode() || $this->isLocalEp) {
             $appCf = new IniModifierReadOnly($this->appEpConfigIni);
+        }
+        else {
+            $appCf = $this->appEpConfigIni;
         }
 
         if ($this->globalSetup->forLocalConfiguration()) {
@@ -212,7 +222,7 @@ class EntryPoint
      */
     public function getSingleConfigIni()
     {
-        if ($this->globalSetup->forLocalConfiguration()) {
+        if ($this->isLocalEp) {
             $ini = $this->localEpConfigIni;
         } else {
             $ini = $this->appEpConfigIni;

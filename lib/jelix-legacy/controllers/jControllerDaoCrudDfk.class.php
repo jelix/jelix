@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package      jelix
  * @subpackage   controllers
@@ -8,7 +9,7 @@
  * @contributor  Thibault Piront (nuKs)
  * @contributor  Bruno Perles (brunto)
  *
- * @copyright    2007-2008 Laurent Jouanneau
+ * @copyright    2007-2022 Laurent Jouanneau
  * @copyright    2007 Thibault Piront
  * @copyright    2007,2008 Bastien Jaillot
  * @copyright    2011 Bruno PERLES
@@ -172,7 +173,7 @@ class jControllerDaoCrudDfk extends jController
     {
         $act = jApp::coord()->action;
 
-        return $act->module.'~'.$act->controller.':'.$method;
+        return $act->module . '~' . $act->controller . ':' . $method;
     }
 
     /**
@@ -233,7 +234,8 @@ class jControllerDaoCrudDfk extends jController
                 $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
             }
             if (($lo = $this->param('listorder'))
-                && (array_key_exists($lo, $this->propertiesForRecordsOrder))) {
+                && (array_key_exists($lo, $this->propertiesForRecordsOrder))
+            ) {
                 $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
                 if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
                     $listOrder[$lo] = 'desc';
@@ -332,11 +334,11 @@ class jControllerDaoCrudDfk extends jController
         // errors or already filled field. see ticket #292
         $form = jForms::create($this->form);
         $this->_preCreate($form);
-        $rep = $this->getResponse('redirect');
-        $rep->action = $this->_getAction('create');
-        $rep->params[$this->spkName] = $this->param($this->spkName);
 
-        return $rep;
+        return $this->redirect(
+            $this->_getAction('create'),
+            [$this->spkName => $this->param($this->spkName)]
+        );
     }
 
     /**
@@ -394,13 +396,14 @@ class jControllerDaoCrudDfk extends jController
     {
         $form = jForms::fill($this->form);
         $spk = $this->param($this->spkName);
-        $rep = $this->getResponse('redirect');
-        $rep->params[$this->spkName] = $spk;
+        $repParams = [$this->spkName => $spk];
 
         if ($form == null) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect(
+                $this->_getAction('index'),
+                $repParams
+            );
         }
 
         if ($form->check() && $this->_checkData($spk, $form, false)) {
@@ -412,13 +415,15 @@ class jControllerDaoCrudDfk extends jController
             }
             $this->_beforeSaveCreate($form, $form_daorec);
             $form_dao->insert($form_daorec);
-            $id = $form_daorec->getPk();
 
-            $rep->action = $this->_getAction('view');
+            $id = $form_daorec->getPk();
+            $rep = $this->redirect($this->_getAction('view'), $repParams);
+
             $this->_afterCreate($form, $id, $rep);
             if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
             }
+
             jForms::destroy($this->form);
 
             $pknames = $form_dao->getPrimaryKeyNames();
@@ -432,9 +437,11 @@ class jControllerDaoCrudDfk extends jController
 
             return $rep;
         }
-        $rep->action = $this->_getAction('create');
 
-        return $rep;
+        return $this->redirect(
+            $this->_getAction('create'),
+            $repParams
+        );
     }
 
     /**
@@ -471,13 +478,11 @@ class jControllerDaoCrudDfk extends jController
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
 
-        $rep = $this->getResponse('redirect');
-        $rep->params[$this->spkName] = $spk;
+        $repParams = [$this->spkName => $spk];
 
         if ($dpk === null) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'), $repParams);
         }
 
         $id = $this->_getPk($spk, $dpk);
@@ -486,18 +491,16 @@ class jControllerDaoCrudDfk extends jController
         try {
             $form->initFromDao($this->dao, $id, $this->dbProfile);
         } catch (Exception $e) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'), $repParams);
         }
 
         $this->_preUpdate($form);
 
-        $rep->params[$this->dpkName] = $dpk;
-        $rep->params[$this->offsetParameterName] = $page;
-        $rep->action = $this->_getAction('editupdate');
+        $repParams[$this->dpkName] = $dpk;
+        $repParams[$this->offsetParameterName] = $page;
 
-        return $rep;
+        return $this->redirect($this->_getAction('editupdate'), $repParams);
     }
 
     /**
@@ -523,11 +526,11 @@ class jControllerDaoCrudDfk extends jController
         $id = $this->_getPk($spk, $dpk);
         $form = jForms::get($this->form, $id);
         if ($form === null || $dpk === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->params[$this->spkName] = $spk;
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect(
+                $this->_getAction('index'),
+                [$this->spkName => $spk]
+            );
         }
         $rep = $this->_getResponse();
 
@@ -569,33 +572,34 @@ class jControllerDaoCrudDfk extends jController
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
 
-        $rep = $this->getResponse('redirect');
-        $rep->params[$this->spkName] = $spk;
+        $repParams = [$this->spkName => $spk];
 
         $id = $this->_getPk($spk, $dpk);
         $form = jForms::fill($this->form, $id);
         if ($form === null || $dpk === null) {
-            $rep->action = $this->_getAction('index');
 
-            return $rep;
+            return $this->redirect($this->_getAction('index'), $repParams);
         }
 
-        $rep->params[$this->dpkName] = $dpk;
-        $rep->params[$this->offsetParameterName] = $page;
+        $repParams[$this->dpkName] = $dpk;
+        $repParams[$this->offsetParameterName] = $page;
 
         if ($form->check() && $this->_checkData($spk, $form, true)) {
             $results = $form->prepareDaoFromControls($this->dao, $id, $this->dbProfile);
             extract($results, EXTR_PREFIX_ALL, 'form');
             $this->_beforeSaveUpdate($form, $form_daorec, $id);
             $form_dao->update($form_daorec);
-            $rep->action = $this->_getAction('view');
+
+            $rep = $this->redirect($this->_getAction('view'), $repParams);
+
             $this->_afterUpdate($form, $id, $rep);
             if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
             }
+
             jForms::destroy($this->form, $id);
         } else {
-            $rep->action = $this->_getAction('editupdate');
+            $rep = $this->redirect($this->_getAction('editupdate'), $repParams);
         }
 
         return $rep;
@@ -637,12 +641,12 @@ class jControllerDaoCrudDfk extends jController
         $page = $this->param($this->offsetParameterName);
 
         if ($dpk === null) {
-            $rep = $this->getResponse('redirect');
-            $rep->action = $this->_getAction('index');
-            $rep->params[$this->spkName] = $spk;
-
-            return $rep;
+            return $this->redirect(
+                $this->_getAction('index'),
+                [$this->spkName => $spk]
+            );
         }
+
         $rep = $this->_getResponse();
 
         $id = $this->_getPk($spk, $dpk);
@@ -691,10 +695,10 @@ class jControllerDaoCrudDfk extends jController
         $dpk = $this->param($this->dpkName);
         $page = $this->param($this->offsetParameterName);
 
-        $rep = $this->getResponse('redirect');
-        $rep->action = $this->_getAction('index');
-        $rep->params[$this->spkName] = $spk;
-        $rep->params = array($this->offsetParameterName => $page);
+        $rep = $this->redirect(
+            $this->_getAction('index'),
+            [$this->spkName => $spk, $this->offsetParameterName => $page]
+        );
 
         $dao = jDao::get($this->dao, $this->dbProfile);
         $id = $this->_getPk($spk, $dpk, $dao);
